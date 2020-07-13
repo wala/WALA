@@ -122,6 +122,13 @@ public final class ConditionalBranchInstruction extends Instruction
   }
 
   @Override
+  public int getPoppedWordSize() {
+    // Xiangyu, to support if_eq (if_ne)...
+    if (opcode >= Constants.OP_ifeq && opcode <= Constants.OP_ifle) return 1;
+    return 2 * Util.getWordSize(getType());
+  }
+
+  @Override
   public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitConditionalBranch(this);
   }

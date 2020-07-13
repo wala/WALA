@@ -94,6 +94,9 @@ public interface IInstruction {
   /** @return the number of values this instruction pops off the working stack */
   public int getPoppedCount();
 
+  /** @return the number of values this instruction pops off the working stack */
+  public int getPoppedWordSize();
+
   /**
    * Computes the type of data pushed onto the stack, or null if none is pushed.
    *

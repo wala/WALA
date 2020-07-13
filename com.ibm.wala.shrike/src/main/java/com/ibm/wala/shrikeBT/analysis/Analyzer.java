@@ -23,6 +23,7 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwapInstruction;
+import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import java.io.IOException;
 import java.io.Writer;
@@ -371,7 +372,7 @@ public class Analyzer {
     return getReachingTo(to, null);
   }
 
-  private void computeStackSizesAt(int[] stackSizes, int i, int size) throws FailureException {
+  private void computeStackSizesAt(byte[] stack, int stackLen, int[] stackSizes, int i, int size) throws FailureException {
     while (true) {
       if (stackSizes[i] >= 0) {
         if (size != stackSizes[i]) {
@@ -383,23 +384,58 @@ public class Analyzer {
 
       IInstruction instr = instructions[i];
       if (instr instanceof DupInstruction) {
-        size += ((DupInstruction) instr).getSize();
+        DupInstruction d = (DupInstruction) instr;
+        
+        byte topStackWordSize = stack[stackLen - 1];
+        
+        int poppedWordSize = d.getPoppedWordSize(topStackWordSize);
+        stackLen = popStackElements(stack, stackLen, poppedWordSize);
+        size -= poppedWordSize;
+        
+        if (d.getDelta() == 0) {
+          // Push the original and the copy
+          stack[stackLen++] = topStackWordSize;
+          stack[stackLen++] = topStackWordSize;
+        } else if (d.getDelta() == 1) {
+          // Push the original and the copy below the previous stack element
+          stack[stackLen + 1] = topStackWordSize;
+          stack[stackLen] = stack[stackLen - 1];
+          stack[stackLen - 1] = topStackWordSize;
+          stackLen += 2;
+        } else if (d.getDelta() == 2) {
+          throw new FailureException(i, "dup with delta 2 not supported", null);
+        }
+        
+        byte pushedWordSize = d.getPushedWordSize(topStackWordSize);
+        size += pushedWordSize;
       } else if (instr instanceof SwapInstruction) {
-      } else {
-        size -= instr.getPoppedCount();
+      } else if (instr instanceof ThrowInstruction) {
+        stackLen = popStackElements(stack, stackLen, instr.getPoppedWordSize());
         byte pushedWordSize = instr.getPushedWordSize();
         if (pushedWordSize > 0) {
           size += pushedWordSize;
+          stack[stackLen++] = pushedWordSize;
+        }
+      } else {
+        size -= instr.getPoppedWordSize();
+        stackLen = popStackElements(stack, stackLen, instr.getPoppedWordSize());
+        byte pushedWordSize = instr.getPushedWordSize();
+        if (pushedWordSize > 0) {
+          size += pushedWordSize;
+          stack[stackLen++] = pushedWordSize;
         }
       }
 
       int[] targets = instr.getBranchTargets();
       for (int target : targets) {
-        computeStackSizesAt(stackSizes, target, size);
+        computeStackSizesAt(stack.clone(), stackLen, stackSizes, target, size);
       }
       ExceptionHandler[] hs = handlers[i];
       for (ExceptionHandler element : hs) {
-        computeStackSizesAt(stackSizes, element.getHandler(), 1);
+        // TODO Does a handler push the exception object on the stack?
+        byte[] branchStack = stack.clone();
+        branchStack[stackLen] = 1;
+        computeStackSizesAt(branchStack, stackLen + 1, stackSizes, element.getHandler(), 1);
       }
 
       if (!instr.isFallThrough()) {
@@ -407,6 +443,19 @@ public class Analyzer {
       }
       i++;
     }
+  }
+  
+  private static int popStackElements(byte[] stack, int stackLen, int elementsToPop) throws FailureException {
+    while(elementsToPop > 0) {
+      byte stackElementSize = stack[--stackLen];
+      stack[stackLen] = -1;
+      
+      elementsToPop -= stackElementSize;
+      if (elementsToPop < 0) {
+        throw new FailureException(stackLen, "Stack underflow", null); 
+      }
+    }
+    return stackLen;
   }
 
   /** This exception is thrown by verify() when it fails. */
@@ -638,20 +687,38 @@ public class Analyzer {
 
             @Override
             public void visitLocalLoad(ILoadInstruction instruction) {
-              String t = curLocals[instruction.getVarIndex()];
-              curStack[0] = t;
+              int index = instruction.getVarIndex();
+              if (longType(instruction.getType())) {
+                String t = curLocals[index + 1];
+                curLocals[index] = topType;
+                curLocals[index + 1] = t;
+                curStack[1] = t;
+              } else {
+                String t = curLocals[index];
+                curStack[0] = t;
+              }
             }
 
             @Override
             public void visitLocalStore(IStoreInstruction instruction) {
               int index = instruction.getVarIndex();
-              String t = curStack[0];
-              curLocals[index] = t;
-              if (longType(t) && curLocals.length > index + 1) {
-                curLocals[index + 1] = null;
-              }
-              if (index >= curLocalsSize[0]) {
-                curLocalsSize[0] = index + (longType(t) && curLocals.length > index + 1 ? 2 : 1);
+              
+              String t = null;
+              if (longType(instruction.getType())) {
+                t = curStack[1];
+                curLocals[index] = topType;
+                curLocals[index + 1] = t;
+
+                if (index + 1 >= curLocalsSize[0]) {
+                  curLocalsSize[0] = index + (curLocals.length > index + 1 ? 2 : 1);
+                }
+              } else {
+                t = curStack[0];
+                curLocals[index] = t;
+                
+                if (index >= curLocalsSize[0]) {
+                  curLocalsSize[0] = index + 1;
+                }
               }
             }
           };
@@ -659,11 +726,6 @@ public class Analyzer {
       boolean restart = false;
       while (true) {
         IInstruction instr = instructions[i];
-        int popped = instr.getPoppedCount();
-
-        if (curStackSize < popped) {
-          throw new FailureException(i, "Stack underflow", path);
-        }
 
         if (visitor != null) {
           visitor.setState(i, path, curStack, curLocals);
@@ -675,31 +737,63 @@ public class Analyzer {
 
         if (instr instanceof DupInstruction) {
           DupInstruction d = (DupInstruction) instr;
-          int size = d.getSize();
+          
+//          byte topStackWordSize = Util.getWordSize(curStack[0]);
+          byte topStackWordSize = (byte) d.getSize();
+          int popped = d.getPoppedWordSize(topStackWordSize);
+          if (curStackSize < popped) {
+            throw new FailureException(i, "Stack underflow", path);
+          }
+          int pushed = d.getPushedWordSize(topStackWordSize);
 
-          System.arraycopy(curStack, popped, curStack, popped + size, curStackSize - popped);
-          System.arraycopy(curStack, 0, curStack, popped, size);
-          curStackSize += size;
+          
+//          int poppedWordSize = d.getPoppedWordSize(topStackWordSize);
+//          stackLen = popStackElements(stack, stackLen, poppedWordSize);
+//          size -= poppedWordSize;
+//          
+          if (d.getDelta() == 0) {
+            // Push the original and the copy
+            System.arraycopy(curStack, popped, curStack, pushed, curStackSize - popped);
+            System.arraycopy(curStack, 0, curStack, popped, popped);
+          } else if (d.getDelta() == 1) {
+            byte intermediateWordSize = 0;
+            if (curStack[d.getSize()].contentEquals(topType)) {
+              intermediateWordSize = 2;
+            } else {
+              intermediateWordSize = Util.getWordSize(curStack[d.getSize()]);
+            }
+            System.arraycopy(curStack, d.getSize(), curStack, 2 * d.getSize() + intermediateWordSize, curStackSize - d.getSize() - 1);
+            System.arraycopy(curStack, 0, curStack, d.getSize() + intermediateWordSize, d.getSize());
+          } else if (d.getDelta() == 2) {
+            throw new FailureException(i, "dup with delta 2 not supported", null);
+          }
+          curStackSize += pushed - popped;
         } else if (instr instanceof SwapInstruction) {
           String s = curStack[0];
           curStack[0] = curStack[1];
           curStack[1] = s;
         } else {
+          int popped = instr.getPoppedWordSize();
+          if (curStackSize < popped) {
+            throw new FailureException(i, "Stack underflow", path);
+          }
+          
           @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
           String pushed = instr.getPushedType(curStack);
           if (instr instanceof NewInstruction && !pushed.startsWith("[")) {
             pushed = "#" + instToBC[i] + '#' + pushed;
           }
           if (pushed != null) {
-            System.arraycopy(curStack, popped, curStack, 1, curStackSize - popped);
             String stackType = Util.getStackType(pushed);
             byte pushedWordSize = Util.getWordSize(stackType);
+            
+            System.arraycopy(curStack, popped, curStack, pushedWordSize, curStackSize - popped);
             for (int topWordIndex = 0; topWordIndex < pushedWordSize - 1; topWordIndex++) {
-              curStack[topWordIndex] = "TOP";
+              curStack[topWordIndex] = topType;
             }
             curStack[pushedWordSize - 1] = stackType;
             instr.visit(localsUpdate); // visit localLoad after pushing
-            curStackSize -= popped - pushedWordSize;
+            curStackSize += pushedWordSize - popped;
           } else {
             instr.visit(localsUpdate); // visit localStore before popping
             System.arraycopy(curStack, popped, curStack, 0, curStackSize - popped);
@@ -781,9 +875,11 @@ public class Analyzer {
     }
 
     stackSizes = new int[instructions.length];
-
+    byte[] stack = new byte[instructions.length];
+        
+    Arrays.fill(stack, (byte) -1);
     Arrays.fill(stackSizes, -1);
-    computeStackSizesAt(stackSizes, 0, 0);
+    computeStackSizesAt(stack, 0, stackSizes, 0, 0);
 
     return stackSizes;
   }
@@ -792,9 +888,9 @@ public class Analyzer {
     maxLocals = locals[0].length;
     for (IInstruction instr : instructions) {
       if (instr instanceof LoadInstruction) {
-        maxLocals = Math.max(maxLocals, ((LoadInstruction) instr).getVarIndex() + 1);
+        maxLocals = Math.max(maxLocals, ((LoadInstruction) instr).getVarIndex() + 2);
       } else if (instr instanceof StoreInstruction) {
-        maxLocals = Math.max(maxLocals, ((StoreInstruction) instr).getVarIndex() + 1);
+        maxLocals = Math.max(maxLocals, ((StoreInstruction) instr).getVarIndex() + 2);
       }
     }
   }

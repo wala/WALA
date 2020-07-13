@@ -108,8 +108,8 @@ public final class Verifier extends Analyzer {
       // parameter to verify.
       // Subsequently calculate the stack index given the logical parameter index
       int j, indexesCounted = 0;
-      for (j = 0; j < curStack.length && indexesCounted <= i; j++) {
-        if (curStack[j].contentEquals("TOP")) {
+      for (j = 0; j < curStack.length && curStack[j] != null && indexesCounted <= i; j++) {
+        if ("TOP".contentEquals(curStack[j])) {
           continue;
         } else {
           indexesCounted++;
@@ -143,7 +143,7 @@ public final class Verifier extends Analyzer {
 
     @Override
     public void visitLocalLoad(ILoadInstruction instruction) {
-      String t = curLocals[instruction.getVarIndex()];
+      String t = curLocals[instruction.getVarIndex() + Util.getWordSize(instruction.getType()) - 1];
       if (t == null) {
         ex =
             new FailureException(

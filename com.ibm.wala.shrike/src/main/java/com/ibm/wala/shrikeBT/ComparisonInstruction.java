@@ -110,6 +110,11 @@ public final class ComparisonInstruction extends Instruction implements ICompari
   }
 
   @Override
+  public int getPoppedWordSize() {
+    return Util.getWordSize(getType()) * 2;
+  }
+
+  @Override
   public String getPushedType(String[] types) {
     return Constants.TYPE_boolean;
   }

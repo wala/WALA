@@ -1,6 +1,6 @@
 package shrike;
 
-public class PopInstruction {
+public class SingleAndDoubleWord {
   public static void popSingleWord() {
     Thread.activeCount();
   }
