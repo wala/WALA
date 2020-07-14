@@ -11,6 +11,7 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.ProgressMaster;
@@ -63,8 +64,8 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   }
 
   protected void dumpCG(JSCallGraph cg) {
-    CallGraph2JSON.IGNORE_HARNESS = false;
-    Map<String, Set<String>> edges = CallGraph2JSON.extractEdges(cg);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
+    Map<String, Set<String>> edges = cg2JSON.extractEdges(cg);
     for (Map.Entry<String, Set<String>> entry : edges.entrySet())
       for (String callee : entry.getValue()) System.out.println(entry.getKey() + " -> " + callee);
   }

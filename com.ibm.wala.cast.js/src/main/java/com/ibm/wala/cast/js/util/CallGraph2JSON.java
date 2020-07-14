@@ -54,14 +54,25 @@ import java.util.Set;
  * @author mschaefer
  */
 public class CallGraph2JSON {
-  public static boolean IGNORE_HARNESS = true;
 
-  public static String serialize(CallGraph cg) {
+  /**
+   * Ignore native methods in WALA models
+   */
+  private final boolean ignoreHarness;
+
+  public CallGraph2JSON() {
+    this(true);
+  }
+
+  public CallGraph2JSON(boolean ignoreHarness) {
+    this.ignoreHarness = ignoreHarness;
+  }
+  public String serialize(CallGraph cg) {
     Map<String, Set<String>> edges = extractEdges(cg);
     return toJSON(edges);
   }
 
-  public static Map<String, Set<String>> extractEdges(CallGraph cg) {
+  public Map<String, Set<String>> extractEdges(CallGraph cg) {
     Map<String, Set<String>> edges = HashMapFactory.make();
     for (CGNode nd : cg) {
       if (!isRealFunction(nd.getMethod())) continue;
@@ -76,7 +87,7 @@ public class CallGraph2JSON {
     return edges;
   }
 
-  public static void serializeCallSite(
+  public void serializeCallSite(
       AstMethod method,
       CallSiteReference callsite,
       Set<IMethod> targets,
@@ -99,14 +110,14 @@ public class CallGraph2JSON {
     return method;
   }
 
-  public static boolean isRealFunction(IMethod method) {
+  public boolean isRealFunction(IMethod method) {
     if (method instanceof AstMethod) {
       String methodName = method.getDeclaringClass().getName().toString();
 
       // exclude synthetic DOM modelling functions
       if (methodName.contains("/make_node")) return false;
 
-      if (IGNORE_HARNESS) {
+      if (ignoreHarness) {
         for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
           if (methodName.startsWith('L' + bootstrapFile + '/')) return false;
       }
