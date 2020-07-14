@@ -40,7 +40,7 @@ public class TestCallGraph2JSON {
             });
   }
 
-  private Map<String, String[]> getParsedJSONCG(CallGraph cg, CallGraph2JSON cg2JSON) {
+  private static Map<String, String[]> getParsedJSONCG(CallGraph cg, CallGraph2JSON cg2JSON) {
     String json = cg2JSON.serialize(cg);
     System.err.println(json);
     Gson gson = new Gson();
