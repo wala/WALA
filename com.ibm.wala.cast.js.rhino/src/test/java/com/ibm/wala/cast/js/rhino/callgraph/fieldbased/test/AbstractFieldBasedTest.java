@@ -11,7 +11,6 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.ProgressMaster;

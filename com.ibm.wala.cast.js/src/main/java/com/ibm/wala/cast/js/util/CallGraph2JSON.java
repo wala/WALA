@@ -55,9 +55,7 @@ import java.util.Set;
  */
 public class CallGraph2JSON {
 
-  /**
-   * Ignore native methods in WALA models
-   */
+  /** Ignore native methods in WALA models */
   private final boolean ignoreHarness;
 
   public CallGraph2JSON() {
@@ -67,6 +65,7 @@ public class CallGraph2JSON {
   public CallGraph2JSON(boolean ignoreHarness) {
     this.ignoreHarness = ignoreHarness;
   }
+
   public String serialize(CallGraph cg) {
     Map<String, Set<String>> edges = extractEdges(cg);
     return toJSON(edges);

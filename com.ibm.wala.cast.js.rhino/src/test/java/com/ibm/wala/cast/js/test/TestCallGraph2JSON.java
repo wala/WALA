@@ -13,7 +13,6 @@ import com.ibm.wala.util.WalaException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
