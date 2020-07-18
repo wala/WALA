@@ -55,15 +55,27 @@ import java.util.Set;
  */
 public class CallGraph2JSON {
 
-  /** Ignore native methods in WALA models */
-  private final boolean ignoreHarness;
-
-  public CallGraph2JSON() {
-    this(true);
+  /** options for which edges to filter from the output JSON */
+  public static enum EdgeFilter {
+    /** ignore any calls to, from, or within WALA's harness containing models of natives methods */
+    IGNORE_HARNESS_COMPLETELY,
+    /**
+     * ignore calls within WALA's native method harness, but include calls to native methods from
+     * scripts and from native methods to scripts (callbacks)
+     */
+    IGNORE_CALLS_WITHIN_HARNESS,
+    /** include all calls in the call graph (including the harness) */
+    INCLUDE_ALL
   }
 
-  public CallGraph2JSON(boolean ignoreHarness) {
-    this.ignoreHarness = ignoreHarness;
+  private final EdgeFilter edgeFilter;
+
+  public CallGraph2JSON() {
+    this(EdgeFilter.IGNORE_HARNESS_COMPLETELY);
+  }
+
+  public CallGraph2JSON(EdgeFilter edgeFilter) {
+    this.edgeFilter = edgeFilter;
   }
 
   public String serialize(CallGraph cg) {
@@ -74,9 +86,13 @@ public class CallGraph2JSON {
   public Map<String, Set<String>> extractEdges(CallGraph cg) {
     Map<String, Set<String>> edges = HashMapFactory.make();
     for (CGNode nd : cg) {
-      if (!isRealFunction(nd.getMethod())) continue;
+      if (!isValidFunctionFromSource(nd.getMethod())) {
+        continue;
+      }
       AstMethod method = (AstMethod) nd.getMethod();
-
+      if (edgeFilter.equals(EdgeFilter.IGNORE_HARNESS_COMPLETELY) && isHarnessMethod(method)) {
+        continue;
+      }
       for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
         Set<IMethod> targets =
             Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
@@ -87,17 +103,33 @@ public class CallGraph2JSON {
   }
 
   public void serializeCallSite(
-      AstMethod method,
+      AstMethod caller,
       CallSiteReference callsite,
       Set<IMethod> targets,
       Map<String, Set<String>> edges) {
     Set<String> targetNames =
         MapUtil.findOrCreateSet(
-            edges, ppPos(method.getSourcePosition(callsite.getProgramCounter())));
+            edges,
+            getJSONRep(caller, ppPos(caller.getSourcePosition(callsite.getProgramCounter()))));
     for (IMethod target : targets) {
       target = getCallTargetMethod(target);
-      if (!isRealFunction(target)) continue;
-      targetNames.add(ppPos(((AstMethod) target).getSourcePosition()));
+      if (!isValidFunctionFromSource(target)
+          || (edgeFilter.equals(EdgeFilter.IGNORE_CALLS_WITHIN_HARNESS)
+              && isHarnessMethod(caller)
+              && isHarnessMethod(target))) {
+        continue;
+      }
+      targetNames.add(getJSONRep(target,ppPos(((AstMethod) target).getSourcePosition())));
+    }
+  }
+
+  private static String getJSONRep(IMethod method, String srcPos) {
+    if (isHarnessMethod(method)) {
+      // just use the method name; position is meaningless
+      String typeName = method.getDeclaringClass().getName().toString();
+      return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
+    } else {
+      return srcPos;
     }
   }
 
@@ -109,19 +141,24 @@ public class CallGraph2JSON {
     return method;
   }
 
-  public boolean isRealFunction(IMethod method) {
+  private static boolean isValidFunctionFromSource(IMethod method) {
     if (method instanceof AstMethod) {
       String methodName = method.getDeclaringClass().getName().toString();
 
       // exclude synthetic DOM modelling functions
       if (methodName.contains("/make_node")) return false;
 
-      if (ignoreHarness) {
-        for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
-          if (methodName.startsWith('L' + bootstrapFile + '/')) return false;
-      }
-
       return method.getName().equals(AstMethodReference.fnAtom);
+    }
+    return false;
+  }
+
+  private static boolean isHarnessMethod(IMethod method) {
+    String methodName = method.getDeclaringClass().getName().toString();
+    for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames) {
+      if (methodName.startsWith('L' + bootstrapFile + '/')) {
+        return true;
+      }
     }
     return false;
   }
