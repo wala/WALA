@@ -119,7 +119,7 @@ public class CallGraph2JSON {
               && isHarnessMethod(target))) {
         continue;
       }
-      targetNames.add(getJSONRep(target,ppPos(((AstMethod) target).getSourcePosition())));
+      targetNames.add(getJSONRep(target, ppPos(((AstMethod) target).getSourcePosition())));
     }
   }
 
