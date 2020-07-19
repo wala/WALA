@@ -55,27 +55,15 @@ import java.util.Set;
  */
 public class CallGraph2JSON {
 
-  /** options for which edges to filter from the output JSON */
-  public static enum EdgeFilter {
-    /** ignore any calls to, from, or within WALA's harness containing models of natives methods */
-    IGNORE_HARNESS_COMPLETELY,
-    /**
-     * ignore calls within WALA's native method harness, but include calls to native methods from
-     * scripts and from native methods to scripts (callbacks)
-     */
-    IGNORE_CALLS_WITHIN_HARNESS,
-    /** include all calls in the call graph (including the harness) */
-    INCLUDE_ALL
-  }
-
-  private final EdgeFilter edgeFilter;
+  /** ignore any calls to, from, or within WALA's harness containing models of natives methods */
+  private final boolean ignoreHarness;
 
   public CallGraph2JSON() {
-    this(EdgeFilter.IGNORE_HARNESS_COMPLETELY);
+    this(true);
   }
 
-  public CallGraph2JSON(EdgeFilter edgeFilter) {
-    this.edgeFilter = edgeFilter;
+  public CallGraph2JSON(boolean ignoreHarness) {
+    this.ignoreHarness = ignoreHarness;
   }
 
   public String serialize(CallGraph cg) {
@@ -90,7 +78,7 @@ public class CallGraph2JSON {
         continue;
       }
       AstMethod method = (AstMethod) nd.getMethod();
-      if (edgeFilter.equals(EdgeFilter.IGNORE_HARNESS_COMPLETELY) && isHarnessMethod(method)) {
+      if (ignoreHarness && isHarnessMethod(method)) {
         continue;
       }
       for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
@@ -113,10 +101,7 @@ public class CallGraph2JSON {
             getJSONRep(caller, ppPos(caller.getSourcePosition(callsite.getProgramCounter()))));
     for (IMethod target : targets) {
       target = getCallTargetMethod(target);
-      if (!isValidFunctionFromSource(target)
-          || (edgeFilter.equals(EdgeFilter.IGNORE_CALLS_WITHIN_HARNESS)
-              && isHarnessMethod(caller)
-              && isHarnessMethod(target))) {
+      if (!isValidFunctionFromSource(target) || (ignoreHarness && isHarnessMethod(target))) {
         continue;
       }
       targetNames.add(getJSONRep(target, ppPos(((AstMethod) target).getSourcePosition())));

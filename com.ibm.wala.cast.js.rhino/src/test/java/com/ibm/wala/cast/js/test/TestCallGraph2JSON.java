@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
-import com.ibm.wala.cast.js.util.CallGraph2JSON.EdgeFilter;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -31,7 +30,7 @@ public class TestCallGraph2JSON {
   public void testBasic() throws WalaException, CancelException {
     String script = "tests/fieldbased/simple.js";
     CallGraph cg = buildCallGraph(script);
-    CallGraph2JSON cg2JSON = new CallGraph2JSON(EdgeFilter.IGNORE_HARNESS_COMPLETELY);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(true);
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
     Assert.assertEquals(5, parsed.keySet().size());
     parsed.values().stream()
@@ -45,10 +44,29 @@ public class TestCallGraph2JSON {
   public void testNative() throws WalaException, CancelException {
     String script = "tests/fieldbased/native_call.js";
     CallGraph cg = buildCallGraph(script);
-    CallGraph2JSON cg2JSON = new CallGraph2JSON(EdgeFilter.IGNORE_CALLS_WITHIN_HARNESS);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
-    Assert.assertEquals(1, parsed.keySet().size());
-    String[] targets = parsed.values().iterator().next();
+    String[] targets = parsed.get("native_call.js@2:21-28");
+    Assert.assertArrayEquals(new String[] {"Array_prototype_pop (Native)"}, targets);
+  }
+
+  @Test
+  public void testReflectiveCalls() throws WalaException, CancelException {
+    String script = "tests/fieldbased/reflective_calls.js";
+    CallGraph cg = buildCallGraph(script);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
+    Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
+    String[] targets = parsed.get("native_call.js@2:21-28");
+    Assert.assertArrayEquals(new String[] {"Array_prototype_pop (Native)"}, targets);
+  }
+
+  @Test
+  public void testNativeCallback() throws WalaException, CancelException {
+    String script = "tests/fieldbased/native_callback.js";
+    CallGraph cg = buildCallGraph(script);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
+    Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
+    String[] targets = parsed.get("native_call.js@2:21-28");
     Assert.assertArrayEquals(new String[] {"Array_prototype_pop (Native)"}, targets);
   }
 
