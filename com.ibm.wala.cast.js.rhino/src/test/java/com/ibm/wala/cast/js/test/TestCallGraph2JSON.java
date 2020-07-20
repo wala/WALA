@@ -52,11 +52,9 @@ public class TestCallGraph2JSON {
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
-    String[] targets = getTargetsStartingWith(parsed, "native_call.js@2");
-    if (targets == null) {
-      throw new RuntimeException(cg2JSON.serialize(cg));
-    }
-    assertArrayEquals(new String[] {"Array_prototype_pop (Native)"}, targets);
+    assertArrayEquals(
+        new String[] {"Array_prototype_pop (Native)"},
+        getTargetsStartingWith(parsed, "native_call.js@2"));
   }
 
   @Test
@@ -87,10 +85,10 @@ public class TestCallGraph2JSON {
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
     assertArrayEquals(
         new String[] {"Array_prototype_map (Native)"},
-        getTargetsStartingWith(parsed, "native_callback.js@2:21-56"));
+        getTargetsStartingWith(parsed, "native_callback.js@2"));
     assertThat(
         Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_call (Native)")),
-        hasItemStartingWith("native_callback.js@2"));
+        hasItemStartingWith("native_callback.js@3"));
   }
 
   private static Map<String, String[]> getParsedJSONCG(CallGraph cg, CallGraph2JSON cg2JSON) {
@@ -125,7 +123,7 @@ public class TestCallGraph2JSON {
    * We need this method since column offsets can differ across platforms, so we can't do an exact
    * position match
    */
-  private static IsCollectionContaining<String> hasItemStartingWith(String item) {
-    return new IsCollectionContaining<>(startsWith(item));
+  private static IsCollectionContaining<String> hasItemStartingWith(String prefix) {
+    return new IsCollectionContaining<>(startsWith(prefix));
   }
 }
