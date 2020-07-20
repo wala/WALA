@@ -1,7 +1,7 @@
 package com.ibm.wala.cast.js.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertArrayEquals;
 
 import com.google.gson.Gson;
@@ -18,6 +18,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
+import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class TestCallGraph2JSON {
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
-    String[] targets = parsed.get("native_call.js@2:21-28");
+    String[] targets = getTargetsStartingWith(parsed, "native_call.js@2");
     if (targets == null) {
       throw new RuntimeException(cg2JSON.serialize(cg));
     }
@@ -66,16 +67,16 @@ public class TestCallGraph2JSON {
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
     assertArrayEquals(
         new String[] {"Function_prototype_call (Native)"},
-        parsed.get("reflective_calls.js@10:63-78"));
+        getTargetsStartingWith(parsed, "reflective_calls.js@10"));
     assertArrayEquals(
         new String[] {"Function_prototype_apply (Native)"},
-        parsed.get("reflective_calls.js@11:82-99"));
+        getTargetsStartingWith(parsed, "reflective_calls.js@11"));
     assertThat(
-        Arrays.asList(parsed.get("Function_prototype_call (Native)")),
-        hasItem("reflective_calls.js@1:0-24"));
+        Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_call (Native)")),
+        hasItemStartingWith("reflective_calls.js@1"));
     assertThat(
-        Arrays.asList(parsed.get("Function_prototype_apply (Native)")),
-        hasItem("reflective_calls.js@5:26-44"));
+        Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_apply (Native)")),
+        hasItemStartingWith("reflective_calls.js@5"));
   }
 
   @Test
@@ -85,10 +86,11 @@ public class TestCallGraph2JSON {
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
     assertArrayEquals(
-        new String[] {"Array_prototype_map (Native)"}, parsed.get("native_callback.js@2:21-56"));
+        new String[] {"Array_prototype_map (Native)"},
+        getTargetsStartingWith(parsed, "native_callback.js@2:21-56"));
     assertThat(
-        Arrays.asList(parsed.get("Function_prototype_call (Native)")),
-        hasItem("native_callback.js@2:27-55"));
+        Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_call (Native)")),
+        hasItemStartingWith("native_callback.js@2"));
   }
 
   private static Map<String, String[]> getParsedJSONCG(CallGraph cg, CallGraph2JSON cg2JSON) {
@@ -104,5 +106,26 @@ public class TestCallGraph2JSON {
     return util.buildCG(
             scriptURL, BuilderType.OPTIMISTIC_WORKLIST, null, false, DefaultSourceExtractor::new)
         .fst;
+  }
+
+  /**
+   * We need this method since column offsets can differ across platforms, so we can't do an exact
+   * position match
+   */
+  private static String[] getTargetsStartingWith(Map<String, String[]> parsedJSON, String prefix) {
+    for (String key : parsedJSON.keySet()) {
+      if (key.startsWith(prefix)) {
+        return parsedJSON.get(key);
+      }
+    }
+    throw new RuntimeException(prefix + " not a key prefix");
+  }
+
+  /**
+   * We need this method since column offsets can differ across platforms, so we can't do an exact
+   * position match
+   */
+  private static IsCollectionContaining<String> hasItemStartingWith(String item) {
+    return new IsCollectionContaining<>(startsWith(item));
   }
 }
