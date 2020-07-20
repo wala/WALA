@@ -54,19 +54,33 @@ import java.util.Set;
  * @author mschaefer
  */
 public class CallGraph2JSON {
-  public static boolean IGNORE_HARNESS = true;
 
-  public static String serialize(CallGraph cg) {
+  /** ignore any calls to, from, or within WALA's harness containing models of natives methods */
+  private final boolean ignoreHarness;
+
+  public CallGraph2JSON() {
+    this(true);
+  }
+
+  public CallGraph2JSON(boolean ignoreHarness) {
+    this.ignoreHarness = ignoreHarness;
+  }
+
+  public String serialize(CallGraph cg) {
     Map<String, Set<String>> edges = extractEdges(cg);
     return toJSON(edges);
   }
 
-  public static Map<String, Set<String>> extractEdges(CallGraph cg) {
+  public Map<String, Set<String>> extractEdges(CallGraph cg) {
     Map<String, Set<String>> edges = HashMapFactory.make();
     for (CGNode nd : cg) {
-      if (!isRealFunction(nd.getMethod())) continue;
-      AstMethod method = (AstMethod) nd.getMethod();
-
+      if (!isValidFunctionFromSource(nd.getMethod())) {
+        continue;
+      }
+      IMethod method = nd.getMethod();
+      if (ignoreHarness && isHarnessMethod(method)) {
+        continue;
+      }
       for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
         Set<IMethod> targets =
             Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
@@ -76,18 +90,42 @@ public class CallGraph2JSON {
     return edges;
   }
 
-  public static void serializeCallSite(
-      AstMethod method,
+  public void serializeCallSite(
+      IMethod caller,
       CallSiteReference callsite,
       Set<IMethod> targets,
       Map<String, Set<String>> edges) {
     Set<String> targetNames =
         MapUtil.findOrCreateSet(
-            edges, ppPos(method.getSourcePosition(callsite.getProgramCounter())));
+            edges,
+            getJSONRep(
+                caller,
+                caller instanceof AstMethod
+                    ? ppPos(((AstMethod) caller).getSourcePosition(callsite.getProgramCounter()))
+                    : null));
     for (IMethod target : targets) {
-      target = getCallTargetMethod(target);
-      if (!isRealFunction(target)) continue;
-      targetNames.add(ppPos(((AstMethod) target).getSourcePosition()));
+      IMethod trueTarget = getCallTargetMethod(target);
+      if (trueTarget == null
+          || !isValidFunctionFromSource(trueTarget)
+          || (ignoreHarness && isHarnessMethod(trueTarget))) {
+        continue;
+      }
+      targetNames.add(
+          getJSONRep(
+              trueTarget,
+              isFunctionPrototypeCallOrApply(trueTarget)
+                  ? null
+                  : ppPos(((AstMethod) trueTarget).getSourcePosition())));
+    }
+  }
+
+  private static String getJSONRep(IMethod method, String srcPos) {
+    if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
+      // just use the method name; position is meaningless
+      String typeName = method.getDeclaringClass().getName().toString();
+      return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
+    } else {
+      return srcPos;
     }
   }
 
@@ -99,19 +137,34 @@ public class CallGraph2JSON {
     return method;
   }
 
-  public static boolean isRealFunction(IMethod method) {
+  private static boolean isValidFunctionFromSource(IMethod method) {
     if (method instanceof AstMethod) {
       String methodName = method.getDeclaringClass().getName().toString();
 
       // exclude synthetic DOM modelling functions
       if (methodName.contains("/make_node")) return false;
 
-      if (IGNORE_HARNESS) {
-        for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
-          if (methodName.startsWith('L' + bootstrapFile + '/')) return false;
-      }
-
       return method.getName().equals(AstMethodReference.fnAtom);
+    } else if (method.isWalaSynthetic()) {
+      if (isFunctionPrototypeCallOrApply(method)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean isFunctionPrototypeCallOrApply(IMethod method) {
+    String methodName = method.getDeclaringClass().getName().toString();
+    return methodName.equals("Lprologue.js/Function_prototype_call")
+        || methodName.equals("Lprologue.js/Function_prototype_apply");
+  }
+
+  private static boolean isHarnessMethod(IMethod method) {
+    String methodName = method.getDeclaringClass().getName().toString();
+    for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames) {
+      if (methodName.startsWith('L' + bootstrapFile + '/')) {
+        return true;
+      }
     }
     return false;
   }

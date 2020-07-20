@@ -24,7 +24,7 @@ public class ExtractingToPredictableFileNames implements AutoCloseable {
 
   /**
    * Reconfigures {@link JSSourceExtractor} to not use temporary file names, and reconfigures {@link
-   * DomLessSourceExtractor} to place HTML files in the <tt>build</tt> subdirectory of the current
+   * DomLessSourceExtractor} to place HTML files in the {@code build} subdirectory of the current
    * working directory.
    */
   public ExtractingToPredictableFileNames() {
