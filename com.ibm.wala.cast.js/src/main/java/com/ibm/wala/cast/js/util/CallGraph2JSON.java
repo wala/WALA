@@ -123,6 +123,9 @@ public class CallGraph2JSON {
     if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
       // just use the method name; position is meaningless
       String typeName = method.getDeclaringClass().getName().toString();
+      if (typeName.lastIndexOf('/') == -1) {
+        throw new RuntimeException(typeName + " is weird on Windows");
+      }
       return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
     } else {
       return srcPos;

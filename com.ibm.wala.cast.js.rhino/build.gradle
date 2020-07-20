@@ -27,6 +27,11 @@ tasks.named('test') {
 	environment 'TRAVIS', 1
 	maxHeapSize = '800M'
 
+	testLogging {
+		exceptionFormat = 'full'
+		events 'passed', 'skipped', 'failed'
+	}
+
 	if (gradle.startParameter.offline)
 		exclude '**/FieldBasedJQueryTest.class'
 
