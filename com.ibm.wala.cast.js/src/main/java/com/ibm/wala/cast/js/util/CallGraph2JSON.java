@@ -77,7 +77,7 @@ public class CallGraph2JSON {
       if (!isValidFunctionFromSource(nd.getMethod())) {
         continue;
       }
-      AstMethod method = (AstMethod) nd.getMethod();
+      IMethod method = nd.getMethod();
       if (ignoreHarness && isHarnessMethod(method)) {
         continue;
       }
@@ -91,25 +91,36 @@ public class CallGraph2JSON {
   }
 
   public void serializeCallSite(
-      AstMethod caller,
+      IMethod caller,
       CallSiteReference callsite,
       Set<IMethod> targets,
       Map<String, Set<String>> edges) {
     Set<String> targetNames =
         MapUtil.findOrCreateSet(
             edges,
-            getJSONRep(caller, ppPos(caller.getSourcePosition(callsite.getProgramCounter()))));
+            getJSONRep(
+                caller,
+                caller instanceof AstMethod
+                    ? ppPos(((AstMethod) caller).getSourcePosition(callsite.getProgramCounter()))
+                    : null));
     for (IMethod target : targets) {
-      target = getCallTargetMethod(target);
-      if (!isValidFunctionFromSource(target) || (ignoreHarness && isHarnessMethod(target))) {
+      IMethod trueTarget = getCallTargetMethod(target);
+      if (trueTarget == null
+          || !isValidFunctionFromSource(trueTarget)
+          || (ignoreHarness && isHarnessMethod(trueTarget))) {
         continue;
       }
-      targetNames.add(getJSONRep(target, ppPos(((AstMethod) target).getSourcePosition())));
+      targetNames.add(
+          getJSONRep(
+              trueTarget,
+              isFunctionPrototypeCallOrApply(trueTarget)
+                  ? null
+                  : ppPos(((AstMethod) trueTarget).getSourcePosition())));
     }
   }
 
   private static String getJSONRep(IMethod method, String srcPos) {
-    if (isHarnessMethod(method)) {
+    if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
       // just use the method name; position is meaningless
       String typeName = method.getDeclaringClass().getName().toString();
       return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
@@ -134,8 +145,18 @@ public class CallGraph2JSON {
       if (methodName.contains("/make_node")) return false;
 
       return method.getName().equals(AstMethodReference.fnAtom);
+    } else if (method.isWalaSynthetic()) {
+      if (isFunctionPrototypeCallOrApply(method)) {
+        return true;
+      }
     }
     return false;
+  }
+
+  private static boolean isFunctionPrototypeCallOrApply(IMethod method) {
+    String methodName = method.getDeclaringClass().getName().toString();
+    return methodName.equals("Lprologue.js/Function_prototype_call")
+        || methodName.equals("Lprologue.js/Function_prototype_apply");
   }
 
   private static boolean isHarnessMethod(IMethod method) {
