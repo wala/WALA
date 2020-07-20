@@ -52,6 +52,9 @@ public class TestCallGraph2JSON {
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
     String[] targets = parsed.get("native_call.js@2:21-28");
+    if (targets == null) {
+      throw new RuntimeException(cg2JSON.serialize(cg));
+    }
     assertArrayEquals(new String[] {"Array_prototype_pop (Native)"}, targets);
   }
 
