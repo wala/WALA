@@ -23,7 +23,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Util;
-import java.util.ArrayList;
+import com.ibm.wala.util.graph.GraphPrint;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,7 +68,7 @@ public class CallGraph2JSON {
 
   public String serialize(CallGraph cg) {
     Map<String, Set<String>> edges = extractEdges(cg);
-    return toJSON(edges);
+    return GraphPrint.toJSON(edges);
   }
 
   public Map<String, Set<String>> extractEdges(CallGraph cg) {
@@ -177,42 +177,5 @@ public class CallGraph2JSON {
         start_offset = pos.getFirstOffset(),
         end_offset = pos.getLastOffset();
     return file + '@' + line + ':' + start_offset + '-' + end_offset;
-  }
-
-  public static String toJSON(Map<String, Set<String>> map) {
-    StringBuilder res = new StringBuilder();
-    res.append("{\n");
-    res.append(
-        joinWith(
-            Util.mapToSet(
-                map.entrySet(),
-                e -> {
-                  StringBuilder res1 = new StringBuilder();
-                  if (e.getValue().size() > 0) {
-                    res1.append("    \"").append(e.getKey()).append("\": [\n");
-                    res1.append(
-                        joinWith(
-                            Util.mapToSet(e.getValue(), str -> "        \"" + str + '"'), ",\n"));
-                    res1.append("\n    ]");
-                  }
-                  return res1.length() == 0 ? null : res1.toString();
-                }),
-            ",\n"));
-    res.append("\n}");
-    return res.toString();
-  }
-
-  private static String joinWith(Iterable<String> lst, String sep) {
-    StringBuilder res = new StringBuilder();
-    ArrayList<String> strings = new ArrayList<>();
-    for (String s : lst) if (s != null) strings.add(s);
-
-    boolean fst = true;
-    for (String s : strings) {
-      if (fst) fst = false;
-      else res.append(sep);
-      res.append(s);
-    }
-    return res.toString();
   }
 }
