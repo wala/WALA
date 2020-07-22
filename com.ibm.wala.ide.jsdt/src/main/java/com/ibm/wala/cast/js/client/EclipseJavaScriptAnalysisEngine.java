@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.client;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FilteredFlowGraphBuilder;
@@ -193,6 +194,7 @@ public class EclipseJavaScriptAnalysisEngine
               }
             };
 
-    return builder.buildCallGraph(roots, new NullProgressMonitor());
+    CallGraphResult result = builder.buildCallGraph(roots, new NullProgressMonitor());
+    return Pair.make(result.getCallGraph(), result.getPointerAnalysis());
   }
 }

@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.util;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
@@ -176,7 +177,8 @@ public class FieldBasedCGUtil {
     final FieldBasedCallGraphBuilder builder =
         builderType.fieldBasedCallGraphBuilderFactory(
             cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-    return builder.buildCallGraph(roots, monitor);
+    CallGraphResult result = builder.buildCallGraph(roots, monitor);
+    return Pair.make(result.getCallGraph(), result.getPointerAnalysis());
   }
 
   /*
