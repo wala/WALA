@@ -81,7 +81,6 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     super();
   }
 
-  @SuppressWarnings("deprecation")
   public void init() throws CancelException {
     fakeRoot = makeFakeRootNode();
     Key k = new Key(fakeRoot.getMethod(), fakeRoot.getContext());
@@ -199,10 +198,6 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     public Context getContext() {
       return context;
     }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public abstract boolean addTarget(CallSiteReference reference, CGNode target);
 
     @Override
     public IClassHierarchy getClassHierarchy() {

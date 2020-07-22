@@ -1642,7 +1642,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param uniqueCatchKey if non-null, then this is the unique PointerKey that catches all
    *     exceptions from this call site.
    */
-  @SuppressWarnings("deprecation")
   private void processResolvedCall(
       CGNode caller,
       SSAAbstractInvokeInstruction instruction,

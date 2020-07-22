@@ -150,7 +150,6 @@ public abstract class FieldBasedCallGraphBuilder {
     return extract(interpreter, flowgraph, eps, monitor);
   }
 
-  @SuppressWarnings("deprecation")
   public JSCallGraph extract(
       SSAContextInterpreter interpreter,
       FlowGraph flowgraph,
@@ -286,7 +285,6 @@ public abstract class FieldBasedCallGraphBuilder {
 
   Everywhere targetContext = Everywhere.EVERYWHERE;
 
-  @SuppressWarnings("deprecation")
   private static boolean addCGEdgeWithContext(
       final JSCallGraph cg,
       CallSiteReference site,

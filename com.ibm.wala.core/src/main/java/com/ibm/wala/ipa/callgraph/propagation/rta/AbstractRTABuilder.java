@@ -284,7 +284,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    *
    * <p>Side effect: add edge to the call graph.
    */
-  @SuppressWarnings("deprecation")
   void processResolvedCall(CGNode caller, CallSiteReference site, CGNode target) {
 
     if (DEBUG) {
