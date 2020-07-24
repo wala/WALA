@@ -64,8 +64,13 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
   protected void dumpCG(JSCallGraph cg) {
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
-    Map<String, Set<String>> edges = cg2JSON.extractEdges(cg);
-    for (Map.Entry<String, Set<String>> entry : edges.entrySet())
-      for (String callee : entry.getValue()) System.out.println(entry.getKey() + " -> " + callee);
+    Map<String, Map<String, Set<String>>> edges = cg2JSON.extractEdges(cg);
+    for (Map<String, Set<String>> sitesInMethod : edges.values()) {
+      for (Map.Entry<String, Set<String>> entry : sitesInMethod.entrySet()) {
+        for (String callee : entry.getValue()) {
+          System.out.println(entry.getKey() + " -> " + callee);
+        }
+      }
+    }
   }
 }
