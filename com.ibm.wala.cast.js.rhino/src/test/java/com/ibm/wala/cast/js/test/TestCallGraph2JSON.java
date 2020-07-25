@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +40,16 @@ public class TestCallGraph2JSON {
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(true);
     Map<String, Map<String, String[]>> parsedJSONCG = getParsedJSONCG(cg, cg2JSON);
-    assertEquals(3, parsedJSONCG.keySet().size());
+    Set<String> methods = parsedJSONCG.keySet();
+    assertEquals(3, methods.size());
+    for (String m : methods) {
+      if (m.startsWith("simple.js@3")) {
+        Map<String, String[]> callSites = parsedJSONCG.get(m);
+        assertThat(
+            Arrays.asList(getTargetsStartingWith(callSites, "simple.js@4")),
+            hasItemStartingWith("simple.js@7"));
+      }
+    }
     Map<String, String[]> flattened = flattenParsedCG(parsedJSONCG);
     assertEquals(5, flattened.keySet().size());
     flattened.values().stream()

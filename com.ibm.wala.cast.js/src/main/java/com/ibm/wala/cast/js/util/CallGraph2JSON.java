@@ -74,8 +74,12 @@ public class CallGraph2JSON {
     return toJSON(edges);
   }
 
+  /**
+   * Extract the edges of the given callgraph as a map over strings that is easy to serialize. The
+   * map keys are locations of methods. The map values are themselves maps, from call site locations
+   * within a method to the (locations of) potential target methods for the call sites.
+   */
   public Map<String, Map<String, Set<String>>> extractEdges(CallGraph cg) {
-    // map from method location -> (map from call site -> targets)
     Map<String, Map<String, Set<String>>> edges = HashMapFactory.make();
     for (CGNode nd : cg) {
       if (!isValidFunctionFromSource(nd.getMethod())) {
@@ -191,6 +195,10 @@ public class CallGraph2JSON {
     return file + '@' + line + ':' + start_offset + '-' + end_offset;
   }
 
+  /**
+   * Converts a call graph map produced by {@link #extractEdges(CallGraph)} to JSON, eliding call
+   * sites with no targets.
+   */
   public static String toJSON(Map<String, Map<String, Set<String>>> map) {
     // strip out call sites with no targets
     Map<String, Map<String, Set<String>>> filtered = new HashMap<>();
