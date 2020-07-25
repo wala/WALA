@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.js.util;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.loader.AstMethod;
@@ -202,7 +203,7 @@ public class CallGraph2JSON {
         filtered.put(methodLoc, filteredSites);
       }
     }
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     return gson.toJson(filtered);
   }
 }
