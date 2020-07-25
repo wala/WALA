@@ -202,9 +202,11 @@ public class CallGraph2JSON {
   public static String toJSON(Map<String, Map<String, Set<String>>> map) {
     // strip out call sites with no targets
     Map<String, Map<String, Set<String>>> filtered = new HashMap<>();
-    for (String methodLoc : map.keySet()) {
+    for (Map.Entry<String, Map<String, Set<String>>> entry : map.entrySet()) {
+      String methodLoc = entry.getKey();
+      Map<String, Set<String>> callSites = entry.getValue();
       Map<String, Set<String>> filteredSites =
-          map.get(methodLoc).entrySet().stream()
+          callSites.entrySet().stream()
               .filter(e -> !e.getValue().isEmpty())
               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
       if (!filteredSites.isEmpty()) {
