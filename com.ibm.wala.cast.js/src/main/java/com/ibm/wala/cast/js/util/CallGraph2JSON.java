@@ -21,10 +21,14 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallString;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContextSelector;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.collections.Util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -61,12 +65,22 @@ public class CallGraph2JSON {
   /** ignore any calls to, from, or within WALA's harness containing models of natives methods */
   private final boolean ignoreHarness;
 
+  /**
+   * if true, output JSON that keeps distinct method clones in the underlying call graph separate
+   */
+  private final boolean exposeContexts;
+
   public CallGraph2JSON() {
     this(true);
   }
 
   public CallGraph2JSON(boolean ignoreHarness) {
+    this(ignoreHarness, false);
+  }
+
+  public CallGraph2JSON(boolean ignoreHarness, boolean exposeContexts) {
     this.ignoreHarness = ignoreHarness;
+    this.exposeContexts = exposeContexts;
   }
 
   public String serialize(CallGraph cg) {
@@ -90,59 +104,77 @@ public class CallGraph2JSON {
         continue;
       }
       Map<String, Set<String>> edgesForMethod =
-          MapUtil.findOrCreateMap(
-              edges,
-              getJSONRep(
-                  method,
-                  (method instanceof AstMethod)
-                      ? ppPos(((AstMethod) method).getSourcePosition())
-                      : null));
+          MapUtil.findOrCreateMap(edges, getJSONRepForNode(nd.getMethod(), nd.getContext()));
       for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
-        Set<IMethod> targets =
-            Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
-        serializeCallSite(method, callsite, targets, edgesForMethod);
+        serializeCallSite(nd, callsite, cg.getPossibleTargets(nd, callsite), edgesForMethod);
       }
     }
     return edges;
   }
 
   public void serializeCallSite(
-      IMethod caller,
-      CallSiteReference callsite,
-      Set<IMethod> targets,
-      Map<String, Set<String>> edges) {
+      CGNode nd, CallSiteReference callsite, Set<CGNode> targets, Map<String, Set<String>> edges) {
     Set<String> targetNames =
         MapUtil.findOrCreateSet(
-            edges,
-            getJSONRep(
-                caller,
-                caller instanceof AstMethod
-                    ? ppPos(((AstMethod) caller).getSourcePosition(callsite.getProgramCounter()))
-                    : null));
-    for (IMethod target : targets) {
-      IMethod trueTarget = getCallTargetMethod(target);
+            edges, getJSONRepForCallSite(nd.getMethod(), nd.getContext(), callsite));
+    for (CGNode target : targets) {
+      IMethod trueTarget = getCallTargetMethod(target.getMethod());
       if (trueTarget == null
           || !isValidFunctionFromSource(trueTarget)
           || (ignoreHarness && isHarnessMethod(trueTarget))) {
         continue;
       }
-      targetNames.add(
-          getJSONRep(
-              trueTarget,
-              isFunctionPrototypeCallOrApply(trueTarget)
-                  ? null
-                  : ppPos(((AstMethod) trueTarget).getSourcePosition())));
+      targetNames.add(getJSONRepForNode(trueTarget, target.getContext()));
     }
   }
 
-  private static String getJSONRep(IMethod method, String srcPos) {
+  private String getJSONRepForNode(IMethod method, Context context) {
+    String result;
     if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
       // just use the method name; position is meaningless
-      String typeName = method.getDeclaringClass().getName().toString();
-      return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
+      result = getNativeMethodName(method);
     } else {
-      return srcPos;
+      AstMethod astMethod = (AstMethod) method;
+      ;
+      result = ppPos(astMethod.getSourcePosition());
     }
+    if (exposeContexts) {
+      result += getContextString(context);
+    }
+    return result;
+  }
+
+  private String getContextString(Context context) {
+    if (context.equals(Everywhere.EVERYWHERE)) {
+      return "";
+    } else if (context instanceof CallStringContext) {
+      CallStringContext cs = (CallStringContext) context;
+      CallString callString = (CallString) cs.get(CallStringContextSelector.CALL_STRING);
+      CallSiteReference csRef = callString.getCallSiteRefs()[0];
+      IMethod callerMethod = callString.getMethods()[0];
+      return " [" + getJSONRepForCallSite(callerMethod, Everywhere.EVERYWHERE, csRef) + "]";
+    } else {
+      throw new RuntimeException(context.toString());
+    }
+  }
+
+  private static String getNativeMethodName(IMethod method) {
+    String typeName = method.getDeclaringClass().getName().toString();
+    return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
+  }
+
+  private String getJSONRepForCallSite(IMethod method, Context context, CallSiteReference site) {
+    String result;
+    if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
+      result = getNativeMethodName(method);
+    } else {
+      AstMethod astMethod = (AstMethod) method;
+      result = ppPos(astMethod.getSourcePosition(site.getProgramCounter()));
+    }
+    if (exposeContexts) {
+      result += getContextString(context);
+    }
+    return result;
   }
 
   private static IMethod getCallTargetMethod(IMethod method) {
