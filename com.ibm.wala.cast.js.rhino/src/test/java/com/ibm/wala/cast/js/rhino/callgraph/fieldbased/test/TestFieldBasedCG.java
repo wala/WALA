@@ -162,8 +162,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testNewFnEmptyNoCrash() throws WalaException, Error, CancelException {
-    runTest(
-        "tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   // @Test
