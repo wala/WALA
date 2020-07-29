@@ -141,6 +141,10 @@ public class FieldBasedCGUtil {
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
   }
 
+  /**
+   * Construct a field-based call graph using all the {@code .js} files appearing in scriptDir or
+   * any of its sub-directories
+   */
   public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildScriptDirCG(
       Path scriptDir,
       BuilderType builderType,
@@ -153,6 +157,8 @@ public class FieldBasedCGUtil {
             .filter(p -> p.toString().toLowerCase().endsWith(".js"))
             .collect(Collectors.toList());
     List<Module> scripts = new ArrayList<>();
+    // we can't do this loop as a map() operation on the previous stream because toURL() throws
+    // a checked exception
     for (Path p : jsFiles) {
       scripts.add(new SourceURLModule(p.toUri().toURL()));
     }
