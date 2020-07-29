@@ -160,6 +160,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         "tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
+  @Test
+  public void testNewFnEmptyNoCrash() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
   // @Test
   public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(

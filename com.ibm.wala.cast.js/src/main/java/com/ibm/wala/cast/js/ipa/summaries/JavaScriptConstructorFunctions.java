@@ -465,7 +465,8 @@ public class JavaScriptConstructorFunctions {
       case 0:
         return makeFunctionConstructor(cls, cls);
       case 1:
-        if (ST.isStringConstant(callStmt.getUse(1))) {
+        if (ST.isStringConstant(callStmt.getUse(1))
+            && !ST.getStringValue(callStmt.getUse(1)).equals("")) {
           TypeReference ref =
               TypeReference.findOrCreate(
                   JavaScriptTypes.jsLoader,
