@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.loader.AstMethod;
@@ -23,9 +25,10 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Util;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Utility class to serialize call graphs as JSON objects.
@@ -67,12 +70,17 @@ public class CallGraph2JSON {
   }
 
   public String serialize(CallGraph cg) {
-    Map<String, Set<String>> edges = extractEdges(cg);
+    Map<String, Map<String, Set<String>>> edges = extractEdges(cg);
     return toJSON(edges);
   }
 
-  public Map<String, Set<String>> extractEdges(CallGraph cg) {
-    Map<String, Set<String>> edges = HashMapFactory.make();
+  /**
+   * Extract the edges of the given callgraph as a map over strings that is easy to serialize. The
+   * map keys are locations of methods. The map values are themselves maps, from call site locations
+   * within a method to the (locations of) potential target methods for the call sites.
+   */
+  public Map<String, Map<String, Set<String>>> extractEdges(CallGraph cg) {
+    Map<String, Map<String, Set<String>>> edges = HashMapFactory.make();
     for (CGNode nd : cg) {
       if (!isValidFunctionFromSource(nd.getMethod())) {
         continue;
@@ -81,10 +89,18 @@ public class CallGraph2JSON {
       if (ignoreHarness && isHarnessMethod(method)) {
         continue;
       }
+      Map<String, Set<String>> edgesForMethod =
+          MapUtil.findOrCreateMap(
+              edges,
+              getJSONRep(
+                  method,
+                  (method instanceof AstMethod)
+                      ? ppPos(((AstMethod) method).getSourcePosition())
+                      : null));
       for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
         Set<IMethod> targets =
             Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
-        serializeCallSite(method, callsite, targets, edges);
+        serializeCallSite(method, callsite, targets, edgesForMethod);
       }
     }
     return edges;
@@ -179,40 +195,25 @@ public class CallGraph2JSON {
     return file + '@' + line + ':' + start_offset + '-' + end_offset;
   }
 
-  public static String toJSON(Map<String, Set<String>> map) {
-    StringBuilder res = new StringBuilder();
-    res.append("{\n");
-    res.append(
-        joinWith(
-            Util.mapToSet(
-                map.entrySet(),
-                e -> {
-                  StringBuilder res1 = new StringBuilder();
-                  if (e.getValue().size() > 0) {
-                    res1.append("    \"").append(e.getKey()).append("\": [\n");
-                    res1.append(
-                        joinWith(
-                            Util.mapToSet(e.getValue(), str -> "        \"" + str + '"'), ",\n"));
-                    res1.append("\n    ]");
-                  }
-                  return res1.length() == 0 ? null : res1.toString();
-                }),
-            ",\n"));
-    res.append("\n}");
-    return res.toString();
-  }
-
-  private static String joinWith(Iterable<String> lst, String sep) {
-    StringBuilder res = new StringBuilder();
-    ArrayList<String> strings = new ArrayList<>();
-    for (String s : lst) if (s != null) strings.add(s);
-
-    boolean fst = true;
-    for (String s : strings) {
-      if (fst) fst = false;
-      else res.append(sep);
-      res.append(s);
+  /**
+   * Converts a call graph map produced by {@link #extractEdges(CallGraph)} to JSON, eliding call
+   * sites with no targets.
+   */
+  public static String toJSON(Map<String, Map<String, Set<String>>> map) {
+    // strip out call sites with no targets
+    Map<String, Map<String, Set<String>>> filtered = new HashMap<>();
+    for (Map.Entry<String, Map<String, Set<String>>> entry : map.entrySet()) {
+      String methodLoc = entry.getKey();
+      Map<String, Set<String>> callSites = entry.getValue();
+      Map<String, Set<String>> filteredSites =
+          callSites.entrySet().stream()
+              .filter(e -> !e.getValue().isEmpty())
+              .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+      if (!filteredSites.isEmpty()) {
+        filtered.put(methodLoc, filteredSites);
+      }
     }
-    return res.toString();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(filtered);
   }
 }
