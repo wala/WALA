@@ -135,7 +135,6 @@ public class CallGraph2JSON {
       result = getNativeMethodName(method);
     } else {
       AstMethod astMethod = (AstMethod) method;
-      ;
       result = ppPos(astMethod.getSourcePosition());
     }
     if (exposeContexts) {
