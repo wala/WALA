@@ -74,19 +74,23 @@ public class TestCallGraph2JSON {
   public void testReflectiveCalls() throws WalaException, CancelException {
     String script = "tests/fieldbased/reflective_calls.js";
     CallGraph cg = buildCallGraph(script);
-    CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(false, true);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
-    assertArrayEquals(
-        new String[] {"Function_prototype_call (Native)"},
-        getTargetsStartingWith(parsed, "reflective_calls.js@10"));
-    assertArrayEquals(
-        new String[] {"Function_prototype_apply (Native)"},
-        getTargetsStartingWith(parsed, "reflective_calls.js@11"));
     assertThat(
-        Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_call (Native)")),
+        Arrays.asList(getTargetsStartingWith(parsed, "reflective_calls.js@10")),
+        hasItemStartingWith("Function_prototype_call (Native) [reflective_calls.js@10"));
+    assertThat(
+        Arrays.asList(getTargetsStartingWith(parsed, "reflective_calls.js@11")),
+        hasItemStartingWith("Function_prototype_apply (Native) [reflective_calls.js@11"));
+    assertThat(
+        Arrays.asList(
+            getTargetsStartingWith(
+                parsed, "Function_prototype_call (Native) [reflective_calls.js@10")),
         hasItemStartingWith("reflective_calls.js@1"));
     assertThat(
-        Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_apply (Native)")),
+        Arrays.asList(
+            getTargetsStartingWith(
+                parsed, "Function_prototype_apply (Native) [reflective_calls.js@11")),
         hasItemStartingWith("reflective_calls.js@5"));
   }
 
