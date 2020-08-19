@@ -3,6 +3,7 @@ package com.ibm.wala.cast.js.test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -14,12 +15,13 @@ import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.HashMapFactory;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import org.hamcrest.core.IsCollectionContaining;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,12 +39,23 @@ public class TestCallGraph2JSON {
     String script = "tests/fieldbased/simple.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(true);
-    Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
-    Assert.assertEquals(5, parsed.keySet().size());
-    parsed.values().stream()
+    Map<String, Map<String, String[]>> parsedJSONCG = getParsedJSONCG(cg, cg2JSON);
+    Set<String> methods = parsedJSONCG.keySet();
+    assertEquals(3, methods.size());
+    for (String m : methods) {
+      if (m.startsWith("simple.js@3")) {
+        Map<String, String[]> callSites = parsedJSONCG.get(m);
+        assertThat(
+            Arrays.asList(getTargetsStartingWith(callSites, "simple.js@4")),
+            hasItemStartingWith("simple.js@7"));
+      }
+    }
+    Map<String, String[]> flattened = flattenParsedCG(parsedJSONCG);
+    assertEquals(5, flattened.keySet().size());
+    flattened.values().stream()
         .forEach(
             callees -> {
-              Assert.assertEquals(1, callees.length);
+              assertEquals(1, callees.length);
             });
   }
 
@@ -51,7 +64,7 @@ public class TestCallGraph2JSON {
     String script = "tests/fieldbased/native_call.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
-    Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
+    Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
     assertArrayEquals(
         new String[] {"Array_prototype_pop (Native)"},
         getTargetsStartingWith(parsed, "native_call.js@2"));
@@ -62,7 +75,7 @@ public class TestCallGraph2JSON {
     String script = "tests/fieldbased/reflective_calls.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
-    Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
+    Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
     assertArrayEquals(
         new String[] {"Function_prototype_call (Native)"},
         getTargetsStartingWith(parsed, "reflective_calls.js@10"));
@@ -82,7 +95,7 @@ public class TestCallGraph2JSON {
     String script = "tests/fieldbased/native_callback.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
-    Map<String, String[]> parsed = getParsedJSONCG(cg, cg2JSON);
+    Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
     assertArrayEquals(
         new String[] {"Array_prototype_map (Native)"},
         getTargetsStartingWith(parsed, "native_callback.js@2"));
@@ -91,11 +104,29 @@ public class TestCallGraph2JSON {
         hasItemStartingWith("native_callback.js@3"));
   }
 
-  private static Map<String, String[]> getParsedJSONCG(CallGraph cg, CallGraph2JSON cg2JSON) {
+  /**
+   * returns a parsed version of the JSON of the call graph, but flattened to just be a map from
+   * call sites to targets (stripping out the outermost level of containing methods)
+   */
+  private static Map<String, String[]> getFlattenedJSONCG(CallGraph cg, CallGraph2JSON cg2JSON) {
+    Map<String, Map<String, String[]>> parsed = getParsedJSONCG(cg, cg2JSON);
+    return flattenParsedCG(parsed);
+  }
+
+  private static Map<String, String[]> flattenParsedCG(Map<String, Map<String, String[]>> parsed) {
+    Map<String, String[]> result = HashMapFactory.make();
+    for (Map<String, String[]> siteInfo : parsed.values()) {
+      result.putAll(siteInfo);
+    }
+    return result;
+  }
+
+  private static Map<String, Map<String, String[]>> getParsedJSONCG(
+      CallGraph cg, CallGraph2JSON cg2JSON) {
     String json = cg2JSON.serialize(cg);
     // System.err.println(json);
     Gson gson = new Gson();
-    Type mapType = new TypeToken<Map<String, String[]>>() {}.getType();
+    Type mapType = new TypeToken<Map<String, Map<String, String[]>>>() {}.getType();
     return gson.fromJson(json, mapType);
   }
 

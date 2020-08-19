@@ -6,6 +6,7 @@ dependencies {
 			'commons-io:commons-io:2.7',
 			'junit:junit:4.13',
 			'net.htmlparser.jericho:jericho-html:3.2',
+			'com.google.code.gson:gson:2.8.6',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
