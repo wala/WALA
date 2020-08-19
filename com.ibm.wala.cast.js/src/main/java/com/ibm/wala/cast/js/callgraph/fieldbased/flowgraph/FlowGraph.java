@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
@@ -57,6 +59,7 @@ import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphPrint;
@@ -71,6 +74,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -583,6 +587,15 @@ public class FlowGraph implements Iterable<Vertex> {
   }
 
   public String toJSON() {
-    return GraphPrint.graphToJSON(graph);
+    Map<String, Set<String>> edges = new LinkedHashMap<>();
+    for (Vertex node : graph) {
+      String nodeStr = node.toString();
+      Set<String> succs = MapUtil.findOrCreateSet(edges, nodeStr);
+      for (Vertex succ : Iterator2Iterable.make(graph.getSuccNodes(node))) {
+        succs.add(succ.toString());
+      }
+    }
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(edges);
   }
 }
