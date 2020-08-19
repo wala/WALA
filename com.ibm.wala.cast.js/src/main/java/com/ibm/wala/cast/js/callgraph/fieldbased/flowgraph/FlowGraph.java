@@ -62,7 +62,6 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.GraphPrint;
 import com.ibm.wala.util.graph.GraphReachability;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.NumberedGraph;
