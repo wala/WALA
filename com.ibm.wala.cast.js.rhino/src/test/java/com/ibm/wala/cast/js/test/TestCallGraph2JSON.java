@@ -76,6 +76,12 @@ public class TestCallGraph2JSON {
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false, true);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
+    assertArrayEquals(
+        new String[] {"Function_prototype_call (Native)"},
+        getTargetsStartingWith(parsed, "reflective_calls.js@10"));
+    assertArrayEquals(
+        new String[] {"Function_prototype_apply (Native)"},
+        getTargetsStartingWith(parsed, "reflective_calls.js@11"));
     assertThat(
         Arrays.asList(getTargetsStartingWith(parsed, "reflective_calls.js@10")),
         hasItemStartingWith("Function_prototype_call (Native) [reflective_calls.js@10"));
