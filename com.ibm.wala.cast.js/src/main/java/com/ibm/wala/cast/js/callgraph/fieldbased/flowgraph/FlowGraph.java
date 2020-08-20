@@ -214,7 +214,6 @@ public class FlowGraph implements Iterable<Vertex> {
                     if (!dataflow.containsNode(prototype)) {
                       dataflow.addNode(prototype);
                     }
-                    System.err.println("adding " + p + " --> " + prototype);
                     dataflow.addEdge(p, prototype);
                   }
                 }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.loader.AstMethod;
@@ -19,13 +21,18 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallString;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContextSelector;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.collections.Util;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Utility class to serialize call graphs as JSON objects.
@@ -54,41 +61,119 @@ import java.util.Set;
  * @author mschaefer
  */
 public class CallGraph2JSON {
-  public static boolean IGNORE_HARNESS = true;
 
-  public static String serialize(CallGraph cg) {
-    Map<String, Set<String>> edges = extractEdges(cg);
+  /** ignore any calls to, from, or within WALA's harness containing models of natives methods */
+  private final boolean ignoreHarness;
+
+  /**
+   * if true, output JSON that keeps distinct method clones in the underlying call graph separate
+   */
+  private final boolean exposeContexts;
+
+  public CallGraph2JSON() {
+    this(true);
+  }
+
+  public CallGraph2JSON(boolean ignoreHarness) {
+    this(ignoreHarness, false);
+  }
+
+  public CallGraph2JSON(boolean ignoreHarness, boolean exposeContexts) {
+    this.ignoreHarness = ignoreHarness;
+    this.exposeContexts = exposeContexts;
+  }
+
+  public String serialize(CallGraph cg) {
+    Map<String, Map<String, Set<String>>> edges = extractEdges(cg);
     return toJSON(edges);
   }
 
-  public static Map<String, Set<String>> extractEdges(CallGraph cg) {
-    Map<String, Set<String>> edges = HashMapFactory.make();
+  /**
+   * Extract the edges of the given callgraph as a map over strings that is easy to serialize. The
+   * map keys are locations of methods. The map values are themselves maps, from call site locations
+   * within a method to the (locations of) potential target methods for the call sites.
+   */
+  public Map<String, Map<String, Set<String>>> extractEdges(CallGraph cg) {
+    Map<String, Map<String, Set<String>>> edges = HashMapFactory.make();
     for (CGNode nd : cg) {
-      if (!isRealFunction(nd.getMethod())) continue;
-      AstMethod method = (AstMethod) nd.getMethod();
-
+      if (!isValidFunctionFromSource(nd.getMethod())) {
+        continue;
+      }
+      IMethod method = nd.getMethod();
+      if (ignoreHarness && isHarnessMethod(method)) {
+        continue;
+      }
+      Map<String, Set<String>> edgesForMethod =
+          MapUtil.findOrCreateMap(edges, getJSONRepForNode(nd.getMethod(), nd.getContext()));
       for (CallSiteReference callsite : Iterator2Iterable.make(nd.iterateCallSites())) {
-        Set<IMethod> targets =
-            Util.mapToSet(cg.getPossibleTargets(nd, callsite), CGNode::getMethod);
-        serializeCallSite(method, callsite, targets, edges);
+        serializeCallSite(nd, callsite, cg.getPossibleTargets(nd, callsite), edgesForMethod);
       }
     }
     return edges;
   }
 
-  public static void serializeCallSite(
-      AstMethod method,
-      CallSiteReference callsite,
-      Set<IMethod> targets,
-      Map<String, Set<String>> edges) {
+  public void serializeCallSite(
+      CGNode nd, CallSiteReference callsite, Set<CGNode> targets, Map<String, Set<String>> edges) {
     Set<String> targetNames =
         MapUtil.findOrCreateSet(
-            edges, ppPos(method.getSourcePosition(callsite.getProgramCounter())));
-    for (IMethod target : targets) {
-      target = getCallTargetMethod(target);
-      if (!isRealFunction(target)) continue;
-      targetNames.add(ppPos(((AstMethod) target).getSourcePosition()));
+            edges, getJSONRepForCallSite(nd.getMethod(), nd.getContext(), callsite));
+    for (CGNode target : targets) {
+      IMethod trueTarget = getCallTargetMethod(target.getMethod());
+      if (trueTarget == null
+          || !isValidFunctionFromSource(trueTarget)
+          || (ignoreHarness && isHarnessMethod(trueTarget))) {
+        continue;
+      }
+      targetNames.add(getJSONRepForNode(trueTarget, target.getContext()));
     }
+  }
+
+  private String getJSONRepForNode(IMethod method, Context context) {
+    String result;
+    if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
+      // just use the method name; position is meaningless
+      result = getNativeMethodName(method);
+    } else {
+      AstMethod astMethod = (AstMethod) method;
+      result = ppPos(astMethod.getSourcePosition());
+    }
+    if (exposeContexts) {
+      result += getContextString(context);
+    }
+    return result;
+  }
+
+  private String getContextString(Context context) {
+    if (context.equals(Everywhere.EVERYWHERE)) {
+      return "";
+    } else if (context instanceof CallStringContext) {
+      CallStringContext cs = (CallStringContext) context;
+      CallString callString = (CallString) cs.get(CallStringContextSelector.CALL_STRING);
+      CallSiteReference csRef = callString.getCallSiteRefs()[0];
+      IMethod callerMethod = callString.getMethods()[0];
+      return " [" + getJSONRepForCallSite(callerMethod, Everywhere.EVERYWHERE, csRef) + "]";
+    } else {
+      throw new RuntimeException(context.toString());
+    }
+  }
+
+  private static String getNativeMethodName(IMethod method) {
+    String typeName = method.getDeclaringClass().getName().toString();
+    return typeName.substring(typeName.lastIndexOf('/') + 1) + " (Native)";
+  }
+
+  private String getJSONRepForCallSite(IMethod method, Context context, CallSiteReference site) {
+    String result;
+    if (isHarnessMethod(method) || isFunctionPrototypeCallOrApply(method)) {
+      result = getNativeMethodName(method);
+    } else {
+      AstMethod astMethod = (AstMethod) method;
+      result = ppPos(astMethod.getSourcePosition(site.getProgramCounter()));
+    }
+    if (exposeContexts) {
+      result += getContextString(context);
+    }
+    return result;
   }
 
   private static IMethod getCallTargetMethod(IMethod method) {
@@ -99,19 +184,34 @@ public class CallGraph2JSON {
     return method;
   }
 
-  public static boolean isRealFunction(IMethod method) {
+  private static boolean isValidFunctionFromSource(IMethod method) {
     if (method instanceof AstMethod) {
       String methodName = method.getDeclaringClass().getName().toString();
 
       // exclude synthetic DOM modelling functions
       if (methodName.contains("/make_node")) return false;
 
-      if (IGNORE_HARNESS) {
-        for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
-          if (methodName.startsWith('L' + bootstrapFile + '/')) return false;
-      }
-
       return method.getName().equals(AstMethodReference.fnAtom);
+    } else if (method.isWalaSynthetic()) {
+      if (isFunctionPrototypeCallOrApply(method)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean isFunctionPrototypeCallOrApply(IMethod method) {
+    String methodName = method.getDeclaringClass().getName().toString();
+    return methodName.equals("Lprologue.js/Function_prototype_call")
+        || methodName.equals("Lprologue.js/Function_prototype_apply");
+  }
+
+  private static boolean isHarnessMethod(IMethod method) {
+    String methodName = method.getDeclaringClass().getName().toString();
+    for (String bootstrapFile : JavaScriptLoader.bootstrapFileNames) {
+      if (methodName.startsWith('L' + bootstrapFile + '/')) {
+        return true;
+      }
     }
     return false;
   }
@@ -126,40 +226,25 @@ public class CallGraph2JSON {
     return file + '@' + line + ':' + start_offset + '-' + end_offset;
   }
 
-  public static String toJSON(Map<String, Set<String>> map) {
-    StringBuilder res = new StringBuilder();
-    res.append("{\n");
-    res.append(
-        joinWith(
-            Util.mapToSet(
-                map.entrySet(),
-                e -> {
-                  StringBuilder res1 = new StringBuilder();
-                  if (e.getValue().size() > 0) {
-                    res1.append("    \"").append(e.getKey()).append("\": [\n");
-                    res1.append(
-                        joinWith(
-                            Util.mapToSet(e.getValue(), str -> "        \"" + str + '"'), ",\n"));
-                    res1.append("\n    ]");
-                  }
-                  return res1.length() == 0 ? null : res1.toString();
-                }),
-            ",\n"));
-    res.append("\n}");
-    return res.toString();
-  }
-
-  private static String joinWith(Iterable<String> lst, String sep) {
-    StringBuilder res = new StringBuilder();
-    ArrayList<String> strings = new ArrayList<>();
-    for (String s : lst) if (s != null) strings.add(s);
-
-    boolean fst = true;
-    for (String s : strings) {
-      if (fst) fst = false;
-      else res.append(sep);
-      res.append(s);
+  /**
+   * Converts a call graph map produced by {@link #extractEdges(CallGraph)} to JSON, eliding call
+   * sites with no targets.
+   */
+  public static String toJSON(Map<String, Map<String, Set<String>>> map) {
+    // strip out call sites with no targets
+    Map<String, Map<String, Set<String>>> filtered = new HashMap<>();
+    for (Map.Entry<String, Map<String, Set<String>>> entry : map.entrySet()) {
+      String methodLoc = entry.getKey();
+      Map<String, Set<String>> callSites = entry.getValue();
+      Map<String, Set<String>> filteredSites =
+          callSites.entrySet().stream()
+              .filter(e -> !e.getValue().isEmpty())
+              .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+      if (!filteredSites.isEmpty()) {
+        filtered.put(methodLoc, filteredSites);
+      }
     }
-    return res.toString();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(filtered);
   }
 }

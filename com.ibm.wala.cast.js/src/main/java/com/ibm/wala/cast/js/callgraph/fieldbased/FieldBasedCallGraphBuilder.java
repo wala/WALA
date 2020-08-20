@@ -150,7 +150,6 @@ public abstract class FieldBasedCallGraphBuilder {
     return extract(interpreter, flowgraph, eps, monitor);
   }
 
-  @SuppressWarnings("deprecation")
   public JSCallGraph extract(
       SSAContextInterpreter interpreter,
       FlowGraph flowgraph,
@@ -259,7 +258,6 @@ public abstract class FieldBasedCallGraphBuilder {
     // need to create nodes for reflective targets of call, and then add them
     // as callees of the synthetic method
     OrdinalSet<FuncVertex> reflectiveTargets = getReflectiveTargets(flowgraph, callVertex, monitor);
-    System.err.println("adding callees " + reflectiveTargets + " for " + caller);
     // there should only be one call site in the synthetic method
     //    CallSiteReference reflectiveCallSite =
     // cache.getIRFactory().makeIR(functionPrototypeCallNode.getMethod(), Everywhere.EVERYWHERE,
@@ -287,7 +285,6 @@ public abstract class FieldBasedCallGraphBuilder {
 
   Everywhere targetContext = Everywhere.EVERYWHERE;
 
-  @SuppressWarnings("deprecation")
   private static boolean addCGEdgeWithContext(
       final JSCallGraph cg,
       CallSiteReference site,
