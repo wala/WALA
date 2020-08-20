@@ -138,7 +138,7 @@ public class TestCallGraph2JSON {
     URL scriptURL = TestCallGraph2JSON.class.getClassLoader().getResource(script);
     return util.buildCG(
             scriptURL, BuilderType.OPTIMISTIC_WORKLIST, null, false, DefaultSourceExtractor::new)
-        .fst;
+        .getCallGraph();
   }
 
   /**
