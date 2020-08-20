@@ -48,7 +48,7 @@ public class SingleAndDoubleWordTest extends WalaTestCase {
     // 'klass' above
     instrumenter = new OfflineInstrumenter();
     instrumenter.addInputClass(
-        new File(testJarLocation), new File(testJarLocation + "/" + klass + ".class"));
+        new File(testJarLocation), new File(testJarLocation + File.separator + klass + ".class"));
     instrumenter.setPassUnmodifiedClasses(false);
     instrumenter.setOutputJar(instrumentedJarLocation.toFile());
     instrumenter.beginTraversal();
