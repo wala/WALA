@@ -46,6 +46,7 @@ import com.ibm.wala.util.warnings.Warnings;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -781,7 +782,10 @@ public class ReflectionTest extends WalaTestCase {
     Assert.assertTrue(nodes.size() == 1);
 
     // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
-    CGNode cgNode = nodes.stream().findFirst().get();
+    Optional<CGNode> firstMatched = nodes.stream().findFirst();
+    Assert.assertTrue(firstMatched.isPresent());
+    CGNode cgNode = firstMatched.get();
+
     LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
     Assert.assertTrue(pts.size() == 1);
