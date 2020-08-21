@@ -586,8 +586,8 @@ public class FlowGraph implements Iterable<Vertex> {
   }
 
   /**
-   * Converts flow graph to a JSON representation.  Keys of the JSON object are vertices,
-   * with each vertex mapped to its successors
+   * Converts flow graph to a JSON representation. Keys of the JSON object are vertices, with each
+   * vertex mapped to its successors
    */
   public String toJSON() {
     Map<String, Set<String>> edges = new LinkedHashMap<>();
