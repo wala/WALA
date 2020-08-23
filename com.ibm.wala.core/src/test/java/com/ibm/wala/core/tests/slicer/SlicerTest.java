@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.MethodEntryStatement;
+import com.ibm.wala.ipa.slicer.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.NormalStatement;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
@@ -1000,5 +1001,40 @@ public class SlicerTest {
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
+  }
+
+  @Test
+  public void testList()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lslice/TestList");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+
+    NormalStatement getCall = (NormalStatement) SlicerUtil.findCallTo(main, "get");
+    // we need a NormalReturnCaller statement to slice from the return value
+    NormalReturnCaller nrc = new NormalReturnCaller(main, getCall.getInstructionIndex());
+
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            nrc,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    Assert.assertEquals(
+        7,
+        slice.stream()
+            .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
+            .count());
   }
 }
