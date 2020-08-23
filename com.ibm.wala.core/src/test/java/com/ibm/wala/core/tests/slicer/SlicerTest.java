@@ -57,6 +57,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -1031,10 +1033,11 @@ public class SlicerTest {
             pointerAnalysis,
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
-    Assert.assertEquals(
-        7,
+    List<Statement> normalsInMain =
         slice.stream()
             .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
-            .count());
+            .collect(Collectors.toList());
+    normalsInMain.stream().forEach(System.err::println);
+    Assert.assertEquals(7, normalsInMain.size());
   }
 }
