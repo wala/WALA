@@ -216,7 +216,12 @@ public class CallGraph2JSON {
     return false;
   }
 
-  private static String ppPos(Position pos) {
+  /**
+   * Pretty print a source position
+   * @param pos the position
+   * @return pretty-printed string representation
+   */
+  public static String ppPos(Position pos) {
     String file = pos.getURL().getFile();
     file = file.substring(file.lastIndexOf('/') + 1);
 

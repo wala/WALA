@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
@@ -37,6 +38,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -590,12 +592,13 @@ public class FlowGraph implements Iterable<Vertex> {
    * vertex mapped to its successors
    */
   public String toJSON() {
+    IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
     Map<String, Set<String>> edges = new LinkedHashMap<>();
     for (Vertex node : graph) {
-      String nodeStr = node.toString();
+      String nodeStr = node.toSourceLevelString(cache);
       Set<String> succs = MapUtil.findOrCreateSet(edges, nodeStr);
       for (Vertex succ : Iterator2Iterable.make(graph.getSuccNodes(node))) {
-        succs.add(succ.toString());
+        succs.add(succ.toSourceLevelString(cache));
       }
     }
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
