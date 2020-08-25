@@ -43,6 +43,7 @@ import com.ibm.wala.util.warnings.Warning;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2767,7 +2768,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     this.Ast = Ast;
     this.scriptName = scriptName;
     this.sourceModule = m;
-    this.sourceReader = new InputStreamReader(sourceModule.getInputStream());
+    try {
+      this.sourceReader = new InputStreamReader(sourceModule.getInputStream(), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException("UTF-8 not supported??", e);
+    }
     this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, Ast);
     this.useNewForIn = useNewForIn;
   }
