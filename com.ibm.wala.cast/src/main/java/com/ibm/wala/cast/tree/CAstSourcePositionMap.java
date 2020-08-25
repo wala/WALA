@@ -35,6 +35,20 @@ public interface CAstSourcePositionMap {
    * @author Julian Dolby (dolby@us.ibm.com)
    */
   public interface Position extends SourcePosition {
+
+    /**
+     * Pretty print a source position
+     *
+     * @return pretty-printed string representation
+     */
+    default String prettyPrint() {
+      String file = getURL().getFile();
+      file = file.substring(file.lastIndexOf('/') + 1);
+
+      int line = getFirstLine(), start_offset = getFirstOffset(), end_offset = getLastOffset();
+      return file + '@' + line + ':' + start_offset + '-' + end_offset;
+    }
+
     URL getURL();
 
     Reader getReader() throws IOException;

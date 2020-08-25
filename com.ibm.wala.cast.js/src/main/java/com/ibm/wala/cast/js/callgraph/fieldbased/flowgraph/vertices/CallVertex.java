@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
-import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -71,8 +70,6 @@ public class CallVertex extends Vertex {
   public String toSourceLevelString(IAnalysisCacheView cache) {
     IClass concreteType = func.getConcreteType();
     AstMethod method = (AstMethod) concreteType.getMethod(AstMethodReference.fnSelector);
-    return "Callee("
-        + CallGraph2JSON.ppPos(method.getSourcePosition(site.getProgramCounter()))
-        + ")";
+    return "Callee(" + method.getSourcePosition(site.getProgramCounter()).prettyPrint() + ")";
   }
 }

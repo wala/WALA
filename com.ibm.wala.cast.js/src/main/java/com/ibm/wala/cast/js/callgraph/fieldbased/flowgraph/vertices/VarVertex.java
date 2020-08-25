@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
-import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
@@ -57,7 +56,7 @@ public final class VarVertex extends Vertex implements PointerKey {
     IClass concreteType = func.getConcreteType();
     AstMethod method = (AstMethod) concreteType.getMethod(AstMethodReference.fnSelector);
     IR ir = cache.getIR(method);
-    String methodPos = CallGraph2JSON.ppPos(method.getSourcePosition());
+    String methodPos = method.getSourcePosition().prettyPrint();
     // we rely on the fact that the CAst IR ignores the index position!
     String[] localNames = ir.getLocalNames(0, valueNumber);
     StringBuilder result = new StringBuilder("Var(" + methodPos + ", ");

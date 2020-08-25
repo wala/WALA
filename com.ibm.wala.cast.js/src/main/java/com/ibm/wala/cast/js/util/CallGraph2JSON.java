@@ -15,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.loader.AstMethod;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -135,7 +134,7 @@ public class CallGraph2JSON {
       result = getNativeMethodName(method);
     } else {
       AstMethod astMethod = (AstMethod) method;
-      result = ppPos(astMethod.getSourcePosition());
+      result = astMethod.getSourcePosition().prettyPrint();
     }
     if (exposeContexts) {
       result += getContextString(context);
@@ -168,7 +167,7 @@ public class CallGraph2JSON {
       result = getNativeMethodName(method);
     } else {
       AstMethod astMethod = (AstMethod) method;
-      result = ppPos(astMethod.getSourcePosition(site.getProgramCounter()));
+      result = astMethod.getSourcePosition(site.getProgramCounter()).prettyPrint();
     }
     if (exposeContexts) {
       result += getContextString(context);
@@ -214,22 +213,6 @@ public class CallGraph2JSON {
       }
     }
     return false;
-  }
-
-  /**
-   * Pretty print a source position
-   *
-   * @param pos the position
-   * @return pretty-printed string representation
-   */
-  public static String ppPos(Position pos) {
-    String file = pos.getURL().getFile();
-    file = file.substring(file.lastIndexOf('/') + 1);
-
-    int line = pos.getFirstLine(),
-        start_offset = pos.getFirstOffset(),
-        end_offset = pos.getLastOffset();
-    return file + '@' + line + ':' + start_offset + '-' + end_offset;
   }
 
   /**
