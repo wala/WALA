@@ -8,6 +8,7 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -30,19 +31,28 @@ public class TestFlowGraphJSON {
 
   @Test
   public void testNamedIIFE() {
-    String[] targets = parsedJSON.get("Func(flowgraph_constraints.js@2:25-41)");
+    boolean onWindows = PlatformUtil.onWindows();
+    String[] targets =
+        onWindows
+            ? parsedJSON.get("Func(flowgraph_constraints.js@2:26-42)")
+            : parsedJSON.get("Func(flowgraph_constraints.js@2:25-41)");
     Assert.assertNotNull(
         parsedJSON.keySet().stream()
             .filter(s -> s.startsWith("Func(flowgraph_constraints.js@2"))
             .collect(Collectors.toList())
             .toString(),
         targets);
-    Assert.assertArrayEquals(
-        new String[] {
-          "Var(flowgraph_constraints.js@2:25-41, [f1])",
-          "Var(flowgraph_constraints.js@1:0-89, %ssa_val 3)"
-        },
-        targets);
+    String[] expected =
+        onWindows
+            ? new String[] {
+              "Var(flowgraph_constraints.js@2:26-42, [f1])",
+              "Var(flowgraph_constraints.js@1:1-90, %ssa_val 3)"
+            }
+            : new String[] {
+              "Var(flowgraph_constraints.js@2:25-41, [f1])",
+              "Var(flowgraph_constraints.js@1:0-89, %ssa_val 3)"
+            };
+    Assert.assertArrayEquals(expected, targets);
   }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)
