@@ -8,12 +8,10 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,27 +29,11 @@ public class TestFlowGraphJSON {
 
   @Test
   public void testNamedIIFE() {
-    boolean onWindows = PlatformUtil.onWindows();
-    String[] targets =
-        onWindows
-            ? parsedJSON.get("Func(flowgraph_constraints.js@2:26-42)")
-            : parsedJSON.get("Func(flowgraph_constraints.js@2:25-41)");
-    Assert.assertNotNull(
-        parsedJSON.keySet().stream()
-            .filter(s -> s.startsWith("Func(flowgraph_constraints.js@2"))
-            .collect(Collectors.toList())
-            .toString(),
-        targets);
+    String[] targets = parsedJSON.get("Func(flowgraph_constraints.js@2)");
     String[] expected =
-        onWindows
-            ? new String[] {
-              "Var(flowgraph_constraints.js@2:26-42, [f1])",
-              "Var(flowgraph_constraints.js@1:1-90, %ssa_val 3)"
-            }
-            : new String[] {
-              "Var(flowgraph_constraints.js@2:25-41, [f1])",
-              "Var(flowgraph_constraints.js@1:0-89, %ssa_val 3)"
-            };
+        new String[] {
+          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 3)"
+        };
     Assert.assertArrayEquals(expected, targets);
   }
 
@@ -68,6 +50,8 @@ public class TestFlowGraphJSON {
                 DefaultSourceExtractor::new)
             .getFlowGraph();
     String json = fg.toJSON();
+    // Strip out character offsets, as they differ on Windows and make it hard to write assertions.
+    json = json.replaceAll(":[0-9]+-[0-9]+", "");
     System.err.println(json);
     Gson gson = new Gson();
     Type mapType = new TypeToken<Map<String, String[]>>() {}.getType();
