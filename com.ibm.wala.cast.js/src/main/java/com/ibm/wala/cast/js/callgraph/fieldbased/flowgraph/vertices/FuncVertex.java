@@ -13,11 +13,15 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.js.util.CallGraph2JSON;
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -88,5 +92,15 @@ public class FuncVertex extends Vertex implements ObjectVertex {
   @Override
   public IClass getConcreteType() {
     return klass;
+  }
+
+  @Override
+  public String toSourceLevelString(IAnalysisCacheView cache) {
+    AstMethod method = (AstMethod) klass.getMethod(AstMethodReference.fnSelector);
+    if (method != null) {
+      return "Func(" + CallGraph2JSON.ppPos(method.getSourcePosition()) + ")";
+    } else {
+      return toString();
+    }
   }
 }

@@ -75,7 +75,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -593,7 +592,7 @@ public class FlowGraph implements Iterable<Vertex> {
    */
   public String toJSON() {
     IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
-    Map<String, Set<String>> edges = new LinkedHashMap<>();
+    Map<String, Set<String>> edges = HashMapFactory.make();
     for (Vertex node : graph) {
       String nodeStr = node.toSourceLevelString(cache);
       Set<String> succs = MapUtil.findOrCreateSet(edges, nodeStr);
@@ -601,7 +600,14 @@ public class FlowGraph implements Iterable<Vertex> {
         succs.add(succ.toSourceLevelString(cache));
       }
     }
+    // filter out empty entries
+    Map<String, Set<String>> filtered = HashMapFactory.make();
+    for (Map.Entry<String, Set<String>> entry : edges.entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        filtered.put(entry.getKey(), entry.getValue());
+      }
+    }
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(edges);
+    return gson.toJson(filtered);
   }
 }
