@@ -12,6 +12,7 @@ import com.ibm.wala.util.WalaException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,11 +28,15 @@ public class TestFlowGraphJSON {
   }
 
   @Test
-  public void testBasic() throws WalaException, CancelException {}
-
-  //  @Test
-  //  public void testBasic2() throws WalaException, CancelException {
-  //  }
+  public void testNamedIIFE() {
+    String[] targets = parsedJSON.get("Func(flowgraph_constraints.js@2:25-41)");
+    Assert.assertArrayEquals(
+        new String[] {
+          "Var(flowgraph_constraints.js@2:25-41, [f1])",
+          "Var(flowgraph_constraints.js@1:0-89, %ssa_val 3)"
+        },
+        targets);
+  }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)
       throws WalaException, CancelException {
