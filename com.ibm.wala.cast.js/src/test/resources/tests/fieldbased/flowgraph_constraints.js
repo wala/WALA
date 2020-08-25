@@ -13,3 +13,9 @@ function callId() {
   var x = {};
   var y = id(x);
 }
+
+function callIdHigherOrder() {
+  var fp = id;
+  var x = {};
+  var y = fp(x);
+}

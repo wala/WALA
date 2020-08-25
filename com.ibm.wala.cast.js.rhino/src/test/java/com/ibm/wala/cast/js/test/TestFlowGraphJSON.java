@@ -32,7 +32,7 @@ public class TestFlowGraphJSON {
   public void testNamedIIFE() {
     assertArrayEquals(
         new String[] {
-          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 13)"
+          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 18)"
         },
         parsedJSON.get("Func(flowgraph_constraints.js@2)"));
   }
@@ -51,8 +51,15 @@ public class TestFlowGraphJSON {
         },
         parsedJSON.get("Var(flowgraph_constraints.js@12, [x])"));
     assertArrayEquals(
-        new String[] {"Var(flowgraph_constraints.js@12, [y])"},
+        new String[] {
+          "Var(flowgraph_constraints.js@17, [y])", "Var(flowgraph_constraints.js@12, [y])"
+        },
         parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))"));
+    assertArrayEquals(
+        new String[] {
+          "Param(Func(flowgraph_constraints.js@8), 2)", "Args(Func(flowgraph_constraints.js@8))"
+        },
+        parsedJSON.get("Var(flowgraph_constraints.js@17, [x])"));
   }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)
