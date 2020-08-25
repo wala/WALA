@@ -1,5 +1,7 @@
 package com.ibm.wala.cast.js.test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertArrayEquals;
 
 import com.google.gson.Gson;
@@ -13,6 +15,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,21 +48,20 @@ public class TestFlowGraphJSON {
     assertArrayEquals(
         new String[] {"Ret(Func(flowgraph_constraints.js@8))"},
         parsedJSON.get("Var(flowgraph_constraints.js@8, [p])"));
-    assertArrayEquals(
-        new String[] {
-          "Param(Func(flowgraph_constraints.js@8), 2)", "Args(Func(flowgraph_constraints.js@8))"
-        },
-        parsedJSON.get("Var(flowgraph_constraints.js@12, [x])"));
-    assertArrayEquals(
-        new String[] {
-          "Var(flowgraph_constraints.js@17, [y])", "Var(flowgraph_constraints.js@12, [y])"
-        },
-        parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))"));
-    assertArrayEquals(
-        new String[] {
-          "Param(Func(flowgraph_constraints.js@8), 2)", "Args(Func(flowgraph_constraints.js@8))"
-        },
-        parsedJSON.get("Var(flowgraph_constraints.js@17, [x])"));
+    assertThat(
+        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@12, [x])")),
+        containsInAnyOrder(
+            "Param(Func(flowgraph_constraints.js@8), 2)",
+            "Args(Func(flowgraph_constraints.js@8))"));
+    assertThat(
+        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@17, [x])")),
+        containsInAnyOrder(
+            "Param(Func(flowgraph_constraints.js@8), 2)",
+            "Args(Func(flowgraph_constraints.js@8))"));
+    assertThat(
+        Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))")),
+        containsInAnyOrder(
+            "Var(flowgraph_constraints.js@17, [y])", "Var(flowgraph_constraints.js@12, [y])"));
   }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)
