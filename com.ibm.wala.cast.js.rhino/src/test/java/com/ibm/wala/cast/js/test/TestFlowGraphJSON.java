@@ -12,6 +12,7 @@ import com.ibm.wala.util.WalaException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,12 @@ public class TestFlowGraphJSON {
   @Test
   public void testNamedIIFE() {
     String[] targets = parsedJSON.get("Func(flowgraph_constraints.js@2:25-41)");
+    Assert.assertNotNull(
+        parsedJSON.keySet().stream()
+            .filter(s -> s.startsWith("Func(flowgraph_constraints.js@2"))
+            .collect(Collectors.toList())
+            .toString(),
+        targets);
     Assert.assertArrayEquals(
         new String[] {
           "Var(flowgraph_constraints.js@2:25-41, [f1])",
