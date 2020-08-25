@@ -218,6 +218,7 @@ public class CallGraph2JSON {
 
   /**
    * Pretty print a source position
+   *
    * @param pos the position
    * @return pretty-printed string representation
    */
