@@ -59,11 +59,11 @@ public final class VarVertex extends Vertex implements PointerKey {
     String methodPos = method.getSourcePosition().prettyPrint();
     // we rely on the fact that the CAst IR ignores the index position!
     String[] localNames = ir.getLocalNames(0, valueNumber);
-    StringBuilder result = new StringBuilder("Var(" + methodPos + ", ");
+    StringBuilder result = new StringBuilder("Var(").append(methodPos).append(", ");
     if (localNames != null && localNames.length > 0) {
       result.append(Arrays.toString(localNames));
     } else {
-      result.append("%ssa_val " + valueNumber);
+      result.append("%ssa_val ").append(valueNumber);
     }
     result.append(")");
     return result.toString();
