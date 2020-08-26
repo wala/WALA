@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
@@ -36,5 +37,10 @@ public class ArgVertex extends Vertex implements PointerKey {
   @Override
   public String toString() {
     return "Args(" + func + ')';
+  }
+
+  @Override
+  public String toSourceLevelString(IAnalysisCacheView cache) {
+    return "Args(" + func.toSourceLevelString(cache) + ')';
   }
 }

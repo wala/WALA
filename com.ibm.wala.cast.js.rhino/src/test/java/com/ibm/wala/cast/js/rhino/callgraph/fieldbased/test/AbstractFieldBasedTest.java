@@ -45,7 +45,9 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     for (BuilderType builderType : builderTypes) {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
       try {
-        cg = util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory).fst;
+        cg =
+            util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory)
+                .getCallGraph();
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch (AssertionError afe) {

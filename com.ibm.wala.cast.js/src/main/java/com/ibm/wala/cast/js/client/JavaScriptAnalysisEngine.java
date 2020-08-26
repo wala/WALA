@@ -13,12 +13,12 @@ package com.ibm.wala.cast.js.client;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
@@ -45,7 +45,6 @@ import com.ibm.wala.ipa.cha.SeqClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collections;
 import java.util.Set;
@@ -162,15 +161,15 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
         @Override
         public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor)
             throws IllegalArgumentException, CallGraphBuilderCancelException {
-          Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> dat;
+          CallGraphResult result;
           try {
-            dat = builder.buildCallGraph(options.getEntrypoints(), monitor);
+            result = builder.buildCallGraph(options.getEntrypoints(), monitor);
           } catch (CancelException e) {
             throw CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
                 e, null, null);
           }
-          ptr = dat.snd;
-          return dat.fst;
+          ptr = result.getPointerAnalysis();
+          return result.getCallGraph();
         }
 
         @Override
