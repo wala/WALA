@@ -4,6 +4,7 @@ import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_DEX_DIR;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAVA_JAR;
 
 import com.android.tools.r8.CompilationFailedException;
+import com.android.tools.r8.D8;
 import com.android.tools.r8.D8Command;
 import com.android.tools.r8.OutputMode;
 import com.ibm.wala.classLoader.JarFileModule;
@@ -59,7 +60,7 @@ public class Util {
     Path tmpDir = Files.createTempDirectory("dex");
     tmpDir.toFile().deleteOnExit();
     try {
-      com.android.tools.r8.D8.run(
+      D8.run(
           D8Command.builder()
               .addLibraryFiles(Paths.get(androidJavaLib().getAbsolutePath()))
               .setMinApiLevel(26)
