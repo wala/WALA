@@ -3,6 +3,10 @@ package com.ibm.wala.dalvik.test.util;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_DEX_DIR;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAVA_JAR;
 
+import com.android.tools.r8.CompilationFailedException;
+import com.android.tools.r8.D8;
+import com.android.tools.r8.D8Command;
+import com.android.tools.r8.OutputMode;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
@@ -20,6 +24,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -54,17 +59,17 @@ public class Util {
   public static File convertJarToDex(String jarFile) throws IOException {
     Path tmpDir = Files.createTempDirectory("dex");
     tmpDir.toFile().deleteOnExit();
-    System.err.println(tmpDir);
-    com.android.tools.r8.D8.main(
-        new String[] {
-          "--lib",
-          androidJavaLib().getAbsolutePath(),
-          "--min-api",
-          "26",
-          "--output",
-          tmpDir.toAbsolutePath().toString(),
-          jarFile
-        });
+    try {
+      D8.run(
+          D8Command.builder()
+              .addLibraryFiles(Paths.get(androidJavaLib().getAbsolutePath()))
+              .setMinApiLevel(26)
+              .setOutput(tmpDir, OutputMode.DexIndexed)
+              .addProgramFiles(Paths.get(jarFile))
+              .build());
+    } catch (CompilationFailedException e) {
+      throw new RuntimeException("Unexpected compilation failure in D8!", e);
+    }
     return tmpDir.resolve("classes.dex").toFile();
   }
 
