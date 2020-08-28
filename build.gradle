@@ -93,7 +93,7 @@ subprojects { subproject ->
 				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
 			}
 		} else {
-			maxParallelForks = Integer.MAX_VALUE
+			maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 		}
 	}
 
