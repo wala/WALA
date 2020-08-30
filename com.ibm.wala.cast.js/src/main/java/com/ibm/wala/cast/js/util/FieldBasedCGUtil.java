@@ -13,14 +13,13 @@ package com.ibm.wala.cast.js.util;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
-import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
@@ -31,14 +30,12 @@ import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -105,7 +102,7 @@ public class FieldBasedCGUtil {
     this.translatorFactory = translatorFactory;
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(
+  public CallGraphResult buildCG(
       URL url,
       BuilderType builderType,
       boolean supportFullPointerAnalysis,
@@ -115,7 +112,7 @@ public class FieldBasedCGUtil {
         url, builderType, new NullProgressMonitor(), supportFullPointerAnalysis, fExtractor);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(
+  public CallGraphResult buildCG(
       URL url,
       BuilderType builderType,
       IProgressMonitor monitor,
@@ -129,7 +126,7 @@ public class FieldBasedCGUtil {
     }
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildScriptCG(
+  public CallGraphResult buildScriptCG(
       URL url,
       BuilderType builderType,
       IProgressMonitor monitor,
@@ -145,7 +142,7 @@ public class FieldBasedCGUtil {
    * Construct a field-based call graph using all the {@code .js} files appearing in scriptDir or
    * any of its sub-directories
    */
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildScriptDirCG(
+  public CallGraphResult buildScriptDirCG(
       Path scriptDir,
       BuilderType builderType,
       IProgressMonitor monitor,
@@ -167,7 +164,7 @@ public class FieldBasedCGUtil {
         loaders, scripts.toArray(new Module[0]), builderType, monitor, supportFullPointerAnalysis);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildTestCG(
+  public CallGraphResult buildTestCG(
       String dir,
       String name,
       BuilderType builderType,
@@ -179,7 +176,7 @@ public class FieldBasedCGUtil {
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildPageCG(
+  public CallGraphResult buildPageCG(
       URL url,
       BuilderType builderType,
       IProgressMonitor monitor,
@@ -191,7 +188,7 @@ public class FieldBasedCGUtil {
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(
+  public CallGraphResult buildCG(
       JavaScriptLoaderFactory loaders,
       Module[] scripts,
       BuilderType builderType,

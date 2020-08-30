@@ -88,6 +88,8 @@ public interface TestConstants {
 
   public static final String REFLECT23_MAIN = "Lreflection/Reflect23";
 
+  public static final String REFLECT24_MAIN = "Lreflection/Reflect24";
+
   public static final String REFLECTGETMETHODCONTEXT_MAIN = "Lreflection/GetMethodContext";
 
   public static final String SLICE1_MAIN = "Lslice/Slice1";

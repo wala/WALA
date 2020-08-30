@@ -24,6 +24,9 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -36,11 +39,14 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -736,6 +742,59 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr = MethodReference.findOrCreate(tr, "u", "(Ljava/lang/Integer;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
     Assert.assertFalse(nodes.isEmpty());
+  }
+
+  /**
+   * Test that when analyzing Reflect24.
+   *
+   * <p>Through the pointer analysis in the CallGraph construction process, it can be inferred that
+   * the type pointed to by the 0th parameter of the {@code com.ibm.wala.test.People#doNothing()}
+   * method is {@code Helper}
+   *
+   * <p>This is to test the support for Object.getClass().
+   */
+  @Test
+  public void testReflect24()
+      throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, TestConstants.REFLECT24_MAIN);
+
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    Pair<CallGraph, PointerAnalysis<InstanceKey>> pair =
+        CallGraphTestUtil.buildNCFA(1, options, new AnalysisCacheImpl(), cha, scope);
+
+    CallGraph cg = pair.fst;
+    PointerAnalysis<InstanceKey> pointerAnalysis = pair.snd;
+
+    TypeReference helperTr =
+        TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
+    IClass helperClass = cha.lookupClass(helperTr);
+    Assert.assertNotNull(helperClass);
+
+    TypeReference reflect24Tr =
+        TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect24");
+    MethodReference mr =
+        MethodReference.findOrCreate(reflect24Tr, "doNothing", "(Ljava/lang/Class;)V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    Assert.assertTrue(nodes.size() == 1);
+
+    // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
+    Optional<CGNode> firstMatched = nodes.stream().findFirst();
+    Assert.assertTrue(firstMatched.isPresent());
+    CGNode cgNode = firstMatched.get();
+
+    LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
+    OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
+    Assert.assertTrue(pts.size() == 1);
+
+    for (InstanceKey mappedObject : pts) {
+      // the type corresponding to the 0th parameter should be Helper
+      Assert.assertTrue(mappedObject instanceof ConstantKey);
+      Assert.assertTrue(((ConstantKey<?>) mappedObject).getValue().equals(helperClass));
+    }
   }
 
   /**

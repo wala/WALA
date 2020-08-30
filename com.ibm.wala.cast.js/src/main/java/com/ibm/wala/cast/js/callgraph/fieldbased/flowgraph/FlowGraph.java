@@ -10,9 +10,12 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
@@ -35,6 +38,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -57,6 +61,7 @@ import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphReachability;
@@ -579,5 +584,30 @@ public class FlowGraph implements Iterable<Vertex> {
         return null;
       }
     };
+  }
+
+  /**
+   * Converts flow graph to a JSON representation. Keys of the JSON object are vertices, with each
+   * vertex mapped to its successors
+   */
+  public String toJSON() {
+    IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
+    Map<String, Set<String>> edges = HashMapFactory.make();
+    for (Vertex node : graph) {
+      String nodeStr = node.toSourceLevelString(cache);
+      Set<String> succs = MapUtil.findOrCreateSet(edges, nodeStr);
+      for (Vertex succ : Iterator2Iterable.make(graph.getSuccNodes(node))) {
+        succs.add(succ.toSourceLevelString(cache));
+      }
+    }
+    // filter out empty entries
+    Map<String, Set<String>> filtered = HashMapFactory.make();
+    for (Map.Entry<String, Set<String>> entry : edges.entrySet()) {
+      if (!entry.getValue().isEmpty()) {
+        filtered.put(entry.getKey(), entry.getValue());
+      }
+    }
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(filtered);
   }
 }

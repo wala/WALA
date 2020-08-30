@@ -10,7 +10,13 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ssa.IR;
+import java.util.Arrays;
 
 /**
  * A variable vertex represents an SSA variable inside a given function.
@@ -42,5 +48,24 @@ public final class VarVertex extends Vertex implements PointerKey {
   @Override
   public String toString() {
     return "Var(" + func + ", " + valueNumber + ')';
+  }
+
+  @Override
+  public String toSourceLevelString(IAnalysisCacheView cache) {
+    // we want to get a variable name rather than a value number
+    IClass concreteType = func.getConcreteType();
+    AstMethod method = (AstMethod) concreteType.getMethod(AstMethodReference.fnSelector);
+    IR ir = cache.getIR(method);
+    String methodPos = method.getSourcePosition().prettyPrint();
+    // we rely on the fact that the CAst IR ignores the index position!
+    String[] localNames = ir.getLocalNames(0, valueNumber);
+    StringBuilder result = new StringBuilder("Var(").append(methodPos).append(", ");
+    if (localNames != null && localNames.length > 0) {
+      result.append(Arrays.toString(localNames));
+    } else {
+      result.append("%ssa_val ").append(valueNumber);
+    }
+    result.append(")");
+    return result.toString();
   }
 }
