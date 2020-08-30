@@ -1038,7 +1038,38 @@ public class SlicerTest {
             .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
             .collect(Collectors.toList());
     normalsInMain.stream().forEach(System.err::println);
-    // TODO this should be 7!  investigate handling of Integer.valueOf()
-    Assert.assertEquals(5, normalsInMain.size());
+    Assert.assertEquals(7, normalsInMain.size());
+  }
+
+  @Test
+  public void testIntegerValueOf()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "Lslice/TestIntegerValueOf");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+
+    Statement s = SlicerUtil.findCallTo(main, "doNothing");
+
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.NO_HEAP, ControlDependenceOptions.NONE);
+    // SlicerUtil.dumpSlice(slice);
+    List<Statement> inMain =
+        slice.stream().filter(st -> st.getNode().equals(main)).collect(Collectors.toList());
+    inMain.stream().forEach(System.err::println);
+    Assert.assertEquals(4, inMain.size());
+    // returns for Integer.valueOf() and getInt()
+    Assert.assertEquals(2, inMain.stream().filter(st -> st instanceof NormalReturnCaller).count());
   }
 }
