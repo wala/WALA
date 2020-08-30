@@ -52,9 +52,12 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.strings.Atom;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -67,22 +70,20 @@ public class SlicerTest {
 
   private static AnalysisScope cachedScope;
 
-  // more aggressive exclusions to avoid library blowup
-  // in interprocedural tests
-  private static final String EXCLUSIONS =
-      "java\\/awt\\/.*\n"
-          + "javax\\/swing\\/.*\n"
-          + "sun\\/awt\\/.*\n"
-          + "sun\\/swing\\/.*\n"
-          + "com\\/sun\\/.*\n"
-          + "sun\\/.*\n"
-          + "org\\/netbeans\\/.*\n"
-          + "org\\/openide\\/.*\n"
-          + "com\\/ibm\\/crypto\\/.*\n"
-          + "com\\/ibm\\/security\\/.*\n"
-          + "org\\/apache\\/xerces\\/.*\n"
-          + "java\\/security\\/.*\n"
-          + "";
+  private static String makeSlicerExclusions() {
+    try {
+      try (InputStream is =
+          (new FileProvider())
+              .getInputStreamFromClassLoader(
+                  CallGraphTestUtil.REGRESSION_EXCLUSIONS, SlicerTest.class.getClassLoader())) {
+        String exclusions = new String(FileUtil.readBytes(is), "UTF-8");
+        // we also need to exclude java.security to avoid blowup during slicing
+        return exclusions + "java\\/security\\/.*\n";
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
@@ -90,7 +91,7 @@ public class SlicerTest {
           AnalysisScopeReader.readJavaScope(
               TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
       cachedScope.setExclusions(
-          new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
+          new FileOfClasses(new ByteArrayInputStream(makeSlicerExclusions().getBytes("UTF-8"))));
     }
     return cachedScope;
   }
