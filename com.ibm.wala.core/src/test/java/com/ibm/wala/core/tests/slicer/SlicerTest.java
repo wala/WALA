@@ -25,8 +25,10 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
@@ -35,6 +37,7 @@ import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.slicer.HeapStatement.HeapReturnCaller;
 import com.ibm.wala.ipa.slicer.MethodEntryStatement;
 import com.ibm.wala.ipa.slicer.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.NormalStatement;
@@ -1040,6 +1043,59 @@ public class SlicerTest {
             .collect(Collectors.toList());
     normalsInMain.stream().forEach(System.err::println);
     Assert.assertEquals(7, normalsInMain.size());
+  }
+
+  @Test
+  public void testListIterator()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "Lslice/TestListIterator");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+
+    NormalStatement getCall = (NormalStatement) SlicerUtil.findCallTo(main, "hasNext");
+    // we need a NormalReturnCaller statement to slice from the return value
+    NormalReturnCaller nrc = new NormalReturnCaller(main, getCall.getInstructionIndex());
+
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            nrc,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
+    List<Statement> inMain =
+        slice.stream().filter(s -> s.getNode().equals(main)).collect(Collectors.toList());
+    // check that we are tracking the size field in a HeapReturnCaller statement for the add() call
+    Assert.assertTrue(
+        "couldn't find HeapReturnCaller for size field",
+        inMain.stream()
+            .filter(
+                st -> {
+                  if (st instanceof HeapReturnCaller) {
+                    HeapReturnCaller hrc = (HeapReturnCaller) st;
+                    if (hrc.getCall().getDeclaredTarget().getName().toString().equals("add")) {
+                      PointerKey location = hrc.getLocation();
+                      if (location instanceof InstanceFieldKey) {
+                        InstanceFieldKey ifk = (InstanceFieldKey) location;
+                        return ifk.getField().getName().toString().equals("size");
+                      }
+                    }
+                  }
+                  return false;
+                })
+            .findFirst()
+            .isPresent());
   }
 
   @Test
