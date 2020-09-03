@@ -1,6 +1,6 @@
 dependencies {
 	implementation(
-			'org.mozilla:rhino:1.7.12',
+			'org.mozilla:rhino:1.7.13',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.core'),
