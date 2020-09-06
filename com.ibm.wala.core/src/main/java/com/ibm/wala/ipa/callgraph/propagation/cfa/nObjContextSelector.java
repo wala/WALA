@@ -63,7 +63,7 @@ public class nObjContextSelector implements ContextSelector {
             : null;
 
     if (site.isStatic()) {
-      calleeContext = getCalleeTargetForStaticCall(caller, site, callee, actualParameters);
+      calleeContext = getCalleeTargetForStaticCall(caller, site, callee);
     } else if (receiver instanceof AllocationSiteInNode) {
       AllocationString allocationString =
           assemblyReceiverAllocString((AllocationSiteInNode) receiver);
@@ -95,7 +95,7 @@ public class nObjContextSelector implements ContextSelector {
   }
 
   protected Context getCalleeTargetForStaticCall(
-      CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
+      CGNode caller, CallSiteReference site, IMethod callee) {
     return ContainerContextSelector.isWellKnownStaticFactory(callee.getReference())
         ? new CallerSiteContext(caller, site)
         : caller.getContext();
