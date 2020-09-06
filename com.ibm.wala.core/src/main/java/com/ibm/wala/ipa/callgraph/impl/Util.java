@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFABuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nObjBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.rta.BasicRTABuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
@@ -580,6 +581,62 @@ public class Util {
                 | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
                 | ZeroXInstanceKeys.SMUSH_STRINGS
                 | ZeroXInstanceKeys.SMUSH_THROWABLES));
+    return result;
+  }
+
+  /**
+   * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
+   * length limited to n
+   */
+  public static SSAPropagationCallGraphBuilder makeNObjBuilder(
+      int n,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      AnalysisScope scope) {
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    addDefaultSelectors(options, cha);
+    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    ContextSelector appSelector = null;
+    SSAContextInterpreter appInterpreter = null;
+    SSAPropagationCallGraphBuilder result =
+        new nObjBuilder(
+            n,
+            cha,
+            options,
+            cache,
+            appSelector,
+            appInterpreter,
+            ZeroXInstanceKeys.ALLOCATIONS
+                | ZeroXInstanceKeys.SMUSH_MANY
+                | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+                | ZeroXInstanceKeys.SMUSH_STRINGS
+                | ZeroXInstanceKeys.SMUSH_THROWABLES);
+    return result;
+  }
+
+  /**
+   * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
+   * length limited to n
+   */
+  public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
+      int n,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      AnalysisScope scope) {
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    addDefaultSelectors(options, cha);
+    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    ContextSelector appSelector = null;
+    SSAContextInterpreter appInterpreter = null;
+    SSAPropagationCallGraphBuilder result =
+        new nObjBuilder(
+            n, cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
     return result;
   }
 
