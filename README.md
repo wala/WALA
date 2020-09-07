@@ -24,8 +24,8 @@ WALA features include:
 ### Getting Started
 
 The fastest way to get started with WALA is to use the packages in Maven Central, as noted [here](https://github.com/wala/WALA/wiki/Getting-Started#quick-start-using-maven-central-packages).  See the [WALA-start](https://github.com/wala/WALA-start) repo for a Gradle-based example.  We are actively re-organizing the deeper wiki technical documentation.  In the meantime, you can check out tutorial slides to get an overview of WALA:
-* [Core WALA](http://wala.sourceforge.net/files/PLDI_WALA_Tutorial.pdf)
-* [WALA JavaScript](http://wala.sourceforge.net/files/WALAJavaScriptTutorial.pdf)
+* [Core WALA](http://wala.sourceforge.net/files/PLDI_WALA_Tutorial.pdf) (PDF)
+* [WALA JavaScript](http://wala.sourceforge.net/files/WALAJavaScriptTutorial.pdf) (PDF)
 
 You can also watch screencasts of the WALA JavaScript tutorial [here](https://www.youtube.com/user/WALALibraries/videos).
 
