@@ -39,6 +39,10 @@ The WALA publications department is populating this wiki with technical document
 
 Currently, we have the [JavaDoc documentation for the WALA code](https://wala.github.io/javadoc) being updated continuously. If you think a particular file deserves better javadoc, please [open a feature request](https://github.com/wala/WALA/issues).
 
+### Getting Help
+
+To get help with WALA, please either [email the mailing list](http://sourceforge.net/p/wala/mailman/), [ask a question on Gitter](https://gitter.im/WALAHelp/Lobby), or [open an issue](https://github.com/wala/WALA/issues).
+
 ### Building from Source
 
 WALA uses Gradle as its build system.  If you intend to modify or build WALA yourself, then see [the Gradle-specific README](README-Gradle.md) for more instructions and helpful tips.  You may also find `pom.xml` configuration files for Maven builds, but Maven is no longer well supported; use Gradle if at all possible.
