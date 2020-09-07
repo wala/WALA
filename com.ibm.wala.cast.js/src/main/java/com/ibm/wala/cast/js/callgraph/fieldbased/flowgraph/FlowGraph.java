@@ -588,7 +588,9 @@ public class FlowGraph implements Iterable<Vertex> {
 
   /**
    * Converts flow graph to a JSON representation. Keys of the JSON object are vertices, with each
-   * vertex mapped to its successors
+   * vertex mapped to its successors. Vertices are serialized using their {@link
+   * Vertex#toSourceLevelString(IAnalysisCacheView)} method to include information about
+   * source-level variables whenever possible.
    */
   public String toJSON() {
     IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
