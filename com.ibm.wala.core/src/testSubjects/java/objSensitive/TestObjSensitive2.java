@@ -1,9 +1,15 @@
-package objSensitive;
-/**
- * test case for nObjBuilder
+/*
+ * Copyright (c) 2002 - 2020 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * @author genli
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
  */
+package objSensitive;
+/** test case for nObjBuilder */
 public class TestObjSensitive2 {
 
   public static void main(String[] args) {

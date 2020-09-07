@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2002 - 2020 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ */
 package com.ibm.wala.core.tests.ptrs;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -28,11 +38,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * test case for nObjBuilder
- *
- * @author genli
- */
+/** test case for nObjBuilder */
 public class ObjectSensitiveTest {
 
   @Test
@@ -50,7 +56,7 @@ public class ObjectSensitiveTest {
     doPointsToSizeTest(3, TestConstants.OBJECT_SENSITIVE_TEST2, 1);
   }
 
-  public static void doPointsToSizeTest(int n, String mainClass, int exceptedSize)
+  public static void doPointsToSizeTest(int n, String mainClass, int expectedSize)
       throws IOException, ClassHierarchyException, CallGraphBuilderCancelException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> pair = initCallGraph(n, mainClass);
     CallGraph cg = pair.fst;
@@ -63,7 +69,7 @@ public class ObjectSensitiveTest {
         new LocalPointerKey(doNothing, doNothing.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pa.getPointsToSet(localPointerKey);
 
-    Assert.assertTrue(pts.size() == exceptedSize);
+    Assert.assertTrue(pts.size() == expectedSize);
   }
 
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> initCallGraph(

@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2002 - 2020 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -20,14 +30,12 @@ import com.ibm.wala.util.intset.IntSetUtil;
  *
  * <ul>
  *   <li>for static method : For a few well-known static factory methods from the standard
- *       libraries, use {@code CallerSiteContext}.Otherwise, directly copy the context of the last
+ *       libraries, use {@link CallerSiteContext}.Otherwise, directly copy the context of the last
  *       non-static method
- *   <li>for virtual method : The context consists of n allocation sites
+ *   <li>for virtual method : The {@link Context} consists of n allocation sites
  *   <li>for an object(fixed at allocation) : The heap context consists of n allocation sites
- *       inherited from CGNode
+ *       inherited from {@link CGNode}
  * </ul>
- *
- * @author genli
  */
 public class nObjContextSelector implements ContextSelector {
 
