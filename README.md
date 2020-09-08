@@ -1,7 +1,8 @@
 ![WALA logo](http://wala.sourceforge.net/wiki/images/9/94/WALA-banner.png)
 
 [![GitHub Actions status](https://github.com/wala/WALA/workflows/Continuous%20integration/badge.svg)](https://github.com/wala/WALA/actions?query=workflow%3A%22Continuous+integration%22) [![Build Status](https://travis-ci.org/wala/WALA.svg?branch=master)](https://travis-ci.org/wala/WALA) [![Join the chat at https://gitter.im/WALAHelp/Lobby](https://badges.gitter.im/WALAHelp/Lobby.svg)](https://gitter.im/WALAHelp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-=====================
+
+-------------------------
 
 The T. J. Watson Libraries for Analysis (WALA) provide static analysis capabilities for Java bytecode and related languages and for JavaScript. The system is licensed under the [Eclipse Public License](http://www.eclipse.org/legal/epl-v10.html), which has been approved by the [OSI](http://www.opensource.org/) (Open Source Initiative) as a fully certified open source license. The initial WALA infrastructure was independently developed as part of the DOMO research project at the [IBM T.J. Watson Research Center](http://www.research.ibm.com/). In 2006, [IBM](http://www.ibm.com/us/) donated the software to the community.
 
@@ -24,6 +25,7 @@ WALA features include:
 ### Getting Started
 
 The fastest way to get started with WALA is to use the packages in Maven Central, as noted [here](https://github.com/wala/WALA/wiki/Getting-Started#quick-start-using-maven-central-packages).  See the [WALA-start](https://github.com/wala/WALA-start) repo for a Gradle-based example.  We are actively re-organizing the deeper wiki technical documentation.  In the meantime, you can check out tutorial slides to get an overview of WALA:
+
 * [Core WALA](http://wala.sourceforge.net/files/PLDI_WALA_Tutorial.pdf) (PDF)
 * [WALA JavaScript](http://wala.sourceforge.net/files/WALAJavaScriptTutorial.pdf) (PDF)
 
@@ -54,5 +56,3 @@ Recently, we have been expanding the set of WALA tools implemented in JavaScript
 ### WALA-Based Tools
 
 Several groups have built open-source tools that enhance or build on WALA that may be useful to other WALA users. For details, see the [Wala-based tools](https://github.com/wala/WALA/wiki/WALA-Based-Tools) page.
-
-
