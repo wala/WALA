@@ -16,6 +16,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.util.debug.Assertions;
 import java.util.Arrays;
 
 /**
@@ -28,6 +29,7 @@ public final class VarVertex extends Vertex implements PointerKey {
   private final int valueNumber;
 
   VarVertex(FuncVertex func, int valueNumber) {
+    Assertions.productionAssertion(valueNumber >= 0, "Invalid value number for VarVertex");
     this.func = func;
     this.valueNumber = valueNumber;
   }
