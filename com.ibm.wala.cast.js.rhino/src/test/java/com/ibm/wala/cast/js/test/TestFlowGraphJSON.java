@@ -35,7 +35,7 @@ public class TestFlowGraphJSON {
   public void testNamedIIFE() {
     assertArrayEquals(
         new String[] {
-          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 18)"
+          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 23)"
         },
         parsedJSON.get("Func(flowgraph_constraints.js@2)"));
   }
