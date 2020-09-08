@@ -324,8 +324,10 @@ public class FlowGraphBuilder {
 
     @Override
     public void visitReturn(SSAReturnInstruction ret) {
-      Vertex v = factory.makeVarVertex(func, ret.getResult()), w = factory.makeRetVertex(func);
-      flowgraph.addEdge(v, w);
+      if (ret.getResult() != -1) { // non-void return
+        Vertex v = factory.makeVarVertex(func, ret.getResult()), w = factory.makeRetVertex(func);
+        flowgraph.addEdge(v, w);
+      }
     }
 
     @Override

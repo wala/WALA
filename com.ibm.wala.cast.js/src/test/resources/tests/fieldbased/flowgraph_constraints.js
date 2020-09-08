@@ -19,3 +19,9 @@ function callIdHigherOrder() {
   var x = {};
   var y = fp(x);
 }
+
+function voidFun() {
+  return;
+}
+
+voidFun();
