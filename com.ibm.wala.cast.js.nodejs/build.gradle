@@ -3,7 +3,7 @@ dependencies {
 		because 'public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil'
 	}
 	implementation(
-			'commons-io:commons-io:2.7',
+			'commons-io:commons-io:2.8.0',
 			'org.json:json:20200518',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js.rhino'),
