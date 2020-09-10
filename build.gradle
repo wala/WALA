@@ -4,7 +4,7 @@
 //
 
 buildscript {
-	dependencies.classpath 'commons-io:commons-io:2.7'
+	dependencies.classpath 'commons-io:commons-io:2.8.0'
 }
 
 plugins {
