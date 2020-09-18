@@ -30,12 +30,3 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 }
-
-configurations {
-	implementation {
-		// See https://github.com/wala/WALA/issues/823.  This group was renamed to net.java.dev.jna.
-		// Since we only try to compile this module from Gradle but not run it, just excluding
-		// the group is sufficient for the build to pass.
-		exclude group: 'com.sun.jna'
-	}
-}
