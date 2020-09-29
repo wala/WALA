@@ -72,8 +72,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testCallbacksOptimistic() throws WalaException, Error, CancelException {
-    runTest(
-        "tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC);
   }
 
   @Test
@@ -163,6 +162,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testNewFnEmptyNoCrash() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  private static final Object[][] assertionsForRecursiveLexWrite =
+      new Object[][] {new Object[] {"suffix:outer", new String[] {"suffix:foo", "suffix:bar"}}};
+
+  @Test
+  public void testRecursiveLexWrite() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/recursive_lex_write.js",
+        assertionsForRecursiveLexWrite,
+        BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   // @Test
