@@ -412,8 +412,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         namePosition = makePosition(f.getFunctionName());
         f.flattenSymbolTable(false);
         int i = 0;
-        arguments = new String[f.getParamCount() + 2];
-        arguments[i++] = name;
+        arguments = new String[f.getParamCount() + 1];
+        // arguments[i++] = name;
         arguments[i++] = "this";
         for (int j = 0; j < f.getParamCount(); j++) {
           arguments[i++] = f.getParamOrVarName(j);

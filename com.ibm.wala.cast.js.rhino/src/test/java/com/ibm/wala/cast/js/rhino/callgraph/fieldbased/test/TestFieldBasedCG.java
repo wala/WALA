@@ -165,6 +165,11 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
     runTest("tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
+  @Test
+  public void testRecursiveLexWrite() throws WalaException, Error, CancelException {
+    runTest("tests/recursive_lex_write.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
   // @Test
   public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(
