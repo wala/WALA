@@ -412,8 +412,18 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         namePosition = makePosition(f.getFunctionName());
         f.flattenSymbolTable(false);
         int i = 0;
-        arguments = new String[f.getParamCount() + 1];
-        // arguments[i++] = name;
+        // The name of the function is declared within the scope of the function itself if it is a
+        // function expression.  Otherwise, the name is declared in the same scope as the function
+        // declaration.
+        boolean isFunctionExpression =
+            f.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION
+                || f.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION_STATEMENT;
+        if (isFunctionExpression) {
+          arguments = new String[f.getParamCount() + 2];
+          arguments[i++] = name;
+        } else {
+          arguments = new String[f.getParamCount() + 1];
+        }
         arguments[i++] = "this";
         for (int j = 0; j < f.getParamCount(); j++) {
           arguments[i++] = f.getParamOrVarName(j);
