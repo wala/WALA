@@ -1,8 +1,11 @@
-(function () {
+function outer() {
   function foo() {
-      foo = function() { return 3; }
+    function bar() { return 3; }
+      foo = bar;
       return 4;
   }
   foo();
   foo();
-})();
+}
+
+outer();

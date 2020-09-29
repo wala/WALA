@@ -418,11 +418,14 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         boolean isFunctionExpression =
             f.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION
                 || f.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION_STATEMENT;
+        arguments = new String[f.getParamCount() + 2];
         if (isFunctionExpression) {
-          arguments = new String[f.getParamCount() + 2];
           arguments[i++] = name;
         } else {
-          arguments = new String[f.getParamCount() + 1];
+          // Obfuscate the name, so any references within the method to the actual function name
+          // become lexical accesses.  We still need to keep the argument since in the WALA IR for
+          // JavaScript calls, the function value itself is always passed as the first argument.
+          arguments[i++] = "__WALA__int3rnal__fn__" + name;
         }
         arguments[i++] = "this";
         for (int j = 0; j < f.getParamCount(); j++) {
