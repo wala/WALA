@@ -1,10 +1,33 @@
-#!/bin/sh -e
+#!/bin/bash -e
+
+# Do our best to make sure we are running in bash *without* posix compatibility
+# enabled.  This is needed to detect old and buggy versions of our
+# pre-commit-stub script
+if [ -z "${BASH}" ] || [ -n "${POSIXLY_CORRECT}" ]; then
+  echo "Your git pre-commit script is outdated.";
+  echo "Please re-run \`./gradlew installGitHooks\` to get the latest script,";
+  echo "or run \`rm .git/hooks/pre-commit\` to disable the pre-commit hook.";
+  echo "Aborting commit";
+  exit 1
+fi
 
 REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
-files=$( (git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$') || true)
-if [ -n "$files" ]; then
-    comma_files=$(echo "$files" | paste -s -d , -)
-    "${REPO_ROOT_DIR}/gradlew" goJF -DgoogleJavaFormat.include="$comma_files" >/dev/null 2>&1
-    git add $(echo "$files" | paste -s -d ' ' -)
+# Set $files to an array of lines output by the "git diff ...| grep ..." pipeline, excluding the
+# trailing newlines.  Forego `mapfile -t` for compatibility with Bash 3.x as found on macOS.
+# Recommended by <https://github.com/koalaman/shellcheck/wiki/SC2207>.
+files=()
+while IFS='' read -r line; do files+=("$line"); done \
+  < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$')
+
+join() {
+  local IFS="$1"
+  shift
+  echo "$*"
+}
+
+if [ "${#files[@]}" -gt 0 ]; then
+  comma_files=$(join , "${files[@]}")
+  "${REPO_ROOT_DIR}/gradlew" goJF -DgoogleJavaFormat.include="$comma_files" >/dev/null 2>&1
+  git add "${files[@]}"
 fi

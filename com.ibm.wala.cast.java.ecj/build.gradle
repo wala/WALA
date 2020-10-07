@@ -1,15 +1,65 @@
-sourceSets.main.java.srcDirs = ['src']
+plugins {
+	id 'application'
+	id 'com.diffplug.eclipse.mavencentral'
+}
+
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.runtime',
+				'org.eclipse.jdt.core',
+		].each it.&implementation
+	}
+}
 
 dependencies {
-	compile(
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.java'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-                'org.eclipse.core:org.eclipse.core.runtime:3.7.0',
-                'org.eclipse.jdt:org.eclipse.jdt.core:3.10.0'
-		)
+	implementation(
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.java'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+	)
+	testImplementation(
+			'junit:junit:4.13',
+			testFixtures(project(':com.ibm.wala.cast.java')),
+	)
+}
+
+application {
+	mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
+}
+
+tasks.named('run') {
+	// this is for testing purposes
+	final javaTestData = ':com.ibm.wala.cast.java.test.data'
+	evaluationDependsOn javaTestData
+	args = ['-sourceDir', project(javaTestData).sourceSets.test.java.srcDirs.find(), '-mainClass', 'LArray1']
+
+	// log output to file, although we don't validate it
+	final outFile = project.layout.buildDirectory.file 'SourceDirCallGraph.log'
+	outputs.file outFile
+	doFirst {
+		final fileStream = outFile.get().asFile.newOutputStream()
+		standardOutput fileStream
+		errorOutput fileStream
+	}
+}
+
+tasks.named('test') {
+	maxHeapSize = '1200M'
+
+	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
+
+	// temporarily turn off some tests on JDK 9+
+	if (JavaVersion.current() <= JavaVersion.VERSION_1_8) {
+		// ensure the command-line driver for running ECJ works
+		dependsOn 'run'
+	} else {
+		exclude '**/ECJJava17IRTest.class'
+		exclude '**/ECJJavaIRTest.class'
+		exclude '**/ECJSyncDuplicatorTest.class'
+	}
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

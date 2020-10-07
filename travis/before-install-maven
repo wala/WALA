@@ -1,10 +1,6 @@
 #!/bin/sh -eux
 
-"$(dirname "$0")"/before-install-gradle
-
-./gradlew prepareMavenBuild
-
-git clone --depth=1 https://github.com/secure-software-engineering/DroidBench.git /tmp/DroidBench
+./gradlew prepareMavenBuild publishToMavenLocal -x javadoc
 
 if [ ! -d "$M2_HOME/bin" ]; then
   curl https://archive.apache.org/dist/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz | tar zxf - -C "$HOME"

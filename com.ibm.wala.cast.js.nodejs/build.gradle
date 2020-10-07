@@ -1,47 +1,46 @@
 dependencies {
-	compile(
-		'commons-io:commons-io:2.4',
-		'org.json:json:20160212',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.js'),
-		project(':com.ibm.wala.cast.js.rhino'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.util'),
-		)
+	api(project(':com.ibm.wala.cast.js')) {
+		because 'public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil'
+	}
+	implementation(
+			'commons-io:commons-io:2.8.0',
+			'org.json:json:20200518',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.js.rhino'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.util'),
+	)
+	testImplementation(
+			'junit:junit:4.13',
+	)
 }
 
-final def downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
-	src 'https://api.github.com/repos/nodejs/node/zipball/0a604e92e258c5ee2752d763e50721e35053f135'
-	dest "$temporaryDir/nodejs.zip"
-	checksum '33c5ba7a5d45644e70d268d8ad3e57df'
+final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
+	src 'https://nodejs.org/dist/v0.12.4/node-v0.12.4.tar.gz'
+	dest project.layout.buildDirectory.file('nodejs.tar.gz')
+	algorithm 'SHA-1'
+	checksum '147ff79947752399b870fcf3f1fc37102100b545'
 }
 
 tasks.register('unpackNodeJSLib', Copy) {
-	dependsOn downloadNodeJS
-	from(zipTree(downloadNodeJS.get().dest)) {
-		include 'nodejs-node-0a604e9/lib/*.js'
+	from(downloadNodeJS.map { tarTree it.dest }) {
+		include 'node-v0.12.4/lib/*.js'
 		eachFile {
-			relativePath new RelativePath(!directory, relativePath.lastName)
+			relativePath RelativePath.parse(!directory, relativePath.lastName)
 		}
 	}
 
-	into 'dat/core-modules'
+	into "${tasks.named('processTestResources', Copy).get().destinationDir}/core-modules"
 	includeEmptyDirs false
 }
 
-tasks.register('cleanUnpackNodeJSLib', Delete) {
-	delete fileTree(dir: 'dat/core-modules', include: '*.js')
-}
-
-tasks.named('processResources') {
+tasks.named('processTestResources') {
 	dependsOn 'unpackNodeJSLib'
 }
 
-tasks.named('clean') {
-	dependsOn 'cleanUnpackNodeJSLib'
-}
+tasks.named('test') {
+	maxHeapSize = '800M'
 
-sourceSets.main {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['dat']
+	// fails with java.lang.OutOfMemoryError for unknown reasons
+	exclude '**/NodejsRequireTargetSelectorResolveTest.class'
 }

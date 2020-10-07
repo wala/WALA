@@ -1,37 +1,21 @@
 #!/bin/sh -eux
 
-case "$TRAVIS_OS_NAME" in
-  (linux) headless=xvfb-run ;;
-  (osx) headless= ;;
-esac
-
-case "$SUBMODULE_PREFIX" in
-  (:*:*:)
-    # native subsubcomponent: no Java code, so no Javadoc
-    documentation=
-    ;;
-  (*)
-    # Java subcomponent
-    documentation=javadoc
-    ;;
-esac
-
 run_gradle() {
-  $headless ./gradlew --continue --no-build-cache --stacktrace "$@"
+  ./gradlew --continue --no-build-cache --stacktrace "$@"
 }
 
-# TRAVIS_JDK_VERSION is unset on Mac with JDK 8
-if [ "${TRAVIS_JDK_VERSION:-}" = openjdk11 ]
-then
-  # only test WALA core on JDK 11 for now
-  run_gradle :com.ibm.wala.core.tests:test
-else
-  run_gradle \
-    -PjavaCompiler=ecj \
-    verifyGoogleJavaFormat \
-    compileJava \
-    compileTestJava \
-    lintGradle \
-    ${documentation:+$SUBMODULE_PREFIX$documentation}
-  run_gradle "$SUBMODULE_PREFIX"build
-fi
+case "$(javac -version 2>&1)" in
+  (javac\ 1.8.*)
+     # ECJ compilation checks only need to run on one operating system
+     if [ "${TRAVIS_OS_NAME:-}" = linux ]; then
+       run_gradle javadoc build publishToMavenLocal
+     else
+       run_gradle javadoc build publishToMavenLocal -PskipJavaUsingEcjTasks
+     fi
+     ;;
+  (*)
+    run_gradle :com.ibm.wala.core:test
+    ;;
+esac
+
+./check-git-cleanliness.sh

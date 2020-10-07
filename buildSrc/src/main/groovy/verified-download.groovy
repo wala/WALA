@@ -37,6 +37,7 @@ class VerifiedDownload extends org.gradle.api.DefaultTask {
 			overwrite true
 			onlyIfModified true
 			useETag this.useETag
+			retries 5
 		}
 		project.verifyChecksum {
 			src destFile

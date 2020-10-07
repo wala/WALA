@@ -1,5 +1,7 @@
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.*
 
+import java.nio.file.Path
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -9,23 +11,37 @@ import org.gradle.api.tasks.*
 @CacheableTask
 class CreatePackageList extends org.gradle.api.DefaultTask {
 
-	@PathSensitive(PathSensitivity.RELATIVE)
-	@Input Object sourceSet
+	@OutputDirectory
+	final DirectoryProperty packageListDirectory =
+			project.objects.directoryProperty().convention(project.layout.buildDirectory.dir(name))
 
-	@OutputFile File packageList = new File("$temporaryDir/package-list")
+	private SortedSet<Path> sourceFileSubdirectories
+
+	@Input
+	final getSourceFileSubdirectories() {
+		// serializable representation of subdirs suitable for cache indexing
+		return sourceFileSubdirectories*.toString()
+	}
+
+	@SuppressWarnings("unused")
+	final sourceSet(final SourceSet sourceSet) {
+		// gather source subdirs relative to each source root
+		sourceFileSubdirectories = new TreeSet<>(
+				sourceSet.java.sourceCollections.collect { collection ->
+					final sourceRoot = collection.tree.dir.toPath()
+					collection.collect { source ->
+						final javaSourceFilePath = source.toPath()
+						final parentPath = javaSourceFilePath.parent
+						sourceRoot.relativize(parentPath)
+					}
+				}.flatten()
+		)
+	}
 
 	@TaskAction
-	def create() {
-		sourceSet.sourceCollections.collect { collection ->
-			def sourceRoot = collection.tree.dir.toPath()
-			collection.collect { source ->
-				def javaSourceFilePath = source.toPath()
-				def parentPath = javaSourceFilePath.parent
-				def relativePath = sourceRoot.relativize(parentPath)
-				relativePath.toString().replace(File.separator, '.')
-			}
-		}.flatten().sort().unique().each {
-			packageList << "$it\n"
-		}
+	final def create() {
+		// relative subbdirs as dot-delimited qualified Java package names, one per line
+		packageListDirectory.get().file('package-list').asFile.text =
+				getSourceFileSubdirectories()*.replace(File.separator, '.').join('\n') + '\n'
 	}
 }

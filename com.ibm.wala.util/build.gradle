@@ -4,16 +4,11 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main.java.srcDirs = ['src']
-
 tasks.named('javadoc') {
-	def coreName = ':com.ibm.wala.core'
-	dependsOn "$coreName:compileJava"
-
-	doFirst {
-		classpath += files project(coreName).compileJava
-	}
-	options.links 'https://docs.oracle.com/javase/8/docs/api/'
+	classpath += files project(':com.ibm.wala.core').tasks.named('compileJava', JavaCompile)
+	final linksPrefix = sourceCompatibility >= JavaVersion.VERSION_11 ? 'en/java/' : ''
+	options.links "https://docs.oracle.com/${linksPrefix}javase/$sourceCompatibility.majorVersion/docs/api/"
+	options.source = "8" // workaround https://bugs.openjdk.java.net/browse/JDK-8212233.
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

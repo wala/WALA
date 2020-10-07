@@ -1,7 +1,0 @@
-# -*- makefile -*-
-
-SCRIPT_NAME := $(realpath $(lastword $(MAKEFILE_LIST)))
-C_DIR := $(dir $(SCRIPTINAME))
-CAST_TEST_DIR := $(realpath $(C_DIR)../..)/
-CAST_TEST_BIN := $(CAST_TEST_DIR)target/classes/
-

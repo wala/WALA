@@ -1,24 +1,182 @@
-sourceSets.main.java.srcDirs = ['src']
+// Dalvik tests require additional libraries installed by the Android SDK Manager, but the latter is
+// incompatible with Java 9 or later: <https://issuetracker.google.com/issues/67495440>.
+final enableDalvikTests = JavaVersion.current() <= JavaVersion.VERSION_1_8
+
+tasks.named('test') {
+	enabled = enableDalvikTests
+}
+
+final downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
+	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
+	dest project.layout.buildDirectory.file('DroidBench_2.0.zip')
+	checksum '16726a48329835140e14f18470a1b4a3'
+}
+
+final unpackDroidBench = tasks.register('unpackDroidBench', Sync) {
+	from(downloadDroidBench.map { zipTree it.dest }) {
+		eachFile {
+			relativePath new RelativePath(!directory, relativePath.segments[1..-1] as String[])
+		}
+	}
+
+	into layout.buildDirectory.dir('DroidBench')
+	includeEmptyDirs false
+}
+
+final downloadAndroidSdk = tasks.register('downloadAndroidSdk', VerifiedDownload) {
+	def sdkOs
+	switch (osName) {
+		case ~/Linux/:
+			sdkOs = 'linux'
+			checksum '444e22ce8ca0f67353bda4b85175ed3731cae3ffa695ca18119cbacef1c1bea0'
+			break
+		case ~/Mac OS X/:
+			sdkOs = 'darwin'
+			checksum '4a81754a760fce88cba74d69c364b05b31c53d57b26f9f82355c61d5fe4b9df9'
+			break
+		case ~/Windows.*/:
+			sdkOs = 'windows'
+			checksum '7f6037d3a7d6789b4fdc06ee7af041e071e9860c51f66f7a4eb5913df9871fd2'
+			break
+		default:
+			throw new GradleException("unrecognized operating system name \"$osName\"")
+	}
+	def archive = "sdk-tools-$sdkOs-3859397.zip"
+	src "https://dl.google.com/android/repository/$archive"
+	dest project.layout.buildDirectory.file(archive)
+	algorithm 'SHA-256'
+}
+
+final installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
+	enabled = enableDalvikTests
+	from downloadAndroidSdk.map { zipTree it.dest }
+	into layout.buildDirectory.dir(name)
+
+	ext {
+		platformsVersion = 'android-28'
+	}
+
+	doLast {
+		exec {
+			def shell, shellFlags, yes, semicolon, discard
+			if (isWindows) {
+				shell = 'PowerShell'
+				shellFlags = '-Command'
+				yes = 'echo y'
+				semicolon = '`;'
+				discard = '$null'
+			} else {
+				shell = 'sh'
+				shellFlags = '-ceu'
+				yes = 'yes 2>/dev/null'
+				semicolon = /\;/
+				discard = '/dev/null'
+			}
+
+			// sdkmanager ultimately runs a JVM, defaulting to $JAVA_HOME.  Ideally we would always
+			// use a Java 1.8 installation here, since sdkmanager does not currently work under Java
+			// 9+.  However, there is no automated way to select a JVM for a given desired version.
+			// So instead we prefer to use whichever Java installation the Gradle build is using.
+			// In most cases that will be $JAVA_HOME, but if it is not, then the developer probably
+			// had good reasons to build using something different.  For example, perhaps $JAVA_HOME
+			// is Java 9+, so the developer intentionally used a different installation to run
+			// Gradle under Java 1.8.
+			environment('JAVA_HOME', System.properties.'java.home')
+
+			commandLine shell, shellFlags, "$yes | $destinationDir/tools/bin/sdkmanager platforms$semicolon$platformsVersion >$discard"
+		}
+	}
+	outputs.cacheIf { true }
+}
+
+eclipse {
+	synchronizationTasks 'installAndroidSdk'
+}
+
+tasks.register('extractSampleCup') {
+	inputs.file configurations.sampleCup.singleFile
+	outputs.file layout.buildDirectory.file("$name/sample.cup")
+
+	doLast {
+		copy {
+			from zipTree(inputs.files.singleFile)
+			include 'parser.cup'
+			rename { outputs.files.singleFile.name }
+			into outputs.files.singleFile.parent
+		}
+	}
+}
+
+tasks.register('downloadSampleLex', VerifiedDownload) {
+	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex'
+	dest layout.buildDirectory.file("$name/sample.lex")
+	checksum 'ae887758b2657981d023a72a165da830'
+}
+
+configurations {
+	sampleCup
+}
 
 dependencies {
-	compile(
-		'org.slf4j:slf4j-api:1.7.2',
-		'org.smali:dexlib2:2.2.6',
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.shrike'),
-		project(':com.ibm.wala.util'),
-		)
+	implementation(
+			'org.slf4j:slf4j-api:1.7.30',
+			'org.smali:dexlib2:2.4.0',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+	)
+	sampleCup 'java_cup:java_cup:0.9e:sources'
+	testImplementation(
+			'com.android.tools:r8:2.0.99',
+			'junit:junit:4.13',
+			'org.smali:dexlib2:2.4.0',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.dalvik'),
+			project(':com.ibm.wala.shrike'),
+			project(':com.ibm.wala.util'),
+			testFixtures(project(':com.ibm.wala.core')),
+	)
+	testRuntimeOnly(
+			// directory containing "android.jar", which various tests want to find as a resource
+			files(installAndroidSdk.map { "$it.outputs.files.singleFile/platforms/$it.platformsVersion" }),
+	)
 }
 
-tasks.register('createPackageList', CreatePackageList) {
-	sourceSet sourceSets.main.java
+tasks.named('processTestResources') {
+	def testdata = project(':com.ibm.wala.core')
+
+	from downloadSampleLex
+	from extractSampleCup
+	from testdata.collectTestDataA
+	from testdata.collectJLex
+	from testdata.compileTestJava
+	from testdata.downloadJavaCup
+	from testdata.extractBcel
 }
 
-tasks.named('javadoc') {
-	dependsOn 'createPackageList'
-	doFirst {
-		options.linksOffline outputDirectory.path, createPackageList.packageList.parent
+if (isWindows)
+	tasks.named('test') {
+		exclude '**/droidbench/**'
 	}
+else
+	tasks.named('processTestResources') {
+		dependsOn unpackDroidBench
+	}
+
+tasks.named('test') {
+	maxHeapSize = '800M'
+
+	outputs.files([
+			'parser.java',
+			'report',
+			'sym.java',
+	].collect(layout.buildDirectory.&file))
+}
+
+googleJavaFormat {
+	// generated files
+	exclude "$name/parser.java"
+	exclude "$name/sym.java"
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

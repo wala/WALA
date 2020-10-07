@@ -1,26 +1,33 @@
 plugins {
-	id 'com.github.hauner.jarTest'
+	id 'com.diffplug.eclipse.mavencentral'
+	id 'com.github.hauner.jarTest' version '1.0.1'
 	id 'eclipse'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.test.java.srcDirs = ['src']
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.commands',
+				'org.eclipse.core.jobs',
+				'org.eclipse.core.resources',
+				'org.eclipse.core.runtime',
+				'org.eclipse.equinox.common',
+				'org.eclipse.jface',
+				'org.eclipse.osgi',
+				'org.eclipse.ui.ide',
+				'org.eclipse.ui.workbench',
+		].each { dep 'testImplementation', it }
+		useNativesForRunningPlatform()
+	}
+}
 
 dependencies {
-	testCompile(
-		'eclipse-deps:org.eclipse.core.resources:+',
-		'eclipse-deps:org.eclipse.core.runtime:+',
-		'eclipse-deps:org.eclipse.equinox.common:+',
-		'eclipse-deps:org.eclipse.jface:+',
-		'eclipse-deps:org.eclipse.osgi:+',
-		'eclipse-deps:org.eclipse.ui.ide:+',
-		'eclipse-deps:org.eclipse.ui.workbench:+',
-		'org.osgi:org.osgi.core:4.2.0',
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.ide'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.core.tests'),
-		)
-	testRuntime project(':com.ibm.wala.ide.jdt')
+	testImplementation(
+			'org.osgi:org.osgi.core:6.0.0',
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.ide'),
+			project(':com.ibm.wala.util'),
+	)
 }

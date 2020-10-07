@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Stubborn Raw Users of Generics" pattern="file:java/com/ibm/wala/ipa/callgraph/propagation/PropagationSystem.java||file:java/com/ibm/wala/ipa/callgraph/propagation/PropagationGraph.java||file:java/com/ibm/wala/ssa/SSACFG.java" />
+</component>

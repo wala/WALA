@@ -1,24 +1,40 @@
-sourceSets.test {
-	java.srcDirs = ['src']
-	resources.srcDirs = ['testdata']
+plugins {
+	id 'com.diffplug.eclipse.mavencentral'
+}
+
+repositories {
+	maven {
+		url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
+		content {
+			includeGroup 'org.eclipse.wst.jsdt'
+		}
+	}
+}
+
+eclipseMavenCentral {
+	release eclipseVersion, {
+		[
+				'org.eclipse.core.runtime',
+				'org.eclipse.equinox.common',
+				'org.eclipse.osgi',
+		].each { dep 'testImplementation', it }
+		useNativesForRunningPlatform()
+	}
 }
 
 dependencies {
-	testCompile(
-		'eclipse-deps:org.eclipse.core.runtime:+',
-		'eclipse-deps:org.eclipse.equinox.common:+',
-		'eclipse-deps:org.eclipse.osgi:+',
-		'junit:junit:4.12',
-		'org.osgi:org.osgi.core:4.2.0',
-		'wst-deps:org.eclipse.wst.jsdt.core:+',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.js'),
-		project(':com.ibm.wala.cast.js.rhino'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.ide.jsdt'),
-		project(':com.ibm.wala.util'),
-		project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
-		)
+	testImplementation(
+			'junit:junit:4.13',
+			"org.eclipse.wst.jsdt:core:$eclipseWstJsdtVersion",
+			'org.osgi:org.osgi.core:6.0.0',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.js'),
+			project(':com.ibm.wala.cast.js.rhino'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.ide.jsdt'),
+			project(':com.ibm.wala.util'),
+			project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
+	)
 }
 
 tasks.named('test') {

@@ -1,10 +1,1 @@
 #!/bin/sh -emux
-
-# Initial p2AsMaven downloads are mostly silent, and can sometimes be
-# quite slow.  If 10 minutes go by with no output, then Travis CI
-# decides the entire job is hung.
-
-while sleep 8m; do echo 'waiting for Eclipse P2 downloads to finish'; done &
-trap 'kill %' EXIT
-
-./gradlew --dry-run

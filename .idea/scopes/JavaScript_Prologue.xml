@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JavaScript Prologue" pattern="file:resources/prologue.js" />
+</component>

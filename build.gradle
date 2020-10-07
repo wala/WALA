@@ -3,14 +3,17 @@
 //  plugin configuration must precede everything else
 //
 
+buildscript {
+	dependencies.classpath 'commons-io:commons-io:2.8.0'
+}
+
 plugins {
-	id 'com.diffplug.gradle.p2.asmaven' version '3.17.3'
-	id 'com.github.hauner.jarTest' version '1.0.1' apply false
-	id 'com.github.sherter.google-java-format' version '0.8'
-	id 'de.set.ecj' version '1.4.1' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.25.0' apply false
+	id 'com.dorongold.task-tree' version '1.5'
+	id 'com.github.ben-manes.versions' version '0.33.0'
+	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
-	id 'nebula.lint' version '9.2.0'
-	id 'nebula.source-jar' version '9.5.0' apply false
+//	id 'nebula.lint' version '14.2.5'
 }
 
 repositories {
@@ -18,39 +21,8 @@ repositories {
 	mavenCentral()
 }
 
-
-////////////////////////////////////////////////////////////////////////
-//
-//  required Eclipse components
-//
-
-p2AsMaven {
-	group 'eclipse-deps', {
-		repoEclipse '4.7.2'
-		slicingOption 'latestVersionOnly', 'true'
-		iu 'org.eclipse.core.commands'
-		iu 'org.eclipse.core.contenttype'
-		iu 'org.eclipse.core.jobs'
-		iu 'org.eclipse.core.resources'
-		iu 'org.eclipse.core.runtime'
-		iu 'org.eclipse.equinox.app'
-		iu 'org.eclipse.equinox.common'
-		iu 'org.eclipse.equinox.preferences'
-		iu 'org.eclipse.jdt.core'
-		iu 'org.eclipse.jface'
-		iu 'org.eclipse.osgi'
-		iu 'org.eclipse.pde.core'
-		iu 'org.eclipse.swt'
-		iu 'org.eclipse.ui.ide'
-		iu 'org.eclipse.ui.workbench'
-	}
-	group 'wst-deps', {
-		repo 'http://download.eclipse.org/releases/oxygen'
-		slicingOption 'latestVersionOnly', 'true'
-		iu 'org.eclipse.wst.jsdt.core'
-		iu 'org.eclipse.wst.jsdt.ui'
-	}
-}
+ext.osName = System.getProperty('os.name')
+ext.isWindows = osName.startsWith('Windows ')
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -59,7 +31,11 @@ p2AsMaven {
 //
 
 group name
-version '1.5.3-SNAPSHOT'
+version VERSION_NAME
+
+// version of Eclipse JARs to use for Eclipse-integrated WALA components
+ext.eclipseVersion = '4.7.2'
+ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
 
 subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever
@@ -72,22 +48,34 @@ subprojects { subproject ->
 			return
 	}
 
-	apply plugin: 'java'
-	apply plugin: 'nebula.source-jar'
+	apply plugin: 'eclipse'
+	apply plugin: 'java-library'
+	apply plugin: 'java-test-fixtures'
+	apply plugin: 'maven-publish'
+	apply plugin: 'signing'
+
+	java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 	version rootProject.version
 
 	repositories {
+		google() // to get r8
 		mavenCentral()
-		maven {
-			url "$rootProject.buildDir/p2asmaven/maven"
+	}
+
+	configurations {
+		implementation {
+			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
+			// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
+			// com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
+			// Gradle, but not run them, excluding the group as a dependence is a reasonable
+			// solution.
+			exclude group: 'com.sun.jna'
 		}
 	}
 
-	jar.manifest.from('META-INF/MANIFEST.MF')
-
-	tasks.register('afterEclipseBuildshipImport') {
-		dependsOn 'processTestResources'
+	eclipse {
+		synchronizationTasks 'processTestResources'
 	}
 
 	tasks.named('test') {
@@ -97,79 +85,92 @@ subprojects { subproject ->
 		include '**/Test*.class'
 		exclude '**/*AndroidLibs*.class'
 
-		maxParallelForks = Integer.MAX_VALUE
-	}
-
-	// Stash the original Java compiler toolchain in case needed.  This is actually only used by
-	// :com.ibm.wala.cast.test:compileTestJava, which requires JNI support that ECJ does not offer.
-	tasks.withType(JavaCompile) {
-		it.ext.originalToolChain = it.toolChain
-	}
-
-	// Use ECJ instead of default Java compiler if "javaCompiler" project property is set to either
-	// "ecj" or "eclipse" (case-insensitive).  For example, use "-PjavaCompiler=ecj" on Gradle
-	// command line or add "javaCompiler=ecj" to the "gradle.properties" file.
-	final def javaCompilerProperty = subproject.findProperty('javaCompiler')?.toLowerCase()
-	switch (javaCompilerProperty) {
-		case 'ecj':
-		case 'eclipse':
-			apply plugin: 'de.set.ecj'
-			tasks.withType(JavaCompile) {
-				options.compilerArgs << '-properties' << "$projectDir/.settings/org.eclipse.jdt.core.prefs"
+		if (project.hasProperty('excludeSlowTests')) {
+			dependencies {
+				testRuntime testFixtures(project(':com.ibm.wala.core'))
 			}
-			break
-		case 'default':
-		case '':
-		case null:
-			break
-		default:
-			throw new InvalidUserDataException("unrecognized Java compiler \"$javaCompilerProperty\"")
+			useJUnit {
+				excludeCategories 'com.ibm.wala.tests.util.SlowTests'
+			}
+		}
+
+		if (project.hasProperty('trial')) {
+			outputs.upToDateWhen { false }
+			afterTest { descriptor, result ->
+				def csv = new File("$rootProject.buildDir/time-trials.csv")
+				if (!csv.exists()) {
+					csv.append('trial,className,name,resultType,startTime,endTime\n')
+				}
+				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
+			}
+		} else {
+			maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+		}
+	}
+
+	final ecjCompileTaskProviders = sourceSets.collect { sourceSet ->
+		JavaCompileUsingEcj.withSourceSet(subproject, sourceSet)
+	}
+
+	project.tasks.named('check').configure {
+		dependsOn ecjCompileTaskProviders
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = 'UTF-8'
+	}
+
+	// Special hack for WALA as an included build.  Composite
+	// builds only build and use artifacts from the default
+	// configuration of included builds:
+	// <https://docs.gradle.org/current/userguide/composite_builds.html#included_build_substitution_limitations>.
+	// This known limitation makes WALA test fixtures unavailable
+	// when WALA is included in a composite build.  As a
+	// workaround for composite projects that rely on those test
+	// fixtures, we extend the main sourceSet to include all
+	// test-fixture sources too.  This hack is only applied when
+	// WALA itself is an included build.
+	if (project.gradle.parent != null) {
+		afterEvaluate {
+			sourceSets {
+				main.java.srcDirs testFixtures.java.srcDirs
+			}
+
+			dependencies {
+				implementation configurations.testFixturesImplementation.dependencies
+			}
+		}
 	}
 }
 
-tasks.register('afterEclipseBuildshipImport', Exec) {
-	commandLine './revert-launchers.sh'
-}
 
-googleJavaFormat {
-	toolVersion = '1.7'
-	// exclude since various tests make assertions based on
-	// source positions in the test inputs.  to auto-format
-	// we also need to update the test assertions
-	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
-}
-
-
-////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 //
-//  find platform-specific SWT implementations
+//  Javadoc documentation
 //
 
-def osgi_platform
-
-switch (System.getProperty('os.name')) {
-	case ~/Mac OS X/:
-		osgi_platform = 'cocoa.macosx.x86_64'
-		break
-	case ~/Windows.*/:
-		osgi_platform = 'win32.win32.x86_64'
-		break
-	case ~/Linux/:
-		osgi_platform = 'gtk.linux.x86_64'
-		break
-	default:
-		throw new GradleException("unrecognized operating system name \"${System.getProperty('os.name')}\"")
+allprojects {
+	tasks.withType(Javadoc).configureEach {
+		options.addBooleanOption('Xdoclint:all,-missing', true)
+		options.encoding = 'UTF-8'
+		options.quiet()
+		options.tags += "apiNote:a:API Note:"
+	}
 }
 
-System.setProperty('osgi.platform', osgi_platform)
+tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
+	description = 'Generate javadocs from all child projects as if they were a single project'
+	group = 'Documentation'
+	destinationDir = file("$buildDir/docs/javadoc")
+	title = "$project.name $version API"
+	options.author true
 
-subprojects {
-	configurations.all {
-		resolutionStrategy {
-			// failOnVersionConflict()
-			dependencySubstitution {
-				substitute module('eclipse-deps:org.eclipse.swt.${osgi.platform}') with module("eclipse-deps:org.eclipse.swt.${System.getProperty('osgi.platform')}:3.+")
-			}
+	subprojects.each { proj ->
+		proj.tasks.withType(Javadoc) { javadocTask ->
+			aggregated.source += javadocTask.source
+			aggregated.classpath += javadocTask.classpath
+			aggregated.excludes += javadocTask.excludes
+			aggregated.includes += javadocTask.includes
 		}
 	}
 }
@@ -177,33 +178,101 @@ subprojects {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  optional lint checking of Gradle scripts
+//  linters for various specific languages or file formats
 //
 
+// Gradle build scripts
+// disabled until <https://github.com/gradle/gradle/issues/6246> is fixed
+/*
 allprojects {
 	apply plugin: 'nebula.lint'
 	gradleLint.alwaysRun = false
 	gradleLint {
 		rules = ['all-dependency']
 		excludedRules = [
-			'duplicate-dependency-class',
-			'transitive-duplicate-dependency-class',
-			'unused-dependency',
-			]
+				// <https://github.com/nebula-plugins/gradle-lint-plugin/issues/203>
+				'undeclared-dependency',
+				'unused-dependency',
+		]
+	}
+}
+*/
+
+// shell scripts, provided they have ".sh" extension
+if (isWindows) {
+	// create a no-op "shellCheck" task so that "gradlew shellCheck" vacuously passes on Windows
+	tasks.register('shellCheck')
+} else {
+	// create a real "shellCheck" task that actually runs the "shellcheck" linter, if available
+	tasks.register('shellCheck', Exec) {
+		description 'Check all shell scripts using shellcheck, if available'
+		group 'verification'
+
+		inputs.files fileTree('.').exclude('**/build').include('**/*.sh')
+		outputs.file project.layout.buildDirectory.file('shellcheck.log')
+
+		doFirst {
+			// quietly succeed if "shellcheck" is not available
+			executable 'shellcheck'
+			final execPaths = System.getenv('PATH').split(File.pathSeparator)
+			final isAvailable = execPaths.any { file("$it/$executable").exists() }
+			if (!isAvailable) executable 'true'
+
+			args inputs.files
+
+			final consoleOutput = System.out
+			final fileOutput = new FileOutputStream(outputs.files.singleFile)
+			final bothOutput = new org.apache.tools.ant.util.TeeOutputStream(consoleOutput, fileOutput)
+			standardOutput = errorOutput = bothOutput
+		}
 	}
 }
 
+// Java formatting
+googleJavaFormat {
+	group 'verification'
+	toolVersion = '1.7'
+	// exclude since various tests make assertions based on
+	// source positions in the test inputs.  to auto-format
+	// we also need to update the test assertions
+	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
+}
 
-////////////////////////////////////////////////////////////////////////
-//
-//  Javadoc linter
-//
+tasks.named('verifyGoogleJavaFormat') {
+	group 'verification'
 
-allprojects {
-	tasks.withType(Javadoc).configureEach {
-		options.addBooleanOption('Xdoclint:all,-missing', true)
-		options.quiet()
+	// workaround for <https://github.com/sherter/google-java-format-gradle-plugin/issues/43>
+	final stampFile = project.layout.buildDirectory.file(name)
+	outputs.file stampFile
+	doLast {
+		stampFile.get().asFile.text = ''
 	}
+}
+
+// install Java reformatter as git pre-commit hook
+tasks.register('installGitHooks', Copy) {
+	from 'config/hooks/pre-commit-stub'
+	rename { 'pre-commit' }
+	into '.git/hooks'
+	fileMode 0777
+}
+
+// run all known linters
+final check = tasks.register('check') {
+	group = 'verification'
+	dependsOn(
+			// 'lintGradle',
+			'shellCheck',
+	)
+	if (!(isWindows && System.getenv('GITHUB_ACTIONS') == 'true')) {
+		// Known to be broken on Windows when running as a GitHub Action, but not intentionally so.
+		// Please fix if you know how!  <https://github.com/wala/WALA/issues/608>
+		dependsOn 'verifyGoogleJavaFormat'
+	}
+}
+
+tasks.register('build') {
+	dependsOn check
 }
 
 
@@ -227,11 +296,26 @@ allprojects {
 
 ////////////////////////////////////////////////////////////////////////
 //
+//  IntelliJ IDEA IDE integration
+//
+
+subprojects { subproject ->
+	apply plugin: 'idea'
+
+	idea.module {
+		// workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
+		excludeDirs += file('bin')
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
 //  helpers for building native CAst components
 //
 
 @SuppressWarnings("unused")
-final def addCastLibrary(project, recipient) {
+final addCastLibrary(project, recipient) {
 	recipient.binaries.whenElementFinalized { binary ->
 		binary.linkTask.get().configure { linkTask ->
 			project.project(':com.ibm.wala.cast:cast').tasks.named(linkTask.name) { castTask ->
@@ -243,38 +327,48 @@ final def addCastLibrary(project, recipient) {
 	addJvmLibrary(project, recipient)
 }
 
-final def addJvmLibrary(project, recipient) {
+final File findJvmLibrary(extension, currentJavaHome, subdirs) {
+	return subdirs
+			.collect { file "$currentJavaHome/$it/libjvm.$extension" }
+			.find { it.exists() }
+}
+
+final addJvmLibrary(project, recipient) {
 	project.with {
 		recipient.with {
 			binaries.whenElementFinalized { binary ->
 				def libJVM
 
 				project.dependencies {
-					final def currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome
+					final currentJavaHome = org.gradle.internal.jvm.Jvm.current().javaHome
 					def osIncludeSubdir
-					final def family = targetMachine.operatingSystemFamily
+					final family = targetMachine.operatingSystemFamily
 					switch (family) {
 						case 'linux':
 							osIncludeSubdir = 'linux'
-							final def subdirs = ['jre/lib/amd64/server', 'lib/amd64/server', 'lib/server']
-							final def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.so") }
-							libJVM = candidates.find { it.exists() }
+							libJVM = findJvmLibrary('so', currentJavaHome, [
+									'jre/lib/amd64/server',
+									'lib/amd64/server',
+									'lib/server',
+							])
 							break
 						case 'macos':
 							osIncludeSubdir = 'darwin'
-							final def subdirs = ['jre/lib/server', 'lib/server']
-							final def candidates = subdirs.collect { file("$currentJavaHome/$it/libjvm.dylib") }
-							libJVM = candidates.find { it.exists() }
+							libJVM = findJvmLibrary('dylib', currentJavaHome, [
+									'jre/lib/server',
+									'lib/server',
+							])
 							break
 						case 'windows':
 							osIncludeSubdir = 'win32'
+							//noinspection GrReassignedInClosureLocalVar
 							libJVM = file("$currentJavaHome/lib/jvm.lib")
 							break
 						default:
 							throw new TaskInstantiationException("unrecognized operating system family \"$family\"")
 					}
 
-					final def jniIncludeDir = "$currentJavaHome/include"
+					final jniIncludeDir = "$currentJavaHome/include"
 					add(binary.includePathConfiguration.name, files(jniIncludeDir, "$jniIncludeDir/$osIncludeSubdir"))
 					add(binary.linkLibraries.name, files(libJVM))
 				}
@@ -287,29 +381,19 @@ final def addJvmLibrary(project, recipient) {
 	}
 }
 
-final def addRpath(linkTask, library) {
-	linkTask.linkerArgs.add "-Wl,-rpath,$library.parent"
+final addRpath(linkTask, library) {
+	if (!isWindows) {
+		linkTask.linkerArgs.add "-Wl,-rpath,$library.parent"
+	}
 }
 
-final def getNativeLibraryOutput(task) {
-	final def outputsFiles = task.outputs.files
-	assert outputsFiles.size() == 2
-	final def (parent, library) = outputsFiles
+final getNativeLibraryOutput(task) {
+	final outputsFiles = task.outputs.files
+	final parent = outputsFiles[0]
+	final library = outputsFiles[1]
+	// on Windows, outputsFiles[2] is DLL
 	assert parent as String == library.parent
 	return library
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  Google Java Format pre-commit hook installation
-//
-
-tasks.register('installGitHooks', Copy) {
-	from 'config/hooks/pre-commit-stub'
-	rename { 'pre-commit' }
-	into '.git/hooks'
-	fileMode 0777
 }
 
 
@@ -318,7 +402,11 @@ tasks.register('installGitHooks', Copy) {
 //  Extra downloads pre-fetcher
 //
 
-
 tasks.register('downloads') {
-	dependsOn allprojects*.tasks*.withType(VerifiedDownload)
+	final allDownloaders = allprojects*.tasks*.withType(VerifiedDownload)
+	final neededDownloaders = allDownloaders.flatten().findAll {
+		// not used in typical builds
+		it.name != 'downloadOcamlJava'
+	}
+	inputs.files neededDownloaders
 }

@@ -1,13 +1,45 @@
-sourceSets.main.java.srcDirs = ['source']
-
 dependencies {
-	compile(
-		'org.mozilla:rhino:1.7.10',
-		project(':com.ibm.wala.cast'),
-		project(':com.ibm.wala.cast.js'),
-		project(':com.ibm.wala.core'),
-		project(':com.ibm.wala.util'),
-		)
+	implementation(
+			'org.mozilla:rhino:1.7.13',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.cast.js'),
+			project(':com.ibm.wala.core'),
+			project(':com.ibm.wala.util'),
+	)
+	testImplementation(
+			'junit:junit:4.13',
+			'org.hamcrest:hamcrest:2.2',
+			'com.google.code.gson:gson:2.8.6',
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+	)
+	testFixturesImplementation(
+			'junit:junit:4.13',
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+	)
+}
+
+tasks.named('processTestResources') {
+	from project(':com.ibm.wala.cast.js').tasks.named('processTestResources')
+}
+
+tasks.named('test') {
+	environment 'TRAVIS', 1
+	maxHeapSize = '800M'
+
+	testLogging {
+		exceptionFormat = 'full'
+		events 'passed', 'skipped', 'failed'
+	}
+
+	if (gradle.startParameter.offline)
+		exclude '**/FieldBasedJQueryTest.class'
+
+	outputs.files([
+			'actual.dump',
+			'expected.dump',
+	].collect(layout.buildDirectory.&file))
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

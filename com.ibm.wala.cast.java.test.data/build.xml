@@ -37,30 +37,20 @@
   <property name="bundleBootClasspath" value="${bootclasspath}"/>
 
   <target name="JLexPresent" depends="init">
-    <available file="${plugin.destination}/src/JLex/Main.java" property="jlex.present"/>
+    <available file="${plugin.destination}/src/test/java/JLex/Main.java" property="jlex.present"/>
   </target>
 
   <target name="fetchJLex" depends="JLexPresent" unless="jlex.present">
     <delete dir="${temp.folder}"/>
     <mkdir dir="${temp.folder}/JLex"/>
     <get src="http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java" dest="${temp.folder}/JLex/Main.java"/>
-    <delete dir="${plugin.destination}/src/JLex"/>
-    <mkdir dir="${plugin.destination}/src/JLex"/>
-    <copy file="${temp.folder}/JLex/Main.java" tofile="${plugin.destination}/src/JLex/Main.java"/>
+    <delete dir="${plugin.destination}/src/test/java/JLex"/>
+    <mkdir dir="${plugin.destination}/src/test/java/JLex"/>
+    <copy file="${temp.folder}/JLex/Main.java" tofile="${plugin.destination}/src/test/java/JLex/Main.java"/>
     <delete dir="${temp.folder}"/>
   </target>
   
   <target name="getSources" depends="fetchJLex" />
-
-  <target name="testdatadir" depends="init,testdata.exists" unless="testdatadir.present">
-    <mkdir dir="${basedir}/../com.ibm.wala.ide.jdt.test/testdata"/>
-  </target>
-
-  <target name="testdata.exists" depends="init">
-    <available file="${basedir}/../com.ibm.wala.ide.jdt.test/testdata" 
-	       type="dir" 
-	       property="testdatadir.present"/>
-  </target>
 
   <target name="bin.exists" depends="">
     <available file="${basedir}/bin" 
@@ -78,8 +68,8 @@
 	   excludes="**/Activator.java"/>
   </target>
   
-  <target name="jar" depends="compile,testdatadir">
-    <jar destfile="${basedir}/../com.ibm.wala.ide.jdt.test/testdata/test_project.zip" manifest="${basedir}/META-INF/MANIFEST.MF" basedir="${basedir}"/>
+  <target name="jar" depends="compile">
+    <jar destfile="${basedir}/bin/test_project.zip" manifest="${basedir}/META-INF/MANIFEST.MF" basedir="${basedir}"/>
   </target>
   
   <target name="init" depends="properties">

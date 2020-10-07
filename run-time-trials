@@ -1,0 +1,16 @@
+#!/bin/bash -eux
+
+cd "$(dirname "$0")"
+
+# use one parallel invocation to build everything quickly before sequential time trials
+./gradlew testClasses "$@"
+
+gio trash build/time-trials.csv || :
+
+for trial in {1..10}; do
+  # "touch orderly-shutdown" to stop after current trial completes
+  if [ -f orderly-shutdown ]; then
+    break
+  fi
+  ./gradlew test --no-build-cache --no-parallel --project-prop trial=$trial "$@"
+done

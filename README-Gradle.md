@@ -1,53 +1,6 @@
-This document describes some WALA-specific aspects of our new Gradle
-build system, plus a few general Gradle features that may be of
-particular interest to WALA developers.  However, it is not a Gradle
-tutorial.
-
-# Pros and Cons of Switching to Gradle
-
-## Selected Gradle Advantages in Brief
-
-- [more comprehensive management of external
-  dependencies](#comprehensive-external-dependencies)
-- faster builds using [parallel task
-  execution](https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:parallel_execution)
-  and [user-scoped
-  caching](https://docs.gradle.org/current/userguide/build_cache.html)
-  (both enabled by default)
-- [trustworthy dependencies for incremental
-  builds](#trustworthy-dependencies-for-incremental-builds)
-- [composite builds](#composite-builds) for easier integration of WALA
-  into larger projects
-- [automated Travis CI testing on macOS](#travis-ci-macos)
-
-## Known Shortcomings
-
-The Gradle build system is not yet ready to replace Maven, due to a
-few [known shortcomings](https://github.com/liblit/WALA/milestone/1).
-Paramount among these is that [Gradle WALA builds do not yet package
-up Eclipse plug-ins / features in the proper
-manner](https://github.com/liblit/WALA/issues/6).  I have [poked at
-this a
-bit](https://github.com/liblit/WALA/tree/gradle-artifact-publishing),
-but I simply do not understand Eclipse and/or OSGi well enough to get
-the job done.  I welcome help from anyone with the right knowledge!
-
-Either Gradle or Maven can be used to build WALA from the command
-line.  However, it was not possible to extend this dual-build-system
-support to Eclipse.  Working with WALA in Eclipse *requires* [doing
-things the Gradle way](#eclipse).  Fortunately, this is rather
-seamless; I see no reason why an Eclipse-using WALA developer should
-need to avoid this switch.
-
-As noted [below](#classpath-and-project-as-generated-files), Eclipse
-`.classpath` and `.project` files are now generated rather than being
-repository-tracked source files.  However, a few Maven-run tests
-depend on having certain of these files present.  One way to create
-them is to [import WALA into
-Eclipse](#importing-wala-projects-into-eclipse) before starting your
-Maven tests.  If you prefer a non-interactive approach, you can
-instead run `./gradlew prepareMavenBuild` before starting your Maven
-tests.
+This document describes some WALA-specific aspects of our Gradle build
+system, plus a few general Gradle features that may be of particular
+interest to WALA developers.  However, it is not a Gradle tutorial.
 
 # Getting Started
 
@@ -55,7 +8,7 @@ tests.
 
 Gradle downloads many packages and supporting Java libraries as
 needed.  Your first Gradle build may take a long time.  On a fast
-workstation with a University-grade network and no local caches, my
+workstation with a university-grade network and no local caches, my
 initial run of `./gradlew assemble processTestResources` took five
 minutes.  On a decent laptop with residential DSL and no local caches,
 the same initial build took twenty minutes.  Fortunately, user- and
@@ -63,27 +16,12 @@ project-level Gradle caches will make incremental rebuilds much
 faster.  Rerunning `./gradlew assemble processTestResources` with a
 warm cache in an already-built tree takes under three seconds.
 
-Maven is the same, really.  You may already have most of what Maven
-needs downloaded and cached locally, but your first Maven WALA build
-was probably slow as well.  Recent Travis CI runs have showed Gradle
-and Maven builds completing in fifteen to twenty minutes, without
-significant variation between the two build systems.
-
-<a id="comprehensive-external-dependencies"/>The good news is that the
-Gradle build knows about all of its external dependencies and will
-download them as needed.  This even includes some complex dependencies
-that the Maven build does not automate.  For example, the Gradle build
-will automatically gather required Android SDK components:  setting
-`$ANDROID_HOME` is not needed.  Gradle builds will also download
-`/tmp/DroidBench` when needed to run tests; the Maven build system
-required that each developer do this by hand.
-
 ## Eclipse
 
 ### One-Time Eclipse Configuration
 
-To work with WALA inside Eclipse, first **install Eclipse Buildship**
-using either [the Eclipse
+To work with WALA inside Eclipse, first **install Eclipse Buildship
+3.1 or later** using either [the Eclipse
 Marketplace](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-marketplace)
 or [the Eclipse update
 manager](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-eclipse-update-manager).
@@ -100,15 +38,19 @@ to import WALA into Eclipse.** Select and import the topmost level of
 your WALA source tree.  On the “Import Options” page of the import
 wizard, leave all settings at their defaults: the “Override workspace
 settings” option should be off, and the grayed-out “Gradle
-distribution” choice should be set to “Gradle wrapper”.  You do not
+distribution” choice should be set to “Gradle wrapper”.  It is also recommended that you clear the "Gradle user home" dialog box in the **Gradle Preferences** prior to importing ([one issue](https://github.com/wala/WALA/issues/731#issuecomment-604465043) was resolved this way). You do not
 need to select each of WALA’s sub-projects; import only the top-level
 WALA source tree, and the rest will follow.
 
-After the lengthy import process completes, **use “Run → After
-Importing WALA Into Eclipse” to perform some post-import cleanup and
-configuration.** Immediately after importing, you may see some errors
-in the Eclipse “Problems” view.  These should all go away after
-running the “After Importing WALA Into Eclipse” step.
+The first time you import the WALA project, Eclipse will synchronize
+its project model with the Gradle build configuration, including
+downloading some large supporting libraries.  The “Import Gradle
+Project” wizard may spend tens of minutes showing “Importing root
+project: Configure project :” with no movement of its progress bar.
+This is normal.  [Be
+patient](#external-dependencies-patience-is-a-virtue) during the
+initial project import, especially if you have a slow network
+connection.
 
 Note: a pristine WALA source tree is *not* pre-configured as a group
 of Eclipse projects.  Using the standard Eclipse “Existing Projects
@@ -145,33 +87,30 @@ in `*/build.gradle` for examples.
 
 ### Opening WALA in IntelliJ IDEA
 
-WALA comes preconfigured as an openable IntelliJ IDEA project.  Open
-the top-level WALA directory as a project; it should have a
+Open the top-level WALA directory as a project; it should have a
 distinctive badge on its folder icon marking it as a directory
-containing a recognized IntelliJ IDEA project.  Do *not* open the
-top-level WALA `build.gradle` in that directory as a project:  this
-will begin an “Import Project from Gradle” process that is *not* the
-recommended way to bring WALA up in IntelliJ IDEA.
+containing a recognized IntelliJ IDEA project.
 
-The first time you open the WALA project, IntelliJ IDEA will
-synchronize its project model with the Gradle build configuration,
-including downloading some large supporting libraries.  After the
-lengthy import process completes, **use “Run → Run… → After Opening
-Pristine Project” to perform some post-import configuration.** This
-also can take tens of minutes, but is only necessary in a clean,
+The first time you open the WALA project, IntelliJ IDEA will notify
+you that “IntelliJ IDEA found a Gradle build script”.  Select the
+“Import Gradle Project” option offered by this notification.  IntelliJ
+IDEA will synchronize its project model with the Gradle build
+configuration, including downloading some large supporting libraries.
+This can take tens of minutes, but is only necessary in a clean,
 never-previously-built tree.  [Be
 patient](#external-dependencies-patience-is-a-virtue) during the
-initial project open, especially if you have a slow network connection.
+initial project open, especially if you have a slow network
+connection.
 
 ### Benign Warning About Non-Managed Maven Project
 
 Each time you open the WALA project, IntelliJ IDEA may report
 “Non-managed pom.xml file found” in its event log.  This arises
-because WALA supports both Gradle and Maven, but WALA in IntelliJ IDEA
-needs only the Gradle configuration.  You can safely ignore this
-notification, permanently disable it using the offered “Disable
-notification” link, or even disable the IntelliJ IDEA Maven plugin
-entirely if you have no other need for it.
+because WALA historically has built using both Gradle and Maven, but
+WALA in IntelliJ IDEA needs only the Gradle configuration.  You can
+safely ignore this notification, permanently disable it using the
+offered “Disable notification” link, or even disable the IntelliJ IDEA
+Maven plugin entirely if you have no other need for it.
 
 ### Project Configuration as Derived Model
 
@@ -201,17 +140,17 @@ it into jar archives, run `./gradlew assemble`.
 In general, most Gradle-generated artifacts will appear somewhere
 under `*/build`.  For example the jar archives created by the
 `assemble` task can be found as `*/build/libs/*.jar`.  Note, however,
-that Eclipse-generated artifacts will still appear in the same places
-as before, such as `*/bin` and `*/target`.
+that Eclipse-generated artifacts will appear in Eclipse-specific
+places, such as `*/bin` and `*/target`.
 
 ### Trustworthy Dependencies For Incremental Builds
 
 Gradle has excellent understanding of task and file dependencies.  You
 can trust it to perform incremental rebuilds rather than always
-rebuilding from scratch.  If you are used to always running `mvn clean
-compile` instead of `mvn compile`, or `mvn clean install` instead of
-`mvn install`, I recommend that you drop `clean` as a reflexive extra
-step and **trust Gradle to do incremental builds correctly.**
+rebuilding from scratch.  If you are used to cleaning your build tree
+and rebuilding from scratch after every change, I recommend that you
+drop `clean` as a reflexive extra step and **trust Gradle to do
+incremental builds correctly.**
 
 ### Favorite Build Tasks
 
@@ -225,6 +164,9 @@ Some useful Gradle tasks include:
 
 - `publishToMavenLocal`: install WALA’s jar files under `~/.m2`
 
+- `googleJavaFormat`: reformat all Java code to match WALA project
+  standards
+
 - `clean`: remove all Gradle-generated artifacts
 
 ### Tasks in Specific Sub-Projects
@@ -234,7 +176,7 @@ you list will be built in all sub-projects.  For example, `./gradlew
 assemble` builds all non-test WALA jars in all sub-projects.  If you
 want to build tasks only in specific sub-projects, you have two options:
 
-1. Give the fully-qualified name of the sub-project task.  For
+1. Give the fully qualified name of the sub-project task.  For
    example, to assemble only the Dalvik jar, you could run `./gradlew
    :com.ibm.wala.dalvik:assemble`.
 
@@ -268,7 +210,7 @@ particularly useful:
   input files change.  Similar to Eclipse’s behavior of updating the
   build whenever you change and save a file.
 
-- [`--tests=...`](https://docs.gradle.org/current/userguide/java_plugin.html#test_filtering):
+- [`--tests=…`](https://docs.gradle.org/current/userguide/java_plugin.html#test_filtering):
   run only the selected tests.  Use in conjunction with the `build` or
   `test` tasks for faster turnaround if you are focusing on getting
   just one or a few failing tests to pass.
@@ -297,34 +239,6 @@ between multiple different personal or experimental WALA builds.  By
 avoiding `~/.m2`, each WALA-based project can be its own composite
 build, with its own WALA subtree, and no project interferes with any
 other.
-
-# Travis CI
-
-I use a [Travis CI build
-matrix](https://docs.travis-ci.com/user/customizing-the-build/#Build-Matrix)
-to perform automated testing in three configurations:
-
-1. Gradle build on Ubuntu 14 (Trusty Tahr)
-1. Maven build on Ubuntu 14 (Trusty Tahr)
-1. Gradle build on macOS 10.12 (Sierra)
-
-Until we are ready to completely replace Maven with Gradle, it is
-important that both keep working.  Therefore, I use Travis CI to build
-and test WALA on Ubuntu using both Gradle and Maven.  Every new pull
-request must be validated in both of these configurations before I
-will accept it onto the `gradle-and-buildship` branch.
-
-<a id="travis-ci-macos"/>The official WALA repository has no macOS CI
-testing.  However, [macOS is the main development platform for at
-least one WALA
-maintainer](https://github.com/liblit/WALA/issues/3#issuecomment-356823287),
-so it is great to have Travis CI helping us keep that platform
-working.  I will not accept pull requests that introduce regressions
-into Gradle macOS builds.  However, I am not using Travis CI to test
-Maven macOS builds.  Initial attempts using [the official WALA master
-sources](https://github.com/wala/WALA) failed.  As it is my goal to
-replace Maven entirely, investigating Maven+macOS failures further is
-not a priority.
 
 <!--
 LocalWords:  processTestResources pre classpath gradlew mvn
