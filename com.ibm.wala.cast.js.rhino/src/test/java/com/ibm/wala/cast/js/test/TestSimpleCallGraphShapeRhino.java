@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.test;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -48,6 +49,19 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   public void testRepr()
       throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "repr.js");
+  }
+
+  private static final Object[][] arrowFunctionCGAssertions =
+      new Object[][] {
+        new Object[] {ROOT, new String[] {"arrowfunction.js"}},
+        new Object[] {"suffix:applyFunction", new String[] {"suffix:arrowfunction.js@55"}}
+      };
+
+  @Test
+  public void testArrowFunction()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "arrowfunction.js");
+    verifyGraphAssertions(CG, arrowFunctionCGAssertions);
   }
 
   @Test
