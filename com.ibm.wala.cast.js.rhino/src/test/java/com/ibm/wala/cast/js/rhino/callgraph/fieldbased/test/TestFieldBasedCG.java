@@ -177,10 +177,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testNamedFnTwice() throws WalaException, Error, CancelException {
-    runTest(
-        "tests/named_fn_twice.js",
-        new Object[][] {},
-        BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/named_fn_twice.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   // @Test
