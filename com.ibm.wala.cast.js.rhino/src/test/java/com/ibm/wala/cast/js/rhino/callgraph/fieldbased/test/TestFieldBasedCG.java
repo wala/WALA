@@ -175,6 +175,14 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 
+  @Test
+  public void testNamedFnTwice() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/named_fn_twice.js",
+        new Object[][] {},
+        BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
   // @Test
   public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(
