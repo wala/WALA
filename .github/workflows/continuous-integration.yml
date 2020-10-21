@@ -11,22 +11,11 @@ jobs:
           - ubuntu-latest
           - macos-latest
           - windows-latest
-        java-compiler:
-          - default
-          - ecj
-        exclude:
-          # testing ECJ compilation on any one OS is sufficient
-          - os: macos-latest
-            java-compiler: ecj
-          - os: windows-latest
-            java-compiler: ecj
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out WALA sources
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v2
       - name: Cache Goomph
         uses: actions/cache@v1
         with:
@@ -49,12 +38,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Compile Java using Gradle and ECJ
-        run: ./gradlew --continue --no-build-cache --no-daemon -PjavaCompiler=${{ matrix.java-compiler }} compileJava compileTestJava
-        if: matrix.java-compiler == 'ecj'
-      - name: Build and test using Gradle and default JDK compiler
-        run: ./gradlew --continue --no-build-cache --no-daemon linters javadoc build
-        if: matrix.java-compiler != 'ecj'
+      - name: Build and test using Gradle
+        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build
+        # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
+        if: runner.os == 'Linux'
+      - name: Build and test using Gradle but without ECJ
+        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build -PskipJavaUsingEcjTasks
+        if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
         # not running in Borne or POSIX shell on Windows

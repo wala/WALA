@@ -42,7 +42,6 @@
 <setAttribute key="selected_features">
 <setEntry value="com.ibm.wala_feature:default"/>
 <setEntry value="com.ibm.wala.ide_feature:default"/>
-<setEntry value="com.ibm.wala.tests_feature:default"/>
 <setEntry value="com.ibm.wala.tests.ide:default"/>
 <setEntry value="org.eclipse.e4.rcp:default"/>
 <setEntry value="org.eclipse.ecf.core.feature:default"/>

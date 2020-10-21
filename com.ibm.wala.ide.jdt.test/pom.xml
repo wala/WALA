@@ -7,7 +7,7 @@
   <parent>
     <artifactId>WALA</artifactId>
     <groupId>com.ibm.wala</groupId>
-    <version>1.5.5-SNAPSHOT</version>
+    <version>1.5.6-SNAPSHOT</version>
   </parent>
 
 
@@ -55,7 +55,7 @@
               <goal>copy-resources</goal>
             </goals>
             <configuration>
-              <outputDirectory>${basedir}/testdata</outputDirectory>
+              <outputDirectory>${basedir}/src/test/resources</outputDirectory>
               <resources>
                 <resource>
                   <directory>${basedir}/../com.ibm.wala.cast.java.test.data/bin</directory>
@@ -79,8 +79,9 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
-									<artifactId>com.ibm.wala.cast.java.test</artifactId>
-									<version>1.5.5-SNAPSHOT</version>
+									<artifactId>com.ibm.wala.cast.java</artifactId>
+									<version>1.5.6-SNAPSHOT</version>
+                  <classifier>test-fixtures</classifier>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>

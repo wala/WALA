@@ -6,5 +6,5 @@ This is the main source repository for WALA.  For more details on WALA, see [the
 WALA uses Gradle as its build system.  If you intend to modify or
 build WALA yourself, then see [the Gradle-specific
 README](README-Gradle.md) for more instructions and helpful tips.  You
-may also find `build.xml` configuration files for Maven builds, but
+may also find `pom.xml` configuration files for Maven builds, but
 Maven is no longer well supported; use Gradle if at all possible.

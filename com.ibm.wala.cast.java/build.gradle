@@ -4,8 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main.java.srcDirs = ['src']
-
 dependencies {
 	implementation(
 			project(':com.ibm.wala.cast'),
@@ -13,7 +11,11 @@ dependencies {
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
+	testFixturesImplementation(
+			'junit:junit:4.13',
+			project(':com.ibm.wala.cast'),
+			project(':com.ibm.wala.core'),
+	)
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")
-

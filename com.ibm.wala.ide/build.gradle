@@ -1,11 +1,9 @@
 plugins {
-	id 'com.diffplug.gradle.eclipse.mavencentral'
+	id 'com.diffplug.eclipse.mavencentral'
 	id 'eclipse'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
-
-sourceSets.main.java.srcDirs = ['src']
 
 eclipseMavenCentral {
 	release eclipseVersion, {

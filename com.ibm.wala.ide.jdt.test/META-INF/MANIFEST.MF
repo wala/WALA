@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.ibm.wala.ide.jdt.test
-Bundle-Version: 1.5.5.qualifier
+Bundle-Version: 1.5.6.qualifier
 Bundle-Activator: com.ibm.wala.cast.java.jdt.test.Activator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: com.ibm.wala.ide.tests;bundle-version="1.1.3",
@@ -23,8 +23,8 @@ Require-Bundle: com.ibm.wala.ide.tests;bundle-version="1.1.3",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ibm.wala.cast.java.jdt.test,
- com.ibm.wala.cast.java.test,
+ com.ibm.wala.cast.java,
  com.ibm.wala.demandpa.driver
 Bundle-ClassPath: .,
- target/dependency/com.ibm.wala.cast.java.test.jar
+ target/dependency/com.ibm.wala.cast.java-test-fixtures.jar
 

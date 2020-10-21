@@ -1,13 +1,38 @@
-sourceSets.main.java.srcDirs = ['source']
-
 dependencies {
 	implementation(
-			'org.mozilla:rhino:1.7.11',
+			'org.mozilla:rhino:1.7.12',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.util'),
 	)
+	testImplementation(
+			'junit:junit:4.13',
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+	)
+	testFixturesImplementation(
+			'junit:junit:4.13',
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+	)
+}
+
+tasks.named('processTestResources') {
+	from project(':com.ibm.wala.cast.js').tasks.named('processTestResources')
+}
+
+tasks.named('test') {
+	environment 'TRAVIS', 1
+	maxHeapSize = '800M'
+
+	if (gradle.startParameter.offline)
+		exclude '**/FieldBasedJQueryTest.class'
+
+	outputs.files([
+			'actual.dump',
+			'expected.dump',
+	].collect(layout.buildDirectory.&file))
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

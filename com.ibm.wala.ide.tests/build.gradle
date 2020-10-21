@@ -1,12 +1,10 @@
 plugins {
-	id 'com.diffplug.gradle.eclipse.mavencentral'
-	id 'com.github.hauner.jarTest'
+	id 'com.diffplug.eclipse.mavencentral'
+	id 'com.github.hauner.jarTest' version '1.0.1'
 	id 'eclipse'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
-
-sourceSets.test.java.srcDirs = ['src']
 
 eclipseMavenCentral {
 	release eclipseVersion, {
@@ -32,5 +30,4 @@ dependencies {
 			project(':com.ibm.wala.ide'),
 			project(':com.ibm.wala.util'),
 	)
-	testRuntimeOnly project(':com.ibm.wala.ide.jdt')
 }

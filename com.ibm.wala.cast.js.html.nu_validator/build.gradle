@@ -1,24 +1,19 @@
-sourceSets {
-	main.java.srcDirs = ['src']
-	test.java.srcDirs = ['tests']
-}
-
 dependencies {
 	implementation(
 			'nu.validator.htmlparser:htmlparser:1.4',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
-			project(':com.ibm.wala.util')
+			project(':com.ibm.wala.util'),
 	)
 	testImplementation(
-			project(':com.ibm.wala.cast.js.test'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.rhino.test'),
-			project(configuration: 'testArchives', path: ':com.ibm.wala.cast.js.test')
+			testFixtures(project(':com.ibm.wala.cast')),
+			testFixtures(project(':com.ibm.wala.cast.js')),
+			testFixtures(project(':com.ibm.wala.cast.js.rhino')),
 	)
 }
 
 tasks.named('processTestResources') {
-	def data = project(':com.ibm.wala.cast.js.test.data')
+	def data = project(':com.ibm.wala.cast.js')
 	dependsOn data.tasks.named('processTestResources')
 	from data.sourceSets.test.resources
 }

@@ -27,7 +27,7 @@ elif [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then
   echo "Skipping snapshot deployment; running cron job."
 else
   echo "Deploying snapshot..."
-  ./gradlew clean uploadArchives
+  ./gradlew clean publishAllPublicationsToMavenRepository
   echo "Snapshot deployed!"
 
   echo "Uploading javadoc..."

@@ -4,8 +4,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-sourceSets.main.java.srcDirs = ['source/java']
-
 dependencies {
 	api(project(':com.ibm.wala.core')) {
 		because 'public method AstCGNode.addTarget receives an argument of type CGNode'
@@ -15,37 +13,51 @@ dependencies {
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
+	testImplementation(
+			'junit:junit:4.13',
+	)
 }
 
-tasks.named('javadoc') {
-	def jsName = ':com.ibm.wala.cast.js'
-	dependsOn "$jsName:compileJava"
-	dependsOn "$jsName:createPackageList"
+tasks.named('javadoc', Javadoc) {
+	final jsTasks = project(':com.ibm.wala.cast.js').tasks
+	classpath += files jsTasks.named('compileJava', JavaCompile)
+	final jsCreatePackageList = jsTasks.named('createPackageList', CreatePackageList)
+	final packageListDirectory = jsCreatePackageList.flatMap { it.packageListDirectory }
+	it.inputs.dir packageListDirectory
 
 	doFirst {
-		def js = project(jsName)
-		classpath += files js.compileJava
-		options.linksOffline js.javadoc.outputDirectory.path, js.createPackageList.packageList.parent
+		final jsJavadoc = jsTasks.named('javadoc', Javadoc)
+		options.linksOffline(
+				jsJavadoc.get().destinationDir.path,
+				packageListDirectory.get().toString()
+		)
 	}
 }
 
-// TODO: if we eventually stop supporting Maven, then we may be able
-// to discard the "copyJarsIntoLib" task and the corresponding lines
-// in "META-INF/MANIFEST.MF" and "build.properties"
-
-tasks.register('copyJarsIntoLib', Sync) {
-	def commonsIoJar = configurations.runtimeClasspath.files[1]
-	assert commonsIoJar.name.startsWith('commons-io-')
-	from commonsIoJar
-	into 'lib'
+final getProjectLibraryDirectory(project_name, link_task_name) {
+	final library_project = project(project_name)
+	final link_task = library_project.tasks.getByName(link_task_name)
+	final library_file = getNativeLibraryOutput(link_task)
+	return library_file.parent
 }
 
-tasks.named('assemble') {
-	dependsOn 'copyJarsIntoLib'
-}
+tasks.named('test') {
+	final xlator_project_name = 'xlator_test'
+	final link_task_name = 'linkDebug'
+	dependsOn "$xlator_project_name:$link_task_name"
 
-tasks.named('clean') {
-	dependsOn 'cleanCopyJarsIntoLib'
+	doFirst {
+		systemProperty 'java.library.path', getProjectLibraryDirectory(xlator_project_name, link_task_name)
+
+		if (isWindows) {
+			// Windows has nothing akin to RPATH for embedding DLL search paths in other DLLs or
+			// executables.  Instead, we need to ensure that any required DLLs are in the standard
+			// executable search path at test run time.
+			final path_key = environment.keySet().find { it.equalsIgnoreCase('path') }
+			assert path_key != null
+			environment[path_key] += ";${getProjectLibraryDirectory(':com.ibm.wala.cast:cast', link_task_name)}"
+		}
+	}
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

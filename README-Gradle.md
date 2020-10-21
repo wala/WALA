@@ -38,7 +38,7 @@ to import WALA into Eclipse.** Select and import the topmost level of
 your WALA source tree.  On the “Import Options” page of the import
 wizard, leave all settings at their defaults: the “Override workspace
 settings” option should be off, and the grayed-out “Gradle
-distribution” choice should be set to “Gradle wrapper”.  You do not
+distribution” choice should be set to “Gradle wrapper”.  It is also recommended that you clear the "Gradle user home" dialog box in the **Gradle Preferences** prior to importing ([one issue](https://github.com/wala/WALA/issues/731#issuecomment-604465043) was resolved this way). You do not
 need to select each of WALA’s sub-projects; import only the top-level
 WALA source tree, and the rest will follow.
 
@@ -87,18 +87,16 @@ in `*/build.gradle` for examples.
 
 ### Opening WALA in IntelliJ IDEA
 
-WALA comes preconfigured as an openable IntelliJ IDEA project.  Open
-the top-level WALA directory as a project; it should have a
+Open the top-level WALA directory as a project; it should have a
 distinctive badge on its folder icon marking it as a directory
-containing a recognized IntelliJ IDEA project.  Do *not* open the
-top-level WALA `build.gradle` in that directory as a project:  this
-will begin an “Import Project from Gradle” process that is *not* the
-recommended way to bring WALA up in IntelliJ IDEA.
+containing a recognized IntelliJ IDEA project.
 
-The first time you open the WALA project, IntelliJ IDEA will
-synchronize its project model with the Gradle build configuration,
-including downloading some large supporting libraries.  This can take
-tens of minutes, but is only necessary in a clean,
+The first time you open the WALA project, IntelliJ IDEA will notify
+you that “IntelliJ IDEA found a Gradle build script”.  Select the
+“Import Gradle Project” option offered by this notification.  IntelliJ
+IDEA will synchronize its project model with the Gradle build
+configuration, including downloading some large supporting libraries.
+This can take tens of minutes, but is only necessary in a clean,
 never-previously-built tree.  [Be
 patient](#external-dependencies-patience-is-a-virtue) during the
 initial project open, especially if you have a slow network

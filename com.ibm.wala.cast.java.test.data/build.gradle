@@ -2,15 +2,13 @@ plugins {
 	id 'eclipse'
 }
 
-sourceSets.test.java.srcDirs = ['src']
-
 
 ////////////////////////////////////////////////////////////////////////
 //
 //  download JLex
 //
 
-final def downloadJLex = tasks.register('downloadJLex', VerifiedDownload) {
+final downloadJLex = tasks.register('downloadJLex', VerifiedDownload) {
 	src 'https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java'
 	checksum 'fe0cff5db3e2f0f5d67a153cf6c783af'
 	dest "${sourceSets.test.java.srcDirs.find()}/JLex/Main.java"

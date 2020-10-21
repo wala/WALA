@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Java Sources as Test Subjects" pattern="file[com.ibm.wala.com.ibm.wala.cast.java.test.data.test]:java//*||file[com.ibm.wala.com.ibm.wala.core.testSubjects]:java//*" />
+</component>

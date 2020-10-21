@@ -1,0 +1,69 @@
+plugins {
+	id 'cpp-application'
+}
+
+evaluationDependsOn(':com.ibm.wala.cast:xlator_test')
+
+application {
+	dependencies {
+		implementation project(':com.ibm.wala.cast:cast')
+		implementation project(':com.ibm.wala.cast:xlator_test')
+	}
+
+	addCastLibrary(project, it)
+
+	binaries.whenElementFinalized(CppExecutable) { binary ->
+		binary.linkTask.get().configure { linkTask ->
+			final libxlator_test = getNativeLibraryOutput(project(':com.ibm.wala.cast:xlator_test').tasks.getByName(linkTask.name))
+			addRpath(linkTask, libxlator_test)
+
+			if (binary.debuggable && !binary.optimized) {
+				tasks.register('checkSmoke_main', Exec) {
+
+					// main executable to run for test
+					final linkedFile = linkTask.linkedFile
+					inputs.file linkedFile
+					doFirst {
+						executable linkedFile.get().asFile
+					}
+
+					// xlator Java bytecode + implementation of native methods
+					final pathElements = project.objects.listProperty(File)
+					pathElements.addAll(files('../build/classes/java/test', libxlator_test.parent))
+
+					// "primordial.txt" resource loaded during test
+					final coreResources = project(':com.ibm.wala.core').tasks.named('processResources', Copy)
+					pathElements.add(coreResources.map { it.destinationDir })
+					inputs.files coreResources
+
+					// additional supporting Java class files
+					['cast', 'core', 'util'].each {
+						final compileJava = project(":com.ibm.wala.$it").tasks.named('compileJava', AbstractCompile)
+						pathElements.add(compileJava.map { it.destinationDir })
+						inputs.files compileJava
+					}
+
+					// all combined as a colon-delimited path list
+					argumentProviders.add({ ->
+						[pathElements.get().join(':')]
+					} as CommandLineArgumentProvider)
+
+					// log output to file, although we don't validate it
+					final outFile = project.layout.buildDirectory.file("${name}.log")
+					outputs.file outFile
+					doFirst {
+						final fileStream = outFile.get().asFile.newOutputStream()
+						standardOutput fileStream
+						errorOutput fileStream
+					}
+				}
+
+				if (!isWindows) {
+					// Known to be broken on Windows, but not intentionally so.  Please fix if you
+					// know how!  <https://github.com/wala/WALA/issues/608>
+					check.dependsOn checkSmoke_main
+				}
+			}
+		}
+	}
+}
