@@ -85,6 +85,11 @@ public abstract class CallStringContextSelector implements ContextSelector {
     public CallString getCallString() {
       return cs;
     }
+
+    @Override
+    public boolean isA(Class<? extends Context> type) {
+      return base.isA(type) || type.isInstance(this);
+    }
   }
 
   protected final ContextSelector base;

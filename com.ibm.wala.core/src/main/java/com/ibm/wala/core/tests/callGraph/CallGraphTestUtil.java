@@ -19,9 +19,11 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.perf.StopwatchGC;
@@ -189,5 +191,28 @@ public class CallGraphTestUtil {
       System.err.println(S.report());
     }
     return cg;
+  }
+
+  public static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildNCFA(
+      int n,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      AnalysisScope scope)
+      throws IllegalArgumentException, CancelException {
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build N-CFA graph");
+      S.start();
+    }
+
+    CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(n, options, cache, cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
+    return Pair.make(cg, builder.getPointerAnalysis());
   }
 }

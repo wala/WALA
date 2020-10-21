@@ -3,20 +3,21 @@ dependencies {
 		because 'public class JSCallGraphUtil extends class CAstCallGraphUtil'
 	}
 	implementation(
-			'commons-io:commons-io:2.6',
-			'junit:junit:4.13',
+			'commons-io:commons-io:2.8.0',
+			'junit:junit:4.13.1',
 			'net.htmlparser.jericho:jericho-html:3.2',
+			'com.google.code.gson:gson:2.8.6',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
 	testFixturesImplementation(
-			'junit:junit:4.13',
+			'junit:junit:4.13.1',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.core')),
 	)
 	testImplementation(
-			'junit:junit:4.13',
+			'junit:junit:4.13.1',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.core')),
 	)

@@ -14,6 +14,7 @@ import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex;
@@ -21,7 +22,6 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFie
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.TransitivePrototypeKey;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
@@ -181,14 +181,14 @@ public abstract class TestPointerAnalyses {
       throws WalaException, CancelException {
     try (ExtractingToPredictableFileNames predictable = new ExtractingToPredictableFileNames()) {
       FieldBasedCGUtil fb = new FieldBasedCGUtil(factory);
-      Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult =
+      CallGraphResult fbResult =
           fb.buildCG(page, BuilderType.OPTIMISTIC, true, DefaultSourceExtractor.factory);
 
       JSCFABuilder propagationBuilder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(page);
       CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());
       PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
 
-      test(filter, test, fbResult.fst, fbResult.snd, propCG, propPA);
+      test(filter, test, fbResult.getCallGraph(), fbResult.getPointerAnalysis(), propCG, propPA);
     }
   }
 
@@ -204,14 +204,14 @@ public abstract class TestPointerAnalyses {
       JSSourceExtractor.USE_TEMP_NAME = false;
 
       FieldBasedCGUtil fb = new FieldBasedCGUtil(factory);
-      Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult =
+      CallGraphResult fbResult =
           fb.buildTestCG(dir, name, BuilderType.OPTIMISTIC, new NullProgressMonitor(), true);
 
       JSCFABuilder propagationBuilder = JSCallGraphBuilderUtil.makeScriptCGBuilder(dir, name);
       CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());
       PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
 
-      test(filter, test, fbResult.fst, fbResult.snd, propCG, propPA);
+      test(filter, test, fbResult.getCallGraph(), fbResult.getPointerAnalysis(), propCG, propPA);
 
     } finally {
       JSSourceExtractor.USE_TEMP_NAME = save;

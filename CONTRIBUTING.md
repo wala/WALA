@@ -35,8 +35,13 @@ DOs and DON'Ts
 * DO format your code using [Google Java Format](https://github.com/google/google-java-format).  You can do so by running `./gradlew googleJavaFormat`.  A CI job will fail if your code is not formatted in this way.
 * DO include tests when adding new features. When fixing bugs, start with adding a test that highlights how the current behavior is broken.
 * DO keep the discussions focused. When a new or related topic comes up it's often better to create new issue than to side track the discussion.
+* DO make liberal use of Javadoc and comments to document code.
+* DO use the `com.ibm.wala.util.debug.Assertions` class liberally. All calls to `assert()` must be guarded by `Assertions.verifyAssertions`. Use the `productionAssert` entrypoints for assertions that should be enabled in production, and thus not guarded.
+* DO make code deterministic.  Construct `HashMap`s and `HashSet`s using `com.ibm.wala.util.collections.HashMapFactory.make()` and ``com.ibm.wala.util.collections.HashSetFactory.make()` respectively.  Avoid use of `System.identityHashCode()` and finalizers.  
 
+* DON'T write to `System.out` or `System.err`. Use the `com.ibm.wala.util.debug.Trace` facility to write debugging and trace messages.
 * DON'T submit PRs that alter licensing related files or headers. If you believe there's a problem with them, file an issue and we'll be happy to discuss it.
+
 
 Guiding Principles
 ------------------

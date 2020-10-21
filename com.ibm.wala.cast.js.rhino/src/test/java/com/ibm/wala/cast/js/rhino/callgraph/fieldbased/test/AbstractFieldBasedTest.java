@@ -1,7 +1,7 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assume.*;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assume.assumeThat;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
@@ -45,7 +45,9 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     for (BuilderType builderType : builderTypes) {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
       try {
-        cg = util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory).fst;
+        cg =
+            util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory)
+                .getCallGraph();
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch (AssertionError afe) {
@@ -63,9 +65,14 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   }
 
   protected void dumpCG(JSCallGraph cg) {
-    CallGraph2JSON.IGNORE_HARNESS = false;
-    Map<String, Set<String>> edges = CallGraph2JSON.extractEdges(cg);
-    for (Map.Entry<String, Set<String>> entry : edges.entrySet())
-      for (String callee : entry.getValue()) System.out.println(entry.getKey() + " -> " + callee);
+    CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
+    Map<String, Map<String, Set<String>>> edges = cg2JSON.extractEdges(cg);
+    for (Map<String, Set<String>> sitesInMethod : edges.values()) {
+      for (Map.Entry<String, Set<String>> entry : sitesInMethod.entrySet()) {
+        for (String callee : entry.getValue()) {
+          System.out.println(entry.getKey() + " -> " + callee);
+        }
+      }
+    }
   }
 }

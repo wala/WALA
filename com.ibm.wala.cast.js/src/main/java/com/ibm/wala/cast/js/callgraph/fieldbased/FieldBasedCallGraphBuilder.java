@@ -110,8 +110,37 @@ public abstract class FieldBasedCallGraphBuilder {
   /** Build a flow graph for the program to be analysed. */
   public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException;
 
+  /** Full result of call graph computation */
+  public static class CallGraphResult {
+
+    private final JSCallGraph callGraph;
+
+    private final PointerAnalysis<ObjectVertex> pointerAnalysis;
+
+    private final FlowGraph flowGraph;
+
+    public CallGraphResult(
+        JSCallGraph callGraph, PointerAnalysis<ObjectVertex> pointerAnalysis, FlowGraph flowGraph) {
+      this.callGraph = callGraph;
+      this.pointerAnalysis = pointerAnalysis;
+      this.flowGraph = flowGraph;
+    }
+
+    public JSCallGraph getCallGraph() {
+      return callGraph;
+    }
+
+    public PointerAnalysis<ObjectVertex> getPointerAnalysis() {
+      return pointerAnalysis;
+    }
+
+    public FlowGraph getFlowGraph() {
+      return flowGraph;
+    }
+  }
+
   /** Main entry point: builds a flow graph, then extracts a call graph and returns it. */
-  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCallGraph(
+  public CallGraphResult buildCallGraph(
       Iterable<? extends Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
     long fgBegin, fgEnd, cgBegin, cgEnd;
 
@@ -136,7 +165,7 @@ public abstract class FieldBasedCallGraphBuilder {
       System.out.println("call graph extraction took " + (cgEnd - cgBegin) / 1000.0 + " seconds");
     }
 
-    return Pair.make(cg, flowGraph.getPointerAnalysis(cg, cache, monitor));
+    return new CallGraphResult(cg, flowGraph.getPointerAnalysis(cg, cache, monitor), flowGraph);
   }
 
   /** Extract a call graph from a given flow graph. */
@@ -150,7 +179,6 @@ public abstract class FieldBasedCallGraphBuilder {
     return extract(interpreter, flowgraph, eps, monitor);
   }
 
-  @SuppressWarnings("deprecation")
   public JSCallGraph extract(
       SSAContextInterpreter interpreter,
       FlowGraph flowgraph,
@@ -259,7 +287,6 @@ public abstract class FieldBasedCallGraphBuilder {
     // need to create nodes for reflective targets of call, and then add them
     // as callees of the synthetic method
     OrdinalSet<FuncVertex> reflectiveTargets = getReflectiveTargets(flowgraph, callVertex, monitor);
-    System.err.println("adding callees " + reflectiveTargets + " for " + caller);
     // there should only be one call site in the synthetic method
     //    CallSiteReference reflectiveCallSite =
     // cache.getIRFactory().makeIR(functionPrototypeCallNode.getMethod(), Everywhere.EVERYWHERE,
@@ -287,7 +314,6 @@ public abstract class FieldBasedCallGraphBuilder {
 
   Everywhere targetContext = Everywhere.EVERYWHERE;
 
-  @SuppressWarnings("deprecation")
   private static boolean addCGEdgeWithContext(
       final JSCallGraph cg,
       CallSiteReference site,

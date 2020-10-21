@@ -38,13 +38,11 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
   public Context getContext();
 
   /**
-   * This is for use only by call graph builders ... not by the general public. Clients should not
-   * use this.
+   * NOTE: This is for use only by call graph builders, not by any other client of this interface.
    *
    * <p>Record that a particular call site might resolve to a call to a particular target node.
    * Returns true if this is a new target
    */
-  @Deprecated
   public boolean addTarget(CallSiteReference site, CGNode target);
 
   /** @return the "default" IR for this node used by the governing call graph */

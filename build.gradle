@@ -4,14 +4,14 @@
 //
 
 buildscript {
-	dependencies.classpath 'commons-io:commons-io:2.6'
+	dependencies.classpath 'commons-io:commons-io:2.8.0'
 }
 
 plugins {
-	id 'com.diffplug.eclipse.mavencentral' version '3.22.0' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.25.0' apply false
 	id 'com.dorongold.task-tree' version '1.5'
-	id 'com.github.ben-manes.versions' version '0.28.0'
-	id 'com.github.sherter.google-java-format' version '0.8'
+	id 'com.github.ben-manes.versions' version '0.33.0'
+	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
 //	id 'nebula.lint' version '14.2.5'
 }
@@ -63,6 +63,17 @@ subprojects { subproject ->
 		mavenCentral()
 	}
 
+	configurations {
+		implementation {
+			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
+			// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
+			// com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
+			// Gradle, but not run them, excluding the group as a dependence is a reasonable
+			// solution.
+			exclude group: 'com.sun.jna'
+		}
+	}
+
 	eclipse {
 		synchronizationTasks 'processTestResources'
 	}
@@ -93,7 +104,7 @@ subprojects { subproject ->
 				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
 			}
 		} else {
-			maxParallelForks = Integer.MAX_VALUE
+			maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 		}
 	}
 
@@ -229,6 +240,13 @@ googleJavaFormat {
 
 tasks.named('verifyGoogleJavaFormat') {
 	group 'verification'
+
+	// workaround for <https://github.com/sherter/google-java-format-gradle-plugin/issues/43>
+	final stampFile = project.layout.buildDirectory.file(name)
+	outputs.file stampFile
+	doLast {
+		stampFile.get().asFile.text = ''
+	}
 }
 
 // install Java reformatter as git pre-commit hook
@@ -272,6 +290,21 @@ allprojects {
 			if (it in org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry && it.entryAttributes['gradle_used_by_scope'] == 'test')
 				it.entryAttributes['test'] = true
 		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  IntelliJ IDEA IDE integration
+//
+
+subprojects { subproject ->
+	apply plugin: 'idea'
+
+	idea.module {
+		// workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
+		excludeDirs += file('bin')
 	}
 }
 
