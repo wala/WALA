@@ -1239,6 +1239,24 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         }
       } else {
         name = fn.getFunctionName().getIdentifier();
+        if (fn.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION) {
+          // there is a possibility of another function expression in the same scope with the same
+          // name.  check for that case and use a different name when it occurs.
+          Map<CAstNode, Collection<CAstEntity>> scopedEntities = context.getScopedEntities();
+          for (CAstNode n : scopedEntities.keySet()) {
+            if (n != null && n.getKind() == CAstNode.FUNCTION_EXPR && n.getChildCount() == 1) {
+              CAstNode constChild = n.getChild(0);
+              if (constChild.getKind() == CAstNode.CONSTANT
+                  && constChild.getValue() instanceof CAstEntity) {
+                CAstEntity entityVal = (CAstEntity) constChild.getValue();
+                if (entityVal.getName().equals(name)) {
+                  name = name + '@' + fn.getAbsolutePosition();
+                  break;
+                }
+              }
+            }
+          }
+        }
       }
 
       if (DEBUG) System.err.println(name + '\n' + body);
