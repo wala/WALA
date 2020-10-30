@@ -178,6 +178,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testNamedFnTwice() throws WalaException, Error, CancelException {
+    // hack since Windows column offsets are different
     String secondFunName =
         PlatformUtil.onWindows() ? "suffix:testFunExp@390" : "suffix:testFunExp@381";
     runTest(

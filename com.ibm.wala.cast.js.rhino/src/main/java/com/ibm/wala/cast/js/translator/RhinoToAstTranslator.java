@@ -1241,20 +1241,23 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         name = fn.getFunctionName().getIdentifier();
         if (fn.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION) {
           // there is a possibility of another function expression in the same scope with the same
-          // name.  check for that case and use a different name when it occurs.
-          Map<CAstNode, Collection<CAstEntity>> scopedEntities = context.getScopedEntities();
-          for (CAstNode n : scopedEntities.keySet()) {
-            if (n != null && n.getKind() == CAstNode.FUNCTION_EXPR && n.getChildCount() == 1) {
-              CAstNode constChild = n.getChild(0);
-              if (constChild.getKind() == CAstNode.CONSTANT
-                  && constChild.getValue() instanceof CAstEntity) {
-                CAstEntity entityVal = (CAstEntity) constChild.getValue();
-                if (entityVal.getName().equals(name)) {
-                  name = name + '@' + fn.getAbsolutePosition();
-                  break;
-                }
-              }
-            }
+          // name.  check for that case and use a different name when it occurs.  the checking code
+          // looks for CAstNode keys in the context's scoped entities map constructed for function
+          // expressions
+          boolean nameExists =
+              context.getScopedEntities().keySet().stream()
+                  .filter(
+                      n ->
+                          n != null
+                              && n.getKind() == CAstNode.FUNCTION_EXPR
+                              && n.getChildCount() == 1)
+                  .map(n -> n.getChild(0))
+                  .filter(
+                      n -> n.getKind() == CAstNode.CONSTANT && n.getValue() instanceof CAstEntity)
+                  .map(n -> ((CAstEntity) n.getValue()).getName())
+                  .anyMatch(name::equals);
+          if (nameExists) {
+            name = name + '@' + fn.getAbsolutePosition();
           }
         }
       }
