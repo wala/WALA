@@ -51,7 +51,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch (AssertionError afe) {
-        throw new AssertionError(builderType + ": " + afe.getMessage() + "\n" + cg.toString());
+        throw new AssertionError(builderType + ": " + afe.getMessage());
       }
     }
     return cg;
