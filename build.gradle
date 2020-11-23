@@ -59,8 +59,11 @@ subprojects { subproject ->
 	version rootProject.version
 
 	repositories {
-		google() // to get r8
 		mavenCentral()
+		// to get r8
+		maven {
+			url 'https://storage.googleapis.com/r8-releases/raw'
+		}
 	}
 
 	configurations {
