@@ -10,7 +10,7 @@ buildscript {
 plugins {
 	id 'com.diffplug.eclipse.mavencentral' version '3.25.0' apply false
 	id 'com.dorongold.task-tree' version '1.5'
-	id 'com.github.ben-manes.versions' version '0.33.0'
+	id 'com.github.ben-manes.versions' version '0.36.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
 //	id 'nebula.lint' version '14.2.5'
@@ -59,8 +59,11 @@ subprojects { subproject ->
 	version rootProject.version
 
 	repositories {
-		google() // to get r8
 		mavenCentral()
+		// to get r8
+		maven {
+			url 'https://storage.googleapis.com/r8-releases/raw'
+		}
 	}
 
 	configurations {

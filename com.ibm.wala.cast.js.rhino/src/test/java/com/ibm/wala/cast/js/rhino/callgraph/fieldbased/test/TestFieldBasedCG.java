@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
 import org.junit.Test;
 
@@ -172,6 +173,21 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
     runTest(
         "tests/recursive_lex_write.js",
         assertionsForRecursiveLexWrite,
+        BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  @Test
+  public void testNamedFnTwice() throws WalaException, Error, CancelException {
+    // hack since Windows column offsets are different
+    String secondFunName =
+        PlatformUtil.onWindows() ? "suffix:testFunExp@390" : "suffix:testFunExp@381";
+    runTest(
+        "tests/named_fn_twice.js",
+        new Object[][] {
+          new Object[] {
+            "suffix:named_fn_twice.js", new String[] {"suffix:testFunExp", secondFunName}
+          },
+        },
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 
