@@ -1,11 +1,14 @@
 package com.ibm.wala.cast.js.test;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertArrayEquals;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -35,7 +38,7 @@ public class TestFlowGraphJSON {
   public void testNamedIIFE() {
     assertArrayEquals(
         new String[] {
-          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 23)"
+          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 28)"
         },
         parsedJSON.get("Func(flowgraph_constraints.js@2)"));
   }
@@ -64,22 +67,35 @@ public class TestFlowGraphJSON {
             "Var(flowgraph_constraints.js@17, [y])", "Var(flowgraph_constraints.js@12, [y])"));
   }
 
+  @Test
+  public void testCallAndApply() {
+    assertThat(
+        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@29, [x, $$destructure$rcvr7])")),
+        hasItems(
+            "ReflectiveCallee(flowgraph_constraints.js@33)",
+            "ReflectiveCallee(flowgraph_constraints.js@32)"));
+    assertThat(
+        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@29, [nested])")),
+        hasItem("Param(Func(flowgraph_constraints.js@8), 2)"));
+    assertThat(
+        Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))")),
+        hasItem("Var(flowgraph_constraints.js@29, [res1])"));
+  }
+
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)
       throws WalaException, CancelException {
     URL scriptURL = TestCallGraph2JSON.class.getClassLoader().getResource(script);
     FieldBasedCGUtil util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
-    FlowGraph fg =
+    CallGraphResult callGraphResult =
         util.buildCG(
-                scriptURL,
-                BuilderType.OPTIMISTIC_WORKLIST,
-                null,
-                false,
-                DefaultSourceExtractor::new)
-            .getFlowGraph();
+            scriptURL, BuilderType.OPTIMISTIC_WORKLIST, null, false, DefaultSourceExtractor::new);
+    FlowGraph fg = callGraphResult.getFlowGraph();
     String json = fg.toJSON();
     // Strip out character offsets, as they differ on Windows and make it hard to write assertions.
     json = json.replaceAll(":[0-9]+-[0-9]+", "");
-    // System.err.println(json);
+    //    System.err.println("CALL GRAPH:");
+    //    System.err.println(callGraphResult.getCallGraph());
+    //    System.err.println(json);
     Gson gson = new Gson();
     Type mapType = new TypeToken<Map<String, String[]>>() {}.getType();
     return gson.fromJson(json, mapType);

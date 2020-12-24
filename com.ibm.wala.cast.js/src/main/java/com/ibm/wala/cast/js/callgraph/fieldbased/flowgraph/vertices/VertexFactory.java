@@ -29,6 +29,8 @@ import java.util.Map;
 public class VertexFactory {
   private final Map<Pair<FuncVertex, CallSiteReference>, CallVertex> callVertexCache =
       HashMapFactory.make();
+  private final Map<Pair<FuncVertex, CallSiteReference>, ReflectiveCallVertex>
+      reflectiveCallVertexCache = HashMapFactory.make();
   private final Map<IClass, FuncVertex> funcVertexCache = HashMapFactory.make();
   private final Map<Pair<FuncVertex, Integer>, ParamVertex> paramVertexCache =
       HashMapFactory.make();
@@ -46,6 +48,16 @@ public class VertexFactory {
     Pair<FuncVertex, CallSiteReference> key = Pair.make(func, site);
     CallVertex value = callVertexCache.get(key);
     if (value == null) callVertexCache.put(key, value = new CallVertex(func, site, invk));
+    return value;
+  }
+
+  public ReflectiveCallVertex makeReflectiveCallVertex(FuncVertex func, JavaScriptInvoke invk) {
+    CallSiteReference site = invk.getCallSite();
+    Pair<FuncVertex, CallSiteReference> key = Pair.make(func, site);
+    ReflectiveCallVertex value = reflectiveCallVertexCache.get(key);
+    if (value == null) {
+      reflectiveCallVertexCache.put(key, value = new ReflectiveCallVertex(func, site, invk));
+    }
     return value;
   }
 
