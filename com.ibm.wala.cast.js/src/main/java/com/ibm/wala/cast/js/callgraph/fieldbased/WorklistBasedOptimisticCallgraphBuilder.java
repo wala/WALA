@@ -100,19 +100,28 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
           for (FuncVertex fv : vReach) {
             if (wReach.add(fv)) {
               changed = true;
-              addCallEdge(flowgraph, (CallVertex) w, fv, worklist);
+              CallVertex callVertex = (CallVertex) w;
+              addCallEdge(flowgraph, callVertex, fv, worklist);
 
               // special handling of invocations of Function.prototype.call
+              String fullName = fv.getFullName();
               if (handleCallApply
                   && changed
-                  && fv.getFullName().equals("Lprologue.js/Function_prototype_call")) {
-                JavaScriptInvoke invk = ((CallVertex) w).getInstruction();
+                  && (fullName.equals("Lprologue.js/Function_prototype_call")
+                      || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+                JavaScriptInvoke invk = callVertex.getInstruction();
                 VarVertex reflectiveCalleeVertex =
-                    factory.makeVarVertex(((CallVertex) w).getCaller(), invk.getUse(1));
-                reflectiveCalleeVertices.put(reflectiveCalleeVertex, invk);
-                for (FuncVertex fw :
-                    MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
-                  addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invk, fw, worklist);
+                    factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+                flowgraph.addEdge(
+                    reflectiveCalleeVertex,
+                    factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+                // we only add dataflow edges for Function.prototype.call
+                if (fullName.equals("Lprologue.js/Function_prototype_call")) {
+                  reflectiveCalleeVertices.put(reflectiveCalleeVertex, invk);
+                  for (FuncVertex fw :
+                      MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
+                    addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invk, fw, worklist);
+                }
               }
             }
           }

@@ -79,4 +79,9 @@ public class AbstractVertexVisitor<T> implements VertexVisitor<T> {
   public T visitPrototypeVertex(PrototypeFieldVertex protoVertex) {
     return visitVertex();
   }
+
+  @Override
+  public T visitReflectiveCallVertex(ReflectiveCallVertex reflectiveCallVertex) {
+    return visitVertex();
+  }
 }
