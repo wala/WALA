@@ -70,16 +70,15 @@ public class TestFlowGraphJSON {
   @Test
   public void testCallAndApply() {
     assertThat(
-        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@29, [x, $$destructure$rcvr7])")),
+        Arrays.asList(
+            parsedJSON.get("Var(flowgraph_constraints.js@29, [nested, x, $$destructure$rcvr7])")),
         hasItems(
             "ReflectiveCallee(flowgraph_constraints.js@33)",
-            "ReflectiveCallee(flowgraph_constraints.js@32)"));
+            "ReflectiveCallee(flowgraph_constraints.js@32)",
+            "Param(Func(flowgraph_constraints.js@30), 2)"));
     assertThat(
-        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@29, [nested])")),
-        hasItem("Param(Func(flowgraph_constraints.js@8), 2)"));
-    assertThat(
-        Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))")),
-        hasItem("Var(flowgraph_constraints.js@29, [res1])"));
+        Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@30))")),
+        containsInAnyOrder("Var(flowgraph_constraints.js@29, [res1])"));
   }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)

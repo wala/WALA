@@ -28,7 +28,7 @@ voidFun();
 
 function functionPrototypeCallApply() {
   function nested() {}
-  var x = id;
+  var x = nested;
   var res1 = x.call(this, nested);
   var res2 = x.apply(this, [nested]);
 }
