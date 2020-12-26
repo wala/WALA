@@ -191,6 +191,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 
+  @Test
+  public void testSwitchDefault() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/switch_default.js",
+        new Object[][] {
+          new Object[] {"suffix:withSwitch", new String[] {"suffix:fun1", "suffix:fun2"}},
+          new Object[] {"suffix:withSwitchStr", new String[] {"suffix:fun3", "suffix:fun4"}}
+        },
+        BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
   // @Test
   public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(
