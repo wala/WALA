@@ -1,5 +1,5 @@
-function fun1() {}
-function fun2() {}
+function fun1() { return 1; }
+function fun2() { return 2; }
 
 function withSwitch(i) {
   switch (i) {
@@ -10,8 +10,8 @@ function withSwitch(i) {
 
 withSwitch(2);
 
-function fun3() {}
-function fun4() {}
+function fun3() { return 3; }
+function fun4() { return 4; }
 
 function withSwitchStr(s) {
   switch (s) {
