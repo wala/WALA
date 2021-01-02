@@ -90,8 +90,8 @@ jobs:
         run: mvn clean install -B -q -Dmaven.javadoc.skip=true
   generate_docs:
     name: 'Generate latest docs'
-    needs: [build_gradle, build_maven]
-    if: github.event_name == 'push' && github.repository == 'msridhar/WALA' && github.ref == 'refs/heads/gh-actions-javadoc-upload'
+#    needs: [build_gradle, build_maven]
+    if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/gh-actions-javadoc-upload'
     runs-on: ubuntu-latest
     steps:
       - name: 'Check out repository'
