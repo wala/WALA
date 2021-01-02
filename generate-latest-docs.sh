@@ -20,16 +20,16 @@ echo -e "Publishing docs...\n"
 
 JAVADOC_DIR=$HOME/wala-javadoc
 
-git clone --quiet --filter=tree:0 https://x-access-token:${GITHUB_TOKEN}@github.com/wala/javadoc $JAVADOC_DIR > /dev/null
+git clone --quiet --filter=tree:0 https://x-access-token:"${GITHUB_TOKEN}"@github.com/wala/javadoc "$JAVADOC_DIR" > /dev/null
 (
-  cd $JAVADOC_DIR
-  rm -rf *
+  cd "$JAVADOC_DIR"
+  rm -rf ./*
 )
 
 ./gradlew aggregatedJavadocs
-rsync -a build/docs/javadoc/ ${JAVADOC_DIR}
+rsync -a build/docs/javadoc/ "${JAVADOC_DIR}"
 
-cd $JAVADOC_DIR
+cd "$JAVADOC_DIR"
 git add --all .
 git config --global user.name "$GITHUB_ACTOR"
 git config --global user.email "$GITHUB_ACTOR@users.noreply.github.com"
