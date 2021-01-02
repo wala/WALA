@@ -122,3 +122,38 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
         run: ./generate-latest-docs.sh
+  publish_snapshot:
+    name: 'Publish snapshot'
+#    needs: [build_gradle, build_maven]
+    if: github.event_name == 'push' && github.repository == 'google/error-prone' && github.ref == 'refs/heads/gh-actions-snapshot-builds'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check out repository'
+        uses: actions/checkout@v2
+      - name: Cache Goomph
+        uses: actions/cache@v1
+        with:
+          path: ~/.goomph
+          key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
+          restore-keys: ${{ runner.os }}-goomph-
+      - name: Cache Gradle caches
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle-caches-
+      - name: Cache Gradle wrapper
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradlew-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradlew-wrapper-
+      - name: 'Set up JDK 8'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: 'Publish'
+        env:
+          SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+          SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+        run: ./gradlew publishAllPublicationsToMavenRepository
