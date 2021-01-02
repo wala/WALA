@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 # Copyright 2020 The Error Prone Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +15,6 @@
 # limitations under the License.
 
 # Adapted from https://github.com/google/error-prone/blob/1ca81097e39957e55867732642687f3fd1160f70/util/generate-latest-docs.sh
-
-set -eu
 
 echo -e "Publishing docs...\n"
 
