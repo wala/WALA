@@ -30,29 +30,29 @@ else
   ./gradlew clean publishAllPublicationsToMavenRepository
   echo "Snapshot deployed!"
 
-  echo "Uploading javadoc..."
+  # echo "Uploading javadoc..."
 
-  ./gradlew aggregatedJavadocs
+  # ./gradlew aggregatedJavadocs
 
-  (
-  cd build/docs/javadoc
-  git init
-  git add .
-  git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
+  # (
+  # cd build/docs/javadoc
+  # git init
+  # git add .
+  # git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
 
-  {
-    set +x
-    git config --global user.email "travis@travis-ci.org"
-    git config --global user.name "travis-ci"
-    git remote add origin "https://${GH_TOKEN}@github.com/wala/javadoc"
-    set -x
-  }
+  # {
+  #   set +x
+  #   git config --global user.email "travis@travis-ci.org"
+  #   git config --global user.name "travis-ci"
+  #   git remote add origin "https://${GH_TOKEN}@github.com/wala/javadoc"
+  #   set -x
+  # }
 
-  # we can force push here since we don't care about maintaining javadoc history for every commit
-  git push origin master --force
+  # # we can force push here since we don't care about maintaining javadoc history for every commit
+  # git push origin master --force
 
-  echo -e "Published Javadoc to gh-pages.\n"
-  )
+  # echo -e "Published Javadoc to gh-pages.\n"
+  # )
 
   {
     set +x
