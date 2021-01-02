@@ -120,5 +120,5 @@ jobs:
           java-version: 8
       - name: 'Generate latest docs'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
         run: ./generate-latest-docs.sh
