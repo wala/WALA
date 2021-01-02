@@ -3,7 +3,7 @@ on:
   - pull_request
   - push
 jobs:
-  build:
+  build_gradle:
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
     strategy:
       matrix:
@@ -60,3 +60,32 @@ jobs:
         if: runner.os != 'Windows'
       - name: Clean up Gradle caches
         run: travis/before-cache-gradle
+  build_maven:
+    name: "Maven Eclipse Tests"
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: 8
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out WALA sources
+        uses: actions/checkout@v2
+      - name: 'Cache local Maven repository'
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: 'Set up JDK ${{ matrix.java }}'
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: 'Prep for Maven'
+        shell: bash
+        run: ./gradlew prepareMavenBuild publishToMavenLocal -x javadoc
+      - name: 'Maven Tests'
+        shell: bash
+        run: mvn clean install -B -q -Dmaven.javadoc.skip=true
