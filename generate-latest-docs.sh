@@ -39,4 +39,3 @@ if git commit -m "Latest docs on successful build $GITHUB_RUN_NUMBER auto-pushed
 else
     echo "No javadoc changes to publish."
 fi
-
