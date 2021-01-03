@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.util;
 
-/** Simple utilities for Eclipse progress monitors */
+/** Simple utilities for Eclipse progress monitors test change */
 public class MonitorUtil {
 
   /** Use this interface to decouple core utilities from the Eclipse layer */
