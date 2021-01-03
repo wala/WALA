@@ -124,8 +124,8 @@ jobs:
         run: ./generate-latest-docs.sh
   publish_snapshot:
     name: 'Publish snapshot'
-#    needs: [build_gradle, build_maven]
-    if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/gh-actions-snapshot-builds'
+    needs: [build_gradle, build_maven]
+    if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: 'Check out repository'
