@@ -77,7 +77,9 @@ public class TestFlowGraphJSON {
             "Param(Func(flowgraph_constraints.js@30), 2)"));
     assertThat(
         Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@30))")),
-        containsInAnyOrder("Var(flowgraph_constraints.js@29, [res1])"));
+        containsInAnyOrder(
+            "Var(flowgraph_constraints.js@29, [res1])",
+            "Var(flowgraph_constraints.js@29, [res2])"));
   }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)
