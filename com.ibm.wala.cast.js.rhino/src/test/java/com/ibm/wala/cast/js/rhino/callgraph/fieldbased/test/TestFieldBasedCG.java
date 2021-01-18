@@ -108,7 +108,8 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         },
         new Object[] {"suffix:Function_prototype_call", new String[] {"suffix:f"}},
         new Object[] {"suffix:Function_prototype_apply", new String[] {"suffix:x"}},
-        new Object[] {"suffix:f", new String[] {"suffix:k"}}
+        new Object[] {"suffix:f", new String[] {"suffix:k"}},
+        new Object[] {"suffix:p", new String[] {"suffix:n"}}
       };
 
   @Test
