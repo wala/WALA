@@ -14,3 +14,12 @@ function h() {
 function k() {}
 
 h();
+
+function m() {
+  return function n() {}
+}
+
+function p() {
+  var x = m.apply(null, []);
+  x();
+}
