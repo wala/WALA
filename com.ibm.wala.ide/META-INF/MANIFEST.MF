@@ -150,7 +150,7 @@ Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.sourcepos 
 Automatic-Module-Name: com.ibm.wala.ide
 Bundle-ClassPath: .,
- target/dependency/com.ibm.wala.core.jar,
- target/dependency/com.ibm.wala.shrike.jar,
- target/dependency/com.ibm.wala.util.jar,
- target/dependency/com.ibm.wala.cast.jar
+ build/eclipse-plugin-dependencies/com.ibm.wala.core.jar,
+ build/eclipse-plugin-dependencies/com.ibm.wala.shrike.jar,
+ build/eclipse-plugin-dependencies/com.ibm.wala.util.jar,
+ build/eclipse-plugin-dependencies/com.ibm.wala.cast.jar

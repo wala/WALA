@@ -25,6 +25,10 @@ eclipseMavenCentral {
 	}
 }
 
+configurations {
+	eclipsePlugin
+}
+
 dependencies {
 	api(project(':com.ibm.wala.ide')) {
 		because 'public class JavaScriptHeadlessUtil extends class HeadlessUtil'
@@ -38,4 +42,28 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.util'),
 	)
+	eclipsePlugin(
+			'net.htmlparser.jericho:jericho-html:3.2',
+			'org.mozilla:rhino:1.7.12',
+	)
+}
+
+final copyEclipsePluginDependencies = tasks.register('copyEclipsePluginDependencies', Sync) {
+	[
+		'cast.js',
+		'cast.js.rhino',
+	].each {
+		from project(":com.ibm.wala.$it").tasks.named('jar')
+	}
+	from configurations.eclipsePlugin
+	into project.layout.buildDirectory.dir('eclipse-plugin-dependencies')
+	rename '(.*)-(?:[0-9.]+)(?:-SNAPSHOT)?(\\.jar)', '$1$2'
+}
+
+eclipse {
+	synchronizationTasks copyEclipsePluginDependencies
+}
+
+tasks.register('prepareMavenBuild') {
+	dependsOn copyEclipsePluginDependencies
 }
