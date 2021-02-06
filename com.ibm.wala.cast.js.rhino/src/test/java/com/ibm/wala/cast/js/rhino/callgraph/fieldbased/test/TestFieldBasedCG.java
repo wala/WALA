@@ -108,7 +108,8 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         },
         new Object[] {"suffix:Function_prototype_call", new String[] {"suffix:f"}},
         new Object[] {"suffix:Function_prototype_apply", new String[] {"suffix:x"}},
-        new Object[] {"suffix:f", new String[] {"suffix:k"}}
+        new Object[] {"suffix:f", new String[] {"suffix:k"}},
+        new Object[] {"suffix:p", new String[] {"suffix:n"}}
       };
 
   @Test
@@ -187,6 +188,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new Object[] {
             "suffix:named_fn_twice.js", new String[] {"suffix:testFunExp", secondFunName}
           },
+        },
+        BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  @Test
+  public void testSwitchDefault() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/switch_default.js",
+        new Object[][] {
+          new Object[] {"suffix:withSwitch", new String[] {"suffix:fun1", "suffix:fun2"}},
+          new Object[] {"suffix:withSwitchStr", new String[] {"suffix:fun3", "suffix:fun4"}}
         },
         BuilderType.OPTIMISTIC_WORKLIST);
   }

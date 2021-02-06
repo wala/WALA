@@ -4744,10 +4744,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     return hasCase;
   }
 
+  /**
+   * Translates a CAst SWITCH node using an {@link com.ibm.wala.ssa.SSASwitchInstruction} for the
+   * control flow
+   */
   private void doSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
-    PreBasicBlock defaultHackBlock = null;
+    // dummy block that will just transfer control to either the explicit default block (if present)
+    // or the end of the switch
+    PreBasicBlock dummyDefaultBlock = null;
     CAstControlFlowMap ctrl = context.getControlFlow();
 
+    // handle the expression being switched on
     CAstNode switchValue = n.getChild(0);
     visitor.visit(switchValue, context, visitor);
     int v = context.getValue(switchValue);
@@ -4757,8 +4764,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Collection<Object> caseLabels = ctrl.getTargetLabels(n);
     int cases = caseLabels.size();
     if (hasExplicitDefault) cases--;
+    // As required by SSASwitchInstruction, the array represents cases in pairs (v,t), where v is
+    // the constant value checked in the switch case and t is the target instruction index for that
+    // case
     int[] casesAndLabels = new int[cases * 2];
 
+    // initialize the switch instruction
+    PreBasicBlock switchInstrBlock = context.cfg().getCurrentBlock();
     int currentInstruction = context.cfg().getCurrentInstruction();
     context
         .cfg()
@@ -4766,25 +4778,34 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             insts.SwitchInstruction(currentInstruction, v, currentInstruction + 1, casesAndLabels));
     context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(switchValue));
     context.cfg().addPreNode(n, context.getUnwindState());
-    context.cfg().newBlock(false);
 
+    // initialize the dummy default block with a goto instruction to -1 (its target index will get
+    // corrected in a later phase)
+    context.cfg().newBlock(false);
     context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction, -1));
-    defaultHackBlock = context.cfg().getCurrentBlock();
-    context.cfg().newBlock(false);
+    dummyDefaultBlock = context.cfg().getCurrentBlock();
+    // make sure the dummy default block is reachable
+    context.cfg().addEdge(switchInstrBlock, dummyDefaultBlock);
 
+    // translate all the switch cases (including any explicit default case)
+    context.cfg().newBlock(false);
     CAstNode switchBody = n.getChild(1);
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
 
     if (!hasExplicitDefault) {
-      context.cfg().addEdge(defaultHackBlock, context.cfg().getCurrentBlock());
+      // no explicit default, to jump from the dummy default block to after the switch cases
+      context.cfg().addEdge(dummyDefaultBlock, context.cfg().getCurrentBlock());
     }
 
+    // add appropriate control-flow edges for the switch cases, and populate the casesAndLabels
+    // array
     int cn = 0;
     for (Object x : caseLabels) {
       CAstNode target = ctrl.getTarget(n, x);
       if (x == CAstControlFlowMap.SWITCH_DEFAULT) {
-        context.cfg().addEdge(defaultHackBlock, context.cfg().getBlock(target));
+        // jump to the explicit default block from the dummy default block
+        context.cfg().addEdge(dummyDefaultBlock, context.cfg().getBlock(target));
       } else {
         Number caseLabel =
             (Number) context.currentScope().getConstantObject(context.getValue((CAstNode) x));
@@ -4792,6 +4813,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         casesAndLabels[2 * cn + 1] = context.cfg().getBlock(target).firstIndex;
         cn++;
 
+        // ensure that each case block is a successor of the switch instruction
         context.cfg().addPreEdge(n, target, false);
       }
     }
