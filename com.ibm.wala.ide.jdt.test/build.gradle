@@ -17,7 +17,7 @@ eclipseMavenCentral {
 
 dependencies {
 	testImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			'org.osgi:org.osgi.core:6.0.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
