@@ -4,6 +4,7 @@ import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroOneContainerCFABuilderFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.ecj.ECJClassLoaderFactory;
+import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -57,16 +58,21 @@ public class SourceDirCallGraph {
   public static void main(String[] args)
       throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
           IOException {
-    doit(
-        args,
-        (cg, builder, time) -> {
-          System.out.println("done");
-          System.out.println("took " + time + "ms");
-          System.out.println(CallGraphStats.getStats(cg));
-        });
+    new SourceDirCallGraph()
+        .doit(
+            args,
+            (cg, builder, time) -> {
+              System.out.println("done");
+              System.out.println("took " + time + "ms");
+              System.out.println(CallGraphStats.getStats(cg));
+            });
   }
 
-  public static void doit(String[] args, Processor processor)
+  protected ClassLoaderFactory getLoaderFactory(AnalysisScope scope) {
+    return new ECJClassLoaderFactory(scope.getExclusions());
+  }
+
+  public void doit(String[] args, Processor processor)
       throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
           IOException {
     long start = System.currentTimeMillis();
@@ -84,14 +90,12 @@ public class SourceDirCallGraph {
         JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(new File(sourceDir)));
 
     // build the class hierarchy
-    IClassHierarchy cha =
-        ClassHierarchyFactory.make(scope, new ECJClassLoaderFactory(scope.getExclusions()));
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope, getLoaderFactory(scope));
     System.out.println(cha.getNumberOfClasses() + " classes");
     System.out.println(Warnings.asString());
     Warnings.clear();
     AnalysisOptions options = new AnalysisOptions();
-    Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
+    Iterable<Entrypoint> entrypoints = getEntrypoints(mainClass, cha);
     options.setEntrypoints(entrypoints);
     options
         .getSSAOptions()
@@ -116,5 +120,11 @@ public class SourceDirCallGraph {
     long end = System.currentTimeMillis();
 
     processor.process(cg, builder, end - start);
+  }
+
+  protected Iterable<Entrypoint> getEntrypoints(String mainClass, IClassHierarchy cha) {
+    Iterable<Entrypoint> entrypoints =
+        Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
+    return entrypoints;
   }
 }
