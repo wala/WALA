@@ -7,14 +7,14 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 	testImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
 			'com.google.code.gson:gson:2.8.6',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.cast.js')),
 	)
 	testFixturesImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.cast.js')),
 	)

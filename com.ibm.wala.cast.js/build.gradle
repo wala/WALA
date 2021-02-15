@@ -4,7 +4,7 @@ dependencies {
 	}
 	implementation(
 			'commons-io:commons-io:2.8.0',
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			'net.htmlparser.jericho:jericho-html:3.2',
 			'com.google.code.gson:gson:2.8.6',
 			project(':com.ibm.wala.core'),
@@ -12,12 +12,12 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 	testFixturesImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.core')),
 	)
 	testImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.core')),
 	)

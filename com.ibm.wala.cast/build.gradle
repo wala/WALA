@@ -14,7 +14,7 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 	testImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 	)
 }
 
