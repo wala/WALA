@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.cast.java.translator.jdt.ecj;
 
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.cast.java.translator.jdt.JDTJava2CAstTranslator;
@@ -81,6 +82,68 @@ import org.eclipse.jdt.core.dom.FileASTRequestor;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class ECJSourceModuleTranslator implements SourceModuleTranslator {
+  protected class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
+    public ECJJavaToCAstTranslator(
+        JavaSourceLoaderImpl sourceLoader,
+        CompilationUnit astRoot,
+        String fullPath,
+        boolean replicateForDoLoops,
+        boolean dump) {
+      super(sourceLoader, astRoot, fullPath, replicateForDoLoops, dump);
+    }
+
+    @Override
+    public Position makePosition(int start, int end) {
+      return new AbstractSourcePosition() {
+
+        @Override
+        public URL getURL() {
+          try {
+            return new URL("file://" + fullPath);
+          } catch (MalformedURLException e) {
+            assert false : fullPath;
+            return null;
+          }
+        }
+
+        @Override
+        public Reader getReader() throws IOException {
+          return new InputStreamReader(getURL().openConnection().getInputStream());
+        }
+
+        @Override
+        public int getFirstLine() {
+          return cu.getLineNumber(start);
+        }
+
+        @Override
+        public int getLastLine() {
+          return cu.getLineNumber(end);
+        }
+
+        @Override
+        public int getFirstCol() {
+          return cu.getColumnNumber(start);
+        }
+
+        @Override
+        public int getLastCol() {
+          return cu.getColumnNumber(end);
+        }
+
+        @Override
+        public int getFirstOffset() {
+          return start;
+        }
+
+        @Override
+        public int getLastOffset() {
+          return end;
+        }
+      };
+    }
+  }
+
   private final class ECJAstToIR extends FileASTRequestor {
     private final Map<String, ModuleEntry> sourceMap;
 
@@ -202,57 +265,6 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
 
   protected JDTJava2CAstTranslator<Position> makeCAstTranslator(
       CompilationUnit cu, String fullPath) {
-    return new JDTJava2CAstTranslator<Position>(sourceLoader, cu, fullPath, false, dump) {
-      @Override
-      public Position makePosition(int start, int end) {
-        return new AbstractSourcePosition() {
-
-          @Override
-          public URL getURL() {
-            try {
-              return new URL("file://" + fullPath);
-            } catch (MalformedURLException e) {
-              assert false : fullPath;
-              return null;
-            }
-          }
-
-          @Override
-          public Reader getReader() throws IOException {
-            return new InputStreamReader(getURL().openConnection().getInputStream());
-          }
-
-          @Override
-          public int getFirstLine() {
-            return cu.getLineNumber(start);
-          }
-
-          @Override
-          public int getLastLine() {
-            return cu.getLineNumber(end);
-          }
-
-          @Override
-          public int getFirstCol() {
-            return cu.getColumnNumber(start);
-          }
-
-          @Override
-          public int getLastCol() {
-            return cu.getColumnNumber(end);
-          }
-
-          @Override
-          public int getFirstOffset() {
-            return start;
-          }
-
-          @Override
-          public int getLastOffset() {
-            return end;
-          }
-        };
-      }
-    };
+    return new ECJJavaToCAstTranslator(sourceLoader, cu, fullPath, false, dump);
   }
 }

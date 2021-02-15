@@ -44,7 +44,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class ECJSourceLoaderImpl extends JavaSourceLoaderImpl {
-  private final boolean dump;
+  protected final boolean dump;
 
   public ECJSourceLoaderImpl(
       ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha) {
