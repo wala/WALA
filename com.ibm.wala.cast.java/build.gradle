@@ -12,7 +12,7 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 	testFixturesImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.core'),
 	)
