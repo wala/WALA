@@ -184,7 +184,8 @@ public abstract class AstFunctionClass implements IClass, ClassConstants {
     if (functionBody != null) {
       return Collections.singleton(functionBody);
     } else {
-      throw new Error("function " + reference + " has no body!");
+      return Collections.emptySet();
+      // throw new Error("function " + reference + " has no body!");
     }
   }
 
