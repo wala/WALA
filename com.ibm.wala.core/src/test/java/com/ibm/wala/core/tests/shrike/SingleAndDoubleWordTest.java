@@ -203,7 +203,6 @@ public class SingleAndDoubleWordTest extends WalaTestCase {
     // and has the correct type
     for (int index = 0; index < instructions.length; index++) {
       IInstruction instruction = instructions[index];
-      System.out.println(instruction);
       if (instruction instanceof PopInstruction) {
         return index;
       }
