@@ -17,7 +17,6 @@ eclipseMavenCentral {
 				'org.eclipse.jface',
 				'org.eclipse.osgi',
 				'org.eclipse.ui.ide',
-				'org.eclipse.ui.workbench',
 		].each { dep 'testImplementation', it }
 		useNativesForRunningPlatform()
 	}
@@ -30,4 +29,7 @@ dependencies {
 			project(':com.ibm.wala.ide'),
 			project(':com.ibm.wala.util'),
 	)
+	testImplementation('org.eclipse.platform:org.eclipse.ui.workbench') {
+		version { strictly '3.120.0' }
+	}
 }

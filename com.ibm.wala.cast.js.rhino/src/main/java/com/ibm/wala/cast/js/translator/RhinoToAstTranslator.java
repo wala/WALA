@@ -412,8 +412,21 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         namePosition = makePosition(f.getFunctionName());
         f.flattenSymbolTable(false);
         int i = 0;
+        // The name of the function is declared within the scope of the function itself if it is a
+        // function expression.  Otherwise, the name is declared in the same scope as the function
+        // declaration.
+        boolean isFunctionExpression =
+            f.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION
+                || f.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION_STATEMENT;
         arguments = new String[f.getParamCount() + 2];
-        arguments[i++] = name;
+        if (isFunctionExpression) {
+          arguments[i++] = name;
+        } else {
+          // Obfuscate the name, so any references within the method to the actual function name
+          // become lexical accesses.  We still need to keep the argument since in the WALA IR for
+          // JavaScript calls, the function value itself is always passed as the first argument.
+          arguments[i++] = "__WALA__int3rnal__fn__" + name;
+        }
         arguments[i++] = "this";
         for (int j = 0; j < f.getParamCount(); j++) {
           arguments[i++] = f.getParamOrVarName(j);
@@ -1226,6 +1239,27 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         }
       } else {
         name = fn.getFunctionName().getIdentifier();
+        if (fn.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION) {
+          // there is a possibility of another function expression in the same scope with the same
+          // name.  check for that case and use a different name when it occurs.  the checking code
+          // looks for CAstNode keys in the context's scoped entities map constructed for function
+          // expressions
+          boolean nameExists =
+              context.getScopedEntities().keySet().stream()
+                  .filter(
+                      n ->
+                          n != null
+                              && n.getKind() == CAstNode.FUNCTION_EXPR
+                              && n.getChildCount() == 1)
+                  .map(n -> n.getChild(0))
+                  .filter(
+                      n -> n.getKind() == CAstNode.CONSTANT && n.getValue() instanceof CAstEntity)
+                  .map(n -> ((CAstEntity) n.getValue()).getName())
+                  .anyMatch(name::equals);
+          if (nameExists) {
+            name = name + '@' + fn.getAbsolutePosition();
+          }
+        }
       }
 
       if (DEBUG) System.err.println(name + '\n' + body);

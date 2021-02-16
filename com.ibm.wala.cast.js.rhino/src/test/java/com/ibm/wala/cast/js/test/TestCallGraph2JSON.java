@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
-import org.hamcrest.core.IsCollectionContaining;
+import org.hamcrest.core.IsIterableContaining;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -138,7 +138,7 @@ public class TestCallGraph2JSON {
     URL scriptURL = TestCallGraph2JSON.class.getClassLoader().getResource(script);
     return util.buildCG(
             scriptURL, BuilderType.OPTIMISTIC_WORKLIST, null, false, DefaultSourceExtractor::new)
-        .fst;
+        .getCallGraph();
   }
 
   /**
@@ -158,7 +158,7 @@ public class TestCallGraph2JSON {
    * We need this method since column offsets can differ across platforms, so we can't do an exact
    * position match
    */
-  private static IsCollectionContaining<String> hasItemStartingWith(String prefix) {
-    return new IsCollectionContaining<>(startsWith(prefix));
+  private static IsIterableContaining<String> hasItemStartingWith(String prefix) {
+    return new IsIterableContaining<>(startsWith(prefix));
   }
 }

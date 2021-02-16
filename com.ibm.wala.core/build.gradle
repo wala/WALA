@@ -45,12 +45,12 @@ dependencies {
 		because 'public interface CallGraph extends interface NumberedGraph'
 	}
 	testFixturesImplementation(
-			'junit:junit:4.13',
-			'org.apache.ant:ant:1.10.8',
+			'junit:junit:4.13.1',
+			'org.apache.ant:ant:1.10.9',
 	)
 	testImplementation(
-			'junit:junit:4.13',
-			'org.hamcrest:hamcrest-core:2.2',
+			'junit:junit:4.13.1',
+			'org.hamcrest:hamcrest:2.2',
 	)
 	testRuntimeOnly(
 			files(compileTestSubjectsJava.map { it.outputs.files.first() })

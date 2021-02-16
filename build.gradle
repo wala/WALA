@@ -4,13 +4,13 @@
 //
 
 buildscript {
-	dependencies.classpath 'commons-io:commons-io:2.7'
+	dependencies.classpath 'commons-io:commons-io:2.8.0'
 }
 
 plugins {
-	id 'com.diffplug.eclipse.mavencentral' version '3.24.0' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.26.0' apply false
 	id 'com.dorongold.task-tree' version '1.5'
-	id 'com.github.ben-manes.versions' version '0.29.0'
+	id 'com.github.ben-manes.versions' version '0.36.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
 //	id 'nebula.lint' version '14.2.5'
@@ -59,8 +59,22 @@ subprojects { subproject ->
 	version rootProject.version
 
 	repositories {
-		google() // to get r8
 		mavenCentral()
+		// to get r8
+		maven {
+			url 'https://storage.googleapis.com/r8-releases/raw'
+		}
+	}
+
+	configurations {
+		implementation {
+			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
+			// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
+			// com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
+			// Gradle, but not run them, excluding the group as a dependence is a reasonable
+			// solution.
+			exclude group: 'com.sun.jna'
+		}
 	}
 
 	eclipse {
@@ -93,7 +107,7 @@ subprojects { subproject ->
 				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
 			}
 		} else {
-			maxParallelForks = Integer.MAX_VALUE
+			maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 		}
 	}
 

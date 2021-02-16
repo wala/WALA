@@ -25,8 +25,10 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
@@ -35,7 +37,9 @@ import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.slicer.HeapStatement.HeapReturnCaller;
 import com.ibm.wala.ipa.slicer.MethodEntryStatement;
+import com.ibm.wala.ipa.slicer.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.NormalStatement;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
@@ -51,11 +55,16 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.strings.Atom;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -64,22 +73,20 @@ public class SlicerTest {
 
   private static AnalysisScope cachedScope;
 
-  // more aggressive exclusions to avoid library blowup
-  // in interprocedural tests
-  private static final String EXCLUSIONS =
-      "java\\/awt\\/.*\n"
-          + "javax\\/swing\\/.*\n"
-          + "sun\\/awt\\/.*\n"
-          + "sun\\/swing\\/.*\n"
-          + "com\\/sun\\/.*\n"
-          + "sun\\/.*\n"
-          + "org\\/netbeans\\/.*\n"
-          + "org\\/openide\\/.*\n"
-          + "com\\/ibm\\/crypto\\/.*\n"
-          + "com\\/ibm\\/security\\/.*\n"
-          + "org\\/apache\\/xerces\\/.*\n"
-          + "java\\/security\\/.*\n"
-          + "";
+  private static String makeSlicerExclusions() {
+    try {
+      try (InputStream is =
+          (new FileProvider())
+              .getInputStreamFromClassLoader(
+                  CallGraphTestUtil.REGRESSION_EXCLUSIONS, SlicerTest.class.getClassLoader())) {
+        String exclusions = new String(FileUtil.readBytes(is), "UTF-8");
+        // we also need to exclude java.security to avoid blowup during slicing
+        return exclusions + "java\\/security\\/.*\n";
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
@@ -87,7 +94,7 @@ public class SlicerTest {
           AnalysisScopeReader.readJavaScope(
               TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
       cachedScope.setExclusions(
-          new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
+          new FileOfClasses(new ByteArrayInputStream(makeSlicerExclusions().getBytes("UTF-8"))));
     }
     return cachedScope;
   }
@@ -1000,5 +1007,126 @@ public class SlicerTest {
             DataDependenceOptions.FULL,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
+  }
+
+  @Test
+  public void testList()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lslice/TestList");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+
+    NormalStatement getCall = (NormalStatement) SlicerUtil.findCallTo(main, "get");
+    // we need a NormalReturnCaller statement to slice from the return value
+    NormalReturnCaller nrc = new NormalReturnCaller(main, getCall.getInstructionIndex());
+
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            nrc,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    List<Statement> normalsInMain =
+        slice.stream()
+            .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
+            .collect(Collectors.toList());
+    normalsInMain.stream().forEach(System.err::println);
+    Assert.assertEquals(7, normalsInMain.size());
+  }
+
+  @Test
+  public void testListIterator()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "Lslice/TestListIterator");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+
+    NormalStatement getCall = (NormalStatement) SlicerUtil.findCallTo(main, "hasNext");
+    // we need a NormalReturnCaller statement to slice from the return value
+    NormalReturnCaller nrc = new NormalReturnCaller(main, getCall.getInstructionIndex());
+
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            nrc,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
+    List<Statement> inMain =
+        slice.stream().filter(s -> s.getNode().equals(main)).collect(Collectors.toList());
+    // check that we are tracking the size field in a HeapReturnCaller statement for the add() call
+    Assert.assertTrue(
+        "couldn't find HeapReturnCaller for size field",
+        inMain.stream()
+            .filter(
+                st -> {
+                  if (st instanceof HeapReturnCaller) {
+                    HeapReturnCaller hrc = (HeapReturnCaller) st;
+                    if (hrc.getCall().getDeclaredTarget().getName().toString().equals("add")) {
+                      PointerKey location = hrc.getLocation();
+                      if (location instanceof InstanceFieldKey) {
+                        InstanceFieldKey ifk = (InstanceFieldKey) location;
+                        return ifk.getField().getName().toString().equals("size");
+                      }
+                    }
+                  }
+                  return false;
+                })
+            .findFirst()
+            .isPresent());
+  }
+
+  @Test
+  public void testIntegerValueOf()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            scope, cha, "Lslice/TestIntegerValueOf");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = CallGraphSearchUtil.findMainMethod(cg);
+
+    Statement s = SlicerUtil.findCallTo(main, "doNothing");
+
+    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            s, cg, pointerAnalysis, DataDependenceOptions.NO_HEAP, ControlDependenceOptions.NONE);
+    // SlicerUtil.dumpSlice(slice);
+    List<Statement> inMain =
+        slice.stream().filter(st -> st.getNode().equals(main)).collect(Collectors.toList());
+    inMain.stream().forEach(System.err::println);
+    Assert.assertEquals(4, inMain.size());
+    // returns for Integer.valueOf() and getInt()
+    Assert.assertEquals(2, inMain.stream().filter(st -> st instanceof NormalReturnCaller).count());
   }
 }

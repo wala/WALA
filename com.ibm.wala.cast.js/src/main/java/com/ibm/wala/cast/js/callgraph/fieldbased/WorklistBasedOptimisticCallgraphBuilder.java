@@ -75,7 +75,8 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     VertexFactory factory = flowgraph.getVertexFactory();
     Set<Vertex> worklist = HashSetFactory.make();
     Map<Vertex, Set<FuncVertex>> reachingFunctions = HashMapFactory.make();
-    Map<VarVertex, JavaScriptInvoke> reflectiveCalleeVertices = HashMapFactory.make();
+    Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices =
+        HashMapFactory.make();
 
     for (Vertex v : flowgraph) {
       if (v instanceof FuncVertex) {
@@ -100,28 +101,38 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
           for (FuncVertex fv : vReach) {
             if (wReach.add(fv)) {
               changed = true;
-              addCallEdge(flowgraph, (CallVertex) w, fv, worklist);
+              CallVertex callVertex = (CallVertex) w;
+              addCallEdge(flowgraph, callVertex, fv, worklist);
 
               // special handling of invocations of Function.prototype.call
+              String fullName = fv.getFullName();
               if (handleCallApply
                   && changed
-                  && fv.getFullName().equals("Lprologue.js/Function_prototype_call")) {
-                JavaScriptInvoke invk = ((CallVertex) w).getInstruction();
+                  && (fullName.equals("Lprologue.js/Function_prototype_call")
+                      || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+                JavaScriptInvoke invk = callVertex.getInstruction();
                 VarVertex reflectiveCalleeVertex =
-                    factory.makeVarVertex(((CallVertex) w).getCaller(), invk.getUse(1));
-                reflectiveCalleeVertices.put(reflectiveCalleeVertex, invk);
+                    factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+                flowgraph.addEdge(
+                    reflectiveCalleeVertex,
+                    factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+                // we only add dataflow edges for Function.prototype.call
+                boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
+                reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
                 for (FuncVertex fw :
                     MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
-                  addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invk, fw, worklist);
+                  addReflectiveCallEdge(
+                      flowgraph, reflectiveCalleeVertex, invk, fw, worklist, isCall);
               }
             }
           }
         } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
-          JavaScriptInvoke invk = reflectiveCalleeVertices.get(w);
+          Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
           for (FuncVertex fv : vReach) {
             if (wReach.add(fv)) {
               changed = true;
-              addReflectiveCallEdge(flowgraph, (VarVertex) w, invk, fv, worklist);
+              addReflectiveCallEdge(
+                  flowgraph, (VarVertex) w, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);
             }
           }
         } else {
@@ -188,24 +199,27 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       VarVertex reflectiveCallee,
       JavaScriptInvoke invk,
       FuncVertex realCallee,
-      Set<Vertex> worklist) {
+      Set<Vertex> worklist,
+      boolean isFunctionPrototypeCall) {
     VertexFactory factory = flowgraph.getVertexFactory();
     FuncVertex caller = reflectiveCallee.getFunction();
 
-    // flow from arguments to parameters
-    for (int i = 2; i < invk.getNumberOfPositionalParameters(); ++i) {
-      addFlowEdge(
-          flowgraph,
-          factory.makeVarVertex(caller, invk.getUse(i)),
-          factory.makeParamVertex(realCallee, i - 1),
-          worklist);
-
-      // flow from return vertex to result vertex
-      addFlowEdge(
-          flowgraph,
-          factory.makeRetVertex(realCallee),
-          factory.makeVarVertex(caller, invk.getDef()),
-          worklist);
+    if (isFunctionPrototypeCall) {
+      // flow from arguments to parameters
+      for (int i = 2; i < invk.getNumberOfPositionalParameters(); ++i) {
+        addFlowEdge(
+            flowgraph,
+            factory.makeVarVertex(caller, invk.getUse(i)),
+            factory.makeParamVertex(realCallee, i - 1),
+            worklist);
+      }
     }
+
+    // flow from return vertex to result vertex
+    addFlowEdge(
+        flowgraph,
+        factory.makeRetVertex(realCallee),
+        factory.makeVarVertex(caller, invk.getDef()),
+        worklist);
   }
 }

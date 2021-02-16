@@ -299,28 +299,6 @@ public class ContainerContextSelector implements ContextSelector {
         return true;
       }
 
-      // TODO MS disabling logic below; it has been disabled anyway
-      // for a while since we were avoiding calling this method with
-      // receiver == null.  Should we delete it?
-      //      if (receiver == null) {
-      //        // any possible receiver. However, we will only handle this call
-      //        // if the concrete receiver type is interesting.
-      //        IClass klass = targetMethod.getDeclaringClass();
-      //        int n = cha.getNumberOfImmediateSubclasses(klass);
-      //        if (n > 0) {
-      //          // the receiver is not "effectively final".
-      //          // give up and assume we might see an interesting subclass.
-      //          return true;
-      //        }
-      //        // only one possible receiver class
-      //        if (delegate.isInteresting(klass)) {
-      //          // we may create a receiver instance context for this call
-      //          return true;
-      //        } else {
-      //          // we will never create a receiver instance context for this call
-      //          return false;
-      //        }
-      //      }
       if (!delegate.isInteresting(receiver.getConcreteType())) {
         return false;
       }
@@ -351,7 +329,7 @@ public class ContainerContextSelector implements ContextSelector {
 
   @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+    if (site.isDispatch()) {
       return thisParameter;
     } else {
       return EmptyIntSet.instance;

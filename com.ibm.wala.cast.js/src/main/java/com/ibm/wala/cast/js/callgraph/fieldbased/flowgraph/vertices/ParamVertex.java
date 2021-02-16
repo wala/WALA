@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
+
 /**
  * A parameter vertex represents a positional parameter of a function. It doesn't necessarily need
  * to correspond to a named parameter.
@@ -47,5 +49,10 @@ public class ParamVertex extends Vertex {
   @Override
   public String toString() {
     return "Param(" + func + ", " + index + ')';
+  }
+
+  @Override
+  public String toSourceLevelString(IAnalysisCacheView cache) {
+    return "Param(" + func.toSourceLevelString(cache) + ", " + index + ')';
   }
 }

@@ -88,6 +88,8 @@ public interface TestConstants {
 
   public static final String REFLECT23_MAIN = "Lreflection/Reflect23";
 
+  public static final String REFLECT24_MAIN = "Lreflection/Reflect24";
+
   public static final String REFLECTGETMETHODCONTEXT_MAIN = "Lreflection/GetMethodContext";
 
   public static final String SLICE1_MAIN = "Lslice/Slice1";
@@ -143,4 +145,8 @@ public interface TestConstants {
   public static final String SLICE_TESTINETADDR = "Lslice/TestInetAddr";
 
   public static final String SLICE_JUSTTHROW = "Lslice/JustThrow";
+
+  public static final String OBJECT_SENSITIVE_TEST1 = "LobjSensitive/TestObjSensitive1";
+
+  public static final String OBJECT_SENSITIVE_TEST2 = "LobjSensitive/TestObjSensitive2";
 }

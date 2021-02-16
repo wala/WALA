@@ -127,9 +127,8 @@ dependencies {
 	)
 	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testImplementation(
-			'com.android.tools:r8:2.0.99',
-			'junit:junit:4.13',
-			'org.osgi:org.osgi.core:6.0.0',
+			'com.android.tools:r8:2.2.42',
+			'junit:junit:4.13.1',
 			'org.smali:dexlib2:2.4.0',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),

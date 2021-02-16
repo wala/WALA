@@ -7,7 +7,7 @@
   <parent>
     <artifactId>WALA</artifactId>
     <groupId>com.ibm.wala</groupId>
-    <version>1.5.6-SNAPSHOT</version>
+    <version>1.5.6</version>
   </parent>
 
 
@@ -80,7 +80,7 @@
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.cast.java</artifactId>
-									<version>1.5.6-SNAPSHOT</version>
+									<version>1.5.6</version>
                   <classifier>test-fixtures</classifier>
 									<type>jar</type>
 									<overWrite>false</overWrite>
@@ -120,7 +120,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

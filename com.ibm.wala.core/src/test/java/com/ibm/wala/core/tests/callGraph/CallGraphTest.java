@@ -33,6 +33,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -57,7 +58,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -336,6 +340,33 @@ public class CallGraphTest extends WalaTestCase {
     OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
     Assert.assertEquals(1, pointsToSet.size());
   }
+
+  @Test
+  public void testZeroOneContainerStaticMethods()
+      throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints =
+        Util.makeMainEntrypoints(scope, cha, "Lslice/TestIntegerValueOf");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+    CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
+    Assert.assertTrue(
+        "did not find call to valueOf",
+        StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(
+                    cg.getSuccNodes(mainMethod), Spliterator.ORDERED),
+                false)
+            .filter(succ -> succ.getMethod().getName().toString().equals("valueOf"))
+            .findFirst()
+            .isPresent());
+  }
+
   /** make main entrypoints, even in the primordial loader. */
   public static Iterable<Entrypoint> makePrimordialMainEntrypoints(ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");

@@ -1,19 +1,20 @@
 dependencies {
 	implementation(
-			'org.mozilla:rhino:1.7.12',
+			'org.mozilla:rhino:1.7.13',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.util'),
 	)
 	testImplementation(
-			'junit:junit:4.13',
+			'junit:junit:4.13.1',
+			'org.hamcrest:hamcrest:2.2',
 			'com.google.code.gson:gson:2.8.6',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.cast.js')),
 	)
 	testFixturesImplementation(
-			'junit:junit:4.13',
+			'junit:junit:4.13.1',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.cast.js')),
 	)

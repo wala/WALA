@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
 import org.junit.Test;
 
@@ -72,8 +73,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testCallbacksOptimistic() throws WalaException, Error, CancelException {
-    runTest(
-        "tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC);
   }
 
   @Test
@@ -108,7 +108,8 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         },
         new Object[] {"suffix:Function_prototype_call", new String[] {"suffix:f"}},
         new Object[] {"suffix:Function_prototype_apply", new String[] {"suffix:x"}},
-        new Object[] {"suffix:f", new String[] {"suffix:k"}}
+        new Object[] {"suffix:f", new String[] {"suffix:k"}},
+        new Object[] {"suffix:p", new String[] {"suffix:n"}}
       };
 
   @Test
@@ -163,6 +164,43 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testNewFnEmptyNoCrash() throws WalaException, Error, CancelException {
     runTest("tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  private static final Object[][] assertionsForRecursiveLexWrite =
+      new Object[][] {new Object[] {"suffix:outer", new String[] {"suffix:foo", "suffix:bar"}}};
+
+  @Test
+  public void testRecursiveLexWrite() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/recursive_lex_write.js",
+        assertionsForRecursiveLexWrite,
+        BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  @Test
+  public void testNamedFnTwice() throws WalaException, Error, CancelException {
+    // hack since Windows column offsets are different
+    String secondFunName =
+        PlatformUtil.onWindows() ? "suffix:testFunExp@390" : "suffix:testFunExp@381";
+    runTest(
+        "tests/named_fn_twice.js",
+        new Object[][] {
+          new Object[] {
+            "suffix:named_fn_twice.js", new String[] {"suffix:testFunExp", secondFunName}
+          },
+        },
+        BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  @Test
+  public void testSwitchDefault() throws WalaException, Error, CancelException {
+    runTest(
+        "tests/switch_default.js",
+        new Object[][] {
+          new Object[] {"suffix:withSwitch", new String[] {"suffix:fun1", "suffix:fun2"}},
+          new Object[] {"suffix:withSwitchStr", new String[] {"suffix:fun3", "suffix:fun4"}}
+        },
+        BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   // @Test
