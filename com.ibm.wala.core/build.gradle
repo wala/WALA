@@ -1,7 +1,21 @@
-plugins {
-	id 'gradle-mvn-push'
-	id 'wala-java'
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.bmuschko:gradle-nexus-plugin:2.3'
+	}
 }
+
+plugins {
+	id 'eclipse'
+}
+
+apply plugin: 'com.bmuschko.nexus'
+
+group = "com.ibm.wala"
+archivesBaseName = "core"
+version = "1.5.7-SNAPSHOT"
 
 eclipse {
 	project.natures 'org.eclipse.pde.PluginNature'
@@ -47,16 +61,14 @@ dependencies {
 	}
 	testFixturesImplementation(
 			'junit:junit:4.13.2',
-			'org.apache.ant:ant:1.10.11',
+			'org.apache.ant:ant:1.10.9',
 	)
 	testImplementation(
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
 	)
 	testRuntimeOnly(
-			sourceSets.testSubjects.output.classesDirs,
-			// add the testSubjects source files to enable SourceMapTest to pass
-			files(sourceSets.testSubjects.java.srcDirs),
+			files(compileTestSubjectsJava.map { it.outputs.files.first() })
 	)
 }
 
@@ -71,7 +83,8 @@ tasks.named('javadoc') {
 //
 
 final downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
-	final archive = 'kawa-3.0.zip'
+	ext.version = '3.0'
+	final archive = "kawa-${version}.zip"
 	src "https://ftp.gnu.org/pub/gnu/kawa/$archive"
 	dest project.layout.buildDirectory.file(archive)
 	checksum '2713e6dfb939274ba3b1d36daea68436'
@@ -83,8 +96,8 @@ tasks.register('extractKawa') {
 
 	doLast {
 		copy {
-			from(zipTree(inputs.files.singleFile)) {
-				include "kawa-*/lib/${outputs.files.singleFile.name}"
+			from(downloadKawa.map { zipTree it.dest }) {
+				include "kawa-${downloadKawa.get().version}/lib/${outputs.files.singleFile.name}"
 				eachFile {
 					relativePath RelativePath.parse(!directory, relativePath.lastName)
 				}
@@ -104,13 +117,11 @@ tasks.register('extractKawa') {
 @CacheableTask
 class CompileKawaScheme extends JavaExec {
 
-	@InputFile
-	@PathSensitive(PathSensitivity.NONE)
 	final RegularFileProperty schemeFile = project.objects.fileProperty()
 
 	CompileKawaScheme() {
 		classpath project.tasks.named('extractKawa')
-		mainClass.set('kawa.repl')
+		main 'kawa.repl'
 
 		final outputDir = project.layout.buildDirectory.dir(name)
 		args '-d', outputDir.get().asFile
@@ -119,6 +130,7 @@ class CompileKawaScheme extends JavaExec {
 		logging.captureStandardError LogLevel.INFO
 		args '--main', '-C'
 		argumentProviders.add({ -> [schemeFile.get() as String] } as CommandLineArgumentProvider)
+		inputs.file schemeFile
 	}
 }
 
@@ -233,7 +245,7 @@ tasks.register('downloadJavaCup', VerifiedDownload) {
 //
 
 tasks.register('collectJLex', Jar) {
-	from project(':com.ibm.wala.cast.java.test.data').tasks.named('compileTestJava')
+	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
 	include 'JLex/'
 	archiveFileName = 'JLex.jar'
 	destinationDirectory = layout.buildDirectory.dir name
@@ -283,7 +295,7 @@ final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
-	mainClass.set('ocaml.compilers.ocamljavaMain')
+	main 'ocaml.compilers.ocamljavaMain'
 	args '-o', jarTarget
 	argumentProviders.add({ ->
 		[ocamlSource.get().toString()]
@@ -328,7 +340,7 @@ tasks.register('collectTestDataA', Jar) {
 
 
 tasks.named('processTestResources') {
-	from [
+	[
 			'buildChessJar',
 			'buildKawaTestJar',
 			'collectJLex',
@@ -336,7 +348,9 @@ tasks.named('processTestResources') {
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
-	].collect(tasks.&named)
+	].each {
+		from tasks.named(it)
+	}
 
 	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
 	// missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
@@ -347,16 +361,80 @@ tasks.named('processTestResources') {
 
 tasks.named('test') {
 	maxHeapSize = '1500M'
+	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
-	classpath += files project(':com.ibm.wala.core').sourceSets.test.output.classesDirs
+	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
 	testLogging {
 		exceptionFormat = 'full'
 		events 'passed', 'skipped', 'failed'
 	}
 	// temporarily turn off some tests on JDK 11+
 	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
-		exclude '**/cha/LibraryVersionTest.class' // https://github.com/wala/WALA/issues/963
+		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
+		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
+		exclude '**/cha/LibraryVersionTest.class'
+		exclude '**/ir/TypeAnnotationTest.class'
 	}
 
 	outputs.file layout.buildDirectory.file('report')
+}
+
+apply from: rootProject.file("gradle-mvn-push.gradle")
+
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+			repository(url: "${nexusUrl}/repository/maven-releases/") {
+				authentication(userName: nexusUsername, password: nexusPassword)
+			}
+
+			snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots/") {
+				authentication(userName: nexusUsername, password: nexusPassword)
+			}
+
+			pom.project {
+				name 'WALA Core'
+				packaging 'jar'
+				// optionally artifactId can be defined here
+				description 'T. J. Watson Libraries for Analysis'
+				url 'https://github.com/wala/WALA'
+
+				scm {
+					connection 'git@github.com:wala/WALA.git'
+					developerConnection 'git@github.com:wala/WALA.git'
+					url 'https://github.com/wala/WALA'
+				}
+
+				licenses {
+					license {
+						name 'Eclipse Public License 2.0'
+						url 'https://github.com/wala/WALA/blob/master/LICENSE'
+					}
+				}
+
+				developers {
+					developer {
+						id 'ralfherzog'
+						name 'Ralf Herzog'
+						email 'ralf@rherzog.de'
+					}
+				}
+			}
+		}
+	}
+}
+
+extraArchive {
+	sources = false
+	tests = true
+	javadoc = false
+}
+
+nexus {
+	sign = false
+	repositoryUrl = "${nexusUrl}/repository/maven-releases/"
+	snapshotRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
 }
