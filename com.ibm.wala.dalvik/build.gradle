@@ -114,7 +114,7 @@ dependencies {
 	)
 	sampleCup 'java_cup:java_cup:0.9e:sources'
 	testImplementation(
-			'com.android.tools:r8:2.2.42',
+			'com.android.tools:r8:2.1.75',
 			'junit:junit:4.13.2',
 			'org.smali:dexlib2:2.5.2',
 			project(':com.ibm.wala.core'),
