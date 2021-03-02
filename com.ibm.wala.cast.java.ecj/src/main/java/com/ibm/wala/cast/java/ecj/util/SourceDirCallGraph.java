@@ -6,6 +6,7 @@ import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.ecj.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -86,8 +87,15 @@ public class SourceDirCallGraph {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
     }
     // add the source directory
-    scope.addToScope(
-        JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(new File(sourceDir)));
+    File root = new File(sourceDir);
+    if (root.isDirectory()) {
+      scope.addToScope(JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(root));
+    } else {
+      String srcFileName = sourceDir.substring(sourceDir.lastIndexOf(File.separator) + 1);
+      assert root.exists() : "couldn't find " + sourceDir;
+      scope.addToScope(
+          JavaSourceAnalysisScope.SOURCE, new SourceFileModule(root, srcFileName, null));
+    }
 
     // build the class hierarchy
     IClassHierarchy cha = ClassHierarchyFactory.make(scope, getLoaderFactory(scope));
