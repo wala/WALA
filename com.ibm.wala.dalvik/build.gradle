@@ -120,7 +120,7 @@ configurations {
 dependencies {
 	implementation(
 			'org.slf4j:slf4j-api:1.7.30',
-			'org.smali:dexlib2:2.4.0',
+			'org.smali:dexlib2:2.5.2',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
@@ -129,7 +129,7 @@ dependencies {
 	testImplementation(
 			'com.android.tools:r8:2.2.42',
 			'junit:junit:4.13.2',
-			'org.smali:dexlib2:2.4.0',
+			'org.smali:dexlib2:2.5.2',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
 			project(':com.ibm.wala.shrike'),
