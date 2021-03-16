@@ -74,7 +74,10 @@ public interface IClassHierarchy extends Iterable<IClass> {
   public Set<IMethod> getPossibleTargets(IClass receiverClass, MethodReference ref);
 
   /**
-   * Return the unique receiver of an invocation of method on an object of type m.getDeclaredClass
+   * Return the unique receiver of an invocation of method on an object of type {@code
+   * m.getDeclaredClass()}. Note that for Java, {@code m.getDeclaredClass()} must represent a
+   * <em>class</em>, <em>not</em> an interface. This method does not work for finding inherited
+   * methods in interfaces.
    *
    * @return IMethod, or null if no appropriate receiver is found.
    * @throws IllegalArgumentException if m is null
@@ -95,9 +98,11 @@ public interface IClassHierarchy extends Iterable<IClass> {
   public IField resolveField(IClass klass, FieldReference f);
 
   /**
-   * Return the unique receiver of an invocation of method on an object of type declaringClass
+   * Return the unique target of an invocation of method on an object of type receiverClass
    *
-   * @param receiverClass type of receiver
+   * @param receiverClass type of receiver. Note that for Java, {@code receiverClass} must represent
+   *     a <em>class</em>, <em>not</em> an interface. This method does not work for finding
+   *     inherited methods in interfaces.
    * @param selector method signature
    * @return Method resolved method abstraction
    * @throws IllegalArgumentException if receiverClass is null

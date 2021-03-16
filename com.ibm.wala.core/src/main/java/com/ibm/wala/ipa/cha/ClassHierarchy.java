@@ -572,12 +572,6 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  /**
-   * Return the unique receiver of an invocation of method on an object of type m.getDeclaredClass
-   *
-   * @return IMethod, or null if no appropriate receiver is found.
-   * @throws IllegalArgumentException if m is null
-   */
   @Override
   public IMethod resolveMethod(MethodReference m) {
     if (m == null) {
@@ -623,14 +617,6 @@ public class ClassHierarchy implements IClassHierarchy {
     return klass.getField(f.getName(), f.getFieldType().getName());
   }
 
-  /**
-   * Return the unique target of an invocation of method on an object of type declaringClass
-   *
-   * @param receiverClass type of receiver
-   * @param selector method signature
-   * @return Method resolved method abstraction
-   * @throws IllegalArgumentException if receiverClass is null
-   */
   @Override
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
     if (receiverClass == null) {
