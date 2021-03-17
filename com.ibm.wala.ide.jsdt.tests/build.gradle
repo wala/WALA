@@ -35,6 +35,9 @@ dependencies {
 			project(':com.ibm.wala.util'),
 			project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
 	)
+	testImplementation('javax.annotation:javax.annotation-api') {
+		version { strictly '1.3.2' }
+	}
 }
 
 tasks.named('test') {
