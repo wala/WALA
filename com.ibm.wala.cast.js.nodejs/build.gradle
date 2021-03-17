@@ -4,7 +4,7 @@ dependencies {
 	}
 	implementation(
 			'commons-io:commons-io:2.8.0',
-			'org.json:json:20201115',
+			'org.json:json:20210307',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js.rhino'),
 			project(':com.ibm.wala.core'),
