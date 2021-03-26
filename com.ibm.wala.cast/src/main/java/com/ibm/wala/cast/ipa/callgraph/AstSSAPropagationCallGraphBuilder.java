@@ -1294,31 +1294,37 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       newFieldRead(opNode, objVn, fieldsVn, getBuilder().getPointerKeyForLocal(opNode, lhsVn));
     }
 
-    protected void newFieldRead(CGNode opNode, int objVn, int fieldsVn, final PointerKey lhs) {
-      newFieldOperation(
-          opNode,
-          objVn,
-          fieldsVn,
-          true,
-          new ReflectedFieldAction() {
-            @Override
-            public void dump(
-                AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-              System.err.println(
-                  ("read " + lhs + " from " + fieldKey + ' ' + constObj + ", " + constProp));
-            }
+    protected class FieldReadAction implements ReflectedFieldAction {
+      private final PointerKey lhs;
 
-            @Override
-            public void action(AbstractFieldPointerKey fieldKey) {
-              if (!representsNullType(fieldKey.getInstanceKey())) {
-                system.newConstraint(lhs, assignOperator, fieldKey);
-                AbstractFieldPointerKey unknown = getBuilder().fieldKeyForUnknownWrites(fieldKey);
-                if (unknown != null) {
-                  system.newConstraint(lhs, assignOperator, unknown);
-                }
-              }
-            }
-          });
+      public FieldReadAction(PointerKey lhs) {
+        this.lhs = lhs;
+      }
+
+      @Override
+      public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
+        System.err.println(
+            ("read " + lhs + " from " + fieldKey + ' ' + constObj + ", " + constProp));
+      }
+
+      @Override
+      public void action(AbstractFieldPointerKey fieldKey) {
+        if (!representsNullType(fieldKey.getInstanceKey())) {
+          system.newConstraint(lhs, assignOperator, fieldKey);
+          AbstractFieldPointerKey unknown = getBuilder().fieldKeyForUnknownWrites(fieldKey);
+          if (unknown != null) {
+            system.newConstraint(lhs, assignOperator, unknown);
+          }
+        }
+      }
+    }
+
+    protected ReflectedFieldAction fieldReadAction(PointerKey lhs) {
+      return new FieldReadAction(lhs);
+    }
+
+    protected void newFieldRead(CGNode opNode, int objVn, int fieldsVn, final PointerKey lhs) {
+      newFieldOperation(opNode, objVn, fieldsVn, true, fieldReadAction(lhs));
     }
   }
 

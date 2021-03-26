@@ -158,4 +158,9 @@ public interface CAstEntity {
 
   /** Returns the set of any annotations this entity may have */
   Collection<CAstAnnotation> getAnnotations();
+
+  /** Allow finding original entity after rewrites */
+  default CAstEntity getOriginal() {
+    return this;
+  }
 }

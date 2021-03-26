@@ -109,7 +109,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     // when doing paranoid checking of points-to sets, code in PointsToSetVariable needs to know
     // about the instance key
     // mapping
-    if (PointsToSetVariable.PARANOID) {
+    if (PointsToSetVariable.PARANOID || PointsToSetVariable.VERBOSE_PRINT) {
       PointsToSetVariable.instanceKeys = instanceKeys;
     }
   }
