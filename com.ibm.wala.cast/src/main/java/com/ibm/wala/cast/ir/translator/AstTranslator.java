@@ -4097,7 +4097,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         doLocalWrite(c, nm, makeType(t), c.getValue(v));
       } else if (v.getKind() != CAstNode.CONSTANT
           && v.getKind() != CAstNode.VAR
-          && v.getKind() != CAstNode.THIS) {
+          && v.getKind() != CAstNode.THIS
+          && v.getKind() != CAstNode.BLOCK_EXPR) {
         scope.declare(s, c.getValue(v));
       } else {
         scope.declare(s);
