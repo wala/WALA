@@ -183,8 +183,12 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getNodeManager().removeNode(n);
   }
 
-  @SuppressWarnings("unused")
-  protected String edgeString(T from, T to) {
+  protected String nodeString(T n, @SuppressWarnings("unused") boolean forEdge) {
+    return n.toString();
+  }
+
+  protected String edgeString(
+      @SuppressWarnings("unused") T from, @SuppressWarnings("unused") T to) {
     return " --> ";
   }
 
@@ -192,9 +196,9 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     for (T n : this) {
-      sb.append(n.toString()).append('\n');
+      sb.append(nodeString(n, false)).append('\n');
       for (T s : Iterator2Iterable.make(getSuccNodes(n))) {
-        sb.append(edgeString(n, s)).append(s);
+        sb.append(edgeString(n, s)).append(nodeString(s, true));
         sb.append('\n');
       }
       sb.append('\n');
