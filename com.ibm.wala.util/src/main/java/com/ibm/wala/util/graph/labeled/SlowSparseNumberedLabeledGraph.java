@@ -83,6 +83,11 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
 
   private final SparseNumberedLabeledEdgeManager<T, U> edgeManager;
 
+  public SlowSparseNumberedLabeledGraph() {
+    nodeManager = new SlowNumberedNodeManager<>();
+    edgeManager = new SparseNumberedLabeledEdgeManager<>(nodeManager);
+  }
+
   public SlowSparseNumberedLabeledGraph(U defaultLabel) {
     if (defaultLabel == null) {
       throw new IllegalArgumentException("null default label");

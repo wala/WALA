@@ -191,9 +191,15 @@ public class SparseNumberedLabeledEdgeManager<T, U>
     super();
     this.defaultLabel = defaultLabel;
     this.nodeManager = nodeManager;
-    if (defaultLabel == null) {
-      throw new IllegalArgumentException("null default label");
+    if (nodeManager == null) {
+      throw new IllegalArgumentException("null nodeManager");
     }
+  }
+
+  public SparseNumberedLabeledEdgeManager(final NumberedNodeManager<T> nodeManager) {
+    super();
+    this.defaultLabel = null;
+    this.nodeManager = nodeManager;
     if (nodeManager == null) {
       throw new IllegalArgumentException("null nodeManager");
     }
@@ -224,6 +230,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   @Override
   public void addEdge(T src, T dst) {
+    assert defaultLabel != null;
     addEdge(src, dst, defaultLabel);
   }
 
@@ -265,12 +272,21 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   @Override
   public boolean hasEdge(T src, T dst) {
-    return hasEdge(src, dst, defaultLabel);
+    for (U label : nodeToSuccLabels.get(src)) {
+      if (hasEdge(src, dst, label)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
   public void removeEdge(T src, T dst) throws UnsupportedOperationException {
-    removeEdge(src, dst, defaultLabel);
+    for (U label : nodeToSuccLabels.get(src)) {
+      if (hasEdge(src, dst, label)) {
+        removeEdge(src, dst, label);
+      }
+    }
   }
 
   @Override
