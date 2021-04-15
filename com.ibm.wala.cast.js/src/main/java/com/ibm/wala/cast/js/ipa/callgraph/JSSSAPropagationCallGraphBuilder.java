@@ -526,9 +526,6 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       if (instruction.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
         handleJavascriptDispatch(instruction);
       } else {
-        if (!instruction.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
-          System.err.println(instruction);
-        }
         visitInvokeInternal(instruction, new DefaultInvariantComputer());
       }
     }
