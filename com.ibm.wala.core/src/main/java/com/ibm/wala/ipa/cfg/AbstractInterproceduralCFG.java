@@ -54,7 +54,25 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
   private static final boolean CALL_TO_RETURN_EDGES = true;
 
   /** Graph implementation we delegate to. */
-  private final NumberedGraph<BasicBlockInContext<T>> g = new SlowSparseNumberedGraph<>(2);
+  private final NumberedGraph<BasicBlockInContext<T>> g =
+      new SlowSparseNumberedGraph<BasicBlockInContext<T>>(2) {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        protected String nodeString(BasicBlockInContext<T> n, boolean forEdge) {
+          if (forEdge) {
+            return n.toString();
+          } else {
+            StringBuffer sb = new StringBuffer(n.toString());
+            n.iterator()
+                .forEachRemaining(
+                    inst -> {
+                      sb.append("\n").append(inst.toString());
+                    });
+            return sb.toString();
+          }
+        }
+      };
 
   /** Governing call graph */
   private final CallGraph cg;

@@ -44,13 +44,19 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.*;
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.collections.MapIterator;
+import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.GraphUtil;
-import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.dominators.Dominators;
+import com.ibm.wala.util.graph.labeled.NumberedLabeledGraph;
 import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntIterator;
@@ -67,16 +73,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /** Program dependence graph for a single call graph node */
-public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
-
-  /* BEGIN Custom change: control deps */
-  public enum Dependency {
-    CONTROL_DEP,
-    DATA_AND_CONTROL_DEP
-  }
+public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statement, Dependency> {
 
   private final SlowSparseNumberedLabeledGraph<Statement, Dependency> delegate =
-      new SlowSparseNumberedLabeledGraph<>(Dependency.DATA_AND_CONTROL_DEP);
+      new SlowSparseNumberedLabeledGraph<>();
   /* END Custom change: control deps */
   private static final boolean VERBOSE = false;
 
@@ -312,10 +312,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
             if (st != null) {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
-              delegate.addEdge(src, dest);
-              /* BEGIN Custom change: control deps */
               delegate.addEdge(src, dest, Dependency.CONTROL_DEP);
-              /* END Custom change: control deps */
             }
           }
         }
@@ -331,10 +328,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     for (ISSABasicBlock exitDom : Iterator2Iterable.make(dom.dominators(controlFlowGraph.exit()))) {
       for (SSAInstruction st : exitDom) {
         Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
-        delegate.addEdge(methodEntry, dest);
-        /* BEGIN Custom change: control deps */
         delegate.addEdge(methodEntry, dest, Dependency.CONTROL_DEP);
-        /* END Custom change: control deps */
       }
     }
     // add CD from method entry to all callee parameter assignments
@@ -373,10 +367,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
               SSAInstruction pss = ir.getInstructions()[pb.getLastInstructionIndex()];
               assert pss != null;
               Statement pst = ssaInstruction2Statement(pss, ir, instructionIndices);
-              delegate.addEdge(pst, phiSt);
-              /* BEGIN Custom change: control deps */
               delegate.addEdge(pst, phiSt, Dependency.CONTROL_DEP);
-              /* END Custom change: control deps */
             } else {
               for (ISSABasicBlock cpb : Iterator2Iterable.make(cdg.getPredNodes(pb))) {
                 /* BEGIN Custom change: control deps */
@@ -391,10 +382,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
                         + " in node "
                         + node;
                 Statement cpst = ssaInstruction2Statement(cps, ir, instructionIndices);
-                delegate.addEdge(cpst, phiSt);
-                /* BEGIN Custom change: control deps */
                 delegate.addEdge(cpst, phiSt, Dependency.CONTROL_DEP);
-                /* END Custom change: control deps */
               }
             }
             phiUseIndex++;
@@ -445,9 +433,12 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
 
               if (st instanceof SSAAbstractInvokeInstruction) {
                 delegate.addEdge(
-                    new ExceptionalReturnCaller(node, pb.getLastInstructionIndex()), c);
+                    new ExceptionalReturnCaller(node, pb.getLastInstructionIndex()),
+                    c,
+                    Dependency.DATA_DEP);
               } else if (st instanceof SSAAbstractThrowInstruction) {
-                delegate.addEdge(ssaInstruction2Statement(st, ir, instructionIndices), c);
+                delegate.addEdge(
+                    ssaInstruction2Statement(st, ir, instructionIndices), c, Dependency.DATA_DEP);
               }
             }
           }
@@ -498,7 +489,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
                     }
                   }
                   Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
-                  delegate.addEdge(s, u);
+                  delegate.addEdge(s, u, Dependency.DATA_DEP);
                 }
               }
             }
@@ -535,13 +526,13 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
                 }
               }
               Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
-              delegate.addEdge(s, u);
+              delegate.addEdge(s, u, Dependency.DATA_DEP);
             }
             break;
           }
         case NORMAL_RET_CALLEE:
           for (NormalStatement ret : computeReturnStatements(ir)) {
-            delegate.addEdge(ret, s);
+            delegate.addEdge(ret, s, Dependency.DATA_DEP);
           }
           break;
         case EXC_RET_CALLEE:
@@ -558,10 +549,10 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
             if (pei instanceof SSAAbstractInvokeInstruction) {
               if (!dOptions.isIgnoreExceptions()) {
                 Statement st = new ExceptionalReturnCaller(node, index);
-                delegate.addEdge(st, s);
+                delegate.addEdge(st, s, Dependency.DATA_DEP);
               }
             } else {
-              delegate.addEdge(new NormalStatement(node, index), s);
+              delegate.addEdge(new NormalStatement(node, index), s, Dependency.DATA_DEP);
             }
           }
           break;
@@ -575,7 +566,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
             if (vn > -1) {
               if (ir.getSymbolTable().isParameter(vn)) {
                 Statement a = new ParamCallee(node, vn);
-                delegate.addEdge(a, pac);
+                delegate.addEdge(a, pac, Dependency.DATA_DEP);
               } else {
                 SSAInstruction d = DU.getDef(vn);
                 if (dOptions.isTerminateAtCast() && (d instanceof SSACheckCastInstruction)) {
@@ -587,15 +578,15 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
                     if (vn == call.getException()) {
                       if (!dOptions.isIgnoreExceptions()) {
                         Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
-                        delegate.addEdge(st, pac);
+                        delegate.addEdge(st, pac, Dependency.DATA_DEP);
                       }
                     } else {
                       Statement st = new NormalReturnCaller(node, instructionIndices.get(d));
-                      delegate.addEdge(st, pac);
+                      delegate.addEdge(st, pac, Dependency.DATA_DEP);
                     }
                   } else {
                     Statement ds = ssaInstruction2Statement(d, ir, instructionIndices);
-                    delegate.addEdge(ds, pac);
+                    delegate.addEdge(ds, pac, Dependency.DATA_DEP);
                   }
                 }
               }
@@ -728,7 +719,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
             OrdinalSet<Statement> defs = entry.getValue();
             if (defs != null) {
               for (Statement def : defs) {
-                delegate.addEdge(def, entry.getKey());
+                delegate.addEdge(def, entry.getKey(), Dependency.HEAP_DATA_DEP);
               }
             }
           }
@@ -747,7 +738,7 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
             OrdinalSet<Statement> defs = entry.getValue();
             if (defs != null) {
               for (Statement def : defs) {
-                delegate.addEdge(def, entry.getKey());
+                delegate.addEdge(def, entry.getKey(), Dependency.DATA_DEP);
               }
             }
             break;
@@ -1288,9 +1279,83 @@ public class PDG<T extends InstanceKey> implements NumberedGraph<Statement> {
     Assertions.UNREACHABLE();
     return null;
   }
-  /* BEGIN Custom change: control deps */
-  public boolean isControlDependend(Statement from, Statement to) {
-    return delegate.hasEdge(from, to, Dependency.CONTROL_DEP);
+
+  @Override
+  public IntSet getPredNodeNumbers(Statement node, Dependency label)
+      throws IllegalArgumentException {
+    populate();
+    return delegate.getPredNodeNumbers(node, label);
   }
-  /* END Custom change: control deps */
+
+  @Override
+  public IntSet getSuccNodeNumbers(Statement node, Dependency label)
+      throws IllegalArgumentException {
+    populate();
+    return delegate.getSuccNodeNumbers(node, label);
+  }
+
+  @Override
+  public Dependency getDefaultLabel() {
+    assert false;
+    return null;
+  }
+
+  @Override
+  public Iterator<Statement> getPredNodes(Statement N, Dependency label) {
+    populate();
+    return delegate.getPredNodes(N, label);
+  }
+
+  @Override
+  public Iterator<? extends Dependency> getPredLabels(Statement N) {
+    populate();
+    return delegate.getPredLabels(N);
+  }
+
+  @Override
+  public int getPredNodeCount(Statement N, Dependency label) {
+    populate();
+    return delegate.getPredNodeCount(N, label);
+  }
+
+  @Override
+  public Iterator<? extends Statement> getSuccNodes(Statement N, Dependency label) {
+    populate();
+    return delegate.getSuccNodes(N, label);
+  }
+
+  @Override
+  public Iterator<? extends Dependency> getSuccLabels(Statement N) {
+    populate();
+    return delegate.getSuccLabels(N);
+  }
+
+  @Override
+  public int getSuccNodeCount(Statement N, Dependency label) {
+    populate();
+    return delegate.getSuccNodeCount(N, label);
+  }
+
+  @Override
+  public void addEdge(Statement src, Statement dst, Dependency label) {
+    assert false;
+  }
+
+  @Override
+  public void removeEdge(Statement src, Statement dst, Dependency label)
+      throws UnsupportedOperationException {
+    assert false;
+  }
+
+  @Override
+  public boolean hasEdge(Statement src, Statement dst, Dependency label) {
+    populate();
+    return delegate.hasEdge(src, dst, label);
+  }
+
+  @Override
+  public Set<? extends Dependency> getEdgeLabels(Statement src, Statement dst) {
+    populate();
+    return delegate.getEdgeLabels(src, dst);
+  }
 }

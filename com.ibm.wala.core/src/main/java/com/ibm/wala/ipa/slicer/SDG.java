@@ -42,9 +42,11 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * System dependence graph.
@@ -628,25 +630,33 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
 
     @Override
     public boolean hasEdge(Statement src, Statement dst) {
+      return !getEdgeLabels(src, dst).isEmpty();
+    }
+
+    public Set<? extends Dependency> getEdgeLabels(Statement src, Statement dst) {
       addPDGStatementNodes(src.getNode());
       addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {
         case NORMAL:
           if (cOptions.isIgnoreInterproc()) {
-            return getPDG(src.getNode()).hasEdge(src, dst);
+            return getPDG(src.getNode()).getEdgeLabels(src, dst);
           } else {
             NormalStatement ns = (NormalStatement) src;
             if (dst instanceof MethodEntryStatement) {
               if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
                 SSAAbstractInvokeInstruction call =
                     (SSAAbstractInvokeInstruction) ns.getInstruction();
-                return cg.getPossibleTargets(src.getNode(), call.getCallSite())
-                    .contains(dst.getNode());
+                if (cg.getPossibleTargets(src.getNode(), call.getCallSite())
+                    .contains(dst.getNode())) {
+                  return Collections.singleton(Dependency.CONTROL_DEP);
+                } else {
+                  return Collections.emptySet();
+                }
               } else {
-                return false;
+                return Collections.emptySet();
               }
             } else {
-              return getPDG(src.getNode()).hasEdge(src, dst);
+              return getPDG(src.getNode()).getEdgeLabels(src, dst);
             }
           }
         case PHI:
@@ -658,52 +668,64 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
         case HEAP_RET_CALLER:
         case METHOD_ENTRY:
         case METHOD_EXIT:
-          return getPDG(src.getNode()).hasEdge(src, dst);
+          return getPDG(src.getNode()).getEdgeLabels(src, dst);
         case EXC_RET_CALLEE:
           {
             if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return false;
+              return Collections.emptySet();
             }
             if (dst.getKind().equals(Kind.EXC_RET_CALLER)) {
               ExceptionalReturnCaller r = (ExceptionalReturnCaller) dst;
-              return cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
-                  .contains(src.getNode());
+              if (cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
+                  .contains(src.getNode())) {
+                return Collections.singleton(Dependency.DATA_DEP);
+              } else {
+                return Collections.emptySet();
+              }
             } else {
-              return false;
+              return Collections.emptySet();
             }
           }
         case NORMAL_RET_CALLEE:
           {
             if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return false;
+              return Collections.emptySet();
             }
             if (dst.getKind().equals(Kind.NORMAL_RET_CALLER)) {
               NormalReturnCaller r = (NormalReturnCaller) dst;
-              return cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
-                  .contains(src.getNode());
+              if (cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
+                  .contains(src.getNode())) {
+                return Collections.singleton(Dependency.DATA_DEP);
+              } else {
+                return Collections.emptySet();
+              }
             } else {
-              return false;
+              return Collections.emptySet();
             }
           }
         case HEAP_RET_CALLEE:
           {
             if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return false;
+              return Collections.emptySet();
             }
             if (dst.getKind().equals(Kind.HEAP_RET_CALLER)) {
               HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) dst;
               HeapStatement h = (HeapStatement) src;
-              return h.getLocation().equals(r.getLocation())
+              if (h.getLocation().equals(r.getLocation())
                   && cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite())
-                      .contains(src.getNode());
+                      .contains(src.getNode())) {
+                return Collections.singleton(Dependency.HEAP_DATA_DEP);
+              } else {
+                return Collections.emptySet();
+              }
             } else {
-              return false;
+              return Collections.emptySet();
             }
           }
         case PARAM_CALLER:
           {
             if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return false;
+              return Collections.emptySet();
             }
             if (dst.getKind().equals(Kind.PARAM_CALLEE)) {
               ParamCallee callee = (ParamCallee) dst;
@@ -712,47 +734,51 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
               final CGNode calleeNode = callee.getNode();
               if (!cg.getPossibleTargets(caller.getNode(), call.getCallSite())
                   .contains(calleeNode)) {
-                return false;
+                return Collections.emptySet();
               }
               if (dOptions.isTerminateAtCast()
                   && call.isDispatch()
                   && caller.getValueNumber() == call.getReceiver()) {
                 // a virtual dispatch is just like a cast.
-                return false;
+                return Collections.emptySet();
               }
               if (dOptions.isTerminateAtCast() && isUninformativeForReflection(calleeNode)) {
                 // don't track reflection into reflective invokes
-                return false;
+                return Collections.emptySet();
               }
               for (int i = 0; i < call.getNumberOfPositionalParameters(); i++) {
                 if (call.getUse(i) == caller.getValueNumber()) {
                   if (callee.getValueNumber() == i + 1) {
-                    return true;
+                    return Collections.singleton(Dependency.DATA_DEP);
                   }
                 }
               }
-              return false;
+              return Collections.emptySet();
             } else {
-              return false;
+              return Collections.emptySet();
             }
           }
         case HEAP_PARAM_CALLER:
           if (dOptions.equals(DataDependenceOptions.NONE)) {
-            return false;
+            return Collections.emptySet();
           }
           if (dst.getKind().equals(Kind.HEAP_PARAM_CALLEE)) {
             HeapStatement.HeapParamCallee callee = (HeapStatement.HeapParamCallee) dst;
             HeapStatement.HeapParamCaller caller = (HeapStatement.HeapParamCaller) src;
 
-            return caller.getLocation().equals(callee.getLocation())
+            if (caller.getLocation().equals(callee.getLocation())
                 && cg.getPossibleTargets(caller.getNode(), caller.getCall().getCallSite())
-                    .contains(callee.getNode());
+                    .contains(callee.getNode())) {
+              return Collections.singleton(Dependency.HEAP_DATA_DEP);
+            } else {
+              return Collections.emptySet();
+            }
           } else {
-            return false;
+            return Collections.emptySet();
           }
         default:
           Assertions.UNREACHABLE(src.getKind());
-          return false;
+          return Collections.emptySet();
       }
     }
 
@@ -841,5 +867,9 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
 
   public PointerAnalysis<T> getPointerAnalysis() {
     return pa;
+  }
+
+  public Set<? extends Dependency> getEdgeLabels(Statement src, Statement dst) {
+    return edgeMgr.getEdgeLabels(src, dst);
   }
 }
