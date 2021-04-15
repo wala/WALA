@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.cast.js.drivers;
+package com.ibm.wala.cast.js.examples.drivers;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ir.translator.RewritingTranslatorToCAst;
@@ -22,7 +22,6 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.CPAContextSelector;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
@@ -53,8 +52,13 @@ public class RunBuilder {
             args[1],
             CGBuilderType.ZERO_ONE_CFA_WITHOUT_CORRELATION_TRACKING,
             RunBuilder.class.getClassLoader());
-    builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
+
+    // builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
+
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
+
+    System.err.println(CG.getClassHierarchy());
+
     CAstCallGraphUtil.AVOID_DUMP = false;
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
