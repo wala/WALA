@@ -659,6 +659,9 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
               return getPDG(src.getNode()).getEdgeLabels(src, dst);
             }
           }
+        case CATCH:
+          assert src.getNode().equals(dst.getNode());
+          return getPDG(src.getNode()).getEdgeLabels(src, dst);
         case PHI:
         case PI:
         case EXC_RET_CALLER:
