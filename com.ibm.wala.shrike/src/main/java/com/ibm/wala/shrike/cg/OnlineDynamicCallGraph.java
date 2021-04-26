@@ -1,11 +1,11 @@
 package com.ibm.wala.shrike.cg;
 
-import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
-import com.ibm.wala.shrikeBT.analysis.ClassHierarchyStore;
-import com.ibm.wala.shrikeBT.shrikeCT.CTUtils;
-import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
-import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrike.shrikeBT.analysis.ClassHierarchyStore;
+import com.ibm.wala.shrike.shrikeBT.shrikeCT.CTUtils;
+import com.ibm.wala.shrike.shrikeBT.shrikeCT.ClassInstrumenter;
+import com.ibm.wala.shrike.shrikeBT.shrikeCT.OfflineInstrumenter;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

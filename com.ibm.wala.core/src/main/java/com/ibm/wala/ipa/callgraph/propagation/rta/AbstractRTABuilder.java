@@ -41,7 +41,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.ClassLoaderReference;

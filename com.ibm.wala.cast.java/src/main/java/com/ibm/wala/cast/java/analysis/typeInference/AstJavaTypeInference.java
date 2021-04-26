@@ -22,7 +22,7 @@ import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
 import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;

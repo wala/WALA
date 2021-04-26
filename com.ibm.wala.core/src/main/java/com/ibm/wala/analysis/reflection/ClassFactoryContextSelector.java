@@ -15,6 +15,8 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -31,8 +33,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.StringStuff;
 
 /**
  * A {@link ContextSelector} to intercept calls to reflective class factories (e.g. Class.forName())

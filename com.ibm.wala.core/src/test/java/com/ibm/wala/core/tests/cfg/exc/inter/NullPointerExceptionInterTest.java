@@ -19,6 +19,10 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -38,11 +42,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.warnings.Warnings;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -66,7 +66,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   public static void beforeClass() throws Exception {
     cache = new AnalysisCacheImpl();
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             NullPointerExceptionInterTest.class.getClassLoader());

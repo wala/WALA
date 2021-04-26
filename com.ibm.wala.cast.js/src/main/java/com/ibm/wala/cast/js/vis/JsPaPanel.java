@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.vis;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.AstGlobalPointerKey;
 import com.ibm.wala.cast.ipa.callgraph.ObjectPropertyCatalogKey;
+import com.ibm.wala.core.viz.viewer.PaPanel;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -20,7 +21,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
-import com.ibm.wala.viz.viewer.PaPanel;
 import java.util.ArrayList;
 import java.util.List;
 

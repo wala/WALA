@@ -11,13 +11,13 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.strings.Atom;
 
 /** A synthetic method that calls all class initializers */
 public class FakeWorldClinitMethod extends AbstractRootMethod {

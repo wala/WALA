@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSACheckCastInstruction;

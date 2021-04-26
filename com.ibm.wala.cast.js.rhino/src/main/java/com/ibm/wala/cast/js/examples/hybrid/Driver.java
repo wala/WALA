@@ -13,6 +13,9 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceURLModule;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -26,9 +29,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class Driver {
 
     HybridAnalysisScope scope = new HybridAnalysisScope();
     FileProvider files = new FileProvider();
-    AnalysisScopeReader.read(
+    AnalysisScopeReader.instance.read(
         scope,
         args[0],
         files.getFile("Java60RegressionExclusions.txt"),

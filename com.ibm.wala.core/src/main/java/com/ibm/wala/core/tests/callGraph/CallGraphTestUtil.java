@@ -11,6 +11,8 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -24,8 +26,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.perf.StopwatchGC;
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class CallGraphTestUtil {
   public static AnalysisScope makeJ2SEAnalysisScope(
       String scopeFile, String exclusionsFile, ClassLoader myClassLoader) throws IOException {
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             scopeFile, (new FileProvider()).getFile(exclusionsFile), myClassLoader);
     return scope;
   }

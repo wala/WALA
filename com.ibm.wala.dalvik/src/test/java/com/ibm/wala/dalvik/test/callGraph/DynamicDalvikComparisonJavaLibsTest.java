@@ -2,8 +2,8 @@ package com.ibm.wala.dalvik.test.callGraph;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 import java.io.File;
 import java.io.IOException;

@@ -10,20 +10,24 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.shrikeBT.BytecodeConstants;
-import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.Decoder;
-import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
-import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.IGetInstruction;
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.IPutInstruction;
-import com.ibm.wala.shrikeBT.ITypeTestInstruction;
-import com.ibm.wala.shrikeBT.MonitorInstruction;
-import com.ibm.wala.shrikeBT.NewInstruction;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.core.util.bytecode.BytecodeStream;
+import com.ibm.wala.core.util.shrike.ShrikeUtil;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.shrike.shrikeBT.BytecodeConstants;
+import com.ibm.wala.shrike.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeBT.Decoder;
+import com.ibm.wala.shrike.shrikeBT.ExceptionHandler;
+import com.ibm.wala.shrike.shrikeBT.IArrayLoadInstruction;
+import com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction;
+import com.ibm.wala.shrike.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IPutInstruction;
+import com.ibm.wala.shrike.shrikeBT.ITypeTestInstruction;
+import com.ibm.wala.shrike.shrikeBT.MonitorInstruction;
+import com.ibm.wala.shrike.shrikeBT.NewInstruction;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
@@ -31,13 +35,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.shrike.ShrikeUtil;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.lang.ref.SoftReference;
 import java.util.Arrays;
 import java.util.Collection;
@@ -391,6 +391,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   @Override
   public boolean isSynthetic() {
     return ((getModifiers() & Constants.ACC_SYNTHETIC) != 0);
+  }
+
+  @Override
+  public boolean isAnnotation() {
+    return ((getModifiers() & Constants.ACC_ANNOTATION) != 0);
+  }
+
+  @Override
+  public boolean isEnum() {
+    return ((getModifiers() & Constants.ACC_ENUM) != 0);
+  }
+
+  @Override
+  public boolean isModule() {
+    return ((getModifiers() & Constants.ACC_MODULE) != 0);
   }
 
   @Override

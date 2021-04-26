@@ -10,10 +10,14 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
@@ -27,10 +31,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;

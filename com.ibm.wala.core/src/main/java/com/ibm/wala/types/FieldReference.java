@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.core.util.shrike.ShrikeUtil;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.shrike.ShrikeUtil;
-import com.ibm.wala.util.strings.Atom;
 import java.util.HashMap;
 
 /** A class to represent the reference in a class file to a field. */

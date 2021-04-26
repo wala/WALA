@@ -12,7 +12,7 @@ package com.ibm.wala.cast.loader;
 
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 

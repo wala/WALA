@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.core.util.io.FileSuffixes;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;

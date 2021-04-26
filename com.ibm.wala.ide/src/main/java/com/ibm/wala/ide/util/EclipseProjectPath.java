@@ -14,12 +14,12 @@ import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.ide.classloader.EclipseSourceDirectoryTreeModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.IOException;
@@ -316,7 +316,7 @@ public abstract class EclipseProjectPath<E, P> {
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile)
       throws IOException {
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
     return toAnalysisScope(scope);
   }

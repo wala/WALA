@@ -33,6 +33,8 @@ public class CAstQualifier {
   public static final CAstQualifier PUBLIC = new CAstQualifier("public");
   public static final CAstQualifier SYNCHRONIZED = new CAstQualifier("synchronized");
   public static final CAstQualifier ANNOTATION = new CAstQualifier("@annotation");
+  public static final CAstQualifier ENUM = new CAstQualifier("enum");
+  public static final CAstQualifier MODULE = new CAstQualifier("module");
 
   static {
     sQualifiers.add(ANNOTATION);
@@ -49,6 +51,8 @@ public class CAstQualifier {
     sQualifiers.add(VOLATILE);
     sQualifiers.add(STRICTFP);
     sQualifiers.add(CONST);
+    sQualifiers.add(ENUM);
+    sQualifiers.add(MODULE);
   }
 
   private static int sNextBitNum = 0;

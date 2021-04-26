@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.Serializable;
 import java.io.UTFDataFormatException;
 import java.util.Map;

@@ -20,7 +20,8 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.Descriptor;
@@ -30,7 +31,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
@@ -303,6 +303,21 @@ public abstract class AstMethod implements IMethod {
   @Override
   public boolean isProtected() {
     return qualifiers.contains(CAstQualifier.PROTECTED);
+  }
+
+  @Override
+  public boolean isAnnotation() {
+    return qualifiers.contains(CAstQualifier.ANNOTATION);
+  }
+
+  @Override
+  public boolean isEnum() {
+    return qualifiers.contains(CAstQualifier.ENUM);
+  }
+
+  @Override
+  public boolean isModule() {
+    return qualifiers.contains(CAstQualifier.MODULE);
   }
 
   @Override

@@ -41,12 +41,12 @@
 package com.ibm.wala.dalvik.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
 import com.ibm.wala.dalvik.util.AndroidTypes;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Comparator;
 
 /**

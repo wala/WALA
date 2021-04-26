@@ -11,7 +11,7 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
@@ -133,4 +133,10 @@ public interface IMethod extends IMember, ContextItem {
   default int getNumberOfDefaultParameters() {
     return 0;
   }
+
+  boolean isAnnotation();
+
+  boolean isEnum();
+
+  boolean isModule();
 }

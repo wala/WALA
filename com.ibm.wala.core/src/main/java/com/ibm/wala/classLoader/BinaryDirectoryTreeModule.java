@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import java.io.File;
 
 /** Module representing a directory of .class files */

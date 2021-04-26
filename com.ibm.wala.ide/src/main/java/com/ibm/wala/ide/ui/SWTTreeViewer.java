@@ -15,7 +15,7 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.viz.NodeDecorator;
+import com.ibm.wala.util.viz.NodeDecorator;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;

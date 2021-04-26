@@ -11,9 +11,9 @@
 
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
-import com.ibm.wala.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import java.io.File;
 
 /** A module which is a wrapper around a .class file */

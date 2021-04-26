@@ -11,6 +11,7 @@
 package com.ibm.wala.ide.client;
 
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -19,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

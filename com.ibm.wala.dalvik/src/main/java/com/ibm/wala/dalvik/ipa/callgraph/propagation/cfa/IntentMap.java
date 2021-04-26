@@ -41,10 +41,10 @@
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.StringStuff;
 import java.util.HashMap;
 import java.util.Map;
 

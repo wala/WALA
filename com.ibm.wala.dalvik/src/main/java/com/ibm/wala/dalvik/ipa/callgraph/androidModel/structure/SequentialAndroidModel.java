@@ -40,10 +40,10 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 
+import com.ibm.wala.core.util.ssa.SSAValueManager;
+import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 
 /**
  * Functions get called once in sequential order.

@@ -14,6 +14,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -23,8 +25,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.WalaRuntimeException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ public class CodeDeletedTest extends WalaTestCase {
   public void testDeletedCode() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             DupFieldsTest.class.getClassLoader());

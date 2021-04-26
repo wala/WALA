@@ -20,6 +20,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -35,7 +36,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Map;
 
 public class JavaJavaScriptHybridCallGraphBuilder

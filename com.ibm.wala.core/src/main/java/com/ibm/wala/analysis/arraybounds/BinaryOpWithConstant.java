@@ -1,7 +1,7 @@
 package com.ibm.wala.analysis.arraybounds;
 
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction.IOperator;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction.Operator;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 

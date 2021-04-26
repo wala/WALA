@@ -1,11 +1,11 @@
 package com.ibm.wala.ipa.callgraph.util;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 
 /**
  * Utility methods for searching call graphs, e.g., to find particular {@link CGNode}s or types of

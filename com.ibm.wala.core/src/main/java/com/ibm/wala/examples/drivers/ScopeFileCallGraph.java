@@ -12,6 +12,9 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -30,10 +33,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ScopeFileCallGraph {
     // use exclusions to eliminate certain library packages
     File exclusionsFile = null;
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             scopeFile, exclusionsFile, ScopeFileCallGraph.class.getClassLoader());
     IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     System.out.println(cha.getNumberOfClasses() + " classes");

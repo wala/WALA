@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.ref.CacheReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.util.ref.CacheReference;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;

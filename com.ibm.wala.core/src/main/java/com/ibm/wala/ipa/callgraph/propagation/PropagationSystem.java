@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.Worklist;
 import com.ibm.wala.fixpoint.AbstractOperator;
@@ -37,7 +38,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

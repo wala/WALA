@@ -14,15 +14,15 @@ import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
-import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TargetInfo;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TargetType;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeAnnotationAttribute;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeAnnotationLocation;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeAnnotationTargetVisitor;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypePathKind;
+import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.AnnotationAttribute;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TargetInfo;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TargetType;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeAnnotationAttribute;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeAnnotationLocation;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeAnnotationTargetVisitor;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypePathKind;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
@@ -179,9 +179,10 @@ public class TypeAnnotation {
   /**
    * A {@link TypeAnnotationTarget} represents the "target" of a Type Annotation.
    *
-   * <p>In contrast to {@link com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeAnnotationTarget},
-   * subclasses of {@link TypeAnnotationTarget} usually have already resolved bytecode-specific data
-   * (such as bcIndices) to their WALA counterparts.
+   * <p>In contrast to {@link
+   * com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeAnnotationTarget}, subclasses of {@link
+   * TypeAnnotationTarget} usually have already resolved bytecode-specific data (such as bcIndices)
+   * to their WALA counterparts.
    *
    * @author Martin Hecker martin.hecker@kit.edu
    */
@@ -612,9 +613,9 @@ public class TypeAnnotation {
 
   /**
    * A @{TypeAnnotationTargetConverter} takes "unresolved" instances of {@link
-   * com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeAnnotationTarget}, resolves some byte-code
-   * specific data, and returns instances of the corresponding {@link TypeAnnotationTarget}
-   * subclass.
+   * com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeAnnotationTarget}, resolves some
+   * byte-code specific data, and returns instances of the corresponding {@link
+   * TypeAnnotationTarget} subclass.
    *
    * @author Martin Hecker martin.hecker@kit.edu
    */
@@ -626,49 +627,49 @@ public class TypeAnnotation {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitSuperTypeTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitTypeParameterBoundTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitEmptyTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitFormalParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitThrowsTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitLocalVarTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
 
         // TODO: is this even allowed? Should we have thrown an exception earlier?
@@ -691,12 +692,12 @@ public class TypeAnnotation {
 
       @Override
       public TypeAnnotationTarget visitCatchTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
 
         final TypeReference catchType;
         if (target.getCatchType()
-            == com.ibm.wala.shrikeCT.TypeAnnotationsReader.CatchTarget.ALL_EXCEPTIONS) {
+            == com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.CatchTarget.ALL_EXCEPTIONS) {
           catchType = CatchTarget.ALL_EXCEPTIONS;
         } else {
           catchType = fromString(clRef, target.getCatchType());
@@ -713,7 +714,7 @@ public class TypeAnnotation {
 
       @Override
       public TypeAnnotationTarget visitOffsetTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         try {
           final int iindex = method.getInstructionIndex(target.getOffset());
@@ -725,7 +726,7 @@ public class TypeAnnotation {
 
       @Override
       public TypeAnnotationTarget visitTypeArgumentTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.Code);
         try {
           final int iindex = method.getInstructionIndex(target.getOffset());
@@ -745,70 +746,70 @@ public class TypeAnnotation {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         return new TypeParameterTarget(target.getIndex());
       }
 
       @Override
       public TypeAnnotationTarget visitSuperTypeTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitTypeParameterBoundTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         return new TypeParameterBoundTarget(target.getParameterIndex(), target.getBoundIndex());
       }
 
       @Override
       public TypeAnnotationTarget visitEmptyTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         return new EmptyTarget();
       }
 
       @Override
       public TypeAnnotationTarget visitFormalParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         return new FormalParameterTarget(target.getIndex());
       }
 
       @Override
       public TypeAnnotationTarget visitThrowsTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         return new ThrowsTarget(fromString(clRef, target.getThrowType()));
       }
 
       @Override
       public TypeAnnotationTarget visitLocalVarTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitCatchTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitOffsetTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitTypeArgumentTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.method_info);
         throw new UnsupportedOperationException();
       }
@@ -820,70 +821,70 @@ public class TypeAnnotation {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         return new TypeParameterTarget(target.getIndex());
       }
 
       @Override
       public TypeAnnotationTarget visitSuperTypeTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         return new SuperTypeTarget(fromString(clRef, target.getSuperType()));
       }
 
       @Override
       public TypeAnnotationTarget visitTypeParameterBoundTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         return new TypeParameterBoundTarget(target.getParameterIndex(), target.getBoundIndex());
       }
 
       @Override
       public TypeAnnotationTarget visitEmptyTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitFormalParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitThrowsTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitLocalVarTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitCatchTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitOffsetTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitTypeArgumentTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.ClassFile);
         throw new UnsupportedOperationException();
       }
@@ -894,70 +895,70 @@ public class TypeAnnotation {
     return new TypeAnnotationTargetConverter() {
       @Override
       public TypeAnnotationTarget visitTypeParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitSuperTypeTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.SuperTypeTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitTypeParameterBoundTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeParameterBoundTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitEmptyTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.EmptyTarget target) {
         assert mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         return new EmptyTarget();
       }
 
       @Override
       public TypeAnnotationTarget visitFormalParameterTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.FormalParameterTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitThrowsTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.ThrowsTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitLocalVarTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.LocalVarTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitCatchTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.CatchTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitOffsetTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.OffsetTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }
 
       @Override
       public TypeAnnotationTarget visitTypeArgumentTarget(
-          com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
+          com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypeArgumentTarget target) {
         assert !mayAppearIn(target.getTargetInfo(), TypeAnnotationLocation.field_info);
         throw new UnsupportedOperationException();
       }

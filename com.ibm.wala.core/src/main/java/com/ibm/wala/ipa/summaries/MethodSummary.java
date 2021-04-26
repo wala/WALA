@@ -10,13 +10,13 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
 import java.util.ArrayList;
 import java.util.Map;
 

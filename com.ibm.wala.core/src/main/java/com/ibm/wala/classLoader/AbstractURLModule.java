@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;

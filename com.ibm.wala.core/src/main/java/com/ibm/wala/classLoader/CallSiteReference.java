@@ -12,8 +12,8 @@ package com.ibm.wala.classLoader;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.shrikeBT.BytecodeConstants;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.BytecodeConstants;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;

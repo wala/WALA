@@ -12,6 +12,7 @@ package com.ibm.wala.analysis.exceptionanalysis;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.ssa.InstructionByIIndexMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -28,7 +29,6 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.ssa.InstructionByIIndexMap;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;

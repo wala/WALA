@@ -38,10 +38,10 @@
  */
 package com.ibm.wala.dalvik.dex.util.config;
 
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -65,7 +65,8 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
       throw new IllegalArgumentException("classPath null");
     }
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(BASIC_FILE, new File(exclusionsFile), WALA_CLASSLOADER);
+        AnalysisScopeReader.instance.readJavaScope(
+            BASIC_FILE, new File(exclusionsFile), WALA_CLASSLOADER);
 
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
     final String path = classPath.getPath();

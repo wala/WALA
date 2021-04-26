@@ -39,6 +39,7 @@
  */
 package org.scandroid.synthmethod;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -66,7 +67,6 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.Atom;
 import java.io.UTFDataFormatException;
 import java.util.ArrayList;
 import java.util.List;

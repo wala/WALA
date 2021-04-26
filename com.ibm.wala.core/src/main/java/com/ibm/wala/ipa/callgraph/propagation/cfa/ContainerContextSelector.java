@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -31,7 +32,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.strings.Atom;
 
 /**
  * This context selector returns a context customized for the {@link InstanceKey} of the receiver if

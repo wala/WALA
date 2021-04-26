@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cfg;
 
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;

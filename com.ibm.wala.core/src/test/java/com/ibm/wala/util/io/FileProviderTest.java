@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.Assert.assertEquals;
 
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
 import java.net.URL;

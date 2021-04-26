@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.types.annotations;
 
-import com.ibm.wala.shrikeCT.AnnotationsReader;
-import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
-import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.AnnotationsReader;
+import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.AnnotationAttribute;
+import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.ElementValue;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;

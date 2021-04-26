@@ -38,6 +38,7 @@ import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.demandpa.TestInfo;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
@@ -63,7 +64,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
@@ -123,7 +123,7 @@ public class CompareToZeroOneCFADriver {
     System.err.println(("ANALYZING " + appJar + "\n\n"));
 
     AnalysisScope scope =
-        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+        AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
             appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     // TODO: return the warning set (need a CAPA type)

@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.ide.ui;
 
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.viz.PDFViewUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 

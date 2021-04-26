@@ -12,6 +12,9 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -45,17 +48,14 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.NodeDecorator;
-import com.ibm.wala.viz.PDFViewUtil;
+import com.ibm.wala.util.viz.DotUtil;
+import com.ibm.wala.util.viz.NodeDecorator;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -149,7 +149,7 @@ public class PDFSlice {
     try {
       // create an analysis scope representing the appJar as a J2SE application
       AnalysisScope scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // build a class hierarchy, call graph, and system dependence graph

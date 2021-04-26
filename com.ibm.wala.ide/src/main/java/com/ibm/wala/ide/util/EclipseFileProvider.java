@@ -12,9 +12,9 @@ package com.ibm.wala.ide.util;
 
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ide.plugin.CorePlugin;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

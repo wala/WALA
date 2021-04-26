@@ -12,6 +12,10 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -25,11 +29,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.viz.PDFViewUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -74,7 +74,7 @@ public class PDFWalaIR {
       // Build an AnalysisScope which represents the set of classes to analyze.  In particular,
       // we will analyze the contents of the appJar jar file and the Java standard libraries.
       AnalysisScope scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // Build a class hierarchy representing all classes to analyze.  This step will read the class

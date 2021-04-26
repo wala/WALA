@@ -16,7 +16,7 @@ import com.ibm.wala.cfg.Util;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;

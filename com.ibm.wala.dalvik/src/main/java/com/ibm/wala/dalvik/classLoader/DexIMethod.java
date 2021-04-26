@@ -50,8 +50,10 @@
 package com.ibm.wala.dalvik.classLoader;
 
 import static org.jf.dexlib2.AccessFlags.ABSTRACT;
+import static org.jf.dexlib2.AccessFlags.ANNOTATION;
 import static org.jf.dexlib2.AccessFlags.BRIDGE;
 import static org.jf.dexlib2.AccessFlags.DECLARED_SYNCHRONIZED;
+import static org.jf.dexlib2.AccessFlags.ENUM;
 import static org.jf.dexlib2.AccessFlags.FINAL;
 import static org.jf.dexlib2.AccessFlags.NATIVE;
 import static org.jf.dexlib2.AccessFlags.PRIVATE;
@@ -66,6 +68,8 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.dalvik.dex.instructions.ArrayFill;
 import com.ibm.wala.dalvik.dex.instructions.ArrayGet;
 import com.ibm.wala.dalvik.dex.instructions.ArrayGet.Type;
@@ -94,8 +98,8 @@ import com.ibm.wala.dalvik.dex.instructions.Throw;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation;
 import com.ibm.wala.dalvik.dex.instructions.UnaryOperation.OpID;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.IndirectionData;
+import com.ibm.wala.shrike.shrikeBT.ExceptionHandler;
+import com.ibm.wala.shrike.shrikeBT.IndirectionData;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -103,8 +107,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -534,6 +536,22 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
    */
   public boolean isVolatile() {
     return (eMethod.getAccessFlags() & VOLATILE.getValue()) != 0;
+  }
+
+  @Override
+  public boolean isAnnotation() {
+    return (eMethod.getAccessFlags() & ANNOTATION.getValue()) != 0;
+  }
+
+  @Override
+  public boolean isEnum() {
+    return (eMethod.getAccessFlags() & ENUM.getValue()) != 0;
+  }
+
+  @Override
+  public boolean isModule() {
+    // flag seems not to be in dexlib
+    return false;
   }
 
   /*

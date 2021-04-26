@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;

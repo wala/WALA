@@ -41,6 +41,11 @@
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.ssa.ParameterAccessor;
+import com.ibm.wala.core.util.ssa.SSAValue;
+import com.ibm.wala.core.util.ssa.SSAValueManager;
+import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
@@ -61,11 +66,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.HashSet;
 

@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ipa.callgraph;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.AstImplicitPointsToSetVisitor;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -28,7 +29,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointsToMap;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.strings.Atom;
 
 public abstract class CrossLanguageSSAPropagationCallGraphBuilder
     extends AstSSAPropagationCallGraphBuilder {

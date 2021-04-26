@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.IndirectionData;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.ExceptionHandler;
+import com.ibm.wala.shrike.shrikeBT.IndirectionData;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.annotations.Annotation;
 import java.util.Collection;
 

@@ -40,19 +40,19 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 
+import com.ibm.wala.core.util.ssa.SSAValue;
+import com.ibm.wala.core.util.ssa.SSAValue.NamedKey;
+import com.ibm.wala.core.util.ssa.SSAValue.TypeKey;
+import com.ibm.wala.core.util.ssa.SSAValue.VariableKey;
+import com.ibm.wala.core.util.ssa.SSAValueManager;
+import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.NamedKey;
-import com.ibm.wala.util.ssa.SSAValue.TypeKey;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

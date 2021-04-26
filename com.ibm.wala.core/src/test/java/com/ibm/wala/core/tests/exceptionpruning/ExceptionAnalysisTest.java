@@ -9,6 +9,8 @@ import com.ibm.wala.analysis.exceptionanalysis.IntraproceduralExceptionAnalysis;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -30,8 +32,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -66,7 +66,7 @@ public class ExceptionAnalysisTest {
     AnalysisScope scope;
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
     cha = ClassHierarchyFactory.make(scope);
 

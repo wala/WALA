@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.shrikeBT.IComparisonInstruction;
+import com.ibm.wala.shrike.shrikeBT.IComparisonInstruction;
 
 /** SSA Instruction for comparisons between floats, longs and doubles */
 public class SSAComparisonInstruction extends SSAInstruction {

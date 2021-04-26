@@ -13,6 +13,9 @@ package com.ibm.wala.core.tests.slicer;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.examples.drivers.PDFSlice;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -51,13 +54,10 @@ import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.util.strings.Atom;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +91,7 @@ public class SlicerTest {
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
       cachedScope =
-          AnalysisScopeReader.readJavaScope(
+          AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
       cachedScope.setExclusions(
           new FileOfClasses(new ByteArrayInputStream(makeSlicerExclusions().getBytes("UTF-8"))));

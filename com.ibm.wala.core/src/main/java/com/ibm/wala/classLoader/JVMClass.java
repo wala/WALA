@@ -11,8 +11,8 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 

@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileSuffixes;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.properties;
 
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
 import java.io.File;
 import java.io.IOException;

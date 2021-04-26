@@ -11,8 +11,8 @@
 
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileSuffixes;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileSuffixes;
 import java.io.InputStream;
 import java.util.jar.JarFile;
 

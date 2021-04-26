@@ -11,7 +11,7 @@
 package com.ibm.wala.types.generics;
 
 import com.ibm.wala.classLoader.ShrikeClass;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.debug.Assertions;
 
 /**

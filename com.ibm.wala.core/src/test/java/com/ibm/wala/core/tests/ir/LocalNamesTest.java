@@ -16,6 +16,11 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.strings.UTF8Convert;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -32,12 +37,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.strings.UTF8Convert;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -65,7 +65,7 @@ public class LocalNamesTest extends WalaTestCase {
   public static void beforeClass() throws Exception {
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
@@ -97,7 +97,7 @@ public class LocalNamesTest extends WalaTestCase {
   public void testAliasNames() {
     try {
       AnalysisScope scope =
-          AnalysisScopeReader.readJavaScope(
+          AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA,
               (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
               MY_CLASSLOADER);

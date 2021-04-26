@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.SetOfClasses;
 import java.io.IOException;
 import java.io.Serializable;
@@ -53,12 +53,12 @@ public class ShallowAnalysisScope implements Serializable {
     analysisScope.setExclusions(exclusions);
 
     for (String moduleLine : moduleLinesList) {
-      AnalysisScopeReader.processScopeDefLine(
+      AnalysisScopeReader.instance.processScopeDefLine(
           analysisScope, this.getClass().getClassLoader(), moduleLine);
     }
 
     for (String ldrLine : ldrImplLinesList) {
-      AnalysisScopeReader.processScopeDefLine(
+      AnalysisScopeReader.instance.processScopeDefLine(
           analysisScope, this.getClass().getClassLoader(), ldrLine);
     }
 

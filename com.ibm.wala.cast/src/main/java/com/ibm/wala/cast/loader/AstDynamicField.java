@@ -2,11 +2,11 @@ package com.ibm.wala.cast.loader;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.Collections;
 

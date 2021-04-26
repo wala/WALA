@@ -11,13 +11,13 @@
 package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACache;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * A place to hold onto caches of various analysis artifacts.

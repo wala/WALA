@@ -14,6 +14,8 @@ import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -27,9 +29,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -47,7 +47,7 @@ public class CFGSanitizerTest extends WalaTestCase {
   public void testSyntheticEdgeToExit()
       throws IOException, IllegalArgumentException, WalaException {
     AnalysisScope scope =
-        AnalysisScopeReader.makePrimordialScope(
+        AnalysisScopeReader.instance.makePrimordialScope(
             (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

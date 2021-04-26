@@ -12,7 +12,7 @@ package com.ibm.wala.types.generics;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 
 /**
  * UNDER CONSTRUCTION.

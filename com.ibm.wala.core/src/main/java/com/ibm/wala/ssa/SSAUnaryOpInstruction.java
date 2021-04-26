@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction;
 
 /**
  * An SSA instruction for some unary operator.

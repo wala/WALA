@@ -11,7 +11,7 @@
 package com.ibm.wala.cfg;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeBT.Constants;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;

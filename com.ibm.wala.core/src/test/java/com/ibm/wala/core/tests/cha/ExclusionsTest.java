@@ -11,12 +11,12 @@
 package com.ibm.wala.core.tests.cha;
 
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class ExclusionsTest {
   @Test
   public void testExclusions() throws IOException {
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("GUIExclusions.txt"),
             ExclusionsTest.class.getClassLoader());

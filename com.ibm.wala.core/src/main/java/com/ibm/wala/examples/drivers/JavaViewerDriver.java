@@ -12,6 +12,9 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.viz.viewer.WalaViewer;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -24,10 +27,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.viz.viewer.WalaViewer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -58,7 +58,7 @@ public class JavaViewerDriver {
 
     File exclusionFile = (new FileProvider()).getFile(exclusionFilePath);
     AnalysisScope scope =
-        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+        AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
             classPath,
             exclusionFile != null
                 ? exclusionFile

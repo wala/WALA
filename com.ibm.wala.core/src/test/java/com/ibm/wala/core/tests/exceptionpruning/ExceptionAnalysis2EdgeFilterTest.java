@@ -8,6 +8,8 @@ import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis2EdgeFilter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -36,8 +38,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -74,7 +74,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     AnalysisScope scope;
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
     cha = ClassHierarchyFactory.make(scope);
 

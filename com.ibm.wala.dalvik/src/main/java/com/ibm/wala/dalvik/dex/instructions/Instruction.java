@@ -116,7 +116,7 @@ public abstract class Instruction {
   /**
    * True if the instruction can continue.
    *
-   * @see com.ibm.wala.shrikeBT.IInstruction#isFallThrough()
+   * @see com.ibm.wala.shrike.shrikeBT.IInstruction#isFallThrough()
    */
   public boolean isFallThrough() {
     return opcode.canContinue();
@@ -125,7 +125,7 @@ public abstract class Instruction {
   /**
    * True if the instruction can throw an exception
    *
-   * @see com.ibm.wala.shrikeBT.IInstruction#isPEI()
+   * @see com.ibm.wala.shrike.shrikeBT.IInstruction#isPEI()
    */
   public boolean isPEI() {
     return opcode.canThrow();

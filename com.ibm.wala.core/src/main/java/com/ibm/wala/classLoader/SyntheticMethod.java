@@ -11,10 +11,12 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.core.util.bytecode.BytecodeStream;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -23,9 +25,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -127,6 +127,21 @@ public class SyntheticMethod implements IMethod {
   /** @see com.ibm.wala.classLoader.IMethod#isAbstract() */
   @Override
   public boolean isSynchronized() {
+    return false;
+  }
+
+  @Override
+  public boolean isAnnotation() {
+    return false;
+  }
+
+  @Override
+  public boolean isEnum() {
+    return false;
+  }
+
+  @Override
+  public boolean isModule() {
     return false;
   }
 

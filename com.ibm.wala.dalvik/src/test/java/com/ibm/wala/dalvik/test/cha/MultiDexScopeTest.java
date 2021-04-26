@@ -3,6 +3,7 @@ package com.ibm.wala.dalvik.test.cha;
 import static org.junit.Assume.assumeFalse;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
@@ -12,7 +13,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +53,8 @@ public class MultiDexScopeTest {
   private static AnalysisScope setUpTestScope(String apkName, String exclusions, ClassLoader loader)
       throws IOException {
     AnalysisScope scope;
-    scope = AnalysisScopeReader.readJavaScope("primordial.txt", new File(exclusions), loader);
+    scope =
+        AnalysisScopeReader.instance.readJavaScope("primordial.txt", new File(exclusions), loader);
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
@@ -98,7 +99,7 @@ public class MultiDexScopeTest {
     String multidexApk = "src/test/resources/multidex-test.apk";
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             "primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");

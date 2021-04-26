@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.ssa.analysis;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
@@ -24,7 +25,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;

@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.ShrikeIRFactory;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.summaries.SyntheticIRFactory;
-import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
 import com.ibm.wala.util.debug.Assertions;
 
 /**

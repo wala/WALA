@@ -11,9 +11,9 @@
 package com.ibm.wala.cast.js.types;
 
 import com.ibm.wala.cast.types.AstTypeReference;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.strings.Atom;
 
 public class JavaScriptTypes extends AstTypeReference {
 

@@ -12,6 +12,8 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -19,12 +21,10 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.CollectionFilter;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
-import com.ibm.wala.util.io.FileProvider;
 import java.util.Collection;
 import java.util.function.Predicate;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -51,7 +51,7 @@ public class SWTTypeHierarchy {
 
     try {
       AnalysisScope scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               classpath, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy

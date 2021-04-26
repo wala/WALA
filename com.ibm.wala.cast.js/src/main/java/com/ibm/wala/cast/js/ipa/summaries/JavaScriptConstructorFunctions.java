@@ -27,7 +27,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.Operator;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.Operator;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;

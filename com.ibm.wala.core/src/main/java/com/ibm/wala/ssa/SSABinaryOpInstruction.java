@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
 
 public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstruction {
 

@@ -15,11 +15,12 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
@@ -27,7 +28,6 @@ import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Map;
 
 /**

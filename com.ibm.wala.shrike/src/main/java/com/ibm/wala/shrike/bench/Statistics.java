@@ -10,14 +10,14 @@
  */
 package com.ibm.wala.shrike.bench;
 
-import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
-import com.ibm.wala.shrikeBT.MethodData;
-import com.ibm.wala.shrikeBT.Util;
-import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
-import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
-import com.ibm.wala.shrikeCT.ClassReader;
+import com.ibm.wala.shrike.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeBT.InvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.MethodData;
+import com.ibm.wala.shrike.shrikeBT.Util;
+import com.ibm.wala.shrike.shrikeBT.shrikeCT.ClassInstrumenter;
+import com.ibm.wala.shrike.shrikeBT.shrikeCT.OfflineInstrumenter;
+import com.ibm.wala.shrike.shrikeCT.ClassReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.Writer;

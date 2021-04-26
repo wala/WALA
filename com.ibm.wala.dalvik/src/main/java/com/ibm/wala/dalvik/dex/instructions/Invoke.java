@@ -49,8 +49,8 @@
 package com.ibm.wala.dalvik.dex.instructions;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction.IDispatch;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction.IDispatch;
 import com.ibm.wala.types.Descriptor;
 import org.jf.dexlib2.Opcode;
 

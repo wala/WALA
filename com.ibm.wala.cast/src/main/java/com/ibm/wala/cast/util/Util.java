@@ -3,9 +3,9 @@ package com.ibm.wala.cast.util;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.warnings.Warning;
 import java.util.Iterator;
 
 public class Util {

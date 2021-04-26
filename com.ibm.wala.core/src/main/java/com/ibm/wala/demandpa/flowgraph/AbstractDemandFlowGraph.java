@@ -39,6 +39,7 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -59,7 +60,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BitVectorIntSet;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

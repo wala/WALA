@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.cast.java.translator.jdt;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
@@ -46,7 +47,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.IMethodBinding;

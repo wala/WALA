@@ -15,12 +15,12 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class SourceMapTest extends WalaTestCase {
   public void testHello() throws ClassHierarchyException, IOException {
     if (analyzingJar()) return;
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // see feature 38676
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -52,7 +52,7 @@ public class SourceMapTest extends WalaTestCase {
   public void testFromJar() throws ClassHierarchyException, IOException {
     if (analyzingJar()) return;
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // open a feature to fix this
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

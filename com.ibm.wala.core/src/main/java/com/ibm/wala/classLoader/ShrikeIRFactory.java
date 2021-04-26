@@ -12,8 +12,8 @@ package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -46,7 +46,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
-    com.ibm.wala.shrikeBT.IInstruction[] shrikeInstructions = null;
+    com.ibm.wala.shrike.shrikeBT.IInstruction[] shrikeInstructions = null;
     try {
       shrikeInstructions = method.getInstructions();
     } catch (InvalidClassFileException e) {

@@ -14,8 +14,9 @@ import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeBT.Constants;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -23,7 +24,6 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.strings.Atom;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;

@@ -39,8 +39,8 @@
  */
 package org.scandroid.synthmethod;
 
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.net.URI;
 import org.scandroid.util.ISCanDroidOptions;

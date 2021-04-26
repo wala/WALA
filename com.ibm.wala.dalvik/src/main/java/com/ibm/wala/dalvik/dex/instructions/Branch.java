@@ -49,8 +49,8 @@
 package com.ibm.wala.dalvik.dex.instructions;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.IOperator;
 import org.jf.dexlib2.Opcode;
 
 public abstract class Branch extends Instruction {

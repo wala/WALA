@@ -40,12 +40,12 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.strings.Atom;
 
 /**
  * Determines the target of an Android-Intent.
