@@ -10,12 +10,15 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class Iterator2List<T> extends Iterator2Collection<T> implements List<T> {
+public class Iterator2List<T> extends Iterator2Collection<T> implements Serializable, List<T> {
+
+  private static final long serialVersionUID = -4364941553982190713L;
 
   private final List<T> delegate;
 
