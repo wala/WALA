@@ -95,6 +95,9 @@ import java.util.Set;
 public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel>
     implements IFlowGraph {
 
+  /** */
+  private static final long serialVersionUID = 1L;
+
   private static final IFlowLabel defaultLabel =
       new IFlowLabel() {
         @Override

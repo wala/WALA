@@ -100,7 +100,7 @@ public class TypeSafeInstructionFactory {
    *
    * @see com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int,
    *     int[], int, CallSiteReference,
-   *     com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod)
+   *     com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod)
    * @param iindex Zero or a positive number unique to any instruction of the same method
    * @param result Where to place the return-value of the called method. Is SSAValue.setAssigned()
    *     automatically.
@@ -259,7 +259,8 @@ public class TypeSafeInstructionFactory {
    * and handed over to the corresponding JavaInstructionFactory.InvokeInstruction.
    *
    * @see com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory#InvokeInstruction(int, int[],
-   *     int, CallSiteReference, com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod)
+   *     int, CallSiteReference,
+   *     com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod)
    * @param iindex Zero or a positive number unique to any instruction of the same method
    * @param params Parameters to the call starting with the implicit this-pointer if necessary
    * @param exception An SSAValue receiving the exception-object when something in the method throws

@@ -89,6 +89,9 @@ import java.util.Set;
  */
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
+  /** */
+  private static final long serialVersionUID = 1L;
+
   public DemandPointerFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, IClassHierarchy cha) {
     super(cg, heapModel, mam, cha);

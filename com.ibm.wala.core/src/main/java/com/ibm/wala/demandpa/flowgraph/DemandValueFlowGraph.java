@@ -92,6 +92,9 @@ import java.util.Set;
  */
 public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
+  /** */
+  private static final long serialVersionUID = 1L;
+
   public DemandValueFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
