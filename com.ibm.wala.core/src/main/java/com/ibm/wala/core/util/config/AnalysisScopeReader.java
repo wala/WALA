@@ -11,6 +11,7 @@
 package com.ibm.wala.core.util.config;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
+import com.ibm.wala.classLoader.ClassFileURLModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 
@@ -189,6 +191,13 @@ public class AnalysisScopeReader {
       File cf = fp.getFile(entryPathname, javaLoader);
       try {
         scope.addClassFileToScope(walaLoader, cf);
+      } catch (InvalidClassFileException e) {
+        Assertions.UNREACHABLE(e.toString());
+      }
+    } else if ("classUrl".equals(entryType)) {
+      URL cls = fp.getResource(entryPathname);
+      try {
+        scope.addToScope(walaLoader, new ClassFileURLModule(cls));
       } catch (InvalidClassFileException e) {
         Assertions.UNREACHABLE(e.toString());
       }
