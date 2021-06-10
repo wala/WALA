@@ -502,11 +502,11 @@ public abstract class Decoder implements Constants {
           index++;
           break;
         case OP_ldc_w:
-          i = makeConstantPoolLoad(decodeShort(index));
+          i = makeConstantPoolLoad(decodeUShort(index));
           index += 2;
           break;
         case OP_ldc2_w:
-          i = makeConstantPoolLoad(decodeShort(index));
+          i = makeConstantPoolLoad(decodeUShort(index));
           index += 2;
           break;
         case OP_iload:
