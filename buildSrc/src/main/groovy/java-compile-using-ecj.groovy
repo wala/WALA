@@ -29,7 +29,7 @@ class JavaCompileUsingEcj extends JavaCompile {
 		onlyIf { !project.hasProperty('skipJavaUsingEcjTasks') }
 	}
 
-	final void setSourceSet(SourceSet sourceSet) {
+	final void setSourceSet(final SourceSet sourceSet) {
 		// Imitate most of the behavior of the standard compilation task for the given sourceSet.
 		final standardCompileTaskName = sourceSet.getCompileTaskName('java')
 		final standardCompileTask = project.tasks.named(standardCompileTaskName, JavaCompile).get()
@@ -41,7 +41,7 @@ class JavaCompileUsingEcj extends JavaCompile {
 		destinationDirectory.set project.layout.buildDirectory.dir(destinationSubdir)
 	}
 
-	final static Provider<JavaCompileUsingEcj> withSourceSet(Project project, SourceSet sourceSet) {
+	final static Provider<JavaCompileUsingEcj> withSourceSet(final Project project, final SourceSet sourceSet) {
 		return project.tasks.register(sourceSet.getCompileTaskName('javaUsingEcj'), JavaCompileUsingEcj) { it ->
 			it.sourceSet = sourceSet
 		}
