@@ -76,6 +76,10 @@ subprojects { subproject ->
     			because 'Versions 3.15 and later of this artifact require Java 11.'
     		}
     	}
+        implementation('org.eclipse.platform:org.eclipse.core.commands') {
+                version { strictly '(,3.9.800)' }
+                because 'Versions 3.10.0 and later of this artifact require Java 11.'
+        }
     }
 
 	configurations {
