@@ -5,6 +5,10 @@
 
 buildscript {
 	dependencies.classpath 'commons-io:commons-io:2.9.0'
+	// lock all dependencies
+	configurations.classpath {
+		resolutionStrategy.activateDependencyLocking()
+	}
 }
 
 plugins {
@@ -159,6 +163,12 @@ subprojects { subproject ->
 				implementation configurations.testFixturesImplementation.dependencies
 			}
 		}
+	}
+
+	// lock all dependencies for now (buildscript deps are locked at the top of
+	// this file); we can relax the policy in the future if needed
+	dependencyLocking {
+		lockAllConfigurations()
 	}
 }
 
@@ -428,4 +438,14 @@ tasks.register('downloads') {
 		it.name != 'downloadOcamlJava'
 	}
 	inputs.files neededDownloaders
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Dependency locking
+//
+
+
+allprojects {
+    task allDeps(type: DependencyReportTask) {}
 }
