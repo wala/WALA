@@ -171,6 +171,7 @@ subprojects { subproject ->
 		lockAllConfigurations()
 		// ignore swt packages that differ by platform
 		//ignoredDependencies.add('org.eclipse.platform:org.eclipse.swt.*')
+		lockMode = LockMode.LENIENT
 	}
 }
 
