@@ -169,6 +169,8 @@ subprojects { subproject ->
 	// this file); we can relax the policy in the future if needed
 	dependencyLocking {
 		lockAllConfigurations()
+		// ignore swt packages that differ by platform
+		ignoredDependencies.add('org.eclipse.platform:org.eclipse.swt.*')
 	}
 }
 
