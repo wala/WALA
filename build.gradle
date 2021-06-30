@@ -460,5 +460,5 @@ tasks.register('downloads') {
 // this task resolves dependencies in all sub-projects, making it easy to
 // generate lockfiles
 allprojects {
-    task allDeps(type: DependencyReportTask) {}
+    tasks.register('allDeps', DependencyReportTask) {}
 }
