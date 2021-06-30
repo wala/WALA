@@ -20,7 +20,7 @@ public class Reflect17 {
           IllegalAccessException, InvocationTargetException, SecurityException,
           NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
-    Method m = c.getDeclaredMethod("t", new Class[] {Integer.class, Integer.class});
+    Method m = c.getDeclaredMethod("t", new Class[] {Integer.class});
     m.invoke(null, new Object[] {null});
   }
 }

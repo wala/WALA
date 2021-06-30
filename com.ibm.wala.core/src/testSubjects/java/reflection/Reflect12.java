@@ -21,6 +21,6 @@ public class Reflect12 {
           NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
     Method[] m = c.getMethods();
-    m[0].invoke(new Helper(), new Object[3]);
+    m[0].invoke(new Helper(), new Object[3], new Object[4]);
   }
 }
