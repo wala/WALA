@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -38,6 +39,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
@@ -139,57 +141,70 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
     MethodHandles.analyzeMethodHandles(options, builder);
 
-    CallGraph cg =
-        builder.makeCallGraph(
-            options,
-            new IProgressMonitor() {
-              private long time = System.currentTimeMillis();
+    CallGraph cg;
+    try {
+      cg =
+          builder.makeCallGraph(
+              options,
+              new IProgressMonitor() {
+                private long time = System.currentTimeMillis();
 
-              @Override
-              public void beginTask(String task, int totalWork) {
-                noteElapsedTime();
-              }
+                private int iterations = 0;
 
-              private void noteElapsedTime() {
-                long now = System.currentTimeMillis();
-                if (now - time >= 10000) {
-                  System.out.println("worked " + (now - time));
-                  System.out.flush();
-                  time = now;
+                private static final int MAX_ITERATIONS = 6;
+
+                @Override
+                public void beginTask(String task, int totalWork) {
+                  noteElapsedTime();
                 }
-              }
 
-              @Override
-              public void subTask(String subTask) {
-                noteElapsedTime();
-              }
+                private void noteElapsedTime() {
+                  long now = System.currentTimeMillis();
+                  if (now - time >= 10000) {
+                    System.out.println("worked " + (now - time));
+                    System.out.flush();
+                    time = now;
+                  }
+                }
 
-              @Override
-              public void cancel() {
-                assert false;
-              }
+                @Override
+                public void subTask(String subTask) {
+                  noteElapsedTime();
+                }
 
-              @Override
-              public boolean isCanceled() {
-                return false;
-              }
+                @Override
+                public void cancel() {
+                  assert false;
+                }
 
-              @Override
-              public void done() {
-                noteElapsedTime();
-              }
+                @Override
+                public boolean isCanceled() {
+                  return false;
+                }
 
-              @Override
-              public void worked(int units) {
-                noteElapsedTime();
-              }
+                @Override
+                public void done() {
+                  noteElapsedTime();
+                }
 
-              @Override
-              public String getCancelMessage() {
-                assert false : "should not cancel";
-                return null;
-              }
-            });
+                @Override
+                public void worked(int units) {
+                  noteElapsedTime();
+                  iterations++;
+                  if (iterations >= MAX_ITERATIONS) {
+                    throw CancelRuntimeException.make("should have run long enough");
+                  }
+                }
+
+                @Override
+                public String getCancelMessage() {
+                  assert false : "should not cancel";
+                  return null;
+                }
+              });
+    } catch (CallGraphBuilderCancelException cgbe) {
+      cg = cgbe.getPartialCallGraph();
+    }
 
     return cg;
   }
