@@ -38,7 +38,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.strings.Atom;
@@ -52,8 +51,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testKawaChess()
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
-          SecurityException {
+      throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
 
     CallGraph CG =
@@ -92,8 +90,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testKawaTest()
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
-          SecurityException {
+      throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
 
     CallGraph CG =
@@ -116,8 +113,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
   }
 
   public CallGraph testKawa(Module code, String main)
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
-          SecurityException {
+      throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             "base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS_FOR_GUI);
