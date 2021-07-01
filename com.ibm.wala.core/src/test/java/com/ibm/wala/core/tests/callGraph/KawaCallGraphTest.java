@@ -112,7 +112,18 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
     return nodes;
   }
 
-  public CallGraph testKawa(Module code, String main)
+  /** Maximum number of outer fixed point iterations to use when building the Kawa call graph. */
+  private static final int MAX_ITERATIONS = 6;
+
+  /**
+   * Builds a call graph for a Kawa module. Call graph construction is terminated after {@link
+   * #MAX_ITERATIONS} runs of the outer fixed point loop of call graph construction.
+   *
+   * @param code the module
+   * @param main entrypoint method for the call graph
+   * @return the call graph
+   */
+  private CallGraph testKawa(Module code, String main)
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
@@ -146,8 +157,6 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
                 private long time = System.currentTimeMillis();
 
                 private int iterations = 0;
-
-                private static final int MAX_ITERATIONS = 6;
 
                 @Override
                 public void beginTask(String task, int totalWork) {
