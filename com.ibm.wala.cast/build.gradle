@@ -9,7 +9,7 @@ dependencies {
 		because 'public method AstCGNode.addTarget receives an argument of type CGNode'
 	}
 	implementation(
-			'commons-io:commons-io:2.9.0',
+			'commons-io:commons-io:2.10.0',
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
