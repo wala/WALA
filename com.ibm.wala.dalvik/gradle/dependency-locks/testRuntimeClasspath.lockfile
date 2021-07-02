@@ -26,5 +26,5 @@ org.ow2.asm:asm-commons:8.0
 org.ow2.asm:asm-tree:8.0
 org.ow2.asm:asm-util:8.0
 org.ow2.asm:asm:8.0
-org.slf4j:slf4j-api:1.7.30
+org.slf4j:slf4j-api:1.7.31
 org.smali:dexlib2:2.4.0

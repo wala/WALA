@@ -9,5 +9,5 @@ com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
 com.google.j2objc:j2objc-annotations:1.1
 org.checkerframework:checker-compat-qual:2.5.2
 org.codehaus.mojo:animal-sniffer-annotations:1.17
-org.slf4j:slf4j-api:1.7.30
+org.slf4j:slf4j-api:1.7.31
 org.smali:dexlib2:2.4.0
