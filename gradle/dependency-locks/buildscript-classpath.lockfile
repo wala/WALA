@@ -6,8 +6,8 @@ com.diffplug.durian:durian-collect:1.2.0
 com.diffplug.durian:durian-core:1.2.0
 com.diffplug.durian:durian-io:1.2.0
 com.diffplug.durian:durian-swt.os:3.0.0
-com.diffplug.eclipse.mavencentral:com.diffplug.eclipse.mavencentral.gradle.plugin:3.28.2
-com.diffplug.gradle:goomph:3.28.2
+com.diffplug.eclipse.mavencentral:com.diffplug.eclipse.mavencentral.gradle.plugin:3.30.0
+com.diffplug.gradle:goomph:3.30.0
 com.diffplug.spotless:spotless-lib:1.5.1
 com.dorongold.task-tree:com.dorongold.task-tree.gradle.plugin:1.5
 com.github.ben-manes.versions:com.github.ben-manes.versions.gradle.plugin:0.39.0
