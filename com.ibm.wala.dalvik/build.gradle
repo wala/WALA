@@ -119,7 +119,7 @@ configurations {
 
 dependencies {
 	implementation(
-			'org.slf4j:slf4j-api:1.7.30',
+			'org.slf4j:slf4j-api:1.7.31',
 			'org.smali:dexlib2:2.4.0',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
