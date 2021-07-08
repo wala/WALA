@@ -13,16 +13,19 @@ package reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/** Test of Constructor.newInstance */
+/** Test of ClassLoader.getSystemClassLoader().loadClass.newInstance */
 public class Reflect25 {
   public static void main(String[] args)
       throws ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException {
     Class<?> helperClass = ClassLoader.getSystemClassLoader().loadClass("reflection.Helper");
-    Class<?> objectClass = Class.forName("java.lang.Object");
+    Class<?> objectClass = ClassLoader.getSystemClassLoader().loadClass("java.lang.Object");
+    
     Class<?>[] paramArrayTypes = new Class[] {objectClass, objectClass};
     Method m = helperClass.getMethod("o", paramArrayTypes);
+    System.out.println(m.getName());
     Object helperObject = helperClass.getDeclaredConstructor().newInstance();
     Object[] paramArrayObjects = new Object[] {new Object(), new Object()};
+    
     m.invoke(helperObject, paramArrayObjects);
   }
 }

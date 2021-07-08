@@ -42,6 +42,7 @@ public class Reflect26 {
     Annotation annoC = c.getAnnotation(Annotation.class);
     System.out.println("Key Attribute of Class Annotation: " + annoC.key());
     System.out.println("Value Attribute of Class Annotation: " + annoC.value());
+    
     Method[] methods = c.getMethods();
     Annotation anno = methods[0].getAnnotation(Annotation.class);
     System.out.println("Key Attribute of Method Annotation: " + anno.key());

@@ -14,22 +14,23 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Method;
+import java.util.ServiceLoader;
 
-public class Reflect27 {
+public class Reflect28 {
 
-  enum Color {
-    RED, GREEN, BLUE;
-  }
-
-  /** Test of Enum.values() */
+  /** Test of ServiceLoader */
   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException,
       IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-    Class<?> c = Color.class;
-    Method m = c.getDeclaredMethod("values", new Class[] {});
-    Object vals = m.invoke(c, new Object[] {});
-    Color[] colors = (Color[]) vals;
-    for (Color col : colors) {
-      System.out.println(col + " at index " + col.ordinal());
+
+    ServiceLoader<HelperInterface> loader = ServiceLoader.load(HelperInterface.class);
+
+    for (HelperInterface service0 : loader) { //there should be two implementors
+      
+      System.out.println(service0.display());
+      
+      HelperInterface s0 = service0.getClass().getDeclaredConstructor().newInstance();
+      System.out.println(s0.display());
     }
+
   }
 }
