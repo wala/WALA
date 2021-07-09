@@ -21,7 +21,7 @@ public class Reflect23 {
           IllegalAccessException, InstantiationException, IllegalArgumentException,
           InvocationTargetException {
     Class<?> helperClass = Class.forName("reflection.Helper");
-    Object helperObject = helperClass.newInstance();
+    Object helperObject = helperClass.getDeclaredConstructor().newInstance();
     Method[] methods = helperClass.getDeclaredMethods();
     for (Method m : methods) {
       if (m.getParameterTypes().length == 1) {

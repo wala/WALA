@@ -20,7 +20,7 @@ public class Reflect18 {
           IllegalAccessException, InvocationTargetException, SecurityException,
           NoSuchMethodException {
     Class<?> c = Class.forName("reflection.Helper");
-    Method m = c.getDeclaredMethod("t", new Class[] {Integer.class, Integer.class});
+    Method m = c.getDeclaredMethod("t", new Class[] {Integer.class});
     Integer i = 0;
     Helper h = new Helper();
     m.invoke(h, new Object[] {i});

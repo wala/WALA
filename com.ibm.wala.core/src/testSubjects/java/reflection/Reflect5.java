@@ -10,12 +10,17 @@
  */
 package reflection;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 public class Reflect5 {
 
   public static void main(String[] args)
-      throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+      throws IllegalAccessException, InstantiationException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     Class<?> c = Class.forName("reflection.Reflect5$A");
-    A h = (A) c.newInstance();
+    Constructor co = c.getDeclaredConstructor();
+    co.setAccessible(true);
+    A h = (A) co.newInstance();
     System.out.println(h.toString());
   }
 

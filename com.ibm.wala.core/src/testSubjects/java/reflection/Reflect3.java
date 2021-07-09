@@ -10,14 +10,15 @@
  */
 package reflection;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
 
 public class Reflect3 {
 
   public static void main(String[] args)
-      throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+      throws ClassNotFoundException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     Class<?> c = Class.forName("java.util.Properties");
-    Hashtable<Object, Object> h = (Hashtable<Object, Object>) c.newInstance();
+    Hashtable<Object, Object> h = (Hashtable<Object, Object>) c.getDeclaredConstructor().newInstance();
     System.out.println(h.toString());
   }
 

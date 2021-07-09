@@ -20,7 +20,7 @@ public class Reflect8 {
           IllegalAccessException, InvocationTargetException {
     Class<?> c = Class.forName("java.lang.Integer");
     Constructor<?>[] ctors = c.getConstructors();
-    Integer i = (Integer) ctors[0].newInstance(1);
+    Integer i = (Integer) ctors[0].newInstance("1");
     i.toString();
   }
 }

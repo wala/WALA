@@ -10,12 +10,23 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -23,6 +34,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
@@ -36,22 +49,16 @@ import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
+import com.ibm.wala.ssa.IRView;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /** Call graph utilities */
 public class Util {
@@ -719,4 +726,60 @@ public class Util {
       }
     }
   }
+
+  public static String getShortName(CGNode nd) {
+    IMethod method = nd.getMethod();
+    return getShortName(method);
+  }
+
+  public static String getShortName(IMethod method) {
+    String origName = method.getName().toString();
+    String result = origName;
+    if (origName.equals("do") || origName.equals("ctor")) {
+      result = method.getDeclaringClass().getName().toString();
+      result = result.substring(result.lastIndexOf('/') + 1);
+      if (origName.equals("ctor")) {
+        if (result.equals("LFunction")) {
+          String s = method.toString();
+          if (s.indexOf('(') != -1) {
+            String functionName = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
+            functionName = functionName.substring(functionName.lastIndexOf('/') + 1);
+            result += ' ' + functionName;
+          }
+        }
+        result = "ctor of " + result;
+      }
+    }
+    return result;
+  }
+
+  public static void dumpCG(
+    SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
+  for (CGNode N : CG) {
+    System.err.print("callees of node " + getShortName(N) + " : [");
+    boolean fst = true;
+    for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(N))) {
+      if (fst) fst = false;
+      else System.err.print(", ");
+      System.err.print(getShortName(n));
+    }
+    System.err.println("]");
+    System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());
+    IRView ir = interp.getIRView(N);
+    if (ir != null) {
+      System.err.println(ir);
+    } else {
+      System.err.println("no IR!");
+    }
+  }
+
+  System.err.println("pointer analysis");
+  for (PointerKey n : PA.getPointerKeys()) {
+    try {
+      System.err.println((n + " --> " + PA.getPointsToSet(n)));
+    } catch (Throwable e) {
+      System.err.println(("error computing set for " + n));
+    }
+  }
+}
 }

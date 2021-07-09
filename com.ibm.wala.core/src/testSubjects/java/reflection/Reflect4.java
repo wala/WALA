@@ -11,13 +11,14 @@
 package reflection;
 
 import java.io.FilePermission;
+import java.lang.reflect.InvocationTargetException;
 
 public class Reflect4 {
 
   public static void main(String[] args)
-      throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+      throws IllegalAccessException, InstantiationException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     Class<?> c = Class.forName("java.io.FilePermission");
-    FilePermission h = (FilePermission) c.newInstance();
+    FilePermission h = (FilePermission) c.getDeclaredConstructor("".getClass(), "".getClass()).newInstance("log.txt", "read");
     System.out.println(h.toString());
   }
 }

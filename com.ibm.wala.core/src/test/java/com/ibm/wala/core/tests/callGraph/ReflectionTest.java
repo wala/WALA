@@ -451,7 +451,7 @@ public class ReflectionTest extends WalaTestCase {
 
   /**
    * Test that when analyzing Reflect12, the call graph does not include a node for
-   * reflection.Helper.n but does include a node for reflection.Helper.m
+   * reflection.Helper.m but does include a node for reflection.Helper.n
    */
   @Test
   public void testReflect12()
@@ -470,10 +470,10 @@ public class ReflectionTest extends WalaTestCase {
         MethodReference.findOrCreate(
             tr, "m", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    Assert.assertTrue(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.isEmpty());
+    Assert.assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -797,6 +797,87 @@ public class ReflectionTest extends WalaTestCase {
     }
   }
 
+  /**
+     * Test that when analyzing Reflect25, the call graph includes a node for
+     * the constructor of {@code Helper} that takes two {@link Object}
+     * parameters. This is to test the support for Class.getDeclaredConstructor.
+     */
+    @Test
+    public void testReflect25() throws WalaException, IllegalArgumentException, CancelException, IOException {
+        AnalysisScope scope = findOrCreateAnalysisScope();
+        IClassHierarchy cha = findOrCreateCHA(scope);
+        Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+                TestConstants.REFLECT25_MAIN);
+        AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+        CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, true);
+        TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
+        MethodReference mr = MethodReference.findOrCreate(tr, "o", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+        Set<CGNode> nodes = cg.getNodes(mr);
+        Assert.assertFalse(nodes.isEmpty());
+    }
+
+    /**
+     * Test that when analyzing Reflect26, the call graph includes a node for
+     * the getCustomAnnotation method from GFG class. This is to test the
+     * support for Class.getAnnotation and Method.getAnnotation.
+     */
+    @Test
+    public void testReflect26() throws WalaException, IllegalArgumentException, CancelException, IOException {
+        AnalysisScope scope = findOrCreateAnalysisScope();
+        IClassHierarchy cha = findOrCreateCHA(scope);
+        Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+                TestConstants.REFLECT26_MAIN);
+        AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+        CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, true);
+        TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect26$Marvel");
+        MethodReference mr = MethodReference.findOrCreate(tr, "getCustomAnnotation", "()V");
+        Set<CGNode> nodes = cg.getNodes(mr);
+        Assert.assertFalse(nodes.isEmpty());
+    }
+
+    /**
+     * Test that when analyzing Reflect27, the call graph includes a node for
+     * the values method from ENUM class Color. This is to test the support for
+     * c.getDeclaredMethod("values")
+     */
+    @Test
+    public void testReflect27() throws WalaException, IllegalArgumentException, CancelException, IOException {
+        AnalysisScope scope = findOrCreateAnalysisScope();
+        IClassHierarchy cha = findOrCreateCHA(scope);
+        Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+                TestConstants.REFLECT27_MAIN);
+        AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+        CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, true);
+        TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect27$Color");
+        MethodReference mr = MethodReference.findOrCreate(tr, "values", "()[Lreflection/Reflect27$Color;");
+        Set<CGNode> nodes = cg.getNodes(mr);
+        Assert.assertFalse(nodes.isEmpty());
+    }
+
+    /**
+     * Test that when analyzing Reflect28, the call graph includes a node for
+     * the method implemented from abstract class loaded via ServiceLoader. This
+     * is to test the support for ServiceLoader.load
+     */
+    @Test
+    public void testReflect28() throws WalaException, IllegalArgumentException, CancelException, IOException {
+        AnalysisScope scope = findOrCreateAnalysisScope();
+        IClassHierarchy cha = findOrCreateCHA(scope);
+        Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+                TestConstants.REFLECT28_MAIN);
+        AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+        CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, true);
+        TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/HelperInterface");
+        MethodReference mr = MethodReference.findOrCreate(tr, "display", "()Ljava/lang/String;");
+        Set<CGNode> nodes = cg.getNodes(mr);
+        Assert.assertFalse(nodes.isEmpty());
+
+        TypeReference tr2 = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/HelperImpl");
+        MethodReference mr2 = MethodReference.findOrCreate(tr2, "display", "()Ljava/lang/String;");
+        Set<CGNode> nodes2 = cg.getNodes(mr2);
+        Assert.assertFalse(nodes2.isEmpty());
+    }
+    
   /**
    * Test that when analyzing GetMethodContext, the call graph must contain exactly one call to each
    * of the following methods:
