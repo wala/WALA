@@ -27,7 +27,7 @@ public class Reflect26 {
   }
 
   @Annotation(key = "AvengersLeader", value = "CaptainAmerica")
-  public class GFG {
+  public class Marvel {
     @Annotation(key = "AvengersPlayer", value = "Hulk")
     public void getCustomAnnotation()
     {
@@ -38,7 +38,7 @@ public class Reflect26 {
   /** Test of Method.getAnnotation */
   public static void main(String[] args)
       throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-    Class<?> c = GFG.class;
+    Class<?> c = Marvel.class;
     Annotation annoC = c.getAnnotation(Annotation.class);
     System.out.println("Key Attribute of Class Annotation: " + annoC.key());
     System.out.println("Value Attribute of Class Annotation: " + annoC.value());
