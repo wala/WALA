@@ -100,7 +100,7 @@ public class AndroidManifestXMLReader {
     try (final FileInputStream in = new FileInputStream(xmlFile)) {
       readXML(in);
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       throw new IllegalStateException("Exception was thrown");
     }
   }
@@ -112,7 +112,7 @@ public class AndroidManifestXMLReader {
     try {
       readXML(xmlFile);
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       throw new IllegalStateException("Exception was thrown");
     }
   }
@@ -264,7 +264,7 @@ public class AndroidManifestXMLReader {
           e.getCause().printStackTrace();
           throw new IllegalStateException("InstantiationException was thrown");
         } catch (java.lang.IllegalAccessException e) {
-          e.printStackTrace();
+          //e.printStackTrace();
           if (e.getCause() != null) {
             e.getCause().printStackTrace();
           }
