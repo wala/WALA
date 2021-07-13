@@ -100,7 +100,7 @@ public class AndroidManifestXMLReader {
     try (final FileInputStream in = new FileInputStream(xmlFile)) {
       readXML(in);
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       throw new IllegalStateException("Exception was thrown");
     }
   }
@@ -112,7 +112,7 @@ public class AndroidManifestXMLReader {
     try {
       readXML(xmlFile);
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       throw new IllegalStateException("Exception was thrown");
     }
   }
@@ -258,17 +258,29 @@ public class AndroidManifestXMLReader {
       this.allowedSubTagsHolder = allowedSubTags;
       if (item != null) {
         try {
-          this.item = item.newInstance();
+          this.item = item.getConstructor().newInstance();
           this.item.setSelf(this);
         } catch (java.lang.InstantiationException e) {
           e.getCause().printStackTrace();
           throw new IllegalStateException("InstantiationException was thrown");
         } catch (java.lang.IllegalAccessException e) {
-          e.printStackTrace();
+          //e.printStackTrace();
           if (e.getCause() != null) {
             e.getCause().printStackTrace();
           }
           throw new IllegalStateException("IllegalAccessException was thrown");
+        } catch (java.lang.NoSuchMethodException e) {
+          e.printStackTrace();
+          if (e.getCause() != null) {
+            e.getCause().printStackTrace();
+          }
+          throw new IllegalStateException("NoSuchMethodException was thrown");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+          e.printStackTrace();
+          if (e.getCause() != null) {
+            e.getCause().printStackTrace();
+          }
+          throw new IllegalStateException("InvocationTargetException was thrown");
         }
       } else {
         this.item = null;
