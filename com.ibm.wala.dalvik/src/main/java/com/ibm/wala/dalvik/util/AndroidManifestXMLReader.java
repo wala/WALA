@@ -258,7 +258,7 @@ public class AndroidManifestXMLReader {
       this.allowedSubTagsHolder = allowedSubTags;
       if (item != null) {
         try {
-          this.item = item.newInstance();
+          this.item = item.getConstructor().newInstance();
           this.item.setSelf(this);
         } catch (java.lang.InstantiationException e) {
           e.getCause().printStackTrace();
@@ -269,6 +269,18 @@ public class AndroidManifestXMLReader {
             e.getCause().printStackTrace();
           }
           throw new IllegalStateException("IllegalAccessException was thrown");
+        } catch (java.lang.NoSuchMethodException e) {
+          e.printStackTrace();
+          if (e.getCause() != null) {
+            e.getCause().printStackTrace();
+          }
+          throw new IllegalStateException("NoSuchMethodException was thrown");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+          e.printStackTrace();
+          if (e.getCause() != null) {
+            e.getCause().printStackTrace();
+          }
+          throw new IllegalStateException("InvocationTargetException was thrown");
         }
       } else {
         this.item = null;
