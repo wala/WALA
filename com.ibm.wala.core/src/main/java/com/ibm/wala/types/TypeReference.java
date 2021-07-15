@@ -154,6 +154,11 @@ public final class TypeReference implements Serializable {
   public static final TypeReference JavaLangClass =
       findOrCreate(ClassLoaderReference.Primordial, JavaLangClassName);
 
+  public static final TypeReference JavaLangClassApplication =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangClassName);
+
+  public static final TypeReference ClassArray = findOrCreateArrayOf(JavaLangClass);
+
   private static final TypeName JavaLangInvokeMethodHandleName =
       TypeName.string2TypeName("Ljava/lang/invoke/MethodHandle");
 
@@ -190,16 +195,30 @@ public final class TypeReference implements Serializable {
   public static final TypeReference JavaLangReflectConstructor =
       findOrCreate(ClassLoaderReference.Primordial, JavaLangReflectConstructorName);
 
+  private static final TypeName JavaLangReflectFieldName =
+      TypeName.string2TypeName("Ljava/lang/reflect/Field");
+
+  public static final TypeReference JavaLangReflectField =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangReflectFieldName);
+
   private static final TypeName JavaLangReflectMethodName =
       TypeName.string2TypeName("Ljava/lang/reflect/Method");
 
   public static final TypeReference JavaLangReflectMethod =
       findOrCreate(ClassLoaderReference.Primordial, JavaLangReflectMethodName);
 
+  private static final TypeName JavaLangReflectParameterName =
+      TypeName.string2TypeName("Ljava/lang/reflect/Parameter");
+
+  public static final TypeReference JavaLangReflectParameter =
+      findOrCreate(ClassLoaderReference.Primordial, JavaLangReflectParameterName);
+
   private static final TypeName JavaLangEnumName = TypeName.string2TypeName("Ljava/lang/Enum");
 
   public static final TypeReference JavaLangEnum =
       findOrCreate(ClassLoaderReference.Primordial, JavaLangEnumName);
+
+  public static final TypeReference EnumArray = findOrCreateArrayOf(JavaLangEnum);
 
   private static final TypeName JavaLangErrorName = TypeName.string2TypeName("Ljava/lang/Error");
 
@@ -263,6 +282,8 @@ public final class TypeReference implements Serializable {
 
   public static final TypeReference JavaLangString =
       findOrCreate(ClassLoaderReference.Primordial, JavaLangStringName);
+
+  public static final TypeReference StringArray = findOrCreateArrayOf(JavaLangString);
 
   private static final TypeName JavaLangStringBufferName =
       TypeName.string2TypeName("Ljava/lang/StringBuffer");

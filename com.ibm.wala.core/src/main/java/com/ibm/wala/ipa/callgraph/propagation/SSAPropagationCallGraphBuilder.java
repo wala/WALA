@@ -2290,12 +2290,13 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       vn = index + 1;
     }
 
-    FilteredPointerKey.TypeFilter filter =
-        (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[index]);
-    if (filter != null && !filter.isRootFilter()) {
-      return getFilteredPointerKeyForLocal(target, vn, filter);
-
-    } else {
+    if (target.getContext().get(ContextKey.PARAMETERS[index])
+        instanceof FilteredPointerKey.TypeFilter) {
+      FilteredPointerKey.TypeFilter filter =
+          (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[index]);
+      if (filter != null && !filter.isRootFilter()) {
+        return getFilteredPointerKeyForLocal(target, vn, filter);
+}}
       // the context does not select a particular concrete type for the
       // receiver, so use the type of the method
       IClass C;
@@ -2311,7 +2312,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         return getFilteredPointerKeyForLocal(
             target, vn, new FilteredPointerKey.SingleClassFilter(C));
       }
-    }
   }
 
   /** @return the receiver class for this method. */

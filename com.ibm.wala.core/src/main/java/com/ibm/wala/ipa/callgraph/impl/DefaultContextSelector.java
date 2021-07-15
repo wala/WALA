@@ -34,7 +34,7 @@ public class DefaultContextSelector implements ContextSelector {
       throw new IllegalArgumentException("null options");
     }
     ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
-    ContextSelector r = ReflectionContextSelector.createReflectionContextSelector(options);
+    ContextSelector r = ReflectionContextSelector.createReflectionContextSelector(options, cha);
     ContextSelector s = new DelegatingContextSelector(r, ci);
     delegate = new DelegatingContextSelector(new CloneContextSelector(cha), s);
   }
