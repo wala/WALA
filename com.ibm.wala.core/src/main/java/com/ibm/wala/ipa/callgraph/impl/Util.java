@@ -11,7 +11,10 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -754,32 +757,44 @@ public class Util {
   }
 
   public static void dumpCG(
-    SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
-  for (CGNode N : CG) {
-    System.err.print("callees of node " + getShortName(N) + " : [");
-    boolean fst = true;
-    for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(N))) {
-      if (fst) fst = false;
-      else System.err.print(", ");
-      System.err.print(getShortName(n));
-    }
-    System.err.println("]");
-    System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());
-    IRView ir = interp.getIRView(N);
-    if (ir != null) {
-      System.err.println(ir);
-    } else {
-      System.err.println("no IR!");
+      SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG)  {
+
+    try {
+      String currentDir = System.getProperty("user.dir");
+      System.out.println("dir = " + currentDir);
+      BufferedWriter out = new BufferedWriter(new FileWriter(String.join(File.pathSeparator, currentDir, "dumpCG.txt")));
+      for (CGNode N : CG) {
+        out.write("callees of node " + getShortName(N) + " : [");
+        boolean fst = true;
+        for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(N))) {
+          if (fst) fst = false;
+          else out.write(", ");
+          out.write(getShortName(n));
+        }
+        out.write("]\n");
+        out.write("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext() + "\n");
+        IRView ir = interp.getIRView(N);
+        if (ir != null) {
+          out.write(ir + "\n");
+        } else {
+          out.write("no IR!\n");
+        }
+      }
+      out.write("pointer analysis\n");
+      for (PointerKey n : PA.getPointerKeys()) {
+        try {
+          out.write((n + " --> " + PA.getPointsToSet(n)));
+          out.write("\n");
+        } catch (Throwable e) {
+          out.write(("error computing set for " + n));
+          out.write("\n");
+        }
+      }
+      out.flush();
+      out.close();
+    } catch (IOException e) {
+      System.err.println(e);
     }
   }
 
-  System.err.println("pointer analysis");
-  for (PointerKey n : PA.getPointerKeys()) {
-    try {
-      System.err.println((n + " --> " + PA.getPointsToSet(n)));
-    } catch (Throwable e) {
-      System.err.println(("error computing set for " + n));
-    }
-  }
-}
 }

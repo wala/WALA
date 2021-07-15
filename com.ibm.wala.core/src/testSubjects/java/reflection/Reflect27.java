@@ -25,7 +25,7 @@ public class Reflect27 {
   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException,
       IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
     Class<?> c = Color.class;
-    Method m = c.getDeclaredMethod("values", new Class[] {});
+    Method m = c.getMethod("values", new Class[] {});
     Object vals = m.invoke(c, new Object[] {});
     Color[] colors = (Color[]) vals;
     for (Color col : colors) {

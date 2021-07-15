@@ -13,21 +13,8 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/com.ibm.wala-repository/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.cast.java.test.data/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide.jdt.test/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide.jdt/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide.jsdt.tests/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide.jsdt/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide.tests/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide/pom.xml" />
-        <option value="$PROJECT_DIR$/com.ibm.wala.ide_feature/pom.xml" />
-      </set>
-    </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="TaskProjectConfiguration">
