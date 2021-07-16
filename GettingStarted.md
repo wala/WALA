@@ -39,4 +39,35 @@ If you have decided to install Eclipse onto the environment, launch Eclipse and 
 
 From here, click Browse from the root directory and open Home > AnalysisCodeGenerator and select Finish. Eclipse will build the Maven project for you, and you will be ready to code afterwards!
 
+## Setting Up The Environment on Linux
+The dependencies for Linux are simpler than that of windows with no docker environment being required at all. The dependencies list are as follows
+```aidl
+wget
+curl
+openjdk-11
+git
+g++
+mercurial
+make
+maven
+ant
+sudo
+```
+Most modern Linux distributions will include most of these. If they are not default included, they are simple to install using whichever package manager fits your distribution.
 
+From here, WALA can be built from commandline. To begin with, the maven dependencies for the project must be installed. The easiest way to do this from any install (fresh or not) is to run 
+```aidl
+mvn clean install
+```
+
+After that completes, you can run a basic gradle command to build and lightly test the build
+```aidl
+./gradlew build publishToMavenLocal -x test -x javadoc
+```
+
+One of the importance considerations to have is the branch of WALA you have checked out and make sure that your operating system is running a compatible version of java. Your java version can be checked by running
+```aidl
+java -version
+```
+
+System specific issue notwithstanding, at this point WALA should be able to be fully built. 
