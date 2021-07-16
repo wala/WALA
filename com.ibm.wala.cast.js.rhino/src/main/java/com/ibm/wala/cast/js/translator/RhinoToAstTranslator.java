@@ -151,6 +151,10 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     }
   }
 
+  private int thisCounter = 0;
+  private final Map<JavaScriptTranslatorToCAst.WalkContext<WalkContext, Node>, String>
+      contextThisVarNameMap = HashMapFactory.make();
+
   /** context used for top-level script declarations */
   private static class ScriptContext extends FunctionContext {
     private final String script;
@@ -1223,8 +1227,24 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       return null;
     }
 
+    private String getContextThisVarName(
+        JavaScriptTranslatorToCAst.WalkContext<WalkContext, Node> context) {
+      String name = "%%saved_this_" + thisCounter;
+      thisCounter += 1;
+      contextThisVarNameMap.put(context, name);
+      return name;
+    }
+
     @Override
     public CAstNode visitFunctionNode(FunctionNode fn, WalkContext context) {
+      // Declare a unique "this" bind to the current context's this
+      // FIXME: Only create it when needed (e.g. for a nested arrow function)
+      String thisName = getContextThisVarName(context);
+      context.addNameDecl(
+          Ast.makeNode(
+              CAstNode.DECL_STMT,
+              Ast.makeConstant(new CAstSymbolImpl(thisName, JSAstTranslator.Any)),
+              visitKeywordLiteral(new KeywordLiteral(-1, -1, Token.THIS), context)));
       WalkContext child = new FunctionContext(context, fn);
       List<CAstNode> body = new ArrayList<>();
       body.add(visit(fn.getBody(), child));
@@ -1268,7 +1288,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
       if (DEBUG) System.err.println(fne.getName());
 
-      if (fn.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION) {
+      if (fn.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION
+          || fn.getFunctionType() == FunctionNode.ARROW_FUNCTION) {
         CAstNode fun = Ast.makeNode(CAstNode.FUNCTION_EXPR, Ast.makeConstant(fne));
 
         context.addScopedEntity(fun, fne);
@@ -1370,6 +1391,15 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
               arg.cfg().map(globalRef, globalRef);
               return globalRef;
             } else {
+              // Query context to decide if using the enclosing context is an arrow function that
+              // has associated "saved_this_X"
+              if (arg.top() instanceof FunctionNode) {
+                int curretnFunctionType = ((FunctionNode) arg.top()).getFunctionType();
+                if (curretnFunctionType == FunctionNode.ARROW_FUNCTION) {
+                  String thisVarName = getContextThisVarName(arg.getParent());
+                  return readName(arg, null, thisVarName);
+                }
+              }
               return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("this"));
             }
           }
