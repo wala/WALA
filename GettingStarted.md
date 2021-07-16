@@ -2,7 +2,7 @@
 
 Summary of WALACodeNetDev
 
-## Setting Up The Environment on Windows
+## Setting Up The Environment Using Docker
 In order to set up your coding environment, first make sure that [Docker Desktop](https://www.docker.com/products/docker-desktop) and [VNC Viewer](https://www.realvnc.com/en/connect/download/viewer/) are installed on your computer. 
 
 Once those are properly set up, open up a command terminal of your choice (Git Bash, PowerShell, etc.) and start the WALACodeNetDev Docker image with this command: 
