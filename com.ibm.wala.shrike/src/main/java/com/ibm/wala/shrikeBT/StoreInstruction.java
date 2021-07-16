@@ -82,6 +82,11 @@ public final class StoreInstruction extends Instruction implements IStoreInstruc
   }
 
   @Override
+  public int getPoppedWordSize() {
+    return Util.getWordSize(getType());
+  }
+
+  @Override
   public String toString() {
     return "LocalStore(" + getType() + ',' + index + ')';
   }

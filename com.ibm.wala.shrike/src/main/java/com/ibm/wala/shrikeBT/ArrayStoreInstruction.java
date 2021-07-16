@@ -56,6 +56,11 @@ public final class ArrayStoreInstruction extends Instruction implements IArraySt
   }
 
   @Override
+  public int getPoppedWordSize() {
+    return 2 + Util.getWordSize(getType());
+  }
+
+  @Override
   public String getType() {
     return Constants.indexedTypes[opcode - OP_iastore];
   }

@@ -68,6 +68,11 @@ public final class ReturnInstruction extends Instruction {
     return opcode == OP_return ? 0 : 1;
   }
 
+  @Override
+  public int getPoppedWordSize() {
+    return Util.getWordSize(getType());
+  }
+
   public String getType() {
     return opcode == OP_return ? TYPE_void : indexedTypes[opcode - OP_ireturn];
   }

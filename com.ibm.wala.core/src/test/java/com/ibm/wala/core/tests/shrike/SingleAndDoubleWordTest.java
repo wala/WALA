@@ -1,12 +1,11 @@
 package com.ibm.wala.core.tests.shrike;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.shrikeBT.ConstantInstruction;
-import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
 import com.ibm.wala.shrikeBT.MethodEditor.Output;
+import com.ibm.wala.shrikeBT.PopInstruction;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
@@ -23,19 +22,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
-public class FloatingPointsTest extends WalaTestCase {
-  private final String klass = "shrike/FloatingPoints";
+public class SingleAndDoubleWordTest extends WalaTestCase {
+  private final String klass = "shrike/SingleAndDoubleWord";
 
   private final String testJarLocation;
   private OfflineInstrumenter instrumenter;
   private Path instrumentedJarLocation;
   private List<ClassInstrumenter> classInstrumenters;
 
-  protected FloatingPointsTest(String testJarLocation) {
+  protected SingleAndDoubleWordTest(String testJarLocation) {
     this.testJarLocation = testJarLocation;
   }
 
-  public FloatingPointsTest() {
+  public SingleAndDoubleWordTest() {
     this(getClasspathEntry("testSubjects").split(File.pathSeparator)[0]);
   }
 
@@ -49,7 +48,7 @@ public class FloatingPointsTest extends WalaTestCase {
     // 'klass' above
     instrumenter = new OfflineInstrumenter();
     instrumenter.addInputClass(
-        new File(testJarLocation), new File(testJarLocation + "/" + klass + ".class"));
+        new File(testJarLocation), new File(testJarLocation + File.separator + klass + ".class"));
     instrumenter.setPassUnmodifiedClasses(false);
     instrumenter.setOutputJar(instrumentedJarLocation.toFile());
     instrumenter.beginTraversal();
@@ -63,33 +62,34 @@ public class FloatingPointsTest extends WalaTestCase {
   }
 
   @Test
-  public void testDouble() throws IOException, InvalidClassFileException {
-    double amountToAdd = 2.5d;
-
+  public void testSingleWord() throws IOException, InvalidClassFileException {
     // Find the method data in which patches should be applied
-    String signature = "L" + klass + ";.doubble()V";
+    String signature = "L" + klass + ";.popSingleWord()V";
     MethodData methodData = getMethodData(signature);
 
-    // Find the first ConstantInstruction of type double (D)
+    // Find the first PopInstruction in the method
     IInstruction[] instructions = methodData.getInstructions();
-    Integer index = getFirstConstantInstructionIndex(instructions, Constants.TYPE_double);
+    Integer index = getFirstPopInstructionIndex(instructions);
 
-    // Since such an instruction was found, read the original value and add some
-    // specified amount
-    ConstantInstruction constantDoubleInstruction = (ConstantInstruction) instructions[index];
-    double value = (double) constantDoubleInstruction.getValue();
-    double newValue = value + amountToAdd;
+    // Set the instruction to read the popped count
+    PopInstruction popInstruction = (PopInstruction) instructions[index];
 
-    // Replace the original constant instruction with another which pushes the
-    // new value (from above)
+    // Assert correct read pop count (1) as expected by the method name
+    Assert.assertEquals(1, popInstruction.getPoppedCount(), 0d);
+
+    // Replace the original pop instruction with the same we just read.
+    // We simply need to do anything here since only modified classes are
+    // written to the jar again
     MethodEditor me = new MethodEditor(methodData);
     me.beginPass();
+    // Replacing the original pop-Instruction forces shrike to re-write the
+    // method instead of just copying the unchanged instructions
     me.replaceWith(
         index,
         new MethodEditor.Patch() {
           @Override
           public void emitTo(Output w) {
-            w.emit(ConstantInstruction.make(newValue));
+            w.emit(popInstruction);
           }
         });
     me.applyPatches();
@@ -99,42 +99,42 @@ public class FloatingPointsTest extends WalaTestCase {
     write();
 
     // Read the saved application from shrike again and verify that the
-    // altered constant instruction has the new value
-    double readValue =
-        (double) getConstantInstructionValue(signature, index, Constants.TYPE_double);
+    // pop instruction has still the same value
+    int poppedCount = getPopInstructionSize(signature, index);
 
-    // And finally (and most important) compare the value
-    Assert.assertEquals(newValue, readValue, 0d);
+    // Assure that we still pop 1 element
+    Assert.assertEquals(1, poppedCount, 0d);
   }
 
   @Test
-  public void testFloat() throws IOException, InvalidClassFileException {
-    float amountToAdd = 2.5f;
-
+  public void testDoubleWord() throws IOException, InvalidClassFileException {
     // Find the method data in which patches should be applied
-    String signature = "L" + klass + ";.floatt()V";
+    String signature = "L" + klass + ";.popDoubleWord()V";
     MethodData methodData = getMethodData(signature);
 
-    // Find the first ConstantInstruction of type float (F)
+    // Find the first PopInstruction in the method
     IInstruction[] instructions = methodData.getInstructions();
-    Integer index = getFirstConstantInstructionIndex(instructions, Constants.TYPE_float);
+    Integer index = getFirstPopInstructionIndex(instructions);
 
-    // Since such an instruction was found, read the original value and add some
-    // specified amount
-    ConstantInstruction constantDoubleInstruction = (ConstantInstruction) instructions[index];
-    float value = (float) constantDoubleInstruction.getValue();
-    float newValue = value + amountToAdd;
+    // Set the instruction to read the popped count
+    PopInstruction popInstruction = (PopInstruction) instructions[index];
 
-    // Replace the original constant instruction with another which pushes the
-    // new value (from above)
+    // Assert correct read pop count (2) as expected by the method name
+    Assert.assertEquals(2, popInstruction.getPoppedCount(), 0d);
+
+    // Replace the original pop instruction with the same we just read.
+    // We simply need to do anything here since only modified classes are
+    // written to the jar again
     MethodEditor me = new MethodEditor(methodData);
     me.beginPass();
+    // Replacing the original pop-Instruction forces shrike to re-write the
+    // method instead of just copying the unchanged instructions
     me.replaceWith(
         index,
         new MethodEditor.Patch() {
           @Override
           public void emitTo(Output w) {
-            w.emit(ConstantInstruction.make(newValue));
+            w.emit(PopInstruction.make(2));
           }
         });
     me.applyPatches();
@@ -144,20 +144,18 @@ public class FloatingPointsTest extends WalaTestCase {
     write();
 
     // Read the saved application from shrike again and verify that the
-    // altered constant instruction has the new value
-    float readValue = (float) getConstantInstructionValue(signature, index, Constants.TYPE_float);
+    // pop instruction has still the same value
+    int poppedCount = getPopInstructionSize(signature, index);
 
-    // And finally (and most important) compare the value
-    Assert.assertEquals(newValue, readValue, 0d);
+    // Assure that we still pop 2 elements
+    Assert.assertEquals(2, poppedCount, 0d);
   }
 
   private void write() throws IllegalStateException, IOException, InvalidClassFileException {
-    // Write all modified classes
+    // Write all classes regardless if they were changed or not
     for (ClassInstrumenter ci2 : classInstrumenters) {
-      if (ci2.isChanged()) {
-        ClassWriter cw = ci2.emitClass();
-        instrumenter.outputModifiedClass(ci2, cw);
-      }
+      ClassWriter cw = ci2.emitClass();
+      instrumenter.outputModifiedClass(ci2, cw);
     }
 
     // Finally write the instrumented jar
@@ -179,7 +177,7 @@ public class FloatingPointsTest extends WalaTestCase {
     }
   }
 
-  private Object getConstantInstructionValue(String signature, int index, String type)
+  private int getPopInstructionSize(String signature, int index)
       throws IllegalStateException, IOException, InvalidClassFileException {
     setValidationInstrumenter();
 
@@ -192,29 +190,24 @@ public class FloatingPointsTest extends WalaTestCase {
     IInstruction instruction = instructions[index];
 
     // Check that the instruction type has not been changed
-    Assert.assertTrue(instruction instanceof ConstantInstruction);
+    Assert.assertTrue(instruction instanceof PopInstruction);
 
     // The type type should be the same as well
-    ConstantInstruction instruction2 = (ConstantInstruction) instruction;
-    Assert.assertTrue(type.contentEquals(instruction2.getType()));
+    PopInstruction instruction2 = (PopInstruction) instruction;
 
-    return instruction2.getValue();
+    return instruction2.getPoppedCount();
   }
 
-  private Integer getFirstConstantInstructionIndex(IInstruction[] instructions, String type) {
+  private Integer getFirstPopInstructionIndex(IInstruction[] instructions) {
     // Iterate all instructions to find the first which is a ConstantInstruction
     // and has the correct type
     for (int index = 0; index < instructions.length; index++) {
       IInstruction instruction = instructions[index];
-      System.out.println(instruction);
-      if (instruction instanceof ConstantInstruction) {
-        ConstantInstruction constantInstruction = (ConstantInstruction) instruction;
-        if (constantInstruction.getType().contentEquals(type)) {
-          return index;
-        }
+      if (instruction instanceof PopInstruction) {
+        return index;
       }
     }
-    Assert.fail("No ConstantInstruction with type '" + type + "' found");
+    Assert.fail("No PopInstruction found");
     return null;
   }
 

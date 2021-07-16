@@ -87,12 +87,33 @@ public final class DupInstruction extends Instruction {
 
   @Override
   public int getPoppedCount() {
-    return size + delta;
+    return 1;
+  }
+  
+  @Override
+  public int getPoppedWordSize() {
+    throw new RuntimeException("Missing top stack element word size parameter");
+  }
+  
+  public int getPoppedWordSize(byte topMostStackElementWordSize) {
+    if (topMostStackElementWordSize < 1) {
+      throw new RuntimeException("Cannot duplicate an element with word size less than 1");
+    }
+    return getPoppedCount() * topMostStackElementWordSize;
   }
 
   @Override
   public String toString() {
     return "Dup(" + size + ',' + delta + ')';
+  }
+  
+  @Override
+  public byte getPushedWordSize() {
+    return (byte) (2 * getPoppedWordSize());
+  }
+  
+  public byte getPushedWordSize(byte topMostStackElementWordSize) {
+    return (byte) (2 * getPoppedWordSize(topMostStackElementWordSize));
   }
 
   @Override

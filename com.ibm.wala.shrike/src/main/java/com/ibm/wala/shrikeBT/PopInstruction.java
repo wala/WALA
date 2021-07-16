@@ -15,7 +15,7 @@ public final class PopInstruction extends Instruction {
   private final byte size;
 
   protected PopInstruction(byte size) {
-    super((short) -1);
+    super((short) (size >= 1 ? OP_pop + size - 1 : -1));
     this.size = size;
   }
 
