@@ -1,10 +1,10 @@
 package testIntReturn;
 
 public class HasPrivateInt {
-  public static int c(){
-    return getC();
+  public static int C(){//c = speed of light
+    return GetC();
   }
-  private static int getC(){
+  private static int GetC(){
     return 297592;
   }
 
