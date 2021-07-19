@@ -120,12 +120,12 @@ cd idea-IC-2021.1.3/bin
 Go through the installation steps until you reach this screen:
 ![intellij1](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/intellij1.png)
 
-Click open home > wala > AnalysisCodeGEnerator then select ok. 
+Click open home > wala > AnalysisCodeGenerator then select Ok. 
 Select Open as: Maven project and trust the project when prompted.
 When opened, go to src > main > java [AnalysisGraphGenerator] > WalaToGNNFiles
 ![intellij2](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/intellij2.png)
 
-Click the Setup SDK prompt at the top. Then, clikc the option underneath Detected SDKs
+Click the Setup SDK prompt at the top. Then, click the option underneath Detected SDKs
 ![intellij3](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/intellij3.png)
 
 To ensure everything is working correctly, attempt to run the WalaToGNNFiles file. Intellij should prompt you with a NullPointerException.
