@@ -79,7 +79,9 @@ After doing this, connect to the image through VNC Viewer by connecting VNC to d
 This is what it should look like:
 ![dev_env1](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/dev-env1.png)
 
-Once this is accomplished, open a terminal within the VNC Viewer environment. The terminal can be found through the Start menu in the bottom left corner and going to System Tools > LXTerminal. Once the terminal has been located, enter in the following command to run an analysis in order to make sure that everything works so far:
+Once this is accomplished, open a terminal within the VNC Viewer environment. The terminal can be found through the Start menu in the bottom left corner and going to System Tools > LXTerminal. 
+![LXTerminal](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/LXTerminal.png)
+Once the terminal has been located, enter in the following command to run an analysis in order to make sure that everything works so far:
 ```sh
 java -cp /home/wala/AnalysisCodeGenerator/target/AnalysisGraphGenerator-0.0.1-SNAPSHOT.jar -DoutputDir=/output -DSDG=true com.ibm.wala.codeNet.WalaToGNNFiles /input/<one of the test files>
 ```
@@ -104,7 +106,7 @@ After following these steps is it then safe to log out of the WALA environment.
 ## Building Project in Eclipse
 
 If you have decided to install Eclipse onto the environment, launch Eclipse and from the top right corner, go to File > Import > Maven > Existing Maven Projects and click Next. 
-
+![eclipsebuild1](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/eclipsebuild1.png)
 From here, click Browse from the root directory and open Home > AnalysisCodeGenerator and select Finish. Eclipse will build the Maven project for you, and you will be ready to code afterwards!
 
 ## Building Project in Intellij
