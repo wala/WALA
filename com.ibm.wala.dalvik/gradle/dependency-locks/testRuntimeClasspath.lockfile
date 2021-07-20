@@ -12,8 +12,8 @@ com.google.j2objc:j2objc-annotations:1.1
 it.unimi.dsi:fastutil:7.2.0
 junit:junit:4.13.2
 net.sf.jopt-simple:jopt-simple:4.6
-org.apache.ant:ant-launcher:1.10.10
-org.apache.ant:ant:1.10.10
+org.apache.ant:ant-launcher:1.10.11
+org.apache.ant:ant:1.10.11
 org.checkerframework:checker-compat-qual:2.5.2
 org.codehaus.mojo:animal-sniffer-annotations:1.17
 org.hamcrest:hamcrest-core:1.3
