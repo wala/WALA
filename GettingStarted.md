@@ -1,7 +1,5 @@
 # Setting up WALACodeNetDev Environment
 
-Summary of WALACodeNetDev
-
 ## Setting up GPU Support in Docker for WSL2 in Windows
 This is mostly based on instructions from Nvidia's website (https://docs.nvidia.com/cuda/wsl-user-guide/index.html) under the assumption that this is a fresh setup (i.e. nothing related is currently installed). This is a setup that allows for Docker to utilize GPU resources that are available and is only applicable to computers with a fairly recent dedicated NVIDIA GPU. If your computer does not have a dedicated NVIDIA GPU, skip to the next section.
 
