@@ -134,7 +134,7 @@ To ensure everything is working correctly, attempt to run the WalaToGNNFiles fil
 
 ## Setting Up The Environment on Linux
 The dependencies for Linux are simpler than that of windows with no docker environment being required at all. The dependencies list are as follows
-```aidl
+```
 wget
 curl
 openjdk-11
@@ -149,17 +149,22 @@ sudo
 Most modern Linux distributions will include most of these. If they are not default included, they are simple to install using whichever package manager fits your distribution.
 
 From here, WALA can be built from commandline. To begin with, the maven dependencies for the project must be installed. The easiest way to do this from any install (fresh or not) is to run 
-```aidl
+```
 mvn clean install
 ```
 
-After that completes, you can run a basic gradle command to build and lightly test the build
-```aidl
+After that completes, you can run a basic gradle command from the WALA root directory to build and lightly test the build
+```
 ./gradlew build publishToMavenLocal -x test -x javadoc
 ```
 
+To build WALA for use in other codebases such as Project CodeNet, the build must be shared to maven:
+```
+ ./gradlew clean build publishToMavenLocal
+```
+
 One of the importance considerations to have is the branch of WALA you have checked out and make sure that your operating system is running a compatible version of java. Your java version can be checked by running
-```aidl
+```
 java -version
 ```
 
