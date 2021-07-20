@@ -16,7 +16,7 @@ com.github.sherter.google-java-format:com.github.sherter.google-java-format.grad
 com.squareup.okhttp3:okhttp:4.3.1
 com.squareup.okio:okio:2.4.3
 com.thoughtworks.xstream:xstream:1.4.17
-commons-io:commons-io:2.10.0
+commons-io:commons-io:2.11.0
 gradle.plugin.com.dorongold.plugins:task-tree:1.5
 gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.9
 io.github.x-stream:mxparser:1.2.1
