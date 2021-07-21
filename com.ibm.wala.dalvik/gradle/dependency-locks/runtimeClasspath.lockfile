@@ -8,5 +8,5 @@ com.google.guava:guava:30.1.1-jre
 com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
 com.google.j2objc:j2objc-annotations:1.3
 org.checkerframework:checker-qual:3.8.0
-org.slf4j:slf4j-api:1.7.31
+org.slf4j:slf4j-api:1.7.32
 org.smali:dexlib2:2.5.2
