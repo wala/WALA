@@ -22,7 +22,12 @@ sourceSets {
 }
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
-final Provider<JavaCompile> compileTestSubjects11Java = java11OrHigher ? tasks.named('compileTestSubjects11Java', JavaCompile) : null
+Provider<JavaCompile> compileTestSubjects11Java = null
+if (java11OrHigher) {
+	compileTestSubjects11Java = tasks.named('compileTestSubjects11Java', JavaCompile)
+	compileTestSubjects11Java.get().sourceCompatibility = JavaVersion.VERSION_11.toString()
+	compileTestSubjects11Java.get().targetCompatibility = JavaVersion.VERSION_11.toString()
+}
 
 final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
 ecjCompileJavaTestSubjects.configure {
