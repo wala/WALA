@@ -15,9 +15,13 @@ eclipse {
 
 sourceSets {
 	testSubjects
+	if (JavaVersion.current() >= JavaVersion.VERSION_11){
+		testSubjects11
+	}
 }
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
+final Provider<JavaCompile> compileTestSubjects11Java = tasks.named('compileTestSubjects11Java', JavaCompile)
 
 final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
 ecjCompileJavaTestSubjects.configure {
@@ -298,6 +302,21 @@ tasks.register('collectTestData', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0.jar'
 	from compileTestSubjectsJava
 	from 'classes'
+	includeEmptyDirs false
+	destinationDirectory = layout.buildDirectory.dir name
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////
+//
+//  collect "com.ibm.wala.core.testdata11_1.0.0.jar"
+//
+
+tasks.register('collectTestData11', Jar) {
+	archiveFileName.set 'com.ibm.wala.core.testdata11_1.0.0.jar'
+	from compileTestSubjects11Java
 	includeEmptyDirs false
 	destinationDirectory = layout.buildDirectory.dir name
 }
