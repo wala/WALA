@@ -47,14 +47,14 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'adopt'
       - name: Build and test using Gradle and Java 8
-        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build
+        run: ./gradlew --no-build-cache --no-daemon javadoc build
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux' && matrix.java == '8'
       - name: Build and test using Gradle and Java 11
-        run: ./gradlew --continue --no-build-cache --no-daemon :com.ibm.wala.core:test
+        run: ./gradlew --no-build-cache --no-daemon :com.ibm.wala.core:test
         if: runner.os == 'Linux' && matrix.java == '11'
       - name: Build and test using Gradle but without ECJ
-        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build -PskipJavaUsingEcjTasks
+        run: ./gradlew --no-build-cache --no-daemon javadoc build -PskipJavaUsingEcjTasks
         if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
