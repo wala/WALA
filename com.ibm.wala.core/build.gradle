@@ -60,6 +60,11 @@ dependencies {
 	testRuntimeOnly(
 			files(compileTestSubjectsJava.map { it.outputs.files.first() })
 	)
+	if (java11OrHigher) {
+		testRuntimeOnly(
+				files(compileTestSubjects11Java.map { it.outputs.files.first() })
+		)
+	}
 }
 
 tasks.named('javadoc') {
