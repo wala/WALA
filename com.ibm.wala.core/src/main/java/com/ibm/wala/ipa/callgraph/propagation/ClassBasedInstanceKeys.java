@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
@@ -19,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -109,7 +111,10 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
 
   @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
-    if (type == null || cha.lookupClass(type) == null) {
+    if (S instanceof IField) {
+      IField f = (IField) S;
+      return getInstanceKeyForMetadataObject(f.getReference(), type);
+    } else if (type == null || cha.lookupClass(type) == null) {
       return null;
     } else {
       if (options.getUseConstantSpecificKeys()) {
@@ -145,6 +150,13 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
       }
     } else if (obj instanceof MethodReference) {
       IMethod m = cha.resolveMethod((MethodReference) obj);
+      if (m == null) {
+        return new ConcreteTypeKey(cls);
+      } else {
+        return new ConstantKey<>(m, cls);
+      }
+    } else if (obj instanceof FieldReference) {
+      IField m = cha.resolveField((FieldReference) obj);
       if (m == null) {
         return new ConcreteTypeKey(cls);
       } else {

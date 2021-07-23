@@ -829,12 +829,23 @@ public class ReflectionTest extends WalaTestCase {
                 TestConstants.REFLECT26_MAIN);
         AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
         CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, true);
-//      TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect26$Marvel");
-//      MethodReference mr = MethodReference.findOrCreate(tr, "getCustomAnnotation", "()V");
+       // Pair<CallGraph, PointerAnalysis<InstanceKey>> pair = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope);
+
+        //CallGraph cg = pair.fst;
+        //PointerAnalysis<InstanceKey> pointerAnalysis = pair.snd;
+
         TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");
         MethodReference mr = MethodReference.findOrCreate(tr, "getAnnotation", "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;");
         Set<CGNode> nodes = cg.getNodes(mr);
         Assert.assertFalse(nodes.isEmpty());
+
+/*        Optional<CGNode> firstMatched = nodes.stream().findFirst();
+        Assert.assertTrue(firstMatched.isPresent());
+        CGNode cgNode = firstMatched.get();
+
+        LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
+        OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
+        Assert.assertTrue(pts.size() == 1);*/
 
         tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/reflect/Constructor");
         mr = MethodReference.findOrCreate(tr, "getAnnotation", "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;");
@@ -854,7 +865,7 @@ public class ReflectionTest extends WalaTestCase {
         tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/reflect/Field");
         mr = MethodReference.findOrCreate(tr, "getAnnotation", "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;");
         nodes = cg.getNodes(mr);
-        //Assert.assertFalse(nodes.isEmpty());           //TODO: NOT WORKING!!!
+        Assert.assertFalse(nodes.isEmpty());
 
       //TODO need new asserts to confirm WALA handles annotations!!!
     }

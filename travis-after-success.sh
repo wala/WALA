@@ -9,8 +9,8 @@
 # http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/
 
 SLUG=wala/WALA
-JDK=openjdk8
-BRANCH=master
+JDK=openjdk11
+BRANCH=work
 OSNAME=linux
 
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then
