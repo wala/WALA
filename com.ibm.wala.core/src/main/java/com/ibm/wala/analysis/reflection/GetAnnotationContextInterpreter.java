@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008 IBM Corporation.
+ * Copyright (c) 2021 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,14 +10,18 @@
  */
 package com.ibm.wala.analysis.reflection;
 
-import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMember;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.util.strings.Atom;
@@ -25,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
@@ -45,21 +50,14 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
-import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.MemberReference;
-import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * {@link SSAContextInterpreter} specialized to interpret Class.getAnnotation() in a {@link
@@ -72,7 +70,7 @@ public class GetAnnotationContextInterpreter implements SSAContextInterpreter {
 
   /* END Custom change: caching */
 
-  private Map<IClass, FakeAnnotationClass> annotationCache = HashMapFactory.make();
+  private final Map<IClass, FakeAnnotationClass> annotationCache = HashMapFactory.make();
 
   private static final boolean DEBUG = false;
 
@@ -150,21 +148,25 @@ public class GetAnnotationContextInterpreter implements SSAContextInterpreter {
     TypeReference trParam = ((FilteredPointerKey.SingleClassFilter) context.get(ContextKey.PARAMETERS[1])).getConcreteType().getReference();
     IClass klassParam = cha.lookupClass(trParam);
 
-    Collection<Annotation> annots;
-    if (context.get(ContextKey.PARAMETERS[0]) instanceof ContextItem.Value) {
-        IMember memRec = ((ContextItem.Value<IMember>)context.get(ContextKey.PARAMETERS[0])).getValue();
-        annots = memRec.getAnnotations();
-    } else {
-      TypeReference trRec = ((FilteredPointerKey.SingleClassFilter) context.get(ContextKey.PARAMETERS[0])).getConcreteType().getReference();
+    Collection<Annotation> annots = null;
+    ContextItem contextItem = context.get(ContextKey.PARAMETERS[0]);
+    if (contextItem instanceof ContextItem.Value) {
+      IMember memRec = (IMember) ((ContextItem.Value<?>) contextItem).getValue();
+      annots = memRec.getAnnotations();
+    } else if (contextItem instanceof FilteredPointerKey.SingleClassFilter){
+      TypeReference trRec = ((FilteredPointerKey.SingleClassFilter) contextItem).getConcreteType().getReference();
       IClass klassRec = cha.lookupClass(trRec);
       annots = klassRec.getAnnotations();
+    } else {
+      assert false;
     }
 
-
     Annotation annot = null;
-    for (Annotation k: annots) {
-      if (k.getType().equals(trParam)) {
-        annot = k;
+    if (annots != null) {
+      for (Annotation k: annots) {
+        if (k.getType().equals(trParam)) {
+          annot = k;
+        }
       }
     }
     if (annot != null) {
@@ -174,6 +176,7 @@ public class GetAnnotationContextInterpreter implements SSAContextInterpreter {
       FakeAnnotationClass clAnnot = annotationCache.get(klassParam);
       if (clAnnot == null) {
         clAnnot = new FakeAnnotationClass(loader.getReference(), cha, klassParam);
+        annotationCache.put(klassParam, clAnnot);
       }
 
       loader.registerClass(TypeName.string2TypeName("Lcom/ibm/wala/FakeAnnotationClass") , clAnnot);
@@ -181,7 +184,9 @@ public class GetAnnotationContextInterpreter implements SSAContextInterpreter {
       Map<String, AnnotationsReader.ElementValue> annotMap = annot.getNamedArguments();
       for (String key : annotMap.keySet())  {
         clAnnot.addField(Atom.findOrCreateUnicodeAtom(key), getTRForElementValue(annotMap.get(key)));
-        clAnnot.addMethod(new Selector(Atom.findOrCreateUnicodeAtom(key), Descriptor.findOrCreate(new TypeName[0], getTRForElementValue(annotMap.get(key)).getName())), getTRForElementValue(annotMap.get(key)));
+        MethodReference mr = MethodReference.findOrCreate(clAnnot.getReference(), Atom.findOrCreateUnicodeAtom(key), Descriptor.findOrCreate(new TypeName[0], getTRForElementValue(annotMap.get(key)).getName()));
+        FakeAnnotationMethod method = new FakeAnnotationMethod(mr, cha, klassParam);
+        clAnnot.addMethod(method);
       }
 
       int iindex = 0;
@@ -190,17 +195,12 @@ public class GetAnnotationContextInterpreter implements SSAContextInterpreter {
       statements.add(N);
 
       for (IField field: clAnnot.getAllFields()) {
-        String value = annotMap.get(field.getName().toString()).toString();
-        constants.put(nextLocal, new ConstantValue(value));
+        AnnotationsReader.ElementValue eValue = annotMap.get(field.getName().toString());
+        if (eValue != null) {
+          constants.put(nextLocal, new ConstantValue(eValue.toString()));
+        }
         SSAPutInstruction P = insts.PutInstruction(iindex++, retValue, nextLocal++, field.getReference());
         statements.add(P);
-      }
-
-      for (IMethod method: clAnnot.getAllMethods()) {
-        String value = annotMap.get(method.getName().toString()).toString();
-        constants.put(nextLocal, new ConstantValue(value));
-        //SSAPutInstruction P = insts.PutInstruction(iindex++, retValue, nextLocal++, method.getReference());
-        //statements.add(P);
       }
 
       SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
@@ -237,7 +237,7 @@ public class GetAnnotationContextInterpreter implements SSAContextInterpreter {
         return TypeReference.JavaLangEnum;
     } else if (val instanceof ArrayElementValue) {
         TypeReference elemtr = getTRForElementValue(((ArrayElementValue) val).vals[0]); //return TR of first element in array
-        return elemtr.getArrayTypeForElementType(); //TODO: need to test
+        return elemtr.getArrayTypeForElementType();
       }
     return TypeReference.JavaLangClass;
   }

@@ -15,6 +15,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -57,10 +58,14 @@ import java.util.Map;
  *   <li>getConstructors
  *   <li>getMethod
  *   <li>getMethods
+ *  <li>getField
+ *   <li>getFields
  *   <li>getDeclaredConstructor
  *   <li>getDeclaredConstructors
  *   <li>getDeclaredMethod
  *   <li>getDeclaredMethods
+ *   <li>getDeclaredField
+ *  <li>getDeclaredFields
  * </ul>
  */
 public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
@@ -85,6 +90,16 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       MethodReference.findOrCreate(
           TypeReference.JavaLangClass, "getMethods", "()[Ljava/lang/reflect/Method;");
 
+  public static final MethodReference GET_FIELD =
+  MethodReference.findOrCreate(
+      TypeReference.JavaLangClass,
+      "getField",
+      "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
+
+public static final MethodReference GET_FIELDS =
+  MethodReference.findOrCreate(
+      TypeReference.JavaLangClass, "getFields", "()[Ljava/lang/reflect/Field;");
+
   public static final MethodReference GET_DECLARED_CONSTRUCTOR =
       MethodReference.findOrCreate(
           TypeReference.JavaLangClass,
@@ -106,6 +121,16 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   public static final MethodReference GET_DECLARED_METHODS =
       MethodReference.findOrCreate(
           TypeReference.JavaLangClass, "getDeclaredMethods", "()[Ljava/lang/reflect/Method;");
+
+  public static final MethodReference GET_DECLARED_FIELD =
+          MethodReference.findOrCreate(
+              TypeReference.JavaLangClass,
+              "getDeclaredField",
+              "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
+    
+  public static final MethodReference GET_DECLARED_FIELDS =
+          MethodReference.findOrCreate(
+              TypeReference.JavaLangClass, "getDeclaredFields", "()[Ljava/lang/reflect/Field;");
 
   private static final boolean DEBUG = false;
 
@@ -190,6 +215,26 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           SSAOptions.defaultOptions(),
           constants);
     }
+    if (method.getReference().equals(GET_FIELD)) {
+      SSAInstruction instrs[] = makeGetFieldStatements(context, constants);
+      return new SyntheticIR(
+          method,
+          context,
+          new InducedCFG(instrs, method, context),
+          instrs,
+          SSAOptions.defaultOptions(),
+          constants);
+    }
+    if (method.getReference().equals(GET_FIELDS)) {
+      SSAInstruction instrs[] = makeGetFieldsStatments(context, constants);
+      return new SyntheticIR(
+          method,
+          context,
+          new InducedCFG(instrs, method, context),
+          instrs,
+          SSAOptions.defaultOptions(),
+          constants);
+    }
     if (method.getReference().equals(GET_DECLARED_CONSTRUCTOR)) {
       SSAInstruction instrs[] = makeGetDeclCtorStatements(context, constants);
       return new SyntheticIR(
@@ -230,6 +275,26 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           SSAOptions.defaultOptions(),
           constants);
     }
+    if (method.getReference().equals(GET_DECLARED_FIELD)) {
+      SSAInstruction instrs[] = makeGetDeclaredFieldStatements(context, constants);
+      return new SyntheticIR(
+          method,
+          context,
+          new InducedCFG(instrs, method, context),
+          instrs,
+          SSAOptions.defaultOptions(),
+          constants);
+    }
+    if (method.getReference().equals(GET_DECLARED_FIELDS)) {
+      SSAInstruction instrs[] = makeGetDeclaredFieldsStatements(context, constants);
+      return new SyntheticIR(
+          method,
+          context,
+          new InducedCFG(instrs, method, context),
+          instrs,
+          SSAOptions.defaultOptions(),
+          constants);
+    }
     Assertions.UNREACHABLE("Unexpected method " + method);
     return null;
   }
@@ -260,10 +325,14 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         || mRef.equals(GET_CONSTRUCTORS)
         || mRef.equals(GET_METHOD)
         || mRef.equals(GET_METHODS)
+        || mRef.equals(GET_FIELD)
+        || mRef.equals(GET_FIELDS)
         || mRef.equals(GET_DECLARED_CONSTRUCTOR)
         || mRef.equals(GET_DECLARED_CONSTRUCTORS)
         || mRef.equals(GET_DECLARED_METHOD)
-        || mRef.equals(GET_DECLARED_METHODS);
+        || mRef.equals(GET_DECLARED_METHODS)
+        || mRef.equals(GET_DECLARED_FIELD)
+        || mRef.equals(GET_DECLARED_FIELDS);
   }
 
   @Override
@@ -307,6 +376,28 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     allMethods = cls.getAllMethods();
     for (IMethod m : allMethods) {
       if (!m.isInit() && !m.isClinit() && m.isPublic()) {
+        result.add(m);
+      }
+    }
+    return result;
+  }
+
+   /** Get all the fields of a class */
+   private static Collection<IField> getDeclaredNormalFields(IClass cls) {
+    Collection<IField> result = HashSetFactory.make();
+    for (IField m : cls.getDeclaredInstanceFields()) {
+        result.add(m);
+    }
+    return result;
+  }
+
+  /** Get all the public fields of a class */
+  private static Collection<IField> getAllNormalPublicFields(IClass cls) {
+    Collection<IField> result = HashSetFactory.make();
+    Collection<? extends IField> allFields = null;
+    allFields = cls.getAllFields();
+    for (IField m : allFields) {
+      if (m.isPublic()) {
         result.add(m);
       }
     }
@@ -387,6 +478,53 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
+   * create statements for methods like getFields(), which return an array of
+   * fields.
+   *
+   * @param returnValues the possible return values for this method.
+   */
+  private static SSAInstruction[] getFieldArrayStatements(
+      MethodReference ref,
+      Collection<IField> returnValues,
+      Context context,
+      Map<Integer, ConstantValue> constants) {
+    ArrayList<SSAInstruction> statements = new ArrayList<>();
+    int nextLocal = ref.getNumberOfParameters() + 2;
+    int retValue = nextLocal++;
+    IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+    SSAInstructionFactory insts =
+        ((TypeAbstraction) context.get(ContextKey.RECEIVER))
+            .getType()
+            .getClassLoader()
+            .getInstructionFactory();
+    if (cls != null) {
+      TypeReference arrType = ref.getReturnType();
+      NewSiteReference site = new NewSiteReference(retValue, arrType);
+      int sizeVn = nextLocal++;
+      constants.put(sizeVn, new ConstantValue(returnValues.size()));
+      SSANewInstruction allocArr =
+          insts.NewInstruction(statements.size(), retValue, site, new int[] {sizeVn});
+      statements.add(allocArr);
+
+      int i = 0;
+      for (IField m : returnValues) {
+        int c = nextLocal++;
+        constants.put(c, new ConstantValue(m));
+        int index = i++;
+        int indexVn = nextLocal++;
+        constants.put(indexVn, new ConstantValue(index));
+        SSAArrayStoreInstruction store =
+            insts.ArrayStoreInstruction(
+                statements.size(), retValue, indexVn, c, TypeReference.JavaLangReflectConstructor);
+        statements.add(store);
+      }
+      SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
+      statements.add(R);
+    }
+    return statements.toArray(new SSAInstruction[0]);
+  }
+
+  /**
    * create statements for methods like getConstructor() and getDeclaredMethod(), which return a
    * single method. This creates a return statement for each possible return value, each of which is
    * a {@link ConstantValue} for an {@link IMethod}.
@@ -418,6 +556,37 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       // SSAThrowInstruction t = insts.ThrowInstruction(retValue);
       // statements.add(t);
     }
+    return statements.toArray(new SSAInstruction[0]);
+  }
+
+    /**
+   * create statements for methods like getField() and getDeclaredField(), which return a
+   * single field. This creates a return statement for each possible return value, each of which is
+   * a {@link ConstantValue} for an {@link IField}.
+   *
+   * @param returnValues the possible return values for this method.
+   */
+  private static SSAInstruction[] getParticularFieldStatements(
+      MethodReference ref,
+      Collection<IField> returnValues,
+      Context context,
+      Map<Integer, ConstantValue> constants) {
+    ArrayList<SSAInstruction> statements = new ArrayList<>();
+    int nextLocal = ref.getNumberOfParameters() + 2;
+    IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+    SSAInstructionFactory insts =
+        ((TypeAbstraction) context.get(ContextKey.RECEIVER))
+            .getType()
+            .getClassLoader()
+            .getInstructionFactory();
+    if (cls != null) {
+      for (IField m : returnValues) {
+        int c = nextLocal++;
+        constants.put(c, new ConstantValue(m));
+        SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), c, false);
+        statements.add(R);
+      }
+    } 
     return statements.toArray(new SSAInstruction[0]);
   }
 
@@ -467,6 +636,28 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     }
   }
 
+  private static SSAInstruction[] makeGetFieldStatements(
+    Context context, Map<Integer, ConstantValue> constants) {
+  IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+  if (cls == null) {
+    return getParticularFieldStatements(GET_FIELD, null, context, constants);
+  } else {
+    return getParticularFieldStatements(
+        GET_FIELD, getAllNormalPublicFields(cls), context, constants);
+  }
+}
+
+private static SSAInstruction[] makeGetFieldsStatments(
+    Context context, Map<Integer, ConstantValue> constants) {
+  IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+  if (cls == null) {
+    return getFieldArrayStatements(GET_FIELDS, null, context, constants);
+  } else {
+    return getFieldArrayStatements(
+        GET_FIELDS, getAllNormalPublicFields(cls), context, constants);
+  }
+}
+
   /** create statements for getConstructor() */
   private static SSAInstruction[] makeGetDeclCtorStatements(
       Context context, Map<Integer, ConstantValue> constants) {
@@ -511,6 +702,30 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     } else {
       return getMethodArrayStatements(
           GET_DECLARED_METHODS, getDeclaredNormalMethods(cls), context, constants);
+    }
+  }
+
+  /** create statements for getDeclaredMethod() */
+    private static SSAInstruction[] makeGetDeclaredFieldStatements(
+      Context context, Map<Integer, ConstantValue> constants) {
+    IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+    if (cls == null) {
+      return getParticularFieldStatements(GET_DECLARED_FIELD, null, context, constants);
+    } else {
+      return getParticularFieldStatements(
+          GET_DECLARED_FIELD, getDeclaredNormalFields(cls), context, constants);
+    }
+  }
+
+  /** create statements for getDeclaredMethod() */
+  private static SSAInstruction[] makeGetDeclaredFieldsStatements(
+      Context context, Map<Integer, ConstantValue> constants) {
+    IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+    if (cls == null) {
+      return getFieldArrayStatements(GET_DECLARED_FIELDS, null, context, constants);
+    } else {
+      return getFieldArrayStatements(
+          GET_DECLARED_FIELDS, getDeclaredNormalFields(cls), context, constants);
     }
   }
 

@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2021 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ */
 package com.ibm.wala.analysis.reflection;
 
 import java.io.Reader;
@@ -12,11 +22,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -31,7 +38,7 @@ public class FakeAnnotationClass extends SyntheticClass {
 
   private Map<Atom, IField> fakeAnnotationFields = null;
 
-  private Map<Selector, IMethod> fakeAnnotationMethods = null;
+  private final Map<Selector, IMethod> fakeAnnotationMethods = HashMapFactory.make();
 
   private IClass iinterface;
 
@@ -49,186 +56,11 @@ public class FakeAnnotationClass extends SyntheticClass {
     return getClassHierarchy().getLoader(getReference().getClassLoader());
   }
 
-  public void addMethod(final Selector name, final TypeReference returnType) {
-    if (fakeAnnotationMethods == null) {
-      fakeAnnotationMethods = HashMapFactory.make(2);
+  public void addMethod(IMethod m) {
+    assert (this.fakeAnnotationMethods != null);
+    if (!fakeAnnotationMethods.containsKey(m.getSelector())) {
+      this.fakeAnnotationMethods.put(m.getSelector(), m);
     }
-
-    fakeAnnotationMethods.put(
-        name, 
-        new IMethod() {
-
-          @Override
-          public IClass getDeclaringClass() {
-            return com.ibm.wala.analysis.reflection.FakeAnnotationClass.this;
-          }
-
-          @Override
-          public Atom getName() {
-            return name.getName();
-          }
-
-          @Override
-          public boolean isStatic() {
-            return false;
-          }
-
-          @Override
-          public Collection<Annotation> getAnnotations() {
-            return Collections.emptySet();
-          }
-
-          @Override
-          public IClassHierarchy getClassHierarchy() {
-            return com.ibm.wala.analysis.reflection.FakeAnnotationClass.this.getClassHierarchy();
-          }
-
-          @Override
-          public boolean isSynchronized() {
-            return false;
-          }
-
-          @Override
-          public boolean isClinit() {
-            return false;
-          }
-
-          @Override
-          public boolean isInit() {
-            return false;
-          }
-
-          @Override
-          public boolean isNative() {
-            return false;
-          }
-
-          @Override
-          public boolean isWalaSynthetic() {
-            return true;
-          }
-
-          @Override
-          public boolean isSynthetic() {
-            return true;
-          }
-
-          @Override
-          public boolean isAbstract() {
-            return false;
-          }
-
-          @Override
-          public boolean isPrivate() {
-            return false;
-          }
-
-          @Override
-          public boolean isProtected() {
-            return false;
-          }
-
-          @Override
-          public boolean isPublic() {
-            return false;
-          }
-
-          @Override
-          public boolean isFinal() {
-            return false;
-          }
-
-          @Override
-          public boolean isBridge() {
-            return false;
-          }
-
-          @Override
-          public MethodReference getReference() {
-            return MethodReference.findOrCreate(com.ibm.wala.analysis.reflection.FakeAnnotationClass.this.getReference(), name);
-          }
-
-          @Override
-          public boolean hasExceptionHandler() {
-            return false;
-          }
-
-          @Override
-          public TypeReference getParameterType(int i) {
-            return null;
-          }
-
-          @Override
-          public TypeReference getReturnType() {
-            return returnType;
-          }
-
-          @Override
-          public int getNumberOfParameters() {
-            return 0;
-          }
-
-          @Override
-          public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException, UnsupportedOperationException {
-            return null;
-          }
-
-          @Override
-          public int getLineNumber(int bcIndex) {
-            return 0;
-          }
-
-          @Override
-          public SourcePosition getSourcePosition(int instructionIndex) throws InvalidClassFileException {            
-            return null;
-          }
-
-          @Override
-          public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {            
-            return null;
-          }
-
-          @Override
-          public String getLocalVariableName(int bcIndex, int localNumber) {            
-            return null;
-          }
-
-          @Override
-          public String getSignature() {            
-            return null;
-          }
-
-          @Override
-          public Selector getSelector() {            
-            return null;
-          }
-
-          @Override
-          public Descriptor getDescriptor() {           
-            return null;
-          }
-
-          @Override
-          public boolean hasLocalVariableTable() {            
-            return false;
-          }
-
-          @Override
-          public boolean isAnnotation() {
-            return false;
-          }
-
-          @Override
-          public boolean isEnum() {           
-            return false;
-          }
-
-          @Override
-          public boolean isModule() {
-            return false;
-          }
-
-        });
   }
 
   public void addField(final Atom name, final TypeReference fieldType) {
@@ -336,12 +168,11 @@ public class FakeAnnotationClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   @Override
-  public IMethod getMethod(Selector selector) throws UnsupportedOperationException { //TODO -- caching of method!!!
-    if (fakeAnnotationMethods != null) {
+  public IMethod getMethod(Selector selector) {
+    if (fakeAnnotationMethods.containsKey(selector)) {
       return fakeAnnotationMethods.get(selector);
-    } else {
-      return null;
     }
+    return null;
   }
 
   /*
@@ -370,7 +201,7 @@ public class FakeAnnotationClass extends SyntheticClass {
   @Override
   public Collection<IMethod> getDeclaredMethods() throws UnsupportedOperationException {
     if (this.fakeAnnotationMethods != null) {
-      return Collections.unmodifiableCollection(fakeAnnotationMethods.values());
+      return fakeAnnotationMethods.values();
     }
     return Collections.emptySet();
   }
@@ -381,7 +212,7 @@ public class FakeAnnotationClass extends SyntheticClass {
   @Override
   public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
     if ( fakeAnnotationFields != null) {
-      return  fakeAnnotationFields.values();
+      return fakeAnnotationFields.values();
     } else {
       return Collections.emptySet();
     }
@@ -416,7 +247,6 @@ public class FakeAnnotationClass extends SyntheticClass {
    */
   @Override
   public Collection<IField> getAllInstanceFields() {
-
     return getDeclaredInstanceFields();
   }
 
@@ -425,7 +255,6 @@ public class FakeAnnotationClass extends SyntheticClass {
    */
   @Override
   public Collection<IField> getAllStaticFields() {
-
     return getDeclaredStaticFields();
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002 - 2006 IBM Corporation.
+ * Copyright (c) 2021 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,11 @@ package com.ibm.wala.analysis.reflection;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMember;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import com.ibm.wala.types.MemberReference;
 
 /**
  * Implements a Context which corresponds to a given type abstraction. Thus, this maps the name
@@ -46,7 +44,7 @@ public class GetAnnotationContext implements Context {
 
   public GetAnnotationContext(IMember mr, TypeAbstraction annotationType) {
     if (mr == null) {
-      throw new IllegalArgumentException("null type");
+      throw new IllegalArgumentException("null member");
     }
     if (annotationType == null) {
       throw new IllegalArgumentException("null annotation type");
@@ -64,8 +62,8 @@ public class GetAnnotationContext implements Context {
       if (type instanceof PointType) {
         IClass cls = ((PointType) type).getIClass(); //Class.getAnnotation
         return new FilteredPointerKey.SingleClassFilter(cls);
-      } else if (member instanceof IMember){
-        return new ContextItem.Value<IMember>(member);
+      } else if (member != null) {
+        return ContextItem.Value.make(member);
       } else {
         assert false;
         return null;

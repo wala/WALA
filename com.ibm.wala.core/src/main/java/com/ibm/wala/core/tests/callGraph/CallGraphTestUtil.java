@@ -139,12 +139,12 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    SSAPropagationCallGraphBuilder builder =
+    CallGraphBuilder<InstanceKey> builder =
         Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       //builder.getPointerAnalysis().toString();
-      Util.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), cg);
+      Util.dumpCG(((SSAPropagationCallGraphBuilder) builder).getCFAContextInterpreter(), builder.getPointerAnalysis(), cg);
     }
 
     if (CHECK_FOOTPRINT) {
@@ -153,6 +153,31 @@ public class CallGraphTestUtil {
     }
     return cg;
 
+  }
+  public static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildZeroOneCFA(
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      AnalysisScope scope)
+      throws IllegalArgumentException, CancelException {
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
+
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    //To be removed before merging into master
+    Util.dumpCG(((SSAPropagationCallGraphBuilder) builder).getCFAContextInterpreter(), builder.getPointerAnalysis(), cg);
+
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
+    return Pair.make(cg, builder.getPointerAnalysis());
   }
 
   public static CallGraph buildZeroContainerCFA(

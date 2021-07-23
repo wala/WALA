@@ -75,10 +75,14 @@ class JavaLangClassContextSelector implements ContextSelector {
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_CONSTRUCTORS);
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_METHOD);
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_METHODS);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_FIELD);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_FIELDS);
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTOR);
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTORS);
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_METHOD);
     UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_METHODS);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_FIELD);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_FIELDS);
   }
 
   /**

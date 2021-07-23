@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>WALA</artifactId>
 		<groupId>com.ibm.wala</groupId>
-		<version>1.5.8-SNAPSHOT</version>
+		<version>1.6.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>com.ibm.wala.ide.tests</artifactId>
 	<packaging>eclipse-plugin</packaging>
