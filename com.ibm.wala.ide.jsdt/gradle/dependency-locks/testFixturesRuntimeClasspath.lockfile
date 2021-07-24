@@ -2,7 +2,7 @@
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
 com.google.code.gson:gson:2.8.7
-commons-io:commons-io:2.10.0
+commons-io:commons-io:2.11.0
 commons-jxpath:commons-jxpath:1.3
 commons-logging:commons-logging:1.0.4
 jakarta.annotation:jakarta.annotation-api:2.0.0-RC1

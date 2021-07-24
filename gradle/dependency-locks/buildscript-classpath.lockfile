@@ -1,13 +1,13 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-biz.aQute.bnd:biz.aQute.bndlib:5.2.0
+biz.aQute.bnd:biz.aQute.bndlib:5.3.0
 com.diffplug.durian:durian-collect:1.2.0
 com.diffplug.durian:durian-core:1.2.0
 com.diffplug.durian:durian-io:1.2.0
-com.diffplug.durian:durian-swt.os:3.0.0
-com.diffplug.eclipse.mavencentral:com.diffplug.eclipse.mavencentral.gradle.plugin:3.30.0
-com.diffplug.gradle:goomph:3.30.0
+com.diffplug.durian:durian-swt.os:3.4.0
+com.diffplug.eclipse.mavencentral:com.diffplug.eclipse.mavencentral.gradle.plugin:3.30.2
+com.diffplug.gradle:goomph:3.30.2
 com.diffplug.spotless:spotless-lib:1.5.1
 com.dorongold.task-tree:com.dorongold.task-tree.gradle.plugin:1.5
 com.github.ben-manes.versions:com.github.ben-manes.versions.gradle.plugin:0.39.0
@@ -16,7 +16,7 @@ com.github.sherter.google-java-format:com.github.sherter.google-java-format.grad
 com.squareup.okhttp3:okhttp:4.3.1
 com.squareup.okio:okio:2.4.3
 com.thoughtworks.xstream:xstream:1.4.17
-commons-io:commons-io:2.10.0
+commons-io:commons-io:2.11.0
 gradle.plugin.com.dorongold.plugins:task-tree:1.5
 gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.9
 io.github.x-stream:mxparser:1.2.1
