@@ -1,5 +1,7 @@
-package testArrayReturn;
+package privateInterfaceMethods.testArrayReturn;
 
-public class returnArray implements PrivateInterface{
+import privateInterfaceMethods.PrivateInterface;
+
+public class returnArray implements PrivateInterface {
 
 }

@@ -1,4 +1,4 @@
-package testIntReturn;
+package privateInterfaceMethods.testIntReturn;
 
 public class testIntReturn {
 

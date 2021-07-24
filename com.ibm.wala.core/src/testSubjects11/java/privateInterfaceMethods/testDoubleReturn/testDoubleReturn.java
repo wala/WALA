@@ -1,9 +1,9 @@
-package testArrayReturn;
+package privateInterfaceMethods.testDoubleReturn;
 
-public class testArrayReturn {
+public class testDoubleReturn {
   public void main(String[] args){
-    returnArray testee = new returnDouble();
-    testee.RetT(3.1415926)
+    ReturnDouble testee = new ReturnDouble();
+    testee.RetT(3.1415926);
     return;
   }
 

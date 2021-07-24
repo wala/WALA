@@ -1,4 +1,4 @@
-package pricateInterfaceMethods;
+package privateInterfaceMethods;
 
 public interface PrivateInterface {
   default <T> void RetT(T input){

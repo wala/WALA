@@ -1,4 +1,4 @@
-package testStringReturn;
+package privateInterfaceMethods.testStringReturn;
 
 public class testStringReturn {
   public static void main(String[] args){

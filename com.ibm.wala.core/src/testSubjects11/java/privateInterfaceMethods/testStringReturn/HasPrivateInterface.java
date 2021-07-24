@@ -1,4 +1,6 @@
-package testStringReturn;
+package privateInterfaceMethods.testStringReturn;
 
-public class HasPrivateInterface implements PrivateInterface{
+import privateInterfaceMethods.PrivateInterface;
+
+public class HasPrivateInterface implements PrivateInterface {
 }

@@ -1,5 +1,7 @@
-package testIntReturn;
+package privateInterfaceMethods.testIntReturn;
 
-public interface HasPrivateInt implements PrivateInterface{
+import privateInterfaceMethods.PrivateInterface;
+
+public class HasPrivateInt implements PrivateInterface {
 
 }
