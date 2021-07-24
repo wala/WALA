@@ -17,16 +17,16 @@ final boolean java11OrHigher = JavaVersion.current() >= JavaVersion.VERSION_11
 sourceSets {
 	testSubjects
 	if (java11OrHigher) {
-		testSubjects11
+		test11Subjects
 	}
 }
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
-Provider<JavaCompile> compileTestSubjects11Java = null
+Provider<JavaCompile> compileTest11SubjectsJava = null
 if (java11OrHigher) {
-	compileTestSubjects11Java = tasks.named('compileTestSubjects11Java', JavaCompile)
-	compileTestSubjects11Java.get().sourceCompatibility = JavaVersion.VERSION_11.toString()
-	compileTestSubjects11Java.get().targetCompatibility = JavaVersion.VERSION_11.toString()
+	compileTest11SubjectsJava = tasks.named('compileTest11SubjectsJava', JavaCompile)
+	compileTest11SubjectsJava.get().sourceCompatibility = JavaVersion.VERSION_11.toString()
+	compileTest11SubjectsJava.get().targetCompatibility = JavaVersion.VERSION_11.toString()
 }
 
 final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
@@ -67,7 +67,7 @@ dependencies {
 	)
 	if (java11OrHigher) {
 		testRuntimeOnly(
-				files(compileTestSubjects11Java.map { it.outputs.files.first() })
+				files(compileTest11SubjectsJava.map { it.outputs.files.first() })
 		)
 	}
 }
@@ -328,7 +328,7 @@ tasks.register('collectTestData', Jar) {
 if (java11OrHigher) {
 	tasks.register('collectTestData11', Jar) {
 		archiveFileName.set 'com.ibm.wala.core.testdata11_1.0.0.jar'
-		from compileTestSubjects11Java
+		from compileTest11SubjectsJava
 		includeEmptyDirs false
 		destinationDirectory = layout.buildDirectory.dir name
 	}
