@@ -73,6 +73,9 @@ Once those are properly set up, open up a command terminal of your choice (Git B
 ```sh
 docker run -v <some dir with the test files>:/input -v <where to write output>:/output -p 5901:5901 -t julianwindows/wala:walacodenetdev
 ```
+This is an example of the command above ran on Windows Powershell with its correct output:
+![powershellCommand](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/rcosoutput4-correct.JPG)
+
 After doing this, connect to the image through VNC Viewer by connecting VNC to display 1, port 5901 of your machine (i.e. localhost:1).
 This is what it should look like:
 ![dev_env1](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/dev-env1.png)
