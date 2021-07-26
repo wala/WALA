@@ -99,6 +99,8 @@ After doing this, open up a new command terminal on your computer (not the devel
 ```sh
 docker commit <container id>
 ```
+Here is an example of what it should look like if using Windows Powershell:
+![powershellCommit](https://github.com/VQTran123/WALA/blob/dev_env_setup/GettingStarted-Assets/newDockerCommandPowershell.JPG)
 You can find your container id by inputting the following command:
 ```sh
 docker ps
