@@ -363,6 +363,7 @@ tasks.named('processTestResources') {
 			'buildKawaTestJar',
 			'collectJLex',
 			'collectTestData',
+			'collectTestData11',
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
