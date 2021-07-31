@@ -363,12 +363,15 @@ tasks.named('processTestResources') {
 			'buildKawaTestJar',
 			'collectJLex',
 			'collectTestData',
-			'collectTestData11',
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
 	].each {
 		from tasks.named(it)
+	}
+
+	if (java11OrHigher) {
+		from tasks.named('collectTestData11')
 	}
 
 	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
@@ -393,6 +396,9 @@ tasks.named('test') {
 		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
 		exclude '**/cha/LibraryVersionTest.class'
 		exclude '**/ir/TypeAnnotationTest.class'
+	} else {
+		// turn off JDK 11+ specific tests
+		exclude '**/PrivateInterfaceMethodsTest.class'
 	}
 
 	outputs.file layout.buildDirectory.file('report')
