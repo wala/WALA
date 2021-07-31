@@ -28,7 +28,8 @@ import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import org.junit.Assert; // added for CallGraphTestUtil, not present in DefaultMethodsTest
 import org.junit.Test; // added for CallGraphTestUtil, not present in DefaultMethodsTest not certain
-                       // if necessary
+
+// if necessary
 
 public class PrivateInterfaceMethodsTest extends WalaTestCase {
   @Test
