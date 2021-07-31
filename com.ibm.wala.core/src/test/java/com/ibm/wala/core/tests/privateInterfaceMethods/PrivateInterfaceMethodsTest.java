@@ -79,7 +79,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase{
 */
         //should be from main to RetT
         TypeReference t2s =
-                TypeReference.findOrCreate(ClassLoaderReference.Application, "LprivateInterfaceMethods/testArrayReturn/returnArray");
+                TypeReference.findOrCreate(ClassLoaderReference.Application, "LprivateInterfaceMethods/testArrayReturn/testArrayReturn");
         MethodReference t2m = MethodReference.findOrCreate(t2s, "RetT", "()V");
         System.out.println("RetTnode: " + cg.getNodes(t2m).iterator());
         Assert.assertTrue("expect RetT node", cg.getNodes(t2m).iterator().hasNext());
@@ -87,13 +87,13 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase{
 
         // Check call from main to RetT(string)
         Assert.assertTrue(
-                "should have call site from main to returnArray.retT",
+                "should have call site from main to testArrayRetur.retT",
                 cg.getPossibleSites(mnode, t2node).hasNext());
 
         // Find node corresponding to getT(string) called by retT(string) from main
         TypeReference t3s =
-                TypeReference.findOrCreate(ClassLoaderReference.Application, "LdefaultMethods/Interface2");
-        MethodReference t3m = MethodReference.findOrCreate(t3s, "GetT", "()I");
+                TypeReference.findOrCreate(ClassLoaderReference.Application, "LprivateInterfaceMethods/testArrayReturn/testArrayReturn");
+        MethodReference t3m = MethodReference.findOrCreate(t3s, "GetT", "()[");
 
         Assert.assertTrue("expect returnArray.GetT() node", cg.getNodes(t3m).iterator().hasNext());
         CGNode t3node = cg.getNodes(t3m).iterator().next();
