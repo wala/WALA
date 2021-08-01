@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.privateInterfaceMethods;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -26,6 +28,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
+import java.util.Collection;
 import org.junit.Assert; // added for CallGraphTestUtil, not present in DefaultMethodsTest
 import org.junit.Test; // added for CallGraphTestUtil, not present in DefaultMethodsTest not certain
 
@@ -43,7 +46,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
             scope, cha, "LprivateInterfaceMethods/testArrayReturn/testArrayReturn");
 
-    System.out.println("entry point: " + entrypoints.iterator().next());
+    // System.out.println("entry point: " + entrypoints.iterator().next());
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
@@ -57,32 +60,16 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
             "LprivateInterfaceMethods/testArrayReturn/testArrayReturn");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
     Assert.assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
-    System.out.println("main has next: " + cg.getNodes(mm).iterator().hasNext());
+    // System.out.println("main has next: " + cg.getNodes(mm).iterator().hasNext());
     CGNode mnode = cg.getNodes(mm).iterator().next();
-    /*
-            //find node corresponding to returnArray()
-            TypeReference t1s =
-                    TypeReference.findOrCreate(ClassLoaderReference.Application, "LprivateInterfaceMethods/testArrayReturn/testArrayreturn");
-            MethodReference t1m = MethodReference.findOrCreate(t1s, "returnArray", "()v");
-            boolean noNext = cg.getNodes(t1m).iterator().hasNext();
 
-            Assert.assertTrue("expect returnArray node", !noNext);
-            System.out.println(cg.getNodes(t1m).iterator());
-            CGNode t1node = cg.getNodes(t1m).iterator().next();
-
-            // Check call from main to returnArray()
-            Assert.assertTrue(
-                    "should have call site from main to returnArray.retT",
-                    cg.getPossibleSites(mnode, t1node).hasNext());
-
-    */
     // should be from main to RetT
     TypeReference t2s =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
             "LprivateInterfaceMethods/testArrayReturn/returnArray");
     MethodReference t2m = MethodReference.findOrCreate(t2s, "RetT", "(Ljava/lang/Object;)V");
-    System.out.println("RetTnode: " + cg.getNodes(t2m).iterator());
+    // System.out.println("RetTnode: " + cg.getNodes(t2m).iterator());
     Assert.assertTrue("expect RetT node", cg.getNodes(t2m).iterator().hasNext());
     CGNode t2node = cg.getNodes(t2m).iterator().next();
 
@@ -102,9 +89,27 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     Assert.assertTrue("expect returnArray.GetT() node", cg.getNodes(t3m).iterator().hasNext());
     CGNode t3node = cg.getNodes(t3m).iterator().next();
 
-    // Check call from main to Interface2.silly
+    // Check call from RetT to GetT
     Assert.assertTrue(
         "should have call site from RetT to returnArray.GetT()",
         cg.getPossibleSites(t2node, t3node).hasNext());
+
+    // check that Iclass.getAllMethods() returns
+    TypeReference test1Type =
+        TypeReference.findOrCreate(
+            ClassLoaderReference.Application,
+            "LprivateInterfaceMethods/testArrayReturn/returnArray");
+    IClass test1Class = cha.lookupClass(test1Type);
+
+    Collection<? extends IMethod> allMethods = test1Class.getAllMethods();
+    IMethod defaultMethod = test1Class.getMethod(t2m.getSelector());
+    IMethod privateMethod = test1Class.getMethod(t3m.getSelector());
+
+    Assert.assertTrue(
+        "Expecting default methods to show up in IClass.allMethods()",
+        allMethods.contains(defaultMethod));
+    Assert.assertTrue(
+            "Expecting private methods to show up in IClass.allMethods()",
+        allMethods.contains(privateMethod));
   }
 }
