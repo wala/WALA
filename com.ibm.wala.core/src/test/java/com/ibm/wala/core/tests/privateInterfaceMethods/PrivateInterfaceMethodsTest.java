@@ -109,7 +109,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
         "Expecting default methods to show up in IClass.allMethods()",
         allMethods.contains(defaultMethod));
     Assert.assertTrue(
-            "Expecting private methods to show up in IClass.allMethods()",
+        "Expecting private methods to show up in IClass.allMethods()",
         allMethods.contains(privateMethod));
   }
 }
