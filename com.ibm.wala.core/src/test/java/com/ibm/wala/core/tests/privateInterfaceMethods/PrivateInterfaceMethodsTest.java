@@ -29,8 +29,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Assert; // added for CallGraphTestUtil, not present in DefaultMethodsTest
-import org.junit.Test; // added for CallGraphTestUtil, not present in DefaultMethodsTest not certain
+import org.junit.Assert;
+import org.junit.Test;
 
 // if necessary
 
@@ -44,7 +44,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "LprivateInterfaceMethods/testArrayReturn/testArrayReturn");
+            scope, cha, "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
 
     // System.out.println("entry point: " + entrypoints.iterator().next());
 
@@ -57,7 +57,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     TypeReference tm =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/testArrayReturn/testArrayReturn");
+            "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
     Assert.assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
     // System.out.println("main has next: " + cg.getNodes(mm).iterator().hasNext());
@@ -67,7 +67,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     TypeReference t2s =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/testArrayReturn/returnArray");
+            "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
     MethodReference t2m = MethodReference.findOrCreate(t2s, "RetT", "(Ljava/lang/Object;)V");
     // System.out.println("RetTnode: " + cg.getNodes(t2m).iterator());
     Assert.assertTrue("expect RetT node", cg.getNodes(t2m).iterator().hasNext());
@@ -75,30 +75,30 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
 
     // Check call from main to RetT(string)
     Assert.assertTrue(
-        "should have call site from main to testArrayRetur.retT",
+        "should have call site from main to TestArrayRetur.retT",
         cg.getPossibleSites(mnode, t2node).hasNext());
 
     // Find node corresponding to getT(string) called by retT(string) from main
     TypeReference t3s =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/testArrayReturn/returnArray");
+            "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
     MethodReference t3m =
         MethodReference.findOrCreate(t3s, "GetT", "(Ljava/lang/Object;)Ljava/lang/Object;");
 
-    Assert.assertTrue("expect returnArray.GetT() node", cg.getNodes(t3m).iterator().hasNext());
+    Assert.assertTrue("expect ReturnArray.GetT() node", cg.getNodes(t3m).iterator().hasNext());
     CGNode t3node = cg.getNodes(t3m).iterator().next();
 
     // Check call from RetT to GetT
     Assert.assertTrue(
-        "should have call site from RetT to returnArray.GetT()",
+        "should have call site from RetT to ReturnArray.GetT()",
         cg.getPossibleSites(t2node, t3node).hasNext());
 
     // check that Iclass.getAllMethods() returns
     TypeReference test1Type =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/testArrayReturn/returnArray");
+            "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
     IClass test1Class = cha.lookupClass(test1Type);
 
     Collection<? extends IMethod> allMethods = test1Class.getAllMethods();
