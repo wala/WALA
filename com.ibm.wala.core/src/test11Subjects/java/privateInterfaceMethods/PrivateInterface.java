@@ -1,11 +1,11 @@
 package privateInterfaceMethods;
 
-public interface PrivateInterface {
-  default <T> void RetT(T input) {
+public interface PrivateInterface {//called RetT and GetT b/c it used to type T return/input
+  default <Object> void RetT(Object input) {
     System.out.println(GetT(input));
   }
 
-  private <T> T GetT(T input) {
+  private <Object> Object GetT(Object input) {
     return input;
   }
 }
