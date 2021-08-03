@@ -1,6 +1,6 @@
 package privateInterfaceMethods;
 
-public interface PrivateInterface { // called RetT and GetT b/c it used to type T return/input
+public interface PrivateInterface {
   default void RetT(Object input) {
     GetT(input);
   }

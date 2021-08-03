@@ -32,8 +32,6 @@ import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 
-// if necessary
-
 public class PrivateInterfaceMethodsTest extends WalaTestCase {
   @Test
   public void testPrivateInterfaceMethods()
@@ -46,7 +44,6 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
             scope, cha, "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
 
-    // System.out.println("entry point: " + entrypoints.iterator().next());
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
@@ -60,7 +57,6 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
             "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
     Assert.assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
-    // System.out.println("main has next: " + cg.getNodes(mm).iterator().hasNext());
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // should be from main to RetT
@@ -69,7 +65,6 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
             ClassLoaderReference.Application,
             "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
     MethodReference t2m = MethodReference.findOrCreate(t2s, "RetT", "(Ljava/lang/Object;)V");
-    // System.out.println("RetTnode: " + cg.getNodes(t2m).iterator());
     Assert.assertTrue("expect RetT node", cg.getNodes(t2m).iterator().hasNext());
     CGNode t2node = cg.getNodes(t2m).iterator().next();
 
@@ -78,7 +73,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
         "should have call site from main to TestArrayRetur.retT",
         cg.getPossibleSites(mnode, t2node).hasNext());
 
-    // Find node corresponding to getT(string) called by retT(string) from main
+    // Find node corresponding to getT() called by retT() from main
     TypeReference t3s =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
@@ -94,7 +89,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
         "should have call site from RetT to ReturnArray.GetT()",
         cg.getPossibleSites(t2node, t3node).hasNext());
 
-    // check that Iclass.getAllMethods() returns
+    // check that Iclass.getAllMethods() returns both the default RetT and private GetT
     TypeReference test1Type =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
