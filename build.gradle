@@ -4,13 +4,17 @@
 //
 
 buildscript {
-	dependencies.classpath 'commons-io:commons-io:2.8.0'
+	dependencies.classpath 'commons-io:commons-io:2.11.0'
+	// lock all dependencies
+	configurations.classpath {
+		resolutionStrategy.activateDependencyLocking()
+	}
 }
 
 plugins {
-	id 'com.diffplug.eclipse.mavencentral' version '3.28.2' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.30.2' apply false
 	id 'com.dorongold.task-tree' version '1.5'
-	id 'com.github.ben-manes.versions' version '0.38.0'
+	id 'com.github.ben-manes.versions' version '0.39.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
 //	id 'nebula.lint' version '14.2.5'
@@ -66,6 +70,22 @@ subprojects { subproject ->
 		}
 	}
 
+    dependencies.constraints {
+    	[
+    			'org.eclipse.platform:org.eclipse.core.resources',
+    			'org.eclipse.platform:org.eclipse.equinox.common',
+    	].forEach {
+    		implementation(it) {
+    			version { strictly '(,3.15)' }
+    			because 'Versions 3.15 and later of this artifact require Java 11.'
+    		}
+    	}
+        implementation('org.eclipse.platform:org.eclipse.core.commands') {
+                version { strictly '(,3.9.800)' }
+                because 'Versions 3.10.0 and later of this artifact require Java 11.'
+        }
+    }
+
 	configurations {
 		implementation {
 			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
@@ -90,7 +110,7 @@ subprojects { subproject ->
 
 		if (project.hasProperty('excludeSlowTests')) {
 			dependencies {
-				testRuntime testFixtures(project(':com.ibm.wala.core'))
+				testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 			}
 			useJUnit {
 				excludeCategories 'com.ibm.wala.tests.util.SlowTests'
@@ -143,6 +163,24 @@ subprojects { subproject ->
 				implementation configurations.testFixturesImplementation.dependencies
 			}
 		}
+	}
+
+	// lock all dependencies for now (buildscript deps are locked at the top of
+	// this file); we can relax the policy in the future if needed
+	dependencyLocking {
+		lockAllConfigurations()
+		// The default lock mode does not work for us since SWT packages vary by
+		// operating system, and lockfiles are not expressive enough to handle
+		// that.  We could handle it by ignoring those dependencies when checking
+		// locking, but this is only supported in Gradle 6.7 and above, which
+		// we cannot update to yet (see https://github.com/wala/WALA/issues/892).
+		// As a temporary solution, we use the LENIENT lock mode, which still fixes
+		// any dynamic dependencies but otherwise does not strictly check that
+		// resolved dependencies match the lockfile.
+		lockMode = LockMode.LENIENT
+		// TODO: once we update past Gradle 6.7, get rid of the line above and
+		// try to solve the problem with an ignore like this:
+		// ignoredDependencies.add('org.eclipse.platform:org.eclipse.swt.*')
 	}
 }
 
@@ -412,4 +450,15 @@ tasks.register('downloads') {
 		it.name != 'downloadOcamlJava'
 	}
 	inputs.files neededDownloaders
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Helpers for dependency locking
+//
+
+// this task resolves dependencies in all sub-projects, making it easy to
+// generate lockfiles
+allprojects {
+    tasks.register('allDeps', DependencyReportTask) {}
 }

@@ -46,7 +46,7 @@ dependencies {
 	}
 	testFixturesImplementation(
 			'junit:junit:4.13.2',
-			'org.apache.ant:ant:1.10.10',
+			'org.apache.ant:ant:1.10.11',
 	)
 	testImplementation(
 			'junit:junit:4.13.2',
@@ -102,6 +102,8 @@ tasks.register('extractKawa') {
 @CacheableTask
 class CompileKawaScheme extends JavaExec {
 
+	@InputFile
+	@PathSensitive(PathSensitivity.NONE)
 	final RegularFileProperty schemeFile = project.objects.fileProperty()
 
 	CompileKawaScheme() {
@@ -115,7 +117,6 @@ class CompileKawaScheme extends JavaExec {
 		logging.captureStandardError LogLevel.INFO
 		args '--main', '-C'
 		argumentProviders.add({ -> [schemeFile.get() as String] } as CommandLineArgumentProvider)
-		inputs.file schemeFile
 	}
 }
 

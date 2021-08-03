@@ -37,12 +37,24 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
+import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo.PointsToResult;
 import com.ibm.wala.demandpa.alg.IntraProcFilter;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import org.junit.Test;
 
 public class IntraprocTest extends AbstractPtrTest {
@@ -55,6 +67,36 @@ public class IntraprocTest extends AbstractPtrTest {
   public void testId()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ID, 0);
+  }
+
+  @Test
+  public void testMissingClassMetadataRef()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    DemandRefinementPointsTo drpt = makeDemandPointerAnalysis("Lmissingmetadata/MissingClassRef");
+    // find the call to toString() in the application code and make sure we can get the points-to
+    // set for its receiver
+    for (CGNode node : drpt.getBaseCallGraph()) {
+      if (!node.getMethod()
+          .getDeclaringClass()
+          .getClassLoader()
+          .getReference()
+          .equals(ClassLoaderReference.Application)) {
+        continue;
+      }
+      IR ir = node.getIR();
+      if (ir == null) continue;
+      Iterator<CallSiteReference> callSites = ir.iterateCallSites();
+      while (callSites.hasNext()) {
+        CallSiteReference site = callSites.next();
+        if (site.getDeclaredTarget().getName().toString().equals("toString")) {
+          System.out.println(site + " in " + node);
+          SSAAbstractInvokeInstruction[] calls = ir.getCalls(site);
+          PointerKey pk = drpt.getHeapModel().getPointerKeyForLocal(node, calls[0].getUse(0));
+          Pair<PointsToResult, Collection<InstanceKey>> pointsTo = drpt.getPointsTo(pk, k -> true);
+          System.out.println("POINTS TO RESULT: " + pointsTo);
+        }
+      }
+    }
   }
 
   @Override

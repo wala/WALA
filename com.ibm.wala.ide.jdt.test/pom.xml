@@ -7,7 +7,7 @@
   <parent>
     <artifactId>WALA</artifactId>
     <groupId>com.ibm.wala</groupId>
-    <version>1.5.7-SNAPSHOT</version>
+    <version>1.5.8-SNAPSHOT</version>
   </parent>
 
 
@@ -80,7 +80,7 @@
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.cast.java</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
                   <classifier>test-fixtures</classifier>
 									<type>jar</type>
 									<overWrite>false</overWrite>

@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>WALA</artifactId>
 		<groupId>com.ibm.wala</groupId>
-		<version>1.5.7-SNAPSHOT</version>
+		<version>1.5.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>com.ibm.wala.ide.jdt</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -25,14 +25,14 @@
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.cast.java</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.cast.java.ecj</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>
