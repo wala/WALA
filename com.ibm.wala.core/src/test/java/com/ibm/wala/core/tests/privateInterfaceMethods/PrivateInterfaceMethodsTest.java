@@ -32,7 +32,6 @@ import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 
-// if necessary
 
 public class PrivateInterfaceMethodsTest extends WalaTestCase {
   @Test
