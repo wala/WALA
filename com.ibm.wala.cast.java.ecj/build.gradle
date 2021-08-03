@@ -59,6 +59,8 @@ tasks.named('test') {
 		exclude '**/ECJJava17IRTest.class'
 		exclude '**/ECJJavaIRTest.class'
 		exclude '**/ECJSyncDuplicatorTest.class'
+		exclude '**/ECJIssue666Test.class'	
+		exclude '**/ECJIssue667Test.class'
 	}
 }
 

@@ -8,7 +8,7 @@ buildscript {
 }
 
 plugins {
-	id 'com.diffplug.eclipse.mavencentral' version '3.28.2' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.21.0' apply false
 	id 'com.dorongold.task-tree' version '1.5'
 	id 'com.github.ben-manes.versions' version '0.38.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
@@ -34,7 +34,7 @@ group name
 version VERSION_NAME
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components
-ext.eclipseVersion = '4.15.0'
+ext.eclipseVersion = '4.14.0'
 ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
 
 subprojects { subproject ->
@@ -55,7 +55,8 @@ subprojects { subproject ->
 	apply plugin: 'signing'
 
 	java.sourceCompatibility = JavaVersion.VERSION_1_8
-
+	java.targetCompatibility = JavaVersion.VERSION_1_8
+	
 	version rootProject.version
 
 	repositories {
