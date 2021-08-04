@@ -56,6 +56,8 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   @Test
   public void testPage1() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page1.html");
+    assert url != null;
+    System.err.println("url is " + url);
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage1);
   }

@@ -16,6 +16,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import java.util.HashSet;
+import java.util.function.Function;
 
 /** Includes all application methods in an analysis scope as entrypoints. */
 public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
@@ -28,14 +29,17 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
    * @param cha governing class hierarchy
    * @throws IllegalArgumentException if cha is null
    */
-  public AllApplicationEntrypoints(AnalysisScope scope, final IClassHierarchy cha) {
+  public AllApplicationEntrypoints(
+      AnalysisScope scope,
+      final IClassHierarchy cha,
+      Function<IClass, Boolean> isApplicationClass) {
 
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
     for (IClass klass : cha) {
       if (!klass.isInterface()) {
-        if (isApplicationClass(scope, klass)) {
+        if (isApplicationClass.apply(klass)) {
           for (IMethod method : klass.getDeclaredMethods()) {
             if (!method.isAbstract()) {
               add(new ArgumentTypeEntrypoint(method, cha));
@@ -49,8 +53,11 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
     }
   }
 
-  /** @return true iff klass is loaded by the application loader. */
-  private static boolean isApplicationClass(AnalysisScope scope, IClass klass) {
-    return scope.getApplicationLoader().equals(klass.getClassLoader().getReference());
+  public AllApplicationEntrypoints(AnalysisScope scope, final IClassHierarchy cha) {
+    this(
+        scope,
+        cha,
+        (IClass klass) ->
+            scope.getApplicationLoader().equals(klass.getClassLoader().getReference()));
   }
 }

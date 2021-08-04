@@ -15,6 +15,7 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVector;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.Serializable;
@@ -129,7 +130,12 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
     }
-    return successors.getRelated(nodeManager.getNumber(node));
+    IntSet x = successors.getRelated(nodeManager.getNumber(node));
+    if (x == null) {
+      return EmptyIntSet.instance;
+    } else {
+      return x;
+    }
   }
 
   @Override

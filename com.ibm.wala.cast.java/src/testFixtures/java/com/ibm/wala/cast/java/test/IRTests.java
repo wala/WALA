@@ -64,7 +64,7 @@ import org.junit.Assert;
 
 public abstract class IRTests {
 
-  protected boolean dump = false;
+  protected boolean dump = true;
 
   protected IRTests(String projectName) {
     this.projectName = projectName;

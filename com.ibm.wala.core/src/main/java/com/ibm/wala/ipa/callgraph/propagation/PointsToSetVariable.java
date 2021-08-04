@@ -35,6 +35,9 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
    */
   public static final boolean PARANOID = false;
 
+  /** Print names of types of instance keys */
+  public static final boolean VERBOSE_PRINT = false;
+
   /**
    * used only for paranoid checking. a bit ugly, but avoids adding an instance field just for
    * debugging
@@ -153,6 +156,12 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
 
   @Override
   public String toString() {
-    return pointerKey.toString() + ':' + super.toString();
+    if (VERBOSE_PRINT) {
+      StringBuffer x = new StringBuffer(pointerKey.toString()).append(" :");
+      getValue().foreach(i -> x.append(" ").append(instanceKeys.getMappedObject(i)));
+      return x.toString();
+    } else {
+      return pointerKey.toString() + ':' + super.toString();
+    }
   }
 }

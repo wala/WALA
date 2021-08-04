@@ -15,7 +15,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.util.collections.Filtersection;
+import java.util.function.Predicate;
 
 /**
  * Interprocedural control-flow graph.
@@ -29,7 +29,7 @@ public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBloc
     super(CG);
   }
 
-  public InterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {
+  public InterproceduralCFG(CallGraph cg, Predicate<CGNode> filtersection) {
     super(cg, filtersection);
   }
 

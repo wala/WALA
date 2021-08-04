@@ -4,9 +4,12 @@ import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroOneContainerCFABuilderFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.ecj.ECJClassLoaderFactory;
+import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -35,15 +38,42 @@ import java.util.jar.JarFile;
  */
 public class SourceDirCallGraph {
 
+  @FunctionalInterface
+  public interface Processor {
+    public void process(CallGraph CG, CallGraphBuilder<?> builder, long time);
+  }
+
   /**
-   * Usage: ScopeFileCallGraph -sourceDir file_path -mainClass class_name
+   * Usage: SourceDirCallGraph -sourceDir file_path -mainClass class_name
    *
    * <p>If given -mainClass, uses main() method of class_name as entrypoint. Class name should start
    * with an 'L'.
    *
    * <p>Example args: -sourceDir /tmp/srcTest -mainClass LFoo
+   *
+   * @throws IOException
+   * @throws CallGraphBuilderCancelException
+   * @throws IllegalArgumentException
+   * @throws ClassHierarchyException
    */
   public static void main(String[] args)
+      throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
+          IOException {
+    new SourceDirCallGraph()
+        .doit(
+            args,
+            (cg, builder, time) -> {
+              System.out.println("done");
+              System.out.println("took " + time + "ms");
+              System.out.println(CallGraphStats.getStats(cg));
+            });
+  }
+
+  protected ClassLoaderFactory getLoaderFactory(AnalysisScope scope) {
+    return new ECJClassLoaderFactory(scope.getExclusions());
+  }
+
+  public void doit(String[] args, Processor processor)
       throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
           IOException {
     long start = System.currentTimeMillis();
@@ -57,18 +87,23 @@ public class SourceDirCallGraph {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
     }
     // add the source directory
-    scope.addToScope(
-        JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(new File(sourceDir)));
+    File root = new File(sourceDir);
+    if (root.isDirectory()) {
+      scope.addToScope(JavaSourceAnalysisScope.SOURCE, new SourceDirectoryTreeModule(root));
+    } else {
+      String srcFileName = sourceDir.substring(sourceDir.lastIndexOf(File.separator) + 1);
+      assert root.exists() : "couldn't find " + sourceDir;
+      scope.addToScope(
+          JavaSourceAnalysisScope.SOURCE, new SourceFileModule(root, srcFileName, null));
+    }
 
     // build the class hierarchy
-    IClassHierarchy cha =
-        ClassHierarchyFactory.make(scope, new ECJClassLoaderFactory(scope.getExclusions()));
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope, getLoaderFactory(scope));
     System.out.println(cha.getNumberOfClasses() + " classes");
     System.out.println(Warnings.asString());
     Warnings.clear();
     AnalysisOptions options = new AnalysisOptions();
-    Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
+    Iterable<Entrypoint> entrypoints = getEntrypoints(mainClass, cha);
     options.setEntrypoints(entrypoints);
     options
         .getSSAOptions()
@@ -80,18 +115,24 @@ public class SourceDirCallGraph {
               }
             });
     // you can dial down reflection handling if you like
-    //    options.setReflectionOptions(ReflectionOptions.NONE);
+    options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache =
         new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory(), options.getSSAOptions());
-    // CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache, cha, scope,
+    // CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache,
+    // cha, scope,
     // false);
     CallGraphBuilder<?> builder =
         new ZeroOneContainerCFABuilderFactory().make(options, cache, cha, scope);
     System.out.println("building call graph...");
     CallGraph cg = builder.makeCallGraph(options, null);
     long end = System.currentTimeMillis();
-    System.out.println("done");
-    System.out.println("took " + (end - start) + "ms");
-    System.out.println(CallGraphStats.getStats(cg));
+
+    processor.process(cg, builder, end - start);
+  }
+
+  protected Iterable<Entrypoint> getEntrypoints(String mainClass, IClassHierarchy cha) {
+    Iterable<Entrypoint> entrypoints =
+        Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
+    return entrypoints;
   }
 }

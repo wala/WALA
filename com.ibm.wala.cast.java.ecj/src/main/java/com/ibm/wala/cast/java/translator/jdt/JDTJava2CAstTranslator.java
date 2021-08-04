@@ -1259,10 +1259,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public Position getNamePosition() {
-      if (fDecl == null) {
+      if (fDecl == null || fDecl.getName() == null) {
         return null;
       } else {
-        return makePosition(fDecl);
+        return makePosition(fDecl.getName());
       }
     }
   }

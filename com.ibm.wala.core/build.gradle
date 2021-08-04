@@ -45,11 +45,11 @@ dependencies {
 		because 'public interface CallGraph extends interface NumberedGraph'
 	}
 	testFixturesImplementation(
-			'junit:junit:4.13.1',
-			'org.apache.ant:ant:1.10.9',
+			'junit:junit:4.13.2',
+			'org.apache.ant:ant:1.10.10',
 	)
 	testImplementation(
-			'junit:junit:4.13.1',
+			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
 	)
 	testRuntimeOnly(
@@ -102,6 +102,8 @@ tasks.register('extractKawa') {
 @CacheableTask
 class CompileKawaScheme extends JavaExec {
 
+	@InputFile
+	@PathSensitive(PathSensitivity.NONE)
 	final RegularFileProperty schemeFile = project.objects.fileProperty()
 
 	CompileKawaScheme() {
@@ -115,7 +117,6 @@ class CompileKawaScheme extends JavaExec {
 		logging.captureStandardError LogLevel.INFO
 		args '--main', '-C'
 		argumentProviders.add({ -> [schemeFile.get() as String] } as CommandLineArgumentProvider)
-		inputs.file schemeFile
 	}
 }
 

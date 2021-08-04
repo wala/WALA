@@ -29,6 +29,6 @@ public abstract class MultiReturnValueInvokeInstruction extends SSAAbstractInvok
 
   @Override
   public int getReturnValue(int i) {
-    return results[i];
+    return results == null ? -1 : results[i];
   }
 }

@@ -31,6 +31,11 @@ public class DelegatingEntity implements CAstEntity {
   }
 
   @Override
+  public CAstEntity getOriginal() {
+    return base.getOriginal();
+  }
+
+  @Override
   public int getKind() {
     return base.getKind();
   }

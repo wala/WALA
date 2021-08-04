@@ -38,7 +38,7 @@ public abstract class AllocationSiteInNode extends AbstractTypeInNode {
     return "SITE_IN_NODE{"
         + getNode().getMethod()
         + ':'
-        + site
+        + getConcreteType().getName().toUnicodeString()
         + " in "
         + getNode().getContext()
         + '}';
