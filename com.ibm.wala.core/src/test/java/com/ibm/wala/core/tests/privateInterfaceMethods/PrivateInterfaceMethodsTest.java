@@ -44,7 +44,6 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
             scope, cha, "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
 
-
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraph cg =
