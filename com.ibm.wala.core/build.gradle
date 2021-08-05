@@ -16,17 +16,16 @@ eclipse {
 final boolean java11OrHigher = JavaVersion.current() >= JavaVersion.VERSION_11
 sourceSets {
 	testSubjects
-	if (java11OrHigher) {
-		test11Subjects
+	test11Subjects
+	if (!java11OrHigher) {
+		test11Subjects.java.srcDirs = []
 	}
 }
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
-Provider<JavaCompile> compileTest11SubjectsJava = null
-if (java11OrHigher) {
-	compileTest11SubjectsJava = tasks.named('compileTest11SubjectsJava', JavaCompile)
-	compileTest11SubjectsJava.get().sourceCompatibility = JavaVersion.VERSION_11.toString()
-	compileTest11SubjectsJava.get().targetCompatibility = JavaVersion.VERSION_11.toString()
+tasks.named('compileTest11SubjectsJava', JavaCompile) {
+	sourceCompatibility = JavaVersion.VERSION_11.toString()
+	targetCompatibility = JavaVersion.VERSION_11.toString()
 }
 
 final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
@@ -65,11 +64,9 @@ dependencies {
 	testRuntimeOnly(
 			files(compileTestSubjectsJava.map { it.outputs.files.first() })
 	)
-	if (java11OrHigher) {
-		testRuntimeOnly(
-				files(compileTest11SubjectsJava.map { it.outputs.files.first() })
-		)
-	}
+	testRuntimeOnly(
+			files(compileTest11SubjectsJava.map { it.outputs.files.first() })
+	)
 }
 
 tasks.named('javadoc') {
@@ -325,13 +322,11 @@ tasks.register('collectTestData', Jar) {
 //  collect "com.ibm.wala.core.testdata11_1.0.0.jar"
 //
 
-if (java11OrHigher) {
-	tasks.register('collectTestData11', Jar) {
-		archiveFileName.set 'com.ibm.wala.core.testdata11_1.0.0.jar'
-		from compileTest11SubjectsJava
-		includeEmptyDirs false
-		destinationDirectory = layout.buildDirectory.dir name
-	}
+tasks.register('collectTestData11', Jar) {
+	archiveFileName.set 'com.ibm.wala.core.testdata11_1.0.0.jar'
+	from compileTest11SubjectsJava
+	includeEmptyDirs false
+	destinationDirectory = layout.buildDirectory.dir name
 }
 
 
@@ -370,9 +365,7 @@ tasks.named('processTestResources') {
 		from tasks.named(it)
 	}
 
-	if (java11OrHigher) {
-		from tasks.named('collectTestData11')
-	}
+	from tasks.named('collectTestData11')
 
 	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
 	// missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
