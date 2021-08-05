@@ -23,6 +23,7 @@ sourceSets {
 }
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
+final Provider<JavaCompile> compileTest11SubjectsJava = tasks.named('compileTest11SubjectsJava', JavaCompile)
 tasks.named('compileTest11SubjectsJava', JavaCompile) {
 	sourceCompatibility = JavaVersion.VERSION_11.toString()
 	targetCompatibility = JavaVersion.VERSION_11.toString()
@@ -62,9 +63,7 @@ dependencies {
 			'org.hamcrest:hamcrest:2.2',
 	)
 	testRuntimeOnly(
-			files(compileTestSubjectsJava.map { it.outputs.files.first() })
-	)
-	testRuntimeOnly(
+			files(compileTestSubjectsJava.map { it.outputs.files.first() }),
 			files(compileTest11SubjectsJava.map { it.outputs.files.first() })
 	)
 }
@@ -316,8 +315,6 @@ tasks.register('collectTestData', Jar) {
 
 
 ////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////
 //
 //  collect "com.ibm.wala.core.testdata11_1.0.0.jar"
 //
@@ -358,14 +355,13 @@ tasks.named('processTestResources') {
 			'buildKawaTestJar',
 			'collectJLex',
 			'collectTestData',
+			'collectTestData11',
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
 	].each {
 		from tasks.named(it)
 	}
-
-	from tasks.named('collectTestData11')
 
 	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
 	// missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
