@@ -70,8 +70,8 @@ public class NestmatesTest extends WalaTestCase {
 
     // check that there is no accessor method after triple()
     Assert.assertTrue(
-            "there should not be a call from triple() to an accessor method",
-            cg.getSuccNodes(t2node).hasNext() == false);
+        "there should not be a call from triple() to an accessor method",
+        cg.getSuccNodes(t2node).hasNext() == false);
     Collection<? extends IMethod> allMethods = test1Class.getAllMethods();
     IMethod intMethod = test1Class.getMethod(t1m.getSelector());
     System.out.println(intMethod);
