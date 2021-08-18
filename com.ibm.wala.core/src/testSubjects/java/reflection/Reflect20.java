@@ -23,7 +23,7 @@ public class Reflect20 {
     Class<?> objectClass = Class.forName("java.lang.Object");
     Class<?>[] paramArrayTypes = new Class[] {objectClass, objectClass};
     Method m = helperClass.getMethod("o", paramArrayTypes);
-    Object helperObject = helperClass.newInstance();
+    Object helperObject = helperClass.getDeclaredConstructor().newInstance();
     Object[] paramArrayObjects = new Object[] {new Object(), new Object()};
     m.invoke(helperObject, paramArrayObjects);
   }
