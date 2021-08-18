@@ -1,4 +1,4 @@
-rootProject.name = 'com.ibm.wala'
+rootProject.name = 'WALA'
 
 include(
 	'com.ibm.wala-repository',
