@@ -388,6 +388,7 @@ tasks.named('test') {
 	} else {
 		// turn off JDK 11+ specific tests
 		exclude '**/PrivateInterfaceMethodsTest.class'
+		exclude '**/NestmatesTest.class'
 	}
 
 	outputs.file layout.buildDirectory.file('report')
