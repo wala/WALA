@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.core.tests.nestmates;
 
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.*;
@@ -23,7 +21,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import java.util.Collection;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,27 +53,16 @@ public class NestmatesTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/Outer$Inner");
     MethodReference t1m = MethodReference.findOrCreate(t1s, "triple", "()I");
     Assert.assertTrue("expect Outer.Inner.triple node", cg.getNodes(t1m).iterator().hasNext());
-    CGNode t2node = cg.getNodes(t1m).iterator().next();
+    CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Triple()
     Assert.assertTrue(
         "should have call site from main to TestNestmates.triple()",
-        cg.getPossibleSites(mnode, t2node).hasNext());
+        cg.getPossibleSites(mnode, t1node).hasNext());
 
-    // check that Iclass.getAllMethods() returns Triple node
-    TypeReference test1Type =
-        TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/Outer$Inner");
-    IClass test1Class = cha.lookupClass(test1Type);
-
-    // check that there is no accessor method after triple()
+    // check that triple() does not call an accessor method
     Assert.assertTrue(
         "there should not be a call from triple() to an accessor method",
-        cg.getSuccNodes(t2node).hasNext() == false);
-    Collection<? extends IMethod> allMethods = test1Class.getAllMethods();
-    IMethod intMethod = test1Class.getMethod(t1m.getSelector());
-    System.out.println(intMethod);
-    Assert.assertTrue(
-        "Expecting an int method to show up in IClass.allMethods()",
-        allMethods.contains(intMethod));
+        cg.getSuccNodes(t1node).hasNext() == false);
   }
 }
