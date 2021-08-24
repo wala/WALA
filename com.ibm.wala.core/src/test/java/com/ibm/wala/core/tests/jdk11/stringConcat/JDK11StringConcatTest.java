@@ -54,7 +54,6 @@ public class JDK11StringConcatTest extends WalaTestCase {
     // For now, we will see no call edges from the testConcat method, as we have not added
     // support for invokedynamic-based string concatenation yet
     // TODO add support and change this assertion
-    System.err.println(cg);
     Assert.assertFalse(
         "did not expect call nodes from testConcat", cg.getSuccNodes(t1node).hasNext());
   }
