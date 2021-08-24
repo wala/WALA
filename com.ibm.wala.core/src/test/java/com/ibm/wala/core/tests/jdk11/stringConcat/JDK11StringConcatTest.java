@@ -17,7 +17,7 @@ import org.junit.Test;
 /** Tests string concatenation on JDK 11+, which uses invokedynamic at the bytecode level */
 public class JDK11StringConcatTest extends WalaTestCase {
   @Test
-  public void testPrivateInterfaceMethods()
+  public void testStringConcat()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
