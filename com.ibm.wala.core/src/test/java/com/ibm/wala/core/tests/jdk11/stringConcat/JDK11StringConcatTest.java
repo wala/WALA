@@ -10,11 +10,13 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class StringConcatTest extends WalaTestCase {
+/** Tests string concatenation on JDK 11+, which uses invokedynamic at the bytecode level */
+public class JDK11StringConcatTest extends WalaTestCase {
   @Test
   public void testPrivateInterfaceMethods()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -49,5 +51,12 @@ public class StringConcatTest extends WalaTestCase {
     Assert.assertTrue(
         "should have call site from main to StringConcat.testConcat()",
         cg.getPossibleSites(mnode, t1node).hasNext());
+
+    // For now, we will see no call edges from the testConcat method, as we have not added
+    // support for invokedynamic-based string concatenation yet
+    // TODO add support and change this assertion
+    System.err.println(cg);
+    Assert.assertFalse(
+        "did not expect call nodes from testConcat", cg.getSuccNodes(t1node).hasNext());
   }
 }
