@@ -10,7 +10,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
