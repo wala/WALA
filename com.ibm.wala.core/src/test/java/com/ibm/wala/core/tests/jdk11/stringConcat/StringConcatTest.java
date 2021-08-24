@@ -1,14 +1,4 @@
-/*
- * Copyright (c) 2006 IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- */
-package com.ibm.wala.core.tests.nestmates;
+package com.ibm.wala.core.tests.jdk11.stringConcat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -24,7 +14,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class NestmatesTest extends WalaTestCase {
+public class StringConcatTest extends WalaTestCase {
   @Test
   public void testPrivateInterfaceMethods()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -34,7 +24,7 @@ public class NestmatesTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "Lnestmates/TestNestmates");
+            scope, cha, "LstringConcat/StringConcat");
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
@@ -43,26 +33,21 @@ public class NestmatesTest extends WalaTestCase {
 
     // Find node corresponding to main
     TypeReference tm =
-        TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/TestNestmates");
+        TypeReference.findOrCreate(ClassLoaderReference.Application, "LstringConcat/StringConcat");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
     Assert.assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
-    // should be from main to Triple()
+    // should be from main to testConcat()
     TypeReference t1s =
-        TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/Outer$Inner");
-    MethodReference t1m = MethodReference.findOrCreate(t1s, "triple", "()I");
-    Assert.assertTrue("expect Outer.Inner.triple node", cg.getNodes(t1m).iterator().hasNext());
+        TypeReference.findOrCreate(ClassLoaderReference.Application, "LstringConcat/StringConcat");
+    MethodReference t1m = MethodReference.findOrCreate(t1s, "testConcat", "()Ljava/lang/String;");
+    Assert.assertTrue("expect testConcat node", cg.getNodes(t1m).iterator().hasNext());
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
-    // Check call from main to Triple()
+    // Check call from main to testConcat()
     Assert.assertTrue(
-        "should have call site from main to TestNestmates.triple()",
+        "should have call site from main to StringConcat.testConcat()",
         cg.getPossibleSites(mnode, t1node).hasNext());
-
-    // check that triple() does not call an accessor method
-    Assert.assertTrue(
-        "there should not be a call from triple() to an accessor method",
-        cg.getSuccNodes(t1node).hasNext() == false);
   }
 }

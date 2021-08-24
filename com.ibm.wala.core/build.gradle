@@ -387,9 +387,7 @@ tasks.named('test') {
 		exclude '**/ir/TypeAnnotationTest.class'
 	} else {
 		// turn off JDK 11+ specific tests
-		exclude '**/PrivateInterfaceMethodsTest.class'
-		exclude '**/NestmatesTest.class'
-		exclude '**/StringConcatTest.class'
+		exclude '**/jdk11/**'
 	}
 
 	outputs.file layout.buildDirectory.file('report')
