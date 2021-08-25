@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.core.tests.privateInterfaceMethods;
+package com.ibm.wala.core.tests.jdk11.privateInterfaceMethods;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;

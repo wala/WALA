@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-package com.ibm.wala.core.tests.nestmates;
+package com.ibm.wala.core.tests.jdk11.nestmates;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
