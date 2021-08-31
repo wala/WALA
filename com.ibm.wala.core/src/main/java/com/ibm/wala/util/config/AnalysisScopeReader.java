@@ -213,23 +213,34 @@ public class AnalysisScopeReader {
   /**
    * @param classPath class path to analyze, delimited by {@link File#pathSeparator}
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
+   * @param readManifest read manifest to retrieve Class-Path entries
    * @throws IllegalStateException if there are problems reading wala properties
    */
-  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile)
-      throws IOException {
+  public static AnalysisScope makeJavaBinaryAnalysisScope(
+      String classPath, File exclusionsFile, boolean readManifest) throws IOException {
     if (classPath == null) {
       throw new IllegalArgumentException("classPath null");
     }
     AnalysisScope scope = makePrimordialScope(exclusionsFile);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 
-    addClassPathToScope(classPath, scope, loader);
+    addClassPathToScope(classPath, scope, loader, readManifest);
 
     return scope;
   }
 
+  /**
+   * @param classPath class path to analyze, delimited by {@link File#pathSeparator}
+   * @param exclusionsFile file holding class hierarchy exclusions. may be null
+   * @throws IllegalStateException if there are problems reading wala properties
+   */
+  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile)
+      throws IOException {
+    return makeJavaBinaryAnalysisScope(classPath, exclusionsFile, true);
+  }
+
   public static void addClassPathToScope(
-      String classPath, AnalysisScope scope, ClassLoaderReference loader) {
+      String classPath, AnalysisScope scope, ClassLoaderReference loader, boolean readManifest) {
     if (classPath == null) {
       throw new IllegalArgumentException("null classPath");
     }
@@ -240,18 +251,20 @@ public class AnalysisScopeReader {
         if (path.endsWith(".jar")) {
           JarFile jar = new JarFile(path, false);
           scope.addToScope(loader, jar);
-          try {
-            if (jar.getManifest() != null) {
-              String cp = jar.getManifest().getMainAttributes().getValue("Class-Path");
-              if (cp != null) {
-                for (String cpEntry : cp.split(" ")) {
-                  addClassPathToScope(
-                      new File(path).getParent() + File.separator + cpEntry, scope, loader);
+          if (readManifest) {
+            try {
+              if (jar.getManifest() != null) {
+                String cp = jar.getManifest().getMainAttributes().getValue("Class-Path");
+                if (cp != null) {
+                  for (String cpEntry : cp.split(" ")) {
+                    addClassPathToScope(
+                        new File(path).getParent() + File.separator + cpEntry, scope, loader);
+                  }
                 }
               }
+            } catch (RuntimeException e) {
+              System.err.println("warning: trouble processing class path of " + path);
             }
-          } catch (RuntimeException e) {
-            System.err.println("warning: trouble processing class path of " + path);
           }
         } else {
           File f = new File(path);
@@ -265,5 +278,10 @@ public class AnalysisScopeReader {
     } catch (IOException | InvalidClassFileException e) {
       Assertions.UNREACHABLE(e.toString());
     }
+  }
+
+  public static void addClassPathToScope(
+      String classPath, AnalysisScope scope, ClassLoaderReference loader) {
+    addClassPathToScope(classPath, scope, loader, true);
   }
 }
