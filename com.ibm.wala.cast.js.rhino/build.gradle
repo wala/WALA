@@ -9,7 +9,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
-			'com.google.code.gson:gson:2.8.7',
+			'com.google.code.gson:gson:2.8.8',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.cast.js')),
 	)

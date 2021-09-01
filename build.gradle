@@ -12,8 +12,8 @@ buildscript {
 }
 
 plugins {
-	id 'com.diffplug.eclipse.mavencentral' version '3.30.2' apply false
-	id 'com.dorongold.task-tree' version '1.5'
+	id 'com.diffplug.eclipse.mavencentral' version '3.31.0' apply false
+	id 'com.dorongold.task-tree' version '2.1.0'
 	id 'com.github.ben-manes.versions' version '0.39.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
@@ -170,18 +170,9 @@ subprojects { subproject ->
 	// this file); we can relax the policy in the future if needed
 	dependencyLocking {
 		lockAllConfigurations()
-		// The default lock mode does not work for us since SWT packages vary by
-		// operating system, and lockfiles are not expressive enough to handle
-		// that.  We could handle it by ignoring those dependencies when checking
-		// locking, but this is only supported in Gradle 6.7 and above, which
-		// we cannot update to yet (see https://github.com/wala/WALA/issues/892).
-		// As a temporary solution, we use the LENIENT lock mode, which still fixes
-		// any dynamic dependencies but otherwise does not strictly check that
-		// resolved dependencies match the lockfile.
-		lockMode = LockMode.LENIENT
-		// TODO: once we update past Gradle 6.7, get rid of the line above and
-		// try to solve the problem with an ignore like this:
-		// ignoredDependencies.add('org.eclipse.platform:org.eclipse.swt.*')
+		// SWT packages vary by operating system, and lockfiles are not expressive enough
+		// to handle that.  So, ignore those dependencies for purposes of locking.
+		ignoredDependencies.add('org.eclipse.platform:org.eclipse.swt.*')
 	}
 }
 
