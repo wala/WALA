@@ -1,0 +1,11 @@
+plugins {
+	id 'eclipse'
+}
+
+eclipse.project.natures 'org.eclipse.pde.PluginNature'
+
+dependencies {
+	implementation project(':com.ibm.wala.core')
+}
+
+apply from: rootProject.file("gradle-mvn-push.gradle")

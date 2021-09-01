@@ -38,7 +38,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
  * A {@link ContextSelector} to intercept calls to reflective class factories (e.g. Class.forName())
  * when the parameter is a string constant
  */
-class ClassFactoryContextSelector implements ContextSelector {
+public class ClassFactoryContextSelector implements ContextSelector {
 
   public static final Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
 
