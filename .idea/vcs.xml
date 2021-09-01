@@ -12,6 +12,5 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/com.ibm.wala.core.testdata/kawa-chess" vcs="Git" />
   </component>
 </project>

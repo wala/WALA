@@ -491,8 +491,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       assert instruction.getType() == TypeReference.JavaLangClass;
       InstanceKey iKey =
-          heapModel.getInstanceKeyForMetadataObject(
-              instruction.getToken(), (TypeReference) instruction.getToken());
+          heapModel.getInstanceKeyForMetadataObject(instruction.getToken(), instruction.getType());
 
       g.addNode(iKey);
       g.addNode(def);

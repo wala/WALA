@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>WALA</artifactId>
 		<groupId>com.ibm.wala</groupId>
-		<version>1.5.7-SNAPSHOT</version>
+		<version>1.5.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>com.ibm.wala.ide</artifactId>
 	<packaging>eclipse-plugin</packaging>
@@ -26,28 +26,28 @@
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.util</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.shrike</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.core</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.ibm.wala</groupId>
 									<artifactId>com.ibm.wala.cast</artifactId>
-									<version>1.5.7-SNAPSHOT</version>
+									<version>1.5.8-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>false</overWrite>
 								</artifactItem>

@@ -32,7 +32,7 @@ class EclipseJavaCompiler implements Compiler<JavaCompileSpec> {
    *
    * @param project the project that will use this compiler
    */
-  EclipseJavaCompiler(Project project) {
+  EclipseJavaCompiler(final Project project) {
     this.project = project;
     ecjConfiguration =
         project

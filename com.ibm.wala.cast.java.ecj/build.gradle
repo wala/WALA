@@ -26,9 +26,7 @@ dependencies {
 	)
 }
 
-application {
-	mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
-}
+application.mainClass.set('com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph')
 
 tasks.named('run') {
 	// this is for testing purposes
