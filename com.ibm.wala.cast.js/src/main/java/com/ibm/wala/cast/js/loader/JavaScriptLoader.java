@@ -61,6 +61,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.util.strings.Atom;
@@ -115,10 +116,12 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -1014,14 +1017,15 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   @Override
-  protected TranslatorToCAst getTranslatorToCAst(final CAst ast, ModuleEntry module) {
+  protected TranslatorToCAst getTranslatorToCAst(
+      final CAst ast, ModuleEntry module, List<Module> allModules) {
     TranslatorToCAst translator = translatorFactory.make(ast, module);
     if (preprocessor != null) translator.addRewriter(preprocessor, true);
     return translator;
   }
 
   @Override
-  protected TranslatorToIR initTranslator() {
+  protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
     return new JSAstTranslator(this);
   }
 

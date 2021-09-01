@@ -12,6 +12,7 @@ package com.ibm.wala.cast.util;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -20,71 +21,174 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceBuffer {
+  private final class DetailedPosition implements Position {
+    private final int endOffset;
+    private final int endLine;
+    private final int endColumn;
+    private final int startColumn;
+    private final Position p;
+    private final int startLine;
+    private final int startOffset;
+
+    private DetailedPosition(
+        int endOffset,
+        int endLine,
+        int endColumn,
+        int startColumn,
+        Position p,
+        int startLine,
+        int startOffset) {
+      this.endOffset = endOffset;
+      this.endLine = endLine;
+      this.endColumn = endColumn;
+      this.startColumn = startColumn;
+      this.p = p;
+      this.startLine = startLine;
+      this.startOffset = startOffset;
+    }
+
+    @Override
+    public int getFirstLine() {
+      return startLine;
+    }
+
+    @Override
+    public int getLastLine() {
+      return endLine;
+    }
+
+    @Override
+    public int getFirstCol() {
+      return startColumn;
+    }
+
+    @Override
+    public int getLastCol() {
+      return endColumn;
+    }
+
+    @Override
+    public int getFirstOffset() {
+      return startOffset;
+    }
+
+    @Override
+    public int getLastOffset() {
+      return endOffset;
+    }
+
+    @Override
+    public int compareTo(SourcePosition o) {
+      return p.compareTo(o);
+    }
+
+    @Override
+    public URL getURL() {
+      return p.getURL();
+    }
+
+    @Override
+    public Reader getReader() throws IOException {
+      return p.getReader();
+    }
+  }
+
   private String[] lines;
   private final Position p;
+  public final Position detail;
 
   public SourceBuffer(Position p) throws IOException {
     this.p = p;
 
-    BufferedReader reader = new BufferedReader(p.getReader());
+    try (Reader pr = p.getReader()) {
+      try (BufferedReader reader = new BufferedReader(pr)) {
 
-    String currentLine = null;
-    List<String> lines = new ArrayList<>();
-    int offset = 0, line = 0;
-    do {
-      currentLine = reader.readLine();
-      if (currentLine == null) {
-        this.lines = new String[0];
-        return;
-      }
-      offset += (currentLine.length() + 1);
-      line++;
-    } while (p.getLastOffset() >= 0 ? p.getFirstOffset() > offset : p.getFirstLine() > line);
+        String currentLine = null;
+        List<String> lines = new ArrayList<>();
+        int offset = 0, line = 0;
+        do {
+          currentLine = reader.readLine();
+          if (currentLine == null) {
+            this.lines = new String[0];
+            detail = null;
+            return;
+          }
+          offset += (currentLine.length() + 1);
+          line++;
+        } while (p.getLastOffset() >= 0 ? p.getFirstOffset() > offset : p.getFirstLine() > line);
 
-    // partial first line
-    if (p.getLastOffset() >= 0) {
-      if (p.getFirstOffset() == offset) {
-        lines.add("\n");
-      } else {
-        int startOffset = p.getFirstOffset() - (offset - currentLine.length() - 1);
-        if (offset > p.getLastOffset()) {
-          int endOffset = p.getLastOffset() - (offset - currentLine.length() - 1);
-          lines.add(currentLine.substring(startOffset, endOffset));
+        // partial first line
+        int endOffset = -1;
+        int endLine = -1;
+        int endColumn = -1;
+        int startOffset = -1;
+        int startLine = line;
+        int startColumn = -1;
+        if (p.getLastOffset() >= 0) {
+          if (p.getFirstOffset() == offset) {
+            startOffset = p.getFirstOffset();
+            startColumn = 0;
+            lines.add("\n");
+          } else {
+            startOffset = p.getFirstOffset() - (offset - currentLine.length() - 1);
+            startColumn = startOffset;
+            if (offset > p.getLastOffset()) {
+              endOffset = p.getLastOffset() - (offset - currentLine.length() - 1);
+              endLine = line;
+              endColumn = endOffset;
+              lines.add(currentLine.substring(startOffset, endOffset));
+            } else {
+              lines.add(currentLine.substring(startOffset));
+            }
+          }
         } else {
-          lines.add(currentLine.substring(startOffset));
+          lines.add(currentLine.substring(Math.max(p.getFirstCol(), 0)));
+          startColumn = p.getFirstCol();
         }
+
+        while (p.getLastOffset() >= 0 ? p.getLastOffset() >= offset : p.getLastLine() >= line) {
+          currentLine = reader.readLine();
+
+          if (currentLine == null) {
+            offset = p.getLastOffset();
+            break;
+          } else {
+            offset += currentLine.length() + 1;
+          }
+          line++;
+          if (p.getLastOffset() >= 0) {
+            if (offset > p.getLastOffset()) {
+              endColumn = currentLine.length() - (offset - p.getLastOffset()) + 1;
+              lines.add(currentLine.substring(0, endColumn));
+              endLine = line;
+              endOffset = p.getLastOffset();
+              break;
+            } else {
+              lines.add(currentLine);
+            }
+          } else {
+            if (p.getLastLine() == line) {
+              lines.add(currentLine.substring(0, p.getLastCol()));
+              endColumn = p.getLastCol();
+              endLine = line;
+              endOffset = offset - (currentLine.length() - p.getLastCol());
+              break;
+            } else {
+              lines.add(currentLine);
+            }
+          }
+        }
+
+        this.lines = lines.toArray(new String[0]);
+
+        this.detail =
+            new DetailedPosition(
+                endOffset, endLine, endColumn, startColumn, p, startLine, startOffset);
+
+        reader.close();
+        pr.close();
       }
-    } else {
-      lines.add(currentLine.substring(Math.max(p.getFirstCol(), 0)));
     }
-
-    while (p.getLastOffset() >= 0 ? p.getLastOffset() >= offset : p.getLastLine() >= line) {
-      currentLine = reader.readLine();
-
-      if (currentLine == null) {
-        offset = p.getLastOffset();
-        break;
-      } else {
-        offset += currentLine.length() + 1;
-      }
-      line++;
-      if (p.getLastOffset() >= 0) {
-        if (offset > p.getLastOffset()) {
-          lines.add(
-              currentLine.substring(0, currentLine.length() - (offset - p.getLastOffset()) + 1));
-        } else {
-          lines.add(currentLine);
-        }
-      } else {
-        if (p.getLastLine() == line) {
-          lines.add(currentLine.substring(0, p.getLastCol()));
-        } else {
-          lines.add(currentLine);
-        }
-      }
-    }
-
-    this.lines = lines.toArray(new String[0]);
   }
 
   @Override

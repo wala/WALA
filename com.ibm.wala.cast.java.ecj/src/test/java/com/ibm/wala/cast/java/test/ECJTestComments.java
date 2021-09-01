@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.Descriptor;
@@ -62,7 +61,7 @@ public class ECJTestComments extends IRTests {
 
   @Test
   public void testComments() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
     for (CGNode node : result.fst.getNodes(testMethod)) {
       if (node.getMethod() instanceof AstMethod) {

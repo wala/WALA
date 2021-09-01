@@ -51,7 +51,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     try {
       return url.openConnection().getInputStream();
     } catch (IOException e) {
-      Assertions.UNREACHABLE();
+      assert false : "cannot find stream for " + url;
       return null;
     }
   }

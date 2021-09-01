@@ -5,8 +5,6 @@ import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -25,7 +23,7 @@ public abstract class Issue667Test extends IRTests {
 
   @Test
   public void testDominanceFrontierCase() throws CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result =
+    Pair<CallGraph, ?> result =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
 
     MethodReference cm =

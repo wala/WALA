@@ -749,7 +749,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
                 // don't track reflection into reflective invokes
                 return Collections.emptySet();
               }
-              for (int i = 0; i < call.getNumberOfPositionalParameters(); i++) {
+              for (int i = 0; i < call.getNumberOfUses(); i++) {
                 if (call.getUse(i) == caller.getValueNumber()) {
                   if (callee.getValueNumber() == i + 1) {
                     return Collections.singleton(Dependency.DATA_DEP);

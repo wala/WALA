@@ -63,17 +63,21 @@ public class SymbolTable implements Cloneable {
     return getNewValueNumber();
   }
 
+  int findOrCreateConstant(Object o) {
+    return findOrCreateConstant(o, false);
+  }
+
   /**
    * Common part of getConstant functions.
    *
    * @param o instance of a Java 'boxed-primitive' class, String or NULL.
    * @return value number for constant.
    */
-  int findOrCreateConstant(Object o) {
+  int findOrCreateConstant(Object o, boolean isDefault) {
     ConstantValue v = new ConstantValue(o);
     Integer result = constants.get(v);
     if (result == null) {
-      assert !copy : "making value for " + o;
+      assert !(copy && !isDefault) : "making value for " + o;
       int r = getNewValueNumber();
       result = r;
       constants.put(v, result);
@@ -119,7 +123,7 @@ public class SymbolTable implements Cloneable {
   }
 
   public int getDefaultValue(int vn) {
-    return findOrCreateConstant(defaultValues[vn]);
+    return findOrCreateConstant(defaultValues[vn], true);
   }
 
   public int getNullConstant() {

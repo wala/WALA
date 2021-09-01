@@ -65,6 +65,7 @@
   <target name="compile" depends="getSources,bindir">
     <javac srcdir="${basedir}/src"
 	   destdir="${basedir}/bin"
+	   compiler="javac1.8"
 	   excludes="**/Activator.java"/>
   </target>
   

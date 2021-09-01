@@ -32,7 +32,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
@@ -417,7 +416,7 @@ public abstract class IRTests {
       getAnalysisEngine(
           String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
-  public Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> runTest(
+  public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
       Collection<String> sources,
       List<String> libs,
       String[] mainClassDescriptors,
@@ -446,7 +445,7 @@ public abstract class IRTests {
       IRAssertion.check(callGraph);
     }
 
-    return Pair.make(callGraph, builder.getPointerAnalysis());
+    return Pair.make(callGraph, builder);
   }
 
   protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) {

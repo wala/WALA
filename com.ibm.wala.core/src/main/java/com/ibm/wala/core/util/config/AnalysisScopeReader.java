@@ -196,6 +196,7 @@ public class AnalysisScopeReader {
       }
     } else if ("classUrl".equals(entryType)) {
       URL cls = fp.getResource(entryPathname);
+      assert cls != null : "cannot find " + entryPathname;
       try {
         scope.addToScope(walaLoader, new ClassFileURLModule(cls));
       } catch (InvalidClassFileException e) {

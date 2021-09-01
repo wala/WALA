@@ -46,13 +46,20 @@ public class MethodSummary {
   /** Is this a "factory" method? */
   private boolean isFactory = false;
 
+  private final int numberOfParameters;
+
   /** Known names for values */
   private Map<Integer, Atom> valueNames = null;
 
   public MethodSummary(MethodReference method) {
+    this(method, -1);
+  }
+
+  public MethodSummary(MethodReference method, int numberOfParameters) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
+    this.numberOfParameters = numberOfParameters;
     this.method = method;
   }
 
@@ -129,7 +136,11 @@ public class MethodSummary {
 
   /** @return the number of parameters, including the implicit 'this' */
   public int getNumberOfParameters() {
-    return (isStatic()) ? method.getNumberOfParameters() : method.getNumberOfParameters() + 1;
+    if (numberOfParameters >= 0) {
+      return numberOfParameters;
+    } else {
+      return (isStatic()) ? method.getNumberOfParameters() : method.getNumberOfParameters() + 1;
+    }
   }
 
   public boolean isStatic() {

@@ -25,9 +25,11 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
@@ -437,13 +439,14 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testInnerClassA() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
     CallGraph cg = x.fst;
-    PointerAnalysis<? extends InstanceKey> pa = x.snd;
+    PointerAnalysis<? extends InstanceKey> pa =
+        ((PropagationCallGraphBuilder) x.snd).getPointerAnalysis();
 
     for (CGNode n : cg) {
       // assume in the test we have one enclosing instruction for each of the methods here.
@@ -503,13 +506,14 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testInnerClassSuper() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<>(), true, null);
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
     CallGraph cg = x.fst;
-    PointerAnalysis<? extends InstanceKey> pa = x.snd;
+    PointerAnalysis<? extends InstanceKey> pa =
+        ((PropagationCallGraphBuilder) x.snd).getPointerAnalysis();
 
     for (CGNode n : cg) {
       if (n.getMethod().getSignature().equals("LInnerClassSuper$SuperOuter.test()V")) {
@@ -700,10 +704,11 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
 
-    PointerAnalysis<? extends InstanceKey> pa = x.snd;
+    PointerAnalysis<? extends InstanceKey> pa =
+        ((PropagationCallGraphBuilder) x.snd).getPointerAnalysis();
     CallGraph cg = x.fst;
 
     // test partial slice
@@ -732,10 +737,10 @@ public abstract class JavaIRTests extends IRTests {
     String testName = "MiniaturSliceBug";
     List<String> sources =
         Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
 
-    PointerAnalysis<InstanceKey> pa = (PointerAnalysis<InstanceKey>) x.snd;
+    PointerAnalysis<InstanceKey> pa = ((PropagationCallGraphBuilder) x.snd).getPointerAnalysis();
     CallGraph cg = x.fst;
 
     // we just run context-sensitive and context-insensitive thin slicing, to make sure
@@ -785,7 +790,7 @@ public abstract class JavaIRTests extends IRTests {
   public void testExclusions() throws IllegalArgumentException, CancelException, IOException {
     File exclusions =
         TemporaryFile.stringToFile(File.createTempFile("exl", "txt"), "Exclusions.Excluded\n");
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> x =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(
             singleTestSrc(),
             rtJar,

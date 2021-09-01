@@ -878,12 +878,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
 
       MethodReference ref = MethodReference.findOrCreate(governingClass, mName, D);
-      governingMethod = new MethodSummary(ref);
-
-      if (DEBUG) {
-        System.err.println(("Register method summary: " + ref));
-      }
-      summaries.put(ref, governingMethod);
 
       boolean isStatic = false;
       String staticString = atts.getValue(A_STATIC);
@@ -891,29 +885,12 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         switch (staticString) {
           case "true":
             isStatic = true;
-            governingMethod.setStatic(true);
             break;
           case "false":
             isStatic = false;
-            governingMethod.setStatic(false);
             break;
           default:
             Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
-            break;
-        }
-      }
-
-      String factoryString = atts.getValue(A_FACTORY);
-      if (factoryString != null) {
-        switch (factoryString) {
-          case "true":
-            governingMethod.setFactory(true);
-            break;
-          case "false":
-            governingMethod.setFactory(false);
-            break;
-          default:
-            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
             break;
         }
       }
@@ -930,6 +907,29 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         }
       } else {
         nParams = Integer.parseInt(specifiedArgs);
+      }
+
+      governingMethod = new MethodSummary(ref, nParams);
+      governingMethod.setStatic(isStatic);
+
+      if (DEBUG) {
+        System.err.println(("Register method summary: " + ref));
+      }
+      summaries.put(ref, governingMethod);
+
+      String factoryString = atts.getValue(A_FACTORY);
+      if (factoryString != null) {
+        switch (factoryString) {
+          case "true":
+            governingMethod.setFactory(true);
+            break;
+          case "false":
+            governingMethod.setFactory(false);
+            break;
+          default:
+            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
+            break;
+        }
       }
 
       // note that symbol tables reserve v0 for "unknown", so v1 gets assigned

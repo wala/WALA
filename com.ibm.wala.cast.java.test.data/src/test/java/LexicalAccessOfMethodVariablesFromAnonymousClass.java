@@ -8,8 +8,9 @@ public class LexicalAccessOfMethodVariablesFromAnonymousClass {
     Object o = new Object() {
       @Override
       public int hashCode() {
-        try { }
-        catch (Exception e) {
+        try {
+	    return var.hashCode();
+	} catch (Exception e) {
           String s = var;
         }
 
@@ -17,6 +18,7 @@ public class LexicalAccessOfMethodVariablesFromAnonymousClass {
       }
     };
     o.hashCode();
+    var.hashCode();
   }
 
 }
