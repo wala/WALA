@@ -13,7 +13,6 @@ import com.ibm.wala.cast.js.util.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.core.util.ProgressMaster;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
@@ -44,7 +43,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
       throws WalaException, Error, CancelException {
     JSCallGraph cg = null;
     for (BuilderType builderType : builderTypes) {
-      IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
+      ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
       try {
         cg =
             util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory)

@@ -74,7 +74,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
@@ -180,7 +179,7 @@ public class DemandCastChecker {
       builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
       heapModel = (HeapModel) builder;
     }
-    IProgressMonitor master = ProgressMaster.make(new NullProgressMonitor(), 360000, false);
+    ProgressMaster master = ProgressMaster.make(new NullProgressMonitor(), 360000, false);
     master.beginTask("runSolver", 1);
     try {
       retCG = builder.makeCallGraph(options, master);
