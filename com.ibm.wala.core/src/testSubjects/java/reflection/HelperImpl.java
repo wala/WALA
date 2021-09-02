@@ -11,7 +11,7 @@
 package reflection;
 
 public class HelperImpl implements HelperInterface {
-    public String display() {
-        return "We love WALA";
-    }
+  public String display() {
+    return "We love WALA";
+  }
 }

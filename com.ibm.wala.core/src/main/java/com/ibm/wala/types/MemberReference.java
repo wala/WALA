@@ -12,7 +12,10 @@ package com.ibm.wala.types;
 
 import com.ibm.wala.core.util.strings.Atom;
 
-/** Abstract superclass of {@link MethodReference}, {@link FieldReference} and {@link ParameterReference}*/
+/**
+ * Abstract superclass of {@link MethodReference}, {@link FieldReference} and {@link
+ * ParameterReference}
+ */
 public abstract class MemberReference {
 
   /** The type that declares this member */

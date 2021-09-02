@@ -222,7 +222,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
    */
   @Override
-  public Collection<IField> getDeclaredInstanceFields(){
+  public Collection<IField> getDeclaredInstanceFields() {
     return Collections.emptySet();
   }
 

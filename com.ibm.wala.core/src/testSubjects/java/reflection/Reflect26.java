@@ -10,57 +10,20 @@
  */
 package reflection;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import reflection.Reflect26.MarvelAnnotation.Priority;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.Arrays;
-import reflection.Reflect26.MarvelAnnotation.Priority;
 
 public class Reflect26 {
 
-  // create a custom Annotation
-  @Retention(RetentionPolicy.RUNTIME)
-  @interface MarvelAnnotation {
-      public String role();
-    
-      public String name();
-
-      public int team() default 3;
-
-      public enum Priority {
-        LOW, MEDIUM, HIGH
-      }
-
-      public Priority priority() default Priority.MEDIUM;
-
-      public String[] tags() default {""};
-  }
-
-  @MarvelAnnotation(role = "AvengersLeader", name = "CaptainAmerica", tags = {"A", "B"})
-  public class Marvel {
-
-    @MarvelAnnotation(role = "AvengersPlayer", name = "Thor")
-    public String textField;
-
-    @MarvelAnnotation(role = "AvengersPlayer", name = "IronMan", team = 5)
-    public Marvel() {
-      textField = "MARVEL";
-    }
-
-    @MarvelAnnotation(role = "AvengersPlayer", name = "Hulk", priority = Priority.HIGH)
-    public void getCustomAnnotation(@MarvelAnnotation(role = "AvengersPlayer", name = "Spiderman") String text)
-    {
-      System.out.println(textField + text);
-    }
-  }
-
   /** Test of Method.getAnnotation */
   public static void main(String[] args)
-      throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+      throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+          SecurityException {
     Class<?> c = Marvel.class;
     MarvelAnnotation annoC = c.getAnnotation(MarvelAnnotation.class);
     System.out.println("Role Attribute of Class Annotation: " + annoC.role());
@@ -73,7 +36,8 @@ public class Reflect26 {
     MarvelAnnotation annoCo = co[0].getAnnotation(MarvelAnnotation.class);
     System.out.println("Role Attribute of Constructor Annotation: " + annoCo.role());
     System.out.println("Name Attribute of Constructor Annotation: " + annoCo.name());
-    System.out.println("Tags Attribute of Constructor Annotation: " + Arrays.toString(annoCo.tags()));
+    System.out.println(
+        "Tags Attribute of Constructor Annotation: " + Arrays.toString(annoCo.tags()));
     System.out.println("Team Attribute of Constructor Annotation: " + annoCo.team());
     System.out.println("Priority Attribute of Constructor Annotation: " + annoCo.priority());
 
@@ -100,6 +64,46 @@ public class Reflect26 {
     System.out.println("Tags Attribute of Parameter Annotation: " + Arrays.toString(annoP.tags()));
     System.out.println("Team Attribute of Parameter Annotation: " + annoP.team());
     System.out.println("Priority Attribute of Parameter Annotation: " + annoP.priority());
+  }
 
+  // create a custom Annotation
+  @Retention(RetentionPolicy.RUNTIME)
+  @interface MarvelAnnotation {
+    String role();
+
+    String name();
+
+    int team() default 3;
+
+    Priority priority() default Priority.MEDIUM;
+
+    String[] tags() default {""};
+
+    enum Priority {
+      LOW,
+      MEDIUM,
+      HIGH
+    }
+  }
+
+  @MarvelAnnotation(
+      role = "AvengersLeader",
+      name = "CaptainAmerica",
+      tags = {"A", "B"})
+  public class Marvel {
+
+    @MarvelAnnotation(role = "AvengersPlayer", name = "Thor")
+    public String textField;
+
+    @MarvelAnnotation(role = "AvengersPlayer", name = "IronMan", team = 5)
+    public Marvel() {
+      textField = "MARVEL";
+    }
+
+    @MarvelAnnotation(role = "AvengersPlayer", name = "Hulk", priority = Priority.HIGH)
+    public void getCustomAnnotation(
+        @MarvelAnnotation(role = "AvengersPlayer", name = "Spiderman") String text) {
+      System.out.println(textField + text);
+    }
   }
 }

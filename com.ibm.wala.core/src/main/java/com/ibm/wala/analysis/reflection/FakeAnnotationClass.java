@@ -10,36 +10,22 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.*;
+import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.util.collections.HashMapFactory;
+
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.collections.HashMapFactory;
-
 /** A synthetic class for the fake root method. */
 public class FakeAnnotationClass extends SyntheticClass {
-  public static final TypeReference fakeAnnotationClass(ClassLoaderReference clr) {
-    return TypeReference.findOrCreate(clr, TypeName.string2TypeName("Lcom/ibm/wala/FakeAnnotationClass"));
-  }
-
-  private Map<Atom, IField> fakeAnnotationFields = null;
-
   private final Map<Selector, IMethod> fakeAnnotationMethods = HashMapFactory.make();
-
+  private Map<Atom, IField> fakeAnnotationFields = null;
   private IClass iinterface;
 
   public FakeAnnotationClass(ClassLoaderReference clr, IClassHierarchy cha, IClass iinterface) {
@@ -49,6 +35,11 @@ public class FakeAnnotationClass extends SyntheticClass {
 
   public FakeAnnotationClass(TypeReference typeRef, IClassHierarchy cha) {
     super(typeRef, cha);
+  }
+
+  public static final TypeReference fakeAnnotationClass(ClassLoaderReference clr) {
+    return TypeReference.findOrCreate(
+        clr, TypeName.string2TypeName("Lcom/ibm/wala/FakeAnnotationClass"));
   }
 
   @Override
@@ -103,7 +94,10 @@ public class FakeAnnotationClass extends SyntheticClass {
 
           @Override
           public FieldReference getReference() {
-            return FieldReference.findOrCreate(com.ibm.wala.analysis.reflection.FakeAnnotationClass.this.getReference(), name, fieldType);
+            return FieldReference.findOrCreate(
+                com.ibm.wala.analysis.reflection.FakeAnnotationClass.this.getReference(),
+                name,
+                fieldType);
           }
 
           @Override
@@ -211,7 +205,7 @@ public class FakeAnnotationClass extends SyntheticClass {
    */
   @Override
   public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
-    if ( fakeAnnotationFields != null) {
+    if (fakeAnnotationFields != null) {
       return fakeAnnotationFields.values();
     } else {
       return Collections.emptySet();
@@ -289,7 +283,7 @@ public class FakeAnnotationClass extends SyntheticClass {
     return null;
   }
 
-/*
+  /*
   private IMethod makeMethod(String fieldName) {
     SSAInstructionFactory insts = getClassLoader().getInstructionFactory();
 

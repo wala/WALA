@@ -16,9 +16,12 @@ import java.util.Hashtable;
 public class Reflect3 {
 
   public static void main(String[] args)
-      throws ClassNotFoundException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+      throws ClassNotFoundException, IllegalAccessException, InstantiationException,
+          IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+          SecurityException {
     Class<?> c = Class.forName("java.util.Properties");
-    Hashtable<Object, Object> h = (Hashtable<Object, Object>) c.getDeclaredConstructor().newInstance();
+    Hashtable<Object, Object> h =
+        (Hashtable<Object, Object>) c.getDeclaredConstructor().newInstance();
     System.out.println(h.toString());
   }
 

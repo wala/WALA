@@ -16,7 +16,9 @@ import java.lang.reflect.InvocationTargetException;
 public class Reflect5 {
 
   public static void main(String[] args)
-      throws IllegalAccessException, InstantiationException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+      throws IllegalAccessException, InstantiationException, ClassNotFoundException,
+          IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+          SecurityException {
     Class<?> c = Class.forName("reflection.Reflect5$A");
     Constructor co = c.getDeclaredConstructor();
     co.setAccessible(true);

@@ -58,14 +58,14 @@ import java.util.Map;
  *   <li>getConstructors
  *   <li>getMethod
  *   <li>getMethods
- *  <li>getField
+ *   <li>getField
  *   <li>getFields
  *   <li>getDeclaredConstructor
  *   <li>getDeclaredConstructors
  *   <li>getDeclaredMethod
  *   <li>getDeclaredMethods
  *   <li>getDeclaredField
- *  <li>getDeclaredFields
+ *   <li>getDeclaredFields
  * </ul>
  */
 public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
@@ -91,14 +91,12 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           TypeReference.JavaLangClass, "getMethods", "()[Ljava/lang/reflect/Method;");
 
   public static final MethodReference GET_FIELD =
-  MethodReference.findOrCreate(
-      TypeReference.JavaLangClass,
-      "getField",
-      "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
+      MethodReference.findOrCreate(
+          TypeReference.JavaLangClass, "getField", "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
 
-public static final MethodReference GET_FIELDS =
-  MethodReference.findOrCreate(
-      TypeReference.JavaLangClass, "getFields", "()[Ljava/lang/reflect/Field;");
+  public static final MethodReference GET_FIELDS =
+      MethodReference.findOrCreate(
+          TypeReference.JavaLangClass, "getFields", "()[Ljava/lang/reflect/Field;");
 
   public static final MethodReference GET_DECLARED_CONSTRUCTOR =
       MethodReference.findOrCreate(
@@ -123,14 +121,14 @@ public static final MethodReference GET_FIELDS =
           TypeReference.JavaLangClass, "getDeclaredMethods", "()[Ljava/lang/reflect/Method;");
 
   public static final MethodReference GET_DECLARED_FIELD =
-          MethodReference.findOrCreate(
-              TypeReference.JavaLangClass,
-              "getDeclaredField",
-              "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
-    
+      MethodReference.findOrCreate(
+          TypeReference.JavaLangClass,
+          "getDeclaredField",
+          "(Ljava/lang/String;)Ljava/lang/reflect/Field;");
+
   public static final MethodReference GET_DECLARED_FIELDS =
-          MethodReference.findOrCreate(
-              TypeReference.JavaLangClass, "getDeclaredFields", "()[Ljava/lang/reflect/Field;");
+      MethodReference.findOrCreate(
+          TypeReference.JavaLangClass, "getDeclaredFields", "()[Ljava/lang/reflect/Field;");
 
   private static final boolean DEBUG = false;
 
@@ -382,11 +380,11 @@ public static final MethodReference GET_FIELDS =
     return result;
   }
 
-   /** Get all the fields of a class */
-   private static Collection<IField> getDeclaredNormalFields(IClass cls) {
+  /** Get all the fields of a class */
+  private static Collection<IField> getDeclaredNormalFields(IClass cls) {
     Collection<IField> result = HashSetFactory.make();
     for (IField m : cls.getDeclaredInstanceFields()) {
-        result.add(m);
+      result.add(m);
     }
     return result;
   }
@@ -478,8 +476,7 @@ public static final MethodReference GET_FIELDS =
   }
 
   /**
-   * create statements for methods like getFields(), which return an array of
-   * fields.
+   * create statements for methods like getFields(), which return an array of fields.
    *
    * @param returnValues the possible return values for this method.
    */
@@ -559,10 +556,10 @@ public static final MethodReference GET_FIELDS =
     return statements.toArray(new SSAInstruction[0]);
   }
 
-    /**
-   * create statements for methods like getField() and getDeclaredField(), which return a
-   * single field. This creates a return statement for each possible return value, each of which is
-   * a {@link ConstantValue} for an {@link IField}.
+  /**
+   * create statements for methods like getField() and getDeclaredField(), which return a single
+   * field. This creates a return statement for each possible return value, each of which is a
+   * {@link ConstantValue} for an {@link IField}.
    *
    * @param returnValues the possible return values for this method.
    */
@@ -586,7 +583,7 @@ public static final MethodReference GET_FIELDS =
         SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), c, false);
         statements.add(R);
       }
-    } 
+    }
     return statements.toArray(new SSAInstruction[0]);
   }
 
@@ -637,26 +634,25 @@ public static final MethodReference GET_FIELDS =
   }
 
   private static SSAInstruction[] makeGetFieldStatements(
-    Context context, Map<Integer, ConstantValue> constants) {
-  IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
-  if (cls == null) {
-    return getParticularFieldStatements(GET_FIELD, null, context, constants);
-  } else {
-    return getParticularFieldStatements(
-        GET_FIELD, getAllNormalPublicFields(cls), context, constants);
+      Context context, Map<Integer, ConstantValue> constants) {
+    IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+    if (cls == null) {
+      return getParticularFieldStatements(GET_FIELD, null, context, constants);
+    } else {
+      return getParticularFieldStatements(
+          GET_FIELD, getAllNormalPublicFields(cls), context, constants);
+    }
   }
-}
 
-private static SSAInstruction[] makeGetFieldsStatments(
-    Context context, Map<Integer, ConstantValue> constants) {
-  IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
-  if (cls == null) {
-    return getFieldArrayStatements(GET_FIELDS, null, context, constants);
-  } else {
-    return getFieldArrayStatements(
-        GET_FIELDS, getAllNormalPublicFields(cls), context, constants);
+  private static SSAInstruction[] makeGetFieldsStatments(
+      Context context, Map<Integer, ConstantValue> constants) {
+    IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
+    if (cls == null) {
+      return getFieldArrayStatements(GET_FIELDS, null, context, constants);
+    } else {
+      return getFieldArrayStatements(GET_FIELDS, getAllNormalPublicFields(cls), context, constants);
+    }
   }
-}
 
   /** create statements for getConstructor() */
   private static SSAInstruction[] makeGetDeclCtorStatements(
@@ -706,7 +702,7 @@ private static SSAInstruction[] makeGetFieldsStatments(
   }
 
   /** create statements for getDeclaredMethod() */
-    private static SSAInstruction[] makeGetDeclaredFieldStatements(
+  private static SSAInstruction[] makeGetDeclaredFieldStatements(
       Context context, Map<Integer, ConstantValue> constants) {
     IClass cls = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getType();
     if (cls == null) {

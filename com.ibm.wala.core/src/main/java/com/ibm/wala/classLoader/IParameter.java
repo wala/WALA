@@ -12,29 +12,30 @@ package com.ibm.wala.classLoader;
 
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.ParameterReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+
 import java.util.Collection;
 
 /** */
 public interface IParameter extends IMember, ContextItem {
 
   /** @return the canonical MethodReference of the declaring method */
-  public MethodReference getMethodReference();
+  MethodReference getMethodReference();
 
   /** @return the name of this parameter */
-  public Atom getName();
+  Atom getName();
 
   /** @return the canonical TypeReference of the declared type of the parameter */
-  public TypeReference getFieldTypeReference();
+  TypeReference getFieldTypeReference();
 
   /** @return canonical ParameterReference representing this parameter */
-  public ParameterReference getReference();
+  ParameterReference getReference();
 
   /** Is this parameter final? */
-  public boolean isFinal();
+  boolean isFinal();
 
   /** Get the annotations on this parameter, if any */
   Collection<Annotation> getAnnotations();

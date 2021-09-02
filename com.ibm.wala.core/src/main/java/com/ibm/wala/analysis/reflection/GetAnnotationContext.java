@@ -60,7 +60,7 @@ public class GetAnnotationContext implements Context {
       return type;
     } else if (name == ContextKey.PARAMETERS[0]) {
       if (type instanceof PointType) {
-        IClass cls = ((PointType) type).getIClass(); //Class.getAnnotation
+        IClass cls = ((PointType) type).getIClass(); // Class.getAnnotation
         return new FilteredPointerKey.SingleClassFilter(cls);
       } else if (member != null) {
         return ContextItem.Value.make(member);
@@ -115,4 +115,3 @@ public class GetAnnotationContext implements Context {
     return type;
   }
 }
-

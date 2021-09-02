@@ -12,6 +12,6 @@ package reflection;
 
 public interface HelperInterface {
   final int a = 10;
-  
+
   public abstract String display();
 }

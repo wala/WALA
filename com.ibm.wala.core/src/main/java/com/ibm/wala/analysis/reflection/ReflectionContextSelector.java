@@ -25,7 +25,8 @@ import com.ibm.wala.util.intset.IntSet;
 /** A {@link ContextSelector} to handle default reflection logic. */
 public class ReflectionContextSelector {
 
-  public static ContextSelector createReflectionContextSelector(AnalysisOptions options, IClassHierarchy cha) {
+  public static ContextSelector createReflectionContextSelector(
+      AnalysisOptions options, IClassHierarchy cha) {
 
     if (options == null) {
       throw new IllegalArgumentException("null options");
@@ -52,11 +53,11 @@ public class ReflectionContextSelector {
       result =
           new DelegatingContextSelector(
               new DelegatingContextSelector(
-                new DelegatingContextSelector(
                   new DelegatingContextSelector(
-                      new ClassFactoryContextSelector(), new GetClassContextSelector()),
-                  new ClassNewInstanceContextSelector()),
-                new GetAnnotationContextSelector(cha)),
+                      new DelegatingContextSelector(
+                          new ClassFactoryContextSelector(), new GetClassContextSelector()),
+                      new ClassNewInstanceContextSelector()),
+                  new GetAnnotationContextSelector(cha)),
               result);
     }
     if (!options.getReflectionOptions().isIgnoreMethodInvoke()) {

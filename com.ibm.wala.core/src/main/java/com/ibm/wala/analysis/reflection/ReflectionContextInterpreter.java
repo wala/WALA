@@ -113,15 +113,16 @@ public class ReflectionContextInterpreter {
               new FactoryBypassInterpreter(options, iAnalysisCacheView), result);
     }
     if (!options.getReflectionOptions().isIgnoreStringConstants()) {
-      result = new DelegatingSSAContextInterpreter(
-          new GetAnnotationContextInterpreter(cha),
+      result =
           new DelegatingSSAContextInterpreter(
-              new GetClassContextInterpeter(),
+              new GetAnnotationContextInterpreter(cha),
               new DelegatingSSAContextInterpreter(
+                  new GetClassContextInterpeter(),
                   new DelegatingSSAContextInterpreter(
-                      new ClassFactoryContextInterpreter(),
-                      new ClassNewInstanceContextInterpreter(cha)),
-                  result)));
+                      new DelegatingSSAContextInterpreter(
+                          new ClassFactoryContextInterpreter(),
+                          new ClassNewInstanceContextInterpreter(cha)),
+                      result)));
     }
     if (!options.getReflectionOptions().isIgnoreMethodInvoke()) {
       result =

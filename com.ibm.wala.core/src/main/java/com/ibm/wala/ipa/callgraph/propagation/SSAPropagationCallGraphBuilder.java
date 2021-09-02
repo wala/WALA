@@ -2296,22 +2296,22 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[index]);
       if (filter != null && !filter.isRootFilter()) {
         return getFilteredPointerKeyForLocal(target, vn, filter);
-}}
-      // the context does not select a particular concrete type for the
-      // receiver, so use the type of the method
-      IClass C;
-      if (index == 0 && !target.getMethod().isStatic()) {
-        C = getReceiverClass(target.getMethod());
-      } else {
-        C = cha.lookupClass(target.getMethod().getParameterType(index));
       }
+    }
+    // the context does not select a particular concrete type for the
+    // receiver, so use the type of the method
+    IClass C;
+    if (index == 0 && !target.getMethod().isStatic()) {
+      C = getReceiverClass(target.getMethod());
+    } else {
+      C = cha.lookupClass(target.getMethod().getParameterType(index));
+    }
 
-      if (C == null || C.getClassHierarchy().getRootClass().equals(C)) {
-        return getPointerKeyForLocal(target, vn);
-      } else {
-        return getFilteredPointerKeyForLocal(
-            target, vn, new FilteredPointerKey.SingleClassFilter(C));
-      }
+    if (C == null || C.getClassHierarchy().getRootClass().equals(C)) {
+      return getPointerKeyForLocal(target, vn);
+    } else {
+      return getFilteredPointerKeyForLocal(target, vn, new FilteredPointerKey.SingleClassFilter(C));
+    }
   }
 
   /** @return the receiver class for this method. */

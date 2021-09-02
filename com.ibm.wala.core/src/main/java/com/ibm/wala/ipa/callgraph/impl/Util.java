@@ -10,42 +10,13 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
-import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
-import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXContainerCFABuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFABuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.nObjBuilder;
+import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
 import com.ibm.wala.ipa.callgraph.propagation.rta.BasicRTABuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
@@ -53,30 +24,32 @@ import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
 import com.ibm.wala.ssa.IRView;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.*;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
+
+import java.io.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /** Call graph utilities */
 public class Util {
   /** TODO: Make these properties? */
   public static String nativeSpec = "natives.xml";
 
+  public static String getNativeSpec() {
+    return nativeSpec;
+  }
+
   /* BEGIN Custom change: change native spec */
   public static void setNativeSpec(String xmlFile) {
     nativeSpec = xmlFile;
   }
-
-  public static String getNativeSpec() {
-    return nativeSpec;
-  }
   /* END Custom change: change native spec */
+
   /**
    * Set up an AnalysisOptions object with default selectors, corresponding to class hierarchy
    * lookup
@@ -223,7 +196,7 @@ public class Util {
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final ClassLoaderReference loaderRef, final IClassHierarchy cha, final String[] classNames)
-      throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
 
     if (classNames == null) {
       throw new IllegalArgumentException("classNames == null");
@@ -300,9 +273,9 @@ public class Util {
     nodeDiff.removeAll(setify(supG.iterator()));
     if (!nodeDiff.isEmpty()) {
       System.err.println("supergraph: ");
-      System.err.println(supG.toString());
+      System.err.println(supG);
       System.err.println("subgraph: ");
-      System.err.println(subG.toString());
+      System.err.println(subG);
       System.err.println("nodeDiff: ");
       for (T t : nodeDiff) {
         System.err.println(t.toString());
@@ -322,9 +295,9 @@ public class Util {
       predDiff.removeAll(setify(supG.getPredNodes(m)));
       if (!predDiff.isEmpty()) {
         System.err.println("supergraph: ");
-        System.err.println(supG.toString());
+        System.err.println(supG);
         System.err.println("subgraph: ");
-        System.err.println(subG.toString());
+        System.err.println(subG);
         System.err.println("predDiff: ");
         for (T t : predDiff) {
           System.err.println(t.toString());
@@ -757,12 +730,14 @@ public class Util {
   }
 
   public static void dumpCG(
-      SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG)  {
+      SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
 
     try {
       String currentDir = System.getProperty("user.dir");
       System.out.println("dir = " + currentDir);
-      BufferedWriter out = new BufferedWriter(new FileWriter(String.join(File.pathSeparator, currentDir, "dumpCG.txt")));
+      BufferedWriter out =
+          new BufferedWriter(
+              new FileWriter(String.join(File.pathSeparator, currentDir, "dumpCG.txt")));
       for (CGNode N : CG) {
         out.write("callees of node " + getShortName(N) + " : [");
         boolean fst = true;
@@ -796,5 +771,4 @@ public class Util {
       System.err.println(e);
     }
   }
-
 }
