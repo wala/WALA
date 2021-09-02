@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalDependencies">
+    <plugin id="com.intellij" min-version="191" />
+    <plugin id="google-java-format" />
+    <plugin id="JUnit" />
+    <plugin id="org.jetbrains.plugins.gradle" />
+  </component>
+</project>
