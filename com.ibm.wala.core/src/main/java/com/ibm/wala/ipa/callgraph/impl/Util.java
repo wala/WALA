@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-
 import java.io.*;
 import java.util.HashSet;
 import java.util.Iterator;

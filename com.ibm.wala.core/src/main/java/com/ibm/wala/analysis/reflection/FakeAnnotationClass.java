@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.*;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
-
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;

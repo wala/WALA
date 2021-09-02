@@ -33,7 +33,6 @@ import com.ibm.wala.types.*;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

@@ -16,7 +16,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.ParameterReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-
 import java.util.Collection;
 
 /** */

@@ -21,7 +21,6 @@ import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-
 import java.util.Map;
 
 /** A {@link SyntheticMethod} representing the semantics encoded in a {@link MethodSummary} */

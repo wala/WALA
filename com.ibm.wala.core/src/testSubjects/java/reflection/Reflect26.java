@@ -10,12 +10,11 @@
  */
 package reflection;
 
-import reflection.Reflect26.MarvelAnnotation.Priority;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.*;
 import java.util.Arrays;
+import reflection.Reflect26.MarvelAnnotation.Priority;
 
 public class Reflect26 {
 
