@@ -27,8 +27,5 @@ include(
 	'com.ibm.wala.tests.ide_feature',
 	'com.ibm.wala.util',
 	'com.ibm.wala_feature',
+	'com.ibm.wala.core.java11'
 )
-
-if (JavaVersion.current() >= JavaVersion.VERSION_1_9) {
-   include 'com.ibm.wala.core.java11'
-}
