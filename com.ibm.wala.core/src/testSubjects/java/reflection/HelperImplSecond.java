@@ -11,6 +11,7 @@
 package reflection;
 
 public class HelperImplSecond implements HelperInterface {
+  @Override
   public String display() {
     return "WALA is fun";
   }
