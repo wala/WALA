@@ -101,38 +101,19 @@ public class Util {
       String xmlFile,
       IClassHierarchy cha)
       throws IllegalArgumentException {
-    if (scope == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
-    if (cl == null) {
-      throw new IllegalArgumentException("cl is null");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha cannot be null");
-    }
-
-    try (final InputStream s = cl.getResourceAsStream(xmlFile)) {
-      XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
-      addBypassLogic(options, scope, cl, summary, cha);
-    } catch (IOException e) {
-      System.err.println("Could not close XML method summary reader: " + e.getLocalizedMessage());
-      e.printStackTrace();
-    }
+    addBypassLogic(options, cl, xmlFile, cha);
   }
 
   /**
-   * Removes some overhead from the previous method, removes the need to pass in an AnalysisScope
-   * parameter
+   * @param options
+   * @param cl
+   * @param xmlFile
+   * @param cha
+   * @throws IllegalArgumentException
    */
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, String xmlFile, IClassHierarchy cha)
       throws IllegalArgumentException {
-    if (cha.getScope() == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -171,34 +152,7 @@ public class Util {
       XMLMethodSummaryReader summary,
       IClassHierarchy cha)
       throws IllegalArgumentException {
-    if (scope == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
-    if (cl == null) {
-      throw new IllegalArgumentException("cl is null");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha cannot be null");
-    }
-
-    MethodTargetSelector ms =
-        new BypassMethodTargetSelector(
-            options.getMethodTargetSelector(),
-            summary.getSummaries(),
-            summary.getIgnoredPackages(),
-            cha);
-    options.setSelector(ms);
-
-    ClassTargetSelector cs =
-        new BypassClassTargetSelector(
-            options.getClassTargetSelector(),
-            summary.getAllocatableClasses(),
-            cha,
-            cha.getLoader(scope.getLoader(Atom.findOrCreateUnicodeAtom("Synthetic"))));
-    options.setSelector(cs);
+    addBypassLogic(options, cl, summary, cha);
   }
 
   /**
@@ -212,9 +166,6 @@ public class Util {
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, XMLMethodSummaryReader summary, IClassHierarchy cha)
       throws IllegalArgumentException {
-    if (cha.getScope() == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -245,12 +196,21 @@ public class Util {
   /**
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
+   *     <p>please
+   *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy)} instead
    */
+  @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-    if (scope == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
-    return makeMainEntrypoints(scope.getApplicationLoader(), cha);
+
+    return makeMainEntrypoints(cha);
+  }
+
+  /**
+   * @return set of all eligible Main classes in the class hierarchy
+   * @throws IllegalArgumentException if scope is null
+   */
+  public static Iterable<Entrypoint> makeMainEntrypoints(IClassHierarchy cha) {
+    return makeMainEntrypoints(cha.getScope().getApplicationLoader(), cha);
   }
 
   public static Iterable<Entrypoint> makeMainEntrypoints(
@@ -277,29 +237,51 @@ public class Util {
   }
 
   /**
-   * @return set of all eligible Main classes in the class hierarchy
-   * @throws IllegalArgumentException if scope is null
+   * @return Entrypoints object for a Main J2SE class please
+   *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String)}
    */
-  public static Iterable<Entrypoint> makeMainEntrypoints(IClassHierarchy cha) {
-    AnalysisScope scope = cha.getScope();
-    if (scope == null) {
-      throw new IllegalArgumentException("scope is null");
-    }
-    return makeMainEntrypoints(scope.getApplicationLoader(), cha);
-  }
-
-  /** @return Entrypoints object for a Main J2SE class */
+  @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
       AnalysisScope scope, final IClassHierarchy cha, String className) {
     return makeMainEntrypoints(scope, cha, new String[] {className});
   }
 
+  /**
+   * @param cha
+   * @param className
+   * @return
+   */
+  public static Iterable<Entrypoint> makeMainEntrypoints(
+      final IClassHierarchy cha, String className) {
+    return makeMainEntrypoints(cha, new String[] {className});
+  }
+
+  /**
+   * @param scope
+   * @param cha
+   * @param classNames
+   * @return Please
+   *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String[])}
+   */
+  @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final AnalysisScope scope, final IClassHierarchy cha, final String[] classNames) {
-    if (scope == null) {
-      throw new IllegalArgumentException("scope is null");
+    return makeMainEntrypoints(cha, classNames);
+  }
+
+  /**
+   * replaces the above method
+   *
+   * @param cha
+   * @param classNames
+   * @return
+   */
+  public static Iterable<Entrypoint> makeMainEntrypoints(
+      final IClassHierarchy cha, final String[] classNames) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
     }
-    return makeMainEntrypoints(scope.getApplicationLoader(), cha, classNames);
+    return makeMainEntrypoints(cha.getScope().getApplicationLoader(), cha, classNames);
   }
 
   /**
@@ -427,12 +409,26 @@ public class Util {
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
+   *     <p>Please
+   *     <p>Use{@link Util#makeRTABuilder(AnalysisOptions, IAnalysisCacheView, IClassHierarchy)}
    */
+  @Deprecated
   public static CallGraphBuilder<InstanceKey> makeRTABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
 
+    return makeRTABuilder(options, cache, cha);
+  }
+
+  /**
+   * @return an RTA Call Graph builder.
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   */
+  public static CallGraphBuilder<InstanceKey> makeRTABuilder(
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, cha.getScope(), Util.class.getClassLoader(), cha);
 
     return new BasicRTABuilder(cha, options, cache, null, null);
   }
@@ -442,14 +438,28 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
+   *     <p>Please
+   *     <p>Use{@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
       Language l,
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       AnalysisScope scope) {
-    return makeZeroCFABuilder(l, options, cache, cha, scope, null, null);
+    return makeZeroCFABuilder(l, options, cache, cha);
+  }
+
+  /**
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @return a 0-CFA Call Graph Builder.
+   */
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
+      Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+    return makeZeroCFABuilder(l, options, cache, cha, null, null);
   }
 
   /**
@@ -460,7 +470,11 @@ public class Util {
    * @param customInterpreter user-defined context interpreter, or null if none
    * @return a 0-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
+   *     <p>Please
+   *     <p>Use{@link Util#makeZeroOneCFABuilder (Language, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -470,11 +484,30 @@ public class Util {
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
+    return makeZeroCFABuilder(l, options, cache, cha, customSelector, customInterpreter);
+  }
+
+  /**
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @param customSelector user-defined context selector, or null if none
+   * @param customInterpreter user-defined context interpreter, or null if none
+   * @return a 0-CFA Call Graph Builder.
+   * @throws IllegalArgumentException if options is null
+   */
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
+      Language l,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      ContextSelector customSelector,
+      SSAContextInterpreter customInterpreter) {
+
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, cha.getScope(), Util.class.getClassLoader(), cha);
 
     return ZeroXCFABuilder.make(
         l, cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.NONE);
@@ -485,7 +518,11 @@ public class Util {
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
+   * @deprecated please
+   *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -496,9 +533,44 @@ public class Util {
   }
 
   /**
+   * @return a 0-1-CFA Call Graph Builder.
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   */
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
+      Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+    return makeZeroOneCFABuilder(l, options, cache, cha, null, null);
+  }
+
+  /**
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
+   * @param customSelector user-defined context selector, or null if none
+   * @param customInterpreter user-defined context interpreter, or null if none
+   * @return a 0-1-CFA Call Graph Builder.
+   * @throws IllegalArgumentException if options is null
+   * @deprecated Please
+   *     <p>Use{@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
+   *     IAnalysisCacheView, IClassHierarchy, ContextSelector, SSAContextInterpreter)}
+   */
+  @Deprecated
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
+      Language l,
+      AnalysisOptions options,
+      IAnalysisCacheView analysisCache,
+      IClassHierarchy cha,
+      AnalysisScope scope,
+      ContextSelector customSelector,
+      SSAContextInterpreter customInterpreter) {
+
+    return makeVanillaZeroOneCFABuilder(
+        l, options, analysisCache, cha, customSelector, customInterpreter);
+  }
+
+  /**
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
    * @param customSelector user-defined context selector, or null if none
    * @param customInterpreter user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
@@ -509,7 +581,6 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView analysisCache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
@@ -517,7 +588,7 @@ public class Util {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
     return ZeroXCFABuilder.make(
         l,
@@ -535,6 +606,7 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -545,9 +617,41 @@ public class Util {
   }
 
   /**
+   * @return a 0-1-CFA Call Graph Builder.
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   */
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
+      Language l, AnalysisOptions options, IAnalysisCacheView analysisCache, IClassHierarchy cha) {
+    return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, null, null);
+  }
+
+  /**
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
+   * @param customSelector user-defined context selector, or null if none
+   * @param customInterpreter user-defined context interpreter, or null if none
+   * @return a 0-1-CFA Call Graph Builder.
+   * @throws IllegalArgumentException if options is null
+   * @deprecated please
+   *     <p>
+   */
+  @Deprecated
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
+      Language l,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      AnalysisScope scope,
+      ContextSelector customSelector,
+      SSAContextInterpreter customInterpreter) {
+    return makeZeroOneCFABuilder(l, options, cache, cha, customSelector, customInterpreter);
+  }
+
+  /**
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
    * @param customSelector user-defined context selector, or null if none
    * @param customInterpreter user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
@@ -558,7 +662,6 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
@@ -566,7 +669,7 @@ public class Util {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
     return ZeroXCFABuilder.make(
         l,
@@ -588,15 +691,30 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
+   * @deprecated please
+   *     <p>Use{@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)} *
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+    return makeZeroContainerCFABuilder(options, cache, cha);
+  }
+
+  /**
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @return a 0-CFA Call Graph Builder augmented with extra logic for containers
+   * @throws IllegalArgumentException if options is null
+   */
+  public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
@@ -610,12 +728,17 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
+   * @deprecated please
+   *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy, AnalysisScope)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
-    return makeZeroOneContainerCFABuilder(options, cache, cha, scope, null, null);
+    return makeZeroOneContainerCFABuilder(options, cache, cha);
   }
 
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -624,11 +747,32 @@ public class Util {
       ContextSelector appSelector,
       SSAContextInterpreter appInterpreter) {
 
+    return makeZeroOneContainerCFABuilder(options, cache, cha, appSelector, appInterpreter);
+  }
+
+  /**
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
+   * @throws IllegalArgumentException if options is null
+   */
+  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+    return makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
+  }
+
+  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      ContextSelector appSelector,
+      SSAContextInterpreter appInterpreter) {
+
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
     return new ZeroXContainerCFABuilder(
         cha,
@@ -646,18 +790,32 @@ public class Util {
   /**
    * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
+   *
+   * @deprecated please
+   *     <p>Use{@link Util#makeNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
       int n,
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       AnalysisScope scope) {
+    return makeNCFABuilder(n, options, cache, cha);
+  }
+
+  /**
+   * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
+   * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
+   */
+  public static SSAPropagationCallGraphBuilder makeNCFABuilder(
+      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     SSAPropagationCallGraphBuilder result =
@@ -685,18 +843,32 @@ public class Util {
   /**
    * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
    * length limited to n
+   *
+   * @deprecated please
+   *     <p>Use{@link Util#makeNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeNObjBuilder(
       int n,
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       AnalysisScope scope) {
+    return makeNObjBuilder(n, options, cache, cha);
+  }
+
+  /**
+   * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
+   * length limited to n
+   */
+  public static SSAPropagationCallGraphBuilder makeNObjBuilder(
+      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     SSAPropagationCallGraphBuilder result =
@@ -718,18 +890,32 @@ public class Util {
   /**
    * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
    * length limited to n
+   *
+   * @deprecated Please
+   *     <p>Use{@link Util#makeVanillaNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
       int n,
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       AnalysisScope scope) {
+    return makeVanillaNCFABuilder(n, options, cache, cha);
+  }
+
+  /**
+   * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
+   * length limited to n
+   */
+  public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
+      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     SSAPropagationCallGraphBuilder result =
@@ -742,18 +928,35 @@ public class Util {
    * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction. Standard
    * optimizations in the heap abstraction like smushing of strings are disabled.
+   *
+   * @deprecated please
+   *     <p>Use{@link Util#makeVanillaNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(
       int n,
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       AnalysisScope scope) {
+    return makeVanillaNCFABuilder(n, options, cache, cha);
+  }
+
+  /**
+   * @param n
+   * @param options
+   * @param cache
+   * @param cha
+   * @return
+   */
+  public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(
+      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     SSAPropagationCallGraphBuilder result =
@@ -780,15 +983,31 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
+   * @deprecated Please
+   *     <p>Use{@link Util#makeVanillaZeroOneContainerCFABuilder(AnalysisOptions,
+   *     IAnalysisCacheView, IClassHierarchy)}
    */
+  @Deprecated
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+
+    return makeVanillaZeroOneContainerCFABuilder(options, cache, cha);
+  }
+
+  /**
+   * @param options
+   * @param cache
+   * @param cha
+   * @return
+   */
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     options.setUseConstantSpecificKeys(true);
@@ -796,18 +1015,31 @@ public class Util {
     return new ZeroXContainerCFABuilder(
         cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
   }
-
+  /**
+   * @param options
+   * @param scope
+   * @param cl
+   * @param cha
+   * @deprecated Please
+   *     <p>Use{@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}
+   */
+  @Deprecated
   public static void addDefaultBypassLogic(
       AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
+    addDefaultBypassLogic(options, cl, cha);
+  }
+
+  public static void addDefaultBypassLogic(
+      AnalysisOptions options, ClassLoader cl, IClassHierarchy cha) {
     if (nativeSpec == null) return;
     if (cl.getResourceAsStream(nativeSpec) != null) {
-      addBypassLogic(options, scope, cl, nativeSpec, cha);
+      addBypassLogic(options, cl, nativeSpec, cha);
     } else {
       // try to load from filesystem
       try (final BufferedInputStream bIn =
           new BufferedInputStream(new FileInputStream(nativeSpec))) {
-        XMLMethodSummaryReader reader = new XMLMethodSummaryReader(bIn, scope);
-        addBypassLogic(options, scope, cl, reader, cha);
+        XMLMethodSummaryReader reader = new XMLMethodSummaryReader(bIn, cha.getScope());
+        addBypassLogic(options, cl, reader, cha);
       } catch (FileNotFoundException e) {
         System.err.println("Could not load natives xml file from: " + nativeSpec);
         e.printStackTrace();
