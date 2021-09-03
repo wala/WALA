@@ -25,6 +25,7 @@ public interface IParameter extends IMember, ContextItem {
   MethodReference getMethodReference();
 
   /** @return the name of this parameter */
+  @Override
   Atom getName();
 
   /** @return the canonical TypeReference of the declared type of the parameter */
@@ -37,5 +38,6 @@ public interface IParameter extends IMember, ContextItem {
   boolean isFinal();
 
   /** Get the annotations on this parameter, if any */
+  @Override
   Collection<Annotation> getAnnotations();
 }

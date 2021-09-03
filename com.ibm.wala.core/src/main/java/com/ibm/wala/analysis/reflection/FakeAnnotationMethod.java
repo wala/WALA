@@ -51,7 +51,7 @@ public class FakeAnnotationMethod extends SyntheticMethod {
         iinterface);
   }
 
-  public SSAInstruction[] makeStatements(Context context, Map<Integer, ConstantValue> constants) {
+  public SSAInstruction[] makeStatements() {
     MethodSummary ms = new MethodSummary(this.getReference());
     // SSAInstructionFactory insts = Language.JAVA.instructionFactory();
     ms.addStatement(
@@ -72,7 +72,7 @@ public class FakeAnnotationMethod extends SyntheticMethod {
   @Override
   public IR makeIR(Context context, SSAOptions options) {
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
-    SSAInstruction[] instrs = makeStatements(context, constants);
+    SSAInstruction[] instrs = makeStatements();
     return new SyntheticIR(
         this,
         context,
