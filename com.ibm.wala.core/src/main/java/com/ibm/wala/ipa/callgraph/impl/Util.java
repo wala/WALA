@@ -152,6 +152,18 @@ public class Util {
     }
   }
 
+  /**
+   * @param options
+   * @param scope
+   * @param cl
+   * @param summary
+   * @param cha
+   * @throws IllegalArgumentException
+   * @deprecated Method will be replaced. Please
+   *     <p>Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, XMLMethodSummaryReader,
+   *     IClassHierarchy)} instead
+   */
+  @Deprecated
   public static void addBypassLogic(
       AnalysisOptions options,
       AnalysisScope scope,
@@ -190,6 +202,47 @@ public class Util {
   }
 
   /**
+   * @deprecated
+   * @param options
+   * @param cl
+   * @param summary
+   * @param cha
+   * @throws IllegalArgumentException
+   */
+  public static void addBypassLogic(
+      AnalysisOptions options, ClassLoader cl, XMLMethodSummaryReader summary, IClassHierarchy cha)
+      throws IllegalArgumentException {
+    if (cha.getScope() == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    if (cl == null) {
+      throw new IllegalArgumentException("cl is null");
+    }
+    if (cha == null) {
+      throw new IllegalArgumentException("cha cannot be null");
+    }
+
+    MethodTargetSelector ms =
+        new BypassMethodTargetSelector(
+            options.getMethodTargetSelector(),
+            summary.getSummaries(),
+            summary.getIgnoredPackages(),
+            cha);
+    options.setSelector(ms);
+
+    ClassTargetSelector cs =
+        new BypassClassTargetSelector(
+            options.getClassTargetSelector(),
+            summary.getAllocatableClasses(),
+            cha,
+            cha.getLoader(cha.getScope().getLoader(Atom.findOrCreateUnicodeAtom("Synthetic"))));
+    options.setSelector(cs);
+  }
+
+  /**
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
    */
@@ -221,6 +274,18 @@ public class Util {
       }
     }
     return result::iterator;
+  }
+
+  /**
+   * @return set of all eligible Main classes in the class hierarchy
+   * @throws IllegalArgumentException if scope is null
+   */
+  public static Iterable<Entrypoint> makeMainEntrypoints(IClassHierarchy cha) {
+    AnalysisScope scope = cha.getScope();
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
+    return makeMainEntrypoints(scope.getApplicationLoader(), cha);
   }
 
   /** @return Entrypoints object for a Main J2SE class */
