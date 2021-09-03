@@ -89,14 +89,18 @@ public class Util {
    * @throws IllegalArgumentException if cl is null
    * @throws IllegalArgumentException if options is null
    * @throws IllegalArgumentException if scope is null
+   * @deprecated
+   * This method is being replaced. Please
+   * <p> Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}</p> instead
    */
+  @Deprecated
   public static void addBypassLogic(
-      AnalysisOptions options,
-      AnalysisScope scope,
-      ClassLoader cl,
-      String xmlFile,
-      IClassHierarchy cha)
-      throws IllegalArgumentException {
+          AnalysisOptions options,
+          AnalysisScope scope,
+          ClassLoader cl,
+          String xmlFile,
+          IClassHierarchy cha)
+          throws IllegalArgumentException {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }
@@ -113,6 +117,38 @@ public class Util {
     try (final InputStream s = cl.getResourceAsStream(xmlFile)) {
       XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
       addBypassLogic(options, scope, cl, summary, cha);
+    } catch (IOException e) {
+      System.err.println("Could not close XML method summary reader: " + e.getLocalizedMessage());
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   *
+   *Removes some overhead from the previous method, removes the need to pass in an AnalysisScope parameter
+   */
+  public static void addBypassLogic(
+          AnalysisOptions options,
+          ClassLoader cl,
+          String xmlFile,
+          IClassHierarchy cha)
+          throws IllegalArgumentException {
+    if (cha.getScope() == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    if (cl == null) {
+      throw new IllegalArgumentException("cl is null");
+    }
+    if (cha == null) {
+      throw new IllegalArgumentException("cha cannot be null");
+    }
+
+    try (final InputStream s = cl.getResourceAsStream(xmlFile)) {
+      XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, cha.getScope());
+      addBypassLogic(options, cha.getScope(), cl, summary, cha);
     } catch (IOException e) {
       System.err.println("Could not close XML method summary reader: " + e.getLocalizedMessage());
       e.printStackTrace();
