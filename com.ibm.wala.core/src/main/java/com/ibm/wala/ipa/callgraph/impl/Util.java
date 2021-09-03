@@ -89,18 +89,18 @@ public class Util {
    * @throws IllegalArgumentException if cl is null
    * @throws IllegalArgumentException if options is null
    * @throws IllegalArgumentException if scope is null
-   * @deprecated
-   * This method is being replaced. Please
-   * <p> Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}</p> instead
+   * @deprecated This method is being replaced. Please
+   *     <p>Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}
+   *     instead
    */
   @Deprecated
   public static void addBypassLogic(
-          AnalysisOptions options,
-          AnalysisScope scope,
-          ClassLoader cl,
-          String xmlFile,
-          IClassHierarchy cha)
-          throws IllegalArgumentException {
+      AnalysisOptions options,
+      AnalysisScope scope,
+      ClassLoader cl,
+      String xmlFile,
+      IClassHierarchy cha)
+      throws IllegalArgumentException {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }
@@ -124,15 +124,12 @@ public class Util {
   }
 
   /**
-   *
-   *Removes some overhead from the previous method, removes the need to pass in an AnalysisScope parameter
+   * Removes some overhead from the previous method, removes the need to pass in an AnalysisScope
+   * parameter
    */
   public static void addBypassLogic(
-          AnalysisOptions options,
-          ClassLoader cl,
-          String xmlFile,
-          IClassHierarchy cha)
-          throws IllegalArgumentException {
+      AnalysisOptions options, ClassLoader cl, String xmlFile, IClassHierarchy cha)
+      throws IllegalArgumentException {
     if (cha.getScope() == null) {
       throw new IllegalArgumentException("scope is null");
     }
