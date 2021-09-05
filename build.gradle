@@ -271,7 +271,7 @@ googleJavaFormat {
 	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
 }
 
-tasks.named('verifyGoogleJavaFormat') {
+final verifyGoogleJavaFormat = tasks.named('verifyGoogleJavaFormat') {
 	group 'verification'
 
 	// workaround for <https://github.com/sherter/google-java-format-gradle-plugin/issues/43>
@@ -300,7 +300,7 @@ final check = tasks.register('check') {
 	if (!(isWindows && System.getenv('GITHUB_ACTIONS') == 'true')) {
 		// Known to be broken on Windows when running as a GitHub Action, but not intentionally so.
 		// Please fix if you know how!  <https://github.com/wala/WALA/issues/608>
-		dependsOn 'verifyGoogleJavaFormat'
+		dependsOn verifyGoogleJavaFormat
 	}
 }
 
