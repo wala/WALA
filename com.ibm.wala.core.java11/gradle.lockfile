@@ -1,4 +1,8 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-empty=annotationProcessor,compileClasspath,runtimeClasspath,signatures,testAnnotationProcessor,testCompileClasspath,testFixturesAnnotationProcessor,testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
+junit:junit:4.13.2=testCompileClasspath,testRuntimeClasspath
+org.apache.ant:ant-launcher:1.10.11=testRuntimeClasspath
+org.apache.ant:ant:1.10.11=testRuntimeClasspath
+org.hamcrest:hamcrest-core:1.3=testCompileClasspath,testRuntimeClasspath
+empty=annotationProcessor,compileClasspath,runtimeClasspath,signatures,testAnnotationProcessor,testFixturesAnnotationProcessor,testFixturesCompileClasspath,testFixturesRuntimeClasspath,testSubjectsAnnotationProcessor,testSubjectsCompileClasspath,testSubjectsRuntimeClasspath
