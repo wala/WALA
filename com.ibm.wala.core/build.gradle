@@ -374,7 +374,7 @@ tasks.named('test') {
 	maxHeapSize = '1500M'
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
-	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
+	classpath += files project(':com.ibm.wala.core').sourceSets.test.output.classesDirs
 	testLogging {
 		exceptionFormat = 'full'
 		events 'passed', 'skipped', 'failed'
