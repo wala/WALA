@@ -22,7 +22,7 @@ final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 	checksum '147ff79947752399b870fcf3f1fc37102100b545'
 }
 
-tasks.register('unpackNodeJSLib', Copy) {
+final unpackNodeJSLib = tasks.register('unpackNodeJSLib', Copy) {
 	from(downloadNodeJS.map { tarTree it.dest }) {
 		include 'node-v0.12.4/lib/*.js'
 		eachFile {
@@ -35,7 +35,7 @@ tasks.register('unpackNodeJSLib', Copy) {
 }
 
 tasks.named('processTestResources') {
-	dependsOn 'unpackNodeJSLib'
+	dependsOn unpackNodeJSLib
 }
 
 tasks.named('test') {

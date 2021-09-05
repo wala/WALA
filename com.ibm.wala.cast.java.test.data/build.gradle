@@ -14,16 +14,16 @@ final downloadJLex = tasks.register('downloadJLex', VerifiedDownload) {
 	dest "${sourceSets.test.java.srcDirs.find()}/JLex/Main.java"
 }
 
-tasks.register('cleanDownloadJLex', Delete) {
+final cleanDownloadJLex = tasks.register('cleanDownloadJLex', Delete) {
 	delete downloadJLex.get().dest.parent
 }
 
 tasks.named('compileTestJava') {
-	dependsOn 'downloadJLex'
+	dependsOn downloadJLex
 }
 
 tasks.named('clean') {
-	dependsOn 'cleanDownloadJLex'
+	dependsOn cleanDownloadJLex
 }
 
 
