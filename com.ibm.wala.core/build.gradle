@@ -119,7 +119,7 @@ class CompileKawaScheme extends JavaExec {
 
 	CompileKawaScheme() {
 		classpath project.tasks.named('extractKawa')
-		main 'kawa.repl'
+		mainClass.set('kawa.repl')
 
 		final outputDir = project.layout.buildDirectory.dir(name)
 		args '-d', outputDir.get().asFile
@@ -292,7 +292,7 @@ final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
-	main 'ocaml.compilers.ocamljavaMain'
+	mainClass.set('ocaml.compilers.ocamljavaMain')
 	args '-o', jarTarget
 	argumentProviders.add({ ->
 		[ocamlSource.get().toString()]
