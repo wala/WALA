@@ -39,7 +39,7 @@ version VERSION_NAME
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components
 ext.eclipseVersion = '4.14.0'
-ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
+ext.eclipseWstJsdtVersion = '1.1.202'
 
 subprojects { subproject ->
 	// skip generic Java setup for the few projects that have no Java code whatsoever

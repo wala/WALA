@@ -4,7 +4,7 @@ plugins {
 
 repositories {
 	maven {
-		url 'https://artifacts.alfresco.com/nexus/content/repositories/public/'
+		url 'https://www.jabylon.org/maven/'
 		content {
 			includeGroup 'org.eclipse.wst.jsdt'
 		}
