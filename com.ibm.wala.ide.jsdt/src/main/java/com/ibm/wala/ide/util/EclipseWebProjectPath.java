@@ -44,7 +44,7 @@ public class EclipseWebProjectPath extends JavaScriptEclipseProjectPath {
       String fileExtension) {
     List<Module> s = MapUtil.findOrCreateList(modules, loader);
     Iterator<FileModule> htmlPages =
-        new EclipseSourceDirectoryTreeModule(p, excfffludePaths, "html").getEntries();
+        new EclipseSourceDirectoryTreeModule(p, excludePaths, "html").getEntries();
     while (htmlPages.hasNext()) {
       FileModule htmlPage = htmlPages.next();
       Set<MappedSourceModule> scripts;
