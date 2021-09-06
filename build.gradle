@@ -282,6 +282,18 @@ final verifyGoogleJavaFormat = tasks.named('verifyGoogleJavaFormat') {
 	}
 }
 
+tasks.named('autoLintGradle') {
+	// `autoLintGradle` creates no output files, which causes Gradle to treat it as always
+	// out-of-date.  By creating a simple, empty stamp file to record that this task has run and
+	// succeeded, we allow Gradle to avoid rerunning this task unnecessarily.  This task will still
+	// be rerun when needed, though, such as when any of the `**/build.gradle` files changes.
+	final stampFile = project.layout.buildDirectory.file(name)
+	outputs.file stampFile
+	doLast {
+		stampFile.get().asFile.text = ''
+	}
+}
+
 // install Java reformatter as git pre-commit hook
 tasks.register('installGitHooks', Copy) {
 	from 'config/hooks/pre-commit-stub'
