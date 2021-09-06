@@ -507,7 +507,7 @@ public class Util {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, cha.getScope(), Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
     return ZeroXCFABuilder.make(
         l, cha, options, cache, customSelector, customInterpreter, ZeroXInstanceKeys.NONE);
@@ -635,7 +635,8 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    * @deprecated please
-   *     <p>
+   *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
@@ -693,7 +694,7 @@ public class Util {
    * @throws IllegalArgumentException if options is null
    * @deprecated please
    *     <p>Use{@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)} *
+   *     IClassHierarchy)}</\p>
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
@@ -761,6 +762,14 @@ public class Util {
     return makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
   }
 
+  /**
+   * @param options
+   * @param cache
+   * @param cha
+   * @param appSelector
+   * @param appInterpreter
+   * @return
+   */
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -792,8 +801,8 @@ public class Util {
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
    *
    * @deprecated please
-   *     <p>Use{@link Util#makeNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}
+   *     <p>Use{@link Util#makeNCFABuilder(int, AnalysisOptions,
+   *     IAnalysisCacheView,IClassHierarchy)}
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
