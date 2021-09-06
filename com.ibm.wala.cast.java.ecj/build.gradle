@@ -14,6 +14,7 @@ eclipseMavenCentral {
 
 dependencies {
 	implementation(
+			'org.eclipse.platform:org.eclipse.equinox.common:3.14.100',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
 			project(':com.ibm.wala.core'),
