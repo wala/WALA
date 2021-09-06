@@ -88,6 +88,11 @@ subprojects { subproject ->
     }
 
 	configurations {
+		all {
+			resolutionStrategy.dependencySubstitution {
+				substitute module('org.hamcrest:hamcrest-core') using module('org.hamcrest:hamcrest:2.2') because 'junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest'
+			}
+		}
 		implementation {
 			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
 			// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
@@ -211,22 +216,32 @@ tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 //  linters for various specific languages or file formats
 //
 
-// Gradle build scripts
-// disabled until <https://github.com/gradle/gradle/issues/6246> is fixed
-/*
 allprojects {
 	apply plugin: 'nebula.lint'
+
+	// We use no deprecated Gradle APIs ourselves, and we'd like to keep it that way.
+	// Unfortunately, the Gradle linter tasks produce a deprecation warning under Gradle 7.2. The
+	// warning message is not detailed by default, and could easily mask any new deprecation
+	// problems that we might introduce ourselves. So we don't run the linter by default for now.
 	gradleLint.alwaysRun = false
+
 	gradleLint {
-		rules = ['all-dependency']
+		rules = [
+				'all-dependency',
+				'archaic-wrapper',
+				'duplicate-dependency-class',
+		]
+
+		// These rules warn about platform-specific Eclipse SWT dependencies, such as
+		// `org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64:3.113.0`.  There seems to be no
+		// way to suppress warnings just for specific dependencies or dependency patterns, so we
+		// have to exclude these rules entirely.
 		excludedRules = [
-				// <https://github.com/nebula-plugins/gradle-lint-plugin/issues/203>
 				'undeclared-dependency',
 				'unused-dependency',
 		]
 	}
 }
-*/
 
 // shell scripts, provided they have ".sh" extension
 if (isWindows) {

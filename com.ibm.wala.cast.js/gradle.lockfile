@@ -7,5 +7,5 @@ junit:junit:4.13.2=testCompileClasspath,testFixturesCompileClasspath,testFixture
 net.htmlparser.jericho:jericho-html:3.2=compileClasspath,runtimeClasspath,testCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
 org.apache.ant:ant-launcher:1.10.11=testFixturesRuntimeClasspath,testRuntimeClasspath
 org.apache.ant:ant:1.10.11=testFixturesRuntimeClasspath,testRuntimeClasspath
-org.hamcrest:hamcrest-core:1.3=testCompileClasspath,testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
+org.hamcrest:hamcrest:2.2=testCompileClasspath,testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
 empty=annotationProcessor,signatures,testAnnotationProcessor,testFixturesAnnotationProcessor
