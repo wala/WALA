@@ -98,6 +98,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   private int periodicMaintainInterval = DEFAULT_PERIODIC_MAINTENANCE_INTERVAL;
 
+  @SuppressWarnings("unused")
   public PropagationSystem(
       CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory) {
     if (cg == null) {
