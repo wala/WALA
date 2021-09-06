@@ -59,11 +59,11 @@ public class CPATest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, testClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, testClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph cg = builder.makeCallGraph(options, null);
 

@@ -39,7 +39,7 @@ public class CHACallGraphTest {
       String scopeFile, final String mainClass, final String exclusionsFile)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     return testCHA(
-        scopeFile, exclusionsFile, cha -> Util.makeMainEntrypoints(cha.getScope(), cha, mainClass));
+        scopeFile, exclusionsFile, cha -> Util.makeMainEntrypoints(cha, mainClass));
   }
 
   public static CallGraph testCHA(

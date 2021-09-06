@@ -88,7 +88,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.PI_TEST_MAIN);
+            cha, TestConstants.PI_TEST_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     SSAPiNodePolicy policy = usePiNodes ? SSAOptions.getAllBuiltInPiNodes() : null;
     options.getSSAOptions().setPiNodePolicy(policy);

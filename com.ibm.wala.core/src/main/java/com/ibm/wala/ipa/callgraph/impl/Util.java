@@ -126,7 +126,7 @@ public class Util {
 
     try (final InputStream s = cl.getResourceAsStream(xmlFile)) {
       XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, cha.getScope());
-      addBypassLogic(options, cha.getScope(), cl, summary, cha);
+      addBypassLogic(options, cl, summary, cha);
     } catch (IOException e) {
       System.err.println("Could not close XML method summary reader: " + e.getLocalizedMessage());
       e.printStackTrace();

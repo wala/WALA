@@ -39,7 +39,7 @@ public class MissingMethodRefTest extends WalaTestCase {
             DupFieldsTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "LMissingMethodRef");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LMissingMethodRef");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // should not throw an NPE

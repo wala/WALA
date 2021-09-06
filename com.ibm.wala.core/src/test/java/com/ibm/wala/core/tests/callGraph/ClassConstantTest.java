@@ -51,7 +51,7 @@ public class ClassConstantTest extends WalaTestCase {
 
     // make call graph
     Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(scope, cha, TestConstants.CLASSCONSTANT_MAIN);
+        Util.makeMainEntrypoints(cha, TestConstants.CLASSCONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg =
         CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);

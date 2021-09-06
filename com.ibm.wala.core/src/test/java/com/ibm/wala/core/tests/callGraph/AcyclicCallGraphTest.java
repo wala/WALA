@@ -35,7 +35,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lrecurse/NList");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Lrecurse/NList");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraph cg =

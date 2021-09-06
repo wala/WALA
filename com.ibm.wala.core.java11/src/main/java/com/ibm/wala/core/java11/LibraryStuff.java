@@ -39,7 +39,7 @@ public class LibraryStuff {
       System.err.println(cha);
 
       Iterable<Entrypoint> entrypoints =
-          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
 
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
       options.setReflectionOptions(ReflectionOptions.NONE);

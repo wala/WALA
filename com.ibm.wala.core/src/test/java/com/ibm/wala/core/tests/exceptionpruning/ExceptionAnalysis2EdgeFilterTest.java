@@ -79,7 +79,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
+        Util.makeMainEntrypoints(cha, "Lexceptionpruning/TestPruning");
     options = new AnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
@@ -87,7 +87,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
     cg = builder.makeCallGraph(options, null);
     pointerAnalysis = builder.getPointerAnalysis();
 

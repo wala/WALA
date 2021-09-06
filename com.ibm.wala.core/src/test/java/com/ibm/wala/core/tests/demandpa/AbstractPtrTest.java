@@ -227,7 +227,7 @@ public abstract class AbstractPtrTest {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     final IAnalysisCacheView analysisCache = new AnalysisCacheImpl();

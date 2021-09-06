@@ -81,7 +81,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.JAVA_CUP_MAIN);
+            cha, TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope, useShortProfile());
@@ -96,7 +96,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.BCEL_VERIFIER_MAIN);
+            cha, TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     // this speeds up the test
     options.setReflectionOptions(ReflectionOptions.NONE);
@@ -113,7 +113,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.JLEX_MAIN);
+            cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
@@ -154,7 +154,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.HELLO_MAIN);
+            cha, TestConstants.HELLO_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
@@ -169,7 +169,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "LstaticInit/TestStaticInit");
+            cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg =
         CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
@@ -197,7 +197,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "Llambda/SortingExample");
+            cha, "Llambda/SortingExample");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg =
         CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
@@ -219,10 +219,10 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "LstaticInit/TestSystemProperties");
+            cha, "LstaticInit/TestSystemProperties");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options);
     for (CGNode n : cg) {
       if (n.toString()
@@ -250,7 +250,7 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.RECURSE_MAIN);
+            cha, TestConstants.RECURSE_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
@@ -328,11 +328,11 @@ public class CallGraphTest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(scope, cha, "Ldemandpa/TestArraysCopyOf");
+        Util.makeMainEntrypoints(cha, "Ldemandpa/TestArraysCopyOf");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
@@ -349,11 +349,11 @@ public class CallGraphTest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(scope, cha, "Lslice/TestIntegerValueOf");
+        Util.makeMainEntrypoints(cha, "Lslice/TestIntegerValueOf");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
     Assert.assertTrue(

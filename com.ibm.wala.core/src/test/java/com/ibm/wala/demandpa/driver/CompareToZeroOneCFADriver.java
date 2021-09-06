@@ -138,7 +138,7 @@ public class CompareToZeroOneCFADriver {
     }
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
     doTests(scope, cha, options);
     System.err.println("ALL FINE");

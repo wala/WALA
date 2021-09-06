@@ -263,7 +263,7 @@ public abstract class AbstractAnalysisEngine<
   }
 
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-    return Util.makeMainEntrypoints(scope, cha);
+    return Util.makeMainEntrypoints(cha);
   }
 
   public void setEntrypointBuilder(EntrypointBuilder builder) {

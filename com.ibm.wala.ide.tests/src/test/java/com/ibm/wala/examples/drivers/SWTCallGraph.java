@@ -104,7 +104,7 @@ public class SWTCallGraph {
         }
       }
       if (entrypoints == null) {
-        entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
       }
 
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);

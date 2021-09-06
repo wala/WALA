@@ -49,7 +49,7 @@ public class ZeroLengthArrayTest {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.ZERO_LENGTH_ARRAY_MAIN);
+            cha, TestConstants.ZERO_LENGTH_ARRAY_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
