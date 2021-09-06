@@ -24,6 +24,7 @@ dependencies {
 			'junit:junit:4.13.2',
 			testFixtures(project(':com.ibm.wala.cast.java')),
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
 application.mainClass.set('com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph')

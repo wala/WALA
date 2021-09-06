@@ -16,6 +16,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.13.2',
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
 tasks.named('javadoc', Javadoc) {
