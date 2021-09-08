@@ -694,7 +694,7 @@ public class Util {
    * @throws IllegalArgumentException if options is null
    * @deprecated please
    *     <p>Use{@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy)}</p>
+   *     IClassHierarchy)}
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
