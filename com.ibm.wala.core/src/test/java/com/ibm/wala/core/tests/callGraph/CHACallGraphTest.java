@@ -38,8 +38,7 @@ public class CHACallGraphTest {
   public static CallGraph testCHA(
       String scopeFile, final String mainClass, final String exclusionsFile)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    return testCHA(
-        scopeFile, exclusionsFile, cha -> Util.makeMainEntrypoints(cha, mainClass));
+    return testCHA(scopeFile, exclusionsFile, cha -> Util.makeMainEntrypoints(cha, mainClass));
   }
 
   public static CallGraph testCHA(

@@ -16,7 +16,7 @@ public class ZeroOneCFABuilderFactory {
   public AstJavaZeroXCFABuilder make(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
     Util.addDefaultSelectors(options, cha);
-    Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    Util.addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     return new AstJavaZeroXCFABuilder(
         cha,
         options,

@@ -76,7 +76,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     IAnalysisCacheView cache = new AnalysisCacheImpl();
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     MethodHandles.analyzeMethodHandles(options, builder);
 

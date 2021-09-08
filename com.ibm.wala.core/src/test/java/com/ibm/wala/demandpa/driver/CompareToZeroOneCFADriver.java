@@ -108,7 +108,7 @@ public class CompareToZeroOneCFADriver {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // run existing pointer analysis
@@ -148,15 +148,14 @@ public class CompareToZeroOneCFADriver {
       AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     final CallGraph oldCG = builder.makeCallGraph(options, null);
     final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
     // now, run our analysis
     // build an RTA call graph
     CallGraphBuilder<InstanceKey> rtaBuilder =
-        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -234,8 +233,7 @@ public class CompareToZeroOneCFADriver {
       CallGraph cg,
       MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(

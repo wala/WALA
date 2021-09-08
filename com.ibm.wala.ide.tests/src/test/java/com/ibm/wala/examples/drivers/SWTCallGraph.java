@@ -99,7 +99,7 @@ public class SWTCallGraph {
           if (mainClass != null) {
             entrypoints =
                 com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-                    scope, cha, 'L' + mainClass.replace('.', '/'));
+                    cha, 'L' + mainClass.replace('.', '/'));
           }
         }
       }
@@ -114,8 +114,7 @@ public class SWTCallGraph {
       // build the call graph
       // //
       com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
-          Util.makeZeroCFABuilder(
-              Language.JAVA, options, new AnalysisCacheImpl(), cha, scope, null, null);
+          Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, null, null);
       CallGraph cg = builder.makeCallGraph(options, null);
 
       System.out.println(CallGraphStats.getStats(cg));

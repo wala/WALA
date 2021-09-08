@@ -45,7 +45,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.ARRAY_ALIAS_MAIN);
+            cha, TestConstants.ARRAY_ALIAS_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // RTA yields a TypeBasedPointerAnalysis

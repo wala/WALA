@@ -106,12 +106,12 @@ public class TestAgainstSimpleDriver {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // build an RTA call graph
     CallGraphBuilder<InstanceKey> rtaBuilder =
-        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -165,8 +165,7 @@ public class TestAgainstSimpleDriver {
       CallGraph cg,
       MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(

@@ -232,7 +232,7 @@ public abstract class AbstractPtrTest {
 
     final IAnalysisCacheView analysisCache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> cgBuilder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha);
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -240,7 +240,7 @@ public abstract class AbstractPtrTest {
     // cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(
             cg, builder, mam, cha, options, getStateMachineFactory());

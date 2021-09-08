@@ -47,7 +47,7 @@ public class LibraryStuff {
       IAnalysisCacheView cache = new AnalysisCacheImpl();
 
       SSAPropagationCallGraphBuilder builder =
-          Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+          Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
       CallGraph cg = builder.makeCallGraph(options, new NullProgressMonitor());
 
       System.err.println(cg);

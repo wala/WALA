@@ -24,8 +24,7 @@ public class JDK11StringConcatTest extends WalaTestCase {
             "wala.testdata11.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            cha, "LstringConcat/StringConcat");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstringConcat/StringConcat");
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 

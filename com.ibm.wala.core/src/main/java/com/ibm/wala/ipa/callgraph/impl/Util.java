@@ -471,7 +471,7 @@ public class Util {
    * @return a 0-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
    *     <p>Please
-   *     <p>Use{@link Util#makeZeroOneCFABuilder (Language, AnalysisOptions, IAnalysisCacheView,
+   *     <p>Use{@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
   @Deprecated
@@ -529,7 +529,7 @@ public class Util {
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       AnalysisScope scope) {
-    return makeZeroOneCFABuilder(l, options, cache, cha, scope, null, null);
+    return makeZeroOneCFABuilder(l, options, cache, cha, null, null);
   }
 
   /**
@@ -613,7 +613,7 @@ public class Util {
       IAnalysisCacheView analysisCache,
       IClassHierarchy cha,
       AnalysisScope scope) {
-    return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, scope, null, null);
+    return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, null, null);
   }
 
   /**
@@ -731,7 +731,7 @@ public class Util {
    * @throws IllegalArgumentException if options is null
    * @deprecated please
    *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
-   *     IClassHierarchy, AnalysisScope)}
+   *     IClassHierarchy)}
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
