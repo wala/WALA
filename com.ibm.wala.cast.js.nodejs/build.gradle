@@ -13,6 +13,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.13.2',
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
 final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {

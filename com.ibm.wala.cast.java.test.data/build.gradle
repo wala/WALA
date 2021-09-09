@@ -22,6 +22,10 @@ tasks.named('compileTestJava') {
 	dependsOn downloadJLex
 }
 
+tasks.named('compileTestJavaUsingEcj') {
+	dependsOn downloadJLex
+}
+
 tasks.named('clean') {
 	dependsOn cleanDownloadJLex
 }

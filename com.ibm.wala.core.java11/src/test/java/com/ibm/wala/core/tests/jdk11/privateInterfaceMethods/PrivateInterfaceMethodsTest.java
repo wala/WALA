@@ -38,7 +38,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
-            "wala.testdata11.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+            "wala.testdata.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(

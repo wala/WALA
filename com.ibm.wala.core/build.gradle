@@ -13,21 +13,11 @@ eclipse {
 	}
 }
 
-final boolean java11OrHigher = JavaVersion.current() >= JavaVersion.VERSION_11
 sourceSets {
 	testSubjects
-	test11Subjects
-	if (!java11OrHigher) {
-		test11Subjects.java.srcDirs = []
-	}
 }
 
 final Provider<JavaCompile> compileTestSubjectsJava = tasks.named('compileTestSubjectsJava', JavaCompile)
-final Provider<JavaCompile> compileTest11SubjectsJava = tasks.named('compileTest11SubjectsJava', JavaCompile)
-tasks.named('compileTest11SubjectsJava', JavaCompile) {
-	sourceCompatibility = JavaVersion.VERSION_11.toString()
-	targetCompatibility = JavaVersion.VERSION_11.toString()
-}
 
 final ecjCompileJavaTestSubjects = JavaCompileUsingEcj.withSourceSet(project, sourceSets.testSubjects)
 ecjCompileJavaTestSubjects.configure {
@@ -63,8 +53,7 @@ dependencies {
 			'org.hamcrest:hamcrest:2.2',
 	)
 	testRuntimeOnly(
-			files(compileTestSubjectsJava.map { it.outputs.files.first() }),
-			files(compileTest11SubjectsJava.map { it.outputs.files.first() })
+			sourceSets.testSubjects.output.classesDirs,
 	)
 }
 
@@ -119,7 +108,7 @@ class CompileKawaScheme extends JavaExec {
 
 	CompileKawaScheme() {
 		classpath project.tasks.named('extractKawa')
-		main 'kawa.repl'
+		mainClass.set('kawa.repl')
 
 		final outputDir = project.layout.buildDirectory.dir(name)
 		args '-d', outputDir.get().asFile
@@ -292,7 +281,7 @@ final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
-	main 'ocaml.compilers.ocamljavaMain'
+	mainClass.set('ocaml.compilers.ocamljavaMain')
 	args '-o', jarTarget
 	argumentProviders.add({ ->
 		[ocamlSource.get().toString()]
@@ -309,19 +298,6 @@ tasks.register('collectTestData', Jar) {
 	archiveFileName.set 'com.ibm.wala.core.testdata_1.0.0.jar'
 	from compileTestSubjectsJava
 	from 'classes'
-	includeEmptyDirs false
-	destinationDirectory = layout.buildDirectory.dir name
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  collect "com.ibm.wala.core.testdata11_1.0.0.jar"
-//
-
-tasks.register('collectTestData11', Jar) {
-	archiveFileName.set 'com.ibm.wala.core.testdata11_1.0.0.jar'
-	from compileTest11SubjectsJava
 	includeEmptyDirs false
 	destinationDirectory = layout.buildDirectory.dir name
 }
@@ -355,7 +331,6 @@ tasks.named('processTestResources') {
 			'buildKawaTestJar',
 			'collectJLex',
 			'collectTestData',
-			'collectTestData11',
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
@@ -374,20 +349,17 @@ tasks.named('test') {
 	maxHeapSize = '1500M'
 	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
-	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
+	classpath += files project(':com.ibm.wala.core').sourceSets.test.output.classesDirs
 	testLogging {
 		exceptionFormat = 'full'
 		events 'passed', 'skipped', 'failed'
 	}
 	// temporarily turn off some tests on JDK 11+
-	if (java11OrHigher) {
+	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
 		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
 		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
 		exclude '**/cha/LibraryVersionTest.class'
 		exclude '**/ir/TypeAnnotationTest.class'
-	} else {
-		// turn off JDK 11+ specific tests
-		exclude '**/jdk11/**'
 	}
 
 	outputs.file layout.buildDirectory.file('report')

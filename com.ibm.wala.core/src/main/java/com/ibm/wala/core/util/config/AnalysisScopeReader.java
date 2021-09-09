@@ -182,7 +182,6 @@ public class AnalysisScopeReader {
     Atom loaderName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
     ClassLoaderReference walaLoader = scope.getLoader(loaderName);
 
-    @SuppressWarnings("unused")
     String language = toks.nextToken();
     String entryType = toks.nextToken();
     String entryPathname = toks.nextToken();

@@ -21,15 +21,11 @@ eclipseMavenCentral {
 
 dependencies {
 	implementation(
-			'org.osgi:org.osgi.core:6.0.0',
-			project(':com.ibm.wala.cast'),
-			project(':com.ibm.wala.cast.java'),
-			project(':com.ibm.wala.cast.java.ecj'),
-			project(':com.ibm.wala.core'),
-			project(':com.ibm.wala.ide'),
-			project(':com.ibm.wala.util'),
+		project(':com.ibm.wala.cast'),
+		project(':com.ibm.wala.cast.java'),
+		project(':com.ibm.wala.cast.java.ecj'),
+		project(':com.ibm.wala.core'),
+		project(':com.ibm.wala.ide'),
+		project(':com.ibm.wala.util'),
 	)
-	implementation('javax.annotation:javax.annotation-api') {
-		version { strictly '1.3.2' }
-	}
 }
