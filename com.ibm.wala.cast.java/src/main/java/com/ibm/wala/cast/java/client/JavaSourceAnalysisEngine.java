@@ -173,6 +173,6 @@ public abstract class JavaSourceAnalysisEngine
   @Override
   protected AstJavaZeroXCFABuilder getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
+    return new ZeroCFABuilderFactory().make(options, cache, cha);
   }
 }
