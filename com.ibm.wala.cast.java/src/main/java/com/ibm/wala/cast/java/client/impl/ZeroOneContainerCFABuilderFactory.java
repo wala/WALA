@@ -26,7 +26,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class ZeroOneContainerCFABuilderFactory {
 
   public CallGraphBuilder<InstanceKey> make(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     return new AstJavaZeroOneContainerCFABuilder(cha, options, cache, null, null);
