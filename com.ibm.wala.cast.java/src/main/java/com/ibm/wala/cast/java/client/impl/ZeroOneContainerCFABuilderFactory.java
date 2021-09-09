@@ -12,7 +12,6 @@ package com.ibm.wala.cast.java.client.impl;
 
 import com.ibm.wala.cast.java.ipa.callgraph.AstJavaZeroOneContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Util;
