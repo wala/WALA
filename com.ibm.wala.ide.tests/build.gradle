@@ -24,7 +24,7 @@ eclipseMavenCentral {
 
 dependencies {
 	testImplementation(
-			'org.eclipse.platform:org.eclipse.osgi:3.15.100',
+			'org.eclipse.platform:org.eclipse.osgi:3.16.300',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.ide'),
 			project(':com.ibm.wala.util'),
