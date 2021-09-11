@@ -79,48 +79,6 @@ public abstract class IRTests {
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
-  // TODO delete this code; leaving just in case --MS
-  //  static {
-  //    boolean found = false;
-  //    try {
-  //      rtJar = new LinkedList<String>();
-  //
-  //      Properties p = WalaProperties.loadProperties();
-  //      javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
-  //
-  //      if (new File(javaHomePath).isDirectory()) {
-  //        if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
-  //          /**
-  //           * todo: {@link WalaProperties#getJ2SEJarFiles()}
-  //           */
-  //          rtJar.add(javaHomePath + "/classes.jar");
-  //          rtJar.add(javaHomePath + "/ui.jar");
-  //        } else {
-  //          rtJar.add(javaHomePath + File.separator + "classes.jar");
-  //          rtJar.add(javaHomePath + File.separator + "rt.jar");
-  //          rtJar.add(javaHomePath + File.separator + "core.jar");
-  //          rtJar.add(javaHomePath + File.separator + "vm.jar");
-  //        }
-  //        found = true;
-  //      }
-  //    } catch (Exception e) {
-  //      // no properties
-  //    }
-  //
-  //    if (!found) {
-  //      javaHomePath = System.getProperty("java.home");
-  //      if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
-  //        rtJar.add(javaHomePath + "/../Classes/classes.jar");
-  //        rtJar.add(javaHomePath + "/../Classes/ui.jar");
-  //      } else {
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
-  //      }
-  //    }
-  //  }
-
   public interface IRAssertion {
 
     void check(CallGraph cg);
