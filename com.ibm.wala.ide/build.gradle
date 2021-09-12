@@ -29,13 +29,6 @@ dependencies {
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.util'),
 	)
-	implementation('org.eclipse.platform:org.eclipse.e4.ui.workbench') {
-		version { strictly '1.11.0' }
-	}
-	implementation('org.eclipse.platform:org.eclipse.equinox.registry') {
-		version { strictly '3.8.600' }
-	}
-
 }
 
 configurations.all {
