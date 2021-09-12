@@ -32,6 +32,13 @@ dependencies {
 	testImplementation('org.eclipse.platform:org.eclipse.ui.workbench') {
 		version { strictly '3.120.0' }
 	}
+	testImplementation('org.eclipse.platform:org.eclipse.e4.ui.workbench') {
+		version { strictly '1.11.0' }
+	}
+	testImplementation('org.eclipse.platform:org.eclipse.equinox.registry') {
+		version { strictly '3.8.600' }
+	}
+
 }
 
 configurations.all {
@@ -40,3 +47,10 @@ configurations.all {
 		substitute module('xml-apis:xml-apis-ext') using module('org.eclipse.birt.runtime:org.w3c.css.sac:1.3.1.v200903091627') because 'both provide several of the same classes, but org.w3c.css.sac includes everything we need from both'
 	}
 }
+
+tasks.named('processTestResources') {
+	def testdata = project(':com.ibm.wala.core')
+
+	from testdata.collectTestData
+}
+

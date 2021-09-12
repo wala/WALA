@@ -85,6 +85,26 @@ subprojects { subproject ->
                 version { strictly '(,3.9.800)' }
                 because 'Versions 3.10.0 and later of this artifact require Java 11.'
         }
+	    implementation('org.eclipse.platform:org.eclipse.core.runtime') {
+		    version { strictly '(,3.17.0]' }
+		    because 'For runtime consistency with other constraints'
+	    }
+	    implementation('org.eclipse.platform:org.eclipse.team.core') {
+		    version { strictly '(,3.8.800]' }
+		    because 'For runtime consistency with other constraints'
+	    }
+	    implementation('org.eclipse.platform:org.eclipse.e4.ui.workbench.swt') {
+		    version { strictly '(,0.14.800]' }
+		    because 'For runtime consistency with other constraints'
+	    }
+	    implementation('org.eclipse.platform:org.eclipse.e4.ui.dialogs') {
+		    version { strictly '(,1.1.600]' }
+		    because 'For runtime consistency with other constraints'
+	    }
+	    implementation('org.eclipse.platform:org.eclipse.e4.ui.workbench.renderers.swt') {
+		    version { strictly '(,0.14.900]' }
+		    because 'For runtime consistency with other constraints'
+	    }
     }
 
 	configurations {
