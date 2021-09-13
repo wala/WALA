@@ -141,6 +141,21 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
     }
   }
 
+  public void justOpenForTest() throws WalaException {
+
+    if (getRootsInput() == null) {
+      throw new IllegalStateException("null roots input in " + getClass());
+    }
+
+    final ApplicationWindow w = new GraphViewer(getGraphInput());
+    setApplicationWindow(w);
+    if (PlatformUI.isWorkbenchRunning()) {
+      throw new IllegalStateException("not designed to run inside workbench");
+    }
+    w.open();
+    Display.getCurrent().dispose();
+  }
+
   public IStructuredSelection getSelection() throws IllegalStateException {
     GraphViewer viewer = (GraphViewer) getApplicationWindow();
     if (viewer == null || viewer.treeViewer == null) {

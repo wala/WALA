@@ -32,6 +32,10 @@ dependencies {
 	testImplementation('org.eclipse.platform:org.eclipse.ui.workbench') {
 		version { strictly '3.120.0' }
 	}
+	testImplementation(
+			'junit:junit:4.13.2',
+			'org.hamcrest:hamcrest:2.2',
+	)
 }
 
 configurations.all {
@@ -57,3 +61,6 @@ task runIFDSExplorerExample(type: JavaExec) {
 	}
 }
 
+tasks.named('test') {
+	jvmArgs = ["-XstartOnFirstThread"]
+}
