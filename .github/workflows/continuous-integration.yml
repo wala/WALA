@@ -23,8 +23,6 @@ jobs:
     steps:
       - name: Check out WALA sources
         uses: actions/checkout@v2
-      - name: Start up xvfb on Linux
-        uses: GabrielBB/xvfb-action@v1
       - name: Cache Goomph
         uses: actions/cache@v1
         with:
@@ -48,12 +46,15 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'adopt'
+      - name: 'Set up xvfb on Linux'
+        if: runner.os == 'Linux'
+        run: sudo apt-get install xvfb
       - name: Build and test using Gradle and Java 8
-        run: ./gradlew --no-build-cache --no-daemon javadoc build lintGradle
+        run: xvfb-run --auto-servernum ./gradlew --no-build-cache --no-daemon javadoc build lintGradle
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux' && matrix.java == '8'
       - name: Build and test using Gradle and Java 11
-        run: ./gradlew --no-build-cache --no-daemon :com.ibm.wala.core:test
+        run: xvfb-run --auto-servernum ./gradlew --no-build-cache --no-daemon :com.ibm.wala.core:test
         if: runner.os == 'Linux' && matrix.java == '11'
       - name: Build and test using Gradle but without ECJ
         run: ./gradlew --no-build-cache --no-daemon javadoc build -PskipJavaUsingEcjTasks
