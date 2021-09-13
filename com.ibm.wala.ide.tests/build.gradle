@@ -62,5 +62,7 @@ task runIFDSExplorerExample(type: JavaExec) {
 }
 
 tasks.named('test') {
-	jvmArgs = ["-XstartOnFirstThread"]
+	if (System.getProperty('os.name').startsWith("Mac OS X")) {
+		jvmArgs = ["-XstartOnFirstThread"]
+	}
 }
