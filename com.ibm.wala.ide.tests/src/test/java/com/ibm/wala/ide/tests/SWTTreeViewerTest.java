@@ -28,7 +28,7 @@ public class SWTTreeViewerTest {
     v.justOpenForTest();
   }
 
-  private Pair<Graph<String>, Collection<String>> makeTestGraphAndRoot() {
+  private static Pair<Graph<String>, Collection<String>> makeTestGraphAndRoot() {
     String root = "root";
     String leaf = "leaf";
     Graph<String> result =
