@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Check out WALA sources
         uses: actions/checkout@v2
+      - name: Start up xvfb on Linux
+        uses: GabrielBB/xvfb-action@v1
       - name: Cache Goomph
         uses: actions/cache@v1
         with:
