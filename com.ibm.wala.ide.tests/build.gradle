@@ -55,7 +55,7 @@ task runIFDSExplorerExample(type: JavaExec) {
 	group = "Execution"
 	description = "Run the IFDSExplorerExample driver"
 	classpath = sourceSets.test.runtimeClasspath
-	main = "com.ibm.wala.examples.drivers.IFDSExplorerExample"
+	mainClass = "com.ibm.wala.examples.drivers.IFDSExplorerExample"
 	if (System.getProperty('os.name').startsWith("Mac OS X")) {
 		jvmArgs = ["-XstartOnFirstThread"]
 	}
