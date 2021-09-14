@@ -46,9 +46,6 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
           distribution: 'adopt'
-      - name: 'Set up xvfb on Linux'
-        if: runner.os == 'Linux'
-        run: sudo apt-get install xvfb
       - name: Build and test using Gradle and Java 8
         run: xvfb-run --auto-servernum ./gradlew --no-build-cache --no-daemon javadoc build lintGradle
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
