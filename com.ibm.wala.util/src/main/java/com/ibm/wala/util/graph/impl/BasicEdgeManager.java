@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.impl;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.graph.EdgeManager;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -28,22 +29,26 @@ public class BasicEdgeManager<T> implements EdgeManager<T> {
 
   @Override
   public Iterator<T> getPredNodes(T n) {
-    return preds.get(n).iterator();
+    Set<T> nodePreds = this.preds.get(n);
+    return nodePreds != null ? nodePreds.iterator() : Collections.<T>emptySet().iterator();
   }
 
   @Override
   public int getPredNodeCount(T n) {
-    return preds.get(n).size();
+    Set<T> nodePreds = this.preds.get(n);
+    return nodePreds != null ? nodePreds.size() : 0;
   }
 
   @Override
   public Iterator<T> getSuccNodes(T n) {
-    return succs.get(n).iterator();
+    Set<T> nodeSuccs = this.succs.get(n);
+    return nodeSuccs != null ? nodeSuccs.iterator() : Collections.<T>emptySet().iterator();
   }
 
   @Override
-  public int getSuccNodeCount(T N) {
-    return succs.get(N).size();
+  public int getSuccNodeCount(T n) {
+    Set<T> nodeSuccs = this.succs.get(n);
+    return nodeSuccs != null ? nodeSuccs.size() : 0;
   }
 
   @Override
