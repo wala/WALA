@@ -54,7 +54,7 @@ public class LambdaTest extends WalaTestCase {
 
     @SuppressWarnings("unused")
     CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
   }
 
   @Test
@@ -69,7 +69,7 @@ public class LambdaTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference A = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lspecial/A");
 
@@ -101,7 +101,7 @@ public class LambdaTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     // Find compareTo
     TypeReference str =
@@ -152,7 +152,7 @@ public class LambdaTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     Function<String, MethodReference> getTargetRef =
         (klass) ->
@@ -190,7 +190,7 @@ public class LambdaTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha,false);
 
     Function<String, MethodReference> getTargetRef =
         (klass) ->
@@ -242,7 +242,7 @@ public class LambdaTest extends WalaTestCase {
 
     // shouldn't crash
     CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     // exceedingly unlikely to fail, but ensures that optimizer won't remove buildZeroCFA call
     Assert.assertTrue(cg.getNumberOfNodes() > 0);
   }

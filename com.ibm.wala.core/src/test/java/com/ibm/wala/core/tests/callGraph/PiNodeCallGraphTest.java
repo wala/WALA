@@ -96,7 +96,6 @@ public class PiNodeCallGraphTest extends WalaTestCase {
         options,
         new AnalysisCacheImpl(new DefaultIRFactory(), options.getSSAOptions()),
         cha,
-        scope,
         false);
   }
 

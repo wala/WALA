@@ -43,6 +43,6 @@ public class MissingMethodRefTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // should not throw an NPE
-    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
   }
 }
