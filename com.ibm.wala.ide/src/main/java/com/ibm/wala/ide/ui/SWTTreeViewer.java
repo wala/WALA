@@ -141,6 +141,10 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
     }
   }
 
+  /**
+   * For testing purposes, open the tree viewer window and then immediately close it. Useful for
+   * testing that there is no failure while opening the window.
+   */
   public void justOpenForTest() throws WalaException {
 
     if (getRootsInput() == null) {
