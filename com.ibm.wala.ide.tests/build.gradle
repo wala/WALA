@@ -45,13 +45,21 @@ configurations.all {
 	}
 }
 
+tasks.named('test') {
+	if (System.getProperty('os.name').startsWith("Mac OS X")) {
+		// Required for running SWT code
+		jvmArgs = ["-XstartOnFirstThread"]
+	}
+}
+
+// This is required for IFDSExplorereExample to work correctly
 tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core')
 
 	from testdata.collectTestData
 }
 
-task runIFDSExplorerExample(type: JavaExec) {
+tasks.register('runIFDSExplorerExample', JavaExec) {
 	group = "Execution"
 	description = "Run the IFDSExplorerExample driver"
 	classpath = sourceSets.test.runtimeClasspath
@@ -59,10 +67,7 @@ task runIFDSExplorerExample(type: JavaExec) {
 	if (System.getProperty('os.name').startsWith("Mac OS X")) {
 		jvmArgs = ["-XstartOnFirstThread"]
 	}
-}
-
-tasks.named('test') {
-	if (System.getProperty('os.name').startsWith("Mac OS X")) {
-		jvmArgs = ["-XstartOnFirstThread"]
+	if (project.hasProperty("args")) {
+		args project.getProperty("args").split()
 	}
 }
