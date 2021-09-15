@@ -96,7 +96,7 @@ public class Util {
   @Deprecated
   public static void addBypassLogic(
       AnalysisOptions options,
-      AnalysisScope scope,
+      @SuppressWarnings("unused") AnalysisScope scope,
       ClassLoader cl,
       String xmlFile,
       IClassHierarchy cha)
@@ -105,11 +105,12 @@ public class Util {
   }
 
   /**
-   * @param options
-   * @param cl
-   * @param xmlFile
-   * @param cha
-   * @throws IllegalArgumentException
+   * Modify an options object to include bypass logic as specified by a an XML file.
+   *
+   * @throws IllegalArgumentException if scope is null
+   * @throws IllegalArgumentException if cl is null
+   * @throws IllegalArgumentException if options is null
+   * @throws IllegalArgumentException if scope is null
    */
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, String xmlFile, IClassHierarchy cha)
@@ -147,7 +148,7 @@ public class Util {
   @Deprecated
   public static void addBypassLogic(
       AnalysisOptions options,
-      AnalysisScope scope,
+      @SuppressWarnings("unused") AnalysisScope scope,
       ClassLoader cl,
       XMLMethodSummaryReader summary,
       IClassHierarchy cha)
@@ -156,7 +157,6 @@ public class Util {
   }
 
   /**
-   * @deprecated
    * @param options
    * @param cl
    * @param summary
@@ -196,11 +196,12 @@ public class Util {
   /**
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
-   *     <p>please
+   * @deprecated please
    *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy)} instead
    */
   @Deprecated
-  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(
+      @SuppressWarnings("unused") AnalysisScope scope, IClassHierarchy cha) {
 
     return makeMainEntrypoints(cha);
   }
@@ -238,11 +239,14 @@ public class Util {
 
   /**
    * @return Entrypoints object for a Main J2SE class please
+   * @deprecated
    *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String)}
    */
   @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
-      AnalysisScope scope, final IClassHierarchy cha, String className) {
+      @SuppressWarnings("unused") AnalysisScope scope,
+      final IClassHierarchy cha,
+      String className) {
     return makeMainEntrypoints(scope, cha, new String[] {className});
   }
 
@@ -265,7 +269,9 @@ public class Util {
    */
   @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
-      final AnalysisScope scope, final IClassHierarchy cha, final String[] classNames) {
+      @SuppressWarnings("unused") final AnalysisScope scope,
+      final IClassHierarchy cha,
+      final String[] classNames) {
     return makeMainEntrypoints(cha, classNames);
   }
 
@@ -414,7 +420,10 @@ public class Util {
    */
   @Deprecated
   public static CallGraphBuilder<InstanceKey> makeRTABuilder(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisScope scope) {
 
     return makeRTABuilder(options, cache, cha);
   }
@@ -448,7 +457,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeZeroCFABuilder(l, options, cache, cha);
   }
 
@@ -480,7 +489,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
+      @SuppressWarnings("unused") AnalysisScope scope,
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
@@ -528,7 +537,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeZeroOneCFABuilder(l, options, cache, cha, null, null);
   }
 
@@ -560,7 +569,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView analysisCache,
       IClassHierarchy cha,
-      AnalysisScope scope,
+      @SuppressWarnings("unused") AnalysisScope scope,
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
 
@@ -612,7 +621,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView analysisCache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeVanillaZeroOneCFABuilder(l, options, analysisCache, cha, null, null);
   }
 
@@ -644,7 +653,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
+      @SuppressWarnings("unused") AnalysisScope scope,
       ContextSelector customSelector,
       SSAContextInterpreter customInterpreter) {
     return makeZeroOneCFABuilder(l, options, cache, cha, customSelector, customInterpreter);
@@ -698,7 +707,10 @@ public class Util {
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeZeroContainerCFABuilder(options, cache, cha);
   }
 
@@ -735,7 +747,10 @@ public class Util {
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeZeroOneContainerCFABuilder(options, cache, cha);
   }
 
@@ -744,7 +759,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
+      @SuppressWarnings("unused") AnalysisScope scope,
       ContextSelector appSelector,
       SSAContextInterpreter appInterpreter) {
 
@@ -810,7 +825,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeNCFABuilder(n, options, cache, cha);
   }
 
@@ -863,7 +878,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeNObjBuilder(n, options, cache, cha);
   }
 
@@ -910,7 +925,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeVanillaNCFABuilder(n, options, cache, cha);
   }
 
@@ -948,7 +963,7 @@ public class Util {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope) {
+      @SuppressWarnings("unused") AnalysisScope scope) {
     return makeVanillaNCFABuilder(n, options, cache, cha);
   }
 
@@ -998,7 +1013,10 @@ public class Util {
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope) {
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisScope scope) {
 
     return makeVanillaZeroOneContainerCFABuilder(options, cache, cha);
   }
@@ -1034,7 +1052,10 @@ public class Util {
    */
   @Deprecated
   public static void addDefaultBypassLogic(
-      AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
+      AnalysisOptions options,
+      @SuppressWarnings("unused") AnalysisScope scope,
+      ClassLoader cl,
+      IClassHierarchy cha) {
     addDefaultBypassLogic(options, cl, cha);
   }
 
