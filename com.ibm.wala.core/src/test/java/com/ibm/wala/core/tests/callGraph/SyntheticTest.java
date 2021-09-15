@@ -52,8 +52,7 @@ public class SyntheticTest extends WalaTestCase {
     AnalysisOptions options =
         CallGraphTestUtil.makeAnalysisOptions(scope, Collections.<Entrypoint>singleton(e));
 
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha,false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tA =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo$A");

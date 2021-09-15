@@ -48,8 +48,7 @@ public class DefaultMethodsTest extends WalaTestCase {
             cha, "LdefaultMethods/DefaultMethods");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha,false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     // Find node corresponding to main
     TypeReference tm =
