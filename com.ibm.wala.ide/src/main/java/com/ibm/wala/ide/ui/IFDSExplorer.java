@@ -19,6 +19,9 @@ import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.viz.DotUtil;
 import com.ibm.wala.util.viz.NodeDecorator;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -57,6 +60,11 @@ public class IFDSExplorer {
       Assertions.UNREACHABLE();
     }
     String scratch = p.getProperty(WalaProperties.OUTPUT_DIR);
+    try {
+      Files.createDirectories(Paths.get(scratch));
+    } catch (IOException e) {
+      throw new WalaException("could not create output directory " + scratch, e);
+    }
     viewIFDS(r, roots, labels, scratch);
   }
 
