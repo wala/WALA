@@ -30,7 +30,7 @@ public class BasicEdgeManager<T> implements EdgeManager<T> {
   @Override
   public Iterator<T> getPredNodes(T n) {
     Set<T> nodePreds = this.preds.get(n);
-    return nodePreds != null ? nodePreds.iterator() : Collections.<T>emptySet().iterator();
+    return nodePreds != null ? nodePreds.iterator() : Collections.emptyIterator();
   }
 
   @Override
@@ -42,7 +42,7 @@ public class BasicEdgeManager<T> implements EdgeManager<T> {
   @Override
   public Iterator<T> getSuccNodes(T n) {
     Set<T> nodeSuccs = this.succs.get(n);
-    return nodeSuccs != null ? nodeSuccs.iterator() : Collections.<T>emptySet().iterator();
+    return nodeSuccs != null ? nodeSuccs.iterator() : Collections.emptyIterator();
   }
 
   @Override
