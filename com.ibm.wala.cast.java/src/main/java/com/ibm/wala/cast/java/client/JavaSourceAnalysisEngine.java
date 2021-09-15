@@ -139,7 +139,7 @@ public abstract class JavaSourceAnalysisEngine
   }
 
   @Override
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
     return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha);
   }
 

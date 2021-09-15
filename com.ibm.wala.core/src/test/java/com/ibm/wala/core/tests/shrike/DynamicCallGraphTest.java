@@ -49,7 +49,7 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
   }
 
   @Test

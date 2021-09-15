@@ -167,8 +167,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     boolean foundDoNothing = false;
     for (CGNode n : cg) {
       if (n.toString().contains("doNothing")) {
@@ -178,7 +177,7 @@ public class CallGraphTest extends WalaTestCase {
     }
     Assert.assertTrue(foundDoNothing);
     options.setHandleStaticInit(false);
-    cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     for (CGNode n : cg) {
       Assert.assertTrue(!n.toString().contains("doNothing"));
     }
@@ -194,8 +193,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Llambda/SortingExample");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     boolean foundSortForward = false;
     for (CGNode n : cg) {
       if (n.toString().contains("sortForward")) {
@@ -274,7 +272,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
   }
 
   public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(
@@ -311,7 +309,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
   }
 
   @Test
@@ -395,7 +393,7 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // RTA /////
     // ///////////////
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, cache, cha, scope);
+    CallGraph cg = CallGraphTestUtil.buildRTA(options, cache, cha);
     try {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
@@ -411,7 +409,7 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-CFA /////
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, scope, testPAToString);
+    cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, testPAToString);
 
     // FIXME: annoying special cases caused by clone2assign mean using
     // the rta graph for proper graph subset checking does not work.
@@ -432,19 +430,19 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-1-CFA ///
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroOneCFA(options, cache, cha, scope, testPAToString);
+    cg = CallGraphTestUtil.buildZeroOneCFA(options, cache, cha, testPAToString);
     Graph<MethodReference> squashZeroOne = checkCallGraph(cg, squashZero, "0-1-CFA");
 
     // ///////////////////////////////////////////////////
     // // 0-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    cg = CallGraphTestUtil.buildZeroContainerCFA(options, cache, cha, scope);
+    cg = CallGraphTestUtil.buildZeroContainerCFA(options, cache, cha);
     Graph<MethodReference> squashZeroContainer = checkCallGraph(cg, squashZero, "0-Container-CFA");
 
     // ///////////////////////////////////////////////////
     // // 0-1-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cache, cha, scope);
+    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cache, cha);
     checkCallGraph(cg, squashZeroContainer, "0-1-Container-CFA");
     checkCallGraph(cg, squashZeroOne, "0-1-Container-CFA");
 

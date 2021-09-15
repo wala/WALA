@@ -61,7 +61,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildRTA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -83,7 +83,6 @@ public class CallGraphTestUtil {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       boolean testPAtoString)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
@@ -107,7 +106,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildVanillaZeroOneCFA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -130,7 +129,6 @@ public class CallGraphTestUtil {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       boolean testPAtoString)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
@@ -154,7 +152,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildZeroContainerCFA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -173,7 +171,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildZeroOneContainerCFA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -193,11 +191,7 @@ public class CallGraphTestUtil {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildNCFA(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      AnalysisScope scope)
+      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
