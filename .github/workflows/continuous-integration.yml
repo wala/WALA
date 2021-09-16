@@ -21,10 +21,10 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ github.token }}
+#      - name: Cancel Previous Runs
+#        uses: styfle/cancel-workflow-action@0.9.1
+#        with:
+#          access_token: ${{ github.token }}
       - name: Check out WALA sources
         uses: actions/checkout@v2
       - name: Cache Goomph
@@ -134,7 +134,8 @@ jobs:
   publish_snapshot:
     name: 'Publish snapshot'
     needs: [build_gradle, build_maven]
-    if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
+#    if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
+    if: ${{ false }} # disable temporarily
     runs-on: ubuntu-latest
     steps:
       - name: 'Check out repository'
