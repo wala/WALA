@@ -263,8 +263,6 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
         return;
       }
       controlFlowGraph = prunedCFG;
-    } else {
-      Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
 
     ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<>(controlFlowGraph);

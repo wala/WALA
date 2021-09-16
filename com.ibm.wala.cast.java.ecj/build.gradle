@@ -51,17 +51,8 @@ tasks.named('test') {
 
 	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
 
-	// temporarily turn off some tests on JDK 9+
-//	if (JavaVersion.current() <= JavaVersion.VERSION_1_8) {
-		// ensure the command-line driver for running ECJ works
-		dependsOn run
-//	} else {
-//		exclude '**/ECJJava17IRTest.class'
-//		exclude '**/ECJJavaIRTest.class'
-//		exclude '**/ECJSyncDuplicatorTest.class'
-//		exclude '**/ECJIssue666Test.class'	
-//		exclude '**/ECJIssue667Test.class'
-//	}
+	// ensure the command-line driver for running ECJ works
+	dependsOn run
 }
 
 apply from: rootProject.file("gradle-mvn-push.gradle")

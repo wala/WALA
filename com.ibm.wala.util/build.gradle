@@ -4,6 +4,12 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
+dependencies {
+	testImplementation(
+			'junit:junit:4.13.2',
+			'org.hamcrest:hamcrest:2.2',
+	)
+}
 tasks.named('javadoc') {
 	classpath += files project(':com.ibm.wala.core').tasks.named('compileJava', JavaCompile)
 	final currentJavaVersion = JavaVersion.current()
