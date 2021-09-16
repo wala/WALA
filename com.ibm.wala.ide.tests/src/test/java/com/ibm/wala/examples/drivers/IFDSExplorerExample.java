@@ -40,6 +40,9 @@ import java.util.Properties;
 /**
  * An example of using {@link IFDSExplorer}. We visualize the result of running {@link
  * ContextSensitiveReachingDefs} on a simple test example.
+ *
+ * <p>NOTE: On Mac OS X, this class must be run with the JVM argument `-XstartOnFirstThread`, as
+ * that is required for SWT applications on the Mac.
  */
 public class IFDSExplorerExample {
 

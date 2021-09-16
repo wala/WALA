@@ -141,6 +141,25 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
     }
   }
 
+  /**
+   * For testing purposes, open the tree viewer window and then immediately close it. Useful for
+   * testing that there is no failure while opening the window.
+   */
+  public void justOpenForTest() throws WalaException {
+
+    if (getRootsInput() == null) {
+      throw new IllegalStateException("null roots input in " + getClass());
+    }
+
+    final ApplicationWindow w = new GraphViewer(getGraphInput());
+    setApplicationWindow(w);
+    if (PlatformUI.isWorkbenchRunning()) {
+      throw new IllegalStateException("not designed to run inside workbench");
+    }
+    w.open();
+    Display.getCurrent().dispose();
+  }
+
   public IStructuredSelection getSelection() throws IllegalStateException {
     GraphViewer viewer = (GraphViewer) getApplicationWindow();
     if (viewer == null || viewer.treeViewer == null) {
