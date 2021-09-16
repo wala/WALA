@@ -779,7 +779,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   /** Binary op: &lt;dummy&gt;:= ArrayLoad( &lt;arrayref&gt;) Side effect: Creates new equations. */
   public final class ArrayLoadOperator extends UnarySideEffect implements IPointerOperator {
-    protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
+    private final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
     @Override
     public String toString() {
@@ -1190,7 +1190,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     private final InstanceKey instance;
 
-    protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
+    private final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
     @Override
     public String toString() {
@@ -1260,7 +1260,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       implements IPointerOperator {
     private final InstanceKey instance;
 
-    protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
+    private final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
     @Override
     public String toString() {
