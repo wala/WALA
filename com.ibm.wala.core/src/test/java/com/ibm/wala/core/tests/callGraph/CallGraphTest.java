@@ -83,7 +83,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope, useShortProfile());
+    doCallGraphs(options, new AnalysisCacheImpl(), cha, useShortProfile());
   }
 
   @Test
@@ -376,9 +376,9 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   public static void doCallGraphs(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
-    doCallGraphs(options, cache, cha, scope, false);
+    doCallGraphs(options, cache, cha, false);
   }
 
   /** TODO: refactor this to avoid excessive code bloat. */
@@ -386,7 +386,6 @@ public class CallGraphTest extends WalaTestCase {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       boolean testPAToString)
       throws IllegalArgumentException, CancelException {
 

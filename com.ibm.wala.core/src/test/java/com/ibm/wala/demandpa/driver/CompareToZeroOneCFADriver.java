@@ -144,8 +144,7 @@ public class CompareToZeroOneCFADriver {
     System.err.println("ALL FINE");
   }
 
-  private static void doTests(
-      AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options)
+  private static void doTests(final ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder =
         Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
@@ -162,7 +161,7 @@ public class CompareToZeroOneCFADriver {
     MemoryAccessMap fam =
         new SimpleMemoryAccessMap(cg, rtaBuilder.getPointerAnalysis().getHeapModel(), false);
 
-    final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, scope, cg, fam);
+    final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, cg, fam);
 
     final class Helper {
       void checkPointersInMethod(CGNode node) {
@@ -227,11 +226,7 @@ public class CompareToZeroOneCFADriver {
   }
 
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(
-      AnalysisOptions options,
-      ClassHierarchy cha,
-      AnalysisScope scope,
-      CallGraph cg,
-      MemoryAccessMap fam) {
+      AnalysisOptions options, ClassHierarchy cha, CallGraph cg, MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
         Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);

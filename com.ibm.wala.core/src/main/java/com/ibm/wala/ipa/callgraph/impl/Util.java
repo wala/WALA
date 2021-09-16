@@ -135,12 +135,6 @@ public class Util {
   }
 
   /**
-   * @param options
-   * @param scope
-   * @param cl
-   * @param summary
-   * @param cha
-   * @throws IllegalArgumentException
    * @deprecated Method will be replaced. Please
    *     <p>Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, XMLMethodSummaryReader,
    *     IClassHierarchy)} instead
@@ -156,13 +150,6 @@ public class Util {
     addBypassLogic(options, cl, summary, cha);
   }
 
-  /**
-   * @param options
-   * @param cl
-   * @param summary
-   * @param cha
-   * @throws IllegalArgumentException
-   */
   public static void addBypassLogic(
       AnalysisOptions options, ClassLoader cl, XMLMethodSummaryReader summary, IClassHierarchy cha)
       throws IllegalArgumentException {
@@ -238,7 +225,6 @@ public class Util {
   }
 
   /**
-   * @return Entrypoints object for a Main J2SE class please
    * @deprecated
    *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String)}
    */
@@ -250,21 +236,14 @@ public class Util {
     return makeMainEntrypoints(scope, cha, new String[] {className});
   }
 
-  /**
-   * @param cha
-   * @param className
-   * @return
-   */
+  /** @return Entrypoints for a set of J2SE Main classes */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final IClassHierarchy cha, String className) {
     return makeMainEntrypoints(cha, new String[] {className});
   }
 
   /**
-   * @param scope
-   * @param cha
-   * @param classNames
-   * @return Please
+   * @deprecated Please
    *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String[])}
    */
   @Deprecated
@@ -275,13 +254,7 @@ public class Util {
     return makeMainEntrypoints(cha, classNames);
   }
 
-  /**
-   * replaces the above method
-   *
-   * @param cha
-   * @param classNames
-   * @return
-   */
+  /** @return Entrypoints for a set of J2SE Main classes */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final IClassHierarchy cha, final String[] classNames) {
     if (cha == null) {
@@ -299,7 +272,7 @@ public class Util {
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final ClassLoaderReference loaderRef, final IClassHierarchy cha, final String[] classNames)
-      throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
 
     if (classNames == null) {
       throw new IllegalArgumentException("classNames == null");
@@ -777,14 +750,6 @@ public class Util {
     return makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
   }
 
-  /**
-   * @param options
-   * @param cache
-   * @param cha
-   * @param appSelector
-   * @param appInterpreter
-   * @return
-   */
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -949,10 +914,6 @@ public class Util {
   }
 
   /**
-   * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
-   * length limited to n, and a context-sensitive allocation-site-based heap abstraction. Standard
-   * optimizations in the heap abstraction like smushing of strings are disabled.
-   *
    * @deprecated please
    *     <p>Use{@link Util#makeVanillaNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
@@ -968,11 +929,9 @@ public class Util {
   }
 
   /**
-   * @param n
-   * @param options
-   * @param cache
-   * @param cha
-   * @return
+   * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
+   * length limited to n, and a context-sensitive allocation-site-based heap abstraction. Standard
+   * optimizations in the heap abstraction like smushing of strings are disabled.
    */
   public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(
       int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
@@ -1002,11 +961,6 @@ public class Util {
   }
 
   /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
-   * @throws IllegalArgumentException if options is null
    * @deprecated Please
    *     <p>Use{@link Util#makeVanillaZeroOneContainerCFABuilder(AnalysisOptions,
    *     IAnalysisCacheView, IClassHierarchy)}
@@ -1022,10 +976,10 @@ public class Util {
   }
 
   /**
-   * @param options
-   * @param cache
-   * @param cha
-   * @return
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
+   * @throws IllegalArgumentException if options is null
    */
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
@@ -1043,10 +997,6 @@ public class Util {
         cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
   }
   /**
-   * @param options
-   * @param scope
-   * @param cl
-   * @param cha
    * @deprecated Please
    *     <p>Use{@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}
    */
