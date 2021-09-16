@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.io.CommandLine;
@@ -105,15 +104,7 @@ public class SourceDirCallGraph {
     AnalysisOptions options = new AnalysisOptions();
     Iterable<Entrypoint> entrypoints = getEntrypoints(mainClass, cha);
     options.setEntrypoints(entrypoints);
-    options
-        .getSSAOptions()
-        .setDefaultValues(
-            new DefaultValues() {
-              @Override
-              public int getDefaultValue(SymbolTable symtab, int valueNumber) {
-                return symtab.getDefaultValue(valueNumber);
-              }
-            });
+    options.getSSAOptions().setDefaultValues(SymbolTable::getDefaultValue);
     // you can dial down reflection handling if you like
     options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache =
