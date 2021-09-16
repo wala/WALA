@@ -112,7 +112,7 @@ public class CompareToZeroOneCFADriver {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // run existing pointer analysis
-    doTests(scope, cha, options);
+    doTests(cha, options);
     System.err.println("ALL FINE");
   }
 
@@ -140,7 +140,7 @@ public class CompareToZeroOneCFADriver {
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
-    doTests(scope, cha, options);
+    doTests(cha, options);
     System.err.println("ALL FINE");
   }
 

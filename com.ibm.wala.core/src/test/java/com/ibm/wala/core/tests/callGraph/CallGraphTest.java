@@ -100,7 +100,7 @@ public class CallGraphTest extends WalaTestCase {
     // this speeds up the test
     options.setReflectionOptions(ReflectionOptions.NONE);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
   }
 
   @Test
@@ -114,7 +114,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
   }
 
   @Test
@@ -129,7 +129,7 @@ public class CallGraphTest extends WalaTestCase {
     // this speeds up the test
     options.setReflectionOptions(ReflectionOptions.NONE);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
 
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
@@ -154,7 +154,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.HELLO_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
   }
 
   @Test
@@ -245,7 +245,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.RECURSE_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
   }
 
   @Test
@@ -259,7 +259,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
   }
 
   @Test
