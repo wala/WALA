@@ -57,6 +57,9 @@ tasks.named('processTestResources') {
 	def testdata = project(':com.ibm.wala.core')
 
 	from testdata.collectTestData
+	from(testdata.sourceSets.test.resources) {
+		include 'wala.testdata.txt'
+	}
 }
 
 // Task to make it easier to run IFDSExplorerExample.  Command-line arguments are passed via
