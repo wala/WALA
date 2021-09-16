@@ -50,11 +50,6 @@ public class SourceDirCallGraph {
    * with an 'L'.
    *
    * <p>Example args: -sourceDir /tmp/srcTest -mainClass LFoo
-   *
-   * @throws IOException
-   * @throws CallGraphBuilderCancelException
-   * @throws IllegalArgumentException
-   * @throws ClassHierarchyException
    */
   public static void main(String[] args)
       throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
