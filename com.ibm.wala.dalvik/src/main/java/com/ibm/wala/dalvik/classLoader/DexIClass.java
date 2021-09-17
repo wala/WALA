@@ -208,17 +208,13 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return (modifiers & INTERFACE.getValue()) != 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isAbstract() */
   @Override
   public boolean isAbstract() {
     return (modifiers & ABSTRACT.getValue()) != 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isAbstract() */
   @Override
   public boolean isSynthetic() {
     return (modifiers & SYNTHETIC.getValue()) != 0;

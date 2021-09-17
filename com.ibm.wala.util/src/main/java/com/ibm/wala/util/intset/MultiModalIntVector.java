@@ -88,9 +88,6 @@ public class MultiModalIntVector implements IntVector {
     return currentGrowthRate;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @Override
   public int get(int x) {
     if (x < 0) {
@@ -115,9 +112,6 @@ public class MultiModalIntVector implements IntVector {
     return shortStore.length + byteStore.length + intStore.length;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
   @Override
   public void set(int x, int value) {
     if (x < 0) {

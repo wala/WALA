@@ -45,9 +45,6 @@ public class AuxiliaryCache implements IAuxiliaryCache {
   /** number of items cached here. */
   private int nItems = 0;
 
-  /*
-   * @see com.ibm.wala.ssa.IAuxiliaryCache#wipe()
-   */
   @Override
   public synchronized void wipe() {
     dictionary = HashMapFactory.make();
@@ -79,9 +76,6 @@ public class AuxiliaryCache implements IAuxiliaryCache {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ssa.IAuxiliaryCache#find(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ssa.SSAOptions)
-   */
   @Override
   public synchronized Object find(IMethod m, Context c, SSAOptions options) {
     // methodMap: SSAOptions -> SoftReference
@@ -95,9 +89,6 @@ public class AuxiliaryCache implements IAuxiliaryCache {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ssa.IAuxiliaryCache#cache(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ssa.SSAOptions, java.lang.Object)
-   */
   @Override
   public synchronized void cache(IMethod m, Context c, SSAOptions options, Object aux) {
     nItems++;
@@ -112,9 +103,6 @@ public class AuxiliaryCache implements IAuxiliaryCache {
     methodMap.put(options, ref);
   }
 
-  /*
-   * @see com.ibm.wala.ssa.IAuxiliaryCache#invalidate(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context)
-   */
   @Override
   public void invalidate(IMethod method, Context c) {
     dictionary.remove(Pair.make(method, c));

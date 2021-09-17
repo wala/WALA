@@ -85,10 +85,6 @@ public class ICFGSupergraph
     }
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object,
-   * java.lang.Object)
-   */
   @Override
   public Iterator<BasicBlockInContext<IExplodedBasicBlock>> getCallSites(
       BasicBlockInContext<IExplodedBasicBlock> r, CGNode callee) {

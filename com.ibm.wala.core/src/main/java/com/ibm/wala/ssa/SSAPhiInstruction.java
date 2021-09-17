@@ -144,9 +144,6 @@ public class SSAPhiInstruction extends SSAInstruction {
     return 7823 * result;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

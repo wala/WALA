@@ -188,9 +188,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       }
     }
 
-    /*
-     * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
-     */
+    /** @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite) */
     @Override
     protected Control createContents(Composite parent) {
       treeViewer = new TreeViewer(parent);

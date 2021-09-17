@@ -101,9 +101,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
     return 6311 * result ^ 2371 * val1 + val2;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

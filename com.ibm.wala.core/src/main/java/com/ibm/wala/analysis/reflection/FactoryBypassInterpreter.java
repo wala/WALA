@@ -115,8 +115,9 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return types;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public int getNumberOfStatements(CGNode node) {
@@ -127,10 +128,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return m.allInstructions.size();
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
-   * com.ibm.wala.ipa.callgraph.Context)
-   */
+  /** @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(CGNode) */
   @Override
   public boolean understands(CGNode node) {
     if (node == null) {
@@ -209,9 +207,10 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   * com.ibm.wala.classLoader.IClass)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
+   *     com.ibm.wala.classLoader.IClass)
    */
   @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
@@ -323,8 +322,9 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
@@ -615,9 +615,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return method.getParameterType(i);
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
-     */
     @Override
     public IR makeIR(Context C, SSAOptions options) {
       SSAInstruction[] instrs = getStatements();

@@ -39,9 +39,6 @@ public abstract class Warning implements Comparable<Warning> {
     this.level = MILD;
   }
 
-  /*
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo(Warning other) {
     if (other == null) {

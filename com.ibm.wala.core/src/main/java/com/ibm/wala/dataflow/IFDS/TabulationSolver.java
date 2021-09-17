@@ -922,17 +922,11 @@ public class TabulationSolver<T, P, F> {
       return result.toString();
     }
 
-    /*
-     * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
-     */
     @Override
     public TabulationProblem<T, P, F> getProblem() {
       return problem;
     }
 
-    /*
-     * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getSupergraphNodesReached()
-     */
     @Override
     public Collection<T> getSupergraphNodesReached() {
       Collection<T> result = HashSetFactory.make();

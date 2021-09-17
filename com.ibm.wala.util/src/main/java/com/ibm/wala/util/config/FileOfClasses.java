@@ -64,9 +64,6 @@ public class FileOfClasses extends SetOfClasses {
     needsCompile = false;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#contains(java.lang.String)
-   */
   @Override
   public boolean contains(String klassName) {
     if (needsCompile) {
@@ -86,9 +83,6 @@ public class FileOfClasses extends SetOfClasses {
     return m.matches();
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#add(com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public void add(String klass) {
     if (klass == null) {

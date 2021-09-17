@@ -332,9 +332,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getFieldReads(com.ibm.wala.classLoader.IField)
-   */
   @Override
   public Collection<MemoryAccess> getFieldReads(PointerKey pk, IField field) {
     Collection<MemoryAccess> result = readMap.get(field);
@@ -345,9 +342,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getFieldWrites(com.ibm.wala.classLoader.IField)
-   */
   @Override
   public Collection<MemoryAccess> getFieldWrites(PointerKey pk, IField field) {
     Collection<MemoryAccess> result = writeMap.get(field);
@@ -358,17 +352,11 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getArrayReads()
-   */
   @Override
   public Collection<MemoryAccess> getArrayReads(PointerKey pk) {
     return arrayReads;
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getArrayWrites()
-   */
   @Override
   public Collection<MemoryAccess> getArrayWrites(PointerKey pk) {
     return arrayWrites;
