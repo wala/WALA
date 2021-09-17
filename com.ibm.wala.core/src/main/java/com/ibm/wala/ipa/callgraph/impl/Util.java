@@ -90,7 +90,7 @@ public class Util {
    * @throws IllegalArgumentException if options is null
    * @throws IllegalArgumentException if scope is null
    * @deprecated This method is being replaced. Please
-   *     <p>Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}
+   *     <p>Use {@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}
    *     instead
    */
   @Deprecated
@@ -136,7 +136,7 @@ public class Util {
 
   /**
    * @deprecated Method will be replaced. Please
-   *     <p>Use{@link Util#addBypassLogic(AnalysisOptions, ClassLoader, XMLMethodSummaryReader,
+   *     <p>Use {@link Util#addBypassLogic(AnalysisOptions, ClassLoader, XMLMethodSummaryReader,
    *     IClassHierarchy)} instead
    */
   @Deprecated
@@ -183,8 +183,8 @@ public class Util {
   /**
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
-   * @deprecated please
-   *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy)} instead
+   * @deprecated
+   *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy)} instead
    */
   @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
@@ -226,7 +226,7 @@ public class Util {
 
   /**
    * @deprecated
-   *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String)}
+   *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy, String)}
    */
   @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
@@ -244,7 +244,7 @@ public class Util {
 
   /**
    * @deprecated Please
-   *     <p>Use{@link Util#makeMainEntrypoints(IClassHierarchy, String[])}
+   *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy, String[])}
    */
   @Deprecated
   public static Iterable<Entrypoint> makeMainEntrypoints(
@@ -388,8 +388,8 @@ public class Util {
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
-   *     <p>Please
-   *     <p>Use{@link Util#makeRTABuilder(AnalysisOptions, IAnalysisCacheView, IClassHierarchy)}
+   * @deprecated
+   *     <p>Use {@link Util#makeRTABuilder(AnalysisOptions, IAnalysisCacheView, IClassHierarchy)}
    */
   @Deprecated
   public static CallGraphBuilder<InstanceKey> makeRTABuilder(
@@ -420,8 +420,8 @@ public class Util {
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
-   *     <p>Please
-   *     <p>Use{@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -452,8 +452,8 @@ public class Util {
    * @param customInterpreter user-defined context interpreter, or null if none
    * @return a 0-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
-   *     <p>Please
-   *     <p>Use{@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
   @Deprecated
@@ -500,8 +500,8 @@ public class Util {
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
-   * @deprecated please
-   *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -532,8 +532,8 @@ public class Util {
    * @param customInterpreter user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
-   * @deprecated Please
-   *     <p>Use{@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
+   * @deprecated
+   *     <p>Use {@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
    *     IAnalysisCacheView, IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
   @Deprecated
@@ -587,6 +587,9 @@ public class Util {
    * @param options options that govern call graph construction
    * @param cha governing class hierarchy
    * @param scope representation of the analysis scope
+   * @deprecated
+   *     <p>use {@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
+   *     IAnalysisCacheView, IClassHierarchy)}
    */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
@@ -616,8 +619,8 @@ public class Util {
    * @param customInterpreter user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException if options is null
-   * @deprecated please
-   *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
   @Deprecated
@@ -674,8 +677,8 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
-   * @deprecated please
-   *     <p>Use{@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -714,8 +717,8 @@ public class Util {
    * @param scope representation of the analysis scope
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for containers
    * @throws IllegalArgumentException if options is null
-   * @deprecated please
-   *     <p>Use{@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -727,6 +730,18 @@ public class Util {
     return makeZeroOneContainerCFABuilder(options, cache, cha);
   }
 
+  /**
+   * @param options
+   * @param cache
+   * @param cha
+   * @param scope
+   * @param appSelector
+   * @param appInterpreter
+   * @return
+   * @deprecated
+   *     <p>Use {@link Util#makeZeroOneContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
+   *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
+   */
   @Deprecated
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options,
@@ -780,8 +795,8 @@ public class Util {
    * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
    *
-   * @deprecated please
-   *     <p>Use{@link Util#makeNCFABuilder(int, AnalysisOptions,
+   * @deprecated
+   *     <p>Use {@link Util#makeNCFABuilder(int, AnalysisOptions,
    *     IAnalysisCacheView,IClassHierarchy)}
    */
   @Deprecated
@@ -833,8 +848,8 @@ public class Util {
    * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
    * length limited to n
    *
-   * @deprecated please
-   *     <p>Use{@link Util#makeNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -880,8 +895,8 @@ public class Util {
    * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
    * length limited to n
    *
-   * @deprecated Please
-   *     <p>Use{@link Util#makeVanillaNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeVanillaNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -914,8 +929,8 @@ public class Util {
   }
 
   /**
-   * @deprecated please
-   *     <p>Use{@link Util#makeVanillaNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
+   * @deprecated
+   *     <p>Use {@link Util#makeVanillaNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
   @Deprecated
@@ -961,8 +976,8 @@ public class Util {
   }
 
   /**
-   * @deprecated Please
-   *     <p>Use{@link Util#makeVanillaZeroOneContainerCFABuilder(AnalysisOptions,
+   * @deprecated
+   *     <p>Use {@link Util#makeVanillaZeroOneContainerCFABuilder(AnalysisOptions,
    *     IAnalysisCacheView, IClassHierarchy)}
    */
   @Deprecated
@@ -997,8 +1012,8 @@ public class Util {
         cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
   }
   /**
-   * @deprecated Please
-   *     <p>Use{@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}
+   * @deprecated
+   *     <p>Use {@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}
    */
   @Deprecated
   public static void addDefaultBypassLogic(
