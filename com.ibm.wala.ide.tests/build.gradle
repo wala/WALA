@@ -36,6 +36,7 @@ dependencies {
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
 configurations.all {
