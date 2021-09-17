@@ -57,7 +57,7 @@ public abstract class AbstractAnalysisEngine<
     implements AnalysisEngine {
 
   public interface EntrypointBuilder {
-    Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha);
+    Iterable<Entrypoint> createEntrypoints(IClassHierarchy cha);
   }
 
   public static final String SYNTHETIC_J2SE_MODEL = "SyntheticJ2SEModel.txt";
@@ -262,8 +262,8 @@ public abstract class AbstractAnalysisEngine<
     return new AnalysisCacheImpl(new DefaultIRFactory());
   }
 
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-    return Util.makeMainEntrypoints(scope, cha);
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
+    return Util.makeMainEntrypoints(cha);
   }
 
   public void setEntrypointBuilder(EntrypointBuilder builder) {
@@ -277,7 +277,7 @@ public abstract class AbstractAnalysisEngine<
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
-    Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
+    Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(cha);
     options = getDefaultOptions(eps);
     cache = makeDefaultCache();
     return getCallGraphBuilder(cha, options, cache);

@@ -64,12 +64,11 @@ public class InitializerTest {
     }
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "LstaticInit/TestStaticInit");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = null;
     try {
       cg = builder.makeCallGraph(options, null);

@@ -41,11 +41,10 @@ public class LibModelsTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     String libModelsTestClass = "Llibmodels/LibModels";
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, libModelsTestClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, libModelsTestClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     // System.err.println(cg);
 

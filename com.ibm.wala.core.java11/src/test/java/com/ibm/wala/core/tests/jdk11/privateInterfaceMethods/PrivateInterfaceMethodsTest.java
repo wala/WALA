@@ -42,12 +42,11 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
+            cha, "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     // Find node corresponding to main
     TypeReference tm =

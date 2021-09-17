@@ -57,12 +57,11 @@ public class IFDSExplorerExample {
             TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "Ldataflow/StaticDataflow");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     System.out.println("building CG");
     CallGraph cg = builder.makeCallGraph(options, null);
     System.out.println("done with CG");

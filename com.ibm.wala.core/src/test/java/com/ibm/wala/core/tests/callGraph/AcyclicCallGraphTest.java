@@ -35,11 +35,10 @@ public class AcyclicCallGraphTest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lrecurse/NList");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Lrecurse/NList");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cg, cg.getFakeRootNode());
 

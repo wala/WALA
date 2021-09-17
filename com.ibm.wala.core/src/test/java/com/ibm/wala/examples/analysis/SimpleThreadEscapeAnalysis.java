@@ -88,7 +88,7 @@ public class SimpleThreadEscapeAnalysis
   @Override
   protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+    return Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
   }
 
   /**
@@ -182,7 +182,7 @@ public class SimpleThreadEscapeAnalysis
     //
     // entrypoints are where analysis starts
     //
-    Iterable<Entrypoint> roots = Util.makeMainEntrypoints(getScope(), cha, applicationMainClass);
+    Iterable<Entrypoint> roots = Util.makeMainEntrypoints(cha, applicationMainClass);
 
     //
     // analysis options controls aspects of call graph construction

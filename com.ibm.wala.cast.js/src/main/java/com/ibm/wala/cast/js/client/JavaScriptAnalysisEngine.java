@@ -31,7 +31,6 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -91,7 +90,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
   }
 
   @Override
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
