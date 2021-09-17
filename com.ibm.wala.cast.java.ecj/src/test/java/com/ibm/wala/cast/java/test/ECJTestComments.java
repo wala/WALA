@@ -9,7 +9,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -41,8 +40,7 @@ public class ECJTestComments extends IRTests {
     JavaSourceAnalysisEngine engine =
         new ECJJavaSourceAnalysisEngine() {
           @Override
-          protected Iterable<Entrypoint> makeDefaultEntrypoints(
-              AnalysisScope scope, IClassHierarchy cha) {
+          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(
                 JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
           }

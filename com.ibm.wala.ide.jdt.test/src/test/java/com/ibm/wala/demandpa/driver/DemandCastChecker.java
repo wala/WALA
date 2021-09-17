@@ -138,7 +138,7 @@ public class DemandCastChecker {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
@@ -173,11 +173,11 @@ public class DemandCastChecker {
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
-      builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+      builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
-      heapModel = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+      heapModel = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     } else {
-      builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+      builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha);
       heapModel = (HeapModel) builder;
     }
     IProgressMonitor master = ProgressMaster.make(new NullProgressMonitor(), 360000, false);

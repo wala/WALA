@@ -75,10 +75,10 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
       cha = ClassHierarchyFactory.make(scope, factory);
       Iterable<Entrypoint> entrypoints =
           com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-              scope, cha, "Lcfg/exc/inter/CallFieldAccess");
+              cha, "Lcfg/exc/inter/CallFieldAccess");
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
-      CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(1, options, cache, cha, scope);
+      CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(1, options, cache, cha);
       cg = builder.makeCallGraph(options, null);
     } catch (ClassHierarchyException e) {
       throw new Exception(e);

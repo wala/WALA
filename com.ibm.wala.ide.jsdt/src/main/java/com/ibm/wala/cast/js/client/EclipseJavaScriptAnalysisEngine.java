@@ -85,7 +85,7 @@ public class EclipseJavaScriptAnalysisEngine
   }
 
   @Override
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
     return JSCallGraphUtil.makeScriptRoots(cha);
   }
 

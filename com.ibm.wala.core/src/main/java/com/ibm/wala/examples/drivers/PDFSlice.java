@@ -155,11 +155,10 @@ public class PDFSlice {
       // build a class hierarchy, call graph, and system dependence graph
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
       Iterable<Entrypoint> entrypoints =
-          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
       CallGraphBuilder<InstanceKey> builder =
-          Util.makeVanillaZeroOneCFABuilder(
-              Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+          Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);

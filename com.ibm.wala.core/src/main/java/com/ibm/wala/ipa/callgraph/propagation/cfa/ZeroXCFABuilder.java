@@ -96,7 +96,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
     }
     Util.addDefaultSelectors(options, cha);
     for (String xmlFile : xmlFiles) {
-      Util.addBypassLogic(options, scope, cl, xmlFile, cha);
+      Util.addBypassLogic(options, cl, xmlFile, cha);
     }
 
     return new ZeroXCFABuilder(Language.JAVA, cha, options, cache, null, null, instancePolicy);
