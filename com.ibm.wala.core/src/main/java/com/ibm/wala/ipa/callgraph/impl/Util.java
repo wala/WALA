@@ -731,13 +731,6 @@ public class Util {
   }
 
   /**
-   * @param options
-   * @param cache
-   * @param cha
-   * @param scope
-   * @param appSelector
-   * @param appInterpreter
-   * @return
    * @deprecated
    *     <p>Use {@link Util#makeZeroOneContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
