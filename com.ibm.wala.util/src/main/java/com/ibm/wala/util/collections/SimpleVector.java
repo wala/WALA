@@ -27,9 +27,7 @@ public class SimpleVector<T> implements IVector<T> {
 
   public SimpleVector() {}
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
+  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
   @Override
   @SuppressWarnings("unchecked")
   public T get(int x) {
@@ -43,9 +41,7 @@ public class SimpleVector<T> implements IVector<T> {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IVector#set(int, int)
-   */
+  /** @see com.ibm.wala.util.intset.IntVector#set(int, int) */
   @Override
   public void set(int x, T value) {
     if (x < 0) {
@@ -74,9 +70,6 @@ public class SimpleVector<T> implements IVector<T> {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#reportStats()
-   */
   @Override
   public void performVerboseAction() {
     System.err.println(("size:       " + store.length));

@@ -98,9 +98,6 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
     return paramTypes[i];
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.Entrypoint#getNumberOfParameters()
-   */
   @Override
   public int getNumberOfParameters() {
     return paramTypes.length;

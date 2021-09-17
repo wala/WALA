@@ -34,17 +34,11 @@ public class PhiValue implements Value {
     return phi;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Value#isStringConstant()
-   */
   @Override
   public boolean isStringConstant() {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Value#isNullConstant()
-   */
   @Override
   public boolean isNullConstant() {
     return false;

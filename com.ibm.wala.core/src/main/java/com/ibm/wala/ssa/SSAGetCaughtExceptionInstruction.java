@@ -88,9 +88,6 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
     return 2243 * exceptionValueNumber;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

@@ -46,9 +46,6 @@ public class SemiSparseMutableIntSetFactory
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public SemiSparseMutableIntSet makeCopy(IntSet x) {
     SemiSparseMutableIntSet y = new SemiSparseMutableIntSet();
@@ -56,9 +53,6 @@ public class SemiSparseMutableIntSetFactory
     return y;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
-   */
   @Override
   public SemiSparseMutableIntSet make() {
     return new SemiSparseMutableIntSet();

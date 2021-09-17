@@ -54,9 +54,6 @@ public class JarFileModule implements Module {
     return new JarFileEntry(z.getName(), this);
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.Module#getEntries()
-   */
   @Override
   public Iterator<ModuleEntry> getEntries() {
     return new Iterator<ModuleEntry>() {

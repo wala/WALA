@@ -25,17 +25,11 @@ public class BasicFramework<T, V extends IVariable<V>> implements IKilldallFrame
     this.transferFunctionProvider = transferFunctionProvider;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
-   */
   @Override
   public Graph<T> getFlowGraph() {
     return flowGraph;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionMap()
-   */
   @Override
   public ITransferFunctionProvider<T, V> getTransferFunctionProvider() {
     return transferFunctionProvider;

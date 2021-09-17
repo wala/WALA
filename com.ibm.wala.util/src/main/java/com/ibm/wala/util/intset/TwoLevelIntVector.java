@@ -34,9 +34,6 @@ public class TwoLevelIntVector implements IntVector, Serializable {
     this.defaultValue = defaultValue;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @Override
   public int get(int x) {
     int page = getPageNumber(x);
@@ -93,9 +90,7 @@ public class TwoLevelIntVector implements IntVector, Serializable {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
+  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
   public void performVerboseAction() {
     System.err.println(("stats of " + getClass()));
     System.err.println(("data: size = " + data.size()));

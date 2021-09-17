@@ -58,9 +58,6 @@ public class LocalNamesTest extends WalaTestCase {
     justThisTest(LocalNamesTest.class);
   }
 
-  /*
-   * @see junit.framework.TestCase#setUp()
-   */
   @BeforeClass
   public static void beforeClass() throws Exception {
 

@@ -542,9 +542,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return 9661 * getReference().hashCode();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
-   */
+  /** @see com.ibm.wala.classLoader.SyntheticMethod#getMaxLocals() */
   public abstract int getMaxLocals();
 
   // TODO: ShrikeBT should have a getMaxStack method on Decoder, I think.
@@ -651,9 +649,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       callSites.add(site);
     }
 
-    /*
-     * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(com.ibm.wala.shrikeBT.ArrayLoadInstruction)
-     */
     @Override
     public void visitArrayLoad(IArrayLoadInstruction instruction) {
       arraysRead.add(
@@ -661,9 +656,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
               getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
 
-    /*
-     * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(com.ibm.wala.shrikeBT.ArrayStoreInstruction)
-     */
     @Override
     public void visitArrayStore(IArrayStoreInstruction instruction) {
       arraysWritten.add(
@@ -725,9 +717,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
-   */
   @Override
   public abstract boolean hasExceptionHandler();
 
@@ -761,26 +750,17 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
   /* BEGIN Custom change: precise bytecode positions */
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
-   */
   @Override
   public SourcePosition getSourcePosition(int bcIndex) throws InvalidClassFileException {
     return (getBCInfo().positionMap == null) ? null : getBCInfo().positionMap[bcIndex];
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
-   */
   @Override
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return (getBCInfo().paramPositionMap == null) ? null : getBCInfo().paramPositionMap[paramNum];
   }
   /* END Custom change: precise bytecode positions */
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
-   */
   @Override
   public int getLineNumber(int bcIndex) {
     try {
@@ -811,25 +791,16 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getSignature()
-   */
   @Override
   public String getSignature() {
     return getReference().getSignature();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getSelector()
-   */
   @Override
   public Selector getSelector() {
     return getReference().getSelector();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
-   */
   @Override
   public abstract String getLocalVariableName(int bcIndex, int localNumber);
 

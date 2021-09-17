@@ -28,25 +28,19 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getNodeManager().stream();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#iterateNodes()
-   */
+  /** @see Graph#iterator() */
   @Override
   public Iterator<T> iterator() {
     return getNodeManager().iterator();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getNumberOfNodes() */
   @Override
   public int getNumberOfNodes() {
     return getNodeManager().getNumberOfNodes();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object) */
   @Override
   public int getPredNodeCount(T n) throws IllegalArgumentException {
     if (n == null) {
@@ -55,9 +49,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getEdgeManager().getPredNodeCount(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object) */
   @Override
   public Iterator<T> getPredNodes(T n) throws IllegalArgumentException {
     if (n == null) {
@@ -66,9 +58,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getEdgeManager().getPredNodes(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object) */
   @Override
   public int getSuccNodeCount(T n) throws IllegalArgumentException {
     if (!containsNode(n) || n == null) {
@@ -77,9 +67,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getEdgeManager().getSuccNodeCount(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object) */
   @Override
   public Iterator<T> getSuccNodes(T n) throws IllegalArgumentException {
     if (n == null) {
@@ -88,34 +76,25 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getEdgeManager().getSuccNodes(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#addNode(Object) */
   @Override
   public void addNode(T n) {
     getNodeManager().addNode(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
-   *      com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#addEdge(Object, Object) */
   @Override
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     getEdgeManager().addEdge(src, dst);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdge(java.lang.Object, java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeEdge(java.lang.Object, java.lang.Object) */
   @Override
   public void removeEdge(T src, T dst) throws IllegalArgumentException {
     getEdgeManager().removeEdge(src, dst);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#hasEdge(java.lang.Object, java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#hasEdge(java.lang.Object, java.lang.Object) */
   @Override
   public boolean hasEdge(T src, T dst) {
     if (src == null) {
@@ -127,9 +106,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getEdgeManager().hasEdge(src, dst);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
   @Override
   public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
     if (node == null) {
@@ -138,9 +115,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getEdgeManager().removeAllIncidentEdges(node);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
   @Override
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
     if (node == null) {
@@ -149,9 +124,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getEdgeManager().removeIncomingEdges(node);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
   @Override
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     if (node == null) {
@@ -160,9 +133,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getEdgeManager().removeOutgoingEdges(node);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#removeNode(Object) */
   @Override
   public void removeNodeAndEdges(T N) throws IllegalArgumentException {
     if (N == null) {
@@ -172,9 +143,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getNodeManager().removeNode(N);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
   @Override
   public void removeNode(T n) throws IllegalArgumentException {
     if (n == null) {
@@ -207,9 +176,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return sb.toString();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
   @Override
   public boolean containsNode(T n) {
     if (n == null) {

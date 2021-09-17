@@ -48,18 +48,11 @@ public class NewBarLabel implements IFlowLabel {
     return theInstance;
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#bar()
-   */
   @Override
   public NewLabel bar() {
     return NewLabel.v();
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
-   *      java.lang.Object)
-   */
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {

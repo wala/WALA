@@ -37,9 +37,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   private int numberOfNodes = 0;
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
-   */
   @Override
   public int getNumber(T N) {
     if (N == null) {
@@ -59,17 +56,12 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
-   */
   @Override
   public int getMaxNumber() {
     return maxNumber;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#iterateNodes()
-   */
+  /** @see com.ibm.wala.util.graph.Graph#iterator() */
   @Override
   public Iterator<T> iterator() {
     final INodeWithNumber[] arr = nodes;
@@ -120,9 +112,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     return Arrays.stream(nodes).filter(Objects::nonNull).map(node -> (T) node);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getNumberOfNodes() */
   @Override
   public int getNumberOfNodes() {
     return numberOfNodes;
@@ -166,9 +156,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
   @Override
   public void removeNode(T n) {
     if (n == null) {
@@ -198,9 +186,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     return result.toString();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
   @Override
   public boolean containsNode(T n) {
     if (n == null) {
@@ -231,9 +217,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     // return (nodes[number] == N);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<>(s, this);

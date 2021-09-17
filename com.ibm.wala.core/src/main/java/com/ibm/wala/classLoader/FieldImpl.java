@@ -82,17 +82,12 @@ public final class FieldImpl implements IField {
     return genericSignature;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMember#getDeclaringClass()
-   */
+  /** @see com.ibm.wala.classLoader.IMember#getDeclaringClass() */
   @Override
   public IClass getDeclaringClass() {
     return declaringClass;
   }
 
-  /*
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
@@ -121,17 +116,12 @@ public final class FieldImpl implements IField {
         getDeclaringClass().getReference(), getName(), getFieldTypeReference());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMember#getName()
-   */
+  /** @see com.ibm.wala.classLoader.IMember#getName() */
   @Override
   public Atom getName() {
     return fieldRef.getName();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IField#getFieldTypeReference()
-   */
   @Override
   public TypeReference getFieldTypeReference() {
     return fieldRef.getFieldType();

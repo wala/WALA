@@ -87,17 +87,11 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
     paramInd = ++i;
   }
 
-  /*
-   * @see java.util.Iterator#hasNext()
-   */
   @Override
   public boolean hasNext() {
     return paramInd <= numParams;
   }
 
-  /*
-   * @see java.util.Iterator#next()
-   */
   @Override
   public Integer next() {
     if (!hasNext()) {
@@ -108,9 +102,6 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
     return ret;
   }
 
-  /*
-   * @see java.util.Iterator#remove()
-   */
   @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();

@@ -47,9 +47,6 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
     return new MutableSparseLongSet(bs);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableLongSetFactory#make(com.ibm.wala.util.intset.LongSet)
-   */
   @Override
   public MutableLongSet makeCopy(LongSet x) throws IllegalArgumentException {
     if (x == null) {
@@ -58,9 +55,6 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
     return MutableSparseLongSet.make(x);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableLongSetFactory#make()
-   */
   @Override
   public MutableLongSet make() {
     return new MutableSparseLongSet();

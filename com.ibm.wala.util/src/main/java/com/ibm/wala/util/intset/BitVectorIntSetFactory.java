@@ -47,9 +47,6 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public BitVectorIntSet makeCopy(IntSet x) throws IllegalArgumentException {
     if (x == null) {
@@ -58,9 +55,6 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
     return new BitVectorIntSet(x);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
-   */
   @Override
   public BitVectorIntSet make() {
     return new BitVectorIntSet();

@@ -170,9 +170,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     return s.toString();
   }
 
-  /*
-   * @see org.eclipse.jface.action.IAction#run()
-   */
+  /** @see org.eclipse.jface.action.IAction#run() */
   @Override
   public void run() {
 

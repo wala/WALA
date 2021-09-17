@@ -547,7 +547,7 @@ public class CallGraphTest extends WalaTestCase {
       }
 
       /*
-       * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
+       * @see com.ibm.wala.util.graph.NodeManager#iterator()
        */
       @Override
       public Iterator<MethodReference> iterator() {

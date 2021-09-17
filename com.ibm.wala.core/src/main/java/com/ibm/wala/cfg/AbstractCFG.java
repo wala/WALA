@@ -492,25 +492,19 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#removeNode(Object) */
   @Override
   public void removeNodeAndEdges(T N) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
   @Override
   public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
   @Override
   public boolean containsNode(T N) {
     return nodeManager.containsNode(N);
@@ -551,17 +545,12 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return method;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
   @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.T)
-   */
   @Override
   public List<T> getExceptionalSuccessors(T b) {
     if (b == null) {
@@ -574,9 +563,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.T)
-   */
   @Override
   public Collection<T> getNormalSuccessors(T b) {
     if (b == null) {
@@ -585,7 +571,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return Iterator2Collection.toSet(iterateNormalSuccessors(b.getNumber()));
   }
 
-  /*
+  /**
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   @Override
@@ -611,9 +597,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return normalToExit;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalPredecessors(com.ibm.wala.cfg.T)
-   */
   @Override
   public Collection<T> getExceptionalPredecessors(T b) {
     if (b == null) {
@@ -622,9 +605,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return Iterator2Collection.toSet(iterateExceptionalPredecessors(b));
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalPredecessors(com.ibm.wala.cfg.T)
-   */
   @Override
   public Collection<T> getNormalPredecessors(T b) {
     if (b == null) {

@@ -27,9 +27,6 @@ class FactoryContextSelector implements ContextSelector {
 
   public FactoryContextSelector() {}
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   @Override
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {

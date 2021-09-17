@@ -46,18 +46,12 @@ public final class BitVectorIntSet implements MutableIntSet {
     copySet(S);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
-   */
   @Override
   public void clear() {
     bitVector.clearAll();
     populationCount = 0;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public void copySet(IntSet set) throws IllegalArgumentException {
     if (set == null) {
@@ -129,9 +123,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#add(int)
-   */
   @Override
   public boolean add(int i) {
     if (bitVector.get(i)) {
@@ -144,9 +135,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#remove(int)
-   */
   @Override
   public boolean remove(int i) {
     if (contains(i)) {
@@ -159,9 +147,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public void intersectWith(IntSet set) {
     if (!(set instanceof BitVectorIntSet)) {
@@ -172,9 +157,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     populationCount = UNDEFINED;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet) */
   @Override
   public BitVectorIntSet intersection(IntSet that) {
     BitVectorIntSet newbie = new BitVectorIntSet();
@@ -183,9 +166,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     return newbie;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet) */
   @Override
   public IntSet union(IntSet that) {
     BitVectorIntSet temp = new BitVectorIntSet();
@@ -195,17 +176,13 @@ public final class BitVectorIntSet implements MutableIntSet {
     return temp;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#isEmpty()
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#isEmpty() */
   @Override
   public boolean isEmpty() {
     return size() == 0;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#size()
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#size() */
   @Override
   public int size() {
     populationCount =
@@ -238,9 +215,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     };
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction) */
   @Override
   public void foreach(IntSetAction action) {
     if (action == null) {
@@ -266,9 +241,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     return new SparseIntSet(elements);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction) */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (X instanceof BitVectorIntSet) {
@@ -346,9 +319,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     return bitVector.nextSetBit(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet) */
   @Override
   public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
@@ -385,9 +356,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet) */
   @Override
   public boolean isSubset(IntSet that) {
     if (that instanceof BitVectorIntSet) {
@@ -434,9 +403,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     return oldSize > size();
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet) */
   @Override
   public boolean containsAny(IntSet set) throws IllegalArgumentException {
     if (set == null) {
@@ -456,10 +423,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) throws IllegalArgumentException {
     if (other == null) {

@@ -40,9 +40,6 @@ public class SSACFGNullPointerAnalysis
     this.mState = (mState == null ? MethodState.DEFAULT : mState);
   }
 
-  /*
-   * @see com.ibm.wala.cfg.exc.ExceptionPruningAnalysis#compute(com.ibm.wala.util.MonitorUtil.IProgressMonitor)
-   */
   @Override
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> orig = ir.getControlFlowGraph();

@@ -87,9 +87,7 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     return val * 9929 ^ 2063;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#isFallThrough() */
   @Override
   public boolean isFallThrough() {
     return true;

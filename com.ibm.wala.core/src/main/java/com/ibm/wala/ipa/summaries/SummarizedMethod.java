@@ -48,25 +48,16 @@ public class SummarizedMethod extends SyntheticMethod {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.SyntheticMethod#getPoison()
-   */
   @Override
   public String getPoison() {
     return summary.getPoison();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.SyntheticMethod#getPoisonLevel()
-   */
   @Override
   public byte getPoisonLevel() {
     return summary.getPoisonLevel();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.SyntheticMethod#hasPoison()
-   */
   @Override
   public boolean hasPoison() {
     return summary.hasPoison();
@@ -93,25 +84,19 @@ public class SummarizedMethod extends SyntheticMethod {
         summary.getConstants());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
-   */
+  /** @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters() */
   @Override
   public int getNumberOfParameters() {
     return summary.getNumberOfParameters();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#isStatic()
-   */
+  /** @see com.ibm.wala.classLoader.IMethod#isStatic() */
   @Override
   public boolean isStatic() {
     return summary.isStatic();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
-   */
+  /** @see com.ibm.wala.classLoader.IMethod#getParameterType(int) */
   @Override
   public TypeReference getParameterType(int i) {
     return summary.getParameterType(i);

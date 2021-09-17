@@ -53,9 +53,6 @@ public class SimpleIntVector implements IntVector, Serializable {
     return GROWTH_FACTOR;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @Override
   public int get(int x) {
     if (x < 0) {
@@ -68,9 +65,6 @@ public class SimpleIntVector implements IntVector, Serializable {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
   @Override
   public void set(int x, int value) {
     if (x < 0) {
@@ -101,9 +95,6 @@ public class SimpleIntVector implements IntVector, Serializable {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#reportStats()
-   */
   public void performVerboseAction() {
     System.err.println(("size:       " + store.length));
     System.err.println(("occupancy:  " + computeOccupancy()));

@@ -77,18 +77,11 @@ public class PutFieldBarLabel implements IFlowLabel {
     return field;
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#bar()
-   */
   @Override
   public PutFieldLabel bar() {
     return PutFieldLabel.make(field);
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
-   *      java.lang.Object)
-   */
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {

@@ -22,9 +22,6 @@ public class StandardSolver extends AbstractPointsToSolver {
     super(system, builder);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
-   */
   @Override
   public void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
     int i = 0;

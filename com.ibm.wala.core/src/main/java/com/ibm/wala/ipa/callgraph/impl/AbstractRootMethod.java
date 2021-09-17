@@ -105,9 +105,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         cache);
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
-   */
+  /** @see SyntheticMethod#getStatements() */
   @SuppressWarnings("deprecation")
   @Override
   public SSAInstruction[] getStatements(SSAOptions options) {

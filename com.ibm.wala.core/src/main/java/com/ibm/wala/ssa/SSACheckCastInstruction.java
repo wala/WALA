@@ -79,11 +79,6 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return v.toString();
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   *
-   * @throws IllegalArgumentException if v is null
-   */
   @Override
   public void visit(IVisitor v) {
     if (v == null) {
@@ -92,9 +87,6 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     v.visitCheckCast(this);
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#hasDef()
-   */
   @Override
   public boolean hasDef() {
     return true;
@@ -106,18 +98,13 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef(int)
-   */
   @Override
   public int getDef(int i) {
     assert i == 0;
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
   @Override
   public int getNumberOfDefs() {
     return 1;
@@ -161,17 +148,11 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return result * 7529 + val;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
     return isPEI;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;
