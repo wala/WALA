@@ -24,6 +24,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
@@ -393,35 +394,27 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     return B.getNode();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(Object) */
   @Override
   public void removeNodeAndEdges(BasicBlockInContext<T> N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
-   */
+  /** @see NodeManager#iterator() */
   @Override
   public Iterator<BasicBlockInContext<T>> iterator() {
     constructFullGraph("iterator");
     return g.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
-   */
+  /** @see NodeManager#iterator() */
   @Override
   public Stream<BasicBlockInContext<T>> stream() {
     constructFullGraph("stream");
     return g.stream();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes() */
   @Override
   public int getNumberOfNodes() {
     constructFullGraph("getNumberOfNodes");
@@ -538,25 +531,19 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#addNode(Object) */
   @Override
   public void addNode(BasicBlockInContext<T> n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#removeNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
   @Override
   public void removeNode(BasicBlockInContext<T> n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(Object) */
   @Override
   public Iterator<BasicBlockInContext<T>> getPredNodes(BasicBlockInContext<T> N) {
     initForPred(N);
@@ -595,36 +582,28 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(Object) */
   @Override
   public int getPredNodeCount(BasicBlockInContext<T> N) {
     initForPred(N);
     return g.getPredNodeCount(N);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(Object) */
   @Override
   public Iterator<BasicBlockInContext<T>> getSuccNodes(BasicBlockInContext<T> N) {
     initForSucc(N);
     return g.getSuccNodes(N);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(Object) */
   @Override
   public int getSuccNodeCount(BasicBlockInContext<T> N) {
     initForSucc(N);
     return g.getSuccNodeCount(N);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node, com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#addEdge(Object, Object) */
   @Override
   public void addEdge(BasicBlockInContext<T> src, BasicBlockInContext<T> dst)
       throws UnsupportedOperationException {
@@ -637,9 +616,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
   @Override
   public void removeAllIncidentEdges(BasicBlockInContext<T> node)
       throws UnsupportedOperationException {
@@ -651,9 +628,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     return g.toString();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#containsNode(Object) */
   @Override
   public boolean containsNode(BasicBlockInContext<T> N) {
     return g.containsNode(N);

@@ -81,27 +81,18 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
     return info == null ? null : info.superClass;
   }
 
-  /*
-   * @see ClassHierarchyProvider#getSuperInterfaces(String)
-   */
   @Override
   public String[] getSuperInterfaces(String cl) {
     ClassInfo info = contents.get(cl);
     return info == null ? null : info.superInterfaces;
   }
 
-  /*
-   * @see ClassHierarchyProvider#getSubClasses(String)
-   */
   @Override
   public String[] getSubClasses(String cl) {
     ClassInfo info = contents.get(cl);
     return (info == null || !info.isFinal) ? null : noClasses;
   }
 
-  /*
-   * @see ClassHierarchyProvider#isInterface(String)
-   */
   @Override
   public int isInterface(String cl) {
     ClassInfo info = contents.get(cl);

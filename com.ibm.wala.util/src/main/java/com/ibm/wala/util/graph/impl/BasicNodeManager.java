@@ -32,33 +32,21 @@ public class BasicNodeManager<T> implements NodeManager<T> {
     return nodes.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
-   */
   @Override
   public int getNumberOfNodes() {
     return nodes.size();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
-   */
   @Override
   public void addNode(T n) {
     nodes.add(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
-   */
   @Override
   public void removeNode(T n) {
     nodes.remove(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
-   */
   @Override
   public boolean containsNode(T N) {
     return nodes.contains(N);

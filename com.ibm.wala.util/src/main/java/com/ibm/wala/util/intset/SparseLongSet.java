@@ -325,9 +325,7 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#intersect(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet) */
   @Override
   public LongSet intersection(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
@@ -343,9 +341,7 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#iterator()
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#intIterator() */
   @Override
   public LongIterator longIterator() {
     return new LongIterator() {
@@ -424,9 +420,7 @@ public class SparseLongSet implements LongSet {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet) */
   @Override
   public boolean isSubset(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
@@ -440,9 +434,7 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet) */
   @Override
   public boolean containsAny(LongSet set) {
     if (set == null) {

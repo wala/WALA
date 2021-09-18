@@ -16,9 +16,7 @@ package com.ibm.wala.util.collections;
  * <p>TODO: get rid of this and use java.util.collection.RandomAccess
  */
 public interface IVector<T> extends Iterable<T> {
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
+  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
   public abstract T get(int x);
 
   /**
@@ -28,9 +26,7 @@ public interface IVector<T> extends Iterable<T> {
    */
   public abstract void set(int x, T value);
 
-  /*
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
+  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
   public abstract void performVerboseAction();
 
   /** @return max i s.t get(i) != null */

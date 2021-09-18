@@ -595,25 +595,16 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           + dexMethod.getName();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#isExitBlock()
-     */
     @Override
     public boolean isExitBlock() {
       return this == DexCFG.this.exit();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#isEntryBlock()
-     */
     @Override
     public boolean isEntryBlock() {
       return this == DexCFG.this.entry();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#getMethod()
-     */
     @Override
     public IMethod getMethod() {
       return DexCFG.this.getMethod();
@@ -631,9 +622,6 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           && ((BasicBlock) o).getNumber() == getNumber();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#getNumber()
-     */
     @Override
     public int getNumber() {
       return getGraphNodeId();
@@ -681,9 +669,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     return exceptionHandlers;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
-   */
+  /** @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int) */
   @Override
   public int getProgramCounter(int index) {
     return dexMethod.getAddressFromIndex(index);

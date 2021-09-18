@@ -17,9 +17,6 @@ public class UnorderedDomain<T, U> extends MutableMapping<T> implements Tabulati
 
   private static final long serialVersionUID = -988075488958891635L;
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
-   */
   @Override
   public boolean hasPriorityOver(PathEdge<U> p1, PathEdge<U> p2) {
     return false;

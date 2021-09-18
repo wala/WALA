@@ -50,18 +50,11 @@ public class ParamBarLabel extends CallLabel {
     return new ParamBarLabel(callSite);
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#bar()
-   */
   @Override
   public ParamLabel bar() {
     return ParamLabel.make(callSite);
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
-   *      java.lang.Object)
-   */
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {

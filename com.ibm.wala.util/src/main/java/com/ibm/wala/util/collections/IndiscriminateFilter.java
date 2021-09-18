@@ -20,9 +20,7 @@ public class IndiscriminateFilter<T> implements Predicate<T> {
     return new IndiscriminateFilter<>();
   }
 
-  /*
-   * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
-   */
+  /** @see FilterIterator */
   @Override
   public boolean test(Object o) {
     return true;

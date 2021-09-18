@@ -354,9 +354,6 @@ public abstract class AstMethod implements IMethod {
   }
   /* BEGIN Custom change: precise bytecode positions */
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
-   */
   @Override
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;

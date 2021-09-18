@@ -80,17 +80,11 @@ public class SmallMap<K, V> implements Map<K, V> {
     }
   }
 
-  /*
-   * @see java.util.Map#isEmpty()
-   */
   @Override
   public boolean isEmpty() {
     return (keysAndValues == null);
   }
 
-  /*
-   * @see java.util.Map#containsKey(java.lang.Object)
-   */
   @Override
   public boolean containsKey(Object key) {
     for (int i = 0; i < size(); i++) {
@@ -101,9 +95,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     return false;
   }
 
-  /*
-   * @see java.util.Map#containsValue(java.lang.Object)
-   */
   @Override
   public boolean containsValue(Object value) {
     if (keysAndValues == null) {
@@ -124,9 +115,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     return false;
   }
 
-  /*
-   * @see java.util.Map#get(java.lang.Object)
-   */
   @Override
   @SuppressWarnings("unchecked")
   public V get(Object key) {
@@ -161,9 +149,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     }
   }
 
-  /*
-   * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-   */
   @Override
   @SuppressWarnings({"unchecked", "unused"})
   public V put(Object key, Object value) {
@@ -186,25 +171,16 @@ public class SmallMap<K, V> implements Map<K, V> {
     return null;
   }
 
-  /*
-   * @see java.util.Map#remove(java.lang.Object)
-   */
   @Override
   public V remove(Object key) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see java.util.Map#putAll(java.util.Map)
-   */
   @Override
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see java.util.Map#clear()
-   */
   @Override
   public void clear() {
     keysAndValues = null;

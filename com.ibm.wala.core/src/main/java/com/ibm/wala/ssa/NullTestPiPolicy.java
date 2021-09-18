@@ -38,10 +38,6 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
 
   private NullTestPiPolicy() {}
 
-  /*
-   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAConditionalBranchInstruction,
-   *      com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
-   */
   @Override
   public Pair<Integer, SSAInstruction> getPi(
       SSAConditionalBranchInstruction cond,

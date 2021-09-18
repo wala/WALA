@@ -22,9 +22,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   public BitVectorVariable() {}
 
-  /*
-   * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
-   */
+  /** @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable) */
   @Override
   public void copyState(BitVectorVariable other) {
     if (other == null) {

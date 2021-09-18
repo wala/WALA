@@ -63,9 +63,6 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
     return val * 1663 ^ result * 4027;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

@@ -108,9 +108,6 @@ public class ExplodedControlFlowGraph
     return normalNodes.get(index);
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getCatchBlocks()
-   */
   @Override
   public BitVector getCatchBlocks() {
     BitVector original = ir.getControlFlowGraph().getCatchBlocks();
@@ -236,9 +233,6 @@ public class ExplodedControlFlowGraph
     }
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
-   */
   @Override
   public int getProgramCounter(int index) throws UnimplementedError {
     return ir.getControlFlowGraph().getProgramCounter(index);
@@ -351,9 +345,7 @@ public class ExplodedControlFlowGraph
     return Iterator2Collection.toSet(getSuccNodes(N)).size();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object) */
   @Override
   public Iterator<IExplodedBasicBlock> getSuccNodes(IExplodedBasicBlock bb) {
     ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;

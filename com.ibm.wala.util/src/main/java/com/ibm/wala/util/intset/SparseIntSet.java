@@ -360,9 +360,6 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public IntSet union(IntSet that) {
     MutableSparseIntSet temp = new MutableSparseIntSet();
@@ -372,9 +369,6 @@ public class SparseIntSet implements IntSet {
     return temp;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#iterator()
-   */
   @Override
   public IntIterator intIterator() {
     return new IntIterator() {
@@ -404,9 +398,6 @@ public class SparseIntSet implements IntSet {
     return (size > 0) ? elements[size - 1] : -1;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
-   */
   @Override
   public void foreach(IntSetAction action) {
     if (action == null) {
@@ -415,9 +406,7 @@ public class SparseIntSet implements IntSet {
     for (int i = 0; i < size; i++) action.act(elements[i]);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction) */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (action == null) {
@@ -463,9 +452,6 @@ public class SparseIntSet implements IntSet {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean isSubset(IntSet that) {
     if (that == null) {
@@ -495,9 +481,6 @@ public class SparseIntSet implements IntSet {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean containsAny(IntSet set) {
     if (set instanceof SparseIntSet) {

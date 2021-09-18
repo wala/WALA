@@ -137,18 +137,12 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     return parent.getLanguage();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
-   */
   @Override
   public int getNumberOfMethods() {
     // TODO Auto-generated method stub
     return 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public String getSourceFileName(IClass klass) {
     return null;
@@ -162,9 +156,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   @Override
   public void init(List<Module> modules) throws IOException {}
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
-   */
   @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {

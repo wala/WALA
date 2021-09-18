@@ -123,9 +123,6 @@ public class SSASwitchInstruction extends SSAInstruction {
     return val * 1663 + 3499;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return false;

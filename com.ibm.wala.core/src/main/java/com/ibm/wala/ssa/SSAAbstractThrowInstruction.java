@@ -44,17 +44,11 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return 7529 + exception * 823;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return false;

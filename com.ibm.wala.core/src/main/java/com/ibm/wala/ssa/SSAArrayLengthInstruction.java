@@ -92,17 +92,11 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
     return arrayref * 7573 + result * 563;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

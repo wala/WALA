@@ -56,9 +56,6 @@ public class DefaultEntrypoint extends Entrypoint {
     return new TypeReference[] {method.getParameterType(i)};
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.Entrypoint#getParameterTypes(int)
-   */
   @Override
   public TypeReference[] getParameterTypes(int i) {
     return paramTypes[i];
@@ -68,9 +65,6 @@ public class DefaultEntrypoint extends Entrypoint {
     paramTypes[i] = types;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.Entrypoint#getNumberOfParameters()
-   */
   @Override
   public int getNumberOfParameters() {
     return paramTypes.length;

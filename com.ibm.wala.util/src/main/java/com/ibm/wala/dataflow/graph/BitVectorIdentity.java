@@ -54,9 +54,6 @@ public class BitVectorIdentity extends UnaryOperator<BitVectorVariable> {
     return (o instanceof BitVectorIdentity);
   }
 
-  /*
-   * @see com.ibm.wala.fixpoint.UnaryOperator#isIdentity()
-   */
   @Override
   public boolean isIdentity() {
     return true;

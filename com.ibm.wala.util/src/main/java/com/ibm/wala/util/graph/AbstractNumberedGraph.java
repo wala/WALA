@@ -28,25 +28,19 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
   @Override
   protected abstract NumberedEdgeManager<T> getEdgeManager();
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
-   */
+  /** @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber() */
   @Override
   public int getMaxNumber() {
     return getNodeManager().getMaxNumber();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int) */
   @Override
   public T getNode(int number) {
     return getNodeManager().getNode(number);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(Object) */
   @Override
   public int getNumber(T N) {
     if (N == null) {
@@ -55,7 +49,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
     return getNodeManager().getNumber(N);
   }
 
-  /*
+  /**
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   @Override
@@ -63,18 +57,14 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
     return new NumberedNodeIterator<>(s, this);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedEdgeManager#getPredNodeNumbers(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedEdgeManager#getPredNodeNumbers(java.lang.Object) */
   @Override
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
     return getEdgeManager().getPredNodeNumbers(node);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object) */
   @Override
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodeNumbers(node);

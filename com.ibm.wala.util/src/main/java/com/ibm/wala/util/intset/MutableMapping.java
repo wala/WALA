@@ -115,9 +115,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return result.toString();
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
-   */
+  /** @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator() */
   @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();
@@ -128,9 +126,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return map.keySet().stream();
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
-   */
+  /** @see com.ibm.wala.util.intset.SparseIntSet#singleton(int) */
   public OrdinalSet<T> makeSingleton(int i) {
     return new OrdinalSet<>(SparseIntSet.singleton(i), this);
   }

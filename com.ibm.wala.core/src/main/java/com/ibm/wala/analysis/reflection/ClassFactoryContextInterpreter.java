@@ -90,8 +90,9 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return getIR(node).getInstructions().length;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean understands(CGNode node) {
@@ -104,8 +105,9 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return ClassFactoryContextSelector.isClassFactory(node.getMethod().getReference());
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -121,8 +123,9 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {

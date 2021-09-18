@@ -39,49 +39,31 @@ public class BimodalMap<K, V> implements Map<K, V> {
     this.cutOff = cutoff;
   }
 
-  /*
-   * @see java.util.Map#size()
-   */
   @Override
   public int size() {
     return (backingStore == null) ? 0 : backingStore.size();
   }
 
-  /*
-   * @see java.util.Map#isEmpty()
-   */
   @Override
   public boolean isEmpty() {
     return (backingStore == null) ? true : backingStore.isEmpty();
   }
 
-  /*
-   * @see java.util.Map#containsKey(java.lang.Object)
-   */
   @Override
   public boolean containsKey(Object key) {
     return (backingStore == null) ? false : backingStore.containsKey(key);
   }
 
-  /*
-   * @see java.util.Map#containsValue(java.lang.Object)
-   */
   @Override
   public boolean containsValue(Object value) {
     return (backingStore == null) ? false : backingStore.containsValue(value);
   }
 
-  /*
-   * @see java.util.Map#get(java.lang.Object)
-   */
   @Override
   public V get(Object key) {
     return (backingStore == null) ? null : backingStore.get(key);
   }
 
-  /*
-   * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-   */
   @Override
   public V put(K key, V value) {
     if (backingStore == null) {
@@ -117,9 +99,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
     return (backingStore == null) ? null : backingStore.remove(key);
   }
 
-  /*
-   * @see java.util.Map#putAll(java.util.Map)
-   */
   @Override
   @SuppressWarnings("unchecked")
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
@@ -154,26 +133,17 @@ public class BimodalMap<K, V> implements Map<K, V> {
     }
   }
 
-  /*
-   * @see java.util.Map#clear()
-   */
   @Override
   public void clear() {
     backingStore = null;
   }
 
-  /*
-   * @see java.util.Map#keySet()
-   */
   @Override
   @SuppressWarnings("unchecked")
   public Set<K> keySet() {
     return (Set<K>) ((backingStore == null) ? Collections.emptySet() : backingStore.keySet());
   }
 
-  /*
-   * @see java.util.Map#values()
-   */
   @Override
   @SuppressWarnings("unchecked")
   public Collection<V> values() {

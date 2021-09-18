@@ -560,9 +560,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return getAllClasses().iterator();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#lookupClass(com.ibm.wala.types.TypeName)
-   */
   @SuppressWarnings("unused")
   @Override
   public IClass lookupClass(TypeName className) {
@@ -612,17 +609,11 @@ public class ClassLoaderImpl implements IClassLoader {
     return getName().toString();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfClasses()
-   */
   @Override
   public int getNumberOfClasses() {
     return getAllClasses().size();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
-   */
   @Override
   public int getNumberOfMethods() {
     int result = 0;
@@ -632,9 +623,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public String getSourceFileName(IClass klass) {
     if (klass == null) {
@@ -663,9 +651,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return e == null ? null : new InputStreamReader(e.getInputStream());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
-   */
   @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {

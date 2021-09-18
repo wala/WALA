@@ -106,12 +106,12 @@ public class TestAgainstSimpleDriver {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // build an RTA call graph
     CallGraphBuilder<InstanceKey> rtaBuilder =
-        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -119,7 +119,7 @@ public class TestAgainstSimpleDriver {
         new SimpleMemoryAccessMap(cg, rtaBuilder.getPointerAnalysis().getHeapModel(), false);
     // System.err.println(fam.toString());
 
-    IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, scope, cg, fam);
+    IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, cg, fam);
 
     IDemandPointerAnalysis simpleDmp =
         new SimpleDemandPointsTo(cg, dmp.getHeapModel(), fam, cha, options);
@@ -159,14 +159,9 @@ public class TestAgainstSimpleDriver {
   }
 
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(
-      AnalysisOptions options,
-      ClassHierarchy cha,
-      AnalysisScope scope,
-      CallGraph cg,
-      MemoryAccessMap fam) {
+      AnalysisOptions options, ClassHierarchy cha, CallGraph cg, MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(

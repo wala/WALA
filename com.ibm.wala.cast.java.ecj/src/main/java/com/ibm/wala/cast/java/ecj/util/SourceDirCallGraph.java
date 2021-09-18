@@ -107,8 +107,7 @@ public class SourceDirCallGraph {
     // CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache,
     // cha, scope,
     // false);
-    CallGraphBuilder<?> builder =
-        new ZeroOneContainerCFABuilderFactory().make(options, cache, cha, scope);
+    CallGraphBuilder<?> builder = new ZeroOneContainerCFABuilderFactory().make(options, cache, cha);
     System.out.println("building call graph...");
     CallGraph cg = builder.makeCallGraph(options, null);
     long end = System.currentTimeMillis();

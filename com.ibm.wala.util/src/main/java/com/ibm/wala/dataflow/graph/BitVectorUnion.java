@@ -39,8 +39,9 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
     return (o instanceof BitVectorUnion);
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
+  /**
+   * @see com.ibm.wala.fixpoint.AbstractOperator#evaluate(com.ibm.wala.fixpoint.IVariable,
+   *     com.ibm.wala.fixpoint.IVariable[])
    */
   @Override
   public byte evaluate(BitVectorVariable lhs, BitVectorVariable[] rhs)

@@ -50,18 +50,11 @@ public class ReturnBarLabel extends CallLabel {
     return new ReturnBarLabel(callSite);
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#bar()
-   */
   @Override
   public ReturnLabel bar() {
     return ReturnLabel.make(callSite);
   }
 
-  /*
-   * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
-   *      java.lang.Object)
-   */
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
