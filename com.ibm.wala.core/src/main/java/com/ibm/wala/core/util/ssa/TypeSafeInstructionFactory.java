@@ -210,11 +210,7 @@ public class TypeSafeInstructionFactory {
         }
         if (result.equals(givenParam)) {
           throw new IllegalArgumentException(
-              result.toString()
-                  + " can't be the result and parameter "
-                  + i
-                  + " at the same time in "
-                  + site);
+              result + " can't be the result and parameter " + i + " at the same time in " + site);
         }
       }
     } else {
@@ -236,11 +232,7 @@ public class TypeSafeInstructionFactory {
         }
         if (result.equals(givenParam)) {
           throw new IllegalArgumentException(
-              result.toString()
-                  + " can't be the result and parameter "
-                  + i
-                  + " at the same time in "
-                  + site);
+              result + " can't be the result and parameter " + i + " at the same time in " + site);
         }
       }
     }

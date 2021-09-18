@@ -119,13 +119,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
 
         assert assertDisjoint()
-            : this.toString()
-                + ", maxOffset="
-                + maxOffset
-                + ", maxMax="
-                + maxMax
-                + ", maxCount="
-                + maxCount;
+            : this + ", maxOffset=" + maxOffset + ", maxMax=" + maxMax + ", maxCount=" + maxCount;
 
       } else {
         IntIterator sparseBits = sparsePart.intIterator();
@@ -230,7 +224,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
 
         assert assertDisjoint()
-            : this.toString()
+            : this
                 + ", densePart.length()="
                 + densePart.length()
                 + ", newOffset="
@@ -645,7 +639,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public String toString() {
     StringBuilder sb = new StringBuilder("[");
     if (densePart != null) {
-      sb.append("densePart: ").append(densePart.toString()).append(' ');
+      sb.append("densePart: ").append(densePart).append(' ');
     }
     sb.append("sparsePart: ").append(sparsePart.toString()).append(']');
     return sb.toString();

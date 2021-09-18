@@ -140,7 +140,7 @@ import java.util.Map;
     final Atom foundAction = intent.getAction();
     if (!foundAction.equals(Atom.findOrCreateAsciiAtom(action))) {
       throw new IllegalArgumentException(
-          "Actions differ (" + action + ", " + foundAction.toString() + ") for Intent " + key);
+          "Actions differ (" + action + ", " + foundAction + ") for Intent " + key);
     }
     return intent;
   }

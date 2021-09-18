@@ -189,7 +189,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make("foo()V"));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    assertNotNull(methodRefUnderTest + " not found", methodUnderTest);
     assertTrue(
         methodUnderTest + " must be IBytecodeMethod", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
@@ -229,7 +229,7 @@ public abstract class AnnotationTest extends WalaTestCase {
             typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int);
 
     IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
-    assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
+    assertNotNull(fieldRefUnderTest + " not found", fieldUnderTest);
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
     Collection<Annotation> expectedAnnotations = HashSetFactory.make();
@@ -299,7 +299,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertTrue(methodRefUnderTest.toString() + " not found", methodUnderTest != null);
+    assertTrue(methodRefUnderTest + " not found", methodUnderTest != null);
     assertTrue(
         methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;

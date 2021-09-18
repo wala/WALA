@@ -287,7 +287,7 @@ public abstract class Launcher {
     }
 
     // print the data.
-    p.print(b.toString());
+    p.print(b);
   }
 
   /** Drain some data from the input stream, and append said data to b. Do not block. */

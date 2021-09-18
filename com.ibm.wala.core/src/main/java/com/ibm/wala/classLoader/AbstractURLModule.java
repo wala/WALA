@@ -85,6 +85,6 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
 
   @Override
   public String toString() {
-    return "module:" + url.toString();
+    return "module:" + url;
   }
 }

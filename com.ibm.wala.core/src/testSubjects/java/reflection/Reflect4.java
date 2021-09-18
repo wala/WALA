@@ -18,6 +18,6 @@ public class Reflect4 {
       throws IllegalAccessException, InstantiationException, ClassNotFoundException {
     Class<?> c = Class.forName("java.io.FilePermission");
     FilePermission h = (FilePermission) c.newInstance();
-    System.out.println(h.toString());
+    System.out.println(h);
   }
 }

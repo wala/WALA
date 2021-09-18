@@ -394,7 +394,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
     ret.append(this.action.toString());
     if (uri != null) {
       ret.append(", ");
-      ret.append(this.uri.toString());
+      ret.append(this.uri);
     }
     ret.append(") of type ");
     ret.append(getType());

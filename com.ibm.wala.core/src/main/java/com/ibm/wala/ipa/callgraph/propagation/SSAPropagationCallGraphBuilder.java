@@ -212,7 +212,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("\n   No statements\n");
       } else {
         try {
-          System.err.println(ir.toString());
+          System.err.println(ir);
         } catch (Error e) {
           e.printStackTrace();
         }

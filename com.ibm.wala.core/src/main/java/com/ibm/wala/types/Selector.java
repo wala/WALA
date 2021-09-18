@@ -71,7 +71,7 @@ public final class Selector {
 
   @Override
   public String toString() {
-    return name.toString() + descriptor.toString();
+    return name.toString() + descriptor;
   }
 
   public Descriptor getDescriptor() {

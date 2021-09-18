@@ -80,7 +80,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
             @Override
             public String getMsg() {
               return "could not read contents of nested jar file "
-                  + AbstractNestedJarFileModule.this.toString();
+                  + AbstractNestedJarFileModule.this;
             }
           });
     }

@@ -856,7 +856,7 @@ public class ParameterAccessor {
     if (this.numberOfParameters == 0) {
       if (this.method != null) {
         throw new IllegalArgumentException(
-            "The method " + this.method.toString() + " has no explicit parameters.");
+            "The method " + this.method + " has no explicit parameters.");
       } else {
         throw new IllegalArgumentException(
             "The method " + this.mRef.toString() + " has no explicit parameters.");
@@ -1932,9 +1932,7 @@ public class ParameterAccessor {
         new StringBuilder()
             .append("Parameter Accessor for ")
             .append(
-                (this.mRef != null)
-                    ? "mRef:" + this.mRef.toString()
-                    : "IMethod: " + this.method.toString())
+                (this.mRef != null) ? "mRef:" + this.mRef : "IMethod: " + this.method.toString())
             .append("\nContains ")
             .append(this.numberOfParameters)
             .append(" Parameters ")

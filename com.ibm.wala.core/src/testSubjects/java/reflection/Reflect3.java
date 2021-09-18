@@ -18,7 +18,7 @@ public class Reflect3 {
       throws ClassNotFoundException, IllegalAccessException, InstantiationException {
     Class<?> c = Class.forName("java.util.Properties");
     Hashtable<Object, Object> h = (Hashtable<Object, Object>) c.newInstance();
-    System.out.println(h.toString());
+    System.out.println(h);
   }
 
   private static class Hash extends Hashtable<Object, Object> {}

@@ -107,7 +107,7 @@ public class ExternalModel extends AndroidModel {
       throw new IllegalArgumentException(
           "The component type requested to create an ExternalModel for was null");
     }
-    this.name = Atom.findOrCreateAsciiAtom("startExternal" + target.toString());
+    this.name = Atom.findOrCreateAsciiAtom("startExternal" + target);
     //        this.target = target;
 
   }
