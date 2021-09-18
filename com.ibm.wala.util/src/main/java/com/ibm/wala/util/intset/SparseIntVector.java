@@ -37,9 +37,6 @@ public class SparseIntVector implements IntVector, Serializable {
     this.defaultValue = defaultValue;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @Override
   public int get(int x) {
     int index = indices.getIndex(x);
@@ -76,9 +73,7 @@ public class SparseIntVector implements IntVector, Serializable {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
+  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
   public void performVerboseAction() {
     System.err.println((getClass() + " stats: "));
     System.err.println(("data.length " + data.length));

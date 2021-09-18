@@ -70,13 +70,13 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lpack/ocamljavaMain");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Lpack/ocamljavaMain");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     options.setUseConstantSpecificKeys(true);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     MethodHandles.analyzeMethodHandles(options, builder);
 

@@ -227,12 +227,12 @@ public abstract class AbstractPtrTest {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     final IAnalysisCacheView analysisCache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> cgBuilder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha);
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -240,7 +240,7 @@ public abstract class AbstractPtrTest {
     // cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(
             cg, builder, mam, cha, options, getStateMachineFactory());

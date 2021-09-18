@@ -31,9 +31,6 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public BimodalMutableIntSet makeCopy(IntSet x)
       throws UnimplementedError, IllegalArgumentException {
@@ -43,9 +40,6 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
     return BimodalMutableIntSet.makeCopy(x);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
-   */
   @Override
   public BimodalMutableIntSet make() {
     return new BimodalMutableIntSet();

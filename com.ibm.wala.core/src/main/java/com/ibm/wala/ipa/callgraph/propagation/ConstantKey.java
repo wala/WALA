@@ -52,9 +52,6 @@ public final class ConstantKey<T> implements InstanceKey {
     else return "[ConstantKey:" + value + ':' + valueClass.getReference() + ']';
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKey#getConcreteType()
-   */
   @Override
   public IClass getConcreteType() {
     return valueClass;

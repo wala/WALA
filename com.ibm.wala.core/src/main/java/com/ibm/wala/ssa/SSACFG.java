@@ -300,9 +300,6 @@ public class SSACFG
       return B.getLastInstructionIndex();
     }
 
-    /*
-     * @see com.ibm.wala.ssa.ISSABasicBlock#iteratePhis()
-     */
     @Override
     public Iterator<SSAPhiInstruction> iteratePhis() {
       compressPhis();
@@ -564,17 +561,13 @@ public class SSACFG
       return stackSlotPhis != null || localPhis != null;
     }
 
-    /*
-     * @see com.ibm.wala.util.graph.INodeWithNumber#getGraphNodeId()
-     */
+    /** @see com.ibm.wala.util.graph.INodeWithNumber#getGraphNodeId() */
     @Override
     public int getGraphNodeId() {
       return number;
     }
 
-    /*
-     * @see com.ibm.wala.util.graph.INodeWithNumber#setGraphNodeId(int)
-     */
+    /** @see com.ibm.wala.util.graph.INodeWithNumber#setGraphNodeId(int) */
     @Override
     public void setGraphNodeId(int number) {
       // TODO Auto-generated method stub
@@ -624,17 +617,13 @@ public class SSACFG
       return delegate.getNode(getNumber()).hashCode() * 6271;
     }
 
-    /*
-     * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
-     */
+    /** @see com.ibm.wala.cfg.IBasicBlock#isExitBlock() */
     @Override
     public boolean isExitBlock() {
       return this == SSACFG.this.exit();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
-     */
+    /** @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock() */
     @Override
     public boolean isEntryBlock() {
       return this == SSACFG.this.entry();
@@ -763,25 +752,16 @@ public class SSACFG
     return delegate.isCatchBlock(i);
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#entry()
-   */
   @Override
   public SSACFG.BasicBlock entry() {
     return basicBlocks[0];
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#exit()
-   */
   @Override
   public SSACFG.BasicBlock exit() {
     return exit;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
-   */
   @Override
   public int getNumber(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -790,25 +770,19 @@ public class SSACFG
     return b.getNumber();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedGraph#getNode(int) */
   @Override
   public BasicBlock getNode(int number) {
     return basicBlocks[number];
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
-   */
+  /** @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber() */
   @Override
   public int getMaxNumber() {
     return basicBlocks.length - 1;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#iterateNodes()
-   */
+  /** @see com.ibm.wala.util.graph.Graph#iterator() */
   @Override
   public Iterator<ISSABasicBlock> iterator() {
     return Arrays.<ISSABasicBlock>asList(basicBlocks).iterator();
@@ -819,17 +793,13 @@ public class SSACFG
     return Arrays.stream(basicBlocks);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getNumberOfNodes() */
   @Override
   public int getNumberOfNodes() {
     return delegate.getNumberOfNodes();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getPredNodes(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getPredNodes(Object) */
   @Override
   public Iterator<ISSABasicBlock> getPredNodes(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -857,9 +827,7 @@ public class SSACFG
     };
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getPredNodeCount(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getPredNodeCount(Object) */
   @Override
   public int getPredNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -869,9 +837,7 @@ public class SSACFG
     return delegate.getPredNodeCount(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getSuccNodes(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getSuccNodes(Object) */
   @Override
   public Iterator<ISSABasicBlock> getSuccNodes(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -899,9 +865,7 @@ public class SSACFG
     };
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#getSuccNodeCount(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#getSuccNodeCount(Object) */
   @Override
   public int getSuccNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -911,9 +875,7 @@ public class SSACFG
     return delegate.getSuccNodeCount(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#addNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedGraph#addNode(Object) */
   @Override
   public void addNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -930,42 +892,31 @@ public class SSACFG
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
   @Override
   public void removeAllIncidentEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#removeNode(Object) */
   @Override
   public void removeNodeAndEdges(ISSABasicBlock N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
   @Override
   public void removeNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
-   */
   @Override
   public int getProgramCounter(int index) {
     // delegate to incoming cfg.
     return delegate.getProgramCounter(index);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.Graph#containsNode(Object) */
   @Override
   public boolean containsNode(ISSABasicBlock N) {
     if (N instanceof BasicBlock) {
@@ -975,17 +926,11 @@ public class SSACFG
     }
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getMethod()
-   */
   @Override
   public IMethod getMethod() {
     return method;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
-   */
   @Override
   public List<ISSABasicBlock> getExceptionalSuccessors(final ISSABasicBlock b) {
     if (b == null) {
@@ -1000,9 +945,7 @@ public class SSACFG
     return c;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
-   */
+  /** @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(Object) */
   @Override
   public Collection<ISSABasicBlock> getExceptionalPredecessors(ISSABasicBlock b) {
     if (b == null) {
@@ -1051,9 +994,6 @@ public class SSACFG
     return delegate.hasNormalEdge(getUnderlyingBlock(src), getUnderlyingBlock(dest));
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
-   */
   @Override
   public Collection<ISSABasicBlock> getNormalSuccessors(ISSABasicBlock b) {
     if (b == null) {
@@ -1068,9 +1008,7 @@ public class SSACFG
     return c;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
-   */
+  /** @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(Object) */
   @Override
   public Collection<ISSABasicBlock> getNormalPredecessors(ISSABasicBlock b) {
     if (b == null) {
@@ -1085,7 +1023,7 @@ public class SSACFG
     return c;
   }
 
-  /*
+  /**
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   @Override

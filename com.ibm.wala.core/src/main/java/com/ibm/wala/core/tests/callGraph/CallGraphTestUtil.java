@@ -61,7 +61,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildRTA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -69,7 +69,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeRTABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeRTABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -83,7 +83,6 @@ public class CallGraphTestUtil {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       boolean testPAtoString)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
@@ -93,7 +92,7 @@ public class CallGraphTestUtil {
     }
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       builder.getPointerAnalysis().toString();
@@ -107,7 +106,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildVanillaZeroOneCFA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -116,7 +115,7 @@ public class CallGraphTestUtil {
     }
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -130,7 +129,6 @@ public class CallGraphTestUtil {
       AnalysisOptions options,
       IAnalysisCacheView cache,
       IClassHierarchy cha,
-      AnalysisScope scope,
       boolean testPAtoString)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
@@ -140,7 +138,7 @@ public class CallGraphTestUtil {
     }
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       builder.getPointerAnalysis().toString();
@@ -154,7 +152,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildZeroContainerCFA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -162,8 +160,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroContainerCFABuilder(options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeZeroContainerCFABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -174,7 +171,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildZeroOneContainerCFA(
-      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha, AnalysisScope scope)
+      AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -183,7 +180,7 @@ public class CallGraphTestUtil {
     }
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -194,11 +191,7 @@ public class CallGraphTestUtil {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildNCFA(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      AnalysisScope scope)
+      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -206,7 +199,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(n, options, cache, cha, scope);
+    CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(n, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {

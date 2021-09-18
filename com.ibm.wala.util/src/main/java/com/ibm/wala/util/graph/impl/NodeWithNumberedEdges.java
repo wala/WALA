@@ -79,9 +79,6 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.INodeWithNumberedEdges#removeAllIncidentEdges()
-   */
   @Override
   public void removeAllIncidentEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");

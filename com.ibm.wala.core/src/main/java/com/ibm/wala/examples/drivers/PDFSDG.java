@@ -119,11 +119,11 @@ public class PDFSDG {
 
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
       Iterable<Entrypoint> entrypoints =
-          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
       CallGraphBuilder<InstanceKey> builder =
-          Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+          Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
       CallGraph cg = builder.makeCallGraph(options, null);
       final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
       SDG<?> sdg = new SDG<>(cg, pointerAnalysis, dOptions, cOptions);

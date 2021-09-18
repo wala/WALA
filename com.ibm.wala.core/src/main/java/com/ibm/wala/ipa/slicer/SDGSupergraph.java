@@ -46,18 +46,12 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
-   */
   @Override
   public byte classifyEdge(Statement src, Statement dest) {
     Assertions.UNREACHABLE();
     return 0;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
-   */
   @Override
   public Iterator<? extends Statement> getCallSites(
       Statement r, PDG<? extends InstanceKey> callee) {
@@ -89,9 +83,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     }
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
-   */
   @Override
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
     switch (call.getKind()) {
@@ -106,9 +97,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     }
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
-   */
   @Override
   public Statement[] getEntriesForProcedure(PDG<? extends InstanceKey> procedure) {
     Statement[] normal = procedure.getParamCalleeStatements();
@@ -118,9 +106,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getExitsForProcedure(java.lang.Object)
-   */
   @Override
   public Statement[] getExitsForProcedure(PDG<? extends InstanceKey> procedure) {
     Statement[] normal = procedure.getReturnStatements();
@@ -130,26 +115,17 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
-   */
   @Override
   public Statement getLocalBlock(PDG<? extends InstanceKey> procedure, int i) {
     return procedure.getNode(i);
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlockNumber(java.lang.Object)
-   */
   @Override
   public int getLocalBlockNumber(Statement n) {
     PDG<?> pdg = getProcOf(n);
     return pdg.getNumber(n);
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNormalSuccessors(java.lang.Object)
-   */
   @Override
   public Iterator<Statement> getNormalSuccessors(Statement call) {
     if (!backward) {
@@ -160,18 +136,12 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     }
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
-   */
   @Override
   public int getNumberOfBlocks(PDG<? extends InstanceKey> procedure) {
     Assertions.UNREACHABLE();
     return 0;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcOf(java.lang.Object)
-   */
   @Override
   public PDG<? extends InstanceKey> getProcOf(Statement n) {
     CGNode node = n.getNode();
@@ -182,9 +152,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
-   */
   @Override
   public Iterator<? extends Statement> getReturnSites(
       Statement call, PDG<? extends InstanceKey> callee) {
@@ -216,9 +183,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     }
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isCall(java.lang.Object)
-   */
   @Override
   public boolean isCall(Statement n) {
     switch (n.getKind()) {
@@ -445,9 +409,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return sdg.getPredNodeNumbers(node);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object) */
   @Override
   public IntSet getSuccNodeNumbers(Statement node) {
     return sdg.getSuccNodeNumbers(node);

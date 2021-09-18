@@ -66,17 +66,11 @@ public abstract class SyntheticClass implements IClass {
     return cha.getLoader(T.getClassLoader());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isInterface()
-   */
   @Override
   public boolean isInterface() {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
   @Override
   public boolean isAbstract() {
     return false;
@@ -92,17 +86,11 @@ public abstract class SyntheticClass implements IClass {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getReference()
-   */
   @Override
   public TypeReference getReference() {
     return T;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
-   */
   @Override
   public String getSourceFileName() {
     return null;
@@ -113,9 +101,6 @@ public abstract class SyntheticClass implements IClass {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isArrayClass()
-   */
   @Override
   public boolean isArrayClass() {
     return false;

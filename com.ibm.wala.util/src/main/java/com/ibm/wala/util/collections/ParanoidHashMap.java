@@ -34,9 +34,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
 
   public ParanoidHashMap() {}
 
-  /*
-   * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-   */
+  /** @see java.util.Map#put(java.lang.Object, java.lang.Object) */
   @Override
   public V put(K arg0, V arg1) {
     assertOverridesHashCode(arg0);
@@ -56,9 +54,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
     }
   }
 
-  /*
-   * @see java.util.Map#putAll(java.util.Map)
-   */
+  /** @see java.util.Map#putAll(java.util.Map) */
   @Override
   public void putAll(Map<? extends K, ? extends V> arg0) {
     if (arg0 == null) {

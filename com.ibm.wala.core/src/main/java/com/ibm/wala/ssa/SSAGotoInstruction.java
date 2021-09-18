@@ -50,9 +50,6 @@ public class SSAGotoInstruction extends SSAInstruction {
     return 1409 + 17 * target;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return false;

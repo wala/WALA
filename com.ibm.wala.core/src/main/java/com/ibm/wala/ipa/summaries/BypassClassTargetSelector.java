@@ -58,10 +58,6 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
     this.cha = cha;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ClassTargetSelector#getAllocatedTarget(com.ibm.wala.ipa.callgraph.CGNode,
-   * com.ibm.wala.classLoader.NewSiteReference)
-   */
   @Override
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
 

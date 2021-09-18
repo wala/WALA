@@ -76,7 +76,7 @@ public class Driver {
         new JavaScriptEntryPoints(cha, cha.getLoader(scope.getJavaScriptLoader()));
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
 
     ComposedEntrypoints roots = new ComposedEntrypoints(jsRoots, entrypoints);
 

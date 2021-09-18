@@ -139,7 +139,7 @@ public abstract class JavaSourceAnalysisEngine
   }
 
   @Override
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
     return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha);
   }
 
@@ -173,6 +173,6 @@ public abstract class JavaSourceAnalysisEngine
   @Override
   protected AstJavaZeroXCFABuilder getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
+    return new ZeroCFABuilderFactory().make(options, cache, cha);
   }
 }

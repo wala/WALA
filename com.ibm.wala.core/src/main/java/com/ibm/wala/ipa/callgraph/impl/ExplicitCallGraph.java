@@ -168,9 +168,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
       }
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.CGNode#getPossibleSites(com.ibm.wala.ipa.callgraph.CGNode)
-     */
     protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
       return new FilterIterator<>(
@@ -232,8 +229,9 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
       }
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#removeTarget(com.ibm.wala.ipa.callgraph.CGNode)
+    /**
+     * @see
+     *     com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#removeNodeAndEdges(com.ibm.wala.ipa.callgraph.CGNode)
      */
     public void removeTarget(CGNode target) {
       allTargets.remove(getCallGraph().getNumber(target));
@@ -332,9 +330,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy()
-   */
+  /** @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy() */
   @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;

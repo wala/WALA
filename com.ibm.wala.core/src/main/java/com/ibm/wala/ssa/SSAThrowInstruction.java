@@ -17,8 +17,9 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     super(iindex, exception);
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(com.ibm.wala.ssa.SSAInstructionFactory, int[], int[])
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(com.ibm.wala.ssa.SSAInstructionFactory, int[],
+   *     int[])
    */
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)

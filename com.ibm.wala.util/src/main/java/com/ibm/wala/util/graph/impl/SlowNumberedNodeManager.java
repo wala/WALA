@@ -38,9 +38,6 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
-   */
   @Override
   public int getMaxNumber() {
     return map.getMaximumIndex();
@@ -69,9 +66,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     map.add(n);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
   @Override
   public void removeNode(T n) {
     map.deleteMappedObject(n);
@@ -88,17 +83,12 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     return result.toString();
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
-   */
+  /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
   @Override
   public boolean containsNode(T N) {
     return getNumber(N) != -1;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<>(s, this);

@@ -139,9 +139,6 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
     return ret;
   }
 
-  /*
-   * @see AAA.util.AAASet#contains(java.lang.Object)
-   */
   @Override
   public boolean contains(Object obj_) {
     for (int i = 0; i < _curIndex; i++) {
@@ -208,9 +205,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
     _curIndex = 0;
   }
 
-  /*
-   * @see java.util.Set#iterator()
-   */
+  /** @see java.util.Set#iterator() */
   @Override
   public Iterator<T> iterator() {
     return new ArraySetIterator();

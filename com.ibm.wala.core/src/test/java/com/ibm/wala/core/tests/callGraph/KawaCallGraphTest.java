@@ -135,7 +135,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, 'L' + main);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, 'L' + main);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
 
@@ -144,7 +144,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
     options.setUseConstantSpecificKeys(true);
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     MethodHandles.analyzeMethodHandles(options, builder);
 

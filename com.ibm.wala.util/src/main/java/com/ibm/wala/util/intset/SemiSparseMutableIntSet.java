@@ -245,9 +245,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
-   */
   @Override
   public void clear() {
     sparsePart.clear();
@@ -306,9 +303,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return newThis;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet) */
   @Override
   public IntSet union(IntSet that) {
     SemiSparseMutableIntSet temp = new SemiSparseMutableIntSet();

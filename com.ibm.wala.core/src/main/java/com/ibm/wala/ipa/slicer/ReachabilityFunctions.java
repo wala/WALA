@@ -42,9 +42,6 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
 
   private ReachabilityFunctions() {}
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
-   */
   @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest) {
     return FLOW_REACHES;

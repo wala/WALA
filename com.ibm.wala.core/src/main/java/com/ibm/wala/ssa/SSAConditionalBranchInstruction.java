@@ -119,9 +119,6 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return 7151 * val1 + val2;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

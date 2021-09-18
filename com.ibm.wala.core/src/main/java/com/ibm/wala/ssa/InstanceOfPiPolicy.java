@@ -38,10 +38,6 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
 
   private InstanceOfPiPolicy() {}
 
-  /*
-   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAConditionalBranchInstruction, com.ibm.wala.ssa.SSAInstruction,
-   * com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
-   */
   @Override
   public Pair<Integer, SSAInstruction> getPi(
       SSAConditionalBranchInstruction cond,
@@ -71,9 +67,6 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
     return 12;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAAbstractInvokeInstruction, com.ibm.wala.ssa.SymbolTable)
-   */
   @Override
   public Pair<Integer, SSAInstruction> getPi(
       SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
