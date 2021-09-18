@@ -17,7 +17,7 @@ import java.util.Arrays;
  * the JVM require both parameters to be the same type, but shifts always take one int parameter.
  */
 public final class ShiftInstruction extends Instruction implements IShiftInstruction {
-  protected ShiftInstruction(short opcode) {
+  private ShiftInstruction(short opcode) {
     super(opcode);
   }
 

@@ -14,7 +14,7 @@ package com.ibm.wala.shrike.shrikeBT;
 public final class CheckCastInstruction extends Instruction implements ITypeTestInstruction {
   private final String type;
 
-  protected CheckCastInstruction(String type) {
+  private CheckCastInstruction(String type) {
     super(OP_checkcast);
     this.type = type;
   }

@@ -12,7 +12,7 @@ package com.ibm.wala.shrike.shrikeBT;
 
 /** This class represents comparisons between floats, longs and doubles. */
 public final class ComparisonInstruction extends Instruction implements IComparisonInstruction {
-  protected ComparisonInstruction(short opcode) {
+  private ComparisonInstruction(short opcode) {
     super(opcode);
   }
 

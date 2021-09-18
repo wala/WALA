@@ -19,7 +19,7 @@ public final class ConditionalBranchInstruction extends Instruction
 
   private final int label;
 
-  protected ConditionalBranchInstruction(short opcode, int label) {
+  private ConditionalBranchInstruction(short opcode, int label) {
     super(opcode);
     this.label = label;
   }

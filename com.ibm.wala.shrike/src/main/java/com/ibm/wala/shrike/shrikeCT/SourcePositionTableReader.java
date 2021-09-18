@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public final class SourcePositionTableReader extends AttributeReader {
 
-  protected SourcePositionTableReader(AttrIterator attr) throws InvalidClassFileException {
+  private SourcePositionTableReader(AttrIterator attr) throws InvalidClassFileException {
     super(attr, CRTable.ATTRIBUTE_NAME);
   }
 

@@ -15,7 +15,7 @@ package com.ibm.wala.shrike.shrikeBT;
  * working stack.
  */
 public final class SwapInstruction extends Instruction {
-  protected SwapInstruction() {
+  private SwapInstruction() {
     super((short) -1);
   }
 

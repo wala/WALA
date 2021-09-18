@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 /** This class represents unary operators where the result is the same type as the operand. */
 public final class UnaryOpInstruction extends Instruction implements IUnaryOpInstruction {
-  protected UnaryOpInstruction(short opcode) {
+  private UnaryOpInstruction(short opcode) {
     super(opcode);
   }
 
