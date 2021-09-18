@@ -31,9 +31,6 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 2;
@@ -64,17 +61,11 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     return elementType.isPrimitiveType();
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

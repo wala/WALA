@@ -52,9 +52,6 @@ public class ExplodedCFGNullPointerAnalysis
     this.optHasExceptions = optHasExceptions;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.exc.ExceptionPrunedCFGAnalysis#compute(com.ibm.wala.util.MonitorUtil.IProgressMonitor)
-   */
   @Override
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> orig = ExplodedControlFlowGraph.make(ir);

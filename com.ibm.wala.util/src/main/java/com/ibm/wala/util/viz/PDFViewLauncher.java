@@ -56,9 +56,7 @@ public class PDFViewLauncher {
 
   private WalaException exception = null;
 
-  /*
-   * @see java.lang.Runnable#run()
-   */
+  /** @see java.lang.Runnable#run() */
   public void run() {
     String[] cmdarray = {getGvExe(), getPDFFile()};
     try {

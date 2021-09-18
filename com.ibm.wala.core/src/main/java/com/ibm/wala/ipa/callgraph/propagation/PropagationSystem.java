@@ -642,9 +642,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return flowGraph;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
-   */
+  /** @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys() */
   public Iterator<PointerKey> iteratePointerKeys() {
     return pointsToMap.iterateKeys();
   }

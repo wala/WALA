@@ -77,14 +77,14 @@ public class ScopeFileCallGraph {
     Iterable<Entrypoint> entrypoints =
         entryClass != null
             ? makePublicEntrypoints(cha, entryClass)
-            : Util.makeMainEntrypoints(scope, cha, mainClass);
+            : Util.makeMainEntrypoints(cha, mainClass);
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
     options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     // other builders can be constructed with different Util methods
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     //    CallGraphBuilder builder = Util.makeNCFABuilder(2, options, cache, cha, scope);
     //    CallGraphBuilder builder = Util.makeVanillaNCFABuilder(2, options, cache, cha, scope);
     System.out.println("building call graph...");

@@ -62,17 +62,11 @@ public class ArrayClass implements IClass, Constants {
 
   private final IClassLoader loader;
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getClassLoader()
-   */
   @Override
   public IClassLoader getClassLoader() {
     return loader;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getName()
-   */
   @Override
   public TypeName getName() {
     return getReference().getName();
@@ -83,25 +77,16 @@ public class ArrayClass implements IClass, Constants {
     return this.type.getInnermostElementType().isPrimitiveType();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isInterface()
-   */
   @Override
   public boolean isInterface() {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
   @Override
   public boolean isAbstract() {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getModifiers()
-   */
   @Override
   public int getModifiers() {
     return ACC_PUBLIC | ACC_FINAL;
@@ -111,9 +96,6 @@ public class ArrayClass implements IClass, Constants {
     return type.getName().toString(); // XXX is this the right string?
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSuperclass()
-   */
   @Override
   public IClass getSuperclass() {
     IClass elt = getElementClass();
@@ -134,9 +116,6 @@ public class ArrayClass implements IClass, Constants {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
-   */
   @Override
   public IMethod getMethod(Selector sig) {
     return cha.lookupClass(getClassLoader().getLanguage().getRootType()).getMethod(sig);
@@ -152,9 +131,6 @@ public class ArrayClass implements IClass, Constants {
     return getSuperclass().getField(name, typeName);
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
-   */
   @Override
   public Collection<IMethod> getDeclaredMethods() {
     return Collections.emptySet();
@@ -164,33 +140,21 @@ public class ArrayClass implements IClass, Constants {
     return 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getReference()
-   */
   @Override
   public TypeReference getReference() {
     return type;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
-   */
   @Override
   public String getSourceFileName() {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
-   */
   @Override
   public IMethod getClassInitializer() {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isArrayClass()
-   */
   @Override
   public boolean isArrayClass() {
     return true;
@@ -218,26 +182,17 @@ public class ArrayClass implements IClass, Constants {
     return type.hashCode();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
-   */
   @Override
   public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
-   */
   @Override
   public Collection<IField> getDeclaredStaticFields() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
-   */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
@@ -251,16 +206,11 @@ public class ArrayClass implements IClass, Constants {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
-   */
+  /** @see IClass#getAllImplementedInterfaces() */
   public Collection<IClass> getAllAncestorInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isReferenceType()
-   */
   @Override
   public boolean isReferenceType() {
     return true;
@@ -300,9 +250,6 @@ public class ArrayClass implements IClass, Constants {
     return loader.lookupClass(elementType.getName());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
-   */
   @Override
   public Collection<IClass> getDirectInterfaces() throws UnimplementedError {
     // TODO Auto-generated method stub
@@ -320,27 +267,18 @@ public class ArrayClass implements IClass, Constants {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
-   */
   @Override
   public Collection<IField> getAllInstanceFields() {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
-   */
   @Override
   public Collection<IField> getAllStaticFields() {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllMethods()
-   */
   @Override
   public Collection<? extends IMethod> getAllMethods() {
     return loader
@@ -348,9 +286,6 @@ public class ArrayClass implements IClass, Constants {
         .getAllMethods();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllFields()
-   */
   @Override
   public Collection<IField> getAllFields() {
     Assertions.UNREACHABLE();

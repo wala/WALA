@@ -178,9 +178,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return heapModel;
   }
 
-  /*
-   * @see com.ibm.capa.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object) */
   @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     if (node instanceof StaticFieldKey) {
@@ -191,9 +189,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /*
-   * @see com.ibm.capa.util.graph.AbstractNumberedGraph#getSuccNodeNumbers(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.AbstractNumberedGraph#getSuccNodeNumbers(java.lang.Object) */
   @Override
   public IntSet getSuccNodeNumbers(Object node) throws IllegalArgumentException {
     if (node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
@@ -203,9 +199,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return super.getSuccNodeNumbers(node);
   }
 
-  /*
-   * @see com.ibm.capa.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object) */
   @Override
   public int getPredNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
@@ -216,9 +210,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /*
-   * @see com.ibm.capa.util.graph.AbstractGraph#getPredNodes(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.AbstractGraph#getPredNodes(java.lang.Object) */
   @Override
   public Iterator<Object> getPredNodes(Object N) throws IllegalArgumentException {
     if (N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
@@ -228,9 +220,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return super.getPredNodes(N);
   }
 
-  /*
-   * @see com.ibm.capa.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object) */
   @Override
   public int getSuccNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
@@ -241,9 +231,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /*
-   * @see com.ibm.capa.util.graph.AbstractGraph#getSuccNodes(java.lang.Object)
-   */
+  /** @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodes(java.lang.Object) */
   @Override
   public Iterator<Object> getSuccNodes(Object N) {
     if (N instanceof StaticFieldKey) {
@@ -363,7 +351,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   /*
    * (non-Javadoc)
    *
-   * @see com.ibm.capa.util.graph.AbstractGraph#hasEdge(java.lang.Object, java.lang.Object)
+   * @see com.ibm.wala.util.graph.AbstractGraph#hasEdge(java.lang.Object, java.lang.Object)
    */
   public boolean hasEdge(PointerKey src, PointerKey dst) {
     // TODO Auto-generated method stub
@@ -936,9 +924,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitInvoke(com.ibm.domo.ssa.InvokeInstruction)
-     */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 

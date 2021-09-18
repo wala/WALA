@@ -33,9 +33,6 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
     this.reflectionHandler = new ReflectionHandler(builder);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
-   */
   @Override
   public abstract void solve(IProgressMonitor monitor)
       throws IllegalArgumentException, CancelException;

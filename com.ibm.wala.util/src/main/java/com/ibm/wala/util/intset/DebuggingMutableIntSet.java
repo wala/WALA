@@ -36,9 +36,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
     assert primaryImpl.sameValue(secondaryImpl);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
-   */
   @Override
   public void clear() {
     primaryImpl.clear();
@@ -172,9 +169,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet) */
   @Override
   public IntSet union(IntSet that) {
     MutableSparseIntSet temp = new MutableSparseIntSet();
@@ -308,9 +303,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#intIterator()
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#intIterator() */
   @Override
   public IntIterator intIterator() {
     MutableSparseIntSet bits = MutableSparseIntSet.makeEmpty();

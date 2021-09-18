@@ -90,9 +90,6 @@ public class SSAReturnInstruction extends SSAInstruction {
     return result * 8933;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return false;

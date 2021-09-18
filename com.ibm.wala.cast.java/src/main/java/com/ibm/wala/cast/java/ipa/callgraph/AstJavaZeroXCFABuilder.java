@@ -66,7 +66,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     for (String xmlFile : xmlFiles) {
-      com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFile, cha);
+      com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, cl, xmlFile, cha);
     }
 
     return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, instancePolicy);

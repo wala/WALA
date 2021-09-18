@@ -79,8 +79,9 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /** node numbers of CGNodes we have already visited */
   final BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
@@ -100,17 +101,16 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     }
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean hasSubgraphForNode(CGNode node) {
     return cgNodesVisited.contains(cg.getNumber(node));
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrsPassingParam(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getParamSuccs(LocalPointerKey pk) {
     // TODO cache this result
     // TODO take some cgnode as parameter if we have calling context?
@@ -142,9 +142,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return paramSuccs.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrsPassingParam(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getParamPreds(LocalPointerKey pk) {
     // TODO
     Set<SSAAbstractInvokeInstruction> instrs = callParams.get(pk);
@@ -172,9 +170,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return paramPreds.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrReturningTo(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getReturnSuccs(LocalPointerKey pk) {
     SSAAbstractInvokeInstruction callInstr = callDefs.get(pk);
     if (callInstr == null) return EmptyIterator.instance();
@@ -198,9 +194,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return returnSuccs.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrReturningTo(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getReturnPreds(LocalPointerKey pk) {
     CGNode cgNode = returns.get(pk);
     if (cgNode == null) {

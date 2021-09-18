@@ -135,7 +135,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
     // SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope,
     // null, makeDefaultInterpreter(options, cache));
     SSAPropagationCallGraphBuilder cgb =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     CallGraph callGraph = cgb.makeCallGraph(options, monitor);
 
@@ -183,14 +183,14 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
     System.err.println("building call graph for " + mainClass + ":" + mainClass.getClass());
 
-    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, mainClassName);
+    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(cha, mainClassName);
 
     IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     SSAPropagationCallGraphBuilder cgb =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     CallGraph callGraph = cgb.makeCallGraph(options);
 

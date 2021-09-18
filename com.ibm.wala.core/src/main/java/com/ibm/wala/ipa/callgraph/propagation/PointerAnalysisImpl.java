@@ -97,8 +97,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return new HModel();
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointsToSet(com.ibm.wala.ipa.callgraph.propagation.PointerKey)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointsToSet(com.ibm.wala.ipa.callgraph.propagation.PointerKey)
    */
   @Override
   @SuppressWarnings("unchecked")
@@ -450,9 +451,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return new OrdinalSet<>(S, instanceKeys);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel()
-   */
+  /** @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel() */
   @Override
   public HeapModel getHeapModel() {
     return H;
@@ -492,8 +491,10 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return iKeyFactory.getInstanceKeyForMetadataObject(obj, objType);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode, int)
+    /**
+     * @see
+     *     com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode,
+     *     int)
      */
     @Override
     public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
@@ -506,8 +507,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
+    /**
+     * @see
+     *     com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForReturnValue(com.ibm.wala.ipa.callgraph.CGNode)
      */
     @Override
     public PointerKey getPointerKeyForReturnValue(CGNode node) {
@@ -560,9 +562,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#iteratePointerKeys()
-   */
+  /** @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointerKeys() */
   @Override
   public Iterable<PointerKey> getPointerKeys() {
     return Iterator2Iterable.make(pointsToMap.iterateKeys());

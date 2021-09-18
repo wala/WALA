@@ -22,33 +22,21 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
 
   private IdentityFlowFunctions() {}
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getNormalFlowFunction(java.lang.Object, java.lang.Object)
-   */
   @Override
   public IUnaryFlowFunction getNormalFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
-   */
   @Override
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallToReturnFlowFunction(java.lang.Object, java.lang.Object)
-   */
   @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
-   */
   @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();

@@ -27,9 +27,6 @@ public class BitVectorFramework<T, L> extends BasicFramework<T, BitVectorVariabl
     this.latticeValues = latticeValues;
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getLatticeValues()
-   */
   public OrdinalSetMapping<L> getLatticeValues() {
     return latticeValues;
   }

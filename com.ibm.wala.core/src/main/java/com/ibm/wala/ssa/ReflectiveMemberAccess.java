@@ -30,9 +30,6 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
         + getValueString(symbolTable, memberRef);
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j <= 1;
@@ -52,9 +49,6 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
     return 6311 * memberRef ^ 2371 * objectRef;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

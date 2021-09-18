@@ -74,17 +74,11 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return site.getProgramCounter();
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfDefs()
-   */
   @Override
   public int getNumberOfDefs() {
     return getNumberOfReturnValues() + 1;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef(int)
-   */
   @Override
   public int getDef(int i) {
     if (getNumberOfReturnValues() == 0) {
@@ -110,17 +104,11 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return exception;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#hasDef()
-   */
   @Override
   public boolean hasDef() {
     return getNumberOfReturnValues() > 0;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
   @Override
   public int getDef() {
     return getReturnValue(0);
@@ -150,17 +138,11 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return site.getInvocationCode();
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

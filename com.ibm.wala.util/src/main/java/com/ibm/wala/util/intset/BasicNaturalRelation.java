@@ -264,9 +264,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     return smallStore[0].get(x) != EMPTY_CODE;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelated(int)
-   */
   @Override
   public IntSet getRelated(int x) {
     if (DEBUG) {
@@ -314,9 +311,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelatedCount(int)
-   */
   @Override
   public int getRelatedCount(int x) throws IllegalArgumentException {
     if (x < 0) {
@@ -382,9 +376,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     delegateStore.set(x, null);
   }
 
-  /*
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
+  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
   @Override
   public void performVerboseAction() {
     if (VERBOSE) {

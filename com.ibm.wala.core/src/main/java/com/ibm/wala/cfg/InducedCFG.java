@@ -597,25 +597,16 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       return "BB[Induced]" + getNumber() + " - " + getMethod().getSignature();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
-     */
     @Override
     public boolean isExitBlock() {
       return getLastInstructionIndex() == -2;
     }
 
-    /*
-     * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
-     */
     @Override
     public boolean isEntryBlock() {
       return getNumber() == 0;
     }
 
-    /*
-     * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
-     */
     @Override
     public IMethod getMethod() {
       return InducedCFG.this.getMethod();
@@ -629,9 +620,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       return getInstructions()[getLastInstructionIndex()] instanceof SSAReturnInstruction;
     }
 
-    /*
-     * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
-     */
     @Override
     public int getNumber() {
       return InducedCFG.this.getNumber(this);

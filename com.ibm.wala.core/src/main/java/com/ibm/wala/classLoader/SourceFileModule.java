@@ -37,25 +37,16 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
     return "SourceFileModule:" + getFile().toString();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
-   */
   @Override
   public boolean isClassFile() {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
-   */
   @Override
   public String getClassName() {
     return FileSuffixes.stripSuffix(fileName).replace(File.separator.charAt(0), '/');
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
-   */
   @Override
   public boolean isSourceFile() {
     return true;

@@ -41,9 +41,6 @@ public abstract class FileModule implements Module, ModuleEntry {
     return file.getAbsolutePath();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.Module#getEntries()
-   */
   @Override
   public Iterator<ModuleEntry> getEntries() {
     return new NonNullSingletonIterator<>(this);
@@ -67,17 +64,11 @@ public abstract class FileModule implements Module, ModuleEntry {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getName()
-   */
   @Override
   public String getName() {
     return file.getName();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
-   */
   @Override
   public InputStream getInputStream() {
     try {
@@ -92,9 +83,6 @@ public abstract class FileModule implements Module, ModuleEntry {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
-   */
   @Override
   public boolean isModuleFile() {
     return false;

@@ -221,10 +221,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
         null);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   * com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;

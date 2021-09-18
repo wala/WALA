@@ -28,25 +28,16 @@ public class JarFileEntry implements ModuleEntry {
     this.jarFileModule = jarFile;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getName()
-   */
   @Override
   public String getName() {
     return entryName;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
-   */
   @Override
   public boolean isClassFile() {
     return FileSuffixes.isClassFile(getName());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
-   */
   @Override
   public InputStream getInputStream() {
     try {
@@ -60,9 +51,6 @@ public class JarFileEntry implements ModuleEntry {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getSize()
-   */
   public long getSize() {
     // TODO: cache this?
     return jarFileModule.getJarFile().getEntry(entryName).getSize();
@@ -73,17 +61,11 @@ public class JarFileEntry implements ModuleEntry {
     return jarFileModule.getJarFile().getName() + ':' + getName();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
-   */
   @Override
   public boolean isModuleFile() {
     return FileSuffixes.isJarFile(getName()) || FileSuffixes.isWarFile(getName());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
-   */
   @Override
   public Module asModule() {
     return new NestedJarFileModule(jarFileModule, jarFileModule.getJarFile().getEntry(entryName));
@@ -103,17 +85,11 @@ public class JarFileEntry implements ModuleEntry {
     return entryName.hashCode() * 5059 + jarFileModule.getJarFile().hashCode();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
-   */
   @Override
   public String getClassName() {
     return FileSuffixes.stripSuffix(getName());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
-   */
   @Override
   public boolean isSourceFile() {
     return FileSuffixes.isSourceFile(getName());
