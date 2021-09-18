@@ -81,7 +81,7 @@ public final class MethodPositions extends PositionsAttribute {
   }
 
   @Override
-  protected final void readData(DataInputStream in) throws IOException {
+  protected void readData(DataInputStream in) throws IOException {
     declaration = readRange(in, "declaration_start", "declaration_end", false);
     parameter = readRange(in, "parameter_start", "parameter_end", true);
     block_end = readRange(in, "block_end_start", "block_end_end", false);
@@ -184,7 +184,7 @@ public final class MethodPositions extends PositionsAttribute {
    *
    * @return the source position range of the method declaration
    */
-  public final Range getHeaderInfo() {
+  public Range getHeaderInfo() {
     return declaration;
   }
 
@@ -193,7 +193,7 @@ public final class MethodPositions extends PositionsAttribute {
    *
    * @return the source position range of the method parameter declaration
    */
-  public final Range getMethodInfo() {
+  public Range getMethodInfo() {
     return parameter;
   }
 
@@ -202,7 +202,7 @@ public final class MethodPositions extends PositionsAttribute {
    *
    * @return the source position range of the end of the method block
    */
-  public final Range getFooterInfo() {
+  public Range getFooterInfo() {
     return block_end;
   }
 

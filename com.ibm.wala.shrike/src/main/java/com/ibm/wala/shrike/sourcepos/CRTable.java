@@ -56,7 +56,7 @@ public final class CRTable extends PositionsAttribute {
   }
 
   @Override
-  protected final void readData(DataInputStream in) throws IOException {
+  protected void readData(DataInputStream in) throws IOException {
     assert in != null;
     short crt_length = in.readShort();
     crt = new CRTData[crt_length];
@@ -85,7 +85,7 @@ public final class CRTable extends PositionsAttribute {
    * @param pc the index in the code array of the code attribute
    * @return the most precise source position range
    */
-  public final Range getSourceInfo(int pc) {
+  public Range getSourceInfo(int pc) {
     CRTData sourceInfo = null;
     int sourceInfoIndex = 0;
     for (int i = 0; i < crt.length; i++) {

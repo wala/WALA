@@ -554,12 +554,12 @@ public final class TypeReference implements Serializable {
   }
 
   /** @return the classloader component of this type reference */
-  public final ClassLoaderReference getClassLoader() {
+  public ClassLoaderReference getClassLoader() {
     return classloader;
   }
 
   /** @return the type name component of this type reference */
-  public final TypeName getName() {
+  public TypeName getName() {
     return name;
   }
 
@@ -567,13 +567,13 @@ public final class TypeReference implements Serializable {
    * TODO: specialized form of TypeReference for arrays, please. Get the element type of for this
    * array type.
    */
-  public final TypeReference getArrayElementType() {
+  public TypeReference getArrayElementType() {
     TypeName element = name.parseForArrayElementName();
     return findOrCreate(classloader, element);
   }
 
   /** Get array type corresponding to "this" array element type. */
-  public final TypeReference getArrayTypeForElementType() {
+  public TypeReference getArrayTypeForElementType() {
     return findOrCreate(classloader, name.getArrayTypeForElementType());
   }
 
@@ -581,37 +581,37 @@ public final class TypeReference implements Serializable {
    * Return the dimensionality of the type. By convention, class types have dimensionality 0,
    * primitives -1, and arrays the number of [ in their descriptor.
    */
-  public final int getDerivedMask() {
+  public int getDerivedMask() {
     return name.getDerivedMask();
   }
 
   /** Return the innermost element type reference for an array */
-  public final TypeReference getInnermostElementType() {
+  public TypeReference getInnermostElementType() {
     return findOrCreate(classloader, name.getInnermostElementType());
   }
 
   /** Does 'this' refer to a class? */
-  public final boolean isClassType() {
+  public boolean isClassType() {
     return !isArrayType() && !isPrimitiveType();
   }
 
   /** Does 'this' refer to an array? */
-  public final boolean isArrayType() {
+  public boolean isArrayType() {
     return name.isArrayType();
   }
 
   /** Does 'this' refer to a primitive type */
-  public final boolean isPrimitiveType() {
+  public boolean isPrimitiveType() {
     return isPrimitiveType(name);
   }
 
   /** Does 'this' refer to a reference type */
-  public final boolean isReferenceType() {
+  public boolean isReferenceType() {
     return !isPrimitiveType();
   }
 
   @Override
-  public final int hashCode() {
+  public int hashCode() {
     return name.hashCode();
   }
 
@@ -624,12 +624,12 @@ public final class TypeReference implements Serializable {
    * both represent the IClass which is named &lt;Primordial,java.lang.Object&gt;
    */
   @Override
-  public final boolean equals(Object other) {
+  public boolean equals(Object other) {
     return (this == other);
   }
 
   @Override
-  public final String toString() {
+  public String toString() {
     return "<" + classloader.getName() + ',' + name + '>';
   }
 

@@ -98,7 +98,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param bit the bit to be set
    */
   @Override
-  public final void set(int bit) {
+  public void set(int bit) {
     if (bit < 0) {
       throw new IllegalArgumentException("illegal bit: " + bit);
     }
@@ -132,7 +132,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param bit the bit to be cleared
    */
   @Override
-  public final void clear(int bit) {
+  public void clear(int bit) {
     if (bit < offset) {
       return;
     }
@@ -152,7 +152,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param bit the bit to be gotten
    */
   @Override
-  public final boolean get(int bit) {
+  public boolean get(int bit) {
     if (DEBUG) {
       assert bit >= 0;
     }
@@ -177,7 +177,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   }
 
   /** Logically NOT this bit string */
-  public final void not() {
+  public void not() {
     if (offset != 0) {
       expand(0, offset + length() - 1);
     }
@@ -196,12 +196,12 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * element.
    */
   @Override
-  public final int length() {
+  public int length() {
     return (bits.length << LOG_BITS_PER_UNIT) + offset;
   }
 
   /** Sets all bits. */
-  public final void setAll() {
+  public void setAll() {
     expand(0, length() - 1);
     Arrays.fill(bits, MASK);
   }
@@ -231,7 +231,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if set == null
    */
   @Override
-  public final boolean intersectionEmpty(OffsetBitVector set) throws IllegalArgumentException {
+  public boolean intersectionEmpty(OffsetBitVector set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
@@ -261,7 +261,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if set == null
    */
   @Override
-  public final boolean sameBits(OffsetBitVector set) throws IllegalArgumentException {
+  public boolean sameBits(OffsetBitVector set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
@@ -352,7 +352,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param set the bit set to copy the bits from
    * @throws IllegalArgumentException if set is null
    */
-  public final void copyBits(OffsetBitVector set) {
+  public void copyBits(OffsetBitVector set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
     }
@@ -367,7 +367,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if set == null
    */
   @Override
-  public final void and(OffsetBitVector set) throws IllegalArgumentException {
+  public void and(OffsetBitVector set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
@@ -400,7 +400,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if set == null
    */
   @Override
-  public final void or(OffsetBitVector set) throws IllegalArgumentException {
+  public void or(OffsetBitVector set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
@@ -426,7 +426,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @throws IllegalArgumentException if set == null
    */
   @Override
-  public final void xor(OffsetBitVector set) throws IllegalArgumentException {
+  public void xor(OffsetBitVector set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
