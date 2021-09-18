@@ -14,7 +14,7 @@ package com.ibm.wala.shrike.shrikeBT;
 public final class PopInstruction extends Instruction {
   private final byte size;
 
-  protected PopInstruction(byte size) {
+  private PopInstruction(byte size) {
     super((short) -1);
     this.size = size;
   }

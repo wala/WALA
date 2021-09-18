@@ -548,7 +548,7 @@ public final class TypeReference implements Serializable {
    * @param cl the classloader
    * @param tn the type name
    */
-  protected TypeReference(ClassLoaderReference cl, TypeName tn) {
+  private TypeReference(ClassLoaderReference cl, TypeName tn) {
     classloader = cl;
     name = tn;
   }

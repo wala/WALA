@@ -18,7 +18,7 @@ public final class ThrowInstruction extends Instruction {
 
   private final boolean rethrow;
 
-  protected ThrowInstruction(boolean rethrow) {
+  private ThrowInstruction(boolean rethrow) {
     super(OP_athrow);
     this.rethrow = rethrow;
   }

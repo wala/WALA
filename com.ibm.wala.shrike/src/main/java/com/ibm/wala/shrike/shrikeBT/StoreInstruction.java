@@ -14,7 +14,7 @@ package com.ibm.wala.shrike.shrikeBT;
 public final class StoreInstruction extends Instruction implements IStoreInstruction {
   private final int index;
 
-  protected StoreInstruction(short opcode, int index) {
+  private StoreInstruction(short opcode, int index) {
     super(opcode);
     this.index = index;
   }

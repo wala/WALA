@@ -16,7 +16,7 @@ import java.util.Arrays;
 public final class GotoInstruction extends Instruction {
   private final int[] label;
 
-  protected GotoInstruction(int label) {
+  private GotoInstruction(int label) {
     super(OP_goto);
     int[] l = {label};
     this.label = l;

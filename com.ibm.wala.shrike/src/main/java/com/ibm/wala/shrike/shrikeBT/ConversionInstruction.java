@@ -16,7 +16,7 @@ public final class ConversionInstruction extends Instruction implements IConvers
 
   private final String toType;
 
-  protected ConversionInstruction(short opcode) {
+  private ConversionInstruction(short opcode) {
     super(opcode);
 
     if (opcode < OP_i2b) {
