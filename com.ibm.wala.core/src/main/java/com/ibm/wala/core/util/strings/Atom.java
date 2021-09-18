@@ -142,26 +142,26 @@ public final class Atom implements Serializable {
 
   /** Return printable representation of "this" atom. Does not correctly handle UTF8 translation. */
   @Override
-  public final String toString() {
+  public String toString() {
     return new String(val);
   }
 
   /** Return printable representation of "this" atom. */
-  public final String toUnicodeString() throws java.io.UTFDataFormatException {
+  public String toUnicodeString() throws java.io.UTFDataFormatException {
     return UTF8Convert.fromUTF8(val);
   }
 
   /** New Atom containing first count bytes */
-  public final Atom left(int count) {
+  public Atom left(int count) {
     return findOrCreate(val, 0, count);
   }
 
   /** New Atom containing last count bytes */
-  public final Atom right(int count) {
+  public Atom right(int count) {
     return findOrCreate(val, val.length - count, count);
   }
 
-  public final boolean startsWith(Atom start) {
+  public boolean startsWith(Atom start) {
     assert (start != null);
 
     // can't start with something that's longer.
@@ -181,7 +181,7 @@ public final class Atom implements Serializable {
    *
    * @return array descriptor - something like "[I" or "[Ljava/lang/Object;"
    */
-  public final Atom arrayDescriptorFromElementDescriptor() {
+  public Atom arrayDescriptorFromElementDescriptor() {
     byte sig[] = new byte[1 + val.length];
     sig[0] = (byte) '[';
     for (int i = 0, n = val.length; i < n; ++i) sig[i + 1] = val[i];
@@ -192,7 +192,7 @@ public final class Atom implements Serializable {
    * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with
    * '&lt;' for future use. At present, only &lt;init&gt; and &lt;clinit&gt; are used.
    */
-  public final boolean isReservedMemberName() {
+  public boolean isReservedMemberName() {
     if (length() == 0) {
       return false;
     }
@@ -200,7 +200,7 @@ public final class Atom implements Serializable {
   }
 
   /** Is "this" atom a class descriptor? */
-  public final boolean isClassDescriptor() {
+  public boolean isClassDescriptor() {
     if (length() == 0) {
       return false;
     }
@@ -208,7 +208,7 @@ public final class Atom implements Serializable {
   }
 
   /** Is "this" atom an array descriptor? */
-  public final boolean isArrayDescriptor() {
+  public boolean isArrayDescriptor() {
     if (length() == 0) {
       return false;
     }
@@ -216,14 +216,14 @@ public final class Atom implements Serializable {
   }
 
   /** Is "this" atom a method descriptor? */
-  public final boolean isMethodDescriptor() throws IllegalArgumentException {
+  public boolean isMethodDescriptor() throws IllegalArgumentException {
     if (length() == 0) {
       return false;
     }
     return val[0] == '(';
   }
 
-  public final int length() {
+  public int length() {
     return val.length;
   }
 
@@ -239,7 +239,7 @@ public final class Atom implements Serializable {
    *
    * @return array element descriptor - something like "I"
    */
-  public final Atom parseForArrayElementDescriptor() throws IllegalArgumentException {
+  public Atom parseForArrayElementDescriptor() throws IllegalArgumentException {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
     }
@@ -253,7 +253,7 @@ public final class Atom implements Serializable {
    * @return dimensionality - something like "1" or "2"
    * @throws IllegalStateException if this Atom does not represent an array
    */
-  public final int parseForArrayDimensionality() throws IllegalArgumentException {
+  public int parseForArrayDimensionality() throws IllegalArgumentException {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
     }
@@ -273,7 +273,7 @@ public final class Atom implements Serializable {
    *
    * @throws IllegalStateException if this Atom does not represent an array descriptor
    */
-  public final Atom parseForInnermostArrayElementDescriptor() throws IllegalArgumentException {
+  public Atom parseForInnermostArrayElementDescriptor() throws IllegalArgumentException {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
     }
@@ -307,7 +307,7 @@ public final class Atom implements Serializable {
     }
 
     @Override
-    public final boolean equals(Object other) {
+    public boolean equals(Object other) {
 
       assert (other != null && this.getClass().equals(other.getClass()));
       if (this == other) {
@@ -328,12 +328,12 @@ public final class Atom implements Serializable {
      * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
      */
     @Override
-    public final String toString() {
+    public String toString() {
       return new String(val);
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
       return hash;
     }
   }

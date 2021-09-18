@@ -77,12 +77,12 @@ public final class FieldReference extends MemberReference {
   }
 
   /** @return the descriptor component of this member reference */
-  public final TypeReference getFieldType() {
+  public TypeReference getFieldType() {
     return fieldType;
   }
 
   @Override
-  public final String toString() {
+  public String toString() {
     return "< "
         + getDeclaringClass().getClassLoader().getName()
         + ", "

@@ -26,7 +26,7 @@ public final class CacheReference {
   // should be SOFT except during debugging.
   private static final byte choice = SOFT;
 
-  public static final Object make(final Object referent) {
+  public static Object make(final Object referent) {
 
     switch (choice) {
       case SOFT:
@@ -41,7 +41,7 @@ public final class CacheReference {
     }
   }
 
-  public static final Object get(final Object reference) throws IllegalArgumentException {
+  public static Object get(final Object reference) throws IllegalArgumentException {
 
     if (reference == null) {
       return null;
