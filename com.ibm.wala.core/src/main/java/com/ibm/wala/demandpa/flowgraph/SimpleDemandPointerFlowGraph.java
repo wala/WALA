@@ -526,7 +526,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
         System.err.println("\n   No statements\n");
       } else {
         try {
-          System.err.println(ir.toString());
+          System.err.println(ir);
         } catch (Error e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

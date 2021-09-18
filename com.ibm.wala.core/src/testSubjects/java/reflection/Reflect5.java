@@ -16,7 +16,7 @@ public class Reflect5 {
       throws IllegalAccessException, InstantiationException, ClassNotFoundException {
     Class<?> c = Class.forName("reflection.Reflect5$A");
     A h = (A) c.newInstance();
-    System.out.println(h.toString());
+    System.out.println(h);
   }
 
   public static class A {

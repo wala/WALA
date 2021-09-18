@@ -104,7 +104,7 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     State state = params.get(varNum);
     if (state == null) {
       throw new IllegalArgumentException(
-          "No mapping for variable " + varNum + "in ParameterState " + this.toString());
+          "No mapping for variable " + varNum + "in ParameterState " + this);
     }
     return state;
   }

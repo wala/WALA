@@ -41,10 +41,10 @@ public class MainClass {
 
   public static void main(String[] args) {
     MainClass mc = new MainClass(new ExtraClass("ExtraClass"));
-    System.err.println(mc.toString());
+    System.err.println(mc);
     mc = new MainClass(null);
-    System.err.println(mc.toString());
+    System.err.println(mc);
     mc = new MainClass(new ExtraClass());
-    System.err.println(mc.toString());
+    System.err.println(mc);
   }
 }

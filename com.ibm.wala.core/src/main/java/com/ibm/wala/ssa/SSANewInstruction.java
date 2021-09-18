@@ -144,7 +144,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   @Override
   public int getUse(int j) {
-    assert params != null : "expected params but got null in " + this.toString();
+    assert params != null : "expected params but got null in " + this;
     assert params.length > j : "found too few parameters";
     return params[j];
   }

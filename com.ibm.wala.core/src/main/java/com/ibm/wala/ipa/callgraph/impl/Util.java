@@ -349,9 +349,9 @@ public class Util {
     nodeDiff.removeAll(setify(supG.iterator()));
     if (!nodeDiff.isEmpty()) {
       System.err.println("supergraph: ");
-      System.err.println(supG.toString());
+      System.err.println(supG);
       System.err.println("subgraph: ");
-      System.err.println(subG.toString());
+      System.err.println(subG);
       System.err.println("nodeDiff: ");
       for (T t : nodeDiff) {
         System.err.println(t.toString());
@@ -371,9 +371,9 @@ public class Util {
       predDiff.removeAll(setify(supG.getPredNodes(m)));
       if (!predDiff.isEmpty()) {
         System.err.println("supergraph: ");
-        System.err.println(supG.toString());
+        System.err.println(supG);
         System.err.println("subgraph: ");
-        System.err.println(subG.toString());
+        System.err.println(subG);
         System.err.println("predDiff: ");
         for (T t : predDiff) {
           System.err.println(t.toString());

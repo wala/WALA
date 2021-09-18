@@ -245,7 +245,7 @@ public class FlatInstantiator implements IInstantiator {
       assert (newInst.getDef() == instance.getNumber());
       return instance;
     } else if (klass.isArrayClass()) {
-      logger.info("Creating Array-Class {}", klass.toString());
+      logger.info("Creating Array-Class {}", klass);
 
       final TypeReference payloadType = T.getArrayElementType();
       SSAValue payload = null;

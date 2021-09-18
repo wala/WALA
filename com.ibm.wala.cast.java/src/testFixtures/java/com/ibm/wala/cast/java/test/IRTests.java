@@ -442,7 +442,7 @@ public abstract class IRTests {
     }
 
     if (assertReachable) {
-      Assert.assertTrue("unreachable methods: " + unreachable.toString(), unreachable.isEmpty());
+      Assert.assertTrue("unreachable methods: " + unreachable, unreachable.isEmpty());
     }
   }
 

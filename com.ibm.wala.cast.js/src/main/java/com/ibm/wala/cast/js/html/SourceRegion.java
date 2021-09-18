@@ -88,7 +88,7 @@ public class SourceRegion {
   }
 
   public FileMapping writeToFile(PrintWriter ps) {
-    ps.print(source.toString());
+    ps.print(source);
     ps.flush();
     return fileMapping;
   }
@@ -120,7 +120,7 @@ public class SourceRegion {
   }
 
   public void dump(PrintWriter ps) {
-    ps.println(source.toString());
+    ps.println(source);
   }
 
   private static int getNumberOfLineDrops(String text) {

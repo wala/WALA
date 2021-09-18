@@ -107,7 +107,7 @@ public class PDFWalaIR {
         Assertions.UNREACHABLE("Null IR for " + m);
       }
 
-      System.err.println(ir.toString());
+      System.err.println(ir);
 
       Properties wp = null;
       try {
