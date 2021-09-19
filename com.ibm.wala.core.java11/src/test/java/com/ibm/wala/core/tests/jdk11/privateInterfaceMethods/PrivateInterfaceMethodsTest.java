@@ -42,7 +42,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            cha, "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
+            cha, "LprivateInterfaceMethods/testArrayReturn/TestArrayReturn");
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
@@ -52,7 +52,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     TypeReference tm =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/TestArrayReturn/TestArrayReturn");
+            "LprivateInterfaceMethods/testArrayReturn/TestArrayReturn");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
     Assert.assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
     CGNode mnode = cg.getNodes(mm).iterator().next();
@@ -61,7 +61,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     TypeReference t2s =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
+            "LprivateInterfaceMethods/testArrayReturn/ReturnArray");
     MethodReference t2m = MethodReference.findOrCreate(t2s, "RetT", "(Ljava/lang/Object;)V");
     Assert.assertTrue("expect RetT node", cg.getNodes(t2m).iterator().hasNext());
     CGNode t2node = cg.getNodes(t2m).iterator().next();
@@ -75,7 +75,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     TypeReference t3s =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
+            "LprivateInterfaceMethods/testArrayReturn/ReturnArray");
     MethodReference t3m =
         MethodReference.findOrCreate(t3s, "GetT", "(Ljava/lang/Object;)Ljava/lang/Object;");
 
@@ -91,7 +91,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     TypeReference test1Type =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
-            "LprivateInterfaceMethods/TestArrayReturn/ReturnArray");
+            "LprivateInterfaceMethods/testArrayReturn/ReturnArray");
     IClass test1Class = cha.lookupClass(test1Type);
 
     Collection<? extends IMethod> allMethods = test1Class.getAllMethods();

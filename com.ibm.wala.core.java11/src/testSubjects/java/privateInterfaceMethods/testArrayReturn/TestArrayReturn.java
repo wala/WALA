@@ -1,4 +1,4 @@
-package privateInterfaceMethods.TestArrayReturn;
+package privateInterfaceMethods.testArrayReturn;
 
 public class TestArrayReturn {
   public void main(String[] args) {
