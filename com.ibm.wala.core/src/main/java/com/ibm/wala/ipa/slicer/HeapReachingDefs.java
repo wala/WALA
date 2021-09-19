@@ -499,7 +499,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
         // doesn't mod anything in the heap.
         return Collections.emptySet();
       default:
-        Assertions.UNREACHABLE(s.getKind() + " " + s.toString());
+        Assertions.UNREACHABLE(s.getKind() + " " + s);
         return null;
     }
   }

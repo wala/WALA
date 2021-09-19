@@ -325,7 +325,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
         System.err.println("\n   No statements\n");
       } else {
         try {
-          System.err.println(ir.toString());
+          System.err.println(ir);
         } catch (Error e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

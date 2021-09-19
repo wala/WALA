@@ -364,9 +364,9 @@ public abstract class AbstractAndroidModel {
         throw new IllegalArgumentException(
             "Sections must be in ascending order! When trying to "
                 + "enter "
-                + this.currentSection.toString()
+                + this.currentSection
                 + " from "
-                + section.toString());
+                + section);
       }
     }
 

@@ -172,7 +172,7 @@ public class JUnitEntryPoints {
           Atom methodAtom = method.getName();
           if (methodAtom.equals(targetMethodAtom)) {
             entryPts.add(new DefaultEntrypoint(method, cha));
-            logger.fine(() -> "- adding entry point of the call graph: " + methodAtom.toString());
+            logger.fine(() -> "- adding entry point of the call graph: " + methodAtom);
           }
         }
 

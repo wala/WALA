@@ -276,7 +276,7 @@ public final class TypeName implements Serializable {
       toStringPrefix(result);
 
       if (packageName != null) {
-        result.append(packageName.toString());
+        result.append(packageName);
         result.append('/');
       }
       result.append(className.toString());

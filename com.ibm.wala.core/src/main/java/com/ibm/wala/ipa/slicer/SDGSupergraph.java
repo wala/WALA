@@ -211,7 +211,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
           return s.getInstruction() instanceof SSAAbstractInvokeInstruction;
         }
       default:
-        Assertions.UNREACHABLE(n.getKind() + " " + n.toString());
+        Assertions.UNREACHABLE(n.getKind() + " " + n);
         return false;
     }
   }

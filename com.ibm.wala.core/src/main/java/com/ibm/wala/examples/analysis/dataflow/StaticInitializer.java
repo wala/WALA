@@ -148,7 +148,7 @@ public class StaticInitializer {
 
             @Override
             public IntSet getTargets(int d1) {
-              System.out.println(ebb.toString());
+              System.out.println(ebb);
               System.out.println(d1);
               // first, gen this statement
               int factNum =

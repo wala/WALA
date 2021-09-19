@@ -289,7 +289,7 @@ public class AndroidManifestXMLReader {
     /** The class that takes action on this tag. */
     public ParserItem getHandler() {
       if (this.item == null) {
-        System.err.println("Requested non existing handler for: " + this.toString());
+        System.err.println("Requested non existing handler for: " + this);
       }
       return this.item;
     }
@@ -499,8 +499,7 @@ public class AndroidManifestXMLReader {
         Tag subTag = parserStack.pop();
         if (allowedSubTags.contains(subTag)) {
           if (subTag.getHandler() == null) {
-            throw new IllegalArgumentException(
-                "The SubTag " + subTag.toString() + " has no handler!");
+            throw new IllegalArgumentException("The SubTag " + subTag + " has no handler!");
           }
           subTag.getHandler().popAttributes(); // hmmm....
 

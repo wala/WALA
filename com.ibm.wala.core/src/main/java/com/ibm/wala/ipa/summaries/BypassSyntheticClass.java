@@ -141,7 +141,7 @@ public class BypassSyntheticClass extends SyntheticClass {
     return "<Synthetic "
         + (realType.isInterface() ? "Implementor" : "Subclass")
         + ' '
-        + realType.toString()
+        + realType
         + '>';
   }
 

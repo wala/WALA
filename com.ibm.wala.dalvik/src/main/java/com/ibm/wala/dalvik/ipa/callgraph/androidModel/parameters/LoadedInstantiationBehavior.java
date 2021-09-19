@@ -122,13 +122,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
     @Override
     public String toString() {
-      return "<BehaviorKey of "
-          + base.getClass()
-          + ' '
-          + base.toString()
-          + " hash="
-          + this.hashCode()
-          + "/>";
+      return "<BehaviorKey of " + base.getClass() + ' ' + base + " hash=" + this.hashCode() + "/>";
     }
   }
 

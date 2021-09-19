@@ -138,7 +138,7 @@ public class AnalysisScopeReader {
       String line;
       final InputStream inStream = scopeFileURI.toURL().openStream();
       if (inStream == null) {
-        throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI.toString());
+        throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI);
       }
       r = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
 

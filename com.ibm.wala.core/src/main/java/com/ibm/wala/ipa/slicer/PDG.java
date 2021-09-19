@@ -839,7 +839,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     } else {
       Integer x = instructionIndices.get(s);
       if (x == null) {
-        Assertions.UNREACHABLE(s.toString() + "\nnot found in map of\n" + ir);
+        Assertions.UNREACHABLE(s + "\nnot found in map of\n" + ir);
       }
       return new NormalStatement(node, x);
     }

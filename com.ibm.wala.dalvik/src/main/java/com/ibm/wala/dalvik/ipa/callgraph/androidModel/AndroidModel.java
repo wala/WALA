@@ -807,7 +807,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
                       + asMethod.getDeclaringClass()
                       + " from "
                       + "Method "
-                      + asMethod.toString());
+                      + asMethod);
             }
             redirect.setLocalNames(pm.makeLocalNames());
             SummarizedMethod override =
@@ -886,7 +886,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
                 + asMethod.getDeclaringClass()
                 + " from "
                 + "Method "
-                + asMethod.toString());
+                + asMethod);
       }
       // TODO: Throw into an other loader
       redirect.setLocalNames(pm.makeLocalNames());

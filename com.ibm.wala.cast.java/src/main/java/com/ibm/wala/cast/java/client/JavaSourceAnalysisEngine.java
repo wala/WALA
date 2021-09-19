@@ -132,7 +132,7 @@ public abstract class JavaSourceAnalysisEngine
       cha = ClassHierarchyFactory.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
-      System.err.println(e.toString());
+      System.err.println(e);
       e.printStackTrace();
     }
     return cha;

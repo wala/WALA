@@ -462,7 +462,7 @@ public abstract class CAstRewriter<
       return new DelegatingEntity(root) {
         @Override
         public String toString() {
-          return root.toString() + " (clone)";
+          return root + " (clone)";
         }
 
         @Override
@@ -522,7 +522,7 @@ public abstract class CAstRewriter<
       return new DelegatingEntity(root) {
         @Override
         public String toString() {
-          return root.toString() + " (clone)";
+          return root + " (clone)";
         }
 
         @Override

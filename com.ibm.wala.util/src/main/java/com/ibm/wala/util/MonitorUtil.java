@@ -50,7 +50,7 @@ public class MonitorUtil {
     if (monitor != null) {
       monitor.done();
       if (monitor.isCanceled()) {
-        throw CancelException.make("cancelled in " + monitor.toString());
+        throw CancelException.make("cancelled in " + monitor);
       }
     }
   }
@@ -59,7 +59,7 @@ public class MonitorUtil {
     if (monitor != null) {
       monitor.worked(units);
       if (monitor.isCanceled()) {
-        throw CancelException.make("cancelled in " + monitor.toString());
+        throw CancelException.make("cancelled in " + monitor);
       }
     }
   }

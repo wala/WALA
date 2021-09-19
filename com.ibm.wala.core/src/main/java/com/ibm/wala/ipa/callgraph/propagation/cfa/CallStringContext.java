@@ -38,7 +38,7 @@ public class CallStringContext implements Context {
 
   @Override
   public String toString() {
-    return "CallStringContext: " + cs.toString();
+    return "CallStringContext: " + cs;
   }
 
   @Override
