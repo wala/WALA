@@ -23,6 +23,9 @@ jobs:
             java: 11
       fail-fast: false
     runs-on: ${{ matrix.os }}
+
+
+    
     steps:
       - name: Check out WALA sources
         uses: actions/checkout@v2
