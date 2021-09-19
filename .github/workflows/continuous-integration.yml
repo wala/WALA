@@ -4,6 +4,9 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build_gradle:
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
@@ -21,10 +24,6 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-#      - name: Cancel Previous Runs
-#        uses: styfle/cancel-workflow-action@0.9.1
-#        with:
-#          access_token: ${{ github.token }}
       - name: Check out WALA sources
         uses: actions/checkout@v2
       - name: Cache Goomph
