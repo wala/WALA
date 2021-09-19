@@ -1,4 +1,4 @@
-package privateInterfaceMethods.TestArrayReturn;
+package privateInterfaceMethods.testArrayReturn;
 
 import privateInterfaceMethods.PrivateInterface;
 
