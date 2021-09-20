@@ -301,7 +301,7 @@ public class CodeScanner {
    * @param statements list of ssa statements
    * @return List of InvokeInstruction
    */
-  private static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
+  public static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
     final List<NewSiteReference> result = new LinkedList<>();
     Visitor v =
         new Visitor() {

@@ -14,13 +14,16 @@ package com.ibm.wala.ipa.callgraph.propagation.rta;
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ShrikeBTMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.cha.ContextInsensitiveCHAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /** Default implementation of MethodContextInterpreter for context-insensitive analysis */
@@ -44,7 +47,20 @@ public abstract class ContextInsensitiveRTAInterpreter
       throw new IllegalArgumentException("node is null");
     }
     try {
-      return CodeScanner.getNewSites(node.getMethod()).iterator();
+      if (node.getMethod() instanceof ShrikeBTMethod || node.getMethod().isWalaSynthetic()) {
+        return CodeScanner.getNewSites(node.getMethod()).iterator();
+      } else {
+        ArrayList<SSAInstruction> statements = new ArrayList<>();
+        Iterator<SSAInstruction> it = node.getIR().iterateAllInstructions();
+        while (it.hasNext()) {
+          SSAInstruction s = it.next();
+          if (s != null) {
+            statements.add(s);
+          }
+        }
+        return CodeScanner.getNewSites(statements.toArray(new SSAInstruction[statements.size()]))
+            .iterator();
+      }
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
