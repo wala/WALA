@@ -22,7 +22,7 @@ public final class DupInstruction extends Instruction {
 
   private final byte delta;
 
-  protected DupInstruction(byte size, byte delta) {
+  private DupInstruction(byte size, byte delta) {
     super((short) -1);
     this.size = size;
     this.delta = delta;

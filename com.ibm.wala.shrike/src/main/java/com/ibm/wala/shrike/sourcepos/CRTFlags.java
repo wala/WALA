@@ -70,7 +70,7 @@ public final class CRTFlags {
    *
    * @return An array of Strings containing the flag names.
    */
-  public final String[] getFlagNames() {
+  public String[] getFlagNames() {
     LinkedList<String> names = new LinkedList<>();
     int index = 0;
     short tFlags = flags;

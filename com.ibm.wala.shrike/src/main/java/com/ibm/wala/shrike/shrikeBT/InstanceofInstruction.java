@@ -14,7 +14,7 @@ package com.ibm.wala.shrike.shrikeBT;
 public final class InstanceofInstruction extends Instruction implements IInstanceofInstruction {
   private final String type;
 
-  protected InstanceofInstruction(String type) {
+  private InstanceofInstruction(String type) {
     super(OP_instanceof);
     this.type = type;
     if (type == null) {

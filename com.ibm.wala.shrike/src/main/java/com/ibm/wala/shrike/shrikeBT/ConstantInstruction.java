@@ -102,7 +102,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   static final class ConstNull extends ConstantInstruction {
-    protected ConstNull() {
+    private ConstNull() {
       super(OP_aconst_null);
     }
 
@@ -174,7 +174,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private boolean isSet;
 
-    protected LazyInt(short opcode, ConstantPoolReader cp, int index) {
+    private LazyInt(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, 0);
       this.cp = cp;
       this.index = index;
@@ -246,7 +246,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private boolean isSet;
 
-    protected LazyLong(short opcode, ConstantPoolReader cp, int index) {
+    private LazyLong(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, 0);
       this.cp = cp;
       this.index = index;
@@ -322,7 +322,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private boolean isSet;
 
-    protected LazyFloat(short opcode, ConstantPoolReader cp, int index) {
+    private LazyFloat(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, 0.0f);
       this.cp = cp;
       this.index = index;
@@ -394,7 +394,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private boolean isSet;
 
-    protected LazyDouble(short opcode, ConstantPoolReader cp, int index) {
+    private LazyDouble(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, 0.0);
       this.cp = cp;
       this.index = index;
@@ -449,7 +449,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private final int index;
 
-    protected LazyString(short opcode, ConstantPoolReader cp, int index) {
+    private LazyString(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
       this.cp = cp;
       this.index = index;
@@ -508,7 +508,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     private final int index;
 
-    protected LazyClass(short opcode, ConstantPoolReader cp, int index) {
+    private LazyClass(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);
       this.cp = cp;
       this.index = index;

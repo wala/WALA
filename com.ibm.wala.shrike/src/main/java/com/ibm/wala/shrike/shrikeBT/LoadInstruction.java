@@ -14,7 +14,7 @@ package com.ibm.wala.shrike.shrikeBT;
 public final class LoadInstruction extends Instruction implements ILoadInstruction {
   private final int index;
 
-  protected LoadInstruction(short opcode, int index) {
+  private LoadInstruction(short opcode, int index) {
     super(opcode);
     this.index = index;
   }

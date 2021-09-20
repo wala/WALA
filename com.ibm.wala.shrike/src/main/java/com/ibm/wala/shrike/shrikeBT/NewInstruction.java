@@ -15,7 +15,7 @@ public final class NewInstruction extends Instruction {
 
   private final short arrayBoundsCount;
 
-  protected NewInstruction(short opcode, String type, short arrayBoundsCount) {
+  private NewInstruction(short opcode, String type, short arrayBoundsCount) {
     super(opcode);
     this.type = type;
     this.arrayBoundsCount = arrayBoundsCount;

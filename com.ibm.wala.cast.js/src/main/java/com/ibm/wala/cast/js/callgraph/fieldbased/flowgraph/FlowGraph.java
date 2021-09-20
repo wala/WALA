@@ -190,7 +190,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
       private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<>(graph);
 
-      protected IR getIR(final IAnalysisCacheView cache, FuncVertex func) {
+      private IR getIR(final IAnalysisCacheView cache, FuncVertex func) {
         return cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector));
       }
 

@@ -349,7 +349,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return getFieldAnnotations(fieldIndex, false);
   }
 
-  protected Collection<Annotation> getFieldAnnotations(int fieldIndex, boolean runtimeInvisible)
+  private Collection<Annotation> getFieldAnnotations(int fieldIndex, boolean runtimeInvisible)
       throws InvalidClassFileException {
     AnnotationsReader r = getFieldAnnotationsReader(runtimeInvisible, fieldIndex);
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
@@ -378,7 +378,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return getFieldTypeAnnotations(fieldIndex, false);
   }
 
-  protected Collection<TypeAnnotation> getFieldTypeAnnotations(
+  private Collection<TypeAnnotation> getFieldTypeAnnotations(
       int fieldIndex, boolean runtimeInvisible) throws InvalidClassFileException {
     TypeAnnotationsReader r = getFieldTypeAnnotationsReader(runtimeInvisible, fieldIndex);
     final ClassLoaderReference clRef = getClassLoader().getReference();
