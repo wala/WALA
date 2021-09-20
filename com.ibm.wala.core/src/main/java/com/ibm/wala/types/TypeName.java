@@ -190,27 +190,27 @@ public final class TypeName implements Serializable {
    * @return the dimensionality of the type. By convention, class types have dimensionality 0,
    *     primitives -1, and arrays the number of [ in their descriptor.
    */
-  public final int getDerivedMask() {
+  public int getDerivedMask() {
     return key.dim;
   }
 
   /** Does 'this' refer to a class? */
-  public final boolean isClassType() {
+  public boolean isClassType() {
     return key.dim == 0;
   }
 
   /** Does 'this' refer to an array? */
-  public final boolean isArrayType() {
+  public boolean isArrayType() {
     return key.dim > 0;
   }
 
   /** Does 'this' refer to a primitive type */
-  public final boolean isPrimitiveType() {
+  public boolean isPrimitiveType() {
     return key.dim == -1;
   }
 
   /** Return the innermost element type reference for an array */
-  public final TypeName getInnermostElementType() {
+  public TypeName getInnermostElementType() {
     short newDim = ((key.dim & ElementMask) == PrimitiveMask) ? (short) -1 : 0;
     return findOrCreate(key.packageName, key.className, newDim);
   }

@@ -82,7 +82,7 @@ public final class Position {
    *
    * @return the line number
    */
-  public final int getLine() {
+  public int getLine() {
     return position >>> LINE_SHIFT;
   }
 
@@ -91,7 +91,7 @@ public final class Position {
    *
    * @return the column number
    */
-  public final int getColumn() {
+  public int getColumn() {
     return position & COLUMN_MASK;
   }
 
@@ -100,7 +100,7 @@ public final class Position {
    *
    * @return true if this position is undefined
    */
-  public final boolean isUndefined() {
+  public boolean isUndefined() {
     return position == NOPOS;
   }
 
