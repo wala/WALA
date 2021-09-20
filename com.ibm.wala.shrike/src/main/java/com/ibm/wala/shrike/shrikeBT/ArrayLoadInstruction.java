@@ -12,7 +12,7 @@ package com.ibm.wala.shrike.shrikeBT;
 
 /** This class represents the ?aload instructions. */
 public final class ArrayLoadInstruction extends Instruction implements IArrayLoadInstruction {
-  protected ArrayLoadInstruction(short opcode) {
+  private ArrayLoadInstruction(short opcode) {
     super(opcode);
   }
 

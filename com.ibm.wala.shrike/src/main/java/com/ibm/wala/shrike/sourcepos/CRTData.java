@@ -144,7 +144,7 @@ public final class CRTData {
     this.flags = new CRTFlags(flags);
   }
 
-  public final CRTFlags getFlags() {
+  public CRTFlags getFlags() {
     return this.flags;
   }
 
@@ -154,7 +154,7 @@ public final class CRTData {
    * @param pc the index to test
    * @return whether the given index lies within the range of this data or not.
    */
-  public final boolean isInRange(int pc) {
+  public boolean isInRange(int pc) {
     return pc_start_index <= pc && pc <= pc_end_index;
   }
 
@@ -165,7 +165,7 @@ public final class CRTData {
    * @param d the data to test with
    * @return whether the given data is consistently.
    */
-  public final boolean matches(CRTData d) {
+  public boolean matches(CRTData d) {
     return d != null && (isMorePrecise(d) || d.isMorePrecise(this));
   }
 
@@ -178,7 +178,7 @@ public final class CRTData {
    * @param d the data to test with
    * @return whether this data is equal to or more precise than the given one.
    */
-  public final boolean isMorePrecise(CRTData d) {
+  public boolean isMorePrecise(CRTData d) {
     return d != null
         && pc_start_index >= d.pc_start_index
         && pc_end_index <= d.pc_end_index
@@ -200,7 +200,7 @@ public final class CRTData {
    * @return The returned array consists of four positions: the start line number, the start column
    *     number, the end line number, the end column number
    */
-  public final Range getSourceInfo() {
+  public Range getSourceInfo() {
     return source_positions;
   }
 

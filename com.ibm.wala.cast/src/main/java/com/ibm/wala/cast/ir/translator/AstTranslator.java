@@ -2278,7 +2278,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         return "global scope";
       }
 
-      private final String mapName(String nm) {
+      private String mapName(String nm) {
         String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
       }
@@ -2447,7 +2447,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     final Map<String, AbstractSymbol> typeSymbols = new LinkedHashMap<>();
     final Map<String, String> caseInsensitiveNames = new LinkedHashMap<>();
     return new Scope() {
-      private final String mapName(String nm) {
+      private String mapName(String nm) {
         String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
       }

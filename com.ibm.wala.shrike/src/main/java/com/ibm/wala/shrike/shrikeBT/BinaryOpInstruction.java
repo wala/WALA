@@ -15,7 +15,7 @@ package com.ibm.wala.shrike.shrikeBT;
  * the same type.
  */
 public final class BinaryOpInstruction extends Instruction implements IBinaryOpInstruction {
-  protected BinaryOpInstruction(short opcode) {
+  private BinaryOpInstruction(short opcode) {
     super(opcode);
   }
 

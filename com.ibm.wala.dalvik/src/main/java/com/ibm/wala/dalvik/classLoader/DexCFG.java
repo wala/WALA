@@ -252,7 +252,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
      *
      * @param last the last instruction in a basic block.
      */
-    protected void addExceptionalEdges(Instruction last) {
+    private void addExceptionalEdges(Instruction last) {
       IClassHierarchy cha = getMethod().getClassHierarchy();
       if (last.isPEI()) {
         Collection<TypeReference> exceptionTypes = null;

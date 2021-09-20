@@ -157,12 +157,12 @@ public final class MethodReference extends MemberReference {
   }
 
   /** @return the descriptor component of this member reference */
-  public final Descriptor getDescriptor() {
+  public Descriptor getDescriptor() {
     return selector.getDescriptor();
   }
 
   @Override
-  public final String toString() {
+  public String toString() {
     return "< "
         + getDeclaringClass().getClassLoader().getName()
         + ", "
@@ -193,12 +193,12 @@ public final class MethodReference extends MemberReference {
   }
 
   /** @return return type of the method */
-  public final TypeReference getReturnType() {
+  public TypeReference getReturnType() {
     return returnType;
   }
 
   /** @return ith parameter to the method. This does NOT include the implicit "this" pointer. */
-  public final TypeReference getParameterType(int i) throws IllegalArgumentException {
+  public TypeReference getParameterType(int i) throws IllegalArgumentException {
     if (parameterTypes == null || i >= parameterTypes.length) {
       throw new IllegalArgumentException("illegal parameter number " + i + " for " + this);
     }

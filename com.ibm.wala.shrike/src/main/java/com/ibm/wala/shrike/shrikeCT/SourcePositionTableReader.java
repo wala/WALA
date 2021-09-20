@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public final class SourcePositionTableReader extends AttributeReader {
 
-  protected SourcePositionTableReader(AttrIterator attr) throws InvalidClassFileException {
+  private SourcePositionTableReader(AttrIterator attr) throws InvalidClassFileException {
     super(attr, CRTable.ATTRIBUTE_NAME);
   }
 
@@ -124,7 +124,7 @@ public final class SourcePositionTableReader extends AttributeReader {
 
   private static final int ATTRIBUTE_HEADER_SIZE = 6;
 
-  private static final byte[] getData(ClassReader cr, int rawOffset, int rawSize) {
+  private static byte[] getData(ClassReader cr, int rawOffset, int rawSize) {
     // prepare raw data of attribute to pass to sourceinfo
     byte klass[] = cr.getBytes();
     int size = rawSize - ATTRIBUTE_HEADER_SIZE;
@@ -146,7 +146,7 @@ public final class SourcePositionTableReader extends AttributeReader {
     }
   }
 
-  private static final Position convert(Range r) {
+  private static Position convert(Range r) {
     Position pos = null;
 
     if (r != null) {

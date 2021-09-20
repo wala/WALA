@@ -18,7 +18,7 @@ public final class SwitchInstruction extends Instruction {
 
   private final int defaultLabel;
 
-  protected SwitchInstruction(short opcode, int[] casesAndLabels, int defaultLabel) {
+  private SwitchInstruction(short opcode, int[] casesAndLabels, int defaultLabel) {
     super(opcode);
     this.casesAndLabels = casesAndLabels;
     this.defaultLabel = defaultLabel;

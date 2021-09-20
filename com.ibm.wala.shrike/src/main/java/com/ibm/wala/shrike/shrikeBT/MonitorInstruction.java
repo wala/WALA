@@ -12,7 +12,7 @@ package com.ibm.wala.shrike.shrikeBT;
 
 /** This class represents monitorenter and monitorexit instructions. */
 public final class MonitorInstruction extends Instruction {
-  protected MonitorInstruction(short opcode) {
+  private MonitorInstruction(short opcode) {
     super(opcode);
   }
 
