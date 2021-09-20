@@ -263,9 +263,10 @@ public abstract class TestPointerAnalyses {
         Set<Pair<CGNode, NewSiteReference>> propPtrs =
             map(propCG, ptrs(propNodes, i, propCG, propPA));
 
-        Assert.assertTrue(
+        Assert.assertEquals(
             "analysis should agree on global object for " + i + " of " + ir,
-            isGlobal(fbNodes, i, fbPA) == isGlobal(propNodes, i, propPA));
+            isGlobal(fbNodes, i, fbPA),
+            isGlobal(propNodes, i, propPA));
 
         if (!fbPtrs.isEmpty() || !propPtrs.isEmpty()) {
           System.err.println(
