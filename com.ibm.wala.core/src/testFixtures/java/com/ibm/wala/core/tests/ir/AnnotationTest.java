@@ -13,6 +13,7 @@ package com.ibm.wala.core.tests.ir;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IBytecodeMethod;
@@ -89,7 +90,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     }
 
     if (expected.size() != actual.size()) {
-      assertTrue("expected=" + expected + " actual=" + actual, false);
+      fail("expected=" + expected + " actual=" + actual);
     }
     for (T a : expected) {
       assertTrue("missing " + a.toString(), actual.contains(a));
@@ -299,7 +300,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertTrue(methodRefUnderTest + " not found", methodUnderTest != null);
+    assertNotNull(methodRefUnderTest + " not found", methodUnderTest);
     assertTrue(
         methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
@@ -318,7 +319,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         }
       }
 
-      assertTrue(e + " must be " + a, e.equals(a));
+      assertEquals(e + " must be " + a, e, a);
     }
   }
 }

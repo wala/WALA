@@ -186,9 +186,10 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
               final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
 
-              Assert.assertTrue(
+              Assert.assertEquals(
                   "Expected 'Base' to be the superclass of 'Derived'",
-                  derivedClass.getSuperclass().equals(baseClass));
+                  derivedClass.getSuperclass(),
+                  baseClass);
 
               Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
 
@@ -284,7 +285,7 @@ public abstract class JavaIRTests extends IRTests {
                   Assert.assertTrue(
                       "", ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType());
                 } else {
-                  Assert.assertTrue("Expected 3rd to be a new array instruction.", false);
+                  Assert.fail("Expected 3rd to be a new array instruction.");
                 }
               }
               // test 2
@@ -294,7 +295,7 @@ public abstract class JavaIRTests extends IRTests {
                   Assert.assertTrue(
                       "", ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType());
                 } else {
-                  Assert.assertTrue("Expected 4th to be a new array instruction.", false);
+                  Assert.fail("Expected 4th to be a new array instruction.");
                 }
               }
               // test 3: the last 4 instructions are of the form y[i] = i+1;
@@ -473,7 +474,7 @@ public abstract class JavaIRTests extends IRTests {
         "LInnerClassA,",
       };
 
-      Assert.assertTrue("Buggy test", methodSigs.length == ikConcreteTypeStrings.length);
+      Assert.assertEquals("Buggy test", methodSigs.length, ikConcreteTypeStrings.length);
       for (int i = 0; i < methodSigs.length; i++) {
         if (n.getMethod().getSignature().equals(methodSigs[i])) {
           // find enclosing instruction
@@ -486,7 +487,7 @@ public abstract class JavaIRTests extends IRTests {
               // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
 
               final String allIks = allIksBuilder.toString();
-              Assert.assertTrue(
+              Assert.assertEquals(
                   "assertion failed: expecting ik "
                       + ikConcreteTypeStrings[i]
                       + " in method "
@@ -494,7 +495,8 @@ public abstract class JavaIRTests extends IRTests {
                       + ", got "
                       + allIks
                       + "\n",
-                  allIks.equals(ikConcreteTypeStrings[i]));
+                  allIks,
+                  ikConcreteTypeStrings[i]);
 
               break;
             }
@@ -525,9 +527,10 @@ public abstract class JavaIRTests extends IRTests {
               allIksBuilder.append(ik.getConcreteType().getName()).append(',');
             }
             final String allIks = allIksBuilder.toString();
-            Assert.assertTrue(
+            Assert.assertEquals(
                 "assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n",
-                allIks.equals("LSub,"));
+                "LSub,",
+                allIks);
 
             break;
           }
