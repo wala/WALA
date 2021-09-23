@@ -17,7 +17,7 @@ plugins {
 	id 'com.github.ben-manes.versions' version '0.39.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
-	id 'nebula.lint' version '17.2.1'
+	id 'nebula.lint' version '17.2.2'
 }
 
 repositories {
