@@ -15,7 +15,7 @@ com.github.ben-manes.versions:com.github.ben-manes.versions.gradle.plugin:0.39.0
 com.github.ben-manes:gradle-versions-plugin:0.39.0=classpath
 com.github.sherter.google-java-format:com.github.sherter.google-java-format.gradle.plugin:0.9=classpath
 com.google.guava:guava:19.0=classpath
-com.netflix.nebula:gradle-lint-plugin:17.2.1=classpath
+com.netflix.nebula:gradle-lint-plugin:17.2.2=classpath
 com.netflix.nebula:nebula-gradle-interop:1.0.11=classpath
 com.squareup.okhttp3:okhttp:4.3.1=classpath
 com.squareup.okio:okio:2.4.3=classpath
@@ -24,7 +24,7 @@ commons-io:commons-io:2.11.0=classpath
 gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.9=classpath
 io.github.x-stream:mxparser:1.2.1=classpath
 javax.inject:javax.inject:1=classpath
-nebula.lint:nebula.lint.gradle.plugin:17.2.1=classpath
+nebula.lint:nebula.lint.gradle.plugin:17.2.2=classpath
 org.apache.commons:commons-lang3:3.8.1=classpath
 org.apache.maven:maven-artifact:3.8.1=classpath
 org.apache.maven:maven-builder-support:3.8.1=classpath
