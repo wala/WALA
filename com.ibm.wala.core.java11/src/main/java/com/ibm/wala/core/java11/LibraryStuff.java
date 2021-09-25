@@ -53,7 +53,7 @@ public class LibraryStuff {
       System.err.println(cg);
 
       SDG<InstanceKey> G =
-          new SDG<InstanceKey>(
+          new SDG<>(
               cg,
               builder.getPointerAnalysis(),
               DataDependenceOptions.FULL,
