@@ -5,7 +5,7 @@ public class Finalizers {
   private void sillyMethod() {}
 
   @Override
-  public void finalize() {
+  protected void finalize() {
     sillyMethod();
   }
 
