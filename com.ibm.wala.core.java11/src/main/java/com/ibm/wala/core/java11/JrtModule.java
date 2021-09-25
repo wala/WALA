@@ -42,7 +42,7 @@ public class JrtModule implements Module {
 
                         @Override
                         public String toString() {
-                          StringBuffer sb = new StringBuffer("[");
+                          StringBuilder sb = new StringBuilder("[");
                           if (isClassFile()) {
                             sb.append("class");
                           } else if (isSourceFile()) {
