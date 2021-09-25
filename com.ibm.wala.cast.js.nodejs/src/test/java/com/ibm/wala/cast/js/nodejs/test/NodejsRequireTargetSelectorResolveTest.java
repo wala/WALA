@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.js.nodejs.test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.ibm.wala.cast.js.nodejs.NodejsCallGraphBuilderUtil;
@@ -36,7 +37,7 @@ public class NodejsRequireTargetSelectorResolveTest {
 
     assertTrue(cgString.contains("Lmod/nodejsModule/moduleSource/exec>"));
     assertTrue(cgString.contains("Lmod/nodejsModule/moduleSource/SomeClass/hello>"));
-    assertTrue(!cgString.contains("?"));
+    assertFalse(cgString.contains("?"));
   }
 
   @Test
@@ -53,7 +54,7 @@ public class NodejsRequireTargetSelectorResolveTest {
 
     assertTrue(cgString.contains("Llib1/nodejsModule/moduleSource/lib1>"));
     assertTrue(cgString.contains("Llib2/nodejsModule/moduleSource/lib2>"));
-    assertTrue(!cgString.contains("?"));
+    assertFalse(cgString.contains("?"));
   }
 
   @Test
@@ -70,7 +71,7 @@ public class NodejsRequireTargetSelectorResolveTest {
 
     assertTrue(cgString.contains("Llib1/nodejsModule/moduleSource/lib1>"));
     assertTrue(cgString.contains("Llib2/nodejsModule/moduleSource/lib2>"));
-    assertTrue(!cgString.contains("?"));
+    assertFalse(cgString.contains("?"));
   }
 
   @Test
@@ -88,7 +89,7 @@ public class NodejsRequireTargetSelectorResolveTest {
     assertTrue(
         cgString.contains(
             "Lnode_modules_lib_node_modules_sublib_sublib/nodejsModule/moduleSource"));
-    assertTrue(!cgString.contains("?"));
+    assertFalse(cgString.contains("?"));
   }
 
   @Test

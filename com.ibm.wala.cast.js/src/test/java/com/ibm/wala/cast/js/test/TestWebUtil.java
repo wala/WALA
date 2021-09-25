@@ -25,18 +25,18 @@ public class TestWebUtil extends WalaTestCase {
   @Test
   public void testAjaxslt() throws Error {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    Assert.assertTrue(url != null);
+    Assert.assertNotNull(url);
     Set<MappedSourceModule> mod =
         WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory).fst;
-    Assert.assertTrue(mod != null);
+    Assert.assertNotNull(mod);
   }
 
   @Test
   public void testAjaxpath() throws Error {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
-    Assert.assertTrue(url != null);
+    Assert.assertNotNull(url);
     Set<MappedSourceModule> mod =
         WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory).fst;
-    Assert.assertTrue(mod != null);
+    Assert.assertNotNull(mod);
   }
 }
