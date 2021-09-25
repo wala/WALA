@@ -70,7 +70,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e) {
       System.err.println(ir1);
       e.printStackTrace();
-      Assert.assertTrue("unsound CFG for ir1", false);
+      Assert.fail("unsound CFG for ir1");
     }
 
     IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
@@ -81,7 +81,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e1) {
       System.err.println(ir2);
       e1.printStackTrace();
-      Assert.assertTrue("unsound CFG for ir2", false);
+      Assert.fail("unsound CFG for ir2");
     }
 
     Assert.assertEquals(ir1.toString(), ir2.toString());
@@ -92,7 +92,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private static void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
-      Assert.assertTrue(iterator.next() != null);
+      Assert.assertNotNull(iterator.next());
     }
   }
 
@@ -102,7 +102,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
         return;
       }
     }
-    Assert.assertTrue("no instructions generated", false);
+    Assert.fail("no instructions generated");
   }
 
   @Test

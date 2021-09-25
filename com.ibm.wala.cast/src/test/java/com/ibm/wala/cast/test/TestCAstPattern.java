@@ -66,22 +66,24 @@ public class TestCAstPattern {
       Assert.assertFalse(p.match(n, null));
     } else {
       Segments s = CAstPattern.match(p, n);
-      Assert.assertTrue(s != null);
+      Assert.assertNotNull(s);
       for (Map.Entry<String, Object> entry : names.entrySet()) {
         Object o = entry.getValue();
         final String nm = entry.getKey();
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
-          Assert.assertTrue(
+          Assert.assertEquals(
               "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm),
-              entry.getValue().equals(s.getSingle(nm)));
+              entry.getValue(),
+              s.getSingle(nm));
         } else {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
-          Assert.assertTrue(
+          Assert.assertEquals(
               "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getMultiple(nm),
-              entry.getValue().equals(s.getMultiple(nm)));
+              entry.getValue(),
+              s.getMultiple(nm));
         }
       }
     }
