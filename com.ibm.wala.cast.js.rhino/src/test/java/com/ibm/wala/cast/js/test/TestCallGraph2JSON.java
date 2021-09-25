@@ -53,11 +53,7 @@ public class TestCallGraph2JSON {
     }
     Map<String, String[]> flattened = flattenParsedCG(parsedJSONCG);
     assertEquals(5, flattened.keySet().size());
-    flattened.values().stream()
-        .forEach(
-            callees -> {
-              assertEquals(1, callees.length);
-            });
+    flattened.values().stream().forEach(callees -> assertEquals(1, callees.length));
   }
 
   @Test
