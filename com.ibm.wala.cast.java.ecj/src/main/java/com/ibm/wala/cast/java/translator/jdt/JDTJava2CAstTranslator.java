@@ -1002,7 +1002,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     private final ITypeBinding fType; // TAGALONG
 
-    private ITypeBinding fReturnType;
+    private final ITypeBinding fReturnType;
 
     private final int fModifiers;
 
