@@ -114,6 +114,6 @@ public class WelshPowellTest {
     ColoredVertices<TypedNode<String>> colors = new WelshPowell<TypedNode<String>>().color(G);
     System.err.println(colors.getColors());
     assertColoring(G, colors.getColors(), true);
-    Assert.assertTrue(colors.getNumColors() == 3);
+    Assert.assertEquals(3, colors.getNumColors());
   }
 }

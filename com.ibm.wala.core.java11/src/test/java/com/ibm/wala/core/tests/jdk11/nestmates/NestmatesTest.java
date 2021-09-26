@@ -59,8 +59,8 @@ public class NestmatesTest extends WalaTestCase {
         cg.getPossibleSites(mnode, t1node).hasNext());
 
     // check that triple() does not call an accessor method
-    Assert.assertTrue(
+    Assert.assertFalse(
         "there should not be a call from triple() to an accessor method",
-        cg.getSuccNodes(t1node).hasNext() == false);
+        cg.getSuccNodes(t1node).hasNext());
   }
 }
