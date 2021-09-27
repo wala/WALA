@@ -167,7 +167,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(a.sameValue(b));
     b.remove(1);
     b.add(0);
-    Assert.assertTrue(!a.sameValue(b));
+    Assert.assertFalse(a.sameValue(b));
 
     a = factory.parse("{1}");
     Assert.assertFalse(a.isSubset(b));
@@ -272,7 +272,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(a.sameValue(b));
     b.remove(1);
     b.add(0);
-    Assert.assertTrue(!a.sameValue(b));
+    Assert.assertFalse(a.sameValue(b));
 
     a.clear();
     Assert.assertTrue(a.isEmpty());
@@ -465,7 +465,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(a.sameValue(b));
     b.remove(1);
     b.add(0);
-    Assert.assertTrue(!a.sameValue(b));
+    Assert.assertFalse(a.sameValue(b));
 
     a = factory.parse("{1}");
     Assert.assertFalse(a.isSubset(b));
@@ -570,7 +570,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertTrue(a.sameValue(b));
     b.remove(1);
     b.add(0);
-    Assert.assertTrue(!a.sameValue(b));
+    Assert.assertFalse(a.sameValue(b));
 
     a = factory.parse("{1}");
     Assert.assertFalse(a.isSubset(b));
@@ -631,16 +631,16 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    Assert.assertTrue(I != null);
-    Assert.assertTrue(I.equals(I2));
+    Assert.assertNotNull(I);
+    Assert.assertEquals(I, I2);
 
     I = M.get(Integer.valueOf(4));
-    Assert.assertTrue(I == null);
+    Assert.assertNull(I);
 
     I = M.put(Integer.valueOf(2), Integer.valueOf(3));
-    Assert.assertTrue(I.equals(I2));
+    Assert.assertEquals(I, I2);
     I = M.get(I2);
-    Assert.assertTrue(I.equals(I3));
+    Assert.assertEquals(I, I3);
   }
 
   @Test
@@ -657,31 +657,31 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    Assert.assertTrue(I != null);
-    Assert.assertTrue(I.equals(I2));
+    Assert.assertNotNull(I);
+    Assert.assertEquals(I, I2);
 
     I = M.get(Integer.valueOf(4));
-    Assert.assertTrue(I == null);
+    Assert.assertNull(I);
 
     I = M.put(Integer.valueOf(2), Integer.valueOf(3));
-    Assert.assertTrue(I.equals(I2));
+    Assert.assertEquals(I, I2);
     I = M.get(I2);
-    Assert.assertTrue(I.equals(I3));
+    Assert.assertEquals(I, I3);
 
     M.put(I4, I4);
     M.put(I5, I5);
     M.put(I6, I6);
     I = M.get(Integer.valueOf(4));
-    Assert.assertTrue(I != null);
-    Assert.assertTrue(I.equals(I4));
+    Assert.assertNotNull(I);
+    Assert.assertEquals(I, I4);
 
     I = M.get(Integer.valueOf(7));
-    Assert.assertTrue(I == null);
+    Assert.assertNull(I);
 
     I = M.put(Integer.valueOf(2), Integer.valueOf(6));
-    Assert.assertTrue(I.equals(I3));
+    Assert.assertEquals(I, I3);
     I = M.get(I2);
-    Assert.assertTrue(I.equals(I6));
+    Assert.assertEquals(I, I6);
   }
 
   @Test
@@ -695,7 +695,7 @@ public class PrimitivesTest extends WalaTestCase {
     // path should be 8, 6, 4, 2, 0
     System.err.println("Path is " + p);
     for (int i = 0; i < p.size(); i++) {
-      Assert.assertTrue(p.get(i) == new int[] {8, 6, 4, 2, 0}[i]);
+      Assert.assertEquals((int) p.get(i), new int[] {8, 6, 4, 2, 0}[i]);
     }
   }
 
@@ -705,31 +705,31 @@ public class PrimitivesTest extends WalaTestCase {
 
     BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<>(G, G.getNode(0), 0);
     Collection<Integer> c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 1);
+    Assert.assertEquals(1, c.size());
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 1);
     c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 3);
+    Assert.assertEquals(3, c.size());
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 2);
     c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 5);
+    Assert.assertEquals(5, c.size());
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 3);
     c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 7);
+    Assert.assertEquals(7, c.size());
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 4);
     c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 9);
+    Assert.assertEquals(9, c.size());
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 5);
     c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 10);
+    Assert.assertEquals(10, c.size());
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 500);
     c = Iterator2Collection.toSet(bfs);
-    Assert.assertTrue(c.size() == 10);
+    Assert.assertEquals(10, c.size());
   }
 
   private static NumberedGraph<Integer> makeBFSTestGraph() {
@@ -786,7 +786,7 @@ public class PrimitivesTest extends WalaTestCase {
     int i = 0;
     Object[] desired4 = new Object[] {nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]};
     for (Object d4 : Iterator2Iterable.make(D.dominators(nodes[4])))
-      Assert.assertTrue(d4 == desired4[i++]);
+      Assert.assertSame(d4, desired4[i++]);
 
     int j = 0;
     Object[] desired5 = new Object[] {nodes[8]};
@@ -796,11 +796,11 @@ public class PrimitivesTest extends WalaTestCase {
       if (!ok) {
         System.err.println("O4: " + o4);
         System.err.println("desired " + d);
-        Assert.assertTrue(o4.equals(d));
+        Assert.assertEquals(o4, d);
       }
     }
 
-    Assert.assertTrue(D.dominatorTree().getSuccNodeCount(nodes[10]) == 5);
+    Assert.assertEquals(5, D.dominatorTree().getSuccNodeCount(nodes[10]));
   }
 
   @Test
@@ -820,37 +820,37 @@ public class PrimitivesTest extends WalaTestCase {
       System.err.println(intPair);
       count++;
     }
-    Assert.assertTrue(count == 5);
+    Assert.assertEquals(5, count);
 
     IntSet x = R.getRelated(3);
-    Assert.assertTrue(x.size() == 4);
+    Assert.assertEquals(4, x.size());
 
     x = R.getRelated(5);
-    Assert.assertTrue(x.size() == 1);
+    Assert.assertEquals(1, x.size());
 
     R.remove(5, 1);
     x = R.getRelated(5);
-    Assert.assertTrue(x == null);
+    Assert.assertNull(x);
 
     R.add(2, 1);
     R.add(2, 2);
     R.remove(2, 1);
     x = R.getRelated(2);
-    Assert.assertTrue(x.size() == 1);
+    Assert.assertEquals(1, x.size());
 
     R.removeAll(3);
     x = R.getRelated(3);
-    Assert.assertTrue(x == null);
+    Assert.assertNull(x);
 
     x = R.getRelated(0);
-    Assert.assertTrue(x == null);
+    Assert.assertNull(x);
 
     for (int i = 0; i < 100; i++) {
       R.add(1, i);
     }
-    Assert.assertTrue(R.getRelated(1).size() == 100);
+    Assert.assertEquals(100, R.getRelated(1).size());
     R.remove(1, 1);
-    Assert.assertTrue(R.getRelated(1).size() == 99);
+    Assert.assertEquals(99, R.getRelated(1).size());
   }
 
   @Test
@@ -858,14 +858,14 @@ public class PrimitivesTest extends WalaTestCase {
     int SIZE = 10000;
     IntegerUnionFind uf = new IntegerUnionFind(SIZE);
     int count = countEquivalenceClasses(uf);
-    Assert.assertTrue("Got count " + count, count == SIZE);
+    Assert.assertEquals("Got count " + count, count, SIZE);
 
     uf.union(3, 7);
-    Assert.assertTrue(uf.find(3) == uf.find(7));
+    Assert.assertEquals(uf.find(3), uf.find(7));
     Assert.assertTrue("Got uf.find(3)=" + uf.find(3), uf.find(3) == 3 || uf.find(3) == 7);
 
     uf.union(7, SIZE - 1);
-    Assert.assertTrue(uf.find(3) == uf.find(SIZE - 1));
+    Assert.assertEquals(uf.find(3), uf.find(SIZE - 1));
     Assert.assertTrue(
         "Got uf.find(3)=" + uf.find(3),
         uf.find(3) == 3 || uf.find(3) == 7 || uf.find(3) == SIZE - 1);
@@ -874,7 +874,7 @@ public class PrimitivesTest extends WalaTestCase {
       uf.union(i, i + 1);
     }
     count = countEquivalenceClasses(uf);
-    Assert.assertTrue("Got count " + count, count == 1);
+    Assert.assertEquals("Got count " + count, 1, count);
 
     uf = new IntegerUnionFind(SIZE);
     for (int i = 0; i < SIZE; i++) {
@@ -885,7 +885,7 @@ public class PrimitivesTest extends WalaTestCase {
       }
     }
     count = countEquivalenceClasses(uf);
-    Assert.assertTrue("Got count " + count, count == 2);
+    Assert.assertEquals("Got count " + count, 2, count);
   }
 
   private static int countEquivalenceClasses(IntegerUnionFind uf) {
@@ -931,11 +931,11 @@ public class PrimitivesTest extends WalaTestCase {
     // a reasonable size?
     bv.set(55);
 
-    Assert.assertTrue("bv.max() is " + bv.max(), bv.max() == 55);
+    Assert.assertEquals("bv.max() is " + bv.max(), 55, bv.max());
     Assert.assertTrue(bv.get(55));
 
     bv.set(59);
-    Assert.assertTrue(bv.max() == 59);
+    Assert.assertEquals(59, bv.max());
     Assert.assertTrue(bv.get(55));
     Assert.assertTrue(bv.get(59));
 
@@ -943,31 +943,31 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true};
       int[] bits = new int[] {0, 55, 59};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(bv.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(bv.get(i), gets[j]);
       }
     }
 
     bv.set(77);
 
-    Assert.assertTrue("bv.max() is " + bv.max(), bv.max() == 77);
+    Assert.assertEquals("bv.max() is " + bv.max(), 77, bv.max());
     {
       boolean[] gets = new boolean[] {false, true, true, true};
       int[] bits = new int[] {0, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(bv.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(bv.get(i), gets[j]);
       }
     }
 
     bv.set(3);
-    Assert.assertTrue("bv.max() is " + bv.max(), bv.max() == 77);
+    Assert.assertEquals("bv.max() is " + bv.max(), 77, bv.max());
     {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 3, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(bv.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(bv.get(i), gets[j]);
       }
     }
 
@@ -1003,12 +1003,12 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(100);
     v1.set(101);
     v1.set(102);
-    Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 102);
+    Assert.assertEquals("v1.max() is " + v1.max(), 102, v1.max());
 
     v2.set(200);
     v2.set(201);
     v2.set(202);
-    Assert.assertTrue("v2.max() is " + v2.max(), v2.max() == 202);
+    Assert.assertEquals("v2.max() is " + v2.max(), 202, v2.max());
 
     Assert.assertTrue(v1.intersectionEmpty(v2));
     Assert.assertTrue(v2.intersectionEmpty(v1));
@@ -1018,14 +1018,14 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println("v1 = " + v1 + ", v2 = " + v2);
     Assert.assertFalse("v1 = " + v1 + ", v2 = " + v2, v1.intersectionEmpty(v2));
     Assert.assertFalse("v1 = " + v1 + ", v2 = " + v2, v2.intersectionEmpty(v1));
-    Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 202);
+    Assert.assertEquals("v1.max() is " + v1.max(), 202, v1.max());
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
       int[] bits = new int[] {0, 100, 101, 102, 200, 201, 202};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(v1.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(v1.get(i), gets[j]);
       }
     }
 
@@ -1038,23 +1038,23 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(103);
     v1.set(104);
     v1.set(105);
-    Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 105);
+    Assert.assertEquals("v1.max() is " + v1.max(), 105, v1.max());
 
     v2.set(103);
     v2.set(104);
     v2.set(200);
     v2.set(201);
-    Assert.assertTrue("v2.max() is " + v2.max(), v2.max() == 201);
+    Assert.assertEquals("v2.max() is " + v2.max(), 201, v2.max());
 
     v1.and(v2);
-    Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 104);
+    Assert.assertEquals("v1.max() is " + v1.max(), 104, v1.max());
 
     {
       boolean[] gets = new boolean[] {false, true, true};
       int[] bits = new int[] {0, 103, 104};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(v1.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(v1.get(i), gets[j]);
       }
     }
 
@@ -1062,14 +1062,14 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(101);
     v1.set(102);
     v1.set(105);
-    Assert.assertTrue("v1.max() is " + v1.max(), v1.max() == 105);
+    Assert.assertEquals("v1.max() is " + v1.max(), 105, v1.max());
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
       int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(v1.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(v1.get(i), gets[j]);
       }
     }
 
@@ -1081,8 +1081,8 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
       int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(v1.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(v1.get(i), gets[j]);
       }
     }
 
@@ -1096,8 +1096,8 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 100, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(v1.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(v1.get(i), gets[j]);
       }
     }
 
@@ -1123,8 +1123,8 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 35, 103, 105, 206};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        Assert.assertTrue(i == bits[j]);
-        Assert.assertTrue(v1.get(i) == gets[j]);
+        Assert.assertEquals(i, bits[j]);
+        Assert.assertEquals(v1.get(i), gets[j]);
       }
     }
 

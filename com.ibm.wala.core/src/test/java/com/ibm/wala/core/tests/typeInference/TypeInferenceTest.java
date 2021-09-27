@@ -145,7 +145,7 @@ public class TypeInferenceTest extends WalaTestCase {
     TypeInference ti = TypeInference.make(ir, true);
     TypeAbstraction type = ti.getType(7);
     Assert.assertNotNull("null type abstraction", type);
-    Assert.assertTrue("inferred wrong type", type.toString().equals("int"));
+    Assert.assertEquals("inferred wrong type", "int", type.toString());
   }
 
   @Test

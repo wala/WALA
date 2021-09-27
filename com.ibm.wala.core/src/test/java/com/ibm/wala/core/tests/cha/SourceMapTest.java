@@ -42,10 +42,10 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue("failed to load " + t, klass != null);
+    Assert.assertNotNull("failed to load " + t, klass);
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
-    Assert.assertTrue(sourceFile != null);
+    Assert.assertNotNull(sourceFile);
   }
 
   @Test
@@ -59,12 +59,12 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(scope.getPrimordialLoader(), CLASS_IN_PRIMORDIAL_JAR);
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     String sourceFile = klass.getSourceFileName();
-    Assert.assertTrue(sourceFile != null);
+    Assert.assertNotNull(sourceFile);
     System.err.println("Source file: " + sourceFile);
     Module container = ((BytecodeClass<?>) klass).getContainer();
-    Assert.assertTrue(container != null);
+    Assert.assertNotNull(container);
     System.err.println("container: " + container);
   }
 }

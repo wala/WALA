@@ -233,7 +233,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 
   public Integer generateNewVar() {
     final int result = this.arrayCounter;
-    this.arrayCounter += -1;
+    this.arrayCounter -= 1;
     return result;
   }
 
