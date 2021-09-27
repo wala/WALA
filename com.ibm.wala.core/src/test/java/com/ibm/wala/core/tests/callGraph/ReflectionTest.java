@@ -103,7 +103,7 @@ public class ReflectionTest extends WalaTestCase {
         continue;
       }
       if (w.toString().contains("Integer")) {
-        Assert.assertTrue(w.toString(), false);
+        Assert.fail(w.toString());
       }
     }
   }
@@ -309,7 +309,7 @@ public class ReflectionTest extends WalaTestCase {
         }
       }
     }
-    Assert.assertTrue(filePermConstrNewInstanceNode != null);
+    Assert.assertNotNull(filePermConstrNewInstanceNode);
 
     // Now verify that this node has FilePermission.<init> children
     CGNode filePermInitNode = null;
@@ -323,7 +323,7 @@ public class ReflectionTest extends WalaTestCase {
         break;
       }
     }
-    Assert.assertTrue(filePermInitNode != null);
+    Assert.assertNotNull(filePermInitNode);
 
     // Furthermore, verify that main has a FilePermission.toString child
     CGNode filePermToStringNode = null;
@@ -334,7 +334,7 @@ public class ReflectionTest extends WalaTestCase {
       }
     }
 
-    Assert.assertTrue(filePermToStringNode != null);
+    Assert.assertNotNull(filePermToStringNode);
   }
 
   private static Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
@@ -733,7 +733,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(reflect24Tr, "doNothing", "(Ljava/lang/Class;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.size() == 1);
+    Assert.assertEquals(1, nodes.size());
 
     // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
     Optional<CGNode> firstMatched = nodes.stream().findFirst();
@@ -742,12 +742,12 @@ public class ReflectionTest extends WalaTestCase {
 
     LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
-    Assert.assertTrue(pts.size() == 1);
+    Assert.assertEquals(1, pts.size());
 
     for (InstanceKey mappedObject : pts) {
       // the type corresponding to the 0th parameter should be Helper
       Assert.assertTrue(mappedObject instanceof ConstantKey);
-      Assert.assertTrue(((ConstantKey<?>) mappedObject).getValue().equals(helperClass));
+      Assert.assertEquals(((ConstantKey<?>) mappedObject).getValue(), helperClass);
     }
   }
 
@@ -822,9 +822,9 @@ public class ReflectionTest extends WalaTestCase {
     Assert.assertTrue(cgn.isEmpty());
 
     cgn = cg.getNodes(mbfoo);
-    Assert.assertTrue(1 == cgn.size());
+    Assert.assertEquals(1, cgn.size());
 
     cgn = cg.getNodes(mcbar);
-    Assert.assertTrue(1 == cgn.size());
+    Assert.assertEquals(1, cgn.size());
   }
 }
