@@ -58,11 +58,11 @@ public class CornerCasesTest extends WalaTestCase {
         TypeReference.findOrCreateClass(
             scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     IMethod m =
         klass.getMethod(
             new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
-    Assert.assertTrue(m == null);
+    Assert.assertNull(m);
   }
 
   /**
@@ -82,14 +82,14 @@ public class CornerCasesTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     ShrikeCTMethod m =
         (ShrikeCTMethod)
             klass.getMethod(
                 new Selector(
                     Atom.findOrCreateAsciiAtom("foo"),
                     Descriptor.findOrCreateUTF8("()Ljava/lang/Object;")));
-    Assert.assertTrue(m != null);
+    Assert.assertNotNull(m);
     IR ir =
         new AnalysisCacheImpl()
             .getSSACache()

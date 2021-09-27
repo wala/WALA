@@ -188,10 +188,10 @@ public class AddSerialVersion {
         | (hash[1] & 0xFF) << 8
         | (hash[2] & 0xFF) << 16
         | hash[3] << 24
-        | (hash[4] & 0xFF) << 32
-        | (hash[5] & 0xFF) << 40
-        | (hash[6] & 0xFF) << 48
-        | (hash[7] & 0xFF) << 56;
+        | (hash[4] & 0xFFL) << 32
+        | (hash[5] & 0xFFL) << 40
+        | (hash[6] & 0xFFL) << 48
+        | (hash[7] & 0xFFL) << 56;
   }
 
   public static void main(String[] args) {

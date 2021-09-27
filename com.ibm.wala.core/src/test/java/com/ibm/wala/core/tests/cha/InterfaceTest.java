@@ -77,8 +77,8 @@ public class InterfaceTest extends WalaTestCase {
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
 
-    Assert.assertTrue("did not find PreparedStatement", prep_stmt != null);
-    Assert.assertTrue("did not find Statement", stmt != null);
+    Assert.assertNotNull("did not find PreparedStatement", prep_stmt);
+    Assert.assertNotNull("did not find Statement", stmt);
 
     Assert.assertTrue(cha.implementsInterface(prep_stmt, stmt));
     Assert.assertFalse(cha.implementsInterface(stmt, prep_stmt));

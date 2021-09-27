@@ -60,7 +60,7 @@ public class JSMethodInstructionVisitor extends JSAbstractInstructionVisitor {
           }
           // this may be a genuine use of "new Function()", not a declaration/expression
           if (!symtab.isStringConstant(invk.getUse(1))
-              || symtab.getStringValue(invk.getUse(1)).equals("")) {
+              || symtab.getStringValue(invk.getUse(1)).isEmpty()) {
             return false;
           }
           return true;
