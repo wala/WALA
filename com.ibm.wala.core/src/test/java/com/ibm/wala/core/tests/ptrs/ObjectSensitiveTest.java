@@ -69,7 +69,7 @@ public class ObjectSensitiveTest {
         new LocalPointerKey(doNothing, doNothing.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pa.getPointsToSet(localPointerKey);
 
-    Assert.assertTrue(pts.size() == expectedSize);
+    Assert.assertEquals(pts.size(), expectedSize);
   }
 
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> initCallGraph(
@@ -97,7 +97,7 @@ public class ObjectSensitiveTest {
     MethodReference mr =
         MethodReference.findOrCreate(mainClassTr, "doNothing", "(Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.size() == 1);
+    Assert.assertEquals(1, nodes.size());
 
     Optional<CGNode> firstMatched = nodes.stream().findFirst();
     Assert.assertTrue(firstMatched.isPresent());

@@ -19,6 +19,7 @@ public class StaticInitializers {
     }
 
     int diff() {
+      //noinspection UnnecessaryUnaryMinus
       return x+-y;
     }
   }
