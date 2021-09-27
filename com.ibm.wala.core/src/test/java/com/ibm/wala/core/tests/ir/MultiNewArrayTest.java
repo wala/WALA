@@ -52,19 +52,19 @@ public class MultiNewArrayTest extends WalaTestCase {
         cha.lookupClass(
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
-    Assert.assertTrue(m != null);
+    Assert.assertNotNull(m);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     IR ir = cache.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());
-    Assert.assertTrue(ir != null);
+    Assert.assertNotNull(ir);
     SSAInstruction[] instructions = ir.getInstructions();
     for (SSAInstruction instr : instructions) {
       if (instr instanceof SSANewInstruction) {
         System.err.println(instr.toString(ir.getSymbolTable()));
-        Assert.assertTrue(instr.getNumberOfUses() == 2);
-        Assert.assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(0)) == 3);
-        Assert.assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(1)) == 4);
+        Assert.assertEquals(2, instr.getNumberOfUses());
+        Assert.assertEquals(3, ir.getSymbolTable().getIntValue(instr.getUse(0)));
+        Assert.assertEquals(4, ir.getSymbolTable().getIntValue(instr.getUse(1)));
       }
     }
   }
