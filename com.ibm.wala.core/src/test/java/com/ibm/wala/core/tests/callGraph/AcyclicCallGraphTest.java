@@ -56,8 +56,8 @@ public class AcyclicCallGraphTest extends WalaTestCase {
     PrunedCallGraph pcg =
         new PrunedCallGraph(cg, Iterator2Collection.toSet(cg.iterator()), cgBackEdges);
 
-    Assert.assertTrue(
+    Assert.assertFalse(
         "cycles should be gone",
-        !Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator().hasNext());
+        Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator().hasNext());
   }
 }

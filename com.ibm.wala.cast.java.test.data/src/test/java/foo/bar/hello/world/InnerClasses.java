@@ -145,6 +145,7 @@ class SuperEnclosing2 {
 	class SubEnclosed2 extends SuperEnclosing2 {
 		SubEnclosed2() {
 			// this.seVar = 5; // illegal 
+			//noinspection UnnecessaryUnaryMinus,UnaryPlus
 			SuperEnclosing2.this.seVar += -(-(+7)); // makes 13
 		}
 		int hello() {
