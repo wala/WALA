@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.hamcrest.core.IsIterableContaining;
 import org.junit.Before;
@@ -42,9 +43,9 @@ public class TestCallGraph2JSON {
     Map<String, Map<String, String[]>> parsedJSONCG = getParsedJSONCG(cg, cg2JSON);
     Set<String> methods = parsedJSONCG.keySet();
     assertEquals(3, methods.size());
-    for (String m : methods) {
-      if (m.startsWith("simple.js@3")) {
-        Map<String, String[]> callSites = parsedJSONCG.get(m);
+    for (Entry<String, Map<String, String[]>> entry : parsedJSONCG.entrySet()) {
+      if (entry.getKey().startsWith("simple.js@3")) {
+        Map<String, String[]> callSites = entry.getValue();
         assertThat(
             Arrays.asList(getTargetsStartingWith(callSites, "simple.js@4")),
             hasItemStartingWith("simple.js@7"));
@@ -146,9 +147,9 @@ public class TestCallGraph2JSON {
    * position match
    */
   private static String[] getTargetsStartingWith(Map<String, String[]> parsedJSON, String prefix) {
-    for (String key : parsedJSON.keySet()) {
-      if (key.startsWith(prefix)) {
-        return parsedJSON.get(key);
+    for (Entry<String, String[]> entry : parsedJSON.entrySet()) {
+      if (entry.getKey().startsWith(prefix)) {
+        return entry.getValue();
       }
     }
     throw new RuntimeException(prefix + " not a key prefix");

@@ -174,12 +174,13 @@ public abstract class TestCAstTranslator {
           "found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
 
       if (cls.getSuperclass() == null) {
-        Assert.assertTrue(
-            cls.getName() + " has no superclass", supers.get(cls.getName().toString()) == null);
+        Assert.assertNull(
+            cls.getName() + " has no superclass", supers.get(cls.getName().toString()));
       } else {
-        Assert.assertTrue(
+        Assert.assertEquals(
             "super of " + cls.getName() + " is " + cls.getSuperclass().getName(),
-            supers.get(cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));
+            supers.get(cls.getName().toString()),
+            cls.getSuperclass().getName().toString());
       }
 
       for (Object name2 : cls.getDeclaredInstanceFields()) {
@@ -205,20 +206,22 @@ public abstract class TestCAstTranslator {
           Assert.assertTrue(
               cls.getName() + " has static method " + mth.getName(),
               staticMethods.containsKey(key));
-          Assert.assertTrue(
+          Assert.assertEquals(
               cls.getName() + "::" + mth.getName() + " has " + np + " parameters",
-              staticMethods.get(key).equals(np));
+              staticMethods.get(key),
+              np);
         } else {
           Assert.assertTrue(
               cls.getName() + " has method " + mth.getName(), instanceMethods.containsKey(key));
-          Assert.assertTrue(
+          Assert.assertEquals(
               cls.getName() + "::" + mth.getName() + " has " + np + " parameters",
-              instanceMethods.get(key).equals(np));
+              instanceMethods.get(key),
+              np);
         }
       }
     }
 
-    Assert.assertTrue("want " + classes.size() + " classes", clsCount == classes.size());
+    Assert.assertEquals("want " + classes.size() + " classes", clsCount, classes.size());
   }
 
   protected void testInternal(String[] args, TranslatorAssertions assertions) throws Exception {
@@ -236,7 +239,7 @@ public abstract class TestCAstTranslator {
         URL url = getClass().getClassLoader().getResource(args[i]);
         fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, args[i]);
       }
-      Assert.assertTrue(args[i], fileNames[i] != null);
+      Assert.assertNotNull(args[i], fileNames[i]);
     }
 
     ClassHierarchy cha = runTranslator(fileNames);
@@ -253,7 +256,7 @@ public abstract class TestCAstTranslator {
       testInternal(new String[] {arg}, assertions);
     } catch (Exception e) {
       e.printStackTrace();
-      Assert.assertTrue(e.toString(), false);
+      Assert.fail(e.toString());
     }
   }
 }
