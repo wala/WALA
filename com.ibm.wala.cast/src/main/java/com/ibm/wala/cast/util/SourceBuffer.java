@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceBuffer {
-  private final class DetailedPosition implements Position {
+  private static final class DetailedPosition implements Position {
     private final int endOffset;
     private final int endLine;
     private final int endColumn;
