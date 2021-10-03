@@ -82,7 +82,7 @@ import org.eclipse.jdt.core.dom.FileASTRequestor;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class ECJSourceModuleTranslator implements SourceModuleTranslator {
-  protected class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
+  protected static class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
     public ECJJavaToCAstTranslator(
         JavaSourceLoaderImpl sourceLoader,
         CompilationUnit astRoot,
