@@ -15,6 +15,7 @@ import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestFieldBasedCG extends AbstractFieldBasedTest {
@@ -203,7 +204,8 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 
-  // @Test
+  @Ignore
+  @Test
   public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(
         runTest(

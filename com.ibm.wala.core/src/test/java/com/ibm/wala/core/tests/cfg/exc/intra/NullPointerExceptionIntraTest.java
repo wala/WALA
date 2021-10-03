@@ -44,6 +44,7 @@ import java.util.Collection;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -195,6 +196,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }
   }
 
+  @Ignore
+  @Test
   public void testDynamicParam2() throws UnsoundGraphException, CancelException {
     MethodReference mr =
         StringStuff.makeMethodReference(
@@ -790,7 +793,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
         return candidate;
       }
     }
-    Assert.assertTrue(false);
+    Assert.fail();
     return null;
   }
 }
