@@ -17,7 +17,7 @@ import java.util.Collections;
 
 class Util {
   private static final Collection<TypeReference> TYPE_ERROR_EXCEPTIONS =
-      Collections.unmodifiableCollection(Collections.singleton(JavaScriptTypes.TypeError));
+      Collections.singleton(JavaScriptTypes.TypeError);
 
   public static Collection<TypeReference> typeErrorExceptions() {
     return TYPE_ERROR_EXCEPTIONS;

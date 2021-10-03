@@ -23,6 +23,7 @@ public class MonitorTest {
   void sync2() {
     Object a = new Object();
     synchronized (this) {
+      //noinspection EmptySynchronizedStatement
       synchronized (a) {
         // Nothing here.
       }

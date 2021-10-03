@@ -5164,15 +5164,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int currentInstruction = c.cfg().getCurrentInstruction();
     c.cfg()
         .unknownInstructions(
-            () -> {
-              c.cfg()
-                  .addInstruction(
-                      new EachElementGetInstruction(
-                          currentInstruction,
-                          result,
-                          c.getValue(n.getChild(0)),
-                          c.getValue(n.getChild(1))));
-            });
+            () ->
+                c.cfg()
+                    .addInstruction(
+                        new EachElementGetInstruction(
+                            currentInstruction,
+                            result,
+                            c.getValue(n.getChild(0)),
+                            c.getValue(n.getChild(1)))));
 
     c.cfg()
         .noteOperands(

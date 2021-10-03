@@ -71,7 +71,7 @@ public abstract class CFGTest extends WalaTestCase {
       } catch (UnsoundGraphException e) {
         e.printStackTrace();
         System.err.println(ir);
-        Assert.assertTrue(" failed cfg integrity check for " + methodSig, false);
+        Assert.fail(" failed cfg integrity check for " + methodSig);
       }
 
       try {
@@ -80,7 +80,7 @@ public abstract class CFGTest extends WalaTestCase {
         e.printStackTrace();
         System.err.println(ir);
         System.err.println(cfg);
-        Assert.assertTrue(" failed 2-exit cfg integrity check for " + methodSig, false);
+        Assert.fail(" failed 2-exit cfg integrity check for " + methodSig);
       }
     } catch (Exception e) {
       e.printStackTrace();
