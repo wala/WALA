@@ -73,7 +73,7 @@ public abstract class JDTJavaTest extends IRTests {
       engine.setExclusionsFile(tf.getAbsolutePath());
       tf.deleteOnExit();
     } catch (IOException e) {
-      Assert.assertFalse("Cannot find exclusions file: " + e.toString(), true);
+      Assert.fail("Cannot find exclusions file: " + e);
     }
 
     return engine;

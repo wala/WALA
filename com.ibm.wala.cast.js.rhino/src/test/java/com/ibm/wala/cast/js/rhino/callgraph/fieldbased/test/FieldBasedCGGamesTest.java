@@ -6,6 +6,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URL;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
@@ -18,8 +19,8 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC);
   }
 
-  // seems to break with http issues
-  // @Test
+  @Ignore("seems to break with http issues")
+  @Test
   public void testBeslimed() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(
         new URL("http://www.markus-inger.de/test/game.php"),
@@ -27,8 +28,8 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC);
   }
 
-  // seems to break with http issues
-  // @Test
+  @Ignore("seems to break with http issues")
+  @Test
   public void testDiggAttack() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(
         new URL("http://www.pixastic.com/labs/digg_attack/"),
@@ -36,7 +37,8 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC);
   }
 
-  // @Test
+  @Ignore
+  @Test
   public void testRiverRaider() throws IOException, WalaException, Error, CancelException {
     runTestExceptOnTravis(
         new URL(

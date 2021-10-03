@@ -178,11 +178,11 @@ public class FloydWarshallTest extends WalaTestCase {
   @Test
   public void TestPathLengths() {
     int[][] result = FloydWarshall.shortestPathLengths(G);
-    Assert.assertTrue(result.length == shortestPaths.length);
+    assertEquals(result.length, shortestPaths.length);
     for (int i = 0; i < result.length; i++) {
-      Assert.assertTrue(result[i].length == shortestPaths[i].length);
+      assertEquals(result[i].length, shortestPaths[i].length);
       for (int j = 0; j < result[i].length; j++) {
-        Assert.assertTrue(result[i][j] == shortestPaths[i][j]);
+        assertEquals(result[i][j], shortestPaths[i][j]);
       }
     }
   }

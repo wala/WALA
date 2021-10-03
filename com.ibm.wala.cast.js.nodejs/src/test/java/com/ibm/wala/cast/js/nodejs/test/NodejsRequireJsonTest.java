@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.js.nodejs.test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.ibm.wala.cast.js.nodejs.NodejsCallGraphBuilderUtil;
@@ -34,6 +35,6 @@ public class NodejsRequireJsonTest {
     assertTrue(cgString.contains("Lempty/jsonModule>"));
     assertTrue(cgString.contains("Lnested/jsonModule>"));
     assertTrue(cgString.contains("Lpackage/jsonModule>"));
-    assertTrue(!cgString.contains("?"));
+    assertFalse(cgString.contains("?"));
   }
 }

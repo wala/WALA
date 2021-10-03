@@ -7,6 +7,7 @@ public class PeekErrorCase {
   public int start() {
     System.out.println(""); // Any method invocation here
 
+    //noinspection ConditionalExpressionWithIdenticalBranches,ConstantConditionalExpression
     final int num = true ? 1 : 1; // has to be a ternary?
     Object o = new Object() {
       public int hashCode() {

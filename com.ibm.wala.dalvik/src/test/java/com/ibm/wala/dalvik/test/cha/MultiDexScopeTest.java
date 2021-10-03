@@ -131,7 +131,7 @@ public class MultiDexScopeTest {
   }
 
   private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
-    try (ZipInputStream zis = new ZipInputStream(new FileInputStream(new File(apkFileName)))) {
+    try (ZipInputStream zis = new ZipInputStream(new FileInputStream(apkFileName))) {
       ZipEntry entry;
 
       while ((entry = zis.getNextEntry()) != null) {
@@ -146,8 +146,7 @@ public class MultiDexScopeTest {
   }
 
   private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {
-    try (BufferedOutputStream bos =
-        new BufferedOutputStream(new FileOutputStream(new File(outFileName)))) {
+    try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outFileName))) {
       byte[] buffer = new byte[4096];
       int read;
 
