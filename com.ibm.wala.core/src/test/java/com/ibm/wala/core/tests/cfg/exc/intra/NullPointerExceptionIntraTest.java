@@ -793,7 +793,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
         return candidate;
       }
     }
-    Assert.assertTrue(false);
+    Assert.fail();
     return null;
   }
 }

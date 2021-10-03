@@ -139,7 +139,7 @@ public class CallGraphTest extends WalaTestCase {
 
     // we do not expect a warning about class Abstract2, which has a concrete
     // subclasses
-    Assert.assertTrue("reported a warning about Abstract2", !ws.contains("cornerCases/Abstract2"));
+    Assert.assertFalse("reported a warning about Abstract2", ws.contains("cornerCases/Abstract2"));
   }
 
   @Test
@@ -179,7 +179,7 @@ public class CallGraphTest extends WalaTestCase {
     options.setHandleStaticInit(false);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     for (CGNode n : cg) {
-      Assert.assertTrue(!n.toString().contains("doNothing"));
+      Assert.assertFalse(n.toString().contains("doNothing"));
     }
   }
 
@@ -397,7 +397,7 @@ public class CallGraphTest extends WalaTestCase {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
       e1.printStackTrace();
-      Assert.assertTrue(e1.getMessage(), false);
+      Assert.fail(e1.getMessage());
     }
 
     Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(cg);
@@ -464,7 +464,7 @@ public class CallGraphTest extends WalaTestCase {
       GraphIntegrity.check(icfg);
     } catch (UnsoundGraphException e) {
       e.printStackTrace();
-      Assert.assertTrue(false);
+      Assert.fail();
     }
 
     // perform a little icfg exercise
@@ -487,7 +487,7 @@ public class CallGraphTest extends WalaTestCase {
     try {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
-      Assert.assertTrue(e1.getMessage(), false);
+      Assert.fail(e1.getMessage());
     }
     Set<MethodReference> callGraphMethods = CallGraphStats.collectMethods(cg);
     System.err.println(thisAlgorithm + " methods reached: " + callGraphMethods.size());
