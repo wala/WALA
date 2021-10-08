@@ -337,17 +337,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Symbol S = context.currentScope().lookup(name);
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
-    System.err.println(
-        "script "
-            + name
-            + " "
-            + E.getPosition().getURL().getFile()
-            + " "
-            + E.equals(context.currentScope().getEntity())
-            + " "
-            + entity2WrittenNames.containsKey(E)
-            + " "
-            + entity2WrittenNames.get(E));
     if (E.equals(context.currentScope().getEntity())
         && !(entity2WrittenNames.containsKey(E)
             && entity2WrittenNames.get(E).stream()
