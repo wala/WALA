@@ -356,9 +356,7 @@ tasks.named('test') {
 	}
 	// temporarily turn off some tests on JDK 11+
 	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
-		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
-		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
-		exclude '**/cha/LibraryVersionTest.class'
+		exclude '**/cha/LibraryVersionTest.class' // https://github.com/wala/WALA/issues/963
 		exclude '**/ir/TypeAnnotationTest.class'
 	}
 

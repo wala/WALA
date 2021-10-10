@@ -125,8 +125,11 @@ public class IntraproceduralExceptionAnalysis {
 
     Set<TypeReference> subClasses = new LinkedHashSet<>();
     for (TypeReference caught : possiblyCaughtExceptions) {
-      for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
-        subClasses.add(iclass.getReference());
+      // ignore exception types that cannot be resolved
+      if (this.classHierachy.lookupClass(caught) != null) {
+        for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
+          subClasses.add(iclass.getReference());
+        }
       }
     }
 
@@ -247,8 +250,11 @@ public class IntraproceduralExceptionAnalysis {
 
     Set<TypeReference> subClasses = new LinkedHashSet<>();
     for (TypeReference caught : result) {
-      for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
-        subClasses.add(iclass.getReference());
+      // ignore exception types that cannot be resolved
+      if (this.classHierachy.lookupClass(caught) != null) {
+        for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
+          subClasses.add(iclass.getReference());
+        }
       }
     }
 
