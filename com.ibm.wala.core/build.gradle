@@ -356,8 +356,8 @@ tasks.named('test') {
 	}
 	// temporarily turn off some tests on JDK 11+
 	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
-		// https://github.com/wala/WALA/issues/963
-		exclude '**/cha/LibraryVersionTest.class'
+		exclude '**/cha/LibraryVersionTest.class' // https://github.com/wala/WALA/issues/963
+		exclude '**/ir/TypeAnnotationTest.class'
 	}
 
 	outputs.file layout.buildDirectory.file('report')
