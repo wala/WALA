@@ -11,6 +11,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +37,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.annotations.TypeAnnotation;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -43,6 +46,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
@@ -104,7 +109,7 @@ public class TypeAnnotationTest extends WalaTestCase {
     // ), but instead of the preceding aload instruction.
     //
     // Just change it whenever a test starts to fail
-    final int instanceOfIIndex = 6;
+    final int instanceOfIIndex = PlatformUtil.getJavaRuntimeVersion() > 8 ? 7: 6;
 
     TypeReference typeUnderTest =
         TypeReference.findOrCreate(ClassLoaderReference.Application, typeAnnotatedClass1);
@@ -296,14 +301,12 @@ public class TypeAnnotationTest extends WalaTestCase {
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(true));
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(true));
-    AnnotationTest.assertEqualCollections(
-        expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
+    assertThat(runtimeInvisibleAnnotations, containsInAnyOrder(expectedRuntimeInvisibleAnnotations.toArray(new TypeAnnotation[0])));
 
     Collection<TypeAnnotation> runtimeVisibleAnnotations = HashSetFactory.make();
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(false));
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(false));
-    AnnotationTest.assertEqualCollections(
-        expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
+    assertThat(runtimeVisibleAnnotations, containsInAnyOrder(expectedRuntimeVisibleAnnotations.toArray(new TypeAnnotation[0])));
   }
 
   private void testFieldAnnotations(

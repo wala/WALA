@@ -80,4 +80,20 @@ public class PlatformUtil {
     }
     return result.toArray(new String[0]);
   }
+
+  /**
+   * @return the major version of the Java runtime we are running on.
+   */
+  public static int getJavaRuntimeVersion() {
+    String version = System.getProperty("java.version");
+    if (version.startsWith("1.")) {
+      version = version.substring(2, 3);
+    } else {
+      int dot = version.indexOf(".");
+      if (dot != -1) {
+        version = version.substring(0, dot);
+      }
+    }
+    return Integer.parseInt(version);
+  }
 }
