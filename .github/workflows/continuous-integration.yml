@@ -48,7 +48,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-executable: xvfb-gradle.sh
-          arguments: :com.ibm.wala.core:test
+          arguments: javadoc build lintGradle
         if: runner.os == 'Linux' && matrix.java == '11'
       - name: Build and test using Gradle but without ECJ
         uses: gradle/gradle-build-action@v2
