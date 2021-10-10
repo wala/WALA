@@ -36,20 +36,14 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'adopt'
-      - name: Build and test using Gradle and Java 8
+          distribution: 'temurin'
+      - name: Build and test using Gradle with ECJ
         uses: gradle/gradle-build-action@v2
         with:
           gradle-executable: xvfb-gradle.sh
           arguments: javadoc build lintGradle
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
-        if: runner.os == 'Linux' && matrix.java == '8'
-      - name: Build and test using Gradle and Java 11
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-executable: xvfb-gradle.sh
-          arguments: :com.ibm.wala.core:test
-        if: runner.os == 'Linux' && matrix.java == '11'
+        if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ
         uses: gradle/gradle-build-action@v2
         with:
@@ -82,7 +76,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: 'Prep for Maven'
         shell: bash
         run: ./gradlew prepareMavenBuild publishToMavenLocal -x javadoc
@@ -107,7 +101,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 8
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: 'Generate latest docs'
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
@@ -130,7 +124,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 8
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: 'Publish'
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
