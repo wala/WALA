@@ -46,8 +46,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
@@ -109,7 +107,7 @@ public class TypeAnnotationTest extends WalaTestCase {
     // ), but instead of the preceding aload instruction.
     //
     // Just change it whenever a test starts to fail
-    final int instanceOfIIndex = PlatformUtil.getJavaRuntimeVersion() > 8 ? 7: 6;
+    final int instanceOfIIndex = PlatformUtil.getJavaRuntimeVersion() > 8 ? 7 : 6;
 
     TypeReference typeUnderTest =
         TypeReference.findOrCreate(ClassLoaderReference.Application, typeAnnotatedClass1);
@@ -301,12 +299,16 @@ public class TypeAnnotationTest extends WalaTestCase {
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(true));
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(true));
-    assertThat(runtimeInvisibleAnnotations, containsInAnyOrder(expectedRuntimeInvisibleAnnotations.toArray(new TypeAnnotation[0])));
+    assertThat(
+        runtimeInvisibleAnnotations,
+        containsInAnyOrder(expectedRuntimeInvisibleAnnotations.toArray(new TypeAnnotation[0])));
 
     Collection<TypeAnnotation> runtimeVisibleAnnotations = HashSetFactory.make();
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(false));
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(false));
-    assertThat(runtimeVisibleAnnotations, containsInAnyOrder(expectedRuntimeVisibleAnnotations.toArray(new TypeAnnotation[0])));
+    assertThat(
+        runtimeVisibleAnnotations,
+        containsInAnyOrder(expectedRuntimeVisibleAnnotations.toArray(new TypeAnnotation[0])));
   }
 
   private void testFieldAnnotations(
