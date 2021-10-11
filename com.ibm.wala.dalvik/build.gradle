@@ -63,18 +63,7 @@ final installAndroidSdk = tasks.register('installAndroidSdk', Sync) {
 				semicolon = /\;/
 				discard = '/dev/null'
 			}
-
-			// sdkmanager ultimately runs a JVM, defaulting to $JAVA_HOME.  Ideally we would always
-			// use a Java 1.8 installation here, since sdkmanager does not currently work under Java
-			// 9+.  However, there is no automated way to select a JVM for a given desired version.
-			// So instead we prefer to use whichever Java installation the Gradle build is using.
-			// In most cases that will be $JAVA_HOME, but if it is not, then the developer probably
-			// had good reasons to build using something different.  For example, perhaps $JAVA_HOME
-			// is Java 9+, so the developer intentionally used a different installation to run
-			// Gradle under Java 1.8.
-			// TODO do we still need this?
-			environment('JAVA_HOME', System.properties.'java.home')
-
+			
 			commandLine shell, shellFlags, "$yes | $destinationDir/cmdline-tools/bin/sdkmanager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard"
 		}
 	}
