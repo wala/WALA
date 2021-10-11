@@ -21,6 +21,8 @@ import java.net.URL;
 public class SourceFileModule extends FileModule implements Module, ModuleEntry, SourceModule {
 
   private final String fileName;
+  /** cache result of {@link #getURL()}, for performance */
+  private URL url;
 
   public SourceFileModule(File f, String fileName, Module container) {
     super(f, container);
@@ -59,10 +61,13 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
 
   @Override
   public URL getURL() {
-    try {
-      return getFile().toURI().toURL();
-    } catch (MalformedURLException e) {
-      throw new Error("error making URL for " + getFile(), e);
+    if (url == null) {
+      try {
+        url = getFile().toURI().toURL();
+      } catch (MalformedURLException e) {
+        throw new Error("error making URL for " + getFile(), e);
+      }
     }
+    return url;
   }
 }
