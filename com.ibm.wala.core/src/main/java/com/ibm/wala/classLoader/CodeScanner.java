@@ -93,6 +93,7 @@ public class CodeScanner {
   }
 
   /** @throws IllegalArgumentException if m is null */
+  @SuppressWarnings("unchecked")
   public static Collection<NewSiteReference> getNewSites(IMethod m)
       throws InvalidClassFileException {
     if (m == null) {
@@ -102,7 +103,8 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getNewSites(sm.getStatements());
     } else {
-      return getNewSitesFromShrikeBT((ShrikeCTMethod) m);
+      IBytecodeMethod bm = (IBytecodeMethod) m;
+      return bm.getNewSites();
     }
   }
 
@@ -184,12 +186,6 @@ public class CodeScanner {
   private static Collection<CallSiteReference> getCallSitesFromShrikeBT(IBytecodeMethod<?> M)
       throws InvalidClassFileException {
     return M.getCallSites();
-  }
-
-  /** @return Iterator of TypeReference */
-  private static Collection<NewSiteReference> getNewSitesFromShrikeBT(ShrikeCTMethod M)
-      throws InvalidClassFileException {
-    return M.getNewSites();
   }
 
   private static List<FieldReference> getFieldsReadFromShrikeBT(ShrikeCTMethod M)

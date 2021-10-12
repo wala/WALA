@@ -727,9 +727,9 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
       /*
       System.out.println("i: " + i);
       for (int j = 0; j < handlers[i].length; j++) {
-      	System.out.println("\t j: " + j);
-      	System.out.println("\t\t Handler: " +  handlers[i][j].getHandler());
-      	System.out.println("\t\t Catch Class: " + handlers[i][j].getCatchClass());
+        System.out.println("\t j: " + j);
+        System.out.println("\t\t Handler: " +  handlers[i][j].getHandler());
+        System.out.println("\t\t Catch Class: " + handlers[i][j].getCatchClass());
       }
       */
     }
@@ -4590,20 +4590,20 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   // MethodAnnotationIteratorDelegate Methods
   // -------------------------------------------
 
-  //	/**
-  //	 * Delegate called by the class in order to parse the method annotations.
-  //	 */
-  //	public void processMethodAnnotations(MethodIdItem mIdItem,
-  //			AnnotationSetItem anoSet) {
-  //		//System.out.println("DexIMethod: processMethodAnnotations()");
-  //		if ( mIdItem.equals(eMethod.method) ){
-  //			AnnotationItem[] items = anoSet.getAnnotations();
-  //			for (AnnotationItem item : items) {
+  //  /**
+  //   * Delegate called by the class in order to parse the method annotations.
+  //   */
+  //  public void processMethodAnnotations(MethodIdItem mIdItem,
+  //      AnnotationSetItem anoSet) {
+  //    //System.out.println("DexIMethod: processMethodAnnotations()");
+  //    if ( mIdItem.equals(eMethod.method) ){
+  //      AnnotationItem[] items = anoSet.getAnnotations();
+  //      for (AnnotationItem item : items) {
   //
-  //			}
+  //      }
   //
-  //		}
-  //	}
+  //    }
+  //  }
 
   /**
    * @throws UnsupportedOperationException
@@ -4640,6 +4640,20 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
       }
     }
     return Collections.unmodifiableCollection(csites);
+  }
+
+  @Override
+  public Collection<NewSiteReference> getNewSites() {
+    if (isNative()) {
+      return Collections.emptySet();
+    }
+    ArrayList<NewSiteReference> nsites = new ArrayList<>();
+    for (Instruction inst : instructions()) {
+      if (inst instanceof New) {
+        nsites.add(((New) inst).newSiteRef);
+      }
+    }
+    return Collections.unmodifiableCollection(nsites);
   }
 
   @Override

@@ -41,6 +41,9 @@ public interface IBytecodeMethod<I> extends IMethod {
    */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException;
 
+  /** @return the new sites declared in the bytecode for this method */
+  Collection<NewSiteReference> getNewSites() throws InvalidClassFileException;
+
   /** @return information about any indirect uses of local variables */
   IndirectionData getIndirectionData();
 
