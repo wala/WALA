@@ -93,7 +93,6 @@ public class CodeScanner {
   }
 
   /** @throws IllegalArgumentException if m is null */
-  @SuppressWarnings("unchecked")
   public static Collection<NewSiteReference> getNewSites(IMethod m)
       throws InvalidClassFileException {
     if (m == null) {
@@ -103,7 +102,7 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getNewSites(sm.getStatements());
     } else {
-      IBytecodeMethod bm = (IBytecodeMethod) m;
+      IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
       return bm.getNewSites();
     }
   }
