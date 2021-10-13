@@ -13,8 +13,11 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.shrike.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrike.shrikeBT.IndirectionData;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import java.util.Collection;
+import java.util.Iterator;
 
 /** A method which originated in bytecode, decoded by Shrike */
 public interface IBytecodeMethod<I> extends IMethod {
@@ -40,6 +43,12 @@ public interface IBytecodeMethod<I> extends IMethod {
    * @return the call sites declared in the bytecode for this method
    */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException;
+
+  Iterator<FieldReference> getFieldsRead() throws InvalidClassFileException;
+
+  Iterator<FieldReference> getFieldsWritten() throws InvalidClassFileException;
+
+  Iterator<TypeReference> getArraysWritten() throws InvalidClassFileException;
 
   /** @return the new sites declared in the bytecode for this method */
   Collection<NewSiteReference> getNewSites() throws InvalidClassFileException;

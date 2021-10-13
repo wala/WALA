@@ -12,6 +12,7 @@ import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -22,6 +23,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PlatformUtil;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -106,7 +108,6 @@ public class MultiDexScopeTest {
   public AnalysisScope manuallyInitScope() throws IOException {
     AnalysisScope scope = null;
     String multidexApk = "src/test/resources/multidex-test.apk";
-
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             "primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
@@ -128,7 +129,6 @@ public class MultiDexScopeTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-
     return scope;
   }
 
@@ -141,7 +141,6 @@ public class MultiDexScopeTest {
     scope = manuallyInitScope();
     cha = ClassHierarchyFactory.make(scope);
 
-    // use setUpAndroidAnalysisScope
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, multidexApk);
     cha2 = ClassHierarchyFactory.make(scope2);
 
@@ -158,18 +157,19 @@ public class MultiDexScopeTest {
 
     AnalysisCacheImpl cache = new AnalysisCacheImpl(new DexIRFactory());
 
+    IClass targetClass =
+        cha.lookupClass(TypeReference.find(ClassLoaderReference.Application, "Ltest/Main"));
     IMethod targetMethod = null;
-    for (IClass c : cha) {
-      for (IMethod m : c.getAllMethods()) {
-        if (m != null) {
-          targetMethod = m;
-        }
+    for (IMethod m : targetClass.getAllMethods()) {
+      System.out.println(m.toString());
+      if (m.toString().contains("Main")) {
+        targetMethod = m;
+        break;
       }
     }
 
     ArrayList<DefaultEntrypoint> entrypoints = new ArrayList<>();
     entrypoints.add(new DefaultEntrypoint(targetMethod, cha));
-
     AnalysisOptions options = new AnalysisOptions();
     options.setAnalysisScope(scope);
     options.setEntrypoints(entrypoints);
@@ -177,11 +177,28 @@ public class MultiDexScopeTest {
 
     CallGraphBuilder<InstanceKey> cgb = Util.makeRTABuilder(options, cache, cha);
     CallGraph cg1 = cgb.makeCallGraph(options, null);
-    Assert.assertNotNull(cg1);
+    hasEdge(cg1);
 
     cgb = Util.makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
     CallGraph cg2 = cgb.makeCallGraph(options, null);
-    Assert.assertNotNull(cg2);
+    hasEdge(cg2);
+  }
+
+  private static void hasEdge(CallGraph cg) {
+    Iterator<CGNode> entryNodes = cg.getEntrypointNodes().iterator();
+    CGNode callerNode = null;
+    while (entryNodes.hasNext() && callerNode == null) {
+      callerNode = entryNodes.next();
+    }
+    Assert.assertNotNull(callerNode);
+
+    Iterator<CGNode> succNodes = cg.getSuccNodes(callerNode);
+    CGNode calleeNode = null;
+    while (succNodes.hasNext() && calleeNode == null) {
+      calleeNode = succNodes.next();
+    }
+    Assert.assertNotNull(calleeNode);
+    Assert.assertTrue(cg.hasEdge(callerNode, calleeNode));
   }
 
   private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
