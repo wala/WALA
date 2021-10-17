@@ -104,6 +104,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /** */
   private void checkIntegrity() {
     assert privatePart == null || !privatePart.isEmpty();
+    //noinspection AssertWithSideEffects
     assert sharedPart == null || !sharedPart.isEmpty();
     if (privatePart != null && sharedPart != null) {
       assert privatePart.intersection(sharedPart).isEmpty();
