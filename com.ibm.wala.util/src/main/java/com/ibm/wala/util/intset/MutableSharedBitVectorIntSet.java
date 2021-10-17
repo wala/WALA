@@ -118,23 +118,20 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       checkIntegrity();
     }
     if (privatePart != null && privatePart.size() > OVERFLOW) {
+      BitVectorIntSet temp;
       if (sharedPart == null) {
-        BitVectorIntSet temp = new BitVectorIntSet(privatePart);
-        sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
-        temp.removeAll(sharedPart);
-        if (!temp.isEmpty()) privatePart = MutableSparseIntSet.make(temp);
-        else privatePart = null;
+        temp = new BitVectorIntSet(privatePart);
       } else {
-        BitVectorIntSet temp = new BitVectorIntSet(sharedPart);
+        temp = new BitVectorIntSet(sharedPart);
         // when we call findOrCreateSharedSubset, we will ask size() on temp.
         // so use addAll instead of addAllOblivious: which incrementally
         // updates the population count.
         temp.addAll(privatePart);
-        sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
-        temp.removeAll(sharedPart);
-        if (!temp.isEmpty()) privatePart = MutableSparseIntSet.make(temp);
-        else privatePart = null;
       }
+      sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
+      temp.removeAll(sharedPart);
+      if (!temp.isEmpty()) privatePart = MutableSparseIntSet.make(temp);
+      else privatePart = null;
     }
     if (PARANOID) {
       checkIntegrity();
