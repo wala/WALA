@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /** Platform-specific utility functions. */
 public class PlatformUtil {
@@ -55,13 +56,10 @@ public class PlatformUtil {
     String javaVersion = System.getProperty("java.specification.version");
     if (!javaVersion.equals("1.8")) {
       // java11 support for jmod files
-      try {
+      try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("java.home"), "jmods"))) {
         classpath =
             String.join(
-                File.pathSeparator,
-                Files.list(Paths.get(System.getProperty("java.home"), "jmods"))
-                    .map(Path::toString)
-                    .collect(Collectors.toList()));
+                File.pathSeparator, stream.map(Path::toString).collect(Collectors.toList()));
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
