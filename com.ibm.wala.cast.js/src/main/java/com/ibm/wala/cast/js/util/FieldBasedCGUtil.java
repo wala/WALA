@@ -152,7 +152,9 @@ public class FieldBasedCGUtil {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
     List<Path> jsFiles = Collections.emptyList();
     try (Stream<Path> stream = Files.walk(scriptDir)) {
-        jsFiles = stream.filter(p -> p.toString().toLowerCase().endsWith(".js"))
+      jsFiles =
+          stream
+              .filter(p -> p.toString().toLowerCase().endsWith(".js"))
               .collect(Collectors.toList());
     }
     List<Module> scripts = new ArrayList<>();

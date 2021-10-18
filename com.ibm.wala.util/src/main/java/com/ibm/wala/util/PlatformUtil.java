@@ -59,9 +59,7 @@ public class PlatformUtil {
       try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("java.home"), "jmods"))) {
         classpath =
             String.join(
-                File.pathSeparator,
-                    stream.map(Path::toString)
-                    .collect(Collectors.toList()));
+                File.pathSeparator, stream.map(Path::toString).collect(Collectors.toList()));
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
