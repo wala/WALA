@@ -25,11 +25,11 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +46,8 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCallSites(sm.getStatements());
     } else {
-      return getCallSitesFromShrikeBT((IBytecodeMethod<?>) m);
+      IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
+      return bm.getCallSites();
     }
   }
 
@@ -60,7 +61,12 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsRead(sm.getStatements());
     } else {
-      return getFieldsReadFromShrikeBT((ShrikeCTMethod) m);
+      IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
+      ArrayList<FieldReference> result = new ArrayList<>();
+      for (FieldReference fr : Iterator2Iterable.make(bm.getFieldsRead())) {
+        result.add(fr);
+      }
+      return result;
     }
   }
 
@@ -74,7 +80,12 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsWritten(sm.getStatements());
     } else {
-      return getFieldsWrittenFromShrikeBT((ShrikeCTMethod) m);
+      IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
+      ArrayList<FieldReference> result = new ArrayList<>();
+      for (FieldReference fr : Iterator2Iterable.make(bm.getFieldsWritten())) {
+        result.add(fr);
+      }
+      return result;
     }
   }
 
@@ -88,7 +99,12 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getArraysWritten(sm.getStatements());
     } else {
-      return getArraysWrittenFromShrikeBT((ShrikeCTMethod) m);
+      IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
+      ArrayList<TypeReference> result = new ArrayList<>();
+      for (TypeReference tr : Iterator2Iterable.make(bm.getArraysWritten())) {
+        result.add(tr);
+      }
+      return result;
     }
   }
 
@@ -102,7 +118,8 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getNewSites(sm.getStatements());
     } else {
-      return getNewSitesFromShrikeBT((ShrikeCTMethod) m);
+      IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
+      return bm.getNewSites();
     }
   }
 
@@ -181,47 +198,6 @@ public class CodeScanner {
     return false;
   }
 
-  private static Collection<CallSiteReference> getCallSitesFromShrikeBT(IBytecodeMethod<?> M)
-      throws InvalidClassFileException {
-    return M.getCallSites();
-  }
-
-  /** @return Iterator of TypeReference */
-  private static Collection<NewSiteReference> getNewSitesFromShrikeBT(ShrikeCTMethod M)
-      throws InvalidClassFileException {
-    return M.getNewSites();
-  }
-
-  private static List<FieldReference> getFieldsReadFromShrikeBT(ShrikeCTMethod M)
-      throws InvalidClassFileException {
-    // TODO move the logic here from ShrikeCTMethodWrapper
-    LinkedList<FieldReference> result = new LinkedList<>();
-    for (FieldReference fr : Iterator2Iterable.make(M.getFieldsRead())) {
-      result.add(fr);
-    }
-    return result;
-  }
-
-  private static List<FieldReference> getFieldsWrittenFromShrikeBT(ShrikeCTMethod M)
-      throws InvalidClassFileException {
-    // TODO move the logic here from ShrikeCTMethodWrapper
-    LinkedList<FieldReference> result = new LinkedList<>();
-    for (FieldReference fr : Iterator2Iterable.make(M.getFieldsWritten())) {
-      result.add(fr);
-    }
-    return result;
-  }
-
-  private static List<TypeReference> getArraysWrittenFromShrikeBT(ShrikeCTMethod M)
-      throws InvalidClassFileException {
-    // TODO move the logic here from ShrikeCTMethodWrapper
-    List<TypeReference> result = new LinkedList<>();
-    for (TypeReference tr : Iterator2Iterable.make(M.getArraysWritten())) {
-      result.add(tr);
-    }
-    return result;
-  }
-
   private static boolean hasShrikeBTObjectArrayLoad(ShrikeCTMethod M)
       throws InvalidClassFileException {
     for (TypeReference tr : Iterator2Iterable.make(M.getArraysRead())) {
@@ -281,7 +257,7 @@ public class CodeScanner {
    * @return List of InvokeInstruction
    */
   private static List<CallSiteReference> getCallSites(SSAInstruction[] statements) {
-    final List<CallSiteReference> result = new LinkedList<>();
+    final List<CallSiteReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -302,7 +278,7 @@ public class CodeScanner {
    * @return List of InvokeInstruction
    */
   private static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
-    final List<NewSiteReference> result = new LinkedList<>();
+    final List<NewSiteReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -328,7 +304,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<FieldReference> result = new LinkedList<>();
+    final List<FieldReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -354,7 +330,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<FieldReference> result = new LinkedList<>();
+    final List<FieldReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -380,7 +356,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<TypeReference> result = new LinkedList<>();
+    final List<TypeReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
 

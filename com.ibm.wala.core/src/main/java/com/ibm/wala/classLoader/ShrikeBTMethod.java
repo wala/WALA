@@ -183,7 +183,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
         : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().callSites));
   }
 
-  Collection<NewSiteReference> getNewSites() throws InvalidClassFileException {
+  public Collection<NewSiteReference> getNewSites() throws InvalidClassFileException {
     return (isNative() || getBCInfo().newSites == null)
         ? Collections.emptySet()
         : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().newSites));
