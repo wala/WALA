@@ -4640,7 +4640,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ));
       }
     }
-    return Collections.unmodifiableCollection(csites);
+    return csites;
   }
 
   @Override
@@ -4659,7 +4659,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ((GetField) inst).fieldType));
       }
     }
-    return Collections.unmodifiableCollection(fsites).iterator();
+    return fsites.iterator();
   }
 
   @Override
@@ -4678,7 +4678,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ((PutField) inst).fieldType));
       }
     }
-    return Collections.unmodifiableCollection(fsites).iterator();
+    return fsites.iterator();
   }
 
   @Override
@@ -4692,7 +4692,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         asites.add(((ArrayPut) inst).getType());
       }
     }
-    return Collections.unmodifiableCollection(asites).iterator();
+    return asites.iterator();
   }
 
   @Override
@@ -4706,7 +4706,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         nsites.add(((New) inst).newSiteRef);
       }
     }
-    return Collections.unmodifiableCollection(nsites);
+    return nsites;
   }
 
   @Override

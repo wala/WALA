@@ -23,6 +23,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PlatformUtil;
 import java.io.BufferedOutputStream;
@@ -32,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.jf.dexlib2.DexFileFactory;
@@ -149,58 +152,6 @@ public class MultiDexScopeTest {
         Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
   }
 
-  @Test
-  public void testCGCreationFromDexSource()
-      throws ClassHierarchyException, IOException, CallGraphBuilderCancelException {
-    AnalysisScope scope = manuallyInitScope();
-    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-
-    AnalysisCacheImpl cache = new AnalysisCacheImpl(new DexIRFactory());
-
-    IClass targetClass =
-        cha.lookupClass(TypeReference.find(ClassLoaderReference.Application, "Ltest/Main"));
-    IMethod targetMethod = null;
-    for (IMethod m : targetClass.getAllMethods()) {
-      System.out.println(m.toString());
-      if (m.toString().contains("Main")) {
-        targetMethod = m;
-        break;
-      }
-    }
-
-    ArrayList<DefaultEntrypoint> entrypoints = new ArrayList<>();
-    entrypoints.add(new DefaultEntrypoint(targetMethod, cha));
-    AnalysisOptions options = new AnalysisOptions();
-    options.setAnalysisScope(scope);
-    options.setEntrypoints(entrypoints);
-    options.setReflectionOptions(AnalysisOptions.ReflectionOptions.NONE);
-
-    CallGraphBuilder<InstanceKey> cgb = Util.makeRTABuilder(options, cache, cha);
-    CallGraph cg1 = cgb.makeCallGraph(options, null);
-    hasEdge(cg1);
-
-    cgb = Util.makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
-    CallGraph cg2 = cgb.makeCallGraph(options, null);
-    hasEdge(cg2);
-  }
-
-  private static void hasEdge(CallGraph cg) {
-    Iterator<CGNode> entryNodes = cg.getEntrypointNodes().iterator();
-    CGNode callerNode = null;
-    while (entryNodes.hasNext() && callerNode == null) {
-      callerNode = entryNodes.next();
-    }
-    Assert.assertNotNull(callerNode);
-
-    Iterator<CGNode> succNodes = cg.getSuccNodes(callerNode);
-    CGNode calleeNode = null;
-    while (succNodes.hasNext() && calleeNode == null) {
-      calleeNode = succNodes.next();
-    }
-    Assert.assertNotNull(calleeNode);
-    Assert.assertTrue(cg.hasEdge(callerNode, calleeNode));
-  }
-
   private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
     try (ZipInputStream zis = new ZipInputStream(new FileInputStream(apkFileName))) {
       ZipEntry entry;
@@ -214,6 +165,50 @@ public class MultiDexScopeTest {
         zis.closeEntry();
       }
     }
+  }
+
+  @Test
+  public void testCGCreationFromDexSource()
+      throws ClassHierarchyException, IOException, CallGraphBuilderCancelException {
+    AnalysisScope scope = manuallyInitScope();
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    AnalysisCacheImpl cache = new AnalysisCacheImpl(new DexIRFactory());
+
+    TypeReference b2 = TypeReference.find(ClassLoaderReference.Application, "Ltest/B2");
+    TypeReference b = TypeReference.find(ClassLoaderReference.Application, "Ltest/B");
+
+    MethodReference callerRef =
+        MethodReference.findOrCreate(b2, "<init>", "(ILjava/lang/String;)V");
+    MethodReference calleeRef = MethodReference.findOrCreate(b, "<init>", "(I)V");
+
+    IClass b2Class = cha.lookupClass(b2);
+    IMethod targetMethod = b2Class.getMethod(Selector.make("<init>(ILjava/lang/String;)V"));
+
+    ArrayList<DefaultEntrypoint> entrypoints = new ArrayList<>();
+    entrypoints.add(new DefaultEntrypoint(targetMethod, cha));
+    AnalysisOptions options = new AnalysisOptions();
+    options.setAnalysisScope(scope);
+    options.setEntrypoints(entrypoints);
+    options.setReflectionOptions(AnalysisOptions.ReflectionOptions.NONE);
+
+    CallGraphBuilder<InstanceKey> cgb = Util.makeRTABuilder(options, cache, cha);
+    CallGraph cg1 = cgb.makeCallGraph(options, null);
+    findEdge(cg1, callerRef, calleeRef);
+
+    cgb = Util.makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
+    CallGraph cg2 = cgb.makeCallGraph(options, null);
+    findEdge(cg2, callerRef, calleeRef);
+  }
+
+  public static void findEdge(CallGraph cg, MethodReference callerRef, MethodReference calleeRef) {
+    Set<CGNode> callerNodes = cg.getNodes(callerRef);
+    Assert.assertFalse(callerNodes.isEmpty());
+    CGNode callerNode = callerNodes.iterator().next();
+
+    Set<CGNode> calleeNodes = cg.getNodes(calleeRef);
+    Assert.assertFalse(calleeNodes.isEmpty());
+    CGNode calleeNode = calleeNodes.iterator().next();
+    Assert.assertTrue(cg.hasEdge(callerNode, calleeNode));
   }
 
   private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {

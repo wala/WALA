@@ -25,11 +25,11 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -62,7 +62,7 @@ public class CodeScanner {
       return getFieldsRead(sm.getStatements());
     } else {
       IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
-      LinkedList<FieldReference> result = new LinkedList<>();
+      ArrayList<FieldReference> result = new ArrayList<>();
       for (FieldReference fr : Iterator2Iterable.make(bm.getFieldsRead())) {
         result.add(fr);
       }
@@ -81,7 +81,7 @@ public class CodeScanner {
       return getFieldsWritten(sm.getStatements());
     } else {
       IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
-      LinkedList<FieldReference> result = new LinkedList<>();
+      ArrayList<FieldReference> result = new ArrayList<>();
       for (FieldReference fr : Iterator2Iterable.make(bm.getFieldsWritten())) {
         result.add(fr);
       }
@@ -100,7 +100,7 @@ public class CodeScanner {
       return getArraysWritten(sm.getStatements());
     } else {
       IBytecodeMethod<?> bm = (IBytecodeMethod<?>) m;
-      LinkedList<TypeReference> result = new LinkedList<>();
+      ArrayList<TypeReference> result = new ArrayList<>();
       for (TypeReference tr : Iterator2Iterable.make(bm.getArraysWritten())) {
         result.add(tr);
       }
@@ -257,7 +257,7 @@ public class CodeScanner {
    * @return List of InvokeInstruction
    */
   private static List<CallSiteReference> getCallSites(SSAInstruction[] statements) {
-    final List<CallSiteReference> result = new LinkedList<>();
+    final List<CallSiteReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -278,7 +278,7 @@ public class CodeScanner {
    * @return List of InvokeInstruction
    */
   private static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
-    final List<NewSiteReference> result = new LinkedList<>();
+    final List<NewSiteReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -304,7 +304,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<FieldReference> result = new LinkedList<>();
+    final List<FieldReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -330,7 +330,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<FieldReference> result = new LinkedList<>();
+    final List<FieldReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
           @Override
@@ -356,7 +356,7 @@ public class CodeScanner {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }
-    final List<TypeReference> result = new LinkedList<>();
+    final List<TypeReference> result = new ArrayList<>();
     Visitor v =
         new Visitor() {
 
