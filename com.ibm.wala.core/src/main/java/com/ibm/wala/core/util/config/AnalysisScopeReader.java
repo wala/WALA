@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
+import com.google.gson;
 
 /** Reads {@link AnalysisScope} from a text file. */
 public class AnalysisScopeReader {
@@ -300,5 +301,9 @@ public class AnalysisScopeReader {
     } catch (IOException | InvalidClassFileException e) {
       Assertions.UNREACHABLE(e.toString());
     }
+  }
+  public String toJSON(){
+    Gson gson = new Gson();
+    return toJSON(this);
   }
 }
