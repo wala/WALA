@@ -111,6 +111,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -4639,7 +4640,73 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ));
       }
     }
-    return Collections.unmodifiableCollection(csites);
+    return csites;
+  }
+
+  @Override
+  public Iterator<com.ibm.wala.types.FieldReference> getFieldsRead() {
+    if (isNative()) {
+      return Collections.emptyIterator();
+    }
+    ArrayList<com.ibm.wala.types.FieldReference> fsites = new ArrayList<>();
+    for (Instruction inst : instructions()) {
+      if (inst instanceof GetField) {
+        fsites.add(
+            com.ibm.wala.types.FieldReference.findOrCreate(
+                getDeclaringClass().getClassLoader().getReference(),
+                ((GetField) inst).clazzName,
+                ((GetField) inst).fieldName,
+                ((GetField) inst).fieldType));
+      }
+    }
+    return fsites.iterator();
+  }
+
+  @Override
+  public Iterator<com.ibm.wala.types.FieldReference> getFieldsWritten() {
+    if (isNative()) {
+      return Collections.emptyIterator();
+    }
+    ArrayList<com.ibm.wala.types.FieldReference> fsites = new ArrayList<>();
+    for (Instruction inst : instructions()) {
+      if (inst instanceof PutField) {
+        fsites.add(
+            com.ibm.wala.types.FieldReference.findOrCreate(
+                getDeclaringClass().getClassLoader().getReference(),
+                ((PutField) inst).clazzName,
+                ((PutField) inst).fieldName,
+                ((PutField) inst).fieldType));
+      }
+    }
+    return fsites.iterator();
+  }
+
+  @Override
+  public Iterator<TypeReference> getArraysWritten() {
+    if (isNative()) {
+      return Collections.emptyIterator();
+    }
+    ArrayList<TypeReference> asites = new ArrayList<>();
+    for (Instruction inst : instructions()) {
+      if (inst instanceof ArrayPut) {
+        asites.add(((ArrayPut) inst).getType());
+      }
+    }
+    return asites.iterator();
+  }
+
+  @Override
+  public Collection<NewSiteReference> getNewSites() {
+    if (isNative()) {
+      return Collections.emptySet();
+    }
+    ArrayList<NewSiteReference> nsites = new ArrayList<>();
+    for (Instruction inst : instructions()) {
+      if (inst instanceof New) {
+        nsites.add(((New) inst).newSiteRef);
+      }
+    }
+    return nsites;
   }
 
   @Override

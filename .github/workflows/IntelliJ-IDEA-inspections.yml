@@ -1,0 +1,26 @@
+name: IntelliJ IDEA inspections
+on:
+  schedule:
+    - cron: 38 4 * * 4
+  workflow_dispatch:
+jobs:
+  intellij_idea_inspections:
+    name: 'Run and check IntelliJ IDEA inspections'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out WALA sources
+        uses: actions/checkout@v2
+      - name: Install IntelliJ IDEA snap
+        run: sudo snap install intellij-idea-community --classic
+      - name: Run IntelliJ IDEA inspections
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
+            runInspections
+      - name: Check IntelliJ IDEA inspection results
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
+            checkInspectionResults
