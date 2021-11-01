@@ -12,6 +12,7 @@ buildscript {
 }
 
 plugins {
+	id 'all.shared.gradle.file-lister' version '1.0.2'
 	id 'com.diffplug.eclipse.mavencentral' version '3.33.0' apply false
 	id 'com.dorongold.task-tree' version '2.1.0'
 	id 'com.github.ben-manes.versions' version '0.39.0'
@@ -358,6 +359,77 @@ final check = tasks.register('check') {
 
 tasks.register('build') {
 	dependsOn check
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Run IntelliJ IDEA inspections on entire project tree
+//
+//  We don't make `check` depend on `checkInspectionResults` for two
+//  reasons.  First, `runInspections` is quite slow.  Second,
+//  `runInspections` cannot run while the same user account is running a
+//  regular, graphical instance of IntelliJ IDEA.  These limitations
+//  make `runInspections` and `checkInspectionResults` more suitable for
+//  use in CI/CD pipelines than for daily use by live WALA developers.
+//
+
+final runInspections = tasks.register('runInspections', Exec) {
+	group = 'intellij-idea'
+	description = 'Run all enabled IntelliJ IDEA inspections on the entire WALA project'
+
+	final ideaDir = file "$rootDir/.idea"
+	inputs.dir "$ideaDir/scopes"
+
+	final inspectionProfile = file "$ideaDir/inspectionProfiles/No_Back_Sliding.xml"
+	inputs.file inspectionProfile
+
+	final textResultsFile = file "$buildDir/${name}.txt"
+	outputs.file textResultsFile
+
+	// Inspections examine a wide variety of files, not just Java
+	// sources, so this task is out-of-date if nearly any other file has
+	// changed.
+	inputs.files fileLister.obtainPartialFileTree()
+
+	executable = findProperty('runInspections.IntelliJ-IDEA.command') ?: 'idea'
+	args 'inspect', rootDir, inspectionProfile, textResultsFile, '-v1', '-format', 'plain'
+
+	// The `idea` command above always fails with an
+	// `IllegalArgumentException` arising from
+	// `PlainTextFormatter.getPath`.  Fortunately, this only happens
+	// *after* `idea` has already written out the results file.  So we
+	// should ignore that command's exit value, and only fail this task
+	// if the results file is missing.
+	ignoreExitValue = true
+	doLast {
+		if (!textResultsFile.exists()) {
+			throw new GradleException("IntelliJ IDEA command failed without creating $textResultsFile.")
+		}
+	}
+}
+
+tasks.register('checkInspectionResults') {
+	group = 'intellij-idea'
+	description = 'Fail if any IntelliJ IDEA inspections produced errors or warnings'
+
+	inputs.files runInspections
+	doFirst {
+		def failed = false
+		inputs.files.singleFile.eachLine {
+			if (it =~ /\[(ERROR|WARNING)\]/) {
+				failed = true
+				println it
+			}
+		}
+		if (failed) {
+			throw new GradleException("One or more IntelliJ IDEA inspections failed.  See logged problems above, or \"$inputs.files.singleFile\" for full details.  WEAK WARNINGs are allowed, but all ERRORs and WARNINGs must be corrected.")
+		}
+	}
+
+	final stampFile = file("$buildDir/${name}.stamp")
+	outputs.file stampFile
+	doLast { stampFile.createNewFile() }
 }
 
 
