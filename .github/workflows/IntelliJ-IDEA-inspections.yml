@@ -15,12 +15,12 @@ jobs:
       - name: Run IntelliJ IDEA inspections
         uses: gradle/gradle-build-action@v2
         with:
-          arguments:
-            - -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
-            - runInspections
+          arguments: |
+            -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
+            runInspections
       - name: Check IntelliJ IDEA inspection results
         uses: gradle/gradle-build-action@v2
         with:
-          arguments:
-            - -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
-            - checkInspectionResults
+          arguments: |
+            -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
+            checkInspectionResults
