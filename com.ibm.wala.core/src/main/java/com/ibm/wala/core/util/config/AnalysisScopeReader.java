@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.util.config;
 
+import com.google.gson.Gson;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassFileURLModule;
 import com.ibm.wala.classLoader.Module;
@@ -32,7 +33,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
-import com.google.gson.Gson;
 
 /** Reads {@link AnalysisScope} from a text file. */
 public class AnalysisScopeReader {
@@ -302,7 +302,8 @@ public class AnalysisScopeReader {
       Assertions.UNREACHABLE(e.toString());
     }
   }
-  public String toJSON(){
+
+  public String toJSON() {
     Gson gson = new Gson();
     return null;
     //    return gson.toJSON(new java.util.HashMap<Object,Object>());
