@@ -392,7 +392,8 @@ final runInspections = tasks.register('runInspections', Exec) {
 	// changed.
 	inputs.files fileLister.obtainPartialFileTree()
 
-	commandLine 'idea', 'inspect', rootDir, inspectionProfile, textResultsFile, '-v1', '-format', 'plain'
+	executable = findProperty('runInspections.IntelliJ-IDEA.command') ?: 'idea'
+	args 'inspect', rootDir, inspectionProfile, textResultsFile, '-v1', '-format', 'plain'
 
 	// The `idea` command above always fails with an
 	// `IllegalArgumentException` arising from
