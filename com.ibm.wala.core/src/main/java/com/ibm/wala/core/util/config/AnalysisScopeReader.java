@@ -305,7 +305,6 @@ public class AnalysisScopeReader {
 
   public String toJSON() {
     Gson gson = new Gson();
-    return null;
-    //    return gson.toJSON(new java.util.HashMap<Object,Object>());
+    return gson.toJson(this);
   }
 }
