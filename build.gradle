@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
 	id 'all.shared.gradle.file-lister' version '1.0.2'
-	id 'com.diffplug.eclipse.mavencentral' version '3.33.0' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.33.2' apply false
 	id 'com.dorongold.task-tree' version '2.1.0'
 	id 'com.github.ben-manes.versions' version '0.39.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
