@@ -289,6 +289,11 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   }
 
   @Override
+  public boolean isRecord() {
+    return false;
+  }
+
+  @Override
   public boolean isFromSource() {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
     return false;

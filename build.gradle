@@ -35,7 +35,7 @@ group name
 version VERSION_NAME
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components
-ext.eclipseVersion = '4.14.0'
+ext.eclipseVersion = '4.21.0'
 ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
 
 subprojects { subproject ->
