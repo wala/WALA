@@ -19,6 +19,7 @@ eclipseMavenCentral {
 				'org.eclipse.ui.ide',
 		].each { dep 'testImplementation', it }
 		useNativesForRunningPlatform()
+		constrainTransitivesToThisRelease()
 	}
 }
 

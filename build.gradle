@@ -5,15 +5,11 @@
 
 buildscript {
 	dependencies.classpath 'commons-io:commons-io:2.11.0'
-	// lock all dependencies
-	configurations.classpath {
-		resolutionStrategy.activateDependencyLocking()
-	}
 }
 
 plugins {
 	id 'all.shared.gradle.file-lister' version '1.0.2'
-	id 'com.diffplug.eclipse.mavencentral' version '3.33.0' apply false
+	id 'com.diffplug.eclipse.mavencentral' version '3.33.2' apply false
 	id 'com.dorongold.task-tree' version '2.1.0'
 	id 'com.github.ben-manes.versions' version '0.39.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
@@ -71,50 +67,6 @@ subprojects { subproject ->
 			url 'https://storage.googleapis.com/r8-releases/raw'
 		}
 	}
-
-    dependencies.constraints {
-    	[
-    			'org.eclipse.platform:org.eclipse.core.resources',
-    			'org.eclipse.platform:org.eclipse.equinox.common',
-    	].forEach {
-    		implementation(it) {
-    			version { strictly '(,3.15)' }
-    			because 'Versions 3.15 and later of this artifact require Java 11.'
-    		}
-    	}
-        implementation('org.eclipse.platform:org.eclipse.core.commands') {
-			version { strictly '(,3.9.800)' }
-			because 'Versions 3.10.0 and later of this artifact require Java 11.'
-        }
-	    implementation('org.eclipse.platform:org.eclipse.e4.ui.workbench') {
-			version { strictly '(,1.11.0]' }
-			because 'Later versions of this artifact require Java 11.'
-	    }
-	    implementation('org.eclipse.platform:org.eclipse.equinox.registry') {
-			version { strictly '(,3.8.600]' }
-			because 'Dependencies from later versions introduce inconsistencies with constraints above.'
-	    }
-	    implementation('org.eclipse.platform:org.eclipse.core.runtime') {
-			version { strictly '(,3.17.0]' }
-			because 'For runtime consistency with other constraints'
-	    }
-	    implementation('org.eclipse.platform:org.eclipse.team.core') {
-			version { strictly '(,3.8.800]' }
-			because 'For runtime consistency with other constraints'
-	    }
-	    implementation('org.eclipse.platform:org.eclipse.e4.ui.workbench.swt') {
-			version { strictly '(,0.14.800]' }
-			because 'For runtime consistency with other constraints'
-	    }
-	    implementation('org.eclipse.platform:org.eclipse.e4.ui.dialogs') {
-			version { strictly '(,1.1.600]' }
-			because 'For runtime consistency with other constraints'
-	    }
-	    implementation('org.eclipse.platform:org.eclipse.e4.ui.workbench.renderers.swt') {
-			version { strictly '(,0.14.900]' }
-			because 'For runtime consistency with other constraints'
-	    }
-    }
 
 	configurations {
 		all {
@@ -197,14 +149,6 @@ subprojects { subproject ->
 		}
 	}
 
-	// lock all dependencies for now (buildscript deps are locked at the top of
-	// this file); we can relax the policy in the future if needed
-	dependencyLocking {
-		lockAllConfigurations()
-		// SWT packages vary by operating system, and lockfiles are not expressive enough
-		// to handle that.  So, ignore those dependencies for purposes of locking.
-		ignoredDependencies.add('org.eclipse.platform:org.eclipse.swt.*')
-	}
 }
 
 
