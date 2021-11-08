@@ -1,8 +1,0 @@
-# This is a Gradle generated file for dependency locking.
-# Manual edits can break the build and are not advised.
-# This file is expected to be part of source control.
-junit:junit:4.13.2=testCompileClasspath,testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
-org.apache.ant:ant-launcher:1.10.11=testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
-org.apache.ant:ant:1.10.11=testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
-org.hamcrest:hamcrest:2.2=testCompileClasspath,testFixturesCompileClasspath,testFixturesRuntimeClasspath,testRuntimeClasspath
-empty=annotationProcessor,compileClasspath,runtimeClasspath,signatures,test11SubjectsAnnotationProcessor,test11SubjectsCompileClasspath,test11SubjectsRuntimeClasspath,testAnnotationProcessor,testFixturesAnnotationProcessor,testSubjectsAnnotationProcessor,testSubjectsCompileClasspath,testSubjectsRuntimeClasspath
