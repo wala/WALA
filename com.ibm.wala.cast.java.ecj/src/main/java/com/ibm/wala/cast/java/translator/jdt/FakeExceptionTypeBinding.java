@@ -288,7 +288,11 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return false;
   }
 
-  @Override
+  /**
+   * This overrides a method introduced in recent versions of the {@link ITypeBinding} class to
+   * handle records. We do not use the {@code @Override} annotation to allow the code to build
+   * against earlier versions of the library where ITypeBinding does not contain this method.
+   */
   public boolean isRecord() {
     return false;
   }
