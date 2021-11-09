@@ -289,9 +289,10 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   }
 
   /**
-   * This overrides a method introduced in recent versions of the {@link ITypeBinding} class to
-   * handle records. We do not use the {@code @Override} annotation to allow the code to build
-   * against earlier versions of the library where ITypeBinding does not contain this method.
+   * This overrides a method introduced in recent versions of the {@code ITypeBinding} interface to
+   * handle records. We omit the {@code @Override} annotation to allow building against earlier
+   * versions of {@code org.eclipse.jdt.core}, where {@code ITypeBinding} does not contain this
+   * method.
    */
   public boolean isRecord() {
     return false;
