@@ -44,7 +44,7 @@ dependencies {
 	api(project(':com.ibm.wala.util')) {
 		because 'public interface CallGraph extends interface NumberedGraph'
 	}
-	implementation 'com.google.code.gson:gson:2.8.8'
+	implementation 'com.google.code.gson:gson:2.8.9'
 	testFixturesImplementation(
 			'junit:junit:4.13.2',
 			'org.apache.ant:ant:1.10.11',

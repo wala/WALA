@@ -16,6 +16,7 @@ eclipseMavenCentral {
 				'org.eclipse.ui.workbench',
 		].each it.&implementation
 		useNativesForRunningPlatform()
+		constrainTransitivesToThisRelease()
 	}
 }
 

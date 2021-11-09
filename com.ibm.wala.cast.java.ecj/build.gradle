@@ -9,6 +9,7 @@ eclipseMavenCentral {
 				'org.eclipse.core.runtime',
 				'org.eclipse.jdt.core',
 		].each it.&implementation
+		constrainTransitivesToThisRelease()
 	}
 }
 

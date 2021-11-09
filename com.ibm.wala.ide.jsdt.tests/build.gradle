@@ -19,6 +19,7 @@ eclipseMavenCentral {
 				'org.eclipse.osgi',
 		].each { dep 'testImplementation', it }
 		useNativesForRunningPlatform()
+		constrainTransitivesToThisRelease()
 	}
 }
 
