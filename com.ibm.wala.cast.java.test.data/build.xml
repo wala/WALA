@@ -2,11 +2,6 @@
 <!DOCTYPE project>
 <project name="com.ibm.wala.cast.java.test.data" default="jar" basedir=".">
 
-  <property name="basews" value="${ws}"/>
-  <property name="baseos" value="${os}"/>
-  <property name="basearch" value="${arch}"/>
-  <property name="basenl" value="${nl}"/>
-
   <!-- Compiler settings. -->
   <property name="javacFailOnError" value="true"/>
   <property name="javacDebugInfo" value="on"/>
