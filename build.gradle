@@ -366,7 +366,7 @@ tasks.register('checkInspectionResults') {
 	doFirst {
 		def failed = false
 		inputs.files.singleFile.eachLine {
-			if (it =~ /\[(ERROR|WARNING)\]/) {
+			if (it =~ /\[(ERROR|WARNING)]/) {
 				failed = true
 				println it
 			}
