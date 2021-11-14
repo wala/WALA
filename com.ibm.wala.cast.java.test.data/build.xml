@@ -73,6 +73,7 @@
   </target>
   
   <target name="init" depends="properties">
+    <!--suppress AntResolveInspection -->
     <condition property="pluginTemp" value="${buildTempFolder}/plugins">
       <isset property="buildTempFolder"/>
     </condition>
