@@ -3,6 +3,9 @@ plugins {
 }
 
 library {
+	// Temporary change to build on M1 Mac machines, until https://github.com/gradle/gradle/issues/18876
+	// is fixed
+	targetMachines.add(machines.macOS.x86_64)
 	privateHeaders.from project(':com.ibm.wala.cast').tasks.named('compileTestJava').map {
 		it.options.headerOutputDirectory
 	}
