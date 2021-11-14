@@ -44,7 +44,7 @@ public class FileProviderTest {
     assertThat(
         actual,
         PlatformUtil.onWindows()
-            ? matchesPattern("\\A/[A-Z]:/\\[Eclipse\\]/File.jar\\z")
+            ? matchesPattern("\\A/[A-Z]:/\\[Eclipse]/File.jar\\z")
             : equalTo("/[Eclipse]/File.jar"));
   }
 
