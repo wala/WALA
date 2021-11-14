@@ -13,7 +13,6 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <file path="/com.ibm.wala.shrike/build.xml"/>
         <file path="/com.ibm.wala.shrike/.project"/>
-        <file path="/com.ibm.wala.shrike/exportPlugin.xml"/>
         <file path="/com.ibm.wala.shrike/manifest.codescrape"/>
         <javaElement handleIdentifier="=com.ibm.wala.shrike/src"/>
         <file path="/com.ibm.wala.shrike/pom.xml"/>
