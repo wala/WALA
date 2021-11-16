@@ -141,10 +141,6 @@ publishing {
 }
 
 signing {
-	// Use external gpg cmd.  This makes it easy to use gpg-agent,
-	// to avoid being prompted for a password once per artifact.
-	useGpgCmd()
-
 	// If anything about signing is misconfigured, fail loudly rather than quietly continuing with
 	// unsigned artifacts.
 	required = true
