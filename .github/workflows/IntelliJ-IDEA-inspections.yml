@@ -18,6 +18,12 @@ jobs:
           arguments: |
             -PrunInspections.IntelliJ-IDEA.command=intellij-idea-community
             runInspections
+      - name: Preserve IntelliJ IDEA inspection results as workflow artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: runInspections.txt
+          path: build/runInspections.txt
+          retention-days: 14
       - name: Check IntelliJ IDEA inspection results
         uses: gradle/gradle-build-action@v2
         with:

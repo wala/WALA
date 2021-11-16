@@ -452,7 +452,7 @@ public abstract class IRTests {
    */
   public static MethodReference descriptorToMethodRef(
       String srcMethodDescriptor, IClassHierarchy cha) {
-    String[] ldrTypeMeth = srcMethodDescriptor.split("\\#");
+    String[] ldrTypeMeth = srcMethodDescriptor.split("#");
 
     String loaderName = ldrTypeMeth[0];
     String typeStr = ldrTypeMeth[1];

@@ -78,7 +78,7 @@ public class DefaultEntrypoint extends Entrypoint {
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + Arrays.hashCode(paramTypes);
+    result = prime * result + Arrays.deepHashCode(paramTypes);
     return result;
   }
 
@@ -88,7 +88,7 @@ public class DefaultEntrypoint extends Entrypoint {
     if (!super.equals(obj)) return false;
     if (getClass() != obj.getClass()) return false;
     final DefaultEntrypoint other = (DefaultEntrypoint) obj;
-    if (!Arrays.equals(paramTypes, other.paramTypes)) return false;
+    if (!Arrays.deepEquals(paramTypes, other.paramTypes)) return false;
     return true;
   }
 }
