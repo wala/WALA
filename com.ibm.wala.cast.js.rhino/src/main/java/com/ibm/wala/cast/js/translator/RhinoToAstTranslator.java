@@ -1731,7 +1731,10 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       } else if (node.getType() == Token.VOID) {
         return Ast.makeConstant(null);
       } else {
-        throw new RuntimeException("Unhandled unary expression " + node.toSource());
+        return Ast.makeNode(
+            CAstNode.UNARY_EXPR,
+            translateOpcode(node.getOperator()),
+            visit(node.getOperand(), arg));
       }
     }
 
