@@ -1753,10 +1753,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
             op);
 
       } else {
-        return Ast.makeNode(
-            CAstNode.UNARY_EXPR,
-            translateOpcode(node.getOperator()),
-            visit(node.getOperand(), arg));
+        throw new RuntimeException("unexpected UpdateExpression " + node.toSource());
       }
     }
 
