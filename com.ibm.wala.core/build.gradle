@@ -54,6 +54,7 @@ dependencies {
 	)
 	testRuntimeOnly(
 			sourceSets.testSubjects.output.classesDirs,
+			// add the testSubjects source files to enable SourceMapTest to pass
 			layout.files(sourceSets.testSubjects.java.srcDirs)
 	)
 }
