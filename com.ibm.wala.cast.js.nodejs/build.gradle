@@ -31,12 +31,12 @@ final unpackNodeJSLib = tasks.register('unpackNodeJSLib', Copy) {
 		}
 	}
 
-	into "${tasks.named('processTestResources', Copy).get().destinationDir}/core-modules"
+	into "${tasks.named('processResources', Copy).get().destinationDir}/core-modules"
 	includeEmptyDirs false
 }
 
-tasks.named('processTestResources') {
-	dependsOn unpackNodeJSLib
+tasks.named('processResources') {
+	dependsOn 'unpackNodeJSLib'
 }
 
 tasks.named('test') {
