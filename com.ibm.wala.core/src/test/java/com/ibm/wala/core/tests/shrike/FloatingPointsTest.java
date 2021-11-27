@@ -36,7 +36,7 @@ public class FloatingPointsTest extends WalaTestCase {
   }
 
   public FloatingPointsTest() {
-    this(getClasspathEntry("classes" + File.separator + "java" + File.separator + "testSubjects"));
+    this(getClasspathEntry(String.join(File.separator, "classes", "java", "testSubjects")));
   }
 
   @Before
