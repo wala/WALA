@@ -34,10 +34,6 @@ public abstract class WalaTestCase {
     }
   }
 
-  public static boolean analyzingJar() {
-    return "true".equals(System.getProperty("com.ibm.wala.junit.analyzingJar"));
-  }
-
   @Before
   public void setUp() throws Exception {}
 

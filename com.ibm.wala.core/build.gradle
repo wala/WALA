@@ -54,6 +54,8 @@ dependencies {
 	)
 	testRuntimeOnly(
 			sourceSets.testSubjects.output.classesDirs,
+			// add the testSubjects source files to enable SourceMapTest to pass
+			files(sourceSets.testSubjects.java.srcDirs),
 	)
 }
 
@@ -68,8 +70,7 @@ tasks.named('javadoc') {
 //
 
 final downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
-	ext.version = '3.0'
-	final archive = "kawa-${version}.zip"
+	final archive = 'kawa-3.0.zip'
 	src "https://ftp.gnu.org/pub/gnu/kawa/$archive"
 	dest project.layout.buildDirectory.file(archive)
 	checksum '2713e6dfb939274ba3b1d36daea68436'
@@ -81,8 +82,8 @@ tasks.register('extractKawa') {
 
 	doLast {
 		copy {
-			from(downloadKawa.map { zipTree it.dest }) {
-				include "kawa-${downloadKawa.get().version}/lib/${outputs.files.singleFile.name}"
+			from(zipTree(inputs.files.singleFile)) {
+				include "kawa-*/lib/${outputs.files.singleFile.name}"
 				eachFile {
 					relativePath RelativePath.parse(!directory, relativePath.lastName)
 				}
@@ -347,7 +348,6 @@ tasks.named('processTestResources') {
 
 tasks.named('test') {
 	maxHeapSize = '1500M'
-	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
 	classpath += files project(':com.ibm.wala.core').sourceSets.test.output.classesDirs
 	testLogging {
