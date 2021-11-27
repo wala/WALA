@@ -31,6 +31,12 @@ final unpackNodeJSLib = tasks.register('unpackNodeJSLib', Copy) {
 		}
 	}
 
+	// It is important to unpack the the NodeJs library files into the main resources directory,
+	// so they are packaged inside the jar artifact for this module.  That way, the packaged jar
+	// will work when used by third-party code.  The downside is that we cannot release this jar
+	// artifact to Maven Central with third-party source code included.  Eventually, we should find
+	// a way to remove the reliance on packaging this code (e.g., allow the nodejs library directory
+	// to be specified via a JVM property), so we can release the artifact to Maven Central.
 	into "${tasks.named('processResources', Copy).get().destinationDir}/core-modules"
 	includeEmptyDirs false
 }
