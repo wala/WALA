@@ -54,6 +54,8 @@ dependencies {
 	)
 	testRuntimeOnly(
 			sourceSets.testSubjects.output.classesDirs,
+			// add the testSubjects source files to enable SourceMapTest to pass
+			files(sourceSets.testSubjects.java.srcDirs),
 	)
 }
 
@@ -346,7 +348,6 @@ tasks.named('processTestResources') {
 
 tasks.named('test') {
 	maxHeapSize = '1500M'
-	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
 	classpath += files project(':com.ibm.wala.core').sourceSets.test.output.classesDirs
 	testLogging {

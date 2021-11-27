@@ -145,7 +145,6 @@ public class CallGraphTest extends WalaTestCase {
   @Test
   public void testHello()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    if (analyzingJar()) return;
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -251,7 +250,6 @@ public class CallGraphTest extends WalaTestCase {
   @Test
   public void testHelloAllEntrypoints()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    if (analyzingJar()) return;
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
