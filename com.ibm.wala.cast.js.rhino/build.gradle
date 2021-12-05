@@ -20,9 +20,7 @@ dependencies {
 	)
 }
 
-tasks.named('processTestResources') {
-	from project(':com.ibm.wala.cast.js').tasks.named('processTestResources')
-}
+sourceSets.test.resources.srcDir project(':com.ibm.wala.cast.js').tasks.named('processTestResources')
 
 tasks.named('test') {
 	environment 'TRAVIS', 1
