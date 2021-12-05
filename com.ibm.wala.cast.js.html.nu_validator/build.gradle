@@ -1,3 +1,5 @@
+apply from: "$rootDir/wala-java.gradle"
+
 dependencies {
 	implementation(
 			'nu.validator.htmlparser:htmlparser:1.4',
