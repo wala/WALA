@@ -12,7 +12,9 @@ dependencies {
 	)
 }
 
-sourceSets.test.resources.srcDir project(':com.ibm.wala.cast.js').tasks.named('processTestResources')
+tasks.named('processTestResources') {
+	from project(':com.ibm.wala.cast.js').tasks.named('processTestResources')
+}
 
 tasks.named('test') {
 	maxHeapSize = '800M'
