@@ -17,6 +17,8 @@ plugins {
 	id 'nebula.lint' version '17.2.3'
 }
 
+apply from: "$rootDir/wala-javadoc.gradle"
+
 repositories {
 	// to get the google-java-format jar and dependencies
 	mavenCentral()

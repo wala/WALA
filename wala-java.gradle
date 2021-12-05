@@ -4,6 +4,8 @@ apply plugin: 'java-test-fixtures'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
+apply from: "$rootDir/wala-javadoc.gradle"
+
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -74,13 +76,6 @@ project.tasks.named('check').configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
-}
-
-tasks.withType(Javadoc).configureEach {
-	options.addBooleanOption('Xdoclint:all,-missing', true)
-	options.encoding = 'UTF-8'
-	options.quiet()
-	options.tags += "apiNote:a:API Note:"
 }
 
 // Special hack for WALA as an included build.  Composite
