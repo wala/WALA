@@ -1,3 +1,5 @@
+apply from: "$rootDir/wala-java.gradle"
+
 dependencies {
 	api(project(':com.ibm.wala.cast')) {
 		because 'public class JSCallGraphUtil extends class CAstCallGraphUtil'

@@ -1,7 +1,8 @@
 plugins {
 	id 'com.diffplug.eclipse.mavencentral'
-	id 'eclipse'
 }
+
+apply from: "$rootDir/wala-java.gradle"
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 

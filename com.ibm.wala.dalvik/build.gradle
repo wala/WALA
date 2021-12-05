@@ -1,3 +1,5 @@
+apply from: "$rootDir/wala-java.gradle"
+
 final downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest project.layout.buildDirectory.file('DroidBench_2.0.zip')
