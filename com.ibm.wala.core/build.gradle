@@ -327,7 +327,7 @@ tasks.register('collectTestDataA', Jar) {
 
 
 tasks.named('processTestResources') {
-	[
+	from [
 			'buildChessJar',
 			'buildKawaTestJar',
 			'collectJLex',
@@ -335,9 +335,7 @@ tasks.named('processTestResources') {
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
-	].each {
-		from tasks.named(it)
-	}
+	].collect(tasks.&named)
 
 	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
 	// missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
