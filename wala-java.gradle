@@ -25,6 +25,7 @@ configurations {
 			substitute module('org.hamcrest:hamcrest-core') using module('org.hamcrest:hamcrest:2.2') because 'junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest'
 		}
 	}
+
 	implementation {
 		// See https://github.com/wala/WALA/issues/823.  This group was renamed to
 		// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
@@ -32,6 +33,16 @@ configurations {
 		// Gradle, but not run them, excluding the group as a dependence is a reasonable
 		// solution.
 		exclude group: 'com.sun.jna'
+	}
+
+	aggregatedJavadocClasspath
+}
+
+tasks.withType(Javadoc).configureEach {
+	classpath.each { path ->
+		artifacts {
+			aggregatedJavadocClasspath path
+		}
 	}
 }
 
