@@ -150,6 +150,8 @@ final verifyGoogleJavaFormat = tasks.named('verifyGoogleJavaFormat') {
 	doLast {
 		stampFile.get().asFile.text = ''
 	}
+
+	exclude '**/build/'
 }
 
 tasks.named('autoLintGradle') {
