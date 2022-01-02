@@ -41,13 +41,13 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-executable: xvfb-gradle.sh
-          arguments: javadoc build lintGradle
+          arguments: aggregatedJavadocs javadoc build lintGradle
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: javadoc build -PskipJavaUsingEcjTasks
+          arguments: aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks
         if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh

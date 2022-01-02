@@ -17,6 +17,8 @@ plugins {
 	id 'nebula.lint' version '17.2.3'
 }
 
+apply from: "$rootDir/wala-javadoc.gradle"
+
 repositories {
 	// to get the google-java-format jar and dependencies
 	mavenCentral()
@@ -43,133 +45,11 @@ version VERSION_NAME
 ext.eclipseVersion = (osName.equals('Mac OS X') && archName.equals('aarch64')) ? '4.21.0' : '4.14.0'
 ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
 
-subprojects { subproject ->
-	// skip generic Java setup for the few projects that have no Java code whatsoever
-	switch (subproject.name) {
-		case 'cast':
-		case 'smoke_main':
-		case 'xlator_test':
-		case 'com.ibm.wala-repository':
-		case ~/.*_feature/:
-			return
-	}
-
-	apply plugin: 'eclipse'
-	apply plugin: 'java-library'
-	apply plugin: 'java-test-fixtures'
-	apply plugin: 'maven-publish'
-	apply plugin: 'signing'
-
-	java.sourceCompatibility = JavaVersion.VERSION_1_8
-	java.targetCompatibility = JavaVersion.VERSION_1_8
-
-	version rootProject.version
-
-	repositories {
-		mavenCentral()
-		// to get r8
-		maven {
-			url 'https://storage.googleapis.com/r8-releases/raw'
-		}
-	}
-
-	configurations {
-		all {
-			resolutionStrategy.dependencySubstitution {
-				substitute module('org.hamcrest:hamcrest-core') using module('org.hamcrest:hamcrest:2.2') because 'junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest'
-			}
-		}
-		implementation {
-			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
-			// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
-			// com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
-			// Gradle, but not run them, excluding the group as a dependence is a reasonable
-			// solution.
-			exclude group: 'com.sun.jna'
-		}
-	}
-
-	eclipse {
-		synchronizationTasks 'processTestResources'
-	}
-
-	tasks.named('test') {
-		include '**/*Test.class'
-		include '**/*TestCase.class'
-		include '**/*Tests.class'
-		include '**/Test*.class'
-		exclude '**/*AndroidLibs*.class'
-
-		if (project.hasProperty('excludeSlowTests')) {
-			useJUnit {
-				excludeCategories 'com.ibm.wala.tests.util.SlowTests'
-			}
-		}
-
-		if (project.hasProperty('trial')) {
-			outputs.upToDateWhen { false }
-			afterTest { descriptor, result ->
-				def csv = new File("$rootProject.buildDir/time-trials.csv")
-				if (!csv.exists()) {
-					csv.append('trial,className,name,resultType,startTime,endTime\n')
-				}
-				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
-			}
-		} else {
-			maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-		}
-	}
-
-	final ecjCompileTaskProviders = sourceSets.collect { sourceSet ->
-		JavaCompileUsingEcj.withSourceSet(subproject, sourceSet)
-	}
-
-	project.tasks.named('check').configure {
-		dependsOn ecjCompileTaskProviders
-	}
-
-	tasks.withType(JavaCompile).configureEach {
-		options.encoding = 'UTF-8'
-	}
-
-	// Special hack for WALA as an included build.  Composite
-	// builds only build and use artifacts from the default
-	// configuration of included builds:
-	// <https://docs.gradle.org/current/userguide/composite_builds.html#included_build_substitution_limitations>.
-	// This known limitation makes WALA test fixtures unavailable
-	// when WALA is included in a composite build.  As a
-	// workaround for composite projects that rely on those test
-	// fixtures, we extend the main sourceSet to include all
-	// test-fixture sources too.  This hack is only applied when
-	// WALA itself is an included build.
-	if (project.gradle.parent != null) {
-		afterEvaluate {
-			sourceSets {
-				main.java.srcDirs testFixtures.java.srcDirs
-			}
-
-			dependencies {
-				implementation configurations.testFixturesImplementation.dependencies
-			}
-		}
-	}
-
-}
-
 
 ///////////////////////////////////////////////////////////////////////
 //
 //  Javadoc documentation
 //
-
-allprojects {
-	tasks.withType(Javadoc).configureEach {
-		options.addBooleanOption('Xdoclint:all,-missing', true)
-		options.encoding = 'UTF-8'
-		options.quiet()
-		options.tags += "apiNote:a:API Note:"
-	}
-}
 
 tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	description = 'Generate javadocs from all child projects as if they were a single project'
@@ -270,6 +150,8 @@ final verifyGoogleJavaFormat = tasks.named('verifyGoogleJavaFormat') {
 	doLast {
 		stampFile.get().asFile.text = ''
 	}
+
+	exclude '**/build/'
 }
 
 tasks.named('autoLintGradle') {

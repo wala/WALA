@@ -1,3 +1,5 @@
+apply from: "$rootDir/wala-java.gradle"
+
 final downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
 	dest project.layout.buildDirectory.file('DroidBench_2.0.zip')
@@ -125,15 +127,15 @@ dependencies {
 }
 
 tasks.named('processTestResources') {
-	def testdata = project(':com.ibm.wala.core')
-
 	from downloadSampleLex
 	from extractSampleCup
-	from testdata.collectTestDataA
-	from testdata.collectJLex
-	from testdata.compileTestJava
-	from testdata.downloadJavaCup
-	from testdata.extractBcel
+	from [
+			'collectTestDataA',
+			'collectJLex',
+			'compileTestJava',
+			'downloadJavaCup',
+			'extractBcel',
+	].collect(project(':com.ibm.wala.core').tasks.&named)
 }
 
 if (isWindows)
@@ -141,9 +143,7 @@ if (isWindows)
 		exclude '**/droidbench/**'
 	}
 else
-	tasks.named('processTestResources') {
-		dependsOn unpackDroidBench
-	}
+	sourceSets.test.resources.srcDir unpackDroidBench
 
 tasks.named('test') {
 	maxHeapSize = '800M'

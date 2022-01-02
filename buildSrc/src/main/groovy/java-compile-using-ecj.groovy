@@ -17,10 +17,6 @@ class JavaCompileUsingEcj extends JavaCompile {
 				project.configurations.detachedConfiguration(
 						project.dependencies.create('org.eclipse.jdt:ecj:3.21.0'))
 
-		// Advise Gradle that this task will not be using the Java compilation API associated with the
-		// standard Java toolchain.  Instead, we will use an external compiler command, configured below.
-		javaCompiler.set(project.provider { null })
-
 		options.with {
 			// Add Eclipse JDT configuration, especially for warnings/errors.
 			compilerArgs << '-properties' << project.layout.projectDirectory.file('.settings/org.eclipse.jdt.core.prefs').asFile

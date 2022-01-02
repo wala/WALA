@@ -2,6 +2,8 @@ plugins {
 	id 'com.diffplug.eclipse.mavencentral'
 }
 
+apply from: "$rootDir/wala-java.gradle"
+
 eclipseMavenCentral {
 	release eclipseVersion, {
 		api 'org.eclipse.equinox.common'
