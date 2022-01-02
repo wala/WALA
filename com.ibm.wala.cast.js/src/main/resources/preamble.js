@@ -195,7 +195,7 @@ DOMDocument = function DOMDocument() {
 
 	};
 
-	this.createEvent = function Document_createEvent (stuff) {
+	this.createEvent = function Document_prototype_createEvent (stuff) {
 
 	};
 };
