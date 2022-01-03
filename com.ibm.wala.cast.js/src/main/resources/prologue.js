@@ -13,14 +13,14 @@ var local_number = primitive("NewNumber");
 Number = local_number;
 var local_regexp = primitive("NewRegExp");
 RegExp = local_regexp;
-var local_json = primitive("NewJSON");
+/*var local_json = primitive("NewJSON");
 JSON = local_json;
 var local_map = primitive("NewMap");
 Map = local_map;
 var local_set = primitive("NewSet");
 Set = local_set;
 var local_proxy = primitive("NewProxy");
-Proxy = local_proxy;
+Proxy = local_proxy;*/
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -805,7 +805,7 @@ function EvalError(str) {
 /* JSON properties, see 15.12
 /************************************************************************/
 
-local_json.__proto__ = Function.prototype;
+/*local_json.__proto__ = Function.prototype;
 
 JSON$proto$__WALA__ = {
 
@@ -896,4 +896,4 @@ Promise$proto$__WALA__ = {
   }
 }
 
-local_promise.prototype = Promise$proto$__WALA__;
+local_promise.prototype = Promise$proto$__WALA__;*/
