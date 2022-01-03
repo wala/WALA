@@ -823,7 +823,7 @@ JSON$proto$__WALA__ = {
 
 };
 
-JSON.prototype = JSON$proto$__WALA__;
+local_json.prototype = JSON$proto$__WALA__;
 
 //MAP 
 
