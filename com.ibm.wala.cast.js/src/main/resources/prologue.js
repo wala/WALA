@@ -82,8 +82,6 @@ escape = function escape(str){
 /* Object properties, see spec 15.2					*/
 /************************************************************************/
 
-Object = function Object() {};
-
 Object$proto$__WALA__ =  {
 
   prototype: null,
