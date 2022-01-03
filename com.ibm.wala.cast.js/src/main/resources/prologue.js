@@ -80,8 +80,6 @@ escape = function escape(str){
 /* Object properties, see spec 15.2					*/
 /************************************************************************/
 
-Object = function Object() {};
-
 Object$proto$__WALA__ =  {
 
   prototype: null,
@@ -162,8 +160,6 @@ Object.prototype = Object$proto$__WALA__;
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
 
-Function = function Function() {};
-
 Function$proto$__WALA__ = {
 
   constructor: Function,
@@ -196,8 +192,6 @@ local_function.__proto__ = Function.prototype;
 /************************************************************************/
 /* Array properties, see spec 15.4					*/
 /************************************************************************/
-
-Array = function Array() {};
 
 local_array.__proto__ = Function.prototype;
 
@@ -483,8 +477,6 @@ local_array.prototype = Array$proto$__WALA__;
 /* String properties, see spec 15.4					*/
 /************************************************************************/
 
-String = function String() {};
-
 local_string.__proto__ = Function.prototype;
 
 String$proto$__WALA__ = {
@@ -608,8 +600,6 @@ local_string.prototype = String$proto$__WALA__;
 /* Number properties, see spec 15.7					*/
 /************************************************************************/
 
-Number = function Number() {};
-
 local_number.__proto__ = Function.prototype;
 
 Number$proto$__WALA__ = {
@@ -704,8 +694,6 @@ Math = {
 /************************************************************************/
 /* RegExp properties, see spec 15.10					*/
 /************************************************************************/
-
-RegExp = function RegExp() {};
 
 local_regexp.__proto__ = Function.prototype;
 
@@ -906,7 +894,7 @@ Proxy$proto$__WALA__ = {
   },
 }
 
-local_set.prototype = Proxy$proto$__WALA__;
+local_proxy.prototype = Proxy$proto$__WALA__;
 
 Promise = function Promise() {};
 
