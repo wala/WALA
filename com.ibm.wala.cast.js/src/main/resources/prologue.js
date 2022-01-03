@@ -748,8 +748,6 @@ function EvalError(str) {
 /* JSON properties, see 15.12
 /************************************************************************/
 
-JSON = function JSON() {};
-
 JSON$proto$__WALA__ = {
 
   __proto__: Object.prototype,
@@ -769,7 +767,6 @@ JSON$proto$__WALA__ = {
 JSON.prototype = JSON$proto$__WALA__;
 
 //MAP 
-Map = function Map() {};
 
 local_map.__proto__ = Function.prototype;
 
@@ -787,7 +784,6 @@ Map$proto$__WALA__ = {
 local_map.prototype = Map$proto$__WALA__;
 
 //SET 
-Set = function Set() {};
 
 local_set.__proto__ = Function.prototype;
 
@@ -803,9 +799,6 @@ Set$proto$__WALA__ = {
 }
 
 local_set.prototype = Set$proto$__WALA__;
-
-
-Proxy = function Proxy() {};
 
 local_proxy.__proto__ = Function.prototype;
 
@@ -827,8 +820,6 @@ Proxy$proto$__WALA__ = {
 }
 
 local_proxy.prototype = Proxy$proto$__WALA__;
-
-Promise = function Promise() {};
 
 local_promise.__proto__ = Function.prototype;
 
