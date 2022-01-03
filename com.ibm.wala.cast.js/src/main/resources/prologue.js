@@ -13,14 +13,6 @@ var local_number = primitive("NewNumber");
 Number = local_number;
 var local_regexp = primitive("NewRegExp");
 RegExp = local_regexp;
-//var local_json = primitive("NewJSON");
-//JSON = local_json;
-var local_map = primitive("NewMap");
-Map = local_map;
-var local_set = primitive("NewSet");
-Set = local_set;
-var local_proxy = primitive("NewProxy");
-Proxy = local_proxy;
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -108,50 +100,7 @@ Object$proto$__WALA__ =  {
   
   propertyIsEnumerable: function Object_prototype_propertyIsEnumerable (V) {
     return primitive("ObjectPropertyIsEnumerable", this, V);
-  },
-
-  create: function Object_prototype_create() {
-    // TODO: model me
-  },
-
-  defineProperty: function Object_prototype_defineProperty() {
-    // TODO: model me
-  },
-
-  defineProperties: function Object_prototype_defineProperties() {
-    // TODO: model me
-  },
-
-  getPrototypeOf: function Object_prototype_getPrototypeOf(V) {
-    return primitive("ObjectGetPrototypeOf", this, V);
-    // TODO: model me
-  },
-
-  getOwnPropertyDescriptor: function Object_prototype_getOwnPropertyDescriptor() {
-    // TODO: model me
-  },
-
-  getOwnPropertyDescriptors: function Object_prototype_getOwnPropertyDescriptors() {
-    // TODO: model me
-  },
-
-  getOwnPropertyNames: function Object_prototype_getOwnPropertyNames() {
-    // TODO: model me
-  },
-
-  keys: function Object_prototype_keys() {
-    // TODO: model me
-  },
-
-  freeze: function Object_prototype_freeze() {
-    // TODO: model me
-  },
-
-  isExtensible: function Object_prototype_isExtensible() {
-    // TODO: model me
   }
-
-
 };
 
 Object.prototype = Object$proto$__WALA__;
@@ -459,10 +408,6 @@ Array$proto$__WALA__ = {
 	    }
 	  }
 	  return result;
-  },
-
-  lastIndexOf: function Array_prototype_lastIndexOf() {
-	  // TODO: model me
   }
 
 };
@@ -557,12 +502,7 @@ String$proto$__WALA__ = {
 
   replace: function String_prototype_replace(regex, withStr) {
     // return new String(primitive("StringReplace", this, regex, withStr));
-    //return this || withStr;
-    if(typeof withStr === "string"){
-      return new String(primitive("StringReplace", regex, withStr));
-    }else if(typeof withStr === "function"){
-      return new String(primitive("StringReplace", regex, withStr.call(this)));
-    }
+    return this || withStr;
   },
   
   match: function String_prototype_match(regexp) {
@@ -582,15 +522,7 @@ String$proto$__WALA__ = {
   
   anchor: function String_prototype_anchor(url) {
 	  return new String();
-  },
-
-  fromCharCode: function String_prototype_fromCharCode() {
-	  return new String(primitive("StringFromCharCode", this));
-  },
-  
-  search: function String_prototype_search() {
-	  // TODO: model me
-  },
+  }
 
 };
 
@@ -702,7 +634,7 @@ RegExp$proto$__WALA__ = {
   __proto__: Object.prototype,
 
   constructor: RegExp,
-
+  
   exec: function RegExp_prototype_exec(string) {
 	  return [ string, string, string, string, string ] || null;
   },
@@ -811,107 +743,3 @@ function Error(str) {
 function EvalError(str) {
 	this.message = new String();
 }
-
-/************************************************************************/
-/* JSON properties, see 15.12
-/************************************************************************/
-
-JSON = function JSON() {};
-
-JSON$proto$__WALA__ = {
-
-  __proto__: Object.prototype,
-
-  constructor: JSON,
-
-  parse: function JSON_prototype_parse() {
-	  // TODO: model me
-  },
-  
-  stringify: function JSON_prototype_stringify() {
-	  // TODO: model me
-  }
-
-};
-
-JSON.prototype = JSON$proto$__WALA__;
-
-//MAP 
-Map = function Map() {};
-
-local_map.__proto__ = Function.prototype;
-
-Map$proto$__WALA__ = {
-
-  __proto__: Object.prototype,
-
-  constructor: Map,
-
-  has: function Map_prototype_has () {
-    // TO DO
-  }
-}
-
-local_map.prototype = Map$proto$__WALA__;
-
-//SET 
-Set = function Set() {};
-
-local_set.__proto__ = Function.prototype;
-
-Set$proto$__WALA__ = {
-
-  __proto__: Object.prototype,
-
-  constructor: Set,
-
-  has: function Set_prototype_has () {
-    // TO DO
-  }
-}
-
-local_set.prototype = Set$proto$__WALA__;
-
-
-Proxy = function Proxy() {};
-
-local_proxy.__proto__ = Function.prototype;
-
-Proxy$proto$__WALA__ = {
-
-  __proto__: Object.prototype,
-
-  constructor: Proxy,
-
-  resolve: function proxy_prototype_resolve () {
-    // TO DO
-  },
-  reject: function Proxy_prototype_reject () {
-    // TO DO
-  },
-  then: function Proxy_prototype_then () {
-    // TO DO
-  },
-}
-
-local_proxy.prototype = Proxy$proto$__WALA__;
-
-Promise = function Promise() {};
-
-local_promise.__proto__ = Function.prototype;
-
-Promise$proto$__WALA__ = {
-
-  __proto__: Object.prototype,
-
-  constructor: Promise,
-
-  then: function Promise_prototype_then () {
-    // TO DO
-  },
-  catch: function Promise_prototype_catch () {
-    // TO DO
-  }
-}
-
-local_promise.prototype = Promise$proto$__WALA__;
