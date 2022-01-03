@@ -743,3 +743,107 @@ function Error(str) {
 function EvalError(str) {
 	this.message = new String();
 }
+
+/************************************************************************/
+/* JSON properties, see 15.12
+/************************************************************************/
+
+JSON = function JSON() {};
+
+JSON$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: JSON,
+
+  parse: function JSON_prototype_parse() {
+	  // TODO: model me
+  },
+  
+  stringify: function JSON_prototype_stringify() {
+	  // TODO: model me
+  }
+
+};
+
+JSON.prototype = JSON$proto$__WALA__;
+
+//MAP 
+Map = function Map() {};
+
+local_map.__proto__ = Function.prototype;
+
+Map$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Map,
+
+  has: function Map_prototype_has () {
+    // TO DO
+  }
+}
+
+local_map.prototype = Map$proto$__WALA__;
+
+//SET 
+Set = function Set() {};
+
+local_set.__proto__ = Function.prototype;
+
+Set$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Set,
+
+  has: function Set_prototype_has () {
+    // TO DO
+  }
+}
+
+local_set.prototype = Set$proto$__WALA__;
+
+
+Proxy = function Proxy() {};
+
+local_proxy.__proto__ = Function.prototype;
+
+Proxy$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Proxy,
+
+  resolve: function proxy_prototype_resolve () {
+    // TO DO
+  },
+  reject: function Proxy_prototype_reject () {
+    // TO DO
+  },
+  then: function Proxy_prototype_then () {
+    // TO DO
+  },
+}
+
+local_proxy.prototype = Proxy$proto$__WALA__;
+
+Promise = function Promise() {};
+
+local_promise.__proto__ = Function.prototype;
+
+Promise$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Promise,
+
+  then: function Promise_prototype_then () {
+    // TO DO
+  },
+  catch: function Promise_prototype_catch () {
+    // TO DO
+  }
+}
+
+local_promise.prototype = Promise$proto$__WALA__;
