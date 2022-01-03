@@ -100,7 +100,39 @@ Object$proto$__WALA__ =  {
   
   propertyIsEnumerable: function Object_prototype_propertyIsEnumerable (V) {
     return primitive("ObjectPropertyIsEnumerable", this, V);
+  },
+  create: function Object_prototype_create() {
+    // TODO: model me
+  },
+  defineProperty: function Object_prototype_defineProperty() {
+    // TODO: model me
+  },
+  defineProperties: function Object_prototype_defineProperties() {
+    // TODO: model me
+  },
+  getPrototypeOf: function Object_prototype_getPrototypeOf(V) {
+    return primitive("ObjectGetPrototypeOf", this, V);
+    // TODO: model me
+  },
+  getOwnPropertyDescriptor: function Object_prototype_getOwnPropertyDescriptor() {
+    // TODO: model me
+  },
+  getOwnPropertyDescriptors: function Object_prototype_getOwnPropertyDescriptors() {
+    // TODO: model me
+  },
+  getOwnPropertyNames: function Object_prototype_getOwnPropertyNames() {
+    // TODO: model me
+  },
+  keys: function Object_prototype_keys() {
+    // TODO: model me
+  },
+  freeze: function Object_prototype_freeze() {
+    // TODO: model me
+  },
+  isExtensible: function Object_prototype_isExtensible() {
+    // TODO: model me
   }
+
 };
 
 Object.prototype = Object$proto$__WALA__;
@@ -408,6 +440,10 @@ Array$proto$__WALA__ = {
 	    }
 	  }
 	  return result;
+  },
+
+  lastIndexOf: function Array_prototype_lastIndexOf() {
+	  // TODO: model me
   }
 
 };
@@ -502,7 +538,12 @@ String$proto$__WALA__ = {
 
   replace: function String_prototype_replace(regex, withStr) {
     // return new String(primitive("StringReplace", this, regex, withStr));
-    return this || withStr;
+    //return this || withStr;
+    if(typeof withStr === "string"){
+      return new String(primitive("StringReplace", regex, withStr));
+    }else if(typeof withStr === "function"){
+      return new String(primitive("StringReplace", regex, withStr.call(this)));
+    }
   },
   
   match: function String_prototype_match(regexp) {
@@ -522,6 +563,14 @@ String$proto$__WALA__ = {
   
   anchor: function String_prototype_anchor(url) {
 	  return new String();
+  },
+
+  fromCharCode: function String_prototype_fromCharCode() {
+	  return new String(primitive("StringFromCharCode", this));
+  },
+  
+  search: function String_prototype_search() {
+	  // TODO: model me
   }
 
 };
@@ -748,7 +797,7 @@ function EvalError(str) {
 /* JSON properties, see 15.12
 /************************************************************************/
 
-JSON$proto$__WALA__ = {
+/*JSON$proto$__WALA__ = {
 
   __proto__: Object.prototype,
 
@@ -837,4 +886,4 @@ Promise$proto$__WALA__ = {
   }
 }
 
-local_promise.prototype = Promise$proto$__WALA__;
+local_promise.prototype = Promise$proto$__WALA__;*/
