@@ -1,6 +1,4 @@
-plugins {
-	id 'eclipse'
-}
+apply from: "$rootDir/wala-java.gradle"
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
@@ -47,7 +45,7 @@ final getProjectLibraryDirectory(project_name, link_task_name) {
 tasks.named('test') {
 	final xlator_project_name = 'xlator_test'
 	final link_task_name = 'linkDebug'
-	dependsOn "$xlator_project_name:$link_task_name"
+	inputs.files project(xlator_project_name).tasks.named(link_task_name)
 
 	doFirst {
 		systemProperty 'java.library.path', getProjectLibraryDirectory(xlator_project_name, link_task_name)

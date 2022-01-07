@@ -1,0 +1,112 @@
+apply plugin: 'eclipse'
+apply plugin: 'java-library'
+apply plugin: 'java-test-fixtures'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+apply from: "$rootDir/wala-javadoc.gradle"
+
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+
+version rootProject.version
+
+repositories {
+	mavenCentral()
+	// to get r8
+	maven {
+		url 'https://storage.googleapis.com/r8-releases/raw'
+	}
+}
+
+configurations {
+	all {
+		resolutionStrategy.dependencySubstitution {
+			substitute module('org.hamcrest:hamcrest-core') using module('org.hamcrest:hamcrest:2.2') because 'junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest'
+		}
+	}
+
+	implementation {
+		// See https://github.com/wala/WALA/issues/823.  This group was renamed to
+		// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
+		// com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
+		// Gradle, but not run them, excluding the group as a dependence is a reasonable
+		// solution.
+		exclude group: 'com.sun.jna'
+	}
+
+	aggregatedJavadocClasspath
+}
+
+tasks.withType(Javadoc).configureEach {
+	classpath.each { path ->
+		artifacts {
+			aggregatedJavadocClasspath path
+		}
+	}
+}
+
+eclipse {
+	synchronizationTasks 'processTestResources'
+}
+
+tasks.named('test') {
+	include '**/*Test.class'
+	include '**/*TestCase.class'
+	include '**/*Tests.class'
+	include '**/Test*.class'
+	exclude '**/*AndroidLibs*.class'
+
+	if (project.hasProperty('excludeSlowTests')) {
+		useJUnit {
+			excludeCategories 'com.ibm.wala.tests.util.SlowTests'
+		}
+	}
+
+	if (project.hasProperty('trial')) {
+		outputs.upToDateWhen { false }
+		afterTest { descriptor, result ->
+			def csv = new File("$rootProject.buildDir/time-trials.csv")
+			if (!csv.exists()) {
+				csv.append('trial,className,name,resultType,startTime,endTime\n')
+			}
+			csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
+		}
+	} else {
+		maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+	}
+}
+
+final ecjCompileTaskProviders = sourceSets.collect { sourceSet ->
+	JavaCompileUsingEcj.withSourceSet(project, sourceSet)
+}
+
+project.tasks.named('check').configure {
+	dependsOn ecjCompileTaskProviders
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
+
+// Special hack for WALA as an included build.  Composite
+// builds only build and use artifacts from the default
+// configuration of included builds:
+// <https://docs.gradle.org/current/userguide/composite_builds.html#included_build_substitution_limitations>.
+// This known limitation makes WALA test fixtures unavailable
+// when WALA is included in a composite build.  As a
+// workaround for composite projects that rely on those test
+// fixtures, we extend the main sourceSet to include all
+// test-fixture sources too.  This hack is only applied when
+// WALA itself is an included build.
+if (project.gradle.parent != null) {
+	afterEvaluate {
+		sourceSets {
+			main.java.srcDirs testFixtures.java.srcDirs
+		}
+
+		dependencies {
+			implementation configurations.testFixturesImplementation.dependencies
+		}
+	}
+}
