@@ -57,6 +57,7 @@ import org.mozilla.javascript.ast.Symbol;
 import org.mozilla.javascript.ast.ThrowStatement;
 import org.mozilla.javascript.ast.TryStatement;
 import org.mozilla.javascript.ast.UnaryExpression;
+import org.mozilla.javascript.ast.UpdateExpression;
 import org.mozilla.javascript.ast.VariableDeclaration;
 import org.mozilla.javascript.ast.VariableInitializer;
 import org.mozilla.javascript.ast.WhileLoop;
@@ -163,6 +164,8 @@ public abstract class TypedNodeVisitor<R, A> {
       return visitTryStatement((TryStatement) node, arg);
     } else if (node instanceof UnaryExpression) {
       return visitUnaryExpression((UnaryExpression) node, arg);
+    } else if (node instanceof UpdateExpression) {
+      return visitUpdateExpression((UpdateExpression) node, arg);
     } else if (node instanceof VariableDeclaration) {
       return visitVariableDeclaration((VariableDeclaration) node, arg);
     } else if (node instanceof VariableInitializer) {
@@ -285,6 +288,8 @@ public abstract class TypedNodeVisitor<R, A> {
   public abstract R visitTryStatement(TryStatement node, A arg);
 
   public abstract R visitUnaryExpression(UnaryExpression node, A arg);
+
+  public abstract R visitUpdateExpression(UpdateExpression node, A arg);
 
   public abstract R visitVariableDeclaration(VariableDeclaration node, A arg);
 

@@ -106,6 +106,7 @@ import org.mozilla.javascript.ast.Symbol;
 import org.mozilla.javascript.ast.ThrowStatement;
 import org.mozilla.javascript.ast.TryStatement;
 import org.mozilla.javascript.ast.UnaryExpression;
+import org.mozilla.javascript.ast.UpdateExpression;
 import org.mozilla.javascript.ast.VariableDeclaration;
 import org.mozilla.javascript.ast.VariableInitializer;
 import org.mozilla.javascript.ast.WhileLoop;
@@ -1714,19 +1715,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public CAstNode visitUnaryExpression(UnaryExpression node, WalkContext arg) {
-      if (node.getType() == Token.INC || node.getType() == Token.DEC) {
-        CAstNode op = (node.getType() == Token.DEC) ? CAstOperator.OP_SUB : CAstOperator.OP_ADD;
-
-        AstNode l = node.getOperand();
-        CAstNode last = visit(l, arg);
-
-        return Ast.makeNode(
-            (node.isPostfix() ? CAstNode.ASSIGN_POST_OP : CAstNode.ASSIGN_PRE_OP),
-            last,
-            Ast.makeConstant(1),
-            op);
-
-      } else if (node.getType() == Token.TYPEOFNAME) {
+      if (node.getType() == Token.TYPEOFNAME) {
         return Ast.makeNode(
             CAstNode.TYPE_OF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(node.getString())));
       } else if (node.getType() == Token.TYPEOF) {
@@ -1746,6 +1735,25 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
             CAstNode.UNARY_EXPR,
             translateOpcode(node.getOperator()),
             visit(node.getOperand(), arg));
+      }
+    }
+
+    @Override
+    public CAstNode visitUpdateExpression(UpdateExpression node, WalkContext arg) {
+      if (node.getType() == Token.INC || node.getType() == Token.DEC) {
+        CAstNode op = (node.getType() == Token.DEC) ? CAstOperator.OP_SUB : CAstOperator.OP_ADD;
+
+        AstNode l = node.getOperand();
+        CAstNode last = visit(l, arg);
+
+        return Ast.makeNode(
+            (node.isPostfix() ? CAstNode.ASSIGN_POST_OP : CAstNode.ASSIGN_PRE_OP),
+            last,
+            Ast.makeConstant(1),
+            op);
+
+      } else {
+        throw new RuntimeException("unexpected UpdateExpression " + node.toSource());
       }
     }
 
