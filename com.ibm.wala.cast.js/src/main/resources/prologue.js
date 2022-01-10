@@ -824,7 +824,6 @@ JSON$proto$__WALA__ = {
   stringify: function JSON_prototype_stringify() {
 	  // TODO: model me
   }
-
 };
 
 local_json.prototype = JSON$proto$__WALA__;
