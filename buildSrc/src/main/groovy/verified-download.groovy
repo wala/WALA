@@ -31,7 +31,7 @@ class VerifiedDownload extends org.gradle.api.DefaultTask {
 	@TaskAction
 	downloadAndVerify() {
 		def destFile = getDest()
-		project.download {
+		project.download.run {
 			src this.src
 			dest destFile
 			overwrite true
@@ -39,7 +39,7 @@ class VerifiedDownload extends org.gradle.api.DefaultTask {
 			useETag this.useETag
 			retries 5
 		}
-		project.verifyChecksum {
+		project.verifyChecksum.run {
 			src destFile
 			algorithm this.algorithm
 			checksum this.checksum
