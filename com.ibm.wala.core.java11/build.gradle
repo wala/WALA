@@ -1,4 +1,7 @@
-apply from: "$rootDir/wala-java.gradle"
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
@@ -54,5 +57,3 @@ tasks.named('test') {
 
 	outputs.file layout.buildDirectory.file('report')
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

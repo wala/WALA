@@ -1,9 +1,9 @@
 plugins {
 	id 'application'
 	id 'com.diffplug.eclipse.mavencentral'
+	id 'gradle-mvn-push'
+	id 'wala-java'
 }
-
-apply from: "$rootDir/wala-java.gradle"
 
 eclipseMavenCentral {
 	release eclipseVersion, {
@@ -56,5 +56,3 @@ tasks.named('test') {
 	// ensure the command-line driver for running ECJ works
 	dependsOn run
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")
