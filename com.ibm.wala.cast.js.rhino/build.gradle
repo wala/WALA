@@ -1,4 +1,7 @@
-apply from: "$rootDir/wala-java.gradle"
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
 
 dependencies {
 	implementation(
@@ -43,5 +46,3 @@ tasks.named('test') {
 			'expected.dump',
 	].collect(layout.buildDirectory.&file))
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

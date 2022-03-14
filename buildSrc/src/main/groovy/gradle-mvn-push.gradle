@@ -1,5 +1,10 @@
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+plugins {
+	id 'java-library'
+	id 'java-test-fixtures'
+	id 'maven-publish'
+	id 'signing'
+	id 'wala-subproject'
+}
 
 final isSnapshot = version.contains('SNAPSHOT')
 

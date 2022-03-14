@@ -1,4 +1,7 @@
-apply from: "$rootDir/wala-java.gradle"
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
 
 dependencies {
 	api(project(':com.ibm.wala.cast')) {
@@ -59,5 +62,3 @@ tasks.named('processTestResources', Copy) {
 		into 'ajaxslt'
 	}
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

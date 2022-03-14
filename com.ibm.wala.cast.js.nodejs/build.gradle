@@ -1,4 +1,6 @@
-apply from: "$rootDir/wala-java.gradle"
+plugins {
+	id 'wala-java'
+}
 
 dependencies {
 	api(project(':com.ibm.wala.cast.js')) {
