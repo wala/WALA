@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.processes;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -63,6 +64,12 @@ public class BasicLauncher extends Launcher {
     if (isCaptureOutput()) {
       Drainer d = (Drainer) d2;
       setStdOut(d.getCapture().toByteArray());
+    }
+    if (p.getInputStream() != null) {
+      p.getInputStream().close();
+    }
+    if (p.getErrorStream() != null) {
+      p.getErrorStream().close();
     }
     return p.exitValue();
   }
