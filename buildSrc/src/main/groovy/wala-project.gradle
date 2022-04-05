@@ -1,0 +1,59 @@
+// Build configuration shared by all projects *including* the root project.
+
+
+plugins {
+	id 'eclipse'
+	id 'nebula.lint'
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+//  linters for various specific languages or file formats
+//
+
+// We use no deprecated Gradle APIs ourselves, and we'd like to keep it that way.
+// Unfortunately, the Gradle linter tasks produce a deprecation warning under Gradle 7.2. The
+// warning message is not detailed by default, and could easily mask any new deprecation
+// problems that we might introduce ourselves. So we don't run the linter by default for now.
+gradleLint.alwaysRun = false
+
+gradleLint {
+	rules = [
+			'all-dependency',
+			'archaic-wrapper',
+			'duplicate-dependency-class',
+	]
+
+	// These rules warn about platform-specific Eclipse SWT dependencies, such as
+	// `org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64:3.113.0`.  There seems to be no
+	// way to suppress warnings just for specific dependencies or dependency patterns, so we
+	// have to exclude these rules entirely.
+	excludedRules = [
+			'undeclared-dependency',
+			'unused-dependency',
+	]
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Eclipse IDE integration
+//
+
+// workaround for <https://github.com/gradle/gradle/issues/4802>
+eclipse.classpath.file.whenMerged {
+	entries.each {
+		if (it in org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry && it.entryAttributes['gradle_used_by_scope'] == 'test')
+			it.entryAttributes['test'] = true
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Helpers for dependency locking
+//
+
+// this task resolves dependencies in all sub-projects, making it easy to
+// generate lockfiles
+tasks.register('allDeps', DependencyReportTask) {}

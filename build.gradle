@@ -15,9 +15,9 @@ plugins {
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
 	id 'nebula.lint' version '17.2.3'
+	id 'wala-javadoc'
+	id 'wala-project'
 }
-
-apply from: "$rootDir/wala-javadoc.gradle"
 
 repositories {
 	// to get the google-java-format jar and dependencies
@@ -73,33 +73,6 @@ tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 //
 //  linters for various specific languages or file formats
 //
-
-allprojects {
-	apply plugin: 'nebula.lint'
-
-	// We use no deprecated Gradle APIs ourselves, and we'd like to keep it that way.
-	// Unfortunately, the Gradle linter tasks produce a deprecation warning under Gradle 7.2. The
-	// warning message is not detailed by default, and could easily mask any new deprecation
-	// problems that we might introduce ourselves. So we don't run the linter by default for now.
-	gradleLint.alwaysRun = false
-
-	gradleLint {
-		rules = [
-				'all-dependency',
-				'archaic-wrapper',
-				'duplicate-dependency-class',
-		]
-
-		// These rules warn about platform-specific Eclipse SWT dependencies, such as
-		// `org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64:3.113.0`.  There seems to be no
-		// way to suppress warnings just for specific dependencies or dependency patterns, so we
-		// have to exclude these rules entirely.
-		excludedRules = [
-				'undeclared-dependency',
-				'unused-dependency',
-		]
-	}
-}
 
 // shell scripts, provided they have ".sh" extension
 if (isWindows) {
@@ -266,39 +239,6 @@ tasks.register('checkInspectionResults') {
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  Eclipse IDE integration
-//
-
-// workaround for <https://github.com/gradle/gradle/issues/4802>
-allprojects {
-	apply plugin: 'eclipse'
-
-	eclipse.classpath.file.whenMerged {
-		entries.each {
-			if (it in org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry && it.entryAttributes['gradle_used_by_scope'] == 'test')
-				it.entryAttributes['test'] = true
-		}
-	}
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  IntelliJ IDEA IDE integration
-//
-
-subprojects { subproject ->
-	apply plugin: 'idea'
-
-	idea.module {
-		// workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
-		excludeDirs += file('bin')
-	}
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
 //  helpers for building native CAst components
 //
 
@@ -382,30 +322,4 @@ final getNativeLibraryOutput(task) {
 	// on Windows, outputsFiles[2] is DLL
 	assert parent as String == library.parent
 	return library
-}
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  Extra downloads pre-fetcher
-//
-
-tasks.register('downloads') {
-	final allDownloaders = allprojects*.tasks*.withType(VerifiedDownload)
-	final neededDownloaders = allDownloaders.flatten().findAll {
-		// not used in typical builds
-		it.name != 'downloadOcamlJava'
-	}
-	inputs.files neededDownloaders
-}
-
-////////////////////////////////////////////////////////////////////////
-//
-//  Helpers for dependency locking
-//
-
-// this task resolves dependencies in all sub-projects, making it easy to
-// generate lockfiles
-allprojects {
-    tasks.register('allDeps', DependencyReportTask) {}
 }

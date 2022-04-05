@@ -1,7 +1,6 @@
-apply from: "$rootDir/wala-java.gradle"
-
 plugins {
 	id 'com.diffplug.eclipse.mavencentral'
+	id 'wala-java'
 }
 
 repositories {

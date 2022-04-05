@@ -1,4 +1,7 @@
-apply from: "$rootDir/wala-java.gradle"
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
 
 final downloadDroidBench = tasks.register('downloadDroidBench', VerifiedDownload) {
 	src 'https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0'
@@ -160,5 +163,3 @@ googleJavaFormat {
 	exclude "$name/parser.java"
 	exclude "$name/sym.java"
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

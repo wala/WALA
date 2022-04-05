@@ -1,15 +1,18 @@
-apply plugin: 'eclipse'
-apply plugin: 'java-library'
-apply plugin: 'java-test-fixtures'
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+// Build configuration for subprojects that include Java source code.
 
-apply from: "$rootDir/wala-javadoc.gradle"
+
+plugins {
+	id 'eclipse'
+	id 'java-library'
+	id 'java-test-fixtures'
+	id 'maven-publish'
+	id 'signing'
+	id 'wala-javadoc'
+	id 'wala-subproject'
+}
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
-
-version rootProject.version
 
 repositories {
 	mavenCentral()

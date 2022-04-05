@@ -1,0 +1,35 @@
+// Build configuration shared by all projects *except* for the root project.
+
+
+plugins {
+	id 'idea'
+	id 'wala-project'
+}
+
+version rootProject.version
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Extra downloads pre-fetcher
+//
+
+tasks.register('downloads') {
+	final allDownloaders = tasks.withType(VerifiedDownload)
+	final neededDownloaders = allDownloaders.findAll {
+		// not used in typical builds
+		it.name != 'downloadOcamlJava'
+	}
+	inputs.files neededDownloaders
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  IntelliJ IDEA IDE integration
+//
+
+idea.module {
+	// workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
+	excludeDirs += file('bin')
+}
