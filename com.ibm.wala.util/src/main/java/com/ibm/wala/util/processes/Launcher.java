@@ -178,7 +178,7 @@ public abstract class Launcher {
     return result;
   }
 
-  protected Drainer captureStdErr(Process p) throws IOException {
+  protected Drainer captureStdErr(Process p) {
     final BufferedInputStream out = new BufferedInputStream(p.getErrorStream(), BUFFER_SIZE);
     final ByteArrayOutputStream b = new ByteArrayOutputStream(BUFFER_SIZE);
     Drainer result =
