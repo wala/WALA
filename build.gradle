@@ -58,7 +58,7 @@ tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	title = "$project.name $version API"
 	options.author true
 
-	subprojects.each { proj ->
+	subprojects { proj ->
 		proj.tasks.withType(Javadoc) { javadocTask ->
 			aggregated.source += javadocTask.source
 			aggregated.classpath += javadocTask.classpath
