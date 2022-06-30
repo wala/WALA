@@ -59,7 +59,7 @@ tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	options.author true
 
 	subprojects.each { proj ->
-		proj.tasks.withType(Javadoc).configureEach { javadocTask ->
+		proj.tasks.withType(Javadoc) { javadocTask ->
 			aggregated.source += javadocTask.source
 			aggregated.classpath += javadocTask.classpath
 			aggregated.excludes += javadocTask.excludes
