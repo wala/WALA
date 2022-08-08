@@ -15,12 +15,10 @@ version rootProject.version
 //
 
 tasks.register('downloads') {
-	final allDownloaders = tasks.withType(VerifiedDownload)
-	final neededDownloaders = allDownloaders.findAll {
+	inputs.files tasks.withType(VerifiedDownload).matching {
 		// not used in typical builds
 		it.name != 'downloadOcamlJava'
 	}
-	inputs.files neededDownloaders
 }
 
 
