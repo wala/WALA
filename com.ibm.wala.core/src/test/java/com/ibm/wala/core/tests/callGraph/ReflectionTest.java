@@ -18,6 +18,7 @@ import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -839,6 +840,7 @@ public class ReflectionTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
             cha, "Lreflection/StringsOnlyGetMessage");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     IMethod mainMethod = entrypoints.iterator().next().getMethod();
     List<CGNode> mainCallees =
