@@ -841,8 +841,29 @@ public class ReflectionTest extends WalaTestCase {
             cha, "Lreflection/StringsOnlyGetMessage");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, false);
     IMethod mainMethod = entrypoints.iterator().next().getMethod();
+    List<CGNode> mainCallees =
+        Iterator2List.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
+    Assert.assertTrue(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
+  }
+
+  @Test
+  public void testStringsOnlyGetMessageEmptyPackage()
+      throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            cha, "LStringsOnlyGetMessage");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
+    AnalysisCacheImpl cache = new AnalysisCacheImpl();
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, false);
+    System.err.println(cg);
+    IMethod mainMethod = entrypoints.iterator().next().getMethod();
+//    System.err.println(cache.getIR(mainMethod));
     List<CGNode> mainCallees =
         Iterator2List.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
     Assert.assertTrue(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));

@@ -10,7 +10,7 @@ public class StringsOnlyGetMessage {
 
   public static void main(String[] args) {
     try {
-      Class clazz = Class.forName("MyClass");
+      Class clazz = Class.forName("reflection.StringsOnlyGetMessage$MyClass");
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
