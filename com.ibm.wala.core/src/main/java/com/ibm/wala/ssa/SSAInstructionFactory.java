@@ -13,11 +13,11 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IComparisonInstruction;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IComparisonInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 

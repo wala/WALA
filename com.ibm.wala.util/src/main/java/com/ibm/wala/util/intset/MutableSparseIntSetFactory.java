@@ -45,9 +45,6 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
     return new MutableSparseIntSet(backingStore);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public MutableSparseIntSet makeCopy(IntSet x) throws IllegalArgumentException {
     if (x == null) {
@@ -56,9 +53,6 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
     return MutableSparseIntSet.make(x);
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
-   */
   @Override
   public MutableSparseIntSet make() {
     return MutableSparseIntSet.makeEmpty();

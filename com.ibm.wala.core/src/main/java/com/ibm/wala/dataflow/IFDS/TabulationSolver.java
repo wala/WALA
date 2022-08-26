@@ -11,8 +11,9 @@
 package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.core.util.CancelRuntimeException;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -28,7 +29,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -922,17 +922,11 @@ public class TabulationSolver<T, P, F> {
       return result.toString();
     }
 
-    /*
-     * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
-     */
     @Override
     public TabulationProblem<T, P, F> getProblem() {
       return problem;
     }
 
-    /*
-     * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getSupergraphNodesReached()
-     */
     @Override
     public Collection<T> getSupergraphNodesReached() {
       Collection<T> result = HashSetFactory.make();

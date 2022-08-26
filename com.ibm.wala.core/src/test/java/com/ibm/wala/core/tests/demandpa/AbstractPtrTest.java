@@ -41,6 +41,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.refinepolicy.NeverRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.OnlyArraysPolicy;
@@ -76,8 +78,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.IOException;
 import java.util.Collection;
 import org.junit.AfterClass;
@@ -227,12 +227,12 @@ public abstract class AbstractPtrTest {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     final IAnalysisCacheView analysisCache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> cgBuilder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, analysisCache, cha);
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
@@ -240,7 +240,7 @@ public abstract class AbstractPtrTest {
     // cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, analysisCache, cha);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(
             cg, builder, mam, cha, options, getStateMachineFactory());

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Eclipse-LazyStart: true
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.ide
-Bundle-Version: 1.5.7.qualifier
+Bundle-Version: 1.5.9.qualifier
 Bundle-Activator: com.ibm.wala.ide.plugin.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -20,6 +20,7 @@ Require-Bundle: org.eclipse.pde.core,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ibm.wala.ide.classloader,
+ com.ibm.wala.core.util,
  com.ibm.wala.ide.client,
  com.ibm.wala.ide.plugin,
  com.ibm.wala.ide.ui,
@@ -112,6 +113,7 @@ Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.util.shrike,
  com.ibm.wala.util.ssa,
  com.ibm.wala.util.strings,
+ com.ibm.wala.core.util.strings,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz,
  com.ibm.wala.viz.viewer,
@@ -140,14 +142,14 @@ Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.shrike.cg,
  com.ibm.wala.shrike.copywriter,
  com.ibm.wala.shrike.instrumentation,
- com.ibm.wala.shrikeBT,
- com.ibm.wala.shrikeBT.analysis,
- com.ibm.wala.shrikeBT.info,
- com.ibm.wala.shrikeBT.shrikeCT,
- com.ibm.wala.shrikeBT.shrikeCT.tools,
- com.ibm.wala.shrikeBT.tools,
- com.ibm.wala.shrikeCT,
- com.ibm.wala.sourcepos 
+ com.ibm.wala.shrike.shrikeBT,
+ com.ibm.wala.shrike.shrikeBT.analysis,
+ com.ibm.wala.shrike.shrikeBT.info,
+ com.ibm.wala.shrike.shrikeBT.shrikeCT,
+ com.ibm.wala.shrike.shrikeBT.shrikeCT.tools,
+ com.ibm.wala.shrike.shrikeBT.tools,
+ com.ibm.wala.shrike.shrikeCT,
+ com.ibm.wala.shrike.sourcepos 
 Automatic-Module-Name: com.ibm.wala.ide
 Bundle-ClassPath: .,
  target/dependency/com.ibm.wala.core.jar,

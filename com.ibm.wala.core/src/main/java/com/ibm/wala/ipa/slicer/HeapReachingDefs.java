@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorIdentity;
@@ -38,7 +39,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -499,7 +499,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
         // doesn't mod anything in the heap.
         return Collections.emptySet();
       default:
-        Assertions.UNREACHABLE(s.getKind() + " " + s.toString());
+        Assertions.UNREACHABLE(s.getKind() + " " + s);
         return null;
     }
   }

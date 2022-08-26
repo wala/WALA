@@ -61,8 +61,10 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -74,10 +76,10 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef.ModVisitor;
 import com.ibm.wala.ipa.modref.ModRef.RefVisitor;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
-import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
-import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction.IOperator;
+import com.ibm.wala.shrike.shrikeBT.IComparisonInstruction.Operator;
+import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAAbstractBinaryInstruction;
 import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -114,11 +116,12 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -498,7 +501,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             @Override
             public SSAConditionalBranchInstruction ConditionalBranchInstruction(
                 int iindex,
-                com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator operator,
+                com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.IOperator operator,
                 TypeReference type,
                 int val1,
                 int val2,
@@ -688,7 +691,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             @Override
             public SSAUnaryOpInstruction UnaryOpInstruction(
                 int iindex,
-                com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator operator,
+                com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction.IOperator operator,
                 int result,
                 int val) {
               return new SSAUnaryOpInstruction(iindex, operator, result, val);
@@ -1014,14 +1017,15 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   @Override
-  protected TranslatorToCAst getTranslatorToCAst(final CAst ast, ModuleEntry module) {
+  protected TranslatorToCAst getTranslatorToCAst(
+      final CAst ast, ModuleEntry module, List<Module> allModules) {
     TranslatorToCAst translator = translatorFactory.make(ast, module);
     if (preprocessor != null) translator.addRewriter(preprocessor, true);
     return translator;
   }
 
   @Override
-  protected TranslatorToIR initTranslator() {
+  protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
     return new JSAstTranslator(this);
   }
 

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.core.util.io.FileSuffixes;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -21,6 +21,8 @@ import java.net.URL;
 public class SourceFileModule extends FileModule implements Module, ModuleEntry, SourceModule {
 
   private final String fileName;
+  /** cache result of {@link #getURL()}, for performance */
+  private URL url;
 
   public SourceFileModule(File f, String fileName, Module container) {
     super(f, container);
@@ -37,25 +39,16 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
     return "SourceFileModule:" + getFile().toString();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
-   */
   @Override
   public boolean isClassFile() {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
-   */
   @Override
   public String getClassName() {
     return FileSuffixes.stripSuffix(fileName).replace(File.separator.charAt(0), '/');
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
-   */
   @Override
   public boolean isSourceFile() {
     return true;
@@ -68,10 +61,13 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
 
   @Override
   public URL getURL() {
-    try {
-      return getFile().toURI().toURL();
-    } catch (MalformedURLException e) {
-      throw new Error("error making URL for " + getFile(), e);
+    if (url == null) {
+      try {
+        url = getFile().toURI().toURL();
+      } catch (MalformedURLException e) {
+        throw new Error("error making URL for " + getFile(), e);
+      }
     }
+    return url;
   }
 }

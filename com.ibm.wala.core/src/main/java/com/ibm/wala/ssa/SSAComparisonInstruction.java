@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.shrikeBT.IComparisonInstruction;
+import com.ibm.wala.shrike.shrikeBT.IComparisonInstruction;
 
 /** SSA Instruction for comparisons between floats, longs and doubles */
 public class SSAComparisonInstruction extends SSAInstruction {
@@ -101,9 +101,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
     return 6311 * result ^ 2371 * val1 + val2;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

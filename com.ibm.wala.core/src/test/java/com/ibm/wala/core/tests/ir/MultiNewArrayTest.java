@@ -15,6 +15,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -29,8 +31,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class MultiNewArrayTest extends WalaTestCase {
   public void testMultiNewArray1() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
@@ -52,19 +52,19 @@ public class MultiNewArrayTest extends WalaTestCase {
         cha.lookupClass(
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
-    Assert.assertTrue(m != null);
+    Assert.assertNotNull(m);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     IR ir = cache.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());
-    Assert.assertTrue(ir != null);
+    Assert.assertNotNull(ir);
     SSAInstruction[] instructions = ir.getInstructions();
     for (SSAInstruction instr : instructions) {
       if (instr instanceof SSANewInstruction) {
         System.err.println(instr.toString(ir.getSymbolTable()));
-        Assert.assertTrue(instr.getNumberOfUses() == 2);
-        Assert.assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(0)) == 3);
-        Assert.assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(1)) == 4);
+        Assert.assertEquals(2, instr.getNumberOfUses());
+        Assert.assertEquals(3, ir.getSymbolTable().getIntValue(instr.getUse(0)));
+        Assert.assertEquals(4, ir.getSymbolTable().getIntValue(instr.getUse(1)));
       }
     }
   }

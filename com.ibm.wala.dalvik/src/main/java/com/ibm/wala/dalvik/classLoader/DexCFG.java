@@ -20,14 +20,17 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JavaLanguage;
+import com.ibm.wala.core.util.shrike.ShrikeUtil;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.dalvik.dex.instructions.Instruction;
 import com.ibm.wala.dalvik.dex.instructions.Invoke;
 import com.ibm.wala.dalvik.dex.instructions.Return;
 import com.ibm.wala.dalvik.dex.instructions.Throw;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.ExceptionHandler;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -36,9 +39,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.shrike.ShrikeUtil;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -252,7 +252,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
      *
      * @param last the last instruction in a basic block.
      */
-    protected void addExceptionalEdges(Instruction last) {
+    private void addExceptionalEdges(Instruction last) {
       IClassHierarchy cha = getMethod().getClassHierarchy();
       if (last.isPEI()) {
         Collection<TypeReference> exceptionTypes = null;
@@ -595,25 +595,16 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           + dexMethod.getName();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#isExitBlock()
-     */
     @Override
     public boolean isExitBlock() {
       return this == DexCFG.this.exit();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#isEntryBlock()
-     */
     @Override
     public boolean isEntryBlock() {
       return this == DexCFG.this.entry();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#getMethod()
-     */
     @Override
     public IMethod getMethod() {
       return DexCFG.this.getMethod();
@@ -631,9 +622,6 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           && ((BasicBlock) o).getNumber() == getNumber();
     }
 
-    /*
-     * @see com.ibm.wala.cfg.BasicBlock#getNumber()
-     */
     @Override
     public int getNumber() {
       return getGraphNodeId();
@@ -681,9 +669,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     return exceptionHandlers;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
-   */
+  /** @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int) */
   @Override
   public int getProgramCounter(int index) {
     return dexMethod.getAddressFromIndex(index);

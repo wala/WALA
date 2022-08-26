@@ -15,6 +15,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -26,7 +27,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.strings.Atom;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
@@ -130,40 +130,30 @@ public class FakeRootClass extends SyntheticClass {
         });
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getModifiers()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getModifiers() */
   @Override
   public int getModifiers() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSuperclass()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getSuperclass() */
   @Override
   public IClass getSuperclass() throws UnsupportedOperationException {
     return getClassHierarchy().getRootClass();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces() */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() throws UnsupportedOperationException {
     return Collections.emptySet();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces() */
   public Collection<IClass> getAllAncestorInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.types.Selector) */
   @Override
   public IMethod getMethod(Selector selector) throws UnsupportedOperationException {
     for (IMethod m : methods) {
@@ -174,9 +164,7 @@ public class FakeRootClass extends SyntheticClass {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.types.Selector) */
   @Override
   public IField getField(Atom name) {
     if (fakeRootStaticFields != null) {
@@ -186,34 +174,26 @@ public class FakeRootClass extends SyntheticClass {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getClassInitializer() */
   @Override
   public IMethod getClassInitializer() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDeclaredMethods() */
   @Override
   public Collection<IMethod> getDeclaredMethods() throws UnsupportedOperationException {
     return Collections.unmodifiableCollection(methods);
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields() */
   @Override
   public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
     return Collections.emptySet();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields() */
   @Override
   public Collection<IField> getDeclaredStaticFields() {
     if (fakeRootStaticFields != null) {
@@ -223,49 +203,37 @@ public class FakeRootClass extends SyntheticClass {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isReferenceType()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isReferenceType() */
   @Override
   public boolean isReferenceType() {
     return getReference().isReferenceType();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDirectInterfaces() */
   @Override
   public Collection<IClass> getDirectInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllInstanceFields() */
   @Override
   public Collection<IField> getAllInstanceFields() {
     return Collections.emptySet();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllStaticFields() */
   @Override
   public Collection<IField> getAllStaticFields() {
     return getDeclaredStaticFields();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllMethods()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllMethods() */
   @Override
   public Collection<IMethod> getAllMethods() {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllFields() */
   @Override
   public Collection<IField> getAllFields() {
     return getDeclaredStaticFields();

@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
 import java.util.zip.GZIPOutputStream;
 
@@ -80,8 +81,15 @@ public class Runtime {
     }
 
     try {
-      handleCallback = (Policy) Class.forName(policyClassName).newInstance();
-    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+      handleCallback =
+          (Policy) Class.forName(policyClassName).getDeclaredConstructor().newInstance();
+    } catch (InstantiationException
+        | IllegalAccessException
+        | ClassNotFoundException
+        | IllegalArgumentException
+        | InvocationTargetException
+        | NoSuchMethodException
+        | SecurityException e) {
       handleCallback = new DefaultCallbackPolicy();
     }
 

@@ -40,6 +40,7 @@
  */
 package org.scandroid.flow;
 
+import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
@@ -55,7 +56,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

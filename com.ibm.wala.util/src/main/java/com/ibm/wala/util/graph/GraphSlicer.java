@@ -154,6 +154,16 @@ public class GraphSlicer {
     AbstractGraph<T> output =
         new AbstractGraph<T>() {
 
+          @SuppressWarnings({"unchecked", "rawtypes"})
+          @Override
+          protected String nodeString(T n, boolean forEdge) {
+            if (g instanceof AbstractGraph) {
+              return ((AbstractGraph) g).nodeString(n, forEdge);
+            } else {
+              return super.nodeString(n, forEdge);
+            }
+          }
+
           @Override
           protected NodeManager<T> getNodeManager() {
             return n;
@@ -315,6 +325,16 @@ public class GraphSlicer {
         };
 
     return new AbstractGraph<E>() {
+
+      @SuppressWarnings({"unchecked", "rawtypes"})
+      @Override
+      protected String nodeString(E n, boolean forEdge) {
+        if (G instanceof AbstractGraph) {
+          return ((AbstractGraph) G).nodeString(n, forEdge);
+        } else {
+          return super.nodeString(n, forEdge);
+        }
+      }
 
       @Override
       protected EdgeManager<E> getEdgeManager() {

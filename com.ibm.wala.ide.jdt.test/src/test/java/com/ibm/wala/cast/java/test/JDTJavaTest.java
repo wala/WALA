@@ -15,7 +15,6 @@ import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil.ZippedProjectData;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -58,8 +57,7 @@ public abstract class JDTJavaTest extends IRTests {
           }
 
           @Override
-          protected Iterable<Entrypoint> makeDefaultEntrypoints(
-              AnalysisScope scope, IClassHierarchy cha) {
+          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(
                 JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
           }
@@ -75,7 +73,7 @@ public abstract class JDTJavaTest extends IRTests {
       engine.setExclusionsFile(tf.getAbsolutePath());
       tf.deleteOnExit();
     } catch (IOException e) {
-      Assert.assertFalse("Cannot find exclusions file: " + e.toString(), true);
+      Assert.fail("Cannot find exclusions file: " + e);
     }
 
     return engine;

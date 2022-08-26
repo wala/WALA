@@ -45,6 +45,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -258,9 +259,13 @@ public class AndroidManifestXMLReader {
       this.allowedSubTagsHolder = allowedSubTags;
       if (item != null) {
         try {
-          this.item = item.newInstance();
+          this.item = item.getDeclaredConstructor().newInstance();
           this.item.setSelf(this);
-        } catch (java.lang.InstantiationException e) {
+        } catch (IllegalArgumentException
+            | InvocationTargetException
+            | NoSuchMethodException
+            | SecurityException
+            | InstantiationException e) {
           e.getCause().printStackTrace();
           throw new IllegalStateException("InstantiationException was thrown");
         } catch (java.lang.IllegalAccessException e) {
@@ -284,7 +289,7 @@ public class AndroidManifestXMLReader {
     /** The class that takes action on this tag. */
     public ParserItem getHandler() {
       if (this.item == null) {
-        System.err.println("Requested non existing handler for: " + this.toString());
+        System.err.println("Requested non existing handler for: " + this);
       }
       return this.item;
     }
@@ -494,8 +499,7 @@ public class AndroidManifestXMLReader {
         Tag subTag = parserStack.pop();
         if (allowedSubTags.contains(subTag)) {
           if (subTag.getHandler() == null) {
-            throw new IllegalArgumentException(
-                "The SubTag " + subTag.toString() + " has no handler!");
+            throw new IllegalArgumentException("The SubTag " + subTag + " has no handler!");
           }
           subTag.getHandler().popAttributes(); // hmmm....
 

@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,10 +48,16 @@ import java.util.NoSuchElementException;
  * A set implementation backed by an array. This implementation is space-efficient for small sets,
  * but several operations like {@link #contains(Object)} are linear time.
  */
-public class ArraySet<T> extends AbstractSet<T> {
+public class ArraySet<T> extends AbstractSet<T> implements Serializable {
+
+  /** */
+  private static final long serialVersionUID = -5842124218051589966L;
 
   private static final ArraySet<?> EMPTY =
       new ArraySet<Object>(0, true) {
+        /** */
+        private static final long serialVersionUID = -3094823386613798012L;
+
         @Override
         /*
          * @throws UnsupportedOperationException unconditionally
@@ -132,9 +139,6 @@ public class ArraySet<T> extends AbstractSet<T> {
     return ret;
   }
 
-  /*
-   * @see AAA.util.AAASet#contains(java.lang.Object)
-   */
   @Override
   public boolean contains(Object obj_) {
     for (int i = 0; i < _curIndex; i++) {
@@ -201,9 +205,7 @@ public class ArraySet<T> extends AbstractSet<T> {
     _curIndex = 0;
   }
 
-  /*
-   * @see java.util.Set#iterator()
-   */
+  /** @see java.util.Set#iterator() */
   @Override
   public Iterator<T> iterator() {
     return new ArraySetIterator();

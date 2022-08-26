@@ -10,9 +10,15 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.io.FileSuffixes;
+import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.ClassReader;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.ClassReader;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -20,12 +26,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.config.SetOfClasses;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -560,9 +560,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return getAllClasses().iterator();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#lookupClass(com.ibm.wala.types.TypeName)
-   */
   @SuppressWarnings("unused")
   @Override
   public IClass lookupClass(TypeName className) {
@@ -612,17 +609,11 @@ public class ClassLoaderImpl implements IClassLoader {
     return getName().toString();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfClasses()
-   */
   @Override
   public int getNumberOfClasses() {
     return getAllClasses().size();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
-   */
   @Override
   public int getNumberOfMethods() {
     int result = 0;
@@ -632,9 +623,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public String getSourceFileName(IClass klass) {
     if (klass == null) {
@@ -663,9 +651,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return e == null ? null : new InputStreamReader(e.getInputStream());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
-   */
   @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {

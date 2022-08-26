@@ -11,13 +11,13 @@
 package com.ibm.wala.ssa.analysis;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.BooleanVariable;
 import com.ibm.wala.fixpoint.UnaryOr;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;

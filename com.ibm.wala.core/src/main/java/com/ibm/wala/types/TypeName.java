@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.Serializable;
 import java.io.UTFDataFormatException;
 import java.util.Map;
@@ -190,27 +190,27 @@ public final class TypeName implements Serializable {
    * @return the dimensionality of the type. By convention, class types have dimensionality 0,
    *     primitives -1, and arrays the number of [ in their descriptor.
    */
-  public final int getDerivedMask() {
+  public int getDerivedMask() {
     return key.dim;
   }
 
   /** Does 'this' refer to a class? */
-  public final boolean isClassType() {
+  public boolean isClassType() {
     return key.dim == 0;
   }
 
   /** Does 'this' refer to an array? */
-  public final boolean isArrayType() {
+  public boolean isArrayType() {
     return key.dim > 0;
   }
 
   /** Does 'this' refer to a primitive type */
-  public final boolean isPrimitiveType() {
+  public boolean isPrimitiveType() {
     return key.dim == -1;
   }
 
   /** Return the innermost element type reference for an array */
-  public final TypeName getInnermostElementType() {
+  public TypeName getInnermostElementType() {
     short newDim = ((key.dim & ElementMask) == PrimitiveMask) ? (short) -1 : 0;
     return findOrCreate(key.packageName, key.className, newDim);
   }
@@ -276,7 +276,7 @@ public final class TypeName implements Serializable {
       toStringPrefix(result);
 
       if (packageName != null) {
-        result.append(packageName.toString());
+        result.append(packageName);
         result.append('/');
       }
       result.append(className.toString());

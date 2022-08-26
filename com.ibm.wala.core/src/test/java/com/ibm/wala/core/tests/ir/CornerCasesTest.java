@@ -17,6 +17,9 @@ import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -28,9 +31,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class CornerCasesTest extends WalaTestCase {
   public void testBug38484() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             MY_CLASSLOADER);
@@ -58,11 +58,11 @@ public class CornerCasesTest extends WalaTestCase {
         TypeReference.findOrCreateClass(
             scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     IMethod m =
         klass.getMethod(
             new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
-    Assert.assertTrue(m == null);
+    Assert.assertNull(m);
   }
 
   /**
@@ -73,7 +73,7 @@ public class CornerCasesTest extends WalaTestCase {
   public void testBug38540() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             MY_CLASSLOADER);
@@ -82,14 +82,14 @@ public class CornerCasesTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     ShrikeCTMethod m =
         (ShrikeCTMethod)
             klass.getMethod(
                 new Selector(
                     Atom.findOrCreateAsciiAtom("foo"),
                     Descriptor.findOrCreateUTF8("()Ljava/lang/Object;")));
-    Assert.assertTrue(m != null);
+    Assert.assertNotNull(m);
     IR ir =
         new AnalysisCacheImpl()
             .getSSACache()

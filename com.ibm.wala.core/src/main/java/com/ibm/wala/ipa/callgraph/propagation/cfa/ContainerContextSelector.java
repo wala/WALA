@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -31,7 +32,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.strings.Atom;
 
 /**
  * This context selector returns a context customized for the {@link InstanceKey} of the receiver if
@@ -105,11 +105,6 @@ public class ContainerContextSelector implements ContextSelector {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
-   * com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
-   * com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
-   */
   @Override
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] keys) {

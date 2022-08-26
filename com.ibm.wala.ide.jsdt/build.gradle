@@ -1,5 +1,6 @@
 plugins {
 	id 'com.diffplug.eclipse.mavencentral'
+	id 'wala-java'
 }
 
 repositories {
@@ -22,6 +23,7 @@ eclipseMavenCentral {
 				'org.eclipse.ui.workbench',
 		].each it.&implementation
 		useNativesForRunningPlatform()
+		constrainTransitivesToThisRelease()
 	}
 }
 

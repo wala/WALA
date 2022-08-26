@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
@@ -22,7 +23,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Collection;
 import org.junit.Assert;

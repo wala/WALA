@@ -40,6 +40,7 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -48,7 +49,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.strings.Atom;
 
 /**
  * Models all classes derived from the given AndroidComponent.

@@ -13,6 +13,7 @@ package com.ibm.wala.core.tests.callGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -34,7 +35,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Set;
 import org.junit.Assert;
@@ -87,8 +87,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.PI_TEST_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.PI_TEST_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     SSAPiNodePolicy policy = usePiNodes ? SSAOptions.getAllBuiltInPiNodes() : null;
     options.getSSAOptions().setPiNodePolicy(policy);
@@ -97,7 +96,6 @@ public class PiNodeCallGraphTest extends WalaTestCase {
         options,
         new AnalysisCacheImpl(new DefaultIRFactory(), options.getSSAOptions()),
         cha,
-        scope,
         false);
   }
 

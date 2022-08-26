@@ -21,8 +21,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import org.junit.Test;
@@ -47,9 +47,9 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
             exclusionsFile != null ? exclusionsFile : CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    return CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
   }
 
   @Test

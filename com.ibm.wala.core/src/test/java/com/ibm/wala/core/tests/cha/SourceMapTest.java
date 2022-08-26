@@ -15,12 +15,12 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,38 +33,36 @@ public class SourceMapTest extends WalaTestCase {
 
   @Test
   public void testHello() throws ClassHierarchyException, IOException {
-    if (analyzingJar()) return;
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // see feature 38676
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference t =
         TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue("failed to load " + t, klass != null);
+    Assert.assertNotNull("failed to load " + t, klass);
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
-    Assert.assertTrue(sourceFile != null);
+    Assert.assertNotNull(sourceFile);
   }
 
   @Test
   public void testFromJar() throws ClassHierarchyException, IOException {
-    if (analyzingJar()) return;
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // open a feature to fix this
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference t =
         TypeReference.findOrCreate(scope.getPrimordialLoader(), CLASS_IN_PRIMORDIAL_JAR);
     IClass klass = cha.lookupClass(t);
-    Assert.assertTrue(klass != null);
+    Assert.assertNotNull(klass);
     String sourceFile = klass.getSourceFileName();
-    Assert.assertTrue(sourceFile != null);
+    Assert.assertNotNull(sourceFile);
     System.err.println("Source file: " + sourceFile);
     Module container = ((BytecodeClass<?>) klass).getContainer();
-    Assert.assertTrue(container != null);
+    Assert.assertNotNull(container);
     System.err.println("container: " + container);
   }
 }

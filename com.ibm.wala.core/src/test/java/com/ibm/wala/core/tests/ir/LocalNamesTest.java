@@ -16,6 +16,11 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.strings.UTF8Convert;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -32,12 +37,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.strings.UTF8Convert;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -58,14 +58,11 @@ public class LocalNamesTest extends WalaTestCase {
     justThisTest(LocalNamesTest.class);
   }
 
-  /*
-   * @see junit.framework.TestCase#setUp()
-   */
   @BeforeClass
   public static void beforeClass() throws Exception {
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
@@ -97,7 +94,7 @@ public class LocalNamesTest extends WalaTestCase {
   public void testAliasNames() {
     try {
       AnalysisScope scope =
-          AnalysisScopeReader.readJavaScope(
+          AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA,
               (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
               MY_CLASSLOADER);
@@ -106,7 +103,7 @@ public class LocalNamesTest extends WalaTestCase {
           TypeReference.findOrCreateClass(
               scope.getApplicationLoader(), "cornerCases", "AliasNames");
       IClass klass = cha.lookupClass(t);
-      Assert.assertTrue(klass != null);
+      Assert.assertNotNull(klass);
       IMethod m =
           klass.getMethod(
               new Selector(
@@ -126,11 +123,10 @@ public class LocalNamesTest extends WalaTestCase {
           String[] localNames = ir.getLocalNames(offsetIndex, instr.getDef());
           if (localNames != null && localNames.length > 0 && localNames[0] == null) {
             System.err.println(ir);
-            Assert.assertTrue(
+            Assert.fail(
                 " getLocalNames() returned [null,...] for the def of instruction at offset "
                     + offsetIndex
-                    + "\n\tinstr",
-                false);
+                    + "\n\tinstr");
           }
         }
       }
@@ -159,24 +155,21 @@ public class LocalNamesTest extends WalaTestCase {
 
     // v1 should be the parameter "a" at pc 0
     String[] names = ir.getLocalNames(0, 1);
-    Assert.assertTrue("failed local name resolution for v1@0", names != null);
-    Assert.assertTrue(
-        "incorrect number of local names for v1@0: " + names.length, names.length == 1);
-    Assert.assertTrue(
-        "incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
+    Assert.assertNotNull("failed local name resolution for v1@0", names);
+    Assert.assertEquals(
+        "incorrect number of local names for v1@0: " + names.length, 1, names.length);
+    Assert.assertEquals("incorrect local name resolution for v1@0: " + names[0], "a", names[0]);
 
     // v2 is a compiler-induced temporary
-    Assert.assertTrue("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2) == null);
+    Assert.assertNull("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2));
 
     // at pc 5, v1 should represent the locals "a" and "b"
     names = ir.getLocalNames(5, 1);
-    Assert.assertTrue("failed local name resolution for v1@5", names != null);
-    Assert.assertTrue(
-        "incorrect number of local names for v1@5: " + names.length, names.length == 2);
-    Assert.assertTrue(
-        "incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
-    Assert.assertTrue(
-        "incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
+    Assert.assertNotNull("failed local name resolution for v1@5", names);
+    Assert.assertEquals(
+        "incorrect number of local names for v1@5: " + names.length, 2, names.length);
+    Assert.assertEquals("incorrect local name resolution #0 for v1@5: " + names[0], "a", names[0]);
+    Assert.assertEquals("incorrect local name resolution #1 for v1@5: " + names[1], "b", names[1]);
   }
 
   @Test
@@ -198,23 +191,20 @@ public class LocalNamesTest extends WalaTestCase {
 
     // v1 should be the parameter "a" at pc 0
     String[] names = ir.getLocalNames(0, 1);
-    Assert.assertTrue("failed local name resolution for v1@0", names != null);
-    Assert.assertTrue(
-        "incorrect number of local names for v1@0: " + names.length, names.length == 1);
-    Assert.assertTrue(
-        "incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
+    Assert.assertNotNull("failed local name resolution for v1@0", names);
+    Assert.assertEquals(
+        "incorrect number of local names for v1@0: " + names.length, 1, names.length);
+    Assert.assertEquals("incorrect local name resolution for v1@0: " + names[0], "a", names[0]);
 
     // v2 is a compiler-induced temporary
-    Assert.assertTrue("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2) == null);
+    Assert.assertNull("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2));
 
     // at pc 5, v1 should represent the locals "a" and "b"
     names = ir.getLocalNames(5, 1);
-    Assert.assertTrue("failed local name resolution for v1@5", names != null);
-    Assert.assertTrue(
-        "incorrect number of local names for v1@5: " + names.length, names.length == 2);
-    Assert.assertTrue(
-        "incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
-    Assert.assertTrue(
-        "incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
+    Assert.assertNotNull("failed local name resolution for v1@5", names);
+    Assert.assertEquals(
+        "incorrect number of local names for v1@5: " + names.length, 2, names.length);
+    Assert.assertEquals("incorrect local name resolution #0 for v1@5: " + names[0], "a", names[0]);
+    Assert.assertEquals("incorrect local name resolution #1 for v1@5: " + names[1], "b", names[1]);
   }
 }

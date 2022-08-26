@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Utility class for building call graphs.
@@ -149,10 +150,13 @@ public class FieldBasedCGUtil {
       boolean supportFullPointerAnalysis)
       throws WalaException, CancelException, IOException {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
-    List<Path> jsFiles =
-        Files.walk(scriptDir)
-            .filter(p -> p.toString().toLowerCase().endsWith(".js"))
-            .collect(Collectors.toList());
+    List<Path> jsFiles = Collections.emptyList();
+    try (Stream<Path> stream = Files.walk(scriptDir)) {
+      jsFiles =
+          stream
+              .filter(p -> p.toString().toLowerCase().endsWith(".js"))
+              .collect(Collectors.toList());
+    }
     List<Module> scripts = new ArrayList<>();
     // we can't do this loop as a map() operation on the previous stream because toURL() throws
     // a checked exception

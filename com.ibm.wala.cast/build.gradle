@@ -1,5 +1,6 @@
 plugins {
-	id 'eclipse'
+	id 'gradle-mvn-push'
+	id 'wala-java'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
@@ -9,27 +10,30 @@ dependencies {
 		because 'public method AstCGNode.addTarget receives an argument of type CGNode'
 	}
 	implementation(
-			'commons-io:commons-io:2.8.0',
+			'commons-io:commons-io:2.11.0',
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
 	)
 	testImplementation(
 			'junit:junit:4.13.2',
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
 tasks.named('javadoc', Javadoc) {
 	final jsTasks = project(':com.ibm.wala.cast.js').tasks
 	classpath += files jsTasks.named('compileJava', JavaCompile)
 	final jsCreatePackageList = jsTasks.named('createPackageList', CreatePackageList)
-	final packageListDirectory = jsCreatePackageList.flatMap { it.packageListDirectory }
+	final packageListDirectory = jsCreatePackageList.map { it.packageListDirectory.get() }
 	it.inputs.dir packageListDirectory
 
+	inputs.property 'extdocURL', jsTasks.named('javadoc', Javadoc).map { it.destinationDir.path }
+	inputs.property 'packagelistLoc', packageListDirectory.map { it.toString() }
+
 	doFirst {
-		final jsJavadoc = jsTasks.named('javadoc', Javadoc)
 		options.linksOffline(
-				jsJavadoc.get().destinationDir.path,
-				packageListDirectory.get().toString()
+				inputs.properties['extdocURL'],
+				inputs.properties['packagelistLoc']
 		)
 	}
 }
@@ -44,7 +48,7 @@ final getProjectLibraryDirectory(project_name, link_task_name) {
 tasks.named('test') {
 	final xlator_project_name = 'xlator_test'
 	final link_task_name = 'linkDebug'
-	dependsOn "$xlator_project_name:$link_task_name"
+	inputs.files project(xlator_project_name).tasks.named(link_task_name)
 
 	doFirst {
 		systemProperty 'java.library.path', getProjectLibraryDirectory(xlator_project_name, link_task_name)
@@ -59,5 +63,3 @@ tasks.named('test') {
 		}
 	}
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

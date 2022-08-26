@@ -52,8 +52,7 @@ public class SyntheticTest extends WalaTestCase {
     AnalysisOptions options =
         CallGraphTestUtil.makeAnalysisOptions(scope, Collections.<Entrypoint>singleton(e));
 
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tA =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo$A");
@@ -61,8 +60,8 @@ public class SyntheticTest extends WalaTestCase {
     TypeReference tB =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo$B");
     MethodReference barB = MethodReference.findOrCreate(tB, "bar", "()V");
-    Assert.assertTrue(cg.getNodes(barA).size() == 1);
-    Assert.assertTrue(cg.getNodes(barB).size() == 1);
+    Assert.assertEquals(1, cg.getNodes(barA).size());
+    Assert.assertEquals(1, cg.getNodes(barB).size());
 
     CGNode root = cg.getFakeRootNode();
     IR ir = root.getIR();

@@ -44,6 +44,15 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.ssa.ParameterAccessor;
+import com.ibm.wala.core.util.ssa.ParameterAccessor.Parameter;
+import com.ibm.wala.core.util.ssa.SSAValue;
+import com.ibm.wala.core.util.ssa.SSAValue.TypeKey;
+import com.ibm.wala.core.util.ssa.SSAValue.VariableKey;
+import com.ibm.wala.core.util.ssa.SSAValue.WeaklyNamedKey;
+import com.ibm.wala.core.util.ssa.SSAValueManager;
+import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.FlatInstantiator;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
@@ -70,7 +79,7 @@ import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.ipa.summaries.SummarizedMethodWithNames;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -84,15 +93,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.TypeKey;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.strings.Atom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -807,7 +807,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
                       + asMethod.getDeclaringClass()
                       + " from "
                       + "Method "
-                      + asMethod.toString());
+                      + asMethod);
             }
             redirect.setLocalNames(pm.makeLocalNames());
             SummarizedMethod override =
@@ -886,7 +886,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
                 + asMethod.getDeclaringClass()
                 + " from "
                 + "Method "
-                + asMethod.toString());
+                + asMethod);
       }
       // TODO: Throw into an other loader
       redirect.setLocalNames(pm.makeLocalNames());

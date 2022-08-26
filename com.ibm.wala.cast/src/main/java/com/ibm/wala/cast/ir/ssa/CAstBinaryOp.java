@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
 
 public enum CAstBinaryOp implements IBinaryOpInstruction.IOperator {
   CONCAT,

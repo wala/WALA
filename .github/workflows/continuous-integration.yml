@@ -2,8 +2,11 @@ name: Continuous integration
 on:
   pull_request:
   push:
-    branches:
-      - master
+    branches-ignore:
+      - 'dependabot/**'
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build_gradle:
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
@@ -29,38 +32,27 @@ jobs:
           path: ~/.goomph
           key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
           restore-keys: ${{ runner.os }}-goomph-
-      - name: Cache Gradle caches
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle-caches-
-      - name: Cache Gradle wrapper
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradlew-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradlew-wrapper-
       - name: 'Set up JDK ${{ matrix.java }}'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
-      - name: Build and test using Gradle and Java 8
-        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build
+          distribution: 'temurin'
+      - name: Build and test using Gradle with ECJ
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-executable: xvfb-gradle.sh
+          arguments: aggregatedJavadocs javadoc build lintGradle
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
-        if: runner.os == 'Linux' && matrix.java == '8'
-      - name: Build and test using Gradle and Java 11
-        run: ./gradlew --continue --no-build-cache --no-daemon :com.ibm.wala.core:test
-        if: runner.os == 'Linux' && matrix.java == '11'
+        if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ
-        run: ./gradlew --continue --no-build-cache --no-daemon javadoc build -PskipJavaUsingEcjTasks
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks
         if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
         # not running in Borne or POSIX shell on Windows
         if: runner.os != 'Windows'
-      - name: Clean up Gradle caches
-        run: travis/before-cache-gradle
   build_maven:
     name: "Maven Eclipse Tests"
     strategy:
@@ -81,9 +73,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: 'Set up JDK ${{ matrix.java }}'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: ${{ matrix.java }}
+          distribution: 'temurin'
       - name: 'Prep for Maven'
         shell: bash
         run: ./gradlew prepareMavenBuild publishToMavenLocal -x javadoc
@@ -104,22 +97,11 @@ jobs:
           path: ~/.goomph
           key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
           restore-keys: ${{ runner.os }}-goomph-
-      - name: Cache Gradle caches
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle-caches-
-      - name: Cache Gradle wrapper
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradlew-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradlew-wrapper-
       - name: 'Set up JDK 8'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: 8
+          distribution: 'temurin'
       - name: 'Generate latest docs'
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
@@ -138,24 +120,15 @@ jobs:
           path: ~/.goomph
           key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
           restore-keys: ${{ runner.os }}-goomph-
-      - name: Cache Gradle caches
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle-caches-
-      - name: Cache Gradle wrapper
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradlew-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradlew-wrapper-
       - name: 'Set up JDK 8'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: 8
+          distribution: 'temurin'
       - name: 'Publish'
         env:
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
-        run: ./gradlew publishAllPublicationsToMavenRepository
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publishAllPublicationsToMavenRepository

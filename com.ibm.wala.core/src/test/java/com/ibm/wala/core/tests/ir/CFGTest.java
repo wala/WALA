@@ -14,6 +14,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -29,7 +30,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -71,7 +71,7 @@ public abstract class CFGTest extends WalaTestCase {
       } catch (UnsoundGraphException e) {
         e.printStackTrace();
         System.err.println(ir);
-        Assert.assertTrue(" failed cfg integrity check for " + methodSig, false);
+        Assert.fail(" failed cfg integrity check for " + methodSig);
       }
 
       try {
@@ -80,7 +80,7 @@ public abstract class CFGTest extends WalaTestCase {
         e.printStackTrace();
         System.err.println(ir);
         System.err.println(cfg);
-        Assert.assertTrue(" failed 2-exit cfg integrity check for " + methodSig, false);
+        Assert.fail(" failed 2-exit cfg integrity check for " + methodSig);
       }
     } catch (Exception e) {
       e.printStackTrace();

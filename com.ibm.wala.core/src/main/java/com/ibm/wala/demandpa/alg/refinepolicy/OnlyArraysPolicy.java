@@ -23,18 +23,12 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
  */
 public class OnlyArraysPolicy implements FieldRefinePolicy {
 
-  /*
-   * @see com.ibm.wala.demandpa.alg.refinepolicy.FieldRefinePolicy#shouldRefine(com.ibm.wala.classLoader.IField, com.ibm.wala.ipa.callgraph.propagation.PointerKey, com.ibm.wala.ipa.callgraph.propagation.PointerKey, com.ibm.wala.demandpa.flowgraph.IFlowLabel, com.ibm.wala.demandpa.alg.statemachine.StateMachine.State)
-   */
   @Override
   public boolean shouldRefine(
       IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, State state) {
     return field == ArrayContents.v();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.alg.refinepolicy.FieldRefinePolicy#nextPass()
-   */
   @Override
   public boolean nextPass() {
     return false;

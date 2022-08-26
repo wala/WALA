@@ -54,13 +54,15 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.ShiftInstruction;
+import com.ibm.wala.shrike.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.ConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.ShiftInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
@@ -85,8 +87,6 @@ import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
@@ -301,7 +301,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (exposed != null && exposed.contains(nm)) {
       // use a lexical write
       doLexicallyScopedWrite(context, nm, type, rval);
-      return;
+      //      return;
     }
     int lval = context.currentScope().lookup(nm).valueNumber();
     if (lval != rval) {
@@ -333,18 +333,27 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * we only have this method to avoid having to pass a node parameter at other call sites, as would
    * be required for {@link #doLexicallyScopedRead(CAstNode, WalkContext, String, TypeReference)}
    */
-  private static int doLexReadHelper(WalkContext context, final String name, TypeReference type) {
+  private int doLexReadHelper(WalkContext context, final String name, TypeReference type) {
     Symbol S = context.currentScope().lookup(name);
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
-    // record in declaring scope that the name is exposed to a nested scope
-    addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false, context);
-    final String entityName = context.getEntityName(E);
-    int result = context.currentScope().allocateTempValue();
-    Access A = new Access(name, entityName, type, result);
-    context.cfg().addInstruction(new AstLexicalRead(context.cfg().currentInstruction, A));
-    markExposedInEnclosingEntities(context, name, definingScope, type, E, entityName, false);
-    return result;
+    if (E.equals(context.currentScope().getEntity())
+        && !(entity2WrittenNames.containsKey(E)
+            && entity2WrittenNames.get(E).stream()
+                .filter(p -> p.snd.equals(name) && p.fst != E)
+                .iterator()
+                .hasNext())) {
+      return definingScope.lookup(name).valueNumber();
+    } else {
+      // record in declaring scope that the name is exposed to a nested scope
+      addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false, context);
+      final String entityName = context.getEntityName(E);
+      int result = context.currentScope().allocateTempValue();
+      Access A = new Access(name, entityName, type, result);
+      context.cfg().addInstruction(new AstLexicalRead(context.cfg().currentInstruction, A));
+      markExposedInEnclosingEntities(context, name, definingScope, type, E, entityName, false);
+      return result;
+    }
   }
 
   /**
@@ -391,6 +400,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     context.cfg().addInstruction(new AstLexicalWrite(context.cfg().currentInstruction, A));
     markExposedInEnclosingEntities(
         context, name, definingScope, type, E, context.getEntityName(E), true);
+
+    int lval = S.valueNumber();
+    if (lval != rval) {
+      context
+          .cfg()
+          .addInstruction(new AssignInstruction(context.cfg().currentInstruction, lval, rval));
+    }
   }
 
   /** generate instructions for a read of a global */
@@ -1215,6 +1231,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public void noteOperands(int instruction, Position... operands) {
       ensurePositionSpace(instruction);
       operandPositions[instruction] = operands;
+    }
+
+    public void unknownInstructions(Runnable f) {
+      Position save = currentPosition;
+      currentPosition = CAstSourcePositionMap.NO_INFORMATION;
+      f.run();
+      currentPosition = save;
     }
 
     public void addInstruction(SSAInstruction n) {
@@ -2244,7 +2267,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         return "global scope";
       }
 
-      private final String mapName(String nm) {
+      private String mapName(String nm) {
         String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
       }
@@ -2413,7 +2436,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     final Map<String, AbstractSymbol> typeSymbols = new LinkedHashMap<>();
     final Map<String, String> caseInsensitiveNames = new LinkedHashMap<>();
     return new Scope() {
-      private final String mapName(String nm) {
+      private String mapName(String nm) {
         String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
       }
@@ -3687,6 +3710,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   protected Map<CAstEntity, Set<String>> entity2ExposedNames;
+  protected Map<CAstEntity, Set<Pair<CAstEntity, String>>> entity2WrittenNames;
 
   protected int processFunctionExpr(CAstNode n, WalkContext context) {
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
@@ -5128,9 +5152,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     c.setValue(n, result);
     int currentInstruction = c.cfg().getCurrentInstruction();
     c.cfg()
-        .addInstruction(
-            new EachElementGetInstruction(
-                currentInstruction, result, c.getValue(n.getChild(0)), c.getValue(n.getChild(1))));
+        .unknownInstructions(
+            () ->
+                c.cfg()
+                    .addInstruction(
+                        new EachElementGetInstruction(
+                            currentInstruction,
+                            result,
+                            c.getValue(n.getChild(0)),
+                            c.getValue(n.getChild(1)))));
+
     c.cfg()
         .noteOperands(
             currentInstruction,
@@ -5484,17 +5515,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /** translate module, represented by {@link CAstEntity} N */
   @Override
   public void translate(final CAstEntity N, final ModuleEntry module) {
-    if (DEBUG_TOP) System.err.println(("translating " + module.getName()));
-    // this.inlinedSourceMap = inlinedSourceMap;
-    final ExposedNamesCollector exposedNamesCollector = new ExposedNamesCollector();
-    exposedNamesCollector.run(N);
-    if (liftDeclarationsForLexicalScoping()) {
-      exposedNamesCollector.run(N);
-    }
-    entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
-    // CAstEntity rewrite = (new ExposedParamRenamer(new CAstImpl(),
-    // entity2ExposedNames)).rewrite(N);
-    walkEntities(N, new RootContext(N, module));
+    translate(N, new RootContext(N, module));
   }
 
   public void translate(final CAstEntity N, final WalkContext context) {
@@ -5504,6 +5525,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       exposedNamesCollector.run(N);
     }
     entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
+    entity2WrittenNames = exposedNamesCollector.getEntity2WrittenNames();
     walkEntities(N, context);
   }
 

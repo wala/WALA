@@ -8,14 +8,13 @@ import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.Descriptor;
@@ -24,7 +23,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -42,8 +40,7 @@ public class ECJTestComments extends IRTests {
     JavaSourceAnalysisEngine engine =
         new ECJJavaSourceAnalysisEngine() {
           @Override
-          protected Iterable<Entrypoint> makeDefaultEntrypoints(
-              AnalysisScope scope, IClassHierarchy cha) {
+          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(
                 JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
           }
@@ -62,7 +59,7 @@ public class ECJTestComments extends IRTests {
 
   @Test
   public void testComments() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
     for (CGNode node : result.fst.getNodes(testMethod)) {
       if (node.getMethod() instanceof AstMethod) {

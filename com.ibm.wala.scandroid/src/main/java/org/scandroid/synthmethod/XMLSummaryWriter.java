@@ -39,11 +39,11 @@
  */
 package org.scandroid.synthmethod;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.Atom;
 import java.io.ByteArrayOutputStream;
 import java.io.UTFDataFormatException;
 import java.util.List;

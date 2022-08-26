@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
@@ -51,7 +51,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     try {
       return url.openConnection().getInputStream();
     } catch (IOException e) {
-      Assertions.UNREACHABLE();
+      assert false : "cannot find stream for " + url;
       return null;
     }
   }
@@ -85,6 +85,6 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
 
   @Override
   public String toString() {
-    return "module:" + url.toString();
+    return "module:" + url;
   }
 }

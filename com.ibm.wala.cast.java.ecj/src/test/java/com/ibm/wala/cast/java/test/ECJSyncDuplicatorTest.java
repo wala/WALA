@@ -24,13 +24,12 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction.Dispatch;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -58,8 +57,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
     JavaSourceAnalysisEngine engine =
         new ECJJavaSourceAnalysisEngine() {
           @Override
-          protected Iterable<Entrypoint> makeDefaultEntrypoints(
-              AnalysisScope scope, IClassHierarchy cha) {
+          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(
                 JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
           }

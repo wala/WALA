@@ -12,6 +12,9 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -30,10 +33,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ScopeFileCallGraph {
     // use exclusions to eliminate certain library packages
     File exclusionsFile = null;
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             scopeFile, exclusionsFile, ScopeFileCallGraph.class.getClassLoader());
     IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     System.out.println(cha.getNumberOfClasses() + " classes");
@@ -77,14 +77,14 @@ public class ScopeFileCallGraph {
     Iterable<Entrypoint> entrypoints =
         entryClass != null
             ? makePublicEntrypoints(cha, entryClass)
-            : Util.makeMainEntrypoints(scope, cha, mainClass);
+            : Util.makeMainEntrypoints(cha, mainClass);
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
     options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     // other builders can be constructed with different Util methods
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     //    CallGraphBuilder builder = Util.makeNCFABuilder(2, options, cache, cha, scope);
     //    CallGraphBuilder builder = Util.makeVanillaNCFABuilder(2, options, cache, cha, scope);
     System.out.println("building call graph...");

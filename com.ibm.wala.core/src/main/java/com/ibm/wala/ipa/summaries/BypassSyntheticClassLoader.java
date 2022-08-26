@@ -15,13 +15,13 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.SetOfClasses;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
@@ -137,18 +137,12 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     return parent.getLanguage();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
-   */
   @Override
   public int getNumberOfMethods() {
     // TODO Auto-generated method stub
     return 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public String getSourceFileName(IClass klass) {
     return null;
@@ -162,9 +156,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   @Override
   public void init(List<Module> modules) throws IOException {}
 
-  /*
-   * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
-   */
   @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {

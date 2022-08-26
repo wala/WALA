@@ -38,6 +38,7 @@ import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.demandpa.TestInfo;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
@@ -63,7 +64,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
@@ -108,11 +108,11 @@ public class CompareToZeroOneCFADriver {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     // run existing pointer analysis
-    doTests(scope, cha, options);
+    doTests(cha, options);
     System.err.println("ALL FINE");
   }
 
@@ -123,7 +123,7 @@ public class CompareToZeroOneCFADriver {
     System.err.println(("ANALYZING " + appJar + "\n\n"));
 
     AnalysisScope scope =
-        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+        AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
             appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     // TODO: return the warning set (need a CAPA type)
@@ -138,32 +138,30 @@ public class CompareToZeroOneCFADriver {
     }
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
-    doTests(scope, cha, options);
+    doTests(cha, options);
     System.err.println("ALL FINE");
   }
 
-  private static void doTests(
-      AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options)
+  private static void doTests(final ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     final CallGraph oldCG = builder.makeCallGraph(options, null);
     final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
     // now, run our analysis
     // build an RTA call graph
     CallGraphBuilder<InstanceKey> rtaBuilder =
-        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeRTABuilder(options, new AnalysisCacheImpl(), cha);
     final CallGraph cg = rtaBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
     MemoryAccessMap fam =
         new SimpleMemoryAccessMap(cg, rtaBuilder.getPointerAnalysis().getHeapModel(), false);
 
-    final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, scope, cg, fam);
+    final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, cg, fam);
 
     final class Helper {
       void checkPointersInMethod(CGNode node) {
@@ -228,14 +226,9 @@ public class CompareToZeroOneCFADriver {
   }
 
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(
-      AnalysisOptions options,
-      ClassHierarchy cha,
-      AnalysisScope scope,
-      CallGraph cg,
-      MemoryAccessMap fam) {
+      AnalysisOptions options, ClassHierarchy cha, CallGraph cg, MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(

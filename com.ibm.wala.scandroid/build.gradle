@@ -1,6 +1,11 @@
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
+
 dependencies {
 	implementation(
-			'com.google.guava:guava:30.1.1-jre',
+			'com.google.guava:guava:31.0.1-jre',
 			'commons-cli:commons-cli:1.4',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
@@ -8,5 +13,3 @@ dependencies {
 			project(':com.ibm.wala.util'),
 	)
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

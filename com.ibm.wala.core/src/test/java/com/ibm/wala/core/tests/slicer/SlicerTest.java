@@ -13,6 +13,9 @@ package com.ibm.wala.core.tests.slicer;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.examples.drivers.PDFSlice;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -51,13 +54,10 @@ import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.util.strings.Atom;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,7 +91,7 @@ public class SlicerTest {
   private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
       cachedScope =
-          AnalysisScopeReader.readJavaScope(
+          AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
       cachedScope.setExclusions(
           new FileOfClasses(new ByteArrayInputStream(makeSlicerExclusions().getBytes("UTF-8"))));
@@ -125,12 +125,11 @@ public class SlicerTest {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE1_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -165,12 +164,11 @@ public class SlicerTest {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE2_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE2_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMethod(cg, "baz");
@@ -194,12 +192,11 @@ public class SlicerTest {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE3_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE3_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMethod(cg, "main");
@@ -222,12 +219,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE4_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE4_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -250,12 +246,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE5_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE5_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode n = CallGraphSearchUtil.findMethod(cg, "baz");
@@ -279,12 +274,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE7_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE7_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -306,12 +300,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE8_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode process =
@@ -344,12 +337,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE9_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE9_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -375,12 +367,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD1);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -403,12 +394,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD2);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD2);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -431,12 +421,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD3);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD3);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -459,12 +448,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD4);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD4);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -495,12 +483,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD5);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD5);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -529,12 +516,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD5);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD5);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -563,12 +549,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTCD6);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTCD6);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -596,12 +581,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTID);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.SLICE_TESTID);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -625,11 +609,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTARRAYS);
+            cha, TestConstants.SLICE_TESTARRAYS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -654,11 +638,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTFIELDS);
+            cha, TestConstants.SLICE_TESTFIELDS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -683,11 +667,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTTHIN1);
+            cha, TestConstants.SLICE_TESTTHIN1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -727,11 +711,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTGLOBAL);
+            cha, TestConstants.SLICE_TESTGLOBAL);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -757,11 +741,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTMULTITARGET);
+            cha, TestConstants.SLICE_TESTMULTITARGET);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -785,11 +769,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTRECURSION);
+            cha, TestConstants.SLICE_TESTRECURSION);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -815,11 +799,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
+            cha, TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode test = CallGraphSearchUtil.findMethod(cg, "test");
@@ -852,10 +836,10 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TEST_PRIM_GETTER_SETTER2);
+            cha, TestConstants.SLICE_TEST_PRIM_GETTER_SETTER2);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     Util.addDefaultSelectors(options, cha);
-    Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    Util.addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     IAnalysisCacheView cache = new AnalysisCacheImpl();
@@ -906,11 +890,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTTHROWCATCH);
+            cha, TestConstants.SLICE_TESTTHROWCATCH);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -936,11 +920,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTMESSAGEFORMAT);
+            cha, TestConstants.SLICE_TESTMESSAGEFORMAT);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -963,11 +947,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_TESTINETADDR);
+            cha, TestConstants.SLICE_TESTINETADDR);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     SDG<?> sdg =
         new SDG<>(
@@ -986,11 +970,11 @@ public class SlicerTest {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.SLICE_JUSTTHROW);
+            cha, TestConstants.SLICE_JUSTTHROW);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -1016,11 +1000,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lslice/TestList");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Lslice/TestList");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -1052,12 +1036,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "Lslice/TestListIterator");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Lslice/TestListIterator");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);
@@ -1105,12 +1088,11 @@ public class SlicerTest {
 
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "Lslice/TestIntegerValueOf");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Lslice/TestIntegerValueOf");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneContainerCFABuilder(options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = CallGraphSearchUtil.findMainMethod(cg);

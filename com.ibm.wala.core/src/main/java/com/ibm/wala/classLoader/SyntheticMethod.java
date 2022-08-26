@@ -11,10 +11,12 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.core.util.bytecode.BytecodeStream;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -23,9 +25,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -127,6 +127,21 @@ public class SyntheticMethod implements IMethod {
   /** @see com.ibm.wala.classLoader.IMethod#isAbstract() */
   @Override
   public boolean isSynchronized() {
+    return false;
+  }
+
+  @Override
+  public boolean isAnnotation() {
+    return false;
+  }
+
+  @Override
+  public boolean isEnum() {
+    return false;
+  }
+
+  @Override
+  public boolean isModule() {
     return false;
   }
 
@@ -257,9 +272,6 @@ public class SyntheticMethod implements IMethod {
     throw new UnimplementedError("haven't implemented IR yet for class " + getClass());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
-   */
   @Override
   public TypeReference getParameterType(int i) {
     if (isStatic()) {
@@ -279,9 +291,6 @@ public class SyntheticMethod implements IMethod {
     return isStatic() ? n : n + 1;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
-   */
   @Override
   public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {
     if (resolvedMethod == null) {
@@ -302,26 +311,17 @@ public class SyntheticMethod implements IMethod {
   }
   /* BEGIN Custom change: : precise bytecode positions */
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
-   */
   @Override
   public SourcePosition getSourcePosition(int bcIndex) throws InvalidClassFileException {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
-   */
   @Override
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }
   /* END Custom change: precise bytecode positions */
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
-   */
   @Override
   public int getLineNumber(int bcIndex) {
     return -1;
@@ -331,34 +331,22 @@ public class SyntheticMethod implements IMethod {
     return isFactory;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getSignature()
-   */
   @Override
   public String getSignature() {
     return getReference().getSignature();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getSelector()
-   */
   @Override
   public Selector getSelector() {
     return getReference().getSelector();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
-   */
   @Override
   public String getLocalVariableName(int bcIndex, int localNumber) {
     // no information is available
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
-   */
   @Override
   public boolean hasLocalVariableTable() {
     return false;
@@ -368,9 +356,6 @@ public class SyntheticMethod implements IMethod {
     return getStatements(SSAOptions.defaultOptions());
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getReturnType()
-   */
   @Override
   public TypeReference getReturnType() {
     return getReference().getReturnType();

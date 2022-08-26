@@ -11,13 +11,13 @@
 package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACache;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * A place to hold onto caches of various analysis artifacts.
@@ -39,9 +39,6 @@ public class AnalysisCache implements IAnalysisCacheView {
     ReferenceCleanser.registerCache(this);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#invalidate(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context)
-   */
   @Override
   public void invalidate(IMethod method, Context C) {
     ssaCache.invalidate(method, C);
@@ -55,17 +52,12 @@ public class AnalysisCache implements IAnalysisCacheView {
     return ssaOptions;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIRFactory()
-   */
   @Override
   public IRFactory<IMethod> getIRFactory() {
     return irFactory;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIR(com.ibm.wala.classLoader.IMethod)
-   */
+  /** @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIR(com.ibm.wala.classLoader.IMethod) */
   @Override
   public IR getIR(IMethod method, Context context) {
     if (method == null) {
@@ -79,9 +71,6 @@ public class AnalysisCache implements IAnalysisCacheView {
     return getIR(m, Everywhere.EVERYWHERE);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getDefUse(com.ibm.wala.ssa.IR)
-   */
   @Override
   public DefUse getDefUse(IR ir) {
     if (ir == null) {

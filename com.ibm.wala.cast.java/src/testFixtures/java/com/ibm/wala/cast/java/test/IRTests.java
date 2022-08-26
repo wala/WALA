@@ -27,11 +27,11 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
@@ -47,7 +47,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -79,48 +78,6 @@ public abstract class IRTests {
   public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
-
-  // TODO delete this code; leaving just in case --MS
-  //  static {
-  //    boolean found = false;
-  //    try {
-  //      rtJar = new LinkedList<String>();
-  //
-  //      Properties p = WalaProperties.loadProperties();
-  //      javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
-  //
-  //      if (new File(javaHomePath).isDirectory()) {
-  //        if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
-  //          /**
-  //           * todo: {@link WalaProperties#getJ2SEJarFiles()}
-  //           */
-  //          rtJar.add(javaHomePath + "/classes.jar");
-  //          rtJar.add(javaHomePath + "/ui.jar");
-  //        } else {
-  //          rtJar.add(javaHomePath + File.separator + "classes.jar");
-  //          rtJar.add(javaHomePath + File.separator + "rt.jar");
-  //          rtJar.add(javaHomePath + File.separator + "core.jar");
-  //          rtJar.add(javaHomePath + File.separator + "vm.jar");
-  //        }
-  //        found = true;
-  //      }
-  //    } catch (Exception e) {
-  //      // no properties
-  //    }
-  //
-  //    if (!found) {
-  //      javaHomePath = System.getProperty("java.home");
-  //      if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
-  //        rtJar.add(javaHomePath + "/../Classes/classes.jar");
-  //        rtJar.add(javaHomePath + "/../Classes/ui.jar");
-  //      } else {
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
-  //        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
-  //      }
-  //    }
-  //  }
 
   public interface IRAssertion {
 
@@ -417,7 +374,7 @@ public abstract class IRTests {
       getAnalysisEngine(
           String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
-  public Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> runTest(
+  public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
       Collection<String> sources,
       List<String> libs,
       String[] mainClassDescriptors,
@@ -446,7 +403,7 @@ public abstract class IRTests {
       IRAssertion.check(callGraph);
     }
 
-    return Pair.make(callGraph, builder.getPointerAnalysis());
+    return Pair.make(callGraph, builder);
   }
 
   protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) {
@@ -485,7 +442,7 @@ public abstract class IRTests {
     }
 
     if (assertReachable) {
-      Assert.assertTrue("unreachable methods: " + unreachable.toString(), unreachable.isEmpty());
+      Assert.assertTrue("unreachable methods: " + unreachable, unreachable.isEmpty());
     }
   }
 
@@ -495,7 +452,7 @@ public abstract class IRTests {
    */
   public static MethodReference descriptorToMethodRef(
       String srcMethodDescriptor, IClassHierarchy cha) {
-    String[] ldrTypeMeth = srcMethodDescriptor.split("\\#");
+    String[] ldrTypeMeth = srcMethodDescriptor.split("#");
 
     String loaderName = ldrTypeMeth[0];
     String typeStr = ldrTypeMeth[1];

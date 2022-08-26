@@ -12,6 +12,9 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -30,14 +33,11 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.PDFViewUtil;
+import com.ibm.wala.util.viz.DotUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -134,7 +134,7 @@ public class PDFCallGraph {
   public static Graph<CGNode> buildPrunedCallGraph(String appJar, File exclusionFile)
       throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
-        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+        AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
             appJar,
             exclusionFile != null
                 ? exclusionFile
@@ -143,14 +143,14 @@ public class PDFCallGraph {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     // //
     // build the call graph
     // //
     com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     System.err.println(CallGraphStats.getStats(cg));

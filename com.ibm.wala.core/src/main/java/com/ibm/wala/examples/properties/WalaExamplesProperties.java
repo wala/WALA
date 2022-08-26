@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.examples.properties;
 
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.net.URL;
 import java.util.Properties;

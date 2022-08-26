@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.core.tests.util;
 
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.heapTrace.HeapTracer;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
 import org.junit.After;
 import org.junit.Before;
@@ -34,18 +34,9 @@ public abstract class WalaTestCase {
     }
   }
 
-  public static boolean analyzingJar() {
-    return "true".equals(System.getProperty("com.ibm.wala.junit.analyzingJar"));
-  }
-  /*
-   * @see junit.framework.TestCase#setUp()
-   */
   @Before
   public void setUp() throws Exception {}
 
-  /*
-   * @see junit.framework.TestCase#tearDown()
-   */
   @After
   public void tearDown() throws Exception {
     Warnings.clear();

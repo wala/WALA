@@ -12,6 +12,9 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -34,17 +37,14 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.NodeDecorator;
-import com.ibm.wala.viz.PDFViewUtil;
+import com.ibm.wala.util.viz.DotUtil;
+import com.ibm.wala.util.viz.NodeDecorator;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -112,18 +112,18 @@ public class PDFSDG {
       throws IllegalArgumentException, CancelException, IOException {
     try {
       AnalysisScope scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // generate a WALA-consumable wrapper around the incoming scope object
 
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
       Iterable<Entrypoint> entrypoints =
-          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+          com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
       CallGraphBuilder<InstanceKey> builder =
-          Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+          Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
       CallGraph cg = builder.makeCallGraph(options, null);
       final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
       SDG<?> sdg = new SDG<>(cg, pointerAnalysis, dOptions, cOptions);

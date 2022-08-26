@@ -21,6 +21,11 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NoSuperclassFoundException;
 import com.ibm.wala.classLoader.PhantomClass;
 import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.core.util.ref.CacheReference;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -37,11 +42,6 @@ import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.ref.CacheReference;
-import com.ibm.wala.util.ref.ReferenceCleanser;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -834,10 +834,6 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.cha.IClassHierarchy#getLeastCommonSuperclass(com.ibm.wala.types.TypeReference,
-   * com.ibm.wala.types.TypeReference)
-   */
   @Override
   public TypeReference getLeastCommonSuperclass(TypeReference a, TypeReference b) {
     if (a == null) {

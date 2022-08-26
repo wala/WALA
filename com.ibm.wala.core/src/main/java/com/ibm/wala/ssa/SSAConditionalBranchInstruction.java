@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.IOperator;
 import com.ibm.wala.types.TypeReference;
 
 /** A conditional branch instruction, which tests two values according to some {@link IOperator}. */
@@ -119,9 +119,6 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return 7151 * val1 + val2;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

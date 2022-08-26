@@ -1,12 +1,16 @@
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
+
 dependencies {
 	api(project(':com.ibm.wala.cast')) {
 		because 'public class JSCallGraphUtil extends class CAstCallGraphUtil'
 	}
 	implementation(
-			'commons-io:commons-io:2.8.0',
-			'junit:junit:4.13.2',
+			'commons-io:commons-io:2.11.0',
 			'net.htmlparser.jericho:jericho-html:3.2',
-			'com.google.code.gson:gson:2.8.6',
+			'com.google.code.gson:gson:2.8.9',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.shrike'),
 			project(':com.ibm.wala.util'),
@@ -58,5 +62,3 @@ tasks.named('processTestResources', Copy) {
 		into 'ajaxslt'
 	}
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

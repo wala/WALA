@@ -1,6 +1,8 @@
 plugins {
 	id 'application'
 	id 'com.diffplug.eclipse.mavencentral'
+	id 'gradle-mvn-push'
+	id 'wala-java'
 }
 
 eclipseMavenCentral {
@@ -9,6 +11,7 @@ eclipseMavenCentral {
 				'org.eclipse.core.runtime',
 				'org.eclipse.jdt.core',
 		].each it.&implementation
+		constrainTransitivesToThisRelease()
 	}
 }
 
@@ -24,13 +27,12 @@ dependencies {
 			'junit:junit:4.13.2',
 			testFixtures(project(':com.ibm.wala.cast.java')),
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
-application {
-	mainClassName = 'com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph'
-}
+application.mainClass.set('com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph')
 
-tasks.named('run') {
+final run = tasks.named('run') {
 	// this is for testing purposes
 	final javaTestData = ':com.ibm.wala.cast.java.test.data'
 	evaluationDependsOn javaTestData
@@ -51,15 +53,6 @@ tasks.named('test') {
 
 	workingDir project(':com.ibm.wala.cast.java.test.data').projectDir
 
-	// temporarily turn off some tests on JDK 9+
-	if (JavaVersion.current() <= JavaVersion.VERSION_1_8) {
-		// ensure the command-line driver for running ECJ works
-		dependsOn 'run'
-	} else {
-		exclude '**/ECJJava17IRTest.class'
-		exclude '**/ECJJavaIRTest.class'
-		exclude '**/ECJSyncDuplicatorTest.class'
-	}
+	// ensure the command-line driver for running ECJ works
+	dependsOn run
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

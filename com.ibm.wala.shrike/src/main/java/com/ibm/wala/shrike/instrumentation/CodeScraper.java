@@ -1,9 +1,9 @@
 package com.ibm.wala.shrike.instrumentation;
 
-import com.ibm.wala.shrikeCT.ClassReader;
-import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.shrikeCT.SourceFileReader;
+import com.ibm.wala.shrike.shrikeCT.ClassReader;
+import com.ibm.wala.shrike.shrikeCT.ClassReader.AttrIterator;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.SourceFileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;

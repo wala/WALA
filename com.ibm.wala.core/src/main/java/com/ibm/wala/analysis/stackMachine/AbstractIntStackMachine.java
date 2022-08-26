@@ -12,6 +12,8 @@ package com.ibm.wala.analysis.stackMachine;
 
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
+import com.ibm.wala.core.util.CancelRuntimeException;
+import com.ibm.wala.core.util.shrike.ShrikeUtil;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BasicFramework;
 import com.ibm.wala.dataflow.graph.DataflowSolver;
@@ -21,39 +23,37 @@ import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.AbstractVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrikeBT.ConstantInstruction;
-import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.DupInstruction;
-import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
-import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IComparisonInstruction;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IConversionInstruction;
-import com.ibm.wala.shrikeBT.IGetInstruction;
-import com.ibm.wala.shrikeBT.IInstanceofInstruction;
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.ILoadInstruction;
-import com.ibm.wala.shrikeBT.IPutInstruction;
-import com.ibm.wala.shrikeBT.IShiftInstruction;
-import com.ibm.wala.shrikeBT.IStoreInstruction;
-import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.MonitorInstruction;
-import com.ibm.wala.shrikeBT.NewInstruction;
-import com.ibm.wala.shrikeBT.PopInstruction;
-import com.ibm.wala.shrikeBT.SwapInstruction;
-import com.ibm.wala.shrikeBT.SwitchInstruction;
-import com.ibm.wala.shrikeBT.ThrowInstruction;
-import com.ibm.wala.shrikeBT.Util;
+import com.ibm.wala.shrike.shrikeBT.ArrayLengthInstruction;
+import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
+import com.ibm.wala.shrike.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeBT.DupInstruction;
+import com.ibm.wala.shrike.shrikeBT.IArrayLoadInstruction;
+import com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IComparisonInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrike.shrikeBT.IConversionInstruction;
+import com.ibm.wala.shrike.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstanceofInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrike.shrikeBT.IPutInstruction;
+import com.ibm.wala.shrike.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrike.shrikeBT.IStoreInstruction;
+import com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.MonitorInstruction;
+import com.ibm.wala.shrike.shrikeBT.NewInstruction;
+import com.ibm.wala.shrike.shrikeBT.PopInstruction;
+import com.ibm.wala.shrike.shrikeBT.SwapInstruction;
+import com.ibm.wala.shrike.shrikeBT.SwitchInstruction;
+import com.ibm.wala.shrike.shrikeBT.ThrowInstruction;
+import com.ibm.wala.shrike.shrikeBT.Util;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.INodeWithNumber;
-import com.ibm.wala.util.shrike.ShrikeUtil;
 import java.util.Arrays;
 
 /**
@@ -772,7 +772,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     private BasicStackMachineVisitor visitor;
 
-    private com.ibm.wala.shrikeBT.IInstruction.Visitor edgeVisitor;
+    private com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor edgeVisitor;
 
     private int currentInstructionIndex = 0;
 
@@ -786,7 +786,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     /** Initialize the visitors used to perform the flow functions */
-    protected void init(BasicStackMachineVisitor v, com.ibm.wala.shrikeBT.IInstruction.Visitor ev) {
+    protected void init(
+        BasicStackMachineVisitor v, com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor ev) {
       this.visitor = v;
       this.edgeVisitor = ev;
     }

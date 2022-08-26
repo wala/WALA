@@ -15,6 +15,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
@@ -23,7 +24,6 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.strings.Atom;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,17 +57,13 @@ public class BypassSyntheticClass extends SyntheticClass {
     this.realType = realType;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getClassLoader()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getClassLoader() */
   @Override
   public IClassLoader getClassLoader() {
     return loader;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSuperclass()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getSuperclass() */
   @Override
   public IClass getSuperclass() {
     if (realType.isInterface()) {
@@ -80,9 +76,7 @@ public class BypassSyntheticClass extends SyntheticClass {
     } else return realType;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllInterfaces()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces() */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     Collection<IClass> realIfaces = realType.getAllImplementedInterfaces();
@@ -95,65 +89,49 @@ public class BypassSyntheticClass extends SyntheticClass {
     }
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getMethod(Selector) */
   @Override
   public IMethod getMethod(Selector selector) {
     return realType.getMethod(selector);
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getMethod(Selector) */
   @Override
   public IField getField(Atom name) {
     return realType.getField(name);
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getSourceFileName() */
   @Override
   public String getSourceFileName() {
     return realType.getSourceFileName();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getClassInitializer() */
   @Override
   public IMethod getClassInitializer() {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDeclaredMethods() */
   @Override
   public Collection<? extends IMethod> getDeclaredMethods() {
     return realType.getDeclaredMethods();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields() */
   @Override
   public Collection<IField> getDeclaredInstanceFields() {
     return realType.getDeclaredInstanceFields();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields() */
   @Override
   public Collection<IField> getDeclaredStaticFields() {
     return realType.getDeclaredStaticFields();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isInterface()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isInterface() */
   public boolean isSyntheticImplentor() {
     return realType.isInterface();
   }
@@ -163,7 +141,7 @@ public class BypassSyntheticClass extends SyntheticClass {
     return "<Synthetic "
         + (realType.isInterface() ? "Implementor" : "Subclass")
         + ' '
-        + realType.toString()
+        + realType
         + '>';
   }
 
@@ -188,59 +166,45 @@ public class BypassSyntheticClass extends SyntheticClass {
     return realType.hashCode() * 1621;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getModifiers()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getModifiers() */
   @Override
   public int getModifiers() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isReferenceType()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isReferenceType() */
   @Override
   public boolean isReferenceType() {
     return getReference().isReferenceType();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getDirectInterfaces() */
   @Override
   public Collection<IClass> getDirectInterfaces() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllInstanceFields() */
   @Override
   public Collection<IField> getAllInstanceFields() {
     return realType.getAllInstanceFields();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllStaticFields() */
   @Override
   public Collection<IField> getAllStaticFields() {
     return realType.getAllStaticFields();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllMethods()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllMethods() */
   @Override
   public Collection<? extends IMethod> getAllMethods() {
     return realType.getAllMethods();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getAllFields()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#getAllFields() */
   @Override
   public Collection<IField> getAllFields() {
     return realType.getAllFields();

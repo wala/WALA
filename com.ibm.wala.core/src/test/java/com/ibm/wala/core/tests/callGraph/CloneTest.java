@@ -47,7 +47,7 @@ public class CloneTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraph cg = CallGraphTestUtil.buildRTA(options, new AnalysisCacheImpl(), cha);
 
     // Find node corresponding to java.text.MessageFormat.clone()
     TypeReference t =

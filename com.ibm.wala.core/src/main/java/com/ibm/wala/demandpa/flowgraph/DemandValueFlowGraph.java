@@ -92,6 +92,9 @@ import java.util.Set;
  */
 public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
+  /** */
+  private static final long serialVersionUID = 1L;
+
   public DemandValueFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
@@ -141,9 +144,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       assert symbolTable != null;
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.domo.ssa.SSAArrayLoadInstruction)
-     */
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       PointerKey result = heapModel.getPointerKeyForLocal(node, instruction.getDef());
@@ -154,9 +154,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.domo.ssa.SSAArrayStoreInstruction)
-     */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // make node for used value
@@ -168,9 +165,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.domo.ssa.SSACheckCastInstruction)
-     */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       Set<IClass> types = HashSetFactory.make();
@@ -197,9 +191,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       addEdge(result, value, AssignLabel.noFilter());
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.domo.ssa.SSAReturnInstruction)
-     */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
@@ -215,9 +206,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitGet(com.ibm.domo.ssa.SSAGetInstruction)
-     */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
       visitGetInternal(
@@ -251,9 +239,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitPut(com.ibm.domo.ssa.PutInstruction)
-     */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
       visitPutInternal(
@@ -285,9 +270,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitInvoke(com.ibm.domo.ssa.InvokeInstruction)
-     */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
@@ -313,9 +295,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       callDefs.put(exc, instruction);
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitNew(com.ibm.domo.ssa.NewInstruction)
-     */
     @Override
     public void visitNew(SSANewInstruction instruction) {
 
@@ -354,7 +333,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     /*
      * (non-Javadoc)
      *
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitThrow(com.ibm.domo.ssa.ThrowInstruction)
+     * @see com.ibm.wala.Instruction.Visitor#visitThrow(com.ibm.wala.ThrowInstruction)
      */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
@@ -362,9 +341,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       // in a separate pass
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.domo.ssa.GetCaughtExceptionInstruction)
-     */
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       List<ProgramCounter> peis =
@@ -375,9 +351,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       addExceptionDefConstraints(ir, node, peis, def, types);
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitPi(com.ibm.domo.ssa.SSAPiInstruction)
-     */
     @Override
     public void visitPi(SSAPiInstruction instruction) {
       PointerKey src = heapModel.getPointerKeyForLocal(node, instruction.getDef());

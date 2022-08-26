@@ -54,6 +54,14 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrike.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IPutInstruction;
+import com.ibm.wala.shrike.shrikeBT.ITypeTestInstruction;
+import com.ibm.wala.shrike.shrikeBT.NewInstruction;
+import com.ibm.wala.shrike.shrikeBT.ReturnInstruction;
+import com.ibm.wala.shrike.shrikeBT.ThrowInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -88,6 +96,9 @@ import java.util.Set;
  * x to y with label {@link AssignLabel#noFilter()}
  */
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
+
+  /** */
+  private static final long serialVersionUID = 1L;
 
   public DemandPointerFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, IClassHierarchy cha) {
@@ -163,9 +174,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       assert symbolTable != null;
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.domo.ssa.SSAArrayLoadInstruction)
-     */
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       // skip arrays of primitive type
@@ -180,9 +188,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.domo.ssa.SSAArrayStoreInstruction)
-     */
+    /** @see Visitor#visitArrayStore(com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction) */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // Assertions.UNREACHABLE();
@@ -199,9 +205,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.domo.ssa.SSACheckCastInstruction)
-     */
+    /** @see Visitor#visitCheckCast(ITypeTestInstruction) */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       Set<IClass> types = HashSetFactory.make();
@@ -224,9 +228,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(result, value, AssignLabel.make(filter));
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.domo.ssa.SSAReturnInstruction)
-     */
+    /** @see Visitor#visitReturn(ReturnInstruction) */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
@@ -242,9 +244,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitGet(com.ibm.domo.ssa.SSAGetInstruction)
-     */
+    /** @see Visitor#visitGet(IGetInstruction) */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
       visitGetInternal(
@@ -281,9 +281,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitPut(com.ibm.domo.ssa.PutInstruction)
-     */
+    /** @see Visitor#visitPut(IPutInstruction) */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
       visitPutInternal(
@@ -318,9 +316,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitInvoke(com.ibm.domo.ssa.InvokeInstruction)
-     */
+    /** @see Visitor#visitInvoke(IInvokeInstruction) */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
@@ -346,9 +342,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       // callDefs.put(exc, instruction);
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitNew(com.ibm.domo.ssa.NewInstruction)
-     */
+    /** @see Visitor#visitNew(NewInstruction) */
     @Override
     public void visitNew(SSANewInstruction instruction) {
 
@@ -377,18 +371,13 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitThrow(com.ibm.domo.ssa.ThrowInstruction)
-     */
+    /** @see Visitor#visitThrow(ThrowInstruction) */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // don't do anything: we handle exceptional edges
       // in a separate pass
     }
 
-    /*
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.domo.ssa.GetCaughtExceptionInstruction)
-     */
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       List<ProgramCounter> peis =
@@ -488,8 +477,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       assert instruction.getType() == TypeReference.JavaLangClass;
       InstanceKey iKey =
-          heapModel.getInstanceKeyForMetadataObject(
-              instruction.getToken(), (TypeReference) instruction.getToken());
+          heapModel.getInstanceKeyForMetadataObject(instruction.getToken(), instruction.getType());
 
       g.addNode(iKey);
       g.addNode(def);

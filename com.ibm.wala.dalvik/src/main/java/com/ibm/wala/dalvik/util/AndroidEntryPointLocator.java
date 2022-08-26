@@ -108,7 +108,7 @@ public final class AndroidEntryPointLocator {
   }
 
   private static final List<AndroidPossibleEntryPoint> possibleEntryPoints = new ArrayList<>();
-  protected final Set<LocatorFlags> flags;
+  private final Set<LocatorFlags> flags;
 
   private static Set<LocatorFlags> defaultFlags() {
     Set<LocatorFlags> flags = HashSetFactory.make();

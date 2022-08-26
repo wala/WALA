@@ -12,10 +12,10 @@ package com.ibm.wala.cast.java.loader;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.strings.Atom;
 
 public class Util {
 

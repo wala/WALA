@@ -36,8 +36,8 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
@@ -135,7 +135,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
     // SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope,
     // null, makeDefaultInterpreter(options, cache));
     SSAPropagationCallGraphBuilder cgb =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     CallGraph callGraph = cgb.makeCallGraph(options, monitor);
 
@@ -183,14 +183,14 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
     System.err.println("building call graph for " + mainClass + ":" + mainClass.getClass());
 
-    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, mainClassName);
+    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(cha, mainClassName);
 
     IAnalysisCacheView cache = new AnalysisCacheImpl(new DexIRFactory());
 
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     SSAPropagationCallGraphBuilder cgb =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
 
     CallGraph callGraph = cgb.makeCallGraph(options);
 

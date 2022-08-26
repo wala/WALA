@@ -41,7 +41,10 @@ public abstract class AbstractScriptEntity extends AbstractCodeEntity {
 
   @Override
   public String getName() {
-    return "script " + file.getName();
+    return "script "
+        + (file.isAbsolute() || file.getPath().startsWith("file:")
+            ? file.getName()
+            : file.getPath());
   }
 
   @Override

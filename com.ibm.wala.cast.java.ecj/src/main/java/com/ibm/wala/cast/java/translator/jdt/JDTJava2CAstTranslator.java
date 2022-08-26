@@ -62,7 +62,7 @@ import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -607,7 +607,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     assert decl instanceof TypeDeclaration : "Local enum declaration not yet supported";
     CAstEntity classEntity = visitTypeDecl(decl, context);
 
-    // these statements doin't actually do anything, just define a type
+    // these statements don't actually do anything, just define a type
     final CAstNode lcdNode = makeNode(context, fFactory, n, CAstNode.EMPTY);
 
     // so define it!
@@ -1002,7 +1002,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     private final ITypeBinding fType; // TAGALONG
 
-    protected ITypeBinding fReturnType;
+    private final ITypeBinding fReturnType;
 
     private final int fModifiers;
 

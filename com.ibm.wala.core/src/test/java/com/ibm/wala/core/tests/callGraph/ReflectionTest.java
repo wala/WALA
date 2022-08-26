@@ -14,6 +14,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -41,8 +43,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -93,18 +93,17 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT1_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Warnings.clear();
-    CallGraphTest.doCallGraphs(options, new AnalysisCacheImpl(), cha, scope);
+    CallGraphTest.doCallGraphs(options, new AnalysisCacheImpl(), cha);
     for (Warning w : Iterator2Iterable.make(Warnings.iterator())) {
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }
       if (w.toString().contains("Integer")) {
-        Assert.assertTrue(w.toString(), false);
+        Assert.fail(w.toString());
       }
     }
   }
@@ -120,11 +119,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT2_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT2_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Integer");
@@ -143,11 +140,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT3_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT3_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
@@ -180,11 +175,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT4_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT4_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
@@ -216,11 +209,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT5_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT5_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
@@ -250,11 +241,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT6_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT6_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
 
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
@@ -280,11 +269,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT7_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT7_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
 
     final String mainClass = "Lreflection/Reflect7";
     TypeReference mainTr = TypeReference.findOrCreate(ClassLoaderReference.Application, mainClass);
@@ -322,7 +309,7 @@ public class ReflectionTest extends WalaTestCase {
         }
       }
     }
-    Assert.assertTrue(filePermConstrNewInstanceNode != null);
+    Assert.assertNotNull(filePermConstrNewInstanceNode);
 
     // Now verify that this node has FilePermission.<init> children
     CGNode filePermInitNode = null;
@@ -336,7 +323,7 @@ public class ReflectionTest extends WalaTestCase {
         break;
       }
     }
-    Assert.assertTrue(filePermInitNode != null);
+    Assert.assertNotNull(filePermInitNode);
 
     // Furthermore, verify that main has a FilePermission.toString child
     CGNode filePermToStringNode = null;
@@ -347,7 +334,7 @@ public class ReflectionTest extends WalaTestCase {
       }
     }
 
-    Assert.assertTrue(filePermToStringNode != null);
+    Assert.assertNotNull(filePermToStringNode);
   }
 
   private static Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
@@ -371,11 +358,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT8_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
@@ -393,11 +378,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT9_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT9_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
@@ -415,11 +398,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT10_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT10_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
@@ -437,11 +418,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT11_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT11_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Object");
     MethodReference mr = MethodReference.findOrCreate(tr, "wait", "()V");
@@ -459,11 +438,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT12_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT12_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr =
@@ -486,11 +463,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT13_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT13_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr =
@@ -513,11 +488,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT14_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT14_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr =
@@ -540,11 +513,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT15_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT15_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr =
@@ -572,11 +543,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT16_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT16_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
@@ -594,11 +563,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT17_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT17_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "t", "(Ljava/lang/Integer;)V");
@@ -616,11 +583,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT18_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT18_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "t", "(Ljava/lang/Integer;)V");
@@ -642,11 +607,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT19_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT19_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
@@ -661,11 +624,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT20_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT20_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr =
@@ -685,11 +646,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT21_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT21_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr =
@@ -709,11 +668,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT22_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT22_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Integer;)V");
@@ -732,11 +689,9 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT23_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT23_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     TypeReference tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "u", "(Ljava/lang/Integer;)V");
@@ -759,12 +714,11 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisScope scope = findOrCreateAnalysisScope();
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECT24_MAIN);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, TestConstants.REFLECT24_MAIN);
 
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     Pair<CallGraph, PointerAnalysis<InstanceKey>> pair =
-        CallGraphTestUtil.buildNCFA(1, options, new AnalysisCacheImpl(), cha, scope);
+        CallGraphTestUtil.buildNCFA(1, options, new AnalysisCacheImpl(), cha);
 
     CallGraph cg = pair.fst;
     PointerAnalysis<InstanceKey> pointerAnalysis = pair.snd;
@@ -779,7 +733,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(reflect24Tr, "doNothing", "(Ljava/lang/Class;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.size() == 1);
+    Assert.assertEquals(1, nodes.size());
 
     // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
     Optional<CGNode> firstMatched = nodes.stream().findFirst();
@@ -788,12 +742,12 @@ public class ReflectionTest extends WalaTestCase {
 
     LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
-    Assert.assertTrue(pts.size() == 1);
+    Assert.assertEquals(1, pts.size());
 
     for (InstanceKey mappedObject : pts) {
       // the type corresponding to the 0th parameter should be Helper
       Assert.assertTrue(mappedObject instanceof ConstantKey);
-      Assert.assertTrue(((ConstantKey<?>) mappedObject).getValue().equals(helperClass));
+      Assert.assertEquals(((ConstantKey<?>) mappedObject).getValue(), helperClass);
     }
   }
 
@@ -846,10 +800,9 @@ public class ReflectionTest extends WalaTestCase {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, TestConstants.REFLECTGETMETHODCONTEXT_MAIN);
+            cha, TestConstants.REFLECTGETMETHODCONTEXT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg =
-        CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, scope, false);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     Set<CGNode> cgn;
     cgn = cg.getNodes(mabar);
     Assert.assertTrue(cgn.isEmpty());
@@ -869,9 +822,9 @@ public class ReflectionTest extends WalaTestCase {
     Assert.assertTrue(cgn.isEmpty());
 
     cgn = cg.getNodes(mbfoo);
-    Assert.assertTrue(1 == cgn.size());
+    Assert.assertEquals(1, cgn.size());
 
     cgn = cg.getNodes(mcbar);
-    Assert.assertTrue(1 == cgn.size());
+    Assert.assertEquals(1, cgn.size());
   }
 }

@@ -27,7 +27,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.Operator;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.Operator;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -466,7 +466,7 @@ public class JavaScriptConstructorFunctions {
         return makeFunctionConstructor(cls, cls);
       case 1:
         if (ST.isStringConstant(callStmt.getUse(1))
-            && !ST.getStringValue(callStmt.getUse(1)).equals("")) {
+            && !ST.getStringValue(callStmt.getUse(1)).isEmpty()) {
           TypeReference ref =
               TypeReference.findOrCreate(
                   JavaScriptTypes.jsLoader,

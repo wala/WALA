@@ -12,6 +12,9 @@ package com.ibm.wala.core.tests.ir;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.strings.UTF8Convert;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -23,9 +26,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.strings.UTF8Convert;
 import java.io.IOException;
 import java.util.Iterator;
 import org.junit.Assert;
@@ -70,7 +70,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e) {
       System.err.println(ir1);
       e.printStackTrace();
-      Assert.assertTrue("unsound CFG for ir1", false);
+      Assert.fail("unsound CFG for ir1");
     }
 
     IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
@@ -81,7 +81,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e1) {
       System.err.println(ir2);
       e1.printStackTrace();
-      Assert.assertTrue("unsound CFG for ir2", false);
+      Assert.fail("unsound CFG for ir2");
     }
 
     Assert.assertEquals(ir1.toString(), ir2.toString());
@@ -92,7 +92,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private static void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
-      Assert.assertTrue(iterator.next() != null);
+      Assert.assertNotNull(iterator.next());
     }
   }
 
@@ -102,7 +102,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
         return;
       }
     }
-    Assert.assertTrue("no instructions generated", false);
+    Assert.fail("no instructions generated");
   }
 
   @Test

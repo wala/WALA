@@ -113,9 +113,6 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   private final Map<String, IR> cache = HashMapFactory.make();
 
   /* END Custom change: caching */
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -235,17 +232,15 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   }
   /* END Custom change: caching */
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public int getNumberOfStatements(CGNode node) {
     assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean understands(CGNode node) {

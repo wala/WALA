@@ -41,10 +41,10 @@
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.StringStuff;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,7 +140,7 @@ import java.util.Map;
     final Atom foundAction = intent.getAction();
     if (!foundAction.equals(Atom.findOrCreateAsciiAtom(action))) {
       throw new IllegalArgumentException(
-          "Actions differ (" + action + ", " + foundAction.toString() + ") for Intent " + key);
+          "Actions differ (" + action + ", " + foundAction + ") for Intent " + key);
     }
     return intent;
   }

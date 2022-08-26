@@ -18,6 +18,9 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.core.util.CancelRuntimeException;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -35,7 +38,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -43,8 +45,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -191,9 +191,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return makeCallGraph(options, null);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
-   */
   @Override
   public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor)
       throws IllegalArgumentException, CallGraphBuilderCancelException {
@@ -495,9 +492,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       assert !(type instanceof FilteredPointerKey);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter()
-     */
     @Override
     public TypeFilter getTypeFilter() {
       return new SingleClassFilter(type);
@@ -581,9 +575,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     protected FilterOperator() {}
 
-    /*
-     * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable, com.ibm.wala.dataflow.IVariable)
-     */
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
 
@@ -609,9 +600,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return changed ? CHANGED : NOT_CHANGED;
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return false;
@@ -657,9 +645,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     callGraph.setInterpreter(interpreter);
   }
 
-  /*
-   * @see com.ibm.detox.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
-   */
   @Override
   public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return system.extractPointerAnalysis(this);
@@ -779,7 +764,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   /** Binary op: &lt;dummy&gt;:= ArrayLoad( &lt;arrayref&gt;) Side effect: Creates new equations. */
   public final class ArrayLoadOperator extends UnarySideEffect implements IPointerOperator {
-    protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
+    private final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
     @Override
     public String toString() {
@@ -857,9 +842,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return true;
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return true;
@@ -1053,9 +1035,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return true;
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return true;
@@ -1079,9 +1058,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       system.registerFixedSet(val, this);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return true;
@@ -1190,7 +1166,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     private final InstanceKey instance;
 
-    protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
+    private final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
     @Override
     public String toString() {
@@ -1246,9 +1222,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       }
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return true;
@@ -1260,7 +1233,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       implements IPointerOperator {
     private final InstanceKey instance;
 
-    protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
+    private final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
     @Override
     public String toString() {
@@ -1333,9 +1306,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       }
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return true;
@@ -1387,9 +1357,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return "InverseFilter";
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
+    /** @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex() */
     @Override
     public boolean isComplex() {
       return false;

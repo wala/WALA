@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.core.util.shrike.ShrikeUtil;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.shrike.ShrikeUtil;
-import com.ibm.wala.util.strings.Atom;
 import java.util.HashMap;
 
 /** A class to represent the reference in a class file to a field. */
@@ -70,19 +70,19 @@ public final class FieldReference extends MemberReference {
     if (DEBUG) {
       if (getName().toString().indexOf('.') > -1) throw new UnimplementedError();
       if (fieldType.toString().indexOf('.') > -1)
-        Assertions.UNREACHABLE("Field name: " + fieldType.toString());
+        Assertions.UNREACHABLE("Field name: " + fieldType);
       if (getName().toString().length() == 0) throw new UnimplementedError();
       if (fieldType.toString().length() == 0) throw new UnimplementedError();
     }
   }
 
   /** @return the descriptor component of this member reference */
-  public final TypeReference getFieldType() {
+  public TypeReference getFieldType() {
     return fieldType;
   }
 
   @Override
-  public final String toString() {
+  public String toString() {
     return "< "
         + getDeclaringClass().getClassLoader().getName()
         + ", "

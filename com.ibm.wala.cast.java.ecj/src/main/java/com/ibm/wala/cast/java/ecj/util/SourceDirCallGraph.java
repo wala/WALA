@@ -7,6 +7,7 @@ import com.ibm.wala.cast.java.translator.jdt.ecj.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
@@ -22,11 +23,9 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -50,11 +49,6 @@ public class SourceDirCallGraph {
    * with an 'L'.
    *
    * <p>Example args: -sourceDir /tmp/srcTest -mainClass LFoo
-   *
-   * @throws IOException
-   * @throws CallGraphBuilderCancelException
-   * @throws IllegalArgumentException
-   * @throws ClassHierarchyException
    */
   public static void main(String[] args)
       throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
@@ -105,15 +99,7 @@ public class SourceDirCallGraph {
     AnalysisOptions options = new AnalysisOptions();
     Iterable<Entrypoint> entrypoints = getEntrypoints(mainClass, cha);
     options.setEntrypoints(entrypoints);
-    options
-        .getSSAOptions()
-        .setDefaultValues(
-            new DefaultValues() {
-              @Override
-              public int getDefaultValue(SymbolTable symtab, int valueNumber) {
-                return symtab.getDefaultValue(valueNumber);
-              }
-            });
+    options.getSSAOptions().setDefaultValues(SymbolTable::getDefaultValue);
     // you can dial down reflection handling if you like
     options.setReflectionOptions(ReflectionOptions.NONE);
     IAnalysisCacheView cache =
@@ -121,8 +107,7 @@ public class SourceDirCallGraph {
     // CallGraphBuilder builder = new ZeroCFABuilderFactory().make(options, cache,
     // cha, scope,
     // false);
-    CallGraphBuilder<?> builder =
-        new ZeroOneContainerCFABuilderFactory().make(options, cache, cha, scope);
+    CallGraphBuilder<?> builder = new ZeroOneContainerCFABuilderFactory().make(options, cache, cha);
     System.out.println("building call graph...");
     CallGraph cg = builder.makeCallGraph(options, null);
     long end = System.currentTimeMillis();

@@ -10,23 +10,23 @@
  */
 package com.ibm.wala.ide.util;
 
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.ide.plugin.CorePlugin;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.core.runtime.Plugin;
 
 public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
 
-  public static AnalysisScope readJavaScopeFromPlugin(
+  public AnalysisScope readJavaScopeFromPlugin(
       String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
     return readJavaScopeFromPlugin(
         scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
   }
 
-  public static AnalysisScope readJavaScopeFromPlugin(
+  public AnalysisScope readJavaScopeFromPlugin(
       String scopeFileName,
       File exclusionsFile,
       ClassLoader javaLoader,
@@ -36,15 +36,14 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
     return read(scope, scopeFileName, exclusionsFile, javaLoader);
   }
 
-  public static AnalysisScope makePrimordialScopeFromPlugin(File exclusionsFile)
-      throws IOException {
+  public AnalysisScope makePrimordialScopeFromPlugin(File exclusionsFile) throws IOException {
     return makePrimordialScopeFromPlugin(exclusionsFile, CorePlugin.getDefault());
   }
   /**
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
    * @throws IllegalStateException if there are problmes reading wala properties
    */
-  public static AnalysisScope makePrimordialScopeFromPlugin(
+  public AnalysisScope makePrimordialScopeFromPlugin(
       File exclusionsFile, @SuppressWarnings("unused") Plugin plugIn) throws IOException {
     return read(
         AnalysisScope.createJavaAnalysisScope(),
@@ -53,8 +52,8 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
         EclipseAnalysisScopeReader.class.getClassLoader());
   }
 
-  public static AnalysisScope makeJavaBinaryAnalysisScopeFromPlugin(
-      String classPath, File exclusionsFile) throws IOException {
+  public AnalysisScope makeJavaBinaryAnalysisScopeFromPlugin(String classPath, File exclusionsFile)
+      throws IOException {
     return makeJavaBinaryAnalysisScopeFromPlugin(
         classPath, exclusionsFile, CorePlugin.getDefault());
   }
@@ -64,7 +63,7 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
    * @throws IllegalStateException if there are problems reading wala properties
    */
-  public static AnalysisScope makeJavaBinaryAnalysisScopeFromPlugin(
+  public AnalysisScope makeJavaBinaryAnalysisScopeFromPlugin(
       String classPath, File exclusionsFile, Plugin plugIn) throws IOException {
     if (classPath == null) {
       throw new IllegalArgumentException("classPath null");

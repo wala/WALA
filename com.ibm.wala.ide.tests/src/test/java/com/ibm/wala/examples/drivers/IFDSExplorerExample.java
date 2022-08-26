@@ -40,6 +40,9 @@ import java.util.Properties;
 /**
  * An example of using {@link IFDSExplorer}. We visualize the result of running {@link
  * ContextSensitiveReachingDefs} on a simple test example.
+ *
+ * <p>NOTE: On Mac OS X, this class must be run with the JVM argument `-XstartOnFirstThread`, as
+ * that is required for SWT applications on the Mac.
  */
 public class IFDSExplorerExample {
 
@@ -54,12 +57,11 @@ public class IFDSExplorerExample {
             TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "Ldataflow/StaticDataflow");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     System.out.println("building CG");
     CallGraph cg = builder.makeCallGraph(options, null);
     System.out.println("done with CG");

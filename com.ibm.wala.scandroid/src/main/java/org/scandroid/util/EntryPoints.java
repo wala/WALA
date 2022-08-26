@@ -40,12 +40,12 @@
 package org.scandroid.util;
 
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

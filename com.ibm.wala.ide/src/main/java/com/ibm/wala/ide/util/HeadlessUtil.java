@@ -113,7 +113,7 @@ public class HeadlessUtil {
                 buffer.append('\n');
               }
               if (length != 0) {
-                System.err.println(buffer.toString());
+                System.err.println(buffer);
                 return true;
               }
             }

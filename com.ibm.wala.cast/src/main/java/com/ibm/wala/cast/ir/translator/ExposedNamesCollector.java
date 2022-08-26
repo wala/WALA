@@ -17,6 +17,7 @@ import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.collections.Pair;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,8 +33,16 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
   /** exposed names for each entity, updated as child entities are visited */
   private final Map<CAstEntity, Set<String>> entity2ExposedNames = HashMapFactory.make();
 
+  /** exposed names for each entity which are written, updated as child entities are visited */
+  private final Map<CAstEntity, Set<Pair<CAstEntity, String>>> entity2WrittenNames =
+      HashMapFactory.make();
+
   public Map<CAstEntity, Set<String>> getEntity2ExposedNames() {
     return entity2ExposedNames;
+  }
+
+  public Map<CAstEntity, Set<Pair<CAstEntity, String>>> getEntity2WrittenNames() {
+    return entity2WrittenNames;
   }
 
   static class EntityContext implements CAstVisitor.Context {
@@ -102,7 +111,7 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
     MapUtil.findOrCreateSet(entity2DeclaredNames, c.top()).add(nm);
   }
 
-  private void checkForLexicalAccess(Context c, String nm) {
+  private void checkForLexicalAccess(Context c, String nm, boolean isWrite) {
     CAstEntity entity = c.top();
     final Set<String> entityNames = entity2DeclaredNames.get(entity);
     if (entityNames == null || !entityNames.contains(nm)) {
@@ -120,6 +129,9 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
       if (declaringEntity != null) {
         // System.err.println("marking " + nm + " from entity " + declaringEntity + " as exposed");
         MapUtil.findOrCreateSet(entity2ExposedNames, declaringEntity).add(nm);
+        if (isWrite) {
+          MapUtil.findOrCreateSet(entity2WrittenNames, declaringEntity).add(Pair.make(entity, nm));
+        }
       }
     }
   }
@@ -127,7 +139,7 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
   @Override
   protected void leaveVar(CAstNode n, EntityContext c, CAstVisitor<EntityContext> visitor) {
     String nm = (String) n.getChild(0).getValue();
-    checkForLexicalAccess(c, nm);
+    checkForLexicalAccess(c, nm, false);
   }
 
   @Override
@@ -138,13 +150,13 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
       boolean pre,
       EntityContext c,
       CAstVisitor<EntityContext> visitor) {
-    checkForLexicalAccess(c, (String) n.getChild(0).getValue());
+    checkForLexicalAccess(c, (String) n.getChild(0).getValue(), true);
   }
 
   @Override
   protected void leaveVarAssign(
       CAstNode n, CAstNode v, CAstNode a, EntityContext c, CAstVisitor<EntityContext> visitor) {
-    checkForLexicalAccess(c, (String) n.getChild(0).getValue());
+    checkForLexicalAccess(c, (String) n.getChild(0).getValue(), true);
   }
 
   @Override

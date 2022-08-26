@@ -3,22 +3,38 @@ package com.ibm.wala.dalvik.test.cha;
 import static org.junit.Assume.assumeFalse;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
+import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
+import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
+import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
+import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.jf.dexlib2.DexFileFactory;
@@ -53,7 +69,8 @@ public class MultiDexScopeTest {
   private static AnalysisScope setUpTestScope(String apkName, String exclusions, ClassLoader loader)
       throws IOException {
     AnalysisScope scope;
-    scope = AnalysisScopeReader.readJavaScope("primordial.txt", new File(exclusions), loader);
+    scope =
+        AnalysisScopeReader.instance.readJavaScope("primordial.txt", new File(exclusions), loader);
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
@@ -91,14 +108,11 @@ public class MultiDexScopeTest {
         Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
   }
 
-  @Test
-  public void testMultiDex() throws ClassHierarchyException, IOException {
-    AnalysisScope scope, scope2;
-    ClassHierarchy cha, cha2;
+  public AnalysisScope manuallyInitScope() throws IOException {
+    AnalysisScope scope = null;
     String multidexApk = "src/test/resources/multidex-test.apk";
-
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             "primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
@@ -118,9 +132,18 @@ public class MultiDexScopeTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    return scope;
+  }
+
+  @Test
+  public void testMultiDex() throws ClassHierarchyException, IOException {
+    AnalysisScope scope, scope2;
+    ClassHierarchy cha, cha2;
+    String multidexApk = "src/test/resources/multidex-test.apk";
+
+    scope = manuallyInitScope();
     cha = ClassHierarchyFactory.make(scope);
 
-    // use setUpAndroidAnalysisScope
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, multidexApk);
     cha2 = ClassHierarchyFactory.make(scope2);
 
@@ -130,7 +153,7 @@ public class MultiDexScopeTest {
   }
 
   private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
-    try (ZipInputStream zis = new ZipInputStream(new FileInputStream(new File(apkFileName)))) {
+    try (ZipInputStream zis = new ZipInputStream(new FileInputStream(apkFileName))) {
       ZipEntry entry;
 
       while ((entry = zis.getNextEntry()) != null) {
@@ -144,9 +167,52 @@ public class MultiDexScopeTest {
     }
   }
 
+  @Test
+  public void testCGCreationFromDexSource()
+      throws ClassHierarchyException, IOException, CallGraphBuilderCancelException {
+    AnalysisScope scope = manuallyInitScope();
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    AnalysisCacheImpl cache = new AnalysisCacheImpl(new DexIRFactory());
+
+    TypeReference b2 = TypeReference.find(ClassLoaderReference.Application, "Ltest/B2");
+    TypeReference b = TypeReference.find(ClassLoaderReference.Application, "Ltest/B");
+
+    MethodReference callerRef =
+        MethodReference.findOrCreate(b2, "<init>", "(ILjava/lang/String;)V");
+    MethodReference calleeRef = MethodReference.findOrCreate(b, "<init>", "(I)V");
+
+    IClass b2Class = cha.lookupClass(b2);
+    IMethod targetMethod = b2Class.getMethod(Selector.make("<init>(ILjava/lang/String;)V"));
+
+    ArrayList<DefaultEntrypoint> entrypoints = new ArrayList<>();
+    entrypoints.add(new DefaultEntrypoint(targetMethod, cha));
+    AnalysisOptions options = new AnalysisOptions();
+    options.setAnalysisScope(scope);
+    options.setEntrypoints(entrypoints);
+    options.setReflectionOptions(AnalysisOptions.ReflectionOptions.NONE);
+
+    CallGraphBuilder<InstanceKey> cgb = Util.makeRTABuilder(options, cache, cha);
+    CallGraph cg1 = cgb.makeCallGraph(options, null);
+    findEdge(cg1, callerRef, calleeRef);
+
+    cgb = Util.makeZeroOneContainerCFABuilder(options, cache, cha, null, null);
+    CallGraph cg2 = cgb.makeCallGraph(options, null);
+    findEdge(cg2, callerRef, calleeRef);
+  }
+
+  public static void findEdge(CallGraph cg, MethodReference callerRef, MethodReference calleeRef) {
+    Set<CGNode> callerNodes = cg.getNodes(callerRef);
+    Assert.assertFalse(callerNodes.isEmpty());
+    CGNode callerNode = callerNodes.iterator().next();
+
+    Set<CGNode> calleeNodes = cg.getNodes(calleeRef);
+    Assert.assertFalse(calleeNodes.isEmpty());
+    CGNode calleeNode = calleeNodes.iterator().next();
+    Assert.assertTrue(cg.hasEdge(callerNode, calleeNode));
+  }
+
   private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {
-    try (BufferedOutputStream bos =
-        new BufferedOutputStream(new FileOutputStream(new File(outFileName)))) {
+    try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outFileName))) {
       byte[] buffer = new byte[4096];
       int read;
 

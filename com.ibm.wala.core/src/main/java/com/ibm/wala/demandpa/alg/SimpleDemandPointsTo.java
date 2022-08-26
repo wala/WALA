@@ -93,7 +93,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
     }
 
     if (VERBOSE) {
-      System.err.println(g.toString());
+      System.err.println(g);
     }
 
     SlowDFSDiscoverTimeIterator<Object> dfs = new SlowDFSDiscoverTimeIterator<>(g, pk);

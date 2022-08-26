@@ -13,6 +13,10 @@ package com.ibm.wala.examples.drivers;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -27,12 +31,8 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.PDFViewUtil;
+import com.ibm.wala.util.viz.DotUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -79,7 +79,7 @@ public class PDFControlDependenceGraph {
         appJar = PDFCallGraph.findJarFiles(new String[] {appJar});
       }
       AnalysisScope scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -100,7 +100,7 @@ public class PDFControlDependenceGraph {
         Assertions.UNREACHABLE("Null IR for " + m);
       }
 
-      System.err.println(ir.toString());
+      System.err.println(ir);
       ControlDependenceGraph<ISSABasicBlock> cdg =
           new ControlDependenceGraph<>(ir.getControlFlowGraph());
 

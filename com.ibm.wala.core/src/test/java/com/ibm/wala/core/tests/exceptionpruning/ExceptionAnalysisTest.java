@@ -9,6 +9,8 @@ import com.ibm.wala.analysis.exceptionanalysis.IntraproceduralExceptionAnalysis;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -30,8 +32,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -66,12 +66,12 @@ public class ExceptionAnalysisTest {
     AnalysisScope scope;
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA, new File(REGRESSION_EXCLUSIONS), CLASS_LOADER);
     cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(scope, cha, "Lexceptionpruning/TestPruning");
+        Util.makeMainEntrypoints(cha, "Lexceptionpruning/TestPruning");
     options = new AnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
 
@@ -79,7 +79,7 @@ public class ExceptionAnalysisTest {
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     ReferenceCleanser.registerCache(cache);
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
     cg = builder.makeCallGraph(options, null);
     pointerAnalysis = builder.getPointerAnalysis();
 

@@ -17,6 +17,7 @@ import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -34,7 +35,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.config.SetOfClasses;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -132,14 +132,14 @@ public abstract class JavaSourceAnalysisEngine
       cha = ClassHierarchyFactory.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
-      System.err.println(e.toString());
+      System.err.println(e);
       e.printStackTrace();
     }
     return cha;
   }
 
   @Override
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
     return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha);
   }
 
@@ -173,6 +173,6 @@ public abstract class JavaSourceAnalysisEngine
   @Override
   protected AstJavaZeroXCFABuilder getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return new ZeroCFABuilderFactory().make(options, cache, cha, scope);
+    return new ZeroCFABuilderFactory().make(options, cache, cha);
   }
 }

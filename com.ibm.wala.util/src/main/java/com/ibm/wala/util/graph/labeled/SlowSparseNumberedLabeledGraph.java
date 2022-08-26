@@ -51,9 +51,14 @@ package com.ibm.wala.util.graph.labeled;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
+import java.io.Serializable;
 
 /** A labeled graph implementation suitable for sparse graphs. */
-public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U> {
+public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U>
+    implements Serializable {
+
+  /** */
+  private static final long serialVersionUID = -6929183520814732209L;
 
   /** @return a graph with the same nodes and edges as g */
   public static <T, U> SlowSparseNumberedLabeledGraph<T, U> duplicate(LabeledGraph<T, U> g) {
@@ -82,6 +87,11 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
   private final SlowNumberedNodeManager<T> nodeManager;
 
   private final SparseNumberedLabeledEdgeManager<T, U> edgeManager;
+
+  public SlowSparseNumberedLabeledGraph() {
+    nodeManager = new SlowNumberedNodeManager<>();
+    edgeManager = new SparseNumberedLabeledEdgeManager<>(nodeManager);
+  }
 
   public SlowSparseNumberedLabeledGraph(U defaultLabel) {
     if (defaultLabel == null) {

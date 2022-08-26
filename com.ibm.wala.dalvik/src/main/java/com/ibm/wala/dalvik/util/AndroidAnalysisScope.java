@@ -11,14 +11,14 @@ package com.ibm.wala.dalvik.util;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class AndroidAnalysisScope {
     File exclusionsFile = exclusions != null ? new File(exclusions) : null;
 
     if (androidLib == null || androidLib.length == 0) {
-      scope = AnalysisScopeReader.readJavaScope(BASIC_FILE, exclusionsFile, loader);
+      scope = AnalysisScopeReader.instance.readJavaScope(BASIC_FILE, exclusionsFile, loader);
     } else {
       scope = AnalysisScope.createJavaAnalysisScope();
 

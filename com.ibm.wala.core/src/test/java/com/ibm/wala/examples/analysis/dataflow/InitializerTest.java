@@ -15,6 +15,8 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -32,10 +34,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import org.junit.Assert;
 
@@ -46,7 +46,7 @@ public class InitializerTest {
     AnalysisScope scope = null;
     try {
       scope =
-          AnalysisScopeReader.readJavaScope(
+          AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA,
               (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
               InitializerTest.class.getClassLoader());
@@ -64,12 +64,11 @@ public class InitializerTest {
     }
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            scope, cha, "LstaticInit/TestStaticInit");
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = null;
     try {
       cg = builder.makeCallGraph(options, null);

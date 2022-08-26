@@ -11,10 +11,10 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.util.strings.UTF8Convert;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.ImmutableByteArray;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.strings.UTF8Convert;
 import java.util.Map;
 
 /**

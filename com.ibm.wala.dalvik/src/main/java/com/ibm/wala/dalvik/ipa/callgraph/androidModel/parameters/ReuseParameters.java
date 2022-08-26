@@ -41,6 +41,10 @@
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.ssa.ParameterAccessor.BasedOn;
+import com.ibm.wala.core.util.ssa.ParameterAccessor.ParamerterDisposition;
+import com.ibm.wala.core.util.ssa.ParameterAccessor.Parameter;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -49,10 +53,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.ssa.ParameterAccessor.BasedOn;
-import com.ibm.wala.util.ssa.ParameterAccessor.ParamerterDisposition;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-import com.ibm.wala.util.strings.Atom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +72,7 @@ import java.util.List;
  * ParameterAccessor is the better way to get them.
  *
  * @see com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior
- * @see com.ibm.wala.util.ssa.ParameterAccessor
+ * @see com.ibm.wala.core.util.ssa.ParameterAccessor
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  * @since 2013-11-02
  */
@@ -149,7 +149,7 @@ public class ReuseParameters {
   /**
    * Get the ssa-number for a parameter to an IMethod.
    *
-   * @see com.ibm.wala.util.ssa.ParameterAccessor
+   * @see com.ibm.wala.core.util.ssa.ParameterAccessor
    */
   private static int ssaFor(IMethod inCallTo, int paramNo) {
     assert (paramNo >= 0);
@@ -165,7 +165,7 @@ public class ReuseParameters {
   /**
    * Get the first paramNo of a given type.
    *
-   * @see com.ibm.wala.util.ssa.ParameterAccessor
+   * @see com.ibm.wala.core.util.ssa.ParameterAccessor
    */
   private static int firstOf(TypeName type, IMethod inCallTo) {
     for (int i = 0; i < inCallTo.getNumberOfParameters(); ++i) {

@@ -13,6 +13,7 @@ package com.ibm.wala.core.tests.callGraph;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -30,7 +31,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Set;
 import org.junit.Assert;
@@ -59,11 +59,11 @@ public class CPATest extends WalaTestCase {
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, testClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, testClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, scope);
+        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph cg = builder.makeCallGraph(options, null);
 

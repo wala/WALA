@@ -41,6 +41,9 @@
 package com.ibm.wala.dalvik.util;
 
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.core.util.ssa.SSAValueManager;
+import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
@@ -55,9 +58,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.strings.StringStuff;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

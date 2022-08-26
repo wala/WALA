@@ -10,6 +10,7 @@ import com.ibm.wala.analysis.nullpointer.IntraproceduralNullPointerAnalysis;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -30,7 +31,6 @@ import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import org.hamcrest.Matcher;
@@ -92,7 +92,8 @@ public class PruneArrayOutOfBoundExceptionEdge {
 
   @BeforeClass
   public static void init() throws IOException, ClassHierarchyException {
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, CLASS_LOADER);
+    scope =
+        AnalysisScopeReader.instance.readJavaScope(TestConstants.WALA_TESTDATA, null, CLASS_LOADER);
     cha = ClassHierarchyFactory.make(scope);
 
     irFactory = new DefaultIRFactory();

@@ -21,6 +21,10 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.StringStuff;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -35,15 +39,12 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.warnings.Warnings;
 import java.util.Collection;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -60,7 +61,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
   public static void beforeClass() throws Exception {
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             NullPointerExceptionIntraTest.class.getClassLoader());
@@ -195,6 +196,8 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }
   }
 
+  @Ignore
+  @Test
   public void testDynamicParam2() throws UnsoundGraphException, CancelException {
     MethodReference mr =
         StringStuff.makeMethodReference(
@@ -790,7 +793,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
         return candidate;
       }
     }
-    Assert.assertTrue(false);
+    Assert.fail();
     return null;
   }
 }

@@ -40,9 +40,9 @@
 */
 package com.ibm.wala.dalvik.util;
 
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.StringStuff;
 
 /**
  * Generate a Settings-Object from a String-Representation.

@@ -35,6 +35,7 @@ package com.ibm.wala.demandpa.driver;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.ProgressMaster;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo.PointsToResult;
@@ -73,8 +74,8 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
-import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -137,7 +138,7 @@ public class DemandCastChecker {
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
@@ -172,14 +173,14 @@ public class DemandCastChecker {
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
-      builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha, scope);
+      builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
-      heapModel = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha, scope);
+      heapModel = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     } else {
-      builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+      builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha);
       heapModel = (HeapModel) builder;
     }
-    ProgressMaster master = ProgressMaster.make(new NullProgressMonitor(), 360000, false);
+    IProgressMonitor master = ProgressMaster.make(new NullProgressMonitor(), 360000, false);
     master.beginTask("runSolver", 1);
     try {
       retCG = builder.makeCallGraph(options, master);

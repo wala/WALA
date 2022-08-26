@@ -17,9 +17,11 @@ import static com.ibm.wala.types.TypeName.PrimitiveMask;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.shrikeBT.BytecodeConstants;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.BytecodeConstants;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -39,8 +41,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -250,8 +250,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     /** A mapping from String (variable name) -&gt; Integer (local number) */
     private Map<String, Integer> symbolTable = null;
 
-    /*
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+    /**
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String,
+     *     java.lang.String, org.xml.sax.Attributes)
      */
     @Override
     public void startElement(String uri, String name, String qName, Attributes atts) {
@@ -340,8 +341,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
     }
 
-    /*
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+    /**
+     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String,
+     *     java.lang.String)
      */
     @Override
     public void endElement(String uri, String name, String qName) {
@@ -878,12 +880,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
 
       MethodReference ref = MethodReference.findOrCreate(governingClass, mName, D);
-      governingMethod = new MethodSummary(ref);
-
-      if (DEBUG) {
-        System.err.println(("Register method summary: " + ref));
-      }
-      summaries.put(ref, governingMethod);
 
       boolean isStatic = false;
       String staticString = atts.getValue(A_STATIC);
@@ -891,29 +887,12 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         switch (staticString) {
           case "true":
             isStatic = true;
-            governingMethod.setStatic(true);
             break;
           case "false":
             isStatic = false;
-            governingMethod.setStatic(false);
             break;
           default:
             Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
-            break;
-        }
-      }
-
-      String factoryString = atts.getValue(A_FACTORY);
-      if (factoryString != null) {
-        switch (factoryString) {
-          case "true":
-            governingMethod.setFactory(true);
-            break;
-          case "false":
-            governingMethod.setFactory(false);
-            break;
-          default:
-            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
             break;
         }
       }
@@ -930,6 +909,29 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         }
       } else {
         nParams = Integer.parseInt(specifiedArgs);
+      }
+
+      governingMethod = new MethodSummary(ref, nParams);
+      governingMethod.setStatic(isStatic);
+
+      if (DEBUG) {
+        System.err.println(("Register method summary: " + ref));
+      }
+      summaries.put(ref, governingMethod);
+
+      String factoryString = atts.getValue(A_FACTORY);
+      if (factoryString != null) {
+        switch (factoryString) {
+          case "true":
+            governingMethod.setFactory(true);
+            break;
+          case "false":
+            governingMethod.setFactory(false);
+            break;
+          default:
+            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
+            break;
+        }
       }
 
       // note that symbol tables reserve v0 for "unknown", so v1 gets assigned

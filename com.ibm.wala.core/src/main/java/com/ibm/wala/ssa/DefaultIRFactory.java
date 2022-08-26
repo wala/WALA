@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.ShrikeIRFactory;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.summaries.SyntheticIRFactory;
-import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -32,10 +32,6 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
 
   private final SyntheticIRFactory syntheticFactory = new SyntheticIRFactory();
 
-  /*
-   * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context,
-   * com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
-   */
   public ControlFlowGraph<?, ?> makeCFG(IMethod method, @SuppressWarnings("unused") Context c)
       throws IllegalArgumentException {
     if (method == null) {
@@ -53,10 +49,6 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context,
-   * com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
-   */
   @Override
   public IR makeIR(IMethod method, Context c, SSAOptions options) throws IllegalArgumentException {
     if (method == null) {

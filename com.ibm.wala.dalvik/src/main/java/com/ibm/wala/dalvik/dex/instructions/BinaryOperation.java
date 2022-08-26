@@ -49,8 +49,8 @@
 package com.ibm.wala.dalvik.dex.instructions;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IShiftInstruction;
 import org.jf.dexlib2.Opcode;
 
 public class BinaryOperation extends Instruction {

@@ -13,6 +13,7 @@ package com.ibm.wala.core.tests.ir;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IBytecodeMethod;
@@ -22,12 +23,15 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeBT.IInstruction;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -36,9 +40,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,7 +74,7 @@ public abstract class AnnotationTest extends WalaTestCase {
 
   public static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             AnnotationTest.class.getClassLoader());
@@ -89,7 +90,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     }
 
     if (expected.size() != actual.size()) {
-      assertTrue("expected=" + expected + " actual=" + actual, false);
+      fail("expected=" + expected + " actual=" + actual);
     }
     for (T a : expected) {
       assertTrue("missing " + a.toString(), actual.contains(a));
@@ -189,7 +190,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make("foo()V"));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    assertNotNull(methodRefUnderTest + " not found", methodUnderTest);
     assertTrue(
         methodUnderTest + " must be IBytecodeMethod", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
@@ -229,7 +230,7 @@ public abstract class AnnotationTest extends WalaTestCase {
             typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int);
 
     IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
-    assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
+    assertNotNull(fieldRefUnderTest + " not found", fieldUnderTest);
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
     Collection<Annotation> expectedAnnotations = HashSetFactory.make();
@@ -299,7 +300,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertTrue(methodRefUnderTest.toString() + " not found", methodUnderTest != null);
+    assertNotNull(methodRefUnderTest + " not found", methodUnderTest);
     assertTrue(
         methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
     IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
@@ -318,7 +319,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         }
       }
 
-      assertTrue(e + " must be " + a, e.equals(a));
+      assertEquals(e + " must be " + a, e, a);
     }
   }
 }

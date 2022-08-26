@@ -1,5 +1,6 @@
 plugins {
-	id 'eclipse'
+	id 'gradle-mvn-push'
+	id 'wala-java'
 }
 
 eclipse {
@@ -46,14 +47,16 @@ dependencies {
 	}
 	testFixturesImplementation(
 			'junit:junit:4.13.2',
-			'org.apache.ant:ant:1.10.9',
+			'org.apache.ant:ant:1.10.11',
 	)
 	testImplementation(
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
 	)
 	testRuntimeOnly(
-			files(compileTestSubjectsJava.map { it.outputs.files.first() })
+			sourceSets.testSubjects.output.classesDirs,
+			// add the testSubjects source files to enable SourceMapTest to pass
+			files(sourceSets.testSubjects.java.srcDirs),
 	)
 }
 
@@ -68,8 +71,7 @@ tasks.named('javadoc') {
 //
 
 final downloadKawa = tasks.register('downloadKawa', VerifiedDownload) {
-	ext.version = '3.0'
-	final archive = "kawa-${version}.zip"
+	final archive = 'kawa-3.0.zip'
 	src "https://ftp.gnu.org/pub/gnu/kawa/$archive"
 	dest project.layout.buildDirectory.file(archive)
 	checksum '2713e6dfb939274ba3b1d36daea68436'
@@ -81,8 +83,8 @@ tasks.register('extractKawa') {
 
 	doLast {
 		copy {
-			from(downloadKawa.map { zipTree it.dest }) {
-				include "kawa-${downloadKawa.get().version}/lib/${outputs.files.singleFile.name}"
+			from(zipTree(inputs.files.singleFile)) {
+				include "kawa-*/lib/${outputs.files.singleFile.name}"
 				eachFile {
 					relativePath RelativePath.parse(!directory, relativePath.lastName)
 				}
@@ -102,11 +104,13 @@ tasks.register('extractKawa') {
 @CacheableTask
 class CompileKawaScheme extends JavaExec {
 
+	@InputFile
+	@PathSensitive(PathSensitivity.NONE)
 	final RegularFileProperty schemeFile = project.objects.fileProperty()
 
 	CompileKawaScheme() {
 		classpath project.tasks.named('extractKawa')
-		main 'kawa.repl'
+		mainClass.set('kawa.repl')
 
 		final outputDir = project.layout.buildDirectory.dir(name)
 		args '-d', outputDir.get().asFile
@@ -115,7 +119,6 @@ class CompileKawaScheme extends JavaExec {
 		logging.captureStandardError LogLevel.INFO
 		args '--main', '-C'
 		argumentProviders.add({ -> [schemeFile.get() as String] } as CommandLineArgumentProvider)
-		inputs.file schemeFile
 	}
 }
 
@@ -230,7 +233,7 @@ tasks.register('downloadJavaCup', VerifiedDownload) {
 //
 
 tasks.register('collectJLex', Jar) {
-	from project(':com.ibm.wala.cast.java.test.data').compileTestJava
+	from project(':com.ibm.wala.cast.java.test.data').tasks.named('compileTestJava')
 	include 'JLex/'
 	archiveFileName = 'JLex.jar'
 	destinationDirectory = layout.buildDirectory.dir name
@@ -280,7 +283,7 @@ final generateHelloHashJar = tasks.register('generateHelloHashJar', JavaExec) {
 	inputs.file ocamlJavaJar
 	classpath ocamlJavaJar
 
-	main 'ocaml.compilers.ocamljavaMain'
+	mainClass.set('ocaml.compilers.ocamljavaMain')
 	args '-o', jarTarget
 	argumentProviders.add({ ->
 		[ocamlSource.get().toString()]
@@ -325,7 +328,7 @@ tasks.register('collectTestDataA', Jar) {
 
 
 tasks.named('processTestResources') {
-	[
+	from [
 			'buildChessJar',
 			'buildKawaTestJar',
 			'collectJLex',
@@ -333,9 +336,7 @@ tasks.named('processTestResources') {
 			'downloadJavaCup',
 			'extractBcel',
 			'extractKawa',
-	].each {
-		from tasks.named(it)
-	}
+	].collect(tasks.&named)
 
 	// If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
 	// missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
@@ -346,22 +347,16 @@ tasks.named('processTestResources') {
 
 tasks.named('test') {
 	maxHeapSize = '1500M'
-	systemProperty 'com.ibm.wala.junit.analyzingJar', 'true'
 	systemProperty 'com.ibm.wala.junit.profile', 'short'
-	classpath += files project(':com.ibm.wala.core').sourceSets.test.java.outputDir
+	classpath += files project(':com.ibm.wala.core').sourceSets.test.output.classesDirs
 	testLogging {
 		exceptionFormat = 'full'
 		events 'passed', 'skipped', 'failed'
 	}
 	// temporarily turn off some tests on JDK 11+
 	if (JavaVersion.current() >= JavaVersion.VERSION_11) {
-		exclude '**/exceptionpruning/ExceptionAnalysisTest.class'
-		exclude '**/exceptionpruning/ExceptionAnalysis2EdgeFilterTest.class'
-		exclude '**/cha/LibraryVersionTest.class'
-		exclude '**/ir/TypeAnnotationTest.class'
+		exclude '**/cha/LibraryVersionTest.class' // https://github.com/wala/WALA/issues/963
 	}
 
 	outputs.file layout.buildDirectory.file('report')
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

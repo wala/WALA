@@ -23,8 +23,8 @@ import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction.Dispatch;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -64,8 +64,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
   private final Map<String, IR> cache = HashMapFactory.make();
 
   /* END Custom change: caching */
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public IR getIR(CGNode node) {
@@ -82,7 +83,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     IMethod m = c.getValue();
     /* BEGIN Custom change: caching */
     final IMethod method = node.getMethod();
-    final String hashKey = method.toString() + '@' + recv.toString();
+    final String hashKey = method.toString() + '@' + recv;
 
     IR result = cache.get(hashKey);
 
@@ -100,8 +101,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     return getIR(node);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public int getNumberOfStatements(CGNode node) {
@@ -109,8 +111,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     return getIR(node).getInstructions().length;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean understands(CGNode node) {
@@ -128,8 +131,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
         || node.getMethod().getReference().equals(CTOR_NEW_INSTANCE);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -140,8 +144,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     return getIR(node).iterateNewSites();
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {

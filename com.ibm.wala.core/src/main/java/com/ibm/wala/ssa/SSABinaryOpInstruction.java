@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
 
 public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstruction {
 
@@ -60,9 +60,7 @@ public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstructio
     return operator;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#isPEI() */
   @Override
   public boolean isPEI() {
     return mayBeInteger
@@ -70,9 +68,7 @@ public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstructio
             || operator == BinaryOpInstruction.Operator.REM);
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
+  /** @see com.ibm.wala.ssa.SSAInstruction#isFallThrough() */
   @Override
   public boolean isFallThrough() {
     return true;

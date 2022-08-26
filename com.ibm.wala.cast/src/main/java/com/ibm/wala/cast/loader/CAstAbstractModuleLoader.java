@@ -32,6 +32,7 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
+import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -42,7 +43,6 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.TemporaryFile;
-import com.ibm.wala.util.warnings.Warning;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -72,15 +72,24 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     this(cha, null);
   }
 
-  /** create the appropriate CAst translator for the language and source module */
-  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M)
-      throws IOException;
+  /**
+   * create the appropriate CAst translator for the language and source module
+   *
+   * @param modules all modules in the analysis
+   */
+  protected abstract TranslatorToCAst getTranslatorToCAst(
+      CAst ast, ModuleEntry M, List<Module> modules) throws IOException;
 
   /** should IR be generated for entity? */
   protected abstract boolean shouldTranslate(CAstEntity entity);
 
-  /** create the appropriate IR translator for the language */
-  protected abstract TranslatorToIR initTranslator();
+  /**
+   * create the appropriate IR translator for the language
+   *
+   * @param topLevelEntities the set of all modules being translated
+   */
+  protected abstract TranslatorToIR initTranslator(
+      Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities);
 
   protected File getLocalFile(SourceModule M) throws IOException {
     if (M instanceof SourceFileModule) {
@@ -109,11 +118,11 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     // convert everything to CAst
     final Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities = new LinkedHashSet<>();
     for (Module module : modules) {
-      translateModuleToCAst(module, ast, topLevelEntities);
+      translateModuleToCAst(module, ast, topLevelEntities, modules);
     }
 
     // generate IR as needed
-    final TranslatorToIR xlatorToIR = initTranslator();
+    final TranslatorToIR xlatorToIR = initTranslator(topLevelEntities);
 
     for (Pair<CAstEntity, ModuleEntry> p : topLevelEntities) {
       if (shouldTranslate(p.fst)) {
@@ -136,15 +145,22 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     finishTranslation();
   }
 
-  /** translate moduleEntry to CAst and store result in topLevelEntities */
+  /**
+   * translate moduleEntry to CAst and store result in topLevelEntities
+   *
+   * @param modules all mofules in the analysis
+   */
   private void translateModuleEntryToCAst(
-      ModuleEntry moduleEntry, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
+      ModuleEntry moduleEntry,
+      CAst ast,
+      Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities,
+      List<Module> modules) {
     try {
       if (moduleEntry.isModuleFile()) {
         // nested module
-        translateModuleToCAst(moduleEntry.asModule(), ast, topLevelEntities);
+        translateModuleToCAst(moduleEntry.asModule(), ast, topLevelEntities, modules);
       } else {
-        TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry);
+        TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, modules);
 
         CAstEntity fileEntity = null;
         try {
@@ -185,11 +201,16 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
   /**
    * translate all relevant entities in the module to CAst, storing the results in topLevelEntities
+   *
+   * @param modules all modules in the analysis
    */
   private void translateModuleToCAst(
-      Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
+      Module module,
+      CAst ast,
+      Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities,
+      List<Module> modules) {
     for (ModuleEntry me : Iterator2Iterable.make(module.getEntries())) {
-      translateModuleEntryToCAst(me, ast, topLevelEntities);
+      translateModuleEntryToCAst(me, ast, topLevelEntities, modules);
     }
   }
 

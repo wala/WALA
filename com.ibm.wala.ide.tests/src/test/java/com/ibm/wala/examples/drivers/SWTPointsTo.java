@@ -13,6 +13,8 @@ package com.ibm.wala.examples.drivers;
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -26,11 +28,9 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import java.util.Properties;
 import org.eclipse.jface.window.ApplicationWindow;
@@ -74,13 +74,13 @@ public class SWTPointsTo {
   public static Graph<Object> buildPointsTo(String appJar)
       throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
-        AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+        AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
             appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
     Iterable<Entrypoint> entrypoints =
-        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     // //
@@ -88,7 +88,7 @@ public class SWTPointsTo {
     // //
     com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
         Util.makeVanillaZeroOneCFABuilder(
-            Language.JAVA, options, new AnalysisCacheImpl(), cha, scope, null, null);
+            Language.JAVA, options, new AnalysisCacheImpl(), cha, null, null);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
 

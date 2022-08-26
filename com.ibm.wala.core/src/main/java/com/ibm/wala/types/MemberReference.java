@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.types;
 
-import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.core.util.strings.Atom;
 
 /** Abstract superclass of {@link MethodReference} and {@link FieldReference} */
 public abstract class MemberReference {

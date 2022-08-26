@@ -11,7 +11,7 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.core.util.strings.Atom;
 
 /**
  * A method selector; something like: foo(Ljava/lang/String;)Ljava/lang/Class;
@@ -71,7 +71,7 @@ public final class Selector {
 
   @Override
   public String toString() {
-    return name.toString() + descriptor.toString();
+    return name.toString() + descriptor;
   }
 
   public Descriptor getDescriptor() {

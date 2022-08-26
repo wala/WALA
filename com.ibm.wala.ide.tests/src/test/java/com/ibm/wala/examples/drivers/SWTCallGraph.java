@@ -12,6 +12,8 @@ package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ide.ui.SWTTreeViewer;
 import com.ibm.wala.ide.ui.ViewIRAction;
@@ -29,12 +31,10 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.File;
 import java.util.Properties;
 import java.util.jar.JarFile;
@@ -84,7 +84,7 @@ public class SWTCallGraph {
       String exclusionFile = p.getProperty("exclusions");
 
       AnalysisScope scope =
-          AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
               appJar,
               exclusionFile != null
                   ? new File(exclusionFile)
@@ -99,12 +99,12 @@ public class SWTCallGraph {
           if (mainClass != null) {
             entrypoints =
                 com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-                    scope, cha, 'L' + mainClass.replace('.', '/'));
+                    cha, 'L' + mainClass.replace('.', '/'));
           }
         }
       }
       if (entrypoints == null) {
-        entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+        entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha);
       }
 
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
@@ -114,8 +114,7 @@ public class SWTCallGraph {
       // build the call graph
       // //
       com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
-          Util.makeZeroCFABuilder(
-              Language.JAVA, options, new AnalysisCacheImpl(), cha, scope, null, null);
+          Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, null, null);
       CallGraph cg = builder.makeCallGraph(options, null);
 
       System.out.println(CallGraphStats.getStats(cg));

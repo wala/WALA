@@ -1,5 +1,6 @@
 plugins {
 	id 'com.diffplug.eclipse.mavencentral'
+	id 'wala-java'
 }
 
 eclipseMavenCentral {
@@ -12,13 +13,14 @@ eclipseMavenCentral {
 				'org.eclipse.osgi',
 		].each { dep 'testImplementation', it }
 		useNativesForRunningPlatform()
+		constrainTransitivesToThisRelease()
 	}
 }
 
 dependencies {
 	testImplementation(
 			'junit:junit:4.13.2',
-			'org.osgi:org.osgi.core:6.0.0',
+			'org.eclipse.platform:org.eclipse.osgi:3.17.0',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.java'),
 			project(':com.ibm.wala.cast.java.ecj'),
@@ -30,9 +32,6 @@ dependencies {
 			project(configuration: 'testArchives', path: ':com.ibm.wala.ide.tests'),
 			testFixtures(project(':com.ibm.wala.cast.java')),
 	)
-	testImplementation('javax.annotation:javax.annotation-api') {
-		version { strictly '1.3.2' }
-	}
 }
 
 tasks.named('test') {

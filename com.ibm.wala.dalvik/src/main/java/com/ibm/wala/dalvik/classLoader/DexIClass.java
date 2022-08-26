@@ -57,12 +57,12 @@ import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.strings.ImmutableByteArray;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -208,17 +208,13 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return (modifiers & INTERFACE.getValue()) != 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isAbstract() */
   @Override
   public boolean isAbstract() {
     return (modifiers & ABSTRACT.getValue()) != 0;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
+  /** @see com.ibm.wala.classLoader.IClass#isAbstract() */
   @Override
   public boolean isSynthetic() {
     return (modifiers & SYNTHETIC.getValue()) != 0;

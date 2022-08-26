@@ -15,6 +15,8 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -22,8 +24,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.io.FileProvider;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -44,7 +44,7 @@ public class InterfaceTest extends WalaTestCase {
   @BeforeClass
   public static void beforeClass() throws Exception {
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
@@ -77,8 +77,8 @@ public class InterfaceTest extends WalaTestCase {
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
 
-    Assert.assertTrue("did not find PreparedStatement", prep_stmt != null);
-    Assert.assertTrue("did not find Statement", stmt != null);
+    Assert.assertNotNull("did not find PreparedStatement", prep_stmt);
+    Assert.assertNotNull("did not find Statement", stmt);
 
     Assert.assertTrue(cha.implementsInterface(prep_stmt, stmt));
     Assert.assertFalse(cha.implementsInterface(stmt, prep_stmt));

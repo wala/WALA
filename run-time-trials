@@ -12,5 +12,5 @@ for trial in {1..10}; do
   if [ -f orderly-shutdown ]; then
     break
   fi
-  ./gradlew test --no-build-cache --no-parallel --project-prop trial=$trial "$@"
+  ./gradlew test --no-build-cache --no-parallel --project-prop trial="$trial" "$@"
 done

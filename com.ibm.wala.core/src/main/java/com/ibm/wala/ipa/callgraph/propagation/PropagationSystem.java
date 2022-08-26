@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.Worklist;
 import com.ibm.wala.fixpoint.AbstractOperator;
@@ -37,7 +38,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -98,6 +98,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   private int periodicMaintainInterval = DEFAULT_PERIODIC_MAINTENANCE_INTERVAL;
 
+  @SuppressWarnings("unused")
   public PropagationSystem(
       CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory) {
     if (cg == null) {
@@ -641,9 +642,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return flowGraph;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
-   */
+  /** @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys() */
   public Iterator<PointerKey> iteratePointerKeys() {
     return pointsToMap.iterateKeys();
   }

@@ -14,6 +14,7 @@ import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
+import com.ibm.wala.core.util.ProgressMaster;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -22,8 +23,8 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.tests.util.SlowTests;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
-import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
@@ -936,7 +937,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     SSAPropagationCallGraphBuilder B =
         JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
     B.getOptions().setTraceStringConstants(true);
-    ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 10000, false);
+    IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 10000, false);
     monitor.beginTask("build CG", 1);
     CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
     monitor.done();

@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ide.ui;
 
+import com.ibm.wala.core.viz.PDFViewUtil;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
@@ -23,9 +24,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
-import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.NodeDecorator;
-import com.ibm.wala.viz.PDFViewUtil;
+import com.ibm.wala.util.viz.DotUtil;
+import com.ibm.wala.util.viz.NodeDecorator;
 import java.util.function.Predicate;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -170,9 +170,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     return s.toString();
   }
 
-  /*
-   * @see org.eclipse.jface.action.IAction#run()
-   */
+  /** @see org.eclipse.jface.action.IAction#run() */
   @Override
   public void run() {
 

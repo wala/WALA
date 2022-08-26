@@ -11,6 +11,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,24 +22,25 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
-import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TargetType;
-import com.ibm.wala.shrikeCT.TypeAnnotationsReader.TypePathKind;
+import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.ConstantElementValue;
+import com.ibm.wala.shrike.shrikeCT.AnnotationsReader.ElementValue;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TargetType;
+import com.ibm.wala.shrike.shrikeCT.TypeAnnotationsReader.TypePathKind;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.annotations.TypeAnnotation;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -104,7 +107,7 @@ public class TypeAnnotationTest extends WalaTestCase {
     // ), but instead of the preceding aload instruction.
     //
     // Just change it whenever a test starts to fail
-    final int instanceOfIIndex = 6;
+    final int instanceOfIIndex = PlatformUtil.getJavaRuntimeVersion() > 8 ? 7 : 6;
 
     TypeReference typeUnderTest =
         TypeReference.findOrCreate(ClassLoaderReference.Application, typeAnnotatedClass1);
@@ -296,14 +299,16 @@ public class TypeAnnotationTest extends WalaTestCase {
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(true));
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(true));
-    AnnotationTest.assertEqualCollections(
-        expectedRuntimeInvisibleAnnotations, runtimeInvisibleAnnotations);
+    assertThat(
+        runtimeInvisibleAnnotations,
+        containsInAnyOrder(expectedRuntimeInvisibleAnnotations.toArray(new TypeAnnotation[0])));
 
     Collection<TypeAnnotation> runtimeVisibleAnnotations = HashSetFactory.make();
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(false));
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(false));
-    AnnotationTest.assertEqualCollections(
-        expectedRuntimeVisibleAnnotations, runtimeVisibleAnnotations);
+    assertThat(
+        runtimeVisibleAnnotations,
+        containsInAnyOrder(expectedRuntimeVisibleAnnotations.toArray(new TypeAnnotation[0])));
   }
 
   private void testFieldAnnotations(

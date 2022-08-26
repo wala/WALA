@@ -1,9 +1,13 @@
+plugins {
+	id 'wala-java'
+}
+
 dependencies {
 	api(project(':com.ibm.wala.cast.js')) {
 		because 'public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil'
 	}
 	implementation(
-			'commons-io:commons-io:2.8.0',
+			'commons-io:commons-io:2.11.0',
 			'org.json:json:20210307',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js.rhino'),
@@ -13,6 +17,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.13.2',
 	)
+	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
 }
 
 final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
@@ -22,20 +27,23 @@ final downloadNodeJS = tasks.register('downloadNodeJS', VerifiedDownload) {
 	checksum '147ff79947752399b870fcf3f1fc37102100b545'
 }
 
-tasks.register('unpackNodeJSLib', Copy) {
+final unpackNodeJSLib = tasks.register('unpackNodeJSLib', Copy) {
 	from(downloadNodeJS.map { tarTree it.dest }) {
-		include 'node-v0.12.4/lib/*.js'
-		eachFile {
-			relativePath RelativePath.parse(!directory, relativePath.lastName)
-		}
+		include '*/lib/*.js'
+		eachFile { path = name }
 	}
 
-	into "${tasks.named('processTestResources', Copy).get().destinationDir}/core-modules"
-	includeEmptyDirs false
+	into layout.buildDirectory.dir(name)
 }
 
-tasks.named('processTestResources') {
-	dependsOn 'unpackNodeJSLib'
+tasks.named('processResources', Copy) {
+	// It is important to unpack the the NodeJs library files into the main resources directory,
+	// so they are packaged inside the jar artifact for this module.  That way, the packaged jar
+	// will work when used by third-party code.  The downside is that we cannot release this jar
+	// artifact to Maven Central with third-party source code included.  Eventually, we should find
+	// a way to remove the reliance on packaging this code (e.g., allow the nodejs library directory
+	// to be specified via a JVM property), so we can release the artifact to Maven Central.
+	from(unpackNodeJSLib) { eachFile { path = "core-modules/$name" } }
 }
 
 tasks.named('test') {

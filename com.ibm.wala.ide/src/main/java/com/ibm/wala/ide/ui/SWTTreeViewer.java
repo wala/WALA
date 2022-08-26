@@ -15,7 +15,7 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.viz.NodeDecorator;
+import com.ibm.wala.util.viz.NodeDecorator;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,6 +141,25 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
     }
   }
 
+  /**
+   * For testing purposes, open the tree viewer window and then immediately close it. Useful for
+   * testing that there is no failure while opening the window.
+   */
+  public void justOpenForTest() throws WalaException {
+
+    if (getRootsInput() == null) {
+      throw new IllegalStateException("null roots input in " + getClass());
+    }
+
+    final ApplicationWindow w = new GraphViewer(getGraphInput());
+    setApplicationWindow(w);
+    if (PlatformUI.isWorkbenchRunning()) {
+      throw new IllegalStateException("not designed to run inside workbench");
+    }
+    w.open();
+    Display.getCurrent().dispose();
+  }
+
   public IStructuredSelection getSelection() throws IllegalStateException {
     GraphViewer viewer = (GraphViewer) getApplicationWindow();
     if (viewer == null || viewer.treeViewer == null) {
@@ -169,9 +188,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       }
     }
 
-    /*
-     * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
-     */
+    /** @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite) */
     @Override
     protected Control createContents(Composite parent) {
       treeViewer = new TreeViewer(parent);

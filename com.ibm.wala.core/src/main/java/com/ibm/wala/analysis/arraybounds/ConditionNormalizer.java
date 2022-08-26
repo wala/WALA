@@ -1,6 +1,6 @@
 package com.ibm.wala.analysis.arraybounds;
 
-import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.Operator;
+import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.Operator;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 
 /**

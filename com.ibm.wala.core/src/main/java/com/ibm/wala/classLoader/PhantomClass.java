@@ -1,9 +1,9 @@
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.Collections;
 

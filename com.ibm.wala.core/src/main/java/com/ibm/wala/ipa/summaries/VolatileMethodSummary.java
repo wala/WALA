@@ -42,6 +42,7 @@
 */
 package com.ibm.wala.ipa.summaries;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -49,7 +50,6 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.strings.Atom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

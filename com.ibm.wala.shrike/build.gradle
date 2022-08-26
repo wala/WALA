@@ -1,5 +1,6 @@
 plugins {
-	id 'eclipse'
+	id 'gradle-mvn-push'
+	id 'wala-java'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
@@ -7,5 +8,3 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 dependencies {
 	implementation project(':com.ibm.wala.util')
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

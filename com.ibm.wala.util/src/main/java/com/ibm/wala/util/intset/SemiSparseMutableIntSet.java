@@ -119,13 +119,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
 
         assert assertDisjoint()
-            : this.toString()
-                + ", maxOffset="
-                + maxOffset
-                + ", maxMax="
-                + maxMax
-                + ", maxCount="
-                + maxCount;
+            : this + ", maxOffset=" + maxOffset + ", maxMax=" + maxMax + ", maxCount=" + maxCount;
 
       } else {
         IntIterator sparseBits = sparsePart.intIterator();
@@ -230,7 +224,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
 
         assert assertDisjoint()
-            : this.toString()
+            : this
                 + ", densePart.length()="
                 + densePart.length()
                 + ", newOffset="
@@ -245,9 +239,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
-   */
   @Override
   public void clear() {
     sparsePart.clear();
@@ -306,9 +297,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return newThis;
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
+  /** @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet) */
   @Override
   public IntSet union(IntSet that) {
     SemiSparseMutableIntSet temp = new SemiSparseMutableIntSet();
@@ -650,7 +639,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public String toString() {
     StringBuilder sb = new StringBuilder("[");
     if (densePart != null) {
-      sb.append("densePart: ").append(densePart.toString()).append(' ');
+      sb.append("densePart: ").append(densePart).append(' ');
     }
     sb.append("sparsePart: ").append(sparsePart.toString()).append(']');
     return sb.toString();

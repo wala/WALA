@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileSuffixes;
+import com.ibm.wala.core.util.warnings.Warning;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.Warnings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
             @Override
             public String getMsg() {
               return "could not read contents of nested jar file "
-                  + AbstractNestedJarFileModule.this.toString();
+                  + AbstractNestedJarFileModule.this;
             }
           });
     }
@@ -92,9 +92,6 @@ public abstract class AbstractNestedJarFileModule implements Module {
     return b.length;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.Module#getEntries()
-   */
   @Override
   public Iterator<ModuleEntry> getEntries() {
     populateCache();
@@ -142,9 +139,6 @@ public abstract class AbstractNestedJarFileModule implements Module {
       this.name = name;
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#getName()
-     */
     @Override
     public String getName() {
       return name;
@@ -155,33 +149,21 @@ public abstract class AbstractNestedJarFileModule implements Module {
       return container;
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
-     */
     @Override
     public boolean isClassFile() {
       return FileSuffixes.isClassFile(getName());
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
-     */
     @Override
     public InputStream getInputStream() {
       return AbstractNestedJarFileModule.this.getInputStream(name);
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
-     */
     @Override
     public boolean isModuleFile() {
       return false;
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
-     */
     @Override
     public Module asModule() {
       Assertions.UNREACHABLE();
@@ -193,17 +175,11 @@ public abstract class AbstractNestedJarFileModule implements Module {
       return "nested entry: " + name;
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
-     */
     @Override
     public String getClassName() {
       return FileSuffixes.stripSuffix(getName());
     }
 
-    /*
-     * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
-     */
     @Override
     public boolean isSourceFile() {
       return FileSuffixes.isSourceFile(getName());

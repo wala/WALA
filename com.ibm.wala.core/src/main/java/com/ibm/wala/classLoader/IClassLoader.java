@@ -11,10 +11,10 @@
 
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;

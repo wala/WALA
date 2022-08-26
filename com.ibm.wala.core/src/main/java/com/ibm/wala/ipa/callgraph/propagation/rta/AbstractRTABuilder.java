@@ -41,7 +41,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -342,9 +342,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   protected abstract void updateSetsForNewClass(
       IClass klass, InstanceKey iKey, CGNode node, NewSiteReference ns);
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#customInit()
-   */
   @Override
   protected void customInit() {
     super.customInit();
@@ -364,9 +361,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return (Set<IClass>) allocatedClasses.clone();
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSolver()
-   */
   @Override
   protected IPointsToSolver makeSolver() {
     return new StandardSolver(system, this);
@@ -410,9 +404,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return new DelegatingExplicitCallGraph(fakeRootClass, options, getAnalysisCache());
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSystem(com.ibm.wala.ipa.callgraph.AnalysisOptions)
-   */
   @Override
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     PropagationSystem result = super.makeSystem(options);
@@ -421,9 +412,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return result;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
-   */
+  /** @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis() */
   @Override
   public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return TypeBasedPointerAnalysis.make(getOptions(), allocatedClasses, getCallGraph());

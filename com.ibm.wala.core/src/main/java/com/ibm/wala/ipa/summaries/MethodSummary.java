@@ -10,13 +10,13 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.Warning;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -46,13 +46,20 @@ public class MethodSummary {
   /** Is this a "factory" method? */
   private boolean isFactory = false;
 
+  private final int numberOfParameters;
+
   /** Known names for values */
   private Map<Integer, Atom> valueNames = null;
 
   public MethodSummary(MethodReference method) {
+    this(method, -1);
+  }
+
+  public MethodSummary(MethodReference method, int numberOfParameters) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
+    this.numberOfParameters = numberOfParameters;
     this.method = method;
   }
 
@@ -129,7 +136,11 @@ public class MethodSummary {
 
   /** @return the number of parameters, including the implicit 'this' */
   public int getNumberOfParameters() {
-    return (isStatic()) ? method.getNumberOfParameters() : method.getNumberOfParameters() + 1;
+    if (numberOfParameters >= 0) {
+      return numberOfParameters;
+    } else {
+      return (isStatic()) ? method.getNumberOfParameters() : method.getNumberOfParameters() + 1;
+    }
   }
 
   public boolean isStatic() {

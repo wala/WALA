@@ -42,10 +42,10 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -122,13 +122,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
     @Override
     public String toString() {
-      return "<BehaviorKey of "
-          + base.getClass()
-          + ' '
-          + base.toString()
-          + " hash="
-          + this.hashCode()
-          + "/>";
+      return "<BehaviorKey of " + base.getClass() + ' ' + base + " hash=" + this.hashCode() + "/>";
     }
   }
 

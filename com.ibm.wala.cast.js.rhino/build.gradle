@@ -1,6 +1,11 @@
+plugins {
+	id 'gradle-mvn-push'
+	id 'wala-java'
+}
+
 dependencies {
 	implementation(
-			'org.mozilla:rhino:1.7.13',
+			'org.mozilla:rhino:1.7.14',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js'),
 			project(':com.ibm.wala.core'),
@@ -9,7 +14,7 @@ dependencies {
 	testImplementation(
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',
-			'com.google.code.gson:gson:2.8.6',
+			'com.google.code.gson:gson:2.8.9',
 			testFixtures(project(':com.ibm.wala.cast')),
 			testFixtures(project(':com.ibm.wala.cast.js')),
 	)
@@ -41,5 +46,3 @@ tasks.named('test') {
 			'expected.dump',
 	].collect(layout.buildDirectory.&file))
 }
-
-apply from: rootProject.file("gradle-mvn-push.gradle")

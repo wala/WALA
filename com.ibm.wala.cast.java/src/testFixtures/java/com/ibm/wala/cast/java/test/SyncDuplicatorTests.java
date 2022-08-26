@@ -13,17 +13,17 @@ package com.ibm.wala.cast.java.test;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public abstract class SyncDuplicatorTests extends IRTests {
 
   @Test
   public void testMonitor2() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, PointerAnalysis<? extends InstanceKey>> result =
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result =
         runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
     System.err.println(result.fst);
   }

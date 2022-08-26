@@ -39,6 +39,7 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -59,7 +60,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BitVectorIntSet;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -68,6 +68,9 @@ import java.util.Set;
 
 /** A graph representing program flow, constructed method-by-method on demand */
 public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
+  /** */
+  private static final long serialVersionUID = 1L;
+
   private static final boolean DEBUG = false;
 
   /** Counter for wiping soft caches */
@@ -76,8 +79,9 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /** node numbers of CGNodes we have already visited */
   final BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
@@ -97,17 +101,16 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     }
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
+  /**
+   * @see
+   *     com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean hasSubgraphForNode(CGNode node) {
     return cgNodesVisited.contains(cg.getNumber(node));
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrsPassingParam(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getParamSuccs(LocalPointerKey pk) {
     // TODO cache this result
     // TODO take some cgnode as parameter if we have calling context?
@@ -139,9 +142,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return paramSuccs.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrsPassingParam(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getParamPreds(LocalPointerKey pk) {
     // TODO
     Set<SSAAbstractInvokeInstruction> instrs = callParams.get(pk);
@@ -169,9 +170,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return paramPreds.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrReturningTo(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getReturnSuccs(LocalPointerKey pk) {
     SSAAbstractInvokeInstruction callInstr = callDefs.get(pk);
     if (callInstr == null) return EmptyIterator.instance();
@@ -195,9 +194,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return returnSuccs.iterator();
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
+  /** @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrReturningTo(LocalPointerKey) */
   public Iterator<PointerKeyAndCallSite> getReturnPreds(LocalPointerKey pk) {
     CGNode cgNode = returns.get(pk);
     if (cgNode == null) {
@@ -328,7 +325,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
         System.err.println("\n   No statements\n");
       } else {
         try {
-          System.err.println(ir.toString());
+          System.err.println(ir);
         } catch (Error e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

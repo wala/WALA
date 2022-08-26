@@ -95,6 +95,9 @@ import java.util.Set;
 public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel>
     implements IFlowGraph {
 
+  /** */
+  private static final long serialVersionUID = 1L;
+
   private static final IFlowLabel defaultLabel =
       new IFlowLabel() {
         @Override
@@ -155,10 +158,6 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     this.cg = cg;
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowLabelGraph#visitSuccs(java.lang.Object,
-   * com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor)
-   */
   @Override
   public void visitSuccs(Object node, IFlowLabelVisitor v) {
     for (final IFlowLabel label : Iterator2Iterable.make(getSuccLabels(node))) {
@@ -168,10 +167,6 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     }
   }
 
-  /*
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowLabelGraph#visitPreds(java.lang.Object,
-   * com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor)
-   */
   @Override
   public void visitPreds(Object node, IFlowLabelVisitor v) {
     for (final IFlowLabel label : Iterator2Iterable.make(getPredLabels(node))) {

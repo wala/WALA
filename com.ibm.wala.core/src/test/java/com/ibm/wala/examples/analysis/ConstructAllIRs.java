@@ -12,6 +12,8 @@ package com.ibm.wala.examples.analysis;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -20,9 +22,7 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.perf.Stopwatch;
-import com.ibm.wala.util.ref.ReferenceCleanser;
 import java.io.IOException;
 
 /**
@@ -48,7 +48,8 @@ public class ConstructAllIRs {
     Stopwatch s = new Stopwatch();
     s.start();
     AnalysisScope scope =
-        AnalysisScopeReader.readJavaScope(scopeFile, null, ConstructAllIRs.class.getClassLoader());
+        AnalysisScopeReader.instance.readJavaScope(
+            scopeFile, null, ConstructAllIRs.class.getClassLoader());
 
     // build a type hierarchy
     System.out.print("building class hierarchy...");

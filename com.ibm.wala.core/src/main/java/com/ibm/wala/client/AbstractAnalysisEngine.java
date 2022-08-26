@@ -16,6 +16,8 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -37,10 +39,8 @@ import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.jar.JarFile;
@@ -57,7 +57,7 @@ public abstract class AbstractAnalysisEngine<
     implements AnalysisEngine {
 
   public interface EntrypointBuilder {
-    Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha);
+    Iterable<Entrypoint> createEntrypoints(IClassHierarchy cha);
   }
 
   public static final String SYNTHETIC_J2SE_MODEL = "SyntheticJ2SEModel.txt";
@@ -141,7 +141,7 @@ public abstract class AbstractAnalysisEngine<
     }
 
     scope =
-        AnalysisScopeReader.readJavaScope(
+        AnalysisScopeReader.instance.readJavaScope(
             SYNTHETIC_J2SE_MODEL,
             (new FileProvider()).getFile(getExclusionsFile()),
             getClass().getClassLoader());
@@ -163,7 +163,7 @@ public abstract class AbstractAnalysisEngine<
       cha = ClassHierarchyFactory.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
-      System.err.println(e.toString());
+      System.err.println(e);
       e.printStackTrace();
     }
     return cha;
@@ -262,8 +262,8 @@ public abstract class AbstractAnalysisEngine<
     return new AnalysisCacheImpl(new DefaultIRFactory());
   }
 
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-    return Util.makeMainEntrypoints(scope, cha);
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
+    return Util.makeMainEntrypoints(cha);
   }
 
   public void setEntrypointBuilder(EntrypointBuilder builder) {
@@ -277,7 +277,7 @@ public abstract class AbstractAnalysisEngine<
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
-    Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
+    Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(cha);
     options = getDefaultOptions(eps);
     cache = makeDefaultCache();
     return getCallGraphBuilder(cha, options, cache);

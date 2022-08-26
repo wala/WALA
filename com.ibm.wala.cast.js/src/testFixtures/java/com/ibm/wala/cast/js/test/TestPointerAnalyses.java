@@ -36,6 +36,7 @@ import com.ibm.wala.cast.loader.AstDynamicField;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -54,7 +55,6 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.strings.Atom;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -263,9 +263,10 @@ public abstract class TestPointerAnalyses {
         Set<Pair<CGNode, NewSiteReference>> propPtrs =
             map(propCG, ptrs(propNodes, i, propCG, propPA));
 
-        Assert.assertTrue(
+        Assert.assertEquals(
             "analysis should agree on global object for " + i + " of " + ir,
-            isGlobal(fbNodes, i, fbPA) == isGlobal(propNodes, i, propPA));
+            isGlobal(fbNodes, i, fbPA),
+            isGlobal(propNodes, i, propPA));
 
         if (!fbPtrs.isEmpty() || !propPtrs.isEmpty()) {
           System.err.println(

@@ -1,8 +1,8 @@
 package com.ibm.wala.core.tests.typeargument;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.types.generics.TypeArgument;
-import com.ibm.wala.util.warnings.Warnings;
 import org.junit.AfterClass;
 import org.junit.Test;
 

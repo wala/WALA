@@ -144,22 +144,16 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   @Override
   public int getUse(int j) {
-    assert params != null : "expected params but got null in " + this.toString();
+    assert params != null : "expected params but got null in " + this;
     assert params.length > j : "found too few parameters";
     return params[j];
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

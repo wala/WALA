@@ -1,0 +1,9 @@
+// Build configuration for projects that include `Javadoc` tasks.
+
+
+tasks.withType(Javadoc).configureEach {
+	options.addBooleanOption 'Xdoclint:all,-missing', true
+	options.encoding = 'UTF-8'
+	options.quiet()
+	options.tags += "apiNote:a:API Note:"
+}

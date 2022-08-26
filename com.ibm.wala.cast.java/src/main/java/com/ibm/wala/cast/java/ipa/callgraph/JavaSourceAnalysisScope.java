@@ -16,9 +16,9 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.strings.Atom;
 import java.util.Collection;
 import java.util.Collections;
 

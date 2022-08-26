@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction;
 
 public enum CAstUnaryOp implements IUnaryOpInstruction.IOperator {
   MINUS,

@@ -11,9 +11,9 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.core.util.shrike.ShrikeUtil;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.shrike.ShrikeUtil;
-import com.ibm.wala.util.strings.Atom;
 import java.util.HashMap;
 
 /** A class to represent the reference in a class file to a method. */
@@ -157,12 +157,12 @@ public final class MethodReference extends MemberReference {
   }
 
   /** @return the descriptor component of this member reference */
-  public final Descriptor getDescriptor() {
+  public Descriptor getDescriptor() {
     return selector.getDescriptor();
   }
 
   @Override
-  public final String toString() {
+  public String toString() {
     return "< "
         + getDeclaringClass().getClassLoader().getName()
         + ", "
@@ -193,12 +193,12 @@ public final class MethodReference extends MemberReference {
   }
 
   /** @return return type of the method */
-  public final TypeReference getReturnType() {
+  public TypeReference getReturnType() {
     return returnType;
   }
 
   /** @return ith parameter to the method. This does NOT include the implicit "this" pointer. */
-  public final TypeReference getParameterType(int i) throws IllegalArgumentException {
+  public TypeReference getParameterType(int i) throws IllegalArgumentException {
     if (parameterTypes == null || i >= parameterTypes.length) {
       throw new IllegalArgumentException("illegal parameter number " + i + " for " + this);
     }

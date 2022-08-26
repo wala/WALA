@@ -57,9 +57,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       super(method, C);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode#getAllTargetNumbers()
-     */
     @Override
     public MutableSharedBitVectorIntSet getAllTargetNumbers() {
       MutableSharedBitVectorIntSet result =
@@ -78,9 +75,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       return result;
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.CGNode#getPossibleTargets(com.ibm.wala.classLoader.CallSiteReference)
-     */
     @Override
     public Set<CGNode> getPossibleTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
@@ -149,10 +143,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph#makeNode(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context)
-   */
   @Override
   protected ExplicitNode makeNode(IMethod method, Context context) {
     return new DelegatingCGNode(method, context);
@@ -160,10 +150,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
 
   private class DelegatingEdgeManager extends ExplicitEdgeManager {
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#addEdge(java.lang.Object,
-     *      java.lang.Object)
-     */
     @Override
     public void addEdge(CGNode src, CGNode dst) {
       // we assume that this is called from ExplicitNode.addTarget().
@@ -174,34 +160,21 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       super.addEdge(src, dst);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#removeAllIncidentEdges(java.lang.Object)
-     */
     @Override
     public void removeAllIncidentEdges(CGNode node) {
       Assertions.UNREACHABLE();
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#removeIncomingEdges(java.lang.Object)
-     */
     @Override
     public void removeIncomingEdges(CGNode node) {
       Assertions.UNREACHABLE();
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#removeOutgoingEdges(java.lang.Object)
-     */
     @Override
     public void removeOutgoingEdges(CGNode node) {
       Assertions.UNREACHABLE();
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#hasEdge(java.lang.Object,
-     *      java.lang.Object)
-     */
     @Override
     public boolean hasEdge(CGNode src, CGNode dst) {
       if (super.hasEdge(src, dst)) {
@@ -213,18 +186,12 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       }
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#getPredNodeCount(java.lang.Object)
-     */
     @Override
     public int getPredNodeCount(CGNode N) {
       IntSet s = getPredNodeNumbers(N);
       return s == null ? 0 : s.size();
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#getPredNodeNumbers(java.lang.Object)
-     */
     @Override
     public IntSet getPredNodeNumbers(CGNode node) {
       IntSet superR = super.getPredNodeNumbers(node);
@@ -252,9 +219,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph#makeEdgeManger()
-   */
   @Override
   protected ExplicitEdgeManager makeEdgeManger() {
     return new DelegatingEdgeManager();

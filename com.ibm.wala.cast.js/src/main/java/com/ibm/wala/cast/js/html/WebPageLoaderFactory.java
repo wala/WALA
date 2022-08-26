@@ -25,8 +25,11 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.Pair;
+import java.util.Set;
 
 public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
 
@@ -43,7 +46,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
     return new JavaScriptLoader(cha, translatorFactory, preprocessor) {
       @Override
-      protected TranslatorToIR initTranslator() {
+      protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntitie) {
         return new JSAstTranslator(this) {
           private final CAst Ast = new CAstImpl();
 

@@ -40,11 +40,11 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
+import com.ibm.wala.core.util.ssa.ParameterAccessor;
+import com.ibm.wala.core.util.ssa.SSAValue;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.SSAValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
