@@ -853,5 +853,4 @@ public class ReflectionTest extends WalaTestCase {
     // getMessage() should _not_ be a callee with reflection handling enabled
     Assert.assertFalse(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
   }
-
 }
