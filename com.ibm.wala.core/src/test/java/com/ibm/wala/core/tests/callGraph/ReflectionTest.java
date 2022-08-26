@@ -18,6 +18,7 @@ import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -41,11 +42,13 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.collections.Iterator2List;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.AfterClass;
@@ -826,5 +829,28 @@ public class ReflectionTest extends WalaTestCase {
 
     cgn = cg.getNodes(mcbar);
     Assert.assertEquals(1, cgn.size());
+  }
+
+  @Test
+  public void testForNameThrownExceptions()
+      throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints =
+        com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
+            cha, "Lreflection/ForNameThrownExceptions");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    options.setReflectionOptions(ReflectionOptions.NONE);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
+    IMethod mainMethod = entrypoints.iterator().next().getMethod();
+    List<CGNode> mainCallees =
+        Iterator2List.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
+    Assert.assertTrue(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
+    options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
+    cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
+    mainCallees =
+        Iterator2List.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
+    // getMessage() should _not_ be a callee with reflection handling enabled
+    Assert.assertFalse(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
   }
 }
