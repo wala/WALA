@@ -261,8 +261,11 @@ public abstract class SSAInstruction {
   public final boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj != null && obj instanceof SSAInstruction)
-      return this.instructionIndex == ((SSAInstruction) obj).instructionIndex;
-    else return false;
+      return this.instructionIndex == ((SSAInstruction) obj).instructionIndex
+          && this.hashCode() == ((SSAInstruction) obj).hashCode()
+          && this.toString().equals(((SSAInstruction) obj).toString());
+
+    return false;
   }
 
   public int iIndex() {
