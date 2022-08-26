@@ -262,8 +262,8 @@ public abstract class SSAInstruction {
     if (this == obj) return true;
     if (obj != null && obj instanceof SSAInstruction)
       return this.instructionIndex == ((SSAInstruction) obj).instructionIndex
-          && this.hashCode() == ((SSAInstruction) obj).hashCode()
-          && this.toString().equals(((SSAInstruction) obj).toString());
+          && this.hashCode() == obj.hashCode()
+          && this.toString().equals(obj.toString());
 
     return false;
   }
