@@ -139,6 +139,11 @@ public class PutInstruction extends Instruction implements IPutInstruction {
   }
 
   @Override
+  public final int getPoppedWordSize() {
+    return isStatic() ? Util.getWordSize(getFieldType()) : Util.getWordSize(getFieldType()) + 1;
+  }
+
+  @Override
   public final String toString() {
     return "Put("
         + getFieldType()

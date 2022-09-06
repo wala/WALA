@@ -4,20 +4,22 @@
 //
 
 buildscript {
-	dependencies.classpath 'commons-io:commons-io:2.11.0'
+	dependencies.classpath 'commons-io:commons-io:2.8.0'
+	dependencies {
+		classpath 'com.bmuschko:gradle-nexus-plugin:2.3'
+	}
 }
 
 plugins {
-	id 'all.shared.gradle.file-lister' version '1.0.2'
-	id 'com.diffplug.eclipse.mavencentral' version '3.33.2' apply false
-	id 'com.dorongold.task-tree' version '2.1.0'
-	id 'com.github.ben-manes.versions' version '0.39.0'
+	id 'com.diffplug.eclipse.mavencentral' version '3.28.0' apply false
+	id 'com.dorongold.task-tree' version '1.5'
+	id 'com.github.ben-manes.versions' version '0.36.0'
 	id 'com.github.sherter.google-java-format' version '0.9'
 	id 'de.undercouch.download'
-	id 'nebula.lint' version '17.2.3'
-	id 'wala-javadoc'
-	id 'wala-project'
+//	id 'nebula.lint' version '14.2.5'
 }
+
+apply plugin: 'com.bmuschko.nexus'
 
 repositories {
 	// to get the google-java-format jar and dependencies
@@ -25,9 +27,7 @@ repositories {
 }
 
 ext.osName = System.getProperty('os.name')
-ext.archName = System.getProperty('os.arch')
 ext.isWindows = osName.startsWith('Windows ')
-
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -38,18 +38,133 @@ ext.isWindows = osName.startsWith('Windows ')
 group name
 version VERSION_NAME
 
-// version of Eclipse JARs to use for Eclipse-integrated WALA components.  On ARM-based Mac OS
-// machines, we use a more recent Eclipse version which includes an SWT library built for the
-// platform.  We only use the recent version on ARM-based Macs as it requires JDK 11, and we would
-// like to preserve JDK 8 compatibility on other platforms.
-ext.eclipseVersion = (osName.equals('Mac OS X') && archName.equals('aarch64')) ? '4.21.0' : '4.14.0'
+// version of Eclipse JARs to use for Eclipse-integrated WALA components
+ext.eclipseVersion = '4.7.2'
 ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
+
+subprojects { subproject ->
+	// skip generic Java setup for the few projects that have no Java code whatsoever
+	switch (subproject.name) {
+		case 'cast':
+		case 'smoke_main':
+		case 'xlator_test':
+		case 'com.ibm.wala-repository':
+		case ~/.*_feature/:
+			return
+	}
+
+	apply plugin: 'eclipse'
+	apply plugin: 'java-library'
+	apply plugin: 'java-test-fixtures'
+	apply plugin: 'maven-publish'
+	apply plugin: 'signing'
+
+	java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+	version rootProject.version
+
+	repositories {
+		mavenCentral()
+		// to get r8
+		maven {
+			url 'https://storage.googleapis.com/r8-releases/raw'
+		}
+	}
+
+	configurations {
+		implementation {
+			// See https://github.com/wala/WALA/issues/823.  This group was renamed to
+			// net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
+			// com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
+			// Gradle, but not run them, excluding the group as a dependence is a reasonable
+			// solution.
+			exclude group: 'com.sun.jna'
+		}
+	}
+
+	eclipse {
+		synchronizationTasks 'processTestResources'
+	}
+
+	tasks.named('test') {
+		include '**/*Test.class'
+		include '**/*TestCase.class'
+		include '**/*Tests.class'
+		include '**/Test*.class'
+		exclude '**/*AndroidLibs*.class'
+
+		if (project.hasProperty('excludeSlowTests')) {
+			dependencies {
+				testRuntime testFixtures(project(':com.ibm.wala.core'))
+			}
+			useJUnit {
+				excludeCategories 'com.ibm.wala.tests.util.SlowTests'
+			}
+		}
+
+		if (project.hasProperty('trial')) {
+			outputs.upToDateWhen { false }
+			afterTest { descriptor, result ->
+				def csv = new File("$rootProject.buildDir/time-trials.csv")
+				if (!csv.exists()) {
+					csv.append('trial,className,name,resultType,startTime,endTime\n')
+				}
+				csv.append("$trial,$descriptor.className,$descriptor.name,$result.resultType,$result.startTime,$result.endTime\n")
+			}
+		} else {
+			maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+		}
+	}
+
+	final ecjCompileTaskProviders = sourceSets.collect { sourceSet ->
+		JavaCompileUsingEcj.withSourceSet(subproject, sourceSet)
+	}
+
+	project.tasks.named('check').configure {
+		dependsOn ecjCompileTaskProviders
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = 'UTF-8'
+	}
+
+	// Special hack for WALA as an included build.  Composite
+	// builds only build and use artifacts from the default
+	// configuration of included builds:
+	// <https://docs.gradle.org/current/userguide/composite_builds.html#included_build_substitution_limitations>.
+	// This known limitation makes WALA test fixtures unavailable
+	// when WALA is included in a composite build.  As a
+	// workaround for composite projects that rely on those test
+	// fixtures, we extend the main sourceSet to include all
+	// test-fixture sources too.  This hack is only applied when
+	// WALA itself is an included build.
+	if (project.gradle.parent != null) {
+		afterEvaluate {
+			sourceSets {
+				main.java.srcDirs testFixtures.java.srcDirs
+			}
+
+			dependencies {
+				implementation configurations.testFixturesImplementation.dependencies
+			}
+		}
+	}
+}
 
 
 ///////////////////////////////////////////////////////////////////////
 //
 //  Javadoc documentation
 //
+
+allprojects {
+	tasks.withType(Javadoc).configureEach {
+		options.addBooleanOption('Xdoclint:all,-missing', true)
+		options.encoding = 'UTF-8'
+		options.quiet()
+		options.tags += "apiNote:a:API Note:"
+	}
+}
 
 tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	description = 'Generate javadocs from all child projects as if they were a single project'
@@ -58,7 +173,7 @@ tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 	title = "$project.name $version API"
 	options.author true
 
-	subprojects { proj ->
+	subprojects.each { proj ->
 		proj.tasks.withType(Javadoc) { javadocTask ->
 			aggregated.source += javadocTask.source
 			aggregated.classpath += javadocTask.classpath
@@ -73,6 +188,23 @@ tasks.register('aggregatedJavadocs', Javadoc) { aggregated ->
 //
 //  linters for various specific languages or file formats
 //
+
+// Gradle build scripts
+// disabled until <https://github.com/gradle/gradle/issues/6246> is fixed
+/*
+allprojects {
+	apply plugin: 'nebula.lint'
+	gradleLint.alwaysRun = false
+	gradleLint {
+		rules = ['all-dependency']
+		excludedRules = [
+				// <https://github.com/nebula-plugins/gradle-lint-plugin/issues/203>
+				'undeclared-dependency',
+				'unused-dependency',
+		]
+	}
+}
+*/
 
 // shell scripts, provided they have ".sh" extension
 if (isWindows) {
@@ -114,24 +246,10 @@ googleJavaFormat {
 	exclude 'com.ibm.wala.cast.java.test.data/**/*.java'
 }
 
-final verifyGoogleJavaFormat = tasks.named('verifyGoogleJavaFormat') {
+tasks.named('verifyGoogleJavaFormat') {
 	group 'verification'
 
 	// workaround for <https://github.com/sherter/google-java-format-gradle-plugin/issues/43>
-	final stampFile = project.layout.buildDirectory.file(name)
-	outputs.file stampFile
-	doLast {
-		stampFile.get().asFile.text = ''
-	}
-
-	exclude '**/build/'
-}
-
-tasks.named('autoLintGradle') {
-	// `autoLintGradle` creates no output files, which causes Gradle to treat it as always
-	// out-of-date.  By creating a simple, empty stamp file to record that this task has run and
-	// succeeded, we allow Gradle to avoid rerunning this task unnecessarily.  This task will still
-	// be rerun when needed, though, such as when any of the `**/build.gradle` files changes.
 	final stampFile = project.layout.buildDirectory.file(name)
 	outputs.file stampFile
 	doLast {
@@ -148,7 +266,7 @@ tasks.register('installGitHooks', Copy) {
 }
 
 // run all known linters
-final check = tasks.register('check') {
+final check = tasks.register('walaCheck') {
 	group = 'verification'
 	dependsOn(
 			// 'lintGradle',
@@ -157,83 +275,45 @@ final check = tasks.register('check') {
 	if (!(isWindows && System.getenv('GITHUB_ACTIONS') == 'true')) {
 		// Known to be broken on Windows when running as a GitHub Action, but not intentionally so.
 		// Please fix if you know how!  <https://github.com/wala/WALA/issues/608>
-		dependsOn verifyGoogleJavaFormat
+		dependsOn 'verifyGoogleJavaFormat'
 	}
 }
 
-tasks.register('build') {
+tasks.register('walaBuild') {
 	dependsOn check
 }
 
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  Run IntelliJ IDEA inspections on entire project tree
-//
-//  We don't make `check` depend on `checkInspectionResults` for two
-//  reasons.  First, `runInspections` is quite slow.  Second,
-//  `runInspections` cannot run while the same user account is running a
-//  regular, graphical instance of IntelliJ IDEA.  These limitations
-//  make `runInspections` and `checkInspectionResults` more suitable for
-//  use in CI/CD pipelines than for daily use by live WALA developers.
+//  Eclipse IDE integration
 //
 
-final runInspections = tasks.register('runInspections', Exec) {
-	group = 'intellij-idea'
-	description = 'Run all enabled IntelliJ IDEA inspections on the entire WALA project'
+// workaround for <https://github.com/gradle/gradle/issues/4802>
+allprojects {
+	apply plugin: 'eclipse'
 
-	final ideaDir = file "$rootDir/.idea"
-	inputs.dir "$ideaDir/scopes"
-
-	final inspectionProfile = file "$ideaDir/inspectionProfiles/No_Back_Sliding.xml"
-	inputs.file inspectionProfile
-
-	final textResultsFile = file "$buildDir/${name}.txt"
-	outputs.file textResultsFile
-
-	// Inspections examine a wide variety of files, not just Java
-	// sources, so this task is out-of-date if nearly any other file has
-	// changed.
-	inputs.files fileLister.obtainPartialFileTree()
-
-	executable = findProperty('runInspections.IntelliJ-IDEA.command') ?: 'idea'
-	args 'inspect', rootDir, inspectionProfile, textResultsFile, '-v1', '-format', 'plain'
-
-	// The `idea` command above always fails with an
-	// `IllegalArgumentException` arising from
-	// `PlainTextFormatter.getPath`.  Fortunately, this only happens
-	// *after* `idea` has already written out the results file.  So we
-	// should ignore that command's exit value, and only fail this task
-	// if the results file is missing.
-	ignoreExitValue = true
-	doLast {
-		if (!textResultsFile.exists()) {
-			throw new GradleException("IntelliJ IDEA command failed without creating $textResultsFile.")
+	eclipse.classpath.file.whenMerged {
+		entries.each {
+			if (it in org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry && it.entryAttributes['gradle_used_by_scope'] == 'test')
+				it.entryAttributes['test'] = true
 		}
 	}
 }
 
-tasks.register('checkInspectionResults') {
-	group = 'intellij-idea'
-	description = 'Fail if any IntelliJ IDEA inspections produced errors or warnings'
 
-	inputs.files runInspections
-	doFirst {
-		def failed = false
-		inputs.files.singleFile.eachLine {
-			if (it =~ /\[(ERROR|WARNING)]/) {
-				failed = true
-				println it
-			}
-		}
-		if (failed) {
-			throw new GradleException("One or more IntelliJ IDEA inspections failed.  See logged problems above, or \"$inputs.files.singleFile\" for full details.  WEAK WARNINGs are allowed, but all ERRORs and WARNINGs must be corrected.")
-		}
+////////////////////////////////////////////////////////////////////////
+//
+//  IntelliJ IDEA IDE integration
+//
+
+subprojects { subproject ->
+	apply plugin: 'idea'
+
+	idea.module {
+		// workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
+		excludeDirs += file('bin')
 	}
-
-	final stampFile = file("$buildDir/${name}.stamp")
-	outputs.file stampFile
-	doLast { stampFile.createNewFile() }
 }
 
 
@@ -322,4 +402,19 @@ final getNativeLibraryOutput(task) {
 	// on Windows, outputsFiles[2] is DLL
 	assert parent as String == library.parent
 	return library
+}
+
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Extra downloads pre-fetcher
+//
+
+tasks.register('downloads') {
+	final allDownloaders = allprojects*.tasks*.withType(VerifiedDownload)
+	final neededDownloaders = allDownloaders.flatten().findAll {
+		// not used in typical builds
+		it.name != 'downloadOcamlJava'
+	}
+	inputs.files neededDownloaders
 }

@@ -71,6 +71,11 @@ public final class ConversionInstruction extends Instruction implements IConvers
   }
 
   @Override
+  public int getPoppedWordSize() {
+    return Util.getWordSize(getFromType());
+  }
+
+  @Override
   public String getFromType() {
     return fromType;
   }

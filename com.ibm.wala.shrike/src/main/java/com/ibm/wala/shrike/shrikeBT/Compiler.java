@@ -360,12 +360,12 @@ public abstract class Compiler implements Constants {
         stackWords[stackLen - 2] = stackWords[stackLen - 1];
         stackWords[stackLen - 1] = b;
       } else {
-        stackLen -= instr.getPoppedCount();
+        stackLen -= instr.getPoppedWordSize();
 
         byte w = instr.getPushedWordSize();
         if (w > 0) {
           stackWords[stackLen] = w;
-          stackLen++;
+          stackLen += w;
           checkStackWordSize(stackWords, stackLen);
         }
       }
@@ -522,10 +522,17 @@ public abstract class Compiler implements Constants {
             int stackLen = stackLenRef[0];
 
             while (count > 0) {
-              code[offset] = (byte) (stackWords[stackLen - 1] == 1 ? OP_pop : OP_pop2);
-              count--;
-              stackLen--;
-              offset++;
+              if (stackWords[stackLen - 1] == OP_pop) {
+                code[offset] = OP_pop;
+                count--;
+                stackLen--;
+                offset++;
+              } else {
+                code[offset] = OP_pop2;
+                count -= 2;
+                stackLen -= 2;
+                offset += 2;
+              }
             }
 
             curOffsetRef[0] = offset;
@@ -540,11 +547,11 @@ public abstract class Compiler implements Constants {
 
             int sizeWords = stackWords[stackLen - 1];
             if (size == 2) {
-              sizeWords += stackWords[stackLen - 2];
+              sizeWords = stackWords[stackLen - 2];
             }
             int deltaWords = delta == 0 ? 0 : stackWords[stackLen - 1 - size];
             if (delta == 2) {
-              deltaWords += stackWords[stackLen - 1 - size - 1];
+              deltaWords = stackWords[stackLen - 1 - size - 1];
             }
             if (sizeWords > 2 || deltaWords > 2) {
               throw new IllegalArgumentException("Invalid dup size");
@@ -1139,12 +1146,12 @@ public abstract class Compiler implements Constants {
             stackWords[stackLen - 1] = stackWords[stackLen - 2];
             stackWords[stackLen - 2] = b;
           } else {
-            stackLen -= instr.getPoppedCount();
+            stackLen -= instr.getPoppedWordSize();
 
             byte w = instr.getPushedWordSize();
             if (w > 0) {
               stackWords[stackLen] = w;
-              stackLen++;
+              stackLen += w;
             }
           }
         } else {

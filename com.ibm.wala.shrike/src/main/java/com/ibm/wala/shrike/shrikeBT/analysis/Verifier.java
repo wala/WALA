@@ -103,11 +103,25 @@ public final class Verifier extends Analyzer {
     }
 
     private void checkStackSubtype(int i, String t) {
-      if (!isSubtypeOf(curStack[i], Util.getStackType(t))) {
+      // The stack indexes do not exactly match the parameter index since two-word elements
+      // need two elements on the stack. The given index "i" is the logical position of the
+      // parameter to verify.
+      // Subsequently calculate the stack index given the logical parameter index
+      int j, indexesCounted = 0;
+      for (j = 0; j < curStack.length && curStack[j] != null && indexesCounted <= i; j++) {
+        if ("TOP".contentEquals(curStack[j])) {
+          continue;
+        } else {
+          indexesCounted++;
+        }
+      }
+      j--;
+
+      if (!isSubtypeOf(curStack[j], Util.getStackType(t))) {
         ex =
             new FailureException(
                 curIndex,
-                "Expected type " + t + " at stack " + i + ", got " + curStack[i],
+                "Expected type " + t + " at stack " + j + ", got " + curStack[j],
                 curPath);
       }
     }
@@ -129,7 +143,7 @@ public final class Verifier extends Analyzer {
 
     @Override
     public void visitLocalLoad(ILoadInstruction instruction) {
-      String t = curLocals[instruction.getVarIndex()];
+      String t = curLocals[instruction.getVarIndex() + Util.getWordSize(instruction.getType()) - 1];
       if (t == null) {
         ex =
             new FailureException(

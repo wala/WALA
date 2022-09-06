@@ -1,22 +1,86 @@
-plugins {
-	id 'gradle-mvn-push'
-	id 'wala-java'
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.bmuschko:gradle-nexus-plugin:2.3'
+	}
 }
+
+plugins {
+	id 'eclipse'
+}
+
+apply plugin: 'com.bmuschko.nexus'
+
+group = "com.ibm.wala"
+archivesBaseName = "util"
+version = "1.5.7-SNAPSHOT"
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-dependencies {
-	testImplementation(
-			'junit:junit:4.13.2',
-			'org.hamcrest:hamcrest:2.2',
-	)
-	testRuntimeOnly testFixtures(project(':com.ibm.wala.core'))
-}
-
 tasks.named('javadoc') {
 	classpath += files project(':com.ibm.wala.core').tasks.named('compileJava', JavaCompile)
-	final currentJavaVersion = JavaVersion.current()
-	final linksPrefix = currentJavaVersion >= JavaVersion.VERSION_11 ? 'en/java/' : ''
-	options.links "https://docs.oracle.com/${linksPrefix}javase/$currentJavaVersion.majorVersion/docs/api/"
+	final linksPrefix = sourceCompatibility >= JavaVersion.VERSION_11 ? 'en/java/' : ''
+	options.links "https://docs.oracle.com/${linksPrefix}javase/$sourceCompatibility.majorVersion/docs/api/"
 	options.source = "8" // workaround https://bugs.openjdk.java.net/browse/JDK-8212233.
+}
+
+apply from: rootProject.file("gradle-mvn-push.gradle")
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+			repository(url: "${nexusUrl}/repository/maven-releases/") {
+				authentication(userName: nexusUsername, password: nexusPassword)
+			}
+
+			snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots/") {
+				authentication(userName: nexusUsername, password: nexusPassword)
+			}
+
+			pom.project {
+				name 'WALA Util'
+				packaging 'jar'
+				// optionally artifactId can be defined here
+				description 'T. J. Watson Libraries for Analysis'
+				url 'https://github.com/wala/WALA'
+
+				scm {
+					connection 'git@github.com:wala/WALA.git'
+					developerConnection 'git@github.com:wala/WALA.git'
+					url 'https://github.com/wala/WALA'
+				}
+
+				licenses {
+					license {
+						name 'Eclipse Public License 2.0'
+						url 'https://github.com/wala/WALA/blob/master/LICENSE'
+					}
+				}
+
+				developers {
+					developer {
+						id 'ralfherzog'
+						name 'Ralf Herzog'
+						email 'ralf@rherzog.de'
+					}
+				}
+			}
+		}
+	}
+}
+
+extraArchive {
+	sources = false
+	tests = true
+	javadoc = false
+}
+
+nexus {
+	sign = false
+	repositoryUrl = "${nexusUrl}/repository/maven-releases/"
+	snapshotRepositoryUrl = "${nexusUrl}/repository/maven-snapshots/"
 }

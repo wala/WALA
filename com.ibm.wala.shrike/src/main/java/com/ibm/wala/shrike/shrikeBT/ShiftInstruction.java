@@ -68,6 +68,11 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
   }
 
   @Override
+  public int getPoppedWordSize() {
+    return Util.getWordSize(getType()) + 1;
+  }
+
+  @Override
   public String getPushedType(String[] types) {
     return getType();
   }
