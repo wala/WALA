@@ -47,7 +47,7 @@ dependencies {
 	}
 	testFixturesImplementation(
 			'junit:junit:4.13.2',
-			'org.apache.ant:ant:1.10.11',
+			'org.apache.ant:ant:1.10.12',
 	)
 	testImplementation(
 			'junit:junit:4.13.2',

@@ -5,8 +5,8 @@ plugins {
 
 dependencies {
 	implementation(
-			'com.google.guava:guava:31.0.1-jre',
-			'commons-cli:commons-cli:1.4',
+			'com.google.guava:guava:31.1-jre',
+			'commons-cli:commons-cli:1.5.0',
 			project(':com.ibm.wala.core'),
 			project(':com.ibm.wala.dalvik'),
 			project(':com.ibm.wala.shrike'),
