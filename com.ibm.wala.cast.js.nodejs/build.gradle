@@ -8,7 +8,7 @@ dependencies {
 	}
 	implementation(
 			'commons-io:commons-io:2.11.0',
-			'org.json:json:20210307',
+			'org.json:json:20220320',
 			project(':com.ibm.wala.cast'),
 			project(':com.ibm.wala.cast.js.rhino'),
 			project(':com.ibm.wala.core'),
