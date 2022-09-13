@@ -187,7 +187,7 @@ tasks.register('buildKawaTestJar', Jar) {
 final downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
 	ext.basename = 'bcel-5.2'
 	final archive = "${basename}.tar.gz"
-	src "http://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
+	src "https://archive.apache.org/dist/jakarta/bcel/binaries/$archive"
 	dest project.layout.buildDirectory.file(archive)
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
 	useETag false
