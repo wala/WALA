@@ -191,7 +191,6 @@ final downloadBcel = tasks.register('downloadBcel', VerifiedDownload) {
 	dest project.layout.buildDirectory.file(archive)
 	checksum '19bffd7f217b0eae415f1ef87af2f0bc'
 	useETag false
-	retries 3
 }
 
 tasks.register('extractBcel') {
