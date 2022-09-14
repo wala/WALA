@@ -57,14 +57,18 @@ public class CHACallGraphTest {
     CG.init(makeEntrypoints.apply(cha));
     System.err.println(CallGraphStats.getCGStats(CG));
     // basic well-formedness
-    for (CGNode node: CG) {
+    for (CGNode node : CG) {
       int nodeNum = CG.getNumber(node);
-      CG.getSuccNodeNumbers(node).foreach(succNum -> {
-        CGNode succNode = CG.getNode(succNum);
-        IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
-        Assert.assertNotNull("no predecessors for " + succNode + " which is called by " + node, predNodeNumbers);
-        Assert.assertTrue(predNodeNumbers.contains(nodeNum));
-      });
+      CG.getSuccNodeNumbers(node)
+          .foreach(
+              succNum -> {
+                CGNode succNode = CG.getNode(succNum);
+                IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
+                Assert.assertNotNull(
+                    "no predecessors for " + succNode + " which is called by " + node,
+                    predNodeNumbers);
+                Assert.assertTrue(predNodeNumbers.contains(nodeNum));
+              });
     }
     return CG;
   }

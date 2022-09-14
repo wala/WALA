@@ -41,7 +41,6 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -320,7 +319,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       int x = getNumber(src);
       int y = getNumber(dst);
       predecessors.add(y, x);
-
     }
 
     @Override
@@ -356,7 +354,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       }
       return result;
     }
-
   }
 
   private final CHACallGraphEdgeManager edgeManager = new CHACallGraphEdgeManager();
