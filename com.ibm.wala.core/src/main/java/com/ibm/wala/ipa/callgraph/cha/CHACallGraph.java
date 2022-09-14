@@ -235,6 +235,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
             CallSiteReference.make(
                 clinitPC++, clinit.getReference(), IInvokeInstruction.Dispatch.STATIC),
             cln);
+        edgeManager.addEdge(clinits, cln);
       }
     }
     return n;
@@ -256,8 +257,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
               if (n == getFakeRootNode()) {
                 registerEntrypoint(callee);
               }
-              edgeManager.addEdge(n, callee);
             }
+            edgeManager.addEdge(n, callee);
           }
         }
       }
@@ -356,14 +357,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       return result;
     }
 
-    @Override
-    public IntSet getPredNodeNumbers(CGNode node) {
-      MutableIntSet result = IntSetUtil.make();
-      for (CGNode s : Iterator2Iterable.make(getPredNodes(node))) {
-        result.add(s.getGraphNodeId());
-      }
-      return result;
-    }
   }
 
   private final CHACallGraphEdgeManager edgeManager = new CHACallGraphEdgeManager();
