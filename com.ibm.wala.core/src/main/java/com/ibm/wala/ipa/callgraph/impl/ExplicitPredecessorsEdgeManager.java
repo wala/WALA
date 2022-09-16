@@ -12,8 +12,8 @@ import java.util.Iterator;
 import java.util.function.IntFunction;
 
 /**
- * An abstract {@link NumberedEdgeManager} where predecessor edges are represented explicitly.
- * The representation of successor edges is determined by concrete subclasses.
+ * An abstract {@link NumberedEdgeManager} where predecessor edges are represented explicitly. The
+ * representation of successor edges is determined by concrete subclasses.
  */
 public abstract class ExplicitPredecessorsEdgeManager implements NumberedEdgeManager<CGNode> {
 
