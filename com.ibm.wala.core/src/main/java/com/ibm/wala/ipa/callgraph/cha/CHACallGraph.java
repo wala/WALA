@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.function.Predicate;
 
+/** Call graph in which call targets are determined entirely based on an {@link IClassHierarchy}. */
 public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
   private final AnalysisOptions options;
@@ -103,10 +104,18 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     }
   }
 
+  /**
+   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * initialization
+   */
   public CHACallGraph(IClassHierarchy cha) {
     this(cha, false);
   }
 
+  /**
+   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * initialization
+   */
   public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
     this.cha = cha;
     this.options = new AnalysisOptions();
@@ -115,6 +124,10 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
   }
 
+  /**
+   * Builds the call graph data structures. The call graph will only include methods reachable from
+   * the provided entrypoints.
+   */
   public void init(Iterable<Entrypoint> entrypoints) throws CancelException {
     super.init();
 

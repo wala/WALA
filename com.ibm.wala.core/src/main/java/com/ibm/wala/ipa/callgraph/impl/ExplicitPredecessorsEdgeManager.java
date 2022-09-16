@@ -11,6 +11,10 @@ import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
 import java.util.function.IntFunction;
 
+/**
+ * An abstract {@link NumberedEdgeManager} where predecessor edges are represented explicitly.
+ * The representation of successor edges is determined by concrete subclasses.
+ */
 public abstract class ExplicitPredecessorsEdgeManager implements NumberedEdgeManager<CGNode> {
 
   private final NumberedNodeManager<CGNode> nodeManager;
@@ -24,14 +28,7 @@ public abstract class ExplicitPredecessorsEdgeManager implements NumberedEdgeMan
 
   protected ExplicitPredecessorsEdgeManager(NumberedNodeManager<CGNode> nodeManager) {
     this.nodeManager = nodeManager;
-    toNode =
-        i -> {
-          CGNode result = nodeManager.getNode(i);
-          // if (Assertions.verifyAssertions && result == null) {
-          // Assertions.UNREACHABLE("uh oh " + i);
-          // }
-          return result;
-        };
+    toNode = nodeManager::getNode;
   }
 
   @Override
