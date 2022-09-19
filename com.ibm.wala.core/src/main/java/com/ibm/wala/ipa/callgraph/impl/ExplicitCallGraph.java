@@ -26,15 +26,12 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IntMapIterator;
 import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
-import com.ibm.wala.util.intset.BasicNaturalRelation;
-import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -45,7 +42,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.IntFunction;
 
 /** A call graph which explicitly holds the target for each call site in each node. */
 public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
@@ -336,50 +332,16 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
     return cha;
   }
 
-  protected class ExplicitEdgeManager implements NumberedEdgeManager<CGNode> {
+  protected class ExplicitEdgeManager extends ExplicitPredecessorsEdgeManager {
 
-    final IntFunction<CGNode> toNode =
-        i -> {
-          CGNode result = getNode(i);
-          // if (Assertions.verifyAssertions && result == null) {
-          // Assertions.UNREACHABLE("uh oh " + i);
-          // }
-          return result;
-        };
-
-    /** for each y, the {x | (x,y) is an edge) */
-    final IBinaryNaturalRelation predecessors =
-        new BasicNaturalRelation(
-            new byte[] {BasicNaturalRelation.SIMPLE_SPACE_STINGY}, BasicNaturalRelation.SIMPLE);
+    protected ExplicitEdgeManager() {
+      super(ExplicitCallGraph.this);
+    }
 
     @Override
     public IntSet getSuccNodeNumbers(CGNode node) {
       ExplicitNode n = (ExplicitNode) node;
       return n.getAllTargetNumbers();
-    }
-
-    @Override
-    public IntSet getPredNodeNumbers(CGNode node) {
-      ExplicitNode n = (ExplicitNode) node;
-      int y = getNumber(n);
-      return predecessors.getRelated(y);
-    }
-
-    @Override
-    public Iterator<CGNode> getPredNodes(CGNode N) {
-      IntSet s = getPredNodeNumbers(N);
-      if (s == null) {
-        return EmptyIterator.instance();
-      } else {
-        return new IntMapIterator<>(s.intIterator(), toNode);
-      }
-    }
-
-    @Override
-    public int getPredNodeCount(CGNode N) {
-      ExplicitNode n = (ExplicitNode) N;
-      int y = getNumber(n);
-      return predecessors.getRelatedCount(y);
     }
 
     @Override

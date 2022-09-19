@@ -22,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.BasicCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
@@ -40,7 +41,6 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import java.lang.ref.SoftReference;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.function.Predicate;
 
+/** Call graph in which call targets are determined entirely based on an {@link IClassHierarchy}. */
 public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
   private final AnalysisOptions options;
@@ -103,10 +104,18 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     }
   }
 
+  /**
+   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * initialization
+   */
   public CHACallGraph(IClassHierarchy cha) {
     this(cha, false);
   }
 
+  /**
+   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * initialization
+   */
   public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
     this.cha = cha;
     this.options = new AnalysisOptions();
@@ -115,6 +124,10 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
   }
 
+  /**
+   * Builds the call graph data structures. The call graph will only include methods reachable from
+   * the provided entrypoints.
+   */
   public void init(Iterable<Entrypoint> entrypoints) throws CancelException {
     super.init();
 
@@ -234,6 +247,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
             CallSiteReference.make(
                 clinitPC++, clinit.getReference(), IInvokeInstruction.Dispatch.STATIC),
             cln);
+        edgeManager.addEdge(clinits, cln);
       }
     }
     return n;
@@ -256,6 +270,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
                 registerEntrypoint(callee);
               }
             }
+            edgeManager.addEdge(n, callee);
           }
         }
       }
@@ -277,112 +292,87 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return n;
   }
 
+  private class CHACallGraphEdgeManager extends ExplicitPredecessorsEdgeManager {
+
+    protected CHACallGraphEdgeManager() {
+      super(CHACallGraph.this);
+    }
+
+    @Override
+    public Iterator<CGNode> getSuccNodes(final CGNode n) {
+      return new FilterIterator<>(
+          new ComposedIterator<CallSiteReference, CGNode>(n.iterateCallSites()) {
+            @Override
+            public Iterator<? extends CGNode> makeInner(CallSiteReference outer) {
+              return getPossibleTargets(n, outer).iterator();
+            }
+          },
+          new Predicate<CGNode>() {
+            private final MutableIntSet nodes = IntSetUtil.make();
+
+            @Override
+            public boolean test(CGNode o) {
+              if (nodes.contains(o.getGraphNodeId())) {
+                return false;
+              } else {
+                nodes.add(o.getGraphNodeId());
+                return true;
+              }
+            }
+          });
+    }
+
+    @Override
+    public int getSuccNodeCount(CGNode N) {
+      return IteratorUtil.count(getSuccNodes(N));
+    }
+
+    @Override
+    public void addEdge(CGNode src, CGNode dst) {
+      int x = getNumber(src);
+      int y = getNumber(dst);
+      predecessors.add(y, x);
+    }
+
+    @Override
+    public void removeEdge(CGNode src, CGNode dst) throws UnsupportedOperationException {
+      assert false;
+    }
+
+    @Override
+    public void removeAllIncidentEdges(CGNode node) throws UnsupportedOperationException {
+      assert false;
+    }
+
+    @Override
+    public void removeIncomingEdges(CGNode node) throws UnsupportedOperationException {
+      assert false;
+    }
+
+    @Override
+    public void removeOutgoingEdges(CGNode node) throws UnsupportedOperationException {
+      assert false;
+    }
+
+    @Override
+    public boolean hasEdge(CGNode src, CGNode dst) {
+      return getPossibleSites(src, dst).hasNext();
+    }
+
+    @Override
+    public IntSet getSuccNodeNumbers(CGNode node) {
+      MutableIntSet result = IntSetUtil.make();
+      for (CGNode s : Iterator2Iterable.make(getSuccNodes(node))) {
+        result.add(s.getGraphNodeId());
+      }
+      return result;
+    }
+  }
+
+  private final CHACallGraphEdgeManager edgeManager = new CHACallGraphEdgeManager();
+
   @Override
   protected NumberedEdgeManager<CGNode> getEdgeManager() {
-    return new NumberedEdgeManager<CGNode>() {
-      private final Map<CGNode, SoftReference<Set<CGNode>>> predecessors = HashMapFactory.make();
-
-      private Set<CGNode> getPreds(CGNode n) {
-        if (predecessors.containsKey(n) && predecessors.get(n).get() != null) {
-          return predecessors.get(n).get();
-        } else {
-          Set<CGNode> preds = HashSetFactory.make();
-          for (CGNode node : CHACallGraph.this) {
-            if (getPossibleSites(node, n).hasNext()) {
-              preds.add(node);
-            }
-          }
-          predecessors.put(n, new SoftReference<>(preds));
-          return preds;
-        }
-      }
-
-      @Override
-      public Iterator<CGNode> getPredNodes(CGNode n) {
-        return getPreds(n).iterator();
-      }
-
-      @Override
-      public int getPredNodeCount(CGNode n) {
-        return getPreds(n).size();
-      }
-
-      @Override
-      public Iterator<CGNode> getSuccNodes(final CGNode n) {
-        return new FilterIterator<>(
-            new ComposedIterator<CallSiteReference, CGNode>(n.iterateCallSites()) {
-              @Override
-              public Iterator<? extends CGNode> makeInner(CallSiteReference outer) {
-                return getPossibleTargets(n, outer).iterator();
-              }
-            },
-            new Predicate<CGNode>() {
-              private final MutableIntSet nodes = IntSetUtil.make();
-
-              @Override
-              public boolean test(CGNode o) {
-                if (nodes.contains(o.getGraphNodeId())) {
-                  return false;
-                } else {
-                  nodes.add(o.getGraphNodeId());
-                  return true;
-                }
-              }
-            });
-      }
-
-      @Override
-      public int getSuccNodeCount(CGNode N) {
-        return IteratorUtil.count(getSuccNodes(N));
-      }
-
-      @Override
-      public void addEdge(CGNode src, CGNode dst) {
-        assert false;
-      }
-
-      @Override
-      public void removeEdge(CGNode src, CGNode dst) throws UnsupportedOperationException {
-        assert false;
-      }
-
-      @Override
-      public void removeAllIncidentEdges(CGNode node) throws UnsupportedOperationException {
-        assert false;
-      }
-
-      @Override
-      public void removeIncomingEdges(CGNode node) throws UnsupportedOperationException {
-        assert false;
-      }
-
-      @Override
-      public void removeOutgoingEdges(CGNode node) throws UnsupportedOperationException {
-        assert false;
-      }
-
-      @Override
-      public boolean hasEdge(CGNode src, CGNode dst) {
-        return getPossibleSites(src, dst).hasNext();
-      }
-
-      @Override
-      public IntSet getSuccNodeNumbers(CGNode node) {
-        MutableIntSet result = IntSetUtil.make();
-        for (CGNode s : Iterator2Iterable.make(getSuccNodes(node))) {
-          result.add(s.getGraphNodeId());
-        }
-        return result;
-      }
-
-      @Override
-      public IntSet getPredNodeNumbers(CGNode node) {
-        MutableIntSet result = IntSetUtil.make();
-        for (CGNode s : Iterator2Iterable.make(getPredNodes(node))) {
-          result.add(s.getGraphNodeId());
-        }
-        return result;
-      }
-    };
+    return edgeManager;
   }
 }

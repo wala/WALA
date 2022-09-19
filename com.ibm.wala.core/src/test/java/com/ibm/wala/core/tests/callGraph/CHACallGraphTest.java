@@ -12,7 +12,9 @@ package com.ibm.wala.core.tests.callGraph;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.cha.CHACallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -20,8 +22,10 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
 import java.util.function.Function;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class CHACallGraphTest {
@@ -51,7 +55,21 @@ public class CHACallGraphTest {
 
     CHACallGraph CG = new CHACallGraph(cha);
     CG.init(makeEntrypoints.apply(cha));
-
+    System.err.println(CallGraphStats.getCGStats(CG));
+    // basic well-formedness
+    for (CGNode node : CG) {
+      int nodeNum = CG.getNumber(node);
+      CG.getSuccNodeNumbers(node)
+          .foreach(
+              succNum -> {
+                CGNode succNode = CG.getNode(succNum);
+                IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
+                Assert.assertNotNull(
+                    "no predecessors for " + succNode + " which is called by " + node,
+                    predNodeNumbers);
+                Assert.assertTrue(predNodeNumbers.contains(nodeNum));
+              });
+    }
     return CG;
   }
 
