@@ -254,7 +254,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  /** Hook for aubclasses to add pointer flow constraints based on values in a given node */
+  /** Hook for subclasses to add pointer flow constraints based on values in a given node */
   @SuppressWarnings("unused")
   protected void addNodeValueConstraints(CGNode node, IProgressMonitor monitor)
       throws CancelException {}
