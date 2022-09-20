@@ -1330,7 +1330,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     // TODO do this better
                     SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
                     if (callInstrs.length == 0) {
-                      return;
+                      return null;
                     }
                     SSAAbstractInvokeInstruction callInstr = callInstrs[0];
                     PointerKey actualPk =
