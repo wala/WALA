@@ -1329,6 +1329,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     // hack to get some actual parameter from call site
                     // TODO do this better
                     SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
+                    if (callInstrs.length == 0) {
+                      return;
+                    }
                     SSAAbstractInvokeInstruction callInstr = callInstrs[0];
                     PointerKey actualPk =
                         heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
@@ -1645,6 +1648,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   // System.err.println("caller " + caller);
                   // }
                   SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
+                  if (callInstrs.length == 0) {
+                    return null;
+                  }
                   SSAAbstractInvokeInstruction callInstr = callInstrs[0];
                   PointerKey returnAtCallerKey =
                       heapModel.getPointerKeyForLocal(
@@ -2020,8 +2026,19 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
   }
 
+  /**
+   * Returns the call instructions corresponding to a given call site in a node. (There can be
+   * multiple call instructions if the program's bytecode uses the {@code jsr} instruction.)
+   *
+   * <p>If the site does not exist in the node's IR, returns an array of length 0. This can occur,
+   * e.g., if the up-front call graph is a {@link com.ibm.wala.ipa.callgraph.cha.CHACallGraph},
+   * which does not construct IRs and may include call sites not present after building IR.
+   */
   private static SSAAbstractInvokeInstruction[] getCallInstrs(CGNode node, CallSiteReference site) {
-    return node.getIR().getCalls(site);
+    IR ir = node.getIR();
+    return ir.getCallInstructionIndices(site) == null
+        ? new SSAAbstractInvokeInstruction[0]
+        : ir.getCalls(site);
   }
 
   private static boolean hasNullIR(CGNode node) {
@@ -2167,6 +2184,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                       // hack to get some actual parameter from call site
                       // TODO do this better
                       SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
+                      if (callInstrs.length == 0) {
+                        return null;
+                      }
                       SSAAbstractInvokeInstruction callInstr = callInstrs[0];
                       PointerKey actualPk =
                           heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
