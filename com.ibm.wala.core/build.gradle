@@ -39,6 +39,7 @@ tasks.named('check') {
 }
 
 tasks.named("compileTestSubjectsJava").configure {
+	// No need to run Error Prone on our analysis test inputs
 	options.errorprone.enabled = false
 }
 

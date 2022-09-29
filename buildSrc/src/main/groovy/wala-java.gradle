@@ -28,7 +28,8 @@ dependencies {
 	if (JavaVersion.current().isJava9Compatible()) {
 		errorprone("com.google.errorprone:error_prone_core:2.15.0")
 	} else {
-		// to make the build still work; we disable Error Prone later
+		// We disable Error Prone for JDK 8, but we still need to set these dependencies as
+		// otherwise the build fails with a javac crash
 		errorprone("com.google.errorprone:error_prone_core:2.10.0")
 		errorproneJavac("com.google.errorprone:javac:9+181-r4173-1")
 	}
@@ -36,11 +37,14 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
 	if (!JavaVersion.current().isJava9Compatible()) {
+		// disable on JDK 8
 		options.errorprone.enabled = false
 	} else {
 		options.errorprone {
+			// don't run warning-level checks for now as they add too much lose
 			disableAllWarnings = true
-			// dummy setting. hack until https://github.com/google/error-prone/pull/3462 lands
+			// hack until https://github.com/google/error-prone/pull/3462 lands; we add a dummy
+			// setting of a severity level, to make the disableAllWarnings flag work
 			error("AsyncFunctionReturnsNull")
 		}
 
