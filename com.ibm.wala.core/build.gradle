@@ -38,6 +38,10 @@ tasks.named('check') {
 	dependsOn ecjCompileJavaTestSubjects
 }
 
+tasks.named("compileTestSubjectsJava").configure {
+	options.errorprone.enabled = false
+}
+
 dependencies {
 	api(project(':com.ibm.wala.shrike')) {
 		because 'public class Entrypoint implements interface BytecodeConstraints'

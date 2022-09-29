@@ -167,10 +167,6 @@ public abstract class AstMethod implements IMethod {
     return cfg;
   }
 
-  public boolean hasCatchBlock() {
-    return hasCatchBlock();
-  }
-
   public SymbolTable symbolTable() {
     return symtab;
   }

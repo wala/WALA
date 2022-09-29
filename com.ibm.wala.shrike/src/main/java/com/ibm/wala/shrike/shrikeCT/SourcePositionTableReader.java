@@ -23,7 +23,7 @@ public final class SourcePositionTableReader extends AttributeReader {
     super(attr, CRTable.ATTRIBUTE_NAME);
   }
 
-  public static final class Position implements Comparable<Object> {
+  public static final class Position implements Comparable<Position> {
 
     public final int firstLine;
     public final int lastLine;
@@ -38,22 +38,17 @@ public final class SourcePositionTableReader extends AttributeReader {
     }
 
     @Override
-    public int compareTo(Object o) {
-      if (o instanceof Position) {
-        Position p = (Position) o;
-        if (firstLine != p.firstLine) {
-          return firstLine - p.firstLine;
-        } else if (firstCol != p.firstCol) {
-          return firstCol - p.firstCol;
-        } else if (lastLine != p.lastLine) {
-          return lastLine - p.lastLine;
-        } else if (lastCol != p.lastCol) {
-          return lastCol - p.lastCol;
-        } else {
-          return 0;
-        }
+    public int compareTo(Position p) {
+      if (firstLine != p.firstLine) {
+        return firstLine - p.firstLine;
+      } else if (firstCol != p.firstCol) {
+        return firstCol - p.firstCol;
+      } else if (lastLine != p.lastLine) {
+        return lastLine - p.lastLine;
+      } else if (lastCol != p.lastCol) {
+        return lastCol - p.lastCol;
       } else {
-        return -1;
+        return 0;
       }
     }
   }

@@ -115,6 +115,8 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   public class AstCGNode extends ExplicitNode {
+    // TODO should this be a Set<Consumer<Object>> instead?  I don't see the return values from the
+    // callbacks ever being used
     private Set<Function<Object, Object>> callbacks;
 
     private AstCGNode(IMethod method, Context context) {
@@ -127,7 +129,8 @@ public class AstCallGraph extends ExplicitCallGraph {
         while (!done) {
           try {
             for (Function<Object, Object> function : callbacks) {
-              function.apply(null);
+              @SuppressWarnings("unused")
+              Object ignored = function.apply(null);
             }
           } catch (ConcurrentModificationException e) {
             done = false;

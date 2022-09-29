@@ -95,7 +95,8 @@ public class CallGraphTestUtil {
         Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
-      builder.getPointerAnalysis().toString();
+      @SuppressWarnings("unused")
+      String ignored = builder.getPointerAnalysis().toString();
     }
 
     if (CHECK_FOOTPRINT) {
@@ -141,7 +142,8 @@ public class CallGraphTestUtil {
         Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
-      builder.getPointerAnalysis().toString();
+      @SuppressWarnings("unused")
+      String ignored = builder.getPointerAnalysis().toString();
     }
 
     if (CHECK_FOOTPRINT) {

@@ -30,6 +30,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -81,7 +82,7 @@ public class GetMethodContextSelector implements ContextSelector {
       if (symbolTable.isStringConstant(invokeInstructions[0].getUse(1))) {
         String sym = symbolTable.getStringValue(use);
         if (DEBUG) {
-          System.out.println(invokeInstructions);
+          System.out.println(Arrays.toString(invokeInstructions));
           System.out.println(", with constant := `" + sym + '`');
           for (InstanceKey instanceKey : receiver) {
             System.out.println(" " + instanceKey);
