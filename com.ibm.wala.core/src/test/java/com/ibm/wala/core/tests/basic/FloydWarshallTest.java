@@ -91,11 +91,6 @@ public class FloydWarshallTest extends WalaTestCase {
     public String toString() {
       return "<" + number + ">";
     }
-
-    @Override
-    public boolean equals(Object o) {
-      return this == o;
-    }
   }
 
   public static NumberedGraph<Node> makeGraph() {
