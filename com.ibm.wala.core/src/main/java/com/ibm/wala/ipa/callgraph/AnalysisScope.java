@@ -446,7 +446,7 @@ public class AnalysisScope {
           Assertions.UNREACHABLE("Module type isn't supported - " + m);
           continue;
         }
-        modulePath.replace("\\", "/");
+        modulePath = modulePath.replace("\\", "/");
         String moduleDescrLine =
             String.format("%s,%s,%s,%s", moduleLdr, moduleLang, moduleType, modulePath);
         moduleLines.add(moduleDescrLine);

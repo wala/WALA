@@ -2,6 +2,10 @@ plugins {
 	id 'wala-java'
 }
 
+tasks.named("compileTestJava").configure {
+	// No need to run Error Prone on our analysis test inputs
+	options.errorprone.enabled = false
+}
 
 ////////////////////////////////////////////////////////////////////////
 //

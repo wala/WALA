@@ -41,12 +41,13 @@ public class OperatorUtil {
       if (getClass() != o.getClass()) return false;
 
       UnaryOperatorSequence<?> other = (UnaryOperatorSequence<?>) o;
-      return operators.equals(other.operators);
+
+      return Arrays.equals(operators, other.operators);
     }
 
     @Override
     public int hashCode() {
-      return operators.hashCode();
+      return Arrays.hashCode(operators);
     }
 
     @Override

@@ -39,7 +39,6 @@
  */
 package org.scandroid.util;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -75,7 +74,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -148,36 +146,6 @@ public class AndroidAnalysisContext {
         customSelector,
         customInterpreter,
         ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC);
-  }
-
-  /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param scope representation of the analysis scope
-   * @param customSelector user-defined context selector, or null if none
-   * @param customInterpreter user-defined context interpreter, or null if none
-   * @return a 0-CFA Call Graph Builder.
-   * @throws IllegalArgumentException if options is null
-   *     <p>TODO: move
-   */
-  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      AnalysisScope scope,
-      ContextSelector customSelector,
-      SSAContextInterpreter customInterpreter,
-      List<InputStream> arrayList,
-      MethodSummary extraSummary) {
-    return makeZeroCFABuilder(
-        options,
-        cache,
-        cha,
-        scope,
-        customSelector,
-        customInterpreter,
-        Lists.newArrayList(arrayList),
-        extraSummary);
   }
 
   /**

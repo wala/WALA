@@ -6,10 +6,12 @@ plugins {
 	id 'java-library'
 	id 'java-test-fixtures'
 	id 'maven-publish'
+	id 'net.ltgt.errorprone'
 	id 'signing'
 	id 'wala-javadoc'
 	id 'wala-subproject'
 }
+
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -19,6 +21,34 @@ repositories {
 	// to get r8
 	maven {
 		url 'https://storage.googleapis.com/r8-releases/raw'
+	}
+}
+
+// only use Error Prone on JDK 9+ JVMs
+final useErrorProne = JavaVersion.current().isJava9Compatible()
+
+dependencies {
+	if (useErrorProne) {
+		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
+	} else {
+		// We disable Error Prone for pre JDK 9+, but we still need to set these dependencies, as
+		// otherwise the build fails with a javac crash
+		errorprone 'com.google.errorprone:error_prone_core:2.10.0'
+		errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	if (useErrorProne) {
+		options.errorprone {
+			// don't run warning-level checks for now as they add too much noise to build output
+			disableAllWarnings = true
+			// hack until https://github.com/google/error-prone/pull/3462 lands; we add a dummy
+			// setting of a severity level, to make the disableAllWarnings flag work
+			error 'AsyncFunctionReturnsNull'
+		}
+	} else {
+		options.errorprone.enabled = false
 	}
 }
 
