@@ -41,13 +41,14 @@ dependencies {
 tasks.withType(JavaCompile).configureEach {
 	if (useErrorProne) {
 		options.errorprone {
-			// don't run warning-level checks for now as they add too much noise to build output
+			// don't run warning-level checks by default as they add too much noise to build output
+			// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
+			// we need to customize the level of at least one specific check to make this flag work
 			disableAllWarnings = true
-			// hack until https://github.com/google/error-prone/pull/3462 lands; we add a dummy
-			// setting of a severity level, to make the disableAllWarnings flag work
-			error 'AsyncFunctionReturnsNull'
-			// some warning-level checks we have fixed everywhere
+			// warning-level checks upgraded to error, since we've fixed all the warnings
 			error 'UnnecessaryParentheses'
+			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+			// check name to the one you want to patch
 //			errorproneArgs.addAll(
 //					"-XepPatchChecks:UnnecessaryParentheses",
 //					"-XepPatchLocation:IN_PLACE"
