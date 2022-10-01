@@ -133,6 +133,9 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
   }
 
   public boolean containsAny(IntSet instances) {
+    if (V == null) {
+      return false;
+    }
     return V.containsAny(instances);
   }
 
