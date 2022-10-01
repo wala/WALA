@@ -43,7 +43,7 @@ public final class AnalysisUtil {
    * @return true if node is FakeRoot
    */
   public static boolean isFakeRoot(CallGraph CG, CGNode node) {
-    return (node.equals(CG.getFakeRootNode()));
+    return node.equals(CG.getFakeRootNode());
   }
 
   /**

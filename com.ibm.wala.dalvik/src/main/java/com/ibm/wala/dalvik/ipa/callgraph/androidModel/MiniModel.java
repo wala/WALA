@@ -124,7 +124,7 @@ public class MiniModel extends AndroidModel {
 
   private void register(SummarizedMethod model) {
     AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
-    if (!(mClass.containsMethod(model.getSelector()))) {
+    if (!mClass.containsMethod(model.getSelector())) {
       mClass.addMethod(super.model);
     }
   }

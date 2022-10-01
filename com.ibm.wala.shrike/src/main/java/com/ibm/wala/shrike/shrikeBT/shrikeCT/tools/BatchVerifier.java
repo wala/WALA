@@ -119,7 +119,7 @@ public class BatchVerifier {
 
           if (disasm) {
             w.write("ShrikeBT code:\n");
-            (new Disassembler(md)).disassembleTo(w);
+            new Disassembler(md).disassembleTo(w);
             w.flush();
           }
 

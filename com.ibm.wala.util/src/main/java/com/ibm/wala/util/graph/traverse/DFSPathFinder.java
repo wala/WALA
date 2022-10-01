@@ -128,7 +128,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
    * @return true if there nodes left to enumerate.
    */
   public boolean hasNext() {
-    return (!empty());
+    return !empty();
   }
 
   /**

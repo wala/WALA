@@ -117,7 +117,7 @@ public interface FilteredPointerKey extends PointerKey {
       }
 
       for (int i = 0; i < concreteType.length; i++) {
-        if (!(concreteType[i].equals(f.concreteType[i]))) {
+        if (!concreteType[i].equals(f.concreteType[i])) {
           return false;
         }
       }

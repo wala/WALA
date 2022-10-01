@@ -157,8 +157,8 @@ public class ExceptionAnalysisTest {
             + exceptions.toString();
 
     if (node.getMethod().getName().toString().matches("invokeSingle.*")
-        && (!node.getMethod().getName().toString().equals("invokeSingleRecursive2Helper"))
-        && (!node.getMethod().getName().toString().equals("invokeSinglePassThrough"))) {
+        && !node.getMethod().getName().toString().equals("invokeSingleRecursive2Helper")
+        && !node.getMethod().getName().toString().equals("invokeSinglePassThrough")) {
       collector.checkThat(text, exceptions.size(), equalTo(1));
     } else {
       collector.checkThat(text, exceptions.size(), equalTo(0));

@@ -695,7 +695,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       int index = 0;
       List<CAstNode> eltNodes = new ArrayList<>(2 * node.getElements().size());
       eltNodes.add(
-          ((isPrologueScript(arg)) ? makeBuiltinNew("Array") : handleNew(arg, "Array", null)));
+          (isPrologueScript(arg) ? makeBuiltinNew("Array") : handleNew(arg, "Array", null)));
       for (AstNode elt : node.getElements()) {
         if (elt instanceof EmptyExpression) {
           index++;
@@ -1217,7 +1217,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           ObjectProperty prop = (ObjectProperty) fn;
           AstNode label = prop.getLeft();
           if (label instanceof Name) {
-            return (((Name) label).getString());
+            return ((Name) label).getString();
           }
         }
       }
@@ -1461,7 +1461,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       List<ObjectProperty> props = n.getElements();
       List<CAstNode> args = new ArrayList<>(props.size() * 2 + 1);
       args.add(
-          ((isPrologueScript(context))
+          (isPrologueScript(context)
               ? makeBuiltinNew("Object")
               : handleNew(context, "Object", null)));
       for (ObjectProperty prop : props) {

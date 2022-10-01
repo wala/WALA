@@ -72,7 +72,7 @@ public class PlatformUtil {
     String[] jars = classpath.split(File.pathSeparator);
     ArrayList<String> result = new ArrayList<>();
     for (String jar : jars) {
-      if ((jar.endsWith(".jar") || jar.endsWith(".jmod")) && (new File(jar)).exists()) {
+      if ((jar.endsWith(".jar") || jar.endsWith(".jmod")) && new File(jar).exists()) {
         result.add(jar);
       }
     }

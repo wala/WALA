@@ -50,7 +50,7 @@ public class GetTargetsTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
 
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());

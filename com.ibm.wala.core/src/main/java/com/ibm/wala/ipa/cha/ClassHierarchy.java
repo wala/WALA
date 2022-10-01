@@ -257,7 +257,7 @@ public class ClassHierarchy implements IClassHierarchy {
       int idx = 0;
 
       if (progressMonitor != null) {
-        progressMonitor.beginTask("Build Class Hierarchy", (numLoaders) * 2 - 1);
+        progressMonitor.beginTask("Build Class Hierarchy", numLoaders * 2 - 1);
       }
       for (ClassLoaderReference ref : scope.getLoaders()) {
         if (progressMonitor != null) {
@@ -482,7 +482,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     Set<IMethod> targets = HashSetFactory.make();
     targets.addAll(findOrCreateTargetSet(declaredClass, ref));
-    return (targets);
+    return targets;
   }
 
   /**
@@ -794,7 +794,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /** @throws IllegalArgumentException if A is null */
   @Override
   public IClass getLeastCommonSuperclass(IClass a, IClass b) {
-    assert (a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage()));
+    assert a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage());
     Language lang = a.getClassLoader().getLanguage();
     TypeReference tempA = a.getReference();
     if (a.equals(b)) {

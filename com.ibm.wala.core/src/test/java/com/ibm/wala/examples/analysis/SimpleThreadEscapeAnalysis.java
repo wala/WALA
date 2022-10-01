@@ -317,7 +317,7 @@ public class SimpleThreadEscapeAnalysis
     }
 
     Set<IClass> escapingTypes =
-        (new SimpleThreadEscapeAnalysis(jars, mainClassName)).gatherThreadEscapingClasses();
+        new SimpleThreadEscapeAnalysis(jars, mainClassName).gatherThreadEscapingClasses();
 
     for (IClass cls : escapingTypes) {
       if (!cls.isArrayClass()) {

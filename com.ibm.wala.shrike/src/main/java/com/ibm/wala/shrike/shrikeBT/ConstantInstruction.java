@@ -137,7 +137,7 @@ public abstract class ConstantInstruction extends Instruction {
       ConstInt[] r = new ConstInt[256];
       Arrays.setAll(r, i -> new ConstInt(OP_bipush, i - 128));
       for (int i = -1; i <= 5; i++) {
-        r[i + 128] = new ConstInt((short) (i - (-1) + OP_iconst_m1), i);
+        r[i + 128] = new ConstInt((short) (i - -1 + OP_iconst_m1), i);
       }
       return r;
     }

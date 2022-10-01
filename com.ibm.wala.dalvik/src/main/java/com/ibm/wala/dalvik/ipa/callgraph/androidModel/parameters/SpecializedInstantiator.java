@@ -142,7 +142,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
       }
     }
 
-    assert (understands(T));
+    assert understands(T);
 
     if (T.equals(AndroidTypes.Context)) {
       return createContext(T, key);
@@ -181,13 +181,13 @@ public class SpecializedInstantiator extends FlatInstantiator {
         // At a given time context is expected to be only of one component already seen.
         // If it's seen there is a field in AndroidModelClass.
         for (final IField f : mClass.getAllFields()) {
-          assert (f.isStatic())
+          assert f.isStatic()
               : "All fields of AndroidModelClass are expected to be static! " + f + " is not.";
 
           final TypeReference fdType = f.getReference().getFieldType();
           { // Test assignable
             if (!ParameterAccessor.isAssignable(fdType, T, cha)) {
-              assert (false) : "Unexpected but not fatal - remove assertion if this happens";
+              assert false : "Unexpected but not fatal - remove assertion if this happens";
               continue;
             }
           }

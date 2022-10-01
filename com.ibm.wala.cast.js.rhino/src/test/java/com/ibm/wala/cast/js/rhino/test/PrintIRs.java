@@ -81,7 +81,7 @@ public class PrintIRs {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     // add model for DOM APIs
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-    URL url = (new File(filename)).toURI().toURL();
+    URL url = new File(filename).toURI().toURL();
     Pair<Set<MappedSourceModule>, File> p =
         WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory);
     SourceModule[] scripts = p.fst.toArray(new SourceModule[] {});

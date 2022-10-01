@@ -264,7 +264,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     TypeReference T = m.getDeclaringClass();
     TypeName n = T.getName();
     Atom p = n.getPackage();
-    return (ignoredPackages.contains(p));
+    return ignoredPackages.contains(p);
   }
 
   private MethodSummary findSummary(MemberReference m) {

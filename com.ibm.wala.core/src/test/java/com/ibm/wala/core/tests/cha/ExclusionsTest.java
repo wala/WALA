@@ -28,7 +28,7 @@ public class ExclusionsTest {
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("GUIExclusions.txt"),
+            new FileProvider().getFile("GUIExclusions.txt"),
             ExclusionsTest.class.getClassLoader());
     TypeReference buttonRef =
         TypeReference.findOrCreate(

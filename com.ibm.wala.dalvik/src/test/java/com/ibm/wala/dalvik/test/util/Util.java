@@ -117,7 +117,7 @@ public class Util {
     File F = File.createTempFile("walatest", ".jar");
     F.deleteOnExit();
     TemporaryFile.urlToFile(
-        F, (new FileProvider()).getResource("com.ibm.wala.core.testdata_1.0.0a.jar"));
+        F, new FileProvider().getResource("com.ibm.wala.core.testdata_1.0.0a.jar"));
     File androidDex = convertJarToDex(F.getAbsolutePath());
     AnalysisScope dalvikScope =
         DalvikCallGraphTestBase.makeDalvikScope(null, null, androidDex.getAbsolutePath());

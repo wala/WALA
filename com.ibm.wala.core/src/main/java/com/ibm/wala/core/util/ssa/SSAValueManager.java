@@ -172,7 +172,7 @@ public class SSAValueManager {
       for (Managed<? extends SSAValue> param : seenTypes.get(value.key)) {
         if (param.status == ValueStatus.UNALLOCATED) {
           // XXX: Allow more?
-          assert (param.value.getType().equals(value.getType())) : "Inequal types";
+          assert param.value.getType().equals(value.getType()) : "Inequal types";
 
           if ((param.value.getNumber() + 1) > nextLocal) {
             nextLocal = param.value.getNumber() + 1;
@@ -232,7 +232,7 @@ public class SSAValueManager {
             || (param.status == ValueStatus.FREE_INVALIDATED)
             || (param.status == ValueStatus.FREE_CLOSED)) {
           // XXX: Allow more?
-          assert (param.value.getType().equals(value.getType())) : "Unequal types";
+          assert param.value.getType().equals(value.getType()) : "Unequal types";
           if (param.value.getNumber() != value.getNumber()) {
             if ((param.status == ValueStatus.FREE) && (param.setInScope == currentScope)) {
               param.status = ValueStatus.FREE_CLOSED;
@@ -268,7 +268,7 @@ public class SSAValueManager {
           // throw new IllegalStateException("You forgot Phis in subordinate blocks");
         }
       }
-      assert (didPhi);
+      assert didPhi;
       return;
     } else {
       throw new IllegalStateException("This should not be reached!");

@@ -779,8 +779,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           InstanceKey[] iks2 = getInstancesArray(arg2);
 
           IOperator op = instruction.getOperator();
-          if ((op == BinaryOpInstruction.Operator.ADD)
-              && (getOptions().getTraceStringConstants())) {
+          if ((op == BinaryOpInstruction.Operator.ADD) && getOptions().getTraceStringConstants()) {
             for (InstanceKey element : iks1) {
               if (isStringConstant(element)) {
                 for (InstanceKey element2 : iks2) {

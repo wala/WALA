@@ -51,7 +51,7 @@ import java.util.function.Predicate;
  */
 public class PDFCallGraph {
   public static boolean isDirectory(String appJar) {
-    return (new File(appJar).isDirectory());
+    return new File(appJar).isDirectory();
   }
 
   public static String findJarFiles(String[] directories) {
@@ -103,7 +103,7 @@ public class PDFCallGraph {
   public static Process run(String appJar, String exclusionFile)
       throws IllegalArgumentException, CancelException {
     try {
-      Graph<CGNode> g = buildPrunedCallGraph(appJar, (new FileProvider()).getFile(exclusionFile));
+      Graph<CGNode> g = buildPrunedCallGraph(appJar, new FileProvider().getFile(exclusionFile));
 
       Properties p = null;
       try {

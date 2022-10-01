@@ -84,7 +84,7 @@ public class StackMapTableReader extends AttributeReader {
         StackMapType[] stack = new StackMapType[numStack];
         for (int j = 0; j < numStack; j++) {
           stack[j] = item(ptr);
-          ptr += (stack[j].isObject()) ? 3 : 1;
+          ptr += stack[j].isObject() ? 3 : 1;
         }
 
         frames.add(new StackMapFrame(frameType, offset, locals, stack));

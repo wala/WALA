@@ -71,7 +71,7 @@ public class PDFTypeHierarchy {
       String classpath = args[CLASSPATH_INDEX];
       AnalysisScope scope =
           AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
-              classpath, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+              classpath, new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -101,7 +101,7 @@ public class PDFTypeHierarchy {
   /** Restrict g to nodes from the Application loader */
   public static Graph<IClass> pruneForAppLoader(Graph<IClass> g) {
     Predicate<IClass> f =
-        c -> (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
+        c -> c.getClassLoader().getReference().equals(ClassLoaderReference.Application);
     return pruneGraph(g, f);
   }
 

@@ -120,7 +120,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext().isA(ReceiverInstanceContext.class))) {
+    if (!node.getContext().isA(ReceiverInstanceContext.class)) {
       return false;
     }
     Context r = node.getContext();

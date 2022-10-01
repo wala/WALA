@@ -80,7 +80,7 @@ public class StringBuilderUseAnalysis {
   private final List<SSAInstruction> instructions;
 
   public StringBuilderUseAnalysis(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) {
-    assert (ik.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder"));
+    assert ik.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder");
 
     this.pa = pa;
     this.node = findCGNode(ik, pa);

@@ -351,7 +351,7 @@ public final class Util {
   /** General "print an error" routine. */
   public static void error(String s) {
     System.err.println(s);
-    (new Error("Stack Trace")).printStackTrace();
+    new Error("Stack Trace").printStackTrace();
   }
 
   /**

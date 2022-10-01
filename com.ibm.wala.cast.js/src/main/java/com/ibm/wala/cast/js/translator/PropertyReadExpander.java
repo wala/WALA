@@ -147,7 +147,7 @@ public class PropertyReadExpander
       RewriteContext context,
       Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
     CAstNode get, result;
-    String receiverTemp = TEMP_NAME + (readTempCounter++);
+    String receiverTemp = TEMP_NAME + readTempCounter++;
     String elt = (String) element.getValue();
     if (elt.equals("prototype") || elt.equals("__proto__")) {
       result =
@@ -213,8 +213,8 @@ public class PropertyReadExpander
       CAstNode element,
       RewriteContext context,
       Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
-    String receiverTemp = TEMP_NAME + (readTempCounter++);
-    String elementTemp = TEMP_NAME + (readTempCounter++);
+    String receiverTemp = TEMP_NAME + readTempCounter++;
+    String elementTemp = TEMP_NAME + readTempCounter++;
 
     if (context.inAssignment()) {
       context.setAssign(
@@ -293,8 +293,8 @@ public class PropertyReadExpander
       CAstNode rval = copyNodes(root.getChild(1), cfg, READ, nodeMap);
       CAstNode op = copyNodes(root.getChild(2), cfg, READ, nodeMap);
       if (ctxt.receiverTemp != null) { // if we found a nested property access
-        String temp1 = TEMP_NAME + (readTempCounter++);
-        String temp2 = TEMP_NAME + (readTempCounter++);
+        String temp1 = TEMP_NAME + readTempCounter++;
+        String temp2 = TEMP_NAME + readTempCounter++;
         CAstNode copy =
             Ast.makeNode(
                 CAstNode.BLOCK_EXPR,

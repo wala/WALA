@@ -75,7 +75,7 @@ public class PDFWalaIR {
       // we will analyze the contents of the appJar jar file and the Java standard libraries.
       AnalysisScope scope =
           AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
-              appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+              appJar, new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // Build a class hierarchy representing all classes to analyze.  This step will read the class
       // files and organize them into a tree.

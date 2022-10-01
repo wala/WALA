@@ -56,7 +56,7 @@ public class CallGraphTestUtil {
       String scopeFile, String exclusionsFile, ClassLoader myClassLoader) throws IOException {
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
-            scopeFile, (new FileProvider()).getFile(exclusionsFile), myClassLoader);
+            scopeFile, new FileProvider().getFile(exclusionsFile), myClassLoader);
     return scope;
   }
 

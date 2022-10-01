@@ -62,7 +62,7 @@ import java.util.Map;
   public Intent findOrCreateImmutable(final Intent intent) {
     if (immutables.containsKey(intent)) {
       final Intent immutable = immutables.get(intent);
-      assert (immutable.getAction().equals(intent.getAction()));
+      assert immutable.getAction().equals(intent.getAction());
       return immutable;
     } else {
       final Intent immutable = intent.clone();

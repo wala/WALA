@@ -32,7 +32,7 @@ public class CAstImpl implements CAst {
 
   @Override
   public String makeUnique() {
-    return "id" + (nextID++);
+    return "id" + nextID++;
   }
 
   protected static class CAstNodeImpl implements CAstNode {

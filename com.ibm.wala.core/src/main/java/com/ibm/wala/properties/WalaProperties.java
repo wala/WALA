@@ -68,7 +68,7 @@ public final class WalaProperties {
     if (dir == null) {
       return PlatformUtil.getBootClassPathJars();
     }
-    if (!(new File(dir)).isDirectory()) {
+    if (!new File(dir).isDirectory()) {
       System.err.println(
           "WARNING: java_runtime_dir "
               + dir
@@ -131,7 +131,7 @@ public final class WalaProperties {
 
   static String convertToAbsolute(String path) {
     final File file = new File(path);
-    return (file.isAbsolute())
+    return file.isAbsolute()
         ? file.getAbsolutePath()
         : WalaProperties.getWalaHomeDir().concat(File.separator).concat(path);
   }
@@ -177,7 +177,7 @@ public final class WalaProperties {
     if (url == null) {
       return System.getProperty("user.dir"); // $NON-NLS-1$
     } else {
-      return new File((new FileProvider()).filePathFromURL(url))
+      return new File(new FileProvider().filePathFromURL(url))
           .getParentFile()
           .getParentFile()
           .getPath();

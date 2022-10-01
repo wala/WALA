@@ -181,16 +181,16 @@ public class Intent implements ContextItem, Comparable<Intent> {
     if (this.action == null) {
       assert (this.explicit == Explicit.UNSET)
           : "No Action but Intent is not UNSET - is " + this.explicit;
-      assert (!immutable) : "Intent was marked immutable - can't change it.";
+      assert !immutable : "Intent was marked immutable - can't change it.";
       this.action = action;
       this.explicit = Explicit.EXPLICIT;
-    } else if (isExplicit() && (!this.action.equals(action))) {
+    } else if (isExplicit() && !this.action.equals(action)) {
       // We already have the explicit target. Ignore the change.
 
       unbind();
     } else if (!isExplicit()) {
 
-      assert (!immutable) : "Intent was marked immutable - can't change it.";
+      assert !immutable : "Intent was marked immutable - can't change it.";
       this.action = action;
       this.explicit = Explicit.EXPLICIT;
       // TODO: Set type?
@@ -200,7 +200,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
   }
 
   public void unbind() {
-    assert (!immutable) : "Intent was marked immutable - can't change it.";
+    assert !immutable : "Intent was marked immutable - can't change it.";
     this.action = UNBOUND;
     this.type = IntentType.UNKNOWN_TARGET;
     this.explicit = Explicit.MULTI; // XXX shoulb we do this?
@@ -213,7 +213,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
    */
   public void setAction(Atom action) {
     if (this.action == null) {
-      assert (!immutable) : "Intent was marked immutable - can't change it.";
+      assert !immutable : "Intent was marked immutable - can't change it.";
       this.action = action;
     } else if (isExplicit()) {
       // We already have the explicit target. Ignore the change.
@@ -224,7 +224,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
 
   public Atom getAction() {
     if (this.action == null) {
-      assert (!isExplicit()) : "Beeing explicit implies having an action!";
+      assert !isExplicit() : "Beeing explicit implies having an action!";
       return UNBOUND;
     }
     return this.action;
@@ -306,7 +306,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
         return override.isExternal(true);   // The isExternal defined later not this one!
     }*/
 
-    if ((intent.action == null) || (intent.action.equals(UNBOUND))) {
+    if ((intent.action == null) || intent.action.equals(UNBOUND)) {
       return false; // Is Unknown
     }
 
@@ -316,8 +316,8 @@ public class Intent implements ContextItem, Comparable<Intent> {
       // Unknown so not selected as external
       return false;
     }
-    return (!(intent.action.toString().startsWith('L' + pack)
-        || intent.action.toString().startsWith(pack)));
+    return !(intent.action.toString().startsWith('L' + pack)
+        || intent.action.toString().startsWith(pack));
   }
 
   /** Fallback: tries to determine on the Intent itself if it's a standard action. */
@@ -329,7 +329,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
     if (override.getType() != IntentType.UNKNOWN_TARGET) {
         return override.isStandard(true);
     }*/
-    if ((intent.action == null) || (intent.action.equals(UNBOUND))) {
+    if ((intent.action == null) || intent.action.equals(UNBOUND)) {
       return false; // Is Unknown
     }
 
@@ -348,7 +348,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
     IntentType type = getType(); // Asserts type is computed
 
     return ((type == IntentType.INTERNAL_TARGET)
-        || ((!strict) && (type == IntentType.UNKNOWN_TARGET)));
+        || (!strict && (type == IntentType.UNKNOWN_TARGET)));
   }
 
   /**
@@ -364,7 +364,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
 
     return ((type == IntentType.EXTERNAL_TARGET)
         || (type == IntentType.STANDARD_ACTION)
-        || ((!strict) && (type == IntentType.UNKNOWN_TARGET)));
+        || (!strict && (type == IntentType.UNKNOWN_TARGET)));
   }
 
   /**
@@ -378,13 +378,13 @@ public class Intent implements ContextItem, Comparable<Intent> {
     IntentType type = getType(); // Asserts type is computed
 
     return ((type == IntentType.STANDARD_ACTION)
-        || ((!strict) && (type == IntentType.UNKNOWN_TARGET)));
+        || (!strict && (type == IntentType.UNKNOWN_TARGET)));
   }
 
   @Override
   public String toString() {
     StringBuilder ret;
-    if ((this.action == null) || (this.action.equals(UNBOUND))) {
+    if ((this.action == null) || this.action.equals(UNBOUND)) {
       return "Unbound Intent";
     } else if (getType() == IntentType.SYSTEM_SERVICE) {
       ret = new StringBuilder("SystemService(");
@@ -437,7 +437,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
 
       // DO NOT USE TYPE!
       if (this.uri != null) {
-        return ((this.uri.equals(other.uri))
+        return (this.uri.equals(other.uri)
             && equalAction(other)); // && (this.explicit == other.explicit));
       } else {
         return ((other.uri == null)

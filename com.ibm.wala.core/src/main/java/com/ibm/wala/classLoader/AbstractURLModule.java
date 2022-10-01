@@ -39,7 +39,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     try {
       URLConnection con = url.openConnection();
       if (con instanceof JarURLConnection) return ((JarURLConnection) con).getEntryName();
-      else return (new FileProvider()).filePathFromURL(url);
+      else return new FileProvider().filePathFromURL(url);
     } catch (IOException e) {
       Assertions.UNREACHABLE();
       return null;

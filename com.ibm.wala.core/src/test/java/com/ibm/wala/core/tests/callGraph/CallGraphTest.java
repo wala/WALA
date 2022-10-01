@@ -300,7 +300,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             "primordial.txt",
-            (System.getProperty("os.name").equals("Mac OS X"))
+            System.getProperty("os.name").equals("Mac OS X")
                 ? "Java60RegressionExclusions.txt"
                 : "GUIExclusions.txt");
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -524,7 +524,7 @@ public class CallGraphTest extends WalaTestCase {
     }
     final Set<MethodReference> nodes = HashSetFactory.make();
     for (CGNode cgNode : cg) {
-      nodes.add((cgNode).getMethod().getReference());
+      nodes.add(cgNode.getMethod().getReference());
     }
 
     return new Graph<MethodReference>() {

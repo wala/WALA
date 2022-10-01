@@ -150,7 +150,7 @@ public class PDFSlice {
       // create an analysis scope representing the appJar as a J2SE application
       AnalysisScope scope =
           AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
-              appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+              appJar, new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // build a class hierarchy, call graph, and system dependence graph
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);

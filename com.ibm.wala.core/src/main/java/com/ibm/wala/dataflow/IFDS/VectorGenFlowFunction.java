@@ -34,7 +34,7 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
 
   @Override
   public IntSet getSources(int i) {
-    return (gen.contains(i)) ? SparseIntSet.singleton(0) : SparseIntSet.singleton(i);
+    return gen.contains(i) ? SparseIntSet.singleton(0) : SparseIntSet.singleton(i);
   }
 
   /**

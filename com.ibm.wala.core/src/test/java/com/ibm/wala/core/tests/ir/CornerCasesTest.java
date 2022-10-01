@@ -51,7 +51,7 @@ public class CornerCasesTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
+            new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     TypeReference t =
@@ -75,7 +75,7 @@ public class CornerCasesTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
+            new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             MY_CLASSLOADER);
     AnalysisOptions options = new AnalysisOptions();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

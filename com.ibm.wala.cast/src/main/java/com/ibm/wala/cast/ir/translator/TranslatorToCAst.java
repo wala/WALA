@@ -317,7 +317,7 @@ public interface TranslatorToCAst {
         loopBody = Ast.makeNode(CAstNode.BLOCK_STMT, loopBody, continueNode);
 
         CAstRewriter.Rewrite x =
-            (new CAstCloner(Ast, false))
+            new CAstCloner(Ast, false)
                 .copy(loopBody, wc.cfg(), wc.pos(), wc.getNodeTypeMap(), null, null);
         CAstNode otherBody = x.newRoot();
 

@@ -477,7 +477,7 @@ public class AndroidManifestXMLReader {
       }
       if (attributesHistory.containsKey(self)
           && attributesHistory.get(self) != null
-          && (!attributesHistory.get(self).isEmpty())) {
+          && !attributesHistory.get(self).isEmpty()) {
         try {
           attributesHistory.get(self).pop();
         } catch (java.util.EmptyStackException e) {
@@ -691,7 +691,7 @@ public class AndroidManifestXMLReader {
       // Generating Intent for this...
       final String pack;
       if ((attributesHistory.get(Attr.PACKAGE) != null)
-          && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
+          && !attributesHistory.get(Attr.PACKAGE).isEmpty()) {
         pack = (String) attributesHistory.get(Attr.PACKAGE).peek();
       } else {
         logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());

@@ -503,7 +503,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     // whether we are extracting an empty loop body
     boolean extractingEmpty = false;
 
-    String name = EXTRACTED_FUN_BASENAME + (anonymous_counter++);
+    String name = EXTRACTED_FUN_BASENAME + anonymous_counter++;
 
     // Create a new entity for the extracted function.
     ExtractedFunction new_entity = new ExtractedFunction(name, context);

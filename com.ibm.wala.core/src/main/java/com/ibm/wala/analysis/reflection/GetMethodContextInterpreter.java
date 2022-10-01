@@ -83,7 +83,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     Context context = node.getContext();
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
     if (method.getReference().equals(GET_METHOD)) {
-      Atom name = Atom.findOrCreateAsciiAtom(((NameItem) (context.get(ContextKey.NAME))).name());
+      Atom name = Atom.findOrCreateAsciiAtom(((NameItem) context.get(ContextKey.NAME)).name());
       SSAInstruction instrs[] = makeGetMethodStatements(context, constants, name);
       return new SyntheticIR(
           method,
@@ -94,7 +94,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_DECLARED_METHOD)) {
-      Atom name = Atom.findOrCreateAsciiAtom(((NameItem) (context.get(ContextKey.NAME))).name());
+      Atom name = Atom.findOrCreateAsciiAtom(((NameItem) context.get(ContextKey.NAME)).name());
       SSAInstruction instrs[] = makeGetDeclaredMethodStatements(context, constants, name);
       return new SyntheticIR(
           method,
@@ -124,7 +124,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext().isA(GetMethodContext.class))) {
+    if (!node.getContext().isA(GetMethodContext.class)) {
       return false;
     }
     MethodReference mRef = node.getMethod().getReference();

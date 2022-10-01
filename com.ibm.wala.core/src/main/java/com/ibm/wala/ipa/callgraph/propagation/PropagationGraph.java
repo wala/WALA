@@ -709,7 +709,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     if (VERBOSE) {
       System.err.println(("stats for " + getClass()));
       System.err.println(("number of variables: " + delegateGraph.getVarCount()));
-      System.err.println(("implicit equations: " + (implicitUnaryCount)));
+      System.err.println(("implicit equations: " + implicitUnaryCount));
       System.err.println(("explicit equations: " + delegateGraph.getEquationCount()));
       System.err.println("implicit map:");
       int count = 0;

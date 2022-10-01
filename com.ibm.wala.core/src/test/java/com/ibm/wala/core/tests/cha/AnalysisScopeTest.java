@@ -23,7 +23,7 @@ public class AnalysisScopeTest {
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             AnalysisScopeTest.class.getClassLoader());
     // assumes com.ibm.wala.core is the current working directory
     Path bcelJarPath = Paths.get("build", "extractBcel", "bcel-5.2.jar");

@@ -247,7 +247,7 @@ public final class AndroidEntryPointLocator {
       }
       for (final IClass candid : candids) {
         if (isExcluded(candid)) continue;
-        if ((!this.flags.contains(LocatorFlags.WITH_ANDROID)) && (isAPIComponent(candid))) {
+        if (!this.flags.contains(LocatorFlags.WITH_ANDROID) && isAPIComponent(candid)) {
           // Don't consider internal overrides
           continue;
         }
@@ -255,7 +255,7 @@ public final class AndroidEntryPointLocator {
         for (final IMethod method : methods) {
 
           if ((method.isInit() || method.isClinit())
-              && (!this.flags.contains(LocatorFlags.WITH_CTOR))) {
+              && !this.flags.contains(LocatorFlags.WITH_CTOR)) {
             logger.debug("Skipping constructor of {}", method);
             continue;
           }
@@ -300,7 +300,7 @@ public final class AndroidEntryPointLocator {
     final IClassLoader appLoader = cha.getLoader(ClassLoaderReference.Application);
     final Iterator<IClass> appIt = appLoader.iterateAllClasses();
 
-    for (IClass appClass = ((appIt.hasNext()) ? appIt.next() : null);
+    for (IClass appClass = (appIt.hasNext() ? appIt.next() : null);
         appIt.hasNext();
         appClass = appIt.next()) {
       IClass androidClass = appClass; // .getSuperclass(); Override on new
@@ -338,7 +338,7 @@ public final class AndroidEntryPointLocator {
         final Collection<? extends IMethod> methods = appClass.getDeclaredMethods();
         for (final IMethod method : methods) {
           if ((method.isInit() || method.isClinit())
-              && (!this.flags.contains(LocatorFlags.WITH_CTOR))) {
+              && !this.flags.contains(LocatorFlags.WITH_CTOR)) {
             logger.debug("Skipping constructor of {}", method);
             continue;
           }
@@ -386,7 +386,7 @@ public final class AndroidEntryPointLocator {
               if (this.flags.contains(LocatorFlags.WITH_SUPER)) {
                 final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
 
-                if ((eps.contains(ep)) && (!method.isStatic())) {
+                if (eps.contains(ep) && !method.isStatic()) {
                   // eps.get(ep) ... suuuuuper!
                   for (final AndroidEntryPoint eps_ep : eps) {
                     if (eps_ep.equals(ep)) {

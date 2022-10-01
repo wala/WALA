@@ -48,7 +48,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     // for now we assume that we always want to use the same representation for
     // V as
     // for W.
-    return (V.getClass().equals(W.getClass()));
+    return V.getClass().equals(W.getClass());
   }
 
   @Override

@@ -134,7 +134,7 @@ final class IntraprocAnalysisState
   public int[] getInjectedParameters(final IExplodedBasicBlock block) {
     if (noAnalysisPossible) {
       throw new IllegalStateException();
-    } else if (!((block.getInstruction() instanceof SSAAbstractInvokeInstruction))) {
+    } else if (!(block.getInstruction() instanceof SSAAbstractInvokeInstruction)) {
       throw new IllegalArgumentException();
     }
 

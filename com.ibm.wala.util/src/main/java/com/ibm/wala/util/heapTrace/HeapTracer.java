@@ -98,7 +98,7 @@ public class HeapTracer {
 
   public static void main(String[] args) {
     try {
-      Result r = (new HeapTracer(true)).perform();
+      Result r = new HeapTracer(true).perform();
       System.err.println(r.toString());
     } catch (Throwable t) {
       t.printStackTrace();
@@ -482,7 +482,7 @@ public class HeapTracer {
       long f = Runtime.getRuntime().freeMemory();
       System.err.println(("Total Memory:     " + t));
       System.err.println(("Occupied Memory:  " + (t - f)));
-      HeapTracer.Result r = (new HeapTracer(traceStatics)).perform();
+      HeapTracer.Result r = new HeapTracer(traceStatics).perform();
       System.err.println("HeapTracer Analysis:");
       System.err.println(r.toString());
     } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
@@ -507,7 +507,7 @@ public class HeapTracer {
       long f = Runtime.getRuntime().freeMemory();
       System.err.println(("Total Memory:     " + t));
       System.err.println(("Occupied Memory:  " + (t - f)));
-      HeapTracer.Result r = (new HeapTracer(instances, traceStatics)).perform();
+      HeapTracer.Result r = new HeapTracer(instances, traceStatics).perform();
       System.err.println("HeapTracer Analysis:");
       System.err.println(r.toString());
       return r;

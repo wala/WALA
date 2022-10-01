@@ -139,7 +139,7 @@ public class MethodSummary {
     if (numberOfParameters >= 0) {
       return numberOfParameters;
     } else {
-      return (isStatic()) ? method.getNumberOfParameters() : method.getNumberOfParameters() + 1;
+      return isStatic() ? method.getNumberOfParameters() : method.getNumberOfParameters() + 1;
     }
   }
 

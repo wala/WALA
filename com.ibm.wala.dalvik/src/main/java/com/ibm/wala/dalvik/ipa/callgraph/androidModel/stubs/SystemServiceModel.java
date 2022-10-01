@@ -113,7 +113,7 @@ public class SystemServiceModel extends AndroidModel {
   // @Override
   private void register(SummarizedMethod model) {
     AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
-    if (!(mClass.containsMethod(model.getSelector()))) {
+    if (!mClass.containsMethod(model.getSelector())) {
       mClass.addMethod(model);
     }
   }
@@ -131,7 +131,7 @@ public class SystemServiceModel extends AndroidModel {
 
   @Override
   protected void build(Atom name, Collection<? extends AndroidEntryPoint> entrypoints) {
-    assert ((entrypoints == null) || (!entrypoints.iterator().hasNext()));
+    assert ((entrypoints == null) || !entrypoints.iterator().hasNext());
 
     final Descriptor descr =
         Descriptor.findOrCreate(
@@ -190,8 +190,8 @@ public class SystemServiceModel extends AndroidModel {
    */
   // @Override
   private void populate(Iterable<? extends AndroidEntryPoint> entrypoints) {
-    assert ((entrypoints == null) || (!entrypoints.iterator().hasNext()));
-    assert (!built) : "You can only build once";
+    assert ((entrypoints == null) || !entrypoints.iterator().hasNext());
+    assert !built : "You can only build once";
 
     final TypeSafeInstructionFactory instructionFactory =
         new TypeSafeInstructionFactory(getClassHierarchy());

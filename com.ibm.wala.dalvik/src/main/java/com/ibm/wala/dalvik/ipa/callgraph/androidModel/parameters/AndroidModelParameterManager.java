@@ -183,7 +183,7 @@ public class AndroidModelParameterManager {
       for (ManagedParameter param : seenTypes.get(type)) {
         if (param.status == ValueStatus.UNALLOCATED) {
           // XXX: Allow more?
-          assert (param.type.equals(type)) : "Inequal types";
+          assert param.type.equals(type) : "Inequal types";
 
           if ((ssaValue + 1) > nextLocal) {
             nextLocal = ssaValue + 1;
@@ -253,7 +253,7 @@ public class AndroidModelParameterManager {
             || (param.status == ValueStatus.FREE_INVALIDATED)
             || (param.status == ValueStatus.FREE_CLOSED)) {
           // XXX: Allow more?
-          assert (param.type.equals(type)) : "Inequal types";
+          assert param.type.equals(type) : "Inequal types";
           if (param.ssa != ssaValue) {
             if ((param.status == ValueStatus.FREE) && (param.setInScope == currentScope)) {
               param.status = ValueStatus.FREE_CLOSED;
@@ -292,7 +292,7 @@ public class AndroidModelParameterManager {
           // throw new IllegalStateException("You forgot Phis in subordinate blocks");
         }
       }
-      assert (didPhi);
+      assert didPhi;
     } else {
       ManagedParameter param = new ManagedParameter();
       param.status = ValueStatus.ALLOCATED;
@@ -417,7 +417,7 @@ public class AndroidModelParameterManager {
     if (seenTypes.containsKey(type)) {
       for (ManagedParameter param : seenTypes.get(type)) {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
-          assert (param.type.equals(type)) : "Inequal types";
+          assert param.type.equals(type) : "Inequal types";
           if (param.setInScope > currentScope) {
 
             continue;
@@ -479,7 +479,7 @@ public class AndroidModelParameterManager {
     if (seenTypes.containsKey(type)) {
       for (ManagedParameter param : seenTypes.get(type)) {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
-          assert (param.type.equals(type)) : "Inequal types";
+          assert param.type.equals(type) : "Inequal types";
 
           ret.add(param.ssa);
         } else if ((param.status == ValueStatus.INVALIDATED) && param.setInScope > currentScope) {
@@ -596,7 +596,7 @@ public class AndroidModelParameterManager {
             && (param.status != ValueStatus.FREE_INVALIDATED)
             && (param.status != ValueStatus.INVALIDATED)
             && (param.setInScope == currentScope)) {
-          assert (param.type.equals(type));
+          assert param.type.equals(type);
 
           if (param.status == ValueStatus.FREE) {
             param.status = ValueStatus.FREE_INVALIDATED;
@@ -677,7 +677,7 @@ public class AndroidModelParameterManager {
    *     IInstanciationBehavior
    */
   public boolean isCreate(TypeReference type) {
-    return (!isReuse(type));
+    return !isReuse(type);
   }
 
   @Override
