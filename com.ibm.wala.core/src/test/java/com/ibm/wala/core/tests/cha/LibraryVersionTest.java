@@ -34,7 +34,7 @@ public class LibraryVersionTest extends WalaTestCase {
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
     Assert.assertTrue(

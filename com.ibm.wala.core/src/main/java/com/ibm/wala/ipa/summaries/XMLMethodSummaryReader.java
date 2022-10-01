@@ -832,15 +832,15 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       governingMethod.addConstant(
           valueNumber,
-          (typeString.equals("int"))
+          typeString.equals("int")
               ? new ConstantValue(Integer.valueOf(valueString))
-              : (typeString.equals("long"))
+              : typeString.equals("long")
                   ? new ConstantValue(Long.valueOf(valueString))
-                  : (typeString.equals("short"))
+                  : typeString.equals("short")
                       ? new ConstantValue(Short.valueOf(valueString))
-                      : (typeString.equals("float"))
+                      : typeString.equals("float")
                           ? new ConstantValue(Float.valueOf(valueString))
-                          : (typeString.equals("double"))
+                          : typeString.equals("double")
                               ? new ConstantValue(Double.valueOf(valueString))
                               : null);
     }

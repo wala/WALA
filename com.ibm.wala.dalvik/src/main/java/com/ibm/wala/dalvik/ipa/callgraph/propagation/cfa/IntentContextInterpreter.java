@@ -282,7 +282,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     final MethodReference target = node.getMethod().getReference();
-    return (intentStarters.isStarter(target));
+    return intentStarters.isStarter(target);
   }
 
   @Override

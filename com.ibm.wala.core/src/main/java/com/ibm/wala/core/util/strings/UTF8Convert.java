@@ -124,8 +124,7 @@ public abstract class UTF8Convert {
       char c = s.charAt(i);
       // in all shifts below, c is an (unsigned) char,
       // so either >>> or >> is ok
-      if (((!WRITE_PSEUDO_UTF8) || (c >= 0x0001)) && (c <= 0x007F))
-        result[result_index++] = (byte) c;
+      if ((!WRITE_PSEUDO_UTF8 || (c >= 0x0001)) && (c <= 0x007F)) result[result_index++] = (byte) c;
       else if (c > 0x07FF) {
         result[result_index++] = (byte) (0xe0 | (byte) (c >> 12));
         result[result_index++] = (byte) (0x80 | ((c & 0xfc0) >> 6));
@@ -150,7 +149,7 @@ public abstract class UTF8Convert {
     int utflen = 0;
     for (int i = 0, n = s.length(); i < n; ++i) {
       int c = s.charAt(i);
-      if (((!WRITE_PSEUDO_UTF8) || (c >= 0x0001)) && (c <= 0x007F)) ++utflen;
+      if ((!WRITE_PSEUDO_UTF8 || (c >= 0x0001)) && (c <= 0x007F)) ++utflen;
       else if (c > 0x07FF) utflen += 3;
       else utflen += 2;
     }

@@ -90,7 +90,7 @@ public class PointsToMap {
     PointsToSetVariable result = (PointsToSetVariable) pointsToSets.get(repI);
     if (result != null
         && p instanceof FilteredPointerKey
-        && (!(result.getPointerKey() instanceof FilteredPointerKey))) {
+        && !(result.getPointerKey() instanceof FilteredPointerKey)) {
       upgradeToFilter(result, ((FilteredPointerKey) p).getTypeFilter());
     }
     return result;

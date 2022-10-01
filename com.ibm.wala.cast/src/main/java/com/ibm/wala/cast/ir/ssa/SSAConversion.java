@@ -440,7 +440,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   @Override
   protected boolean isLive(SSACFG.BasicBlock Y, int V) {
-    return (liveness.isLiveEntry(Y, V));
+    return liveness.isLiveEntry(Y, V);
   }
 
   private void addPhi(SSACFG.BasicBlock BB, SSAPhiInstruction phi) {
@@ -733,7 +733,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
           @Override
           protected boolean skip(int i) {
-            return (i >= 0) && (i <= limit) && (!values.contains(i));
+            return (i >= 0) && (i <= limit) && !values.contains(i);
           }
         };
     ssa.perform();

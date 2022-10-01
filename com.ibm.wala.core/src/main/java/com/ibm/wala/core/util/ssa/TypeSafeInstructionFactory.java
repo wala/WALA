@@ -150,7 +150,7 @@ public class TypeSafeInstructionFactory {
             "A function expecting an implicit this can not be invoked static.");
       }
     } else {
-      if (params.size() != (acc.getNumberOfParameters())) {
+      if (params.size() != acc.getNumberOfParameters()) {
         throw new IllegalArgumentException(
             "The callee takes "
                 + acc.getNumberOfParameters()
@@ -297,7 +297,7 @@ public class TypeSafeInstructionFactory {
             "A function expecting an implicit this can not be invoked static.");
       }
     } else {
-      if (params.size() != (acc.getNumberOfParameters())) {
+      if (params.size() != acc.getNumberOfParameters()) {
         throw new IllegalArgumentException(
             "The callee takes "
                 + acc.getNumberOfParameters()
@@ -460,7 +460,7 @@ public class TypeSafeInstructionFactory {
 
     if ((targetValueValidIn != null)
         && (instValidIn != null)
-        && (!targetValueValidIn.equals(instValidIn))) {
+        && !targetValueValidIn.equals(instValidIn)) {
       throw new IllegalArgumentException(
           "containingInstance "
               + containingInstance
@@ -558,7 +558,7 @@ public class TypeSafeInstructionFactory {
 
     if ((newValueValidIn != null)
         && (instValidIn != null)
-        && (!newValueValidIn.equals(instValidIn))) {
+        && !newValueValidIn.equals(instValidIn)) {
       throw new IllegalArgumentException(
           "targetInstance "
               + targetInstance
@@ -649,7 +649,7 @@ public class TypeSafeInstructionFactory {
 
       if ((resultValidIn != null)
           && (paramValidIn != null)
-          && (!paramValidIn.equals(resultValidIn))) {
+          && !paramValidIn.equals(resultValidIn)) {
         throw new IllegalArgumentException(
             "The parameter " + param + " is valid in another scope than" + result);
       }
@@ -701,7 +701,7 @@ public class TypeSafeInstructionFactory {
 
       if ((resultValidIn != null)
           && (paramValidIn != null)
-          && (!paramValidIn.equals(resultValidIn))) {
+          && !paramValidIn.equals(resultValidIn)) {
         throw new IllegalArgumentException(
             "The parameter " + param + " is valid in another scope than" + result);
       }

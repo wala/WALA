@@ -125,7 +125,7 @@ public class SSAValue {
         return (this.type.equals(other.type) && this.name.equals(other.name));
       } else if (o instanceof TypeKey) {
         TypeKey other = (TypeKey) o;
-        return (this.type.equals(other.type));
+        return this.type.equals(other.type);
       } else {
         return false;
       }
@@ -319,7 +319,7 @@ public class SSAValue {
     if (o instanceof SSAValue) {
       final SSAValue other = (SSAValue) o;
       return ((this.number == other.number)
-          && (this.mRef.equals(other.mRef))
+          && this.mRef.equals(other.mRef)
           && this.type.equals(other.type));
     }
     throw new IllegalArgumentException("Can't compare SSAValue to " + o.getClass());

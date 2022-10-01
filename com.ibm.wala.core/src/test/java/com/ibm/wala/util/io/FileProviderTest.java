@@ -29,7 +29,7 @@ public class FileProviderTest {
     URL url = new URL("file:///c:/my/File.jar");
     String expected = "/c:/my/File.jar";
     // exercise:
-    String actual = (new FileProvider()).filePathFromURL(url);
+    String actual = new FileProvider().filePathFromURL(url);
     // verify:
     assertEquals(expected, actual);
   }
@@ -39,7 +39,7 @@ public class FileProviderTest {
     // setup:
     URL url = new URL("file:///[Eclipse]/File.jar");
     // exercise:
-    String actual = (new FileProvider()).filePathFromURL(url);
+    String actual = new FileProvider().filePathFromURL(url);
     // verify:
     assertThat(
         actual,
@@ -53,7 +53,7 @@ public class FileProviderTest {
     // setup:
     URL url = new URL("file:///With%20Space/File.jar");
     // exercise:
-    String actual = (new FileProvider()).filePathFromURL(url);
+    String actual = new FileProvider().filePathFromURL(url);
     // verify:
     assertThat(
         actual,

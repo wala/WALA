@@ -92,7 +92,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext().isA(JavaTypeContext.class))) {
+    if (!node.getContext().isA(JavaTypeContext.class)) {
       return false;
     }
     return node.getMethod().getReference().equals(GetClassContextSelector.GET_CLASS);

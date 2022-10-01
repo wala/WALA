@@ -344,7 +344,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     if (this.pack == null) {
       logger.info("Setting the package to {}", pack);
       this.pack = pack;
-    } else if (!(this.pack.equals(pack))) {
+    } else if (!this.pack.equals(pack)) {
       throw new IllegalArgumentException(
           "The already set package "
               + this.pack
@@ -628,7 +628,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   public Intent getIntent(Intent intent) {
     if (overrideIntents.containsKey(intent)) {
       Intent ret = overrideIntents.get(intent);
-      while (!(ret.equals(intent))) {
+      while (!ret.equals(intent)) {
         // Follow the chain of overrides
         if (!overrideIntents.containsKey(intent)) {
           logger.info("Resolved {} to {}", intent, ret);

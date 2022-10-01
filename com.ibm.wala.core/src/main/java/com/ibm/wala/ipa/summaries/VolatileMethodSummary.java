@@ -199,7 +199,7 @@ public class VolatileMethodSummary {
 
     if (instructions.size() - 1 < programCounter) return false;
     if (instructions.get(programCounter) == null) return false;
-    return (instructions.get(programCounter).equals(RESERVED));
+    return instructions.get(programCounter).equals(RESERVED);
   }
 
   /**
@@ -268,7 +268,7 @@ public class VolatileMethodSummary {
     if (statement.iIndex() < 0) {
       throw new IllegalArgumentException("Statement has a negative iindex");
     }
-    if ((!this.allowReservedPC) && isReserved(statement.iIndex())) {
+    if (!this.allowReservedPC && isReserved(statement.iIndex())) {
       throw new IllegalStateException(
           "ProgramCounter " + statement.iIndex() + " is reserved! Use allowReserved(true).");
     }
@@ -401,7 +401,7 @@ public class VolatileMethodSummary {
    */
   public void addConstant(java.lang.Integer vn, ConstantValue value) {
 
-    if ((summary.getConstants() != null) && (summary.getConstants().containsKey(vn))) {
+    if ((summary.getConstants() != null) && summary.getConstants().containsKey(vn)) {
       throw new IllegalStateException("You redefined a constant at number " + vn);
     }
     if (vn <= 0) {

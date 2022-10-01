@@ -99,7 +99,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext().isA(JavaTypeContext.class))) {
+    if (!node.getContext().isA(JavaTypeContext.class)) {
       return false;
     }
     return ClassFactoryContextSelector.isClassFactory(node.getMethod().getReference());

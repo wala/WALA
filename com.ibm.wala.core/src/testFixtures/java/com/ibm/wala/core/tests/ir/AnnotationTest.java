@@ -76,7 +76,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
+            new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             AnnotationTest.class.getClassLoader());
     return ClassHierarchyFactory.make(scope);
   }

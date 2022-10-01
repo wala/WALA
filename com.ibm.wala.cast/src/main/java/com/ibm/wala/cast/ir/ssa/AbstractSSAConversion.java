@@ -456,6 +456,6 @@ public abstract class AbstractSSAConversion {
     }
 
     assert !S[v].isEmpty();
-    return (isConstant(v)) ? v : S[v].peek();
+    return isConstant(v) ? v : S[v].peek();
   }
 }

@@ -185,7 +185,7 @@ public class AnalysisScopeReader {
     String language = toks.nextToken();
     String entryType = toks.nextToken();
     String entryPathname = toks.nextToken();
-    FileProvider fp = (new FileProvider());
+    FileProvider fp = new FileProvider();
     if ("classFile".equals(entryType)) {
       File cf = fp.getFile(entryPathname, javaLoader);
       try {

@@ -87,7 +87,7 @@ public class IntentModel extends AndroidModel {
 
   private void register(SummarizedMethod model) {
     AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
-    if (!(mClass.containsMethod(model.getSelector()))) {
+    if (!mClass.containsMethod(model.getSelector())) {
       mClass.addMethod(model);
     }
   }

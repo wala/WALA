@@ -68,7 +68,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
+            new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
             NullPointerExceptionInterTest.class.getClassLoader());
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
     try {

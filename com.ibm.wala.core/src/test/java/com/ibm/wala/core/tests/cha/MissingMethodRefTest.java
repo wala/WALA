@@ -35,7 +35,7 @@ public class MissingMethodRefTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             DupFieldsTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =

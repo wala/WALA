@@ -78,7 +78,7 @@ public class SlicerUtil {
     w.println("SLICE:\n");
     int i = 1;
     for (Statement s : slice) {
-      String line = (i++) + "   " + s;
+      String line = i++ + "   " + s;
       w.println(line);
       w.flush();
     }

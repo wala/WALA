@@ -261,9 +261,9 @@ public class ParameterAccessor {
     public boolean equals(final Object o) {
       if (o instanceof Parameter) {
         final Parameter other = (Parameter) o;
-        return ((this.type.equals(other.type))
+        return (this.type.equals(other.type)
             && (this.number == other.number)
-            && (this.mRef.equals(other.mRef)));
+            && this.mRef.equals(other.mRef));
       }
       if (o instanceof SSAValue) {
         return super.equals(o);
@@ -445,7 +445,7 @@ public class ParameterAccessor {
                   + ". The targets contradict themselves if they have an implicit this!");
         }
       }
-      hasImplicitThis = (!testStatic);
+      hasImplicitThis = !testStatic;
     }
 
     if (hasImplicitThis) {
@@ -508,7 +508,7 @@ public class ParameterAccessor {
     this.base = BasedOn.IMETHOD;
     this.numberOfParameters = method.getReference().getNumberOfParameters();
 
-    if (method.isStatic() && (!method.isInit())) {
+    if (method.isStatic() && !method.isInit()) {
       assert (method.getNumberOfParameters() == method.getReference().getNumberOfParameters())
           : "WTF!" + method;
       this.implicitThis = -1;
@@ -638,7 +638,7 @@ public class ParameterAccessor {
         case IMETHOD:
           {
             // final int firstInSelector = firstInSelector();
-            for (int i = ((hasImplicitThis()) ? 1 : 0);
+            for (int i = (hasImplicitThis() ? 1 : 0);
                 i < this.method.getNumberOfParameters();
                 ++i) {
               debug(

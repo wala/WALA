@@ -792,7 +792,7 @@ public class PrimitivesTest extends WalaTestCase {
     Object[] desired5 = new Object[] {nodes[8]};
     for (Object o4 : Iterator2Iterable.make(D.dominatorTree().getSuccNodes(nodes[5]))) {
       Object d = desired5[j++];
-      boolean ok = (o4.equals(d));
+      boolean ok = o4.equals(d);
       if (!ok) {
         System.err.println("O4: " + o4);
         System.err.println("desired " + d);

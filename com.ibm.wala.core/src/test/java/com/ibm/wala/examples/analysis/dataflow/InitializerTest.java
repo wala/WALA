@@ -48,7 +48,7 @@ public class InitializerTest {
       scope =
           AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA,
-              (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+              new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
               InitializerTest.class.getClassLoader());
     } catch (IOException e1) {
       // TODO Auto-generated catch block

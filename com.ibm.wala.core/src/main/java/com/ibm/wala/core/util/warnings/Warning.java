@@ -76,17 +76,17 @@ public abstract class Warning implements Comparable<Warning> {
   protected String severityString() {
     switch (level) {
       case MILD:
-        return ("mild");
+        return "mild";
       case MODERATE:
-        return ("Moderate");
+        return "Moderate";
       case SEVERE:
-        return ("SEVERE");
+        return "SEVERE";
       case CLIENT_MILD:
-        return ("Client mild");
+        return "Client mild";
       case CLIENT_MODERATE:
-        return ("Client moderate");
+        return "Client moderate";
       case CLIENT_SEVERE:
-        return ("Client severe");
+        return "Client severe";
       default:
         Assertions.UNREACHABLE();
         return null;

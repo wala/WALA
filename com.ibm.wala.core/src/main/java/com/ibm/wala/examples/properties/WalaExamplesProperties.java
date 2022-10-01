@@ -44,7 +44,7 @@ public final class WalaExamplesProperties {
       throw new IllegalStateException("failed to find URL for wala.examples.properties");
     }
 
-    return new File((new FileProvider()).filePathFromURL(url))
+    return new File(new FileProvider().filePathFromURL(url))
         .getParentFile()
         .getParentFile()
         .getAbsolutePath();

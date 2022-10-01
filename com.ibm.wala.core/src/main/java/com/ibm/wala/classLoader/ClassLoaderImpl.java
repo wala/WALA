@@ -384,7 +384,7 @@ public class ClassLoaderImpl implements IClassLoader {
     for (ModuleEntry entry : sourceModules) {
       String className = entry.getClassName().replace('.', '/');
       className = className.replace(File.separatorChar, '/');
-      className = 'L' + ((className.startsWith("/")) ? className.substring(1) : className);
+      className = 'L' + (className.startsWith("/") ? className.substring(1) : className);
       TypeName T = TypeName.string2TypeName(className);
 
       // Note: entry.getClassName() may not return the correct class name, for example,
@@ -531,7 +531,7 @@ public class ClassLoaderImpl implements IClassLoader {
     String jarFileName = archive.getJarFile().getName();
     InputStream s = null;
     try {
-      File jarFile = (new FileProvider()).getFile(jarFileName);
+      File jarFile = new FileProvider().getFile(jarFileName);
       int bufferSize = 65536;
       s = new BufferedInputStream(new FileInputStream(jarFile), bufferSize);
       byte[] b = new byte[1024];

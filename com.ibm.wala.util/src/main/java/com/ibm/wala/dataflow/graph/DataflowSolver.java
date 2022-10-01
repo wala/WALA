@@ -188,7 +188,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
         V[] rhs = makeStmtRHS(nPred);
         int i = 0;
         for (Object o : Iterator2Iterable.make(G.getPredNodes(node))) {
-          rhs[i++] = (functions.hasEdgeTransferFunctions()) ? getEdge(o, node) : getOut(o);
+          rhs[i++] = functions.hasEdgeTransferFunctions() ? getEdge(o, node) : getOut(o);
         }
         newStatement(getIn(node), meet, rhs, toWorkList, eager);
       }
@@ -213,7 +213,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
             newStatement(
                 getEdge(node, succ),
                 f,
-                (functions.hasNodeTransferFunctions()) ? getOut(node) : getIn(node),
+                functions.hasNodeTransferFunctions() ? getOut(node) : getIn(node),
                 toWorkList,
                 eager);
           }
@@ -241,7 +241,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
           if (f.isIdentity()) {
             uf.union(
                 getEdge(node, succ),
-                (functions.hasNodeTransferFunctions()) ? getOut(node) : getIn(node));
+                functions.hasNodeTransferFunctions() ? getOut(node) : getIn(node));
           }
         }
       }

@@ -979,7 +979,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     @Override
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
-        return (fEntities.get(construct)).iterator();
+        return fEntities.get(construct).iterator();
       } else {
         return EmptyIterator.instance();
       }

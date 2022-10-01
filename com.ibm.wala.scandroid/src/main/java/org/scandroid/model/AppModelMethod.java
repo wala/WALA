@@ -396,11 +396,11 @@ public class AppModelMethod {
           deps = icDependencies.get(aClassToTR.get(tr));
           int index = deps.lastIndexOf(tr);
           TypeReference otr = deps.get(index - 1);
-          assert (ctor.getParameterType(1).equals(otr)) : "Type Mismatch";
+          assert ctor.getParameterType(1).equals(otr) : "Type Mismatch";
           params[1] = typeToID.get(otr);
         } else {
           TypeReference otr = deps.get(deps.size() - 2);
-          assert (ctor.getParameterType(1).equals(otr)) : "Type Mismatch";
+          assert ctor.getParameterType(1).equals(otr) : "Type Mismatch";
           params[1] = typeToID.get(otr);
         }
 

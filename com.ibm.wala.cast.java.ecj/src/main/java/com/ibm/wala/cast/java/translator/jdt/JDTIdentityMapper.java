@@ -134,7 +134,7 @@ public class JDTIdentityMapper {
     metSelectorName = "<init>";
     else metSelectorName = getMethodRef(metBinding).getSelector().toString();
 
-    String shortName = (type.isAnonymous()) ? JDT2CAstUtils.anonTypeName(type) : type.getName();
+    String shortName = type.isAnonymous() ? JDT2CAstUtils.anonTypeName(type) : type.getName();
 
     return outerTypeID + '/' + metSelectorName + '/' + shortName;
   }
@@ -199,7 +199,7 @@ public class JDTIdentityMapper {
     // TODO: have to handle default constructors?
     // TODO: generics...
     Atom name =
-        (met.isConstructor())
+        met.isConstructor()
             ? MethodReference.initAtom
             : Atom.findOrCreateUnicodeAtom(met.getName());
 

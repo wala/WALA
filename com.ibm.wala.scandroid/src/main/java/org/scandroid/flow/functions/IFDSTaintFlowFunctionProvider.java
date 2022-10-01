@@ -449,7 +449,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
 
     // Assertions.UNREACHABLE();
     // TODO: Look up summary for this method, or warn if it doesn't exist.
-    assert (src.getNode().equals(dest.getNode()));
+    assert src.getNode().equals(dest.getNode());
 
     //		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
 
@@ -462,7 +462,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-    assert (src.getNode().equals(dest.getNode()));
+    assert src.getNode().equals(dest.getNode());
     // final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
     // System.out.println("call to return method inside call graph: " +
     // instruction.getDeclaredTarget());
@@ -473,7 +473,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   @Override
   public IUnaryFlowFunction getNormalFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-    assert (src.getNode().equals(dest.getNode()));
+    assert src.getNode().equals(dest.getNode());
     // System.out.println("getNormalFlowFuntion");
     // System.out.println("\tSrc " + src.getLastInstruction());
     // System.out.println("\tDest " + dest.getLastInstruction());

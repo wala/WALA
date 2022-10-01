@@ -127,7 +127,7 @@ public class UnknownTargetModel extends AndroidModel {
   // @Override
   private void register(SummarizedMethod model) {
     AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
-    if (!(mClass.containsMethod(model.getSelector()))) {
+    if (!mClass.containsMethod(model.getSelector())) {
       mClass.addMethod(model);
     }
   }
@@ -145,7 +145,7 @@ public class UnknownTargetModel extends AndroidModel {
   @Override
   protected void build(Atom name, Collection<? extends AndroidEntryPoint> entrypoints)
       throws CancelException {
-    assert ((entrypoints == null) || (!entrypoints.iterator().hasNext()));
+    assert ((entrypoints == null) || !entrypoints.iterator().hasNext());
 
     { // Check if this Application has components, that implement target. If not we don't
       // have to build a MiniModel.
@@ -245,8 +245,8 @@ public class UnknownTargetModel extends AndroidModel {
    */
   // @Override
   private void populate(Iterable<? extends AndroidEntryPoint> entrypoints) throws CancelException {
-    assert ((entrypoints == null) || (!entrypoints.iterator().hasNext()));
-    assert (!built) : "You can only build once";
+    assert ((entrypoints == null) || !entrypoints.iterator().hasNext());
+    assert !built : "You can only build once";
 
     final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(this.cha);
     final ParameterAccessor pAcc = new ParameterAccessor(this.mRef, /* hasImplicitThis */ false);

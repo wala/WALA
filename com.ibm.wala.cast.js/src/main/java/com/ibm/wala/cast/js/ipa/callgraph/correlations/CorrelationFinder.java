@@ -246,7 +246,7 @@ public class CorrelationFinder {
     correlations.sort(Comparator.comparing(o -> o.fst));
     int i = 0;
     for (Pair<Position, String> p : correlations)
-      System.out.println((i++) + " -- " + p.fst + ": " + p.snd);
+      System.out.println(i++ + " -- " + p.fst + ": " + p.snd);
   }
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(URL url)
@@ -305,7 +305,7 @@ public class CorrelationFinder {
   private URL toUrl(String src) throws MalformedURLException {
     // first try interpreting as local file name, if that doesn't work just assume it's a URL
     try {
-      File f = (new FileProvider()).getFileFromClassLoader(src, this.getClass().getClassLoader());
+      File f = new FileProvider().getFileFromClassLoader(src, this.getClass().getClassLoader());
       URL url = f.toURI().toURL();
       return url;
     } catch (FileNotFoundException fnfe) {

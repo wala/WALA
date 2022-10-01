@@ -113,7 +113,7 @@ public class PDFSDG {
     try {
       AnalysisScope scope =
           AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
-              appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+              appJar, new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // generate a WALA-consumable wrapper around the incoming scope object
 

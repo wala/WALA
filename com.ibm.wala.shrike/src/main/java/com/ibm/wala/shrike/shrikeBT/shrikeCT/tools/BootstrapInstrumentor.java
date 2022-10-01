@@ -138,7 +138,7 @@ public class BootstrapInstrumentor {
                 MethodData.makeWithDefaultHandlersAndInstToBytecodes(
                     Constants.ACC_PUBLIC | Constants.ACC_STATIC,
                     cr.getName(),
-                    "bs" + (idx++),
+                    "bs" + idx++,
                     "()Ljava/lang/invoke/CallSite;",
                     insts));
           }

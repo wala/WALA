@@ -247,7 +247,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext().isA(JavaTypeContext.class))) {
+    if (!node.getContext().isA(JavaTypeContext.class)) {
       return false;
     }
     MethodReference mRef = node.getMethod().getReference();

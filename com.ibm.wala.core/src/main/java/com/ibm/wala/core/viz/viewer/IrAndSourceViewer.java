@@ -52,7 +52,7 @@ public class IrAndSourceViewer {
           if (sourceFileName != null) {
             URL url;
             try {
-              url = (new File(sourceFileName)).toURI().toURL();
+              url = new File(sourceFileName).toURI().toURL();
               sourceViewer.setSource(url, sourceLineNumber);
             } catch (MalformedURLException e2) {
               e2.printStackTrace();

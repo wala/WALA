@@ -76,7 +76,7 @@ public class SlicerTest {
   private static String makeSlicerExclusions() {
     try {
       try (InputStream is =
-          (new FileProvider())
+          new FileProvider()
               .getInputStreamFromClassLoader(
                   CallGraphTestUtil.REGRESSION_EXCLUSIONS, SlicerTest.class.getClassLoader())) {
         String exclusions = new String(FileUtil.readBytes(is), "UTF-8");

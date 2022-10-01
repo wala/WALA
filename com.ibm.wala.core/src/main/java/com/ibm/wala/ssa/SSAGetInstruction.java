@@ -84,7 +84,7 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
 
   @Override
   public int getNumberOfUses() {
-    return (isStatic()) ? 0 : 1;
+    return isStatic() ? 0 : 1;
   }
 
   /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */

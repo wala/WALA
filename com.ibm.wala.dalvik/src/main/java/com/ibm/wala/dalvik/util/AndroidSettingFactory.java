@@ -214,24 +214,24 @@ public class AndroidSettingFactory {
    *     Check Target-Types
    */
   public static Intent intent(String pack, String name, String uri) {
-    if ((name == null) || (name.isEmpty())) {
+    if ((name == null) || name.isEmpty()) {
       throw new IllegalArgumentException("name may not be null or empty");
     }
     Intent.IntentType type = Intent.IntentType.UNKNOWN_TARGET;
 
     if (name.startsWith(".")) {
-      if ((pack == null) || (pack.isEmpty())) {
+      if ((pack == null) || pack.isEmpty()) {
         throw new IllegalArgumentException(
             "The pack is needed to resolve the full name of " + name + ", but it's empty");
       }
       name = pack + name;
       type = Intent.IntentType.INTERNAL_TARGET; // TODO Ehhh...
-    } else if (!(name.contains("."))) {
-      if ((pack != null) && (!pack.isEmpty())) {
+    } else if (!name.contains(".")) {
+      if ((pack != null) && !pack.isEmpty()) {
         name = pack + '.' + name;
       }
       type = Intent.IntentType.INTERNAL_TARGET; // TODO Ehhh...
-    } else if ((pack != null) && (name.startsWith(pack))) {
+    } else if ((pack != null) && name.startsWith(pack)) {
       type = Intent.IntentType.INTERNAL_TARGET; // TODO Ehhh...
     } else if (name.startsWith("android.intent.action")) {
       type = Intent.IntentType.STANDARD_ACTION;

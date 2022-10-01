@@ -2397,7 +2397,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     if (symbolTable.isConstant(valueNumber)) {
       Object v = symbolTable.getConstantValue(valueNumber);
-      return (!(v instanceof Number));
+      return !(v instanceof Number);
     } else {
       return false;
     }

@@ -143,7 +143,7 @@ public abstract class AbstractAnalysisEngine<
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             SYNTHETIC_J2SE_MODEL,
-            (new FileProvider()).getFile(getExclusionsFile()),
+            new FileProvider().getFile(getExclusionsFile()),
             getClass().getClassLoader());
 
     // add standard libraries

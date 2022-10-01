@@ -202,7 +202,7 @@ public class OfflineDynamicCallGraph {
                   + ci.getReader().getMethodType(m)
                   + ":\n");
           w.write("Initial ShrikeBT code:\n");
-          (new Disassembler(d)).disassembleTo(w);
+          new Disassembler(d).disassembleTo(w);
           w.flush();
         }
 
@@ -420,7 +420,7 @@ public class OfflineDynamicCallGraph {
 
         if (disasm) {
           w.write("Final ShrikeBT code:\n");
-          (new Disassembler(d)).disassembleTo(w);
+          new Disassembler(d).disassembleTo(w);
           w.flush();
         }
 

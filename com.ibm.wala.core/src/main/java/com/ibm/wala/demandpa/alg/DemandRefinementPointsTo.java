@@ -1239,7 +1239,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
               @Override
               public void visitGetField(GetFieldLabel label, Object dst) {
-                IField field = (label).getField();
+                IField field = label.getField();
                 PointerKey loadBase = (PointerKey) dst;
                 if (refineFieldAccesses(field, loadBase, curPk, label, curState)) {
                   // if (Assertions.verifyAssertions) {
@@ -1522,7 +1522,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
               @Override
               public void visitGetField(GetFieldLabel label, Object dst) {
-                IField field = (label).getField();
+                IField field = label.getField();
                 PointerKey dstPtrKey = (PointerKey) dst;
                 if (refineFieldAccesses(field, curPk, dstPtrKey, label, curState)) {
                   // statements x = y.f, Y updated
@@ -1555,7 +1555,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
               @Override
               public void visitPutField(PutFieldLabel label, Object dst) {
-                IField field = (label).getField();
+                IField field = label.getField();
                 PointerKey dstPtrKey = (PointerKey) dst;
                 // pass barred label since this is for tracked points-to sets
                 if (refineFieldAccesses(field, curPk, dstPtrKey, label.bar(), curState)) {
@@ -2371,7 +2371,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         @Override
         public void visitGetField(GetFieldLabel label, Object dst) {
-          IField field = (label).getField();
+          IField field = label.getField();
           PointerKey loadBase = (PointerKey) dst;
           if (refineFieldAccesses(field, loadBase, curPk, label, curState)) {
             if (DEBUG_TOPLEVEL) {

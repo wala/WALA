@@ -279,7 +279,7 @@ public class IntraproceduralExceptionAnalysis {
         int iindex = it.next();
 
         SSAInstruction instruction = ir.getInstructions()[iindex];
-        if (!((instruction instanceof SSAInvokeInstruction))) {
+        if (!(instruction instanceof SSAInvokeInstruction)) {
           throw new IllegalArgumentException(
               "The given callsite dose not correspond to an invoke instruction." + instruction);
         }

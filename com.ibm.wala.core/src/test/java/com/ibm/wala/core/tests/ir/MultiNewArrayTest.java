@@ -45,7 +45,7 @@ public class MultiNewArrayTest extends WalaTestCase {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
-            (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"),
+            new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     IClass klass =

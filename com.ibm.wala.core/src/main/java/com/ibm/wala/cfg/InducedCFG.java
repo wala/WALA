@@ -496,7 +496,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
                 "The associated Instruction "
                     + instructions[tgtNd]
                     + " does not start a basic block");
-            assert (false); // It will fail anyway
+            assert false; // It will fail anyway
           }
 
           if (DEBUG) {

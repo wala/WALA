@@ -54,7 +54,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
    */
   @Override
   public boolean hasNext() {
-    return (!empty());
+    return !empty();
   }
 
   protected abstract Iterator<? extends T> getPendingChildren(T n);

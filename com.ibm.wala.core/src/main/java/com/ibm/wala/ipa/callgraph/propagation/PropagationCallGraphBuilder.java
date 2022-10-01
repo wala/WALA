@@ -183,7 +183,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
   /** @return true iff the klass represents java.lang.Object */
   protected boolean isJavaLangObject(IClass klass) {
-    return (klass.getReference().equals(TypeReference.JavaLangObject));
+    return klass.getReference().equals(TypeReference.JavaLangObject);
   }
 
   public CallGraph makeCallGraph(AnalysisOptions options)
@@ -1070,7 +1070,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
             "EVAL PutField "
                 + getField()
                 + ' '
-                + (getFixedSet()).getPointerKey()
+                + getFixedSet().getPointerKey()
                 + ' '
                 + rhs.getPointerKey()
                 + getFixedSet()

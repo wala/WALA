@@ -94,7 +94,7 @@ public class MethodTracer {
 
         if (disasm) {
           w.write("Initial ShrikeBT code:\n");
-          (new Disassembler(d)).disassembleTo(w);
+          new Disassembler(d).disassembleTo(w);
           w.flush();
         }
 
@@ -155,7 +155,7 @@ public class MethodTracer {
 
         if (disasm) {
           w.write("Final ShrikeBT code:\n");
-          (new Disassembler(d)).disassembleTo(w);
+          new Disassembler(d).disassembleTo(w);
           w.flush();
         }
 

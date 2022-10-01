@@ -233,9 +233,9 @@ public class FlatInstantiator implements IInstantiator {
     }
 
     if ((types.size() == 1)
-        && (!klass.isAbstract())
-        && (!klass.isArrayClass())
-        && (!klass.isInterface())) {
+        && !klass.isAbstract()
+        && !klass.isArrayClass()
+        && !klass.isInterface()) {
       // It's a "regular" class
       final SSANewInstruction newInst = addNew(instance);
       selectAndCallCtor(instance, seen, currentDepth);
@@ -425,7 +425,7 @@ public class FlatInstantiator implements IInstantiator {
       SSAValue val, final Set<? extends SSAValue> overrides, final int currentDepth) {
     final IMethod cTor = lookupConstructor(val.getType());
     final ParameterAccessor ctorAcc = new ParameterAccessor(cTor);
-    assert (ctorAcc.hasImplicitThis()) : "CTor detected as not having implicit this pointer";
+    assert ctorAcc.hasImplicitThis() : "CTor detected as not having implicit this pointer";
     logger.debug("Acc for: {}", this.scope);
     final ParameterAccessor acc =
         new ParameterAccessor(this.scope, false); // TODO pm needs a connectThrough too!
@@ -547,7 +547,7 @@ public class FlatInstantiator implements IInstantiator {
           throw new IllegalStateException("The array " + T + " has no inner class");
         }
 
-        if ((inner.isInterface()) || (inner.isAbstract())) {
+        if (inner.isInterface() || inner.isAbstract()) {
           final Set<TypeReference> innerTypes =
               getTypes(inner.getReference(), Collections.<TypeReference>emptySet());
           for (TypeReference iT : innerTypes) {

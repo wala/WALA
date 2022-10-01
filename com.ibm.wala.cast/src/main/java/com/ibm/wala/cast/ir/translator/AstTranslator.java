@@ -859,7 +859,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       public PreBasicBlock findOrCreateCode(
           PreBasicBlock source, PreBasicBlock target, final boolean exception) {
         UnwindState sourceContext = unwindData.get(source);
-        final CAstNode dummy = exception ? (new CAstImpl()).makeNode(CAstNode.EMPTY) : null;
+        final CAstNode dummy = exception ? new CAstImpl().makeNode(CAstNode.EMPTY) : null;
 
         // no unwinding is needed, so jump to target block directly
         if (sourceContext == null) return target;
@@ -896,29 +896,28 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           while (sourceContext != null
               && (targetContext == null || !targetContext.covers(sourceContext))) {
             final CAstRewriter.Rewrite ast =
-                (new CAstCloner(new CAstImpl()) {
-                      @Override
-                      protected CAstNode flowOutTo(
-                          Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap,
-                          CAstNode oldSource,
-                          Object label,
-                          CAstNode oldTarget,
-                          CAstControlFlowMap orig,
-                          CAstSourcePositionMap src) {
-                        if (exception && !isExceptionLabel(label)) {
-                          return dummy;
-                        } else {
-                          return oldTarget;
-                        }
-                      }
-                    })
-                    .copy(
-                        sourceContext.unwindAst,
-                        sourceContext.astContext.getControlFlow(),
-                        sourceContext.astContext.getSourceMap(),
-                        sourceContext.astContext.top().getNodeTypeMap(),
-                        sourceContext.astContext.top().getAllScopedEntities(),
-                        sourceContext.astContext.top().getArgumentDefaults());
+                new CAstCloner(new CAstImpl()) {
+                  @Override
+                  protected CAstNode flowOutTo(
+                      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap,
+                      CAstNode oldSource,
+                      Object label,
+                      CAstNode oldTarget,
+                      CAstControlFlowMap orig,
+                      CAstSourcePositionMap src) {
+                    if (exception && !isExceptionLabel(label)) {
+                      return dummy;
+                    } else {
+                      return oldTarget;
+                    }
+                  }
+                }.copy(
+                    sourceContext.unwindAst,
+                    sourceContext.astContext.getControlFlow(),
+                    sourceContext.astContext.getSourceMap(),
+                    sourceContext.astContext.top().getNodeTypeMap(),
+                    sourceContext.astContext.top().getAllScopedEntities(),
+                    sourceContext.astContext.top().getArgumentDefaults());
             sourceContext.astVisitor.visit(
                 ast.newRoot(),
                 new DelegatingContext(sourceContext.astContext) {
@@ -5314,41 +5313,40 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       System.err.println("found " + included.getName() + " for " + CAstPrinter.print(n));
 
       final CAstEntity copy =
-          (new CAstCloner(new CAstImpl(), true) {
+          new CAstCloner(new CAstImpl(), true) {
 
-                private CAstNode copyIncludeExpr(CAstNode expr) {
-                  if (expr.getValue() != null) {
-                    return Ast.makeConstant(expr.getValue());
-                  } else if (expr instanceof CAstOperator) {
-                    return expr;
-                  } else {
-                    List<CAstNode> nc = new ArrayList<>(expr.getChildCount());
+            private CAstNode copyIncludeExpr(CAstNode expr) {
+              if (expr.getValue() != null) {
+                return Ast.makeConstant(expr.getValue());
+              } else if (expr instanceof CAstOperator) {
+                return expr;
+              } else {
+                List<CAstNode> nc = new ArrayList<>(expr.getChildCount());
 
-                    for (CAstNode child : expr.getChildren()) {
-                      nc.add(copyIncludeExpr(child));
-                    }
-
-                    return Ast.makeNode(expr.getKind(), nc);
-                  }
+                for (CAstNode child : expr.getChildren()) {
+                  nc.add(copyIncludeExpr(child));
                 }
 
-                @Override
-                protected CAstNode copyNodes(
-                    CAstNode root,
-                    final CAstControlFlowMap cfg,
-                    NonCopyingContext c,
-                    Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
-                  if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
-                    int arg = ((Number) root.getChild(0).getValue()).intValue();
-                    CAstNode expr = copyIncludeExpr(n.getChild(arg));
-                    nodeMap.put(Pair.make(root, c.key()), expr);
-                    return expr;
-                  } else {
-                    return super.copyNodes(root, cfg, c, nodeMap);
-                  }
-                }
-              })
-              .rewrite(included);
+                return Ast.makeNode(expr.getKind(), nc);
+              }
+            }
+
+            @Override
+            protected CAstNode copyNodes(
+                CAstNode root,
+                final CAstControlFlowMap cfg,
+                NonCopyingContext c,
+                Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+              if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
+                int arg = ((Number) root.getChild(0).getValue()).intValue();
+                CAstNode expr = copyIncludeExpr(n.getChild(arg));
+                nodeMap.put(Pair.make(root, c.key()), expr);
+                return expr;
+              } else {
+                return super.copyNodes(root, cfg, c, nodeMap);
+              }
+            }
+          }.rewrite(included);
 
       if (copy.getAST() == null) {
         System.err.println((copy.getName() + " has no AST"));

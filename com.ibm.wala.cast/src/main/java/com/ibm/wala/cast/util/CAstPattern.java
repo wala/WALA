@@ -369,7 +369,7 @@ public class CAstPattern {
 
   public static CAstPattern parse(String patternString) {
     try {
-      return (new Parser(patternString)).parse();
+      return new Parser(patternString).parse();
     } catch (NoSuchFieldException e) {
       Assertions.UNREACHABLE("no such kind in pattern: " + e.getMessage());
       return null;

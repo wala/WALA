@@ -115,7 +115,7 @@ public class AndroidStartComponentTool {
     if (flags == null) {
       throw new IllegalArgumentException("Flags may not be null");
     }
-    if ((caller == null) && (!flags.contains(StarterFlags.CONTEXT_FREE))) {
+    if ((caller == null) && !flags.contains(StarterFlags.CONTEXT_FREE)) {
       throw new IllegalArgumentException(
           "Caller may not be null if StarterFlags.CONTEXT_FREE is not set. Flags: " + flags);
     }

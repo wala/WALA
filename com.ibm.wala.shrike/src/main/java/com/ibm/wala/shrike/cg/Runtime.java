@@ -135,7 +135,7 @@ public class Runtime {
           // check for expected caller
           //
           if (runtime.handleCallback != null) {
-            StackTraceElement[] stack = (new Throwable()).getStackTrace();
+            StackTraceElement[] stack = new Throwable().getStackTrace();
             if (stack.length > 2) {
               // frames: Runtime.execution(0), callee(1), caller(2)
               StackTraceElement callerFrame = stack[2];

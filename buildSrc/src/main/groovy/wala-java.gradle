@@ -46,6 +46,12 @@ tasks.withType(JavaCompile).configureEach {
 			// hack until https://github.com/google/error-prone/pull/3462 lands; we add a dummy
 			// setting of a severity level, to make the disableAllWarnings flag work
 			error 'AsyncFunctionReturnsNull'
+			// some warning-level checks we have fixed everywhere
+			error 'UnnecessaryParentheses'
+//			errorproneArgs.addAll(
+//					"-XepPatchChecks:UnnecessaryParentheses",
+//					"-XepPatchLocation:IN_PLACE"
+//			)
 		}
 	} else {
 		options.errorprone.enabled = false

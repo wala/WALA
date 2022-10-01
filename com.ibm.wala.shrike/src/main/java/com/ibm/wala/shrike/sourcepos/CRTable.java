@@ -89,7 +89,7 @@ public final class CRTable extends PositionsAttribute {
     CRTData sourceInfo = null;
     int sourceInfoIndex = 0;
     for (int i = 0; i < crt.length; i++) {
-      if ((crt[i] != null) && (crt[i].isInRange(pc))) {
+      if ((crt[i] != null) && crt[i].isInRange(pc)) {
         if ((sourceInfo != null) && !sourceInfo.matches(crt[i]))
           Debug.warn(WARN_CRT_ENTRIES_CONTRADICTORY, new Object[] {sourceInfoIndex, i});
         if ((sourceInfo == null) || crt[i].isMorePrecise(sourceInfo)) {

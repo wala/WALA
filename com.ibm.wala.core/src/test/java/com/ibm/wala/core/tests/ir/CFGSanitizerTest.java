@@ -48,7 +48,7 @@ public class CFGSanitizerTest extends WalaTestCase {
       throws IOException, IllegalArgumentException, WalaException {
     AnalysisScope scope =
         AnalysisScopeReader.instance.makePrimordialScope(
-            (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+            new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     ClassLoader cl = CFGSanitizerTest.class.getClassLoader();

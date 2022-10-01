@@ -56,7 +56,7 @@ public class JavaViewerDriver {
   private static void run(String classPath, String exclusionFilePath)
       throws IOException, ClassHierarchyException, CallGraphBuilderCancelException {
 
-    File exclusionFile = (new FileProvider()).getFile(exclusionFilePath);
+    File exclusionFile = new FileProvider().getFile(exclusionFilePath);
     AnalysisScope scope =
         AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
             classPath,

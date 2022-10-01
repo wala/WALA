@@ -135,12 +135,12 @@ public class PrimitiveAssignability {
   }
 
   private static void putNarrowing(final Primitive from, final Primitive to) {
-    assert (!assignability.get(from).containsKey(to));
+    assert !assignability.get(from).containsKey(to);
     assignability.get(from).put(to, AssignabilityKind.NARROWING);
   }
 
   private static void putWidening(final Primitive from, final Primitive to) {
-    assert (!assignability.get(from).containsKey(to));
+    assert !assignability.get(from).containsKey(to);
     assignability.get(from).put(to, AssignabilityKind.WIDENING);
   }
 

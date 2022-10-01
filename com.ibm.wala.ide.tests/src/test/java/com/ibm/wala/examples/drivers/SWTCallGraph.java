@@ -88,7 +88,7 @@ public class SWTCallGraph {
               appJar,
               exclusionFile != null
                   ? new File(exclusionFile)
-                  : (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+                  : new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 

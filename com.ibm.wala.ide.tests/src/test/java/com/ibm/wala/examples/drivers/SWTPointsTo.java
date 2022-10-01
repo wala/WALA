@@ -75,7 +75,7 @@ public class SWTPointsTo {
       throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
         AnalysisScopeReader.instance.makeJavaBinaryAnalysisScope(
-            appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+            appJar, new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
 

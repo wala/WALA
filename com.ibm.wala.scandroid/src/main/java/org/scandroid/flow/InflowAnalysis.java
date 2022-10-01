@@ -110,7 +110,7 @@ public class InflowAnalysis {
       newArgNums =
           (ss.getArgNums() == null)
               ? SourceSpec.getNewArgNums(
-                  (im.isStatic()) ? im.getNumberOfParameters() : im.getNumberOfParameters() - 1)
+                  im.isStatic() ? im.getNumberOfParameters() : im.getNumberOfParameters() - 1)
               : ss.getArgNums();
       for (CGNode node : cg.getNodes(im.getReference())) {
         BasicBlockInContext<E>[] entriesForProcedure = graph.getEntriesForProcedure(node);
@@ -177,7 +177,7 @@ public class InflowAnalysis {
                 argNums =
                     (argNums == null)
                         ? SourceSpec.getNewArgNums(
-                            (target.isStatic())
+                            target.isStatic()
                                 ? target.getNumberOfParameters()
                                 : target.getNumberOfParameters() - 1)
                         : argNums;

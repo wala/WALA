@@ -230,7 +230,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
     // Complete the signature of the method
     reuseParameters.collectParameters(entrypoints);
     this.mRef = reuseParameters.toMethodReference(null);
-    this.modelAcc = new ParameterAccessor(this.mRef, (!isStatic()));
+    this.modelAcc = new ParameterAccessor(this.mRef, !isStatic());
     this.paramManager = new SSAValueManager(modelAcc);
 
     final Selector selector = this.mRef.getSelector();
@@ -334,7 +334,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
    * build(), calling it doesn't make sense in an other context.
    */
   private void populate(Iterable<? extends AndroidEntryPoint> entrypoints) throws CancelException {
-    assert (!built) : "You can only build once";
+    assert !built : "You can only build once";
     int currentProgress = 0;
 
     final TypeSafeInstructionFactory tsif = new TypeSafeInstructionFactory(this.cha);
@@ -395,7 +395,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       this.monitor.subTask(ep.getMethod().getReference().getSignature());
 
       if (!selectEntryPoint(ep)) {
-        assert (false) : "The ep should not reach here!";
+        assert false : "The ep should not reach here!";
 
         currentProgress++;
         continue;
@@ -828,8 +828,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       // Optionally call onActivityResult
       if (flags.contains(StarterFlags.CALL_ON_ACTIVITY_RESULT)
           && // TODO: Test multiple activities
-          (!flags.contains(
-              StarterFlags.CONTEXT_FREE))) { // TODO: Doesn't this work without context?
+          !flags.contains(StarterFlags.CONTEXT_FREE)) { // TODO: Doesn't this work without context?
         // Collect all Activity.mResultCode and Activity.mResultData
 
         // Result information of all activities.
@@ -968,8 +967,8 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
         final TypeReference argT = model.getParameterType(i);
         final SSAValue arg;
 
-        if ((AndroidEntryPointManager.MANAGER.doFlatComponents())
-            && (AndroidComponent.isAndroidComponent(argT, cha))) {
+        if (AndroidEntryPointManager.MANAGER.doFlatComponents()
+            && AndroidComponent.isAndroidComponent(argT, cha)) {
           // Get / Put filed in AndroidModelClass for Android-Components
           final Atom fdName = argT.getName().getClassName();
 
