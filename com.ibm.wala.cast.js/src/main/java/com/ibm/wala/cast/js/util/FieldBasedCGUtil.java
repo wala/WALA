@@ -17,6 +17,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.Call
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.BoundedWorklistBasedOptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
@@ -86,6 +87,18 @@ public class FieldBasedCGUtil {
           IAnalysisCacheView cache,
           boolean supportFullPointerAnalysis) {
         return new WorklistBasedOptimisticCallgraphBuilder(
+            cha, makeOptions, cache, supportFullPointerAnalysis);
+      }
+    },
+
+    BOUNDED_OPTIMISTIC_WORKLIST {
+      @Override
+      protected FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(
+          IClassHierarchy cha,
+          JSAnalysisOptions makeOptions,
+          IAnalysisCacheView cache,
+      boolean supportFullPointerAnalysis) {
+        return new BoundedWorklistBasedOptimisticCallgraphBuilder(
             cha, makeOptions, cache, supportFullPointerAnalysis);
       }
     };
@@ -168,6 +181,35 @@ public class FieldBasedCGUtil {
         loaders, scripts.toArray(new Module[0]), builderType, monitor, supportFullPointerAnalysis);
   }
 
+  /**
+   * Construct a bounded field-based call graph using all the {@code .js} files appearing in scriptDir or
+   * any of its sub-directories
+   */
+  public CallGraphResult buildScriptDirBoundedCG(
+      Path scriptDir,
+      BuilderType builderType,
+      IProgressMonitor monitor,
+      boolean supportFullPointerAnalysis,
+      Integer bound)
+      throws WalaException, CancelException, IOException {
+    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
+    List<Path> jsFiles =
+        Files.walk(scriptDir)
+            .filter(p -> p.toString().toLowerCase().endsWith(".js"))
+            .collect(Collectors.toList());
+    List<Module> scripts = new ArrayList<>();
+    // we can't do this loop as a map() operation on the previous stream because toURL() throws
+    // a checked exception
+    for (Path p : jsFiles) {
+      scripts.add(new SourceURLModule(p.toUri().toURL()));
+    }
+    JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
+    scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
+    scripts.add(JSCallGraphUtil.getPrologueFile("preamble.js"));
+    return buildBoundedCG(
+        loaders, scripts.toArray(new Module[0]), builderType, monitor, supportFullPointerAnalysis, bound);
+  }
+
   public CallGraphResult buildTestCG(
       String dir,
       String name,
@@ -209,6 +251,26 @@ public class FieldBasedCGUtil {
         builderType.fieldBasedCallGraphBuilderFactory(
             cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
     return builder.buildCallGraph(roots, monitor);
+  }
+
+  public CallGraphResult buildBoundedCG(
+      JavaScriptLoaderFactory loaders,
+      Module[] scripts,
+      BuilderType builderType,
+      IProgressMonitor monitor,
+      boolean supportFullPointerAnalysis,
+      Integer bound)
+      throws WalaException, CancelException {
+    CAstAnalysisScope scope =
+        new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);
+    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
+    Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
+    IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
+    final FieldBasedCallGraphBuilder builder =
+        builderType.fieldBasedCallGraphBuilderFactory(
+            cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
+    return builder.buildBoundedCallGraph(roots, monitor, bound);
   }
 
   /*
