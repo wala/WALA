@@ -103,7 +103,7 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
             reflectiveCalleeVertices,
             worklist);
         processPendingReflectiveCallWorklist(
-            flowgraph, pendingReflectiveCallWorklist, reflectiveCalleeVertices, monitor, worklist);
+            flowgraph, pendingReflectiveCallWorklist, reflectiveCalleeVertices, worklist);
         pendingCallWorklist.clear();
         pendingReflectiveCallWorklist.clear();
       }
@@ -152,7 +152,7 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
               }
             }
           } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
-            Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
+            //Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
             for (FuncVertex fv : vReach) {
               if (wReach.add(fv)) {
                 changed = true;
@@ -215,7 +215,6 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
       FlowGraph flowgraph,
       Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist,
       Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
-      IProgressMonitor monitor,
       Set<Vertex> worklist) {
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingReflectiveCallWorklist.entrySet()) {
       final Vertex v = entry.getKey();

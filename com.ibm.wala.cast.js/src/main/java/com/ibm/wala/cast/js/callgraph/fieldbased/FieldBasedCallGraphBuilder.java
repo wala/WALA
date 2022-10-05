@@ -511,27 +511,29 @@ public abstract class FieldBasedCallGraphBuilder {
       FlowGraph flowgraph, IProgressMonitor monitor, Integer bound) throws CancelException {
     VertexFactory factory = flowgraph.getVertexFactory();
     final Set<Pair<CallVertex, FuncVertex>> result = HashSetFactory.make();
-
-    // find all pairs <call, func> such that call is reachable from func in the flow graph
-    for (final CallVertex callVertex : factory.getCallVertices()) {
-      for (FuncVertex funcVertex : flowgraph.getReachingSet(callVertex, monitor)) {
-        result.add(Pair.make(callVertex, funcVertex));
-        // add ReflectiveCall vertices for invocations of call and apply
-        String fullName = funcVertex.getFullName();
-        if (options instanceof JSAnalysisOptions
-            && ((JSAnalysisOptions) options).handleCallApply()
-            && (fullName.equals("Lprologue.js/Function_prototype_call")
-                || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
-          JavaScriptInvoke invk = callVertex.getInstruction();
-          VarVertex reflectiveCalleeVertex =
-              factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
-          flowgraph.addEdge(
-              reflectiveCalleeVertex,
-              factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+    Integer cnt = 0;
+    while (cnt < bound) {
+      // find all pairs <call, func> such that call is reachable from func in the flow graph
+      for (final CallVertex callVertex : factory.getCallVertices()) {
+        for (FuncVertex funcVertex : flowgraph.getReachingSet(callVertex, monitor)) {
+          result.add(Pair.make(callVertex, funcVertex));
+          // add ReflectiveCall vertices for invocations of call and apply
+          String fullName = funcVertex.getFullName();
+          if (options instanceof JSAnalysisOptions
+              && ((JSAnalysisOptions) options).handleCallApply()
+              && (fullName.equals("Lprologue.js/Function_prototype_call")
+                  || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+            JavaScriptInvoke invk = callVertex.getInstruction();
+            VarVertex reflectiveCalleeVertex =
+                factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+            flowgraph.addEdge(
+                reflectiveCalleeVertex,
+                factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+          }
         }
       }
+      cnt++;
     }
-
     return result;
   }
 }
