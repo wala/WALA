@@ -12,12 +12,12 @@ package com.ibm.wala.cast.js.util;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.js.callgraph.fieldbased.BoundedWorklistBasedOptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
-import com.ibm.wala.cast.js.callgraph.fieldbased.BoundedWorklistBasedOptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
@@ -97,7 +97,7 @@ public class FieldBasedCGUtil {
           IClassHierarchy cha,
           JSAnalysisOptions makeOptions,
           IAnalysisCacheView cache,
-      boolean supportFullPointerAnalysis) {
+          boolean supportFullPointerAnalysis) {
         return new BoundedWorklistBasedOptimisticCallgraphBuilder(
             cha, makeOptions, cache, supportFullPointerAnalysis);
       }
@@ -182,8 +182,8 @@ public class FieldBasedCGUtil {
   }
 
   /**
-   * Construct a bounded field-based call graph using all the {@code .js} files appearing in scriptDir or
-   * any of its sub-directories
+   * Construct a bounded field-based call graph using all the {@code .js} files appearing in
+   * scriptDir or any of its sub-directories
    */
   public CallGraphResult buildScriptDirBoundedCG(
       Path scriptDir,
@@ -205,7 +205,12 @@ public class FieldBasedCGUtil {
     }
     scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
     return buildBoundedCG(
-        loaders, scripts.toArray(new Module[0]), builderType, monitor, supportFullPointerAnalysis, bound);
+        loaders,
+        scripts.toArray(new Module[0]),
+        builderType,
+        monitor,
+        supportFullPointerAnalysis,
+        bound);
   }
 
   public CallGraphResult buildTestCG(

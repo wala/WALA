@@ -90,16 +90,24 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
       }
     }
 
-    //int bound = 3;
-    Integer cnt=0;
-    while (cnt<bound){
-      if (worklist.isEmpty()){
-          processPendingCallWorklist(flowgraph, pendingCallWorklist, pendingReflectiveCallWorklist, factory, reachingFunctions, reflectiveCalleeVertices, worklist);
-          processPendingReflectiveCallWorklist(flowgraph, pendingReflectiveCallWorklist, reflectiveCalleeVertices, monitor, worklist);
-          pendingCallWorklist.clear();
-          pendingReflectiveCallWorklist.clear();
+    // int bound = 3;
+    Integer cnt = 0;
+    while (cnt < bound) {
+      if (worklist.isEmpty()) {
+        processPendingCallWorklist(
+            flowgraph,
+            pendingCallWorklist,
+            pendingReflectiveCallWorklist,
+            factory,
+            reachingFunctions,
+            reflectiveCalleeVertices,
+            worklist);
+        processPendingReflectiveCallWorklist(
+            flowgraph, pendingReflectiveCallWorklist, reflectiveCalleeVertices, monitor, worklist);
+        pendingCallWorklist.clear();
+        pendingReflectiveCallWorklist.clear();
       }
-      while (!worklist.isEmpty() ) {
+      while (!worklist.isEmpty()) {
         MonitorUtil.throwExceptionIfCanceled(monitor);
 
         Vertex v = worklist.iterator().next();
@@ -116,11 +124,11 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
                 changed = true;
                 CallVertex callVertex = (CallVertex) w;
                 MapUtil.findOrCreateSet(pendingCallWorklist, callVertex).add(fv);
-                //addCallEdge(flowgraph, callVertex, fv, newWorkList);
-                //MapUtil.findOrCreateSet(pendingCallWorklist, callVertex).add(fv);
+                // addCallEdge(flowgraph, callVertex, fv, newWorkList);
+                // MapUtil.findOrCreateSet(pendingCallWorklist, callVertex).add(fv);
 
                 // special handling of invocations of Function.prototype.call
-                //handleCallApply 
+                // handleCallApply
                 /*String fullName = fv.getFullName();
                 if (handleCallApply
                     && changed
@@ -158,7 +166,7 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
           if (changed) worklist.add(w);
         }
       }
-      cnt+=1;
+      cnt += 1;
     }
 
     Set<Pair<CallVertex, FuncVertex>> res = HashSetFactory.make();
@@ -170,15 +178,23 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
     return res;
   }
 
-  public void processPendingCallWorklist(FlowGraph flowgraph, Map<Vertex, Set<FuncVertex>> pendingCallWorklist, Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist, VertexFactory factory, Map<Vertex, Set<FuncVertex>> reachingFunctions, Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices, Set<Vertex> worklist){
+  public void processPendingCallWorklist(
+      FlowGraph flowgraph,
+      Map<Vertex, Set<FuncVertex>> pendingCallWorklist,
+      Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist,
+      VertexFactory factory,
+      Map<Vertex, Set<FuncVertex>> reachingFunctions,
+      Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
+      Set<Vertex> worklist) {
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingCallWorklist.entrySet()) {
       final Vertex v = entry.getKey();
       CallVertex callVertex = (CallVertex) v;
       for (FuncVertex fv : entry.getValue()) {
         addCallEdge(flowgraph, callVertex, fv, worklist);
         String fullName = fv.getFullName();
-        if(handleCallApply && (fullName.equals("Lprologue.js/Function_prototype_call")
-                        || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+        if (handleCallApply
+            && (fullName.equals("Lprologue.js/Function_prototype_call")
+                || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
           JavaScriptInvoke invk = callVertex.getInstruction();
           VarVertex reflectiveCalleeVertex =
               factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
@@ -188,19 +204,25 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
           // we only add dataflow edges for Function.prototype.call
           boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
           reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
-          for (FuncVertex fw :
-              MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
-              MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, reflectiveCalleeVertex).add(fw);
+          for (FuncVertex fw : MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
+            MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, reflectiveCalleeVertex).add(fw);
         }
       }
     }
   }
-  public void processPendingReflectiveCallWorklist(FlowGraph flowgraph, Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist, Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices, IProgressMonitor monitor, Set<Vertex> worklist){
+
+  public void processPendingReflectiveCallWorklist(
+      FlowGraph flowgraph,
+      Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist,
+      Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
+      IProgressMonitor monitor,
+      Set<Vertex> worklist) {
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingReflectiveCallWorklist.entrySet()) {
       final Vertex v = entry.getKey();
       Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(v);
       for (FuncVertex fv : entry.getValue()) {
-        addReflectiveCallEdge(flowgraph,(VarVertex) v, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);
+        addReflectiveCallEdge(
+            flowgraph, (VarVertex) v, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);
       }
     }
   }
@@ -237,7 +259,6 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
         factory.makeVarVertex(caller, invk.getDef()),
         worklist);
   }
-
 
   public void addFlowEdge(FlowGraph flowgraph, Vertex from, Vertex to, Set<Vertex> worklist) {
     flowgraph.addEdge(from, to);

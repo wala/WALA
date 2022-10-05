@@ -27,8 +27,8 @@ import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelecto
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -170,7 +170,8 @@ public abstract class FieldBasedCallGraphBuilder {
   }
 
   public CallGraphResult buildBoundedCallGraph(
-      Iterable<? extends Entrypoint> eps, IProgressMonitor monitor, Integer bound) throws CancelException {
+      Iterable<? extends Entrypoint> eps, IProgressMonitor monitor, Integer bound)
+      throws CancelException {
     long fgBegin, fgEnd, cgBegin, cgEnd;
 
     if (LOG_TIMINGS) fgBegin = System.currentTimeMillis();
@@ -209,7 +210,10 @@ public abstract class FieldBasedCallGraphBuilder {
   }
 
   public JSCallGraph extract(
-      FlowGraph flowgraph, Iterable<? extends Entrypoint> eps, IProgressMonitor monitor, Integer bound)
+      FlowGraph flowgraph,
+      Iterable<? extends Entrypoint> eps,
+      IProgressMonitor monitor,
+      Integer bound)
       throws CancelException {
     DelegatingSSAContextInterpreter interpreter =
         new DelegatingSSAContextInterpreter(
@@ -502,7 +506,7 @@ public abstract class FieldBasedCallGraphBuilder {
     return result;
   }
 
-    /** Extract call edges from the flow graph into high-level representation. */
+  /** Extract call edges from the flow graph into high-level representation. */
   public Set<Pair<CallVertex, FuncVertex>> extractCallGraphEdges(
       FlowGraph flowgraph, IProgressMonitor monitor, Integer bound) throws CancelException {
     VertexFactory factory = flowgraph.getVertexFactory();
@@ -514,9 +518,10 @@ public abstract class FieldBasedCallGraphBuilder {
         result.add(Pair.make(callVertex, funcVertex));
         // add ReflectiveCall vertices for invocations of call and apply
         String fullName = funcVertex.getFullName();
-        if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply()
+        if (options instanceof JSAnalysisOptions
+            && ((JSAnalysisOptions) options).handleCallApply()
             && (fullName.equals("Lprologue.js/Function_prototype_call")
-            || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+                || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
           JavaScriptInvoke invk = callVertex.getInstruction();
           VarVertex reflectiveCalleeVertex =
               factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
@@ -524,7 +529,6 @@ public abstract class FieldBasedCallGraphBuilder {
               reflectiveCalleeVertex,
               factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
         }
-
       }
     }
 
