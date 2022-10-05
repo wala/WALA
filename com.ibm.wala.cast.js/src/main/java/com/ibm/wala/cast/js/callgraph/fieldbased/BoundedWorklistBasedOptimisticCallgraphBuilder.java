@@ -152,7 +152,7 @@ public class BoundedWorklistBasedOptimisticCallgraphBuilder extends FieldBasedCa
               }
             }
           } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
-            //Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
+            // Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
             for (FuncVertex fv : vReach) {
               if (wReach.add(fv)) {
                 changed = true;
