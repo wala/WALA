@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.util;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.cast.js.callgraph.fieldbased.BoundedWorklistBasedOptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder.CallGraphResult;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
@@ -87,18 +86,6 @@ public class FieldBasedCGUtil {
           IAnalysisCacheView cache,
           boolean supportFullPointerAnalysis) {
         return new WorklistBasedOptimisticCallgraphBuilder(
-            cha, makeOptions, cache, supportFullPointerAnalysis);
-      }
-    },
-
-    BOUNDED_OPTIMISTIC_WORKLIST {
-      @Override
-      protected FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(
-          IClassHierarchy cha,
-          JSAnalysisOptions makeOptions,
-          IAnalysisCacheView cache,
-          boolean supportFullPointerAnalysis) {
-        return new BoundedWorklistBasedOptimisticCallgraphBuilder(
             cha, makeOptions, cache, supportFullPointerAnalysis);
       }
     };
