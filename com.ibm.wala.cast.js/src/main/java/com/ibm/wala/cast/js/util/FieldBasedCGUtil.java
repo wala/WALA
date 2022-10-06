@@ -240,7 +240,11 @@ public class FieldBasedCGUtil {
     final FieldBasedCallGraphBuilder builder =
         builderType.fieldBasedCallGraphBuilderFactory(
             cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-    return builder.buildCallGraph(roots, monitor);
+    if (builderType.toString()=="OPTIMISTIC_WORKLIST"){
+      return builder.buildCallGraph(roots, monitor,-1);
+    }else{
+      return builder.buildCallGraph(roots, monitor);
+    }
   }
 
   public CallGraphResult buildCG(
