@@ -169,7 +169,7 @@ public abstract class FieldBasedCallGraphBuilder {
     return new CallGraphResult(cg, flowGraph.getPointerAnalysis(cg, cache, monitor), flowGraph);
   }
 
-  public CallGraphResult buildBoundedCallGraph(
+  public CallGraphResult buildCallGraph(
       Iterable<? extends Entrypoint> eps, IProgressMonitor monitor, Integer bound)
       throws CancelException {
     long fgBegin, fgEnd, cgBegin, cgEnd;

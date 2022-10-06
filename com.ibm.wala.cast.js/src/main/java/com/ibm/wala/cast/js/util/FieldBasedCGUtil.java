@@ -172,7 +172,7 @@ public class FieldBasedCGUtil {
    * Construct a bounded field-based call graph using all the {@code .js} files appearing in
    * scriptDir or any of its sub-directories
    */
-  public CallGraphResult buildScriptDirBoundedCG(
+  public CallGraphResult buildScriptDirCG(
       Path scriptDir,
       BuilderType builderType,
       IProgressMonitor monitor,
@@ -191,7 +191,7 @@ public class FieldBasedCGUtil {
       scripts.add(new SourceURLModule(p.toUri().toURL()));
     }
     scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
-    return buildBoundedCG(
+    return buildCG(
         loaders,
         scripts.toArray(new Module[0]),
         builderType,
@@ -243,7 +243,7 @@ public class FieldBasedCGUtil {
     return builder.buildCallGraph(roots, monitor);
   }
 
-  public CallGraphResult buildBoundedCG(
+  public CallGraphResult buildCG(
       JavaScriptLoaderFactory loaders,
       Module[] scripts,
       BuilderType builderType,
@@ -260,7 +260,7 @@ public class FieldBasedCGUtil {
     final FieldBasedCallGraphBuilder builder =
         builderType.fieldBasedCallGraphBuilderFactory(
             cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-    return builder.buildBoundedCallGraph(roots, monitor, bound);
+    return builder.buildCallGraph(roots, monitor, bound);
   }
 
   /*

@@ -88,7 +88,6 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
         MapUtil.findOrCreateSet(reachingFunctions, fv).add(fv);
       }
     }
-    System.out.println("Bound is "+ bound.toString());
     if (bound < 0) {
       while (!worklist.isEmpty()) {
         MonitorUtil.throwExceptionIfCanceled(monitor);
