@@ -173,10 +173,7 @@ public class FieldBasedCGUtil {
    * scriptDir or any of its sub-directories
    */
   public CallGraphResult buildScriptDirBoundedCG(
-      Path scriptDir,
-      IProgressMonitor monitor,
-      boolean supportFullPointerAnalysis,
-      Integer bound)
+      Path scriptDir, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Integer bound)
       throws WalaException, CancelException, IOException {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
     List<Path> jsFiles =
