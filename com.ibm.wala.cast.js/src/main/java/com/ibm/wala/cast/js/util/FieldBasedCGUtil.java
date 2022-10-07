@@ -86,7 +86,7 @@ public class FieldBasedCGUtil {
           IAnalysisCacheView cache,
           boolean supportFullPointerAnalysis) {
         return new WorklistBasedOptimisticCallgraphBuilder(
-            cha, makeOptions, cache, supportFullPointerAnalysis);
+            cha, makeOptions, cache, supportFullPointerAnalysis, -1);
       }
     };
 
