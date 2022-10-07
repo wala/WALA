@@ -53,14 +53,18 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 
   private FlowGraphBuilder builder;
 
+  private Integer bound = -1;
+
   public WorklistBasedOptimisticCallgraphBuilder(
       IClassHierarchy cha,
       AnalysisOptions options,
       IAnalysisCacheView cache,
-      boolean supportFullPointerAnalysis) {
+      boolean supportFullPointerAnalysis,
+      Integer bound) {
     super(cha, options, cache, supportFullPointerAnalysis);
     handleCallApply =
         options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply();
+    this.bound = bound;
   }
 
   @Override
@@ -71,7 +75,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 
   @Override
   public Set<Pair<CallVertex, FuncVertex>> extractCallGraphEdges(
-      FlowGraph flowgraph, IProgressMonitor monitor, Integer bound) throws CancelException {
+      FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
     VertexFactory factory = flowgraph.getVertexFactory();
     Set<Vertex> worklist = HashSetFactory.make();
     Map<Vertex, Set<FuncVertex>> reachingFunctions = HashMapFactory.make();
@@ -88,6 +92,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
         MapUtil.findOrCreateSet(reachingFunctions, fv).add(fv);
       }
     }
+
     if (bound < 0) {
       while (!worklist.isEmpty()) {
         MonitorUtil.throwExceptionIfCanceled(monitor);

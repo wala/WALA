@@ -172,7 +172,7 @@ public class FieldBasedCGUtil {
    * Construct a bounded field-based call graph using all the {@code .js} files appearing in
    * scriptDir or any of its sub-directories
    */
-  public CallGraphResult buildScriptDirCG(
+  public CallGraphResult buildScriptDirBoundedCG(
       Path scriptDir,
       BuilderType builderType,
       IProgressMonitor monitor,
@@ -191,7 +191,7 @@ public class FieldBasedCGUtil {
       scripts.add(new SourceURLModule(p.toUri().toURL()));
     }
     scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
-    return buildCG(
+    return buildBoundedCG(
         loaders,
         scripts.toArray(new Module[0]),
         builderType,
@@ -237,17 +237,27 @@ public class FieldBasedCGUtil {
     com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
     Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
     IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
-    final FieldBasedCallGraphBuilder builder =
-        builderType.fieldBasedCallGraphBuilderFactory(
-            cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
+    final FieldBasedCallGraphBuilder builder;
     if (builderType.toString() == "OPTIMISTIC_WORKLIST") {
-      return builder.buildCallGraph(roots, monitor, -1);
+      builder =
+          new WorklistBasedOptimisticCallgraphBuilder(
+              cha,
+              JSCallGraphUtil.makeOptions(scope, cha, roots),
+              cache,
+              supportFullPointerAnalysis,
+              -1);
     } else {
-      return builder.buildCallGraph(roots, monitor);
+      builder =
+          builderType.fieldBasedCallGraphBuilderFactory(
+              cha,
+              JSCallGraphUtil.makeOptions(scope, cha, roots),
+              cache,
+              supportFullPointerAnalysis);
     }
+    return builder.buildCallGraph(roots, monitor);
   }
 
-  public CallGraphResult buildCG(
+  public CallGraphResult buildBoundedCG(
       JavaScriptLoaderFactory loaders,
       Module[] scripts,
       BuilderType builderType,
@@ -262,9 +272,13 @@ public class FieldBasedCGUtil {
     Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
     IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
     final FieldBasedCallGraphBuilder builder =
-        builderType.fieldBasedCallGraphBuilderFactory(
-            cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
-    return builder.buildCallGraph(roots, monitor, bound);
+        new WorklistBasedOptimisticCallgraphBuilder(
+            cha,
+            JSCallGraphUtil.makeOptions(scope, cha, roots),
+            cache,
+            supportFullPointerAnalysis,
+            bound);
+    return builder.buildCallGraph(roots, monitor);
   }
 
   /*
