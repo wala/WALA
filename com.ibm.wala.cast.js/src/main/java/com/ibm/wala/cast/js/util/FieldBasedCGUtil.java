@@ -47,7 +47,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Utility class for building call graphs.
@@ -150,20 +149,7 @@ public class FieldBasedCGUtil {
       boolean supportFullPointerAnalysis)
       throws WalaException, CancelException, IOException {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
-    List<Path> jsFiles = Collections.emptyList();
-    try (Stream<Path> stream = Files.walk(scriptDir)) {
-      jsFiles =
-          stream
-              .filter(p -> p.toString().toLowerCase().endsWith(".js"))
-              .collect(Collectors.toList());
-    }
-    List<Module> scripts = new ArrayList<>();
-    // we can't do this loop as a map() operation on the previous stream because toURL() throws
-    // a checked exception
-    for (Path p : jsFiles) {
-      scripts.add(new SourceURLModule(p.toUri().toURL()));
-    }
-    scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
+    List<Module> scripts = findScriptsInDir(scriptDir);
     return buildCG(
         loaders, scripts.toArray(new Module[0]), builderType, monitor, supportFullPointerAnalysis);
   }
@@ -176,6 +162,12 @@ public class FieldBasedCGUtil {
       Path scriptDir, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Integer bound)
       throws WalaException, CancelException, IOException {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
+    List<Module> scripts = findScriptsInDir(scriptDir);
+    return buildBoundedCG(
+        loaders, scripts.toArray(new Module[0]), monitor, supportFullPointerAnalysis, bound);
+  }
+
+  public List<Module> findScriptsInDir(Path scriptDir) throws IOException {
     List<Path> jsFiles =
         Files.walk(scriptDir)
             .filter(p -> p.toString().toLowerCase().endsWith(".js"))
@@ -187,8 +179,7 @@ public class FieldBasedCGUtil {
       scripts.add(new SourceURLModule(p.toUri().toURL()));
     }
     scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
-    return buildBoundedCG(
-        loaders, scripts.toArray(new Module[0]), monitor, supportFullPointerAnalysis, bound);
+    return scripts;
   }
 
   public CallGraphResult buildTestCG(
@@ -228,23 +219,9 @@ public class FieldBasedCGUtil {
     com.ibm.wala.cast.util.Util.checkForFrontEndErrors(cha);
     Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
     IAnalysisCacheView cache = new AnalysisCacheImpl(AstIRFactory.makeDefaultFactory());
-    final FieldBasedCallGraphBuilder builder;
-    if (builderType.toString() == "OPTIMISTIC_WORKLIST") {
-      builder =
-          new WorklistBasedOptimisticCallgraphBuilder(
-              cha,
-              JSCallGraphUtil.makeOptions(scope, cha, roots),
-              cache,
-              supportFullPointerAnalysis,
-              -1);
-    } else {
-      builder =
-          builderType.fieldBasedCallGraphBuilderFactory(
-              cha,
-              JSCallGraphUtil.makeOptions(scope, cha, roots),
-              cache,
-              supportFullPointerAnalysis);
-    }
+    final FieldBasedCallGraphBuilder builder =
+        builderType.fieldBasedCallGraphBuilderFactory(
+            cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
     return builder.buildCallGraph(roots, monitor);
   }
 
