@@ -192,12 +192,7 @@ public class FieldBasedCGUtil {
     }
     scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
     return buildBoundedCG(
-        loaders,
-        scripts.toArray(new Module[0]),
-        builderType,
-        monitor,
-        supportFullPointerAnalysis,
-        bound);
+        loaders, scripts.toArray(new Module[0]), monitor, supportFullPointerAnalysis, bound);
   }
 
   public CallGraphResult buildTestCG(
@@ -260,7 +255,6 @@ public class FieldBasedCGUtil {
   public CallGraphResult buildBoundedCG(
       JavaScriptLoaderFactory loaders,
       Module[] scripts,
-      BuilderType builderType,
       IProgressMonitor monitor,
       boolean supportFullPointerAnalysis,
       Integer bound)
