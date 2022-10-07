@@ -174,7 +174,6 @@ public class FieldBasedCGUtil {
    */
   public CallGraphResult buildScriptDirBoundedCG(
       Path scriptDir,
-      BuilderType builderType,
       IProgressMonitor monitor,
       boolean supportFullPointerAnalysis,
       Integer bound)
