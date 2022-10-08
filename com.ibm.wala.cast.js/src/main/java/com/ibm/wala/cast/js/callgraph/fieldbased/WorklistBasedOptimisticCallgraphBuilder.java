@@ -102,7 +102,6 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
         processPendingCallWorklist(
             flowgraph,
             pendingCallWorklist,
-            pendingReflectiveCallWorklist,
             factory,
             reachingFunctions,
             reflectiveCalleeVertices,
@@ -127,40 +126,14 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
             for (FuncVertex fv : vReach) {
               if (wReach.add(fv)) {
                 changed = true;
-                // CallVertex callVertex = (CallVertex) w;
-                MapUtil.findOrCreateSet(pendingCallWorklist, w).add(fv); // problem
-                /*addCallEdge(flowgraph, callVertex, fv, worklist);
-
-                // special handling of invocations of Function.prototype.call
-                String fullName = fv.getFullName();
-                if (handleCallApply
-                    && changed
-                    && (fullName.equals("Lprologue.js/Function_prototype_call")
-                        || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
-                  JavaScriptInvoke invk = callVertex.getInstruction();
-                  VarVertex reflectiveCalleeVertex =
-                      factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
-                  flowgraph.addEdge(
-                      reflectiveCalleeVertex,
-                      factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
-                  // we only add dataflow edges for Function.prototype.call
-                  boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
-                  reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
-                  for (FuncVertex fw :
-                      MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
-                    addReflectiveCallEdge(
-                        flowgraph, reflectiveCalleeVertex, invk, fw, worklist, isCall);
-                }*/
+                MapUtil.findOrCreateSet(pendingCallWorklist, w).add(fv);
               }
             }
           } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
-            Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
             for (FuncVertex fv : vReach) {
               if (wReach.add(fv)) {
                 changed = true;
                 MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, (VarVertex) w).add(fv);
-                /*addReflectiveCallEdge(
-                flowgraph, (VarVertex) w, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);*/
               }
             }
           } else {
@@ -185,7 +158,6 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
   public void processPendingCallWorklist(
       FlowGraph flowgraph,
       Map<Vertex, Set<FuncVertex>> pendingCallWorklist,
-      Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist,
       VertexFactory factory,
       Map<Vertex, Set<FuncVertex>> reachingFunctions,
       Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
