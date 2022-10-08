@@ -93,6 +93,10 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       }
     }
     int cnt = 0;
+    /**
+     * if bound is missing, calledges are added until all worklists are empty else, the calledges
+     * are added until the bound value is hit *
+     */
     while ((bound == -1
             && (!worklist.isEmpty()
                 || !pendingCallWorklist.isEmpty()
@@ -163,8 +167,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
       Set<Vertex> worklist) {
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingCallWorklist.entrySet()) {
-      final Vertex v = entry.getKey();
-      CallVertex callVertex = (CallVertex) v;
+      CallVertex callVertex = (CallVertex) entry.getKey();
       for (FuncVertex fv : entry.getValue()) {
         addCallEdge(flowgraph, callVertex, fv, worklist);
         String fullName = fv.getFullName();
