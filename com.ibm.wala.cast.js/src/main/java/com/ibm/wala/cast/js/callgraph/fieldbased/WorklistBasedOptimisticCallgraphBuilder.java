@@ -60,7 +60,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       AnalysisOptions options,
       IAnalysisCacheView cache,
       boolean supportFullPointerAnalysis,
-      Integer bound) {
+      int bound) {
     super(cha, options, cache, supportFullPointerAnalysis);
     handleCallApply =
         options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply();
