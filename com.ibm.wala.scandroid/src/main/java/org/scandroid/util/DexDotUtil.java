@@ -237,7 +237,7 @@ public class DexDotUtil extends DotUtil {
     result.append('\"');
     result.append(getLabel(n, labels));
     result.append('\"');
-    result.append(decorateNode(n));
+    result.append(decorateNode(n, labels));
   }
 
   /** Compute the nodes to visualize */
@@ -253,7 +253,8 @@ public class DexDotUtil extends DotUtil {
    * @param n node to decorate
    * @param d decorating master
    */
-  private static <T> String decorateNode(@SuppressWarnings("unused") T n) {
+  private static <T> String decorateNode(
+      @SuppressWarnings("unused") T n, @SuppressWarnings("unused") NodeDecorator<T> d) {
     return " [ ]\n";
   }
 
