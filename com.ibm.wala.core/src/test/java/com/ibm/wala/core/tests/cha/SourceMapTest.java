@@ -33,8 +33,9 @@ public class SourceMapTest extends WalaTestCase {
 
   @Test
   public void testHello() throws ClassHierarchyException, IOException {
-    AnalysisScope scope = null;
-    scope = AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
+
+    AnalysisScope scope =
+        AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // see feature 38676
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
@@ -49,8 +50,9 @@ public class SourceMapTest extends WalaTestCase {
 
   @Test
   public void testFromJar() throws ClassHierarchyException, IOException {
-    AnalysisScope scope = null;
-    scope = AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
+
+    AnalysisScope scope =
+        AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // open a feature to fix this
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);

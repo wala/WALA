@@ -64,14 +64,13 @@ public class PDFViewUtil {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    Graph<ISSABasicBlock> g = ir.getControlFlowGraph();
 
     NodeDecorator<ISSABasicBlock> labels = makeIRDecorator(ir);
     if (annotations != null) {
       labels = new ConcatenatingNodeDecorator<>(annotations, labels);
     }
 
-    g = CFGSanitizer.sanitize(ir, cha);
+    Graph<ISSABasicBlock> g = CFGSanitizer.sanitize(ir, cha);
 
     DotUtil.<ISSABasicBlock>dotify(g, labels, dotFile, pdfFile, dotExe);
 

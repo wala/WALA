@@ -143,7 +143,7 @@ public class DemandCastChecker {
 
     System.err.print("constructing call graph...");
     final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA =
-        buildCallGraph(scope, cha, options);
+        buildCallGraph(cha, options);
     CallGraph cg = cgAndPA.fst;
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
@@ -155,7 +155,7 @@ public class DemandCastChecker {
     return fullDemandPointsTo;
   }
 
-  private static String getExclusions(String benchName) {
+  private static String getExclusions(@SuppressWarnings("unused") String benchName) {
     return CallGraphTestUtil.REGRESSION_EXCLUSIONS;
   }
 
@@ -166,7 +166,7 @@ public class DemandCastChecker {
 
   /** builds a call graph, and sets the corresponding heap model for analysis */
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(
-      AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
+      ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     CallGraph retCG = null;
     PointerAnalysis<InstanceKey> retPA = null;

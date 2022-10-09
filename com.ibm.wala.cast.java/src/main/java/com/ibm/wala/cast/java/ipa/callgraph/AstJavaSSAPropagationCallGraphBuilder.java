@@ -240,7 +240,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
           IClass enclosingClass =
               ((JavaClass) klass).getEnclosingClass(); // the immediate enclosing class.
           if (enclosingClass != null) {
-            IClass currentCls = node.getMethod().getDeclaringClass();
+
             PointerKey objKey;
 
             if (instruction instanceof AstJavaNewEnclosingInstruction) {
@@ -272,7 +272,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
               return;
             }
 
-            currentCls = enclosingClass;
+            IClass currentCls = enclosingClass;
 
             PointerKey x = new EnclosingObjectReferenceKey(iKey, currentCls);
             if (enclosingInvariantKeys != null)

@@ -47,8 +47,8 @@ public class CornerCasesTest extends WalaTestCase {
   /** test that getMethod() works even if a declared ancestor interface doesn't exist */
   @Test
   public void testBug38484() throws ClassHierarchyException, IOException {
-    AnalysisScope scope = null;
-    scope =
+
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),
@@ -71,8 +71,8 @@ public class CornerCasesTest extends WalaTestCase {
    */
   @Test
   public void testBug38540() throws ClassHierarchyException, IOException {
-    AnalysisScope scope = null;
-    scope =
+
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             new FileProvider().getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS),

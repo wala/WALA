@@ -173,8 +173,8 @@ public class SSACFG
       } else {
         TypeReference exceptionType =
             ShrikeUtil.makeTypeReference(loader.getReference(), handler.getCatchClass());
-        IClass klass = null;
-        klass = loader.lookupClass(exceptionType.getName());
+
+        IClass klass = loader.lookupClass(exceptionType.getName());
         if (klass == null) {
           Warnings.add(ExceptionLoadFailure.create(exceptionType, method));
           t = exceptionType;

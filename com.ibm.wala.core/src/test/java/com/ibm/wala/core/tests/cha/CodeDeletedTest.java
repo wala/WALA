@@ -36,8 +36,8 @@ public class CodeDeletedTest extends WalaTestCase {
    */
   @Test(expected = WalaRuntimeException.class)
   public void testDeletedCode() throws IOException, ClassHierarchyException {
-    AnalysisScope scope = null;
-    scope =
+
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
