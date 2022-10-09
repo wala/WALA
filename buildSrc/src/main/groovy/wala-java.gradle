@@ -47,6 +47,9 @@ tasks.withType(JavaCompile).configureEach {
 			disableAllWarnings = true
 			// warning-level checks upgraded to error, since we've fixed all the warnings
 			error 'UnnecessaryParentheses'
+			// checks we do not intend to try to fix in the near-term:
+			// Just too many of these; proper Javadoc would be a great long-term goal
+			disable 'MissingSummary'
 			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
 //			errorproneArgs.addAll(
