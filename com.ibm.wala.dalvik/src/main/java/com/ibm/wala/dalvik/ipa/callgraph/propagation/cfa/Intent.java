@@ -280,7 +280,8 @@ public class Intent implements ContextItem, Comparable<Intent> {
    *     Summary-Information is available? TODO: We should read in the Manifest.xml rather than
    *     relying on the packet name!
    */
-  private static boolean isInternal(@SuppressWarnings("unused") Intent intent) { // XXX: This may loop forever!
+  private static boolean isInternal(
+      @SuppressWarnings("unused") Intent intent) { // XXX: This may loop forever!
     /*final Intent override = AndroidEntryPointManager.MANAGER.getIntent(intent);
 
     logger.warn("Intent.isInternal(Intent) is an unsafe fallback!");

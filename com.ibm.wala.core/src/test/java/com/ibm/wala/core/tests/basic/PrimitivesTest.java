@@ -175,7 +175,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(a.isSubset(b));
     a.remove(1);
     Assert.assertTrue(a.isEmpty());
-
+    IntSet ignored = a.intersection(temp);
     Assert.assertTrue(a.isEmpty());
 
     temp2 = factory.make();
@@ -283,7 +283,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(a.isSubset(b));
     a.remove(1);
     Assert.assertTrue(a.isEmpty());
-
+    ignored = a.intersection(temp);
     Assert.assertTrue(a.isEmpty());
 
     temp2 = factory.make();
@@ -473,7 +473,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(a.isSubset(b));
     a.remove(1);
     Assert.assertTrue(a.isEmpty());
-
+    LongSet ignored = a.intersection(temp);
     Assert.assertTrue(a.isEmpty());
 
     temp2 = factory.make();
@@ -578,7 +578,7 @@ public class PrimitivesTest extends WalaTestCase {
     Assert.assertFalse(a.isSubset(b));
     a.remove(1);
     Assert.assertTrue(a.isEmpty());
-
+    ignored = a.intersection(temp);
     Assert.assertTrue(a.isEmpty());
 
     temp2 = factory.make();

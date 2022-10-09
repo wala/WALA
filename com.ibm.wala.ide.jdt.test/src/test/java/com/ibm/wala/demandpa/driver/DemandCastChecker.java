@@ -142,8 +142,7 @@ public class DemandCastChecker {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA =
-        buildCallGraph(cha, options);
+    final Pair<CallGraph, PointerAnalysis<InstanceKey>> cgAndPA = buildCallGraph(cha, options);
     CallGraph cg = cgAndPA.fst;
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
