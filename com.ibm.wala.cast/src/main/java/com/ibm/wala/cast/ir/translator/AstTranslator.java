@@ -4773,9 +4773,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * control flow
    */
   private void doSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
-    // dummy block that will just transfer control to either the explicit default block (if present)
-    // or the end of the switch
-
     CAstControlFlowMap ctrl = context.getControlFlow();
 
     // handle the expression being switched on
@@ -4807,6 +4804,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // corrected in a later phase)
     context.cfg().newBlock(false);
     context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction, -1));
+
+    // dummy block that will just transfer control to either the explicit default block (if present)
+    // or the end of the switch
     PreBasicBlock dummyDefaultBlock = context.cfg().getCurrentBlock();
     // make sure the dummy default block is reachable
     context.cfg().addEdge(switchInstrBlock, dummyDefaultBlock);
