@@ -28,8 +28,6 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   /** A mapping from Integer (hashcode) -&gt; Set of objects */
   private final Map<Integer, Set<T>> hcFreq;
 
-  private int nAdded = 0;
-
   /** If a hash set contains more than this number of items with the same hash code, complain. */
   private final int BAD_HC = 3;
 
@@ -64,7 +62,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     ParanoidHashMap.assertOverridesHashCode(arg0);
     boolean result = super.add(arg0);
     if (result) {
-      nAdded++;
+
       int hc = arg0.hashCode();
       Set<T> s = hcFreq.get(hc);
       if (s == null) {

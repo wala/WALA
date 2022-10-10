@@ -626,8 +626,8 @@ public class ClassHierarchy implements IClassHierarchy {
     if (result != null) {
       return result;
     } else {
-      IClass superclass = null;
-      superclass = receiverClass.getSuperclass();
+
+      IClass superclass = receiverClass.getSuperclass();
       if (superclass == null) {
         if (DEBUG) {
           System.err.println(("resolveMethod(" + selector + ") failed: method not found"));

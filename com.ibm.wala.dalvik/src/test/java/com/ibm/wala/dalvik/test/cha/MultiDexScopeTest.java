@@ -109,9 +109,9 @@ public class MultiDexScopeTest {
   }
 
   public AnalysisScope manuallyInitScope() throws IOException {
-    AnalysisScope scope = null;
+
     String multidexApk = "src/test/resources/multidex-test.apk";
-    scope =
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             "primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
     scope.setLoaderImpl(

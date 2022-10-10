@@ -94,9 +94,9 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     assert endPos.getFirstLine() != -1;
     // assert endPos.getLastLine() != -1;
 
-    Set<ChildPos> startNodes = null, endNodes = null;
     if (!entity.getPosition().getURL().toString().equals(startPos.getURL().toString())) return true;
-    startNodes = findNodesAtPos(CAstNode.OBJECT_REF, startPos, entity);
+    Set<ChildPos> startNodes = findNodesAtPos(CAstNode.OBJECT_REF, startPos, entity);
+    Set<ChildPos> endNodes = null;
     if (corr instanceof ReadWriteCorrelation) {
       endNodes = findNodesAtPos(CAstNode.ASSIGN, endPos, entity);
     } else if (corr instanceof EscapeCorrelation) {

@@ -470,12 +470,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   private void registerArrayInstanceWithAllInterfacesOfElement(
       int index, IClass elementClass, int dim) {
-    Collection<IClass> ifaces = null;
-    ifaces = elementClass.getAllImplementedInterfaces();
+
+    Collection<IClass> ifaces = elementClass.getAllImplementedInterfaces();
     for (IClass I : ifaces) {
       TypeReference iArrayRef = makeArray(I.getReference(), dim);
-      IClass iArrayClass = null;
-      iArrayClass = I.getClassLoader().lookupClass(iArrayRef.getName());
+
+      IClass iArrayClass = I.getClassLoader().lookupClass(iArrayRef.getName());
       MutableIntSet set = findOrCreateSparseSetForClass(iArrayClass);
       set.add(index);
       if (DEBUG) {
@@ -499,8 +499,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     T = elementClass.getSuperclass();
     while (T != null) {
       TypeReference tArrayRef = makeArray(T.getReference(), dim);
-      IClass tArrayClass = null;
-      tArrayClass = T.getClassLoader().lookupClass(tArrayRef.getName());
+
+      IClass tArrayClass = T.getClassLoader().lookupClass(tArrayRef.getName());
       MutableIntSet set = findOrCreateSparseSetForClass(tArrayClass);
       set.add(index);
       if (DEBUG) {

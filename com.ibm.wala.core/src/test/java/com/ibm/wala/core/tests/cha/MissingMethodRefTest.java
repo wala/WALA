@@ -31,8 +31,8 @@ public class MissingMethodRefTest extends WalaTestCase {
   /** Test handling of a method reference to a method that is missing */
   @Test
   public void testMissingMethodRef() throws IOException, ClassHierarchyException, CancelException {
-    AnalysisScope scope = null;
-    scope =
+
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),

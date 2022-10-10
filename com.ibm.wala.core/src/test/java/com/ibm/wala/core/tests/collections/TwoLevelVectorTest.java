@@ -40,7 +40,6 @@ public final class TwoLevelVectorTest extends WalaTestCase {
   @Test
   public void testCase1() {
     final TwoLevelVector<Integer> tlVector = new TwoLevelVector<>();
-    @SuppressWarnings("unused")
     Iterator<Integer> ignored = tlVector.iterator();
     tlVector.set(2147483647, 56);
     Assert.assertNotNull(tlVector.iterator());
