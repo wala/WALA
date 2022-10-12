@@ -6,6 +6,7 @@ import static org.junit.Assume.assumeThat;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.test.TestJSCallGraphShape;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -74,7 +75,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     List<Module> scripts = new ArrayList<>();
     URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
     scripts.add(new SourceURLModule(url));
-    // scripts.add(new SourceURLModule((Paths.get(script)).toUri().toURL()));
+    scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
     try {
       cg =
           util.buildBoundedCG(loaders, scripts.toArray(new Module[0]), monitor, false, bound)
