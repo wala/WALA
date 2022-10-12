@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Before;
-import java.nio.file.Paths;
 
 public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
@@ -65,24 +64,26 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     return cg;
   }
 
-  protected JSCallGraph runBoundedTest(String script, Object[][] assertions, BuilderType builderType, int bound)
+  protected JSCallGraph runBoundedTest(
+      String script, Object[][] assertions, BuilderType builderType, int bound)
       throws WalaException, Error, CancelException, IOException {
     JSCallGraph cg = null;
-    //URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
+    // URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory());
     IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
     List<Module> scripts = new ArrayList<>();
     URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
     scripts.add(new SourceURLModule(url));
-    //scripts.add(new SourceURLModule((Paths.get(script)).toUri().toURL()));
-      try {
-        cg =
-            util.buildBoundedCG(loaders, scripts.toArray(new Module[0]), monitor, false, bound).getCallGraph();
-        System.err.println(cg);
-        verifyGraphAssertions(cg, assertions);
-      } catch (AssertionError afe) {
-        throw new AssertionError(builderType + ": " + afe.getMessage());
-      }
+    // scripts.add(new SourceURLModule((Paths.get(script)).toUri().toURL()));
+    try {
+      cg =
+          util.buildBoundedCG(loaders, scripts.toArray(new Module[0]), monitor, false, bound)
+              .getCallGraph();
+      System.err.println(cg);
+      verifyGraphAssertions(cg, assertions);
+    } catch (AssertionError afe) {
+      throw new AssertionError(builderType + ": " + afe.getMessage());
+    }
     return cg;
   }
 

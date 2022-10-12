@@ -20,24 +20,25 @@ import org.junit.Test;
 public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
   private static final Object[][] assertionsForBound1JS =
       new Object[][] {
-          new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-          new Object[] {"suffix:bounded.js", new String[] {"suffix:y"}}
+        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
+        new Object[] {"suffix:bounded.js", new String[] {"suffix:y"}}
       };
 
   @Test
   public void testBound1Worklist() throws WalaException, Error, CancelException, IOException {
-    runBoundedTest("tests/fieldbased/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
+    runBoundedTest(
+        "tests/fieldbased/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
   }
 
   private static final Object[][] assertionsForBound2JS =
       new Object[][] {
-          new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-          new Object[] {"suffix:bounded.js", new String[] {"suffix:x","suffix:y"}},
+        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
+        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y"}},
       };
 
   @Test
   public void testBound2Worklist() throws WalaException, Error, CancelException, IOException {
-    runBoundedTest("tests/fieldbased/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
+    runBoundedTest(
+        "tests/fieldbased/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
   }
-
 }
