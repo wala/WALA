@@ -14,7 +14,6 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import java.io.IOException;
 import org.junit.Test;
 
 public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
@@ -26,7 +25,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
       };
 
   @Test
-  public void testBound1Worklist() throws WalaException, Error, CancelException, IOException {
+  public void testBound1Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
         "tests/fieldbased/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
   }
@@ -39,7 +38,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
       };
 
   @Test
-  public void testBound2Worklist() throws WalaException, Error, CancelException, IOException {
+  public void testBound2Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
         "tests/fieldbased/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
   }
@@ -52,7 +51,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
       };
 
   @Test
-  public void testBound3Worklist() throws WalaException, Error, CancelException, IOException {
+  public void testBound3Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
         "tests/fieldbased/bounded.js", assertionsForBound3JS, BuilderType.OPTIMISTIC_WORKLIST, 3);
   }
