@@ -6,7 +6,6 @@ import static org.junit.Assume.assumeThat;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.test.TestJSCallGraphShape;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -20,14 +19,14 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
+import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Before;
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import java.nio.file.Paths;
 
 public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
@@ -66,14 +65,16 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     return cg;
   }
 
-  protected JSCallGraph runBoundedTest(URL url, Object[][] assertions, BuilderType builderType, int bound)
-      throws WalaException, Error, CancelException {
+  protected JSCallGraph runBoundedTest(String script, Object[][] assertions, BuilderType builderType, int bound)
+      throws WalaException, Error, CancelException, IOException {
     JSCallGraph cg = null;
+    //URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory());
     IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
     List<Module> scripts = new ArrayList<>();
+    URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
     scripts.add(new SourceURLModule(url));
-    scripts.add(JSCallGraphUtil.getPrologueFile("prologue.js"));
+    //scripts.add(new SourceURLModule((Paths.get(script)).toUri().toURL()));
       try {
         cg =
             util.buildBoundedCG(loaders, scripts.toArray(new Module[0]), monitor, false, bound).getCallGraph();
