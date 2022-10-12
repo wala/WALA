@@ -67,7 +67,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
   protected JSCallGraph runBoundedTest(
       String script, Object[][] assertions, BuilderType builderType, int bound)
-      throws WalaException, Error, CancelException, IOException {
+      throws WalaException, Error, CancelException {
     JSCallGraph cg = null;
     // URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory());
