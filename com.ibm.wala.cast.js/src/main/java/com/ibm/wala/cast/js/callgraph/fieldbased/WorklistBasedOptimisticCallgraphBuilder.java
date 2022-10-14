@@ -53,14 +53,18 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 
   private FlowGraphBuilder builder;
 
+  private final int bound;
+
   public WorklistBasedOptimisticCallgraphBuilder(
       IClassHierarchy cha,
       AnalysisOptions options,
       IAnalysisCacheView cache,
-      boolean supportFullPointerAnalysis) {
+      boolean supportFullPointerAnalysis,
+      int bound) {
     super(cha, options, cache, supportFullPointerAnalysis);
     handleCallApply =
         options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply();
+    this.bound = bound;
   }
 
   @Override
@@ -77,6 +81,9 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     Map<Vertex, Set<FuncVertex>> reachingFunctions = HashMapFactory.make();
     Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices =
         HashMapFactory.make();
+    /** maps to maintain the list of reachable calls that are yet to be processed * */
+    Map<Vertex, Set<FuncVertex>> pendingCallWorklist = HashMapFactory.make();
+    Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist = HashMapFactory.make();
 
     for (Vertex v : flowgraph) {
       if (v instanceof FuncVertex) {
@@ -85,62 +92,62 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
         MapUtil.findOrCreateSet(reachingFunctions, fv).add(fv);
       }
     }
-
-    while (!worklist.isEmpty()) {
-      MonitorUtil.throwExceptionIfCanceled(monitor);
-
-      Vertex v = worklist.iterator().next();
-      worklist.remove(v);
-      Set<FuncVertex> vReach = MapUtil.findOrCreateSet(reachingFunctions, v);
-      for (Vertex w : Iterator2Iterable.make(flowgraph.getSucc(v))) {
+    int cnt = 0;
+    /**
+     * if bound is missing, calledges are added until all worklists are empty else, the calledges
+     * are added until the bound value is hit *
+     */
+    while ((bound == -1
+            && (!worklist.isEmpty()
+                || !pendingCallWorklist.isEmpty()
+                || !pendingReflectiveCallWorklist.isEmpty()))
+        || cnt < bound) {
+      if (worklist.isEmpty()) {
+        processPendingCallWorklist(
+            flowgraph,
+            pendingCallWorklist,
+            factory,
+            reachingFunctions,
+            reflectiveCalleeVertices,
+            worklist);
+        processPendingReflectiveCallWorklist(
+            flowgraph, pendingReflectiveCallWorklist, reflectiveCalleeVertices, worklist);
+        pendingCallWorklist.clear();
+        pendingReflectiveCallWorklist.clear();
+      }
+      while (!worklist.isEmpty()) {
         MonitorUtil.throwExceptionIfCanceled(monitor);
 
-        Set<FuncVertex> wReach = MapUtil.findOrCreateSet(reachingFunctions, w);
-        boolean changed = false;
-        if (w instanceof CallVertex) {
-          for (FuncVertex fv : vReach) {
-            if (wReach.add(fv)) {
-              changed = true;
-              CallVertex callVertex = (CallVertex) w;
-              addCallEdge(flowgraph, callVertex, fv, worklist);
+        Vertex v = worklist.iterator().next();
+        worklist.remove(v);
+        Set<FuncVertex> vReach = MapUtil.findOrCreateSet(reachingFunctions, v);
+        for (Vertex w : Iterator2Iterable.make(flowgraph.getSucc(v))) {
+          MonitorUtil.throwExceptionIfCanceled(monitor);
 
-              // special handling of invocations of Function.prototype.call
-              String fullName = fv.getFullName();
-              if (handleCallApply
-                  && changed
-                  && (fullName.equals("Lprologue.js/Function_prototype_call")
-                      || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
-                JavaScriptInvoke invk = callVertex.getInstruction();
-                VarVertex reflectiveCalleeVertex =
-                    factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
-                flowgraph.addEdge(
-                    reflectiveCalleeVertex,
-                    factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
-                // we only add dataflow edges for Function.prototype.call
-                boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
-                reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
-                for (FuncVertex fw :
-                    MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
-                  addReflectiveCallEdge(
-                      flowgraph, reflectiveCalleeVertex, invk, fw, worklist, isCall);
+          Set<FuncVertex> wReach = MapUtil.findOrCreateSet(reachingFunctions, w);
+          boolean changed = false;
+          if (w instanceof CallVertex) {
+            for (FuncVertex fv : vReach) {
+              if (wReach.add(fv)) {
+                changed = true;
+                MapUtil.findOrCreateSet(pendingCallWorklist, w).add(fv);
               }
             }
-          }
-        } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
-          Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(w);
-          for (FuncVertex fv : vReach) {
-            if (wReach.add(fv)) {
-              changed = true;
-              addReflectiveCallEdge(
-                  flowgraph, (VarVertex) w, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);
+          } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
+            for (FuncVertex fv : vReach) {
+              if (wReach.add(fv)) {
+                changed = true;
+                MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, (VarVertex) w).add(fv);
+              }
             }
-          }
-        } else {
+          } else {
 
-          changed = wReach.addAll(vReach);
+            changed = wReach.addAll(vReach);
+          }
+          if (changed) worklist.add(w);
         }
-        if (changed) worklist.add(w);
       }
+      cnt += 1;
     }
 
     Set<Pair<CallVertex, FuncVertex>> res = HashSetFactory.make();
@@ -152,6 +159,51 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     return res;
   }
 
+  public void processPendingCallWorklist(
+      FlowGraph flowgraph,
+      Map<Vertex, Set<FuncVertex>> pendingCallWorklist,
+      VertexFactory factory,
+      Map<Vertex, Set<FuncVertex>> reachingFunctions,
+      Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
+      Set<Vertex> worklist) {
+    for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingCallWorklist.entrySet()) {
+      CallVertex callVertex = (CallVertex) entry.getKey();
+      for (FuncVertex fv : entry.getValue()) {
+        addCallEdge(flowgraph, callVertex, fv, worklist);
+        String fullName = fv.getFullName();
+        if (handleCallApply
+            && (fullName.equals("Lprologue.js/Function_prototype_call")
+                || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+          JavaScriptInvoke invk = callVertex.getInstruction();
+          VarVertex reflectiveCalleeVertex =
+              factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+          flowgraph.addEdge(
+              reflectiveCalleeVertex,
+              factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+          // we only add dataflow edges for Function.prototype.call
+          boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
+          reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
+          for (FuncVertex fw : MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
+            addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invk, fw, worklist, isCall);
+        }
+      }
+    }
+  }
+
+  public void processPendingReflectiveCallWorklist(
+      FlowGraph flowgraph,
+      Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist,
+      Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
+      Set<Vertex> worklist) {
+    for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingReflectiveCallWorklist.entrySet()) {
+      final Vertex v = entry.getKey();
+      Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(v);
+      for (FuncVertex fv : entry.getValue()) {
+        addReflectiveCallEdge(
+            flowgraph, (VarVertex) v, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);
+      }
+    }
+  }
   // add flow corresponding to a new call edge
   private void addCallEdge(
       FlowGraph flowgraph, CallVertex c, FuncVertex callee, Set<Vertex> worklist) {
