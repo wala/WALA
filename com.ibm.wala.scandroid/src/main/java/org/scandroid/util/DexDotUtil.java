@@ -253,7 +253,8 @@ public class DexDotUtil extends DotUtil {
    * @param n node to decorate
    * @param d decorating master
    */
-  private static <T> String decorateNode(T n, NodeDecorator<T> d) {
+  private static <T> String decorateNode(
+      @SuppressWarnings("unused") T n, @SuppressWarnings("unused") NodeDecorator<T> d) {
     return " [ ]\n";
   }
 

@@ -298,8 +298,8 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
    */
   private static Collection<IMethod> getAllNormalPublicMethods(IClass cls) {
     Collection<IMethod> result = HashSetFactory.make();
-    Collection<? extends IMethod> allMethods = null;
-    allMethods = cls.getAllMethods();
+
+    Collection<? extends IMethod> allMethods = cls.getAllMethods();
     for (IMethod m : allMethods) {
       if (!m.isInit() && !m.isClinit() && m.isPublic()) {
         result.add(m);

@@ -642,10 +642,11 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
               instruction.getClassType(),
               instruction.getMethodName(),
               instruction.getMethodSignature());
-      int programCounter = 0;
-      programCounter = getProgramCounter();
-      CallSiteReference site = null;
-      site = CallSiteReference.make(programCounter, m, instruction.getInvocationCode());
+
+      int programCounter = getProgramCounter();
+
+      CallSiteReference site =
+          CallSiteReference.make(programCounter, m, instruction.getInvocationCode());
       callSites.add(site);
     }
 

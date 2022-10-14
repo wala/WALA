@@ -460,8 +460,8 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     } while (last.size() < result.size());
 
     // now add any interfaces implemented by the super class
-    IClass sup = null;
-    sup = getSuperclass();
+
+    IClass sup = getSuperclass();
     if (sup != null) {
       result.addAll(sup.getAllImplementedInterfaces());
     }
@@ -476,8 +476,8 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   private Collection<IClass> array2IClassSet(ImmutableByteArray[] interfaces) {
     ArrayList<IClass> result = new ArrayList<>(interfaces.length);
     for (ImmutableByteArray name : interfaces) {
-      IClass klass = null;
-      klass = loader.lookupClass(TypeName.findOrCreate(name));
+
+      IClass klass = loader.lookupClass(TypeName.findOrCreate(name));
       if (klass == null) {
         Warnings.add(ClassNotFoundWarning.create(name));
       } else {

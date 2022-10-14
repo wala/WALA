@@ -41,8 +41,8 @@ public class MultiNewArrayTest extends WalaTestCase {
 
   @Test
   public void testMultiNewArray1() throws IOException, ClassHierarchyException {
-    AnalysisScope scope = null;
-    scope =
+
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA,
             new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),

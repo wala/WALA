@@ -589,9 +589,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
         return NOT_CHANGED;
       }
 
-      boolean changed = false;
       FilteredPointerKey.TypeFilter filter = pk.getTypeFilter();
-      changed = filter.addFiltered(system, lhs, rhs);
+      boolean changed = filter.addFiltered(system, lhs, rhs);
 
       if (DEBUG_FILTER) {
         System.err.println("RESULT " + lhs + (changed ? " (changed)" : ""));
