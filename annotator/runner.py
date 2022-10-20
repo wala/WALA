@@ -38,7 +38,7 @@ out_dir = "/tmp/NullAwayFix"
 config_paths = [
   "{}\t{}\n".format("{}/{}/config/nullaway.xml".format(repo_path, dep),
                     "{}/{}/config/scanner.xml".format(repo_path, dep)) for dep
-  in MODULES[target]]
+  in [target] + MODULES[target]]
 paths = "/tmp/NullAwayFix/paths.tsv"
 f = open(paths, "w")
 f.writelines(config_paths)
@@ -46,7 +46,8 @@ f.writelines(config_paths)
 args += ["-bc", build_command]
 args += ["-cp", paths]
 args += ["-i", "com.ibm.wala.Initializer"]
-args += ["-d", "5"]
+args += ["-depth", "5"]
+args += ["-d", out_dir]
 args += ["-n", "com.sun.istack.internal.Nullable"]
 
 if downstream_enabled:
