@@ -39,7 +39,7 @@ config_paths = [
   "{}\t{}\n".format("{}/{}/config/nullaway.xml".format(repo_path, dep),
                     "{}/{}/config/scanner.xml".format(repo_path, dep)) for dep
   in [target] + MODULES[target]]
-paths = "/tmp/NullAwayFix/paths.tsv"
+paths = "{}/paths.tsv".format(out_dir)
 f = open(paths, "w")
 f.writelines(config_paths)
 
