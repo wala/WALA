@@ -26,4 +26,5 @@ include(
 	'com.ibm.wala.tests.ide_feature',
 	'com.ibm.wala.util',
 	'com.ibm.wala_feature',
+	'com.ibm.wala.librarymodelsloader'
 )
