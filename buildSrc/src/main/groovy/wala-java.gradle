@@ -35,7 +35,11 @@ def requiresAnnotatorConfiguration(target) {
 			"com.ibm.wala.cast:cast",
 			"com.ibm.wala.cast:xlator_test",
 			"com.ibm.wala.cast:smoke_main",
-			"com.ibm.wala-repository"
+			"com.ibm.wala-repository",
+			"com.ibm.wala.cast.js.html.nu_validator",
+			"com.ibm.wala.ide.jdt.test",
+			"com.ibm.wala.ide.jsdt.tests",
+			"com.ibm.wala.ide.tests"
 	]
 	if(target == null){
 		return false
