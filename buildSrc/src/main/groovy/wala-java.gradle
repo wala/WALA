@@ -17,6 +17,7 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	// to get r8
 	maven {
@@ -29,6 +30,8 @@ final useErrorProne = JavaVersion.current().isJava9Compatible()
 
 dependencies {
 	if (useErrorProne) {
+		annotationProcessor "com.uber.nullaway:nullaway:0.10.2"
+		annotationProcessor "edu.ucr.cs.riple.nullawayannotator:type-annotator-scanner:1.3.4-SNAPSHOT"
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
 	} else {
 		// We disable Error Prone for pre JDK 9+, but we still need to set these dependencies, as
@@ -38,8 +41,18 @@ dependencies {
 	}
 }
 
+var nullaway_excluded = [
+		"com.ibm.wala.tests.ide_feature",
+		"com.ibm.wala.cast:cast",
+		"com.ibm.wala.cast:xlator_test",
+		"com.ibm.wala.cast:smoke_main",
+		"com.ibm.wala-repository"
+]
+
 tasks.withType(JavaCompile).configureEach {
-	if (useErrorProne) {
+	var nullaway_config = new File(project.getProjectDir(), "config/nullaway.xml")
+	var scanner_config = new File(project.getProjectDir(), "config/scanner.xml")
+	if (useErrorProne && !nullaway_excluded.contains(project.getName())) {
 		options.errorprone {
 			// don't run warning-level checks by default as they add too much noise to build output
 			// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
@@ -51,13 +64,19 @@ tasks.withType(JavaCompile).configureEach {
 			// checks we do not intend to try to fix in the near-term:
 			// Just too many of these; proper Javadoc would be a great long-term goal
 			disable 'MissingSummary'
+			warn 'NullAway'
+			warn 'TypeAnnotatorScanner'
 			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
-//			errorproneArgs.addAll(
-//					"-XepPatchChecks:UnnecessaryParentheses",
-//					"-XepPatchLocation:IN_PLACE"
-//			)
+			errorproneArgs.addAll(
+					"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
+					"-XepOpt:NullAway:SerializeFixMetadata=true",
+					"-XepOpt:NullAway:FixSerializationConfigPath=" + nullaway_config,
+					"-XepOpt:TypeAnnotatorScanner:ConfigPath=" + scanner_config,
+			)
 		}
+		options.compilerArgs << "-Xmaxerrs" << "100000"
+		options.compilerArgs << "-Xmaxwarns" << "100000"
 	} else {
 		options.errorprone.enabled = false
 	}
