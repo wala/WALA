@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.util.graph.traverse;
+import com.ibm.wala.Initializer;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -38,6 +39,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private Graph<T> G;
 
   /** Subclasses must call this in the constructor! */
+  @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     roots = nodes;

@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 from pathlib import Path
+import shutil
 
 MODULES = {
   "com.ibm.wala.util": [
@@ -15,12 +16,12 @@ MODULES = {
     "com.ibm.wala.core",
     "com.ibm.wala.dalvik",
     "com.ibm.wala.ide.jdt",
-    "com.ibm.wala.ide.jsdt",
     "com.ibm.wala.ide",
     "com.ibm.wala.scandroid",
     "com.ibm.wala.shrike"
   ]
 }
+
 args = []
 target = "com.ibm.wala.util"
 core = "{}/.m2/repository/edu/ucr/cs/riple/nullawayannotator/core/1.3.4-SNAPSHOT".format(
@@ -35,6 +36,8 @@ downstream_build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew {} --rerun-ta
 nullaway_library_model_loader = "{}/com.ibm.wala.librarymodelsloader/src/main/resources/com/ibm/wala/librarymodelsloader/nullable-methods.tsv".format(
   repo_path)
 out_dir = "/tmp/NullAwayFix"
+shutil.rmtree(out_dir)
+os.mkdir(out_dir)
 config_paths = [
   "{}\t{}\n".format("{}/{}/config/nullaway.xml".format(repo_path, dep),
                     "{}/{}/config/scanner.xml".format(repo_path, dep)) for dep
