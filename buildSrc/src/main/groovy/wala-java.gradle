@@ -27,14 +27,36 @@ repositories {
 
 // only use Error Prone on JDK 9+ JVMs
 final useErrorProne = JavaVersion.current().isJava9Compatible()
-def annotatorTarget = System.getenv('ANNOTATOR_TARGET')
+final annotatorTarget = System.getenv('ANNOTATOR_TARGET')
+
+def requiresAnnotatorConfiguration(target) {
+	var nullaway_excluded = [
+			"com.ibm.wala.tests.ide_feature",
+			"com.ibm.wala.cast:cast",
+			"com.ibm.wala.cast:xlator_test",
+			"com.ibm.wala.cast:smoke_main",
+			"com.ibm.wala-repository"
+	]
+	if(target == null){
+		return false
+	}
+	if(nullaway_excluded.contains(project.getName())){
+		return false
+	}
+	if(project.getName() == "com.ibm.wala.librarymodelsloader"){
+		return false
+	}
+	return true
+}
 
 dependencies {
 	if (useErrorProne) {
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
-		if(annotatorTarget != null && annotatorTarget != project.getName() && project.getName() != "com.ibm.wala.librarymodelsloader"){
+		if(requiresAnnotatorConfiguration(annotatorTarget)){
 			annotationProcessor "com.uber.nullaway:nullaway:0.10.2"
 			annotationProcessor "edu.ucr.cs.riple.nullawayannotator:type-annotator-scanner:1.3.4-SNAPSHOT"
+		}
+		if(project.getName() != "com.ibm.wala.librarymodelsloader"){
 			annotationProcessor project(':com.ibm.wala.librarymodelsloader')
 		}
 	} else {
@@ -45,19 +67,11 @@ dependencies {
 	}
 }
 
-var nullaway_excluded = [
-		"com.ibm.wala.tests.ide_feature",
-		"com.ibm.wala.cast:cast",
-		"com.ibm.wala.cast:xlator_test",
-		"com.ibm.wala.cast:smoke_main",
-		"com.ibm.wala-repository"
-]
-
 tasks.withType(JavaCompile).configureEach {
 	var nullaway_config = new File(project.getProjectDir(), "config/nullaway.xml")
 	var scanner_config = new File(project.getProjectDir(), "config/scanner.xml")
 	if (useErrorProne) {
-		if(annotatorTarget != null && !nullaway_excluded.contains(project.getName())){
+		if(requiresAnnotatorConfiguration(annotatorTarget)){
 			options.errorprone {
 				disableAllChecks = true
 				warn 'NullAway'
