@@ -1,9 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<scanner>
-    <method active="true" />
-    <field active="true" />
-    <call active="true" />
-    <class active="true" />
-    <path>/tmp/NullAwayFix/11</path>
-    <uuid>c93e71c3-2477-40a6-8844-772a1b0b0303</uuid>
-</scanner>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><scanner><method active="false"/><field active="false"/><call active="false"/><class active="false"/><path>/tmp/NullAwayFix/13</path><uuid>05f3858d-e053-4fc8-bf54-fcf2a0dab500</uuid></scanner>
