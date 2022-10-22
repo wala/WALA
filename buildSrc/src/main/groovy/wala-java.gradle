@@ -51,6 +51,10 @@ tasks.withType(JavaCompile).configureEach {
 			// checks we do not intend to try to fix in the near-term:
 			// Just too many of these; proper Javadoc would be a great long-term goal
 			disable 'MissingSummary'
+			// WALA has many optimizations involving using == to check reference equality.  They
+			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+			// that could introduce bugs
+			disable 'ReferenceEquality'
 			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
 //			errorproneArgs.addAll(
