@@ -5,6 +5,7 @@ plugins {
 tasks.named("compileTestJava").configure {
 	// No need to run Error Prone on our analysis test inputs
 	options.errorprone.enabled = false
+	// Some code in the test data is written in a deliberately bad style, so allow warnings
 	options.compilerArgs -= '-Werror'
 }
 
