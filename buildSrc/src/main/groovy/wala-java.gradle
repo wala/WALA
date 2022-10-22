@@ -139,7 +139,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 tasks.withType(JavaCompileUsingEcj).configureEach {
-	// ECJ warnings vs errors are set in configuration files
+	// ECJ warning / error levels are set via a configuration file, not this argument
 	options.compilerArgs -= '-Werror'
 }
 
