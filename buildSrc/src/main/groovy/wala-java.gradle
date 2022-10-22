@@ -135,6 +135,11 @@ project.tasks.named('check').configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
+	options.compilerArgs += '-Werror'
+}
+
+tasks.withType(JavaCompileUsingEcj).configureEach {
+	options.compilerArgs -= '-Werror'
 }
 
 // Special hack for WALA as an included build.  Composite
