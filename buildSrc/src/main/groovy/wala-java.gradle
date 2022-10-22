@@ -44,13 +44,17 @@ tasks.withType(JavaCompile).configureEach {
 			// don't run warning-level checks by default as they add too much noise to build output
 			// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
 			// we need to customize the level of at least one specific check to make this flag work
-			disableAllWarnings = true
+			//disableAllWarnings = true
 			// warning-level checks upgraded to error, since we've fixed all the warnings
 			error 'UnnecessaryParentheses'
 			error 'UnusedVariable'
 			// checks we do not intend to try to fix in the near-term:
 			// Just too many of these; proper Javadoc would be a great long-term goal
 			disable 'MissingSummary'
+			// WALA has many optimizations involving using == to check reference equality.  They
+			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+			// that could introduce bugs
+			disable 'ReferenceEquality'
 			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
 //			errorproneArgs.addAll(
