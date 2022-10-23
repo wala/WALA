@@ -16,11 +16,11 @@ import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntPair;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Stack;
 
 /** Utilities for dealing with acyclic subgraphs */
 public class Acyclic {
@@ -86,9 +86,9 @@ public class Acyclic {
 
   private static <T> void dfsNonRecursive(
       final BasicNaturalRelation result, final T root, final NumberedGraph<T> G) {
-    final Stack<T> stack = new Stack<>();
+    final ArrayDeque<T> stack = new ArrayDeque<>();
     final Set<T> stackSet = new HashSet<>();
-    final Stack<Iterator<? extends T>> stackIt = new Stack<>();
+    final ArrayDeque<Iterator<? extends T>> stackIt = new ArrayDeque<>();
     final Set<T> finished = new HashSet<>();
     stack.push(root);
     stackSet.add(root);

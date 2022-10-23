@@ -13,8 +13,8 @@ package com.ibm.wala.util.collections;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.math.Logs;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 /** An {@link IVector} implementation which delegates to pages of int vectors. */
 public class TwoLevelVector<T> implements IVector<T>, Serializable {
@@ -26,7 +26,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
   private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
 
   /** Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1] */
-  private final Vector<SparseVector<T>> data = new Vector<>(0);
+  private final ArrayList<SparseVector<T>> data = new ArrayList<>(0);
 
   private int maxPage = -1;
 
@@ -79,7 +79,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
   private IVector<T> findOrCreatePage(int page) {
     if (page >= data.size()) {
       SparseVector<T> v = new SparseVector<>();
-      data.setSize(page + 1);
+      data.ensureCapacity(page + 1);
       data.add(page, v);
       maxPage = Math.max(page, maxPage);
       return v;

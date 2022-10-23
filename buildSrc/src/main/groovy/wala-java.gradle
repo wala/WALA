@@ -48,6 +48,7 @@ tasks.withType(JavaCompile).configureEach {
 			// warning-level checks upgraded to error, since we've fixed all the warnings
 			error 'UnnecessaryParentheses'
 			error 'UnusedVariable'
+			error 'JdkObsolete'
 			// checks we do not intend to try to fix in the near-term:
 			// Just too many of these; proper Javadoc would be a great long-term goal
 			disable 'MissingSummary'
