@@ -7,11 +7,11 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.ModuleEntry;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RewritingTranslatorToCAst implements TranslatorToCAst {
-  private final List<CAstRewriterFactory<?, ?>> rewriters = new LinkedList<>();
+  private final List<CAstRewriterFactory<?, ?>> rewriters = new ArrayList<>();
   protected final ModuleEntry M;
   private final TranslatorToCAst base;
 

@@ -44,7 +44,6 @@ import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;

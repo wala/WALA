@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedSet;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
 public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
@@ -128,7 +128,7 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
   }
 
   @Override
-  public SortedSet<Position> positions() {
+  public NavigableSet<Position> positions() {
     return new TreeSet<>(positions.values());
   }
 }

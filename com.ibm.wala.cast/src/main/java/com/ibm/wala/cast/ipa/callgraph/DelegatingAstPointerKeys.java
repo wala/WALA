@@ -22,8 +22,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
@@ -76,7 +76,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
 
   @Override
   public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
-    List<PointerKey> result = new LinkedList<>();
+    List<PointerKey> result = new ArrayList<>();
 
     if (F instanceof ConstantKey) {
       PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey<?>) F);

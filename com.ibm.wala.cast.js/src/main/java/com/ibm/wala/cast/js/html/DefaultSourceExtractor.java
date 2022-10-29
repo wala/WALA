@@ -16,12 +16,12 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Supplier;
 
 public class DefaultSourceExtractor extends DomLessSourceExtractor {
@@ -32,9 +32,9 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
 
     private final HashMap<String, String> constructors = HashMapFactory.make();
 
-    private final Stack<String> stack = new Stack<>();
+    private final ArrayDeque<String> stack = new ArrayDeque<>();
 
-    private final Stack<ITag> forms = new Stack<>();
+    private final ArrayDeque<ITag> forms = new ArrayDeque<>();
     private final Set<Pair<ITag, String>> sets = new HashSet<>();
 
     public HtmlCallBack(URL entrypointUrl, IUrlResolver urlResolver) {

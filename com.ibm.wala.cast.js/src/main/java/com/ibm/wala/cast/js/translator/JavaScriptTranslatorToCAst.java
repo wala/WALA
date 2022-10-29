@@ -14,10 +14,10 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
@@ -99,7 +99,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
   public static class FunctionContext<C extends WalkContext<C, T>, T>
       extends TranslatorToCAst.FunctionContext<C, T> implements WalkContext<C, T> {
 
-    private final Vector<CAstNode> initializers = new Vector<>();
+    private final List<CAstNode> initializers = new ArrayList<>();
 
     @Override
     public WalkContext<C, T> getParent() {

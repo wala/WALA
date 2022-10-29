@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.SortedSet;
+import java.util.NavigableSet;
 
 /**
  * The assumption is that a typical CAst is derived from some kind of textual source file, for which
@@ -129,5 +129,5 @@ public interface CAstSourcePositionMap {
   Iterator<CAstNode> getMappedNodes();
 
   /** Returns an ordered set of all positions in this map. */
-  SortedSet<Position> positions();
+  NavigableSet<Position> positions();
 }

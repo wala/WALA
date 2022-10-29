@@ -57,8 +57,8 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.io.UTFDataFormatException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Set;
 
 public class MethodNamePattern {
@@ -81,7 +81,7 @@ public class MethodNamePattern {
   }
 
   private Collection<IMethod> lookupMethods(IClass c) {
-    Collection<IMethod> matching = new LinkedList<>();
+    Collection<IMethod> matching = new ArrayList<>();
     Atom atom = Atom.findOrCreateUnicodeAtom(memberName);
     Descriptor desc = descriptor == null ? null : Descriptor.findOrCreateUTF8(descriptor);
     Collection<? extends IMethod> allMethods = c.getAllMethods();
@@ -98,7 +98,7 @@ public class MethodNamePattern {
    * Primordial, Extension
    */
   public Collection<IMethod> getPossibleTargets(IClassHierarchy cha) {
-    Collection<IMethod> matching = new LinkedList<>();
+    Collection<IMethod> matching = new ArrayList<>();
     IClass c;
     c = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, className));
     if (c != null) matching.addAll(lookupMethods(c));

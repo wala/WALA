@@ -16,8 +16,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.viz.NodeDecorator;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
@@ -42,7 +42,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
   protected NodeDecorator<Object> nodeDecoratorInput = null;
 
-  protected final List<IAction> popUpActions = new LinkedList<>();
+  protected final List<IAction> popUpActions = new ArrayList<>();
 
   public SWTTreeViewer() {
     super();

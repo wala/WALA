@@ -25,10 +25,10 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -159,7 +159,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     }
 
     List<ExtractionRegion> regions =
-        region_map.computeIfAbsent(region_info.fst, k -> new LinkedList<>());
+        region_map.computeIfAbsent(region_info.fst, k -> new ArrayList<>());
     for (int i = 0; i < regions.size(); ++i) {
       ExtractionRegion region2 = regions.get(i);
       if (region2.getEnd() <= region_info.snd.getStart()) continue;

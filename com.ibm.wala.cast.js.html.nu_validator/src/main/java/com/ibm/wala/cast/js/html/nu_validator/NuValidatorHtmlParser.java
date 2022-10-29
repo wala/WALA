@@ -24,10 +24,10 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.AbstractMap;
+import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import nu.validator.htmlparser.common.XmlViolationPolicy;
 import nu.validator.htmlparser.sax.HtmlParser;
 import org.xml.sax.Attributes;
@@ -54,7 +54,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
     parser.setContentHandler(
         new ContentHandler() {
           private Locator locator;
-          private final Stack<ITag> tags = new Stack<>();
+          private final ArrayDeque<ITag> tags = new ArrayDeque<>();
 
           private int countLines(char[] ch, int start, int length) {
             LineNumberReader r =

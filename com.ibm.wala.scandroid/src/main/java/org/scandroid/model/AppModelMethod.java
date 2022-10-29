@@ -222,6 +222,7 @@ public class AppModelMethod {
     String packageName = 'L' + tr.getName().getPackage().toString() + '/';
     String outerClassName;
     String innerClassName = tr.getName().getClassName().toString();
+    @SuppressWarnings("JdkObsolete") // too many LinkedList APIs used
     LinkedList<TypeReference> trLL = new LinkedList<>();
     trLL.push(tr);
     int index = innerClassName.lastIndexOf('$');

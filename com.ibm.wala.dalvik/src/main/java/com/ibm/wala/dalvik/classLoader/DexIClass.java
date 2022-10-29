@@ -65,7 +65,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -161,7 +160,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     // final EncodedField[] encInstFields = classData.getInstanceFields();
 
     final Iterable<? extends Field> encInstFields = classDef.getInstanceFields();
-    List<IField> ifs = new LinkedList<>();
+    List<IField> ifs = new ArrayList<>();
     for (Field dexf : encInstFields) {
       ifs.add(new DexIField(dexf, this));
     }
@@ -169,7 +168,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 
     // Set direct static fields
     final Iterable<? extends Field> encStatFields = classDef.getStaticFields();
-    List<IField> sfs = new LinkedList<>();
+    List<IField> sfs = new ArrayList<>();
     for (Field dexf : encStatFields) {
       sfs.add(new DexIField(dexf, this));
     }
