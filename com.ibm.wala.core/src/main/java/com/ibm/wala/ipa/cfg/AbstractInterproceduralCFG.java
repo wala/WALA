@@ -64,7 +64,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
           if (forEdge) {
             return n.toString();
           } else {
-            StringBuffer sb = new StringBuffer(n.toString());
+            StringBuilder sb = new StringBuilder(n.toString());
             n.iterator().forEachRemaining(inst -> sb.append("\n").append(inst.toString()));
             return sb.toString();
           }

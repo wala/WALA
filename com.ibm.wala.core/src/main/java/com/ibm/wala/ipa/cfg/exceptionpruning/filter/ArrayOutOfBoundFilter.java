@@ -8,7 +8,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 
 /**
  * Adapter for using {@link ArrayOutOfBoundsAnalysis}. This filter is filtering
@@ -32,13 +31,9 @@ public class ArrayOutOfBoundFilter implements ExceptionFilter<SSAInstruction> {
   public Collection<FilteredException> filteredExceptions(SSAInstruction instruction) {
     final UnnecessaryCheck unnecessary = this.analysis.getBoundsCheckNecessary().get(instruction);
     if (unnecessary == UnnecessaryCheck.BOTH) {
-
-      final LinkedList<FilteredException> result = new LinkedList<>();
-      result.add(new FilteredException(TypeReference.JavaLangArrayIndexOutOfBoundsException));
-
-      return result;
+      return Collections.singletonList(
+          new FilteredException(TypeReference.JavaLangArrayIndexOutOfBoundsException));
     } else {
-
       return Collections.emptyList();
     }
   }

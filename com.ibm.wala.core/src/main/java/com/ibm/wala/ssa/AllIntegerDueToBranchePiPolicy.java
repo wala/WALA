@@ -11,8 +11,8 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.util.collections.Pair;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -52,7 +52,7 @@ public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
       SSAInstruction def2,
       SymbolTable symbolTable) {
     if (cond.isIntegerComparison()) {
-      final LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
+      final List<Pair<Integer, SSAInstruction>> result = new ArrayList<>();
       for (int i = 0; i < cond.getNumberOfUses(); i++) {
         result.add(Pair.make(cond.getUse(i), (SSAInstruction) cond));
       }

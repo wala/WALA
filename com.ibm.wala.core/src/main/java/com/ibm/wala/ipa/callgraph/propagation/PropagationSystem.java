@@ -38,12 +38,12 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -195,7 +195,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @return an List of instance keys corresponding to the integers in a set
    */
   List<InstanceKey> getInstances(IntSet set) {
-    LinkedList<InstanceKey> result = new LinkedList<>();
+    ArrayList<InstanceKey> result = new ArrayList<>();
     for (IntIterator it = set.intIterator(); it.hasNext(); ) {
       int j = it.next();
       result.add(getInstanceKey(j));

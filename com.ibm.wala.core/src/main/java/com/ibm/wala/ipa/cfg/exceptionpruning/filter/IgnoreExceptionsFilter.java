@@ -4,8 +4,9 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Collections;
 
 /**
  * For filtering specific exceptions.
@@ -17,19 +18,16 @@ public class IgnoreExceptionsFilter implements ExceptionFilter<SSAInstruction> {
 
   /** All given exceptions and subclasses will be ignored. */
   public IgnoreExceptionsFilter(Collection<TypeReference> toBeIgnored) {
-    this.toBeIgnored = new LinkedList<>();
+    this.toBeIgnored = new ArrayList<>();
 
     this.addAll(toBeIgnored);
   }
 
   /** The given exception and subclasses will be ignored. */
   public IgnoreExceptionsFilter(TypeReference toBeIgnored) {
-    this.toBeIgnored = new LinkedList<>();
+    this.toBeIgnored = new ArrayList<>();
 
-    final LinkedList<TypeReference> list = new LinkedList<>();
-    list.add(toBeIgnored);
-
-    this.addAll(list);
+    this.addAll(Collections.singletonList(toBeIgnored));
   }
 
   private void addAll(Collection<TypeReference> toBeIgnored) {

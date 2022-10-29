@@ -13,9 +13,10 @@ package com.ibm.wala.ipa.callgraph.pruned;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public final class CallGraphPruning {
 
   private PruningPolicy pruningPolicy;
   private Set<CGNode> keep;
-  private LinkedList<CGNode> visited;
+  private ArrayDeque<CGNode> visited;
   private List<CGNode> marked;
   private int depth;
   private final CallGraph cg;
@@ -73,9 +74,9 @@ public final class CallGraphPruning {
       System.out.println("Running optimization with depth: " + depth);
     }
 
-    this.marked = new LinkedList<>();
+    this.marked = new ArrayList<>();
     this.keep = new HashSet<>();
-    this.visited = new LinkedList<>();
+    this.visited = new ArrayDeque<>();
     this.depth = depth;
     this.pruningPolicy = policy;
 
@@ -110,8 +111,8 @@ public final class CallGraphPruning {
 
   private void addDepth(CGNode node) {
 
-    LinkedList<CGNode> A = new LinkedList<>();
-    LinkedList<CGNode> B = new LinkedList<>();
+    ArrayList<CGNode> A = new ArrayList<>();
+    ArrayList<CGNode> B = new ArrayList<>();
     int i = depth;
     A.add(node);
     while (i > 0) {

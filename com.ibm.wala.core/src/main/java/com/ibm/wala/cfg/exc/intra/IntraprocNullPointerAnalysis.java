@@ -46,11 +46,11 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -99,7 +99,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
 
   private static <T extends ISSABasicBlock> List<T> searchNodesWithPathToCatchAll(
       ControlFlowGraph<SSAInstruction, T> cfg) {
-    final List<T> nodes = new LinkedList<>();
+    final List<T> nodes = new ArrayList<>();
 
     for (final T exp : cfg) {
       final List<T> excSucc = cfg.getExceptionalSuccessors(exp);

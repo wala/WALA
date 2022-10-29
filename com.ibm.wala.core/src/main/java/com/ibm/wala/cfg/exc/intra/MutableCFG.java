@@ -17,9 +17,9 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -108,7 +108,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public List<T> getExceptionalSuccessors(T b) {
     final List<T> origSucc = orig.getExceptionalSuccessors(b);
     final IntSet allSuccs = this.getSuccNodeNumbers(b);
-    final List<T> thisSuccs = new LinkedList<>();
+    final List<T> thisSuccs = new ArrayList<>();
 
     for (final T block : origSucc) {
       if (allSuccs.contains(block.getNumber())) {
@@ -122,7 +122,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   @Override
   public Collection<T> getNormalSuccessors(T b) {
     final List<T> excSuccs = getExceptionalSuccessors(b);
-    final List<T> thisSuccs = new LinkedList<>();
+    final List<T> thisSuccs = new ArrayList<>();
 
     final Iterator<T> succs = getSuccNodes(b);
     while (succs.hasNext()) {
@@ -139,7 +139,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   public Collection<T> getExceptionalPredecessors(T b) {
     final Collection<T> origPreds = orig.getExceptionalPredecessors(b);
     final IntSet allPreds = this.getPredNodeNumbers(b);
-    final List<T> thisPreds = new LinkedList<>();
+    final List<T> thisPreds = new ArrayList<>();
 
     for (final T block : origPreds) {
       if (allPreds.contains(block.getNumber())) {
@@ -153,7 +153,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
   @Override
   public Collection<T> getNormalPredecessors(T b) {
     final Collection<T> excPreds = getExceptionalPredecessors(b);
-    final List<T> thisPreds = new LinkedList<>();
+    final List<T> thisPreds = new ArrayList<>();
 
     final Iterator<T> preds = getPredNodes(b);
     while (preds.hasNext()) {

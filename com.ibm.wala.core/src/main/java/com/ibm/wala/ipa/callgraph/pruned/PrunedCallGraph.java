@@ -20,11 +20,11 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -107,7 +107,7 @@ public class PrunedCallGraph implements CallGraph {
   @Override
   public Iterator<CGNode> getPredNodes(CGNode n) {
     Iterator<CGNode> tmp = cg.getPredNodes(n);
-    Collection<CGNode> col = new LinkedList<>();
+    Collection<CGNode> col = new ArrayList<>();
     while (tmp.hasNext()) {
       CGNode no = tmp.next();
       if (keep.contains(no) && !removedEdge(no, n)) {
@@ -134,7 +134,7 @@ public class PrunedCallGraph implements CallGraph {
   @Override
   public Iterator<CGNode> getSuccNodes(CGNode n) {
     Iterator<CGNode> tmp = cg.getSuccNodes(n);
-    Collection<CGNode> col = new LinkedList<>();
+    Collection<CGNode> col = new ArrayList<>();
     while (tmp.hasNext()) {
       CGNode no = tmp.next();
       if (keep.contains(no) && !removedEdge(n, no)) {
@@ -219,7 +219,7 @@ public class PrunedCallGraph implements CallGraph {
   @Override
   public Iterator<CGNode> iterateNodes(IntSet s) {
     Iterator<CGNode> tmp = cg.iterateNodes(s);
-    Collection<CGNode> col = new LinkedList<>();
+    Collection<CGNode> col = new ArrayList<>();
     while (tmp.hasNext()) {
       CGNode n = tmp.next();
       if (keep.contains(n)) {

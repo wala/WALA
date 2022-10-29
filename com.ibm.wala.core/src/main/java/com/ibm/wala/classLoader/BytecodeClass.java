@@ -37,7 +37,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -290,7 +289,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   @Override
   public Collection<IField> getAllFields() {
-    Collection<IField> result = new LinkedList<>();
+    Collection<IField> result = new ArrayList<>();
     result.addAll(getAllInstanceFields());
     result.addAll(getAllStaticFields());
     return result;
@@ -326,7 +325,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   @Override
   public Collection<IField> getAllInstanceFields() {
-    Collection<IField> result = new LinkedList<>(getDeclaredInstanceFields());
+    Collection<IField> result = new ArrayList<>(getDeclaredInstanceFields());
     IClass s = getSuperclass();
     while (s != null) {
       result.addAll(s.getDeclaredInstanceFields());
@@ -337,7 +336,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   @Override
   public Collection<IField> getAllStaticFields() {
-    Collection<IField> result = new LinkedList<>(getDeclaredStaticFields());
+    Collection<IField> result = new ArrayList<>(getDeclaredStaticFields());
     IClass s = getSuperclass();
     while (s != null) {
       result.addAll(s.getDeclaredStaticFields());
@@ -348,7 +347,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   @Override
   public Collection<IMethod> getAllMethods() {
-    Collection<IMethod> result = new LinkedList<>(getDeclaredMethods());
+    Collection<IMethod> result = new ArrayList<>(getDeclaredMethods());
     if (isInterface()) {
       for (IClass i : getDirectInterfaces()) {
         result.addAll(i.getAllMethods());
