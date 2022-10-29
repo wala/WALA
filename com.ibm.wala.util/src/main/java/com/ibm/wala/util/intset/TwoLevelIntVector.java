@@ -12,7 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.math.Logs;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Vector;
 
 /** an int vector implementation which delegates to pages of int vectors. */
 public class TwoLevelIntVector implements IntVector, Serializable {
@@ -26,7 +26,8 @@ public class TwoLevelIntVector implements IntVector, Serializable {
   int maxIndex = -1;
 
   /** Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1] */
-  private final ArrayList<SparseIntVector> data = new ArrayList<>();
+  @SuppressWarnings("JdkObsolete") // uses Vector-specific APIs
+  private final Vector<SparseIntVector> data = new Vector<>();
 
   private final int defaultValue;
 
@@ -77,7 +78,7 @@ public class TwoLevelIntVector implements IntVector, Serializable {
   private IntVector findOrCreatePage(int page) {
     if (page >= data.size()) {
       SparseIntVector v = new SparseIntVector(defaultValue);
-      data.ensureCapacity(page + 1);
+      data.setSize(page + 1);
       data.add(page, v);
       return v;
     } else {

@@ -22,6 +22,7 @@ import com.ibm.wala.util.graph.traverse.FloydWarshall.GetPaths;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -213,9 +214,9 @@ public class FloydWarshallTest extends WalaTestCase {
   public static Set<List<Node>> expectedPaths(NumberedGraph<Node> G) {
     Set<List<Node>> paths = new HashSet<>();
     paths.add(
-        new LinkedList<>(Arrays.asList(G.getNode(2), G.getNode(3), G.getNode(4), G.getNode(6))));
+        new ArrayList<>(Arrays.asList(G.getNode(2), G.getNode(3), G.getNode(4), G.getNode(6))));
     paths.add(
-        new LinkedList<>(Arrays.asList(G.getNode(2), G.getNode(3), G.getNode(5), G.getNode(7))));
+        new ArrayList<>(Arrays.asList(G.getNode(2), G.getNode(3), G.getNode(5), G.getNode(7))));
     return paths;
   }
 }
