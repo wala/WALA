@@ -14,10 +14,10 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -136,7 +136,7 @@ public class BFSPathFinder<T> {
     }
   }
 
-  private LinkedList<T> Q = null;
+  private ArrayDeque<T> Q = null;
   private HashMap<Object, T> history = null;
 
   /**
@@ -145,7 +145,7 @@ public class BFSPathFinder<T> {
    */
   public List<T> find() {
     if (Q == null) {
-      Q = new LinkedList<>();
+      Q = new ArrayDeque<>();
       history = HashMapFactory.make();
       while (roots.hasNext()) {
         T next = roots.next();

@@ -18,11 +18,11 @@ import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * @see ArrayBoundsGraph
@@ -214,7 +214,7 @@ public class ArrayBoundsGraphBuilder {
   }
 
   /** Discovers predecessors and adds them to the graph. */
-  private void discoverPredecessors(final Stack<Integer> todo, int handle) {
+  private void discoverPredecessors(final ArrayDeque<Integer> todo, int handle) {
     final SSAInstruction def = this.defUse.getDef(handle);
     if (def == null) {
       this.addPossibleConstant(handle);
@@ -349,7 +349,7 @@ public class ArrayBoundsGraphBuilder {
 
   /** Explore the DefUse-Chain with depth-first-search to add constraints to the given variable. */
   private void startDFS(int index) {
-    final Stack<Integer> todo = new Stack<>();
+    final ArrayDeque<Integer> todo = new ArrayDeque<>();
     todo.push(index);
 
     while (!todo.isEmpty()) {

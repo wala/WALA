@@ -157,7 +157,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   @Override
   public String toString() {
     if (VERBOSE_PRINT) {
-      StringBuffer x = new StringBuffer(pointerKey.toString()).append(" :");
+      StringBuilder x = new StringBuilder(pointerKey.toString()).append(" :");
       getValue().foreach(i -> x.append(" ").append(instanceKeys.getMappedObject(i)));
       return x.toString();
     } else {

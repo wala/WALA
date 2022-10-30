@@ -46,13 +46,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import org.slf4j.Logger;
@@ -392,22 +392,22 @@ public class AndroidManifestXMLReader {
    * the closing Tag or on the closing Tag of a parent: A Item does not remove its own Tag from the
    * Stack.
    */
-  private static final Stack<Tag> parserStack = new Stack<>();
+  private static final ArrayDeque<Tag> parserStack = new ArrayDeque<>();
 
   /**
    * Contains either Attributes of a child or the evaluation-result of a child-Tag.
    *
    * <p>The Item that consumes an Attribute has to pop it.
    */
-  private static final Map<HistoryKey, Stack<Object>> attributesHistory =
+  private static final Map<HistoryKey, ArrayDeque<Object>> attributesHistory =
       new HashMap<>(); // No EnumMap possible :(
 
   static {
     for (Attr attr : Attr.values()) {
-      attributesHistory.put(attr, new Stack<>());
+      attributesHistory.put(attr, new ArrayDeque<>());
     }
     for (Tag tag : Tag.values()) {
-      attributesHistory.put(tag, new Stack<>());
+      attributesHistory.put(tag, new ArrayDeque<>());
     }
   }
 

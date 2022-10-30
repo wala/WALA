@@ -46,10 +46,10 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -184,7 +184,7 @@ import java.util.Set;
  * @author mschaefer
  */
 public class ClosureExtractor extends CAstRewriterExt {
-  private final LinkedList<ExtractionPolicy> policies = new LinkedList<>();
+  private final ArrayDeque<ExtractionPolicy> policies = new ArrayDeque<>();
   private final ExtractionPolicyFactory policyFactory;
 
   private static final boolean LOCALISE = true;

@@ -19,7 +19,7 @@ package com.ibm.wala.shrike.sourcepos;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 
 /**
  * This class represents the CharacterRangeTable attribute.
@@ -71,8 +71,8 @@ public final class CRTable extends PositionsAttribute {
             new CRTData(
                 pc_start_index, pc_end_index, source_start_position, source_end_position, flags);
       } catch (InvalidCRTDataException e) {
-        LinkedList<Object> l = e.getData();
-        if (l == null) l = new LinkedList<>();
+        ArrayDeque<Object> l = e.getData();
+        if (l == null) l = new ArrayDeque<>();
         l.addFirst(i);
         Debug.warn(e.getMessage(), l.toArray());
       }

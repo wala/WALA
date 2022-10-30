@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -63,7 +62,7 @@ public class FormalTypeParameter extends Signature {
   }
 
   private static TypeSignature[] parseForInterfaceBounds(String s) {
-    List<TypeSignature> list = new LinkedList<>();
+    List<TypeSignature> list = new ArrayList<>();
 
     int start = s.indexOf(':');
     if (start == s.length() - 1) {

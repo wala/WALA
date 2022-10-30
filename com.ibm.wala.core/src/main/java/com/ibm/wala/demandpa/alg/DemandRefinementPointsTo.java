@@ -125,12 +125,12 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -2082,7 +2082,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       final PointsToComputer ptoComputer,
       PointerAnalysis<InstanceKey> pa) {
     final Set<PointerKeyAndState> visited = HashSetFactory.make();
-    final LinkedList<PointerKeyAndState> worklist = new LinkedList<>();
+    final ArrayDeque<PointerKeyAndState> worklist = new ArrayDeque<>();
 
     class Helper {
 

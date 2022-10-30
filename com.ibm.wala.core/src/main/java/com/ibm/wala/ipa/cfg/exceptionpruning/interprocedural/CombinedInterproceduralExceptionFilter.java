@@ -13,15 +13,15 @@ package com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.filter.CombinedExceptionFilter;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 public class CombinedInterproceduralExceptionFilter<Instruction>
     implements InterproceduralExceptionFilter<Instruction> {
   private final Collection<InterproceduralExceptionFilter<Instruction>> filter;
 
   public CombinedInterproceduralExceptionFilter() {
-    this.filter = new LinkedList<>();
+    this.filter = new ArrayList<>();
   }
 
   public CombinedInterproceduralExceptionFilter(

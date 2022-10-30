@@ -24,8 +24,9 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.VerboseAction;
 import com.ibm.wala.util.graph.INodeWithNumber;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents a set of {@link IFixedPointStatement}s to be solved by a {@link IFixedPointSolver}
@@ -487,7 +488,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
   /** Re-order the step definitions. */
   private void reorder() {
     // drain the worklist
-    LinkedList<AbstractStatement> temp = new LinkedList<>();
+    List<AbstractStatement> temp = new ArrayList<>();
     while (!workList.isEmpty()) {
       AbstractStatement eq = workList.takeStatement();
       temp.add(eq);

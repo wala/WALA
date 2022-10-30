@@ -100,6 +100,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.function.Function;
@@ -506,7 +507,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private final Position[] parameterPositions;
 
-    private final SortedSet<Position> codePositions;
+    private final NavigableSet<Position> codePositions;
 
     AstDebuggingInformation(
         Position codeBodyNamePosition,
@@ -515,7 +516,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         Position[][] operandPositions,
         Position[] parameterPositions,
         String[] names,
-        SortedSet<Position> codePositions) {
+        NavigableSet<Position> codePositions) {
       this.codePositions = codePositions;
 
       this.codeBodyNamePosition = codeBodyNamePosition;

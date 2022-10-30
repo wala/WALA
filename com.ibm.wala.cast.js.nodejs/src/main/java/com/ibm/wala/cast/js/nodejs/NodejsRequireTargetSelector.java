@@ -38,9 +38,9 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
@@ -282,7 +282,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
    * join(PARTS[0 .. I] + "node_modules") c. DIRS = DIRS + DIR d. let I = I - 1 5. return DIRS
    */
   private static List<File> nodeModulePaths(File rootDir, File d) throws IOException {
-    LinkedList<File> dirs = new LinkedList<>();
+    List<File> dirs = new ArrayList<>();
 
     while (d.getCanonicalPath().startsWith(rootDir.getCanonicalPath())
         && d.toPath().getNameCount() > 0) {

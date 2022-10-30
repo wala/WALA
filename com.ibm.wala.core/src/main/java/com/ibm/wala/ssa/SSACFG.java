@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -307,7 +306,7 @@ public class SSACFG
         if (localPhis == null) {
           return EmptyIterator.instance();
         } else {
-          LinkedList<SSAPhiInstruction> result = new LinkedList<>();
+          ArrayList<SSAPhiInstruction> result = new ArrayList<>();
           for (SSAPhiInstruction phi : localPhis) {
             if (phi != null) {
               result.add(phi);
@@ -317,7 +316,7 @@ public class SSACFG
         }
       } else {
         // stackSlotPhis != null
-        LinkedList<SSAPhiInstruction> result = new LinkedList<>();
+        ArrayList<SSAPhiInstruction> result = new ArrayList<>();
         for (SSAPhiInstruction phi : stackSlotPhis) {
           if (phi != null) {
             result.add(phi);
@@ -436,7 +435,7 @@ public class SSACFG
       return piInstructions.get(new RefPathKey(n, this, path));
     }
 
-    private final LinkedList<SSAPiInstruction> blockPiInstructions = new LinkedList<>();
+    private final ArrayList<SSAPiInstruction> blockPiInstructions = new ArrayList<>();
 
     /**
      * @param n can be the val in the pi instruction

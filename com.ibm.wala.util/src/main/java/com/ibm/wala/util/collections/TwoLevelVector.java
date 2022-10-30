@@ -26,6 +26,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
   private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
 
   /** Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1] */
+  @SuppressWarnings("JdkObsolete") // uses Vector-specific APIs
   private final Vector<SparseVector<T>> data = new Vector<>(0);
 
   private int maxPage = -1;
