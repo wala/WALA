@@ -31,10 +31,9 @@ dependencies {
 	if (useErrorProne) {
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
 	} else {
-		// We disable Error Prone for pre JDK 9+, but we still need to set these dependencies, as
+		// We disable Error Prone for pre JDK 9+, but we still need to set this dependency, as
 		// otherwise the build fails with a javac crash
 		errorprone 'com.google.errorprone:error_prone_core:2.10.0'
-		errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
 	}
 }
 
