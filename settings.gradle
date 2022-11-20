@@ -1,7 +1,6 @@
 rootProject.name = 'com.ibm.wala'
 
 include(
-	'com.ibm.wala-repository',
 	'com.ibm.wala.cast',
 	'com.ibm.wala.cast:smoke_main',
 	'com.ibm.wala.cast:xlator_test',
@@ -20,10 +19,7 @@ include(
 	'com.ibm.wala.ide.jdt',
 	'com.ibm.wala.ide.jdt.test',
 	'com.ibm.wala.ide.tests',
-	'com.ibm.wala.ide_feature',
 	'com.ibm.wala.scandroid',
 	'com.ibm.wala.shrike',
-	'com.ibm.wala.tests.ide_feature',
 	'com.ibm.wala.util',
-	'com.ibm.wala_feature',
 )
