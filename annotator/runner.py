@@ -10,7 +10,6 @@ MODULES = {
     "com.ibm.wala.cast.java",
     "com.ibm.wala.cast.js.nodejs",
     "com.ibm.wala.cast.js.rhino",
-    "com.ibm.wala.cast.js.rhino",
     "com.ibm.wala.cast.js",
     "com.ibm.wala.cast",
     "com.ibm.wala.core",
@@ -33,7 +32,7 @@ verbose = True
 target = "com.ibm.wala.util"
 core = "{}/.m2/repository/edu/ucr/cs/riple/nullawayannotator/core/1.3.4-SNAPSHOT".format(
   Path.home())
-downstream_enabled = True
+downstream_enabled = False
 repo_path = Path(os.getcwd()).parent.absolute()
 build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew :{}:compileJava --rerun-tasks".format(
   repo_path, target, target)
