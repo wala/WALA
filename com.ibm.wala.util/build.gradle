@@ -6,6 +6,9 @@ plugins {
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 dependencies {
+	// to add javax.annotation.*
+	compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+	compileOnly project(':com.ibm.wala.qual')
 	testImplementation(
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',

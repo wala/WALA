@@ -39,7 +39,8 @@ def requiresAnnotatorConfiguration(target) {
 			"com.ibm.wala.cast.js.html.nu_validator",
 			"com.ibm.wala.ide.jdt.test",
 			"com.ibm.wala.ide.jsdt.tests",
-			"com.ibm.wala.ide.tests"
+			"com.ibm.wala.ide.tests",
+			"com.ibm.wala.qual"
 	]
 	if(target == null){
 		return false
@@ -57,7 +58,7 @@ dependencies {
 	if (useErrorProne) {
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
 		if(requiresAnnotatorConfiguration(annotatorTarget)){
-			annotationProcessor "com.uber.nullaway:nullaway:0.10.2"
+			annotationProcessor "com.uber.nullaway:nullaway:0.10.5"
 			annotationProcessor "edu.ucr.cs.riple.nullawayannotator:type-annotator-scanner:1.3.4-SNAPSHOT"
 		}
 		if(project.getName() != "com.ibm.wala.librarymodelsloader"){
@@ -80,8 +81,6 @@ tasks.withType(JavaCompile).configureEach {
 				disableAllChecks = true
 				warn 'NullAway'
 				warn 'TypeAnnotatorScanner'
-				// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-				// check name to the one you want to patch
 				errorproneArgs.addAll(
 						"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
 						"-XepOpt:NullAway:SerializeFixMetadata=true",

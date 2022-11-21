@@ -22,6 +22,12 @@ MODULES = {
   ]
 }
 
+ANNOTATIONS = {
+  "NULLABLE": "javax.annotation.Nullable",
+  "INITIALIZER": "com.ibm.wala.Initializer",
+  "NULLUNMARKED": "com.ibm.wala.NullUnmarked"
+}
+
 args = []
 target = "com.ibm.wala.util"
 core = "{}/.m2/repository/edu/ucr/cs/riple/nullawayannotator/core/1.3.4-SNAPSHOT".format(
@@ -48,10 +54,12 @@ f.writelines(config_paths)
 
 args += ["-bc", build_command]
 args += ["-cp", paths]
-args += ["-i", "com.ibm.wala.Initializer"]
+args += ["-i", ANNOTATIONS['INITIALIZER']]
 args += ["-depth", "5"]
 args += ["-d", out_dir]
-args += ["-n", "com.sun.istack.internal.Nullable"]
+args += ["-n", ANNOTATIONS['NULLABLE']]
+args += ["-acg", "Annotator"]
+args += ["-fr", ANNOTATIONS['NULLUNMARKED']]
 
 if downstream_enabled:
   args += ["-adda"]

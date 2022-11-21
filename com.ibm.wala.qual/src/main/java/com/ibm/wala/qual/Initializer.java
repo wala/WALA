@@ -36,7 +36,7 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-package com.ibm.wala;
+package com.ibm.wala.qual;
 
 public @interface Initializer {
 
