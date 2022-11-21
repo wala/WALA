@@ -97,7 +97,6 @@ import java.lang.annotation.Target;
  * <p>Unspecified nullness is (will be) explained comprehensively in the <a
  * href="http://jspecify.org/docs/user-guide">User Guide</a>.
  */
-
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({TYPE, METHOD, CONSTRUCTOR, PACKAGE})

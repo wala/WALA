@@ -24,8 +24,8 @@ MODULES = {
 
 ANNOTATIONS = {
   "NULLABLE": "javax.annotation.Nullable",
-  "INITIALIZER": "com.ibm.wala.Initializer",
-  "NULLUNMARKED": "com.ibm.wala.NullUnmarked"
+  "INITIALIZER": "com.ibm.wala.qual.Initializer",
+  "NULLUNMARKED": "com.ibm.wala.qual.NullUnmarked"
 }
 
 args = []

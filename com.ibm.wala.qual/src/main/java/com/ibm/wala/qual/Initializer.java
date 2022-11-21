@@ -38,6 +38,4 @@
 
 package com.ibm.wala.qual;
 
-public @interface Initializer {
-
-}
+public @interface Initializer {}
