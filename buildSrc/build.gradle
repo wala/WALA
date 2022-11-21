@@ -7,5 +7,5 @@ repositories {
 }
 
 dependencies {
-	implementation 'de.undercouch:gradle-download-task:5.2.0'
+	implementation 'de.undercouch:gradle-download-task:5.3.0'
 }
