@@ -29,16 +29,17 @@ ANNOTATIONS = {
 }
 
 args = []
+verbose = True
 target = "com.ibm.wala.util"
 core = "{}/.m2/repository/edu/ucr/cs/riple/nullawayannotator/core/1.3.4-SNAPSHOT".format(
   Path.home())
 downstream_enabled = True
 repo_path = Path(os.getcwd()).parent.absolute()
-build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew {}:compileJava --rerun-tasks".format(
+build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew :{}:compileJava --rerun-tasks".format(
   repo_path, target, target)
 downstream_build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew {} --rerun-tasks".format(
   repo_path, target,
-  ' '.join(["{}:compileJava".format(dep) for dep in MODULES[target]]))
+  ' '.join([":{}:compileJava".format(dep) for dep in MODULES[target]]))
 nullaway_library_model_loader = "{}/com.ibm.wala.librarymodelsloader/src/main/resources/com/ibm/wala/librarymodelsloader/nullable-methods.tsv".format(
   repo_path)
 out_dir = "/tmp/NullAwayFix"
@@ -65,6 +66,9 @@ if downstream_enabled:
   args += ["-adda"]
   args += ["-nlmlp", nullaway_library_model_loader]
   args += ["-ddbc", downstream_build_command]
+
+if verbose:
+  args += ["rboserr"]
 
 print(args)
 os.chdir(core)
