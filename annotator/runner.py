@@ -3,6 +3,7 @@ import sys
 import subprocess
 from pathlib import Path
 import shutil
+import tempfile
 
 MODULES = {
   "com.ibm.wala.util": [
@@ -31,27 +32,40 @@ args = []
 verbose = True
 target = "com.ibm.wala.util"
 core = "{}/.m2/repository/edu/ucr/cs/riple/nullawayannotator/core/1.3.4-SNAPSHOT".format(
-  Path.home())
-downstream_enabled = False
+    Path.home())
+downstream_enabled = True
 repo_path = Path(os.getcwd()).parent.absolute()
 build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew :{}:compileJava --rerun-tasks".format(
-  repo_path, target, target)
+    repo_path, target, target)
 downstream_build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew {} --rerun-tasks".format(
-  repo_path, target,
-  ' '.join([":{}:compileJava".format(dep) for dep in MODULES[target]]))
+    repo_path, target,
+    ' '.join([":{}:compileJava".format(dep) for dep in MODULES[target]]))
 nullaway_library_model_loader = "{}/com.ibm.wala.librarymodelsloader/src/main/resources/com/ibm/wala/librarymodelsloader/nullable-methods.tsv".format(
-  repo_path)
-out_dir = "/tmp/NullAwayFix"
-shutil.rmtree(out_dir)
+    repo_path)
+
+# create tmp dir
+out_dir = tempfile.TemporaryDirectory().name
 os.mkdir(out_dir)
+
+config_dirs = ["{}/{}/config".format(repo_path, module) for module in
+               [target] + MODULES[target]]
+# make dirs
+for dir in config_dirs:
+  if os.path.exists(dir):
+    shutil.rmtree(dir)
+  os.mkdir(dir)
+
+# write config paths
 config_paths = [
-  "{}\t{}\n".format("{}/{}/config/nullaway.xml".format(repo_path, dep),
-                    "{}/{}/config/scanner.xml".format(repo_path, dep)) for dep
-  in [target] + MODULES[target]]
-paths = "{}/paths.tsv".format(out_dir)
+  "{}\t{}\n".format("{}/nullaway.xml".format(config_path),
+                    "{}/scanner.xml".format(config_path)) for config_path in
+  config_dirs]
+paths = os.path.join(out_dir, "paths.tsv")
 f = open(paths, "w")
 f.writelines(config_paths)
+f.close()
 
+# make args
 args += ["-bc", build_command]
 args += ["-cp", paths]
 args += ["-i", ANNOTATIONS['INITIALIZER']]
@@ -71,4 +85,10 @@ if verbose:
 
 print(args)
 os.chdir(core)
-subprocess.Popen(["java", "-jar", "core-1.3.4-SNAPSHOT.jar"] + args)
+p = subprocess.Popen(["java", "-jar", "core-1.3.4-SNAPSHOT.jar"] + args)
+p.communicate()
+
+# cleanup
+for dir in config_dirs:
+  shutil.rmtree(dir)
+shutil.rmtree(out_dir)
