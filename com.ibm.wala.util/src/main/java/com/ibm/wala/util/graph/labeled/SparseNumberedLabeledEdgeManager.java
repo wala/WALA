@@ -61,6 +61,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /** */
 public class SparseNumberedLabeledEdgeManager<T, U>
@@ -70,7 +71,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   private static final long serialVersionUID = 5298089288917726790L;
 
   /** the label to be attached to an edge when no label is specified */
-  private final U defaultLabel;
+  @Nullable private final U defaultLabel;
 
   private final NumberedNodeManager<T> nodeManager;
 
@@ -81,7 +82,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   private final ArraySetMultiMap<T, U> nodeToSuccLabels = new ArraySetMultiMap<>();
 
-  private SparseNumberedEdgeManager<T> getManagerForLabel(U label) {
+  private SparseNumberedEdgeManager<T> getManagerForLabel(@Nullable U label) {
     SparseNumberedEdgeManager<T> ret = edgeLabelToManager.get(label);
     if (ret == null) {
       ret = new SparseNumberedEdgeManager<>(nodeManager);
@@ -92,7 +93,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   /** @see LabeledEdgeManager#addEdge(java.lang.Object, java.lang.Object, java.lang.Object) */
   @Override
-  public void addEdge(T src, T dst, U label) {
+  public void addEdge(T src, T dst, @Nullable U label) {
     nodeToSuccLabels.put(src, label);
     nodeToPredLabels.put(dst, label);
     getManagerForLabel(label).addEdge(src, dst);
@@ -264,6 +265,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
     }
   }
 
+  @Nullable
   @Override
   public U getDefaultLabel() {
     return defaultLabel;

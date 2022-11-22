@@ -10,13 +10,15 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.qual.NullUnmarked;
 import java.util.Iterator;
+import javax.annotation.Nullable;
 
 /** A 2-level iterator. has not been tested yet! */
 public abstract class ComposedIterator<O, I> implements Iterator<I> {
 
   private final Iterator<O> outer;
-  private Iterator<? extends I> inner;
+  @Nullable private Iterator<? extends I> inner;
 
   public ComposedIterator(Iterator<O> outer) {
     this.outer = outer;
@@ -47,6 +49,7 @@ public abstract class ComposedIterator<O, I> implements Iterator<I> {
     return (inner != null);
   }
 
+  @NullUnmarked /* Annotator://local 1 */
   @Override
   public I next() {
     I result = inner.next();

@@ -10,16 +10,18 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Iterator;
+import javax.annotation.Nullable;
 
 /** A Set backed by a set of integers. */
 public class OrdinalSet<T> implements Iterable<T> {
 
-  private final IntSet S;
+  @Nullable private final IntSet S;
 
   private final OrdinalSetMapping<T> mapping;
 
@@ -30,12 +32,13 @@ public class OrdinalSet<T> implements Iterable<T> {
     return EMPTY;
   }
 
+  @NullUnmarked /* Annotator://local 1 */
   private OrdinalSet() {
     S = null;
     mapping = null;
   }
 
-  public OrdinalSet(IntSet S, OrdinalSetMapping<T> mapping) {
+  public OrdinalSet(@Nullable IntSet S, OrdinalSetMapping<T> mapping) {
     this.S = S;
     this.mapping = mapping;
   }
@@ -61,6 +64,8 @@ public class OrdinalSet<T> implements Iterable<T> {
     } else {
 
       return new Iterator<T>() {
+
+        @SuppressWarnings("NullAway")
         final IntIterator it = S.intIterator();
 
         @Override
@@ -158,6 +163,7 @@ public class OrdinalSet<T> implements Iterable<T> {
   /**
    * Dangerous. Added for performance reasons. Use this only if you really know what you are doing.
    */
+  @Nullable
   public IntSet getBackingSet() {
     return S;
   }

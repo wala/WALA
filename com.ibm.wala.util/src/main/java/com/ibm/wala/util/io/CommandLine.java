@@ -11,6 +11,7 @@
 package com.ibm.wala.util.io;
 
 import java.util.Properties;
+import javax.annotation.Nullable;
 
 /** utilities for parsing a command line */
 public class CommandLine {
@@ -50,6 +51,7 @@ public class CommandLine {
   }
 
   /** if string is of the form "-foo" or "-foo=", return "foo". else return null. */
+  @Nullable
   private static String parseForKey(String string) {
     if (string.charAt(0) == '-') {
       if (string.contains("=")) {

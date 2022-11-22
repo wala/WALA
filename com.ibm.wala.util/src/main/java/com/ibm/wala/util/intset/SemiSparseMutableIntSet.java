@@ -10,8 +10,10 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
+import javax.annotation.Nullable;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
   private static final long serialVersionUID = 8647721176321526013L;
@@ -22,9 +24,10 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   private static final double FIX_SPARSE_RATIO = .05;
 
+  @SuppressWarnings("NullAway.Init")
   private MutableSparseIntSet sparsePart;
 
-  private OffsetBitVector densePart = null;
+  @Nullable private OffsetBitVector densePart = null;
 
   public SemiSparseMutableIntSet() {
     this(MutableSparseIntSet.makeEmpty());
@@ -325,11 +328,13 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     class DensePartIterator implements IntIterator {
       private int i = -1;
 
+      @NullUnmarked /* Annotator://local 1 */
       @Override
       public boolean hasNext() {
         return densePart.nextSetBit(i + 1) != -1;
       }
 
+      @NullUnmarked /* Annotator://local 1 */
       @Override
       public int next() {
         int next = densePart.nextSetBit(i + 1);
@@ -474,6 +479,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
+  @NullUnmarked /* Annotator://local 1 */
   private boolean inDenseRange(int i) {
     return densePart.getOffset() <= i && densePart.length() > i;
   }

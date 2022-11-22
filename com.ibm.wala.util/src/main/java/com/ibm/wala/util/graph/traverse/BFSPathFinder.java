@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
 
 /**
  * This class searches breadth-first for node that matches some criteria. If found, it reports a
@@ -136,13 +137,16 @@ public class BFSPathFinder<T> {
     }
   }
 
-  private ArrayDeque<T> Q = null;
+  @Nullable private ArrayDeque<T> Q = null;
+
+  @SuppressWarnings("NullAway")
   private HashMap<Object, T> history = null;
 
   /**
    * @return a List of nodes that specifies the first path found from a root to a node accepted by
    *     the filter. Returns null if no path found.
    */
+  @Nullable
   public List<T> find() {
     if (Q == null) {
       Q = new ArrayDeque<>();

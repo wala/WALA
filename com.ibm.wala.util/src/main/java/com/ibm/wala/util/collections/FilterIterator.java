@@ -13,6 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
 
 /** A {@code FilterIterator} filters an {@code Iterator} to generate a new one. */
 public class FilterIterator<T> implements java.util.Iterator<T> {
@@ -20,7 +21,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
 
   final Predicate<? super T> f;
 
-  private T next = null;
+  @Nullable private T next = null;
 
   private boolean done = false;
 
@@ -52,6 +53,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     done = true;
   }
 
+  @Nullable
   @Override
   public T next() throws NoSuchElementException {
     if (done) {

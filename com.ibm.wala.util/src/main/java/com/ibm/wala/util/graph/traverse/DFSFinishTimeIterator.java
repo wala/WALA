@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import com.ibm.wala.qual.Initializer;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -17,6 +18,7 @@ import com.ibm.wala.util.graph.Graph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
 
 /**
  * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes
@@ -29,6 +31,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private static final long serialVersionUID = 8440061593631309429L;
 
   /** the current next element in finishing time order */
+  @SuppressWarnings("NullAway.Init")
   private T theNextElement;
 
   /** an enumeration of all nodes to search from */
@@ -38,6 +41,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private Graph<T> G;
 
   /** Subclasses must call this in the constructor! */
+  @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     roots = nodes;
@@ -58,6 +62,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     return (!empty() || (theNextElement != null && getPendingChildren(theNextElement) == null));
   }
 
+  @Nullable
   abstract Iterator<T> getPendingChildren(T n);
 
   abstract void setPendingChildren(T v, Iterator<T> iterator);
@@ -81,6 +86,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    *
    * @return the next graph node in finishing time order.
    */
+  @Nullable
   @Override
   @SuppressWarnings("unchecked")
   public T next() throws NoSuchElementException {

@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import javax.annotation.Nullable;
 
 /** Utilities for dealing with LongSets */
 public class LongSetUtil {
@@ -19,6 +20,7 @@ public class LongSetUtil {
   public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME =
       "com.ibm.wala.mutableLongSetFactory";
 
+  @SuppressWarnings("NullAway.Init")
   private static MutableLongSetFactory defaultLongSetFactory;
 
   static {
@@ -60,6 +62,7 @@ public class LongSetUtil {
    *     com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
    * @throws IllegalArgumentException if set == null
    */
+  @Nullable
   public static MutableLongSet makeMutableCopy(LongSet set)
       throws IllegalArgumentException, UnimplementedError {
     if (set == null) {

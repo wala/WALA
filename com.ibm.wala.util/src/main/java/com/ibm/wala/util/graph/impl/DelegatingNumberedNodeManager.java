@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 
 /**
  * Basic implementation of a numbered graph -- this implementation relies on nodes that carry
@@ -87,6 +88,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
         return nextCounter != -1;
       }
 
+      @Nullable
       @Override
       @SuppressWarnings("unchecked")
       public T next() {

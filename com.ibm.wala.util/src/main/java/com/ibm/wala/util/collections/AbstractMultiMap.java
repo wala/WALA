@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
@@ -82,7 +83,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
    * @see AAA.util.MultiMap#put(K, V)
    */
   @Override
-  public boolean put(K key, V val) {
+  public boolean put(K key, @Nullable V val) {
     Set<V> vals = map.get(key);
     if (vals == null) {
       vals = createSet();

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
 
 /**
  * This class implements breadth-first search over a Graph, returning an Iterator of the nodes of
@@ -59,7 +60,7 @@ public class BFSIterator<T> implements Iterator<T> {
    * @param nodes the set of nodes from which to start searching
    * @throws IllegalArgumentException if G is null
    */
-  public BFSIterator(Graph<T> G, Iterator<? extends T> nodes) {
+  public BFSIterator(Graph<T> G, @Nullable Iterator<? extends T> nodes) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }

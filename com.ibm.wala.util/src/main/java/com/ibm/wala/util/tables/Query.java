@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.tables;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,7 @@ public class Query {
    *
    * @throws IllegalArgumentException if t == null
    */
+  @NullUnmarked /* Annotator://local 1 */
   public static <T> Collection<Map<String, T>> selectStarWhereEquals(
       Table<T> t, String column, T value) throws IllegalArgumentException {
     if (t == null) {

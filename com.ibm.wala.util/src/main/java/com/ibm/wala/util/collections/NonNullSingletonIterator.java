@@ -12,6 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
 
 /**
  * A singleton iterator for an object which is guaranteed to be not-null. Exploiting this invariant
@@ -19,10 +20,10 @@ import java.util.NoSuchElementException;
  */
 public class NonNullSingletonIterator<T> implements Iterator<T> {
 
-  private T it;
+  @Nullable private T it;
 
   /** @param o the single object in this collection, must be non-null */
-  public NonNullSingletonIterator(T o) {
+  public NonNullSingletonIterator(@Nullable T o) {
     if (o == null) {
       throw new IllegalArgumentException("o is null");
     }
