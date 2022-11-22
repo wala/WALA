@@ -11,7 +11,7 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.util.collections.Pair;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,7 +99,7 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
       SSAInstruction def1,
       SSAInstruction def2,
       SymbolTable symbolTable) {
-    LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
+    List<Pair<Integer, SSAInstruction>> result = new ArrayList<>();
     result.addAll(p1.getPis(cond, def1, def2, symbolTable));
     result.addAll(p2.getPis(cond, def1, def2, symbolTable));
     return result;

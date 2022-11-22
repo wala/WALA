@@ -26,10 +26,10 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 
 /**
  * ensures that no contexts returned by a base context selector are recursive (assertion failure
@@ -63,7 +63,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
     if (!recursionPossible(callee)) {
       return false;
     }
-    LinkedList<Pair<Context, Collection<IMethod>>> worklist = new LinkedList<>();
+    ArrayDeque<Pair<Context, Collection<IMethod>>> worklist = new ArrayDeque<>();
     worklist.push(Pair.make(baseContext, (Collection<IMethod>) Collections.singleton(callee)));
     while (!worklist.isEmpty()) {
       Pair<Context, Collection<IMethod>> p = worklist.removeFirst();
@@ -102,7 +102,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
   private static boolean updateForNode(
       Context baseContext,
       Collection<IMethod> curEncountered,
-      LinkedList<Pair<Context, Collection<IMethod>>> worklist,
+      ArrayDeque<Pair<Context, Collection<IMethod>>> worklist,
       CGNode callerNode) {
     final IMethod method = callerNode.getMethod();
     if (!recursionPossible(method)) {

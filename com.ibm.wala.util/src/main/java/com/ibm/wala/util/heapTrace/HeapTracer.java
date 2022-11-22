@@ -18,6 +18,7 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +26,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Set;
-import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -41,10 +41,10 @@ public class HeapTracer {
   private final Collection<?> rootInstances;
 
   /** Stack of instance objects discovered but not yet traced. */
-  private final Stack<Object> scalarWorkList = new Stack<>();
+  private final ArrayDeque<Object> scalarWorkList = new ArrayDeque<>();
 
   /** Stack of array objects discovered but not yet traced. */
-  private final Stack<Object> arrayWorkList = new Stack<>();
+  private final ArrayDeque<Object> arrayWorkList = new ArrayDeque<>();
 
   /** How many bytes do we assume the JVM wastes on each instance? */
   private static final int BYTES_IN_HEADER = 12;

@@ -26,6 +26,7 @@ public class TwoLevelIntVector implements IntVector, Serializable {
   int maxIndex = -1;
 
   /** Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ... data[(i+1)*PAGESIZE - 1] */
+  @SuppressWarnings("JdkObsolete") // uses Vector-specific APIs
   private final Vector<SparseIntVector> data = new Vector<>();
 
   private final int defaultValue;

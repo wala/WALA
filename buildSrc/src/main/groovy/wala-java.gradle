@@ -65,10 +65,9 @@ dependencies {
 			annotationProcessor project(':com.ibm.wala.librarymodelsloader')
 		}
 	} else {
-		// We disable Error Prone for pre JDK 9+, but we still need to set these dependencies, as
+		// We disable Error Prone for pre JDK 9+, but we still need to set this dependency, as
 		// otherwise the build fails with a javac crash
 		errorprone 'com.google.errorprone:error_prone_core:2.10.0'
-		errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
 	}
 }
 
@@ -76,6 +75,7 @@ tasks.withType(JavaCompile).configureEach {
 	var nullaway_config = new File(project.getProjectDir(), "config/nullaway.xml")
 	var scanner_config = new File(project.getProjectDir(), "config/scanner.xml")
 	if (useErrorProne) {
+<<<<<<< HEAD
 		if(requiresAnnotatorConfiguration(annotatorTarget)){
 			options.errorprone {
 				disableAllChecks = true
@@ -109,6 +109,30 @@ tasks.withType(JavaCompile).configureEach {
 //					    "-XepPatchLocation:IN_PLACE"
 //			    )
 			}
+=======
+		options.errorprone {
+			// don't run warning-level checks by default as they add too much noise to build output
+			// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
+			// we need to customize the level of at least one specific check to make this flag work
+			disableAllWarnings = true
+			// warning-level checks upgraded to error, since we've fixed all the warnings
+			error 'UnnecessaryParentheses'
+			error 'UnusedVariable'
+			error 'JdkObsolete'
+			// checks we do not intend to try to fix in the near-term:
+			// Just too many of these; proper Javadoc would be a great long-term goal
+			disable 'MissingSummary'
+			// WALA has many optimizations involving using == to check reference equality.  They
+			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+			// that could introduce bugs
+			disable 'ReferenceEquality'
+			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+			// check name to the one you want to patch
+//			errorproneArgs.addAll(
+//					"-XepPatchChecks:UnnecessaryParentheses",
+//					"-XepPatchLocation:IN_PLACE"
+//			)
+>>>>>>> ab9df3e3a7136ee07ed77b57dbe5fd9d77255950
 		}
 	} else {
 		options.errorprone.enabled = false
@@ -183,6 +207,12 @@ project.tasks.named('check').configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
+	options.compilerArgs += '-Werror'
+}
+
+tasks.withType(JavaCompileUsingEcj).configureEach {
+	// ECJ warning / error levels are set via a configuration file, not this argument
+	options.compilerArgs -= '-Werror'
 }
 
 // Special hack for WALA as an included build.  Composite

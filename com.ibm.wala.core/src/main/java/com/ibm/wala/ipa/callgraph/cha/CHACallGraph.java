@@ -41,11 +41,11 @@ import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Predicate;
 
 /** Call graph in which call targets are determined entirely based on an {@link IClassHierarchy}. */
@@ -253,7 +253,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return n;
   }
 
-  private final Stack<CGNode> newNodes = new Stack<>();
+  private final ArrayDeque<CGNode> newNodes = new ArrayDeque<>();
 
   private void closure() throws CancelException {
     while (!newNodes.isEmpty()) {

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Stack;
+import java.util.ArrayDeque;
 import java.util.zip.GZIPOutputStream;
 
 public class Runtime {
@@ -56,10 +56,10 @@ public class Runtime {
   private Policy handleCallback;
   private final ThreadLocal<String> currentSite = new ThreadLocal<>();
 
-  private final ThreadLocal<Stack<String>> callStacks =
+  private final ThreadLocal<ArrayDeque<String>> callStacks =
       ThreadLocal.withInitial(
           () -> {
-            Stack<String> callStack = new Stack<>();
+            ArrayDeque<String> callStack = new ArrayDeque<>();
             callStack.push("root");
             return callStack;
           });

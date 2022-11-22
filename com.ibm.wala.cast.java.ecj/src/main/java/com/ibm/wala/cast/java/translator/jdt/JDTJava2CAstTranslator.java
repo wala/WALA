@@ -83,7 +83,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -4187,7 +4186,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       fEntities = entities;
     }
 
-    private final Vector<CAstNode> initializers = new Vector<>();
+    private final List<CAstNode> initializers = new ArrayList<>();
 
     @Override
     public void addNameDecl(CAstNode v) {

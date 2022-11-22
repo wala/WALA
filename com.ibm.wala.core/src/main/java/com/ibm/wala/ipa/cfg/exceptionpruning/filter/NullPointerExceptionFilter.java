@@ -8,7 +8,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 
 /**
  * Adapter for {@link IntraproceduralNullPointerAnalysis}. This filter is filtering
@@ -31,9 +30,8 @@ public class NullPointerExceptionFilter implements ExceptionFilter<SSAInstructio
   @Override
   public Collection<FilteredException> filteredExceptions(SSAInstruction instruction) {
     if (this.analysis.nullPointerExceptionThrowState(instruction) == State.NOT_NULL) {
-      final LinkedList<FilteredException> result = new LinkedList<>();
-      result.add(new FilteredException(TypeReference.JavaLangNullPointerException));
-      return result;
+      return Collections.singletonList(
+          new FilteredException(TypeReference.JavaLangNullPointerException));
     } else {
       return Collections.emptyList();
     }

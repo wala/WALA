@@ -11,7 +11,7 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.util.collections.Pair;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -71,8 +71,6 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
       SSAInstruction def1,
       SSAInstruction def2,
       SymbolTable symbolTable) {
-    LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
-    result.add(getPi(cond, def1, def2, symbolTable));
-    return result;
+    return Collections.singletonList(getPi(cond, def1, def2, symbolTable));
   }
 }

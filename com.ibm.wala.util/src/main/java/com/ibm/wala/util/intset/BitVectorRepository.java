@@ -76,7 +76,9 @@ public class BitVectorRepository {
     LinkedList<WeakReference<BitVectorIntSet>> m;
     m = buckets.get(size);
     if (m == null) {
-      m = new LinkedList<>();
+      @SuppressWarnings("JdkObsolete") // performance-tuned
+      LinkedList<WeakReference<BitVectorIntSet>> tmp = new LinkedList<>();
+      m = tmp;
       buckets.put(size, m);
     }
     BitVectorIntSet bv = new BitVectorIntSet(value);

@@ -17,7 +17,8 @@
 
 package com.ibm.wala.shrike.sourcepos;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents the flags which a entry in the CharacterRangeTable can have. The flags are
@@ -71,7 +72,7 @@ public final class CRTFlags {
    * @return An array of Strings containing the flag names.
    */
   public String[] getFlagNames() {
-    LinkedList<String> names = new LinkedList<>();
+    List<String> names = new ArrayList<>();
     int index = 0;
     short tFlags = flags;
     while (tFlags > 0) {

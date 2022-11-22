@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -133,7 +132,7 @@ public class FloydWarshall<T> {
                 return Collections.emptyList();
               } else {
                 T in = G.getNode(intermediate);
-                List<T> result = new LinkedList<>(getPath(from, in));
+                List<T> result = new ArrayList<>(getPath(from, in));
                 result.add(in);
                 result.addAll(getPath(in, to));
                 return result;
@@ -195,7 +194,7 @@ public class FloydWarshall<T> {
                       T in = G.getNode(x);
                       for (List<T> pre : getPaths(from, in)) {
                         for (List<T> post : getPaths(in, to)) {
-                          List<T> path = new LinkedList<>(pre);
+                          List<T> path = new ArrayList<>(pre);
                           path.add(in);
                           path.addAll(post);
                           result.add(path);

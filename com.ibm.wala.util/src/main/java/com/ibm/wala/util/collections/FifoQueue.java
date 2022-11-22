@@ -10,10 +10,9 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,7 +21,7 @@ import java.util.Set;
  */
 public class FifoQueue<T> {
   /** The work queue. Items are references to Object instances. */
-  final List<T> qItems = new LinkedList<>();
+  final ArrayDeque<T> qItems = new ArrayDeque<>();
 
   /**
    * Set representing items currently enqueue. This is used to keep an item from having more than
@@ -143,8 +142,7 @@ public class FifoQueue<T> {
     if (isEmpty()) throw new IllegalStateException("Unexpected empty queue during pop");
 
     // get & remove the top of the queue.
-    T element = qItems.get(0);
-    qItems.remove(0);
+    T element = qItems.removeLast();
 
     // remove element from the elements that are 'inQueue'
     inQueue.remove(element);
@@ -164,6 +162,6 @@ public class FifoQueue<T> {
     if (isEmpty()) throw new IllegalStateException("Unexpected empty queue during peek");
 
     // get & remove the top of the queue.
-    return qItems.get(0);
+    return qItems.getLast();
   }
 }

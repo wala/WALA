@@ -21,9 +21,9 @@ import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -73,7 +73,7 @@ public abstract class AbstractJavaAnalysisAction
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
-    final Collection<EclipseProjectPath<?, ?>> projectPaths = new LinkedList<>();
+    final Collection<EclipseProjectPath<?, ?>> projectPaths = new ArrayList<>();
     Job job =
         new Job("Compute project paths") {
 

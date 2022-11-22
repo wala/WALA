@@ -52,8 +52,8 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.types.TypeName;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 public class FieldNamePattern {
   final String className; // null = match any class
@@ -66,7 +66,7 @@ public class FieldNamePattern {
   }
 
   Collection<IField> lookupFields(IClassLoader cl) {
-    Collection<IField> matching = new LinkedList<>();
+    Collection<IField> matching = new ArrayList<>();
     IClass c = cl.lookupClass(TypeName.findOrCreate(className));
     if (c == null) return matching;
     Atom atom = Atom.findOrCreateUnicodeAtom(memberName);

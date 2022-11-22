@@ -23,13 +23,13 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * Extension of {@link CAstRewriter} which allows adding or deleting control flow edges, and keeps
@@ -103,7 +103,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
   }
 
   private final HashSet<Entity> entities_to_add = HashSetFactory.make();
-  private final Stack<CAstEntity> entities = new Stack<>();
+  private final ArrayDeque<CAstEntity> entities = new ArrayDeque<>();
 
   public CAstNode addNode(CAstNode node, CAstControlFlowMap flow) {
     Set<CAstNode> nodes = extra_nodes.get(flow);

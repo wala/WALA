@@ -58,12 +58,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -91,7 +91,7 @@ public class CorrelationFinder {
     CorrelationSummary summary = new CorrelationSummary(method, instrIndices);
 
     // collect all dynamic property writes in the method
-    LinkedList<AbstractReflectivePut> puts = new LinkedList<>();
+    ArrayDeque<AbstractReflectivePut> puts = new ArrayDeque<>();
     for (SSAInstruction inst : Iterator2Iterable.make(ir.iterateNormalInstructions()))
       if (inst instanceof AbstractReflectivePut) puts.addFirst((AbstractReflectivePut) inst);
 
@@ -128,7 +128,7 @@ public class CorrelationFinder {
         reached.add(get.getDef());
         // saturate reached by following def-use chains through phi instructions and across function
         // calls
-        LinkedList<Integer> worklist = new LinkedList<>();
+        ArrayDeque<Integer> worklist = new ArrayDeque<>();
         MutableIntSet done = new BitVectorIntSet();
         worklist.add(get.getDef());
         while (!worklist.isEmpty()) {
@@ -201,7 +201,7 @@ public class CorrelationFinder {
 
   // checks whether the given SSA variable must always be assigned a numeric value
   private static boolean mustBeNumeric(IR ir, DefUse du, int v) {
-    LinkedList<Integer> worklist = new LinkedList<>();
+    ArrayDeque<Integer> worklist = new ArrayDeque<>();
     MutableIntSet done = new BitVectorIntSet();
     worklist.add(v);
     while (!worklist.isEmpty()) {

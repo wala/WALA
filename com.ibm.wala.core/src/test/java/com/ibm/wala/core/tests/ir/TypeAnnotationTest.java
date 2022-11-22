@@ -42,8 +42,8 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
@@ -202,7 +202,7 @@ public class TypeAnnotationTest extends WalaTestCase {
             new TypeAnnotation.EmptyTarget(),
             TargetType.FIELD));
 
-    final List<Pair<TypePathKind, Integer>> path = new LinkedList<>();
+    final List<Pair<TypePathKind, Integer>> path = new ArrayList<>();
     path.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
     path.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
 
@@ -236,27 +236,27 @@ public class TypeAnnotationTest extends WalaTestCase {
 
     Collection<TypeAnnotation> expectedAnnotations = HashSetFactory.make();
     {
-      final List<Pair<TypePathKind, Integer>> pathA = new LinkedList<>();
+      final List<Pair<TypePathKind, Integer>> pathA = new ArrayList<>();
       expectedAnnotations.add(makeForAnnotations6("A", pathA));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathB = new LinkedList<>();
+      final List<Pair<TypePathKind, Integer>> pathB = new ArrayList<>();
       pathB.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
       expectedAnnotations.add(makeForAnnotations6("B", pathB));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathC = new LinkedList<>();
+      final List<Pair<TypePathKind, Integer>> pathC = new ArrayList<>();
       pathC.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
       pathC.add(Pair.make(TypeAnnotationsReader.TypePathKind.WILDCARD_BOUND, 0));
       expectedAnnotations.add(makeForAnnotations6("C", pathC));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathD = new LinkedList<>();
+      final List<Pair<TypePathKind, Integer>> pathD = new ArrayList<>();
       pathD.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 1));
       expectedAnnotations.add(makeForAnnotations6("D", pathD));
     }
     {
-      final List<Pair<TypePathKind, Integer>> pathE = new LinkedList<>();
+      final List<Pair<TypePathKind, Integer>> pathE = new ArrayList<>();
       pathE.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 1));
       pathE.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));
       expectedAnnotations.add(makeForAnnotations6("E", pathE));

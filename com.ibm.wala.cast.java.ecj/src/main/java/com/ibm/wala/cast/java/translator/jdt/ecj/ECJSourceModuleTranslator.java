@@ -61,8 +61,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -195,8 +195,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   private static Pair<String[], String[]> computeClassPath(AnalysisScope scope) {
-    List<String> sources = new LinkedList<>();
-    List<String> libs = new LinkedList<>();
+    List<String> sources = new ArrayList<>();
+    List<String> libs = new ArrayList<>();
     for (ClassLoaderReference cl : scope.getLoaders()) {
 
       while (cl != null) {
@@ -237,7 +237,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
 
   @Override
   public void loadAllSources(Set<ModuleEntry> modules) {
-    List<String> sources = new LinkedList<>();
+    List<String> sources = new ArrayList<>();
     Map<String, ModuleEntry> sourceMap = HashMapFactory.make();
     for (ModuleEntry m : modules) {
       if (m.isSourceFile()) {

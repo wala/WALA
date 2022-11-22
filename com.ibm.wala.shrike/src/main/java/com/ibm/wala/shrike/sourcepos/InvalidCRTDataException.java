@@ -17,8 +17,9 @@
 
 package com.ibm.wala.shrike.sourcepos;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * An exception for invalid data in the CharacterRangeTable.
@@ -34,7 +35,7 @@ class InvalidCRTDataException extends Exception {
   private static final long serialVersionUID = 1088484553652342438L;
 
   /** Stores additional information */
-  private LinkedList<Object> data;
+  private List<Object> data;
 
   /** Creates a new instance of {@code InvalidCRTDataException} without detail message. */
   InvalidCRTDataException() {}
@@ -57,8 +58,7 @@ class InvalidCRTDataException extends Exception {
    */
   InvalidCRTDataException(String msg, Object... data) {
     super(msg);
-    this.data = new LinkedList<>();
-    this.data.addAll(Arrays.asList(data));
+    this.data = Arrays.asList(data);
   }
 
   /**
@@ -66,7 +66,7 @@ class InvalidCRTDataException extends Exception {
    *
    * @return additional information
    */
-  LinkedList<Object> getData() {
-    return data;
+  ArrayDeque<Object> getData() {
+    return new ArrayDeque<>(data);
   }
 }

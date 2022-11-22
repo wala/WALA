@@ -2,8 +2,8 @@ package com.ibm.wala.ipa.cfg.exceptionpruning.filter;
 
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 /**
  * Use this class to combine multiple {@link ExceptionFilter}
@@ -14,7 +14,7 @@ public class CombinedExceptionFilter<Instruction> implements ExceptionFilter<Ins
   private final Collection<ExceptionFilter<Instruction>> exceptionFilter;
 
   public CombinedExceptionFilter() {
-    this.exceptionFilter = new LinkedList<>();
+    this.exceptionFilter = new ArrayList<>();
   }
 
   public CombinedExceptionFilter(Collection<ExceptionFilter<Instruction>> exceptionFilter) {
@@ -42,7 +42,7 @@ public class CombinedExceptionFilter<Instruction> implements ExceptionFilter<Ins
 
   @Override
   public Collection<FilteredException> filteredExceptions(Instruction instruction) {
-    final LinkedList<FilteredException> result = new LinkedList<>();
+    final ArrayList<FilteredException> result = new ArrayList<>();
     for (final ExceptionFilter<Instruction> filter : this.exceptionFilter) {
       result.addAll(filter.filteredExceptions(instruction));
     }

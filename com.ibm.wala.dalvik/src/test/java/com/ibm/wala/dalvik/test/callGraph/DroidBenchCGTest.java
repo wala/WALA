@@ -29,9 +29,9 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.FileUtil;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -179,7 +179,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
       final URI[] androidLibs,
       final File androidJavaJar,
       final String filter) {
-    final List<Object[]> files = new LinkedList<>();
+    final List<Object[]> files = new ArrayList<>();
     FileUtil.recurseFiles(
         f -> {
           Set<MethodReference> uncalled = uncalledFunctions.get(f.getName());
