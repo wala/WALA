@@ -85,8 +85,8 @@ if verbose:
 
 print(args)
 os.chdir(core)
-p = subprocess.Popen(["java", "-jar", "core-1.3.4-SNAPSHOT.jar"] + args)
-p.communicate()
+# p = subprocess.Popen(["java", "-jar", "core-1.3.4-SNAPSHOT.jar"] + args)
+# p.communicate()
 
 # cleanup
 for dir in config_dirs:
