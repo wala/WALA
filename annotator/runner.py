@@ -81,7 +81,7 @@ if downstream_enabled:
   args += ["-ddbc", downstream_build_command]
 
 if verbose:
-  args += ["rboserr"]
+  args += ["-rboserr"]
 
 print(args)
 os.chdir(core)
