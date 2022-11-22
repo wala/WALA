@@ -17,8 +17,6 @@ import com.ibm.wala.util.graph.Graph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import com.ibm.wala.qual.Initializer;
-
 
 /**
  * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes
@@ -40,7 +38,6 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private Graph<T> G;
 
   /** Subclasses must call this in the constructor! */
-  @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     roots = nodes;
