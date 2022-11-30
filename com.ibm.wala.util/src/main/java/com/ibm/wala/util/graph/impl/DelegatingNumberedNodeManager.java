@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
-
 /**
  * Basic implementation of a numbered graph -- this implementation relies on nodes that carry
  * numbers and edges.

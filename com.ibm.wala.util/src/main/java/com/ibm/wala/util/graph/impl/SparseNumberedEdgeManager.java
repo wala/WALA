@@ -21,8 +21,6 @@ import com.ibm.wala.util.intset.IntSet;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-
 
 /** An object which tracks edges for nodes that have numbers. */
 public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T>, Serializable {

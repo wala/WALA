@@ -12,8 +12,6 @@ package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-
 
 /** An edge manager that reverses the edges in a graph */
 public class InvertingEdgeManager<T> implements EdgeManager<T> {

@@ -13,12 +13,10 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 import javax.annotation.Nullable;
 
-
 /** Converts an {@link Iterator} to an {@link Iterable}. */
 public class Iterator2Iterable<T> implements Iterable<T> {
 
-  @Nullable
-  private final Iterator<T> iter;
+  @Nullable private final Iterator<T> iter;
 
   public static <T> Iterator2Iterable<T> make(@Nullable Iterator<T> iter) {
     return new Iterator2Iterable<>(iter);

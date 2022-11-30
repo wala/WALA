@@ -13,8 +13,6 @@ package com.ibm.wala.util.graph.impl;
 import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-
 
 /** A utility class. */
 public class DelegatingGraph<T> implements Graph<T> {

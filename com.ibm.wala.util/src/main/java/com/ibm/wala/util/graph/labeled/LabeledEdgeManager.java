@@ -55,7 +55,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
-
 /**
  * An object which tracks labeled edges in a graph.
  *

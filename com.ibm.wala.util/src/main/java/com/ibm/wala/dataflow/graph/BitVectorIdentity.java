@@ -12,8 +12,6 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import javax.annotation.Nullable;
-
 
 /** Operator OUT = IN */
 public class BitVectorIdentity extends UnaryOperator<BitVectorVariable> {

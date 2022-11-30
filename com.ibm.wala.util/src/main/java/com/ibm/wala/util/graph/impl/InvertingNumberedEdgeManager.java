@@ -13,8 +13,6 @@ package com.ibm.wala.util.graph.impl;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-
 
 /** An edge manager that reverses the edges in a graph */
 public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {

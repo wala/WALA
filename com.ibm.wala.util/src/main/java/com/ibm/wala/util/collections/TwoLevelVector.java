@@ -10,15 +10,13 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.math.Logs;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** An {@link IVector} implementation which delegates to pages of int vectors. */
 public class TwoLevelVector<T> implements IVector<T>, Serializable {
@@ -113,8 +111,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     return new Iterator<T>() {
       final Iterator<SparseVector<T>> outer = data.iterator();
 
-      @Nullable
-      Iterator<T> inner;
+      @Nullable Iterator<T> inner;
 
       {
         while (outer.hasNext()) {

@@ -13,7 +13,6 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.intset.IntSet;
 import javax.annotation.Nullable;
 
-
 /**
  * Basic interface for a node which lives in one graph ... it's id is used to implement the {@link
  * NumberedGraph} interface.

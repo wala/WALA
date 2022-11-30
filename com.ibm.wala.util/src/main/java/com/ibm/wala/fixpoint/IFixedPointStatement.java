@@ -11,8 +11,6 @@
 package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.INodeWithNumber;
-import javax.annotation.Nullable;
-
 
 /**
  * The general form of a statement definition in an iterative solver is: x &gt;= term, where term

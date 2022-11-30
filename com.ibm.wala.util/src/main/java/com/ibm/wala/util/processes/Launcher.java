@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.processes;
 
+import com.ibm.wala.qual.NullUnmarked;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,9 +21,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** Abstract base class for a process launcher */
 public abstract class Launcher {
@@ -30,20 +28,15 @@ public abstract class Launcher {
   // use a fairly big buffer size to avoid performance problems with the default
   private static final int BUFFER_SIZE = 32 * 1024;
 
-  @Nullable
-  protected File workingDir = null;
+  @Nullable protected File workingDir = null;
 
-  @Nullable
-  protected Map<String, String> env = null;
+  @Nullable protected Map<String, String> env = null;
 
-  @Nullable
-  protected byte[] stdOut = null;
+  @Nullable protected byte[] stdOut = null;
 
-  @Nullable
-  protected byte[] stdErr = null;
+  @Nullable protected byte[] stdErr = null;
 
-  @Nullable
-  private byte[] input = null;
+  @Nullable private byte[] input = null;
 
   /** capture the contents of stdout? */
   private final boolean captureOutput;
@@ -95,7 +88,8 @@ public abstract class Launcher {
    *
    * @return an object representing the process
    */
-  protected Process spawnProcess(@Nullable String cmd) throws IllegalArgumentException, IOException {
+  protected Process spawnProcess(@Nullable String cmd)
+      throws IllegalArgumentException, IOException {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
     }
@@ -217,8 +211,7 @@ public abstract class Launcher {
 
     private final Process p;
 
-    @Nullable
-    private ByteArrayOutputStream capture;
+    @Nullable private ByteArrayOutputStream capture;
 
     /** Drain data from the stream, but don't block. */
     abstract void drain() throws IOException;

@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Nullable;
 
-
 /**
  * Represents a set of {@link IFixedPointStatement}s to be solved by a {@link IFixedPointSolver}
  *

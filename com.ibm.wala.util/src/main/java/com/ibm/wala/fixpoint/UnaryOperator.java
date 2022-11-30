@@ -14,7 +14,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import javax.annotation.Nullable;
 
-
 /** An operator of the form lhs = op (rhs) */
 public abstract class UnaryOperator<T extends IVariable<T>> extends AbstractOperator<T> {
 

@@ -12,8 +12,6 @@ package com.ibm.wala.util.intset;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import javax.annotation.Nullable;
-
 
 /** Abstract base class for implementations of bitvectors */
 @SuppressWarnings("rawtypes")

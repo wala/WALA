@@ -10,12 +10,10 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
   private static final long serialVersionUID = 8647721176321526013L;
@@ -29,8 +27,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   @SuppressWarnings("NullAway.Init")
   private MutableSparseIntSet sparsePart;
 
-  @Nullable
-  private OffsetBitVector densePart = null;
+  @Nullable private OffsetBitVector densePart = null;
 
   public SemiSparseMutableIntSet() {
     this(MutableSparseIntSet.makeEmpty());

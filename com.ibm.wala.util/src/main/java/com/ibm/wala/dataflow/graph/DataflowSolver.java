@@ -13,6 +13,7 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
@@ -21,9 +22,6 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 import java.util.Map;
 import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** Iterative solver for a Killdall dataflow framework */
 public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultFixedPointSolver<V> {

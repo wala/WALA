@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 import javax.annotation.Nullable;
 
-
 /** */
 public class StringTable extends Table<String> implements Cloneable {
 

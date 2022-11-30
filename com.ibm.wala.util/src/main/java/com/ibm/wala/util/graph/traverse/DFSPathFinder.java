@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
-
 /**
  * This class searches depth-first search for node that matches some criteria. If found, it reports
  * a path to the first node found.

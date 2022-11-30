@@ -17,15 +17,12 @@ import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import javax.annotation.Nullable;
 
-
 /** Simple implementation of {@link INodeWithNumberedEdges} */
 public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNumberedEdges {
 
-  @Nullable
-  private BimodalMutableIntSet predNumbers;
+  @Nullable private BimodalMutableIntSet predNumbers;
 
-  @Nullable
-  private BimodalMutableIntSet succNumbers;
+  @Nullable private BimodalMutableIntSet succNumbers;
 
   @Nullable
   @Override

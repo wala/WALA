@@ -11,6 +11,7 @@
 
 package com.ibm.wala.util.graph.impl;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -25,10 +26,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 public class ExtensionGraph<T> implements NumberedGraph<T> {
   private final NumberedGraph<T> original;

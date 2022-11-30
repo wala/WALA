@@ -9,8 +9,6 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.util.intset;
-import javax.annotation.Nullable;
-
 
 /** A factory for mutable shared bit vector int sets */
 public class MutableSharedBitVectorIntSetFactory

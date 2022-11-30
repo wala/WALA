@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.graph;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -27,10 +28,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** Utilities related to simple graph subset operations. */
 public class GraphSlicer {

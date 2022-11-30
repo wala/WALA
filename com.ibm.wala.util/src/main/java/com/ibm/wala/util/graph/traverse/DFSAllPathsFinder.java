@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
-
 /**
  * Extends {@link DFSPathFinder} to discover all paths from a set of root nodes to nodes passing
  * some {@link Predicate}.

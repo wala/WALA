@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -19,9 +20,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /**
  * An {@link IVector} implementation designed for low occupancy. Note that get() from this vector is

@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
 import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /**
  * A sparse ordered, mutable duplicate-free, fully-encapsulated set of integers. Instances are not

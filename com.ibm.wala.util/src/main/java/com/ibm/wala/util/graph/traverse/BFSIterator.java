@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.annotation.Nullable;
 
-
 /**
  * This class implements breadth-first search over a Graph, returning an Iterator of the nodes of
  * the graph in order of discovery. This class follows the outNodes of the graph nodes to define the

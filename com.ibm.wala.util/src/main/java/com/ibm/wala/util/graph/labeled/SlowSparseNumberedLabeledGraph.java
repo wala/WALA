@@ -54,7 +54,6 @@ import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 import java.io.Serializable;
 import javax.annotation.Nullable;
 
-
 /** A labeled graph implementation suitable for sparse graphs. */
 public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U>
     implements Serializable {

@@ -63,7 +63,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-
 /** */
 public class SparseNumberedLabeledEdgeManager<T, U>
     implements Serializable, NumberedLabeledEdgeManager<T, U> {
@@ -72,8 +71,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   private static final long serialVersionUID = 5298089288917726790L;
 
   /** the label to be attached to an edge when no label is specified */
-  @Nullable
-  private final U defaultLabel;
+  @Nullable private final U defaultLabel;
 
   private final NumberedNodeManager<T> nodeManager;
 

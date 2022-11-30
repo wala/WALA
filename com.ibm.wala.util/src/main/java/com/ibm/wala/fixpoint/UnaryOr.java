@@ -9,8 +9,6 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.fixpoint;
-import javax.annotation.Nullable;
-
 
 /** Operator U(n) = U(n) | U(j) */
 public final class UnaryOr extends UnaryOperator<BooleanVariable> {

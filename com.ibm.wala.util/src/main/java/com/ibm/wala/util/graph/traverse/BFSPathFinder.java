@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
-
 /**
  * This class searches breadth-first for node that matches some criteria. If found, it reports a
  * path to the first node found.
@@ -138,8 +137,8 @@ public class BFSPathFinder<T> {
     }
   }
 
-  @Nullable
-  private ArrayDeque<T> Q = null;
+  @Nullable private ArrayDeque<T> Q = null;
+
   @SuppressWarnings("NullAway")
   private HashMap<Object, T> history = null;
 

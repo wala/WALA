@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-
 public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumberedGraph<T>
     implements LabeledGraph<T, U>, NumberedLabeledGraph<T, U> {
 

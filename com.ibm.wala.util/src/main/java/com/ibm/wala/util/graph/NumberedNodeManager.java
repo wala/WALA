@@ -12,8 +12,6 @@ package com.ibm.wala.util.graph;
 
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-
 
 /** An object which tracks nodes with numbers. */
 public interface NumberedNodeManager<T> extends NodeManager<T> {
