@@ -25,6 +25,10 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 public class ExtensionGraph<T> implements NumberedGraph<T> {
   private final NumberedGraph<T> original;
@@ -99,6 +103,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
           outEdges.get(src).add(getNumber(dst));
         }
 
+        @NullUnmarked
         @Override
         public void removeEdge(T src, T dst) throws UnsupportedOperationException {
           assert hasEdge(src, dst);

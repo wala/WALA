@@ -26,6 +26,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** utilities related to depth-first search. */
 public class DFS {
@@ -122,6 +126,7 @@ public class DFS {
       this.order = order;
     }
 
+    @NullUnmarked
     @Override
     public int compare(T o1, T o2) {
       // throws an exception if either argument is not a Node object
@@ -199,7 +204,7 @@ public class DFS {
    * @return iterator of nodes of G in order of DFS finish time
    */
   public static <T> DFSFinishTimeIterator<T> iterateFinishTime(
-      Graph<T> G, Iterator<? extends T> ie) {
+      Graph<T> G, @Nullable Iterator<? extends T> ie) {
     if (ie == null) {
       throw new IllegalArgumentException("null ie");
     }

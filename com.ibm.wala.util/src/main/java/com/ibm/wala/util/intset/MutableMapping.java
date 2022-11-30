@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
+
 
 /**
  * A bit set mapping based on an object array. This is not terribly efficient, but is useful for

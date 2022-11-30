@@ -13,6 +13,8 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
+import javax.annotation.Nullable;
+
 
 /**
  * Basic functionality for a graph that delegates node and edge management, and tracks node numbers

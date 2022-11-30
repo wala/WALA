@@ -13,6 +13,8 @@ package com.ibm.wala.util.graph;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
+
 
 /**
  * An object which tracks graph nodes.

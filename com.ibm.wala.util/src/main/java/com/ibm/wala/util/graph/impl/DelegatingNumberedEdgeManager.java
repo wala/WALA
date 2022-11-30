@@ -19,6 +19,8 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 import java.util.Iterator;
+import javax.annotation.Nullable;
+
 
 /** An object that delegates edge management to the nodes, {@link INodeWithNumberedEdges} */
 public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>

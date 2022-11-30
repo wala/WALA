@@ -9,6 +9,8 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.util.graph;
+import javax.annotation.Nullable;
+
 
 /** */
 public interface OrderedMultiGraph<T> extends Graph<T> {

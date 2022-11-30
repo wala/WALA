@@ -11,6 +11,8 @@
 package com.ibm.wala.util.intset;
 
 import java.util.TreeSet;
+import javax.annotation.Nullable;
+
 
 /** */
 public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorIntSet> {

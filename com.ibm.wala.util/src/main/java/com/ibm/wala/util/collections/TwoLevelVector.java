@@ -15,6 +15,10 @@ import com.ibm.wala.util.math.Logs;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** An {@link IVector} implementation which delegates to pages of int vectors. */
 public class TwoLevelVector<T> implements IVector<T>, Serializable {
@@ -32,6 +36,8 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
   private int maxPage = -1;
 
   /** @see com.ibm.wala.util.intset.IntVector#get(int) */
+  @NullUnmarked
+  @Nullable
   @Override
   public T get(int x) {
     if (x < 0) {
@@ -63,7 +69,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
-  public void set(int x, T value) {
+  public void set(int x, @Nullable T value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
     }
@@ -107,6 +113,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     return new Iterator<T>() {
       final Iterator<SparseVector<T>> outer = data.iterator();
 
+      @Nullable
       Iterator<T> inner;
 
       {
@@ -127,6 +134,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
         return inner != null;
       }
 
+      @NullUnmarked
       @Override
       public T next() {
         T result = inner.next();

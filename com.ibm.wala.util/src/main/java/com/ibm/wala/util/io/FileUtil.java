@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
+
 
 /** Simple utilities for accessing files. */
 public class FileUtil {
@@ -49,7 +51,7 @@ public class FileUtil {
     return listFiles(d, recurse, p);
   }
 
-  private static Collection<File> listFiles(File directory, boolean recurse, Pattern p) {
+  private static Collection<File> listFiles(File directory, boolean recurse, @Nullable Pattern p) {
     File[] files = directory.listFiles();
     if (files == null) {
       return Collections.emptyList();

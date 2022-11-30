@@ -2,11 +2,14 @@ package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
+import javax.annotation.Nullable;
+
 
 public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   private class PrependItterator implements Iterator<T> {
     private boolean usedFirst = false;
     private final Iterator<T> original;
+    @Nullable
     private T first;
 
     public PrependItterator(Iterator<T> original, T first) {
@@ -24,6 +27,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
       }
     }
 
+    @Nullable
     @Override
     public T next() {
       if (!usedFirst) {

@@ -15,6 +15,10 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** A sparse ordered, duplicate-free, fully-encapsulated set of longs; not necessary mutable */
 public class SparseLongSet implements LongSet {
@@ -32,6 +36,7 @@ public class SparseLongSet implements LongSet {
   // TODO: I'm not thrilled with exposing these to subclasses, but
   // it seems expedient for now.
   /** The backing store of int arrays */
+  @SuppressWarnings("NullAway.Init")
   protected long[] elements;
 
   /** The number of entries in the backing store that are valid. */
@@ -61,6 +66,7 @@ public class SparseLongSet implements LongSet {
   }
 
   /** Subclasses should use this with extreme care. */
+  @NullUnmarked
   public SparseLongSet() {
     elements = null;
     this.size = 0;
@@ -326,6 +332,7 @@ public class SparseLongSet implements LongSet {
   }
 
   /** @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet) */
+  @Nullable
   @Override
   public LongSet intersection(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {

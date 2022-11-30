@@ -18,6 +18,10 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * This class implements depth-first search over a {@link NumberedGraph}, return an enumeration of
@@ -29,6 +33,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
 
   private static final long serialVersionUID = 4238700455408861924L;
   /** an enumeration of all nodes to search from */
+  @Nullable
   private Iterator<? extends T> roots;
 
   /** subclass constructors must call this! */
@@ -57,6 +62,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
     return !empty();
   }
 
+  @Nullable
   protected abstract Iterator<? extends T> getPendingChildren(T n);
 
   protected abstract void setPendingChildren(T v, Iterator<? extends T> iterator);
@@ -66,6 +72,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
    *
    * @return the next graph node in discover time order.
    */
+  @NullUnmarked
   @Override
   public T next() throws NoSuchElementException {
 

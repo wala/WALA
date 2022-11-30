@@ -9,6 +9,8 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.fixpoint;
+import javax.annotation.Nullable;
+
 
 /** Operator U(n) = true */
 public final class TrueOperator extends UnaryOperator<BooleanVariable> {

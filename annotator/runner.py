@@ -73,7 +73,6 @@ args += ["-i", ANNOTATIONS['INITIALIZER']]
 args += ["-depth", "5"]
 args += ["-d", out_dir]
 args += ["-n", ANNOTATIONS['NULLABLE']]
-args += ["-acg", "Annotator"]
 args += ["-fr", ANNOTATIONS['NULLUNMARKED']]
 args += ["-am", "strict"]
 

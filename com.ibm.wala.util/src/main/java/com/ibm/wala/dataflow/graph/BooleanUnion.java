@@ -11,6 +11,8 @@
 package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BooleanVariable;
+import javax.annotation.Nullable;
+
 
 /** Operator U(n) = U(n) U U(j) */
 public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> {

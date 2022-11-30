@@ -11,6 +11,8 @@
 package com.ibm.wala.util.intset;
 
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
+
 
 public class EmptyIntSet implements IntSet {
 

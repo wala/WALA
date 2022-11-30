@@ -31,6 +31,10 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.util.Iterator;
 import java.util.function.Predicate;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * A dataflow system that computes, for each graph node, the set of "interesting" nodes that are
@@ -42,6 +46,7 @@ public class GraphReachability<T, S> {
   private final Graph<T> g;
 
   /** Killdall-style dataflow solver */
+  @Nullable
   private DataflowSolver<T, BitVectorVariable> solver;
 
   /** set of "interesting" CGNodes */
@@ -107,6 +112,8 @@ public class GraphReachability<T, S> {
           /*
            * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
            */
+          @NullUnmarked
+          @Nullable
           @Override
           public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(Object from, Object to) {
             Assertions.UNREACHABLE();

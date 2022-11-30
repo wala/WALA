@@ -52,6 +52,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 import java.io.Serializable;
+import javax.annotation.Nullable;
+
 
 /** A labeled graph implementation suitable for sparse graphs. */
 public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U>
@@ -93,7 +95,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
     edgeManager = new SparseNumberedLabeledEdgeManager<>(nodeManager);
   }
 
-  public SlowSparseNumberedLabeledGraph(U defaultLabel) {
+  public SlowSparseNumberedLabeledGraph(@Nullable U defaultLabel) {
     if (defaultLabel == null) {
       throw new IllegalArgumentException("null default label");
     }

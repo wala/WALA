@@ -9,6 +9,10 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.fixpoint;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** Represents a single step, restricted to a unary operator. */
 public abstract class UnaryStatement<T extends IVariable<T>>
@@ -90,7 +94,8 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    * @param lhs the lattice cell set by this equation
    * @param rhs the first operand on the rhs
    */
-  protected UnaryStatement(T lhs, T rhs) {
+  @NullUnmarked
+  protected UnaryStatement(@Nullable T lhs, T rhs) {
     super();
     this.lhs = lhs;
     this.rhs = rhs;

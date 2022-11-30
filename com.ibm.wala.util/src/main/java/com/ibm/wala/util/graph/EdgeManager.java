@@ -11,6 +11,8 @@
 package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
+import javax.annotation.Nullable;
+
 
 /**
  * An object which manages edges in a directed graph.

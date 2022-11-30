@@ -9,6 +9,8 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.fixpoint;
+import javax.annotation.Nullable;
+
 
 /**
  * operator for a step in an iterative solver

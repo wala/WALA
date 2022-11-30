@@ -22,6 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
+import javax.annotation.Nullable;
+
 
 /** utilities for interfacing with DOT */
 public class DotUtil {
@@ -72,7 +74,7 @@ public class DotUtil {
   public static <T> void dotify(
       Graph<T> g,
       NodeDecorator<T> labels,
-      String title,
+      @Nullable String title,
       String dotFile,
       String outputFile,
       String dotExe)
@@ -150,7 +152,7 @@ public class DotUtil {
   }
 
   public static <T> File writeDotFile(
-      Graph<T> g, NodeDecorator<T> labels, String title, String dotfile) throws WalaException {
+      Graph<T> g, NodeDecorator<T> labels, @Nullable String title, String dotfile) throws WalaException {
 
     if (g == null) {
       throw new IllegalArgumentException("g is null");
@@ -174,7 +176,7 @@ public class DotUtil {
   }
 
   /** @return StringBuffer holding dot output representing G */
-  public static <T> StringBuilder dotOutput(Graph<T> g, NodeDecorator<T> labels, String title)
+  public static <T> StringBuilder dotOutput(Graph<T> g, NodeDecorator<T> labels, @Nullable String title)
       throws WalaException {
     StringBuilder result = new StringBuilder("digraph \"DirectedGraph\" {\n");
 
@@ -246,6 +248,7 @@ public class DotUtil {
     return Iterator2Collection.toSet(g.iterator());
   }
 
+  @Nullable
   private static String getRankDir() {
     return null;
   }

@@ -15,19 +15,25 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import javax.annotation.Nullable;
+
 
 /** Simple implementation of {@link INodeWithNumberedEdges} */
 public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNumberedEdges {
 
+  @Nullable
   private BimodalMutableIntSet predNumbers;
 
+  @Nullable
   private BimodalMutableIntSet succNumbers;
 
+  @Nullable
   @Override
   public IntSet getSuccNumbers() {
     return succNumbers;
   }
 
+  @Nullable
   @Override
   public IntSet getPredNumbers() {
     return predNumbers;

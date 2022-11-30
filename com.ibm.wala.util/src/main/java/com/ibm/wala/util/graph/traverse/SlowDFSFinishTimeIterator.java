@@ -15,6 +15,8 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.Map;
+import javax.annotation.Nullable;
+
 
 /**
  * This class implements depth-first search over a Graph, return an enumeration of the nodes of the
@@ -50,7 +52,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
-  public SlowDFSFinishTimeIterator(Graph<T> G, Iterator<? extends T> nodes) {
+  public SlowDFSFinishTimeIterator(Graph<T> G, @Nullable Iterator<? extends T> nodes) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -65,6 +67,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     this(G, G == null ? null : G.iterator());
   }
 
+  @Nullable
   @Override
   Iterator<T> getPendingChildren(T n) {
     return pendingChildren.get(n);

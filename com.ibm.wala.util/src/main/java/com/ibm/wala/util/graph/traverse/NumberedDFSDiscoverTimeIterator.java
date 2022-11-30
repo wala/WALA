@@ -13,6 +13,8 @@ package com.ibm.wala.util.graph.traverse;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.NumberedGraph;
 import java.util.Iterator;
+import javax.annotation.Nullable;
+
 
 /**
  * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes
@@ -56,7 +58,7 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    * @throws IllegalArgumentException if nodes == null
    */
   @SuppressWarnings("unchecked")
-  public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G, Iterator<? extends T> nodes)
+  public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G, @Nullable Iterator<? extends T> nodes)
       throws IllegalArgumentException {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
