@@ -33,7 +33,7 @@ downstream_enabled = True
 
 args = []
 target = "com.ibm.wala.util"
-core = "{}/.m2/repository/edu/ucr/cs/riple/nullawayannotator/core/1.3.4-SNAPSHOT".format(
+core = "{}/.m2/repository/edu/ucr/cs/riple/annotator/annotator-core/1.3.4".format(
     Path.home())
 repo_path = Path(os.getcwd()).parent.absolute()
 build_command = "cd {} && ANNOTATOR_TARGET={} ./gradlew :{}:compileJava --rerun-tasks".format(
@@ -75,6 +75,7 @@ args += ["-d", out_dir]
 args += ["-n", ANNOTATIONS['NULLABLE']]
 args += ["-acg", "Annotator"]
 args += ["-fr", ANNOTATIONS['NULLUNMARKED']]
+args += ["-am", "strict"]
 
 if downstream_enabled:
   args += ["-adda"]
@@ -86,7 +87,7 @@ if verbose:
 
 print(args)
 os.chdir(core)
-p = subprocess.Popen(["java", "-jar", "core-1.3.4-SNAPSHOT.jar"] + args)
+p = subprocess.Popen(["java", "-jar", "annotator-core-1.3.4.jar"] + args)
 p.communicate()
 
 # cleanup
