@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
 
 /**
  * A bit set mapping based on an immutable object array. This is not terribly efficient, but is
@@ -50,7 +49,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   }
 
   @Override
-  public int getMappedIndex(@Nullable Object o) {
+  public int getMappedIndex(Object o) {
     if (map.get(o) == null) {
       return -1;
     }

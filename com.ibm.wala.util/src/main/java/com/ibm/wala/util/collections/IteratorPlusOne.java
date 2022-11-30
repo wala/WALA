@@ -11,7 +11,6 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
-import javax.annotation.Nullable;
 
 /** A utility to efficiently compose an iterator and a singleton */
 public class IteratorPlusOne<T> implements Iterator<T> {
@@ -25,7 +24,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
   private final Iterator<? extends T> it;
 
   // the following field will be nulled out after visiting xtra.
-  @Nullable private T xtra;
+  private T xtra;
 
   private IteratorPlusOne(Iterator<? extends T> it, T xtra) {
     this.it = it;
@@ -37,7 +36,6 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     return it.hasNext() || (xtra != null);
   }
 
-  @Nullable
   @Override
   public T next() {
     if (it.hasNext()) {

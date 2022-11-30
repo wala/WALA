@@ -10,10 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import javax.annotation.Nullable;
 
 /**
  * An implementation of {@link MutableIntSet} that delegates to either a {@link MutableSparseIntSet}
@@ -147,8 +145,6 @@ public class BimodalMutableIntSet implements MutableIntSet {
   }
 
   /** @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet) */
-  @NullUnmarked /* Annotator://local 1 */
-  @Nullable
   @Override
   public IntSet intersection(IntSet that) throws UnimplementedError {
     if (that instanceof BimodalMutableIntSet) {

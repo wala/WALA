@@ -1,6 +1,5 @@
 package com.ibm.wala.util.io;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -13,7 +12,6 @@ import java.util.jar.JarFile;
 
 public class RtJar {
 
-  @NullUnmarked /* Annotator://local 1 */
   public static JarFile getRtJar(Iterator<JarFile> x) {
     while (x.hasNext()) {
       JarFile JF = x.next();

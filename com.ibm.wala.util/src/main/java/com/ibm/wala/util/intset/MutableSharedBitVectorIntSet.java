@@ -10,12 +10,10 @@
  */
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import javax.annotation.Nullable;
 
 /**
  * The shared bit vector implementation described by [Heintze 1999] TODO: much optimization
@@ -31,9 +29,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   private static final int OVERFLOW = 20;
 
-  @Nullable private MutableSparseIntSet privatePart;
+  private MutableSparseIntSet privatePart;
 
-  @Nullable private BitVectorIntSet sharedPart;
+  private BitVectorIntSet sharedPart;
 
   /** */
   public MutableSharedBitVectorIntSet() {}
@@ -614,8 +612,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return result;
   }
 
-  @NullUnmarked /* Annotator://local 1 */
-  private boolean addAllInternal(@Nullable SparseIntSet set) {
+  private boolean addAllInternal(SparseIntSet set) {
     if (privatePart == null) {
       if (sharedPart == null) {
         if (!set.isEmpty()) {

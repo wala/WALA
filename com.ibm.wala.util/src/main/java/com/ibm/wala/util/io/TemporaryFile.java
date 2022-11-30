@@ -18,11 +18,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import javax.annotation.Nullable;
 
 public class TemporaryFile {
 
-  @Nullable private static Path outputDir;
+  private static Path outputDir;
 
   public static File urlToFile(String fileName, URL input) throws IOException {
     if (input == null) {

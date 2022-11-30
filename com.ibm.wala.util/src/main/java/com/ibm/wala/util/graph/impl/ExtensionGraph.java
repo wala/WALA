@@ -11,7 +11,6 @@
 
 package com.ibm.wala.util.graph.impl;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -100,7 +99,6 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
           outEdges.get(src).add(getNumber(dst));
         }
 
-        @NullUnmarked /* Annotator://local 2 */
         @Override
         public void removeEdge(T src, T dst) throws UnsupportedOperationException {
           assert hasEdge(src, dst);

@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.graph;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -259,7 +258,6 @@ public class GraphSlicer {
             succs.put(N, getConnected(N, G::getSuccNodes));
           }
 
-          @NullUnmarked /* Annotator://local 1 */
           @Override
           public int getPredNodeCount(E N) {
             if (!preds.containsKey(N)) {
@@ -268,7 +266,6 @@ public class GraphSlicer {
             return preds.get(N).size();
           }
 
-          @NullUnmarked /* Annotator://local 1 */
           @Override
           public Iterator<E> getPredNodes(E N) {
             if (!preds.containsKey(N)) {
@@ -277,7 +274,6 @@ public class GraphSlicer {
             return preds.get(N).iterator();
           }
 
-          @NullUnmarked /* Annotator://local 1 */
           @Override
           public int getSuccNodeCount(E N) {
             if (!succs.containsKey(N)) {
@@ -286,7 +282,6 @@ public class GraphSlicer {
             return succs.get(N).size();
           }
 
-          @NullUnmarked /* Annotator://local 1 */
           @Override
           public Iterator<E> getSuccNodes(E N) {
             if (!succs.containsKey(N)) {
@@ -295,7 +290,6 @@ public class GraphSlicer {
             return succs.get(N).iterator();
           }
 
-          @NullUnmarked /* Annotator://local 1 */
           @Override
           public boolean hasEdge(E src, E dst) {
             if (!preds.containsKey(dst)) {

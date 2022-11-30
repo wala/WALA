@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
-import javax.annotation.Nullable;
 
 /**
  * A sparse ordered, mutable duplicate-free, fully-encapsulated set of integers. Instances are not
@@ -37,7 +35,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   private static final int TRAP_SIZE = 1000;
 
-  protected MutableSparseIntSet(@Nullable IntSet set) {
+  protected MutableSparseIntSet(IntSet set) {
     super();
     copySet(set);
   }
@@ -65,7 +63,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   /** */
-  @NullUnmarked /* Annotator://local 1 */
   @Override
   public boolean remove(int value) {
     if (elements != null) {
@@ -154,10 +151,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   /** @throws IllegalArgumentException if that == null */
-  @NullUnmarked /* Annotator://local 1 */
   @Override
   @SuppressWarnings("unused")
-  public void copySet(@Nullable IntSet that) throws IllegalArgumentException {
+  public void copySet(IntSet that) throws IllegalArgumentException {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
@@ -208,7 +204,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  @NullUnmarked /* Annotator://local 4 */
   public void intersectWith(SparseIntSet set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");
@@ -315,7 +310,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    *
    * @return true iff this set changes
    */
-  public boolean addAll(@Nullable SparseIntSet that) {
+  public boolean addAll(SparseIntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("null that");
     }
@@ -488,7 +483,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     return new MutableSparseIntSet(diffInternal(A, B));
   }
 
-  public static MutableSparseIntSet make(@Nullable IntSet set) {
+  public static MutableSparseIntSet make(IntSet set) {
     return new MutableSparseIntSet(set);
   }
 

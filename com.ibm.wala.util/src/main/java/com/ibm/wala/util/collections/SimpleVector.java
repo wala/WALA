@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.qual.NullUnmarked;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import javax.annotation.Nullable;
 
 /** simple implementation of IVector */
 public class SimpleVector<T> implements IVector<T> {
@@ -30,7 +28,6 @@ public class SimpleVector<T> implements IVector<T> {
   public SimpleVector() {}
 
   /** @see com.ibm.wala.util.intset.IntVector#get(int) */
-  @NullUnmarked /* Annotator://local 1 */
   @Override
   @SuppressWarnings("unchecked")
   public T get(int x) {
@@ -46,7 +43,7 @@ public class SimpleVector<T> implements IVector<T> {
 
   /** @see com.ibm.wala.util.intset.IntVector#set(int, int) */
   @Override
-  public void set(int x, @Nullable T value) {
+  public void set(int x, T value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x value " + x);
     }

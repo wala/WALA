@@ -13,7 +13,6 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.qual.NullUnmarked;
 
 /** Represents a single step in an iterative solver */
 public abstract class GeneralStatement<T extends IVariable<T>>
@@ -73,7 +72,6 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @param lhs the lattice cell set by this equation
    * @param operator the equation operator
    */
-  @NullUnmarked /* Annotator://local 1 */
   public GeneralStatement(T lhs, AbstractOperator<T> operator) {
     super();
     if (operator == null) {

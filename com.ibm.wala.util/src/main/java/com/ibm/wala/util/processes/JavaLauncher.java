@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.annotation.Nullable;
 
 /** A Java process launcher */
 public class JavaLauncher extends Launcher {
@@ -79,10 +78,10 @@ public class JavaLauncher extends Launcher {
   private final List<String> xtraClasspath = new ArrayList<>();
 
   /** A {@link Thread} which spins and drains stdout of the running process. */
-  @Nullable private Thread stdOutDrain;
+  private Thread stdOutDrain;
 
   /** A {@link Thread} which spins and drains stderr of the running process. */
-  @Nullable private Thread stdErrDrain;
+  private Thread stdErrDrain;
 
   /** Absolute path of the 'java' executable to use. */
   private String javaExe;
@@ -91,7 +90,7 @@ public class JavaLauncher extends Launcher {
   private final List<String> vmArgs = new ArrayList<>();
 
   /** The last process returned by a call to start() on this object. */
-  @Nullable private Process lastProcess;
+  private Process lastProcess;
 
   private JavaLauncher(
       String programArgs,
@@ -203,12 +202,10 @@ public class JavaLauncher extends Launcher {
     return p;
   }
 
-  @Nullable
   public Process getLastProcess() {
     return lastProcess;
   }
 
-  @Nullable
   private static String makeLibPath() {
     String libPath = System.getProperty("java.library.path");
     if (libPath == null) {

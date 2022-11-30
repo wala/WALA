@@ -16,7 +16,6 @@ import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
 
 /**
  * Extends {@link DFSPathFinder} to discover all paths from a set of root nodes to nodes passing
@@ -44,7 +43,6 @@ public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
     return new FilterIterator<>(G.getSuccNodes(n), o -> !cp.contains(o));
   }
 
-  @Nullable
   @Override
   protected Iterator<? extends T> getPendingChildren(T n) {
     Pair<List<T>, T> key = Pair.make(currentPath(), n);

@@ -12,14 +12,13 @@ package com.ibm.wala.util.collections;
 
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Iterator;
-import javax.annotation.Nullable;
 
 public class IteratorPlusTwo<T> implements Iterator<T> {
   private final Iterator<T> it;
 
   // the following fields will be nulled out after visiting xtra.
-  @Nullable private T xtra1;
-  @Nullable private T xtra2;
+  private T xtra1;
+  private T xtra2;
 
   public IteratorPlusTwo(Iterator<T> it, T xtra1, T xtra2) {
     if (it == null) {
@@ -35,7 +34,6 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
     return it.hasNext() || (xtra1 != null) || (xtra2 != null);
   }
 
-  @Nullable
   @Override
   public T next() {
     if (it.hasNext()) {

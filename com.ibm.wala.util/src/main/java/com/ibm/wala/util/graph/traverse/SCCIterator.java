@@ -17,7 +17,6 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 /**
  * This class computes strongly connected components for a Graph (or a subset of it). It does not
@@ -42,7 +41,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    * Construct an enumeration of the SCCs of the subset of a given graph determined by starting at a
    * given set of nodes.
    */
-  public SCCIterator(Graph<T> G, @Nullable Iterator<T> nodes) {
+  public SCCIterator(Graph<T> G, Iterator<T> nodes) {
     if (G == null) {
       throw new IllegalArgumentException("G cannot be null");
     }
