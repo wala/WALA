@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.dominators;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.Graph;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
@@ -35,7 +36,7 @@ public class GenericDominators<T> extends Dominators<T> {
   private final Map<Object, DominatorInfo> infoMap;
 
   @Override
-  protected DominatorInfo getInfo(T node) {
+  protected DominatorInfo getInfo(@Nullable T node) {
     if (!infoMap.containsKey(node)) infoMap.put(node, new DominatorInfo(node));
     return infoMap.get(node);
   }

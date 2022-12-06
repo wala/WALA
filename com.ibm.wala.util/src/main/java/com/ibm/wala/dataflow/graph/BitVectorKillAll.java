@@ -12,6 +12,8 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Just kills everything */
 public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
@@ -28,7 +30,8 @@ public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
    * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
    */
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
+  @NullUnmarked
+  public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs) {
     BitVectorVariable empty = new BitVectorVariable();
     if (!lhs.sameValue(empty)) {
       lhs.copyState(empty);

@@ -12,11 +12,12 @@ package com.ibm.wala.util.graph;
 
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** An object which tracks nodes with numbers. */
 public interface NumberedNodeManager<T> extends NodeManager<T> {
 
-  public abstract int getNumber(T N);
+  public abstract int getNumber(@Nullable T N);
 
   public abstract T getNode(int number);
 

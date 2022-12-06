@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A bit set mapping based on an object array. This is not terribly efficient, but is useful for
@@ -72,7 +73,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   }
 
   @Override
-  public int getMappedIndex(Object o) {
+  public int getMappedIndex(@Nullable Object o) {
     Integer I = map.get(o);
     if (I == null) {
       return -1;

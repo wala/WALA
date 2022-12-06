@@ -13,6 +13,7 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Set;
+import org.jspecify.annotations.NullUnmarked;
 
 /** Utilities for dealing with {@link IntSet}s */
 public class IntSetUtil {
@@ -20,6 +21,7 @@ public class IntSetUtil {
   public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME =
       "com.ibm.wala.mutableIntSetFactory";
 
+  @SuppressWarnings("NullAway.Init")
   private static MutableIntSetFactory<?> defaultIntSetFactory;
 
   static {
@@ -69,6 +71,7 @@ public class IntSetUtil {
    * @throws UnimplementedError if we haven't supported the set type yet.
    * @throws IllegalArgumentException if set == null
    */
+  @NullUnmarked
   public static MutableIntSet makeMutableCopy(IntSet set)
       throws IllegalArgumentException, UnimplementedError {
     if (set == null) {

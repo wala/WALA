@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Basic implementation of a numbered graph -- this implementation relies on nodes that carry
@@ -38,7 +39,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
   private int numberOfNodes = 0;
 
   @Override
-  public int getNumber(T N) {
+  public int getNumber(@Nullable T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
@@ -87,6 +88,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
         return nextCounter != -1;
       }
 
+      @Nullable
       @Override
       @SuppressWarnings("unchecked")
       public T next() {
@@ -188,7 +190,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
   @Override
-  public boolean containsNode(T n) {
+  public boolean containsNode(@Nullable T n) {
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }

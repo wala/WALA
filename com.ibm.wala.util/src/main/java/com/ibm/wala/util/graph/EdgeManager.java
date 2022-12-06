@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An object which manages edges in a directed graph.
@@ -26,7 +27,7 @@ public interface EdgeManager<T> {
    *
    * @return an {@link Iterator} over the immediate predecessor nodes of this Node.
    */
-  public Iterator<T> getPredNodes(T n);
+  public Iterator<T> getPredNodes(@Nullable T n);
 
   /**
    * Return the number of {@link #getPredNodes immediate predecessor} nodes of n
@@ -42,7 +43,7 @@ public interface EdgeManager<T> {
    *
    * @return an Iterator over the immediate successor nodes of n
    */
-  public Iterator<T> getSuccNodes(T n);
+  public Iterator<T> getSuccNodes(@Nullable T n);
 
   /**
    * Return the number of {@link #getSuccNodes immediate successor} nodes of this Node in the Graph
@@ -61,5 +62,5 @@ public interface EdgeManager<T> {
 
   public void removeOutgoingEdges(T node) throws UnsupportedOperationException;
 
-  public boolean hasEdge(T src, T dst);
+  public boolean hasEdge(@Nullable T src, @Nullable T dst);
 }

@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import org.jspecify.annotations.NullUnmarked;
 
 /**
  * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs. Instances are not
@@ -63,6 +64,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   /** */
+  @NullUnmarked
   @Override
   public void remove(long value) {
     if (elements != null) {
@@ -141,6 +143,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   /**
    * @throws UnimplementedError if not ( that instanceof com.ibm.wala.util.intset.SparseLongSet )
    */
+  @NullUnmarked
   @Override
   public void copySet(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
@@ -172,6 +175,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     }
   }
 
+  @NullUnmarked
   public void intersectWith(SparseLongSet set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");

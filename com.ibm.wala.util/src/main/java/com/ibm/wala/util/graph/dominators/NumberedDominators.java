@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph.dominators;
 
 import com.ibm.wala.util.graph.NumberedGraph;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
@@ -39,7 +40,7 @@ public class NumberedDominators<T> extends Dominators<T> {
 
   @SuppressWarnings("unchecked")
   @Override
-  protected final DominatorInfo getInfo(T node) {
+  protected final DominatorInfo getInfo(@Nullable T node) {
     assert node != null;
     return (DominatorInfo) infoMap[((NumberedGraph<T>) G).getNumber(node)];
   }

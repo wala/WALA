@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 
 /** An object which represents a set of classes read from a text file. */
 public class FileOfClasses extends SetOfClasses {
@@ -26,9 +27,9 @@ public class FileOfClasses extends SetOfClasses {
 
   private static final boolean DEBUG = false;
 
-  private Pattern pattern = null;
+  @Nullable private Pattern pattern = null;
 
-  private String regex = null;
+  @Nullable private String regex = null;
 
   private boolean needsCompile = false;
 
@@ -96,6 +97,7 @@ public class FileOfClasses extends SetOfClasses {
     needsCompile = true;
   }
 
+  @Nullable
   @Override
   public String toString() {
     return this.regex;

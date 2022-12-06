@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /** Basic functionality for a {@link Graph} that delegates node and edge management. */
 public abstract class AbstractGraph<T> implements Graph<T> {
@@ -51,7 +52,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object) */
   @Override
-  public Iterator<T> getPredNodes(T n) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n cannot be null");
     }
@@ -69,7 +70,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object) */
   @Override
-  public Iterator<T> getSuccNodes(T n) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(@Nullable T n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n cannot be null");
     }
@@ -96,7 +97,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   /** @see com.ibm.wala.util.graph.EdgeManager#hasEdge(java.lang.Object, java.lang.Object) */
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     if (src == null) {
       throw new IllegalArgumentException("src is null");
     }
@@ -178,7 +179,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
   @Override
-  public boolean containsNode(T n) {
+  public boolean containsNode(@Nullable T n) {
     if (n == null) {
       throw new IllegalArgumentException("n cannot be null");
     }

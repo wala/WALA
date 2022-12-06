@@ -14,6 +14,7 @@ import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import org.jspecify.annotations.Nullable;
 
 /** Operator OUT = (IN - kill) U gen */
 public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
@@ -34,7 +35,7 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+  public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
     if (rhs == null) {
       throw new IllegalArgumentException("rhs == null");

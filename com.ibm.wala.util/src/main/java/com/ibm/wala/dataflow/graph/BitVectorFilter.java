@@ -15,6 +15,8 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Operator OUT = IN - filterSet */
 public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
@@ -29,7 +31,8 @@ public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+  @NullUnmarked
+  public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
     if (rhs == null) {
       throw new IllegalArgumentException("rhs == null");

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
+import org.jspecify.annotations.Nullable;
 
 /** */
 public class StringTable extends Table<String> implements Cloneable {
@@ -91,7 +92,7 @@ public class StringTable extends Table<String> implements Cloneable {
    * @throws IllegalArgumentException if s is null
    */
   public static StringTable readFromStream(
-      InputStream s, Character commentToken, Character delimiter) throws IOException {
+      InputStream s, Character commentToken, @Nullable Character delimiter) throws IOException {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
@@ -141,7 +142,7 @@ public class StringTable extends Table<String> implements Cloneable {
     return line.charAt(0) == commentToken;
   }
 
-  private void populateRow(int row, String line, Character delimiter) {
+  private void populateRow(int row, String line, @Nullable Character delimiter) {
     StringTokenizer st =
         delimiter == null
             ? new StringTokenizer(line)
@@ -167,7 +168,7 @@ public class StringTable extends Table<String> implements Cloneable {
   }
 
   /** @param line a whitespace-delimited string of column names */
-  private void populateColumnHeadings(String line, Character delimiter) {
+  private void populateColumnHeadings(String line, @Nullable Character delimiter) {
     StringTokenizer st =
         delimiter == null
             ? new StringTokenizer(line)

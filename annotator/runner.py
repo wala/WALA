@@ -29,7 +29,7 @@ ANNOTATIONS = {
 }
 
 verbose = False
-downstream_enabled = True
+downstream_enabled = False
 
 args = []
 target = "com.ibm.wala.util"

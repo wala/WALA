@@ -19,6 +19,7 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** An object that delegates edge management to the nodes, {@link INodeWithNumberedEdges} */
 public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
@@ -61,7 +62,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(Object) */
   @Override
-  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
@@ -72,7 +73,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public IntSet getPredNodeNumbers(T node) {
+  public IntSet getPredNodeNumbers(@Nullable T node) {
     if (node == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
@@ -98,7 +99,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
 
   /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(Object) */
   @Override
-  public Iterator<T> getSuccNodes(T N) {
+  public Iterator<T> getSuccNodes(@Nullable T N) {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
@@ -165,7 +166,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) throws IllegalArgumentException {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) throws IllegalArgumentException {
     if (dst == null) {
       throw new IllegalArgumentException("dst == null");
     }
@@ -173,7 +174,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(T node) {
+  public IntSet getSuccNodeNumbers(@Nullable T node) {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }

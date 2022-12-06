@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Basic functionality for a graph that delegates node and edge management, and tracks node numbers
@@ -42,7 +43,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
 
   /** @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(Object) */
   @Override
-  public int getNumber(T N) {
+  public int getNumber(@Nullable T N) {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
@@ -59,14 +60,14 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T>
 
   /** @see com.ibm.wala.util.graph.NumberedEdgeManager#getPredNodeNumbers(java.lang.Object) */
   @Override
-  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(@Nullable T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
     return getEdgeManager().getPredNodeNumbers(node);
   }
 
   /** @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object) */
   @Override
-  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(@Nullable T node) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodeNumbers(node);
   }
 }

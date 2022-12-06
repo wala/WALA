@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.impl;
 import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /** A utility class. */
 public class DelegatingGraph<T> implements Graph<T> {
@@ -37,7 +38,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public boolean containsNode(T N) {
+  public boolean containsNode(@Nullable T N) {
     return delegate.containsNode(N);
   }
 
@@ -57,7 +58,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
@@ -67,12 +68,12 @@ public class DelegatingGraph<T> implements Graph<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(@Nullable T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     return delegate.hasEdge(src, dst);
   }
 

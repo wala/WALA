@@ -25,6 +25,8 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 public class ExtensionGraph<T> implements NumberedGraph<T> {
   private final NumberedGraph<T> original;
@@ -34,7 +36,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         private final Map<T, MutableIntSet> inEdges = HashMapFactory.make();
         private final Map<T, MutableIntSet> outEdges = HashMapFactory.make();
 
-        private Iterator<T> nodes(final T node, final Map<T, ? extends IntSet> extra) {
+        private Iterator<T> nodes(@Nullable final T node, final Map<T, ? extends IntSet> extra) {
           if (extra.containsKey(node)) {
             return new Iterator<T>() {
               private final IntIterator i = extra.get(node).intIterator();
@@ -60,7 +62,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public Iterator<T> getPredNodes(T n) {
+        public Iterator<T> getPredNodes(@Nullable T n) {
           Iterator<T> orig =
               (original.containsNode(n) ? original.getPredNodes(n) : EmptyIterator.<T>instance());
           return new CompoundIterator<>(orig, nodes(n, inEdges));
@@ -73,7 +75,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public Iterator<T> getSuccNodes(T n) {
+        public Iterator<T> getSuccNodes(@Nullable T n) {
           Iterator<T> orig =
               (original.containsNode(n) ? original.getSuccNodes(n) : EmptyIterator.<T>instance());
           return new CompoundIterator<>(orig, nodes(n, outEdges));
@@ -99,6 +101,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
           outEdges.get(src).add(getNumber(dst));
         }
 
+        @NullUnmarked
         @Override
         public void removeEdge(T src, T dst) throws UnsupportedOperationException {
           assert hasEdge(src, dst);
@@ -127,13 +130,13 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public boolean hasEdge(T src, T dst) {
+        public boolean hasEdge(@Nullable T src, @Nullable T dst) {
           return original.hasEdge(src, dst)
               || (outEdges.containsKey(src) && outEdges.get(src).contains(getNumber(dst)));
         }
 
         @Override
-        public IntSet getSuccNodeNumbers(T node) {
+        public IntSet getSuccNodeNumbers(@Nullable T node) {
           if (original.containsNode(node)) {
             if (outEdges.containsKey(node)) {
               MutableIntSet x = IntSetUtil.makeMutableCopy(original.getSuccNodeNumbers(node));
@@ -152,7 +155,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         }
 
         @Override
-        public IntSet getPredNodeNumbers(T node) {
+        public IntSet getPredNodeNumbers(@Nullable T node) {
           if (original.containsNode(node)) {
             if (inEdges.containsKey(node)) {
               MutableIntSet x = IntSetUtil.makeMutableCopy(original.getPredNodeNumbers(node));
@@ -203,12 +206,12 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public boolean containsNode(T n) {
+  public boolean containsNode(@Nullable T n) {
     return original.containsNode(n) || additionalNodes.containsNode(n);
   }
 
   @Override
-  public int getNumber(T N) {
+  public int getNumber(@Nullable T N) {
     if (original.containsNode(N)) {
       return original.getNumber(N);
     } else {
@@ -250,7 +253,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(T n) {
+  public Iterator<T> getPredNodes(@Nullable T n) {
     return edgeManager.getPredNodes(n);
   }
 
@@ -260,12 +263,12 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public IntSet getPredNodeNumbers(T node) {
+  public IntSet getPredNodeNumbers(@Nullable T node) {
     return edgeManager.getPredNodeNumbers(node);
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T n) {
+  public Iterator<T> getSuccNodes(@Nullable T n) {
     return edgeManager.getSuccNodes(n);
   }
 
@@ -275,7 +278,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(T node) {
+  public IntSet getSuccNodeNumbers(@Nullable T node) {
     return edgeManager.getSuccNodeNumbers(node);
   }
 
@@ -310,7 +313,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     return edgeManager.hasEdge(src, dst);
   }
 

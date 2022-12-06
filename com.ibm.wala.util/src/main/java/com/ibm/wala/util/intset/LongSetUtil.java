@@ -12,6 +12,8 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Utilities for dealing with LongSets */
 public class LongSetUtil {
@@ -19,7 +21,7 @@ public class LongSetUtil {
   public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME =
       "com.ibm.wala.mutableLongSetFactory";
 
-  private static MutableLongSetFactory defaultLongSetFactory;
+  @Nullable private static MutableLongSetFactory defaultLongSetFactory;
 
   static {
     MutableLongSetFactory defaultFactory = new MutableSparseLongSetFactory();
@@ -42,6 +44,7 @@ public class LongSetUtil {
     assert defaultLongSetFactory != null;
   }
 
+  @NullUnmarked
   public static MutableLongSet make() {
     return defaultLongSetFactory.make();
   }
@@ -60,6 +63,7 @@ public class LongSetUtil {
    *     com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
    * @throws IllegalArgumentException if set == null
    */
+  @Nullable
   public static MutableLongSet makeMutableCopy(LongSet set)
       throws IllegalArgumentException, UnimplementedError {
     if (set == null) {
@@ -84,7 +88,9 @@ public class LongSetUtil {
     return diff(A, B, LongSetUtil.getDefaultLongSetFactory());
   }
 
-  private static LongSet defaultSlowDiff(LongSet A, LongSet B, MutableLongSetFactory factory) {
+  @NullUnmarked
+  private static LongSet defaultSlowDiff(
+      LongSet A, LongSet B, @Nullable MutableLongSetFactory factory) {
     // TODO: this is slow ... optimize please.
     MutableLongSet result = factory.makeCopy(A);
     if (DEBUG) {
@@ -104,7 +110,7 @@ public class LongSetUtil {
   }
 
   /** Compute the asymmetric difference of two sets, a \ b. */
-  public static LongSet diff(LongSet A, LongSet B, MutableLongSetFactory factory) {
+  public static LongSet diff(LongSet A, LongSet B, @Nullable MutableLongSetFactory factory) {
     if (A == null) {
       throw new IllegalArgumentException("null A");
     }
@@ -174,6 +180,7 @@ public class LongSetUtil {
     }
   }
 
+  @Nullable
   public static MutableLongSetFactory getDefaultLongSetFactory() {
     return defaultLongSetFactory;
   }

@@ -2,14 +2,16 @@ package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   private class PrependItterator implements Iterator<T> {
     private boolean usedFirst = false;
     private final Iterator<T> original;
-    private T first;
+    @Nullable private T first;
 
-    public PrependItterator(Iterator<T> original, T first) {
+    public PrependItterator(Iterator<T> original, @Nullable T first) {
       super();
       this.original = original;
       this.first = first;
@@ -24,6 +26,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
       }
     }
 
+    @Nullable
     @Override
     public T next() {
       if (!usedFirst) {
@@ -52,7 +55,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(T n) {
+  public Iterator<T> getPredNodes(@Nullable T n) {
     if (original.hasEdge(n, n)) {
       return original.getPredNodes(n);
     } else {
@@ -70,7 +73,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T n) {
+  public Iterator<T> getSuccNodes(@Nullable T n) {
     if (original.hasEdge(n, n)) {
       return original.getSuccNodes(n);
     } else {
@@ -112,8 +115,9 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     original.removeOutgoingEdges(node);
   }
 
+  @NullUnmarked
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     if (src.equals(dst)) {
       return true;
     } else {
