@@ -7,7 +7,7 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 dependencies {
 	compileOnly (
-			"org.jspecify:jspecify:0.3.0-alpha-2"
+			"org.jspecify:jspecify:0.3.0-alpha-3"
 	)
 	testImplementation(
 			'junit:junit:4.13.2',
