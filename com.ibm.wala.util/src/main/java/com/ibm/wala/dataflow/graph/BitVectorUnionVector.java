@@ -13,8 +13,6 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
-import javax.annotation.Nullable;
-
 
 /** Operator lhs = lhs U rhs U v */
 public class BitVectorUnionVector extends UnaryOperator<BitVectorVariable> {

@@ -11,8 +11,6 @@
 package com.ibm.wala.util.graph;
 
 import com.ibm.wala.util.collections.SimpleVector;
-import javax.annotation.Nullable;
-
 
 /** A simple, extremely inefficient tree implementation */
 public class BasicTree<T> {
@@ -35,7 +33,6 @@ public class BasicTree<T> {
     return value;
   }
 
-  @Nullable
   public T getChildValue(int i) {
     if (children.get(i) == null) {
       return null;

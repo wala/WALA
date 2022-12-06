@@ -12,16 +12,11 @@ package com.ibm.wala.util.graph.traverse;
 
 import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T> {
 
   private static final long serialVersionUID = -5673397879499010863L;
   /** the graph being searched */
-  @Nullable
   private Graph<T> G;
 
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
@@ -32,7 +27,6 @@ abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T
     super.init(nodes);
   }
 
-  @NullUnmarked
   @Override
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);

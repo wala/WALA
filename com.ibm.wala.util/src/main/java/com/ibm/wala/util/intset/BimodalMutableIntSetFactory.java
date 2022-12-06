@@ -11,8 +11,6 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.UnimplementedError;
-import javax.annotation.Nullable;
-
 
 /** An object that creates some bimodal mutable int sets. */
 public class BimodalMutableIntSetFactory implements MutableIntSetFactory<BimodalMutableIntSet> {

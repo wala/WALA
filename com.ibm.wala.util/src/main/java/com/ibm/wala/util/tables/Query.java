@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
-import com.ibm.wala.qual.NullUnmarked;
-
 
 /** Misc SQL-like support for queries on tables */
 public class Query {
@@ -26,7 +24,6 @@ public class Query {
    *
    * @throws IllegalArgumentException if t == null
    */
-  @NullUnmarked
   public static <T> Collection<Map<String, T>> selectStarWhereEquals(
       Table<T> t, String column, T value) throws IllegalArgumentException {
     if (t == null) {

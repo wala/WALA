@@ -12,10 +12,6 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /**
  * A {@link BitVector} implementation of {@link MutableIntSet}.
@@ -43,7 +39,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     populationCount = UNDEFINED;
   }
 
-  public BitVectorIntSet(@Nullable IntSet S) throws IllegalArgumentException {
+  public BitVectorIntSet(IntSet S) throws IllegalArgumentException {
     if (S == null) {
       throw new IllegalArgumentException("S == null");
     }
@@ -94,7 +90,7 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   @Override
-  public boolean addAll(@Nullable IntSet set) {
+  public boolean addAll(IntSet set) {
     if (set instanceof BitVectorIntSet) {
       BitVector B = ((BitVectorIntSet) set).bitVector;
       int delta = bitVector.orWithDelta(B);
@@ -325,7 +321,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   /** @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet) */
   @Override
-  public boolean sameValue(@Nullable IntSet that) throws IllegalArgumentException, UnimplementedError {
+  public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
@@ -361,9 +357,8 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /** @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet) */
-  @NullUnmarked
   @Override
-  public boolean isSubset(@Nullable IntSet that) {
+  public boolean isSubset(IntSet that) {
     if (that instanceof BitVectorIntSet) {
       return bitVector.isSubset(((BitVectorIntSet) that).bitVector);
     } else if (that instanceof SparseIntSet) {

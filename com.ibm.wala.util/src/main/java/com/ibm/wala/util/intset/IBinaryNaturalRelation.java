@@ -11,8 +11,6 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.VerboseAction;
-import javax.annotation.Nullable;
-
 
 /** a relation R(x,y) where x &gt;= 0 */
 public interface IBinaryNaturalRelation extends VerboseAction, Iterable<IntPair> {

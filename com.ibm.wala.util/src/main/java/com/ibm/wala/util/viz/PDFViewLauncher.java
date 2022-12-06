@@ -13,8 +13,6 @@ package com.ibm.wala.util.viz;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.util.Arrays;
-import javax.annotation.Nullable;
-
 
 /**
  * Launch gsview on a postscript file
@@ -23,22 +21,18 @@ import javax.annotation.Nullable;
  */
 public class PDFViewLauncher {
 
-  @Nullable
   private Process process;
 
   /** Name of the postscript file to view */
-  @Nullable
   protected String pdffile = null;
 
   /** Path to ghostview executable */
-  @Nullable
   protected String gvExe = null;
 
   public PDFViewLauncher() {
     super();
   }
 
-  @Nullable
   public String getPDFFile() {
     return pdffile;
   }
@@ -47,7 +41,6 @@ public class PDFViewLauncher {
     pdffile = newPsfile;
   }
 
-  @Nullable
   public String getGvExe() {
     return gvExe;
   }
@@ -61,7 +54,6 @@ public class PDFViewLauncher {
     return super.toString() + ", psfile: " + pdffile + ", gvExe: " + gvExe + ')';
   }
 
-  @Nullable
   private WalaException exception = null;
 
   /** @see java.lang.Runnable#run() */
@@ -76,12 +68,10 @@ public class PDFViewLauncher {
     }
   }
 
-  @Nullable
   public WalaException getException() {
     return exception;
   }
 
-  @Nullable
   public Process getProcess() {
     return process;
   }

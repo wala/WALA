@@ -11,8 +11,6 @@
 package com.ibm.wala.util.intset;
 
 import java.io.Serializable;
-import javax.annotation.Nullable;
-
 
 /** Set of integers; not necessary mutable TODO: extract a smaller interface? */
 public interface IntSet extends Serializable {

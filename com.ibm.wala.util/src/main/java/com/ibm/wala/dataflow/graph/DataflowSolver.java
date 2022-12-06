@@ -20,10 +20,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 import java.util.Map;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** Iterative solver for a Killdall dataflow framework */
 public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultFixedPointSolver<V> {
@@ -85,7 +81,6 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
     buildEquations(true, false);
   }
 
-  @NullUnmarked
   public V getOut(Object node) {
     assert node != null;
     V v = node2Out.get(node);
@@ -93,17 +88,14 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
     return v;
   }
 
-  @NullUnmarked
   public V getIn(Object node) {
     return node2In.get(node);
   }
 
-  @Nullable
   public V getEdge(Object key) {
     return edge2Var.get(key);
   }
 
-  @Nullable
   public V getEdge(Object src, Object dst) {
     assert src != null;
     assert dst != null;
@@ -146,7 +138,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
      * record that variable (n1, in1) is the same as variable (n2,in2), where (x,true) = IN(X) and
      * (x,false) = OUT(X)
      */
-    public void union(@Nullable Object n1, @Nullable Object n2) {
+    public void union(Object n1, Object n2) {
       assert n1 != null;
       assert n2 != null;
       int x = map.getMappedIndex(n1);

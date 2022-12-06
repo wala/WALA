@@ -9,14 +9,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.jar.JarFile;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 public class RtJar {
 
-  @NullUnmarked
   public static JarFile getRtJar(Iterator<JarFile> x) {
     while (x.hasNext()) {
       JarFile JF = x.next();

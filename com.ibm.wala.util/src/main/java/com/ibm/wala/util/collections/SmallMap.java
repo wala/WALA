@@ -19,10 +19,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /**
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not
@@ -37,7 +33,6 @@ public class SmallMap<K, V> implements Map<K, V> {
   // this Map contains keysAndValues.length / 2 entries.
   // in the following array, entries 0 ... keysAndValues.length/2 - 1 are keys.
   // entries keysAndValues.length/2 .. keysAndValues.length are values.
-  @SuppressWarnings("NullAway.Init")
   private Object[] keysAndValues;
 
   /*
@@ -120,7 +115,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     return false;
   }
 
-  @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
   public V get(Object key) {
@@ -155,7 +149,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     }
   }
 
-  @Nullable
   @Override
   @SuppressWarnings({"unchecked", "unused"})
   public V put(Object key, Object value) {
@@ -188,7 +181,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  @NullUnmarked
   @Override
   public void clear() {
     keysAndValues = null;

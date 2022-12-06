@@ -13,8 +13,6 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.util.intset.IntSet;
-import javax.annotation.Nullable;
-
 
 /** Operator U(n) = U(n) n U(j) */
 public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorVariable> {

@@ -81,11 +81,11 @@ tasks.withType(JavaCompile).configureEach {
 			options.errorprone {
 				// for faster builds
 				disableAllChecks = true
-				error 'NullAway'
-				disable 'AnnotatorScanner'
+				warn 'NullAway'
+				warn 'AnnotatorScanner'
 				errorproneArgs.addAll(
 						"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
-						"-XepOpt:NullAway:SerializeFixMetadata=false",
+						"-XepOpt:NullAway:SerializeFixMetadata=true",
 						"-XepOpt:NullAway:FixSerializationConfigPath=" + nullaway_config,
 						"-XepOpt:AnnotatorScanner:ConfigPath=" + scanner_config,
 				)

@@ -16,10 +16,6 @@ import com.ibm.wala.util.collections.TwoLevelVector;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.Serializable;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /**
  * A relation between non-negative integers
@@ -126,7 +122,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
    *
    * @return true iff the relation changes as a result of this call.
    */
-  @NullUnmarked
   @Override
   public boolean add(int x, int y) throws IllegalArgumentException {
     if (x < 0) {
@@ -194,7 +189,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
      */
     private int nextIndex = -1;
 
-    @Nullable
     private IntIterator delegateIterator = null;
 
     TotalIterator() {
@@ -233,7 +227,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
       return nextX != -1;
     }
 
-    @NullUnmarked
     @Override
     public IntPair next() {
       IntPair result = null;
@@ -271,7 +264,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     return smallStore[0].get(x) != EMPTY_CODE;
   }
 
-  @NullUnmarked
   @Override
   public IntSet getRelated(int x) {
     if (DEBUG) {

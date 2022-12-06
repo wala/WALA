@@ -9,8 +9,6 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.util.intset;
-import javax.annotation.Nullable;
-
 
 /** Set of longs; not necessary mutable TODO: extract a smaller interface? */
 public interface LongSet {
@@ -26,7 +24,6 @@ public interface LongSet {
    *
    * @return a new IntSet which is the intersection of this and that
    */
-  @Nullable
   public LongSet intersection(LongSet that);
 
   /** @return true iff this set is empty */

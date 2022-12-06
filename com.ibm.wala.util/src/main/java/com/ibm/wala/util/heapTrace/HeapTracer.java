@@ -28,10 +28,6 @@ import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** Simple utility that uses reflection to trace memory */
 public class HeapTracer {
@@ -333,7 +329,7 @@ public class HeapTracer {
   private void traverseScalar(
       Field root,
       Object scalar,
-      @Nullable Object container,
+      Object container,
       Result result,
       IdentityHashMap<Object, Object> objectsVisited)
       throws IllegalArgumentException, IllegalAccessException {
@@ -385,7 +381,7 @@ public class HeapTracer {
       Field root,
       Field f,
       Object scalar,
-      @Nullable Object container,
+      Object container,
       IdentityHashMap<Object, Object> objectsVisited,
       Result result)
       throws IllegalArgumentException, IllegalAccessException {
@@ -500,7 +496,6 @@ public class HeapTracer {
    * @param instances instances to be considered roots of the heap traversal
    * @param traceStatics should all static fields be considered roots?
    */
-  @NullUnmarked
   public static HeapTracer.Result traceHeap(Collection<?> instances, boolean traceStatics) {
     try {
       System.gc();
@@ -556,7 +551,6 @@ public class HeapTracer {
       totalSize += s;
     }
 
-    @NullUnmarked
     @Override
     public String toString() {
       StringBuilder result = new StringBuilder();
@@ -580,7 +574,6 @@ public class HeapTracer {
        * @see java.util.Comparator#compare(java.lang.Object,
        * java.lang.Object)
        */
-      @NullUnmarked
       @Override
       public int compare(Object o1, Object o2) {
         Integer i1 = sizeCount.get(o1);
@@ -632,7 +625,6 @@ public class HeapTracer {
       return totalSize;
     }
 
-    @NullUnmarked
     @Override
     public String toString() {
       StringBuilder result = new StringBuilder();
@@ -666,7 +658,6 @@ public class HeapTracer {
        * @see java.util.Comparator#compare(java.lang.Object,
        * java.lang.Object)
        */
-      @NullUnmarked
       @Override
       public int compare(Field o1, Field o2) {
         Demographics d1 = roots.get(o1);

@@ -17,8 +17,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import java.util.Iterator;
-import javax.annotation.Nullable;
-
 
 /** View of a {@link NumberedGraph} in which some edges have been filtered out */
 public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {

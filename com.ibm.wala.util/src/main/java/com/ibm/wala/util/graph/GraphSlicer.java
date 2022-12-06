@@ -27,10 +27,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** Utilities related to simple graph subset operations. */
 public class GraphSlicer {
@@ -262,7 +258,6 @@ public class GraphSlicer {
             succs.put(N, getConnected(N, G::getSuccNodes));
           }
 
-          @NullUnmarked
           @Override
           public int getPredNodeCount(E N) {
             if (!preds.containsKey(N)) {
@@ -271,7 +266,6 @@ public class GraphSlicer {
             return preds.get(N).size();
           }
 
-          @NullUnmarked
           @Override
           public Iterator<E> getPredNodes(E N) {
             if (!preds.containsKey(N)) {
@@ -280,7 +274,6 @@ public class GraphSlicer {
             return preds.get(N).iterator();
           }
 
-          @NullUnmarked
           @Override
           public int getSuccNodeCount(E N) {
             if (!succs.containsKey(N)) {
@@ -289,7 +282,6 @@ public class GraphSlicer {
             return succs.get(N).size();
           }
 
-          @NullUnmarked
           @Override
           public Iterator<E> getSuccNodes(E N) {
             if (!succs.containsKey(N)) {
@@ -298,7 +290,6 @@ public class GraphSlicer {
             return succs.get(N).iterator();
           }
 
-          @NullUnmarked
           @Override
           public boolean hasEdge(E src, E dst) {
             if (!preds.containsKey(dst)) {

@@ -15,8 +15,6 @@ import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.intset.BitVector;
 import java.util.ArrayList;
 import java.util.Map;
-import javax.annotation.Nullable;
-
 
 /** */
 public class Table<T> {

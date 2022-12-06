@@ -10,8 +10,6 @@
  */
 
 package com.ibm.wala.util.intset;
-import javax.annotation.Nullable;
-
 
 /** An {@link IntSet} that can be changed. */
 public interface MutableIntSet extends IntSet {

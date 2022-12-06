@@ -11,8 +11,6 @@
 package com.ibm.wala.util.graph.dominators;
 
 import com.ibm.wala.util.graph.NumberedGraph;
-import javax.annotation.Nullable;
-
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This

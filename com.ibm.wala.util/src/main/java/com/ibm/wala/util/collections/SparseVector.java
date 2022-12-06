@@ -18,10 +18,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /**
  * An {@link IVector} implementation designed for low occupancy. Note that get() from this vector is
@@ -51,7 +47,6 @@ public class SparseVector<T> implements IVector<T>, Serializable {
   }
 
   /** @see com.ibm.wala.util.intset.IntVector#get(int) */
-  @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
   public T get(int x) {
@@ -69,7 +64,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
-  public void set(int x, @Nullable T value) {
+  public void set(int x, T value) {
     int index = indices.getIndex(x);
     if (index == -1) {
       indices.add(x);

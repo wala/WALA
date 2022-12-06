@@ -15,10 +15,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import javax.annotation.Nullable;
-import com.ibm.wala.qual.NullUnmarked;
-
-
 
 /** A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable */
 public class SparseIntSet implements IntSet {
@@ -38,7 +34,6 @@ public class SparseIntSet implements IntSet {
   // TODO: I'm not thrilled with exposing these to subclasses, but
   // it seems expedient for now.
   /** The backing store of int arrays */
-  @SuppressWarnings("NullAway.Init")
   protected int[] elements;
 
   /** The number of entries in the backing store that are valid. */
@@ -62,7 +57,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /** Subclasses should use this with extreme care. */
-  @NullUnmarked
   public SparseIntSet() {
     elements = null;
     this.size = 0;
@@ -72,7 +66,6 @@ public class SparseIntSet implements IntSet {
     cloneState(S);
   }
 
-  @NullUnmarked
   private void cloneState(SparseIntSet S) {
     if (S.elements != null) {
       elements = S.elements.clone();
@@ -460,7 +453,7 @@ public class SparseIntSet implements IntSet {
   }
 
   @Override
-  public boolean isSubset(@Nullable IntSet that) {
+  public boolean isSubset(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("null that");
     }

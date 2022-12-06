@@ -16,8 +16,6 @@ import com.ibm.wala.util.intset.MutableMapping;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-
 
 /** An object which manages node numbers via a mapping. */
 public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Serializable {

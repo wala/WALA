@@ -13,8 +13,6 @@ package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
-import javax.annotation.Nullable;
-
 
 /** An operator of the form lhs = op */
 public abstract class NullaryOperator<T extends IVariable<T>> extends AbstractOperator<T> {

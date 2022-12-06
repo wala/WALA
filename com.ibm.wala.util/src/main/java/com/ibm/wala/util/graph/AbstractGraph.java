@@ -13,8 +13,6 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import javax.annotation.Nullable;
-
 
 /** Basic functionality for a {@link Graph} that delegates node and edge management. */
 public abstract class AbstractGraph<T> implements Graph<T> {
