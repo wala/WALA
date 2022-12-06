@@ -15,13 +15,15 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
+
 /** A {@code FilterIterator} filters an {@code Iterator} to generate a new one. */
 public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<? extends T> i;
 
   final Predicate<? super T> f;
 
-  @Nullable private T next = null;
+  @Nullable
+  private T next = null;
 
   private boolean done = false;
 

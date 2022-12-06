@@ -14,13 +14,15 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.annotation.Nullable;
 
+
 /**
  * A singleton iterator for an object which is guaranteed to be not-null. Exploiting this invariant
  * allows this class to be slightly more efficient than Collections.iterator()
  */
 public class NonNullSingletonIterator<T> implements Iterator<T> {
 
-  @Nullable private T it;
+  @Nullable
+  private T it;
 
   /** @param o the single object in this collection, must be non-null */
   public NonNullSingletonIterator(@Nullable T o) {

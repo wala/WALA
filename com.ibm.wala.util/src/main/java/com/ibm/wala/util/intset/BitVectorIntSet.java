@@ -10,10 +10,12 @@
  */
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * A {@link BitVector} implementation of {@link MutableIntSet}.
@@ -323,8 +325,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   /** @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet) */
   @Override
-  public boolean sameValue(@Nullable IntSet that)
-      throws IllegalArgumentException, UnimplementedError {
+  public boolean sameValue(@Nullable IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }

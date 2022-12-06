@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.util.collections;
-
 import javax.annotation.Nullable;
+
 
 /**
  * simple interface for a vector.

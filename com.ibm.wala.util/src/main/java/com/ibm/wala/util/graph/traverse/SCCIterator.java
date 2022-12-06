@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.annotation.Nullable;
 
+
 /**
  * This class computes strongly connected components for a Graph (or a subset of it). It does not
  * store the SCCs in any lookaside structure, but rather simply generates an enumeration of them.

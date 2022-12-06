@@ -10,13 +10,15 @@
  */
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * This implementation of {@link Map} chooses between one of two implementations, depending on the
@@ -31,7 +33,8 @@ public class BimodalMap<K, V> implements Map<K, V> {
   private final int cutOff;
 
   /** The implementation we delegate to */
-  @Nullable private Map<K, V> backingStore;
+  @Nullable
+  private Map<K, V> backingStore;
 
   /**
    * @param cutoff the map size at which to switch from the small map implementation to the large

@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import com.ibm.wala.qual.Initializer;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -18,7 +17,10 @@ import com.ibm.wala.util.graph.Graph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import com.ibm.wala.qual.Initializer;
 import javax.annotation.Nullable;
+
+
 
 /**
  * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes

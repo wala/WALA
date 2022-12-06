@@ -15,10 +15,12 @@ import java.io.IOException;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
+
 /** A generic process launcher */
 public class BasicLauncher extends Launcher {
 
-  @Nullable protected String cmd;
+  @Nullable
+  protected String cmd;
 
   public BasicLauncher(boolean captureOutput, boolean captureErr, Logger logger) {
     super(captureOutput, captureErr, logger);

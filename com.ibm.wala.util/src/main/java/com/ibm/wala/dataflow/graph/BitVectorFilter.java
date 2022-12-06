@@ -15,6 +15,8 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import javax.annotation.Nullable;
+
 
 /** Operator OUT = IN - filterSet */
 public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {

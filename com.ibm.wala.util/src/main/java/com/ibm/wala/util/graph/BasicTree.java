@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.collections.SimpleVector;
 import javax.annotation.Nullable;
 
+
 /** A simple, extremely inefficient tree implementation */
 public class BasicTree<T> {
 

@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import javax.annotation.Nullable;
 
+
 /**
  * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes
  * of the graph in order of increasing discover time. This class follows the outNodes of the graph

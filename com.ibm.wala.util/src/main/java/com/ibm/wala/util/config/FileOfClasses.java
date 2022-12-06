@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
+
 /** An object which represents a set of classes read from a text file. */
 public class FileOfClasses extends SetOfClasses {
 
@@ -27,9 +28,11 @@ public class FileOfClasses extends SetOfClasses {
 
   private static final boolean DEBUG = false;
 
-  @Nullable private Pattern pattern = null;
+  @Nullable
+  private Pattern pattern = null;
 
-  @Nullable private String regex = null;
+  @Nullable
+  private String regex = null;
 
   private boolean needsCompile = false;
 

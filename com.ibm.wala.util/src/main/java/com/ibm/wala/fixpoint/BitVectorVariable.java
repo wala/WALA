@@ -16,10 +16,12 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import javax.annotation.Nullable;
 
+
 /** A bit vector variable for dataflow analysis. */
 public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
-  @Nullable private MutableSharedBitVectorIntSet V;
+  @Nullable
+  private MutableSharedBitVectorIntSet V;
 
   public BitVectorVariable() {}
 

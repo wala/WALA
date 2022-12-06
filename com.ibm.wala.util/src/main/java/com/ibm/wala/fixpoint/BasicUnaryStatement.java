@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.fixpoint;
-
 import javax.annotation.Nullable;
+
 
 /** An implementation of UnaryStatement that carries its operator explicitly */
 public class BasicUnaryStatement<T extends IVariable<T>> extends UnaryStatement<T> {

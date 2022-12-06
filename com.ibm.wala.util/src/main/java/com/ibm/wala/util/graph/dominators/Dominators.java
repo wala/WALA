@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.graph.dominators;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -29,6 +28,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
@@ -97,7 +99,8 @@ public abstract class Dominators<T> {
   /** return an Iterator over all nodes that dominate node */
   public Iterator<T> dominators(final T node) {
     return new Iterator<T>() {
-      @Nullable private T current = node;
+      @Nullable
+      private T current = node;
 
       @Override
       public void remove() {
@@ -423,12 +426,14 @@ public abstract class Dominators<T> {
     /*
      * The result of this computation: the immediate dominator of this node
      */
-    @Nullable private T dominator;
+    @Nullable
+    private T dominator;
 
     /*
      * The parent node in the DFS tree used in dominator computation
      */
-    @Nullable private T parent;
+    @Nullable
+    private T parent;
 
     /*
      * the ``semi-dominator,'' which starts as the DFS number in step 1
@@ -443,12 +448,14 @@ public abstract class Dominators<T> {
     /*
      * the labels used in the fast union-find structure
      */
-    @Nullable private T label;
+    @Nullable
+    private T label;
 
     /*
      * ancestor for fast union-find data structure
      */
-    @Nullable private T ancestor;
+    @Nullable
+    private T ancestor;
 
     /*
      * the size used by the fast union-find structure
@@ -458,7 +465,8 @@ public abstract class Dominators<T> {
     /*
      * the child used by the fast union-find structure
      */
-    @Nullable private T child;
+    @Nullable
+    private T child;
 
     DominatorInfo(T node) {
       semiDominator = 0;

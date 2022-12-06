@@ -1,6 +1,5 @@
 package com.ibm.wala.util.io;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -10,6 +9,10 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.jar.JarFile;
+import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 public class RtJar {
 

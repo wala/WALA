@@ -10,11 +10,13 @@
  */
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.qual.NullUnmarked;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** simple implementation of IVector */
 public class SimpleVector<T> implements IVector<T> {

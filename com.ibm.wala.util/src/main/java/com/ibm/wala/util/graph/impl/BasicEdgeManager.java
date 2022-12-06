@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
+
 
 /**
  * Simple implementation of an {@link com.ibm.wala.util.graph.EdgeManager}. Does not support edge

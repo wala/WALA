@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
+
 /**
  * Launch gsview on a postscript file
  *
@@ -22,13 +23,16 @@ import javax.annotation.Nullable;
  */
 public class PDFViewLauncher {
 
-  @Nullable private Process process;
+  @Nullable
+  private Process process;
 
   /** Name of the postscript file to view */
-  @Nullable protected String pdffile = null;
+  @Nullable
+  protected String pdffile = null;
 
   /** Path to ghostview executable */
-  @Nullable protected String gvExe = null;
+  @Nullable
+  protected String gvExe = null;
 
   public PDFViewLauncher() {
     super();
@@ -57,7 +61,8 @@ public class PDFViewLauncher {
     return super.toString() + ", psfile: " + pdffile + ", gvExe: " + gvExe + ')';
   }
 
-  @Nullable private WalaException exception = null;
+  @Nullable
+  private WalaException exception = null;
 
   /** @see java.lang.Runnable#run() */
   public void run() {

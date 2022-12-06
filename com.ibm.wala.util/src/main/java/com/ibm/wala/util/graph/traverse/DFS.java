@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -28,6 +27,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** utilities related to depth-first search. */
 public class DFS {

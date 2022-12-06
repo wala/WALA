@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
+
 /**
  * A bit set mapping based on an immutable object array. This is not terribly efficient, but is
  * useful for prototyping.

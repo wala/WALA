@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
+
 /** A Java process launcher */
 public class JavaLauncher extends Launcher {
 
@@ -79,10 +80,12 @@ public class JavaLauncher extends Launcher {
   private final List<String> xtraClasspath = new ArrayList<>();
 
   /** A {@link Thread} which spins and drains stdout of the running process. */
-  @Nullable private Thread stdOutDrain;
+  @Nullable
+  private Thread stdOutDrain;
 
   /** A {@link Thread} which spins and drains stderr of the running process. */
-  @Nullable private Thread stdErrDrain;
+  @Nullable
+  private Thread stdErrDrain;
 
   /** Absolute path of the 'java' executable to use. */
   private String javaExe;
@@ -91,7 +94,8 @@ public class JavaLauncher extends Launcher {
   private final List<String> vmArgs = new ArrayList<>();
 
   /** The last process returned by a call to start() on this object. */
-  @Nullable private Process lastProcess;
+  @Nullable
+  private Process lastProcess;
 
   private JavaLauncher(
       String programArgs,

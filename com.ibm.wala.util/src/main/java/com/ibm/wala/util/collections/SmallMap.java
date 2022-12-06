@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -21,6 +20,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not

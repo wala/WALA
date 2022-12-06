@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.collections.TwoLevelVector;
@@ -18,6 +17,9 @@ import com.ibm.wala.util.debug.Assertions;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /**
  * A relation between non-negative integers
@@ -192,7 +194,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
      */
     private int nextIndex = -1;
 
-    @Nullable private IntIterator delegateIterator = null;
+    @Nullable
+    private IntIterator delegateIterator = null;
 
     TotalIterator() {
       advanceX();

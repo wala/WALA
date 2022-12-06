@@ -9,8 +9,8 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.util.intset;
-
 import javax.annotation.Nullable;
+
 
 /** Set of longs; not necessary mutable TODO: extract a smaller interface? */
 public interface LongSet {

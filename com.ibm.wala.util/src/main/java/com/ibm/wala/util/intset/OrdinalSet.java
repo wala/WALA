@@ -10,18 +10,21 @@
  */
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** A Set backed by a set of integers. */
 public class OrdinalSet<T> implements Iterable<T> {
 
-  @Nullable private final IntSet S;
+  @Nullable
+  private final IntSet S;
 
   private final OrdinalSetMapping<T> mapping;
 

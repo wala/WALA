@@ -9,9 +9,10 @@
  *     IBM Corporation - initial API and implementation
  */
 package com.ibm.wala.fixpoint;
-
-import com.ibm.wala.qual.NullUnmarked;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** Represents a single step, restricted to a unary operator. */
 public abstract class UnaryStatement<T extends IVariable<T>>

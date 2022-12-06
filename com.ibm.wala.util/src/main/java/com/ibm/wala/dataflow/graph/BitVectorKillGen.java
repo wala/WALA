@@ -14,6 +14,8 @@ import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import javax.annotation.Nullable;
+
 
 /** Operator OUT = (IN - kill) U gen */
 public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {

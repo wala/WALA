@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.heapTrace;
 
-import com.ibm.wala.qual.NullUnmarked;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -30,6 +29,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 import javax.annotation.Nullable;
+import com.ibm.wala.qual.NullUnmarked;
+
+
 
 /** Simple utility that uses reflection to trace memory */
 public class HeapTracer {

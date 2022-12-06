@@ -12,6 +12,8 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import javax.annotation.Nullable;
+
 
 /** Just kills everything */
 public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
