@@ -150,7 +150,7 @@ project.tasks.named('check').configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
-	if (useErrorProne) { options.compilerArgs += '-Werror' }
+	options.compilerArgs += '-Werror'
 }
 
 tasks.withType(JavaCompileUsingEcj).configureEach {
