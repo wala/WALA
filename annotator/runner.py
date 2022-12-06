@@ -23,9 +23,9 @@ MODULES = {
 }
 
 ANNOTATIONS = {
-  "NULLABLE": "javax.annotation.Nullable",
-  "INITIALIZER": "com.ibm.wala.qual.Initializer",
-  "NULLUNMARKED": "com.ibm.wala.qual.NullUnmarked"
+  "NULLABLE": "org.jspecify.Nullable",
+  "INITIALIZER": "com.facebook.infer.annotation.Initializer",
+  "NULLUNMARKED": "org.jspecify.NullUnmarked"
 }
 
 verbose = False
