@@ -7,8 +7,6 @@ eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 dependencies {
 	compileOnly (
-			// to get `@Initializer` annotation.
-			"com.facebook.infer.annotation:infer-annotation:0.11.0",
 			"org.jspecify:jspecify:0.3.0-alpha-2"
 	)
 	testImplementation(

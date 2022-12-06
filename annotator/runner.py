@@ -24,7 +24,7 @@ MODULES = {
 
 ANNOTATIONS = {
   "NULLABLE": "org.jspecify.Nullable",
-  "INITIALIZER": "com.facebook.infer.annotation.Initializer",
+  "INITIALIZER": "com.ibm.wala.Initializer",
   "NULLUNMARKED": "org.jspecify.NullUnmarked"
 }
 
