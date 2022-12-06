@@ -23,9 +23,9 @@ MODULES = {
 }
 
 ANNOTATIONS = {
-  "NULLABLE": "org.jspecify.Nullable",
+  "NULLABLE": "org.jspecify.annotations.Nullable",
   "INITIALIZER": "com.ibm.wala.Initializer",
-  "NULLUNMARKED": "org.jspecify.NullUnmarked"
+  "NULLUNMARKED": "org.jspecify.annotations.NullUnmarked"
 }
 
 verbose = False
