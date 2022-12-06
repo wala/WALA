@@ -17,7 +17,6 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	// to get r8
 	maven {
@@ -28,43 +27,17 @@ repositories {
 // only use Error Prone on JDK 9+ JVMs
 final useErrorProne = JavaVersion.current().isJava9Compatible()
 
-// NullAway Annotator target.
-final annotatorTarget = System.getenv('ANNOTATOR_TARGET')
-
-def requiresAnnotatorConfiguration(target) {
-	var nullaway_excluded = [
-			"com.ibm.wala.tests.ide_feature",
-			"com.ibm.wala.cast:cast",
-			"com.ibm.wala.cast:xlator_test",
-			"com.ibm.wala.cast:smoke_main",
-			"com.ibm.wala-repository",
-			"com.ibm.wala.cast.js.html.nu_validator",
-			"com.ibm.wala.ide.jdt.test",
-			"com.ibm.wala.ide.jsdt.tests",
-			"com.ibm.wala.ide.tests",
-			"com.ibm.wala.qual"
-	]
-	if(target == null){
-		return false
-	}
-	if(nullaway_excluded.contains(project.getName())){
-		return false
-	}
-	if(project.getName() == "com.ibm.wala.librarymodelsloader"){
-		return false
-	}
-	return true
+// checks if NullAway should be used.
+def useNullAway(project) {
+	final nullawayEnrolledModules = ["com.ibm.wala.util"]
+	return nullawayEnrolledModules.contains(project.name)
 }
 
 dependencies {
 	if (useErrorProne) {
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
-		if(requiresAnnotatorConfiguration(annotatorTarget)){
-			annotationProcessor "com.uber.nullaway:nullaway:0.10.5"
-			annotationProcessor "edu.ucr.cs.riple.annotator:annotator-scanner:1.3.4"
-		}
-		if(project.getName() != "com.ibm.wala.librarymodelsloader"){
-			annotationProcessor project(':com.ibm.wala.librarymodelsloader')
+		if(useNullAway(project)){
+			annotationProcessor 'com.uber.nullaway:nullaway:0.10.5'
 		}
 	} else {
 		// We disable Error Prone for pre JDK 9+, but we still need to set this dependency, as
@@ -74,48 +47,35 @@ dependencies {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	var nullaway_config = new File(project.getProjectDir(), "config/nullaway.xml")
-	var scanner_config = new File(project.getProjectDir(), "config/scanner.xml")
 	if (useErrorProne) {
-		if(requiresAnnotatorConfiguration(annotatorTarget)){
-			options.errorprone {
-				// for faster builds
-				disableAllChecks = true
+		options.errorprone {
+			// don't run warning-level checks by default as they add too much noise to build output
+			// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
+			// we need to customize the level of at least one specific check to make this flag work
+			disableAllWarnings = true
+			// warning-level checks upgraded to error, since we've fixed all the warnings
+			error 'UnnecessaryParentheses'
+			error 'UnusedVariable'
+			error 'JdkObsolete'
+			// checks we do not intend to try to fix in the near-term:
+			// Just too many of these; proper Javadoc would be a great long-term goal
+			disable 'MissingSummary'
+			// WALA has many optimizations involving using == to check reference equality.  They
+			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+			// that could introduce bugs
+			disable 'ReferenceEquality'
+			if(useNullAway(project)){
 				error 'NullAway'
-				disable 'AnnotatorScanner'
 				errorproneArgs.addAll(
-						"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
-						"-XepOpt:NullAway:SerializeFixMetadata=false",
-						"-XepOpt:NullAway:FixSerializationConfigPath=" + nullaway_config,
-						"-XepOpt:AnnotatorScanner:ConfigPath=" + scanner_config,
+					"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
 				)
 			}
-			options.compilerArgs << "-Xmaxerrs" << "100000"
-			options.compilerArgs << "-Xmaxwarns" << "100000"
-		}else{
-			options.errorprone {
-				// don't run warning-level checks by default as they add too much noise to build output
-				// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
-				// we need to customize the level of at least one specific check to make this flag work
-				disableAllWarnings = true
-				// warning-level checks upgraded to error, since we've fixed all the warnings
-				error 'UnnecessaryParentheses'
-				error 'UnusedVariable'
-				error 'JdkObsolete'
-				// checks we do not intend to try to fix in the near-term:
-				// Just too many of these; proper Javadoc would be a great long-term goal
-				disable 'MissingSummary'
-				// WALA has many optimizations involving using == to check reference equality.  They
-				// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
-				// that could introduce bugs
-				disable 'ReferenceEquality'
-				// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-				// check name to the one you want to patch
-//			    errorproneArgs.addAll(
-//					    "-XepPatchChecks:UnnecessaryParentheses",
-//					    "-XepPatchLocation:IN_PLACE"
-//			    )
-			}
+            // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+			// check name to the one you want to patch
+//			errorproneArgs.addAll(
+//					"-XepPatchChecks:UnnecessaryParentheses",
+//					"-XepPatchLocation:IN_PLACE"
+//			)
 		}
 	} else {
 		options.errorprone.enabled = false
@@ -190,9 +150,7 @@ project.tasks.named('check').configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
-	if(!requiresAnnotatorConfiguration(annotatorTarget)){
-		options.compilerArgs += '-Werror'
-	}
+	options.compilerArgs += '-Werror'
 }
 
 tasks.withType(JavaCompileUsingEcj).configureEach {
