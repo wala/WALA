@@ -72,7 +72,7 @@ tasks.withType(JavaCompile).configureEach {
 					)
 				}
 			}
-            // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
 //			errorproneArgs.addAll(
 //					"-XepPatchChecks:UnnecessaryParentheses",
