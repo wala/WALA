@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  */
 
-package com.ibm.wala;
+package com.ibm.wala.qual;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

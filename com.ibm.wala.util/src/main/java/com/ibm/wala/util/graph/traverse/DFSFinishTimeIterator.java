@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import com.ibm.wala.Initializer;
+import com.ibm.wala.qual.Initializer;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
