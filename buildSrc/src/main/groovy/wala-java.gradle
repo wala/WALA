@@ -65,10 +65,12 @@ tasks.withType(JavaCompile).configureEach {
 			// that could introduce bugs
 			disable 'ReferenceEquality'
 			if(useNullAway(project)){
-				error 'NullAway'
-				errorproneArgs.addAll(
-					"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
-				)
+				if (!name.toLowerCase().contains("test")) {
+					error 'NullAway'
+					errorproneArgs.addAll(
+							"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
+					)
+				}
 			}
             // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
