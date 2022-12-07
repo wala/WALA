@@ -36,7 +36,7 @@ def useNullAway(project) {
 dependencies {
 	if (useErrorProne) {
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
-		if(useNullAway(project)){
+		if (useNullAway(project)) {
 			annotationProcessor 'com.uber.nullaway:nullaway:0.10.5'
 		}
 	} else {
@@ -64,7 +64,7 @@ tasks.withType(JavaCompile).configureEach {
 			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
 			// that could introduce bugs
 			disable 'ReferenceEquality'
-			if(useNullAway(project)){
+			if (useNullAway(project)) {
 				if (!name.toLowerCase().contains("test")) {
 					error 'NullAway'
 					errorproneArgs.addAll(
