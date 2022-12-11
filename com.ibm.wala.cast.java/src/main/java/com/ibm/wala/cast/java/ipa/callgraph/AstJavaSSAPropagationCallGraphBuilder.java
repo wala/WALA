@@ -180,7 +180,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
       } else {
         system.newSideEffect(
-            new UnaryOperator<PointsToSetVariable>() {
+            new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
                 IntSetVariable<?> tv = rhs;

@@ -117,7 +117,7 @@ public class FlowGraph implements Iterable<Vertex> {
             graph,
             t ->
                 t.accept(
-                    new AbstractVertexVisitor<Boolean>() {
+                    new AbstractVertexVisitor<>() {
                       @Override
                       public Boolean visitVertex() {
                         return true;
@@ -180,7 +180,7 @@ public class FlowGraph implements Iterable<Vertex> {
   public PointerAnalysis<ObjectVertex> getPointerAnalysis(
       final CallGraph cg, final IAnalysisCacheView cache, final IProgressMonitor monitor)
       throws CancelException {
-    return new PointerAnalysis<ObjectVertex>() {
+    return new PointerAnalysis<>() {
 
       private final Map<Pair<PrototypeField, ObjectVertex>, PrototypeFieldVertex> proto =
           HashMapFactory.make();

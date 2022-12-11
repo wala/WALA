@@ -97,7 +97,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * abstraction.
    */
   private NumberedEdgeManager<T> constructGraphEdges(final Map<T, Set<T>> forwardEdges) {
-    return new NumberedEdgeManager<T>() {
+    return new NumberedEdgeManager<>() {
       final Map<T, Set<T>> backwardEdges = HashMapFactory.make(forwardEdges.size());
 
       {

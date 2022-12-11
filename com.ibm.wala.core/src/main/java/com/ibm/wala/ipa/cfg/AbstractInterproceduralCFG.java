@@ -56,7 +56,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
 
   /** Graph implementation we delegate to. */
   private final NumberedGraph<BasicBlockInContext<T>> g =
-      new SlowSparseNumberedGraph<BasicBlockInContext<T>>(2) {
+      new SlowSparseNumberedGraph<>(2) {
         private static final long serialVersionUID = 1L;
 
         @Override

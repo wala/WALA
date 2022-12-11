@@ -36,7 +36,7 @@ public class CAstFunctions {
   }
 
   public static Iterator<CAstNode> iterateNodes(final CAstNode tree) {
-    return new DFSDiscoverTimeIterator<CAstNode>() {
+    return new DFSDiscoverTimeIterator<>() {
 
       private static final long serialVersionUID = -627203481092871529L;
       private final Map<Object, Iterator<? extends CAstNode>> pendingChildren =
@@ -54,7 +54,7 @@ public class CAstFunctions {
 
       @Override
       protected Iterator<CAstNode> getConnected(final CAstNode n) {
-        return new Iterator<CAstNode>() {
+        return new Iterator<>() {
           private int i = 0;
 
           @Override

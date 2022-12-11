@@ -208,7 +208,7 @@ public class LiveAnalysis {
               @Override
               public ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable>
                   getTransferFunctionProvider() {
-                return new ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable>() {
+                return new ITransferFunctionProvider<>() {
 
                   @Override
                   public boolean hasNodeTransferFunctions() {

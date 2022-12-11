@@ -116,7 +116,7 @@ public class GraphDataflowTest extends WalaTestCase {
   public static String solveNodeOnly(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions =
-        new ITransferFunctionProvider<String, BitVectorVariable>() {
+        new ITransferFunctionProvider<>() {
 
           @Override
           public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
@@ -154,7 +154,7 @@ public class GraphDataflowTest extends WalaTestCase {
   public static String solveNodeEdge(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions =
-        new ITransferFunctionProvider<String, BitVectorVariable>() {
+        new ITransferFunctionProvider<>() {
 
           @Override
           public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
