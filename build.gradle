@@ -29,6 +29,15 @@ ext.osName = System.getProperty('os.name')
 ext.archName = System.getProperty('os.arch')
 ext.isWindows = osName.startsWith('Windows ')
 
+final currentJavaVersion = JavaVersion.current()
+if (!currentJavaVersion.java11Compatible) {
+	logger.error("""\
+Gradle is running on a Java $currentJavaVersion JVM, which is not compatible with Java 11. Build \
+failures are likely. For advice on changing JVMs, visit \
+<https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the \
+`org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable. \
+""")
+}
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -39,11 +48,8 @@ ext.isWindows = osName.startsWith('Windows ')
 group name
 version VERSION_NAME
 
-// version of Eclipse JARs to use for Eclipse-integrated WALA components.  On ARM-based Mac OS
-// machines, we use a more recent Eclipse version which includes an SWT library built for the
-// platform.  We only use the recent version on ARM-based Macs as it requires JDK 11, and we would
-// like to preserve JDK 8 compatibility on other platforms.
-ext.eclipseVersion = (osName.equals('Mac OS X') && archName.equals('aarch64')) ? '4.21.0' : '4.14.0'
+// version of Eclipse JARs to use for Eclipse-integrated WALA components.
+ext.eclipseVersion = '4.21.0'
 ext.eclipseWstJsdtVersion = '1.0.201.v2010012803'
 
 
