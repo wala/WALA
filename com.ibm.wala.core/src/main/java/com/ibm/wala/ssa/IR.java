@@ -575,7 +575,7 @@ public abstract class IR implements IRView {
   /** @return an {@link Iterator} of all the call sites ( {@link CallSiteReference}s ) in this IR */
   @Override
   public Iterator<CallSiteReference> iterateCallSites() {
-    return new Iterator<CallSiteReference>() {
+    return new Iterator<>() {
       private final int limit = callSiteMapping.maxKeyValue();
 
       private int i = -1;

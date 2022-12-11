@@ -72,7 +72,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
     final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys();
     final NumberedNodeManager<Object> nodeMgr =
-        new NumberedNodeManager<Object>() {
+        new NumberedNodeManager<>() {
           @Override
           public Iterator<Object> iterator() {
             return new CompoundIterator<>(
@@ -141,9 +141,9 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     final IntFunction<Object> toNode = nodeMgr::getNode;
 
     this.G =
-        new AbstractNumberedGraph<Object>() {
+        new AbstractNumberedGraph<>() {
           private final NumberedEdgeManager<Object> edgeMgr =
-              new NumberedEdgeManager<Object>() {
+              new NumberedEdgeManager<>() {
                 @Override
                 public Iterator<Object> getPredNodes(Object N) {
                   int n = nodeMgr.getNumber(N);

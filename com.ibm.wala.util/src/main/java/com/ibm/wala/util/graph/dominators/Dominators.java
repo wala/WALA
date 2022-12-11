@@ -93,7 +93,7 @@ public abstract class Dominators<T> {
 
   /** return an Iterator over all nodes that dominate node */
   public Iterator<T> dominators(final T node) {
-    return new Iterator<T>() {
+    return new Iterator<>() {
       private T current = node;
 
       @Override
@@ -118,7 +118,7 @@ public abstract class Dominators<T> {
 
   /** return the dominator tree, which has an edge from n to n' if n dominates n' */
   public Graph<T> dominatorTree() {
-    return new AbstractGraph<T>() {
+    return new AbstractGraph<>() {
       @Override
       protected NodeManager<T> getNodeManager() {
         return G;
@@ -130,7 +130,7 @@ public abstract class Dominators<T> {
       }
 
       private final EdgeManager<T> edges =
-          new EdgeManager<T>() {
+          new EdgeManager<>() {
             private final Map<T, Set<T>> nextMap = HashMapFactory.make();
 
             {
@@ -234,7 +234,7 @@ public abstract class Dominators<T> {
     reachableNodeCount = 0;
 
     DFSDiscoverTimeIterator<T> dfs =
-        new SlowDFSDiscoverTimeIterator<T>(G, root) {
+        new SlowDFSDiscoverTimeIterator<>(G, root) {
           public static final long serialVersionUID = 88831771771711L;
 
           @Override

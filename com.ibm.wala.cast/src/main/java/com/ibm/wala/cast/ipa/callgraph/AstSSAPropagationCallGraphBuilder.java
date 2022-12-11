@@ -517,7 +517,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       } else {
         final String hack = fieldName;
         system.newSideEffect(
-            new UnaryOperator<PointsToSetVariable>() {
+            new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
                 final IntSetVariable<?> objects = rhs;
@@ -579,7 +579,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         }
       } else {
         system.newSideEffect(
-            new UnaryOperator<PointsToSetVariable>() {
+            new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
                 final IntSetVariable<?> objects = rhs;
@@ -989,7 +989,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         PointerKey objKey,
         final PointerKey fieldKey) {
       system.newSideEffect(
-          new AbstractOperator<PointsToSetVariable>() {
+          new AbstractOperator<>() {
             private final MutableIntSet doneReceiver = IntSetUtil.make();
             private final MutableIntSet doneField = IntSetUtil.make();
 
@@ -1064,7 +1064,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         final PointerKey objKey,
         final InstanceKey[] fieldsKeys) {
       system.newSideEffect(
-          new UnaryOperator<PointsToSetVariable>() {
+          new UnaryOperator<>() {
             @Override
             public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
               final IntSetVariable<?> objects = rhs;
@@ -1135,7 +1135,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       system.newSideEffect(
-          new UnaryOperator<PointsToSetVariable>() {
+          new UnaryOperator<>() {
             @Override
             public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
               final IntSetVariable<?> fields = rhs;

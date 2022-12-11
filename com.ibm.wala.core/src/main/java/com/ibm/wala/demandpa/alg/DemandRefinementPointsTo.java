@@ -1307,7 +1307,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             doTransition(
                 curPkAndState.getState(),
                 paramLabel,
-                new Function<State, Object>() {
+                new Function<>() {
 
                   private void propagateToCallee() {
                     // if (caller.getIR() == null) {
@@ -1624,7 +1624,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           doTransition(
               curState,
               returnBarLabel,
-              new Function<State, Object>() {
+              new Function<>() {
 
                 private void propagateToCaller() {
                   // if (caller.getIR() == null) {
@@ -2156,7 +2156,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               doTransition(
                   curPkAndState.getState(),
                   paramLabel,
-                  new Function<State, Object>() {
+                  new Function<>() {
 
                     private void propagateToCallee() {
                       // if (caller.getIR() == null) {

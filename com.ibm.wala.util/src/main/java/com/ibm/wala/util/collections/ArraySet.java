@@ -54,7 +54,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   private static final long serialVersionUID = -5842124218051589966L;
 
   private static final ArraySet<?> EMPTY =
-      new ArraySet<Object>(0, true) {
+      new ArraySet<>(0, true) {
         /** */
         private static final long serialVersionUID = -3094823386613798012L;
 

@@ -874,7 +874,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   // determine the innermost enclosing throw target at position pos
   private CAstNode getThrowTarget(NodePos pos) {
     return pos.accept(
-        new PosSwitch<CAstNode>() {
+        new PosSwitch<>() {
           @Override
           public CAstNode caseRootPos(RootPos pos) {
             return CAstControlFlowMap.EXCEPTION_TO_EXIT;

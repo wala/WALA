@@ -128,7 +128,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
             .maximumSize(10000)
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build(
-                new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
+                new CacheLoader<>() {
                   @Override
                   public IUnaryFlowFunction load(BlockPair<E> key) {
                     return makeCallFlowFunction(key.fst);
@@ -139,7 +139,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
             .maximumSize(10000)
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build(
-                new CacheLoader<BlockPair<E>, IUnaryFlowFunction>() {
+                new CacheLoader<>() {
                   @Override
                   public IUnaryFlowFunction load(BlockPair<E> key) {
                     return makeNormalFlowFunction(key.snd);

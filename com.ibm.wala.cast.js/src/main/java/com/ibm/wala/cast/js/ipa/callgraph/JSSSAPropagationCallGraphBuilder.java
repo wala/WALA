@@ -911,7 +911,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     private final UnaryOperator<PointsToSetVariable> transitivePrototypeOp =
-        new UnaryOperator<PointsToSetVariable>() {
+        new UnaryOperator<>() {
           @Override
           public byte evaluate(final PointsToSetVariable lhs, PointsToSetVariable rhs) {
             class Op implements IntSetAction {
