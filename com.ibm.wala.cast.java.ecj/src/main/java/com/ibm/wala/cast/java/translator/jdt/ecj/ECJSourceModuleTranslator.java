@@ -253,7 +253,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     parser.setResolveBindings(true);
     parser.setEnvironment(libs, this.sources, null, false);
     Hashtable<String, String> options = JavaCore.getOptions();
-    options.put(JavaCore.COMPILER_SOURCE, "1.8");
+    options.put(JavaCore.COMPILER_SOURCE, "11");
     parser.setCompilerOptions(options);
     parser.createASTs(
         sourceFiles, null, new String[0], new ECJAstToIR(sourceMap), new NullProgressMonitor());

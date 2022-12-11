@@ -22,12 +22,12 @@ class JavaCompileUsingEcj extends JavaCompile {
 			compilerArgs << '-properties' << project.layout.projectDirectory.file('.settings/org.eclipse.jdt.core.prefs').asFile
 
 			// Compile by running an external process.  Specifically, use the standard "java" command from
-			// the Java 1.8 toolchain to run the ECJ JAR archive.  Conveniently, that archive is set up to
+			// the Java 11 toolchain to run the ECJ JAR archive.  Conveniently, that archive is set up to
 			// act as a batch compiler when run as a application.
 			fork = true
 			forkOptions.with {
 				executable = project.javaToolchains.launcherFor {
-					languageVersion.set(JavaLanguageVersion.of(8))
+					languageVersion.set(JavaLanguageVersion.of(11))
 				}.get().executablePath.toString()
 				jvmArgs << '-jar' << ecjConfiguration.singleFile.absolutePath
 			}
