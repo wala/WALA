@@ -188,7 +188,8 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Override
   public Set<K> keySet() {
-    return new SlotIteratingSet<K>() {
+    //noinspection rawtypes
+    return new SlotIteratingSet<>() {
       @Override
       protected K getItemInSlot(int slot) {
         return getKey(slot);
@@ -198,7 +199,8 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Override
   public Collection<V> values() {
-    return new SlotIteratingSet<V>() {
+    //noinspection rawtypes
+    return new SlotIteratingSet<>() {
       @Override
       protected V getItemInSlot(int slot) {
         return getValue(slot);
@@ -208,7 +210,8 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
-    return new SlotIteratingSet<Entry<K, V>>() {
+    //noinspection rawtypes
+    return new SlotIteratingSet<>() {
       @Override
       protected Entry<K, V> getItemInSlot(int slot) {
         return new AbstractMap.SimpleEntry<>(getKey(slot), getValue(slot));
