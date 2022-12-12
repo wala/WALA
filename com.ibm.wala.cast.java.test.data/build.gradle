@@ -22,15 +22,3 @@ final downloadJLex = tasks.register('downloadJLex', VerifiedDownload) {
 }
 
 sourceSets.test.java.srcDir downloadJLex.map { it.downloadedSourceDir }
-
-
-////////////////////////////////////////////////////////////////////////
-//
-//  create Eclipse metadata for use by Maven when running
-//  com.ibm.wala.cast.java.test.JDTJavaIRTests and
-//  com.ibm.wala.cast.java.test.JDTJava15IRTests tests
-//
-
-tasks.register('prepareMavenBuild') {
-	dependsOn 'eclipseClasspath', 'eclipseProject'
-}

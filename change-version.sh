@@ -23,7 +23,7 @@ fi
 
 oldVersionRegex=${1//./\\.}
 newVersion=$2
-replace "$oldVersionRegex" "$newVersion" -name gradle.properties -o -name pom.xml
+replace "$oldVersionRegex" "$newVersion" -name gradle.properties
 
 oldBundleRegex=${oldVersionRegex/%-SNAPSHOT/\\.qualifier}
 newBundle=${newVersion/%-SNAPSHOT/.qualifier}
