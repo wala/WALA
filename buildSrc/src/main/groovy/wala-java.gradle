@@ -25,20 +25,11 @@ repositories {
 }
 
 // only use Error Prone on JDK 9+ JVMs
-final useErrorProne = JavaVersion.current().isJava9Compatible()
-
-// checks if NullAway should be used.
-def useNullAway(project) {
-	final nullawayEnrolledModules = ["com.ibm.wala.util"]
-	return nullawayEnrolledModules.contains(project.name)
-}
+project.ext.useErrorProne = JavaVersion.current().isJava9Compatible()
 
 dependencies {
 	if (useErrorProne) {
 		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
-		if (useNullAway(project)) {
-			annotationProcessor 'com.uber.nullaway:nullaway:0.10.5'
-		}
 	} else {
 		// We disable Error Prone for pre JDK 9+, but we still need to set this dependency, as
 		// otherwise the build fails with a javac crash
@@ -64,14 +55,6 @@ tasks.withType(JavaCompile).configureEach {
 			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
 			// that could introduce bugs
 			disable 'ReferenceEquality'
-			if (useNullAway(project)) {
-				if (!name.toLowerCase().contains("test")) {
-					error 'NullAway'
-					errorproneArgs.addAll(
-							"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
-					)
-				}
-			}
 			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
 			// check name to the one you want to patch
 //			errorproneArgs.addAll(
