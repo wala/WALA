@@ -53,39 +53,9 @@ jobs:
         run: ./check-git-cleanliness.sh
         # not running in Borne or POSIX shell on Windows
         if: runner.os != 'Windows'
-  build_maven:
-    name: "Maven Eclipse Tests"
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            java: 8
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Check out WALA sources
-        uses: actions/checkout@v3
-      - name: 'Cache local Maven repository'
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - name: 'Set up JDK ${{ matrix.java }}'
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ matrix.java }}
-          distribution: 'temurin'
-      - name: 'Prep for Maven'
-        shell: bash
-        run: ./gradlew prepareMavenBuild publishToMavenLocal -x javadoc
-      - name: 'Maven Tests'
-        shell: bash
-        run: mvn clean install -B -q -Dmaven.javadoc.skip=true
   generate_docs:
     name: 'Generate latest docs'
-    needs: [build_gradle, build_maven]
+    needs: build_gradle
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
@@ -108,7 +78,7 @@ jobs:
         run: ./generate-latest-docs.sh
   publish_snapshot:
     name: 'Publish snapshot'
-    needs: [build_gradle, build_maven]
+    needs: build_gradle
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
