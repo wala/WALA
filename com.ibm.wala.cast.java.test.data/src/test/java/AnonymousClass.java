@@ -30,7 +30,7 @@ public class AnonymousClass {
 	System.out.println(f.getValue());
 	System.out.println(f.getValueBase());
 
-	(new AnonymousClass()).method();
+	new AnonymousClass().method();
     }
 
     public void method() {
