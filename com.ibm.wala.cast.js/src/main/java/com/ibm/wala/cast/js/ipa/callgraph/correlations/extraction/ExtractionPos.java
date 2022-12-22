@@ -160,7 +160,7 @@ public class ExtractionPos extends NodePos {
   // "null" if there is none
   public static ExtractionPos getOutermostEnclosingExtractionPos(NodePos pos) {
     return pos.accept(
-        new PosSwitch<ExtractionPos>() {
+        new PosSwitch<>() {
           @Override
           public ExtractionPos caseRootPos(RootPos pos) {
             return null;
@@ -190,7 +190,7 @@ public class ExtractionPos extends NodePos {
   // "null" if there is none
   public static ExtractionPos getEnclosingExtractionPos(NodePos pos) {
     return pos.accept(
-        new PosSwitch<ExtractionPos>() {
+        new PosSwitch<>() {
           @Override
           public ExtractionPos caseRootPos(RootPos pos) {
             return null;

@@ -46,7 +46,7 @@ public class DFS {
       throw new IllegalArgumentException("C is null");
     }
     Iterator<T> dfs =
-        new SlowDFSFinishTimeIterator<T>(G, C.iterator()) {
+        new SlowDFSFinishTimeIterator<>(G, C.iterator()) {
 
           @Override
           protected Iterator<T> getConnected(@Nullable T n) {

@@ -154,7 +154,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
               : new OptimisticCallgraphBuilder(
                   getClassHierarchy(), options, makeDefaultCache(), true);
 
-      return new CallGraphBuilder<ObjectVertex>() {
+      return new CallGraphBuilder<>() {
         private PointerAnalysis<ObjectVertex> ptr;
 
         @Override

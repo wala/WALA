@@ -95,7 +95,7 @@ public final class ConcreteTypeKey implements InstanceKey {
 
   @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
-    return new ComposedIterator<CGNode, Pair<CGNode, NewSiteReference>>(CG.iterator()) {
+    return new ComposedIterator<>(CG.iterator()) {
       @Override
       public Iterator<? extends Pair<CGNode, NewSiteReference>> makeInner(final CGNode outer) {
         return new MapIterator<>(

@@ -77,8 +77,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
                       @Override
                       protected JDTJava2CAstTranslator<Position> makeCAstTranslator(
                           CompilationUnit astRoot, String fullPath) {
-                        return new JDTJava2CAstTranslator<Position>(
-                            sourceLoader, astRoot, fullPath, true) {
+                        return new JDTJava2CAstTranslator<>(sourceLoader, astRoot, fullPath, true) {
                           @Override
                           public CAstEntity translateToCAst() {
                             CAstEntity ast = super.translateToCAst();

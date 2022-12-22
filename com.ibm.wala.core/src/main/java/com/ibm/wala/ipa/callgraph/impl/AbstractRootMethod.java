@@ -403,7 +403,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       @Override
       public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
         final Iterator<SSAInstruction> I = getInvokeStatements();
-        return new Iterator<CallSiteReference>() {
+        return new Iterator<>() {
           @Override
           public boolean hasNext() {
             return I.hasNext();

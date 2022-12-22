@@ -110,7 +110,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
   protected void init(Meeter meeter, final FlowProvider flow) {
     final MeetOperator meet = new MeetOperator(meeter);
     ITransferFunctionProvider<BasicBlock, MachineState> xferFunctions =
-        new ITransferFunctionProvider<BasicBlock, MachineState>() {
+        new ITransferFunctionProvider<>() {
           @Override
           public boolean hasNodeTransferFunctions() {
             return flow.needsNodeFlow();
@@ -123,7 +123,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
           @Override
           public UnaryOperator<MachineState> getNodeTransferFunction(final BasicBlock node) {
-            return new UnaryOperator<MachineState>() {
+            return new UnaryOperator<>() {
               @Override
               public byte evaluate(MachineState lhs, MachineState rhs) {
 
@@ -159,7 +159,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
           @Override
           public UnaryOperator<MachineState> getEdgeTransferFunction(
               final BasicBlock from, final BasicBlock to) {
-            return new UnaryOperator<MachineState>() {
+            return new UnaryOperator<>() {
               @Override
               public byte evaluate(MachineState lhs, MachineState rhs) {
 
@@ -200,7 +200,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
     IKilldallFramework<BasicBlock, MachineState> problem = new BasicFramework<>(cfg, xferFunctions);
     solver =
-        new DataflowSolver<BasicBlock, MachineState>(problem) {
+        new DataflowSolver<>(problem) {
           private MachineState entry;
 
           @Override

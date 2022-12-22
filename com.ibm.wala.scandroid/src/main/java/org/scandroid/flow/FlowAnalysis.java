@@ -148,7 +148,7 @@ public class FlowAnalysis {
     }
 
     final TabulationProblem<BasicBlockInContext<E>, CGNode, DomainElement> problem =
-        new TabulationProblem<BasicBlockInContext<E>, CGNode, DomainElement>() {
+        new TabulationProblem<>() {
 
           @Override
           public TabulationDomain<DomainElement, BasicBlockInContext<E>> getDomain() {

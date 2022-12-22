@@ -301,13 +301,13 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     @Override
     public Iterator<CGNode> getSuccNodes(final CGNode n) {
       return new FilterIterator<>(
-          new ComposedIterator<CallSiteReference, CGNode>(n.iterateCallSites()) {
+          new ComposedIterator<>(n.iterateCallSites()) {
             @Override
             public Iterator<? extends CGNode> makeInner(CallSiteReference outer) {
               return getPossibleTargets(n, outer).iterator();
             }
           },
-          new Predicate<CGNode>() {
+          new Predicate<>() {
             private final MutableIntSet nodes = IntSetUtil.make();
 
             @Override

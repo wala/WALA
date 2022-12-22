@@ -267,7 +267,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
   private PrunedCFG(final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
     this.cfg = cfg;
     Graph<T> temp =
-        new AbstractNumberedGraph<T>() {
+        new AbstractNumberedGraph<>() {
           private final NumberedEdgeManager<T> edges = new FilteredCFGEdges<>(cfg, cfg, filter);
 
           @Override

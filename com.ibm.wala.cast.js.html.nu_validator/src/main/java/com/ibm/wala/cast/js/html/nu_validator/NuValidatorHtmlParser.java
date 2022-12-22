@@ -97,7 +97,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
 
                   @Override
                   public Map<String, Pair<String, Position>> getAllAttributes() {
-                    return new AbstractMap<String, Pair<String, Position>>() {
+                    return new AbstractMap<>() {
                       private Set<Map.Entry<String, Pair<String, Position>>> es = null;
 
                       @Override
@@ -107,7 +107,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                           for (int i = 0; i < atts.getLength(); i++) {
                             final int index = i;
                             es.add(
-                                new Map.Entry<String, Pair<String, Position>>() {
+                                new Map.Entry<>() {
 
                                   @Override
                                   public String getKey() {

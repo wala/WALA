@@ -97,7 +97,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
   /** @see com.ibm.wala.util.intset.IntSet#intIterator() */
   @Override
   public Iterator<T> iterator() {
-    return new Iterator<T>() {
+    return new Iterator<>() {
 
       int i = 0;
 

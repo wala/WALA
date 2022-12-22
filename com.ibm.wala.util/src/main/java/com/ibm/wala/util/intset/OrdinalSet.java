@@ -62,7 +62,7 @@ public class OrdinalSet<T> implements Iterable<T> {
       return EmptyIterator.instance();
     } else {
 
-      return new Iterator<T>() {
+      return new Iterator<>() {
         @SuppressWarnings("NullAway")
         final IntIterator it = S.intIterator();
 

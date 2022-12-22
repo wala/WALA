@@ -64,7 +64,7 @@ public class GraphSlicer {
       throw new IllegalArgumentException("g is null");
     }
     final NodeManager<T> n =
-        new NodeManager<T>() {
+        new NodeManager<>() {
           int nodeCount = -1;
 
           @Override
@@ -101,7 +101,7 @@ public class GraphSlicer {
           }
         };
     final EdgeManager<T> e =
-        new EdgeManager<T>() {
+        new EdgeManager<>() {
 
           @Override
           public Iterator<T> getPredNodes(@Nullable T n) {
@@ -154,7 +154,7 @@ public class GraphSlicer {
           }
         };
     AbstractGraph<T> output =
-        new AbstractGraph<T>() {
+        new AbstractGraph<>() {
 
           @SuppressWarnings({"unchecked", "rawtypes"})
           @Override
@@ -182,7 +182,7 @@ public class GraphSlicer {
 
   public static <E> AbstractGraph<E> project(final Graph<E> G, final Predicate<E> fmember) {
     final NodeManager<E> nodeManager =
-        new NodeManager<E>() {
+        new NodeManager<>() {
           private int count = -1;
 
           @Override
@@ -220,7 +220,7 @@ public class GraphSlicer {
         };
 
     final EdgeManager<E> edgeManager =
-        new EdgeManager<E>() {
+        new EdgeManager<>() {
 
           private final Map<E, Collection<E>> succs = new HashMap<>();
 
@@ -332,7 +332,7 @@ public class GraphSlicer {
           }
         };
 
-    return new AbstractGraph<E>() {
+    return new AbstractGraph<>() {
 
       @SuppressWarnings({"unchecked", "rawtypes"})
       @Override
