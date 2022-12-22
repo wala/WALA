@@ -8,14 +8,12 @@ dependencies {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	if (useErrorProne) {
-		options.errorprone {
-			if (!name.toLowerCase().contains("test")) {
-				error 'NullAway'
-				errorproneArgs.addAll(
-						"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
-				)
-			}
+	options.errorprone {
+		if (!name.toLowerCase().contains("test")) {
+			error 'NullAway'
+			errorproneArgs.addAll(
+					"-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
+			)
 		}
 	}
 }

@@ -64,6 +64,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   /** @see com.ibm.wala.util.graph.Graph#iterator() */
   @Override
+  @SuppressWarnings("unused")
   public Iterator<T> iterator() {
     final INodeWithNumber[] arr = nodes;
     return new Iterator<T>() {

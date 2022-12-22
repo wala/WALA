@@ -13,8 +13,7 @@ plugins {
 }
 
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 
 repositories {
 	mavenCentral()
@@ -24,46 +23,33 @@ repositories {
 	}
 }
 
-// only use Error Prone on JDK 9+ JVMs
-project.ext.useErrorProne = JavaVersion.current().isJava9Compatible()
-
 dependencies {
-	if (useErrorProne) {
-		errorprone 'com.google.errorprone:error_prone_core:2.15.0'
-	} else {
-		// We disable Error Prone for pre JDK 9+, but we still need to set this dependency, as
-		// otherwise the build fails with a javac crash
-		errorprone 'com.google.errorprone:error_prone_core:2.10.0'
-	}
+	errorprone 'com.google.errorprone:error_prone_core:2.15.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
-	if (useErrorProne) {
-		options.errorprone {
-			// don't run warning-level checks by default as they add too much noise to build output
-			// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
-			// we need to customize the level of at least one specific check to make this flag work
-			disableAllWarnings = true
-			// warning-level checks upgraded to error, since we've fixed all the warnings
-			error 'UnnecessaryParentheses'
-			error 'UnusedVariable'
-			error 'JdkObsolete'
-			// checks we do not intend to try to fix in the near-term:
-			// Just too many of these; proper Javadoc would be a great long-term goal
-			disable 'MissingSummary'
-			// WALA has many optimizations involving using == to check reference equality.  They
-			// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
-			// that could introduce bugs
-			disable 'ReferenceEquality'
-			// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-			// check name to the one you want to patch
+	options.errorprone {
+		// don't run warning-level checks by default as they add too much noise to build output
+		// NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
+		// we need to customize the level of at least one specific check to make this flag work
+		disableAllWarnings = true
+		// warning-level checks upgraded to error, since we've fixed all the warnings
+		error 'UnnecessaryParentheses'
+		error 'UnusedVariable'
+		error 'JdkObsolete'
+		// checks we do not intend to try to fix in the near-term:
+		// Just too many of these; proper Javadoc would be a great long-term goal
+		disable 'MissingSummary'
+		// WALA has many optimizations involving using == to check reference equality.  They
+		// may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+		// that could introduce bugs
+		disable 'ReferenceEquality'
+		// Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+		// check name to the one you want to patch
 //			errorproneArgs.addAll(
 //					"-XepPatchChecks:UnnecessaryParentheses",
 //					"-XepPatchLocation:IN_PLACE"
 //			)
-		}
-	} else {
-		options.errorprone.enabled = false
 	}
 }
 

@@ -5,13 +5,6 @@ plugins {
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
-// Clear compatibility settings already applied in a `subprojects { ... }` block in the top-level
-// `build.gradle`. Once those are gone, we can then use `java.toolchain` to request a Java 11 JDK
-// just for this subproject.
-java.sourceCompatibility = null
-java.targetCompatibility = null
-java.toolchain.languageVersion.set JavaLanguageVersion.of(11)
-
 sourceSets {
 	testSubjects
 }

@@ -16,6 +16,9 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
@@ -63,22 +66,20 @@ public abstract class WalaTestCase {
   }
 
   protected static String getClasspathEntry(String elt) {
-    StringBuilder result = null;
-    for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
-      if (s.contains(elt)) {
-        File e = new File(s);
-        assert e.exists() : elt + " expected to exist";
-        if (e.isDirectory() && !s.endsWith("/")) {
-          s += '/';
-        }
-        if (result == null) {
-          result = new StringBuilder(s);
-        } else {
-          result.append(File.pathSeparator).append(s);
-        }
-      }
-    }
-    assert result != null : "cannot find " + elt;
-    return result.toString();
+    final String normalizedElt = Paths.get(elt).normalize().toString();
+    final String result =
+        Arrays.stream(System.getProperty("java.class.path").split(File.pathSeparator))
+            .map(candidate -> Paths.get(candidate).normalize())
+            .filter(candidate -> candidate.toString().contains(normalizedElt))
+            .map(
+                found -> {
+                  final String foundString = found.toString();
+                  return found.toFile().isDirectory()
+                      ? foundString + File.separatorChar
+                      : foundString;
+                })
+            .collect(Collectors.joining(File.pathSeparator));
+    assert !result.isEmpty() : "cannot find " + elt;
+    return result;
   }
 }
