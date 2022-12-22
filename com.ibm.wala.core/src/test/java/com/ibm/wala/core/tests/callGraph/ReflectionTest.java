@@ -41,8 +41,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.collections.Iterator2List;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
@@ -844,12 +844,12 @@ public class ReflectionTest extends WalaTestCase {
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     IMethod mainMethod = entrypoints.iterator().next().getMethod();
     List<CGNode> mainCallees =
-        Iterator2List.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
+        Iterator2Collection.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
     Assert.assertTrue(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
     options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     mainCallees =
-        Iterator2List.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
+        Iterator2Collection.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
     // getMessage() should _not_ be a callee with reflection handling enabled
     Assert.assertFalse(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
   }
