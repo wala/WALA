@@ -49,7 +49,7 @@ public abstract class AbstractJSProjectScopeTest {
     IJavaScriptProject p =
         JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     System.err.println(p);
-    Assert.assertTrue("cannot find project", p != null);
+    Assert.assertNotNull("cannot find project", p);
   }
 
   @Test
@@ -63,7 +63,7 @@ public abstract class AbstractJSProjectScopeTest {
                 new CAstAnalysisScope(
                     JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
-    Assert.assertTrue("cannot make scope", s != null);
+    Assert.assertNotNull("cannot make scope", s);
     Assert.assertFalse("cannot find files", s.getModules(JavaScriptTypes.jsLoader).isEmpty());
   }
 
@@ -93,7 +93,7 @@ public abstract class AbstractJSProjectScopeTest {
     e.buildAnalysisScope();
     IClassHierarchy cha = e.getClassHierarchy();
     // System.err.println(cha);
-    Assert.assertTrue(cha != null);
+    Assert.assertNotNull(cha);
   }
 
   protected EclipseJavaScriptAnalysisEngine makeAnalysisEngine(IJavaScriptProject p) {
