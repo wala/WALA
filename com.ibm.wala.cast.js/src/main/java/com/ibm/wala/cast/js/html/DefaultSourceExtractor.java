@@ -81,10 +81,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
     }
 
     private void printlnIndented(String line, Position pos) {
-      StringBuilder indentedLine = new StringBuilder();
-      for (int i = 0; i < stack.size(); i++) {
-        indentedLine.append("  ");
-      }
+      StringBuilder indentedLine = new StringBuilder("  ".repeat(stack.size()));
       indentedLine.append(line);
 
       if (pos == null) {

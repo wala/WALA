@@ -51,9 +51,7 @@ public class StringStuff {
       throw new IllegalArgumentException("b is null");
     }
     if (b.length() < length) {
-      for (int i = b.length(); i < length; i++) {
-        b.append(' ');
-      }
+      b.append(" ".repeat(length - b.length()));
     }
   }
 
@@ -74,10 +72,7 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
-      StringBuilder result = new StringBuilder("[");
-      for (int i = 1; i < dim; i++) {
-        result.append('[');
-      }
+      StringBuilder result = new StringBuilder("[".repeat(dim));
       result.append(baseType);
       return result.toString();
     } else {
@@ -107,10 +102,7 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalDescriptorTypeString(baseType);
-      StringBuilder result = new StringBuilder("[");
-      for (int i = 1; i < dim; i++) {
-        result.append('[');
-      }
+      StringBuilder result = new StringBuilder("[".repeat(dim));
       result.append(baseType);
       return result.toString();
     } else {
@@ -619,9 +611,7 @@ public class StringStuff {
         break;
     }
     // append trailing "[]" for each array dimension
-    for (int i = 0; i < numberOfDimensions; ++i) {
-      readable.append("[]");
-    }
+    readable.append("[]".repeat(numberOfDimensions));
     return readable.toString();
   }
 
@@ -692,9 +682,7 @@ public class StringStuff {
         break;
     }
     // append trailing "[]" for each array dimension
-    for (int i = 0; i < numberOfDimensions; ++i) {
-      readable.append("[]");
-    }
+    readable.append("[]".repeat(numberOfDimensions));
     return readable.toString();
   }
 

@@ -160,9 +160,7 @@ public class Table<T> {
       throw new IllegalArgumentException("b is null");
     }
     if (b.length() < length) {
-      for (int i = b.length(); i < length; i++) {
-        b.append(' ');
-      }
+      b.append(" ".repeat(length - b.length()));
     }
   }
 }

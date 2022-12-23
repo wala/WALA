@@ -371,9 +371,7 @@ public class ClassPrinter {
           } else {
             buf.append("\\u");
             String h = makeHex(new byte[] {(byte) (ch >> 8), (byte) ch}, 0, 2, 0);
-            for (int j = 4 - h.length(); j > 0; j--) {
-              buf.append('0');
-            }
+            buf.append("0".repeat(4 - h.length()));
             buf.append(h);
           }
       }
