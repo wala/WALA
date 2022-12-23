@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Behavior loaded from a file.
@@ -258,11 +259,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
   /** */
   @Override
   public InstanceBehavior getDafultBehavior() {
-    if (this.defaultBehavior == null) {
-      return InstanceBehavior.REUSE;
-    } else {
-      return this.defaultBehavior;
-    }
+    return Objects.requireNonNullElse(defaultBehavior, InstanceBehavior.REUSE);
   }
 
   public void setBehavior(

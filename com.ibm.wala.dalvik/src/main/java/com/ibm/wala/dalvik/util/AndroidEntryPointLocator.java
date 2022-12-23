@@ -66,6 +66,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,11 +124,7 @@ public final class AndroidEntryPointLocator {
   }
 
   public AndroidEntryPointLocator(final Set<LocatorFlags> flags) {
-    if (flags == null) {
-      this.flags = EnumSet.noneOf(LocatorFlags.class);
-    } else {
-      this.flags = flags;
-    }
+    this.flags = Objects.requireNonNullElseGet(flags, () -> EnumSet.noneOf(LocatorFlags.class));
     this.mon = AndroidEntryPointManager.MANAGER.getProgressMonitor();
 
     populatePossibleEntryPoints();

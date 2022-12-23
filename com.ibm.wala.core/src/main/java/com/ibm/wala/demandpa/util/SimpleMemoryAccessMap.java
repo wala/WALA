@@ -45,6 +45,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /** @author sfink */
@@ -335,21 +336,13 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   @Override
   public Collection<MemoryAccess> getFieldReads(PointerKey pk, IField field) {
     Collection<MemoryAccess> result = readMap.get(field);
-    if (result == null) {
-      return Collections.emptySet();
-    } else {
-      return result;
-    }
+    return Objects.requireNonNullElse(result, Collections.emptySet());
   }
 
   @Override
   public Collection<MemoryAccess> getFieldWrites(PointerKey pk, IField field) {
     Collection<MemoryAccess> result = writeMap.get(field);
-    if (result == null) {
-      return Collections.emptySet();
-    } else {
-      return result;
-    }
+    return Objects.requireNonNullElse(result, Collections.emptySet());
   }
 
   @Override
