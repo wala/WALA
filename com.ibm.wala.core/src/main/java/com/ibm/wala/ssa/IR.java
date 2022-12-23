@@ -41,7 +41,8 @@ import java.util.Set;
  * abstraction, relying instead on a set of symbolic registers. The IR organizes instructions in a
  * control-flow graph of basic blocks, as typical in compiler textbooks.
  *
- * <p>See http://wala.sourceforge.net/wiki/index.php/UserGuide:IR for more details on the IR API.
+ * <p>See <a href="http://wala.sourceforge.net/wiki/index.php/UserGuide:IR">more details on the IR
+ * API</a>.
  */
 public abstract class IR implements IRView {
 
