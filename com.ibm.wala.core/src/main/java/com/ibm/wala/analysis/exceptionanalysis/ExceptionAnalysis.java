@@ -36,6 +36,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.InvertedGraph;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -77,11 +78,9 @@ public class ExceptionAnalysis {
       InterproceduralExceptionFilter<SSAInstruction> filter) {
     this.cha = cha;
     this.cg = callgraph;
-    if (filter == null) {
-      this.filter = new IgnoreExceptionsInterFilter<>(new DummyFilter<>());
-    } else {
-      this.filter = filter;
-    }
+    this.filter =
+        Objects.requireNonNullElseGet(
+            filter, () -> new IgnoreExceptionsInterFilter<>(new DummyFilter<>()));
 
     intraResult =
         new CGIntraproceduralExceptionAnalysis(callgraph, pointerAnalysis, cha, this.filter);

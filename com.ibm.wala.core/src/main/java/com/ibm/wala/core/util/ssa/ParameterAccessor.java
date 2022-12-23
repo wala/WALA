@@ -58,6 +58,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -854,13 +855,10 @@ public class ParameterAccessor {
    */
   public int firstInSelector() {
     if (this.numberOfParameters == 0) {
-      if (this.method != null) {
-        throw new IllegalArgumentException(
-            "The method " + this.method + " has no explicit parameters.");
-      } else {
-        throw new IllegalArgumentException(
-            "The method " + this.mRef.toString() + " has no explicit parameters.");
-      }
+      throw new IllegalArgumentException(
+          "The method "
+              + Objects.requireNonNullElseGet(method, mRef::toString)
+              + " has no explicit parameters.");
     }
     if (this.implicitThis > 1) {
       throw new IllegalStateException(

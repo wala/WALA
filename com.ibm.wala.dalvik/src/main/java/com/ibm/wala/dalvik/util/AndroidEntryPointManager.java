@@ -66,6 +66,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -199,11 +200,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * @return a NullProgressMonitor or the one set before.
    */
   public IProgressMonitor getProgressMonitor() {
-    if (this.progressMonitor == null) {
-      return new NullProgressMonitor();
-    } else {
-      return this.progressMonitor;
-    }
+    return Objects.requireNonNullElseGet(progressMonitor, NullProgressMonitor::new);
   }
 
   /** Set the monitor returned by {@link #getProgressMonitor()}. */
