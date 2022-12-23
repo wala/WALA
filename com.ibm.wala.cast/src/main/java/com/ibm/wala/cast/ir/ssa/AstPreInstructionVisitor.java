@@ -12,5 +12,5 @@ package com.ibm.wala.cast.ir.ssa;
 
 public interface AstPreInstructionVisitor extends AstInstructionVisitor {
 
-  public void visitAssign(AssignInstruction inst);
+  void visitAssign(AssignInstruction inst);
 }

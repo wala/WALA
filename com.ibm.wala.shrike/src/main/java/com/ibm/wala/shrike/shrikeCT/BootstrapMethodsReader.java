@@ -21,9 +21,9 @@ public class BootstrapMethodsReader extends AttributeReader {
 
   public interface BootstrapMethod {
 
-    static final String LAMBDA_METAFACTORY_CLASS = "java/lang/invoke/LambdaMetafactory";
-    static final String BOOTSTRAP_METHOD_NAME = "metafactory";
-    static final String BOOTSTRAP_METHOD_TYPE =
+    String LAMBDA_METAFACTORY_CLASS = "java/lang/invoke/LambdaMetafactory";
+    String BOOTSTRAP_METHOD_NAME = "metafactory";
+    String BOOTSTRAP_METHOD_TYPE =
         "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;";
 
     byte invokeType();

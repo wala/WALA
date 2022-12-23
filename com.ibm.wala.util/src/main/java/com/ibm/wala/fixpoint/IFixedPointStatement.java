@@ -26,10 +26,10 @@ import org.jspecify.annotations.Nullable;
 public interface IFixedPointStatement<T extends IVariable<T>> extends INodeWithNumber {
   /** @return the left-hand side of this statement. */
   @Nullable
-  public T getLHS();
+  T getLHS();
 
   /** returns the list of free variables appearing in the right-hand side of the statement */
-  public T[] getRHS();
+  T[] getRHS();
 
   /**
    * Evaluate this statement, setting a new value for the left-hand side. The return value is one of
@@ -42,12 +42,12 @@ public interface IFixedPointStatement<T extends IVariable<T>> extends INodeWithN
    *   <li>{@link FixedPointConstants#NOT_CHANGED_AND_FIXED}.
    * </ul>
    */
-  abstract byte evaluate();
+  byte evaluate();
 
   /**
    * Does this statement definition contain an appearance of a given variable?
    *
    * @param v the variable in question
    */
-  public boolean hasVariable(T v);
+  boolean hasVariable(T v);
 }

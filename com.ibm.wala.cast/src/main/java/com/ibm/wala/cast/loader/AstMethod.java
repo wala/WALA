@@ -72,37 +72,37 @@ public abstract class AstMethod implements IMethod {
      * names possibly accessed in a nested lexical scope, represented as pairs
      * (name,nameOfDefiningEntity)
      */
-    public Pair<String, String>[] getExposedNames();
+    Pair<String, String>[] getExposedNames();
 
     /**
      * maps each exposed name (via its index in {@link #getExposedNames()}) to its value number at
      * method exit.
      */
-    public int[] getExitExposedUses();
+    int[] getExitExposedUses();
 
     /**
      * get a map from exposed name (via its index in {@link #getExposedNames()}) to its value number
      * at the instruction at offset instructionOffset.
      */
-    public int[] getExposedUses(int instructionOffset);
+    int[] getExposedUses(int instructionOffset);
 
     /**
      * return all value numbers appearing as entries in either {@link #getExposedUses(int)} or
      * {@link #getExitExposedUses()}
      */
-    public IntSet getAllExposedUses();
+    IntSet getAllExposedUses();
 
     /**
      * return the names of the enclosing methods declaring names that are lexically accessed by the
      * entity
      */
-    public String[] getScopingParents();
+    String[] getScopingParents();
 
     /** returns true if name may be read in nested lexical scopes but cannot be written */
-    public boolean isReadOnly(String name);
+    boolean isReadOnly(String name);
 
     /** get the name of this entity, as it appears in the definer portion of a lexical name */
-    public String getScopingName();
+    String getScopingName();
   }
 
   protected final IClass cls;

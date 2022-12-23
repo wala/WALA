@@ -1569,7 +1569,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  public static enum ScopeType {
+  public enum ScopeType {
     LOCAL,
     GLOBAL,
     SCRIPT,

@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
  * @author mschaefer
  */
 public class FieldBasedCGUtil {
-  public static enum BuilderType {
+  public enum BuilderType {
     PESSIMISTIC {
       @Override
       protected FieldBasedCallGraphBuilder fieldBasedCallGraphBuilderFactory(

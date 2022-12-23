@@ -12,9 +12,9 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IUnaryOpInstruction extends IInstruction {
 
-  public interface IOperator {}
+  interface IOperator {}
 
-  public static enum Operator implements IOperator {
+  enum Operator implements IOperator {
     NEG;
 
     @Override

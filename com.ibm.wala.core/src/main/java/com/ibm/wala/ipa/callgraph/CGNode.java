@@ -27,7 +27,7 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
    *
    * @return the target IMethod for this CGNode.
    */
-  public IMethod getMethod();
+  IMethod getMethod();
 
   /**
    * Return the {@link Context context} this CGNode represents. This value will never be {@code
@@ -35,7 +35,7 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
    *
    * @return the Context for this CGNode.
    */
-  public Context getContext();
+  Context getContext();
 
   /**
    * NOTE: This is for use only by call graph builders, not by any other client of this interface.
@@ -43,21 +43,21 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
    * <p>Record that a particular call site might resolve to a call to a particular target node.
    * Returns true if this is a new target
    */
-  public boolean addTarget(CallSiteReference site, CGNode target);
+  boolean addTarget(CallSiteReference site, CGNode target);
 
   /** @return the "default" IR for this node used by the governing call graph */
-  public IR getIR();
+  IR getIR();
 
   /** @return DefUse for the "default" IR for this node used by the governing call graph */
-  public DefUse getDU();
+  DefUse getDU();
 
   /**
    * @return an Iterator of the types that may be allocated by a given method in a given context.
    */
-  public Iterator<NewSiteReference> iterateNewSites();
+  Iterator<NewSiteReference> iterateNewSites();
   /**
    * @return an Iterator of the call statements that may execute in a given method for a given
    *     context
    */
-  public Iterator<CallSiteReference> iterateCallSites();
+  Iterator<CallSiteReference> iterateCallSites();
 }

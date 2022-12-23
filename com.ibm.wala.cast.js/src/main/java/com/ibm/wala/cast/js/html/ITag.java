@@ -21,23 +21,23 @@ import java.util.Map;
 public interface ITag {
 
   /** @return tag's name (e.g., "HEAD" / "HTML" / "FORM") */
-  public String getName();
+  String getName();
 
   /**
    * Retrieves a specific attribute
    *
    * @return null if there is no such attribute
    */
-  public Pair<String, Position> getAttributeByName(String name);
+  Pair<String, Position> getAttributeByName(String name);
 
-  public Map<String, Pair<String, Position>> getAllAttributes();
+  Map<String, Pair<String, Position>> getAllAttributes();
 
   /**
    * Returns the starting line number of the tag.
    *
    * @return null if no known
    */
-  public Position getElementPosition();
+  Position getElementPosition();
 
-  public Position getContentPosition();
+  Position getContentPosition();
 }

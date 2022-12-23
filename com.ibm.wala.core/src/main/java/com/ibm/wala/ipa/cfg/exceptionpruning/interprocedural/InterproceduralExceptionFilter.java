@@ -14,5 +14,5 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 
 public interface InterproceduralExceptionFilter<Instruction> {
-  public ExceptionFilter<Instruction> getFilter(CGNode node);
+  ExceptionFilter<Instruction> getFilter(CGNode node);
 }

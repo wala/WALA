@@ -8,5 +8,5 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public interface EdgeWeight {
-  public Weight newValue(Weight weight);
+  Weight newValue(Weight weight);
 }

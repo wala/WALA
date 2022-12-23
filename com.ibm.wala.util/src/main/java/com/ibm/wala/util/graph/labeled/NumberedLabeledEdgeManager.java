@@ -16,7 +16,7 @@ import com.ibm.wala.util.intset.IntSet;
 public interface NumberedLabeledEdgeManager<T, U>
     extends LabeledEdgeManager<T, U>, NumberedEdgeManager<T> {
 
-  public IntSet getPredNodeNumbers(T node, U label) throws IllegalArgumentException;
+  IntSet getPredNodeNumbers(T node, U label) throws IllegalArgumentException;
 
-  public IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException;
+  IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException;
 }

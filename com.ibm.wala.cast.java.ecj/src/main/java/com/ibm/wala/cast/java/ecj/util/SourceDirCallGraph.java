@@ -39,7 +39,7 @@ public class SourceDirCallGraph {
 
   @FunctionalInterface
   public interface Processor {
-    public void process(CallGraph CG, CallGraphBuilder<?> builder, long time);
+    void process(CallGraph CG, CallGraphBuilder<?> builder, long time);
   }
 
   /**

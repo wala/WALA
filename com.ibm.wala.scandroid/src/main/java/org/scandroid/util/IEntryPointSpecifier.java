@@ -45,5 +45,5 @@ import java.util.List;
 public interface IEntryPointSpecifier {
 
   /** @return a list of entrypoints for the given analysis context */
-  public List<Entrypoint> specify(AndroidAnalysisContext analysisContext);
+  List<Entrypoint> specify(AndroidAnalysisContext analysisContext);
 }

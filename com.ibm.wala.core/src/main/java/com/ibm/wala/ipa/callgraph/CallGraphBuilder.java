@@ -24,16 +24,16 @@ public interface CallGraphBuilder<I extends InstanceKey> {
    *     algorithm needs to know.
    * @return the built call graph
    */
-  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor)
+  CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor)
       throws IllegalArgumentException, CallGraphBuilderCancelException;
 
   /**
    * @return the Pointer Analysis information computed as a side-effect of call graph construction.
    */
-  public PointerAnalysis<I> getPointerAnalysis();
+  PointerAnalysis<I> getPointerAnalysis();
 
   /** @return A cache of various analysis artifacts used during call graph construction. */
-  public IAnalysisCacheView getAnalysisCache();
+  IAnalysisCacheView getAnalysisCache();
 
-  public IClassHierarchy getClassHierarchy();
+  IClassHierarchy getClassHierarchy();
 }

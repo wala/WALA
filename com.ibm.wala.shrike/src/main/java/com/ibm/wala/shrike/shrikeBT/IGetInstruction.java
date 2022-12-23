@@ -12,11 +12,11 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IGetInstruction extends IInstruction, IMemoryOperation {
 
-  public String getClassType();
+  String getClassType();
 
-  public String getFieldName();
+  String getFieldName();
 
-  public String getFieldType();
+  String getFieldType();
 
-  public boolean isStatic();
+  boolean isStatic();
 }

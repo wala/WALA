@@ -46,20 +46,20 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 public interface RefinementPolicy {
 
   /** @return the maximum number of refinement iterations for the query */
-  public int getNumPasses();
+  int getNumPasses();
 
   /** @return the maximum number of nodes to traverse in pass {@code passNum} */
-  public int getBudgetForPass(int passNum);
+  int getBudgetForPass(int passNum);
 
   /** @return the field refinement policy */
-  public FieldRefinePolicy getFieldRefinePolicy();
+  FieldRefinePolicy getFieldRefinePolicy();
 
   /** @return the call graph refinement policy */
-  public CallGraphRefinePolicy getCallGraphRefinePolicy();
+  CallGraphRefinePolicy getCallGraphRefinePolicy();
 
   /**
    * @return {@code true} if more refinement can be done, and hence another pass can be attempted;
    *     {@code false} otherwise
    */
-  public boolean nextPass();
+  boolean nextPass();
 }

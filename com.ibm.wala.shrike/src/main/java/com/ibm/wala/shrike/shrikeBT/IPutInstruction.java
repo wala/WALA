@@ -12,11 +12,11 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IPutInstruction extends IInstruction {
 
-  public String getClassType();
+  String getClassType();
 
-  public String getFieldType();
+  String getFieldType();
 
-  public String getFieldName();
+  String getFieldName();
 
-  public boolean isStatic();
+  boolean isStatic();
 }

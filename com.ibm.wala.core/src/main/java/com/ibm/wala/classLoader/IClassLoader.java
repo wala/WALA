@@ -32,20 +32,20 @@ public interface IClassLoader {
    * @return the IClass defined by this class loader that corresponds to the given class name, or
    *     null if not found.
    */
-  public abstract IClass lookupClass(TypeName className);
+  IClass lookupClass(TypeName className);
 
   /**
    * Return the ClassLoaderReference for this class loader.
    *
    * @return ClassLoaderReference
    */
-  public abstract ClassLoaderReference getReference();
+  ClassLoaderReference getReference();
 
   /** @return an Iterator of all classes loaded by this loader */
-  public abstract Iterator<IClass> iterateAllClasses();
+  Iterator<IClass> iterateAllClasses();
 
   /** @return the number of classes in scope to be loaded by this loader */
-  public abstract int getNumberOfClasses();
+  int getNumberOfClasses();
 
   /** @return the unique name that identifies this class loader. */
   Atom getName();
@@ -58,7 +58,7 @@ public interface IClassLoader {
 
   SSAInstructionFactory getInstructionFactory();
 
-  public abstract int getNumberOfMethods();
+  int getNumberOfMethods();
 
   /**
    * @param method The method for which information is desired
@@ -67,7 +67,7 @@ public interface IClassLoader {
    *     that this api allows a single method to arise from multiple source files, which is
    *     deliberate as it can happen in some languages.
    */
-  public abstract String getSourceFileName(IMethod method, int offset);
+  String getSourceFileName(IMethod method, int offset);
 
   /**
    * @param method The method for which information is desired
@@ -75,7 +75,7 @@ public interface IClassLoader {
    * @return input stream representing the source file for a given bytecode index of a given method,
    *     or null if not available
    */
-  public abstract Reader getSource(IMethod method, int offset);
+  Reader getSource(IMethod method, int offset);
 
   /**
    * @param klass the class for which information is desired.
@@ -86,7 +86,7 @@ public interface IClassLoader {
    *     offset, since that is now the granularity at which source file information will be
    *     recorded. SJF .. we should think about this deprecation. postponing deprecation for now.
    */
-  public abstract String getSourceFileName(IClass klass) throws NoSuchElementException;
+  String getSourceFileName(IClass klass) throws NoSuchElementException;
 
   /**
    * @return input stream representing the source file for a class, or null if not available
@@ -96,22 +96,22 @@ public interface IClassLoader {
    *     offset, since that is now the granularity at which source file information will be
    *     recorded. SJF .. we should think about this deprecation. postponing deprecation for now.
    */
-  public abstract Reader getSource(IClass klass) throws NoSuchElementException;
+  Reader getSource(IClass klass) throws NoSuchElementException;
 
   /** @return the parent IClassLoader, if any, or null */
-  public abstract IClassLoader getParent();
+  IClassLoader getParent();
 
   /**
    * Initialize internal data structures.
    *
    * @throws IllegalArgumentException if modules is null
    */
-  public void init(List<Module> modules) throws IOException;
+  void init(List<Module> modules) throws IOException;
 
   /**
    * blow away references to any classes in the set
    *
    * @param toRemove Collection&lt;IClass&gt;
    */
-  public abstract void removeAll(Collection<IClass> toRemove);
+  void removeAll(Collection<IClass> toRemove);
 }

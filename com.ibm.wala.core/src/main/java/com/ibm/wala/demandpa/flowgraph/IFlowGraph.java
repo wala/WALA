@@ -27,39 +27,39 @@ import java.util.Set;
 public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
 
   /** Apply a visitor to the successors of some node. */
-  public abstract void visitSuccs(Object node, IFlowLabelVisitor v);
+  void visitSuccs(Object node, IFlowLabelVisitor v);
 
   /** Apply a visitor to the predecessors of some node. */
-  public abstract void visitPreds(Object node, IFlowLabelVisitor v);
+  void visitPreds(Object node, IFlowLabelVisitor v);
 
   /**
    * add representation of flow for a node, if not already present
    *
    * @throws IllegalArgumentException if node == null
    */
-  public abstract void addSubgraphForNode(CGNode node) throws IllegalArgumentException;
+  void addSubgraphForNode(CGNode node) throws IllegalArgumentException;
 
-  public abstract boolean hasSubgraphForNode(CGNode node);
+  boolean hasSubgraphForNode(CGNode node);
 
   /** @return {@code true} iff {@code pk} is a formal parameter */
-  public abstract boolean isParam(LocalPointerKey pk);
+  boolean isParam(LocalPointerKey pk);
 
   /** @return the {@link SSAInvokeInstruction}s passing some pointer as a parameter */
-  public abstract Iterator<SSAAbstractInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk);
+  Iterator<SSAAbstractInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk);
 
   /**
    * get the {@link SSAInvokeInstruction} whose return value is assigned to a pointer key.
    *
    * @return the instruction, or {@code null} if no return value is assigned to pk
    */
-  public abstract SSAAbstractInvokeInstruction getInstrReturningTo(LocalPointerKey pk);
+  SSAAbstractInvokeInstruction getInstrReturningTo(LocalPointerKey pk);
 
   /**
    * @param sfk the static field
    * @return all the variables whose values are written to sfk
    * @throws IllegalArgumentException if sfk == null
    */
-  public abstract Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk)
+  Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk)
       throws IllegalArgumentException;
 
   /**
@@ -67,19 +67,19 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
    * @return all the variables that get the value of sfk
    * @throws IllegalArgumentException if sfk == null
    */
-  public abstract Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk)
+  Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk)
       throws IllegalArgumentException;
 
-  public abstract Iterator<PointerKey> getWritesToInstanceField(PointerKey pk, IField f);
+  Iterator<PointerKey> getWritesToInstanceField(PointerKey pk, IField f);
 
-  public abstract Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f);
+  Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f);
 
   /**
    * @param formalPk a {@link PointerKey} representing either a formal parameter or return value
    * @return the {@link CallerSiteContext}s representing pointer callers of {@code formalPk}'s
    *     method
    */
-  public abstract Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk);
+  Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk);
 
   /**
    * get the callees that should be considered at a particular call site
@@ -90,6 +90,5 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
    *     of interest. This may be used to filter out certain callees.
    * @return the callees of interest
    */
-  public abstract Set<CGNode> getPossibleTargets(
-      CGNode caller, CallSiteReference site, LocalPointerKey actualPk);
+  Set<CGNode> getPossibleTargets(CGNode caller, CallSiteReference site, LocalPointerKey actualPk);
 }

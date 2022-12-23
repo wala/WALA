@@ -26,5 +26,5 @@ public interface Graph<T> extends NodeManager<T>, EdgeManager<T> {
    *
    * @throws UnsupportedOperationException if the graph implementation does not allow removal
    */
-  public void removeNodeAndEdges(T n) throws UnsupportedOperationException;
+  void removeNodeAndEdges(T n) throws UnsupportedOperationException;
 }

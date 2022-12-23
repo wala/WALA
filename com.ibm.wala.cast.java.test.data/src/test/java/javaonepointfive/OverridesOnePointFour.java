@@ -38,8 +38,8 @@
 package javaonepointfive;
 
 public class OverridesOnePointFour {
-	static interface Super {
-		public Number get();
+	interface Super {
+		Number get();
 	}
 	
 	static class Sub implements Super {

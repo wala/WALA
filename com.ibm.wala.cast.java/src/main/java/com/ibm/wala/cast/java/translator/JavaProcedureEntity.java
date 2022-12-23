@@ -15,5 +15,5 @@ import com.ibm.wala.cast.tree.CAstEntity;
 public interface JavaProcedureEntity extends CAstEntity {
 
   @Override
-  public String getSignature();
+  String getSignature();
 }

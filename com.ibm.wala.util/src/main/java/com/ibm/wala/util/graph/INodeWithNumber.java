@@ -23,7 +23,7 @@ public interface INodeWithNumber {
    *
    * @return the identifier
    */
-  public int getGraphNodeId();
+  int getGraphNodeId();
 
   void setGraphNodeId(int number);
 }

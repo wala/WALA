@@ -28,43 +28,43 @@ import java.util.Map;
 public interface CAstEntity {
 
   /** This entity is a function. Children: in JavaScript, FUNCTION_ENTITY's; in Java, none. */
-  public static int FUNCTION_ENTITY = 1;
+  int FUNCTION_ENTITY = 1;
 
   /**
    * This entity is a program script for a scripting language. Children: in JavaScript,
    * FUNCTION_ENTITY's(?); doesn't occur in Java.
    */
-  public static int SCRIPT_ENTITY = 2;
+  int SCRIPT_ENTITY = 2;
 
   /**
    * This entity is a type in an object-oriented language. Children: typically, immediately enclosed
    * FIELD_ENTITY's, FUNCTION_ENTITY's, and TYPE_ENTITY's.
    */
-  public static int TYPE_ENTITY = 3;
+  int TYPE_ENTITY = 3;
 
   /** This entity is a field in an object-oriented language. Children: usually, none */
-  public static int FIELD_ENTITY = 4;
+  int FIELD_ENTITY = 4;
 
   /** This entity is a source file (i.e. a compilation unit). */
-  public static int FILE_ENTITY = 5;
+  int FILE_ENTITY = 5;
 
   /** This entity represents a rule in a logic language. */
-  public static int RULE_ENTITY = 6;
+  int RULE_ENTITY = 6;
 
   /**
    * This entity is a macro. A macro is a code body that only makes sense when expanded in the
    * context of another code body.
    */
-  public static int MACRO_ENTITY = 7;
+  int MACRO_ENTITY = 7;
 
   /** This entity represents a global varible */
-  public static int GLOBAL_ENTITY = 8;
+  int GLOBAL_ENTITY = 8;
 
   /**
    * Languages that introduce new kinds of CAstEntity should use this number as the base of integers
    * chosen to denote the new entity types.
    */
-  public static final int SUB_LANGUAGE_BASE = 100;
+  int SUB_LANGUAGE_BASE = 100;
 
   /**
    * What kind of entity is this? The answer should be one of the constants in this file. This has

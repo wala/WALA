@@ -90,7 +90,7 @@ public interface IMethod extends IMember, ContextItem {
    */
   int getLineNumber(int bcIndex);
   /* BEGIN Custom change: precise positions */
-  public interface SourcePosition extends Comparable<SourcePosition> {
+  interface SourcePosition extends Comparable<SourcePosition> {
     int getFirstLine();
 
     int getLastLine();
@@ -119,10 +119,10 @@ public interface IMethod extends IMember, ContextItem {
    * something like:
    * com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    */
-  public String getSignature();
+  String getSignature();
 
   /** something like: foo(Ljava/langString;)Ljava/lang/Class; */
-  public Selector getSelector();
+  Selector getSelector();
 
   /** something like: (IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer; */
   Descriptor getDescriptor();

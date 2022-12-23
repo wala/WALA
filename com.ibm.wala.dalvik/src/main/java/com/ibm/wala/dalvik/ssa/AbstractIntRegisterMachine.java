@@ -740,20 +740,20 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
   /** Interface which defines a flow function for a basic block */
   public interface FlowProvider {
 
-    public boolean needsNodeFlow();
+    boolean needsNodeFlow();
 
-    public boolean needsEdgeFlow();
+    boolean needsEdgeFlow();
 
     /**
      * Compute the MachineState at the exit of a basic block, given a MachineState at the block's
      * entry.
      */
-    public MachineState flow(MachineState entry, BasicBlock basicBlock);
+    MachineState flow(MachineState entry, BasicBlock basicBlock);
 
     /**
      * Compute the MachineState at the end of an edge, given a MachineState at the edges's entry.
      */
-    public MachineState flow(MachineState entry, BasicBlock from, BasicBlock to);
+    MachineState flow(MachineState entry, BasicBlock from, BasicBlock to);
   }
 
   /**

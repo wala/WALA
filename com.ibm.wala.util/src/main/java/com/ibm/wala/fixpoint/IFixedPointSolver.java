@@ -17,7 +17,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 public interface IFixedPointSolver<T extends IVariable<T>> {
 
   /** @return the set of statements solved by this {@code IFixedPointSolver} */
-  public IFixedPointSystem<T> getFixedPointSystem();
+  IFixedPointSystem<T> getFixedPointSystem();
 
   /**
    * Solve the problem.
@@ -27,5 +27,5 @@ public interface IFixedPointSolver<T extends IVariable<T>> {
    * @return true iff the evaluation of some constraint caused a change in the value of some
    *     variable.
    */
-  public boolean solve(IProgressMonitor monitor) throws CancelException;
+  boolean solve(IProgressMonitor monitor) throws CancelException;
 }

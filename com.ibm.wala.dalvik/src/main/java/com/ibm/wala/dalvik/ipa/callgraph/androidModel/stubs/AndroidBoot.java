@@ -74,7 +74,7 @@ import java.util.List;
 public class AndroidBoot {
   //    private static Logger logger = LoggerFactory.getLogger(AndroidBoot.class);
 
-  public static enum BootAction {
+  public enum BootAction {
     /** Create an instance of android.app.ContextImpl for the system. */
     CREATE_SYSTEM_CONTEXT,
     /** Crate an instance of android.app.ContextImpl for the apk. */

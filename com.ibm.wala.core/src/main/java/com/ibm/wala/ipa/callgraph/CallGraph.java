@@ -27,12 +27,12 @@ public interface CallGraph extends NumberedGraph<CGNode> {
    *
    * @return the "fake" root node the call graph
    */
-  public CGNode getFakeRootNode();
+  CGNode getFakeRootNode();
 
   CGNode getFakeWorldClinitNode();
 
   /** @return an Iterator of the nodes designated as "root nodes" */
-  public Collection<CGNode> getEntrypointNodes();
+  Collection<CGNode> getEntrypointNodes();
 
   /**
    * If you want to get <em> all </em> the nodes corresponding to a particular method, regardless of
@@ -40,25 +40,25 @@ public interface CallGraph extends NumberedGraph<CGNode> {
    *
    * @return the node corresponding a method in a context
    */
-  public CGNode getNode(IMethod method, Context C);
+  CGNode getNode(IMethod method, Context C);
 
   /**
    * @param m a method reference
    * @return the set of all nodes in the call graph that represent this method.
    */
-  public Set<CGNode> getNodes(MethodReference m);
+  Set<CGNode> getNodes(MethodReference m);
 
   /** @return the governing class hierarchy for this call graph */
-  public IClassHierarchy getClassHierarchy();
+  IClassHierarchy getClassHierarchy();
 
   /**
    * Return the set of CGNodes that represent possible targets of a particular call site from a
    * particular node
    */
-  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site);
+  Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site);
 
   /** @return the number of nodes that the call site may dispatch to */
-  public int getNumberOfTargets(CGNode node, CallSiteReference site);
+  int getNumberOfTargets(CGNode node, CallSiteReference site);
 
   /**
    * @return iterator of CallSiteReference, the call sites in a node that might dispatch to the

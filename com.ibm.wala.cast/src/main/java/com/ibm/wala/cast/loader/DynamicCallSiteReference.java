@@ -20,7 +20,7 @@ public class DynamicCallSiteReference extends CallSiteReference {
 
   // this must be distinct from java invoke codes.
   // see com.ibm.shrikeBT.BytecodeConstants
-  public static enum Dispatch implements IInvokeInstruction.IDispatch {
+  public enum Dispatch implements IInvokeInstruction.IDispatch {
     JS_CALL;
 
     @Override

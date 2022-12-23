@@ -21,419 +21,419 @@ public interface BytecodeConstants {
 
   // The following mnemonics are defined in Chapter 10 of The Java Virtual Machine Specification.
   //
-  public static final int JBC_nop = 0;
+  int JBC_nop = 0;
 
-  public static final int JBC_aconst_null = 1;
+  int JBC_aconst_null = 1;
 
-  public static final int JBC_iconst_m1 = 2;
+  int JBC_iconst_m1 = 2;
 
-  public static final int JBC_iconst_0 = 3;
+  int JBC_iconst_0 = 3;
 
-  public static final int JBC_iconst_1 = 4;
+  int JBC_iconst_1 = 4;
 
-  public static final int JBC_iconst_2 = 5;
+  int JBC_iconst_2 = 5;
 
-  public static final int JBC_iconst_3 = 6;
+  int JBC_iconst_3 = 6;
 
-  public static final int JBC_iconst_4 = 7;
+  int JBC_iconst_4 = 7;
 
-  public static final int JBC_iconst_5 = 8;
+  int JBC_iconst_5 = 8;
 
-  public static final int JBC_lconst_0 = 9;
+  int JBC_lconst_0 = 9;
 
-  public static final int JBC_lconst_1 = 10;
+  int JBC_lconst_1 = 10;
 
-  public static final int JBC_fconst_0 = 11;
+  int JBC_fconst_0 = 11;
 
-  public static final int JBC_fconst_1 = 12;
+  int JBC_fconst_1 = 12;
 
-  public static final int JBC_fconst_2 = 13;
+  int JBC_fconst_2 = 13;
 
-  public static final int JBC_dconst_0 = 14;
+  int JBC_dconst_0 = 14;
 
-  public static final int JBC_dconst_1 = 15;
+  int JBC_dconst_1 = 15;
 
-  public static final int JBC_bipush = 16;
+  int JBC_bipush = 16;
 
-  public static final int JBC_sipush = 17;
+  int JBC_sipush = 17;
 
-  public static final int JBC_ldc = 18;
+  int JBC_ldc = 18;
 
-  public static final int JBC_ldc_w = 19;
+  int JBC_ldc_w = 19;
 
-  public static final int JBC_ldc2_w = 20;
+  int JBC_ldc2_w = 20;
 
-  public static final int JBC_iload = 21;
+  int JBC_iload = 21;
 
-  public static final int JBC_lload = 22;
+  int JBC_lload = 22;
 
-  public static final int JBC_fload = 23;
+  int JBC_fload = 23;
 
-  public static final int JBC_dload = 24;
+  int JBC_dload = 24;
 
-  public static final int JBC_aload = 25;
+  int JBC_aload = 25;
 
-  public static final int JBC_iload_0 = 26;
+  int JBC_iload_0 = 26;
 
-  public static final int JBC_iload_1 = 27;
+  int JBC_iload_1 = 27;
 
-  public static final int JBC_iload_2 = 28;
+  int JBC_iload_2 = 28;
 
-  public static final int JBC_iload_3 = 29;
+  int JBC_iload_3 = 29;
 
-  public static final int JBC_lload_0 = 30;
+  int JBC_lload_0 = 30;
 
-  public static final int JBC_lload_1 = 31;
+  int JBC_lload_1 = 31;
 
-  public static final int JBC_lload_2 = 32;
+  int JBC_lload_2 = 32;
 
-  public static final int JBC_lload_3 = 33;
+  int JBC_lload_3 = 33;
 
-  public static final int JBC_fload_0 = 34;
+  int JBC_fload_0 = 34;
 
-  public static final int JBC_fload_1 = 35;
+  int JBC_fload_1 = 35;
 
-  public static final int JBC_fload_2 = 36;
+  int JBC_fload_2 = 36;
 
-  public static final int JBC_fload_3 = 37;
+  int JBC_fload_3 = 37;
 
-  public static final int JBC_dload_0 = 38;
+  int JBC_dload_0 = 38;
 
-  public static final int JBC_dload_1 = 39;
+  int JBC_dload_1 = 39;
 
-  public static final int JBC_dload_2 = 40;
+  int JBC_dload_2 = 40;
 
-  public static final int JBC_dload_3 = 41;
+  int JBC_dload_3 = 41;
 
-  public static final int JBC_aload_0 = 42;
+  int JBC_aload_0 = 42;
 
-  public static final int JBC_aload_1 = 43;
+  int JBC_aload_1 = 43;
 
-  public static final int JBC_aload_2 = 44;
+  int JBC_aload_2 = 44;
 
-  public static final int JBC_aload_3 = 45;
+  int JBC_aload_3 = 45;
 
-  public static final int JBC_iaload = 46;
+  int JBC_iaload = 46;
 
-  public static final int JBC_laload = 47;
+  int JBC_laload = 47;
 
-  public static final int JBC_faload = 48;
+  int JBC_faload = 48;
 
-  public static final int JBC_daload = 49;
+  int JBC_daload = 49;
 
-  public static final int JBC_aaload = 50;
+  int JBC_aaload = 50;
 
-  public static final int JBC_baload = 51;
+  int JBC_baload = 51;
 
-  public static final int JBC_caload = 52;
+  int JBC_caload = 52;
 
-  public static final int JBC_saload = 53;
+  int JBC_saload = 53;
 
-  public static final int JBC_istore = 54;
+  int JBC_istore = 54;
 
-  public static final int JBC_lstore = 55;
+  int JBC_lstore = 55;
 
-  public static final int JBC_fstore = 56;
+  int JBC_fstore = 56;
 
-  public static final int JBC_dstore = 57;
+  int JBC_dstore = 57;
 
-  public static final int JBC_astore = 58;
+  int JBC_astore = 58;
 
-  public static final int JBC_istore_0 = 59;
+  int JBC_istore_0 = 59;
 
-  public static final int JBC_istore_1 = 60;
+  int JBC_istore_1 = 60;
 
-  public static final int JBC_istore_2 = 61;
+  int JBC_istore_2 = 61;
 
-  public static final int JBC_istore_3 = 62;
+  int JBC_istore_3 = 62;
 
-  public static final int JBC_lstore_0 = 63;
+  int JBC_lstore_0 = 63;
 
-  public static final int JBC_lstore_1 = 64;
+  int JBC_lstore_1 = 64;
 
-  public static final int JBC_lstore_2 = 65;
+  int JBC_lstore_2 = 65;
 
-  public static final int JBC_lstore_3 = 66;
+  int JBC_lstore_3 = 66;
 
-  public static final int JBC_fstore_0 = 67;
+  int JBC_fstore_0 = 67;
 
-  public static final int JBC_fstore_1 = 68;
+  int JBC_fstore_1 = 68;
 
-  public static final int JBC_fstore_2 = 69;
+  int JBC_fstore_2 = 69;
 
-  public static final int JBC_fstore_3 = 70;
+  int JBC_fstore_3 = 70;
 
-  public static final int JBC_dstore_0 = 71;
+  int JBC_dstore_0 = 71;
 
-  public static final int JBC_dstore_1 = 72;
+  int JBC_dstore_1 = 72;
 
-  public static final int JBC_dstore_2 = 73;
+  int JBC_dstore_2 = 73;
 
-  public static final int JBC_dstore_3 = 74;
+  int JBC_dstore_3 = 74;
 
-  public static final int JBC_astore_0 = 75;
+  int JBC_astore_0 = 75;
 
-  public static final int JBC_astore_1 = 76;
+  int JBC_astore_1 = 76;
 
-  public static final int JBC_astore_2 = 77;
+  int JBC_astore_2 = 77;
 
-  public static final int JBC_astore_3 = 78;
+  int JBC_astore_3 = 78;
 
-  public static final int JBC_iastore = 79;
+  int JBC_iastore = 79;
 
-  public static final int JBC_lastore = 80;
+  int JBC_lastore = 80;
 
-  public static final int JBC_fastore = 81;
+  int JBC_fastore = 81;
 
-  public static final int JBC_dastore = 82;
+  int JBC_dastore = 82;
 
-  public static final int JBC_aastore = 83;
+  int JBC_aastore = 83;
 
-  public static final int JBC_bastore = 84;
+  int JBC_bastore = 84;
 
-  public static final int JBC_castore = 85;
+  int JBC_castore = 85;
 
-  public static final int JBC_sastore = 86;
+  int JBC_sastore = 86;
 
-  public static final int JBC_pop = 87;
+  int JBC_pop = 87;
 
-  public static final int JBC_pop2 = 88;
+  int JBC_pop2 = 88;
 
-  public static final int JBC_dup = 89;
+  int JBC_dup = 89;
 
-  public static final int JBC_dup_x1 = 90;
+  int JBC_dup_x1 = 90;
 
-  public static final int JBC_dup_x2 = 91;
+  int JBC_dup_x2 = 91;
 
-  public static final int JBC_dup2 = 92;
+  int JBC_dup2 = 92;
 
-  public static final int JBC_dup2_x1 = 93;
+  int JBC_dup2_x1 = 93;
 
-  public static final int JBC_dup2_x2 = 94;
+  int JBC_dup2_x2 = 94;
 
-  public static final int JBC_swap = 95;
+  int JBC_swap = 95;
 
-  public static final int JBC_iadd = 96;
+  int JBC_iadd = 96;
 
-  public static final int JBC_ladd = 97;
+  int JBC_ladd = 97;
 
-  public static final int JBC_fadd = 98;
+  int JBC_fadd = 98;
 
-  public static final int JBC_dadd = 99;
+  int JBC_dadd = 99;
 
-  public static final int JBC_isub = 100;
+  int JBC_isub = 100;
 
-  public static final int JBC_lsub = 101;
+  int JBC_lsub = 101;
 
-  public static final int JBC_fsub = 102;
+  int JBC_fsub = 102;
 
-  public static final int JBC_dsub = 103;
+  int JBC_dsub = 103;
 
-  public static final int JBC_imul = 104;
+  int JBC_imul = 104;
 
-  public static final int JBC_lmul = 105;
+  int JBC_lmul = 105;
 
-  public static final int JBC_fmul = 106;
+  int JBC_fmul = 106;
 
-  public static final int JBC_dmul = 107;
+  int JBC_dmul = 107;
 
-  public static final int JBC_idiv = 108;
+  int JBC_idiv = 108;
 
-  public static final int JBC_ldiv = 109;
+  int JBC_ldiv = 109;
 
-  public static final int JBC_fdiv = 110;
+  int JBC_fdiv = 110;
 
-  public static final int JBC_ddiv = 111;
+  int JBC_ddiv = 111;
 
-  public static final int JBC_irem = 112;
+  int JBC_irem = 112;
 
-  public static final int JBC_lrem = 113;
+  int JBC_lrem = 113;
 
-  public static final int JBC_frem = 114;
+  int JBC_frem = 114;
 
-  public static final int JBC_drem = 115;
+  int JBC_drem = 115;
 
-  public static final int JBC_ineg = 116;
+  int JBC_ineg = 116;
 
-  public static final int JBC_lneg = 117;
+  int JBC_lneg = 117;
 
-  public static final int JBC_fneg = 118;
+  int JBC_fneg = 118;
 
-  public static final int JBC_dneg = 119;
+  int JBC_dneg = 119;
 
-  public static final int JBC_ishl = 120;
+  int JBC_ishl = 120;
 
-  public static final int JBC_lshl = 121;
+  int JBC_lshl = 121;
 
-  public static final int JBC_ishr = 122;
+  int JBC_ishr = 122;
 
-  public static final int JBC_lshr = 123;
+  int JBC_lshr = 123;
 
-  public static final int JBC_iushr = 124;
+  int JBC_iushr = 124;
 
-  public static final int JBC_lushr = 125;
+  int JBC_lushr = 125;
 
-  public static final int JBC_iand = 126;
+  int JBC_iand = 126;
 
-  public static final int JBC_land = 127;
+  int JBC_land = 127;
 
-  public static final int JBC_ior = 128;
+  int JBC_ior = 128;
 
-  public static final int JBC_lor = 129;
+  int JBC_lor = 129;
 
-  public static final int JBC_ixor = 130;
+  int JBC_ixor = 130;
 
-  public static final int JBC_lxor = 131;
+  int JBC_lxor = 131;
 
-  public static final int JBC_iinc = 132;
+  int JBC_iinc = 132;
 
-  public static final int JBC_i2l = 133;
+  int JBC_i2l = 133;
 
-  public static final int JBC_i2f = 134;
+  int JBC_i2f = 134;
 
-  public static final int JBC_i2d = 135;
+  int JBC_i2d = 135;
 
-  public static final int JBC_l2i = 136;
+  int JBC_l2i = 136;
 
-  public static final int JBC_l2f = 137;
+  int JBC_l2f = 137;
 
-  public static final int JBC_l2d = 138;
+  int JBC_l2d = 138;
 
-  public static final int JBC_f2i = 139;
+  int JBC_f2i = 139;
 
-  public static final int JBC_f2l = 140;
+  int JBC_f2l = 140;
 
-  public static final int JBC_f2d = 141;
+  int JBC_f2d = 141;
 
-  public static final int JBC_d2i = 142;
+  int JBC_d2i = 142;
 
-  public static final int JBC_d2l = 143;
+  int JBC_d2l = 143;
 
-  public static final int JBC_d2f = 144;
+  int JBC_d2f = 144;
 
-  public static final int JBC_int2byte = 145;
+  int JBC_int2byte = 145;
 
-  public static final int JBC_int2char = 146;
+  int JBC_int2char = 146;
 
-  public static final int JBC_int2short = 147;
+  int JBC_int2short = 147;
 
-  public static final int JBC_lcmp = 148;
+  int JBC_lcmp = 148;
 
-  public static final int JBC_fcmpl = 149;
+  int JBC_fcmpl = 149;
 
-  public static final int JBC_fcmpg = 150;
+  int JBC_fcmpg = 150;
 
-  public static final int JBC_dcmpl = 151;
+  int JBC_dcmpl = 151;
 
-  public static final int JBC_dcmpg = 152;
+  int JBC_dcmpg = 152;
 
-  public static final int JBC_ifeq = 153;
+  int JBC_ifeq = 153;
 
-  public static final int JBC_ifne = 154;
+  int JBC_ifne = 154;
 
-  public static final int JBC_iflt = 155;
+  int JBC_iflt = 155;
 
-  public static final int JBC_ifge = 156;
+  int JBC_ifge = 156;
 
-  public static final int JBC_ifgt = 157;
+  int JBC_ifgt = 157;
 
-  public static final int JBC_ifle = 158;
+  int JBC_ifle = 158;
 
-  public static final int JBC_if_icmpeq = 159;
+  int JBC_if_icmpeq = 159;
 
-  public static final int JBC_if_icmpne = 160;
+  int JBC_if_icmpne = 160;
 
-  public static final int JBC_if_icmplt = 161;
+  int JBC_if_icmplt = 161;
 
-  public static final int JBC_if_icmpge = 162;
+  int JBC_if_icmpge = 162;
 
-  public static final int JBC_if_icmpgt = 163;
+  int JBC_if_icmpgt = 163;
 
-  public static final int JBC_if_icmple = 164;
+  int JBC_if_icmple = 164;
 
-  public static final int JBC_if_acmpeq = 165;
+  int JBC_if_acmpeq = 165;
 
-  public static final int JBC_if_acmpne = 166;
+  int JBC_if_acmpne = 166;
 
-  public static final int JBC_goto = 167;
+  int JBC_goto = 167;
 
-  public static final int JBC_jsr = 168;
+  int JBC_jsr = 168;
 
-  public static final int JBC_ret = 169;
+  int JBC_ret = 169;
 
-  public static final int JBC_tableswitch = 170;
+  int JBC_tableswitch = 170;
 
-  public static final int JBC_lookupswitch = 171;
+  int JBC_lookupswitch = 171;
 
-  public static final int JBC_ireturn = 172;
+  int JBC_ireturn = 172;
 
-  public static final int JBC_lreturn = 173;
+  int JBC_lreturn = 173;
 
-  public static final int JBC_freturn = 174;
+  int JBC_freturn = 174;
 
-  public static final int JBC_dreturn = 175;
+  int JBC_dreturn = 175;
 
-  public static final int JBC_areturn = 176;
+  int JBC_areturn = 176;
 
-  public static final int JBC_return = 177;
+  int JBC_return = 177;
 
-  public static final int JBC_getstatic = 178;
+  int JBC_getstatic = 178;
 
-  public static final int JBC_putstatic = 179;
+  int JBC_putstatic = 179;
 
-  public static final int JBC_getfield = 180;
+  int JBC_getfield = 180;
 
-  public static final int JBC_putfield = 181;
+  int JBC_putfield = 181;
 
-  public static final int JBC_invokevirtual = 182;
+  int JBC_invokevirtual = 182;
 
-  public static final int JBC_invokespecial = 183;
+  int JBC_invokespecial = 183;
 
-  public static final int JBC_invokestatic = 184;
+  int JBC_invokestatic = 184;
 
-  public static final int JBC_invokeinterface = 185;
+  int JBC_invokeinterface = 185;
 
-  public static final int JBC_xxxunusedxxx = 186;
+  int JBC_xxxunusedxxx = 186;
 
-  public static final int JBC_new = 187;
+  int JBC_new = 187;
 
-  public static final int JBC_newarray = 188;
+  int JBC_newarray = 188;
 
-  public static final int JBC_anewarray = 189;
+  int JBC_anewarray = 189;
 
-  public static final int JBC_arraylength = 190;
+  int JBC_arraylength = 190;
 
-  public static final int JBC_athrow = 191;
+  int JBC_athrow = 191;
 
-  public static final int JBC_checkcast = 192;
+  int JBC_checkcast = 192;
 
-  public static final int JBC_instanceof = 193;
+  int JBC_instanceof = 193;
 
-  public static final int JBC_monitorenter = 194;
+  int JBC_monitorenter = 194;
 
-  public static final int JBC_monitorexit = 195;
+  int JBC_monitorexit = 195;
 
-  public static final int JBC_wide = 196;
+  int JBC_wide = 196;
 
-  public static final int JBC_multianewarray = 197;
+  int JBC_multianewarray = 197;
 
-  public static final int JBC_ifnull = 198;
+  int JBC_ifnull = 198;
 
-  public static final int JBC_ifnonnull = 199;
+  int JBC_ifnonnull = 199;
 
-  public static final int JBC_goto_w = 200;
+  int JBC_goto_w = 200;
 
-  public static final int JBC_jsr_w = 201;
+  int JBC_jsr_w = 201;
 
-  public static final int JBC_impdep1 = 254;
+  int JBC_impdep1 = 254;
 
-  public static final int JBC_impdep2 = 255;
+  int JBC_impdep2 = 255;
 
   // Length of each instruction introduced by the above bytecodes.
   // -1 indicates a variable length instruction.
   // -2 indicates an unused instruction.
   //
-  public static final byte JBC_length[] = {
+  byte JBC_length[] = {
     1, // nop
     1, // aconst_null
     1, // iconst_m1
@@ -639,7 +639,7 @@ public interface BytecodeConstants {
   };
 
   /** Bytecode names (for debugging/printing) */
-  public static final String JBC_name[] = {
+  String JBC_name[] = {
     "nop",
     "aconst_null",
     "iconst_m1",

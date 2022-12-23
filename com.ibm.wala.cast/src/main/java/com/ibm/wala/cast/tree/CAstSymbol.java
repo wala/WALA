@@ -12,7 +12,7 @@ package com.ibm.wala.cast.tree;
 
 public interface CAstSymbol {
 
-  public static Object NULL_DEFAULT_VALUE =
+  Object NULL_DEFAULT_VALUE =
       new Object() {
         @Override
         public String toString() {
@@ -20,16 +20,16 @@ public interface CAstSymbol {
         }
       };
 
-  public String name();
+  String name();
 
   /** like final in Java; can only be declared / assigned once */
-  public boolean isFinal();
+  boolean isFinal();
 
-  public boolean isCaseInsensitive();
+  boolean isCaseInsensitive();
 
-  public Object defaultInitValue();
+  Object defaultInitValue();
 
-  public boolean isInternalName();
+  boolean isInternalName();
 
-  public CAstType type();
+  CAstType type();
 }

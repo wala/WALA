@@ -24,13 +24,13 @@ public interface RTAContextInterpreter extends CHAContextInterpreter {
    * @return an Iterator of the types that may be allocated by a given method in a given context.
    */
   @Override
-  public abstract Iterator<NewSiteReference> iterateNewSites(CGNode node);
+  Iterator<NewSiteReference> iterateNewSites(CGNode node);
 
   /** @return iterator of FieldReference */
-  public Iterator<FieldReference> iterateFieldsRead(CGNode node);
+  Iterator<FieldReference> iterateFieldsRead(CGNode node);
 
   /** @return iterator of FieldReference */
-  public Iterator<FieldReference> iterateFieldsWritten(CGNode node);
+  Iterator<FieldReference> iterateFieldsWritten(CGNode node);
 
   /**
    * record that the "factory" method of a node should be interpreted to allocate a particular
@@ -40,5 +40,5 @@ public interface RTAContextInterpreter extends CHAContextInterpreter {
    *
    * @return true iff a NEW type was recorded, false if the type was previously recorded.
    */
-  public boolean recordFactoryType(CGNode node, IClass klass);
+  boolean recordFactoryType(CGNode node, IClass klass);
 }

@@ -50,7 +50,7 @@ public abstract class IInstantiationBehavior implements Serializable {
   private static final long serialVersionUID = -3698760758700891479L;
 
   /** The handling for a variable occurring in the AndroidModel. */
-  public static enum InstanceBehavior {
+  public enum InstanceBehavior {
     /** Create a new instance on each occurrence. */
     CREATE,
     /** Use a single instance throughout the model (uses Phi-in). */
@@ -61,7 +61,7 @@ public abstract class IInstantiationBehavior implements Serializable {
   /**
    * Information on how the IInstanciationBehavior made its decision for {@link InstanceBehavior}
    */
-  public static enum Exactness {
+  public enum Exactness {
     /** The decision was made based on a exact known mapping from the given data. */
     EXACT,
     /** No direct mapping was found for the type, the one returned is from a superclass. */

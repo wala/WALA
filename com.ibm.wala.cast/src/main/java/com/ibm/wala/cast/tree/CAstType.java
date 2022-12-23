@@ -23,25 +23,25 @@ public interface CAstType {
 
   Collection<CAstType> getSupertypes();
 
-  public interface Primitive extends CAstType {
+  interface Primitive extends CAstType {
     // Need anything else? The name pretty much says it all...
   }
 
-  public interface Reference extends CAstType {}
+  interface Reference extends CAstType {}
 
-  public interface Class extends Reference {
+  interface Class extends Reference {
     boolean isInterface();
 
     Collection<CAstQualifier> getQualifiers();
   }
 
-  public interface Array extends Reference {
+  interface Array extends Reference {
     int getNumDimensions();
 
     CAstType getElementType();
   }
 
-  public interface Function extends Reference {
+  interface Function extends Reference {
     CAstType getReturnType();
 
     List<CAstType> getArgumentTypes();
@@ -51,23 +51,23 @@ public interface CAstType {
     int getArgumentCount();
   }
 
-  public interface Method extends Function {
+  interface Method extends Function {
     CAstType getDeclaringType();
 
     boolean isStatic();
   }
 
-  public interface Complex extends CAstType {
+  interface Complex extends CAstType {
 
     CAstType getType();
   }
 
-  public interface Union extends Complex {
+  interface Union extends Complex {
 
     Iterable<CAstType> getConstituents();
   }
 
-  public static final CAstType DYNAMIC =
+  CAstType DYNAMIC =
       new CAstType() {
 
         @Override

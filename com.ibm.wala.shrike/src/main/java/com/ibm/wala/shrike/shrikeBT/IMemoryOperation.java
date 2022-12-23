@@ -17,5 +17,5 @@ public interface IMemoryOperation {
    *
    * @return whether this instruction is taking the address of a location
    */
-  public boolean isAddressOf();
+  boolean isAddressOf();
 }

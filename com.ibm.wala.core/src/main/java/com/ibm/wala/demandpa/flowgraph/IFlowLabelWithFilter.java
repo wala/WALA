@@ -14,5 +14,5 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 
 public interface IFlowLabelWithFilter extends IFlowLabel {
 
-  public TypeFilter getFilter();
+  TypeFilter getFilter();
 }

@@ -217,7 +217,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * @see DemandRefinementPointsTo#getPointsTo(PointerKey, Predicate)
    * @author manu
    */
-  public static enum PointsToResult {
+  public enum PointsToResult {
     /** The points-to set result satisfies the supplied {@link Predicate} */
     SUCCESS,
     /**

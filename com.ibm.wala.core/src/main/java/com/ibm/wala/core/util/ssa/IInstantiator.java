@@ -65,5 +65,5 @@ public interface IInstantiator {
    * @param instantiatorArgs passed through utility functions
    * @return SSA-Number of the instance
    */
-  public int createInstance(TypeReference type, Object... instantiatorArgs);
+  int createInstance(TypeReference type, Object... instantiatorArgs);
 }

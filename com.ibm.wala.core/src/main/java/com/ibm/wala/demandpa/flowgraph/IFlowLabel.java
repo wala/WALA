@@ -44,12 +44,12 @@ package com.ibm.wala.demandpa.flowgraph;
  */
 public interface IFlowLabel {
 
-  public void visit(IFlowLabelVisitor v, Object dst);
+  void visit(IFlowLabelVisitor v, Object dst);
 
   /** @return the bar (inverse) edge corresponding to this edge */
-  public IFlowLabel bar();
+  IFlowLabel bar();
 
-  public interface IFlowLabelVisitor {
+  interface IFlowLabelVisitor {
 
     void visitAssignGlobal(AssignGlobalLabel label, Object dst);
 
@@ -85,5 +85,5 @@ public interface IFlowLabel {
   }
 
   /** @return true if this is a "barred" edge */
-  public boolean isBarred();
+  boolean isBarred();
 }

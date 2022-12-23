@@ -35,14 +35,14 @@ public interface NodeManager<T> extends Iterable<T> {
   Stream<T> stream();
 
   /** @return the number of nodes in this graph */
-  public int getNumberOfNodes();
+  int getNumberOfNodes();
 
   /** add a node to this graph */
-  public void addNode(T n);
+  void addNode(T n);
 
   /** remove a node from this graph */
-  public void removeNode(T n) throws UnsupportedOperationException;
+  void removeNode(T n) throws UnsupportedOperationException;
 
   /** @return true iff the graph contains the specified node */
-  public boolean containsNode(@Nullable T n);
+  boolean containsNode(@Nullable T n);
 }

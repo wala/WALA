@@ -57,7 +57,7 @@ import org.jf.dexlib2.Opcode;
 
 public class BinaryLiteralOperation extends Instruction {
 
-  public static enum OpID {
+  public enum OpID {
     CMPL_FLOAT,
     CMPG_FLOAT,
     CMPL_DOUBLE,

@@ -17,19 +17,19 @@ public interface ContextKey {
    * A property of contexts that might be generally useful: the "caller" method ... used for
    * call-string context schemes.
    */
-  public static final ContextKey CALLER = new ContextKey() {};
+  ContextKey CALLER = new ContextKey() {};
 
   /** A property of contexts that might be generally useful: the "target" method. */
-  public static final ContextKey TARGET = new ContextKey() {};
+  ContextKey TARGET = new ContextKey() {};
 
   /** A property of contexts that might be generally useful: the "name". */
-  public static final ContextKey NAME = new ContextKey() {};
+  ContextKey NAME = new ContextKey() {};
 
   /**
    * A property of contexts that might be generally useful: the "call site" method ... used for
    * call-string context schemes.
    */
-  public static final ContextKey CALLSITE = new ContextKey() {};
+  ContextKey CALLSITE = new ContextKey() {};
 
   /**
    * A property of contexts that might be generally useful: an identifier for the receiver object
@@ -37,13 +37,13 @@ public interface ContextKey {
    *
    * <p>Known implementations (ContextItems) for RECEIVER include TypeAbstraction and InstanceKey
    */
-  public static final ContextKey RECEIVER = new ContextKey() {};
+  ContextKey RECEIVER = new ContextKey() {};
 
   /**
    * context key representing some parameter index, useful, e.g. for CPA-style context-sensitivity
    * policies.
    */
-  static class ParameterKey implements ContextKey {
+  class ParameterKey implements ContextKey {
     public final int index;
 
     private ParameterKey(int index) {
@@ -57,7 +57,7 @@ public interface ContextKey {
   }
 
   /** Generally useful constants for possible parameter indices */
-  public static final ContextKey PARAMETERS[] =
+  ContextKey PARAMETERS[] =
       new ContextKey[] {
         new ParameterKey(0),
         new ParameterKey(1),

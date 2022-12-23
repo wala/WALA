@@ -14,7 +14,7 @@ package com.ibm.wala.ipa.callgraph;
 /** A placeholder for strong typing. */
 public interface ContextItem {
 
-  public class Value<T> implements ContextItem {
+  class Value<T> implements ContextItem {
     private final T v;
 
     public Value(T v) {

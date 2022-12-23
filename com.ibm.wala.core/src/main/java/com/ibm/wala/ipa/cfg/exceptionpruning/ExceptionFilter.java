@@ -10,8 +10,8 @@ import java.util.Collection;
  */
 public interface ExceptionFilter<Instruction> {
   /** @return if the instruction does always throw an exception */
-  public boolean alwaysThrowsException(Instruction instruction);
+  boolean alwaysThrowsException(Instruction instruction);
 
   /** @return a list of exceptions, which have to be filtered for the given instruction */
-  public Collection<FilteredException> filteredExceptions(Instruction instruction);
+  Collection<FilteredException> filteredExceptions(Instruction instruction);
 }

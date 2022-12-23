@@ -12,9 +12,9 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IConditionalBranchInstruction extends IInstruction {
 
-  public interface IOperator {}
+  interface IOperator {}
 
-  public enum Operator implements IConditionalBranchInstruction.IOperator {
+  enum Operator implements IConditionalBranchInstruction.IOperator {
     EQ,
     NE,
     LT,

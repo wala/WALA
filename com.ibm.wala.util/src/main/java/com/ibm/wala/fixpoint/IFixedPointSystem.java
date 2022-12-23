@@ -20,21 +20,21 @@ public interface IFixedPointSystem<T extends IVariable<T>> {
   void removeStatement(IFixedPointStatement<T> statement);
 
   /** Add a statement to the system */
-  public void addStatement(IFixedPointStatement<T> statement);
+  void addStatement(IFixedPointStatement<T> statement);
 
   /**
    * Return an Iterator of the {@link IFixedPointStatement}s in this system
    *
    * @return {@link Iterator}&lt;Constraint&gt;
    */
-  public Iterator<? extends INodeWithNumber> getStatements();
+  Iterator<? extends INodeWithNumber> getStatements();
 
   /**
    * Return an Iterator of the variables in this graph
    *
    * @return {@link Iterator}&lt;{@link IVariable}&gt;
    */
-  public Iterator<? extends INodeWithNumber> getVariables();
+  Iterator<? extends INodeWithNumber> getVariables();
 
   /** @return true iff this system already contains an equation that is equal() to s */
   boolean containsStatement(IFixedPointStatement<T> s);

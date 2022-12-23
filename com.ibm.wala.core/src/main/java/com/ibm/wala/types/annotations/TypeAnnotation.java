@@ -619,7 +619,7 @@ public class TypeAnnotation {
    *
    * @author Martin Hecker martin.hecker@kit.edu
    */
-  public static interface TypeAnnotationTargetConverter
+  public interface TypeAnnotationTargetConverter
       extends TypeAnnotationTargetVisitor<TypeAnnotationTarget> {}
 
   public static TypeAnnotationTargetConverter targetConverterAtCode(

@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 public class MethodRefs {
 
-  static interface I {
+  interface I {
     void target();
   }
 

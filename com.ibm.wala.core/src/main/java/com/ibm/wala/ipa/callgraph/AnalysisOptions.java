@@ -55,7 +55,7 @@ public class AnalysisOptions {
   private int maxEvalBetweenTopo = 1000000000;
 
   /** options for handling reflection during call graph construction */
-  public static enum ReflectionOptions {
+  public enum ReflectionOptions {
     FULL("full", Integer.MAX_VALUE, false, false, false),
     APPLICATION_GET_METHOD("application_get_method", Integer.MAX_VALUE, false, false, true),
     NO_FLOW_TO_CASTS("no_flow_to_casts", 0, false, false, false),
@@ -86,7 +86,7 @@ public class AnalysisOptions {
     /** should calls to reflective methods with String constant arguments be ignored? */
     private final boolean ignoreStringConstants;
 
-    private ReflectionOptions(
+    ReflectionOptions(
         String name,
         int numFlowToCastIterations,
         boolean ignoreMethodInvoke,

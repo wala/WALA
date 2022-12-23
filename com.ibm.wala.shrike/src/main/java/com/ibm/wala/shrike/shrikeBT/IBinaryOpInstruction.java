@@ -12,13 +12,13 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IBinaryOpInstruction extends IInstruction {
 
-  public interface IOperator {}
+  interface IOperator {}
 
   IBinaryOpInstruction.IOperator getOperator();
 
   String getType();
 
-  public enum Operator implements IBinaryOpInstruction.IOperator {
+  enum Operator implements IBinaryOpInstruction.IOperator {
     ADD,
     SUB,
     MUL,
@@ -34,7 +34,7 @@ public interface IBinaryOpInstruction extends IInstruction {
     }
   }
 
-  public boolean throwsExceptionOnOverflow();
+  boolean throwsExceptionOnOverflow();
 
-  public boolean isUnsigned();
+  boolean isUnsigned();
 }

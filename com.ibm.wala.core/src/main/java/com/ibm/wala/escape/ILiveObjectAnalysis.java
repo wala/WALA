@@ -27,7 +27,7 @@ public interface ILiveObjectAnalysis {
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be
    *     live immediately after the statement &lt;m,instructionIndex&gt;
    */
-  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex)
+  boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex)
       throws WalaException;
 
   /**
@@ -38,7 +38,7 @@ public interface ILiveObjectAnalysis {
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may be
    *     live immediately after the statement &lt;m,instructionIndex&gt;
    */
-  public boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) throws WalaException;
+  boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) throws WalaException;
 
   /**
    * @param ik an instance key
@@ -48,5 +48,5 @@ public interface ILiveObjectAnalysis {
    *     live immediately after the statement &lt;m,instructionIndex&gt; for any instructionIndex in
    *     the set
    */
-  public boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices);
+  boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices);
 }

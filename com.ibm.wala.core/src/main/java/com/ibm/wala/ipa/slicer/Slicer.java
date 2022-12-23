@@ -46,7 +46,7 @@ public class Slicer {
   public static final boolean VERBOSE = false;
 
   /** options to control data dependence edges in the SDG */
-  public static enum DataDependenceOptions {
+  public enum DataDependenceOptions {
     FULL("full", false, false, false, false),
     NO_BASE_PTRS("no_base_ptrs", true, false, false, false),
     NO_BASE_NO_HEAP("no_base_no_heap", true, true, false, false),
@@ -121,7 +121,7 @@ public class Slicer {
   }
 
   /** options to control control dependence edges in the sdg */
-  public static enum ControlDependenceOptions {
+  public enum ControlDependenceOptions {
     /** track all control dependencies */
     FULL("full", false, false),
 

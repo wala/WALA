@@ -45,11 +45,11 @@ package com.ibm.wala.demandpa.alg.statemachine;
  */
 public interface StateMachine<T> {
 
-  public static interface State {}
+  interface State {}
 
-  public static final State ERROR = new State() {};
+  State ERROR = new State() {};
 
-  public State getStartState();
+  State getStartState();
 
   /**
    * @return the successor state of prevState for the transition labelled label, or {@code null} if
@@ -57,5 +57,5 @@ public interface StateMachine<T> {
    * @throws StatesMergedException if merging of states is detected
    * @see StatesMergedException
    */
-  public State transition(State prevState, T label);
+  State transition(State prevState, T label);
 }

@@ -23,5 +23,5 @@ public interface IUnaryFlowFunction extends IFlowFunction {
    * @return set of d2 such that (d1,d2) is an edge in this distributive function's graph
    *     representation, or null if there are none
    */
-  public IntSet getTargets(int d1);
+  IntSet getTargets(int d1);
 }

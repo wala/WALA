@@ -17,7 +17,7 @@ public class MonitorUtil {
   public interface IProgressMonitor {
 
     /** Constant indicating an unknown amount of work. */
-    public static final int UNKNOWN = -1;
+    int UNKNOWN = -1;
 
     void beginTask(String task, int totalWork);
 

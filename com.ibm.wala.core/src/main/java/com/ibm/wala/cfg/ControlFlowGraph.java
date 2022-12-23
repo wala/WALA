@@ -19,13 +19,13 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>>
     extends NumberedGraph<T>, MinimalCFG<T> {
 
   /** @return the indices of the catch blocks, as a bit vector */
-  public BitVector getCatchBlocks();
+  BitVector getCatchBlocks();
 
   /**
    * @param index an instruction index
    * @return the basic block which contains this instruction.
    */
-  public T getBlockForInstruction(int index);
+  T getBlockForInstruction(int index);
 
   /** @return the instructions of this CFG, as an array. */
   I[] getInstructions();
@@ -36,8 +36,8 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>>
    * @param index an instruction index
    * @return the program counter (bytecode index) corresponding to that instruction
    */
-  public int getProgramCounter(int index);
+  int getProgramCounter(int index);
 
   /** @return the Method this CFG represents */
-  public IMethod getMethod();
+  IMethod getMethod();
 }

@@ -43,16 +43,16 @@ public interface ISpecs {
   /* A list of functions that are entry points. Arguments to these
    * functions that are considered sources should be in the
    * SourceSpec list. */
-  public MethodNamePattern[] getEntrypointSpecs();
+  MethodNamePattern[] getEntrypointSpecs();
 
   /* Other methods that source data via their return values or
    * modification of their parameters. */
-  public SourceSpec[] getSourceSpecs();
+  SourceSpec[] getSourceSpecs();
 
   /* Methods that sink data supplied by some of their parameters. */
-  public SinkSpec[] getSinkSpecs();
+  SinkSpec[] getSinkSpecs();
 
-  public static ISpecs EMPTY_SPECS =
+  ISpecs EMPTY_SPECS =
       new ISpecs() {
 
         @Override

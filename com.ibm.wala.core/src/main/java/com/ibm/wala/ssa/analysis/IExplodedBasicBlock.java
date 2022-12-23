@@ -23,7 +23,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 public interface IExplodedBasicBlock extends ISSABasicBlock {
 
   /** get the instruction for this block, or null if the block has no instruction */
-  public SSAInstruction getInstruction();
+  SSAInstruction getInstruction();
 
   /**
    * if this represents an exception handler block, return the corresponding {@link
@@ -31,10 +31,10 @@ public interface IExplodedBasicBlock extends ISSABasicBlock {
    *
    * @throws IllegalArgumentException if this does not represent an exception handler block
    */
-  public SSAGetCaughtExceptionInstruction getCatchInstruction();
+  SSAGetCaughtExceptionInstruction getCatchInstruction();
 
   /**
    * get the number of the original basic block containing the instruction of this exploded block
    */
-  public int getOriginalNumber();
+  int getOriginalNumber();
 }

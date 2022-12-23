@@ -21,17 +21,17 @@ public interface ClassHierarchyProvider {
    * @return the superclass of the given class, or null if the superclass is not known or cl is
    *     java.lang.Object
    */
-  public String getSuperClass(String cl);
+  String getSuperClass(String cl);
 
   /** @return the superinterfaces of the given class, or null if they are not known */
-  public String[] getSuperInterfaces(String cl);
+  String[] getSuperInterfaces(String cl);
 
   /**
    * @return the complete set of direct subclasses or implementors of cl, or null if the complete
    *     set is not known
    */
-  public String[] getSubClasses(String cl);
+  String[] getSubClasses(String cl);
 
   /** @return whether or not cl is an interface, or Constants.MAYBE if not known */
-  public int isInterface(String cl);
+  int isInterface(String cl);
 }

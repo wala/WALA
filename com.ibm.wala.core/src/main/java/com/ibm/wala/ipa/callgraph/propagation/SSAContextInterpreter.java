@@ -23,18 +23,18 @@ import com.ibm.wala.ssa.SSAInstruction;
 public interface SSAContextInterpreter extends RTAContextInterpreter {
 
   /** @return the IR that models the method context, or null if it's an unmodelled native method */
-  public IR getIR(CGNode node);
+  IR getIR(CGNode node);
 
-  public IRView getIRView(CGNode node);
+  IRView getIRView(CGNode node);
 
   /**
    * @return DefUse for the IR that models the method context, or null if it's an unmodelled native
    *     method
    */
-  public DefUse getDU(CGNode node);
+  DefUse getDU(CGNode node);
 
   /** @return the number of the statements in the IR, or -1 if it's an unmodelled native method. */
-  public int getNumberOfStatements(CGNode node);
+  int getNumberOfStatements(CGNode node);
 
-  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n);
+  ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n);
 }

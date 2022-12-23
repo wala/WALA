@@ -187,7 +187,7 @@ public final class MethodData {
    * Annotation objects implement this Results interface. The Results interface is used to notify an
    * annotation that the method code has been updated.
    */
-  public static interface Results {
+  public interface Results {
     /**
      * This method is called just before the code for a method changes. The existing instructions,
      * handlers, etc can be read from the current info.
@@ -199,7 +199,7 @@ public final class MethodData {
      * @return true to remove the object from the info set, for example because the annotation is
      *     now invalid
      */
-    public boolean notifyUpdate(
+    boolean notifyUpdate(
         MethodData info,
         IInstruction[] newInstructions,
         ExceptionHandler[][] newHandlers,

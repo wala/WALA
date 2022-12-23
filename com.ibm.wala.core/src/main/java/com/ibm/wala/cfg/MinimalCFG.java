@@ -17,10 +17,10 @@ import java.util.List;
 public interface MinimalCFG<T> extends NumberedGraph<T> {
 
   /** Return the entry basic block in the CFG */
-  public T entry();
+  T entry();
 
   /** @return the synthetic exit block for the cfg */
-  public T exit();
+  T exit();
 
   /**
    * The order of blocks returned must indicate the exception-handling scope. So the first block is
@@ -29,26 +29,26 @@ public interface MinimalCFG<T> extends NumberedGraph<T> {
    *
    * @return the basic blocks which may be reached from b via exceptional control flow
    */
-  public List<T> getExceptionalSuccessors(T b);
+  List<T> getExceptionalSuccessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    *
    * @return the basic blocks which may be reached from b via normal control flow
    */
-  public Collection<T> getNormalSuccessors(T b);
+  Collection<T> getNormalSuccessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    *
    * @return the basic blocks from which b may be reached via exceptional control flow
    */
-  public Collection<T> getExceptionalPredecessors(T b);
+  Collection<T> getExceptionalPredecessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    *
    * @return the basic blocks from which b may be reached via normal control flow
    */
-  public Collection<T> getNormalPredecessors(T b);
+  Collection<T> getNormalPredecessors(T b);
 }

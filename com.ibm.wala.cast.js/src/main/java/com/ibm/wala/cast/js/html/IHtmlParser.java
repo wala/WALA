@@ -21,5 +21,5 @@ import java.net.URL;
 public interface IHtmlParser {
 
   /** Parses a given HTML, calling the given callback. */
-  public void parse(URL url, Reader reader, IHtmlCallback callback, String fileName) throws Error;
+  void parse(URL url, Reader reader, IHtmlCallback callback, String fileName) throws Error;
 }

@@ -105,9 +105,9 @@ public final class ClassInstrumenter {
   }
 
   /** Implement this interface to instrument every method of a class using visitMethods() below. */
-  public static interface MethodExaminer {
+  public interface MethodExaminer {
     /** Do something to the method. */
-    public void examineCode(MethodData data);
+    void examineCode(MethodData data);
   }
 
   private void prepareMethod(int i) throws InvalidClassFileException {

@@ -12,7 +12,7 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IComparisonInstruction extends IInstruction {
 
-  public enum Operator {
+  enum Operator {
     CMP,
     CMPL,
     CMPG;

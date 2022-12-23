@@ -31,14 +31,14 @@ import java.util.Collection;
  */
 public interface TabulationProblem<T, P, F> {
 
-  public ISupergraph<T, P> getSupergraph();
+  ISupergraph<T, P> getSupergraph();
 
-  public TabulationDomain<F, T> getDomain();
+  TabulationDomain<F, T> getDomain();
 
-  public IFlowFunctionMap<T> getFunctionMap();
+  IFlowFunctionMap<T> getFunctionMap();
 
   /** Define the set of path edges to start propagation with. */
-  public Collection<PathEdge<T>> initialSeeds();
+  Collection<PathEdge<T>> initialSeeds();
 
   /**
    * Special case: if supportsMerge(), then the problem is not really IFDS anymore. (TODO: rename
@@ -48,5 +48,5 @@ public interface TabulationProblem<T, P, F> {
    *
    * @return the merge function, or null if !supportsMerge()
    */
-  public IMergeFunction getMergeFunction();
+  IMergeFunction getMergeFunction();
 }

@@ -4027,13 +4027,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * Contains things needed by in the visit() of some nodes to process the nodes. For example, pos()
    * contains the source position mapping which each node registers
    */
-  public static interface WalkContext extends TranslatorToCAst.WalkContext<WalkContext, ASTNode> {
+  public interface WalkContext extends TranslatorToCAst.WalkContext<WalkContext, ASTNode> {
 
-    public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type);
+    Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type);
 
-    public Map<ASTNode, String> getLabelMap();
+    Map<ASTNode, String> getLabelMap();
 
-    public boolean needLValue();
+    boolean needLValue();
   }
 
   /**

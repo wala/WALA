@@ -22,7 +22,7 @@ import java.util.Arrays;
 /** A {@link PointerKey} which carries a type filter, used during pointer analysis */
 public interface FilteredPointerKey extends PointerKey {
 
-  public interface TypeFilter extends ContextItem {
+  interface TypeFilter extends ContextItem {
 
     boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R);
 
@@ -32,7 +32,7 @@ public interface FilteredPointerKey extends PointerKey {
     boolean isRootFilter();
   }
 
-  public class SingleClassFilter implements TypeFilter {
+  class SingleClassFilter implements TypeFilter {
     private final IClass concreteType;
 
     public SingleClassFilter(IClass concreteType) {
@@ -83,7 +83,7 @@ public interface FilteredPointerKey extends PointerKey {
     }
   }
 
-  public class MultipleClassesFilter implements TypeFilter {
+  class MultipleClassesFilter implements TypeFilter {
     private final IClass[] concreteType;
 
     public MultipleClassesFilter(IClass[] concreteType) {
@@ -162,7 +162,7 @@ public interface FilteredPointerKey extends PointerKey {
     }
   }
 
-  public class SingleInstanceFilter implements TypeFilter {
+  class SingleInstanceFilter implements TypeFilter {
     private final InstanceKey concreteType;
 
     public SingleInstanceFilter(InstanceKey concreteType) {
@@ -219,7 +219,7 @@ public interface FilteredPointerKey extends PointerKey {
     }
   }
 
-  public class TargetMethodFilter implements TypeFilter {
+  class TargetMethodFilter implements TypeFilter {
     private final IMethod targetMethod;
 
     public TargetMethodFilter(IMethod targetMethod) {
@@ -307,5 +307,5 @@ public interface FilteredPointerKey extends PointerKey {
    * @return the class which should govern filtering of instances to which this pointer points, or
    *     null if no filtering needed
    */
-  public TypeFilter getTypeFilter();
+  TypeFilter getTypeFilter();
 }

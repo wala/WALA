@@ -30,5 +30,5 @@ public interface IBinaryReturnFlowFunction extends IFlowFunction {
    * @return set of ret_d such that ({@literal <call_d, exit_d>}, ret_d) is an edge in this
    *     distributive function's graph representation, or null if there are none
    */
-  public SparseIntSet getTargets(int call_d, int exit_d);
+  SparseIntSet getTargets(int call_d, int exit_d);
 }

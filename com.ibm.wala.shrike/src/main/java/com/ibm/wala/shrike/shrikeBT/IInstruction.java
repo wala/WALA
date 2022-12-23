@@ -18,7 +18,7 @@ public interface IInstruction {
 
   /** This class is used by IInstruction.visit to dispatch based on the instruction type. */
   @SuppressWarnings("unused")
-  public abstract static class Visitor {
+  abstract class Visitor {
     public void visitConstant(ConstantInstruction instruction) {}
 
     public void visitGoto(GotoInstruction instruction) {}
@@ -77,22 +77,22 @@ public interface IInstruction {
   }
 
   /** @return true if the instruction can "fall through" to the following instruction */
-  public boolean isFallThrough();
+  boolean isFallThrough();
 
   /**
    * @return an array containing the labels this instruction can branch to (not including the
    *     following instruction if this instruction 'falls through')
    */
-  public int[] getBranchTargets();
+  int[] getBranchTargets();
 
   /**
    * @return an Instruction equivalent to this one but with any branch labels updated by looking
    *     them up in the targetMap array
    */
-  public IInstruction redirectTargets(int[] targetMap);
+  IInstruction redirectTargets(int[] targetMap);
 
   /** @return the number of values this instruction pops off the working stack */
-  public int getPoppedCount();
+  int getPoppedCount();
 
   /**
    * Computes the type of data pushed onto the stack, or null if none is pushed.
@@ -101,23 +101,23 @@ public interface IInstruction {
    *     poppedTypes is null, then we don't know the incoming stack types and the result of this
    *     method may be less accurate
    */
-  public String getPushedType(String[] poppedTypesToCheck);
+  String getPushedType(String[] poppedTypesToCheck);
 
   /**
    * @return the JVM word size of the value this instruction pushes onto the stack, or 0 if this
    *     instruction doesn't push anything onto the stack.
    */
-  public byte getPushedWordSize();
+  byte getPushedWordSize();
 
   /**
    * Apply a Visitor to this instruction. We invoke the appropriate Visitor method according to the
    * type of this instruction.
    */
-  public void visit(IInstruction.Visitor v);
+  void visit(IInstruction.Visitor v);
 
   /** Subclasses must implement toString. */
   @Override
-  public String toString();
+  String toString();
 
   /**
    * PEI == "Potentially excepting instruction"

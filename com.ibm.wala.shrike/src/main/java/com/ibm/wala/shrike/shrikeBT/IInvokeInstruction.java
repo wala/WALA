@@ -25,12 +25,12 @@ public interface IInvokeInstruction extends IInstruction {
 
   String getClassType();
 
-  public interface IDispatch {
+  interface IDispatch {
 
     boolean hasImplicitThis();
   }
 
-  public static enum Dispatch implements IDispatch {
+  enum Dispatch implements IDispatch {
     VIRTUAL,
     SPECIAL,
     INTERFACE,

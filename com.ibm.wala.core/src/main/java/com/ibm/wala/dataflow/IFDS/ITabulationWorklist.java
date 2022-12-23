@@ -16,7 +16,7 @@ public interface ITabulationWorklist<T> {
   /** @return the first object in the priority queue */
   PathEdge<T> take();
 
-  public void insert(PathEdge<T> elt);
+  void insert(PathEdge<T> elt);
 
   int size();
 }

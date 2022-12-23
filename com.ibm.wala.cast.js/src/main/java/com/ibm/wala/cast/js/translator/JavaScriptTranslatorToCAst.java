@@ -43,8 +43,8 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
     }
   }
 
-  public static class RootContext<C extends WalkContext<C, T>, T>
-      extends TranslatorToCAst.RootContext<C, T> implements WalkContext<C, T> {
+  class RootContext<C extends WalkContext<C, T>, T> extends TranslatorToCAst.RootContext<C, T>
+      implements WalkContext<C, T> {
 
     @Override
     public WalkContext<C, T> getParent() {
@@ -96,7 +96,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
     }
   }
 
-  public static class FunctionContext<C extends WalkContext<C, T>, T>
+  class FunctionContext<C extends WalkContext<C, T>, T>
       extends TranslatorToCAst.FunctionContext<C, T> implements WalkContext<C, T> {
 
     private final List<CAstNode> initializers = new ArrayList<>();
@@ -146,7 +146,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
     }
   }
 
-  public static class ScriptContext<C extends WalkContext<C, T>, T> extends FunctionContext<C, T> {
+  class ScriptContext<C extends WalkContext<C, T>, T> extends FunctionContext<C, T> {
     private final String script;
 
     ScriptContext(C parent, T s, String script) {
@@ -169,8 +169,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
    * <p>The general strategy is to store the value of the expression passed as the 'this' parameter
    * in baseVar, and then to use baseVar as the actual argument sub-node for the CAst call node
    */
-  public class MemberDestructuringContext<C extends WalkContext<C, T>, T>
-      implements WalkContext<C, T> {
+  class MemberDestructuringContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
     private final WalkContext<C, T> parent;
 
     /**
