@@ -53,9 +53,7 @@ public class CAstDumper {
   }
 
   private static String indent(int indent) {
-    StringBuilder buf = new StringBuilder();
-    for (int i = 0; i < indent; ++i) buf.append(' ');
-    return buf.toString();
+    return " ".repeat(indent);
   }
 
   public String dump(CAstEntity entity) {
