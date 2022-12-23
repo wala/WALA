@@ -114,7 +114,7 @@ public class InflowAnalysis {
               : ss.getArgNums();
       for (CGNode node : cg.getNodes(im.getReference())) {
         BasicBlockInContext<E>[] entriesForProcedure = graph.getEntriesForProcedure(node);
-        if (entriesForProcedure == null || 0 == entriesForProcedure.length) {
+        if (entriesForProcedure == null) {
           continue;
         }
 

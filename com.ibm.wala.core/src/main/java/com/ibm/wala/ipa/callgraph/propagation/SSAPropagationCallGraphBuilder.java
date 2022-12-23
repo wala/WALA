@@ -544,18 +544,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         final int p = params[pi];
         InstanceKey[] ik = invariants != null ? invariants[p] : null;
         if (ik != null) {
-          if (ik.length > 0) {
-            for (InstanceKey element : ik) {
-              system.findOrCreateIndexForInstanceKey(element);
-              keys[pi] = element;
-              rec(pi + 1, rhsi);
-            }
-          } /* else {
-              if (!site.isDispatch() || p != 0) {
-                keys[pi] = null;
-                rec(pi + 1, rhsi);
-              }
-            } */
+          for (InstanceKey element : ik) {
+            system.findOrCreateIndexForInstanceKey(element);
+            keys[pi] = element;
+            rec(pi + 1, rhsi);
+          }
         } else {
           IntSet s = getParamObjects(pi, rhsi);
           if (s != null && !s.isEmpty()) {

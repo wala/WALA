@@ -646,7 +646,7 @@ public final class Util {
         if (i + 1 < instructions.length && !r[i + 1]) {
           r[i + 1] = true;
         }
-        if (hs != null && hs.length > 0) {
+        if (hs != null) {
           for (ExceptionHandler h : hs) {
             // exceptionHandlers.add(hs[j]);
             if (!r[h.getHandler()]) {

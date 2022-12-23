@@ -3232,7 +3232,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public static boolean hasExposedUses(CGNode caller, CallSiteReference site) {
       int uses[] =
           ((AstMethod) caller.getMethod()).lexicalInfo().getExposedUses(site.getProgramCounter());
-      if (uses != null && uses.length > 0) {
+      if (uses != null) {
         for (int use : uses) {
           if (use > 0) {
             return true;
