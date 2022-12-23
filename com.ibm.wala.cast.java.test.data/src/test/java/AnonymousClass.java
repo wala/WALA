@@ -10,8 +10,8 @@
  */
 public class AnonymousClass {
     private interface Foo {
-      public int getValue();
-      public int getValueBase();
+      int getValue();
+      int getValueBase();
     }
 
     public static void main(String[] args) {

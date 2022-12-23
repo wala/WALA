@@ -17,12 +17,12 @@ import org.jspecify.annotations.Nullable;
 /** An object which tracks nodes with numbers. */
 public interface NumberedNodeManager<T> extends NodeManager<T> {
 
-  public abstract int getNumber(@Nullable T N);
+  int getNumber(@Nullable T N);
 
-  public abstract T getNode(int number);
+  T getNode(int number);
 
-  public abstract int getMaxNumber();
+  int getMaxNumber();
 
   /** @return iterator of nodes with the numbers in set s */
-  public abstract Iterator<T> iterateNodes(IntSet s);
+  Iterator<T> iterateNodes(IntSet s);
 }

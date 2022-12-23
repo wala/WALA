@@ -20,33 +20,33 @@ import org.jspecify.annotations.Nullable;
 public interface INodeWithNumberedEdges extends INodeWithNumber {
   /** @return set of node numbers which are successors of this node */
   @Nullable
-  public IntSet getSuccNumbers();
+  IntSet getSuccNumbers();
 
   /** @return set of node numbers which are predecessors of this node */
   @Nullable
-  public IntSet getPredNumbers();
+  IntSet getPredNumbers();
 
   /** Modify the graph so that node number n is a successor of this node */
-  public void addSucc(int n);
+  void addSucc(int n);
 
   /** Modify the graph so that node number n is a predecessor of this node */
-  public void addPred(int n);
+  void addPred(int n);
 
   /**
    * remove all edges that involve this node. This must fix up the other nodes involved in each edge
    * removed.
    */
-  public void removeAllIncidentEdges();
+  void removeAllIncidentEdges();
 
   /**
    * remove all incoming edges to this this node. This must fix up the other nodes involved in each
    * edge removed.
    */
-  public void removeIncomingEdges();
+  void removeIncomingEdges();
 
   /**
    * remove all outgoing edges to this this node. This must fix up the other nodes involved in each
    * edge removed.
    */
-  public void removeOutgoingEdges();
+  void removeOutgoingEdges();
 }

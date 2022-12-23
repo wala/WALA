@@ -136,7 +136,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
    */
   public interface IExecutionOrder extends Comparable<IExecutionOrder> {
     /** Returns an integer-representation of the ExecutionOrder. */
-    public int getOrderValue();
+    int getOrderValue();
     /**
      * AbstractAndroidModel inserts code at section switches.
      *
@@ -145,7 +145,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
      *
      * @return the section of this entity
      */
-    public ExecutionOrder getSection();
+    ExecutionOrder getSection();
   }
 
   /** AndroidEntryPoints have to be sorted before building the model. */

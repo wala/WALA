@@ -12,7 +12,7 @@ package com.ibm.wala.cast.tree;
 
 public interface CAstMemberReference extends CAstReference {
 
-  public static final CAstMemberReference FUNCTION =
+  CAstMemberReference FUNCTION =
       new CAstMemberReference() {
         @Override
         public String member() {

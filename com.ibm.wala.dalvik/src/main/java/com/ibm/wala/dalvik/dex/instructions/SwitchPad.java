@@ -50,11 +50,11 @@ package com.ibm.wala.dalvik.dex.instructions;
 
 public interface SwitchPad {
 
-  public int[] getOffsets();
+  int[] getOffsets();
 
-  public int[] getValues();
+  int[] getValues();
 
-  public int[] getLabelsAndOffsets();
+  int[] getLabelsAndOffsets();
 
-  public int getDefaultOffset();
+  int getDefaultOffset();
 }

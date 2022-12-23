@@ -18,19 +18,19 @@ import java.util.Collection;
 public interface MemoryAccessMap {
 
   /** @return {@link Collection}&lt;{@link MemoryAccess}&gt; */
-  public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
+  Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
 
   /** @return {@link Collection}&lt;{@link MemoryAccess}&gt; */
-  public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
+  Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
 
-  public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef);
+  Collection<MemoryAccess> getArrayReads(PointerKey arrayRef);
 
-  public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef);
+  Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef);
 
-  public Collection<MemoryAccess> getStaticFieldReads(IField field);
+  Collection<MemoryAccess> getStaticFieldReads(IField field);
 
-  public Collection<MemoryAccess> getStaticFieldWrites(IField field);
+  Collection<MemoryAccess> getStaticFieldWrites(IField field);
 
   /** get the heap model used in this memory access map */
-  public HeapModel getHeapModel();
+  HeapModel getHeapModel();
 }

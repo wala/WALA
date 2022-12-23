@@ -55,12 +55,12 @@ public interface FieldRefinePolicy {
    * @return {@code true} if match edges for the field access should be refined. Otherwise, {@code
    *     false} is returned, indicating that the field can be handled with match edges.
    */
-  public boolean shouldRefine(
+  boolean shouldRefine(
       IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state);
 
   /**
    * @return {@code true} if more refinement can be done, and hence another pass can be attempted;
    *     {@code false} otherwise
    */
-  public boolean nextPass();
+  boolean nextPass();
 }

@@ -10,7 +10,7 @@
  */
 
 interface ISimpleCalls {
-	public void helloWorld();
+	void helloWorld();
 }
 public class SimpleCalls implements ISimpleCalls {
 	

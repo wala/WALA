@@ -2,7 +2,7 @@ package lambda;
 
 public class ParamsAndCapture {
 
-  static interface A {
+  interface A {
 
     void target();
   }
@@ -37,7 +37,7 @@ public class ParamsAndCapture {
     public void target() {}
   }
 
-  static interface Params {
+  interface Params {
 
     void m(A a1, A a2, A a3);
   }

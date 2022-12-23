@@ -27,14 +27,14 @@ public interface EdgeManager<T> {
    *
    * @return an {@link Iterator} over the immediate predecessor nodes of this Node.
    */
-  public Iterator<T> getPredNodes(@Nullable T n);
+  Iterator<T> getPredNodes(@Nullable T n);
 
   /**
    * Return the number of {@link #getPredNodes immediate predecessor} nodes of n
    *
    * @return the number of immediate predecessors of n.
    */
-  public int getPredNodeCount(T n);
+  int getPredNodeCount(T n);
 
   /**
    * Return an Iterator over the immediate successor nodes of n
@@ -43,24 +43,24 @@ public interface EdgeManager<T> {
    *
    * @return an Iterator over the immediate successor nodes of n
    */
-  public Iterator<T> getSuccNodes(@Nullable T n);
+  Iterator<T> getSuccNodes(@Nullable T n);
 
   /**
    * Return the number of {@link #getSuccNodes immediate successor} nodes of this Node in the Graph
    *
    * @return the number of immediate successor Nodes of this Node in the Graph.
    */
-  public int getSuccNodeCount(T N);
+  int getSuccNodeCount(T N);
 
-  public void addEdge(T src, T dst);
+  void addEdge(T src, T dst);
 
-  public void removeEdge(T src, T dst) throws UnsupportedOperationException;
+  void removeEdge(T src, T dst) throws UnsupportedOperationException;
 
-  public void removeAllIncidentEdges(T node) throws UnsupportedOperationException;
+  void removeAllIncidentEdges(T node) throws UnsupportedOperationException;
 
-  public void removeIncomingEdges(T node) throws UnsupportedOperationException;
+  void removeIncomingEdges(T node) throws UnsupportedOperationException;
 
-  public void removeOutgoingEdges(T node) throws UnsupportedOperationException;
+  void removeOutgoingEdges(T node) throws UnsupportedOperationException;
 
-  public boolean hasEdge(@Nullable T src, @Nullable T dst);
+  boolean hasEdge(@Nullable T src, @Nullable T dst);
 }

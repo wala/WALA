@@ -43,7 +43,7 @@ import java.util.Set;
 public interface Language {
 
   /** The canonical {@link Language} implementation for Java */
-  public static JavaLanguage JAVA = new JavaLanguage();
+  JavaLanguage JAVA = new JavaLanguage();
 
   /** What is the name of the language? */
   Atom getName();

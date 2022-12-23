@@ -28,13 +28,13 @@ import java.util.Iterator;
  */
 public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
-  public static final byte CALL_EDGE = 0;
+  byte CALL_EDGE = 0;
 
-  public static final byte RETURN_EDGE = 1;
+  byte RETURN_EDGE = 1;
 
-  public static final byte CALL_TO_RETURN_EDGE = 2;
+  byte CALL_TO_RETURN_EDGE = 2;
 
-  public static final byte OTHER = 3;
+  byte OTHER = 3;
 
   /** @return the graph of procedures (e.g. a call graph) over which this supergraph is induced. */
   Graph<P> getProcedureGraph();

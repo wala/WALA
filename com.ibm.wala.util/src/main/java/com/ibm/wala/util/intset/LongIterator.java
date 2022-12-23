@@ -14,8 +14,8 @@ package com.ibm.wala.util.intset;
 public interface LongIterator {
 
   /** @return true iff this iterator has a next element */
-  public boolean hasNext();
+  boolean hasNext();
 
   /** @return next integer in the iteration */
-  public long next();
+  long next();
 }

@@ -12,7 +12,7 @@ package com.ibm.wala.shrike.shrikeBT;
 
 public interface IShiftInstruction extends IInstruction {
 
-  public enum Operator implements IBinaryOpInstruction.IOperator {
+  enum Operator implements IBinaryOpInstruction.IOperator {
     SHL,
     SHR,
     USHR;

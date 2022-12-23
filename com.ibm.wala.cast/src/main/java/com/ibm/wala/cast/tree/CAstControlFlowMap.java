@@ -28,10 +28,10 @@ public interface CAstControlFlowMap {
    * A distinguished label that means this control flow is the default target of a switch (or case)
    * statement as found in many procedural languages.
    */
-  public static final Object SWITCH_DEFAULT = new Object();
+  Object SWITCH_DEFAULT = new Object();
 
   /** A distinguished target that means this control flow is the target of an uncaught exception. */
-  public static final CAstNode EXCEPTION_TO_EXIT =
+  CAstNode EXCEPTION_TO_EXIT =
       new CAstLeafNode() {
         @Override
         public int getKind() {

@@ -28,20 +28,20 @@ public interface TabulationResult<T, P, F> {
    * @param node a node in the supergraph
    * @return SparseIntSet efficiently representing the bitvector
    */
-  public IntSet getResult(T node);
+  IntSet getResult(T node);
 
   /** @return the governing IFDS problem */
-  public TabulationProblem<T, P, F> getProblem();
+  TabulationProblem<T, P, F> getProblem();
 
   /** @return the set of supergraph nodes for which any fact is reached */
-  public Collection<T> getSupergraphNodesReached();
+  Collection<T> getSupergraphNodesReached();
 
   /**
    * @return set of d2 s.t. (n1,d1) -&gt; (n2,d2) is recorded as a summary edge, or null if none
    *     found
    */
-  public IntSet getSummaryTargets(T n1, int d1, T n2);
+  IntSet getSummaryTargets(T n1, int d1, T n2);
 
   /** @return the set of all {@link PathEdge}s that were used as seeds during the tabulation. */
-  public Collection<PathEdge<T>> getSeeds();
+  Collection<PathEdge<T>> getSeeds();
 }

@@ -65,8 +65,8 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /** Thiscallback is notified whenever an entry has been added to the output zip file. */
-  public static interface ManifestBuilder {
-    public void addEntry(ZipEntry ze);
+  public interface ManifestBuilder {
+    void addEntry(ZipEntry ze);
   }
 
   /**

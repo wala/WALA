@@ -56,7 +56,7 @@ import java.util.function.Supplier;
 /** TODO this class is a mess. rewrite. */
 public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil {
 
-  public static enum CGBuilderType {
+  public enum CGBuilderType {
     ZERO_ONE_CFA(false, true, true),
     ZERO_ONE_CFA_WITHOUT_CORRELATION_TRACKING(false, true, false),
     ZERO_ONE_CFA_NO_CALL_APPLY(false, false, true),
@@ -68,8 +68,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
     private final boolean extractCorrelatedPairs;
 
-    private CGBuilderType(
-        boolean useOneCFA, boolean handleCallApply, boolean extractCorrelatedPairs) {
+    CGBuilderType(boolean useOneCFA, boolean handleCallApply, boolean extractCorrelatedPairs) {
       this.useOneCFA = useOneCFA;
       this.handleCallApply = handleCallApply;
       this.extractCorrelatedPairs = extractCorrelatedPairs;

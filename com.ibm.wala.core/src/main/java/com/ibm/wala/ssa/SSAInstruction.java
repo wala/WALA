@@ -66,7 +66,7 @@ public abstract class SSAInstruction {
 
   /** This interface is used by Instruction.visit to dispatch based on the instruction type. */
   @SuppressWarnings("unused")
-  public static interface IVisitor {
+  public interface IVisitor {
     default void visitGoto(SSAGotoInstruction instruction) {}
 
     default void visitArrayLoad(SSAArrayLoadInstruction instruction) {}

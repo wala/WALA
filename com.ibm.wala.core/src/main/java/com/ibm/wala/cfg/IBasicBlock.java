@@ -25,7 +25,7 @@ public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstTyp
    *
    * @return the instruction index for the first instruction in the basic block.
    */
-  public int getFirstInstructionIndex();
+  int getFirstInstructionIndex();
 
   /**
    * Get the index of the last instruction in the basic block. The value is an index into the
@@ -35,36 +35,36 @@ public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstTyp
    *
    * @return the instruction index for the last instruction in the basic block
    */
-  public int getLastInstructionIndex();
+  int getLastInstructionIndex();
 
   /**
    * Return true if the basic block represents a catch block.
    *
    * @return true if the basic block represents a catch block.
    */
-  public boolean isCatchBlock();
+  boolean isCatchBlock();
 
   /**
    * Return true if the basic block represents the unique exit block.
    *
    * @return true if the basic block represents the unique exit block.
    */
-  public boolean isExitBlock();
+  boolean isExitBlock();
 
   /**
    * Return true if the basic block represents the unique entry block.
    *
    * @return true if the basic block represents the unique entry block.
    */
-  public boolean isEntryBlock();
+  boolean isEntryBlock();
 
   /** @return governing method for this block */
-  public IMethod getMethod();
+  IMethod getMethod();
 
   /**
    * Each basic block should have a unique number in its cfg
    *
    * @return the basic block's number
    */
-  public int getNumber();
+  int getNumber();
 }

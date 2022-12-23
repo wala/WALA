@@ -39,5 +39,5 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 
 public interface RefinementPolicyFactory {
 
-  public RefinementPolicy make();
+  RefinementPolicy make();
 }

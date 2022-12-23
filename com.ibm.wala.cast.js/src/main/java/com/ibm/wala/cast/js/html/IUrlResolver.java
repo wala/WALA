@@ -21,8 +21,8 @@ import java.net.URL;
  */
 public interface IUrlResolver {
   /** From Internet to local */
-  public URL resolve(URL input);
+  URL resolve(URL input);
 
   /** From local to Internet */
-  public URL deResolve(URL input);
+  URL deResolve(URL input);
 }

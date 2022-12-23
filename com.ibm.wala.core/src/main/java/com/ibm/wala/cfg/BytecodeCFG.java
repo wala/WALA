@@ -15,5 +15,5 @@ import java.util.Set;
 
 public interface BytecodeCFG {
 
-  public Set<ExceptionHandler> getExceptionHandlers();
+  Set<ExceptionHandler> getExceptionHandlers();
 }

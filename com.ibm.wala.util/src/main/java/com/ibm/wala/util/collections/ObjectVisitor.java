@@ -39,5 +39,5 @@ package com.ibm.wala.util.collections;
 
 public interface ObjectVisitor<T> {
 
-  public void visit(T obj_);
+  void visit(T obj_);
 }

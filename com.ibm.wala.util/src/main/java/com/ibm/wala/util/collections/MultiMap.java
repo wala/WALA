@@ -42,26 +42,26 @@ import java.util.Set;
 
 public interface MultiMap<K, V> {
 
-  public Set<V> get(K key);
+  Set<V> get(K key);
 
-  public boolean put(K key, V val);
+  boolean put(K key, V val);
 
-  public boolean remove(K key, V val);
+  boolean remove(K key, V val);
 
-  public Set<K> keySet();
+  Set<K> keySet();
 
-  public boolean containsKey(K key);
+  boolean containsKey(K key);
 
-  public int size();
+  int size();
 
   @Override
-  public String toString();
+  String toString();
 
-  public boolean putAll(K key, Collection<? extends V> vals);
+  boolean putAll(K key, Collection<? extends V> vals);
 
-  public Set<V> removeAll(K key);
+  Set<V> removeAll(K key);
 
-  public void clear();
+  void clear();
 
-  public boolean isEmpty();
+  boolean isEmpty();
 }

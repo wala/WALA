@@ -16,5 +16,5 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 /** Basic interface for a pointer analysis solver. */
 public interface IPointsToSolver {
 
-  public void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException;
+  void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException;
 }

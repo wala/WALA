@@ -68,7 +68,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    * This is due to compatibility with the EdgeManager interface
    */
   @Nullable
-  public U getDefaultLabel();
+  U getDefaultLabel();
 
   /**
    * Return an Iterator over the immediate predecessor nodes of this Node in the Graph on edges with
@@ -78,7 +78,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    *
    * @return an Iterator over the immediate predecessor nodes of this Node.
    */
-  public Iterator<T> getPredNodes(T N, U label);
+  Iterator<T> getPredNodes(T N, U label);
 
   default Iterator<T> getPredNodes(T N, Predicate<U> pred) {
     return new FilterIterator<>(
@@ -86,7 +86,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   }
 
   /** @return the labels on edges whose destination is N */
-  public Iterator<? extends U> getPredLabels(T N);
+  Iterator<? extends U> getPredLabels(T N);
 
   /**
    * Return the number of {@link #getPredNodes immediate predecessor} nodes of this Node in the
@@ -94,7 +94,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    *
    * @return the number of immediate predecessor Nodes of this Node in the Graph.
    */
-  public int getPredNodeCount(T N, U label);
+  int getPredNodeCount(T N, U label);
 
   /**
    * Return an Iterator over the immediate successor nodes of this Node in the Graph on edges with
@@ -104,24 +104,24 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    *
    * @return an Iterator over the immediate successor Nodes of this Node.
    */
-  public Iterator<? extends T> getSuccNodes(T N, U label);
+  Iterator<? extends T> getSuccNodes(T N, U label);
 
   /** @return the labels on edges whose source is N */
-  public Iterator<? extends U> getSuccLabels(T N);
+  Iterator<? extends U> getSuccLabels(T N);
 
   /**
    * Return the number of {@link #getSuccNodes immediate successor} nodes of this Node in the Graph
    *
    * @return the number of immediate successor Nodes of this Node in the Graph.
    */
-  public int getSuccNodeCount(T N, U label);
+  int getSuccNodeCount(T N, U label);
 
   /** adds an edge with some label */
-  public void addEdge(T src, T dst, U label);
+  void addEdge(T src, T dst, U label);
 
-  public void removeEdge(T src, T dst, U label) throws UnsupportedOperationException;
+  void removeEdge(T src, T dst, U label) throws UnsupportedOperationException;
 
-  public boolean hasEdge(T src, T dst, U label);
+  boolean hasEdge(T src, T dst, U label);
 
   /**
    * Returns a set of all labeled edges between node src and node dst
@@ -130,5 +130,5 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    * @param dst target node of the edge
    * @return Set of edge labels
    */
-  public Set<? extends U> getEdgeLabels(T src, T dst);
+  Set<? extends U> getEdgeLabels(T src, T dst);
 }

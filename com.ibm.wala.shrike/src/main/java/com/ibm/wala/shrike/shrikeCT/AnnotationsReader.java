@@ -62,7 +62,7 @@ public class AnnotationsReader extends AttributeReader {
    *
    * @see AnnotationsReader#readElementValueAndSize(int)
    */
-  public static interface ElementValue {}
+  public interface ElementValue {}
 
   /**
    * Represents a constant argument to an annotation. Class arguments (e.g., {@code Foo.class}) are
@@ -352,7 +352,7 @@ public class AnnotationsReader extends AttributeReader {
   // utility methods for reading well-known annotation types
   // //////////////
 
-  public static enum AnnotationType {
+  public enum AnnotationType {
     RuntimeVisibleAnnotations,
     RuntimeInvisibleAnnotations,
     RuntimeVisibleParameterAnnotations,

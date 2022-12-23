@@ -33,8 +33,8 @@ public interface IVariable<T extends IVariable<T>> extends INodeWithNumber {
    * <p>It might be cleaner to hold this on the side, but we cannot tolerate any extra space. TODO:
    * consider moving this functionality to a subinterface?
    */
-  public abstract void setOrderNumber(int i);
+  void setOrderNumber(int i);
 
   /** Set this variable to have the same state as another one */
-  public void copyState(T v);
+  void copyState(T v);
 }

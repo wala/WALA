@@ -51,10 +51,10 @@ import org.scandroid.util.CGAnalysisContext;
 
 public interface ISinkPoint {
 
-  public Set<FlowType<IExplodedBasicBlock>> findSources(
+  Set<FlowType<IExplodedBasicBlock>> findSources(
       CGAnalysisContext<IExplodedBasicBlock> ctx,
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain);
 
-  public FlowType<IExplodedBasicBlock> getFlow();
+  FlowType<IExplodedBasicBlock> getFlow();
 }

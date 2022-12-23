@@ -17,22 +17,22 @@ import com.ibm.wala.types.TypeReference;
 public interface IField extends IMember {
 
   /** @return the canonical TypeReference of the declared type of the field */
-  public TypeReference getFieldTypeReference();
+  TypeReference getFieldTypeReference();
 
   /** @return canonical FieldReference representing this field */
-  public FieldReference getReference();
+  FieldReference getReference();
 
   /** Is this field final? */
-  public boolean isFinal();
+  boolean isFinal();
 
-  public boolean isPrivate();
+  boolean isPrivate();
 
-  public boolean isProtected();
+  boolean isProtected();
 
-  public boolean isPublic();
+  boolean isPublic();
 
   @Override
-  public boolean isStatic();
+  boolean isStatic();
 
   /** Is this member volatile? */
   boolean isVolatile();

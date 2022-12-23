@@ -16,10 +16,10 @@ import org.jspecify.annotations.Nullable;
 public interface LongSet {
 
   /** @return true iff this set contains long i */
-  public boolean contains(long i);
+  boolean contains(long i);
 
   /** @return true iff this set contains integer i */
-  public boolean containsAny(LongSet set);
+  boolean containsAny(LongSet set);
 
   /**
    * This implementation must not despoil the original value of "this"
@@ -27,29 +27,29 @@ public interface LongSet {
    * @return a new IntSet which is the intersection of this and that
    */
   @Nullable
-  public LongSet intersection(LongSet that);
+  LongSet intersection(LongSet that);
 
   /** @return true iff this set is empty */
-  public boolean isEmpty();
+  boolean isEmpty();
 
   /** @return the number of elements in this set */
-  public int size();
+  int size();
 
   /** @return maximum integer in this set. */
-  public long max();
+  long max();
 
   /** @return true iff {@code this} has the same value as {@code that}. */
-  public boolean sameValue(LongSet that);
+  boolean sameValue(LongSet that);
 
   /** @return true iff {@code this} is a subset of {@code that}. */
-  public boolean isSubset(LongSet that);
+  boolean isSubset(LongSet that);
 
   /** @return a perhaps more efficient iterator */
-  public LongIterator longIterator();
+  LongIterator longIterator();
 
   /** Invoke an action on each element of the Set */
-  public void foreach(LongSetAction action);
+  void foreach(LongSetAction action);
 
   /** Invoke an action on each element of the Set, excluding elements of Set X */
-  public void foreachExcluding(LongSet X, LongSetAction action);
+  void foreachExcluding(LongSet X, LongSetAction action);
 }

@@ -32,9 +32,9 @@ import java.util.Set;
  */
 public interface HeapGraph<T extends InstanceKey> extends NumberedGraph<Object> {
 
-  public Collection<Object> getReachableInstances(Set<Object> roots);
+  Collection<Object> getReachableInstances(Set<Object> roots);
 
-  public HeapModel getHeapModel();
+  HeapModel getHeapModel();
 
-  public PointerAnalysis<T> getPointerAnalysis();
+  PointerAnalysis<T> getPointerAnalysis();
 }

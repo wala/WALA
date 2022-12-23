@@ -38,7 +38,7 @@ public final class Debug {
 
     private final Integer priority;
 
-    private LogLevel(int priority) {
+    LogLevel(int priority) {
       this.priority = priority;
     }
 

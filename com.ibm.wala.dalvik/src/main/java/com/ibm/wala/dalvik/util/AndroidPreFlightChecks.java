@@ -72,7 +72,7 @@ public class AndroidPreFlightChecks {
     this.cha = cha;
   }
 
-  public static enum Test {
+  public enum Test {
     OVERRIDES,
     INTENTS,
     REUSE,

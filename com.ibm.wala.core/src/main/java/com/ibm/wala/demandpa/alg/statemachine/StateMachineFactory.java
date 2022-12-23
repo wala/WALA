@@ -39,5 +39,5 @@ package com.ibm.wala.demandpa.alg.statemachine;
 
 public interface StateMachineFactory<T> {
 
-  public StateMachine<T> make();
+  StateMachine<T> make();
 }

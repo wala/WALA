@@ -129,7 +129,7 @@ public class AndroidManifestXMLReader {
 
   //  Needed to delay initialization
   private interface ISubTags {
-    public Set<Tag> getSubTags();
+    Set<Tag> getSubTags();
   }
 
   private interface HistoryKey {}

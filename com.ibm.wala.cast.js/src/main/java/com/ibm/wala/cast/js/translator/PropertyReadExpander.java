@@ -28,8 +28,7 @@ import java.util.Map;
 public class PropertyReadExpander
     extends CAstRewriter<PropertyReadExpander.RewriteContext, PropertyReadExpander.ExpanderKey> {
 
-  static enum ExpanderKey
-      implements com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey<ExpanderKey> {
+  enum ExpanderKey implements com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey<ExpanderKey> {
     EVERYWHERE,
     EXTRA {
       @Override

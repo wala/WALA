@@ -269,14 +269,14 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     }
   }
 
-  public static interface RecursionHandler {
+  public interface RecursionHandler {
 
-    public boolean isRecursive(CallerSiteContext callSite);
+    boolean isRecursive(CallerSiteContext callSite);
 
-    public void makeRecursive(Collection<CallerSiteContext> callSites);
+    void makeRecursive(Collection<CallerSiteContext> callSites);
 
     /** in lieu of creating factories */
-    public RecursionHandler makeNew();
+    RecursionHandler makeNew();
   }
 
   /**

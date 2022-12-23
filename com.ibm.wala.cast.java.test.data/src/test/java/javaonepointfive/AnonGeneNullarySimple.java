@@ -39,8 +39,8 @@ package javaonepointfive;
 
 public class AnonGeneNullarySimple {
 
-	static interface Ops<E> {
-		public E nullary();
+	interface Ops<E> {
+		E nullary();
 	}
 
 	static class StrTripler implements Ops<String> {

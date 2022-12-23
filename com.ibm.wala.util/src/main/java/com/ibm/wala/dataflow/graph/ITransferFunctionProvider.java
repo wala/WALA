@@ -24,20 +24,20 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 public interface ITransferFunctionProvider<T, V extends IVariable<V>> {
 
   /** @return the transfer function from IN_node -&gt; OUT_node */
-  public UnaryOperator<V> getNodeTransferFunction(T node);
+  UnaryOperator<V> getNodeTransferFunction(T node);
 
   /** @return true if this provider provides node transfer functions */
-  public boolean hasNodeTransferFunctions();
+  boolean hasNodeTransferFunctions();
 
   /** @return the transfer function from OUT_src -&gt; EDGE_&lt;src,dst&gt; */
-  public UnaryOperator<V> getEdgeTransferFunction(T src, T dst);
+  UnaryOperator<V> getEdgeTransferFunction(T src, T dst);
 
   /** @return true if this provider provides edge transfer functions */
-  public boolean hasEdgeTransferFunctions();
+  boolean hasEdgeTransferFunctions();
 
   /**
    * TODO: perhaps this should go with a Lattice object instead. TODO: provide an API to allow
    * composition of the meet operator with the flow operator for a given block, as an optimization?
    */
-  public AbstractMeetOperator<V> getMeetOperator();
+  AbstractMeetOperator<V> getMeetOperator();
 }

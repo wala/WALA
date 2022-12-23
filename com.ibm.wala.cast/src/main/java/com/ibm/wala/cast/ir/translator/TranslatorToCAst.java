@@ -34,10 +34,10 @@ import java.util.Map;
 import java.util.Set;
 
 public interface TranslatorToCAst {
-  public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(
+  <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(
       CAstRewriterFactory<C, K> factory, boolean prepend);
 
-  public class Error extends WalaException {
+  class Error extends WalaException {
     private static final long serialVersionUID = -8440950320425119751L;
     public final Set<Warning> warning;
 
@@ -47,9 +47,9 @@ public interface TranslatorToCAst {
     }
   }
 
-  public CAstEntity translateToCAst() throws Error, IOException;
+  CAstEntity translateToCAst() throws Error, IOException;
 
-  public interface WalkContext<C extends WalkContext<C, T>, T> {
+  interface WalkContext<C extends WalkContext<C, T>, T> {
 
     WalkContext<C, T> getParent();
 
@@ -119,7 +119,7 @@ public interface TranslatorToCAst {
     }
   }
 
-  public class RootContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
+  class RootContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
     @Override
     public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       assert false;
@@ -179,7 +179,7 @@ public interface TranslatorToCAst {
     }
   }
 
-  public class DelegatingContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
+  class DelegatingContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
     protected final C parent;
 
     protected DelegatingContext(C parent) {
@@ -213,7 +213,7 @@ public interface TranslatorToCAst {
     }
   }
 
-  public class LoopContext<C extends WalkContext<C, T>, T> extends BreakContext<C, T> {
+  class LoopContext<C extends WalkContext<C, T>, T> extends BreakContext<C, T> {
     private final T continueTo;
 
     protected LoopContext(C parent, T breakTo, T continueTo, String label) {
@@ -227,7 +227,7 @@ public interface TranslatorToCAst {
     }
   }
 
-  public static class TryCatchContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
+  class TryCatchContext<C extends WalkContext<C, T>, T> implements WalkContext<C, T> {
     private final Map<String, CAstNode> catchNode;
     private final WalkContext<C, T> parent;
 
@@ -256,8 +256,7 @@ public interface TranslatorToCAst {
     }
   }
 
-  public static class FunctionContext<C extends WalkContext<C, T>, T>
-      extends DelegatingContext<C, T> {
+  class FunctionContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C, T> {
     private final T topNode;
     private final CAstSourcePositionRecorder pos = new CAstSourcePositionRecorder();
     private final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder(pos);
@@ -297,7 +296,7 @@ public interface TranslatorToCAst {
     }
   }
 
-  public static class DoLoopTranslator {
+  class DoLoopTranslator {
     private final boolean replicateForDoLoops;
 
     private final CAst Ast;

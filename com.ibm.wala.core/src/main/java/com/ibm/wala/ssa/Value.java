@@ -19,8 +19,8 @@ package com.ibm.wala.ssa;
 public interface Value {
 
   /** Is this value a string constant? */
-  public boolean isStringConstant();
+  boolean isStringConstant();
 
   /** Is this value a null constant? */
-  public boolean isNullConstant();
+  boolean isNullConstant();
 }

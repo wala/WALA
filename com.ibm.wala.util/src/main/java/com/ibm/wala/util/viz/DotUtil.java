@@ -28,7 +28,7 @@ import org.jspecify.annotations.Nullable;
 public class DotUtil {
 
   /** possible output formats for dot */
-  public static enum DotOutputType {
+  public enum DotOutputType {
     PS("ps"),
     SVG("svg"),
     PDF("pdf"),

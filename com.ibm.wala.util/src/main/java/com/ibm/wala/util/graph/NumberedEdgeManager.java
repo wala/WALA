@@ -17,8 +17,8 @@ import org.jspecify.annotations.Nullable;
 public interface NumberedEdgeManager<T> extends EdgeManager<T> {
 
   /** @return the numbers identifying the immediate successors of node */
-  public IntSet getSuccNodeNumbers(@Nullable T node);
+  IntSet getSuccNodeNumbers(@Nullable T node);
 
   /** @return the numbers identifying the immediate predecessors of node */
-  public IntSet getPredNodeNumbers(@Nullable T node);
+  IntSet getPredNodeNumbers(@Nullable T node);
 }

@@ -33,7 +33,7 @@ public class TypeArgument extends Signature {
 
   private final WildcardIndicator w;
 
-  private static enum WildcardIndicator {
+  private enum WildcardIndicator {
     PLUS,
     MINUS
   }

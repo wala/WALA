@@ -57,7 +57,7 @@ import java.util.Map;
  * @since 2013-11-21
  */
 public class PrimitiveAssignability {
-  public static enum AssignabilityKind {
+  public enum AssignabilityKind {
     IDENTITY,
     WIDENING,
     NARROWING,
@@ -65,7 +65,7 @@ public class PrimitiveAssignability {
     UNASSIGNABLE
   }
 
-  private static enum Primitive {
+  private enum Primitive {
     BOOLEAN,
     CHAR,
     BYTE,

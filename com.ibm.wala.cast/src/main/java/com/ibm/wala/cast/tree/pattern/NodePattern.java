@@ -19,5 +19,5 @@ import com.ibm.wala.cast.tree.CAstNode;
  * @author mschaefer
  */
 public interface NodePattern {
-  public abstract boolean matches(CAstNode node);
+  boolean matches(CAstNode node);
 }

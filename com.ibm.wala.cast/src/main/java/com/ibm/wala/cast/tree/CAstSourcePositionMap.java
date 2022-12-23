@@ -34,7 +34,7 @@ public interface CAstSourcePositionMap {
    *
    * @author Julian Dolby (dolby@us.ibm.com)
    */
-  public interface Position extends SourcePosition {
+  interface Position extends SourcePosition {
 
     /**
      * Pretty print a source position
@@ -54,7 +54,7 @@ public interface CAstSourcePositionMap {
     Reader getReader() throws IOException;
   }
 
-  public static Position NO_INFORMATION =
+  Position NO_INFORMATION =
       new Position() {
 
         @Override

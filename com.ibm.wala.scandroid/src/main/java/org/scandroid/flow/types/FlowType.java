@@ -127,7 +127,7 @@ public abstract class FlowType<E extends ISSABasicBlock> {
 
   public abstract <R> R visit(FlowTypeVisitor<E, R> v);
 
-  public static interface FlowTypeVisitor<E extends ISSABasicBlock, R> {
+  public interface FlowTypeVisitor<E extends ISSABasicBlock, R> {
     R visitFieldFlow(FieldFlow<E> flow);
 
     R visitIKFlow(IKFlow<E> flow);

@@ -21,13 +21,13 @@ public interface CHAContextInterpreter {
    * Does this object understand the given method? The caller had better check this before inquiring
    * on other properties.
    */
-  public boolean understands(CGNode node);
+  boolean understands(CGNode node);
 
   /**
    * @return an Iterator of the call statements that may execute in a given method for a given
    *     context
    */
-  public abstract Iterator<CallSiteReference> iterateCallSites(CGNode node);
+  Iterator<CallSiteReference> iterateCallSites(CGNode node);
 
   Iterator<NewSiteReference> iterateNewSites(CGNode node);
 }

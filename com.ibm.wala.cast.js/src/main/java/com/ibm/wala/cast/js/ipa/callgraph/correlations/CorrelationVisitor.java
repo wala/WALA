@@ -17,7 +17,7 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations;
  * @author mschaefer
  */
 public interface CorrelationVisitor<T> {
-  public T visitReadWriteCorrelation(ReadWriteCorrelation rwc);
+  T visitReadWriteCorrelation(ReadWriteCorrelation rwc);
 
-  public T visitEscapeCorrelation(EscapeCorrelation ec);
+  T visitEscapeCorrelation(EscapeCorrelation ec);
 }

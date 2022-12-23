@@ -46,7 +46,7 @@ public interface CAstNode {
    *   <li>BLOCK_STMT containing all the cases
    * </ul>
    */
-  public static final int SWITCH = 1;
+  int SWITCH = 1;
 
   /**
    * Represents a standard while loop. Children:
@@ -56,7 +56,7 @@ public interface CAstNode {
    *   <li>statement denoting the loop body
    * </ul>
    */
-  public static final int LOOP = 2;
+  int LOOP = 2;
 
   /**
    * Represents a block of sequential statements. Children:
@@ -67,7 +67,7 @@ public interface CAstNode {
    *   <li>...
    * </ul>
    */
-  public static final int BLOCK_STMT = 3;
+  int BLOCK_STMT = 3;
 
   /**
    * Represents a standard try/catch statement. Note that while some languages choose to bundle
@@ -80,7 +80,7 @@ public interface CAstNode {
    *   <li>...
    * </ul>
    */
-  public static final int TRY = 4;
+  int TRY = 4;
 
   /**
    * Represents an expression statement (e.g. "foo();"). Children:
@@ -89,38 +89,38 @@ public interface CAstNode {
    *   <li>the expression
    * </ul>
    */
-  public static final int EXPR_STMT = 5;
+  int EXPR_STMT = 5;
 
-  public static final int DECL_STMT = 6;
-  public static final int RETURN = 7;
-  public static final int GOTO = 8;
-  public static final int BREAK = 9;
-  public static final int CONTINUE = 10;
-  public static final int IF_STMT = 11;
-  public static final int THROW = 12;
-  public static final int FUNCTION_STMT = 13;
-  public static final int ASSIGN = 14;
-  public static final int ASSIGN_PRE_OP = 15;
-  public static final int ASSIGN_POST_OP = 16;
-  public static final int LABEL_STMT = 17;
-  public static final int IFGOTO = 18;
-  public static final int EMPTY = 19;
-  public static final int RETURN_WITHOUT_BRANCH = 20;
-  public static final int CATCH = 21;
-  public static final int UNWIND = 22;
-  public static final int MONITOR_ENTER = 23;
-  public static final int MONITOR_EXIT = 24;
-  public static final int ECHO = 25;
-  public static final int YIELD_STMT = 26;
-  public static final int FORIN_LOOP = 27;
-  public static final int GLOBAL_DECL = 28;
-  public static final int CLASS_STMT = 29;
+  int DECL_STMT = 6;
+  int RETURN = 7;
+  int GOTO = 8;
+  int BREAK = 9;
+  int CONTINUE = 10;
+  int IF_STMT = 11;
+  int THROW = 12;
+  int FUNCTION_STMT = 13;
+  int ASSIGN = 14;
+  int ASSIGN_PRE_OP = 15;
+  int ASSIGN_POST_OP = 16;
+  int LABEL_STMT = 17;
+  int IFGOTO = 18;
+  int EMPTY = 19;
+  int RETURN_WITHOUT_BRANCH = 20;
+  int CATCH = 21;
+  int UNWIND = 22;
+  int MONITOR_ENTER = 23;
+  int MONITOR_EXIT = 24;
+  int ECHO = 25;
+  int YIELD_STMT = 26;
+  int FORIN_LOOP = 27;
+  int GLOBAL_DECL = 28;
+  int CLASS_STMT = 29;
 
   // expression kinds
-  public static final int FUNCTION_EXPR = 100;
-  public static final int EXPR_LIST = 101;
-  public static final int CALL = 102;
-  public static final int GET_CAUGHT_EXCEPTION = 103;
+  int FUNCTION_EXPR = 100;
+  int EXPR_LIST = 101;
+  int CALL = 102;
+  int GET_CAUGHT_EXCEPTION = 103;
 
   /**
    * Represents a block of sequentially-executed nodes, the last of which produces the value for the
@@ -133,56 +133,56 @@ public interface CAstNode {
    *   <li>block value expression
    * </ul>
    */
-  public static final int BLOCK_EXPR = 104;
+  int BLOCK_EXPR = 104;
 
-  public static final int BINARY_EXPR = 105;
-  public static final int UNARY_EXPR = 106;
-  public static final int IF_EXPR = 107;
-  public static final int ANDOR_EXPR = 108; // TODO blow away?
-  public static final int NEW = 109;
-  public static final int OBJECT_LITERAL = 110;
-  public static final int VAR = 111;
-  public static final int OBJECT_REF = 112;
-  public static final int CHOICE_EXPR = 113;
-  public static final int CHOICE_CASE = 114;
-  public static final int SUPER = 115;
-  public static final int THIS = 116;
-  public static final int ARRAY_LITERAL = 117;
-  public static final int CAST = 118;
-  public static final int INSTANCEOF = 119;
-  public static final int ARRAY_REF = 120;
-  public static final int ARRAY_LENGTH = 121;
-  public static final int TYPE_OF = 122;
-  public static final int EACH_ELEMENT_HAS_NEXT = 123;
-  public static final int EACH_ELEMENT_GET = 124;
-  public static final int LIST_EXPR = 125;
-  public static final int EMPTY_LIST_EXPR = 126;
-  public static final int TYPE_LITERAL_EXPR = 127;
-  public static final int IS_DEFINED_EXPR = 128;
-  public static final int MACRO_VAR = 129;
-  public static final int NARY_EXPR = 130;
+  int BINARY_EXPR = 105;
+  int UNARY_EXPR = 106;
+  int IF_EXPR = 107;
+  int ANDOR_EXPR = 108; // TODO blow away?
+  int NEW = 109;
+  int OBJECT_LITERAL = 110;
+  int VAR = 111;
+  int OBJECT_REF = 112;
+  int CHOICE_EXPR = 113;
+  int CHOICE_CASE = 114;
+  int SUPER = 115;
+  int THIS = 116;
+  int ARRAY_LITERAL = 117;
+  int CAST = 118;
+  int INSTANCEOF = 119;
+  int ARRAY_REF = 120;
+  int ARRAY_LENGTH = 121;
+  int TYPE_OF = 122;
+  int EACH_ELEMENT_HAS_NEXT = 123;
+  int EACH_ELEMENT_GET = 124;
+  int LIST_EXPR = 125;
+  int EMPTY_LIST_EXPR = 126;
+  int TYPE_LITERAL_EXPR = 127;
+  int IS_DEFINED_EXPR = 128;
+  int MACRO_VAR = 129;
+  int NARY_EXPR = 130;
   // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly
   // treated the same, except in JavaCAst2IRTranslator.doNewObject
-  public static final int NEW_ENCLOSING = 131;
-  public static final int COMPREHENSION_EXPR = 132;
+  int NEW_ENCLOSING = 131;
+  int COMPREHENSION_EXPR = 132;
 
   // explicit lexical scopes
-  public static final int LOCAL_SCOPE = 200;
-  public static final int SPECIAL_PARENT_SCOPE = 201;
+  int LOCAL_SCOPE = 200;
+  int SPECIAL_PARENT_SCOPE = 201;
 
   // literal expression kinds
-  public static final int CONSTANT = 300;
-  public static final int OPERATOR = 301;
+  int CONSTANT = 300;
+  int OPERATOR = 301;
 
   // special stuff
-  public static final int PRIMITIVE = 400;
-  public static final int ERROR = 401;
-  public static final int VOID = 402;
-  public static final int ASSERT = 403;
-  public static final int INCLUDE = 404;
-  public static final int NAMED_ENTITY_REF = 405;
+  int PRIMITIVE = 400;
+  int ERROR = 401;
+  int VOID = 402;
+  int ASSERT = 403;
+  int INCLUDE = 404;
+  int NAMED_ENTITY_REF = 405;
 
-  public static final int SUB_LANGUAGE_BASE = 1000;
+  int SUB_LANGUAGE_BASE = 1000;
 
   /** What kind of node is this? Should return some constant from this file. */
   int getKind();

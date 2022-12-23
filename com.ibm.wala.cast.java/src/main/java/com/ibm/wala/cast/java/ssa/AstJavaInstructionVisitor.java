@@ -14,7 +14,7 @@ import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 
 public interface AstJavaInstructionVisitor extends AstInstructionVisitor {
 
-  public void visitJavaInvoke(AstJavaInvokeInstruction instruction);
+  void visitJavaInvoke(AstJavaInvokeInstruction instruction);
 
-  public void visitEnclosingObjectReference(EnclosingObjectReference inst);
+  void visitEnclosingObjectReference(EnclosingObjectReference inst);
 }

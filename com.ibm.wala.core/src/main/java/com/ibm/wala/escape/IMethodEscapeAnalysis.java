@@ -23,6 +23,6 @@ public interface IMethodEscapeAnalysis {
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may
    *     escape from an activation of method m, false otherwise
    */
-  public boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m)
+  boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m)
       throws WalaException;
 }

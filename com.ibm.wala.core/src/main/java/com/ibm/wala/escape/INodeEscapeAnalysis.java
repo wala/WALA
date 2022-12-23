@@ -23,5 +23,5 @@ public interface INodeEscapeAnalysis extends IMethodEscapeAnalysis {
    * @return true if an object allocated at the allocation site &lt;allocMethod,allocPC&gt; may
    *     escape from an activation of node m, false otherwise
    */
-  public boolean mayEscape(CGNode allocNode, int allocPC, CGNode node) throws WalaException;
+  boolean mayEscape(CGNode allocNode, int allocPC, CGNode node) throws WalaException;
 }

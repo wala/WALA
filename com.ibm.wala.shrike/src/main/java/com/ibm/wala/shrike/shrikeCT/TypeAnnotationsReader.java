@@ -324,7 +324,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.20">JLS
    *     (SE8), 4.7.20</a>
    */
-  public static enum TypeAnnotationLocation {
+  public enum TypeAnnotationLocation {
     ClassFile,
     method_info,
     field_info,
@@ -337,7 +337,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.20">JLS
    *     (SE8), 4.7.20</a>
    */
-  public static enum TargetInfo {
+  public enum TargetInfo {
     type_parameter_target,
     supertype_target,
     type_parameter_bound_target,
@@ -360,7 +360,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
    *     (SE8), 4.7.20</a>
    */
   // TODO: This somewhat mirrors com.sun.tools.javac.code.TargetType, maybe just use that instead?
-  public static enum TargetType {
+  public enum TargetType {
     CLASS_TYPE_PARAMETER(0x00, TargetInfo.type_parameter_target, TypeAnnotationLocation.ClassFile),
     METHOD_TYPE_PARAMETER(
         0x01, TargetInfo.type_parameter_target, TypeAnnotationLocation.method_info),
@@ -458,7 +458,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     public abstract <R> R acceptVisitor(TypeAnnotationTargetVisitor<R> visitor);
   }
 
-  public static interface TypeAnnotationTargetVisitor<R> {
+  public interface TypeAnnotationTargetVisitor<R> {
     R visitTypeParameterTarget(TypeParameterTarget target);
 
     R visitSuperTypeTarget(SuperTypeTarget target);
@@ -768,12 +768,12 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     }
   }
 
-  public static enum AnnotationType {
+  public enum AnnotationType {
     RuntimeInvisibleTypeAnnotations,
     RuntimeVisibleTypeAnnotations
   }
 
-  public static enum TypePathKind {
+  public enum TypePathKind {
     DEEPER_IN_ARRAY(0),
     DEEPER_IN_NESTED(1),
     WILDCARD_BOUND(2),
@@ -781,7 +781,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
 
     private final int type_path_kind;
 
-    private TypePathKind(int type_path_kind) {
+    TypePathKind(int type_path_kind) {
       this.type_path_kind = type_path_kind;
     }
 
@@ -829,7 +829,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     return false;
   }
 
-  private static interface Action {
+  private interface Action {
     TypeAnnotationsReader apply() throws InvalidClassFileException;
   }
 

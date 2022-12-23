@@ -51,11 +51,11 @@ import java.util.Collection;
  */
 public interface IDemandPointerAnalysis {
 
-  public HeapModel getHeapModel();
+  HeapModel getHeapModel();
 
-  public CallGraph getBaseCallGraph();
+  CallGraph getBaseCallGraph();
 
-  public IClassHierarchy getClassHierarchy();
+  IClassHierarchy getClassHierarchy();
 
-  public Collection<InstanceKey> getPointsTo(PointerKey pk);
+  Collection<InstanceKey> getPointsTo(PointerKey pk);
 }

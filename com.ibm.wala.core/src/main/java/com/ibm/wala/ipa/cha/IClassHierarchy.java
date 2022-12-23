@@ -27,31 +27,31 @@ import java.util.Set;
 /** General interface for a type hierarchy */
 public interface IClassHierarchy extends Iterable<IClass> {
 
-  public ClassLoaderFactory getFactory();
+  ClassLoaderFactory getFactory();
 
-  public AnalysisScope getScope();
+  AnalysisScope getScope();
 
-  public IClassLoader[] getLoaders();
+  IClassLoader[] getLoaders();
 
-  public IClassLoader getLoader(ClassLoaderReference loaderRef);
+  IClassLoader getLoader(ClassLoaderReference loaderRef);
 
   /**
    * @return true if the add succeeded; false if it failed for some reason
    * @throws IllegalArgumentException if klass is null
    */
-  public boolean addClass(IClass klass);
+  boolean addClass(IClass klass);
 
   /** @return The number of classes present in the class hierarchy. */
-  public int getNumberOfClasses();
+  int getNumberOfClasses();
 
-  public boolean isRootClass(IClass c);
+  boolean isRootClass(IClass c);
 
-  public IClass getRootClass();
+  IClass getRootClass();
 
-  public int getNumber(IClass c);
+  int getNumber(IClass c);
 
   /* BEGIN Custom change: remember unresolved classes */
-  public Set<TypeReference> getUnresolvedClasses();
+  Set<TypeReference> getUnresolvedClasses();
 
   /* END Custom change: remember unresolved classes */
   /**
@@ -61,7 +61,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
    */
-  public Set<IMethod> getPossibleTargets(MethodReference ref);
+  Set<IMethod> getPossibleTargets(MethodReference ref);
 
   /**
    * Find the possible targets of a call to a method reference where the receiver is of a certain
@@ -71,7 +71,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    */
-  public Set<IMethod> getPossibleTargets(IClass receiverClass, MethodReference ref);
+  Set<IMethod> getPossibleTargets(IClass receiverClass, MethodReference ref);
 
   /**
    * Return the unique receiver of an invocation of method on an object of type {@code
@@ -82,20 +82,20 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return IMethod, or null if no appropriate receiver is found.
    * @throws IllegalArgumentException if m is null
    */
-  public IMethod resolveMethod(MethodReference m);
+  IMethod resolveMethod(MethodReference m);
 
   /**
    * @return the canonical IField that represents a given field , or null if none found
    * @throws IllegalArgumentException if f is null
    */
-  public IField resolveField(FieldReference f);
+  IField resolveField(FieldReference f);
 
   /**
    * @return the canonical IField that represents a given field , or null if none found
    * @throws IllegalArgumentException if f is null
    * @throws IllegalArgumentException if klass is null
    */
-  public IField resolveField(IClass klass, FieldReference f);
+  IField resolveField(IClass klass, FieldReference f);
 
   /**
    * Return the unique target of an invocation of method on an object of type receiverClass
@@ -107,7 +107,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return Method resolved method abstraction
    * @throws IllegalArgumentException if receiverClass is null
    */
-  public IMethod resolveMethod(IClass receiverClass, Selector selector);
+  IMethod resolveMethod(IClass receiverClass, Selector selector);
 
   /**
    * Load a class using one of the loaders specified for this class hierarchy
@@ -115,22 +115,22 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return null if can't find the class.
    * @throws IllegalArgumentException if A is null
    */
-  public IClass lookupClass(TypeReference A);
+  IClass lookupClass(TypeReference A);
 
   // public boolean isSyntheticClass(IClass c);
 
-  public boolean isInterface(TypeReference type);
+  boolean isInterface(TypeReference type);
 
-  public IClass getLeastCommonSuperclass(IClass A, IClass B);
+  IClass getLeastCommonSuperclass(IClass A, IClass B);
 
-  public TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B);
+  TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B);
 
   /**
    * Is c a subclass of T?
    *
    * @throws IllegalArgumentException if c is null
    */
-  public boolean isSubclassOf(IClass c, IClass T);
+  boolean isSubclassOf(IClass c, IClass T);
 
   /**
    * Does c implement i?
@@ -138,10 +138,10 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return true iff i is an interface and c is a class that implements i, or c is an interface
    *     that extends i.
    */
-  public boolean implementsInterface(IClass c, IClass i);
+  boolean implementsInterface(IClass c, IClass i);
 
   /** Return set of all subclasses of type in the Class Hierarchy */
-  public Collection<IClass> computeSubClasses(TypeReference type);
+  Collection<IClass> computeSubClasses(TypeReference type);
 
   /**
    * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses
@@ -149,7 +149,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    *
    * <p>kind of ugly. a better scheme?
    */
-  public Collection<TypeReference> getJavaLangErrorTypes();
+  Collection<TypeReference> getJavaLangErrorTypes();
 
   /**
    * Solely for optimization; return a Collection&lt;TypeReference&gt; representing the subclasses
@@ -157,19 +157,19 @@ public interface IClassHierarchy extends Iterable<IClass> {
    *
    * <p>kind of ugly. a better scheme?
    */
-  public Collection<TypeReference> getJavaLangRuntimeExceptionTypes();
+  Collection<TypeReference> getJavaLangRuntimeExceptionTypes();
 
   /**
    * @param type an interface
    * @return Set of IClass that represent implementors of the interface
    */
-  public Set<IClass> getImplementors(TypeReference type);
+  Set<IClass> getImplementors(TypeReference type);
 
   /** @return the number of classes that immediately extend klass. */
-  public int getNumberOfImmediateSubclasses(IClass klass);
+  int getNumberOfImmediateSubclasses(IClass klass);
 
   /** @return the classes that immediately extend klass. */
-  public Collection<IClass> getImmediateSubclasses(IClass klass);
+  Collection<IClass> getImmediateSubclasses(IClass klass);
 
   /**
    * Does an expression c1 x := c2 y typecheck?
@@ -179,5 +179,5 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @throws IllegalArgumentException if c1 is null
    * @throws IllegalArgumentException if c2 is null
    */
-  public boolean isAssignableFrom(IClass c1, IClass c2);
+  boolean isAssignableFrom(IClass c1, IClass c2);
 }

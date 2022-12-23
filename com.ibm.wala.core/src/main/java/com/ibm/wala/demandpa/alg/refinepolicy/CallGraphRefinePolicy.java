@@ -46,11 +46,11 @@ public interface CallGraphRefinePolicy {
    * @return {@code true} if the analysis should attempt to determine targets for the virtual call
    *     on-the-fly, and {@code false} otherwise
    */
-  public boolean shouldRefine(CallerSiteContext callSiteAndCGNode);
+  boolean shouldRefine(CallerSiteContext callSiteAndCGNode);
 
   /**
    * @return {@code true} if more refinement can be done, and hence another pass can be attempted;
    *     {@code false} otherwise
    */
-  public boolean nextPass();
+  boolean nextPass();
 }

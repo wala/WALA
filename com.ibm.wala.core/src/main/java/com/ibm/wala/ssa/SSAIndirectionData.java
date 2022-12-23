@@ -52,7 +52,7 @@ public interface SSAIndirectionData<T extends SSAIndirectionData.Name> {
    * entity in the program representation (e.g. a local variable in the source code or a local
    * number in the bytecode)
    */
-  public interface Name {}
+  interface Name {}
 
   /**
    * Returns the set of "source" level names (e.g. local variables in bytecode or source code) for

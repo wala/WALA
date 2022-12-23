@@ -16,46 +16,46 @@ import java.io.Serializable;
 public interface IntSet extends Serializable {
 
   /** @return true iff this set contains integer i */
-  public boolean contains(int i);
+  boolean contains(int i);
 
   /** @return true iff this set contains integer i */
-  public boolean containsAny(IntSet set);
+  boolean containsAny(IntSet set);
 
   /**
    * This implementation must not despoil the original value of "this"
    *
    * @return a new IntSet which is the intersection of this and that
    */
-  public IntSet intersection(IntSet that);
+  IntSet intersection(IntSet that);
 
   /**
    * This implementation must not despoil the original value of "this"
    *
    * @return a new IntSet containing all elements of this and that
    */
-  public IntSet union(IntSet that);
+  IntSet union(IntSet that);
 
   /** @return true iff this set is empty */
-  public boolean isEmpty();
+  boolean isEmpty();
 
   /** @return the number of elements in this set */
-  public int size();
+  int size();
 
   /** @return a perhaps more efficient iterator */
-  public IntIterator intIterator();
+  IntIterator intIterator();
 
   /** Invoke an action on each element of the Set */
-  public void foreach(IntSetAction action);
+  void foreach(IntSetAction action);
 
   /** Invoke an action on each element of the Set, excluding elements of Set X */
-  public void foreachExcluding(IntSet X, IntSetAction action);
+  void foreachExcluding(IntSet X, IntSetAction action);
 
   /** @return maximum integer in this set. */
-  public int max();
+  int max();
 
   /** @return true iff {@code this} has the same value as {@code that}. */
-  public boolean sameValue(IntSet that);
+  boolean sameValue(IntSet that);
 
   /** @return true iff {@code this} is a subset of {@code that}. */
-  public boolean isSubset(IntSet that);
+  boolean isSubset(IntSet that);
 }

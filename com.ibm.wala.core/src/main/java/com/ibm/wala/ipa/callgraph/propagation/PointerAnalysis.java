@@ -47,5 +47,5 @@ public interface PointerAnalysis<T extends InstanceKey> {
   /** did the pointer analysis use a type filter for a given points-to set? (this is ugly). */
   boolean isFiltered(PointerKey pk);
 
-  public IClassHierarchy getClassHierarchy();
+  IClassHierarchy getClassHierarchy();
 }

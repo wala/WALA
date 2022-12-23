@@ -39,9 +39,9 @@ package javaonepointfive;
 
 public class AnonymousGenerics {
 
-	static interface Ops<E> {
-		public E nullary();
-		public E unary(E x);
+	interface Ops<E> {
+		E nullary();
+		E unary(E x);
 	}
 
 	static class StrTripler implements Ops<String> {

@@ -16,14 +16,14 @@ import com.ibm.wala.util.perf.StopwatchGC;
 public interface EngineStopwatch {
 
   /** @return a String representation of the information in this object */
-  public String report();
+  String report();
 
   /** start timing for some category */
-  public void start(byte category);
+  void start(byte category);
 
   /** stop timing for some category */
-  public void stop(byte category);
+  void stop(byte category);
 
   /** Returns access to class encapsulating time events results, related to the given category. */
-  public StopwatchGC getTimer(byte category);
+  StopwatchGC getTimer(byte category);
 }

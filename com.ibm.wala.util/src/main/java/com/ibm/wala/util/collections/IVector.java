@@ -19,18 +19,18 @@ import org.jspecify.annotations.Nullable;
  */
 public interface IVector<T> extends Iterable<T> {
   /** @see com.ibm.wala.util.intset.IntVector#get(int) */
-  public abstract T get(int x);
+  T get(int x);
 
   /**
    * TODO: this can be optimized
    *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
-  public abstract void set(int x, @Nullable T value);
+  void set(int x, @Nullable T value);
 
   /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
-  public abstract void performVerboseAction();
+  void performVerboseAction();
 
   /** @return max i s.t get(i) != null */
-  public abstract int getMaxIndex();
+  int getMaxIndex();
 }

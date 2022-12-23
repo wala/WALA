@@ -11,29 +11,29 @@
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 public interface VertexVisitor<T> {
-  public abstract T visitVarVertex(VarVertex varVertex);
+  T visitVarVertex(VarVertex varVertex);
 
-  public abstract T visitPropVertex(PropVertex propVertex);
+  T visitPropVertex(PropVertex propVertex);
 
-  public abstract T visitUnknownVertex(UnknownVertex unknownVertex);
+  T visitUnknownVertex(UnknownVertex unknownVertex);
 
-  public abstract T visitFuncVertex(FuncVertex funcVertex);
+  T visitFuncVertex(FuncVertex funcVertex);
 
-  public abstract T visitCreationSiteVertex(CreationSiteVertex csVertex);
+  T visitCreationSiteVertex(CreationSiteVertex csVertex);
 
-  public abstract T visitParamVertex(ParamVertex paramVertex);
+  T visitParamVertex(ParamVertex paramVertex);
 
-  public abstract T visitRetVertex(RetVertex retVertex);
+  T visitRetVertex(RetVertex retVertex);
 
-  public abstract T visitCalleeVertex(CallVertex calleeVertex);
+  T visitCalleeVertex(CallVertex calleeVertex);
 
-  public abstract T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex);
+  T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex);
 
-  public abstract T visitArgVertex(ArgVertex argVertex);
+  T visitArgVertex(ArgVertex argVertex);
 
-  public abstract T visitGlobalVertex(GlobalVertex globalVertex);
+  T visitGlobalVertex(GlobalVertex globalVertex);
 
-  public abstract T visitPrototypeVertex(PrototypeFieldVertex protoVertex);
+  T visitPrototypeVertex(PrototypeFieldVertex protoVertex);
 
-  public abstract T visitReflectiveCallVertex(ReflectiveCallVertex reflectiveCallVertex);
+  T visitReflectiveCallVertex(ReflectiveCallVertex reflectiveCallVertex);
 }

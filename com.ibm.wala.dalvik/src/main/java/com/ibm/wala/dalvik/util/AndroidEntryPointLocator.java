@@ -83,7 +83,7 @@ public final class AndroidEntryPointLocator {
   private final IProgressMonitor mon;
 
   /** Used to control the search mechanisms of AndroidEntryPointLocator. */
-  public static enum LocatorFlags {
+  public enum LocatorFlags {
     /**
      * If this flag is not set only functions of actual Android-Components are returned.
      *

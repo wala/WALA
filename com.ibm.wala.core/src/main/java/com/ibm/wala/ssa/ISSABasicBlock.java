@@ -20,25 +20,25 @@ public interface ISSABasicBlock extends IBasicBlock<SSAInstruction> {
 
   /** Is this block a catch block */
   @Override
-  public boolean isCatchBlock();
+  boolean isCatchBlock();
 
   /** Does this block represent the unique exit from a {@link ControlFlowGraph}? */
   @Override
-  public boolean isExitBlock();
+  boolean isExitBlock();
 
   /** Does this block represent the unique entry to a {@link ControlFlowGraph} */
   @Override
-  public boolean isEntryBlock();
+  boolean isEntryBlock();
 
   /** @return the phi instructions incoming to this block */
-  public Iterator<SSAPhiInstruction> iteratePhis();
+  Iterator<SSAPhiInstruction> iteratePhis();
 
   /** @return the pi instructions incoming to this block */
-  public Iterator<SSAPiInstruction> iteratePis();
+  Iterator<SSAPiInstruction> iteratePis();
 
   /** @return the last instruction in this block. */
-  public SSAInstruction getLastInstruction();
+  SSAInstruction getLastInstruction();
 
   /** @return the set of exception types this block may catch. */
-  public Iterator<TypeReference> getCaughtExceptionTypes();
+  Iterator<TypeReference> getCaughtExceptionTypes();
 }
