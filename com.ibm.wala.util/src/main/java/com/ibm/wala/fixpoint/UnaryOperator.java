@@ -12,6 +12,7 @@ package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import org.jspecify.annotations.Nullable;
 
 /** An operator of the form lhs = op (rhs) */
 public abstract class UnaryOperator<T extends IVariable<T>> extends AbstractOperator<T> {
@@ -21,10 +22,10 @@ public abstract class UnaryOperator<T extends IVariable<T>> extends AbstractOper
    *
    * @return true if the lhs value changes. false otherwise.
    */
-  public abstract byte evaluate(T lhs, T rhs);
+  public abstract byte evaluate(@Nullable T lhs, T rhs);
 
   /** Create an equation which uses this operator Override in subclasses for efficiency. */
-  public UnaryStatement<T> makeEquation(T lhs, T rhs) {
+  public UnaryStatement<T> makeEquation(@Nullable T lhs, T rhs) {
     return new BasicUnaryStatement<>(lhs, this, rhs);
   }
 

@@ -10,12 +10,14 @@
  */
 package com.ibm.wala.fixpoint;
 
+import org.jspecify.annotations.Nullable;
+
 /** Represents a single step, restricted to a unary operator. */
 public abstract class UnaryStatement<T extends IVariable<T>>
     extends AbstractStatement<T, UnaryOperator<T>> {
 
   /** The operands */
-  protected final T lhs;
+  @Nullable protected final T lhs;
 
   protected final T rhs;
 
@@ -35,6 +37,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    *
    * @return the lattice cell this equation computes
    */
+  @Nullable
   @Override
   public T getLHS() {
     return lhs;
@@ -90,7 +93,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    * @param lhs the lattice cell set by this equation
    * @param rhs the first operand on the rhs
    */
-  protected UnaryStatement(T lhs, T rhs) {
+  protected UnaryStatement(@Nullable T lhs, T rhs) {
     super();
     this.lhs = lhs;
     this.rhs = rhs;

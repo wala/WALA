@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import com.ibm.wala.qual.Initializer;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -17,6 +18,7 @@ import com.ibm.wala.util.graph.Graph;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes
@@ -29,7 +31,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private static final long serialVersionUID = 8440061593631309429L;
 
   /** the current next element in finishing time order */
-  private T theNextElement;
+  @Nullable private T theNextElement;
 
   /** an enumeration of all nodes to search from */
   private Iterator<? extends T> roots;
@@ -38,6 +40,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private Graph<T> G;
 
   /** Subclasses must call this in the constructor! */
+  @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     roots = nodes;
@@ -58,11 +61,12 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     return (!empty() || (theNextElement != null && getPendingChildren(theNextElement) == null));
   }
 
-  abstract Iterator<T> getPendingChildren(T n);
+  @Nullable
+  abstract Iterator<T> getPendingChildren(@Nullable T n);
 
-  abstract void setPendingChildren(T v, Iterator<T> iterator);
+  abstract void setPendingChildren(@Nullable T v, Iterator<T> iterator);
 
-  private void push(T elt) {
+  private void push(@Nullable T elt) {
     add(elt);
   }
 
@@ -81,6 +85,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    *
    * @return the next graph node in finishing time order.
    */
+  @Nullable
   @Override
   @SuppressWarnings("unchecked")
   public T next() throws NoSuchElementException {
@@ -125,7 +130,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    * @param n the node of which to get the out edges
    * @return the out edges
    */
-  protected Iterator<T> getConnected(T n) {
+  protected Iterator<T> getConnected(@Nullable T n) {
     return G.getSuccNodes(n);
   }
 

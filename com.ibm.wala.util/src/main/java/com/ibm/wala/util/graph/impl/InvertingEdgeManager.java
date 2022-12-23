@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** An edge manager that reverses the edges in a graph */
 public class InvertingEdgeManager<T> implements EdgeManager<T> {
@@ -26,7 +27,7 @@ public class InvertingEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
     return original.getSuccNodes(N);
   }
 
@@ -36,7 +37,7 @@ public class InvertingEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(@Nullable T N) throws IllegalArgumentException {
     return original.getPredNodes(N);
   }
 
@@ -56,7 +57,7 @@ public class InvertingEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     return original.hasEdge(dst, src);
   }
 

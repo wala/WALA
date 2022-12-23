@@ -15,13 +15,15 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Iterator;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** A Set backed by a set of integers. */
 public class OrdinalSet<T> implements Iterable<T> {
 
-  private final IntSet S;
+  @Nullable private final IntSet S;
 
-  private final OrdinalSetMapping<T> mapping;
+  @Nullable private final OrdinalSetMapping<T> mapping;
 
   @SuppressWarnings("rawtypes")
   private static final OrdinalSet EMPTY = new OrdinalSet();
@@ -35,7 +37,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     mapping = null;
   }
 
-  public OrdinalSet(IntSet S, OrdinalSetMapping<T> mapping) {
+  public OrdinalSet(@Nullable IntSet S, @Nullable OrdinalSetMapping<T> mapping) {
     this.S = S;
     this.mapping = mapping;
   }
@@ -61,6 +63,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     } else {
 
       return new Iterator<>() {
+        @SuppressWarnings("NullAway")
         final IntIterator it = S.intIterator();
 
         @Override
@@ -68,6 +71,7 @@ public class OrdinalSet<T> implements Iterable<T> {
           return it.hasNext();
         }
 
+        @NullUnmarked
         @Override
         public T next() {
           return mapping.getMappedObject(it.next());
@@ -158,11 +162,13 @@ public class OrdinalSet<T> implements Iterable<T> {
   /**
    * Dangerous. Added for performance reasons. Use this only if you really know what you are doing.
    */
+  @Nullable
   public IntSet getBackingSet() {
     return S;
   }
 
   /** @return true iff this set contains object */
+  @NullUnmarked
   public boolean contains(T object) {
     if (this == EMPTY || S == null || object == null) {
       return false;
@@ -202,6 +208,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<>(s, m);
   }
 
+  @Nullable
   public OrdinalSetMapping<T> getMapping() {
     return mapping;
   }

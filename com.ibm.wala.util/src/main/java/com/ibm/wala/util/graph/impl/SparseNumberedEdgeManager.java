@@ -21,6 +21,7 @@ import com.ibm.wala.util.intset.IntSet;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** An object which tracks edges for nodes that have numbers. */
 public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T>, Serializable {
@@ -78,7 +79,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
 
   /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object) */
   @Override
-  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
     int number = nodeManager.getNumber(N);
     if (number < 0) {
       throw new IllegalArgumentException(N + " is not in graph");
@@ -100,7 +101,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
 
   /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object) */
   @Override
-  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(@Nullable T N) throws IllegalArgumentException {
     int number = nodeManager.getNumber(N);
     if (number == -1) {
       throw new IllegalArgumentException(N + "  is not in graph");
@@ -118,7 +119,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(@Nullable T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
     }
@@ -131,7 +132,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   @Override
-  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(@Nullable T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
     }
@@ -166,7 +167,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     int x = nodeManager.getNumber(src);
     int y = nodeManager.getNumber(dst);
     if (x < 0 || y < 0) {

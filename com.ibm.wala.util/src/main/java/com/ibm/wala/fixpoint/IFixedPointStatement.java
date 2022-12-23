@@ -11,6 +11,7 @@
 package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.INodeWithNumber;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The general form of a statement definition in an iterative solver is: x &gt;= term, where term
@@ -24,6 +25,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  */
 public interface IFixedPointStatement<T extends IVariable<T>> extends INodeWithNumber {
   /** @return the left-hand side of this statement. */
+  @Nullable
   public T getLHS();
 
   /** returns the list of free variables appearing in the right-hand side of the statement */

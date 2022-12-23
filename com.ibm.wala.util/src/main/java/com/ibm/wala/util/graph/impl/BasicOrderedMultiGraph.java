@@ -19,6 +19,7 @@ import com.ibm.wala.util.graph.OrderedMultiGraph;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Inefficient implementation of OrderedMultiGraph.
@@ -66,7 +67,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   }
 
   @Override
-  public boolean containsNode(T N) {
+  public boolean containsNode(@Nullable T N) {
     return delegate.containsNode(N);
   }
 
@@ -82,7 +83,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
 
   /** For now, this returns nodes in no particular order! Fix this when needed. */
   @Override
-  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
@@ -92,12 +93,12 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(@Nullable T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     return delegate.hasEdge(src, dst);
   }
 

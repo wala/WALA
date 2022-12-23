@@ -14,6 +14,7 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.NumberedGraph;
 import java.util.Arrays;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes
@@ -61,8 +62,9 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     this(G, G.iterator());
   }
 
+  @Nullable
   @Override
-  Iterator<T> getPendingChildren(T n) {
+  Iterator<T> getPendingChildren(@Nullable T n) {
     int number = G.getNumber(n);
     if (number >= pendingChildren.length) {
       // the graph is probably growing as we travserse
@@ -77,7 +79,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
 
   /** Method setPendingChildren. */
   @Override
-  void setPendingChildren(T v, Iterator<T> iterator) {
+  void setPendingChildren(@Nullable T v, Iterator<T> iterator) {
     pendingChildren[G.getNumber(v)] = iterator;
   }
 }

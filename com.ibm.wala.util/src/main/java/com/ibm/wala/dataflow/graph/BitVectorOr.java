@@ -13,6 +13,7 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
+import org.jspecify.annotations.Nullable;
 
 /** Operator OUT = IN U v */
 public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
@@ -27,7 +28,7 @@ public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs)
+  public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");

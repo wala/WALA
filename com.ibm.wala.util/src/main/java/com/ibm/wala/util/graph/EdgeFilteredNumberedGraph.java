@@ -17,6 +17,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** View of a {@link NumberedGraph} in which some edges have been filtered out */
 public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
@@ -74,7 +75,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public Iterator<T> getPredNodes(T N) {
+    public Iterator<T> getPredNodes(@Nullable T N) {
       return new NodeIterator(getPredNodeNumbers(N));
     }
 
@@ -84,21 +85,21 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public Iterator<T> getSuccNodes(T N) {
+    public Iterator<T> getSuccNodes(@Nullable T N) {
       return new NodeIterator(getSuccNodeNumbers(N));
     }
 
     @Override
-    public boolean hasEdge(T src, T dst) {
+    public boolean hasEdge(@Nullable T src, @Nullable T dst) {
       return delegate.hasEdge(src, dst) && !ignoreEdges.contains(getNumber(src), getNumber(dst));
     }
 
     @Override
-    public IntSet getPredNodeNumbers(T node) {
+    public IntSet getPredNodeNumbers(@Nullable T node) {
       return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node));
     }
 
-    private IntSet getFilteredNodeNumbers(T node, IntSet s) {
+    private IntSet getFilteredNodeNumbers(@Nullable T node, IntSet s) {
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
       for (IntIterator it = s.intIterator(); it.hasNext(); ) {
         int y = it.next();
@@ -110,7 +111,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     }
 
     @Override
-    public IntSet getSuccNodeNumbers(T node) {
+    public IntSet getSuccNodeNumbers(@Nullable T node) {
       return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node));
     }
 

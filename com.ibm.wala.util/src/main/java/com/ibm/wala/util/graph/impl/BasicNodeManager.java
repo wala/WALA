@@ -16,6 +16,7 @@ import com.ibm.wala.util.graph.NodeManager;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /** Simple implementation of a {@link NodeManager}. */
 public class BasicNodeManager<T> implements NodeManager<T> {
@@ -48,7 +49,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   }
 
   @Override
-  public boolean containsNode(T N) {
+  public boolean containsNode(@Nullable T N) {
     return nodes.contains(N);
   }
 }

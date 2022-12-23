@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class searches depth-first search for node that matches some criteria. If found, it reports
@@ -98,6 +99,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
    * @return a List of nodes that specifies the first path found from a root to a node accepted by
    *     the filter. Returns null if no path found.
    */
+  @Nullable
   public List<T> find() {
     if (!initialized) {
       init();
@@ -136,6 +138,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
    *
    * @return Object
    */
+  @Nullable
   protected Iterator<? extends T> getPendingChildren(T n) {
     return pendingChildren.get(n);
   }

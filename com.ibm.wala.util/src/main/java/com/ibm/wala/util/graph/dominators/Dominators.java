@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
@@ -87,14 +88,15 @@ public abstract class Dominators<T> {
   }
 
   /** return the immediate dominator of node */
-  public T getIdom(T node) {
+  @Nullable
+  public T getIdom(@Nullable T node) {
     return getInfo(node).dominator;
   }
 
   /** return an Iterator over all nodes that dominate node */
   public Iterator<T> dominators(final T node) {
     return new Iterator<>() {
-      private T current = node;
+      @Nullable private T current = node;
 
       @Override
       public void remove() {
@@ -145,7 +147,7 @@ public abstract class Dominators<T> {
             }
 
             @Override
-            public Iterator<T> getPredNodes(T N) {
+            public Iterator<T> getPredNodes(@Nullable T N) {
               if (N == root) return EmptyIterator.instance();
               else return new NonNullSingletonIterator<>(getIdom(N));
             }
@@ -156,7 +158,7 @@ public abstract class Dominators<T> {
             }
 
             @Override
-            public Iterator<T> getSuccNodes(Object N) {
+            public Iterator<T> getSuccNodes(@Nullable Object N) {
               if (nextMap.containsKey(N)) return nextMap.get(N).iterator();
               else return EmptyIterator.instance();
             }
@@ -195,7 +197,7 @@ public abstract class Dominators<T> {
             }
 
             @Override
-            public boolean hasEdge(Object src, Object dst) {
+            public boolean hasEdge(@Nullable Object src, @Nullable Object dst) {
               // TODO Auto-generated method stub
               Assertions.UNREACHABLE();
               return false;
@@ -327,6 +329,7 @@ public abstract class Dominators<T> {
    * @param node the node to evaluate
    * @return the node as described above
    */
+  @Nullable
   private T EVAL(T node) {
     if (DEBUG) {
       System.out.println("  Evaling " + node);
@@ -348,7 +351,7 @@ public abstract class Dominators<T> {
    *
    * @param node node of interest
    */
-  private void compress(T node) {
+  private void compress(@Nullable T node) {
     if (getAncestor(getAncestor(node)) != null) {
       compress(getAncestor(node));
       if (getSemi(getLabel(getAncestor(node))) < getSemi(getLabel(node))) {
@@ -366,7 +369,7 @@ public abstract class Dominators<T> {
    * @param node1 a basic node corresponding to the source of the new edge
    * @param node2 a basic node corresponding to the source of the new edge
    */
-  private void LINK(T node1, T node2) {
+  private void LINK(@Nullable T node1, T node2) {
     if (DEBUG) {
       System.out.println("  Linking " + node1 + " with " + node2);
     }
@@ -415,12 +418,12 @@ public abstract class Dominators<T> {
     /*
      * The result of this computation: the immediate dominator of this node
      */
-    private T dominator;
+    @Nullable private T dominator;
 
     /*
      * The parent node in the DFS tree used in dominator computation
      */
-    private T parent;
+    @Nullable private T parent;
 
     /*
      * the ``semi-dominator,'' which starts as the DFS number in step 1
@@ -435,12 +438,12 @@ public abstract class Dominators<T> {
     /*
      * the labels used in the fast union-find structure
      */
-    private T label;
+    @Nullable private T label;
 
     /*
      * ancestor for fast union-find data structure
      */
-    private T ancestor;
+    @Nullable private T ancestor;
 
     /*
      * the size used by the fast union-find structure
@@ -450,9 +453,9 @@ public abstract class Dominators<T> {
     /*
      * the child used by the fast union-find structure
      */
-    private T child;
+    @Nullable private T child;
 
-    DominatorInfo(T node) {
+    DominatorInfo(@Nullable T node) {
       semiDominator = 0;
       dominator = null;
       parent = null;
@@ -467,9 +470,9 @@ public abstract class Dominators<T> {
   /*
    * Look-aside table for DominatorInfo objects
    */
-  protected abstract DominatorInfo getInfo(T node);
+  protected abstract DominatorInfo getInfo(@Nullable T node);
 
-  private Iterator<T> iterateBucket(T node) {
+  private Iterator<T> iterateBucket(@Nullable T node) {
     return getInfo(node).bucket.iterator();
   }
 
@@ -477,15 +480,17 @@ public abstract class Dominators<T> {
     getInfo(node).bucket.add(addend);
   }
 
-  private T getDominator(T node) {
+  @Nullable
+  private T getDominator(@Nullable T node) {
     assert node != null;
     return getInfo(node).dominator;
   }
 
-  private void setDominator(T node, T dominator) {
+  private void setDominator(T node, @Nullable T dominator) {
     getInfo(node).dominator = dominator;
   }
 
+  @Nullable
   private T getParent(T node) {
     return getInfo(node).parent;
   }
@@ -494,41 +499,44 @@ public abstract class Dominators<T> {
     getInfo(node).parent = parent;
   }
 
-  private T getAncestor(T node) {
+  @Nullable
+  private T getAncestor(@Nullable T node) {
     return getInfo(node).ancestor;
   }
 
-  private void setAncestor(T node, T ancestor) {
+  private void setAncestor(@Nullable T node, @Nullable T ancestor) {
     getInfo(node).ancestor = ancestor;
   }
 
-  private T getLabel(T node) {
+  @Nullable
+  private T getLabel(@Nullable T node) {
     if (node == null) return null;
     else return getInfo(node).label;
   }
 
-  private void setLabel(T node, T label) {
+  private void setLabel(@Nullable T node, @Nullable T label) {
     getInfo(node).label = label;
   }
 
-  private int getSize(T node) {
+  private int getSize(@Nullable T node) {
     if (node == null) return 0;
     else return getInfo(node).size;
   }
 
-  private void setSize(T node, int size) {
+  private void setSize(@Nullable T node, int size) {
     getInfo(node).size = size;
   }
 
-  private T getChild(T node) {
+  @Nullable
+  private T getChild(@Nullable T node) {
     return getInfo(node).child;
   }
 
-  private void setChild(T node, T child) {
+  private void setChild(@Nullable T node, @Nullable T child) {
     getInfo(node).child = child;
   }
 
-  private int getSemi(T node) {
+  private int getSemi(@Nullable T node) {
     if (node == null) return 0;
     else return getInfo(node).semiDominator;
   }

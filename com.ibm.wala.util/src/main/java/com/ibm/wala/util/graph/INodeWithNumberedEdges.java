@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph;
 
 import com.ibm.wala.util.intset.IntSet;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Basic interface for a node which lives in one graph ... it's id is used to implement the {@link
@@ -18,9 +19,11 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public interface INodeWithNumberedEdges extends INodeWithNumber {
   /** @return set of node numbers which are successors of this node */
+  @Nullable
   public IntSet getSuccNumbers();
 
   /** @return set of node numbers which are predecessors of this node */
+  @Nullable
   public IntSet getPredNumbers();
 
   /** Modify the graph so that node number n is a successor of this node */

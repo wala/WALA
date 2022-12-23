@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixpoint;
 
+import org.jspecify.annotations.Nullable;
+
 /** Operator U(n) = true */
 public final class TrueOperator extends UnaryOperator<BooleanVariable> {
 
@@ -22,7 +24,8 @@ public final class TrueOperator extends UnaryOperator<BooleanVariable> {
   private TrueOperator() {}
 
   @Override
-  public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(@Nullable BooleanVariable lhs, BooleanVariable rhs)
+      throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }

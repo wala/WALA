@@ -39,6 +39,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /** */
 public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
@@ -53,7 +54,7 @@ public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
         private static final long serialVersionUID = 1839857029830528896L;
 
         @Override
-        public boolean put(Object key, Object val) {
+        public boolean put(Object key, @Nullable Object val) {
           throw new RuntimeException();
         }
 
@@ -82,7 +83,7 @@ public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
   }
 
   @Override
-  public ArraySet<V> get(K key) {
+  public ArraySet<V> get(@Nullable K key) {
     return (ArraySet<V>) super.get(key);
   }
 

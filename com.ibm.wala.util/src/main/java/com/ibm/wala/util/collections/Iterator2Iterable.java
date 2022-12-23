@@ -11,20 +11,22 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** Converts an {@link Iterator} to an {@link Iterable}. */
 public class Iterator2Iterable<T> implements Iterable<T> {
 
-  private final Iterator<T> iter;
+  @Nullable private final Iterator<T> iter;
 
-  public static <T> Iterator2Iterable<T> make(Iterator<T> iter) {
+  public static <T> Iterator2Iterable<T> make(@Nullable Iterator<T> iter) {
     return new Iterator2Iterable<>(iter);
   }
 
-  public Iterator2Iterable(Iterator<T> iter) {
+  public Iterator2Iterable(@Nullable Iterator<T> iter) {
     this.iter = iter;
   }
 
+  @Nullable
   @Override
   public Iterator<T> iterator() {
     return iter;

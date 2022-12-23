@@ -12,6 +12,7 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BooleanVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
+import org.jspecify.annotations.Nullable;
 
 /** Operator OUT = IN */
 public class BooleanIdentity extends UnaryOperator<BooleanVariable> {
@@ -25,7 +26,8 @@ public class BooleanIdentity extends UnaryOperator<BooleanVariable> {
   private BooleanIdentity() {}
 
   @Override
-  public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(@Nullable BooleanVariable lhs, BooleanVariable rhs)
+      throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }

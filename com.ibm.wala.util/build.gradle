@@ -1,11 +1,15 @@
 plugins {
 	id 'gradle-mvn-push'
 	id 'wala-java'
+	id 'wala-NullAway'
 }
 
 eclipse.project.natures 'org.eclipse.pde.PluginNature'
 
 dependencies {
+	compileOnly (
+			"org.jspecify:jspecify:0.3.0"
+	)
 	testImplementation(
 			'junit:junit:4.13.2',
 			'org.hamcrest:hamcrest:2.2',

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * simple interface for a vector.
  *
@@ -24,7 +26,7 @@ public interface IVector<T> extends Iterable<T> {
    *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
-  public abstract void set(int x, T value);
+  public abstract void set(int x, @Nullable T value);
 
   /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
   public abstract void performVerboseAction();

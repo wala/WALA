@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Simple implementation of an {@link com.ibm.wala.util.graph.EdgeManager}. Does not support edge
@@ -28,7 +29,7 @@ public class BasicEdgeManager<T> implements EdgeManager<T> {
   private final Map<T, Set<T>> succs = HashMapFactory.make();
 
   @Override
-  public Iterator<T> getPredNodes(T n) {
+  public Iterator<T> getPredNodes(@Nullable T n) {
     Set<T> nodePreds = this.preds.get(n);
     return nodePreds != null ? nodePreds.iterator() : Collections.emptyIterator();
   }
@@ -40,7 +41,7 @@ public class BasicEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T n) {
+  public Iterator<T> getSuccNodes(@Nullable T n) {
     Set<T> nodeSuccs = this.succs.get(n);
     return nodeSuccs != null ? nodeSuccs.iterator() : Collections.emptyIterator();
   }
@@ -78,7 +79,7 @@ public class BasicEdgeManager<T> implements EdgeManager<T> {
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     Set<T> succsForSrc = succs.get(src);
     return succsForSrc != null && succsForSrc.contains(dst);
   }

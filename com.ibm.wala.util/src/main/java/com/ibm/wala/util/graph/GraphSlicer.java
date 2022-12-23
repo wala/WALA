@@ -27,6 +27,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Utilities related to simple graph subset operations. */
 public class GraphSlicer {
@@ -94,7 +96,7 @@ public class GraphSlicer {
           }
 
           @Override
-          public boolean containsNode(T n) {
+          public boolean containsNode(@Nullable T n) {
             return p.test(n) && g.containsNode(n);
           }
         };
@@ -102,7 +104,7 @@ public class GraphSlicer {
         new EdgeManager<>() {
 
           @Override
-          public Iterator<T> getPredNodes(T n) {
+          public Iterator<T> getPredNodes(@Nullable T n) {
             return new FilterIterator<>(g.getPredNodes(n), p);
           }
 
@@ -112,7 +114,7 @@ public class GraphSlicer {
           }
 
           @Override
-          public Iterator<T> getSuccNodes(T n) {
+          public Iterator<T> getSuccNodes(@Nullable T n) {
             return new FilterIterator<>(g.getSuccNodes(n), p);
           }
 
@@ -147,7 +149,7 @@ public class GraphSlicer {
           }
 
           @Override
-          public boolean hasEdge(T src, T dst) {
+          public boolean hasEdge(@Nullable T src, @Nullable T dst) {
             return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
           }
         };
@@ -189,7 +191,7 @@ public class GraphSlicer {
           }
 
           @Override
-          public boolean containsNode(E N) {
+          public boolean containsNode(@Nullable E N) {
             return G.containsNode(N) && fmember.test(N);
           }
 
@@ -224,7 +226,8 @@ public class GraphSlicer {
 
           private final Map<E, Collection<E>> preds = new HashMap<>();
 
-          private Set<E> getConnected(E inst, Function<E, Iterator<? extends E>> fconnected) {
+          private Set<E> getConnected(
+              @Nullable E inst, Function<E, Iterator<? extends E>> fconnected) {
             Set<E> result = new LinkedHashSet<>();
             Set<E> seenInsts = new HashSet<>();
             Set<E> newInsts = Iterator2Collection.toSet(fconnected.apply(inst));
@@ -250,14 +253,15 @@ public class GraphSlicer {
             return result;
           }
 
-          private void setPredNodes(E N) {
+          private void setPredNodes(@Nullable E N) {
             preds.put(N, getConnected(N, G::getPredNodes));
           }
 
-          private void setSuccNodes(E N) {
+          private void setSuccNodes(@Nullable E N) {
             succs.put(N, getConnected(N, G::getSuccNodes));
           }
 
+          @NullUnmarked
           @Override
           public int getPredNodeCount(E N) {
             if (!preds.containsKey(N)) {
@@ -266,14 +270,16 @@ public class GraphSlicer {
             return preds.get(N).size();
           }
 
+          @NullUnmarked
           @Override
-          public Iterator<E> getPredNodes(E N) {
+          public Iterator<E> getPredNodes(@Nullable E N) {
             if (!preds.containsKey(N)) {
               setPredNodes(N);
             }
             return preds.get(N).iterator();
           }
 
+          @NullUnmarked
           @Override
           public int getSuccNodeCount(E N) {
             if (!succs.containsKey(N)) {
@@ -282,16 +288,18 @@ public class GraphSlicer {
             return succs.get(N).size();
           }
 
+          @NullUnmarked
           @Override
-          public Iterator<E> getSuccNodes(E N) {
+          public Iterator<E> getSuccNodes(@Nullable E N) {
             if (!succs.containsKey(N)) {
               setSuccNodes(N);
             }
             return succs.get(N).iterator();
           }
 
+          @NullUnmarked
           @Override
-          public boolean hasEdge(E src, E dst) {
+          public boolean hasEdge(@Nullable E src, @Nullable E dst) {
             if (!preds.containsKey(dst)) {
               setPredNodes(dst);
             }

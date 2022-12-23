@@ -19,6 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Abstract base class for a process launcher */
 public abstract class Launcher {
@@ -26,15 +28,15 @@ public abstract class Launcher {
   // use a fairly big buffer size to avoid performance problems with the default
   private static final int BUFFER_SIZE = 32 * 1024;
 
-  protected File workingDir = null;
+  @Nullable protected File workingDir = null;
 
-  protected Map<String, String> env = null;
+  @Nullable protected Map<String, String> env = null;
 
-  protected byte[] stdOut = null;
+  @Nullable protected byte[] stdOut = null;
 
-  protected byte[] stdErr = null;
+  @Nullable protected byte[] stdErr = null;
 
-  private byte[] input = null;
+  @Nullable private byte[] input = null;
 
   /** capture the contents of stdout? */
   private final boolean captureOutput;
@@ -58,6 +60,7 @@ public abstract class Launcher {
     this.logger = logger;
   }
 
+  @Nullable
   public File getWorkingDir() {
     return workingDir;
   }
@@ -66,6 +69,7 @@ public abstract class Launcher {
     workingDir = newWorkingDir;
   }
 
+  @Nullable
   public Map<String, String> getEnv() {
     return env;
   }
@@ -84,7 +88,8 @@ public abstract class Launcher {
    *
    * @return an object representing the process
    */
-  protected Process spawnProcess(String cmd) throws IllegalArgumentException, IOException {
+  protected Process spawnProcess(@Nullable String cmd)
+      throws IllegalArgumentException, IOException {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
     }
@@ -206,7 +211,7 @@ public abstract class Launcher {
 
     private final Process p;
 
-    private ByteArrayOutputStream capture;
+    @Nullable private ByteArrayOutputStream capture;
 
     /** Drain data from the stream, but don't block. */
     abstract void drain() throws IOException;
@@ -248,6 +253,7 @@ public abstract class Launcher {
       }
     }
 
+    @NullUnmarked
     public ByteArrayOutputStream getCapture() {
       return capture;
     }
@@ -326,10 +332,14 @@ public abstract class Launcher {
     return captureErr;
   }
 
+  @NullUnmarked
+  @Nullable
   public byte[] getStdOut() {
     return stdOut;
   }
 
+  @NullUnmarked
+  @Nullable
   public byte[] getStderr() {
     return stdErr;
   }
@@ -342,6 +352,8 @@ public abstract class Launcher {
     stdErr = newErr;
   }
 
+  @NullUnmarked
+  @Nullable
   public byte[] getInput() {
     return input;
   }

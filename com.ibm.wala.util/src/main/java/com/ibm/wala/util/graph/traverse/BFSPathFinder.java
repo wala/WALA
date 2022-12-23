@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This class searches breadth-first for node that matches some criteria. If found, it reports a
@@ -136,13 +138,15 @@ public class BFSPathFinder<T> {
     }
   }
 
-  private ArrayDeque<T> Q = null;
-  private HashMap<Object, T> history = null;
+  @Nullable private ArrayDeque<T> Q = null;
+  @Nullable private HashMap<Object, T> history = null;
 
   /**
    * @return a List of nodes that specifies the first path found from a root to a node accepted by
    *     the filter. Returns null if no path found.
    */
+  @NullUnmarked
+  @Nullable
   public List<T> find() {
     if (Q == null) {
       Q = new ArrayDeque<>();
@@ -178,7 +182,8 @@ public class BFSPathFinder<T> {
    * @return a List which represents a path in the breadth-first search to Q[i]. Q holds the nodes
    *     visited during the BFS, in order.
    */
-  private List<T> makePath(T node, Map<Object, T> history) {
+  @NullUnmarked
+  private List<T> makePath(T node, @Nullable Map<Object, T> history) {
     ArrayList<T> result = new ArrayList<>();
     T n = node;
     result.add(n);

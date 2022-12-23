@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.impl;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /** An edge manager that reverses the edges in a graph */
 public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
@@ -27,7 +28,7 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(@Nullable T N) throws IllegalArgumentException {
     return original.getSuccNodes(N);
   }
 
@@ -37,7 +38,7 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(@Nullable T N) throws IllegalArgumentException {
     return original.getPredNodes(N);
   }
 
@@ -57,7 +58,7 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(@Nullable T src, @Nullable T dst) {
     return original.hasEdge(dst, src);
   }
 
@@ -77,12 +78,12 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   }
 
   @Override
-  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(@Nullable T node) throws IllegalArgumentException {
     return original.getPredNodeNumbers(node);
   }
 
   @Override
-  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
+  public IntSet getPredNodeNumbers(@Nullable T node) throws IllegalArgumentException {
     return original.getSuccNodeNumbers(node);
   }
 }
