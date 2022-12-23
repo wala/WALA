@@ -68,7 +68,7 @@ public class FileUtil {
   }
 
   /**
-   * This may be a resource leak: http://bugs.sun.com/view_bug.do?bug_id=4724038
+   * <a href="http://bugs.sun.com/view_bug.do?bug_id=4724038">This may be a resource leak.</a>
    *
    * <p>We may have to reconsider using nio for this, or apply one of the horrible workarounds
    * listed in the bug report above.
