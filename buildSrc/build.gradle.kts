@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-  implementation("de.undercouch:gradle-download-task:5.3.0")
-  implementation("net.ltgt.gradle:gradle-errorprone-plugin:3.0.1")
+  implementation(libs.gradle.download.task)
+  implementation(libs.gradle.errorprone.plugin)
 }
 
 kotlin.jvmToolchain { languageVersion.set(JavaLanguageVersion.of(11)) }

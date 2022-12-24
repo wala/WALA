@@ -1,5 +1,6 @@
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  id("com.diffplug.eclipse.mavencentral")
+  alias(libs.plugins.eclipse.mavencentral)
   id("com.ibm.wala.gradle.java")
 }
 
@@ -34,7 +35,7 @@ dependencies {
 configurations.all {
   resolutionStrategy.dependencySubstitution {
     substitute(module("xml-apis:xml-apis-ext"))
-        .using(module("org.eclipse.birt.runtime:org.w3c.css.sac:1.3.1.v200903091627"))
+        .using(module(libs.w3c.css.sac.get().toString()))
         .because(
             "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
   }

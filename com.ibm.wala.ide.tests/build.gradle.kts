@@ -1,9 +1,10 @@
 import org.gradle.api.attributes.VerificationType.MAIN_SOURCES
 import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  id("com.diffplug.eclipse.mavencentral")
-  id("com.github.hauner.jarTest") version "1.0.1"
+  alias(libs.plugins.eclipse.mavencentral)
+  alias(libs.plugins.jarTest)
   id("com.ibm.wala.gradle.java")
 }
 
@@ -48,28 +49,26 @@ dependencies {
   coreTestDataJar(project(":com.ibm.wala.core"))
   coreTestResources(
       project(mapOf("path" to ":com.ibm.wala.core", "configuration" to "testResources")))
-  testImplementation("org.eclipse.platform:org.eclipse.osgi:3.17.0")
+  testImplementation(libs.eclipse.osgi)
+  testImplementation(libs.hamcrest)
+  testImplementation(libs.junit)
   testImplementation(project(":com.ibm.wala.core"))
   testImplementation(project(":com.ibm.wala.ide"))
   testImplementation(project(":com.ibm.wala.util"))
   testImplementation("org.eclipse.platform:org.eclipse.ui.workbench") {
     version { strictly("3.120.0") }
   }
-  testImplementation("junit:junit:4.13.2")
-  testImplementation(
-      "org.hamcrest:hamcrest:2.2",
-  )
   testRuntimeOnly(testFixtures(project(":com.ibm.wala.core")))
 }
 
 configurations.all {
   resolutionStrategy.dependencySubstitution {
     substitute(module("org.eclipse.platform:org.eclipse.osgi.services"))
-        .using(module("org.eclipse.platform:org.eclipse.osgi:3.17.0"))
+        .using(module(libs.eclipse.osgi.get().toString()))
         .because(
             "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both")
     substitute(module("xml-apis:xml-apis-ext"))
-        .using(module("org.eclipse.birt.runtime:org.w3c.css.sac:1.3.1.v200903091627"))
+        .using(module(libs.w3c.css.sac.get().toString()))
         .because(
             "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
   }

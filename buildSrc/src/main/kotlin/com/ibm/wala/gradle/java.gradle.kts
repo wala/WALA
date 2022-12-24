@@ -28,7 +28,12 @@ val sourceSets = the<SourceSetContainer>()
 configurations { named("javadocClasspath").get().extendsFrom(compileClasspath.get()) }
 
 dependencies {
-  errorprone("com.google.errorprone:error_prone_core:2.15.0")
+  "errorprone"(
+      rootProject.extensions
+          .getByType<VersionCatalogsExtension>()
+          .named("libs")
+          .findLibrary("errorprone-core")
+          .get())
   "javadocSource"(sourceSets.main.get().allJava)
 }
 
@@ -64,7 +69,15 @@ configurations {
   all {
     resolutionStrategy.dependencySubstitution {
       substitute(module("org.hamcrest:hamcrest-core"))
-          .using(module("org.hamcrest:hamcrest:2.2"))
+          .using(
+              module(
+                  rootProject.extensions
+                      .getByType<VersionCatalogsExtension>()
+                      .named("libs")
+                      .findLibrary("hamcrest")
+                      .get()
+                      .get()
+                      .toString()))
           .because(
               "junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest")
     }

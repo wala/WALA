@@ -7,21 +7,22 @@ import com.github.sherter.googlejavaformatgradleplugin.VerifyGoogleJavaFormat
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 
-buildscript { dependencies.classpath("commons-io:commons-io:2.11.0") }
+buildscript { dependencies.classpath(libs.commons.io) }
 
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
   idea
   java
-  kotlin("jvm") version "1.7.10"
-  id("all.shared.gradle.file-lister") version "1.0.2"
-  id("com.diffplug.eclipse.mavencentral") version "3.33.2"
-  id("com.dorongold.task-tree") version "2.1.0"
-  id("com.github.ben-manes.versions") version "0.42.0"
-  id("com.github.sherter.google-java-format") version "0.9"
+  alias(libs.plugins.eclipse.mavencentral)
+  alias(libs.plugins.file.lister)
+  alias(libs.plugins.google.java.format)
+  alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.ktfmt)
+  alias(libs.plugins.task.tree)
+  alias(libs.plugins.versions)
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
   id("com.ibm.wala.gradle.project")
-  id("com.ncorti.ktfmt.gradle") version "0.11.0"
 }
 
 repositories {
@@ -55,8 +56,6 @@ version = properties["VERSION_NAME"] as String
 // like to preserve JDK 8 compatibility on other platforms.
 val eclipseVersion by
     extra(if (osName == "Mac OS X" && archName == "aarch64") "4.21.0" else "4.14.0")
-
-extra["eclipseWstJsdtVersion"] = "1.0.201.v2010012803"
 
 ///////////////////////////////////////////////////////////////////////
 //

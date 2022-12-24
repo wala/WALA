@@ -10,17 +10,17 @@ dependencies {
   api(project(":com.ibm.wala.cast")) {
     because("public class JSCallGraphUtil extends class CAstCallGraphUtil")
   }
-  implementation("commons-io:commons-io:2.11.0")
-  implementation("net.htmlparser.jericho:jericho-html:3.2")
-  implementation("com.google.code.gson:gson:2.9.1")
+  implementation(libs.commons.io)
+  implementation(libs.gson)
+  implementation(libs.jericho.html)
   implementation(project(":com.ibm.wala.core"))
   implementation(project(":com.ibm.wala.shrike"))
   implementation(project(":com.ibm.wala.util"))
   javadocClasspath(project(":com.ibm.wala.cast.js.rhino"))
-  testFixturesImplementation("junit:junit:4.13.2")
+  testFixturesImplementation(libs.junit)
   testFixturesImplementation(testFixtures(project(":com.ibm.wala.cast")))
   testFixturesImplementation(testFixtures(project(":com.ibm.wala.core")))
-  testImplementation("junit:junit:4.13.2")
+  testImplementation(libs.junit)
   testImplementation(testFixtures(project(":com.ibm.wala.cast")))
   testImplementation(testFixtures(project(":com.ibm.wala.core")))
 }

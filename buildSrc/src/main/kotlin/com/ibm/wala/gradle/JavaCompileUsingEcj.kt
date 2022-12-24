@@ -1,6 +1,7 @@
 package com.ibm.wala.gradle
 
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.SourceSet
@@ -21,7 +22,13 @@ open class JavaCompileUsingEcj : JavaCompile() {
     // Resolve ECJ to a JAR archive.  This task will use that archive as a batch Java compiler.
     val ecjConfiguration =
         project.configurations.detachedConfiguration(
-            project.dependencies.create("org.eclipse.jdt:ecj:3.21.0"))
+            project.dependencies.create(
+                project.rootProject.extensions
+                    .getByType(VersionCatalogsExtension::class.java)
+                    .named("libs")
+                    .findLibrary("eclipse-ecj")
+                    .get()
+                    .get()))
 
     options.run {
       // Add Eclipse JDT configuration, especially for warnings/errors.

@@ -57,19 +57,13 @@ dependencies {
   api(project(":com.ibm.wala.util")) {
     because("public interface CallGraph extends interface NumberedGraph")
   }
-  testFixturesImplementation("junit:junit:4.13.2")
-  testFixturesImplementation(
-      "org.apache.ant:ant:1.10.12",
-  )
-  testImplementation("junit:junit:4.13.2")
-  testImplementation(
-      "org.hamcrest:hamcrest:2.2",
-  )
+  testFixturesImplementation(libs.ant)
+  testFixturesImplementation(libs.junit)
+  testImplementation(libs.hamcrest)
+  testImplementation(libs.junit)
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
-  testRuntimeOnly(
-      // add the testSubjects source files to enable SourceMapTest to pass
-      files(sourceSets["testSubjects"].java.srcDirs),
-  )
+  // add the testSubjects source files to enable SourceMapTest to pass
+  testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
 }
 
 dependencies { javadocClasspath(project(":com.ibm.wala.dalvik")) }

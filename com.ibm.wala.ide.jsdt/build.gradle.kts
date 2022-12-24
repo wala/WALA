@@ -1,5 +1,6 @@
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  id("com.diffplug.eclipse.mavencentral")
+  alias(libs.plugins.eclipse.mavencentral)
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }
@@ -24,16 +25,13 @@ dependencies {
   api(project(":com.ibm.wala.ide")) {
     because("public class JavaScriptHeadlessUtil extends class HeadlessUtil")
   }
-  val eclipseWstJsdtVersion: String by rootProject.extra
-  implementation("org.eclipse.wst.jsdt:core:$eclipseWstJsdtVersion")
-  implementation("org.eclipse.wst.jsdt:ui:$eclipseWstJsdtVersion")
+  implementation(libs.eclipse.wst.jsdt.core)
+  implementation(libs.eclipse.wst.jsdt.ui)
+  implementation(libs.javax.annotation.api)
   implementation(project(":com.ibm.wala.cast"))
   implementation(project(":com.ibm.wala.cast.js"))
   implementation(project(":com.ibm.wala.cast.js.rhino"))
   implementation(project(":com.ibm.wala.core"))
   implementation(project(":com.ibm.wala.util"))
-  implementation("javax.annotation:javax.annotation-api") { version { strictly("1.3.2") } }
-  testFixturesImplementation("javax.annotation:javax.annotation-api") {
-    version { strictly("1.3.2") }
-  }
+  testFixturesImplementation(libs.javax.annotation.api)
 }
