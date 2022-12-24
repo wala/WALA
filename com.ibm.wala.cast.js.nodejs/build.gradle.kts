@@ -6,13 +6,13 @@ dependencies {
   api(project(":com.ibm.wala.cast.js")) {
     because("public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil")
   }
-  implementation("commons-io:commons-io:2.11.0")
-  implementation("org.json:json:20220320")
+  implementation(libs.commons.io)
+  implementation(libs.json)
   implementation(project(":com.ibm.wala.cast"))
   implementation(project(":com.ibm.wala.cast.js.rhino"))
   implementation(project(":com.ibm.wala.core"))
   implementation(project(":com.ibm.wala.util"))
-  testImplementation("junit:junit:4.13.2")
+  testImplementation(libs.junit)
   testRuntimeOnly(testFixtures(project(":com.ibm.wala.core")))
 }
 

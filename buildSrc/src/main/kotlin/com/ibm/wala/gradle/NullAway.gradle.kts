@@ -8,7 +8,14 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
-dependencies { annotationProcessor("com.uber.nullaway:nullaway:0.10.5") }
+dependencies {
+  annotationProcessor(
+      rootProject.extensions
+          .getByType<VersionCatalogsExtension>()
+          .named("libs")
+          .findLibrary("nullaway")
+          .get())
+}
 
 tasks.withType<JavaCompile>().configureEach {
   options.errorprone {

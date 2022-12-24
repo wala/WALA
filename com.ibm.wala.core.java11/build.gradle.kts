@@ -11,7 +11,7 @@ sourceSets.create("testSubjects")
 
 dependencies {
   implementation(project(":com.ibm.wala.core"))
-  testImplementation("junit:junit:4.13.2")
+  testImplementation(libs.junit)
   testImplementation(
       testFixtures(project(":com.ibm.wala.core")),
   )

@@ -1,6 +1,7 @@
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
   application
-  id("com.diffplug.eclipse.mavencentral")
+  alias(libs.plugins.eclipse.mavencentral)
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.publishing")
 }
@@ -31,9 +32,7 @@ dependencies {
           mapOf(
               "path" to ":com.ibm.wala.cast.java.test.data",
               "configuration" to "testJavaSourceDirectory")))
-  testImplementation(
-      "junit:junit:4.13.2",
-  )
+  testImplementation(libs.junit)
   testImplementation(testFixtures(project(":com.ibm.wala.cast.java")))
   testRuntimeOnly(testFixtures(project(":com.ibm.wala.core")))
 }

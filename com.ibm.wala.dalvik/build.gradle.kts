@@ -68,18 +68,18 @@ dependencies {
   extraTestResources(
       project("path" to ":com.ibm.wala.core", "configuration" to "dalvikTestResources"))
 
-  implementation("org.slf4j:slf4j-api:1.7.32")
-  implementation("org.smali:dexlib2:2.5.2")
-  implementation("com.google.guava:guava:31.1-jre")
+  implementation(libs.slf4j.api)
+  implementation(libs.dexlib2)
+  implementation(libs.guava)
   implementation(project(":com.ibm.wala.core"))
   implementation(project(":com.ibm.wala.shrike"))
   implementation(project(":com.ibm.wala.util"))
 
-  sampleCupSources("java_cup:java_cup:0.9e:sources")
+  sampleCupSources(libs.java.cup.map { "$it:sources" })
 
-  testImplementation("com.android.tools:r8:2.2.42")
-  testImplementation("junit:junit:4.13.2")
-  testImplementation("org.smali:dexlib2:2.5.2")
+  testImplementation(libs.android.tools)
+  testImplementation(libs.junit)
+  testImplementation(libs.dexlib2)
   testImplementation(project(":com.ibm.wala.core"))
   testImplementation(project(":com.ibm.wala.dalvik"))
   testImplementation(project(":com.ibm.wala.shrike"))

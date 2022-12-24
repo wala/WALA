@@ -1,5 +1,6 @@
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  id("com.diffplug.eclipse.mavencentral")
+  alias(libs.plugins.eclipse.mavencentral)
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }
@@ -18,10 +19,10 @@ eclipseMavenCentral {
 }
 
 dependencies {
-  testImplementation("junit:junit:4.13.2")
-  testImplementation(
-      "org.eclipse.wst.jsdt:core:${rootProject.extra["eclipseWstJsdtVersion"] as String}")
-  testImplementation("org.eclipse.platform:org.eclipse.osgi:3.15.100")
+  testImplementation(libs.eclipse.osgi)
+  testImplementation(libs.eclipse.wst.jsdt.core)
+  testImplementation(libs.javax.annotation.api)
+  testImplementation(libs.junit)
   testImplementation(project(":com.ibm.wala.cast"))
   testImplementation(project(":com.ibm.wala.cast.js"))
   testImplementation(project(":com.ibm.wala.cast.js.rhino"))
@@ -29,7 +30,6 @@ dependencies {
   testImplementation(project(":com.ibm.wala.ide.jsdt"))
   testImplementation(project(":com.ibm.wala.util"))
   testImplementation(project(configuration = "testArchives", path = ":com.ibm.wala.ide.tests"))
-  testImplementation("javax.annotation:javax.annotation-api") { version { strictly("1.3.2") } }
 }
 
 tasks.named<Test>("test") {

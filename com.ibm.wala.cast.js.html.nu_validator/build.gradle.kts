@@ -5,7 +5,7 @@ val extraTestResources: Configuration by configurations.creating { isCanBeConsum
 dependencies {
   extraTestResources(
       project(mapOf("path" to ":com.ibm.wala.cast.js", "configuration" to "testResources")))
-  implementation("nu.validator.htmlparser:htmlparser:1.4")
+  implementation(libs.htmlparser)
   implementation(project(":com.ibm.wala.cast"))
   implementation(project(":com.ibm.wala.cast.js"))
   implementation(project(":com.ibm.wala.util"))

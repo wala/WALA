@@ -37,7 +37,7 @@ dependencies {
   api(project(":com.ibm.wala.core")) {
     because("public method AstCGNode.addTarget receives an argument of type CGNode")
   }
-  implementation("commons-io:commons-io:2.11.0")
+  implementation(libs.commons.io)
   implementation(project(":com.ibm.wala.shrike"))
   implementation(project(":com.ibm.wala.util"))
   castJsJavadocDestinationDirectory(
@@ -48,9 +48,7 @@ dependencies {
   castJsPackageListDirectory(
       project(mapOf("path" to ":com.ibm.wala.cast.js", "configuration" to "packageListDirectory")))
   javadocClasspath(project(":com.ibm.wala.cast.js"))
-  testImplementation(
-      "junit:junit:4.13.2",
-  )
+  testImplementation(libs.junit)
   testRuntimeOnly(testFixtures(project(":com.ibm.wala.core")))
   xlatorTestSharedLibrary(project("xlator_test"))
 }

@@ -1,5 +1,6 @@
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  id("com.diffplug.eclipse.mavencentral")
+  alias(libs.plugins.eclipse.mavencentral)
   id("com.ibm.wala.gradle.java")
 }
 
@@ -19,8 +20,8 @@ eclipseMavenCentral {
 }
 
 dependencies {
-  testImplementation("junit:junit:4.13.2")
-  testImplementation("org.eclipse.platform:org.eclipse.osgi:3.17.0")
+  testImplementation(libs.eclipse.osgi)
+  testImplementation(libs.junit)
   testImplementation(project(":com.ibm.wala.cast"))
   testImplementation(project(":com.ibm.wala.cast.java"))
   testImplementation(project(":com.ibm.wala.cast.java.ecj"))

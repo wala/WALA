@@ -7,12 +7,10 @@ plugins {
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 dependencies {
-  compileOnly("org.jspecify:jspecify:0.3.0")
+  compileOnly(libs.jspecify)
   javadocClasspath(project(":com.ibm.wala.core"))
-  testImplementation("junit:junit:4.13.2")
-  testImplementation(
-      "org.hamcrest:hamcrest:2.2",
-  )
+  testImplementation(libs.hamcrest)
+  testImplementation(libs.junit)
   testRuntimeOnly(testFixtures(project(":com.ibm.wala.core")))
 }
 
