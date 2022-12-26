@@ -104,7 +104,7 @@ public class JsdtUtil {
 
           @Override
           public Parser<IJavaScriptUnit> getParser() {
-            return new Parser<IJavaScriptUnit>() {
+            return new Parser<>() {
               IJavaScriptProject project;
 
               @Override
