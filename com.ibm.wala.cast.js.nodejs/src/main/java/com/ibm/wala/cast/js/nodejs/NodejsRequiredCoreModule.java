@@ -29,7 +29,8 @@ public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
 
   /**
    * Core modules list for Nodejs v6.2.2
-   * https://github.com/nodejs/node/blob/v6.2.2/lib/internal/module.js
+   *
+   * @see <a href="https://github.com/nodejs/node/blob/v6.2.2/lib/internal/module.js">module.js</a>
    */
   private static final Set<String> CORE_MODULES =
       HashSetFactory.make(

@@ -167,7 +167,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           r[i + 1] = true;
           blockCount++;
         }
-        if (hs != null && hs.length > 0) {
+        if (hs != null) {
           for (ExceptionHandler h : hs) {
             exceptionHandlers.add(h);
             if (!r[h.getHandler()]) {

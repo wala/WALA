@@ -49,8 +49,8 @@ import java.util.List;
  * Hardcoded EntryPoint-specifications for an Android-Activity.
  *
  * <p>The specifications are read and handled by AndroidEntryPointLocator.
- * https://developer.android.com/reference/android/app/Fragment.html
  *
+ * @see <a href="https://developer.android.com/reference/android/app/Fragment.html">Fragment</a>
  * @see com.ibm.wala.dalvik.util.AndroidEntryPointLocator
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
