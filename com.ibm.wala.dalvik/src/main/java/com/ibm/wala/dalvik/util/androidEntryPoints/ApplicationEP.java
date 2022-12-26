@@ -48,9 +48,10 @@ import java.util.List;
 /**
  * Hardcoded EntryPoint-specifications for an Android-Application.
  *
- * <p>The specifications are read and handled by AndroidEntryPointLocator. see:
- * http://developer.android.com/reference/android/app/Application.html
+ * <p>The specifications are read and handled by AndroidEntryPointLocator.
  *
+ * @see <a
+ *     href="http://developer.android.com/reference/android/app/Application.html">Application</a>
  * @see com.ibm.wala.dalvik.util.AndroidEntryPointLocator
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */

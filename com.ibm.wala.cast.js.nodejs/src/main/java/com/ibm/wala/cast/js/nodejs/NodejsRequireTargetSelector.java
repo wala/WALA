@@ -172,8 +172,8 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
   }
 
   /**
-   * Implements the Nodejs require.resolve algorithm, see
-   * https://nodejs.org/api/modules.html#modules_all_together
+   * Implements the Nodejs require.resolve algorithm, see <a
+   * href="https://nodejs.org/api/modules.html#modules_all_together">Node.js documentation</a>
    *
    * <p>require(X) from module at path Y 1. If X is a core module, a. return the core module b. STOP
    * 2. If X begins with './' or '/' or '../' a. LOAD_AS_FILE(Y + X) b. LOAD_AS_DIRECTORY(Y + X) 3.

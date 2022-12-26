@@ -51,6 +51,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
@@ -613,11 +614,12 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       context.cfg().map(cn, cn);
     }
     CAstNode target = context.getCatchTarget();
-    if (target != null) {
-      context.cfg().add(cn, target, JavaScriptTypes.ReferenceError);
-    } else {
-      context.cfg().add(cn, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
-    }
+    context
+        .cfg()
+        .add(
+            cn,
+            Objects.requireNonNullElse(target, CAstControlFlowMap.EXCEPTION_TO_EXIT),
+            JavaScriptTypes.ReferenceError);
     return cn;
   }
 
@@ -947,11 +949,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
         arg.cfg().map(get, get);
         CAstNode ctch = arg.getCatchTarget();
-        if (ctch != null) {
-          arg.cfg().add(get, ctch, JavaScriptTypes.ReferenceError);
-        } else {
-          arg.cfg().add(get, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
-        }
+        arg.cfg()
+            .add(
+                get,
+                Objects.requireNonNullElse(ctch, CAstControlFlowMap.EXCEPTION_TO_EXIT),
+                JavaScriptTypes.ReferenceError);
 
         return loop;
       }
@@ -1073,11 +1075,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
         arg.cfg().map(get, get);
         CAstNode ctch = arg.getCatchTarget();
-        if (ctch != null) {
-          arg.cfg().add(get, ctch, JavaScriptTypes.ReferenceError);
-        } else {
-          arg.cfg().add(get, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
-        }
+        arg.cfg()
+            .add(
+                get,
+                Objects.requireNonNullElse(ctch, CAstControlFlowMap.EXCEPTION_TO_EXIT),
+                JavaScriptTypes.ReferenceError);
 
         // body
         AstNode breakStmt = makeEmptyLabelStmt("breakLabel");
@@ -1119,11 +1121,11 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
       arg.cfg().map(get, get);
       CAstNode ctch = arg.getCatchTarget();
-      if (ctch != null) {
-        arg.cfg().add(get, ctch, JavaScriptTypes.ReferenceError);
-      } else {
-        arg.cfg().add(get, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
-      }
+      arg.cfg()
+          .add(
+              get,
+              Objects.requireNonNullElse(ctch, CAstControlFlowMap.EXCEPTION_TO_EXIT),
+              JavaScriptTypes.ReferenceError);
 
       return loop;
     }

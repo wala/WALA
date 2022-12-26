@@ -73,8 +73,9 @@ public class AddSerialVersion {
   }
 
   /**
-   * This method computes the serialVersionUID for class r. See the specification at
-   * http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/class.html
+   * This method computes the serialVersionUID for class r. See <a
+   * href="http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/class.html">the
+   * specification</a>.
    *
    * @throws IllegalArgumentException if r is null
    */
