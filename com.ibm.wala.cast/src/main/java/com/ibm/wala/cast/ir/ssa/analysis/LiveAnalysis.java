@@ -38,8 +38,8 @@ import com.ibm.wala.util.intset.IntSet;
  *     <p>Live-value analysis for a method's IR (or {@link ControlFlowGraph} and {@link
  *     SymbolTable}) using a {@link IKilldallFramework} based implementation.
  *     <p>Pre-requisites - Knowledge of SSA form: control flow graphs, basic blocks, Phi
- *     instructions - Knowledge of data flow analysis theory: see
- *     http://en.wikipedia.org/wiki/Data_flow_analysis
+ *     instructions - Knowledge of <a href="http://en.wikipedia.org/wiki/Data_flow_analysis">data
+ *     flow analysis theory</a>.
  *     <p>Implementation notes:
  *     <p>- The solver uses node transfer functions only. - Performance: inverts the CFG to traverse
  *     backwards (backward analysis).

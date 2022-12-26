@@ -31,9 +31,9 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.Map;
 
 /**
- * Generates synthetic summaries to model the behavior of Java 8 lambdas. See
- * https://cr.openjdk.java.net/~briangoetz/lambda/lambda-translation.html for a good discussion of
- * how lambdas look in bytecode.
+ * Generates synthetic summaries to model the behavior of Java 8 lambdas. See <a
+ * href="https://cr.openjdk.java.net/~briangoetz/lambda/lambda-translation.html">this good
+ * discussion of how lambdas look in bytecode</a>.
  *
  * <p>We generate two types of summaries.
  *
