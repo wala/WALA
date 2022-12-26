@@ -81,7 +81,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     Map<Vertex, Set<FuncVertex>> reachingFunctions = HashMapFactory.make();
     Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices =
         HashMapFactory.make();
-    /** maps to maintain the list of reachable calls that are yet to be processed * */
+    /* maps to maintain the list of reachable calls that are yet to be processed * */
     Map<Vertex, Set<FuncVertex>> pendingCallWorklist = HashMapFactory.make();
     Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist = HashMapFactory.make();
 
@@ -93,7 +93,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       }
     }
     int cnt = 0;
-    /**
+    /*
      * if bound is missing, calledges are added until all worklists are empty else, the calledges
      * are added until the bound value is hit *
      */
