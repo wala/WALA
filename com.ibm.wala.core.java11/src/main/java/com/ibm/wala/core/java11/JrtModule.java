@@ -30,92 +30,90 @@ public class JrtModule implements Module {
 
   private Stream<? extends ModuleEntry> rec(Path pp) {
     Module me = this;
-    try {
-      return Files.list(pp)
-          .flatMap(
-              s -> {
-                if (Files.isDirectory(s)) {
-                  return rec(s);
-                } else {
-                  return Stream.of(
-                      new ModuleEntry() {
+    try (var list = Files.list(pp)) {
+      return list.flatMap(
+          s -> {
+            if (Files.isDirectory(s)) {
+              return rec(s);
+            } else {
+              return Stream.of(
+                  new ModuleEntry() {
 
-                        @Override
-                        public String toString() {
-                          StringBuilder sb = new StringBuilder("[");
-                          if (isClassFile()) {
-                            sb.append("class");
-                          } else if (isSourceFile()) {
-                            sb.append("source");
-                          } else {
-                            sb.append("file");
-                          }
-                          sb.append(" ").append(getName());
-                          return sb.toString();
-                        }
+                    @Override
+                    public String toString() {
+                      StringBuilder sb = new StringBuilder("[");
+                      if (isClassFile()) {
+                        sb.append("class");
+                      } else if (isSourceFile()) {
+                        sb.append("source");
+                      } else {
+                        sb.append("file");
+                      }
+                      sb.append(" ").append(getName());
+                      return sb.toString();
+                    }
 
-                        @Override
-                        public String getName() {
-                          return s.toString().substring(root.toString().length() + 1);
-                        }
+                    @Override
+                    public String getName() {
+                      return s.toString().substring(root.toString().length() + 1);
+                    }
 
-                        @Override
-                        public boolean isClassFile() {
-                          return getName().endsWith(".class");
-                        }
+                    @Override
+                    public boolean isClassFile() {
+                      return getName().endsWith(".class");
+                    }
 
-                        @Override
-                        public boolean isSourceFile() {
-                          return getName().endsWith(".java");
-                        }
+                    @Override
+                    public boolean isSourceFile() {
+                      return getName().endsWith(".java");
+                    }
 
-                        @Override
-                        public InputStream getInputStream() {
-                          try {
-                            return new ByteArrayInputStream(Files.readAllBytes(s));
-                          } catch (IOException e) {
-                            assert false : e;
-                            return null;
-                          }
-                        }
+                    @Override
+                    public InputStream getInputStream() {
+                      try {
+                        return new ByteArrayInputStream(Files.readAllBytes(s));
+                      } catch (IOException e) {
+                        assert false : e;
+                        return null;
+                      }
+                    }
 
-                        @Override
-                        public boolean isModuleFile() {
-                          return false;
-                        }
+                    @Override
+                    public boolean isModuleFile() {
+                      return false;
+                    }
 
-                        @Override
-                        public Module asModule() {
+                    @Override
+                    public Module asModule() {
+                      assert false;
+                      return null;
+                    }
+
+                    private String className = null;
+
+                    @Override
+                    public String getClassName() {
+                      assert isClassFile();
+                      if (className == null) {
+                        ShrikeClassReaderHandle reader = new ShrikeClassReaderHandle(this);
+                        try {
+                          ImmutableByteArray name = ImmutableByteArray.make(reader.get().getName());
+                          className = name.toString();
+                        } catch (InvalidClassFileException e) {
+                          e.printStackTrace();
                           assert false;
-                          return null;
                         }
+                      }
+                      return className;
+                    }
 
-                        private String className = null;
-
-                        @Override
-                        public String getClassName() {
-                          assert isClassFile();
-                          if (className == null) {
-                            ShrikeClassReaderHandle reader = new ShrikeClassReaderHandle(this);
-                            try {
-                              ImmutableByteArray name =
-                                  ImmutableByteArray.make(reader.get().getName());
-                              className = name.toString();
-                            } catch (InvalidClassFileException e) {
-                              e.printStackTrace();
-                              assert false;
-                            }
-                          }
-                          return className;
-                        }
-
-                        @Override
-                        public Module getContainer() {
-                          return me;
-                        }
-                      });
-                }
-              });
+                    @Override
+                    public Module getContainer() {
+                      return me;
+                    }
+                  });
+            }
+          });
     } catch (IOException e) {
       assert false;
       return null;
