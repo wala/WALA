@@ -72,11 +72,7 @@ dependencies {
   )
 }
 
-val extraJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
-
-dependencies { extraJavadocClasspath(project(":com.ibm.wala.dalvik")) }
-
-tasks.named<Javadoc>("javadoc") { classpath += extraJavadocClasspath }
+dependencies { javadocClasspath(project(":com.ibm.wala.dalvik")) }
 
 ////////////////////////////////////////////////////////////////////////
 //

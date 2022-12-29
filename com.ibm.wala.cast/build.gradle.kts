@@ -23,8 +23,6 @@ val castJsJavadocDestinationDirectory: Configuration by
 
 val castJsPackageListDirectory: Configuration by configurations.creating { isCanBeConsumed = false }
 
-val extraJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
-
 val xlatorTestSharedLibrary: Configuration by
     configurations.creating {
       isCanBeConsumed = false
@@ -49,7 +47,7 @@ dependencies {
   castCastSharedLibrary(project(":com.ibm.wala.cast:cast"))
   castJsPackageListDirectory(
       project(mapOf("path" to ":com.ibm.wala.cast.js", "configuration" to "packageListDirectory")))
-  extraJavadocClasspath(project(":com.ibm.wala.cast.js"))
+  javadocClasspath(project(":com.ibm.wala.cast.js"))
   testImplementation(
       "junit:junit:4.13.2",
   )
@@ -64,7 +62,6 @@ artifacts.add(
     tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory })
 
 tasks.named<Javadoc>("javadoc") {
-  classpath += extraJavadocClasspath
   inputs.files(castJsPackageListDirectory)
 
   inputs.property("extdocURL", castJsJavadocDestinationDirectory.singleFile)

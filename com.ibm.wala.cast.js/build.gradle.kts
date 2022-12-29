@@ -6,8 +6,6 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val extraJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
-
 dependencies {
   api(project(":com.ibm.wala.cast")) {
     because("public class JSCallGraphUtil extends class CAstCallGraphUtil")
@@ -18,7 +16,7 @@ dependencies {
   implementation(project(":com.ibm.wala.core"))
   implementation(project(":com.ibm.wala.shrike"))
   implementation(project(":com.ibm.wala.util"))
-  extraJavadocClasspath(project(":com.ibm.wala.cast.js.rhino"))
+  javadocClasspath(project(":com.ibm.wala.cast.js.rhino"))
   testFixturesImplementation("junit:junit:4.13.2")
   testFixturesImplementation(testFixtures(project(":com.ibm.wala.cast")))
   testFixturesImplementation(testFixtures(project(":com.ibm.wala.core")))
@@ -31,8 +29,6 @@ val createPackageList by
     tasks.registering(CreatePackageList::class) { sourceSet(sourceSets.main.get()) }
 
 val packageListDirectory: Configuration by configurations.creating { isCanBeResolved = false }
-
-val javadoc by tasks.existing(Javadoc::class) { classpath += extraJavadocClasspath }
 
 val javadocDestinationDirectory: Configuration by
     configurations.creating { isCanBeResolved = false }

@@ -11,6 +11,7 @@ plugins {
   `java-test-fixtures`
   `maven-publish`
   signing
+  id("com.ibm.wala.gradle.aggregated-javadoc")
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.subproject")
   id("net.ltgt.errorprone")
@@ -22,7 +23,14 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-dependencies { errorprone("com.google.errorprone:error_prone_core:2.15.0") }
+val sourceSets = the<SourceSetContainer>()
+
+configurations { named("javadocClasspath").get().extendsFrom(compileClasspath.get()) }
+
+dependencies {
+  errorprone("com.google.errorprone:error_prone_core:2.15.0")
+  "javadocSource"(sourceSets.main.get().allJava)
+}
 
 the<JavaPluginExtension>().toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 
@@ -70,12 +78,6 @@ configurations {
     // solution.
     exclude(group = "com.sun.jna")
   }
-
-  create("aggregatedJavadocClasspath")
-}
-
-tasks.withType<Javadoc>().configureEach {
-  classpath.forEach { path -> artifacts.add("aggregatedJavadocClasspath", path) }
 }
 
 the<EclipseModel>().synchronizationTasks("processTestResources")
@@ -108,8 +110,6 @@ tasks.named<Test>("test") {
     maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
   }
 }
-
-val sourceSets = the<SourceSetContainer>()
 
 val ecjCompileTaskProviders =
     sourceSets.map { sourceSet -> JavaCompileUsingEcj.withSourceSet(project, sourceSet) }
