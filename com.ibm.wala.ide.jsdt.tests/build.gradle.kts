@@ -1,13 +1,7 @@
 plugins {
   id("com.diffplug.eclipse.mavencentral")
   id("com.ibm.wala.gradle.java")
-}
-
-repositories {
-  maven {
-    url = uri("https://artifacts.alfresco.com/nexus/content/repositories/public/")
-    content { includeGroup("org.eclipse.wst.jsdt") }
-  }
+  id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }
 
 eclipseMavenCentral {
