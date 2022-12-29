@@ -4,13 +4,11 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val extraJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
-
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 dependencies {
   compileOnly("org.jspecify:jspecify:0.3.0")
-  extraJavadocClasspath(project(":com.ibm.wala.core"))
+  javadocClasspath(project(":com.ibm.wala.core"))
   testImplementation("junit:junit:4.13.2")
   testImplementation(
       "org.hamcrest:hamcrest:2.2",
@@ -19,7 +17,6 @@ dependencies {
 }
 
 tasks.named<Javadoc>("javadoc") {
-  classpath += extraJavadocClasspath
   val currentJavaVersion = JavaVersion.current()
   val linksPrefix = if (currentJavaVersion >= JavaVersion.VERSION_11) "en/java/" else ""
   (options as StandardJavadocDocletOptions).run {

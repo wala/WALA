@@ -14,11 +14,12 @@ plugins {
   java
   kotlin("jvm") version "1.7.10"
   id("all.shared.gradle.file-lister") version "1.0.2"
-  id("com.diffplug.eclipse.mavencentral") version "3.33.2" apply false
+  id("com.diffplug.eclipse.mavencentral") version "3.33.2"
   id("com.dorongold.task-tree") version "2.1.0"
   id("com.github.ben-manes.versions") version "0.42.0"
   id("com.github.sherter.google-java-format") version "0.9"
   id("com.ibm.wala.gradle.javadoc")
+  id("com.ibm.wala.gradle.maven-eclipse-jsdt")
   id("com.ibm.wala.gradle.project")
   id("com.ncorti.ktfmt.gradle") version "0.11.0"
 }
@@ -52,7 +53,8 @@ version = properties["VERSION_NAME"] as String
 // machines, we use a more recent Eclipse version which includes an SWT library built for the
 // platform.  We only use the recent version on ARM-based Macs as it requires JDK 11, and we would
 // like to preserve JDK 8 compatibility on other platforms.
-extra["eclipseVersion"] = if (osName == "Mac OS X" && archName == "aarch64") "4.21.0" else "4.14.0"
+val eclipseVersion by
+    extra(if (osName == "Mac OS X" && archName == "aarch64") "4.21.0" else "4.14.0")
 
 extra["eclipseWstJsdtVersion"] = "1.0.201.v2010012803"
 
@@ -61,21 +63,29 @@ extra["eclipseWstJsdtVersion"] = "1.0.201.v2010012803"
 //  Javadoc documentation
 //
 
+val aggregatedJavadocClasspath by configurations.creating { isCanBeConsumed = false }
+
+val aggregatedJavadocSource by configurations.creating { isCanBeConsumed = false }
+
+eclipseMavenCentral { release(eclipseVersion) { useNativesForRunningPlatform() } }
+
+dependencies {
+  subprojects {
+    aggregatedJavadocClasspath(
+        project(mapOf("path" to path, "configuration" to "javadocClasspath")))
+
+    aggregatedJavadocSource(project(mapOf("path" to path, "configuration" to "javadocSource")))
+  }
+}
+
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
   setDestinationDir(file("$buildDir/docs/javadoc"))
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
-
-  subprojects {
-    tasks.withType<Javadoc>().configureEach {
-      this@register.source += this@configureEach.source
-      this@register.classpath += this@configureEach.classpath
-      this@register.excludes += this@configureEach.excludes
-      this@register.includes += this@configureEach.includes
-    }
-  }
+  classpath = aggregatedJavadocClasspath
+  source(aggregatedJavadocSource)
 }
 
 ////////////////////////////////////////////////////////////////////////
