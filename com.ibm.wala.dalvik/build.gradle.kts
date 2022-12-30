@@ -20,6 +20,12 @@ val installAndroidSdk by
 
       doLast {
         exec {
+
+          // Running the Android SDK manager requires that `$JAVA_HOME` be set.
+          environment(
+              "JAVA_HOME",
+              javaToolchains.launcherFor(java.toolchain).get().metadata.installationPath)
+
           data class Details(
               val shell: String,
               val shellFlags: String,
