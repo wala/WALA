@@ -11,9 +11,6 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assume.assumeThat;
-
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
@@ -52,8 +49,6 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
   @Test
   public void testKawaChess()
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
-    assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
-
     CallGraph CG =
         testKawa(
             new ResourceJarFileModule(getClass().getClassLoader().getResource("kawachess.jar")),
@@ -91,8 +86,6 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
   @Test
   public void testKawaTest()
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
-    assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
-
     CallGraph CG =
         testKawa(
             new ResourceJarFileModule(getClass().getClassLoader().getResource("kawatest.jar")),
