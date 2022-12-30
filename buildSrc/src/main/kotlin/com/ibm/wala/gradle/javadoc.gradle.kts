@@ -6,9 +6,12 @@ plugins { id("com.ibm.wala.gradle.aggregated-javadoc") }
 
 // Build configuration for projects that include `Javadoc` tasks.
 
-tasks.withType<Javadoc>().configureEach {
+tasks.named<Javadoc>("javadoc") {
   classpath = configurations.named("javadocClasspath").get()
   source(configurations.named("javadocSource"))
+}
+
+tasks.withType<Javadoc>().configureEach {
   with(options as StandardJavadocDocletOptions) {
     addBooleanOption("Xdoclint:all,-missing", true)
     encoding = "UTF-8"
