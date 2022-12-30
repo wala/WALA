@@ -1,8 +1,5 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assume.assumeThat;
-
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
@@ -84,13 +81,6 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
       throw new AssertionError(builderType + ": " + afe.getMessage(), afe);
     }
     return cg;
-  }
-
-  /** for long-running tests that tend to time out on Travis */
-  protected void runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes)
-      throws WalaException, Error, CancelException {
-    assumeThat("not running on Travis CI", System.getenv("TRAVIS"), nullValue());
-    runTest(url, assertions, builderTypes);
   }
 
   protected void dumpCG(JSCallGraph cg) {

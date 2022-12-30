@@ -31,8 +31,8 @@ fun MavenPublication.sharedPublicationConfiguration() {
     url.set("https://github.com/wala/WALA")
 
     ciManagement {
-      system.set("Travis CI")
-      url.set("https://travis-ci.org/wala/WALA")
+      system.set("GitHub Actions")
+      url.set("https://github.com/wala/WALA/actions")
     }
 
     developers {

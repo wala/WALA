@@ -28,7 +28,6 @@ dependencies {
 tasks.named<Copy>("processTestResources") { from(extraTestResources) }
 
 tasks.named<Test>("test") {
-  environment("TRAVIS", 1)
   maxHeapSize = "800M"
 
   testLogging {
