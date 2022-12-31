@@ -350,7 +350,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   private static File createOutputFile(URL url, boolean delete, boolean useTempName)
       throws IOException {
     File outputFile;
-    String fileName = new File(url.getFile()).getName();
+    String fileName = new File(url.getPath()).getName();
     if (fileName.length() < 5) {
       fileName = "xxxx" + fileName;
     }
