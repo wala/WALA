@@ -66,8 +66,6 @@ dependencies {
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
 }
 
-dependencies { javadocClasspath(project(":com.ibm.wala.dalvik")) }
-
 ////////////////////////////////////////////////////////////////////////
 //
 //  download and extract kawa 3.0 "kawa.jar"
