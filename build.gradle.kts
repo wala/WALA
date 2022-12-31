@@ -50,12 +50,8 @@ group = name
 
 version = properties["VERSION_NAME"] as String
 
-// version of Eclipse JARs to use for Eclipse-integrated WALA components.  On ARM-based Mac OS
-// machines, we use a more recent Eclipse version which includes an SWT library built for the
-// platform.  We only use the recent version on ARM-based Macs as it requires JDK 11, and we would
-// like to preserve JDK 8 compatibility on other platforms.
-val eclipseVersion by
-    extra(if (osName == "Mac OS X" && archName == "aarch64") "4.21.0" else "4.14.0")
+// version of Eclipse JARs to use for Eclipse-integrated WALA components.
+val eclipseVersion by extra(libs.versions.eclipse.asProvider()::get)
 
 ///////////////////////////////////////////////////////////////////////
 //
