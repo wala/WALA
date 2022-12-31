@@ -1,3 +1,0 @@
-Primordial,Java,jrt,java.base
-Primordial,Java,jarFile,primordial.jar.model
-Application,Java,classUrl,x.class
