@@ -13,7 +13,6 @@ include(
     "com.ibm.wala.cast.js.nodejs",
     "com.ibm.wala.cast.js.rhino",
     "com.ibm.wala.core",
-    "com.ibm.wala.core.java11",
     "com.ibm.wala.dalvik",
     "com.ibm.wala.ide",
     "com.ibm.wala.ide.jdt",
