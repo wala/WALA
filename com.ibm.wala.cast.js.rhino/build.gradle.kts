@@ -35,7 +35,11 @@ tasks.named<Test>("test") {
     events("passed", "skipped", "failed")
   }
 
-  if (gradle.startParameter.isOffline) exclude("**/FieldBasedJQueryTest.class")
+  if (project.hasProperty("excludeRequiresInternetTests") ||
+      gradle.startParameter.isOffline ||
+      environment.get("CI") == "true") {
+    useJUnit { excludeCategories("com.ibm.wala.cast.js.test.RequiresInternetTests") }
+  }
 
   outputs.files(layout.buildDirectory.files("actual.dump", "expected.dump"))
 }
