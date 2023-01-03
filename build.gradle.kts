@@ -3,6 +3,7 @@
 //  plugin configuration must precede everything else
 //
 
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.sherter.googlejavaformatgradleplugin.VerifyGoogleJavaFormat
 import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
 import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
@@ -264,4 +265,20 @@ tasks.register("checkInspectionResults") {
   val stampFile = file("$buildDir/${name}.stamp")
   outputs.file(stampFile)
   doLast { stampFile.createNewFile() }
+}
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Check for updated dependencies
+//
+
+tasks.withType<DependencyUpdatesTask>().configureEach {
+  gradleReleaseChannel = "current"
+  rejectVersionIf {
+    candidate.run {
+      // Apache Commons IO snapshot releases have timestamped versions like `20030203.000550`. We
+      // don't want these. We only want stable releases, which have versions like `2.11.0`.
+      group == "commons-io" && module == "commons-io" && version.matches("\\d+\\.\\d+".toRegex())
+    }
+  }
 }
