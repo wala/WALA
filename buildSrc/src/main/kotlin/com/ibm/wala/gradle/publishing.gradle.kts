@@ -92,7 +92,7 @@ val publishing: PublishingExtension by extensions
 
 val java: JavaPluginExtension by extensions
 
-publishing.run {
+publishing {
   publications {
 
     // Everything we want to publish to remote repositories.  That includes code, sources, and
@@ -187,7 +187,7 @@ configure<SigningExtension> {
 // Only sign releases; snapshots are unsigned.
 tasks.withType<Sign>().configureEach { onlyIf { !isSnapshot } }
 
-java.run {
+java {
   withJavadocJar()
   withSourcesJar()
 }
