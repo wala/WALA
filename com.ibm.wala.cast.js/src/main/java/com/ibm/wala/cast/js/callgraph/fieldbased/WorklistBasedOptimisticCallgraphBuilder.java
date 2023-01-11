@@ -101,7 +101,10 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
             && (!worklist.isEmpty()
                 || !pendingCallWorklist.isEmpty()
                 || !pendingReflectiveCallWorklist.isEmpty()))
-        || cnt < bound) {
+        || (cnt < bound
+            && (!worklist.isEmpty()
+                || !pendingCallWorklist.isEmpty()
+                || !pendingReflectiveCallWorklist.isEmpty()))) {
       if (worklist.isEmpty()) {
         processPendingCallWorklist(
             flowgraph,
@@ -149,6 +152,8 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       }
       cnt += 1;
     }
+
+    System.out.println("The last executed bound was : " + cnt);
 
     Set<Pair<CallVertex, FuncVertex>> res = HashSetFactory.make();
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : reachingFunctions.entrySet()) {
