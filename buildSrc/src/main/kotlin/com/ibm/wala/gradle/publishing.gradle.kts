@@ -35,8 +35,8 @@ val testFixturesSourcesJar by
 
 val publishing: PublishingExtension by extensions
 
-fun createPublication(publicationName: String) =
-    publishing.publications.create<MavenPublication>(publicationName) {
+val mavenPublication =
+    publishing.publications.create<MavenPublication>("maven") {
       from(javaComponent)
 
       val testFixturesCodeElementsNames =
@@ -120,59 +120,44 @@ fun createPublication(publicationName: String) =
       }
     }
 
-val localPublication = createPublication("local")
-val remotePublication = createPublication("remote")
+val repositories = publishing.repositories
 
-publishing.repositories {
-  maven {
-    url =
-        URI(
-            (if (isSnapshot)
-                project.properties.getOrDefault(
-                    "SNAPSHOT_REPOSITORY_URL",
-                    "https://oss.sonatype.org/content/repositories/snapshots/")
-            else
-                project.properties.getOrDefault(
-                    "RELEASE_REPOSITORY_URL",
-                    "https://oss.sonatype.org/service/local/staging/deploy/maven2/"))
-                as String)
-    credentials {
-      username = project.properties["SONATYPE_NEXUS_USERNAME"] as String?
-      password = project.properties["SONATYPE_NEXUS_PASSWORD"] as String?
+val mavenRepository =
+    repositories.maven {
+      url =
+          URI(
+              (if (isSnapshot)
+                  project.properties.getOrDefault(
+                      "SNAPSHOT_REPOSITORY_URL",
+                      "https://oss.sonatype.org/content/repositories/snapshots/")
+              else
+                  project.properties.getOrDefault(
+                      "RELEASE_REPOSITORY_URL",
+                      "https://oss.sonatype.org/service/local/staging/deploy/maven2/"))
+                  as String)
+      credentials {
+        username = project.properties["SONATYPE_NEXUS_USERNAME"] as String?
+        password = project.properties["SONATYPE_NEXUS_PASSWORD"] as String?
+      }
     }
-  }
 
-  maven {
-    name = "fakeRemote"
-    url = uri("file://${rootProject.buildDir}/maven-fake-remote-repository")
-  }
+repositories.maven {
+  name = "fakeRemote"
+  url = uri("file://${rootProject.buildDir}/maven-fake-remote-repository")
 }
 
 configure<SigningExtension> {
-  // If anything about signing is misconfigured, fail loudly rather than quietly continuing with
-  // unsigned artifacts.
-  isRequired = true
-
-  // Only sign publications sent to remote repositories; local install installatios are unsigned.
-  // The `sign` invocation below causes eager creation of three tasks per subproject:
-  // `signRemotePublication` is created immediately and `generateMetadataFileForRemotePublication`
-  // and `generatePomFileForRemotePublication` are created during configuration.  Creating these
-  // lazily instead will require a fix to <https://github.com/gradle/gradle/issues/8796>.
-  sign(remotePublication)
+  sign(mavenPublication)
+  setRequired {
+    // Signatures are a hard requirement if publishing a non-snapshot to a real, remote repository.
+    !isSnapshot &&
+        gradle.taskGraph.allTasks.any {
+          it is PublishToMavenRepository && it.repository == mavenRepository
+        }
+  }
 }
-
-// Only sign releases; snapshots are unsigned.
-tasks.withType<Sign>().configureEach { onlyIf { !isSnapshot } }
 
 java {
   withJavadocJar()
   withSourcesJar()
 }
-
-// Remote publication set goes to remote repositories.
-tasks.withType<PublishToMavenRepository>().configureEach {
-  onlyIf { publication == remotePublication }
-}
-
-// Local publication set goes to local installations.
-tasks.withType<PublishToMavenLocal>().configureEach { onlyIf { publication == localPublication } }
