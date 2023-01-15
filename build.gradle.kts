@@ -52,16 +52,16 @@ group = name
 version = properties["VERSION_NAME"] as String
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components.
-val eclipseVersion by extra(libs.versions.eclipse.asProvider()::get)
+val eclipseVersion: String by extra(libs.versions.eclipse.asProvider()::get)
 
 ///////////////////////////////////////////////////////////////////////
 //
 //  Javadoc documentation
 //
 
-val aggregatedJavadocClasspath by configurations.creating { isCanBeConsumed = false }
+val aggregatedJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
 
-val aggregatedJavadocSource by configurations.creating { isCanBeConsumed = false }
+val aggregatedJavadocSource: Configuration by configurations.creating { isCanBeConsumed = false }
 
 eclipseMavenCentral { release(eclipseVersion) { useNativesForRunningPlatform() } }
 
