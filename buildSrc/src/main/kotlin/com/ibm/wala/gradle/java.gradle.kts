@@ -11,6 +11,7 @@ plugins {
   `java-test-fixtures`
   `maven-publish`
   signing
+  id("com.diffplug.spotless")
   id("com.ibm.wala.gradle.aggregated-javadoc")
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.subproject")
@@ -157,4 +158,14 @@ if (project.gradle.parent != null) {
 
     dependencies { "implementation"(configurations["testFixturesImplementation"].dependencies) }
   }
+}
+
+spotless.java {
+  googleJavaFormat(
+      rootProject
+          .the<VersionCatalogsExtension>()
+          .named("libs")
+          .findVersion("google-java-format")
+          .get()
+          .toString())
 }
