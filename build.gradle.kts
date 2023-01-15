@@ -4,9 +4,6 @@
 //
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import com.github.sherter.googlejavaformatgradleplugin.VerifyGoogleJavaFormat
-import com.ncorti.ktfmt.gradle.tasks.KtfmtCheckTask
-import com.ncorti.ktfmt.gradle.tasks.KtfmtFormatTask
 
 buildscript { dependencies.classpath(libs.commons.io) }
 
@@ -16,9 +13,7 @@ plugins {
   java
   alias(libs.plugins.eclipse.mavencentral)
   alias(libs.plugins.file.lister)
-  alias(libs.plugins.google.java.format)
   alias(libs.plugins.kotlin.jvm)
-  alias(libs.plugins.ktfmt)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.versions)
   id("com.ibm.wala.gradle.javadoc")
@@ -121,27 +116,11 @@ if (isWindows) {
   }
 }
 
-// Java formatting
-googleJavaFormat {
-  group = "verification"
-  toolVersion = "1.7"
-  exclude("**/.gradle/")
-  exclude("buildSrc/build/")
-  // exclude since various tests make assertions based on
-  // source positions in the test inputs.  to auto-format
-  // we also need to update the test assertions
-  exclude("com.ibm.wala.cast.java.test.data/")
+spotless {
+  kotlin {
+    target("buildSrc/*.kts", "buildSrc/src/**/*.kt", "buildSrc/src/**/*.kts")
+  }
 }
-
-val verifyGoogleJavaFormat by
-    tasks.existing(VerifyGoogleJavaFormat::class) {
-      group = "verification"
-
-      // workaround for <https://github.com/sherter/google-java-format-gradle-plugin/issues/43>
-      val stampFile = project.layout.buildDirectory.file(name)
-      outputs.file(stampFile)
-      doLast { stampFile.get().asFile.writeText("") }
-    }
 
 // install Java reformatter as git pre-commit hook
 tasks.register<Copy>("installGitHooks") {
@@ -156,43 +135,7 @@ val check by
     tasks.existing {
       group = "verification"
       dependsOn("shellCheck")
-      if (!(isWindows && System.getenv("GITHUB_ACTIONS") == "true")) {
-        // Known to be broken on Windows when running as a GitHub Action, but not intentionally so.
-        // Please fix if you know how!  <https://github.com/wala/WALA/issues/608>
-        dependsOn(verifyGoogleJavaFormat)
-      }
     }
-
-////////////////////////////////////////////////////////////////////////
-//
-//  Kotlin formatting
-//
-
-val kotlinSources =
-    fileTree(".") {
-      include("**/*.kt")
-      include("**/*.kts")
-      exclude("**/build/")
-    }
-
-val kotlinFormat by
-    tasks.registering(KtfmtFormatTask::class) {
-      group = "formatting"
-      description = "Reformats Kotlin build scripts."
-      source(kotlinSources)
-    }
-
-val verifyKotlinFormat by
-    tasks.registering(KtfmtCheckTask::class) {
-      group = "verification"
-      description = "Checks formatting of Kotlin build scripts."
-      source(kotlinSources)
-      val stampFile = project.layout.buildDirectory.file(name)
-      outputs.file(stampFile)
-      doLast { stampFile.get().asFile.writeText("") }
-    }
-
-tasks.named("check") { dependsOn(verifyKotlinFormat) }
 
 ////////////////////////////////////////////////////////////////////////
 //

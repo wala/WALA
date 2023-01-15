@@ -18,7 +18,7 @@ REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 # Recommended by <https://github.com/koalaman/shellcheck/wiki/SC2207>.
 files=()
 while IFS='' read -r line; do files+=("$line"); done \
-  < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.java$')
+  < <(git diff --cached --name-only --diff-filter=ACMR | grep -Ei '\.(java|kts?)$')
 
 join() {
   local IFS="$1"
@@ -27,7 +27,6 @@ join() {
 }
 
 if [ "${#files[@]}" -gt 0 ]; then
-  comma_files=$(join , "${files[@]}")
-  "${REPO_ROOT_DIR}/gradlew" goJF -DgoogleJavaFormat.include="$comma_files" >/dev/null 2>&1
+  "${REPO_ROOT_DIR}/gradlew" spotlessApply -Pspotless.ratchet.from=HEAD >/dev/null 2>&1
   git add "${files[@]}"
 fi

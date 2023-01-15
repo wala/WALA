@@ -6,7 +6,12 @@ import org.gradle.plugins.ide.eclipse.model.EclipseModel
 
 // Build configuration shared by all projects *including* the root project.
 
-plugins { eclipse }
+plugins {
+  eclipse
+  id("com.diffplug.spotless")
+}
+
+repositories.mavenCentral()
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -31,3 +36,21 @@ the<EclipseModel>().classpath.file.whenMerged {
 // this task resolves dependencies in all sub-projects, making it easy to
 // generate lockfiles
 tasks.register<DependencyReportTask>("allDeps") {}
+
+////////////////////////////////////////////////////////////////////////
+//
+//  Code formatting
+//
+
+spotless.kotlin {
+  findProperty("spotless.ratchet.from")?.let { ratchetFrom(it as String) }
+
+  ktfmt(
+      rootProject
+          .the<VersionCatalogsExtension>()
+          .named("libs")
+          .findVersion("ktfmt")
+          .get()
+          .toString())
+  target("*.gradle.kts")
+}
