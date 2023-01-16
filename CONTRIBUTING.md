@@ -21,10 +21,11 @@ Beyond tests, other checks run as part of `./gradlew check` and `./gradlew build
 
 1. Compilation with the Java compiler from [Eclipse JDT Core](https://www.eclipse.org/jdt/core/),
 which runs additional lint checks
-2. Checking that all code is formatted according to [Google Java
-  Format](https://github.com/google/google-java-format) standards
+2. Checking that all Java and Kotlin code is formatted according to [Google Java
+   Format](https://github.com/google/google-java-format) and
+   [ktfmt](https://facebook.github.io/ktfmt/) standards, respectively.
 
-If your code fails check 2, you can run `./gradlew googleJavaFormat` to automatically format
+If your code fails check 2, you can run `./gradlew spotlessApply` to automatically format
 it.  The CI job runs `./gradlew build` and will fail if any of these additional
 checks fail.
 
@@ -32,7 +33,10 @@ checks fail.
 DOs and DON'Ts
 --------------
 
-* DO format your code using [Google Java Format](https://github.com/google/google-java-format).  You can do so by running `./gradlew googleJavaFormat`.  A CI job will fail if your code is not formatted in this way.
+* DO format your Java and Kotlin code using [Google Java
+  Format](https://github.com/google/google-java-format) and
+  [ktfmt](https://facebook.github.io/ktfmt/), respectively.  A CI job will fail if your code is not
+  formatted in this way.
 * DO include tests when adding new features. When fixing bugs, start with adding a test that highlights how the current behavior is broken.
 * DO keep the discussions focused. When a new or related topic comes up it's often better to create new issue than to side track the discussion.
 * DO make liberal use of Javadoc and comments to document code.
