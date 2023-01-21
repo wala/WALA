@@ -10,11 +10,7 @@ plugins {
 
 dependencies {
   annotationProcessor(
-      rootProject.extensions
-          .getByType<VersionCatalogsExtension>()
-          .named("libs")
-          .findLibrary("nullaway")
-          .get())
+      rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary("nullaway").get())
 }
 
 tasks.withType<JavaCompile>().configureEach {

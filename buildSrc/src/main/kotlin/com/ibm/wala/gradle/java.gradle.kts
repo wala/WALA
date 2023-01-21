@@ -30,8 +30,8 @@ configurations { named("javadocClasspath").get().extendsFrom(compileClasspath.ge
 
 dependencies {
   "errorprone"(
-      rootProject.extensions
-          .getByType<VersionCatalogsExtension>()
+      rootProject
+          .the<VersionCatalogsExtension>()
           .named("libs")
           .findLibrary("errorprone-core")
           .get())
@@ -72,8 +72,8 @@ configurations {
       substitute(module("org.hamcrest:hamcrest-core"))
           .using(
               module(
-                  rootProject.extensions
-                      .getByType<VersionCatalogsExtension>()
+                  rootProject
+                      .the<VersionCatalogsExtension>()
                       .named("libs")
                       .findLibrary("hamcrest")
                       .get()
