@@ -22,9 +22,6 @@ jobs:
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Install ShellCheck on macOS
-        run: brew install shellcheck
-        if: runner.os == 'macOS'
       - name: Check out WALA sources
         uses: actions/checkout@v3
       - name: Cache Goomph
@@ -42,7 +39,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-executable: xvfb-gradle.sh
-          arguments: aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository
+          arguments: aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository shellcheck
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ

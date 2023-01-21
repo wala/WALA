@@ -98,11 +98,6 @@ shellcheck {
 
 val shellcheckTask = tasks.named("shellcheck") { group = "verification" }
 
-tasks.named("check") {
-  // <https://github.com/felipefzdz/gradle-shellcheck-plugin/issues/7>
-  if (!isWindows) dependsOn(shellcheckTask)
-}
-
 spotless {
   kotlin {
     target("buildSrc/*.kts", "buildSrc/src/**/*.kt", "buildSrc/src/**/*.kts")
