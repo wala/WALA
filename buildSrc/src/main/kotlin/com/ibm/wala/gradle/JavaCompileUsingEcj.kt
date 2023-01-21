@@ -23,8 +23,8 @@ open class JavaCompileUsingEcj : JavaCompile() {
     val ecjConfiguration =
         project.configurations.detachedConfiguration(
             project.dependencies.create(
-                project.rootProject.extensions
-                    .getByType(VersionCatalogsExtension::class.java)
+                project.rootProject
+                    .the<VersionCatalogsExtension>()
                     .named("libs")
                     .findLibrary("eclipse-ecj")
                     .get()
