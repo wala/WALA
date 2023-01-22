@@ -24,27 +24,17 @@ abstract class VerifiedDownload : DefaultTask() {
   // URL of resource to download
   @get:Input abstract val src: Property<URL>
 
-  fun src(url: String) = src.set(URL(url))
-
   // expected checksum of resource as hex digits
   @get:Input abstract val checksum: Property<String>
-
-  fun checksum(hex: String) = checksum.set(hex)
 
   // algorithm to use for computing checksum
   @get:Input val algorithm: Property<String> = project.objects.property<String>().convention("MD5")
 
-  fun algorithm(algorithmName: String) = algorithm.set(algorithmName)
-
   // whether to use ETag for selective downloading
   @get:Input val useETag: Property<Boolean> = project.objects.property<Boolean>().convention(true)
 
-  fun useETag(enabled: Boolean) = useETag.set(enabled)
-
   // local file into which resource should be saved
   @get:OutputFile abstract val dest: RegularFileProperty
-
-  fun dest(file: Any): RegularFileProperty = dest.value { project.file(file) }
 
   @TaskAction
   fun downloadAndVerify() =
