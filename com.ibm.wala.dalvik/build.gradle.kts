@@ -140,17 +140,24 @@ val downloadAndroidSdk by
 
 val isWindows: Boolean by rootProject.extra
 
+interface ExtractSampleCupServices {
+  @get:Inject val archive: ArchiveOperations
+  @get:Inject val fileSystem: FileSystemOperations
+}
+
 val extractSampleCup by
     tasks.registering {
       inputs.files(sampleCupSources)
       outputs.file(layout.buildDirectory.file("$name/sample.cup"))
 
-      doLast {
-        copy {
-          from(zipTree(inputs.files.singleFile))
-          include("parser.cup")
-          rename { outputs.files.singleFile.name }
-          into(outputs.files.singleFile.parent)
+      objects.newInstance<ExtractSampleCupServices>().run {
+        doLast {
+          fileSystem.copy {
+            from(archive.zipTree(inputs.files.singleFile))
+            include("parser.cup")
+            rename { outputs.files.singleFile.name }
+            into(outputs.files.singleFile.parent)
+          }
         }
       }
     }
