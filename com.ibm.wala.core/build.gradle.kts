@@ -67,6 +67,12 @@ dependencies {
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
 }
 
+// Injected services used by several tasks that extract selected files from downloads.
+interface ExtractServices {
+  @get:Inject val archive: ArchiveOperations
+  @get:Inject val fileSystem: FileSystemOperations
+}
+
 ////////////////////////////////////////////////////////////////////////
 //
 //  download and extract kawa 3.0 "kawa.jar"
@@ -85,14 +91,16 @@ val extractKawa by
       inputs.files(downloadKawa)
       outputs.file(layout.buildDirectory.file("$name/kawa.jar"))
 
-      doLast {
-        copy {
-          from(zipTree(inputs.files.singleFile)) {
-            include("kawa-*/lib/${outputs.files.singleFile.name}")
-            eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+      objects.newInstance<ExtractServices>().run {
+        doLast {
+          fileSystem.copy {
+            from(archive.zipTree(inputs.files.singleFile)) {
+              include("kawa-*/lib/${outputs.files.singleFile.name}")
+              eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+            }
+            into(outputs.files.singleFile.parent)
+            includeEmptyDirs = false
           }
-          into(outputs.files.singleFile.parent)
-          includeEmptyDirs = false
         }
       }
     }
@@ -116,10 +124,12 @@ val unpackKawaChess by
       inputs.files(downloadKawaChess)
       outputs.dir(project.layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
 
-      doLast {
-        copy {
-          from(zipTree(inputs.files.singleFile))
-          into(outputs.files.singleFile.parent)
+      objects.newInstance<ExtractServices>().run {
+        doLast {
+          fileSystem.copy {
+            from(archive.zipTree(inputs.files.singleFile))
+            into(outputs.files.singleFile.parent)
+          }
         }
       }
     }
@@ -178,15 +188,17 @@ val extractBcel by
       inputs.files(downloadBcel)
       outputs.file(jarFile)
 
-      doLast {
-        copy {
-          from(tarTree(inputs.files.singleFile)) {
-            val downloadBcelBasename = basename.get()
-            include("$downloadBcelBasename/$downloadBcelBasename.jar")
-            eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+      objects.newInstance<ExtractServices>().run {
+        doLast {
+          fileSystem.copy {
+            from(archive.tarTree(inputs.files.singleFile)) {
+              val downloadBcelBasename = basename.get()
+              include("$downloadBcelBasename/$downloadBcelBasename.jar")
+              eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+            }
+            into(jarFile.get().asFile.parent)
+            includeEmptyDirs = false
           }
-          into(jarFile.get().asFile.parent)
-          includeEmptyDirs = false
         }
       }
     }
