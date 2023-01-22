@@ -41,6 +41,7 @@ google-java-format = "com.github.sherter.google-java-format:0.9"
 jarTest = "com.github.hauner.jarTest:1.0.1"
 kotlin-jvm = "org.jetbrains.kotlin.jvm:1.8.0"
 ktfmt = "com.ncorti.ktfmt.gradle:0.11.0"
+shellcheck = "com.felipefzdz.gradle.shellcheck:1.4.6"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 task-tree = "com.dorongold.task-tree:2.1.1"
 versions = "com.github.ben-manes.versions:0.44.0"

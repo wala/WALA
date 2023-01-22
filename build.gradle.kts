@@ -14,6 +14,7 @@ plugins {
   alias(libs.plugins.eclipse.mavencentral)
   alias(libs.plugins.file.lister)
   alias(libs.plugins.kotlin.jvm)
+  alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.versions)
   id("com.ibm.wala.gradle.javadoc")
@@ -85,36 +86,17 @@ tasks.register<Javadoc>("aggregatedJavadocs") {
 //
 
 // shell scripts, provided they have ".sh" extension
-if (isWindows) {
-  // create a no-op "shellCheck" task so that "gradlew shellCheck" vacuously passes on Windows
-  tasks.register("shellCheck")
-} else {
-  // create a real "shellCheck" task that actually runs the "shellcheck" linter, if available
-  tasks.register<Exec>("shellCheck") {
-    description = "Check all shell scripts using shellcheck, if available"
-    group = "verification"
-
-    inputs.files(fileTree(".").exclude("**/build").include("**/*.sh"))
-    outputs.file(project.layout.buildDirectory.file("shellcheck.log"))
-
-    doFirst {
-      // quietly succeed if "shellcheck" is not available
-      executable = "shellcheck"
-      val execPaths = System.getenv("PATH").split(File.pathSeparator)
-      val isAvailable = execPaths.any { file("$it/$executable").exists() }
-      if (!isAvailable) executable = "true"
-
-      args(inputs.files)
-
-      val consoleOutput = System.out
-      val fileOutput = outputs.files.singleFile.outputStream()
-      org.apache.tools.ant.util.TeeOutputStream(consoleOutput, fileOutput).let {
-        standardOutput = it
-        errorOutput = it
+shellcheck {
+  isUseDocker = false
+  shellcheckBinary = "shellcheck"
+  sourceFiles =
+      fileTree(".") {
+        exclude("**/build")
+        include("**/*.sh")
       }
-    }
-  }
 }
+
+val shellcheckTask = tasks.named("shellcheck") { group = "verification" }
 
 spotless {
   kotlin {
@@ -129,13 +111,6 @@ tasks.register<Copy>("installGitHooks") {
   into(".git/hooks")
   fileMode = 0b111_111_111
 }
-
-// run all known linters
-val check by
-    tasks.existing {
-      group = "verification"
-      dependsOn("shellCheck")
-    }
 
 ////////////////////////////////////////////////////////////////////////
 //
