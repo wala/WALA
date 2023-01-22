@@ -19,7 +19,7 @@ version = rootProject.version
 //
 
 tasks.register("downloads") {
-  inputs.files(
+  dependsOn(
       tasks.withType<VerifiedDownload>().matching {
         // not used in typical builds
         it.name != "downloadOcamlJava"
