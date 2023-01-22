@@ -76,14 +76,17 @@ tasks.named<Test>("test") {
   doFirst { systemProperty("java.library.path", xlatorTestSharedLibrary.parent) }
 
   if (rootProject.extra["isWindows"] as Boolean) {
+
     // Windows has nothing akin to RPATH for embedding DLL search paths in other DLLs or
     // executables.  Instead, we need to ensure that any required DLLs are in the standard
     // executable search path at test run time.
+    //
+    // Unfortunately, Windows environment variables are case-insensitive.  So we cannot simply
+    // append the DLL's path to `$PATH`.  Rather, we need to append to an environment variable whose
+    // name is case-insensitively equal to `"path"`, whether that's `$PATH`, `$Path`, `$path`, etc.
+
     inputs.files(castCastSharedLibrary)
-    doFirst {
-      val pathEntry = environment.entries.find { it.key.equals("path", true) }!!
-      environment[pathEntry.key] =
-          (pathEntry.value as String) + ";${castCastSharedLibrary.singleFile.parent}"
-    }
+    val pathEntry = environment.entries.find { it.key.equals("path", true) }!!
+    environment(pathEntry.key, "${pathEntry.value};${castCastSharedLibrary.singleFile.parent}")
   }
 }
