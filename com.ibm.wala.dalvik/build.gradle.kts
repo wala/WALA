@@ -11,50 +11,64 @@ val extraTestResources: Configuration by configurations.creating { isCanBeConsum
 
 val sampleCupSources: Configuration by configurations.creating { isCanBeConsumed = false }
 
+val isWindows: Boolean by rootProject.extra
+
+val platformsVersion by extra("android-28")
+
+interface InstallAndroidSdkServices {
+  @get:Inject val exec: ExecOperations
+}
+
 val installAndroidSdk by
     tasks.registering(Sync::class) {
       from(downloadAndroidSdk.map { zipTree(it.dest) })
       into(layout.buildDirectory.dir(name))
 
-      val platformsVersion by extra("android-28")
+      // When the task is actually executing (i.e.,in the `doLast` code below), the Gradle
+      // configuration cache forbids us from accessing the current project. Instead, we use the
+      // current project here, at task *configuration* time, to grab some values that we will later
+      // use at task *execution* time.
+      val isWindows = isWindows
+      val javaLauncher = javaToolchains.launcherFor(java.toolchain)
+      val platformsVersion = platformsVersion
 
-      doLast {
-        exec {
+      objects.newInstance<InstallAndroidSdkServices>().run {
+        doLast {
+          exec.exec {
 
-          // Running the Android SDK manager requires that `$JAVA_HOME` be set.
-          environment(
-              "JAVA_HOME",
-              javaToolchains.launcherFor(java.toolchain).get().metadata.installationPath)
+            // Running the Android SDK manager requires that `$JAVA_HOME` be set.
+            environment("JAVA_HOME", javaLauncher.get().metadata.installationPath)
 
-          data class Details(
-              val shell: String,
-              val shellFlags: String,
-              val yes: String,
-              val semicolon: String,
-              val discard: String,
-          )
-          (if (isWindows)
-                  Details(
-                      "PowerShell",
-                      "-Command",
-                      "echo y",
-                      "`;",
-                      "\$null",
-                  )
-              else
-                  Details(
-                      "sh",
-                      "-ceu",
-                      "yes 2>/dev/null",
-                      "\\;",
-                      "/dev/null",
-                  ))
-              .run {
-                commandLine(
-                    shell,
-                    shellFlags,
-                    "$yes | $destinationDir/cmdline-tools/bin/sdkmanager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard")
-              }
+            data class Details(
+                val shell: String,
+                val shellFlags: String,
+                val yes: String,
+                val semicolon: String,
+                val discard: String,
+            )
+            (if (isWindows)
+                    Details(
+                        "PowerShell",
+                        "-Command",
+                        "echo y",
+                        "`;",
+                        "\$null",
+                    )
+                else
+                    Details(
+                        "sh",
+                        "-ceu",
+                        "yes 2>/dev/null",
+                        "\\;",
+                        "/dev/null",
+                    ))
+                .run {
+                  commandLine(
+                      shell,
+                      shellFlags,
+                      "$yes | $destinationDir/cmdline-tools/bin/sdkmanager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard")
+                }
+          }
         }
       }
 
@@ -88,10 +102,7 @@ dependencies {
 
   // directory containing "android.jar", which various tests want to find as a resource
   testRuntimeOnly(
-      files(
-          installAndroidSdk.map {
-            "${it.outputs.files.singleFile}/platforms/${it.extra["platformsVersion"]}"
-          }))
+      files(installAndroidSdk.map { "${it.outputs.files.singleFile}/platforms/$platformsVersion" }))
 }
 
 val downloadDroidBench by
@@ -137,8 +148,6 @@ val downloadAndroidSdk by
             algorithm("SHA-256")
           }
     }
-
-val isWindows: Boolean by rootProject.extra
 
 interface ExtractSampleCupServices {
   @get:Inject val archive: ArchiveOperations
