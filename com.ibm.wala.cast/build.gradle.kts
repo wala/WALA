@@ -72,7 +72,8 @@ tasks.named<Javadoc>("javadoc") {
 
 tasks.named<Test>("test") {
   inputs.files(xlatorTestSharedLibrary)
-  doFirst { systemProperty("java.library.path", xlatorTestSharedLibrary.singleFile.parent) }
+  val xlatorTestSharedLibrary = xlatorTestSharedLibrary.singleFile
+  doFirst { systemProperty("java.library.path", xlatorTestSharedLibrary.parent) }
 
   if (rootProject.extra["isWindows"] as Boolean) {
 
