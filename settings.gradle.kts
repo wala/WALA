@@ -1,5 +1,7 @@
 rootProject.name = "com.ibm.wala"
 
+includeBuild("build-logic")
+
 include(
     "com.ibm.wala.cast",
     "com.ibm.wala.cast:smoke_main",
