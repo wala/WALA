@@ -3,6 +3,7 @@ import com.ibm.wala.gradle.cast.nativeLibraryOutput
 
 plugins {
   `cpp-library`
+  id("com.ibm.wala.gradle.cast.native")
   id("com.ibm.wala.gradle.subproject")
 }
 

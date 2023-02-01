@@ -2,6 +2,7 @@ import com.ibm.wala.gradle.cast.addCastLibrary
 
 plugins {
   `cpp-library`
+  id("com.ibm.wala.gradle.cast.native")
   id("com.ibm.wala.gradle.subproject")
 }
 

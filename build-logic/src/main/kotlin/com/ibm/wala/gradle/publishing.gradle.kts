@@ -1,5 +1,7 @@
 package com.ibm.wala.gradle
 
+import java.lang.module.ModuleDescriptor.Version
+
 plugins {
   `java-library`
   `java-test-fixtures`
@@ -158,4 +160,10 @@ configure<SigningExtension> {
 java {
   withJavadocJar()
   withSourcesJar()
+}
+
+if (Version.parse(gradle.gradleVersion) < Version.parse("8.1-RC1")) {
+  tasks.withType<Sign> {
+    notCompatibleWithConfigurationCache("https://github.com/gradle/gradle/issues/13470")
+  }
 }
