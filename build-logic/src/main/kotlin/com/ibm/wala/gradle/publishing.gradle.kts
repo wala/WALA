@@ -1,7 +1,5 @@
 package com.ibm.wala.gradle
 
-import java.net.URI
-
 plugins {
   `java-library`
   `java-test-fixtures`
@@ -125,7 +123,7 @@ val repositories = publishing.repositories
 val mavenRepository =
     repositories.maven {
       url =
-          URI(
+          uri(
               (if (isSnapshot)
                   project.properties.getOrDefault(
                       "SNAPSHOT_REPOSITORY_URL",
