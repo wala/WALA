@@ -88,7 +88,7 @@ val downloadKawa by
 
 val extractKawa by
     tasks.registering {
-      inputs.files(downloadKawa)
+      inputs.files(downloadKawa.map { it.outputs.files })
       outputs.file(layout.buildDirectory.file("$name/kawa.jar"))
 
       objects.newInstance<ExtractServices>().run {
@@ -121,7 +121,7 @@ val downloadKawaChess by
 
 val unpackKawaChess by
     tasks.registering {
-      inputs.files(downloadKawaChess)
+      inputs.files(downloadKawaChess.map { it.outputs.files })
       outputs.dir(project.layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
 
       objects.newInstance<ExtractServices>().run {
@@ -185,7 +185,7 @@ val extractBcel by
     tasks.registering {
       val basename = downloadBcel.map { it.extra["basename"] as String }
       val jarFile = basename.flatMap { layout.buildDirectory.file("$name/${it}.jar") }
-      inputs.files(downloadBcel)
+      inputs.files(downloadBcel.map { it.outputs.files })
       outputs.file(jarFile)
 
       objects.newInstance<ExtractServices>().run {
