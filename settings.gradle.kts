@@ -1,3 +1,5 @@
+enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
+
 rootProject.name = "com.ibm.wala"
 
 includeBuild("build-logic")
