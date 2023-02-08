@@ -1,6 +1,6 @@
 @Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  alias(libs.plugins.eclipse.mavencentral)
+  id("com.diffplug.eclipse.mavencentral")
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }

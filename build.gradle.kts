@@ -11,12 +11,12 @@ buildscript { dependencies.classpath(libs.commons.io) }
 plugins {
   idea
   java
-  alias(libs.plugins.eclipse.mavencentral)
   alias(libs.plugins.file.lister)
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.versions)
+  id("com.diffplug.eclipse.mavencentral")
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
   id("com.ibm.wala.gradle.project")

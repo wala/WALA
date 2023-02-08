@@ -3,9 +3,10 @@ import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
 @Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
-  alias(libs.plugins.eclipse.mavencentral)
+  `java-library`
   alias(libs.plugins.jarTest)
   id("com.ibm.wala.gradle.java")
+  id("com.diffplug.eclipse.mavencentral")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
