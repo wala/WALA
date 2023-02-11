@@ -29,7 +29,7 @@ dependencies {
   testImplementation(project(":com.ibm.wala.core"))
   testImplementation(project(":com.ibm.wala.ide.jsdt"))
   testImplementation(project(":com.ibm.wala.util"))
-  testImplementation(project(configuration = "testArchives", path = ":com.ibm.wala.ide.tests"))
+  testImplementation(testFixtures(project(":com.ibm.wala.ide.tests")))
 }
 
 tasks.named<Test>("test") {
