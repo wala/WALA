@@ -81,7 +81,7 @@ generated `.classpath` and `.project` files will have the desired
 contents, likely by using [Gradle’s `eclipse`
 plugin](https://docs.gradle.org/current/userguide/eclipse_plugin.html).
 A few WALA sub-projects already use this:  look for `eclipse.project`
-in `*/build.gradle` for examples.
+in `*/build.gradle.kt` for examples.
 
 ## IntelliJ IDEA
 
