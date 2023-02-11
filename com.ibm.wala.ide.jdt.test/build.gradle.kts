@@ -36,10 +36,5 @@ dependencies {
 
 tasks.named<Test>("test") {
   maxHeapSize = "1200M"
-
-  // https://github.com/liblit/WALA/issues/5
-  exclude("**/JDTJava15IRTests.class")
-  exclude("**/JDTJavaIRTests.class")
-
   workingDir = project(":com.ibm.wala.cast.java.test.data").projectDir
 }
