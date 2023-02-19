@@ -103,10 +103,6 @@ tasks.named<Test>("test") {
   include("**/Test*.class")
   exclude("**/*AndroidLibs*.class")
 
-  if (project.hasProperty("excludeSlowTests")) {
-    useJUnit { excludeCategories("com.ibm.wala.tests.util.SlowTests") }
-  }
-
   val trial = project.findProperty("trial")
   if (trial != null) {
     outputs.upToDateWhen { false }
@@ -123,6 +119,11 @@ tasks.named<Test>("test") {
   } else {
     maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
   }
+}
+
+if (project.hasProperty("excludeSlowTests")) {
+  dependencies { testImplementation(testFixtures(project(":com.ibm.wala.core"))) }
+  tasks.named<Test>("test") { useJUnit { excludeCategories("com.ibm.wala.tests.util.SlowTests") } }
 }
 
 val ecjCompileTaskProviders =
