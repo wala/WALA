@@ -26,9 +26,13 @@ repositories {
 
 val sourceSets = the<SourceSetContainer>()
 
-configurations { named("javadocClasspath").get().extendsFrom(compileClasspath.get()) }
+configurations {
+  create("ecj") { isCanBeConsumed = false }
+  named("javadocClasspath").get().extendsFrom(compileClasspath.get())
+}
 
 dependencies {
+  "ecj"(rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary("eclipse-ecj").get())
   "errorprone"(
       rootProject
           .the<VersionCatalogsExtension>()
@@ -139,6 +143,10 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.withType<JavaCompileUsingEcj>().configureEach {
+
+  // Allow skipping all ECJ compilation tasks by setting a project property.
+  onlyIf { !project.hasProperty("skipJavaUsingEcjTasks") }
+
   // ECJ warning / error levels are set via a configuration file, not this argument
   options.compilerArgs.remove("-Werror")
 }

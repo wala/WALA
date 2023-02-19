@@ -33,15 +33,16 @@ val ecjCompileJavaTestSubjects: TaskProvider<JavaCompileUsingEcj> =
     JavaCompileUsingEcj.withSourceSet(project, sourceSets["testSubjects"])
 
 ecjCompileJavaTestSubjects.configure {
-  options.compilerArgs.add("-warn:none")
-  listOf(
-          "serial",
-          "unchecked",
-          "unusedLocal",
-          "unusedParam",
-          "unusedThrown",
-      )
-      .forEach { options.compilerArgs.add("-err:-$it") }
+  options.compilerArgumentProviders.add {
+    listOf(
+        "-warn:none",
+        "-err:-serial",
+        "-err:-unchecked",
+        "-err:-unusedLocal",
+        "-err:-unusedParam",
+        "-err:-unusedThrown",
+    )
+  }
 }
 
 tasks.named("check") { dependsOn(ecjCompileJavaTestSubjects) }

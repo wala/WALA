@@ -1,65 +1,61 @@
 package com.ibm.wala.gradle
 
+import java.io.File
+import javax.inject.Inject
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
-import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.file.RegularFile
 import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.CompileClasspath
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
-import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.kotlin.dsl.named
-import org.gradle.kotlin.dsl.the
+import org.gradle.process.ExecOperations
 
 /**
  * Compiles some Java {@link SourceSet} using ECJ, but otherwise imitating the standard {@link
  * JavaCompile} task.
  */
 @CacheableTask
-open class JavaCompileUsingEcj : JavaCompile() {
+abstract class JavaCompileUsingEcj : JavaCompile() {
+
+  /** ECJ compiler, resolved to a JAR archive. */
+  @CompileClasspath
+  @InputFile
+  val ecjJar: File = project.configurations.named("ecj").get().singleFile
+
+  @InputFile
+  @PathSensitive(PathSensitivity.NONE)
+  val jdtPrefs: RegularFile =
+      project.layout.projectDirectory.file(".settings/org.eclipse.jdt.core.prefs")
+
+  @get:Inject abstract val execOperations: ExecOperations
 
   init {
-    // Resolve ECJ to a JAR archive.  This task will use that archive as a batch Java compiler.
-    val ecjConfiguration =
-        project.configurations.detachedConfiguration(
-            project.dependencies.create(
-                project.rootProject
-                    .the<VersionCatalogsExtension>()
-                    .named("libs")
-                    .findLibrary("eclipse-ecj")
-                    .get()
-                    .get()))
-
-    options.run {
-      // Add Eclipse JDT configuration, especially for warnings/errors.
-      compilerArgs.add("-properties")
-      compilerArgs.add(
-          project.layout.projectDirectory.file(".settings/org.eclipse.jdt.core.prefs").toString())
-
-      // Compile by running an external process.  Specifically, use the standard "java" command from
-      // the current Java toolchain to run the ECJ JAR archive.  Conveniently, that archive is set
-      // up to act as a batch compiler when run as a application.
-      isFork = true
-      forkOptions.run {
-        executable =
-            project
-                .the<JavaToolchainService>()
-                .launcherFor(project.the<JavaPluginExtension>().toolchain)
-                .get()
-                .executablePath
-                .toString()
-        jvmArgs!!.run {
-          add("-jar")
-          add(ecjConfiguration.singleFile.absolutePath)
-        }
+    options.compilerArgumentProviders.run {
+      add {
+        listOf(
+            "-properties",
+            jdtPrefs.toString(),
+            "-classpath",
+            this@JavaCompileUsingEcj.classpath.joinToString(":"),
+            "-d",
+            destinationDirectory.get().toString())
       }
-
-      // ECJ doesn't support the "-h" flag for setting the JNI header output directory.
-      headerOutputDirectory.set(project.provider { null })
+      add { source.files.map { it.toString() } }
     }
+  }
 
-    // Allow skipping all ECJ compilation tasks by setting a project property.
-    onlyIf { !project.hasProperty("skipJavaUsingEcjTasks") }
+  @TaskAction
+  fun compile() {
+    execOperations.javaexec {
+      classpath(ecjJar.absolutePath)
+      args(options.allCompilerArgs)
+    }
   }
 
   fun setSourceSet(sourceSet: SourceSet) {
