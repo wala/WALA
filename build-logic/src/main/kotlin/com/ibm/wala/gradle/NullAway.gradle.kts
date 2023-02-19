@@ -15,7 +15,7 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   options.errorprone {
-    if (!name.toLowerCase().contains("test")) {
+    if (!name.contains("test", true)) {
       error("NullAway")
       errorproneArgs.addAll(
           "-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
