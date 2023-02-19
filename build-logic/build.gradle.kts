@@ -1,6 +1,8 @@
+@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
+  alias(libs.plugins.spotless)
 }
 
 repositories {
@@ -15,3 +17,22 @@ dependencies {
 }
 
 kotlin.jvmToolchain { languageVersion.set(JavaLanguageVersion.of(11)) }
+
+spotless {
+  val ktfmtVersion =
+      rootProject
+          .the<VersionCatalogsExtension>()
+          .named("libs")
+          .findVersion("ktfmt")
+          .get()
+          .toString()
+
+  kotlin {
+    ktfmt(ktfmtVersion)
+    targetExclude("build/")
+  }
+
+  kotlinGradle { ktfmt(ktfmtVersion) }
+
+  findProperty("spotless.ratchet.from")?.let { ratchetFrom(it as String) }
+}

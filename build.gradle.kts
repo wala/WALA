@@ -98,18 +98,16 @@ shellcheck {
 
 val shellcheckTask = tasks.named("shellcheck") { group = "verification" }
 
-spotless {
-  kotlin {
-    target("buildSrc/*.kts", "buildSrc/src/**/*.kt", "buildSrc/src/**/*.kts")
-  }
-}
-
 // install Java reformatter as git pre-commit hook
 tasks.register<Copy>("installGitHooks") {
   from("config/hooks/pre-commit-stub")
   rename { "pre-commit" }
   into(".git/hooks")
   fileMode = 0b111_111_111
+}
+
+listOf("check", "spotlessCheck", "spotlessApply").forEach {
+  tasks.named(it) { dependsOn(gradle.includedBuild("build-logic").task(":$it")) }
 }
 
 ////////////////////////////////////////////////////////////////////////
