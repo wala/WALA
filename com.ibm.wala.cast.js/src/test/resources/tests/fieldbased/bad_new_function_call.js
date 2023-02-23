@@ -1,0 +1,1 @@
+var x = new Function('bogus1', 'bogus2');
