@@ -218,6 +218,9 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testBadNewFunctionCall() throws WalaException, CancelException {
-    runTest("tests/fieldbased/bad_new_function_call.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest(
+        "tests/fieldbased/bad_new_function_call.js",
+        new Object[][] {},
+        BuilderType.OPTIMISTIC_WORKLIST);
   }
 }
