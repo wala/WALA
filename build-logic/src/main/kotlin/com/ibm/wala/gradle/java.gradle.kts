@@ -12,7 +12,6 @@ plugins {
   `maven-publish`
   signing
   id("com.diffplug.spotless")
-  id("com.ibm.wala.gradle.aggregated-javadoc")
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.subproject")
   id("net.ltgt.errorprone")

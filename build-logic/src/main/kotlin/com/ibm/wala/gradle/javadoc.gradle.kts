@@ -1,10 +1,14 @@
 package com.ibm.wala.gradle
 
-import org.gradle.kotlin.dsl.withType
-
-plugins { id("com.ibm.wala.gradle.aggregated-javadoc") }
-
 // Build configuration for projects that include `Javadoc` tasks.
+
+val javadocClasspath: Configuration by
+    configurations.creating { description = "Classpath used during Javadoc creation." }
+
+val javadocSource: Configuration by
+    configurations.creating {
+      description = "Java source files from which Javadoc should be extracted."
+    }
 
 tasks.named<Javadoc>("javadoc") {
   classpath = configurations.named("javadocClasspath").get()
