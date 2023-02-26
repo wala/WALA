@@ -21,10 +21,9 @@ import org.gradle.nativeplatform.tasks.LinkSharedLibrary
 fun addCastLibrary(binary: CppBinary, linkTask: AbstractLinkTask, project: Project) {
   linkTask.configure(
       project.closureOf<AbstractLinkTask> {
-        project.project(":com.ibm.wala.cast:cast").tasks.named(
-            name, LinkSharedLibrary::class.java) {
-              addRpath(linkTask, nativeLibraryOutput)
-            }
+        project.project(":cast:cast").tasks.named(name, LinkSharedLibrary::class.java) {
+          addRpath(linkTask, nativeLibraryOutput)
+        }
         addJvmLibrary(binary, linkTask, project)
       })
 }

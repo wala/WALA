@@ -23,6 +23,8 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
+the<BasePluginExtension>().archivesName.set("com.ibm.wala${project.path.replace(':', '.')}")
+
 val sourceSets = the<SourceSetContainer>()
 
 configurations {
@@ -125,7 +127,7 @@ tasks.named<Test>("test") {
 }
 
 if (project.hasProperty("excludeSlowTests")) {
-  dependencies { testImplementation(testFixtures(project(":com.ibm.wala.core"))) }
+  dependencies { testImplementation(testFixtures(project(":core"))) }
   tasks.named<Test>("test") { useJUnit { excludeCategories("com.ibm.wala.tests.util.SlowTests") } }
 }
 
