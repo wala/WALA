@@ -1,10 +1,10 @@
 **/.settings/org.eclipse.buildship.core.prefs
 *.swp
 *~
+.classpath
 .DS_Store
 .project
-/*/.classpath
-/*/bin/
+bin/
 /.gradle/
 /.vscode/settings.json
 build/
