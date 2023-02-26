@@ -63,10 +63,12 @@ eclipseMavenCentral { release(eclipseVersion) { useNativesForRunningPlatform() }
 
 dependencies {
   subprojects {
-    aggregatedJavadocClasspath(
-        project(mapOf("path" to path, "configuration" to "javadocClasspath")))
+    pluginManager.withPlugin("java-base") {
+      aggregatedJavadocClasspath(
+          project(mapOf("path" to path, "configuration" to "javadocClasspath")))
 
-    aggregatedJavadocSource(project(mapOf("path" to path, "configuration" to "javadocSource")))
+      aggregatedJavadocSource(project(mapOf("path" to path, "configuration" to "javadocSource")))
+    }
   }
 }
 

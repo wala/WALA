@@ -6,7 +6,6 @@ import org.gradle.plugins.ide.idea.model.IdeaModel
 
 plugins {
   idea
-  id("com.ibm.wala.gradle.aggregated-javadoc")
   id("com.ibm.wala.gradle.project")
   id("de.undercouch.download")
 }
