@@ -39,6 +39,9 @@ val mavenPublication =
     publishing.publications.create<MavenPublication>("maven") {
       from(javaComponent)
 
+      groupId = "com.ibm.wala"
+      artifactId = the<BasePluginExtension>().archivesName.get()
+
       val testFixturesCodeElementsNames =
           listOf("testFixturesApiElements", "testFixturesRuntimeElements")
       testFixturesCodeElementsNames.forEach(this::suppressPomMetadataWarningsFor)
