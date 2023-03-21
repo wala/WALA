@@ -19,13 +19,7 @@ dependencies {
 kotlin.jvmToolchain { languageVersion.set(JavaLanguageVersion.of(11)) }
 
 spotless {
-  val ktfmtVersion =
-      rootProject
-          .the<VersionCatalogsExtension>()
-          .named("libs")
-          .findVersion("ktfmt")
-          .get()
-          .toString()
+  val ktfmtVersion = libs.versions.ktfmt.get()
 
   kotlin {
     ktfmt(ktfmtVersion)
