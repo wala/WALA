@@ -53,8 +53,8 @@ slides to get an overview of WALA:
 You can also watch screencasts of the WALA JavaScript tutorial [here](https://www.youtube.com/user/WALALibraries/videos).
 
 Finally, for now, to search the wiki documentation, we recommend a
-site-specific search on Google, e.g., [a search for "call
-graph"](https://www.google.com/search?q=call+graph+site%3Ahttps%3A%2F%2Fgithub.com%2Fwala%2FWALA%2Fwiki&oq=call+graph+site%3Ahttps%3A%2F%2Fgithub.com%2Fwala%2FWALA%2Fwiki).
+site-specific search on GitHub, e.g., [a search for "call
+graph"](https://github.com/wala/WALA/search?q=call+graph&type=wikis).
 
 ## Documentation
 
