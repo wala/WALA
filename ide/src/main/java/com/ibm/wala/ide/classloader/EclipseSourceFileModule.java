@@ -13,7 +13,6 @@ package com.ibm.wala.ide.classloader;
 import com.ibm.wala.classLoader.SourceFileModule;
 import java.io.File;
 import org.eclipse.core.resources.IFile;
-import java.net.URI;
 
 /** A module which is a wrapper around a .java file */
 public class EclipseSourceFileModule extends SourceFileModule {
