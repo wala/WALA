@@ -27,7 +27,7 @@ public class EclipseSourceFileModule extends SourceFileModule {
   }
 
   private EclipseSourceFileModule(IFile f) {
-    super(new File(f.getLocation().toOSString()), f.getLocation().lastSegment(), null);
+    super(new File(f.getFullPath().toOSString()), f.getName(), null);
     this.f = f;
   }
 
