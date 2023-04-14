@@ -305,7 +305,7 @@ val collectTestData by
 
 val collectTestDataJar: Configuration by configurations.creating { isCanBeResolved = false }
 
-artifacts.add(collectTestDataJar.name, collectTestData)
+artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirectory })
 
 ////////////////////////////////////////////////////////////////////////
 //
