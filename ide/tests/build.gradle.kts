@@ -38,10 +38,19 @@ val coreMainSource: Configuration by
       }
     }
 
+val ifdsExplorerExampleClasspath: Configuration by
+    configurations.creating {
+      isCanBeConsumed = false
+      isTransitive = false
+    }
+
 dependencies {
   coreMainSource(project(mapOf("path" to ":core")))
   coreTestDataJar(projects.core)
   coreTestResources(project(mapOf("path" to ":core", "configuration" to "testResources")))
+  ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
+  ifdsExplorerExampleClasspath(
+      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar")))
   testImplementation(libs.junit)
   testImplementation(projects.core)
   testImplementation(projects.ide)
@@ -81,7 +90,7 @@ tasks.named<Copy>("processTestResources") {
 tasks.register<JavaExec>("runIFDSExplorerExample") {
   group = "Execution"
   description = "Run the IFDSExplorerExample driver"
-  classpath = sourceSets.test.get().runtimeClasspath
+  classpath = ifdsExplorerExampleClasspath
   mainClass.set("com.ibm.wala.examples.drivers.IFDSExplorerExample")
   if (System.getProperty("os.name").startsWith("Mac OS X")) {
     jvmArgs = listOf("-XstartOnFirstThread")
