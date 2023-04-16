@@ -158,7 +158,7 @@ configure<SigningExtension> {
   }
 }
 
-java {
+configure<JavaPluginExtension> {
   withJavadocJar()
   withSourcesJar()
 }
