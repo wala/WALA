@@ -1,7 +1,6 @@
 import org.gradle.api.attributes.VerificationType.MAIN_SOURCES
 import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
-@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
   `java-library`
   `java-test-fixtures`

@@ -7,7 +7,6 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript { dependencies.classpath(libs.commons.io) }
 
-@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
   idea
   java
