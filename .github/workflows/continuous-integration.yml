@@ -41,13 +41,13 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           gradle-executable: xvfb-gradle.sh
-          arguments: aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository shellcheck
+          arguments: aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository shellcheck --no-configuration-cache
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks
+          arguments: aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks --no-configuration-cache
         if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
