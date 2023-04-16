@@ -44,7 +44,7 @@ val mavenPublication =
           listOf("testFixturesApiElements", "testFixturesRuntimeElements")
       testFixturesCodeElementsNames.forEach(this::suppressPomMetadataWarningsFor)
 
-      if (allTestFixturesSource.isEmpty()) {
+      if (allTestFixturesSource.isEmpty) {
         // Test-fixtures jar would be empty except for the manifest, so skip it.
         testFixturesCodeElementsNames.forEach {
           javaComponent.withVariantsFromConfiguration(configurations[it]) { skip() }
