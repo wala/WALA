@@ -146,7 +146,8 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.withType<JavaCompileUsingEcj>().configureEach {
 
   // Allow skipping all ECJ compilation tasks by setting a project property.
-  onlyIf { !project.hasProperty("skipJavaUsingEcjTasks") }
+  val skipJavaUsingEcjTasks = project.hasProperty("skipJavaUsingEcjTasks")
+  onlyIf { !skipJavaUsingEcjTasks }
 
   // ECJ warning / error levels are set via a configuration file, not this argument
   options.compilerArgs.remove("-Werror")
