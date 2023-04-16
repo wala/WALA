@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION") // https://github.com/gradle/gradle/issues/22797
 plugins {
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
