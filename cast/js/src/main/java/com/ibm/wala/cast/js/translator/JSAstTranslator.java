@@ -260,18 +260,30 @@ public class JSAstTranslator extends AstTranslator {
     int nm = context.currentScope().getConstantValue('L' + composeEntityName(context, fn));
     // "Function" is the name we use to model the constructor of function values
     int tmp = super.doGlobalRead(n, context, "Function", JavaScriptTypes.Function);
-    context
-        .cfg()
-        .addInstruction(
-            ((JSInstructionFactory) insts)
-                .Invoke(
-                    context.cfg().getCurrentInstruction(),
-                    tmp,
-                    result,
-                    new int[] {nm},
-                    exception,
-                    new DynamicCallSiteReference(
-                        JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
+    Position old = null;
+    if (n.getKind() == CAstNode.FUNCTION_STMT) {
+      old = getCurrentPosition();
+      CAstEntity entity = (CAstEntity) n.getChild(0).getValue();
+      currentPosition = entity.getPosition();
+    }
+    try {
+      context
+          .cfg()
+          .addInstruction(
+              ((JSInstructionFactory) insts)
+                  .Invoke(
+                      context.cfg().getCurrentInstruction(),
+                      tmp,
+                      result,
+                      new int[] {nm},
+                      exception,
+                      new DynamicCallSiteReference(
+                          JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
+    } finally {
+      if (old != null) {
+        currentPosition = old;
+      }
+    }
   }
 
   @Override
