@@ -26,7 +26,7 @@ git clone --quiet --filter=tree:0 https://x-access-token:"${GITHUB_TOKEN}"@githu
   rm -rf ./*
 )
 
-./gradlew aggregatedJavadocs
+./gradlew aggregatedJavadocs --no-configuration-cache
 rsync -a build/docs/javadoc/ "${JAVADOC_DIR}"
 
 cd "$JAVADOC_DIR"
