@@ -75,7 +75,7 @@ dependencies {
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
-  setDestinationDir(file("$buildDir/docs/javadoc"))
+  destinationDir = file("$buildDir/docs/javadoc")
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
   classpath = aggregatedJavadocClasspath
@@ -98,7 +98,7 @@ shellcheck {
       }
 }
 
-val shellcheckTask = tasks.named("shellcheck") { group = "verification" }
+tasks.named("shellcheck") { group = "verification" }
 
 // Workaround for <https://github.com/diffplug/spotless/issues/1644>
 // using idea found at
