@@ -97,7 +97,7 @@ shellcheck {
       }
 }
 
-val shellcheckTask = tasks.named("shellcheck") { group = "verification" }
+tasks.named("shellcheck") { group = "verification" }
 
 // install Java reformatter as git pre-commit hook
 tasks.register<Copy>("installGitHooks") {
