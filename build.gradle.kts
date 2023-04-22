@@ -3,6 +3,7 @@
 //  plugin configuration must precede everything else
 //
 
+import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript { dependencies.classpath(libs.commons.io) }
@@ -98,6 +99,11 @@ shellcheck {
 }
 
 val shellcheckTask = tasks.named("shellcheck") { group = "verification" }
+
+// Workaround for <https://github.com/diffplug/spotless/issues/1644>
+// using idea found at
+// <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
+spotless.lineEndings = PLATFORM_NATIVE
 
 // install Java reformatter as git pre-commit hook
 tasks.register<Copy>("installGitHooks") {
