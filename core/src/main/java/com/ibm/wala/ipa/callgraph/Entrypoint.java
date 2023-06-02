@@ -70,17 +70,15 @@ public abstract class Entrypoint implements BytecodeConstants {
       return CallSiteReference.make(
           programCounter, method.getReference(), IInvokeInstruction.Dispatch.SPECIAL);
     } else {
-      if (method.getDeclaringClass().isInterface()) {
+      if (method.isStatic()) {
+        return CallSiteReference.make(
+            programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
+      } else if (method.getDeclaringClass().isInterface()) {
         return CallSiteReference.make(
             programCounter, method.getReference(), IInvokeInstruction.Dispatch.INTERFACE);
       } else {
-        if (method.isStatic()) {
-          return CallSiteReference.make(
-              programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
-        } else {
-          return CallSiteReference.make(
-              programCounter, method.getReference(), IInvokeInstruction.Dispatch.VIRTUAL);
-        }
+        return CallSiteReference.make(
+            programCounter, method.getReference(), IInvokeInstruction.Dispatch.VIRTUAL);
       }
     }
   }
