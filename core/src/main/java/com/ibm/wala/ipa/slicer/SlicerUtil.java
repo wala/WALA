@@ -109,8 +109,10 @@ public class SlicerUtil {
   }
 
   private static boolean fromApplicationLoader(Statement s) {
-    return s.getNode().getClassHierarchy().getScope().isApplicationLoader(
-        s.getNode().getMethod().getDeclaringClass().getClassLoader());
+    return s.getNode()
+        .getClassHierarchy()
+        .getScope()
+        .isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader());
   }
 
   public static int countThrows(Collection<Statement> slice, boolean applicationOnly) {
