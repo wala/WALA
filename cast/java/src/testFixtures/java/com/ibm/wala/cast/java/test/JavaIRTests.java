@@ -722,7 +722,7 @@ public abstract class JavaIRTests extends IRTests {
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
     dumpSlice(slice);
-    Assert.assertEquals(0, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(0, SlicerUtil.countAllocations(slice, false));
     Assert.assertEquals(1, SlicerUtil.countPutfields(slice));
 
     // test slice from main
@@ -731,7 +731,7 @@ public abstract class JavaIRTests extends IRTests {
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
     // SlicerUtil.dumpSlice(slice);
-    Assert.assertEquals(2, SlicerUtil.countAllocations(slice));
+    Assert.assertEquals(2, SlicerUtil.countAllocations(slice, false));
     Assert.assertEquals(2, SlicerUtil.countPutfields(slice));
   }
 

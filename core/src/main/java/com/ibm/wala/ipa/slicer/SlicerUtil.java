@@ -93,28 +93,13 @@ public class SlicerUtil {
     }
   }
 
-  public static int countAllocations(Collection<Statement> slice) {
+  public static int countAllocations(Collection<Statement> slice, boolean applicationOnly) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSANewInstruction) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }
-
-  public static int countApplicationAllocations(Collection<Statement> slice) {
-    int count = 0;
-    for (Statement s : slice) {
-      if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSANewInstruction) {
-          AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
-          if (scope.isApplicationLoader(
-              s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+          if (!applicationOnly || fromApplicationLoader(s)) {
             count++;
           }
         }
@@ -123,13 +108,20 @@ public class SlicerUtil {
     return count;
   }
 
-  public static int countThrows(Collection<Statement> slice) {
+  private static boolean fromApplicationLoader(Statement s) {
+    return s.getNode().getClassHierarchy().getScope().isApplicationLoader(
+        s.getNode().getMethod().getDeclaringClass().getClassLoader());
+  }
+
+  public static int countThrows(Collection<Statement> slice, boolean applicationOnly) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSAAbstractThrowInstruction) {
-          count++;
+          if (!applicationOnly || fromApplicationLoader(s)) {
+            count++;
+          }
         }
       }
     }
@@ -228,7 +220,7 @@ public class SlicerUtil {
     return count;
   }
 
-  public static int countGetfields(Collection<Statement> slice) {
+  public static int countGetfields(Collection<Statement> slice, boolean applicationOnly) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
@@ -236,7 +228,9 @@ public class SlicerUtil {
         if (ns.getInstruction() instanceof SSAGetInstruction) {
           SSAGetInstruction p = (SSAGetInstruction) ns.getInstruction();
           if (!p.isStatic()) {
-            count++;
+            if (!applicationOnly || fromApplicationLoader(s)) {
+              count++;
+            }
           }
         }
       }
