@@ -59,7 +59,12 @@ val aggregatedJavadocClasspath: Configuration by configurations.creating { isCan
 
 val aggregatedJavadocSource: Configuration by configurations.creating { isCanBeConsumed = false }
 
-eclipseMavenCentral { release(eclipseVersion) { useNativesForRunningPlatform() } }
+eclipseMavenCentral {
+  release(eclipseVersion) {
+    useNativesForRunningPlatform()
+    constrainTransitivesToThisRelease()
+  }
+}
 
 dependencies {
   subprojects {
