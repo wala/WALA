@@ -347,7 +347,7 @@ tasks.named<Copy>("processTestResources") {
 }
 
 tasks.named<Test>("test") {
-  maxHeapSize = "1500M"
+  maxHeapSize = "2000M"
   systemProperty("com.ibm.wala.junit.profile", "short")
   classpath += files(sourceSets.test.get().output.classesDirs)
   testLogging {
