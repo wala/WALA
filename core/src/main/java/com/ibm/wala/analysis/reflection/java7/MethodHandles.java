@@ -305,6 +305,11 @@ public class MethodHandles {
                   false) {
                 @Override
                 public IR makeIR(Context context, SSAOptions options) throws UnimplementedError {
+                  // MS: On JDK 17, sometimes makeIR() is getting called, and the default
+                  // implementation fails with an error.  I don't fully understand the invariants of
+                  // this class, but overriding and returning null makes the tests pass.
+                  // Eventually, we should document this class and figure out if this is the right
+                  // fix.
                   return null;
                 }
               };
