@@ -60,6 +60,6 @@ sourceSets.test.get().java.srcDir(downloadJLex.map { it.extra["downloadedSourceD
 
 tasks.register("prepareMavenBuild") { dependsOn("eclipseClasspath", "eclipseProject") }
 
-// On JDK 17, I cannot disable deprecation errors when compiling JLex code, so I disabled this task
-// for now
+// On JDK 17, deprecation errors in ECJ cannot be disabled when compiling JLex code.  So, we disable
+// the ECJ task.
 tasks.named("compileTestJavaUsingEcj") { enabled = false }
