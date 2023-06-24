@@ -13,6 +13,7 @@ package com.ibm.wala.analysis.exceptionanalysis;
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis;
 import com.ibm.wala.analysis.nullpointer.IntraproceduralNullPointerAnalysis;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.fixpoint.BitVectorVariable;
@@ -127,10 +128,18 @@ public class ExceptionAnalysis {
       boolean isCaught = false;
       while (caughtExceptions.hasNext() && !isCaught) {
         TypeReference caughtException = caughtExceptions.next();
+        IClass caughtExceptionClass = cha.lookupClass(caughtException);
+        if (caughtExceptionClass == null) {
+          // for now, assume it is not caught
+          continue;
+        }
         for (TypeReference thrownException : thrownExceptions) {
-          isCaught |=
-              cha.isAssignableFrom(
-                  cha.lookupClass(caughtException), cha.lookupClass(thrownException));
+          IClass thrownExceptionClass = cha.lookupClass(thrownException);
+          if (thrownExceptionClass == null) {
+            // for now, assume it is not caught
+            continue;
+          }
+          isCaught |= cha.isAssignableFrom(caughtExceptionClass, thrownExceptionClass);
           if (isCaught) break;
         }
       }
