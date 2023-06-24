@@ -269,7 +269,8 @@ public class SyntheticMethod implements IMethod {
    * @param options options governing IR conversion
    */
   public IR makeIR(Context context, SSAOptions options) throws UnimplementedError {
-    throw new UnimplementedError("haven't implemented IR yet for class " + getClass());
+    throw new UnimplementedError(
+        "haven't implemented IR yet for class " + getClass() + ", method " + method);
   }
 
   @Override
