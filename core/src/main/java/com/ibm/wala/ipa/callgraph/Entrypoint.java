@@ -70,6 +70,8 @@ public abstract class Entrypoint implements BytecodeConstants {
       return CallSiteReference.make(
           programCounter, method.getReference(), IInvokeInstruction.Dispatch.SPECIAL);
     } else {
+      // It is important to check for static methods before interface methods, since if an interface
+      // contains a static method, it should be called via static dispatch, not interface dispatch
       if (method.isStatic()) {
         return CallSiteReference.make(
             programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
