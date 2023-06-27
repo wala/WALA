@@ -48,6 +48,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapIterator;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -301,7 +302,17 @@ public class MethodHandles {
                       .getClassHierarchy()
                       .lookupClass(TypeReference.JavaLangInvokeMethodHandle),
                   false,
-                  false);
+                  false) {
+                @Override
+                public IR makeIR(Context context, SSAOptions options) throws UnimplementedError {
+                  // MS: On JDK 17, sometimes makeIR() is getting called, and the default
+                  // implementation fails with an error.  I don't fully understand the invariants of
+                  // this class, but overriding and returning null makes the tests pass.
+                  // Eventually, we should document this class and figure out if this is the right
+                  // fix.
+                  return null;
+                }
+              };
           impls.put(target, invokeExactTrampoline);
         }
 

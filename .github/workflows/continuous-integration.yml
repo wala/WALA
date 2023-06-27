@@ -19,6 +19,8 @@ jobs:
             java: 11
           - os: windows-latest
             java: 11
+          - os: ubuntu-latest
+            java: 17
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:

@@ -43,9 +43,9 @@ dependencies {
   "javadocSource"(sourceSets.main.get().allJava)
 }
 
-the<JavaPluginExtension>().toolchain.languageVersion.set(JavaLanguageVersion.of(11))
-
 tasks.withType<JavaCompile>().configureEach {
+  // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
+  options.release.set(11)
   options.errorprone {
     // don't run warning-level checks by default as they add too much noise to build output
     // NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
