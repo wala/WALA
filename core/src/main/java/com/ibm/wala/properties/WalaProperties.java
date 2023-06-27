@@ -54,26 +54,26 @@ public final class WalaProperties {
    * <p>If wala.properties cannot be loaded, returns jar files in boot classpath.
    *
    * @throws IllegalStateException if jar files cannot be discovered
-   * @see PlatformUtil#getBootClassPathJars()
+   * @see PlatformUtil#getJDKModules()
    */
   public static String[] getJ2SEJarFiles() {
     Properties p = null;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
-      return PlatformUtil.getBootClassPathJars();
+      return PlatformUtil.getJDKModules(false);
     }
 
     String dir = p.getProperty(WalaProperties.J2SE_DIR);
     if (dir == null) {
-      return PlatformUtil.getBootClassPathJars();
+      return PlatformUtil.getJDKModules(false);
     }
     if (!new File(dir).isDirectory()) {
       System.err.println(
           "WARNING: java_runtime_dir "
               + dir
               + " in wala.properties is invalid.  Using boot class path instead.");
-      return PlatformUtil.getBootClassPathJars();
+      return PlatformUtil.getJDKModules(false);
     }
     return getJarsInDirectory(dir);
   }
