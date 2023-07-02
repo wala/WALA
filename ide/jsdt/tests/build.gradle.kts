@@ -1,20 +1,15 @@
 plugins {
-  id("com.diffplug.eclipse.mavencentral")
+  id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }
 
-eclipseMavenCentral {
-  release(rootProject.extra["eclipseVersion"] as String) {
-    listOf(
-            "org.eclipse.core.runtime",
-            "org.eclipse.equinox.common",
-            "org.eclipse.osgi",
-        )
-        .forEach { dep("testImplementation", it) }
-    useNativesForRunningPlatform()
-    constrainTransitivesToThisRelease()
-  }
+walaEclipseMavenCentral {
+  testImplementation(
+      "org.eclipse.core.runtime",
+      "org.eclipse.equinox.common",
+      "org.eclipse.osgi",
+  )
 }
 
 dependencies {

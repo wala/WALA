@@ -4,21 +4,16 @@ import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 plugins {
   `java-library`
   `java-test-fixtures`
+  id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
-  id("com.diffplug.eclipse.mavencentral")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
-eclipseMavenCentral {
-  release(rootProject.extra["eclipseVersion"] as String) {
-    dep("testFixturesApi", "org.eclipse.core.resources")
-    dep("testFixturesApi", "org.eclipse.core.runtime")
-    dep("testFixturesImplementation", "org.eclipse.ui.ide")
-    dep("testImplementation", "org.eclipse.jface")
-    useNativesForRunningPlatform()
-    constrainTransitivesToThisRelease()
-  }
+walaEclipseMavenCentral {
+  testFixturesApi("org.eclipse.core.resources", "org.eclipse.core.runtime")
+  testFixturesImplementation("org.eclipse.ui.ide")
+  testImplementation("org.eclipse.jface")
 }
 
 val coreTestDataJar: Configuration by
