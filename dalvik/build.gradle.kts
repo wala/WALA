@@ -107,11 +107,11 @@ dependencies {
 
 val downloadDroidBench by
     tasks.registering(VerifiedDownload::class) {
-      src.set(
+      src =
           URL(
-              "https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0"))
-      dest.set(project.layout.buildDirectory.file("DroidBench_2.0.zip"))
-      checksum.set("16726a48329835140e14f18470a1b4a3")
+              "https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0")
+      dest = project.layout.buildDirectory.file("DroidBench_2.0.zip")
+      checksum = "16726a48329835140e14f18470a1b4a3"
     }
 
 val unpackDroidBench by
@@ -144,10 +144,10 @@ val downloadAndroidSdk by
           })
           .run {
             val archive = "commandlinetools-$sdkOs-7583922_latest.zip"
-            src.set(URL("https://dl.google.com/android/repository/$archive"))
-            dest.set(project.layout.buildDirectory.file(archive))
-            this@registering.checksum.set(checksum)
-            algorithm.set("SHA-256")
+            src = URL("https://dl.google.com/android/repository/$archive")
+            dest = project.layout.buildDirectory.file(archive)
+            this@registering.checksum = checksum
+            algorithm = "SHA-256"
           }
     }
 
@@ -175,9 +175,9 @@ val extractSampleCup by
 
 val downloadSampleLex by
     tasks.registering(VerifiedDownload::class) {
-      src.set(URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex"))
-      dest.set(layout.buildDirectory.file("$name/sample.lex"))
-      checksum.set("ae887758b2657981d023a72a165da830")
+      src = URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex")
+      dest = layout.buildDirectory.file("$name/sample.lex")
+      checksum = "ae887758b2657981d023a72a165da830"
     }
 
 tasks.named<Copy>("processTestResources") {

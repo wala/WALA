@@ -38,11 +38,11 @@ val downloadAjaxslt by
     tasks.registering(VerifiedDownload::class) {
       val version = "0.8.1"
       val versionedArchive = "ajaxslt-${version}.tar.gz"
-      src.set(
+      src =
           URL(
-              "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/$versionedArchive"))
-      dest.set(project.layout.buildDirectory.file(versionedArchive))
-      checksum.set("c995abe3310a401bb4db7f28a6409756")
+              "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/$versionedArchive")
+      dest = project.layout.buildDirectory.file(versionedArchive)
+      checksum = "c995abe3310a401bb4db7f28a6409756"
     }
 
 val unpackAjaxslt by

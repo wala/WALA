@@ -23,7 +23,7 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-the<BasePluginExtension>().archivesName.set("com.ibm.wala${project.path.replace(':', '.')}")
+the<BasePluginExtension>().archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
 
 val sourceSets = the<SourceSetContainer>()
 
@@ -45,12 +45,12 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
-  options.release.set(11)
+  options.release = 11
   options.errorprone {
     // don't run warning-level checks by default as they add too much noise to build output
     // NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
     // we need to customize the level of at least one specific check to make this flag work
-    disableAllWarnings.set(true)
+    disableAllWarnings = true
     // warning-level checks upgraded to error, since we've fixed all the warnings
     error("UnnecessaryParentheses")
     error("UnusedVariable")

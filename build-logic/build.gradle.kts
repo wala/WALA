@@ -16,7 +16,7 @@ dependencies {
   implementation(libs.gradle.spotless.plugin)
 }
 
-kotlin.jvmToolchain { languageVersion.set(JavaLanguageVersion.of(11)) }
+kotlin.jvmToolchain { languageVersion = JavaLanguageVersion.of(11) }
 
 spotless {
   val ktfmtVersion = libs.versions.ktfmt.get()
