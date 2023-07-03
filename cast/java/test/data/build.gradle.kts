@@ -8,7 +8,7 @@ val compileTestJava by
     tasks.existing(JavaCompile::class) {
       options.run {
         // No need to run Error Prone on our analysis test inputs
-        errorprone.isEnabled.set(false)
+        errorprone.isEnabled = false
         // Some code in the test data is written in a deliberately bad style, so allow warnings
         compilerArgs.remove("-Werror")
         compilerArgs.add("-nowarn")
@@ -18,7 +18,7 @@ val compileTestJava by
 val testJar by
     tasks.registering(Jar::class) {
       group = "build"
-      archiveClassifier.set("test")
+      archiveClassifier = "test"
       from(compileTestJava)
     }
 
@@ -43,10 +43,10 @@ spotless { java { targetExclude("**/*") } }
 
 val downloadJLex by
     tasks.registering(VerifiedDownload::class) {
-      src.set(URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java"))
-      checksum.set("fe0cff5db3e2f0f5d67a153cf6c783af")
+      src = URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java")
+      checksum = "fe0cff5db3e2f0f5d67a153cf6c783af"
       val downloadedSourceDir by extra(layout.buildDirectory.dir(name))
-      dest.set(downloadedSourceDir.map { it.file("JLex/Main.java") })
+      dest = downloadedSourceDir.map { it.file("JLex/Main.java") }
     }
 
 sourceSets.test.get().java.srcDir(downloadJLex.map { it.extra["downloadedSourceDir"]!! })
