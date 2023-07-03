@@ -71,7 +71,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       Files.deleteIfExists(instrumentedJarLocation);
 
       String rtJar = null;
-      for (String jar : WalaProperties.getJ2SEJarFiles()) {
+      for (String jar : WalaProperties.getJDKLibraryFiles(true)) {
         if (jar.endsWith(File.separator + "rt.jar")
             || jar.endsWith(File.separator + "classes.jar")) {
           rtJar = jar;
