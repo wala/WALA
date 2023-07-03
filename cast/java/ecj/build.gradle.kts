@@ -1,19 +1,15 @@
 plugins {
   application
-  id("com.diffplug.eclipse.mavencentral")
+  id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.publishing")
 }
 
-eclipseMavenCentral {
-  release(rootProject.extra["eclipseVersion"] as String) {
-    listOf(
-            "org.eclipse.core.runtime",
-            "org.eclipse.jdt.core",
-        )
-        .forEach { implementation(it) }
-    constrainTransitivesToThisRelease()
-  }
+walaEclipseMavenCentral {
+  implementation(
+      "org.eclipse.core.runtime",
+      "org.eclipse.jdt.core",
+  )
 }
 
 val runSourceDirectory: Configuration by configurations.creating { isCanBeConsumed = false }

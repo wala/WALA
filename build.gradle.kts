@@ -3,6 +3,7 @@
 //  plugin configuration must precede everything else
 //
 
+import com.diffplug.gradle.pde.EclipseRelease
 import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
@@ -16,8 +17,8 @@ plugins {
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.versions)
-  id("com.diffplug.eclipse.mavencentral")
   id("com.ibm.wala.gradle.javadoc")
+  id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
   id("com.ibm.wala.gradle.project")
 }
@@ -48,7 +49,9 @@ group = name
 version = properties["VERSION_NAME"] as String
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components.
-val eclipseVersion: String by extra(libs.versions.eclipse.asProvider()::get)
+val eclipseVersion: EclipseRelease by extra {
+  EclipseRelease.official(libs.versions.eclipse.asProvider().get())
+}
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -58,13 +61,6 @@ val eclipseVersion: String by extra(libs.versions.eclipse.asProvider()::get)
 val aggregatedJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
 
 val aggregatedJavadocSource: Configuration by configurations.creating { isCanBeConsumed = false }
-
-eclipseMavenCentral {
-  release(eclipseVersion) {
-    useNativesForRunningPlatform()
-    constrainTransitivesToThisRelease()
-  }
-}
 
 dependencies {
   subprojects {
