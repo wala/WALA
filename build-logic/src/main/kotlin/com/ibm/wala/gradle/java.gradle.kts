@@ -2,6 +2,7 @@ package com.ibm.wala.gradle
 
 // Build configuration for subprojects that include Java source code.
 
+import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.plugins.ide.eclipse.model.EclipseModel
 
@@ -171,12 +172,19 @@ if (project.gradle.parent != null) {
   }
 }
 
-spotless.java {
-  googleJavaFormat(
-      rootProject
-          .the<VersionCatalogsExtension>()
-          .named("libs")
-          .findVersion("google-java-format")
-          .get()
-          .toString())
+spotless {
+  // Workaround for <https://github.com/diffplug/spotless/issues/1644>
+  // using idea found at
+  // <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
+  lineEndings = PLATFORM_NATIVE
+
+  java {
+    googleJavaFormat(
+        rootProject
+            .the<VersionCatalogsExtension>()
+            .named("libs")
+            .findVersion("google-java-format")
+            .get()
+            .toString())
+  }
 }
