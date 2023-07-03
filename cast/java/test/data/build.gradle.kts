@@ -45,11 +45,15 @@ val downloadJLex by
     tasks.registering(VerifiedDownload::class) {
       src = URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java")
       checksum = "fe0cff5db3e2f0f5d67a153cf6c783af"
-      val downloadedSourceDir by extra(layout.buildDirectory.dir(name))
-      dest = downloadedSourceDir.map { it.file("JLex/Main.java") }
+      val downloadedSourceDir = layout.buildDirectory.dir(name).map(Directory::toString)
+      inputs.property("downloadedSourceDir", downloadedSourceDir)
+      dest = layout.buildDirectory.dir(name).map { it.file("JLex/Main.java") }
     }
 
-sourceSets.test.get().java.srcDir(downloadJLex.map { it.extra["downloadedSourceDir"]!! })
+sourceSets.test
+    .get()
+    .java
+    .srcDir(downloadJLex.map { it.inputs.properties["downloadedSourceDir"]!! })
 
 ////////////////////////////////////////////////////////////////////////
 //

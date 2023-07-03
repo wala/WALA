@@ -172,7 +172,8 @@ val buildKawaTestJar by
 
 val downloadBcel by
     tasks.registering(VerifiedDownload::class) {
-      val basename by extra("bcel-5.2")
+      val basename = "bcel-5.2"
+      inputs.property("basename", basename)
       val archive = "${basename}.tar.gz"
       src = URL("https://archive.apache.org/dist/jakarta/bcel/binaries/$archive")
       dest = project.layout.buildDirectory.file(archive)
@@ -182,7 +183,7 @@ val downloadBcel by
 
 val extractBcel by
     tasks.registering {
-      val basename = downloadBcel.map { it.extra["basename"] as String }
+      val basename = downloadBcel.map { it.inputs.properties["basename"] as String }
       val jarFile = basename.flatMap { layout.buildDirectory.file("$name/${it}.jar") }
       inputs.files(downloadBcel.map { it.outputs.files })
       outputs.file(jarFile)
