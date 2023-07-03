@@ -1,3 +1,5 @@
+import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
+
 plugins {
   `kotlin-dsl`
   `kotlin-dsl-precompiled-script-plugins`
@@ -19,6 +21,11 @@ dependencies {
 kotlin.jvmToolchain { languageVersion = JavaLanguageVersion.of(11) }
 
 spotless {
+  // Workaround for <https://github.com/diffplug/spotless/issues/1644>
+  // using idea found at
+  // <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
+  lineEndings = PLATFORM_NATIVE
+
   val ktfmtVersion = libs.versions.ktfmt.get()
 
   kotlin {
