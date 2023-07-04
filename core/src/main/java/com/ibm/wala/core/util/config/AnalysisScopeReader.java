@@ -218,7 +218,7 @@ public class AnalysisScopeReader {
     } else if ("loaderImpl".equals(entryType)) {
       scope.setLoaderImpl(walaLoader, entryPathname);
     } else if ("stdlib".equals(entryType)) {
-      boolean justBase = !entryPathname.equals("full");
+      boolean justBase = entryPathname.equals("base");
       String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
       for (String stdlib : stdlibs) {
         scope.addToScope(walaLoader, new JarFile(stdlib, false));

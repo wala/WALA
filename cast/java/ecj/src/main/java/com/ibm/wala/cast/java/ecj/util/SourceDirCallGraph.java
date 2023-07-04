@@ -76,7 +76,7 @@ public class SourceDirCallGraph {
     String mainClass = p.getProperty("mainClass");
     AnalysisScope scope = new JavaSourceAnalysisScope();
     // add standard libraries to scope
-    String[] stdlibs = WalaProperties.getJDKLibraryFiles(false);
+    String[] stdlibs = WalaProperties.getJ2SEJarFiles();
     for (String stdlib : stdlibs) {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
     }

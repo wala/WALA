@@ -75,7 +75,7 @@ public abstract class IRTests {
 
   private String testSrcPath = Paths.get("src", "test", "java").toString();
 
-  public static final List<String> rtJar = Arrays.asList(WalaProperties.getJDKLibraryFiles(true));
+  public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
