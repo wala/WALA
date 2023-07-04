@@ -49,7 +49,7 @@ tasks.named("check") { dependsOn(ecjCompileJavaTestSubjects) }
 
 compileTestSubjectsJava.configure {
   // No need to run Error Prone on our analysis test inputs
-  options.errorprone.isEnabled.set(false)
+  options.errorprone.isEnabled = false
 }
 
 dependencies {
@@ -80,9 +80,9 @@ interface ExtractServices {
 val downloadKawa by
     tasks.registering(VerifiedDownload::class) {
       val archive = "kawa-3.0.zip"
-      src.set(URL("https://ftp.gnu.org/pub/gnu/kawa/$archive"))
-      dest.set(project.layout.buildDirectory.file(archive))
-      checksum.set("2713e6dfb939274ba3b1d36daea68436")
+      src = URL("https://ftp.gnu.org/pub/gnu/kawa/$archive")
+      dest = project.layout.buildDirectory.file(archive)
+      checksum = "2713e6dfb939274ba3b1d36daea68436"
     }
 
 val extractKawa by
@@ -113,9 +113,9 @@ val kawaChessCommitHash = "f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8"
 
 val downloadKawaChess by
     tasks.registering(VerifiedDownload::class) {
-      src.set(URL("https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip"))
-      dest.set(project.layout.buildDirectory.file("kawa-chess.zip"))
-      checksum.set("cf29613d2be5f476a475ee28b4df9d9e")
+      src = URL("https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip")
+      dest = project.layout.buildDirectory.file("kawa-chess.zip")
+      checksum = "cf29613d2be5f476a475ee28b4df9d9e"
     }
 
 val unpackKawaChess by
@@ -142,9 +142,9 @@ val compileKawaSchemeChessMain by
 val buildChessJar by
     tasks.registering(Jar::class) {
       from(compileKawaSchemeChessMain)
-      destinationDirectory.set(project.layout.buildDirectory.dir(name))
-      archiveFileName.set("kawachess.jar")
-      archiveVersion.set(null as String?)
+      destinationDirectory = project.layout.buildDirectory.dir(name)
+      archiveFileName = "kawachess.jar"
+      archiveVersion = null as String?
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -154,15 +154,15 @@ val buildChessJar by
 
 val compileKawaSchemeTest by
     tasks.registering(CompileKawaScheme::class) {
-      schemeFile.set(layout.projectDirectory.file("kawasrc/test.scm"))
+      schemeFile = layout.projectDirectory.file("kawasrc/test.scm")
     }
 
 val buildKawaTestJar by
     tasks.registering(Jar::class) {
       from(compileKawaSchemeTest)
-      destinationDirectory.set(project.layout.buildDirectory.dir(name))
-      archiveFileName.set("kawatest.jar")
-      archiveVersion.set(null as String?)
+      destinationDirectory = project.layout.buildDirectory.dir(name)
+      archiveFileName = "kawatest.jar"
+      archiveVersion = null as String?
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -172,17 +172,18 @@ val buildKawaTestJar by
 
 val downloadBcel by
     tasks.registering(VerifiedDownload::class) {
-      val basename by extra("bcel-5.2")
+      val basename = "bcel-5.2"
+      inputs.property("basename", basename)
       val archive = "${basename}.tar.gz"
-      src.set(URL("https://archive.apache.org/dist/jakarta/bcel/binaries/$archive"))
-      dest.set(project.layout.buildDirectory.file(archive))
-      checksum.set("19bffd7f217b0eae415f1ef87af2f0bc")
-      useETag.set(false)
+      src = URL("https://archive.apache.org/dist/jakarta/bcel/binaries/$archive")
+      dest = project.layout.buildDirectory.file(archive)
+      checksum = "19bffd7f217b0eae415f1ef87af2f0bc"
+      useETag = false
     }
 
 val extractBcel by
     tasks.registering {
-      val basename = downloadBcel.map { it.extra["basename"] as String }
+      val basename = downloadBcel.map { it.inputs.properties["basename"] as String }
       val jarFile = basename.flatMap { layout.buildDirectory.file("$name/${it}.jar") }
       inputs.files(downloadBcel.map { it.outputs.files })
       outputs.file(jarFile)
@@ -210,9 +211,9 @@ val extractBcel by
 val downloadJavaCup by
     tasks.registering(VerifiedDownload::class) {
       val archive = "java-cup-11a.jar"
-      src.set(URL("http://www2.cs.tum.edu/projects/cup/$archive"))
-      dest.set(layout.buildDirectory.file("$name/$archive"))
-      checksum.set("2bda8c40abd0cbc295d3038643d6e4ec")
+      src = URL("http://www2.cs.tum.edu/projects/cup/$archive")
+      dest = layout.buildDirectory.file("$name/$archive")
+      checksum = "2bda8c40abd0cbc295d3038643d6e4ec"
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -232,8 +233,8 @@ val collectJLex by
       inputs.files(collectJLexFrom)
       from(zipTree(collectJLexFrom.singleFile))
       include("JLex/")
-      archiveFileName.set("JLex.jar")
-      destinationDirectory.set(layout.buildDirectory.dir(name))
+      archiveFileName = "JLex.jar"
+      destinationDirectory = layout.buildDirectory.dir(name)
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -246,9 +247,9 @@ val downloadOcamlJava by
       val version = "2.0-alpha1"
       val basename by extra("ocamljava-$version")
       val archive = "$basename.tar.gz"
-      src.set(URL("http://www.ocamljava.org/downloads/download.php?version=$version-bin"))
-      dest.set(project.layout.buildDirectory.file(archive))
-      checksum.set("45feec6e3889f5073a39c2c4c84878d1")
+      src = URL("http://www.ocamljava.org/downloads/download.php?version=$version-bin")
+      dest = project.layout.buildDirectory.file(archive)
+      checksum = "45feec6e3889f5073a39c2c4c84878d1"
     }
 
 val unpackOcamlJava by
@@ -284,7 +285,7 @@ val generateHelloHashJar by
       inputs.file(ocamlJavaJar)
       classpath(ocamlJavaJar)
 
-      mainClass.set("ocaml.compilers.ocamljavaMain")
+      mainClass = "ocaml.compilers.ocamljavaMain"
       args("-o", jarTarget)
       argumentProviders.add { listOf(ocamlSource.get()) }
     }
@@ -296,11 +297,11 @@ val generateHelloHashJar by
 
 val collectTestData by
     tasks.registering(Jar::class) {
-      archiveFileName.set("com.ibm.wala.core.testdata_1.0.0.jar")
+      archiveFileName = "com.ibm.wala.core.testdata_1.0.0.jar"
       from(compileTestSubjectsJava)
       from("classes")
       includeEmptyDirs = false
-      destinationDirectory.set(layout.buildDirectory.dir(name))
+      destinationDirectory = layout.buildDirectory.dir(name)
     }
 
 val collectTestDataJar: Configuration by configurations.creating { isCanBeResolved = false }
@@ -314,11 +315,11 @@ artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirec
 
 val collectTestDataA by
     tasks.registering(Jar::class) {
-      archiveFileName.set("com.ibm.wala.core.testdata_1.0.0a.jar")
+      archiveFileName = "com.ibm.wala.core.testdata_1.0.0a.jar"
       from(compileTestSubjectsJava)
       from("classes")
       includeEmptyDirs = false
-      destinationDirectory.set(layout.buildDirectory.dir(name))
+      destinationDirectory = layout.buildDirectory.dir(name)
       exclude(
           "**/CodeDeleted.class",
           "**/SortingExample.class",
@@ -371,7 +372,7 @@ artifacts.add(testResources.name, sourceSets.test.map { it.resources.srcDirs.sin
 val testJar by
     tasks.registering(Jar::class) {
       group = "build"
-      archiveClassifier.set("test")
+      archiveClassifier = "test"
       from(tasks.named("compileTestJava"))
     }
 

@@ -30,7 +30,7 @@ dependencies {
   testRuntimeOnly(testFixtures(projects.core))
 }
 
-application.mainClass.set("com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph")
+application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
 val run by
     tasks.existing(JavaExec::class) {

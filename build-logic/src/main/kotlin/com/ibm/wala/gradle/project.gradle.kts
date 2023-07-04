@@ -1,5 +1,6 @@
 package com.ibm.wala.gradle
 
+import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.EclipseModel
@@ -43,6 +44,11 @@ tasks.register<DependencyReportTask>("allDeps") {}
 //
 
 spotless {
+  // Workaround for <https://github.com/diffplug/spotless/issues/1644>
+  // using idea found at
+  // <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
+  lineEndings = PLATFORM_NATIVE
+
   findProperty("spotless.ratchet.from")?.let { ratchetFrom(it as String) }
 
   kotlinGradle {
