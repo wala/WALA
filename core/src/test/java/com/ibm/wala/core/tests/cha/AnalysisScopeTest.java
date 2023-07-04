@@ -36,4 +36,21 @@ public class AnalysisScopeTest {
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")));
   }
+
+  @Test
+  public void testBaseScope() throws IOException, ClassHierarchyException {
+    AnalysisScope scope =
+        AnalysisScopeReader.instance.readJavaScope(
+            "primordial-base.txt", null, AnalysisScopeTest.class.getClassLoader());
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Assert.assertNotNull(
+        "couldn't find expected class",
+        cha.lookupClass(
+            TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/util/ArrayList")));
+    Assert.assertNull(
+        "found unexpected class",
+        cha.lookupClass(
+            TypeReference.findOrCreate(
+                ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")));
+  }
 }
