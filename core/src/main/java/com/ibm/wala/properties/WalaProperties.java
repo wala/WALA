@@ -60,6 +60,16 @@ public final class WalaProperties {
     return getJDKLibraryFiles(false);
   }
 
+  /**
+   * Determine the classpath noted in wala.properties for J2SE standard libraries
+   *
+   * <p>If wala.properties cannot be loaded, returns library files in boot classpath.
+   *
+   * @param justBase Only relevant if wala.properties cannot be loaded. If {@code true}, only
+   *     returns the {@code java.base} library from boot classpath. Otherwise, returns all library
+   *     modules from boot classpath.
+   * @see PlatformUtil#getJDKModules(boolean)
+   */
   public static String[] getJDKLibraryFiles(boolean justBase) {
     Properties p = null;
     try {

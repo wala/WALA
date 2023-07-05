@@ -75,6 +75,12 @@ public class PlatformUtil {
     return jmods.toArray(new String[0]);
   }
 
+  /**
+   * Returns the filesystem path for a JDK module from the running JVM
+   *
+   * @param moduleName name of the module, e.g., {@code "java.sql"}
+   * @return path to the module
+   */
   public static Path getPathForJDKModule(String moduleName) {
     return Paths.get(System.getProperty("java.home"), "jmods", moduleName + ".jmod");
   }
