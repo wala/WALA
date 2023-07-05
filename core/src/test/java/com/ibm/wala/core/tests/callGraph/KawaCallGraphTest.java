@@ -51,7 +51,8 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     CallGraph CG =
         testKawa(
-            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawachess.jar")), "baseAndDesktop.txt",
+            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawachess.jar")),
+            "baseAndDesktop.txt",
             "main");
 
     Set<CGNode> status =
@@ -88,7 +89,8 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     CallGraph CG =
         testKawa(
-            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawatest.jar")), "base.txt",
+            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawatest.jar")),
+            "base.txt",
             "test");
 
     Set<CGNode> nodes = getNodes(CG, "Ltest", "plusish$V", "(Lgnu/lists/LList;)Ljava/lang/Object;");
