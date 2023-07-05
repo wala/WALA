@@ -51,7 +51,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     CallGraph CG =
         testKawa(
-            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawachess.jar")),
+            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawachess.jar")), "baseAndDesktop.txt",
             "main");
 
     Set<CGNode> status =
@@ -88,7 +88,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     CallGraph CG =
         testKawa(
-            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawatest.jar")),
+            new ResourceJarFileModule(getClass().getClassLoader().getResource("kawatest.jar")), "base.txt",
             "test");
 
     Set<CGNode> nodes = getNodes(CG, "Ltest", "plusish$V", "(Lgnu/lists/LList;)Ljava/lang/Object;");
@@ -113,14 +113,15 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
    * #MAX_ITERATIONS} runs of the outer fixed point loop of call graph construction.
    *
    * @param code the module
+   * @param scopeFile the scope file to use
    * @param main entrypoint method for the call graph
    * @return the call graph
    */
-  private CallGraph testKawa(Module code, String main)
+  private CallGraph testKawa(Module code, String scopeFile, String main)
       throws ClassHierarchyException, IllegalArgumentException, IOException, SecurityException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
-            "base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS_FOR_GUI);
+            scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS_FOR_GUI);
     scope.addToScope(
         ClassLoaderReference.Application,
         new ResourceJarFileModule(getClass().getClassLoader().getResource("kawa.jar")));

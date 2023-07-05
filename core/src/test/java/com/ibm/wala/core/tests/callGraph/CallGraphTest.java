@@ -265,7 +265,7 @@ public class CallGraphTest extends WalaTestCase {
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
-            "primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+            "primordial-base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
