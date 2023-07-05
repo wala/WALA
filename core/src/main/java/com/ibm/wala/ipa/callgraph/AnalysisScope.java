@@ -28,6 +28,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -40,6 +41,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.NotSerializableException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -194,6 +197,19 @@ public class AnalysisScope {
     s.add(new ClassFileModule(file, null));
   }
 
+  /**
+   * Adds a module from the Java standard library to the analysis scope.
+   *
+   * @param moduleName the name of the module, e.g., {@code "java.sql"}
+   * @throws IOException if a module by that name cannot successfully be loaded
+   */
+  public void addJDKModuleToScope(String moduleName) throws IOException {
+    Path path = PlatformUtil.getPathForJDKModule(moduleName);
+    if (!Files.exists(path)) {
+      throw new IOException("cannot find jmod file for module " + moduleName + ", tried " + path);
+    }
+    addToScope(ClassLoaderReference.Primordial, new JarFile(path.toString(), false));
+  }
   /**
    * Add a jar file to the scope via an {@link InputStream}. NOTE: The InputStream should *not* be a
    * {@link java.util.jar.JarInputStream}; it should be a regular {@link InputStream} for the raw

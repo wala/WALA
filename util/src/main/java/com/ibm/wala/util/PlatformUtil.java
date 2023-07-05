@@ -10,12 +10,11 @@
  */
 package com.ibm.wala.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,38 +46,44 @@ public class PlatformUtil {
   }
 
   /**
-   * get the jars in the boot classpath. TODO test on more JVMs
+   * Gets the standard JDK modules shipped with the running JDK
    *
-   * @throws IllegalStateException if boot classpath cannot be found
+   * @param justBase if {@code true}, only include the file corresponding to the {@code java.base}
+   *     module
+   * @return array of {@code .jmod} module files
+   * @throws IllegalStateException if modules cannot be found
    */
-  public static String[] getBootClassPathJars() {
-    String classpath = null;
-    String javaVersion = System.getProperty("java.specification.version");
-    if (!javaVersion.equals("1.8")) {
-      // java11 support for jmod files
+  public static String[] getJDKModules(boolean justBase) {
+    List<String> jmods;
+    if (justBase) {
+      Path basePath = Paths.get(System.getProperty("java.home"), "jmods", "java.base.jmod");
+      if (!Files.exists(basePath)) {
+        throw new IllegalStateException("could not find java.base.jmod");
+      }
+      jmods = List.of(basePath.toString());
+    } else {
       try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("java.home"), "jmods"))) {
-        classpath =
-            String.join(
-                File.pathSeparator, stream.map(Path::toString).collect(Collectors.toList()));
+        jmods =
+            stream
+                .map(Path::toString)
+                .filter(p -> p.endsWith(".jmod"))
+                .collect(Collectors.toList());
       } catch (IOException e) {
         throw new IllegalStateException(e);
       }
-    } else {
-      classpath = System.getProperty("sun.boot.class.path");
     }
-    if (classpath == null) {
-      throw new IllegalStateException("could not find boot classpath");
-    }
-    String[] jars = classpath.split(File.pathSeparator);
-    ArrayList<String> result = new ArrayList<>();
-    for (String jar : jars) {
-      if ((jar.endsWith(".jar") || jar.endsWith(".jmod")) && new File(jar).exists()) {
-        result.add(jar);
-      }
-    }
-    return result.toArray(new String[0]);
+    return jmods.toArray(new String[0]);
   }
 
+  /**
+   * Returns the filesystem path for a JDK module from the running JVM
+   *
+   * @param moduleName name of the module, e.g., {@code "java.sql"}
+   * @return path to the module
+   */
+  public static Path getPathForJDKModule(String moduleName) {
+    return Paths.get(System.getProperty("java.home"), "jmods", moduleName + ".jmod");
+  }
   /** @return the major version of the Java runtime we are running on. */
   public static int getJavaRuntimeVersion() {
     String version = System.getProperty("java.version");

@@ -48,7 +48,7 @@ public class InterfaceTest extends WalaTestCase {
             TestConstants.WALA_TESTDATA,
             new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
-
+    scope.addJDKModuleToScope("java.sql");
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
