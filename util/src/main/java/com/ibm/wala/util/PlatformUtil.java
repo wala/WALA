@@ -75,6 +75,9 @@ public class PlatformUtil {
     return jmods.toArray(new String[0]);
   }
 
+  public static Path getPathForJDKModule(String moduleName) {
+    return Paths.get(System.getProperty("java.home"), "jmods", moduleName + ".jmod");
+  }
   /** @return the major version of the Java runtime we are running on. */
   public static int getJavaRuntimeVersion() {
     String version = System.getProperty("java.version");
