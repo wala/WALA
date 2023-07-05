@@ -200,7 +200,7 @@ public class AnalysisScope {
   /**
    * Adds a module from the Java standard library to the analysis scope.
    *
-   * @param moduleName, the name of the module, e.g., {@code "java.sql"}
+   * @param moduleName the name of the module, e.g., {@code "java.sql"}
    * @throws IOException if a module by that name cannot successfully be loaded
    */
   public void addJDKModuleToScope(String moduleName) throws IOException {
