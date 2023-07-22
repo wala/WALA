@@ -27,7 +27,7 @@ htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
 javax-annotation-api = { module = "javax.annotation:javax.annotation-api", version = { strictly = "1.3.2" } }
 jericho-html = "net.htmlparser.jericho:jericho-html:3.2"
-json = "org.json:json:20220924"
+json = "org.json:json:20230618"
 jspecify = "org.jspecify:jspecify:0.3.0"
 junit = "junit:junit:4.13.2"
 nullaway = "com.uber.nullaway:nullaway:0.10.10"
