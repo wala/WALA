@@ -13,7 +13,6 @@ dependencies {
   implementation(projects.cast.js.rhino)
   implementation(projects.core)
   implementation(projects.util)
-  testImplementation(libs.junit)
   testRuntimeOnly(testFixtures(projects.core))
 }
 

@@ -16,10 +16,8 @@ dependencies {
   implementation(projects.shrike)
   implementation(projects.util)
   javadocClasspath(projects.cast.js.rhino)
-  testFixturesImplementation(libs.junit)
   testFixturesImplementation(testFixtures(projects.cast))
   testFixturesImplementation(testFixtures(projects.core))
-  testImplementation(libs.junit)
   testImplementation(testFixtures(projects.cast))
   testImplementation(testFixtures(projects.core))
 }

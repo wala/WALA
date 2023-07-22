@@ -46,7 +46,6 @@ dependencies {
   castJsPackageListDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory")))
   javadocClasspath(projects.cast.js)
-  testImplementation(libs.junit)
   testRuntimeOnly(testFixtures(projects.core))
   xlatorTestSharedLibrary(project("xlator_test"))
 }

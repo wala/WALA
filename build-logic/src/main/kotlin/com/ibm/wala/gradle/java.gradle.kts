@@ -33,15 +33,22 @@ configurations {
   named("javadocClasspath").get().extendsFrom(compileClasspath.get())
 }
 
+fun findLibrary(alias: String) =
+    rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary(alias).get()
+
 dependencies {
-  "ecj"(rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary("eclipse-ecj").get())
-  "errorprone"(
-      rootProject
-          .the<VersionCatalogsExtension>()
-          .named("libs")
-          .findLibrary("errorprone-core")
-          .get())
+  "ecj"(findLibrary("eclipse-ecj"))
+  "errorprone"(findLibrary("errorprone-core"))
   "javadocSource"(sourceSets.main.get().allJava)
+
+  testFixturesImplementation(platform(findLibrary("junit-bom")))
+  testFixturesImplementation(findLibrary("junit"))
+  testFixturesImplementation(findLibrary("junit-jupiter-api"))
+
+  testImplementation(platform(findLibrary("junit-bom")))
+  testImplementation(findLibrary("junit"))
+  testImplementation(findLibrary("junit-jupiter-api"))
+  testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -103,6 +110,8 @@ configurations {
 the<EclipseModel>().synchronizationTasks("processTestResources")
 
 tasks.named<Test>("test") {
+  useJUnitPlatform()
+
   include("**/*Test.class")
   include("**/*TestCase.class")
   include("**/*Tests.class")

@@ -30,6 +30,9 @@ jericho-html = "net.htmlparser.jericho:jericho-html:3.2"
 json = "org.json:json:20230618"
 jspecify = "org.jspecify:jspecify:0.3.0"
 junit = "junit:junit:4.13.2"
+junit-bom = "org.junit:junit-bom:5.9.3"
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
+junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine" }
 nullaway = "com.uber.nullaway:nullaway:0.10.10"
 rhino = "org.mozilla:rhino:1.7.14"
 slf4j-api = "org.slf4j:slf4j-api:2.0.6"

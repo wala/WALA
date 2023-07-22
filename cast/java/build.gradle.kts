@@ -10,7 +10,6 @@ dependencies {
   implementation(projects.core)
   implementation(projects.shrike)
   implementation(projects.util)
-  testFixturesImplementation(libs.junit)
   testFixturesImplementation(projects.cast)
   testFixturesImplementation(projects.core)
 }
