@@ -16,7 +16,6 @@ dependencies {
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.wst.jsdt.core)
   testImplementation(libs.javax.annotation.api)
-  testImplementation(libs.junit)
   testImplementation(projects.cast)
   testImplementation(projects.cast.js)
   testImplementation(projects.cast.js.rhino)

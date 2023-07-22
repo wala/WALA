@@ -45,7 +45,6 @@ dependencies {
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
   ifdsExplorerExampleClasspath(
       project(mapOf("path" to ":core", "configuration" to "collectTestDataJar")))
-  testImplementation(libs.junit)
   testImplementation(projects.core)
   testImplementation(projects.ide)
   testImplementation(projects.util)

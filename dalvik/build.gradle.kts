@@ -92,7 +92,6 @@ dependencies {
   sampleCupSources(libs.java.cup.map { "$it:sources" })
 
   testImplementation(libs.android.tools)
-  testImplementation(libs.junit)
   testImplementation(libs.dexlib2)
   testImplementation(projects.core)
   testImplementation(projects.dalvik)

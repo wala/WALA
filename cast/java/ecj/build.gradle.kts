@@ -25,7 +25,6 @@ dependencies {
   runSourceDirectory(
       project(
           mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory")))
-  testImplementation(libs.junit)
   testImplementation(testFixtures(projects.cast.java))
   testRuntimeOnly(testFixtures(projects.core))
 }

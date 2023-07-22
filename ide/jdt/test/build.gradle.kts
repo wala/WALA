@@ -15,7 +15,6 @@ walaEclipseMavenCentral {
 
 dependencies {
   testImplementation(libs.eclipse.osgi)
-  testImplementation(libs.junit)
   testImplementation(projects.cast)
   testImplementation(projects.cast.java)
   testImplementation(projects.cast.java.ecj)

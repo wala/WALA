@@ -10,7 +10,6 @@ dependencies {
   compileOnly(libs.jspecify)
   javadocClasspath(projects.core)
   testImplementation(libs.hamcrest)
-  testImplementation(libs.junit)
   testRuntimeOnly(testFixtures(projects.core))
 }
 

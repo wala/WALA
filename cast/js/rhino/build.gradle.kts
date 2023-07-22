@@ -16,10 +16,8 @@ dependencies {
   implementation(projects.util)
   testImplementation(libs.gson)
   testImplementation(libs.hamcrest)
-  testImplementation(libs.junit)
   testImplementation(testFixtures(projects.cast))
   testImplementation(testFixtures(projects.cast.js))
-  testFixturesImplementation(libs.junit)
   testFixturesImplementation(testFixtures(projects.cast))
   testFixturesImplementation(testFixtures(projects.cast.js))
 }

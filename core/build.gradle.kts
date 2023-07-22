@@ -58,9 +58,7 @@ dependencies {
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
   testFixturesImplementation(libs.ant)
-  testFixturesImplementation(libs.junit)
   testImplementation(libs.hamcrest)
-  testImplementation(libs.junit)
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
   // add the testSubjects source files to enable SourceMapTest to pass
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
