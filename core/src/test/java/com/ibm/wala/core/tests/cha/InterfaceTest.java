@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -25,7 +29,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -77,13 +80,13 @@ public class InterfaceTest extends WalaTestCase {
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
 
-    Assert.assertNotNull("did not find PreparedStatement", prep_stmt);
-    Assert.assertNotNull("did not find Statement", stmt);
+    assertNotNull("did not find PreparedStatement", prep_stmt);
+    assertNotNull("did not find Statement", stmt);
 
-    Assert.assertTrue(cha.implementsInterface(prep_stmt, stmt));
-    Assert.assertFalse(cha.implementsInterface(stmt, prep_stmt));
-    Assert.assertTrue(cha.isAssignableFrom(stmt, prep_stmt));
-    Assert.assertFalse(cha.isAssignableFrom(prep_stmt, stmt));
+    assertTrue(cha.implementsInterface(prep_stmt, stmt));
+    assertFalse(cha.implementsInterface(stmt, prep_stmt));
+    assertTrue(cha.isAssignableFrom(stmt, prep_stmt));
+    assertFalse(cha.isAssignableFrom(prep_stmt, stmt));
   }
 
   /** check that arrays implement Cloneable and Serializable */
@@ -96,9 +99,9 @@ public class InterfaceTest extends WalaTestCase {
     IClass cloneableClass = cha.lookupClass(TypeReference.JavaLangCloneable);
     IClass serializableClass = cha.lookupClass(TypeReference.JavaIoSerializable);
 
-    Assert.assertTrue(cha.implementsInterface(objArrayClass, cloneableClass));
-    Assert.assertTrue(cha.implementsInterface(objArrayClass, serializableClass));
-    Assert.assertTrue(cha.implementsInterface(stringArrayClass, cloneableClass));
-    Assert.assertTrue(cha.implementsInterface(stringArrayClass, serializableClass));
+    assertTrue(cha.implementsInterface(objArrayClass, cloneableClass));
+    assertTrue(cha.implementsInterface(objArrayClass, serializableClass));
+    assertTrue(cha.implementsInterface(stringArrayClass, cloneableClass));
+    assertTrue(cha.implementsInterface(stringArrayClass, serializableClass));
   }
 }

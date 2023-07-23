@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
@@ -29,7 +31,6 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -499,10 +500,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph cg = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_call.js");
     for (CGNode n : cg) {
       if (n.getMethod().getName().toString().equals("call4")) {
-        Assert.assertEquals(2, cg.getSuccNodeCount(n));
+        assertEquals(2, cg.getSuccNodeCount(n));
         // ugh
         List<CGNode> succs = Iterator2Collection.toList(cg.getSuccNodes(n));
-        Assert.assertEquals(
+        assertEquals(
             "[Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere, Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere]",
             succs.toString());
       }

@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -31,7 +35,6 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Test integrity of CFGs */
@@ -71,7 +74,7 @@ public abstract class CFGTest extends WalaTestCase {
       } catch (UnsoundGraphException e) {
         e.printStackTrace();
         System.err.println(ir);
-        Assert.fail(" failed cfg integrity check for " + methodSig);
+        fail(" failed cfg integrity check for " + methodSig);
       }
 
       try {
@@ -80,7 +83,7 @@ public abstract class CFGTest extends WalaTestCase {
         e.printStackTrace();
         System.err.println(ir);
         System.err.println(cfg);
-        Assert.fail(" failed 2-exit cfg integrity check for " + methodSig);
+        fail(" failed 2-exit cfg integrity check for " + methodSig);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -109,7 +112,7 @@ public abstract class CFGTest extends WalaTestCase {
     for (int i = 0; i < irBefore.getInstructions().length; i++) {
       System.out.println(irBefore.getInstructions()[i]);
       System.out.println(irAfter.getInstructions()[i]);
-      Assert.assertEquals(irAfter.getInstructions()[i], irBefore.getInstructions()[i]);
+      assertEquals(irAfter.getInstructions()[i], irBefore.getInstructions()[i]);
     }
   }
 
@@ -122,8 +125,7 @@ public abstract class CFGTest extends WalaTestCase {
     IR ir = cache.getIR(m);
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
-    Assert.assertEquals(
-        1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(21)));
+    assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(21)));
   }
 
   @Test
@@ -136,9 +138,9 @@ public abstract class CFGTest extends WalaTestCase {
     System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
     IntSet succs = controlFlowGraph.getSuccNodeNumbers(controlFlowGraph.getBlockForInstruction(13));
-    Assert.assertEquals(2, succs.size());
-    Assert.assertTrue(succs.contains(6));
-    Assert.assertTrue(succs.contains(7));
+    assertEquals(2, succs.size());
+    assertTrue(succs.contains(6));
+    assertTrue(succs.contains(7));
   }
 
   @Test
@@ -149,16 +151,15 @@ public abstract class CFGTest extends WalaTestCase {
     IAnalysisCacheView cache = makeAnalysisCache();
     IR ir = cache.getIR(m);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
-    Assert.assertEquals(
-        1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)));
+    assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)));
   }
 
   public static void testCFG(SSACFG cfg, int[][] assertions) {
     for (int i = 0; i < assertions.length; i++) {
       SSACFG.BasicBlock bb = cfg.getNode(i);
-      Assert.assertEquals("basic block " + i, assertions[i].length, cfg.getSuccNodeCount(bb));
+      assertEquals("basic block " + i, assertions[i].length, cfg.getSuccNodeCount(bb));
       for (int j = 0; j < assertions[i].length; j++) {
-        Assert.assertTrue(cfg.hasEdge(bb, cfg.getNode(assertions[i][j])));
+        assertTrue(cfg.hasEdge(bb, cfg.getNode(assertions[i][j])));
       }
     }
   }

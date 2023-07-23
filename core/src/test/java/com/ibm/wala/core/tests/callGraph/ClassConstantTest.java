@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -28,7 +32,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Check handling of class constants (test for part of 1.5 support) */
@@ -47,7 +50,7 @@ public class ClassConstantTest extends WalaTestCase {
     TypeReference mainClassRef =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TestConstants.CLASSCONSTANT_MAIN);
-    Assert.assertNotNull(cha.lookupClass(mainClassRef));
+    assertNotNull(cha.lookupClass(mainClassRef));
 
     // make call graph
     Iterable<Entrypoint> entrypoints =
@@ -61,7 +64,7 @@ public class ClassConstantTest extends WalaTestCase {
     MethodReference mainMethodRef =
         MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
     Set<CGNode> mainMethodNodes = cg.getNodes(mainMethodRef);
-    Assert.assertFalse(mainMethodNodes.isEmpty());
+    assertFalse(mainMethodNodes.isEmpty());
     CGNode mainMethodNode = mainMethodNodes.iterator().next();
     // Trace.println("main IR:");
     // Trace.println(mainMethodNode.getIR());
@@ -71,9 +74,9 @@ public class ClassConstantTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");
     MethodReference hashCodeRef = MethodReference.findOrCreate(classRef, "hashCode", "()I");
     Set<CGNode> hashCodeNodes = cg.getNodes(hashCodeRef);
-    Assert.assertFalse(hashCodeNodes.isEmpty());
+    assertFalse(hashCodeNodes.isEmpty());
 
     // make sure call to hashCode from main
-    Assert.assertTrue(cg.hasEdge(mainMethodNode, hashCodeNodes.iterator().next()));
+    assertTrue(cg.hasEdge(mainMethodNode, hashCodeNodes.iterator().next()));
   }
 }

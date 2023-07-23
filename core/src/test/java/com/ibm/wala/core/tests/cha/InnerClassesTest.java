@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -27,7 +30,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -75,7 +77,7 @@ public class InnerClassesTest extends WalaTestCase {
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass) klass;
-    Assert.assertFalse(s.isInnerClass());
+    assertFalse(s.isInnerClass());
   }
 
   @Test
@@ -86,8 +88,8 @@ public class InnerClassesTest extends WalaTestCase {
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass) klass;
-    Assert.assertTrue(s.isInnerClass());
-    Assert.assertTrue(s.isStaticInnerClass());
+    assertTrue(s.isInnerClass());
+    assertTrue(s.isStaticInnerClass());
   }
 
   @Test
@@ -98,7 +100,7 @@ public class InnerClassesTest extends WalaTestCase {
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass) klass;
-    Assert.assertTrue(s.isInnerClass());
-    Assert.assertFalse(s.isStaticInnerClass());
+    assertTrue(s.isInnerClass());
+    assertFalse(s.isStaticInnerClass());
   }
 }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
@@ -30,7 +32,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
@@ -45,7 +46,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    Assert.assertEquals(0, SlicerUtil.countConditionals(result));
+    assertEquals(0, SlicerUtil.countConditionals(result));
   }
 
   @Test
@@ -58,7 +59,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    Assert.assertEquals(2, SlicerUtil.countConditionals(result));
+    assertEquals(2, SlicerUtil.countConditionals(result));
   }
 
   @Test
@@ -71,7 +72,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    Assert.assertEquals(1, SlicerUtil.countConditionals(result));
+    assertEquals(1, SlicerUtil.countConditionals(result));
   }
 
   private Collection<Statement> slice(

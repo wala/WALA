@@ -11,6 +11,8 @@
 
 package com.ibm.wala.examples.analysis.dataflow;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -37,7 +39,6 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
-import org.junit.Assert;
 
 public class InitializerTest {
 
@@ -95,7 +96,7 @@ public class InitializerTest {
             int next = intIterator.next();
             System.out.println(reachingDefs.getDomain().getMappedObject(next));
           }
-          Assert.assertEquals(3, solution.size());
+          assertEquals(3, solution.size());
         }
       }
     }

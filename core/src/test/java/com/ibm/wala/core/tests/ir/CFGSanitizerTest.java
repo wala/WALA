@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -33,7 +35,6 @@ import com.ibm.wala.util.graph.Graph;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Test integrity of CFGs */
@@ -73,7 +74,7 @@ public class CFGSanitizerTest extends WalaTestCase {
       System.out.println(graph);
       BasicBlock exit = ir.getControlFlowGraph().exit();
       if (!exit.equals(ir.getControlFlowGraph().entry())) {
-        Assert.assertTrue(graph.getPredNodeCount(exit) > 0);
+        assertTrue(graph.getPredNodeCount(exit) > 0);
       }
     }
   }

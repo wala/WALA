@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
@@ -25,7 +27,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -99,7 +100,7 @@ public class TunedRefinementTest extends AbstractPtrTest {
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
-    Assert.assertEquals(1, pointsTo.size());
+    assertEquals(1, pointsTo.size());
   }
 
   @Test

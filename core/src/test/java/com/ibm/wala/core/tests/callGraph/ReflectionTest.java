@@ -10,6 +10,12 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -52,7 +58,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Tests for Call Graph construction */
@@ -106,7 +111,7 @@ public class ReflectionTest extends WalaTestCase {
         continue;
       }
       if (w.toString().contains("Integer")) {
-        Assert.fail(w.toString());
+        fail(w.toString());
       }
     }
   }
@@ -130,7 +135,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "<clinit>", "()V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -165,7 +170,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "()V");
     Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
     succNodes.retainAll(extraneousNodes);
-    Assert.assertTrue(succNodes.isEmpty());
+    assertTrue(succNodes.isEmpty());
   }
 
   /**
@@ -200,7 +205,7 @@ public class ReflectionTest extends WalaTestCase {
             extraneousTR, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
     Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
     succNodes.retainAll(extraneousNodes);
-    Assert.assertTrue(succNodes.isEmpty());
+    assertTrue(succNodes.isEmpty());
   }
 
   /**
@@ -232,7 +237,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "()V");
     Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
     succNodes.retainAll(extraneousNodes);
-    Assert.assertTrue(succNodes.isEmpty());
+    assertTrue(succNodes.isEmpty());
   }
 
   /**
@@ -264,7 +269,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "(I)V");
     Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
     succNodes.retainAll(extraneousNodes);
-    Assert.assertTrue(succNodes.isEmpty());
+    assertTrue(succNodes.isEmpty());
   }
 
   @Test
@@ -312,7 +317,7 @@ public class ReflectionTest extends WalaTestCase {
         }
       }
     }
-    Assert.assertNotNull(filePermConstrNewInstanceNode);
+    assertNotNull(filePermConstrNewInstanceNode);
 
     // Now verify that this node has FilePermission.<init> children
     CGNode filePermInitNode = null;
@@ -326,7 +331,7 @@ public class ReflectionTest extends WalaTestCase {
         break;
       }
     }
-    Assert.assertNotNull(filePermInitNode);
+    assertNotNull(filePermInitNode);
 
     // Furthermore, verify that main has a FilePermission.toString child
     CGNode filePermToStringNode = null;
@@ -337,7 +342,7 @@ public class ReflectionTest extends WalaTestCase {
       }
     }
 
-    Assert.assertNotNull(filePermToStringNode);
+    assertNotNull(filePermToStringNode);
   }
 
   private static Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
@@ -368,7 +373,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -388,7 +393,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -409,7 +414,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
     System.err.println(cg);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -428,7 +433,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Object");
     MethodReference mr = MethodReference.findOrCreate(tr, "wait", "()V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -450,10 +455,10 @@ public class ReflectionTest extends WalaTestCase {
         MethodReference.findOrCreate(
             tr, "m", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.isEmpty());
+    assertTrue(nodes.isEmpty());
   }
 
   /**
@@ -475,10 +480,10 @@ public class ReflectionTest extends WalaTestCase {
         MethodReference.findOrCreate(
             tr, "m", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -499,10 +504,10 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(tr, "s", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.isEmpty());
+    assertTrue(nodes.isEmpty());
   }
 
   /**
@@ -524,16 +529,16 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Object;)V");
     nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.isEmpty());
+    assertTrue(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "<init>", "()V");
     nodes = cg.getNodes(mr);
-    Assert.assertTrue(nodes.isEmpty());
+    assertTrue(nodes.isEmpty());
     mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -553,7 +558,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -573,7 +578,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "t", "(Ljava/lang/Integer;)V");
     CGNode node = cg.getNode(cg.getClassHierarchy().resolveMethod(mr), Everywhere.EVERYWHERE);
-    Assert.assertEquals(0, cg.getSuccNodeCount(node));
+    assertEquals(0, cg.getSuccNodeCount(node));
   }
 
   /**
@@ -593,9 +598,9 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "t", "(Ljava/lang/Integer;)V");
     CGNode node = cg.getNode(cg.getClassHierarchy().resolveMethod(mr), Everywhere.EVERYWHERE);
-    Assert.assertEquals(1, cg.getSuccNodeCount(node));
+    assertEquals(1, cg.getSuccNodeCount(node));
     CGNode succ = cg.getSuccNodes(node).next();
-    Assert.assertEquals(
+    assertEquals(
         "Node: < Primordial, Ljava/lang/Integer, toString()Ljava/lang/String; > Context: Everywhere",
         succ.toString());
   }
@@ -617,7 +622,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /** Test that when analyzing Reflect20, the call graph includes a node for Helper.o. */
@@ -635,7 +640,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(tr, "o", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -657,7 +662,7 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -678,7 +683,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Integer;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -699,7 +704,7 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     MethodReference mr = MethodReference.findOrCreate(tr, "u", "(Ljava/lang/Integer;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertFalse(nodes.isEmpty());
+    assertFalse(nodes.isEmpty());
   }
 
   /**
@@ -729,28 +734,28 @@ public class ReflectionTest extends WalaTestCase {
     TypeReference helperTr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
     IClass helperClass = cha.lookupClass(helperTr);
-    Assert.assertNotNull(helperClass);
+    assertNotNull(helperClass);
 
     TypeReference reflect24Tr =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect24");
     MethodReference mr =
         MethodReference.findOrCreate(reflect24Tr, "doNothing", "(Ljava/lang/Class;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertEquals(1, nodes.size());
+    assertEquals(1, nodes.size());
 
     // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
     Optional<CGNode> firstMatched = nodes.stream().findFirst();
-    Assert.assertTrue(firstMatched.isPresent());
+    assertTrue(firstMatched.isPresent());
     CGNode cgNode = firstMatched.get();
 
     LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
-    Assert.assertEquals(1, pts.size());
+    assertEquals(1, pts.size());
 
     for (InstanceKey mappedObject : pts) {
       // the type corresponding to the 0th parameter should be Helper
-      Assert.assertTrue(mappedObject instanceof ConstantKey);
-      Assert.assertEquals(((ConstantKey<?>) mappedObject).getValue(), helperClass);
+      assertTrue(mappedObject instanceof ConstantKey);
+      assertEquals(((ConstantKey<?>) mappedObject).getValue(), helperClass);
     }
   }
 
@@ -808,27 +813,27 @@ public class ReflectionTest extends WalaTestCase {
     CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     Set<CGNode> cgn;
     cgn = cg.getNodes(mabar);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
     cgn = cg.getNodes(mabaz);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
     cgn = cg.getNodes(mafoo);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
 
     cgn = cg.getNodes(mbbar);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
     cgn = cg.getNodes(mbbaz);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
 
     cgn = cg.getNodes(mcbaz);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
     cgn = cg.getNodes(mcfoo);
-    Assert.assertTrue(cgn.isEmpty());
+    assertTrue(cgn.isEmpty());
 
     cgn = cg.getNodes(mbfoo);
-    Assert.assertEquals(1, cgn.size());
+    assertEquals(1, cgn.size());
 
     cgn = cg.getNodes(mcbar);
-    Assert.assertEquals(1, cgn.size());
+    assertEquals(1, cgn.size());
   }
 
   @Test
@@ -845,12 +850,12 @@ public class ReflectionTest extends WalaTestCase {
     IMethod mainMethod = entrypoints.iterator().next().getMethod();
     List<CGNode> mainCallees =
         Iterator2Collection.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
-    Assert.assertTrue(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
+    assertTrue(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
     options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     mainCallees =
         Iterator2Collection.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
     // getMessage() should _not_ be a callee with reflection handling enabled
-    Assert.assertFalse(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
+    assertFalse(mainCallees.stream().anyMatch(n -> n.toString().contains("getMessage")));
   }
 }

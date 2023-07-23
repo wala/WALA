@@ -1,5 +1,9 @@
 package com.ibm.wala.core.tests.shrike;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrike.shrikeBT.Constants;
@@ -18,7 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -104,7 +107,7 @@ public class FloatingPointsTest extends WalaTestCase {
         (double) getConstantInstructionValue(signature, index, Constants.TYPE_double);
 
     // And finally (and most important) compare the value
-    Assert.assertEquals(newValue, readValue, 0d);
+    assertEquals(newValue, readValue, 0d);
   }
 
   @Test
@@ -148,7 +151,7 @@ public class FloatingPointsTest extends WalaTestCase {
     float readValue = (float) getConstantInstructionValue(signature, index, Constants.TYPE_float);
 
     // And finally (and most important) compare the value
-    Assert.assertEquals(newValue, readValue, 0d);
+    assertEquals(newValue, readValue, 0d);
   }
 
   private void write() throws IllegalStateException, IOException, InvalidClassFileException {
@@ -192,11 +195,11 @@ public class FloatingPointsTest extends WalaTestCase {
     IInstruction instruction = instructions[index];
 
     // Check that the instruction type has not been changed
-    Assert.assertTrue(instruction instanceof ConstantInstruction);
+    assertTrue(instruction instanceof ConstantInstruction);
 
     // The type type should be the same as well
     ConstantInstruction instruction2 = (ConstantInstruction) instruction;
-    Assert.assertTrue(type.contentEquals(instruction2.getType()));
+    assertTrue(type.contentEquals(instruction2.getType()));
 
     return instruction2.getValue();
   }
@@ -214,7 +217,7 @@ public class FloatingPointsTest extends WalaTestCase {
         }
       }
     }
-    Assert.fail("No ConstantInstruction with type '" + type + "' found");
+    fail("No ConstantInstruction with type '" + type + "' found");
     return null;
   }
 
@@ -233,7 +236,7 @@ public class FloatingPointsTest extends WalaTestCase {
         }
       }
     }
-    Assert.fail("Method data not found. Check the signature");
+    fail("Method data not found. Check the signature");
     return null;
   }
 }

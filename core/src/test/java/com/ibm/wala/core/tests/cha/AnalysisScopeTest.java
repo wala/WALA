@@ -1,5 +1,8 @@
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -13,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class AnalysisScopeTest {
@@ -30,7 +32,7 @@ public class AnalysisScopeTest {
     scope.addInputStreamForJarToScope(
         ClassLoaderReference.Application, new FileInputStream(bcelJarPath.toString()));
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Assert.assertNotNull(
+    assertNotNull(
         "couldn't find expected class",
         cha.lookupClass(
             TypeReference.findOrCreate(
@@ -43,11 +45,11 @@ public class AnalysisScopeTest {
         AnalysisScopeReader.instance.readJavaScope(
             "primordial-base.txt", null, AnalysisScopeTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Assert.assertNotNull(
+    assertNotNull(
         "couldn't find expected class",
         cha.lookupClass(
             TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/util/ArrayList")));
-    Assert.assertNull(
+    assertNull(
         "found unexpected class",
         cha.lookupClass(
             TypeReference.findOrCreate(

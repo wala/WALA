@@ -10,11 +10,12 @@
  */
 package com.ibm.wala.core.tests.basic;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFSAllPathsFinder;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class PathFinderTest {
@@ -49,7 +50,7 @@ public class PathFinderTest {
       System.err.println(path);
       count++;
     }
-    Assert.assertEquals(expectedCount, count);
+    assertEquals(expectedCount, count);
   }
 
   private static final String edges1 = "ABBCBDCECFDGDHEIFIGJHJJKIKKL";

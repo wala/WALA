@@ -13,6 +13,10 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstClass;
@@ -59,7 +63,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.jar.JarFile;
-import org.junit.Assert;
 
 public abstract class IRTests {
 
@@ -231,7 +234,7 @@ public abstract class IRTests {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
       for (CGNode cgNode : cg.getNodes(mref)) {
-        Assert.assertTrue(
+        assertTrue(
             "failed for " + this.variableName + " in " + cgNode + "\n" + cgNode.getIR(),
             this.check(cgNode.getMethod(), cgNode.getIR()));
       }
@@ -312,7 +315,7 @@ public abstract class IRTests {
           }
         }
 
-        Assert.assertFalse("cannot find " + at + " in " + cls, false);
+        assertFalse("cannot find " + at + " in " + cls, false);
       }
 
       annot:
@@ -330,7 +333,7 @@ public abstract class IRTests {
               }
             }
 
-            Assert.assertFalse("cannot find " + at, false);
+            assertFalse("cannot find " + at, false);
           }
         }
       }
@@ -442,7 +445,7 @@ public abstract class IRTests {
     }
 
     if (assertReachable) {
-      Assert.assertTrue("unreachable methods: " + unreachable, unreachable.isEmpty());
+      assertTrue("unreachable methods: " + unreachable, unreachable.isEmpty());
     }
   }
 
@@ -495,7 +498,7 @@ public abstract class IRTests {
         try {
           engine.addSystemModule(new JarFileModule(new JarFile(libFile, false)));
         } catch (IOException e) {
-          Assert.fail(e.getMessage());
+          fail(e.getMessage());
         }
       }
     }
@@ -504,7 +507,7 @@ public abstract class IRTests {
     for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
       File f = new File(srcFilePath);
-      Assert.assertTrue("couldn't find " + srcFilePath, f.exists());
+      assertTrue("couldn't find " + srcFilePath, f.exists());
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {

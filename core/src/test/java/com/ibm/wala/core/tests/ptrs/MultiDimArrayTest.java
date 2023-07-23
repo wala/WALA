@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -32,7 +34,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -67,7 +68,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     CGNode node = findDoNothingNode(cg);
     PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     OrdinalSet<InstanceKey> ptsTo = pa.getPointsToSet(pk);
-    Assert.assertEquals(1, ptsTo.size());
+    assertEquals(1, ptsTo.size());
   }
 
   private static final CGNode findDoNothingNode(CallGraph cg) {

@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -35,7 +38,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** test case for nObjBuilder */
@@ -69,7 +71,7 @@ public class ObjectSensitiveTest {
         new LocalPointerKey(doNothing, doNothing.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pa.getPointsToSet(localPointerKey);
 
-    Assert.assertEquals(pts.size(), expectedSize);
+    assertEquals(pts.size(), expectedSize);
   }
 
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> initCallGraph(
@@ -97,10 +99,10 @@ public class ObjectSensitiveTest {
     MethodReference mr =
         MethodReference.findOrCreate(mainClassTr, "doNothing", "(Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    Assert.assertEquals(1, nodes.size());
+    assertEquals(1, nodes.size());
 
     Optional<CGNode> firstMatched = nodes.stream().findFirst();
-    Assert.assertTrue(firstMatched.isPresent());
+    assertTrue(firstMatched.isPresent());
     return firstMatched.get();
   }
 }

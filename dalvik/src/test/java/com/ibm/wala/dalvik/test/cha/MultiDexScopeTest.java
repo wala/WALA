@@ -1,5 +1,8 @@
 package com.ibm.wala.dalvik.test.cha;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 
 import com.ibm.wala.classLoader.IClass;
@@ -41,7 +44,6 @@ import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class MultiDexScopeTest {
@@ -104,7 +106,7 @@ public class MultiDexScopeTest {
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, testAPK);
     cha2 = ClassHierarchyFactory.make(scope2);
 
-    Assert.assertEquals(
+    assertEquals(
         Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
   }
 
@@ -147,8 +149,8 @@ public class MultiDexScopeTest {
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, multidexApk);
     cha2 = ClassHierarchyFactory.make(scope2);
 
-    Assert.assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(5));
-    Assert.assertEquals(
+    assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(5));
+    assertEquals(
         Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
   }
 
@@ -202,13 +204,13 @@ public class MultiDexScopeTest {
 
   public static void findEdge(CallGraph cg, MethodReference callerRef, MethodReference calleeRef) {
     Set<CGNode> callerNodes = cg.getNodes(callerRef);
-    Assert.assertFalse(callerNodes.isEmpty());
+    assertFalse(callerNodes.isEmpty());
     CGNode callerNode = callerNodes.iterator().next();
 
     Set<CGNode> calleeNodes = cg.getNodes(calleeRef);
-    Assert.assertFalse(calleeNodes.isEmpty());
+    assertFalse(calleeNodes.isEmpty());
     CGNode calleeNode = calleeNodes.iterator().next();
-    Assert.assertTrue(cg.hasEdge(callerNode, calleeNode));
+    assertTrue(cg.hasEdge(callerNode, calleeNode));
   }
 
   private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {

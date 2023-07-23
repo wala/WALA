@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -35,7 +38,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Check properties of a call to clone() in RTA */
@@ -75,7 +77,7 @@ public class LambdaTest extends WalaTestCase {
         MethodReference.findOrCreate(
             A, Atom.findOrCreateUnicodeAtom("<init>"), Descriptor.findOrCreateUTF8("()V"));
     Set<CGNode> ctnodes = cg.getNodes(ct);
-    Assert.assertEquals(1, ctnodes.size());
+    assertEquals(1, ctnodes.size());
 
     MethodReference ts =
         MethodReference.findOrCreate(
@@ -83,7 +85,7 @@ public class LambdaTest extends WalaTestCase {
             Atom.findOrCreateUnicodeAtom("toString"),
             Descriptor.findOrCreateUTF8("()Ljava/lang/String;"));
     Set<CGNode> tsnodes = cg.getNodes(ts);
-    Assert.assertEquals(1, tsnodes.size());
+    assertEquals(1, tsnodes.size());
   }
 
   @Test
@@ -121,7 +123,7 @@ public class LambdaTest extends WalaTestCase {
     TypeReference tid1 =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Llambda/SortingExample");
     MethodReference mid1 = MethodReference.findOrCreate(tid1, x, "(I)I");
-    Assert.assertTrue("expect " + x + " node", cg.getNodes(mid1).iterator().hasNext());
+    assertTrue("expect " + x + " node", cg.getNodes(mid1).iterator().hasNext());
     CGNode id1node = cg.getNodes(mid1).iterator().next();
 
     // caller of id1 is dynamic from sortForward, and has 1 compareTo
@@ -132,7 +134,7 @@ public class LambdaTest extends WalaTestCase {
         count++;
       }
     }
-    Assert.assertEquals("expected one call to compareTo", expected, count);
+    assertEquals("expected one call to compareTo", expected, count);
     System.err.println("found " + count + " compareTo calls in " + sfnode);
   }
 
@@ -159,15 +161,15 @@ public class LambdaTest extends WalaTestCase {
                 Descriptor.findOrCreateUTF8("()V"));
 
     System.out.println(cg);
-    Assert.assertEquals(
+    assertEquals(
         "expected C1.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C1")).size());
-    Assert.assertEquals(
+    assertEquals(
         "expected C2.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C2")).size());
-    Assert.assertEquals(
+    assertEquals(
         "expected C3.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C3")).size());
-    Assert.assertEquals(
+    assertEquals(
         "expected C4.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C4")).size());
-    Assert.assertEquals(
+    assertEquals(
         "expected C5.target() to *not* be reachable",
         0,
         cg.getNodes(getTargetRef.apply("C5")).size());
@@ -199,18 +201,17 @@ public class LambdaTest extends WalaTestCase {
     Consumer<String> checkCalledFromOneSite =
         (klassName) -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
-          Assert.assertEquals(
-              "expected " + klassName + ".target() to be reachable", 1, nodes.size());
+          assertEquals("expected " + klassName + ".target() to be reachable", 1, nodes.size());
           CGNode node = nodes.iterator().next();
           List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
-          Assert.assertEquals(
+          assertEquals(
               "expected " + klassName + ".target() to be invoked from one calling method",
               1,
               predNodes.size());
           CGNode pred = predNodes.get(0);
           List<CallSiteReference> sites =
               Iterator2Collection.toList(cg.getPossibleSites(pred, node));
-          Assert.assertEquals(
+          assertEquals(
               "expected " + klassName + ".target() to be invoked from one call site",
               1,
               sites.size());
@@ -238,6 +239,6 @@ public class LambdaTest extends WalaTestCase {
     // shouldn't crash
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     // exceedingly unlikely to fail, but ensures that optimizer won't remove buildZeroCFA call
-    Assert.assertTrue(cg.getNumberOfNodes() > 0);
+    assertTrue(cg.getNumberOfNodes() > 0);
   }
 }

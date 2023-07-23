@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.basic;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFilter;
@@ -28,7 +30,6 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Simple Regression test for a graph-based dataflow problem. */
@@ -59,7 +60,7 @@ public class GraphDataflowTest extends WalaTestCase {
       System.err.println("Uh oh.");
       System.err.println(expectedStringNodeEdge());
     }
-    Assert.assertEquals(expectedStringNodeEdge(), result);
+    assertEquals(expectedStringNodeEdge(), result);
   }
 
   @Test
@@ -67,7 +68,7 @@ public class GraphDataflowTest extends WalaTestCase {
     Graph<String> G = buildGraph();
     String result = solveNodeOnly(G);
     System.err.println(result);
-    Assert.assertEquals(expectedStringNodeOnly(), result);
+    assertEquals(expectedStringNodeOnly(), result);
   }
 
   /** @return the expected dataflow result as a String */

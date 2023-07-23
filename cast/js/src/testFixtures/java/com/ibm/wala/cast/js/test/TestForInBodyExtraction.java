@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ClosureExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ForInBodyExtractionPolicy;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -21,7 +23,6 @@ import com.ibm.wala.util.io.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
-import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public abstract class TestForInBodyExtraction {
       expected = new CAstDumper().dump(parseJS(tmp, ast));
       expected = eraseGeneratedNames(expected);
 
-      Assert.assertEquals(testName, expected, actual);
+      assertEquals(testName, expected, actual);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ComparisonFailure e) {
