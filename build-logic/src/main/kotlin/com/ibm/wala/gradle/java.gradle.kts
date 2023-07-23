@@ -48,6 +48,7 @@ dependencies {
   testImplementation(platform(findLibrary("junit-bom")))
   testImplementation(findLibrary("junit"))
   testImplementation(findLibrary("junit-jupiter-api"))
+  testRuntimeOnly(findLibrary("junit-jupiter-engine"))
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
 
