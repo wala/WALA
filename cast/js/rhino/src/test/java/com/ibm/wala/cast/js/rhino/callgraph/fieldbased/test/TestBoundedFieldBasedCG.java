@@ -14,7 +14,7 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
   private static final Object[][] assertionsForBound1JS =

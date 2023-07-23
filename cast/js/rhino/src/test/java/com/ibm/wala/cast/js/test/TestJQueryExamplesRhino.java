@@ -12,11 +12,11 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public class TestJQueryExamplesRhino extends TestJQueryExamples {
 
-  @Before
+  @BeforeEach
   public void setUp() {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }

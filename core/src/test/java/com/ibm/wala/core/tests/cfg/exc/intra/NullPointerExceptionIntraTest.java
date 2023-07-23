@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.cfg.exc.intra;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
@@ -45,10 +45,10 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import java.util.Collection;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test validity and precision of intra-procedurel NullpointerException-Analysis {@link
@@ -60,7 +60,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
 
   private static ClassHierarchy cha;
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
 
     scope =
@@ -77,7 +77,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     Warnings.clear();
     scope = null;
@@ -199,7 +199,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
     }
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testDynamicParam2() throws UnsoundGraphException, CancelException {
     MethodReference mr =

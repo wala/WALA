@@ -18,9 +18,9 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape {
 
@@ -28,12 +28,12 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
 
   private ExtractingToPredictableFileNames predictable;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     predictable = new ExtractingToPredictableFileNames();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     predictable.close();
   }

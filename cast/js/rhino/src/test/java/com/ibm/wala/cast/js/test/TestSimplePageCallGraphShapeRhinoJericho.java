@@ -19,7 +19,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCallGraphShapeRhino {
 

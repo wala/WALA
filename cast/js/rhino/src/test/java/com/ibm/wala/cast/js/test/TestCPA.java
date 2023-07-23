@@ -19,12 +19,12 @@ import com.ibm.wala.ipa.callgraph.propagation.CPAContextSelector;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestCPA {
 
-  @Before
+  @BeforeEach
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());

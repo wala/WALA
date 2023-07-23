@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.ide.jsdt.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine;
@@ -36,8 +36,8 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractJSProjectScopeTest {
 
@@ -52,7 +52,7 @@ public abstract class AbstractJSProjectScopeTest {
     IJavaScriptProject p =
         JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     System.err.println(p);
-    assertNotNull("cannot find project", p);
+    assertNotNull(p, "cannot find project");
   }
 
   @Test
@@ -66,8 +66,8 @@ public abstract class AbstractJSProjectScopeTest {
                 new CAstAnalysisScope(
                     JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
-    assertNotNull("cannot make scope", s);
-    assertFalse("cannot find files", s.getModules(JavaScriptTypes.jsLoader).isEmpty());
+    assertNotNull(s, "cannot make scope");
+    assertFalse(s.getModules(JavaScriptTypes.jsLoader).isEmpty(), "cannot find files");
   }
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p)
@@ -75,7 +75,7 @@ public abstract class AbstractJSProjectScopeTest {
     return JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String, Plugin>>emptySet());
   }
 
-  @Ignore("works for me on Eclipse Luna, but I cannot make it work with maven")
+  @Disabled("works for me on Eclipse Luna, but I cannot make it work with maven")
   @Test
   public void testParsing() throws IOException, CoreException {
     Set<ModuleEntry> mes = JsdtUtil.getJavaScriptCodeFromProject(project.projectName);
@@ -83,8 +83,8 @@ public abstract class AbstractJSProjectScopeTest {
 
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
-    assertTrue("cannot find any function calls", info.calls.size() > 0);
-    assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes() > 0);
+    assertTrue(info.calls.size() > 0, "cannot find any function calls");
+    assertTrue(info.cg.getNumberOfNodes() > 0, "cannot find any cg nodes");
   }
 
   @Test

@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.cfg.exc.inter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.cfg.exc.InterprocAnalysisResult;
@@ -47,9 +47,9 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test validity and precision of inter-procedural NullpointerException-Analysis {@link
@@ -65,7 +65,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
   private static IAnalysisCacheView cache;
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
     cache = new AnalysisCacheImpl();
     scope =
@@ -88,7 +88,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     }
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     Warnings.clear();
     scope = null;

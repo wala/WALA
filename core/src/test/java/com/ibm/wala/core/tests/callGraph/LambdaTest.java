@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Check properties of a call to clone() in RTA */
 public class LambdaTest extends WalaTestCase {
@@ -123,7 +123,7 @@ public class LambdaTest extends WalaTestCase {
     TypeReference tid1 =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Llambda/SortingExample");
     MethodReference mid1 = MethodReference.findOrCreate(tid1, x, "(I)I");
-    assertTrue("expect " + x + " node", cg.getNodes(mid1).iterator().hasNext());
+    assertTrue(cg.getNodes(mid1).iterator().hasNext(), "expect " + x + " node");
     CGNode id1node = cg.getNodes(mid1).iterator().next();
 
     // caller of id1 is dynamic from sortForward, and has 1 compareTo
@@ -134,7 +134,7 @@ public class LambdaTest extends WalaTestCase {
         count++;
       }
     }
-    assertEquals("expected one call to compareTo", expected, count);
+    assertEquals(expected, count, "expected one call to compareTo");
     System.err.println("found " + count + " compareTo calls in " + sfnode);
   }
 
@@ -161,17 +161,17 @@ public class LambdaTest extends WalaTestCase {
                 Descriptor.findOrCreateUTF8("()V"));
 
     assertEquals(
-        "expected C1.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C1")).size());
+        1, cg.getNodes(getTargetRef.apply("C1")).size(), "expected C1.target() to be reachable");
     assertEquals(
-        "expected C2.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C2")).size());
+        1, cg.getNodes(getTargetRef.apply("C2")).size(), "expected C2.target() to be reachable");
     assertEquals(
-        "expected C3.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C3")).size());
+        1, cg.getNodes(getTargetRef.apply("C3")).size(), "expected C3.target() to be reachable");
     assertEquals(
-        "expected C4.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C4")).size());
+        1, cg.getNodes(getTargetRef.apply("C4")).size(), "expected C4.target() to be reachable");
     assertEquals(
-        "expected C5.target() to *not* be reachable",
         0,
-        cg.getNodes(getTargetRef.apply("C5")).size());
+        cg.getNodes(getTargetRef.apply("C5")).size(),
+        "expected C5.target() to *not* be reachable");
   }
 
   @Test
@@ -199,20 +199,20 @@ public class LambdaTest extends WalaTestCase {
     Consumer<String> checkCalledFromOneSite =
         (klassName) -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
-          assertEquals("expected " + klassName + ".target() to be reachable", 1, nodes.size());
+          assertEquals(1, nodes.size(), "expected " + klassName + ".target() to be reachable");
           CGNode node = nodes.iterator().next();
           List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
           assertEquals(
-              "expected " + klassName + ".target() to be invoked from one calling method",
               1,
-              predNodes.size());
+              predNodes.size(),
+              "expected " + klassName + ".target() to be invoked from one calling method");
           CGNode pred = predNodes.get(0);
           List<CallSiteReference> sites =
               Iterator2Collection.toList(cg.getPossibleSites(pred, node));
           assertEquals(
-              "expected " + klassName + ".target() to be invoked from one call site",
               1,
-              sites.size());
+              sites.size(),
+              "expected " + klassName + ".target() to be invoked from one call site");
         };
 
     checkCalledFromOneSite.accept("C1");

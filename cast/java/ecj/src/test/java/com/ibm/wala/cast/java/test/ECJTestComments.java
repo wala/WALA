@@ -26,7 +26,7 @@ import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ECJTestComments extends IRTests {
 

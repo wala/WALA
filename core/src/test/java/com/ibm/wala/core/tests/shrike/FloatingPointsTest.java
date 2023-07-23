@@ -1,8 +1,8 @@
 package com.ibm.wala.core.tests.shrike;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
@@ -22,27 +22,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
 public class FloatingPointsTest extends WalaTestCase {
   private final String klass = "shrike/FloatingPoints";
 
-  private final String testJarLocation;
+  private final String testJarLocation =
+      getClasspathEntry(String.join(File.separator, "classes", "java", "testSubjects"));
   private OfflineInstrumenter instrumenter;
   private Path instrumentedJarLocation;
   private List<ClassInstrumenter> classInstrumenters;
 
-  protected FloatingPointsTest(String testJarLocation) {
-    this.testJarLocation = testJarLocation;
-  }
+  public FloatingPointsTest() {}
 
-  public FloatingPointsTest() {
-    this(getClasspathEntry(String.join(File.separator, "classes", "java", "testSubjects")));
-  }
-
-  @Before
+  @BeforeEach
   public void setOfflineInstrumenter() throws IOException {
     // Create a temporary file for the shrike instrumented output
     instrumentedJarLocation = Files.createTempFile("wala-test", ".jar");

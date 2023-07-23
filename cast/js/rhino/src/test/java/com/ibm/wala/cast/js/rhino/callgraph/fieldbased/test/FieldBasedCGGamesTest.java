@@ -1,17 +1,16 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.test.RequiresInternetTests;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URL;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(RequiresInternetTests.class)
+@Tag("requires-Internet")
 public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
 
   @Test
@@ -20,21 +19,21 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     runTest(url, new Object[][] {}, BuilderType.OPTIMISTIC);
   }
 
-  @Ignore("seems to break with http issues")
+  @Disabled("seems to break with http issues")
   @Test
   public void testBeslimed() throws IOException, WalaException, Error, CancelException {
     URL url = new URL("http://www.markus-inger.de/test/game.php");
     runTest(url, new Object[][] {}, BuilderType.OPTIMISTIC);
   }
 
-  @Ignore("seems to break with http issues")
+  @Disabled("seems to break with http issues")
   @Test
   public void testDiggAttack() throws IOException, WalaException, Error, CancelException {
     URL url = new URL("http://www.pixastic.com/labs/digg_attack/");
     runTest(url, new Object[][] {}, BuilderType.OPTIMISTIC);
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testRiverRaider() throws IOException, WalaException, Error, CancelException {
     URL url =
@@ -43,7 +42,7 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     runTest(url, new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
-  @Ignore("fails with \"timed out\" CancelException")
+  @Disabled("fails with \"timed out\" CancelException")
   @Test
   public void testSolitaire() throws IOException, WalaException, Error, CancelException {
     URL url = new URL("http://www.inmensia.com/files/solitaire1.0.html");

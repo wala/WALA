@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
@@ -32,7 +32,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     super();
   }
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
   }

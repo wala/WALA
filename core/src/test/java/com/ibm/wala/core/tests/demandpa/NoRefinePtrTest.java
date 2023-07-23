@@ -40,7 +40,7 @@ package com.ibm.wala.core.tests.demandpa;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Note that in this test we still do refinement of the array contents pseudo-field, to avoid

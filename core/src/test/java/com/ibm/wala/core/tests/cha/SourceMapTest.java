@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClass;
@@ -24,7 +24,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** A test of support for source file mapping */
 public class SourceMapTest extends WalaTestCase {
@@ -43,7 +43,7 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
-    assertNotNull("failed to load " + t, klass);
+    assertNotNull(klass, "failed to load " + t);
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
     assertNotNull(sourceFile);

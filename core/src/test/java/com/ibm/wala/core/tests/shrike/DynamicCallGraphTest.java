@@ -25,7 +25,7 @@ import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 

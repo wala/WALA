@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.classLoader.IMethod;
@@ -35,7 +35,7 @@ import com.ibm.wala.util.graph.Graph;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Test integrity of CFGs */
 public class CFGSanitizerTest extends WalaTestCase {

@@ -13,9 +13,9 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -235,8 +235,8 @@ public abstract class IRTests {
 
       for (CGNode cgNode : cg.getNodes(mref)) {
         assertTrue(
-            "failed for " + this.variableName + " in " + cgNode + "\n" + cgNode.getIR(),
-            this.check(cgNode.getMethod(), cgNode.getIR()));
+            this.check(cgNode.getMethod(), cgNode.getIR()),
+            "failed for " + this.variableName + " in " + cgNode + "\n" + cgNode.getIR());
       }
     }
 
@@ -315,7 +315,7 @@ public abstract class IRTests {
           }
         }
 
-        assertFalse("cannot find " + at + " in " + cls, false);
+        assertFalse(false, "cannot find " + at + " in " + cls);
       }
 
       annot:
@@ -333,7 +333,7 @@ public abstract class IRTests {
               }
             }
 
-            assertFalse("cannot find " + at, false);
+            assertFalse(false, "cannot find " + at);
           }
         }
       }
@@ -445,7 +445,7 @@ public abstract class IRTests {
     }
 
     if (assertReachable) {
-      assertTrue("unreachable methods: " + unreachable, unreachable.isEmpty());
+      assertTrue(unreachable.isEmpty(), "unreachable methods: " + unreachable);
     }
   }
 
@@ -507,7 +507,7 @@ public abstract class IRTests {
     for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
       File f = new File(srcFilePath);
-      assertTrue("couldn't find " + srcFilePath, f.exists());
+      assertTrue(f.exists(), "couldn't find " + srcFilePath);
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {

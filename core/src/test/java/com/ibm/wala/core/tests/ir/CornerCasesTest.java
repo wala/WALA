@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
@@ -35,7 +35,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * tests for weird corner cases, such as when the input program doesn't verify

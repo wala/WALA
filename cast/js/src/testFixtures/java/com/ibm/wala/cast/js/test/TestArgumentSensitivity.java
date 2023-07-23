@@ -28,7 +28,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
 

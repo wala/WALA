@@ -11,7 +11,7 @@
 
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ClosureExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ForInBodyExtractionPolicy;
@@ -24,8 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import org.junit.ComparisonFailure;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestForInBodyExtraction {
   public void testRewriter(String in, String out) {
@@ -67,7 +67,7 @@ public abstract class TestForInBodyExtraction {
       expected = new CAstDumper().dump(parseJS(tmp, ast));
       expected = eraseGeneratedNames(expected);
 
-      assertEquals(testName, expected, actual);
+      assertEquals(expected, actual, testName);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ComparisonFailure e) {
@@ -192,8 +192,8 @@ public abstract class TestForInBodyExtraction {
 
   // example where loop variable is referenced after the loop
   // this isn't currently handled, hence the test fails
+  @Disabled
   @Test
-  @Ignore
   public void test7() {
     testRewriter(
         "function extend(dest, src) {"
@@ -365,8 +365,8 @@ public abstract class TestForInBodyExtraction {
   // an example with a var decl
   // this test fails due to a trivial difference between transformed and expected CAst that isn't
   // semantically relevant
+  @Disabled
   @Test
-  @Ignore
   public void test14() {
     testRewriter(
         "x = 23;"

@@ -3,7 +3,7 @@ package com.ibm.wala.cast.js.test;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,8 +19,8 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestFlowGraphJSON {
 
@@ -28,7 +28,7 @@ public class TestFlowGraphJSON {
 
   private Map<String, String[]> parsedJSON;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     parsedJSON = getParsedFlowGraphJSON(SCRIPT);
   }

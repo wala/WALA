@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -32,7 +32,7 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import java.io.IOException;
 import java.util.Iterator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that the SSA-numbering of variables in the IR is deterministic.
@@ -60,9 +60,9 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private IR doMethod(MethodReference method) {
     IAnalysisCacheView cache = makeAnalysisCache();
-    assertNotNull("method not found", method);
+    assertNotNull(method, "method not found");
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull("imethod not found", imethod);
+    assertNotNull(imethod, "imethod not found");
     IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.clear();
 

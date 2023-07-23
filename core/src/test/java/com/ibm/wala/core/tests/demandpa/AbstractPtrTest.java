@@ -37,7 +37,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -82,7 +82,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.AfterClass;
+import org.junit.jupiter.api.AfterAll;
 
 public abstract class AbstractPtrTest {
 
@@ -270,7 +270,7 @@ public abstract class AbstractPtrTest {
     return cachedScope;
   }
 
-  @AfterClass
+  @AfterAll
   public static void cleanup() {
     cachedScope = null;
     cachedCHA = null;

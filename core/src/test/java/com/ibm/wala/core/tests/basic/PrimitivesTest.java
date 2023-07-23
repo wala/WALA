@@ -10,12 +10,12 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
@@ -57,7 +57,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** JUnit tests for some primitive operations. */
 @SuppressWarnings("UnnecessaryBoxing")
@@ -863,23 +863,23 @@ public class PrimitivesTest extends WalaTestCase {
     int SIZE = 10000;
     IntegerUnionFind uf = new IntegerUnionFind(SIZE);
     int count = countEquivalenceClasses(uf);
-    assertEquals("Got count " + count, count, SIZE);
+    assertEquals(count, SIZE, "Got count " + count);
 
     uf.union(3, 7);
     assertEquals(uf.find(3), uf.find(7));
-    assertTrue("Got uf.find(3)=" + uf.find(3), uf.find(3) == 3 || uf.find(3) == 7);
+    assertTrue(uf.find(3) == 3 || uf.find(3) == 7, "Got uf.find(3)=" + uf.find(3));
 
     uf.union(7, SIZE - 1);
     assertEquals(uf.find(3), uf.find(SIZE - 1));
     assertTrue(
-        "Got uf.find(3)=" + uf.find(3),
-        uf.find(3) == 3 || uf.find(3) == 7 || uf.find(3) == SIZE - 1);
+        uf.find(3) == 3 || uf.find(3) == 7 || uf.find(3) == SIZE - 1,
+        "Got uf.find(3)=" + uf.find(3));
 
     for (int i = 0; i < SIZE - 1; i++) {
       uf.union(i, i + 1);
     }
     count = countEquivalenceClasses(uf);
-    assertEquals("Got count " + count, 1, count);
+    assertEquals(1, count, "Got count " + count);
 
     uf = new IntegerUnionFind(SIZE);
     for (int i = 0; i < SIZE; i++) {
@@ -890,7 +890,7 @@ public class PrimitivesTest extends WalaTestCase {
       }
     }
     count = countEquivalenceClasses(uf);
-    assertEquals("Got count " + count, 2, count);
+    assertEquals(2, count, "Got count " + count);
   }
 
   private static int countEquivalenceClasses(IntegerUnionFind uf) {
@@ -936,7 +936,7 @@ public class PrimitivesTest extends WalaTestCase {
     // a reasonable size?
     bv.set(55);
 
-    assertEquals("bv.max() is " + bv.max(), 55, bv.max());
+    assertEquals(55, bv.max(), "bv.max() is " + bv.max());
     assertTrue(bv.get(55));
 
     bv.set(59);
@@ -955,7 +955,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     bv.set(77);
 
-    assertEquals("bv.max() is " + bv.max(), 77, bv.max());
+    assertEquals(77, bv.max(), "bv.max() is " + bv.max());
     {
       boolean[] gets = new boolean[] {false, true, true, true};
       int[] bits = new int[] {0, 55, 59, 77};
@@ -966,7 +966,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     bv.set(3);
-    assertEquals("bv.max() is " + bv.max(), 77, bv.max());
+    assertEquals(77, bv.max(), "bv.max() is " + bv.max());
     {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 3, 55, 59, 77};
@@ -1008,12 +1008,12 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(100);
     v1.set(101);
     v1.set(102);
-    assertEquals("v1.max() is " + v1.max(), 102, v1.max());
+    assertEquals(102, v1.max(), "v1.max() is " + v1.max());
 
     v2.set(200);
     v2.set(201);
     v2.set(202);
-    assertEquals("v2.max() is " + v2.max(), 202, v2.max());
+    assertEquals(202, v2.max(), "v2.max() is " + v2.max());
 
     assertTrue(v1.intersectionEmpty(v2));
     assertTrue(v2.intersectionEmpty(v1));
@@ -1021,9 +1021,9 @@ public class PrimitivesTest extends WalaTestCase {
     v1.or(v2);
 
     System.err.println("v1 = " + v1 + ", v2 = " + v2);
-    assertFalse("v1 = " + v1 + ", v2 = " + v2, v1.intersectionEmpty(v2));
-    assertFalse("v1 = " + v1 + ", v2 = " + v2, v2.intersectionEmpty(v1));
-    assertEquals("v1.max() is " + v1.max(), 202, v1.max());
+    assertFalse(v1.intersectionEmpty(v2), "v1 = " + v1 + ", v2 = " + v2);
+    assertFalse(v2.intersectionEmpty(v1), "v1 = " + v1 + ", v2 = " + v2);
+    assertEquals(202, v1.max(), "v1.max() is " + v1.max());
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
@@ -1043,16 +1043,16 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(103);
     v1.set(104);
     v1.set(105);
-    assertEquals("v1.max() is " + v1.max(), 105, v1.max());
+    assertEquals(105, v1.max(), "v1.max() is " + v1.max());
 
     v2.set(103);
     v2.set(104);
     v2.set(200);
     v2.set(201);
-    assertEquals("v2.max() is " + v2.max(), 201, v2.max());
+    assertEquals(201, v2.max(), "v2.max() is " + v2.max());
 
     v1.and(v2);
-    assertEquals("v1.max() is " + v1.max(), 104, v1.max());
+    assertEquals(104, v1.max(), "v1.max() is " + v1.max());
 
     {
       boolean[] gets = new boolean[] {false, true, true};
@@ -1067,7 +1067,7 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(101);
     v1.set(102);
     v1.set(105);
-    assertEquals("v1.max() is " + v1.max(), 105, v1.max());
+    assertEquals(105, v1.max(), "v1.max() is " + v1.max());
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};

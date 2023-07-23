@@ -11,8 +11,8 @@
 
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationSummary;
@@ -32,8 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestCorrelatedPairExtraction {
   // set to "true" to use JUnit's assertEquals to check whether a test case passed;
@@ -81,7 +81,7 @@ public abstract class TestCorrelatedPairExtraction {
       FileUtil.writeFile(new File("build/actual.dump"), actual);
 
       if (ASSERT_EQUALS) {
-        assertEquals(testName, expected, actual);
+        assertEquals(expected, actual, testName);
       }
 
     } catch (IOException | ClassHierarchyException e) {
@@ -137,8 +137,8 @@ public abstract class TestCorrelatedPairExtraction {
 
   // example from the paper, but without var decl
   // currently fails because the loop index is a global variable
+  @Disabled
   @Test
-  @Ignore
   public void test3() {
     testRewriter(
         "function extend(dest, src) {\n" + "  for(p in src)\n" + "    dest[p] = src[p];\n" + "}",
@@ -210,8 +210,8 @@ public abstract class TestCorrelatedPairExtraction {
 
   // example where loop variable is referenced after the loop
   // currently fails because the check is not implemented yet
+  @Disabled
   @Test
-  @Ignore
   public void test7() {
     testRewriter(
         "function extend(dest, src) {\n"
@@ -243,8 +243,8 @@ public abstract class TestCorrelatedPairExtraction {
   // another example with "this"
   // fails since variables from enclosing functions are no longer in SSA form, hence no correlation
   // is found
+  @Disabled
   @Test
-  @Ignore
   public void test9() {
     testRewriter(
         "function defglobals(globals) {\n"
@@ -521,8 +521,8 @@ public abstract class TestCorrelatedPairExtraction {
   }
 
   // fails due to a missing LOCAL_SCOPE node
+  @Disabled
   @Test
-  @Ignore
   public void test20() {
     testRewriter(
         "function every(object, fn, bind) {\n"

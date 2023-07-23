@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.examples.analysis.dataflow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -53,9 +53,9 @@ import com.ibm.wala.util.intset.IntSet;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /** Tests of various flow analysis engines. */
 public class DataflowTest extends WalaTestCase {
@@ -81,7 +81,7 @@ public class DataflowTest extends WalaTestCase {
           + "java\\/security\\/.*\n"
           + "";
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
 
     scope =
@@ -101,7 +101,7 @@ public class DataflowTest extends WalaTestCase {
    *
    * @see junit.framework.TestCase#tearDown()
    */
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     scope = null;
     cha = null;

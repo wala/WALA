@@ -12,11 +12,11 @@ package com.ibm.wala.util.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.impl.BasicGraph;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for {@link com.ibm.wala.util.graph.impl.BasicGraph}. */
 public class BasicGraphTest {

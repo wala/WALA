@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -30,9 +30,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import java.util.Collection;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /** Test ClassHierarchy.getPossibleTargets */
 public class GetTargetsTest extends WalaTestCase {
@@ -46,7 +46,7 @@ public class GetTargetsTest extends WalaTestCase {
     justThisTest(GetTargetsTest.class);
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
 
     scope =
@@ -69,7 +69,7 @@ public class GetTargetsTest extends WalaTestCase {
    *
    * @see junit.framework.TestCase#tearDown()
    */
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     scope = null;
     cha = null;

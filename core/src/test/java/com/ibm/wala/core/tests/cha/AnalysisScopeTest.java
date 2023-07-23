@@ -1,7 +1,7 @@
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AnalysisScopeTest {
 
@@ -33,10 +33,10 @@ public class AnalysisScopeTest {
         ClassLoaderReference.Application, new FileInputStream(bcelJarPath.toString()));
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     assertNotNull(
-        "couldn't find expected class",
         cha.lookupClass(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")));
+                ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")),
+        "couldn't find expected class");
   }
 
   @Test
@@ -46,13 +46,13 @@ public class AnalysisScopeTest {
             "primordial-base.txt", null, AnalysisScopeTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     assertNotNull(
-        "couldn't find expected class",
         cha.lookupClass(
-            TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/util/ArrayList")));
+            TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/util/ArrayList")),
+        "couldn't find expected class");
     assertNull(
-        "found unexpected class",
         cha.lookupClass(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")));
+                ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")),
+        "found unexpected class");
   }
 }

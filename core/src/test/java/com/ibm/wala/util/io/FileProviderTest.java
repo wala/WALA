@@ -13,13 +13,13 @@ package com.ibm.wala.util.io;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesPattern;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FileProviderTest {
 

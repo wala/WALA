@@ -12,7 +12,7 @@ package com.ibm.wala.core.tests.basic;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.intset.OrdinalSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** JUnit tests for some {@link OrdinalSet} operations. */
 public class OrdinalSetTest extends WalaTestCase {

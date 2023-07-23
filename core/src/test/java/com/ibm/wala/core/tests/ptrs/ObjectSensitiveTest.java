@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -38,7 +38,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** test case for nObjBuilder */
 public class ObjectSensitiveTest {

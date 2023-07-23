@@ -37,7 +37,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
@@ -58,8 +58,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class ContextSensitiveTest extends AbstractPtrTest {
 
@@ -93,7 +93,7 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     doPointsToSizeTest(TestInfo.TEST_HASHTABLE_ENUM, 2);
   }
 
-  @Ignore(
+  @Disabled(
       "support for this combination of context sensitivity and on-the-fly call graph refinement is not yet implemented")
   @Test
   public void testOnTheFlyCS()
@@ -172,7 +172,7 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 1);
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testArrayList()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

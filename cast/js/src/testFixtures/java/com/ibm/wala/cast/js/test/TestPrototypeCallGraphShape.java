@@ -15,14 +15,14 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestPrototypeCallGraphShape extends TestJSCallGraphShape {
 
   private static final Object[][] assertionsForPrototype = new Object[][] {};
 
-  @Ignore("reminder that this no longer works with correlation tracking")
+  @Disabled("reminder that this no longer works with correlation tracking")
   @Test
   public void testPrototype() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/prototype.html");

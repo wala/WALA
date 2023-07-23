@@ -16,14 +16,14 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URL;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
 
   private static final Object[][] assertionsForSwineFlu = new Object[][] {};
 
-  @Ignore("not terminating; Julian, take a look?")
+  @Disabled("not terminating; Julian, take a look?")
   @Test
   public void testSwineFlu()
       throws IOException, IllegalArgumentException, CancelException, WalaException {

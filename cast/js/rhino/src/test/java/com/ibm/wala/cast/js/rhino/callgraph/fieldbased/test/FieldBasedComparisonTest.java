@@ -1,12 +1,14 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.test.ExtractingToPredictableFileNames;
 import com.ibm.wala.cast.js.test.TestSimplePageCallGraphShape;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
@@ -17,12 +19,15 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
     }
   }
 
-  @Test(expected = AssertionError.class)
-  public void testSkeletonPessimistic() throws WalaException, Error, CancelException {
-    test(
-        "pages/skeleton.html",
-        TestSimplePageCallGraphShape.assertionsForSkeleton,
-        BuilderType.PESSIMISTIC);
+  @Test
+  public void testSkeletonPessimistic() {
+    assertThrows(
+        AssertionError.class,
+        () ->
+            test(
+                "pages/skeleton.html",
+                TestSimplePageCallGraphShape.assertionsForSkeleton,
+                BuilderType.PESSIMISTIC));
   }
 
   @Test
@@ -41,12 +46,15 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 
-  @Test(expected = AssertionError.class)
-  public void testSkeleton2Pessimistic() throws WalaException, Error, CancelException {
-    test(
-        "pages/skeleton2.html",
-        TestSimplePageCallGraphShape.assertionsForSkeleton2,
-        BuilderType.PESSIMISTIC);
+  @Test
+  public void testSkeleton2Pessimistic() {
+    assertThrows(
+        AssertionError.class,
+        () ->
+            test(
+                "pages/skeleton2.html",
+                TestSimplePageCallGraphShape.assertionsForSkeleton2,
+                BuilderType.PESSIMISTIC));
   }
 
   @Test
