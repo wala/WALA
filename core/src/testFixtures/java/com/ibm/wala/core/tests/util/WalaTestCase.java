@@ -10,18 +10,23 @@
  */
 package com.ibm.wala.core.tests.util;
 
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import java.io.File;
+import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.JUnitCore;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 
 /** Simple extension to JUnit test case. */
 public abstract class WalaTestCase {
@@ -62,7 +67,12 @@ public abstract class WalaTestCase {
    * test.
    */
   protected static void justThisTest(Class<?> testClass) {
-    JUnitCore.runClasses(testClass);
+    final var listener = new SummaryGeneratingListener();
+    LauncherFactory.create()
+        .execute(
+            LauncherDiscoveryRequestBuilder.request().selectors(selectClass(testClass)).build(),
+            listener);
+    listener.getSummary().printFailuresTo(new PrintWriter(System.err));
   }
 
   protected static String getClasspathEntry(String elt) {
