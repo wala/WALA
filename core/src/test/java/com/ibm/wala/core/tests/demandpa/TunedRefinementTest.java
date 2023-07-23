@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
@@ -27,8 +27,8 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TunedRefinementTest extends AbstractPtrTest {
 
@@ -139,7 +139,7 @@ public class TunedRefinementTest extends AbstractPtrTest {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 1);
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testArrayList()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class FloydWarshallTest extends WalaTestCase {
 

@@ -12,7 +12,7 @@ package com.ibm.wala.cast.java.test;
 
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class JLexTest extends IRTests {
 

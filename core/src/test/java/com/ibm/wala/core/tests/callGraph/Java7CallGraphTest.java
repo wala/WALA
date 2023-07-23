@@ -11,7 +11,7 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.classLoader.Language;
@@ -36,7 +36,7 @@ import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.jar.JarFile;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 

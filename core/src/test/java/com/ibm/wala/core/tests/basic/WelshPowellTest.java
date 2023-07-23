@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -22,7 +22,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumberedEdges;
 import com.ibm.wala.util.graph.traverse.WelshPowell;
 import com.ibm.wala.util.graph.traverse.WelshPowell.ColoredVertices;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class WelshPowellTest {
 
@@ -33,16 +33,16 @@ public class WelshPowellTest {
           continue;
         }
         assertTrue(
-            n + " and succ: " + succ + " have same color: " + colors.get(n),
-            colors.get(n).intValue() != colors.get(succ).intValue());
+            colors.get(n).intValue() != colors.get(succ).intValue(),
+            n + " and succ: " + succ + " have same color: " + colors.get(n));
       }
       for (T pred : Iterator2Iterable.make(G.getPredNodes(n))) {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(pred))) {
           continue;
         }
         assertTrue(
-            n + " and pred: " + pred + " have same color:" + colors.get(n),
-            colors.get(n).intValue() != colors.get(pred).intValue());
+            colors.get(n).intValue() != colors.get(pred).intValue(),
+            n + " and pred: " + pred + " have same color:" + colors.get(n));
       }
     }
   }

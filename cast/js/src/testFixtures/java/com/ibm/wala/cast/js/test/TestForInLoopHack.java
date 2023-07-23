@@ -21,13 +21,13 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URL;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestForInLoopHack extends TestJSCallGraphShape {
 
-  @Before
+  @BeforeEach
   public void config() {
     JSSourceExtractor.USE_TEMP_NAME = true;
     JSSourceExtractor.DELETE_UPON_EXIT = false;
@@ -51,7 +51,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 
-  @Ignore(
+  @Disabled(
       "This test now blows up due to proper handling of the || construct, used in extend().  Should handle this eventually.")
   @Test
   public void testJQueryWithHack() throws IllegalArgumentException, CancelException, WalaException {

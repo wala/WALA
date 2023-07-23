@@ -20,7 +20,7 @@ package com.ibm.wala.core.tests.collections;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link SemiSparseMutableIntSet} class.

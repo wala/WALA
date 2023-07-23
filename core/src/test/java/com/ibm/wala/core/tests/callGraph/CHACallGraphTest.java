@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -28,7 +28,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
 import java.util.function.Function;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class CHACallGraphTest {
 
@@ -67,8 +67,8 @@ public class CHACallGraphTest {
                 CGNode succNode = CG.getNode(succNum);
                 IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
                 assertNotNull(
-                    "no predecessors for " + succNode + " which is called by " + node,
-                    predNodeNumbers);
+                    predNodeNumbers,
+                    "no predecessors for " + succNode + " which is called by " + node);
                 assertTrue(predNodeNumbers.contains(nodeNum));
               });
     }

@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IBytecodeMethod;
@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class AnnotationTest extends WalaTestCase {
 
@@ -93,7 +93,7 @@ public abstract class AnnotationTest extends WalaTestCase {
       fail("expected=" + expected + " actual=" + actual);
     }
     for (T a : expected) {
-      assertTrue("missing " + a.toString(), actual.contains(a));
+      assertTrue(actual.contains(a), "missing " + a.toString());
     }
   }
 
@@ -159,8 +159,8 @@ public abstract class AnnotationTest extends WalaTestCase {
       Collection<Annotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof BytecodeClass);
+    assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
+    assertTrue(classUnderTest instanceof BytecodeClass, classUnderTest + " must be BytecodeClass");
     BytecodeClass<?> bcClassUnderTest = (BytecodeClass<?>) classUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
@@ -179,7 +179,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotatedClass3");
     IClass klass = cha.lookupClass(typeRef);
-    assertNotNull(typeRef + " must exist", klass);
+    assertNotNull(klass, typeRef + " must exist");
     BytecodeClass<?> shrikeClass = (BytecodeClass<?>) klass;
     Collection<Annotation> classAnnotations = shrikeClass.getAnnotations(false);
     assertEquals(
@@ -190,9 +190,9 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make("foo()V"));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodRefUnderTest + " not found", methodUnderTest);
+    assertNotNull(methodUnderTest, methodRefUnderTest + " not found");
     assertTrue(
-        methodUnderTest + " must be IBytecodeMethod", methodUnderTest instanceof IBytecodeMethod);
+        methodUnderTest instanceof IBytecodeMethod, methodUnderTest + " must be IBytecodeMethod");
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
         (IBytecodeMethod<IInstruction>) methodUnderTest;
 
@@ -230,7 +230,7 @@ public abstract class AnnotationTest extends WalaTestCase {
             typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int);
 
     IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
-    assertNotNull(fieldRefUnderTest + " not found", fieldUnderTest);
+    assertNotNull(fieldUnderTest, fieldRefUnderTest + " not found");
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
     Collection<Annotation> expectedAnnotations = HashSetFactory.make();
@@ -300,9 +300,9 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodRefUnderTest + " not found", methodUnderTest);
+    assertNotNull(methodUnderTest, methodRefUnderTest + " not found");
     assertTrue(
-        methodUnderTest + " must be bytecode method", methodUnderTest instanceof IBytecodeMethod);
+        methodUnderTest instanceof IBytecodeMethod, methodUnderTest + " must be bytecode method");
     IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
 
     Collection<Annotation>[] parameterAnnotations =
@@ -319,7 +319,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         }
       }
 
-      assertEquals(e + " must be " + a, e, a);
+      assertEquals(e, a, e + " must be " + a);
     }
   }
 }

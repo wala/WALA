@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ipa.callgraph.GlobalObjectKey;
@@ -65,7 +65,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestPointerAnalyses {
 
@@ -266,9 +266,9 @@ public abstract class TestPointerAnalyses {
             map(propCG, ptrs(propNodes, i, propCG, propPA));
 
         assertEquals(
-            "analysis should agree on global object for " + i + " of " + ir,
             isGlobal(fbNodes, i, fbPA),
-            isGlobal(propNodes, i, propPA));
+            isGlobal(propNodes, i, propPA),
+            "analysis should agree on global object for " + i + " of " + ir);
 
         if (!fbPtrs.isEmpty() || !propPtrs.isEmpty()) {
           System.err.println(
@@ -276,8 +276,8 @@ public abstract class TestPointerAnalyses {
         }
 
         assertTrue(
-            fbPtrs + " should intersect  " + propPtrs + " for " + i + " of " + ir,
-            test.test(Pair.make(fbPtrs, propPtrs)));
+            test.test(Pair.make(fbPtrs, propPtrs)),
+            fbPtrs + " should intersect  " + propPtrs + " for " + i + " of " + ir);
       }
 
       SymbolTable symtab = ir.getSymbolTable();
@@ -301,15 +301,15 @@ public abstract class TestPointerAnalyses {
                               o.getConcreteType(),
                               Atom.findOrCreateUnicodeAtom(p),
                               JavaScriptTypes.Root));
-              assertTrue("object " + o + " should have field " + propKey, hg.hasEdge(o, propKey));
+              assertTrue(hg.hasEdge(o, propKey), "object " + o + " should have field " + propKey);
 
               int val = ((AstPropertyWrite) inst).getValue();
               PointerKey valKey = fbPA.getHeapModel().getPointerKeyForLocal(node, val);
               OrdinalSet<ObjectVertex> valPtrs = fbPA.getPointsToSet(valKey);
               for (ObjectVertex v : valPtrs) {
                 assertTrue(
-                    "field " + propKey + " should point to object " + valKey + "(" + v + ")",
-                    hg.hasEdge(propKey, v));
+                    hg.hasEdge(propKey, v),
+                    "field " + propKey + " should point to object " + valKey + "(" + v + ")");
               }
             }
 
@@ -328,7 +328,7 @@ public abstract class TestPointerAnalyses {
                           Atom.findOrCreateUnicodeAtom(propName),
                           JavaScriptTypes.Root));
           assertTrue(
-              "global " + propName + " should exist", hg.hasEdge(GlobalVertex.instance(), propKey));
+              hg.hasEdge(GlobalVertex.instance(), propKey), "global " + propName + " should exist");
 
           System.err.println("heap graph models instruction " + inst);
         } else if (inst instanceof JavaScriptInvoke) {
@@ -339,14 +339,14 @@ public abstract class TestPointerAnalyses {
           Set<Pair<CGNode, NewSiteReference>> propPrototypes =
               getPropPrototypes(propPA, propCG, node, vn);
           assertTrue(
+              (fbPrototypes.isEmpty() && propPrototypes.isEmpty())
+                  || !Collections.disjoint(fbPrototypes, propPrototypes),
               "should have prototype overlap for "
                   + fbPrototypes
                   + " and "
                   + propPrototypes
                   + " at "
-                  + inst,
-              (fbPrototypes.isEmpty() && propPrototypes.isEmpty())
-                  || !Collections.disjoint(fbPrototypes, propPrototypes));
+                  + inst);
         }
       }
     }

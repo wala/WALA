@@ -1,16 +1,15 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.test.RequiresInternetTests;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URL;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(RequiresInternetTests.class)
+@Tag("requires-Internet")
 public class FieldBasedJQueryTest extends AbstractFieldBasedTest {
 
   @Test

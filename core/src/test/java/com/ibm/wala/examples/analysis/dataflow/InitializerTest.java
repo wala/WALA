@@ -11,7 +11,7 @@
 
 package com.ibm.wala.examples.analysis.dataflow;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;

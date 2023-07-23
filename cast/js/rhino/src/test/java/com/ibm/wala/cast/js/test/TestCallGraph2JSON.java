@@ -2,8 +2,8 @@ package com.ibm.wala.cast.js.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -23,14 +23,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import org.hamcrest.core.IsIterableContaining;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestCallGraph2JSON {
 
   private FieldBasedCGUtil util;
 
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
   }

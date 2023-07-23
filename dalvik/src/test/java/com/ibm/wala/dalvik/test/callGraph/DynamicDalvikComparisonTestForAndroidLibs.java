@@ -10,7 +10,7 @@ import com.ibm.wala.util.CancelException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DynamicDalvikComparisonTestForAndroidLibs extends DynamicDalvikComparisonTest {
 

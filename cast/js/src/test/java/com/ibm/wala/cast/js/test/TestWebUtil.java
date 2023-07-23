@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
@@ -19,7 +19,7 @@ import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import java.net.URL;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestWebUtil extends WalaTestCase {
 

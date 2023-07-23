@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.cast.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -176,10 +176,10 @@ public abstract class TestCAstTranslator {
       IClass cls = (IClass) name;
       clsCount++;
       assertTrue(
-          "found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
+          classes.contains(cls.getName().toString()), "found class " + cls.getName().toString());
 
       if (cls.getSuperclass() == null) {
-        assertNull(cls.getName() + " has no superclass", supers.get(cls.getName().toString()));
+        assertNull(supers.get(cls.getName().toString()), cls.getName() + " has no superclass");
       } else {
         assertEquals(
             "super of " + cls.getName() + " is " + cls.getSuperclass().getName(),
@@ -190,15 +190,15 @@ public abstract class TestCAstTranslator {
       for (Object name2 : cls.getDeclaredInstanceFields()) {
         IField fld = (IField) name2;
         assertTrue(
-            cls.getName() + " has field " + fld.getName(),
-            instanceFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())));
+            instanceFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())),
+            cls.getName() + " has field " + fld.getName());
       }
 
       for (Object name2 : cls.getDeclaredStaticFields()) {
         IField fld = (IField) name2;
         assertTrue(
-            cls.getName() + " has static field " + fld.getName(),
-            staticFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())));
+            staticFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())),
+            cls.getName() + " has static field " + fld.getName());
       }
 
       for (Object name2 : cls.getDeclaredMethods()) {
@@ -208,24 +208,24 @@ public abstract class TestCAstTranslator {
 
         if (mth.isStatic()) {
           assertTrue(
-              cls.getName() + " has static method " + mth.getName(),
-              staticMethods.containsKey(key));
+              staticMethods.containsKey(key),
+              cls.getName() + " has static method " + mth.getName());
           assertEquals(
-              cls.getName() + "::" + mth.getName() + " has " + np + " parameters",
               staticMethods.get(key),
-              np);
+              np,
+              cls.getName() + "::" + mth.getName() + " has " + np + " parameters");
         } else {
           assertTrue(
-              cls.getName() + " has method " + mth.getName(), instanceMethods.containsKey(key));
+              instanceMethods.containsKey(key), cls.getName() + " has method " + mth.getName());
           assertEquals(
-              cls.getName() + "::" + mth.getName() + " has " + np + " parameters",
               instanceMethods.get(key),
-              np);
+              np,
+              cls.getName() + "::" + mth.getName() + " has " + np + " parameters");
         }
       }
     }
 
-    assertEquals("want " + classes.size() + " classes", clsCount, classes.size());
+    assertEquals(Float.parseFloat("want " + classes.size() + " classes"), clsCount, classes.size());
   }
 
   protected void testInternal(String[] args, TranslatorAssertions assertions) throws Exception {
@@ -243,7 +243,7 @@ public abstract class TestCAstTranslator {
         URL url = getClass().getClassLoader().getResource(args[i]);
         fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, args[i]);
       }
-      assertNotNull(args[i], fileNames[i]);
+      assertNotNull(fileNames[i], args[i]);
     }
 
     ClassHierarchy cha = runTranslator(fileNames);

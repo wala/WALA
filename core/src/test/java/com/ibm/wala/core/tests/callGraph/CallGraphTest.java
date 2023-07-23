@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -67,7 +67,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Tests for Call Graph construction */
 public class CallGraphTest extends WalaTestCase {
@@ -138,11 +138,11 @@ public class CallGraphTest extends WalaTestCase {
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
     String ws = Warnings.asString();
-    assertTrue("failed to report a warning about Abstract1", ws.contains("cornerCases/Abstract1"));
+    assertTrue(ws.contains("cornerCases/Abstract1"), "failed to report a warning about Abstract1");
 
     // we do not expect a warning about class Abstract2, which has a concrete
     // subclasses
-    assertFalse("reported a warning about Abstract2", ws.contains("cornerCases/Abstract2"));
+    assertFalse(ws.contains("cornerCases/Abstract2"), "reported a warning about Abstract2");
   }
 
   @Test
@@ -202,7 +202,7 @@ public class CallGraphTest extends WalaTestCase {
         foundSortForward = true;
       }
     }
-    assertTrue("expected for sortForward", foundSortForward);
+    assertTrue(foundSortForward, "expected for sortForward");
   }
 
   @Test
@@ -348,14 +348,14 @@ public class CallGraphTest extends WalaTestCase {
     CallGraph cg = builder.makeCallGraph(options, null);
     CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
     assertTrue(
-        "did not find call to valueOf",
         StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(
                     cg.getSuccNodes(mainMethod), Spliterator.ORDERED),
                 false)
             .filter(succ -> succ.getMethod().getName().toString().equals("valueOf"))
             .findFirst()
-            .isPresent());
+            .isPresent(),
+        "did not find call to valueOf");
   }
 
   /** make main entrypoints, even in the primordial loader. */

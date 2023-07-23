@@ -10,15 +10,15 @@
  */
 package com.ibm.wala.cast.js.nodejs.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.cast.js.nodejs.NodejsCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import java.io.File;
 import java.net.URL;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt; */
 public class NodejsRequireJsonTest {

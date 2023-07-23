@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil.CGBuilderType;
@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
@@ -27,7 +27,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testAjaxslt() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    assertNotNull("cannot find resource \"ajaxslt/test/xslt.html\"", url);
+    assertNotNull(url, "cannot find resource \"ajaxslt/test/xslt.html\"");
     // need to turn off call/apply handling for this to scale; alternatively use 1-CFA
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, CGBuilderType.ZERO_ONE_CFA_NO_CALL_APPLY);
 
@@ -39,7 +39,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testAjaxpath() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
-    assertNotNull("cannot find resource \"ajaxslt/test/xpath.html\"", url);
+    assertNotNull(url, "cannot find resource \"ajaxslt/test/xpath.html\"");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);
   }

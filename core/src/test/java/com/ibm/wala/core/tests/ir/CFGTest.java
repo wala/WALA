@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
@@ -35,7 +35,7 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Test integrity of CFGs */
 public abstract class CFGTest extends WalaTestCase {
@@ -157,7 +157,7 @@ public abstract class CFGTest extends WalaTestCase {
   public static void testCFG(SSACFG cfg, int[][] assertions) {
     for (int i = 0; i < assertions.length; i++) {
       SSACFG.BasicBlock bb = cfg.getNode(i);
-      assertEquals("basic block " + i, assertions[i].length, cfg.getSuccNodeCount(bb));
+      assertEquals(assertions[i].length, cfg.getSuccNodeCount(bb), "basic block " + i);
       for (int j = 0; j < assertions[i].length; j++) {
         assertTrue(cfg.hasEdge(bb, cfg.getNode(assertions[i][j])));
       }

@@ -1,16 +1,14 @@
-/*
- * Copyright (c) 2002 - 2006 IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- */
+// * Copyright (c) 2002 - 2006 IBM Corporation.
+// * All rights reserved. This program and the accompanying materials
+// * are made available under the terms of the Eclipse Public License v1.0
+// * which accompanies this distribution, and is available at
+// * http://www.eclipse.org/legal/epl-v10.html
+// *
+// * Contributors:
+// *     IBM Corporation - initial API and implementation
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.core.tests.ir.DeterministicIRTest;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -19,7 +17,7 @@ import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test code that attempts to find the library version from the analysis scope.

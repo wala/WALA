@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.cast.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestCAstPattern {
 
@@ -76,17 +76,22 @@ public class TestCAstPattern {
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
           assertEquals(
-              "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm),
               entry.getValue(),
-              s.getSingle(nm));
+              s.getSingle(nm),
+              "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm));
         } else {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
           assertEquals(
-              "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getMultiple(nm),
               entry.getValue(),
-              s.getMultiple(nm));
+              s.getMultiple(nm),
+              "for name "
+                  + nm
+                  + ": expected "
+                  + entry.getValue()
+                  + " but got "
+                  + s.getMultiple(nm));
         }
       }
     }

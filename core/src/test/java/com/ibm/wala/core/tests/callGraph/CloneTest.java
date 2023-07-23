@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -30,8 +32,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.IOException;
 import java.util.Set;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Check properties of a call to clone() in RTA */
 public class CloneTest extends WalaTestCase {
@@ -66,7 +67,7 @@ public class CloneTest extends WalaTestCase {
             for (CGNode cgNode : targets) {
               System.err.println("  " + cgNode);
             }
-            Assert.fail("found " + targets.size() + " targets for " + site + " in " + node);
+            fail("found " + targets.size() + " targets for " + site + " in " + node);
           }
         }
       }

@@ -15,8 +15,8 @@ import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TestFieldBasedCG extends AbstractFieldBasedTest {
   private static final Object[][] assertionsForSimpleJS =
@@ -204,7 +204,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 
-  @Ignore
+  @Disabled
   @Test
   public void testBug2979() throws WalaException, Error, CancelException {
     System.err.println(

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -27,7 +27,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Check properties of a call to clone() in RTA */
 public class LibModelsTest extends WalaTestCase {
@@ -53,9 +53,9 @@ public class LibModelsTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(ClassLoaderReference.Application, libModelsTestClass);
     MethodReference m = MethodReference.findOrCreate(t, "reachable1", "()V");
-    assertTrue("expect reachable1 from addShutdownHook", cg.getNodes(m).iterator().hasNext());
+    assertTrue(cg.getNodes(m).iterator().hasNext(), "expect reachable1 from addShutdownHook");
     MethodReference m2 = MethodReference.findOrCreate(t, "reachable2", "()V");
     assertTrue(
-        "expect reachable2 from uncaught exception handler", cg.getNodes(m2).iterator().hasNext());
+        cg.getNodes(m2).iterator().hasNext(), "expect reachable2 from uncaught exception handler");
   }
 }

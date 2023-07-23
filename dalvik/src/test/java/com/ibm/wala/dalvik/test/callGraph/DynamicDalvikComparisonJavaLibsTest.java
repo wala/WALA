@@ -7,7 +7,7 @@ import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 import java.io.File;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DynamicDalvikComparisonJavaLibsTest extends DynamicDalvikComparisonTest {
 

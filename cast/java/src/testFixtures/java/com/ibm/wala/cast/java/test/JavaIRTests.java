@@ -14,16 +14,16 @@
 package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
-import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -66,7 +66,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class JavaIRTests extends IRTests {
 
@@ -111,7 +111,7 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
               final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, iClass);
+              assertNotNull(iClass, "Could not find class " + typeStr);
 
               /*
               assertEquals("Expected two classes.", iClass.getClassLoader().getNumberOfClasses(), 2);
@@ -141,9 +141,9 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
               final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, iClass);
+              assertNotNull(iClass, "Could not find class " + typeStr);
 
-              assertTrue("Expected IFoo to be an interface.", iClass.isInterface());
+              assertTrue(iClass.isInterface(), "Expected IFoo to be an interface.");
             },
             cg -> {
               final String typeStr = "FooIT1";
@@ -152,19 +152,18 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
               final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, iClass);
+              assertNotNull(iClass, "Could not find class " + typeStr);
 
               final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
 
-              assertEquals("Expected one single interface.", interfaces.size(), 1);
+              assertEquals(interfaces.size(), 1, "Expected one single interface.");
 
               assertTrue(
-                  "Expected Foo to implement IFoo",
                   interfaces.contains(
                       cg.getClassHierarchy()
                           .lookupClass(
-                              findOrCreateTypeReference(
-                                  "Source", "IFoo", cg.getClassHierarchy()))));
+                              findOrCreateTypeReference("Source", "IFoo", cg.getClassHierarchy()))),
+                  "Expected Foo to implement IFoo");
             }),
         true,
         null);
@@ -184,22 +183,22 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
               final IClass derivedClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, derivedClass);
+              assertNotNull(derivedClass, "Could not find class " + typeStr);
 
               final TypeReference baseType =
                   findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
               final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
 
               assertEquals(
-                  "Expected 'Base' to be the superclass of 'Derived'",
                   derivedClass.getSuperclass(),
-                  baseClass);
+                  baseClass,
+                  "Expected 'Base' to be the superclass of 'Derived'");
 
               Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
 
               assertTrue(
-                  "Expected subclasses of 'Base' to be 'Base' and 'Derived'.",
-                  subclasses.contains(derivedClass) && subclasses.contains(baseClass));
+                  subclasses.contains(derivedClass) && subclasses.contains(baseClass),
+                  "Expected subclasses of 'Base' to be 'Base' and 'Derived'.");
             }),
         true,
         null);
@@ -232,7 +231,7 @@ public abstract class JavaIRTests extends IRTests {
                   }
                 }
 
-                assertEquals("Unexpected number of array instructions in 'foo'.", count, 4);
+                assertEquals(count, 4, "Unexpected number of array instructions in 'foo'.");
               }
 
               private boolean isArrayInstruction(SSAInstruction s) {
@@ -258,8 +257,8 @@ public abstract class JavaIRTests extends IRTests {
 
               CGNode node = cg.getNodes(mref).iterator().next();
               SSAInstruction s = node.getIR().getInstructions()[2];
-              assertTrue("Did not find new array instruction.", s instanceof SSANewInstruction);
-              assertTrue("", ((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType());
+              assertTrue(s instanceof SSANewInstruction, "Did not find new array instruction.");
+              assertTrue(((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType(), "");
             }),
         true,
         null);
@@ -285,7 +284,7 @@ public abstract class JavaIRTests extends IRTests {
                 SSAInstruction s1 = instructions[2];
                 if (s1 instanceof SSANewInstruction) {
                   assertTrue(
-                      "", ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType());
+                      ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType(), "");
                 } else {
                   fail("Expected 3rd to be a new array instruction.");
                 }
@@ -295,7 +294,7 @@ public abstract class JavaIRTests extends IRTests {
                 SSAInstruction s2 = instructions[3];
                 if (s2 instanceof SSANewInstruction) {
                   assertTrue(
-                      "", ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType());
+                      ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType(), "");
                 } else {
                   fail("Expected 4th to be a new array instruction.");
                 }
@@ -305,15 +304,15 @@ public abstract class JavaIRTests extends IRTests {
                 final SymbolTable symbolTable = node.getIR().getSymbolTable();
                 for (int i = 4; i <= 7; i++) {
                   assertTrue(
-                      "Expected only array stores.",
-                      instructions[i] instanceof SSAArrayStoreInstruction);
+                      instructions[i] instanceof SSAArrayStoreInstruction,
+                      "Expected only array stores.");
 
                   SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
 
                   assertEquals(
-                      "Expected an array store to 'y'.",
                       node.getIR().getLocalNames(i, as.getArrayRef())[0],
-                      "y");
+                      "y",
+                      "Expected an array store to 'y'.");
 
                   final Integer valueOfArrayIndex =
                       ((Integer) symbolTable.getConstantValue(as.getIndex()));
@@ -321,9 +320,9 @@ public abstract class JavaIRTests extends IRTests {
                       (Integer) symbolTable.getConstantValue(as.getValue());
 
                   assertEquals(
-                      "Expected an array store to 'y' with value " + (valueOfArrayIndex + 1),
                       valueAssigned.intValue(),
-                      valueOfArrayIndex + 1);
+                      valueOfArrayIndex + 1,
+                      "Expected an array store to 'y' with value " + (valueOfArrayIndex + 1));
                 }
               }
             }),
@@ -358,15 +357,15 @@ public abstract class JavaIRTests extends IRTests {
               SSAInstruction s = node.getIR().getInstructions()[4];
 
               assertTrue(
-                  "Did not find a getstatic instruction.",
-                  s instanceof SSAGetInstruction && ((SSAGetInstruction) s).isStatic());
+                  s instanceof SSAGetInstruction && ((SSAGetInstruction) s).isStatic(),
+                  "Did not find a getstatic instruction.");
               final FieldReference field = ((SSAGetInstruction) s).getDeclaredField();
               assertEquals(
-                  "Expected a getstatic for 'value'.", field.getName().toString(), "value");
+                  field.getName().toString(), "value", "Expected a getstatic for 'value'.");
               assertEquals(
-                  "Expected a getstatic for 'value'.",
                   field.getDeclaringClass().getName().toString(),
-                  "LFooQ");
+                  "LFooQ",
+                  "Expected a getstatic for 'value'.");
             }),
         true,
         null);
@@ -386,7 +385,7 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
               final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, iClass);
+              assertNotNull(iClass, "Could not find class " + typeStr);
 
               // todo: this fails: assertNotNull("Expected to be enclosed in
               // 'StaticNesting'.",
@@ -421,15 +420,14 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
 
               final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, iClass);
+              assertNotNull(iClass, "Could not find class " + typeStr);
 
               assertEquals(
-                  "Expected to be enclosed in 'InnerClass'.",
-                  ((JavaSourceLoaderImpl.JavaClass) iClass)
-                      .getEnclosingClass(), // todo is there another way?
+                  ((JavaClass) iClass).getEnclosingClass(),
                   cg.getClassHierarchy()
                       .lookupClass(
-                          findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
+                          findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())),
+                  "Expected to be enclosed in 'InnerClass'.");
             }),
         true,
         null);
@@ -476,7 +474,7 @@ public abstract class JavaIRTests extends IRTests {
         "LInnerClassA,",
       };
 
-      assertEquals("Buggy test", methodSigs.length, ikConcreteTypeStrings.length);
+      assertEquals(methodSigs.length, ikConcreteTypeStrings.length, "Buggy test");
       for (int i = 0; i < methodSigs.length; i++) {
         if (n.getMethod().getSignature().equals(methodSigs[i])) {
           // find enclosing instruction
@@ -490,15 +488,15 @@ public abstract class JavaIRTests extends IRTests {
 
               final String allIks = allIksBuilder.toString();
               assertEquals(
+                  allIks,
+                  ikConcreteTypeStrings[i],
                   "assertion failed: expecting ik "
                       + ikConcreteTypeStrings[i]
                       + " in method "
                       + methodSigs[i]
                       + ", got "
                       + allIks
-                      + "\n",
-                  allIks,
-                  ikConcreteTypeStrings[i]);
+                      + "\n");
 
               break;
             }
@@ -530,9 +528,9 @@ public abstract class JavaIRTests extends IRTests {
             }
             final String allIks = allIksBuilder.toString();
             assertEquals(
-                "assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n",
                 "LSub,",
-                allIks);
+                allIks,
+                "assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n");
 
             break;
           }
@@ -561,14 +559,14 @@ public abstract class JavaIRTests extends IRTests {
 
               // Observe the descriptor for a class local to a method.
               final IClass mainFooClass = cg.getClassHierarchy().lookupClass(mainFooType);
-              assertNotNull("Could not find class " + mainFooType, mainFooClass);
+              assertNotNull(mainFooClass, "Could not find class " + mainFooType);
 
               final TypeReference methodFooType =
                   findOrCreateTypeReference(
                       "Source", typeStr + "/method()V/" + localClassStr, cg.getClassHierarchy());
 
               final IClass methodFooClass = cg.getClassHierarchy().lookupClass(methodFooType);
-              assertNotNull("Could not find class " + methodFooType, methodFooClass);
+              assertNotNull(methodFooClass, "Could not find class " + methodFooType);
 
               final IClass localClass =
                   cg.getClassHierarchy()
@@ -576,9 +574,9 @@ public abstract class JavaIRTests extends IRTests {
                           findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy()));
 
               assertSame(
-                  "'Foo' is enclosed in 'Local'",
-                  ((JavaSourceLoaderImpl.JavaClass) methodFooClass).getEnclosingClass(),
-                  localClass);
+                  ((JavaClass) methodFooClass).getEnclosingClass(),
+                  localClass,
+                  "'Foo' is enclosed in 'Local'");
               // todo: is this failing because 'main' is static?
               // assertSame("'Foo' is enclosed in 'Local'",
               // ((JavaSourceLoaderImpl.JavaClass)mainFooClass).getEnclosingClass(),
@@ -602,7 +600,7 @@ public abstract class JavaIRTests extends IRTests {
                   findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
               final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-              assertNotNull("Could not find class " + typeStr, iClass);
+              assertNotNull(iClass, "Could not find class " + typeStr);
 
               // todo what to check?? could not find anything in the APIs for
               // anonymous

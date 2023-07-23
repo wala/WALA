@@ -13,8 +13,8 @@ package com.ibm.wala.core.tests.ir;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -46,20 +46,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
 public class TypeAnnotationTest extends WalaTestCase {
 
-  private final IClassHierarchy cha;
+  private final IClassHierarchy cha = AnnotationTest.makeCHA();
 
-  protected TypeAnnotationTest(IClassHierarchy cha) {
-    this.cha = cha;
-  }
-
-  public TypeAnnotationTest() throws ClassHierarchyException, IOException {
-    this(AnnotationTest.makeCHA());
-  }
+  public TypeAnnotationTest() throws ClassHierarchyException, IOException {}
 
   private final String typeAnnotatedClass1 = "Lannotations/TypeAnnotatedClass1";
   private final String typeAnnotatedClass2 = "Lannotations/TypeAnnotatedClass2";
@@ -270,8 +264,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
+    assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
+    assertTrue(classUnderTest instanceof ShrikeClass, classUnderTest + " must be BytecodeClass");
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations =
@@ -291,9 +285,9 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    assertNotNull(methodUnderTest, methodRefUnderTest.toString() + " not found");
     assertTrue(
-        methodUnderTest + " must be ShrikeCTMethod", methodUnderTest instanceof ShrikeCTMethod);
+        methodUnderTest instanceof ShrikeCTMethod, methodUnderTest + " must be ShrikeCTMethod");
     ShrikeCTMethod bcMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
@@ -316,8 +310,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       TypeReference typeUnderTest,
       Collection<TypeAnnotation> expectedAnnotations) {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    assertTrue(classUnderTest + " must be BytecodeClass", classUnderTest instanceof ShrikeClass);
+    assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
+    assertTrue(classUnderTest instanceof ShrikeClass, classUnderTest + " must be BytecodeClass");
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     final Atom fieldName = Atom.findOrCreateUnicodeAtom(fieldNameStr);

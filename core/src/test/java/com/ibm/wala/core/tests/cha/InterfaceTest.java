@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -28,9 +28,9 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /** Test interface subtype stuff */
 public class InterfaceTest extends WalaTestCase {
@@ -44,7 +44,7 @@ public class InterfaceTest extends WalaTestCase {
     justThisTest(InterfaceTest.class);
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
@@ -61,7 +61,7 @@ public class InterfaceTest extends WalaTestCase {
     }
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     scope = null;
     cha = null;
@@ -80,8 +80,8 @@ public class InterfaceTest extends WalaTestCase {
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
 
-    assertNotNull("did not find PreparedStatement", prep_stmt);
-    assertNotNull("did not find Statement", stmt);
+    assertNotNull(prep_stmt, "did not find PreparedStatement");
+    assertNotNull(stmt, "did not find Statement");
 
     assertTrue(cha.implementsInterface(prep_stmt, stmt));
     assertFalse(cha.implementsInterface(stmt, prep_stmt));

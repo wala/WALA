@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.cast.ipa.lexical.LexicalModRef;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -24,7 +24,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestLexicalModRef {
 
@@ -60,7 +60,6 @@ public abstract class TestLexicalModRef {
         assertEquals(4, readVars.size());
         for (Pair<CGNode, String> rv : readVars) {
           assertTrue(
-              rv.toString(),
               "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x]"
                       .equals(rv.toString())
                   || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3]"
@@ -68,7 +67,8 @@ public abstract class TestLexicalModRef {
                   || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName]"
                       .equals(rv.toString())
                   || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]"
-                      .equals(rv.toString()));
+                      .equals(rv.toString()),
+              rv.toString());
         }
       }
     }

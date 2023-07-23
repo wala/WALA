@@ -50,7 +50,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 

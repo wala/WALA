@@ -14,7 +14,7 @@ import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeHierarchy;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeLoaders;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory;
 import static com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil.makeScriptScope;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -28,12 +28,12 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.IOException;
 import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestRhinoSourceMap {
 
-  @Before
+  @BeforeEach
   public void setUp() {
     setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }

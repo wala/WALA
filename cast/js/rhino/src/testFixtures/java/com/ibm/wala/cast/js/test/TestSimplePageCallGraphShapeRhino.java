@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.WebUtil;
@@ -20,8 +22,8 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
 
@@ -38,19 +40,24 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
     verifyGraphAssertions(CG, assertionsForPage3);
   }
 
-  @Test(expected = WalaException.class)
-  public void testJSParseError() throws IllegalArgumentException, CancelException, WalaException {
-    URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
-    JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
-    B.makeCallGraph(B.getOptions());
-    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+  @Test
+  public void testJSParseError() {
+    assertThrows(
+        WalaException.class,
+        () -> {
+          URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
+          JSCFABuilder B =
+              JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
+          B.makeCallGraph(B.getOptions());
+          com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+        });
   }
 
   @Override
   protected abstract IHtmlParser getParser();
 
+  @BeforeEach
   @Override
-  @Before
   public void setUp() {
     super.setUp();
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(

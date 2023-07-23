@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -29,9 +29,9 @@ import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /** Test stuff with inner classes */
 public class InnerClassesTest extends WalaTestCase {
@@ -46,7 +46,7 @@ public class InnerClassesTest extends WalaTestCase {
     justThisTest(InnerClassesTest.class);
   }
 
-  @BeforeClass
+  @BeforeAll
   public static void beforeClass() throws Exception {
     scope =
         AnalysisScopeReader.instance.readJavaScope(
@@ -63,7 +63,7 @@ public class InnerClassesTest extends WalaTestCase {
     }
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     scope = null;
     cha = null;

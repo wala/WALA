@@ -10,10 +10,10 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -32,7 +32,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
 import java.util.Collection;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MissingSuperTest extends WalaTestCase {
 
@@ -53,22 +53,22 @@ public class MissingSuperTest extends WalaTestCase {
 
     // without phantom classes, won't be able to resolve
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertNull("lookup should not work", cha.lookupClass(ref));
+    assertNull(cha.lookupClass(ref), "lookup should not work");
 
     // with makeWithRoot lookup should succeed and
     // unresolvable super class "Super" should be replaced by hierarchy root
     cha = ClassHierarchyFactory.makeWithRoot(scope);
     IClass klass = cha.lookupClass(ref);
-    assertNotNull("expected class MissingSuper to load", klass);
+    assertNotNull(klass, "expected class MissingSuper to load");
     assertEquals(cha.getRootClass(), klass.getSuperclass());
 
     // with phantom classes, lookup and IR construction should work
     cha = ClassHierarchyFactory.makeWithPhantom(scope);
     klass = cha.lookupClass(ref);
-    assertNotNull("expected class MissingSuper to load", klass);
+    assertNotNull(klass, "expected class MissingSuper to load");
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
-    assertEquals(declaredMethods.toString(), 2, declaredMethods.size());
+    assertEquals(2, declaredMethods.size(), declaredMethods.toString());
     for (IMethod m : declaredMethods) {
       // should succeed
       cache.getIR(m);

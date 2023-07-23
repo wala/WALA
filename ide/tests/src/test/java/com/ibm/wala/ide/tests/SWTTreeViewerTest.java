@@ -17,7 +17,7 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.BasicGraph;
 import java.util.Collection;
 import java.util.Collections;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SWTTreeViewerTest {
 

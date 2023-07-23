@@ -22,7 +22,7 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSetFactory;
 import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** Run the call graph only test with paranoid debugging bit vectors */
 public class DebuggingBitsetCallGraphTest extends WalaTestCase {

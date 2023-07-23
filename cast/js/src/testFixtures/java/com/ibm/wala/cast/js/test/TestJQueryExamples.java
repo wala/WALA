@@ -18,19 +18,19 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class TestJQueryExamples extends TestJSCallGraphShape {
 
-  @Before
+  @BeforeEach
   public void config() {
     JSSourceExtractor.USE_TEMP_NAME = false;
     JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
 
-  @Ignore("This tries to analyze unmodified jquery, which we can't do yet")
+  @Disabled("This tries to analyze unmodified jquery, which we can't do yet")
   @Test
   public void testEx1() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");

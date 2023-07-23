@@ -3,15 +3,15 @@ package com.ibm.wala.core.tests.typeargument;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.types.generics.TypeArgument;
-import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 
 public class TypeArgumentTest extends WalaTestCase {
   public static void main(String[] args) {
     justThisTest(TypeArgumentTest.class);
   }
 
-  @AfterClass
+  @AfterAll
   public static void afterClass() throws Exception {
     Warnings.clear();
   }

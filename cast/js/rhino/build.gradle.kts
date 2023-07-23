@@ -35,7 +35,7 @@ tasks.named<Test>("test") {
   if (project.hasProperty("excludeRequiresInternetTests") ||
       gradle.startParameter.isOffline ||
       environment.get("CI") == "true") {
-    useJUnit { excludeCategories("com.ibm.wala.cast.js.test.RequiresInternetTests") }
+    useJUnitPlatform { excludeTags("requires-Internet") }
   }
 
   outputs.files(layout.buildDirectory.files("actual.dump", "expected.dump"))
