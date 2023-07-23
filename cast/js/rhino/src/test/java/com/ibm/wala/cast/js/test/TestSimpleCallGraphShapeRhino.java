@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
@@ -17,12 +19,12 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
 
-  @Before
+  @BeforeEach
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());
@@ -80,12 +82,15 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "for_in_name.js");
   }
 
-  @Test(expected = WalaException.class)
-  public void testParseError()
-      throws IllegalArgumentException, IOException, CancelException, WalaException {
-    PropagationCallGraphBuilder B =
-        JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");
-    B.makeCallGraph(B.getOptions());
-    com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+  @Test
+  public void testParseError() {
+    assertThrows(
+        WalaException.class,
+        () -> {
+          PropagationCallGraphBuilder B =
+              JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");
+          B.makeCallGraph(B.getOptions());
+          com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+        });
   }
 }
