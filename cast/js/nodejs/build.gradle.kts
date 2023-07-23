@@ -13,7 +13,6 @@ dependencies {
   implementation(projects.cast.js.rhino)
   implementation(projects.core)
   implementation(projects.util)
-  testRuntimeOnly(testFixtures(projects.core))
 }
 
 val downloadNodeJS by

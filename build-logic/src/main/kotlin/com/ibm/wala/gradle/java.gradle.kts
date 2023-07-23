@@ -139,7 +139,7 @@ tasks.named<Test>("test") {
 
 if (project.hasProperty("excludeSlowTests")) {
   dependencies { testImplementation(testFixtures(project(":core"))) }
-  tasks.named<Test>("test") { useJUnit { excludeCategories("com.ibm.wala.tests.util.SlowTests") } }
+  tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
 
 val ecjCompileTaskProviders =

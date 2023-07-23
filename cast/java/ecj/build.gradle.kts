@@ -26,7 +26,6 @@ dependencies {
       project(
           mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory")))
   testImplementation(testFixtures(projects.cast.java))
-  testRuntimeOnly(testFixtures(projects.core))
 }
 
 application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
