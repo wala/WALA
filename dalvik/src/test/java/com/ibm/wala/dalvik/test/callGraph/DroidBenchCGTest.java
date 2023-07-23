@@ -11,7 +11,7 @@
 package com.ibm.wala.dalvik.test.callGraph;
 
 import static com.ibm.wala.dalvik.test.util.Util.walaProperties;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -30,13 +30,12 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.FileUtil;
 import java.io.File;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Test;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Named;
 
 public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
@@ -105,28 +104,13 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return result;
   }
 
-  private final URI[] androidLibs;
+  protected void runTest(final TestParameters testParameters) throws Exception {
 
-  private final File androidJavaJar;
+    final var androidLibs = testParameters.getAndroidLibs();
+    final var androidJavaJar = testParameters.getAndroidJavaJar();
+    final var apkFile = testParameters.getApkFile();
+    final var uncalled = testParameters.getUncalled();
 
-  private final String apkFile;
-
-  private final Set<MethodReference> uncalled;
-
-  protected DroidBenchCGTest(
-      URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {
-    this.androidLibs = androidLibs;
-    this.androidJavaJar = androidJavaJar;
-    this.apkFile = apkFile;
-    this.uncalled = uncalled;
-  }
-
-  public String apkFile() {
-    return apkFile;
-  }
-
-  @Test
-  public void runTest() throws Exception {
     System.err.println("testing " + apkFile + "...");
     Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
         makeAPKCallGraph(
@@ -142,7 +126,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
   }
 
   protected void assertion(String string, boolean empty) {
-    assertTrue(string, empty);
+    assertTrue(empty, string);
   }
 
   private static final Set<String> skipTests = HashSetFactory.make();
@@ -156,7 +140,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     skipTests.add("Button2.apk");
   }
 
-  public static Collection<Object[]> generateData(
+  public static Stream<Named<TestParameters>> generateData(
       final URI[] androidLibs, final File androidJavaJar, final String filter) {
 
     return generateData(getDroidBenchRoot(), androidLibs, androidJavaJar, filter);
@@ -174,25 +158,61 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return f;
   }
 
-  public static Collection<Object[]> generateData(
+  public static Stream<Named<TestParameters>> generateData(
       String droidBenchRoot,
       final URI[] androidLibs,
       final File androidJavaJar,
       final String filter) {
-    final List<Object[]> files = new ArrayList<>();
+    final Stream.Builder<Named<TestParameters>> testParameters = Stream.builder();
+    final var apkRoot = new File(droidBenchRoot + "/apk/");
     FileUtil.recurseFiles(
         f -> {
           Set<MethodReference> uncalled = uncalledFunctions.get(f.getName());
           if (uncalled == null) {
             uncalled = Collections.emptySet();
           }
-          files.add(new Object[] {androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled});
+          testParameters.add(
+              Named.of(
+                  apkRoot.toPath().relativize(f.toPath()).toString(),
+                  new TestParameters(androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled)));
         },
         t ->
             (filter == null || t.getAbsolutePath().contains(filter))
                 && t.getName().endsWith("apk")
                 && !skipTests.contains(t.getName()),
-        new File(droidBenchRoot + "/apk/"));
-    return files;
+        apkRoot);
+    return testParameters.build().sorted(Comparator.comparing(Named::getName));
+  }
+
+  protected static class TestParameters {
+
+    private final URI[] androidLibs;
+    private final File androidJavaJar;
+    private final String apkFile;
+    private final Set<MethodReference> uncalled;
+
+    public TestParameters(
+        URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {
+      this.androidLibs = androidLibs;
+      this.androidJavaJar = androidJavaJar;
+      this.apkFile = apkFile;
+      this.uncalled = uncalled;
+    }
+
+    public URI[] getAndroidLibs() {
+      return androidLibs;
+    }
+
+    public File getAndroidJavaJar() {
+      return androidJavaJar;
+    }
+
+    public String getApkFile() {
+      return apkFile;
+    }
+
+    public Set<MethodReference> getUncalled() {
+      return uncalled;
+    }
   }
 }

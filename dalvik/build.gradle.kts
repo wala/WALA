@@ -93,6 +93,7 @@ dependencies {
 
   testImplementation(libs.android.tools)
   testImplementation(libs.dexlib2)
+  testImplementation(libs.junit.jupiter.params)
   testImplementation(projects.core)
   testImplementation(projects.dalvik)
   testImplementation(projects.shrike)
