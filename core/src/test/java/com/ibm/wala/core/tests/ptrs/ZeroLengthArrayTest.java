@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -35,7 +37,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ZeroLengthArrayTest {
@@ -69,11 +70,11 @@ public class ZeroLengthArrayTest {
             Everywhere.EVERYWHERE);
     OrdinalSet<InstanceKey> pointsToSet =
         pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
-    Assert.assertEquals(1, pointsToSet.size());
+    assertEquals(1, pointsToSet.size());
     InstanceKey arrayKey = pointsToSet.iterator().next();
     OrdinalSet<InstanceKey> arrayContents =
         pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
     System.err.println(arrayContents);
-    Assert.assertEquals(0, arrayContents.size());
+    assertEquals(0, arrayContents.size());
   }
 }

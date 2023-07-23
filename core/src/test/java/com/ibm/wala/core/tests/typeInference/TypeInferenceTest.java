@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.core.tests.typeInference;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -35,7 +39,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -98,9 +101,9 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("foo"),
             new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    Assert.assertNotNull("method not found", method);
+    assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    Assert.assertNotNull("imethod not found", imethod);
+    assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
@@ -118,14 +121,14 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("bar"),
             new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
-    Assert.assertNotNull("method not found", method);
+    assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    Assert.assertNotNull("imethod not found", imethod);
+    assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
-    Assert.assertNotNull("null type abstraction for parameter", ti.getType(2));
+    assertNotNull("null type abstraction for parameter", ti.getType(2));
   }
 
   @Test
@@ -136,16 +139,16 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("inferInt"),
             new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    Assert.assertNotNull("method not found", method);
+    assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    Assert.assertNotNull("imethod not found", imethod);
+    assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
     TypeAbstraction type = ti.getType(7);
-    Assert.assertNotNull("null type abstraction", type);
-    Assert.assertEquals("inferred wrong type", "int", type.toString());
+    assertNotNull("null type abstraction", type);
+    assertEquals("inferred wrong type", "int", type.toString());
   }
 
   @Test
@@ -156,16 +159,16 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("useCast"),
             new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));
-    Assert.assertNotNull("method not found", method);
+    assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    Assert.assertNotNull("imethod not found", imethod);
+    assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, false);
     TypeAbstraction type = ti.getType(4);
-    Assert.assertNotNull("null type abstraction", type);
-    Assert.assertTrue(
+    assertNotNull("null type abstraction", type);
+    assertTrue(
         "inferred wrong type " + type,
         type instanceof ConeType
             && ((ConeType) type)

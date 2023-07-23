@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.cast.ipa.lexical.LexicalModRef;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
@@ -21,7 +24,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class TestLexicalModRef {
@@ -40,14 +42,14 @@ public abstract class TestLexicalModRef {
           .contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner>")) {
         // function "inner" reads exactly x and z
         OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
-        Assert.assertEquals(2, readVars.size());
-        Assert.assertEquals(
+        assertEquals(2, readVars.size());
+        assertEquals(
             "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]",
             readVars.toString());
         // writes x and z as well
         OrdinalSet<Pair<CGNode, String>> writtenVars = writeResult.get(n);
-        Assert.assertEquals(2, writtenVars.size());
-        Assert.assertEquals(
+        assertEquals(2, writtenVars.size());
+        assertEquals(
             "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]",
             writtenVars.toString());
       }
@@ -55,9 +57,9 @@ public abstract class TestLexicalModRef {
           .contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner2>")) {
         // function "inner3" reads exactly innerName, inner3, and x and z via callees
         OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
-        Assert.assertEquals(4, readVars.size());
+        assertEquals(4, readVars.size());
         for (Pair<CGNode, String> rv : readVars) {
-          Assert.assertTrue(
+          assertTrue(
               rv.toString(),
               "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x]"
                       .equals(rv.toString())

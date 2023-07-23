@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.jdk11.nestmates;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.*;
@@ -21,7 +24,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class NestmatesTest extends WalaTestCase {
@@ -43,23 +45,23 @@ public class NestmatesTest extends WalaTestCase {
     TypeReference tm =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/TestNestmates");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
-    Assert.assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
+    assertTrue("expect main node", cg.getNodes(mm).iterator().hasNext());
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // should be from main to Triple()
     TypeReference t1s =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/Outer$Inner");
     MethodReference t1m = MethodReference.findOrCreate(t1s, "triple", "()I");
-    Assert.assertTrue("expect Outer.Inner.triple node", cg.getNodes(t1m).iterator().hasNext());
+    assertTrue("expect Outer.Inner.triple node", cg.getNodes(t1m).iterator().hasNext());
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Triple()
-    Assert.assertTrue(
+    assertTrue(
         "should have call site from main to TestNestmates.triple()",
         cg.getPossibleSites(mnode, t1node).hasNext());
 
     // check that triple() does not call an accessor method
-    Assert.assertFalse(
+    assertFalse(
         "there should not be a call from triple() to an accessor method",
         cg.getSuccNodes(t1node).hasNext());
   }

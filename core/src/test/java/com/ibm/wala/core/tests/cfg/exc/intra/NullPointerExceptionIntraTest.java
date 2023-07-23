@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.core.tests.cfg.exc.intra;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.cfg.exc.NullPointerAnalysis;
@@ -42,7 +46,6 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import java.util.Collection;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -106,19 +109,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NULL, returnState.getState(returnVal));
+      assertEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NULL, returnState.getState(returnVal));
+      assertEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -143,19 +146,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NULL, returnState.getState(returnVal));
+      assertEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NULL, returnState.getState(returnVal));
+      assertEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -180,19 +183,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
   }
 
@@ -218,19 +221,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
   }
 
@@ -255,19 +258,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
   }
 
@@ -292,19 +295,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
   }
 
@@ -329,21 +332,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -368,21 +371,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -407,21 +410,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -446,21 +449,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -485,21 +488,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -524,21 +527,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -563,21 +566,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -602,21 +605,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -641,19 +644,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
   }
 
@@ -678,19 +681,19 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertEquals(State.NOT_NULL, returnState.getState(returnVal));
     }
   }
 
@@ -715,21 +718,21 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
@@ -754,33 +757,33 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
           returnNodeExploded(returnNode, intraExplodedCFG.getCFG());
       final NullPointerState returnState = intraExplodedCFG.getState(returnNodeExploded);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
     {
       ExceptionPruningAnalysis<SSAInstruction, ISSABasicBlock> intraSSACFG =
           NullPointerAnalysis.createIntraproceduralSSACFGAnalyis(ir);
       intraSSACFG.compute(new NullProgressMonitor());
 
-      Assert.assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
-      Assert.assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
+      assertEquals(ir.getControlFlowGraph().exit(), intraSSACFG.getCFG().exit());
+      assertEquals(returnNode, returnNode(intraSSACFG.getCFG()));
 
       final NullPointerState returnState = intraSSACFG.getState(returnNode);
 
-      Assert.assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
-      Assert.assertNotEquals(State.NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NOT_NULL, returnState.getState(returnVal));
+      assertNotEquals(State.NULL, returnState.getState(returnVal));
     }
   }
 
   public static ISSABasicBlock returnNode(ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg) {
     Collection<ISSABasicBlock> returnNodes = cfg.getNormalPredecessors(cfg.exit());
-    Assert.assertEquals(1, returnNodes.size());
+    assertEquals(1, returnNodes.size());
     return (ISSABasicBlock) returnNodes.toArray()[0];
   }
 
   public static int returnVal(ISSABasicBlock returnNode) {
     final SSAReturnInstruction returnInst = (SSAReturnInstruction) returnNode.getLastInstruction();
-    Assert.assertEquals(1, returnInst.getNumberOfUses());
+    assertEquals(1, returnInst.getNumberOfUses());
     return returnInst.getUse(0);
   }
 
@@ -793,7 +796,7 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
         return candidate;
       }
     }
-    Assert.fail();
+    fail();
     return null;
   }
 }

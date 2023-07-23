@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -31,7 +33,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class TypeBasedArrayAliasTest extends WalaTestCase {
@@ -57,17 +58,17 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     CGNode node = findNode(cg, "testMayAlias1");
     PointerKey pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     PointerKey pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
-    Assert.assertTrue(mayAliased(pk1, pk2, pa));
+    assertTrue(mayAliased(pk1, pk2, pa));
 
     node = findNode(cg, "testMayAlias2");
     pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
-    Assert.assertTrue(mayAliased(pk1, pk2, pa));
+    assertTrue(mayAliased(pk1, pk2, pa));
 
     node = findNode(cg, "testMayAlias3");
     pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     pk2 = pa.getHeapModel().getPointerKeyForLocal(node, 2);
-    Assert.assertTrue(mayAliased(pk1, pk2, pa));
+    assertTrue(mayAliased(pk1, pk2, pa));
   }
 
   private static final CGNode findNode(CallGraph cg, String methodName) {

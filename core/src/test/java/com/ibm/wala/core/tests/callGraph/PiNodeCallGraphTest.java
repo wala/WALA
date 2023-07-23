@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assert.assertEquals;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -37,7 +39,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.io.IOException;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** */
@@ -128,7 +129,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
             .iterator()
             .next();
     int actualLocalCastCallees = cg.getSuccNodeCount(localCastNode);
-    Assert.assertEquals(numLocalCastCallees, actualLocalCastCallees);
+    assertEquals(numLocalCastCallees, actualLocalCastCallees);
   }
 
   @Test

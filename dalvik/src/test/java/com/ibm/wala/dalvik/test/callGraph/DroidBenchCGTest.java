@@ -11,6 +11,7 @@
 package com.ibm.wala.dalvik.test.callGraph;
 
 import static com.ibm.wala.dalvik.test.util.Util.walaProperties;
+import static org.junit.Assert.assertTrue;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -35,7 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
@@ -142,7 +142,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
   }
 
   protected void assertion(String string, boolean empty) {
-    Assert.assertTrue(string, empty);
+    assertTrue(string, empty);
   }
 
   private static final Set<String> skipTests = HashSetFactory.make();

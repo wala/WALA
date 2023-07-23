@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -25,7 +28,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class DupFieldsTest extends WalaTestCase {
@@ -48,15 +50,15 @@ public class DupFieldsTest extends WalaTestCase {
     } catch (IllegalStateException e) {
       threwException = true;
     }
-    Assert.assertTrue(threwException);
+    assertTrue(threwException);
     IField f =
         cha.resolveField(
             FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Int));
-    Assert.assertEquals(f.getFieldTypeReference(), TypeReference.Int);
+    assertEquals(f.getFieldTypeReference(), TypeReference.Int);
     f =
         cha.resolveField(
             FieldReference.findOrCreate(
                 ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Boolean));
-    Assert.assertEquals(f.getFieldTypeReference(), TypeReference.Boolean);
+    assertEquals(f.getFieldTypeReference(), TypeReference.Boolean);
   }
 }

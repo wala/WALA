@@ -10,6 +10,11 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -62,7 +67,6 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Tests for Call Graph construction */
@@ -134,12 +138,11 @@ public class CallGraphTest extends WalaTestCase {
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
     String ws = Warnings.asString();
-    Assert.assertTrue(
-        "failed to report a warning about Abstract1", ws.contains("cornerCases/Abstract1"));
+    assertTrue("failed to report a warning about Abstract1", ws.contains("cornerCases/Abstract1"));
 
     // we do not expect a warning about class Abstract2, which has a concrete
     // subclasses
-    Assert.assertFalse("reported a warning about Abstract2", ws.contains("cornerCases/Abstract2"));
+    assertFalse("reported a warning about Abstract2", ws.contains("cornerCases/Abstract2"));
   }
 
   @Test
@@ -174,11 +177,11 @@ public class CallGraphTest extends WalaTestCase {
         break;
       }
     }
-    Assert.assertTrue(foundDoNothing);
+    assertTrue(foundDoNothing);
     options.setHandleStaticInit(false);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     for (CGNode n : cg) {
-      Assert.assertFalse(n.toString().contains("doNothing"));
+      assertFalse(n.toString().contains("doNothing"));
     }
   }
 
@@ -199,7 +202,7 @@ public class CallGraphTest extends WalaTestCase {
         foundSortForward = true;
       }
     }
-    Assert.assertTrue("expected for sortForward", foundSortForward);
+    assertTrue("expected for sortForward", foundSortForward);
   }
 
   @Test
@@ -227,7 +230,7 @@ public class CallGraphTest extends WalaTestCase {
             break;
           }
         }
-        Assert.assertTrue(foundToCharArray);
+        assertTrue(foundToCharArray);
         break;
       }
     }
@@ -327,7 +330,7 @@ public class CallGraphTest extends WalaTestCase {
     CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
     PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", pa.getHeapModel());
     OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
-    Assert.assertEquals(1, pointsToSet.size());
+    assertEquals(1, pointsToSet.size());
   }
 
   @Test
@@ -344,7 +347,7 @@ public class CallGraphTest extends WalaTestCase {
         Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
-    Assert.assertTrue(
+    assertTrue(
         "did not find call to valueOf",
         StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(
@@ -395,7 +398,7 @@ public class CallGraphTest extends WalaTestCase {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
       e1.printStackTrace();
-      Assert.fail(e1.getMessage());
+      fail(e1.getMessage());
     }
 
     Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(cg);
@@ -462,7 +465,7 @@ public class CallGraphTest extends WalaTestCase {
       GraphIntegrity.check(icfg);
     } catch (UnsoundGraphException e) {
       e.printStackTrace();
-      Assert.fail();
+      fail();
     }
 
     // perform a little icfg exercise
@@ -485,7 +488,7 @@ public class CallGraphTest extends WalaTestCase {
     try {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
-      Assert.fail(e1.getMessage());
+      fail(e1.getMessage());
     }
     Set<MethodReference> callGraphMethods = CallGraphStats.collectMethods(cg);
     System.err.println(thisAlgorithm + " methods reached: " + callGraphMethods.size());

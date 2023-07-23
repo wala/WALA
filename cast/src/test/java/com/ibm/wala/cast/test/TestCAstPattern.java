@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.cast.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPattern;
@@ -19,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class TestCAstPattern {
@@ -63,16 +66,16 @@ public class TestCAstPattern {
     System.err.println(("testing with input " + CAstPrinter.print(n)));
 
     if (names == null) {
-      Assert.assertFalse(p.match(n, null));
+      assertFalse(p.match(n, null));
     } else {
       Segments s = CAstPattern.match(p, n);
-      Assert.assertNotNull(s);
+      assertNotNull(s);
       for (Map.Entry<String, Object> entry : names.entrySet()) {
         Object o = entry.getValue();
         final String nm = entry.getKey();
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
-          Assert.assertEquals(
+          assertEquals(
               "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm),
               entry.getValue(),
               s.getSingle(nm));
@@ -80,7 +83,7 @@ public class TestCAstPattern {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
-          Assert.assertEquals(
+          assertEquals(
               "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getMultiple(nm),
               entry.getValue(),
               s.getMultiple(nm));

@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -28,7 +31,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import java.util.Collection;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -82,7 +84,7 @@ public class GetTargetsTest extends WalaTestCase {
     for (IMethod method : c) {
       System.err.println(method);
     }
-    Assert.assertEquals(1, c.size());
+    assertEquals(1, c.size());
   }
 
   /** test that calls to &lt;init&gt; methods are treated specially */
@@ -94,7 +96,7 @@ public class GetTargetsTest extends WalaTestCase {
     for (IMethod method : c) {
       System.err.println(method);
     }
-    Assert.assertEquals(1, c.size());
+    assertEquals(1, c.size());
   }
 
   @Test
@@ -104,6 +106,6 @@ public class GetTargetsTest extends WalaTestCase {
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, "LmethodLookup/MethodLookupStuff$B"));
     IMethod m = testKlass.getMethod(Selector.make("<init>(I)V"));
-    Assert.assertNull(m);
+    assertNull(m);
   }
 }

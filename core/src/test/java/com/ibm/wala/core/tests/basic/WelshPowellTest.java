@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.basic;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.Graph;
@@ -19,7 +22,6 @@ import com.ibm.wala.util.graph.impl.NodeWithNumberedEdges;
 import com.ibm.wala.util.graph.traverse.WelshPowell;
 import com.ibm.wala.util.graph.traverse.WelshPowell.ColoredVertices;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class WelshPowellTest {
@@ -30,7 +32,7 @@ public class WelshPowellTest {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(succ))) {
           continue;
         }
-        Assert.assertTrue(
+        assertTrue(
             n + " and succ: " + succ + " have same color: " + colors.get(n),
             colors.get(n).intValue() != colors.get(succ).intValue());
       }
@@ -38,7 +40,7 @@ public class WelshPowellTest {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(pred))) {
           continue;
         }
-        Assert.assertTrue(
+        assertTrue(
             n + " and pred: " + pred + " have same color:" + colors.get(n),
             colors.get(n).intValue() != colors.get(pred).intValue());
       }
@@ -92,7 +94,7 @@ public class WelshPowellTest {
     ColoredVertices<TypedNode<Integer>> colors = new WelshPowell<TypedNode<Integer>>().color(G);
     System.err.println(colors.getColors());
     assertColoring(G, colors.getColors(), true);
-    Assert.assertTrue(colors.getNumColors() <= 4);
+    assertTrue(colors.getNumColors() <= 4);
   }
 
   @Test
@@ -114,6 +116,6 @@ public class WelshPowellTest {
     ColoredVertices<TypedNode<String>> colors = new WelshPowell<TypedNode<String>>().color(G);
     System.err.println(colors.getColors());
     assertColoring(G, colors.getColors(), true);
-    Assert.assertEquals(3, colors.getNumColors());
+    assertEquals(3, colors.getNumColors());
   }
 }

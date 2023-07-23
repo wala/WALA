@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -18,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ExclusionsTest {
@@ -34,6 +35,6 @@ public class ExclusionsTest {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
             StringStuff.deployment2CanonicalTypeString("java.awt.Button"));
-    Assert.assertTrue(scope.getExclusions().contains(buttonRef.getName().toString().substring(1)));
+    assertTrue(scope.getExclusions().contains(buttonRef.getName().toString().substring(1)));
   }
 }

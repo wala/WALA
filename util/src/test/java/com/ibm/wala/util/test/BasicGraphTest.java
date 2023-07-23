@@ -12,10 +12,10 @@ package com.ibm.wala.util.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertTrue;
 
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.impl.BasicGraph;
-import org.junit.Assert;
 import org.junit.Test;
 
 /** Tests for {@link com.ibm.wala.util.graph.impl.BasicGraph}. */
@@ -29,8 +29,8 @@ public class BasicGraphTest {
     graph.addNode(root);
     graph.addNode(leaf);
     graph.addEdge(root, leaf);
-    Assert.assertTrue(graph.containsNode(root));
-    Assert.assertTrue(graph.containsNode(leaf));
+    assertTrue(graph.containsNode(root));
+    assertTrue(graph.containsNode(leaf));
     assertThat(Iterator2Collection.toList(graph.getPredNodes(leaf)), contains(root));
     assertThat(Iterator2Collection.toList(graph.getSuccNodes(root)), contains(leaf));
   }

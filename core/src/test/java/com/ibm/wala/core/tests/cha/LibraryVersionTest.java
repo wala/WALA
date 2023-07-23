@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.ir.DeterministicIRTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -17,7 +19,6 @@ import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -37,7 +38,7 @@ public class LibraryVersionTest extends WalaTestCase {
             new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
-    Assert.assertTrue(
+    assertTrue(
         scope.isJava18Libraries()
             || scope.isJava17Libraries()
             || scope.isJava16Libraries()

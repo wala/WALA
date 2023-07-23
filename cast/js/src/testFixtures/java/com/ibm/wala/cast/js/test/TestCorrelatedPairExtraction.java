@@ -11,6 +11,9 @@
 
 package com.ibm.wala.cast.js.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationSummary;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ClosureExtractor;
@@ -29,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -63,7 +65,7 @@ public abstract class TestCorrelatedPairExtraction {
             public ExtractionPolicy createPolicy(CAstEntity entity) {
               CorrelatedPairExtractionPolicy policy =
                   CorrelatedPairExtractionPolicy.make(entity, summaries);
-              Assert.assertNotNull(policy);
+              assertNotNull(policy);
               return policy;
             }
           };
@@ -79,7 +81,7 @@ public abstract class TestCorrelatedPairExtraction {
       FileUtil.writeFile(new File("build/actual.dump"), actual);
 
       if (ASSERT_EQUALS) {
-        Assert.assertEquals(testName, expected, actual);
+        assertEquals(testName, expected, actual);
       }
 
     } catch (IOException | ClassHierarchyException e) {

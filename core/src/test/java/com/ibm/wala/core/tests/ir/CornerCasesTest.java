@@ -10,6 +10,9 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -32,7 +35,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -58,11 +60,11 @@ public class CornerCasesTest extends WalaTestCase {
         TypeReference.findOrCreateClass(
             scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
-    Assert.assertNotNull(klass);
+    assertNotNull(klass);
     IMethod m =
         klass.getMethod(
             new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
-    Assert.assertNull(m);
+    assertNull(m);
   }
 
   /**
@@ -82,14 +84,14 @@ public class CornerCasesTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
-    Assert.assertNotNull(klass);
+    assertNotNull(klass);
     ShrikeCTMethod m =
         (ShrikeCTMethod)
             klass.getMethod(
                 new Selector(
                     Atom.findOrCreateAsciiAtom("foo"),
                     Descriptor.findOrCreateUTF8("()Ljava/lang/Object;")));
-    Assert.assertNotNull(m);
+    assertNotNull(m);
     IR ir =
         new AnalysisCacheImpl()
             .getSSACache()

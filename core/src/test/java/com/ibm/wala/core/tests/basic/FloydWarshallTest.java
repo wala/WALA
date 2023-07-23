@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.basic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
@@ -28,7 +29,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class FloydWarshallTest extends WalaTestCase {
@@ -206,7 +206,7 @@ public class FloydWarshallTest extends WalaTestCase {
 
     assertEquals(resultPaths.size(), expectedPaths.size());
     for (List<Node> rp : resultPaths) {
-      Assert.assertTrue(expectedPaths.contains(rp));
+      assertTrue(expectedPaths.contains(rp));
     }
   }
 

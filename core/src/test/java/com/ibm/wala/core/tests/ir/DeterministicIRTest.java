@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.core.tests.ir;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.core.util.strings.Atom;
@@ -28,7 +32,6 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import java.io.IOException;
 import java.util.Iterator;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -57,9 +60,9 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private IR doMethod(MethodReference method) {
     IAnalysisCacheView cache = makeAnalysisCache();
-    Assert.assertNotNull("method not found", method);
+    assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    Assert.assertNotNull("imethod not found", imethod);
+    assertNotNull("imethod not found", imethod);
     IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.clear();
 
@@ -70,7 +73,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e) {
       System.err.println(ir1);
       e.printStackTrace();
-      Assert.fail("unsound CFG for ir1");
+      fail("unsound CFG for ir1");
     }
 
     IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
@@ -81,10 +84,10 @@ public abstract class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e1) {
       System.err.println(ir2);
       e1.printStackTrace();
-      Assert.fail("unsound CFG for ir2");
+      fail("unsound CFG for ir2");
     }
 
-    Assert.assertEquals(ir1.toString(), ir2.toString());
+    assertEquals(ir1.toString(), ir2.toString());
     return ir1;
   }
 
@@ -92,7 +95,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private static void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
-      Assert.assertNotNull(iterator.next());
+      assertNotNull(iterator.next());
     }
   }
 
@@ -102,7 +105,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
         return;
       }
     }
-    Assert.fail("no instructions generated");
+    fail("no instructions generated");
   }
 
   @Test

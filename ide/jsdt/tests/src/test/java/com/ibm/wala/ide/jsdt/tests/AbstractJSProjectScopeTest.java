@@ -10,6 +10,10 @@
  */
 package com.ibm.wala.ide.jsdt.tests;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine;
 import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine.BuilderType;
@@ -32,7 +36,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -49,7 +52,7 @@ public abstract class AbstractJSProjectScopeTest {
     IJavaScriptProject p =
         JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     System.err.println(p);
-    Assert.assertNotNull("cannot find project", p);
+    assertNotNull("cannot find project", p);
   }
 
   @Test
@@ -63,8 +66,8 @@ public abstract class AbstractJSProjectScopeTest {
                 new CAstAnalysisScope(
                     JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
-    Assert.assertNotNull("cannot make scope", s);
-    Assert.assertFalse("cannot find files", s.getModules(JavaScriptTypes.jsLoader).isEmpty());
+    assertNotNull("cannot make scope", s);
+    assertFalse("cannot find files", s.getModules(JavaScriptTypes.jsLoader).isEmpty());
   }
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p)
@@ -80,8 +83,8 @@ public abstract class AbstractJSProjectScopeTest {
 
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
-    Assert.assertTrue("cannot find any function calls", info.calls.size() > 0);
-    Assert.assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes() > 0);
+    assertTrue("cannot find any function calls", info.calls.size() > 0);
+    assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes() > 0);
   }
 
   @Test
@@ -93,7 +96,7 @@ public abstract class AbstractJSProjectScopeTest {
     e.buildAnalysisScope();
     IClassHierarchy cha = e.getClassHierarchy();
     // System.err.println(cha);
-    Assert.assertNotNull(cha);
+    assertNotNull(cha);
   }
 
   protected EclipseJavaScriptAnalysisEngine makeAnalysisEngine(IJavaScriptProject p) {

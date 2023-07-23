@@ -1,5 +1,8 @@
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -22,7 +25,6 @@ import com.ibm.wala.util.intset.IntPair;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class AcyclicCallGraphTest extends WalaTestCase {
@@ -42,7 +44,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
 
     IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cg, cg.getFakeRootNode());
 
-    Assert.assertTrue("NList should have cycles", backEdges.iterator().hasNext());
+    assertTrue("NList should have cycles", backEdges.iterator().hasNext());
 
     Map<CGNode, Set<CGNode>> cgBackEdges = HashMapFactory.make();
     for (IntPair p : backEdges) {
@@ -56,7 +58,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
     PrunedCallGraph pcg =
         new PrunedCallGraph(cg, Iterator2Collection.toSet(cg.iterator()), cgBackEdges);
 
-    Assert.assertFalse(
+    assertFalse(
         "cycles should be gone",
         Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator().hasNext());
   }
