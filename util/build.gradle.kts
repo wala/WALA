@@ -10,7 +10,6 @@ dependencies {
   compileOnly(libs.jspecify)
   javadocClasspath(projects.core)
   testImplementation(libs.hamcrest)
-  testRuntimeOnly(testFixtures(projects.core))
 }
 
 tasks.named<Javadoc>("javadoc") {

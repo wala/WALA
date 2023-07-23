@@ -10,7 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -23,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.tests.util.SlowTests;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -31,9 +31,9 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
 import java.util.List;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
@@ -474,8 +474,8 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyNoEdges(CG, "suffix:test2", "suffix:foo_of_A");
   }
 
+  @Tag("slow")
   @Test
-  @Category(SlowTests.class)
   public void testStackOverflowOnSsaConversionBug()
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
@@ -917,18 +917,21 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
   }
 
-  @Test(expected = CallGraphBuilderCancelException.class)
-  @Category(SlowTests.class)
-  public void testManyStrings()
-      throws IllegalArgumentException, IOException, CancelException, WalaException {
+  @Tag("slow")
+  @Test
+  public void testManyStrings() throws IllegalArgumentException, IOException, WalaException {
     SSAPropagationCallGraphBuilder B =
         JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
     B.getOptions().setTraceStringConstants(true);
     IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 10000, false);
-    monitor.beginTask("build CG", 1);
-    CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
-    monitor.done();
-    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+    assertThrows(
+        CallGraphBuilderCancelException.class,
+        () -> {
+          monitor.beginTask("build CG", 1);
+          CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
+          monitor.done();
+          CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+        });
   }
 
   @Test
@@ -947,7 +950,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         new Object[] {"loops.js", new String[] {"loops.js/three", "loops.js/four"}}
       };
 
-  @Ignore("need to fix this.  bug from Sukyoung's group")
+  @Disabled("need to fix this.  bug from Sukyoung's group")
   @Test
   public void testLoops()
       throws IllegalArgumentException, IOException, CancelException, WalaException {
@@ -973,7 +976,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         },
       };
 
-  @Ignore("need to fix this.  bug from Sukyoung's group")
+  @Disabled("need to fix this.  bug from Sukyoung's group")
   @Test
   public void testPrimitiveStrings()
       throws IllegalArgumentException, IOException, CancelException, WalaException {

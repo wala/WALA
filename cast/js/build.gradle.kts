@@ -17,7 +17,6 @@ dependencies {
   implementation(projects.util)
   javadocClasspath(projects.cast.js.rhino)
   testFixturesImplementation(testFixtures(projects.cast))
-  testFixturesImplementation(testFixtures(projects.core))
   testImplementation(testFixtures(projects.cast))
   testImplementation(testFixtures(projects.core))
 }
