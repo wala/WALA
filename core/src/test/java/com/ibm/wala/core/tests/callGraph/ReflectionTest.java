@@ -413,7 +413,6 @@ public class ReflectionTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
-    System.err.println(cg);
     assertFalse(nodes.isEmpty());
   }
 
