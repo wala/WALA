@@ -52,7 +52,6 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
         cg =
             util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory)
                 .getCallGraph();
-        System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch (AssertionError afe) {
         throw new AssertionError(builderType + ": " + afe.getMessage(), afe);
@@ -75,7 +74,6 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
       cg =
           util.buildBoundedCG(loaders, scripts.toArray(new Module[0]), monitor, false, bound)
               .getCallGraph();
-      System.err.println(cg);
       verifyGraphAssertions(cg, assertions);
     } catch (AssertionError afe) {
       throw new AssertionError(builderType + ": " + afe.getMessage(), afe);
