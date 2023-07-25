@@ -430,7 +430,6 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   public void testSkeleton2() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/skeleton2.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
-    System.err.println(CG);
     verifyGraphAssertions(CG, assertionsForSkeleton2);
   }
 
