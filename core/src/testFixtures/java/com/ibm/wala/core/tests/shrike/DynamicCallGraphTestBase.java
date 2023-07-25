@@ -172,9 +172,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
               "no edge for " + caller + " --> " + callee,
               staticCG1.getPossibleSites(caller, callee).hasNext());
           Pair<CGNode, CGNode> x = Pair.make(caller, callee);
-          if (edges.add(x)) {
-            System.err.println("found expected edge " + caller + " --> " + callee);
-          }
+          edges.add(x);
         },
         filter);
   }
@@ -192,8 +190,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           boolean checkForCallee = !staticCG1.getNodes(callee).isEmpty();
           if (!checkForCallee) {
             notFound.add(callee);
-          } else {
-            System.err.println("found expected node " + callee);
           }
         },
         filter);

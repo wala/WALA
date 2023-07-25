@@ -40,7 +40,7 @@ import org.apache.commons.io.input.BOMInputStream;
 public class CAstCallGraphUtil {
 
   /** flag to prevent dumping of verbose call graph / pointer analysis output */
-  public static boolean AVOID_DUMP = true;
+  public static final ThreadLocal<Boolean> AVOID_DUMP = ThreadLocal.withInitial(() -> true);
 
   public static SourceFileModule makeSourceModule(URL script, String dir, String name) {
     // DO NOT use File.separator here, since this name is matched against
@@ -128,7 +128,7 @@ public class CAstCallGraphUtil {
 
   public static void dumpCG(
       SSAContextInterpreter interp, PointerAnalysis<? extends InstanceKey> PA, CallGraph CG) {
-    if (AVOID_DUMP) return;
+    if (AVOID_DUMP.get()) return;
     for (CGNode N : CG) {
       System.err.print("callees of node " + getShortName(N) + " : [");
       boolean fst = true;
