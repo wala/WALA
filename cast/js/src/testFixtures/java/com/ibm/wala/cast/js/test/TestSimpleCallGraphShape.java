@@ -322,7 +322,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
 
     boolean x = CAstCallGraphUtil.AVOID_DUMP;
-    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(
         (SSAContextInterpreter) B.getContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = x;
@@ -926,7 +926,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "try-finally-crash.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
-    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = save;
   }
@@ -969,7 +969,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "loops.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean x = CAstCallGraphUtil.AVOID_DUMP;
-    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = x;
     verifyGraphAssertions(CG, assertionsForLoops);
@@ -998,7 +998,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "primitive_strings.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean x = CAstCallGraphUtil.AVOID_DUMP;
-    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = x;
     verifyGraphAssertions(CG, assertionsForPrimitiveStrings);
@@ -1036,7 +1036,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badthrow.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
-    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = save;
   }
@@ -1047,7 +1047,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "nrwrapper.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
-    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = save;
   }
@@ -1058,7 +1058,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "finallycrash.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
-    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = save;
   }
@@ -1069,7 +1069,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "for_in_expr.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
-    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = save;
   }
@@ -1098,7 +1098,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForComplexFinally);
 
     boolean save = CAstCallGraphUtil.AVOID_DUMP;
-    // CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
     CAstCallGraphUtil.AVOID_DUMP = save;
   }

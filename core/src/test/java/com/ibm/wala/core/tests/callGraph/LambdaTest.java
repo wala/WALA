@@ -160,7 +160,6 @@ public class LambdaTest extends WalaTestCase {
                 Atom.findOrCreateUnicodeAtom("target"),
                 Descriptor.findOrCreateUTF8("()V"));
 
-    System.out.println(cg);
     assertEquals(
         "expected C1.target() to be reachable", 1, cg.getNodes(getTargetRef.apply("C1")).size());
     assertEquals(
@@ -197,7 +196,6 @@ public class LambdaTest extends WalaTestCase {
                 Atom.findOrCreateUnicodeAtom("target"),
                 Descriptor.findOrCreateUTF8("()V"));
 
-    System.out.println(cg);
     Consumer<String> checkCalledFromOneSite =
         (klassName) -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));

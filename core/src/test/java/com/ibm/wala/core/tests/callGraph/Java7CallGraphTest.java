@@ -82,8 +82,6 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    System.err.println(cg);
-
     instrument(F.getAbsolutePath());
     run("pack.ocamljavaMain", null, args);
 

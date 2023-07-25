@@ -59,7 +59,7 @@ public class RunBuilder {
 
     System.err.println(CG.getClassHierarchy());
 
-    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.AVOID_DUMP = true;
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 }
