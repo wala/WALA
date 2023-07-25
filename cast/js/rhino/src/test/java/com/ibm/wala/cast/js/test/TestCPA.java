@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -37,7 +36,6 @@ public class TestCPA {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "cpa.js");
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphUtil.AVOID_DUMP = false;
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
   }
 }

@@ -841,8 +841,6 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
                 }
               }
             }
-
-            System.err.println(instruction);
           }
 
           if (op == CAstBinaryOp.STRICT_EQ || op == CAstBinaryOp.STRICT_NE) {

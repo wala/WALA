@@ -68,8 +68,6 @@ public abstract class TestCallGraphShape {
                     if (pos.getFirstLine() >= (Integer) assertionDatum[2]
                         && (pos.getLastLine() != -1 ? pos.getLastLine() : pos.getFirstLine())
                             <= (Integer) assertionDatum[3]) {
-                      System.err.println(
-                          "found " + inst + " of " + M + " at expected position " + pos);
                       continue insts;
                     }
                   }
@@ -166,7 +164,6 @@ public abstract class TestCallGraphShape {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
                     assert false : "found edge " + assertionDatum[0] + " ---> " + targetName;
                   } else {
-                    System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
                     continue check_target;
                   }
                 }
