@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.rhino.test;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -36,7 +38,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.function.Supplier;
-import org.junit.Assert;
 
 /**
  * Utility class for building call graphs of HTML pages.
@@ -78,7 +79,7 @@ public class HTMLCGBuilder {
     try {
       url = toUrl(src);
     } catch (MalformedURLException e1) {
-      Assert.fail("Could not find page to analyse: " + src);
+      fail("Could not find page to analyse: " + src);
     }
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());

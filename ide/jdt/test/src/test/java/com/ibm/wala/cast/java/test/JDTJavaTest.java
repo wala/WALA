@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.java.test;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.client.AbstractAnalysisEngine;
@@ -25,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
 
 public abstract class JDTJavaTest extends IRTests {
 
@@ -73,7 +74,7 @@ public abstract class JDTJavaTest extends IRTests {
       engine.setExclusionsFile(tf.getAbsolutePath());
       tf.deleteOnExit();
     } catch (IOException e) {
-      Assert.fail("Cannot find exclusions file: " + e);
+      fail("Cannot find exclusions file: " + e);
     }
 
     return engine;
