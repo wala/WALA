@@ -61,25 +61,15 @@ jobs:
         with:
           name: Test results for JDK ${{ matrix.java }} on ${{ runner.os }}
           path: '**/build/test-results/test/TEST-*.xml'
-  publish_test_results:
-    name: Repoort test results
-    needs: build_gradle
-    if: always()
+  upload_event_file:
+    name: Upload event file
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: read
-      issues: read
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
+      - name: Upload event file
+        uses: actions/upload-artifact@v3
         with:
-          path: artifacts
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2.8.0
-        with:
-          files: 'artifacts/**/build/test-results/test/TEST-*.xml'
+          name: Event file
+          path: ${{ github.event_path }}
   generate_docs:
     name: 'Generate latest docs'
     needs: build_gradle
