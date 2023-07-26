@@ -22,8 +22,8 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.io.FileUtil;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.regex.Pattern;
-import org.junit.ComparisonFailure;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -67,14 +67,9 @@ public abstract class TestForInBodyExtraction {
       expected = new CAstDumper().dump(parseJS(tmp, ast));
       expected = eraseGeneratedNames(expected);
 
-      assertEquals(expected, actual, testName);
+      assertEquals(expected, actual, () -> "Comparison Failure in " + testName + '!');
     } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ComparisonFailure e) {
-      System.err.println("Comparison Failure in " + testName + "!");
-      System.err.println(expected);
-      System.err.println(actual);
-      throw e;
+      throw new UncheckedIOException(e);
     } finally {
       if (tmp != null && tmp.exists()) tmp.delete();
     }
