@@ -24,12 +24,14 @@ import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
+import org.assertj.core.api.HamcrestCondition;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.hamcrest.Matcher;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The test data should be grouped, according to the behavior of the analysis. All array accesses of
@@ -42,6 +44,7 @@ import org.junit.rules.ErrorCollector;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
+@ExtendWith(SoftAssertionsExtension.class)
 public class ArrayboundsAnalysisTest {
   private static final ClassLoader CLASS_LOADER = ArrayboundsAnalysisTest.class.getClassLoader();
 
@@ -59,9 +62,7 @@ public class ArrayboundsAnalysisTest {
   private static AnalysisScope scope;
   private static ClassHierarchy cha;
 
-  @Rule public ErrorCollector collector = new ErrorCollector();
-
-  @BeforeClass
+  @BeforeAll
   public static void init() throws IOException, ClassHierarchyException {
     scope =
         AnalysisScopeReader.instance.readJavaScope(TestConstants.WALA_TESTDATA, null, CLASS_LOADER);
@@ -82,28 +83,35 @@ public class ArrayboundsAnalysisTest {
   }
 
   @Test
-  public void detectable() {
+  public void detectable(final SoftAssertions softly) {
     IClass iClass = getIClass(DETECTABLE_TESTDATA);
     assertAllSameNecessity(
-        iClass, DETECTABLE_NUMBER_OF_ARRAY_ACCESS, equalTo(UnnecessaryCheck.BOTH));
+        softly, iClass, DETECTABLE_NUMBER_OF_ARRAY_ACCESS, equalTo(UnnecessaryCheck.BOTH));
   }
 
   @Test
-  public void notDetectable() {
+  public void notDetectable(final SoftAssertions softly) {
     IClass iClass = getIClass(NOT_DETECTABLE_TESTDATA);
     assertAllSameNecessity(
-        iClass, NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
+        softly, iClass, NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
   }
 
   @Test
-  public void notInBound() {
+  public void notInBound(final SoftAssertions softly) {
     IClass iClass = getIClass(NOT_IN_BOUND_TESTDATA);
     assertAllSameNecessity(
-        iClass, NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS, not(equalTo(UnnecessaryCheck.BOTH)));
+        softly,
+        iClass,
+        NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS,
+        not(equalTo(UnnecessaryCheck.BOTH)));
   }
 
   public void assertAllSameNecessity(
-      IClass iClass, int expectedNumberOfArrayAccesses, Matcher<UnnecessaryCheck> matcher) {
+      final SoftAssertions softly,
+      IClass iClass,
+      int expectedNumberOfArrayAccesses,
+      Matcher<UnnecessaryCheck> matcher) {
+    final var condition = new HamcrestCondition<>(matcher);
     int numberOfArrayAccesses = 0;
     for (IMethod method : iClass.getAllMethods()) {
       if (method.getDeclaringClass().equals(iClass)) {
@@ -123,13 +131,15 @@ public class ArrayboundsAnalysisTest {
         for (SSAArrayReferenceInstruction key : analysis.getBoundsCheckNecessary().keySet()) {
           numberOfArrayAccesses++;
           UnnecessaryCheck unnecessary = analysis.getBoundsCheckNecessary().get(key);
-          collector.checkThat(
-              "Unexpected necessity for bounds check in "
-                  + identifyer
-                  + ":"
-                  + method.getLineNumber(key.iIndex()),
-              unnecessary,
-              matcher);
+          softly
+              .assertThat(unnecessary)
+              .as(
+                  () ->
+                      "Unexpected necessity for bounds check in "
+                          + identifyer
+                          + ":"
+                          + method.getLineNumber(key.iIndex()))
+              .satisfies(condition);
         }
       }
     }
@@ -145,13 +155,16 @@ public class ArrayboundsAnalysisTest {
      *
      * There is a bug, so not all array accesses are found.
      */
-    collector.checkThat(
-        "Number of found array accesses is not as expected for " + iClass.getName().toString(),
-        numberOfArrayAccesses,
-        equalTo(expectedNumberOfArrayAccesses));
+    softly
+        .assertThat(numberOfArrayAccesses)
+        .as(
+            () ->
+                "Number of found array accesses is not as expected for "
+                    + iClass.getName().toString())
+        .isEqualTo(expectedNumberOfArrayAccesses);
   }
 
-  @AfterClass
+  @AfterAll
   public static void free() {
     scope = null;
     cha = null;

@@ -36,10 +36,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
+import java.util.function.Supplier;
+import org.assertj.core.api.HamcrestCondition;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * This class checks, if the number of exceptions which might occur intra and interprocedural is
@@ -47,6 +50,7 @@ import org.junit.rules.ErrorCollector;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
+@ExtendWith(SoftAssertionsExtension.class)
 public class ExceptionAnalysisTest {
   private static final ClassLoader CLASS_LOADER = ExceptionAnalysisTest.class.getClassLoader();
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
@@ -56,9 +60,7 @@ public class ExceptionAnalysisTest {
   private static PointerAnalysis<InstanceKey> pointerAnalysis;
   private static CombinedInterproceduralExceptionFilter<SSAInstruction> filter;
 
-  @Rule public ErrorCollector collector = new ErrorCollector();
-
-  @BeforeClass
+  @BeforeAll
   public static void init()
       throws IOException, ClassHierarchyException, IllegalArgumentException,
           CallGraphBuilderCancelException {
@@ -106,7 +108,7 @@ public class ExceptionAnalysisTest {
   }
 
   @Test
-  public void testIntra() {
+  public void testIntra(final SoftAssertions softly) {
     for (CGNode node : cg) {
       IntraproceduralExceptionAnalysis analysis =
           new IntraproceduralExceptionAnalysis(node, filter.getFilter(node), cha, pointerAnalysis);
@@ -117,13 +119,16 @@ public class ExceptionAnalysisTest {
           .getClassName()
           .toString()
           .equals("TestPruning")) {
-        checkThrownExceptions(node, analysis);
-        checkCaughtExceptions(node, analysis);
+        checkThrownExceptions(softly, node, analysis);
+        checkCaughtExceptions(softly, node, analysis);
       }
     }
   }
 
-  private void checkCaughtExceptions(CGNode node, IntraproceduralExceptionAnalysis analysis) {
+  private void checkCaughtExceptions(
+      final SoftAssertions softly, CGNode node, IntraproceduralExceptionAnalysis analysis) {
+    final var condition =
+        new HamcrestCondition<>(not(anyOf(equalTo(0), equalTo(1), equalTo(2), equalTo(3))));
     String text =
         "Number of caught exceptions did not match in "
             + node.getMethod().getName().toString()
@@ -133,22 +138,20 @@ public class ExceptionAnalysisTest {
       Set<TypeReference> caught = analysis.getCaughtExceptions(it.next());
       if (node.getMethod().getName().toString().matches("testTryCatch.*")) {
         if (node.getMethod().getName().toString().equals("testTryCatchMultipleExceptions")) {
-          collector.checkThat(text + caught.toString(), caught.size(), equalTo(2));
+          softly.assertThat(caught).as(() -> text + caught.toString()).hasSize(2);
         } else if (node.getMethod().getName().toString().equals("testTryCatchSuper")) {
-          collector.checkThat(
-              text + caught.toString(),
-              caught.size(),
-              not(anyOf(equalTo(0), equalTo(1), equalTo(2), equalTo(3))));
+          softly.assertThat(caught.size()).as(() -> text + caught).satisfies(condition);
         } else {
-          collector.checkThat(text + caught.toString(), caught.size(), equalTo(1));
+          softly.assertThat(caught).as(() -> text + caught.toString()).hasSize(1);
         }
       } else {
-        collector.checkThat(text + caught.toString(), caught.size(), equalTo(0));
+        softly.assertThat(caught).as(() -> text + caught.toString()).isEmpty();
       }
     }
   }
 
-  private void checkThrownExceptions(CGNode node, IntraproceduralExceptionAnalysis analysis) {
+  private void checkThrownExceptions(
+      final SoftAssertions softly, CGNode node, IntraproceduralExceptionAnalysis analysis) {
     Set<TypeReference> exceptions = analysis.getExceptions();
     String text =
         "Number of thrown exceptions did not match in "
@@ -159,16 +162,18 @@ public class ExceptionAnalysisTest {
     if (node.getMethod().getName().toString().matches("invokeSingle.*")
         && !node.getMethod().getName().toString().equals("invokeSingleRecursive2Helper")
         && !node.getMethod().getName().toString().equals("invokeSinglePassThrough")) {
-      collector.checkThat(text, exceptions.size(), equalTo(1));
+      softly.assertThat(exceptions).as(text).hasSize(1);
     } else {
-      collector.checkThat(text, exceptions.size(), equalTo(0));
+      softly.assertThat(exceptions).as(text).isEmpty();
     }
   }
 
   @Test
-  public void testInterprocedural() {
+  public void testInterprocedural(final SoftAssertions softly) {
     ExceptionAnalysis analysis = new ExceptionAnalysis(cg, pointerAnalysis, cha, filter);
     analysis.solve();
+
+    final var condition = new HamcrestCondition<>(anyOf(equalTo("main"), equalTo("<init>")));
 
     for (CGNode node : cg) {
       if (node.getMethod()
@@ -178,27 +183,28 @@ public class ExceptionAnalysisTest {
           .toString()
           .equals("TestPruning")) {
         Set<TypeReference> exceptions = analysis.getCGNodeExceptions(node);
-        String text =
-            "Number of thrown exceptions did not match in "
-                + node.getMethod().getName().toString()
-                + ". The follwoing exceptions were thrown: "
-                + exceptions.toString();
+        Supplier<String> text =
+            () ->
+                "Number of thrown exceptions did not match in "
+                    + node.getMethod().getName().toString()
+                    + ". The follwoing exceptions were thrown: "
+                    + exceptions.toString();
         if (node.getMethod().getName().toString().matches("invokeSingle.*")) {
-          collector.checkThat(text, exceptions.size(), equalTo(1));
+          softly.assertThat(exceptions).as(text).hasSize(1);
         } else if (node.getMethod().getName().toString().matches("testTryCatch.*")) {
-          collector.checkThat(text, exceptions.size(), equalTo(0));
+          softly.assertThat(exceptions).as(text).isEmpty();
         } else if (node.getMethod().getName().toString().matches("invokeAll.*")) {
-          collector.checkThat(text, exceptions.size(), equalTo(2));
+          softly.assertThat(exceptions).as(text).hasSize(2);
         } else if (node.getMethod().getName().toString().equals("main")) {
-          collector.checkThat(text, exceptions.size(), equalTo(0));
+          softly.assertThat(exceptions).as(text).isEmpty();
         } else {
-          String text2 =
-              "Found method, i didn't know the expected number of exceptions for: "
-                  + node.getMethod().getName().toString();
-          collector.checkThat(
-              text2,
-              node.getMethod().getName().toString(),
-              anyOf(equalTo("main"), equalTo("<init>")));
+          softly
+              .assertThat(node.getMethod().getName().toString())
+              .as(
+                  () ->
+                      "Found method, i didn't know the expected number of exceptions for: "
+                          + node.getMethod().getName().toString())
+              .satisfies(condition);
         }
 
         analysis.getCGNodeExceptions(node);

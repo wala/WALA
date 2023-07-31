@@ -33,12 +33,14 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.LinkedHashSet;
+import org.assertj.core.api.HamcrestCondition;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.hamcrest.Matcher;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * This test will check that:
@@ -58,6 +60,7 @@ import org.junit.rules.ErrorCollector;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
+@ExtendWith(SoftAssertionsExtension.class)
 public class PruneArrayOutOfBoundExceptionEdge {
   private static final ClassLoader CLASS_LOADER =
       PruneArrayOutOfBoundExceptionEdge.class.getClassLoader();
@@ -88,9 +91,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
   private static AnalysisScope scope;
   private static ClassHierarchy cha;
 
-  @Rule public ErrorCollector collector = new ErrorCollector();
-
-  @BeforeClass
+  @BeforeAll
   public static void init() throws IOException, ClassHierarchyException {
     scope =
         AnalysisScopeReader.instance.readJavaScope(TestConstants.WALA_TESTDATA, null, CLASS_LOADER);
@@ -131,24 +132,25 @@ public class PruneArrayOutOfBoundExceptionEdge {
   }
 
   @Test
-  public void detectable() {
+  public void detectable(final SoftAssertions softly) {
     IClass iClass = getIClass(DETECTABLE_TESTDATA);
-    checkRemovedEdges(iClass, DETECTABLE_EXPECTED_COUNT);
+    checkRemovedEdges(softly, iClass, DETECTABLE_EXPECTED_COUNT);
   }
 
   @Test
-  public void notDetectable() {
+  public void notDetectable(final SoftAssertions softly) {
     IClass iClass = getIClass(NOT_DETECTABLE_TESTDATA);
-    checkRemovedEdges(iClass, NOT_DETECTABLE_EXPECTED_COUNT);
+    checkRemovedEdges(softly, iClass, NOT_DETECTABLE_EXPECTED_COUNT);
   }
 
   @Test
-  public void notInBound() {
+  public void notInBound(final SoftAssertions softly) {
     IClass iClass = getIClass(NOT_IN_BOUND_TESTDATA);
-    checkRemovedEdges(iClass, NOT_IN_BOUND_EXPECTED_COUNT);
+    checkRemovedEdges(softly, iClass, NOT_IN_BOUND_EXPECTED_COUNT);
   }
 
-  private void checkRemovedEdges(IClass iClass, int expectedNumberOfArrayAccesses) {
+  private void checkRemovedEdges(
+      final SoftAssertions softly, IClass iClass, int expectedNumberOfArrayAccesses) {
     int numberOfDeletedExceptionEdges = 0;
     for (IMethod method : iClass.getAllMethods()) {
       if (method.getDeclaringClass().equals(iClass)) {
@@ -160,9 +162,9 @@ public class PruneArrayOutOfBoundExceptionEdge {
         PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg = cfgs.snd;
 
         for (ISSABasicBlock block : cfg) {
-          checkNormalSuccessors(cfg, prunedCfg, block);
+          checkNormalSuccessors(softly, cfg, prunedCfg, block);
           boolean isEdgeRemoved =
-              checkExceptionalSuccessors(block, cfg, prunedCfg, method, identifyer);
+              checkExceptionalSuccessors(softly, block, cfg, prunedCfg, method, identifyer);
           numberOfDeletedExceptionEdges += isEdgeRemoved ? 1 : 0;
         }
       }
@@ -179,10 +181,10 @@ public class PruneArrayOutOfBoundExceptionEdge {
      *
      * There is a bug, so not all edges are deleted.
      */
-    collector.checkThat(
-        "Number of deleted edges is not as expected for " + iClass.getName().toString(),
-        numberOfDeletedExceptionEdges,
-        equalTo(expectedNumberOfArrayAccesses));
+    softly
+        .assertThat(numberOfDeletedExceptionEdges)
+        .as(() -> "Number of deleted edges is not as expected for " + iClass.getName().toString())
+        .isEqualTo(expectedNumberOfArrayAccesses);
   }
 
   /**
@@ -193,6 +195,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * @return if an edge of block was removed
    */
   private boolean checkExceptionalSuccessors(
+      final SoftAssertions softly,
       ISSABasicBlock block,
       SSACFG cfg,
       PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg,
@@ -218,44 +221,50 @@ public class PruneArrayOutOfBoundExceptionEdge {
         final Matcher<Iterable<? super TypeReference>> hasJLNPE = hasItem(isJLNPE);
         final Matcher<Iterable<? super TypeReference>> hasJLAIOOBE = hasItem(isJLAIOOBE);
         final Matcher<Iterable<? super TypeReference>> matcher1 = anyOf(hasJLNPE, hasJLAIOOBE);
-        collector.checkThat(
-            "Edge deleted but cause instruction can't throw NullPointerException"
-                + "nor ArrayIndexOutOfBoundsException: "
-                + identifyer
-                + ":"
-                + method.getLineNumber(lastInstruction.iIndex()),
-            lastInstruction.getExceptionTypes(),
-            matcher1);
+        softly
+            .<Iterable<TypeReference>>assertThat(lastInstruction.getExceptionTypes())
+            .as(
+                () ->
+                    "Edge deleted but cause instruction can't throw NullPointerException"
+                        + "nor ArrayIndexOutOfBoundsException: "
+                        + identifyer
+                        + ":"
+                        + method.getLineNumber(lastInstruction.iIndex()))
+            .satisfies(new HamcrestCondition<>(matcher1));
 
         final Matcher<TypeReference> itemMatcher = anyOf(isJLNPE, isJLAIOOBE);
-        collector.checkThat(
-            "Edge deleted but cause instruction throws other exceptions as NullPointerException"
-                + "and ArrayIndexOutOfBoundsException: "
-                + identifyer
-                + ":"
-                + method.getLineNumber(lastInstruction.iIndex()),
-            lastInstruction.getExceptionTypes(),
-            everyItem(itemMatcher));
+        softly
+            .<Iterable<TypeReference>>assertThat(lastInstruction.getExceptionTypes())
+            .as(
+                () ->
+                    "Edge deleted but cause instruction throws other exceptions as NullPointerException"
+                        + "and ArrayIndexOutOfBoundsException: "
+                        + identifyer
+                        + ":"
+                        + method.getLineNumber(lastInstruction.iIndex()))
+            .satisfies(new HamcrestCondition<>(everyItem(itemMatcher)));
 
       } else {
-        collector.addError(
-            new Throwable(
-                "Exceptional edge deleted, but no instruction as cause. - No last instruction."));
+        softly.fail(
+            "Exceptional edge deleted, but no instruction as cause. - No last instruction.");
       }
     }
     return isEdgeRemoved;
   }
 
   private void checkNormalSuccessors(
-      SSACFG cfg, PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg, ISSABasicBlock block) {
+      final SoftAssertions softly,
+      SSACFG cfg,
+      PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg,
+      ISSABasicBlock block) {
     LinkedHashSet<ISSABasicBlock> normalSuccessorCfg =
         new LinkedHashSet<>(cfg.getNormalSuccessors(block));
     LinkedHashSet<ISSABasicBlock> normalSuccessorPruned =
         new LinkedHashSet<>(prunedCfg.getNormalSuccessors(block));
-    collector.checkThat("", normalSuccessorPruned, equalTo(normalSuccessorCfg));
+    softly.assertThat(normalSuccessorPruned).isEqualTo(normalSuccessorCfg);
   }
 
-  @AfterClass
+  @AfterAll
   public static void free() {
     scope = null;
     cha = null;
