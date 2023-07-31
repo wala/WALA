@@ -1,7 +1,7 @@
 package com.ibm.wala.core.tests.exceptionpruning;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis;
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis2EdgeFilter;
@@ -42,10 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ErrorCollector;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * This Test checks, if the number of deleted edges is correct for TestPruning, it is also doing a
@@ -64,9 +62,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
   private static PointerAnalysis<InstanceKey> pointerAnalysis;
   private static CombinedInterproceduralExceptionFilter<SSAInstruction> filter;
 
-  @Rule public ErrorCollector collector = new ErrorCollector();
-
-  @BeforeClass
+  @BeforeAll
   public static void init()
       throws IOException, ClassHierarchyException, IllegalArgumentException,
           CallGraphBuilderCancelException {
@@ -180,27 +176,27 @@ public class ExceptionAnalysis2EdgeFilterTest {
       }
     }
 
-    assertEquals("Number of normal edges deleted wrong:", 0, deletedNormal);
+    assertEquals(0, deletedNormal, "Number of normal edges deleted wrong:");
     for (Map.Entry<String, Integer> entry : deletedExceptional.entrySet()) {
       final String key = entry.getKey();
       final int value = entry.getValue();
       String text = "Number of exceptional edges deleted wrong for " + key + ":";
       switch (key) {
         case "testTryCatchMultipleExceptions":
-          assertEquals(text, 12, value);
+          assertEquals(12, value, text);
           break;
         case "testTryCatchOwnException":
         case "testTryCatchImplicitException":
-          assertEquals(text, 5, value);
+          assertEquals(5, value, text);
           break;
         case "testTryCatchSuper":
-          assertEquals(text, 3, value);
+          assertEquals(3, value, text);
           break;
         case "main":
-          assertEquals(text, 4, value);
+          assertEquals(4, value, text);
           break;
         default:
-          assertEquals(text, 0, value);
+          assertEquals(0, value, text);
           break;
       }
     }
