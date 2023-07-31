@@ -42,11 +42,9 @@ dependencies {
   "javadocSource"(sourceSets.main.get().allJava)
 
   testFixturesImplementation(platform(findLibrary("junit-bom")))
-  testFixturesImplementation(findLibrary("junit"))
   testFixturesImplementation(findLibrary("junit-jupiter-api"))
 
   testImplementation(platform(findLibrary("junit-bom")))
-  testImplementation(findLibrary("junit"))
   testImplementation(findLibrary("junit-jupiter-api"))
   testRuntimeOnly(findLibrary("junit-jupiter-engine"))
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
