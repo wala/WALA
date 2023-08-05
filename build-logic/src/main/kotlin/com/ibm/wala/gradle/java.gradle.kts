@@ -122,7 +122,7 @@ tasks.named<Test>("test") {
     outputs.upToDateWhen { false }
     afterTest(
         KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-          File("${rootProject.buildDir}/time-trials.csv").let {
+          rootProject.layout.buildDirectory.file("time-trials.csv").get().asFile.let {
             if (!it.exists()) {
               it.appendText("trial,className,name,resultType,startTime,endTime\n")
             }

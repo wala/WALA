@@ -144,7 +144,7 @@ val mavenRepository =
 
 repositories.maven {
   name = "fakeRemote"
-  url = uri("file://${rootProject.buildDir}/maven-fake-remote-repository")
+  setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
 }
 
 configure<SigningExtension> {
