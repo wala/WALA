@@ -150,16 +150,18 @@ public class FloatingPointsTest extends WalaTestCase {
   }
 
   private void write() throws IllegalStateException, IOException, InvalidClassFileException {
-    // Write all modified classes
-    for (ClassInstrumenter ci2 : classInstrumenters) {
-      if (ci2.isChanged()) {
-        ClassWriter cw = ci2.emitClass();
-        instrumenter.outputModifiedClass(ci2, cw);
+    try {
+      // Write all modified classes
+      for (ClassInstrumenter ci2 : classInstrumenters) {
+        if (ci2.isChanged()) {
+          ClassWriter cw = ci2.emitClass();
+          instrumenter.outputModifiedClass(ci2, cw);
+        }
       }
+    } finally {
+      // Finally write the instrumented jar
+      instrumenter.close();
     }
-
-    // Finally write the instrumented jar
-    instrumenter.close();
   }
 
   private void setValidationInstrumenter() throws IOException {
@@ -169,11 +171,15 @@ public class FloatingPointsTest extends WalaTestCase {
     instrumenter.addInputJar(instrumentedJarLocation.toFile());
     instrumenter.beginTraversal();
 
-    // To be able to reuse all classes from shrike save them in a new list
-    classInstrumenters = new ArrayList<>();
-    ClassInstrumenter ci = null;
-    while ((ci = instrumenter.nextClass()) != null) {
-      classInstrumenters.add(ci);
+    try {
+      // To be able to reuse all classes from shrike save them in a new list
+      classInstrumenters = new ArrayList<>();
+      ClassInstrumenter ci = null;
+      while ((ci = instrumenter.nextClass()) != null) {
+        classInstrumenters.add(ci);
+      }
+    } finally {
+      instrumenter.close();
     }
   }
 
