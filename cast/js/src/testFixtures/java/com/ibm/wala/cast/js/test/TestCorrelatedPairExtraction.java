@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public abstract class TestCorrelatedPairExtraction {
   // set to "true" to use JUnit's assertEquals to check whether a test case passed;
@@ -42,14 +43,15 @@ public abstract class TestCorrelatedPairExtraction {
   // this is useful if the outputs are too big/too different for Eclipse's diff view to handle
   private static final boolean ASSERT_EQUALS = true;
 
+  @TempDir private File tmpDir;
+
   public void testRewriter(String in, String out) {
     testRewriter(null, in, out);
   }
 
   public void testRewriter(String testName, String in, String out) {
-    File tmp = null;
     try {
-      tmp = File.createTempFile("test", ".js");
+      final var tmp = File.createTempFile("test", ".js", tmpDir);
       FileUtil.writeFile(tmp, in);
 
       final Map<IMethod, CorrelationSummary> summaries =
@@ -86,8 +88,6 @@ public abstract class TestCorrelatedPairExtraction {
 
     } catch (IOException | ClassHierarchyException e) {
       e.printStackTrace();
-    } finally {
-      if (tmp != null && tmp.exists()) tmp.delete();
     }
   }
 

@@ -26,8 +26,12 @@ import java.io.UncheckedIOException;
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public abstract class TestForInBodyExtraction {
+
+  @TempDir private File tmpDir;
+
   public void testRewriter(String in, String out) {
     testRewriter(null, in, out);
   }
@@ -49,11 +53,10 @@ public abstract class TestForInBodyExtraction {
   }
 
   public void testRewriter(String testName, String in, String out) {
-    File tmp = null;
     String expected = null;
     String actual = null;
     try {
-      tmp = File.createTempFile("test", ".js");
+      final var tmp = File.createTempFile("test", ".js", tmpDir);
       FileUtil.writeFile(tmp, in);
       CAstImpl ast = new CAstImpl();
       actual =
@@ -70,8 +73,6 @@ public abstract class TestForInBodyExtraction {
       assertEquals(expected, actual, () -> "Comparison Failure in " + testName + '!');
     } catch (IOException e) {
       throw new UncheckedIOException(e);
-    } finally {
-      if (tmp != null && tmp.exists()) tmp.delete();
     }
   }
 

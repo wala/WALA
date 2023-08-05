@@ -7,9 +7,18 @@ import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class DynamicDalvikComparisonJavaLibsTest extends DynamicDalvikComparisonTest {
+
+  private @TempDir Path temporaryDirectory;
+
+  @Override
+  protected Path getTemporaryDirectory() {
+    return temporaryDirectory;
+  }
 
   @Test
   public void testJLex()

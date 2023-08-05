@@ -38,12 +38,21 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @Tag("slow")
 public class KawaCallGraphTest extends DynamicCallGraphTestBase {
+
+  private @TempDir Path temporaryDirectory;
+
+  @Override
+  protected Path getTemporaryDirectory() {
+    return temporaryDirectory;
+  }
 
   @Test
   public void testKawaChess()
