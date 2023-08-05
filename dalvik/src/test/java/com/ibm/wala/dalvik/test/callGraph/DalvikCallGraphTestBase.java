@@ -54,14 +54,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.jar.JarFile;
+import org.junit.jupiter.api.io.TempDir;
 
 public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
+
+  private @TempDir Path temporaryDirectory;
+
+  @Override
+  protected Path getTemporaryDirectory() {
+    return temporaryDirectory;
+  }
 
   protected static <T> Set<T> processCG(
       CallGraph cg, Predicate<CGNode> filter, Function<CGNode, T> map) {

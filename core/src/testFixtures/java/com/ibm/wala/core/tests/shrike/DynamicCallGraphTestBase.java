@@ -43,6 +43,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class DynamicCallGraphTestBase extends WalaTestCase {
 
@@ -50,19 +51,17 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
 
   private boolean instrumentedJarBuilt = false;
 
-  private final java.nio.file.Path instrumentedJarLocation;
+  private java.nio.file.Path instrumentedJarLocation;
 
-  private final java.nio.file.Path cgLocation;
+  private java.nio.file.Path cgLocation;
 
-  protected DynamicCallGraphTestBase() {
-    try {
-      instrumentedJarLocation = Files.createTempFile("wala-test", ".jar");
-      instrumentedJarLocation.toFile().deleteOnExit();
-      cgLocation = Files.createTempFile("cg", ".txt");
-      cgLocation.toFile().deleteOnExit();
-    } catch (IOException problem) {
-      throw new RuntimeException(problem);
-    }
+  protected abstract java.nio.file.Path getTemporaryDirectory();
+
+  @BeforeEach
+  protected void createTemporaryFiles() throws IOException {
+    final var temporaryDirectory = getTemporaryDirectory();
+    instrumentedJarLocation = Files.createTempFile(temporaryDirectory, "wala-test", ".jar");
+    cgLocation = Files.createTempFile(temporaryDirectory, "cg", ".txt");
   }
 
   protected void instrument(String testJarLocation)

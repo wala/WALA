@@ -67,6 +67,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public abstract class JavaIRTests extends IRTests {
 
@@ -790,9 +791,11 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test
-  public void testExclusions() throws IllegalArgumentException, CancelException, IOException {
+  public void testExclusions(@TempDir final File tmpDir)
+      throws IllegalArgumentException, CancelException, IOException {
     File exclusions =
-        TemporaryFile.stringToFile(File.createTempFile("exl", "txt"), "Exclusions.Excluded\n");
+        TemporaryFile.stringToFile(
+            File.createTempFile("exl", "txt", tmpDir), "Exclusions.Excluded\n");
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(
             singleTestSrc(),

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings("UnconstructableJUnitTestCase")
 public class FloatingPointsTest extends WalaTestCase {
@@ -38,10 +39,9 @@ public class FloatingPointsTest extends WalaTestCase {
   public FloatingPointsTest() {}
 
   @BeforeEach
-  public void setOfflineInstrumenter() throws IOException {
+  public void setOfflineInstrumenter(@TempDir final Path tmpDir) throws IOException {
     // Create a temporary file for the shrike instrumented output
-    instrumentedJarLocation = Files.createTempFile("wala-test", ".jar");
-    instrumentedJarLocation.toFile().deleteOnExit();
+    instrumentedJarLocation = Files.createTempFile(tmpDir, "wala-test", ".jar");
 
     // Initialize the OfflineInstrumenter loading the class file specified in
     // 'klass' above

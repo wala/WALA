@@ -35,10 +35,19 @@ import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.jar.JarFile;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
+
+  private @TempDir Path temporaryDirectory;
+
+  @Override
+  protected Path getTemporaryDirectory() {
+    return temporaryDirectory;
+  }
 
   @Test
   public void testOcamlHelloHash()
