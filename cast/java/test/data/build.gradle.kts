@@ -1,5 +1,5 @@
 import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URL
+import java.net.URI
 import net.ltgt.gradle.errorprone.errorprone
 
 plugins { id("com.ibm.wala.gradle.java") }
@@ -43,7 +43,7 @@ spotless { java { targetExclude("**/*") } }
 
 val downloadJLex by
     tasks.registering(VerifiedDownload::class) {
-      src = URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java")
+      src = URI("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java")
       checksum = "fe0cff5db3e2f0f5d67a153cf6c783af"
       val downloadedSourceDir = layout.buildDirectory.dir(name).map(Directory::toString)
       inputs.property("downloadedSourceDir", downloadedSourceDir)

@@ -1,5 +1,5 @@
 import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URL
+import java.net.URI
 
 plugins { id("com.ibm.wala.gradle.java") }
 
@@ -17,7 +17,7 @@ dependencies {
 
 val downloadNodeJS by
     tasks.registering(VerifiedDownload::class) {
-      src = URL("https://nodejs.org/dist/v0.12.4/node-v0.12.4.tar.gz")
+      src = URI("https://nodejs.org/dist/v0.12.4/node-v0.12.4.tar.gz")
       dest = project.layout.buildDirectory.file("nodejs.tar.gz")
       algorithm = "SHA-1"
       checksum = "147ff79947752399b870fcf3f1fc37102100b545"

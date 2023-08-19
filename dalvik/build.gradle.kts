@@ -1,5 +1,5 @@
 import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URL
+import java.net.URI
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -108,7 +108,7 @@ dependencies {
 val downloadDroidBench by
     tasks.registering(VerifiedDownload::class) {
       src =
-          URL(
+          URI(
               "https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0")
       dest = project.layout.buildDirectory.file("DroidBench_2.0.zip")
       checksum = "16726a48329835140e14f18470a1b4a3"
@@ -144,7 +144,7 @@ val downloadAndroidSdk by
           })
           .run {
             val archive = "commandlinetools-$sdkOs-7583922_latest.zip"
-            src = URL("https://dl.google.com/android/repository/$archive")
+            src = URI("https://dl.google.com/android/repository/$archive")
             dest = project.layout.buildDirectory.file(archive)
             this@registering.checksum = checksum
             algorithm = "SHA-256"
@@ -175,7 +175,7 @@ val extractSampleCup by
 
 val downloadSampleLex by
     tasks.registering(VerifiedDownload::class) {
-      src = URL("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex")
+      src = URI("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex")
       dest = layout.buildDirectory.file("$name/sample.lex")
       checksum = "ae887758b2657981d023a72a165da830"
     }

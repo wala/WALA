@@ -1,7 +1,7 @@
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URL
+import java.net.URI
 import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
@@ -80,7 +80,7 @@ interface ExtractServices {
 val downloadKawa by
     tasks.registering(VerifiedDownload::class) {
       val archive = "kawa-3.0.zip"
-      src = URL("https://ftp.gnu.org/pub/gnu/kawa/$archive")
+      src = URI("https://ftp.gnu.org/pub/gnu/kawa/$archive")
       dest = project.layout.buildDirectory.file(archive)
       checksum = "2713e6dfb939274ba3b1d36daea68436"
     }
@@ -113,7 +113,7 @@ val kawaChessCommitHash = "f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8"
 
 val downloadKawaChess by
     tasks.registering(VerifiedDownload::class) {
-      src = URL("https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip")
+      src = URI("https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip")
       dest = project.layout.buildDirectory.file("kawa-chess.zip")
       checksum = "cf29613d2be5f476a475ee28b4df9d9e"
     }
@@ -175,7 +175,7 @@ val downloadBcel by
       val basename = "bcel-5.2"
       inputs.property("basename", basename)
       val archive = "${basename}.tar.gz"
-      src = URL("https://archive.apache.org/dist/jakarta/bcel/binaries/$archive")
+      src = URI("https://archive.apache.org/dist/jakarta/bcel/binaries/$archive")
       dest = project.layout.buildDirectory.file(archive)
       checksum = "19bffd7f217b0eae415f1ef87af2f0bc"
       useETag = false
@@ -211,7 +211,7 @@ val extractBcel by
 val downloadJavaCup by
     tasks.registering(VerifiedDownload::class) {
       val archive = "java-cup-11a.jar"
-      src = URL("http://www2.cs.tum.edu/projects/cup/$archive")
+      src = URI("http://www2.cs.tum.edu/projects/cup/$archive")
       dest = layout.buildDirectory.file("$name/$archive")
       checksum = "2bda8c40abd0cbc295d3038643d6e4ec"
     }
@@ -247,7 +247,7 @@ val downloadOcamlJava by
       val version = "2.0-alpha1"
       val basename by extra("ocamljava-$version")
       val archive = "$basename.tar.gz"
-      src = URL("http://www.ocamljava.org/downloads/download.php?version=$version-bin")
+      src = URI("http://www.ocamljava.org/downloads/download.php?version=$version-bin")
       dest = project.layout.buildDirectory.file(archive)
       checksum = "45feec6e3889f5073a39c2c4c84878d1"
     }
