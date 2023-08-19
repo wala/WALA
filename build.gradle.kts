@@ -76,7 +76,7 @@ dependencies {
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
-  destinationDir = file("$buildDir/docs/javadoc")
+  destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
   classpath = aggregatedJavadocClasspath
@@ -141,7 +141,7 @@ val runInspections by
       val inspectionProfile = file("$ideaDir/inspectionProfiles/No_Back_Sliding.xml")
       inputs.file(inspectionProfile)
 
-      val textResultsFile = file("$buildDir/${name}.txt")
+      val textResultsFile = layout.buildDirectory.file("$name.txt").get().asFile
       outputs.file(textResultsFile)
 
       // Inspections examine a wide variety of files, not just Java
@@ -186,9 +186,9 @@ tasks.register("checkInspectionResults") {
     }
   }
 
-  val stampFile = file("$buildDir/${name}.stamp")
+  val stampFile = layout.buildDirectory.file("$name.stamp")
   outputs.file(stampFile)
-  doLast { stampFile.createNewFile() }
+  doLast { stampFile.get().asFile.createNewFile() }
 }
 
 ////////////////////////////////////////////////////////////////////////

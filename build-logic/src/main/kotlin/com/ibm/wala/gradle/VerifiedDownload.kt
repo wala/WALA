@@ -2,7 +2,7 @@ package com.ibm.wala.gradle
 
 import de.undercouch.gradle.tasks.download.DownloadExtension
 import de.undercouch.gradle.tasks.download.VerifyExtension
-import java.net.URL
+import java.net.URI
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
@@ -21,8 +21,8 @@ import org.gradle.kotlin.dsl.property
 @CacheableTask
 abstract class VerifiedDownload : DefaultTask() {
 
-  // URL of resource to download
-  @get:Input abstract val src: Property<URL>
+  // URI of resource to download
+  @get:Input abstract val src: Property<URI>
 
   // expected checksum of resource as hex digits
   @get:Input abstract val checksum: Property<String>
@@ -49,7 +49,7 @@ abstract class VerifiedDownload : DefaultTask() {
   @TaskAction
   fun downloadAndVerify() {
     downloadExtension.run {
-      src(this@VerifiedDownload.src)
+      src(this@VerifiedDownload.src.map { it.toURL() })
       dest(this@VerifiedDownload.dest)
       overwrite(true)
       onlyIfModified(true)
