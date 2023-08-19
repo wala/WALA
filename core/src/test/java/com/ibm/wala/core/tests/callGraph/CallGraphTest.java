@@ -67,6 +67,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /** Tests for Call Graph construction */
@@ -76,6 +77,7 @@ public class CallGraphTest extends WalaTestCase {
     justThisTest(CallGraphTest.class);
   }
 
+  @Tag("slow")
   @Test
   public void testJava_cup()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -90,6 +92,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha, useShortProfile());
   }
 
+  @Tag("slow")
   @Test
   public void testBcelVerifier()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
