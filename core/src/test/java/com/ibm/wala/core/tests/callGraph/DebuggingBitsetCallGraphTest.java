@@ -22,9 +22,11 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSetFactory;
 import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
 import java.io.IOException;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 /** Run the call graph only test with paranoid debugging bit vectors */
+@Tag("slow")
 public class DebuggingBitsetCallGraphTest extends WalaTestCase {
 
   public static void main(String[] args) {
