@@ -1,6 +1,6 @@
 buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:2.34.1") } }
 
-plugins { id("com.diffplug.configuration-cache-for-platform-specific-build") version "3.40.0" }
+plugins { id("com.diffplug.configuration-cache-for-platform-specific-build") version "3.42.2" }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
