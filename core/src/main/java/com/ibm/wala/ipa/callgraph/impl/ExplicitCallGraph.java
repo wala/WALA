@@ -56,6 +56,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
   private final long maxNumberOfNodes;
 
   private final IMethod fakeRootMethod;
+
   /** special object to track call graph edges */
   private final ExplicitEdgeManager edgeManager = makeEdgeManger();
 
@@ -326,7 +327,9 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
     }
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy() */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy()
+   */
   @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
@@ -400,7 +403,9 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
     }
   }
 
-  /** @return Returns the edgeManger. */
+  /**
+   * @return Returns the edgeManger.
+   */
   @Override
   public NumberedEdgeManager<CGNode> getEdgeManager() {
     return edgeManager;

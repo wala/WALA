@@ -941,7 +941,10 @@ public class SlicerTest {
   /** test for bug reported on mailing list by Joshua Garcia, 5/16/2010 */
   @Test
   public void testTestInetAddr()
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          CancelException,
+          IOException,
           UnsoundGraphException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 

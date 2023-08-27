@@ -12,6 +12,8 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 public interface InstanceFieldPointerKey extends PointerKey {
 
-  /** @return the instance key which is the "container" for this pointer */
+  /**
+   * @return the instance key which is the "container" for this pointer
+   */
   InstanceKey getInstanceKey();
 }

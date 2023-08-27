@@ -85,6 +85,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     /** Mapping from instruction index to program counter. */
     private int[] pcMap;
+
     /* BEGIN Custom change: precise positions */
 
     /** Cached map representing position information for bytecode instruction at given index */
@@ -224,7 +225,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return result;
   }
 
-  /** @return true iff this method has a monitorenter or monitorexit */
+  /**
+   * @return true iff this method has a monitorenter or monitorexit
+   */
   public boolean hasMonitorOp() throws InvalidClassFileException {
     if (isNative()) {
       return false;
@@ -232,7 +235,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return getBCInfo().hasMonitorOp;
   }
 
-  /** @return Set of FieldReference */
+  /**
+   * @return Set of FieldReference
+   */
   public Iterator<FieldReference> getFieldsWritten() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -245,7 +250,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /** @return Iterator of FieldReference */
+  /**
+   * @return Iterator of FieldReference
+   */
   public Iterator<FieldReference> getFieldsRead() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -258,7 +265,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /** @return Iterator of TypeReference */
+  /**
+   * @return Iterator of TypeReference
+   */
   public Iterator<TypeReference> getArraysRead() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -268,7 +277,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
         : Arrays.asList(getBCInfo().arraysRead).iterator();
   }
 
-  /** @return Iterator of TypeReference */
+  /**
+   * @return Iterator of TypeReference
+   */
   public Iterator<TypeReference> getArraysWritten() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -281,7 +292,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /** @return Iterator of TypeReference */
+  /**
+   * @return Iterator of TypeReference
+   */
   public Iterator<TypeReference> getCastTypes() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
@@ -542,7 +555,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return 9661 * getReference().hashCode();
   }
 
-  /** @see com.ibm.wala.classLoader.SyntheticMethod#getMaxLocals() */
+  /**
+   * @see com.ibm.wala.classLoader.SyntheticMethod#getMaxLocals()
+   */
   public abstract int getMaxLocals();
 
   // TODO: ShrikeBT should have a getMaxStack method on Decoder, I think.
@@ -729,7 +744,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   protected abstract String[] getDeclaredExceptionTypeNames() throws InvalidClassFileException;
 
-  /** @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions() */
+  /**
+   * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
+   */
   private TypeReference[] computeDeclaredExceptions() {
     try {
       String[] strings = getDeclaredExceptionTypeNames();
@@ -749,6 +766,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return null;
     }
   }
+
   /* BEGIN Custom change: precise bytecode positions */
 
   @Override
@@ -760,6 +778,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return (getBCInfo().paramPositionMap == null) ? null : getBCInfo().paramPositionMap[paramNum];
   }
+
   /* END Custom change: precise bytecode positions */
 
   @Override
@@ -771,7 +790,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /** @return {@link Set}&lt;{@link TypeReference}&gt; */
+  /**
+   * @return {@link Set}&lt;{@link TypeReference}&gt;
+   */
   public Set<TypeReference> getCaughtExceptionTypes() throws InvalidClassFileException {
 
     ExceptionHandler[][] handlers = getHandlers();

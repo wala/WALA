@@ -433,7 +433,8 @@ public class JdtUtil {
                 ++i;
               }
               if (d.charAt(i++) == TypeReference.ClassTypeCode) {
-                while (d.charAt(i++) != ';') ;
+                while (d.charAt(i++) != ';')
+                  ;
                 sigs.add(d.substring(off, i).replaceAll("/", "."));
               } else {
                 sigs.add(d.substring(off, i));

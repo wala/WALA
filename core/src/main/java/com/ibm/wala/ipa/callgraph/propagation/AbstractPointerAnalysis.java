@@ -23,6 +23,7 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis<Instanc
 
   /** graph representation of pointer-analysis results */
   private HeapGraph<InstanceKey> heapGraph;
+
   /** Governing call graph. */
   private final CallGraph cg;
 

@@ -54,7 +54,9 @@ public final class DupInstruction extends Instruction {
     return preallocated[size * 3 + delta];
   }
 
-  /** @param delta 0 for dup, 1 for dup_x1 */
+  /**
+   * @param delta 0 for dup, 1 for dup_x1
+   */
   public static DupInstruction make(int delta) {
     if (delta < 0 || delta > 1) {
       throw new IllegalArgumentException("Invalid dup delta: " + delta);

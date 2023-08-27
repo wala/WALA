@@ -54,7 +54,9 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return false;
   }
 
-  /** @return value number of the thrown exception object. */
+  /**
+   * @return value number of the thrown exception object.
+   */
   public int getException() {
     return exception;
   }

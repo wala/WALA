@@ -32,9 +32,15 @@ import java.net.URI;
 public abstract class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
 
   protected void test(URI[] androidLibs, String mainClass, String javaScopeFile, String... args)
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException,
-          InterruptedException, ClassNotFoundException, SecurityException,
-          InvalidClassFileException, FailureException {
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          IOException,
+          CancelException,
+          InterruptedException,
+          ClassNotFoundException,
+          SecurityException,
+          InvalidClassFileException,
+          FailureException {
     AnalysisScope javaScope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             javaScopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);

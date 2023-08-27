@@ -28,6 +28,7 @@ import java.io.InputStream;
 public class ShrikeClassReaderHandle {
 
   private static final boolean DEBUG = false;
+
   /** The module entry that defines the class file */
   private final ModuleEntry entry;
 

@@ -19,7 +19,9 @@ public final class PopInstruction extends Instruction {
     this.size = size;
   }
 
-  /** @param size 1 or 2, the number of elements to pop */
+  /**
+   * @param size 1 or 2, the number of elements to pop
+   */
   public static PopInstruction make(int size) {
     if (size < 0 || size > 2) {
       throw new IllegalArgumentException("Invalid pop size: " + size);

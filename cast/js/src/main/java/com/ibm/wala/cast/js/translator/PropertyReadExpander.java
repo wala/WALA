@@ -63,7 +63,9 @@ public class PropertyReadExpander
     /** are we handling a sub-node of an assignment? */
     abstract boolean inAssignment();
 
-    /** @see AssignPreOrPostOpContext */
+    /**
+     * @see AssignPreOrPostOpContext
+     */
     abstract void setAssign(CAstNode receiverTemp, CAstNode elementTemp);
   }
 

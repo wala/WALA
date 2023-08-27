@@ -113,7 +113,9 @@ public class SparseLongSet implements LongSet {
     return LongSetUtil.binarySearch(elements, x, 0, size - 1) >= 0;
   }
 
-  /** @return index i s.t. elements[i] == x, or -1 if not found. */
+  /**
+   * @return index i s.t. elements[i] == x, or -1 if not found.
+   */
   public final int getIndex(long x) {
     if (elements == null) {
       return -1;
@@ -329,7 +331,9 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet) */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
+   */
   @Nullable
   @Override
   public LongSet intersection(LongSet that) throws IllegalArgumentException, UnimplementedError {
@@ -346,7 +350,9 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#intIterator() */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#intIterator()
+   */
   @Override
   public LongIterator longIterator() {
     return new LongIterator() {
@@ -390,7 +396,9 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /** @return the largest element in the set */
+  /**
+   * @return the largest element in the set
+   */
   @Override
   public final long max() throws IllegalStateException {
     if (elements == null) {
@@ -399,7 +407,9 @@ public class SparseLongSet implements LongSet {
     return (size > 0) ? elements[size - 1] : -1;
   }
 
-  /** @return a new sparse int set which adds j to s */
+  /**
+   * @return a new sparse int set which adds j to s
+   */
   public static SparseLongSet add(SparseLongSet s, int j) {
     if (s == null || s.elements == null) {
       return SparseLongSet.singleton(j);
@@ -425,7 +435,9 @@ public class SparseLongSet implements LongSet {
     return result;
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet) */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
+   */
   @Override
   public boolean isSubset(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
@@ -439,7 +451,9 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet) */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
+   */
   @Override
   public boolean containsAny(LongSet set) {
     if (set == null) {

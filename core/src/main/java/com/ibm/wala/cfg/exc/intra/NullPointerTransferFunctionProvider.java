@@ -51,7 +51,9 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/** @author Juergen Graf &lt;graf@kit.edu&gt; */
+/**
+ * @author Juergen Graf &lt;graf@kit.edu&gt;
+ */
 class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     implements ITransferFunctionProvider<T, NullPointerState> {
 

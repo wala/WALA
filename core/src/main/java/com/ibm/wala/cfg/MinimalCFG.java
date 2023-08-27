@@ -19,7 +19,9 @@ public interface MinimalCFG<T> extends NumberedGraph<T> {
   /** Return the entry basic block in the CFG */
   T entry();
 
-  /** @return the synthetic exit block for the cfg */
+  /**
+   * @return the synthetic exit block for the cfg
+   */
   T exit();
 
   /**

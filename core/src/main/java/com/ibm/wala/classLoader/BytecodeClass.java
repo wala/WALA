@@ -436,7 +436,9 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     return null;
   }
 
-  /** @return Collection of IClasses, representing the interfaces this class implements. */
+  /**
+   * @return Collection of IClasses, representing the interfaces this class implements.
+   */
   protected Collection<IClass> computeAllInterfacesAsCollection() {
     Collection<? extends IClass> c = getDirectInterfaces();
     Set<IClass> result = HashSetFactory.make();

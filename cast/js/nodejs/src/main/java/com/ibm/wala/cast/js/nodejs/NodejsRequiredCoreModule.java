@@ -24,7 +24,9 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 
-/** @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt; */
+/**
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
+ */
 public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
 
   /**

@@ -134,7 +134,9 @@ public class MethodSummary {
     return constantValues;
   }
 
-  /** @return the number of parameters, including the implicit 'this' */
+  /**
+   * @return the number of parameters, including the implicit 'this'
+   */
   public int getNumberOfParameters() {
     if (numberOfParameters >= 0) {
       return numberOfParameters;

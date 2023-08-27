@@ -12,9 +12,13 @@ package com.ibm.wala.util.viz;
 
 import com.ibm.wala.util.WalaException;
 
-/** @param <T> the node type */
+/**
+ * @param <T> the node type
+ */
 public interface NodeDecorator<T> {
 
-  /** @return the String label for node n */
+  /**
+   * @return the String label for node n
+   */
   String getLabel(T n) throws WalaException;
 }

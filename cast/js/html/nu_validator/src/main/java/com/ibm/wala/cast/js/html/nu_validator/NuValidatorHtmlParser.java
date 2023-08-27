@@ -60,7 +60,8 @@ public class NuValidatorHtmlParser implements IHtmlParser {
             LineNumberReader r =
                 new LineNumberReader(new StringReader(new String(ch, start, length)));
             try {
-              while (r.read() > -1) ;
+              while (r.read() > -1)
+                ;
             } catch (IOException e) {
               throw new RuntimeException("cannot read from string", e);
             }

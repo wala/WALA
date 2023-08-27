@@ -131,12 +131,16 @@ public abstract class Instruction {
     return opcode.canThrow();
   }
 
-  /** @return The DexIMethod which contains this instruction. */
+  /**
+   * @return The DexIMethod which contains this instruction.
+   */
   public DexIMethod getParentMethod() {
     return method;
   }
 
-  /** @return The opcode associated with this instruction. */
+  /**
+   * @return The opcode associated with this instruction.
+   */
   public Opcode getOpcode() {
     return opcode;
   }

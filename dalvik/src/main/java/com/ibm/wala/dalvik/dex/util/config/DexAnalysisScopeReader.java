@@ -58,6 +58,7 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
   /* BEGIN Custom change: Fixes in AndroidAnalysisScope */
   // private static final String BASIC_FILE = "conf" + File.separator+ "primordial.txt";
   private static final String BASIC_FILE = "./primordial.txt"; // Path inside jar
+
   /* END Custom change: Fixes in AndroidAnalysisScope */
   public static AnalysisScope makeAndroidBinaryAnalysisScope(URI classPath, String exclusionsFile)
       throws IOException {

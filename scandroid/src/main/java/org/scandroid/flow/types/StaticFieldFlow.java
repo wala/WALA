@@ -43,7 +43,9 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 
-/** @author acfoltzer */
+/**
+ * @author acfoltzer
+ */
 public class StaticFieldFlow<E extends ISSABasicBlock> extends FlowType<E> {
   private final IField field;
 

@@ -308,7 +308,9 @@ public class ContainerContextSelector implements ContextSelector {
     }
   }
 
-  /** @return true iff C is a container class */
+  /**
+   * @return true iff C is a container class
+   */
   protected boolean isContainer(IClass C) {
     if (DEBUG) {
       System.err.println("isContainer? " + C + ' ' + ContainerUtil.isContainer(C));

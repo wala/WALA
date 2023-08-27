@@ -51,7 +51,9 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
 
   final short opcode;
 
-  /** @return true if the instruction can "fall through" to the following instruction */
+  /**
+   * @return true if the instruction can "fall through" to the following instruction
+   */
   @Override
   public boolean isFallThrough() {
     return true;
@@ -75,13 +77,17 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
     return this;
   }
 
-  /** @return the number of values this instruction pops off the working stack */
+  /**
+   * @return the number of values this instruction pops off the working stack
+   */
   @Override
   public int getPoppedCount() {
     return 0;
   }
 
-  /** @return the opcode selected for this instruction, or -1 if we don't know it yet */
+  /**
+   * @return the opcode selected for this instruction, or -1 if we don't know it yet
+   */
   public final short getOpcode() {
     return opcode;
   }

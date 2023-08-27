@@ -220,7 +220,9 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
     this.edgeManager = constructGraphEdges(buildControlDependence(wantEdgeLabels));
   }
 
-  /** @param cfg governing control flow graph */
+  /**
+   * @param cfg governing control flow graph
+   */
   public ControlDependenceGraph(MinimalCFG<T> cfg) {
     this(cfg, false);
   }

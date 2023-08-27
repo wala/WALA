@@ -12,7 +12,9 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class BinaryOpWithConstant {
-  /** @return normalized BinaryOpWithConstant or null, if normalization was not successful. */
+  /**
+   * @return normalized BinaryOpWithConstant or null, if normalization was not successful.
+   */
   public static BinaryOpWithConstant create(SSABinaryOpInstruction instruction, IR ir) {
     BinaryOpWithConstant result = null;
 

@@ -10,7 +10,9 @@
  */
 package demandpa;
 
-/** @author manu */
+/**
+ * @author manu
+ */
 public class FlowsToTestId {
 
   static Object id(Object o) {

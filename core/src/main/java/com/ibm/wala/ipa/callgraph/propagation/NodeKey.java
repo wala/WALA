@@ -35,7 +35,10 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
   protected int internalHashCode() {
     return node.hashCode() * 1621;
   }
-  /** @return the node this key represents */
+
+  /**
+   * @return the node this key represents
+   */
   @Override
   public CGNode getNode() {
     return node;

@@ -30,7 +30,9 @@ public abstract class MemberReference {
     this.hash = hash;
   }
 
-  /** @return the member name component of this member reference */
+  /**
+   * @return the member name component of this member reference
+   */
   public final Atom getName() {
     return name;
   }
@@ -48,7 +50,9 @@ public abstract class MemberReference {
     return this == other;
   }
 
-  /** @return the type that declared this member */
+  /**
+   * @return the type that declared this member
+   */
   public TypeReference getDeclaringClass() {
     if (declaringClass == null) {
       // fail eagerly

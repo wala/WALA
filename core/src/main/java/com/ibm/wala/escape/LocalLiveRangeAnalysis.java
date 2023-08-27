@@ -88,7 +88,9 @@ public class LocalLiveRangeAnalysis {
     }
   }
 
-  /** @param statements {@code Iterator<SSAInstruction>} */
+  /**
+   * @param statements {@code Iterator<SSAInstruction>}
+   */
   private static Collection<BasicBlock> findBlocks(IR ir, Iterator<SSAInstruction> statements) {
     Collection<SSAInstruction> s = Iterator2Collection.toSet(statements);
     Collection<BasicBlock> result = HashSetFactory.make();

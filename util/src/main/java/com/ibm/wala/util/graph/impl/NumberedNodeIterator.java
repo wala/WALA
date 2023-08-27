@@ -22,7 +22,9 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
 
   final NumberedNodeManager<T> nodeManager;
 
-  /** @throws IllegalArgumentException if s is null */
+  /**
+   * @throws IllegalArgumentException if s is null
+   */
   public NumberedNodeIterator(IntSet s, NumberedNodeManager<T> nodeManager) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");

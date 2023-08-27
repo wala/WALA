@@ -17,7 +17,9 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   public BooleanVariable() {}
 
-  /** @param b initial value for this variable */
+  /**
+   * @param b initial value for this variable
+   */
   public BooleanVariable(boolean b) {
     this.B = b;
   }
@@ -42,12 +44,16 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
     return (B ? "[TRUE]" : "[FALSE]");
   }
 
-  /** @return the value of this variable */
+  /**
+   * @return the value of this variable
+   */
   public boolean getValue() {
     return B;
   }
 
-  /** @throws IllegalArgumentException if other is null */
+  /**
+   * @throws IllegalArgumentException if other is null
+   */
   public void or(BooleanVariable other) {
     if (other == null) {
       throw new IllegalArgumentException("other is null");

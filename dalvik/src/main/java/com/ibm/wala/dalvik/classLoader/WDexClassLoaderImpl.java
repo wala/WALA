@@ -175,7 +175,9 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     }
   }
 
-  /** @return the IClassHierarchy of this classLoader. */
+  /**
+   * @return the IClassHierarchy of this classLoader.
+   */
   public IClassHierarchy getClassHierarcy() {
     return cha;
   }

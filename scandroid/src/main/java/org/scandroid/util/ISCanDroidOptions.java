@@ -48,63 +48,103 @@ import java.net.URI;
  */
 public interface ISCanDroidOptions {
 
-  /** @return whether to create a full call graph pdf */
+  /**
+   * @return whether to create a full call graph pdf
+   */
   boolean pdfCG();
 
-  /** @return whether to create an application-only call graph pdf */
+  /**
+   * @return whether to create an application-only call graph pdf
+   */
   boolean pdfPartialCG();
 
-  /** @return whether to create a call graph of application + 1 level of system calls */
+  /**
+   * @return whether to create a call graph of application + 1 level of system calls
+   */
   boolean pdfOneLevelCG();
 
-  /** @return whether to create a system + 1 level of application call graph */
+  /**
+   * @return whether to create a system + 1 level of application call graph
+   */
   boolean systemToApkCG();
 
-  /** @return whether to print a full call graph to stdout */
+  /**
+   * @return whether to print a full call graph to stdout
+   */
   boolean stdoutCG();
 
-  /** @return whether to include the Android library in flow analysis */
+  /**
+   * @return whether to include the Android library in flow analysis
+   */
   boolean includeLibrary();
 
-  /** @return whether to analyze each entry point separately */
+  /**
+   * @return whether to analyze each entry point separately
+   */
   boolean separateEntries();
 
-  /** @return whether to bring up a GUI to analyze domain elements for flow analysis */
+  /**
+   * @return whether to bring up a GUI to analyze domain elements for flow analysis
+   */
   boolean ifdsExplorer();
 
-  /** @return whether to look for main methods and add them as entry points */
+  /**
+   * @return whether to look for main methods and add them as entry points
+   */
   boolean addMainEntrypoints();
 
-  /** @return whether to use ServerThread.run as the entry point for analysis */
+  /**
+   * @return whether to use ServerThread.run as the entry point for analysis
+   */
   boolean useThreadRunMain();
 
-  /** @return whether to run string prefix analysis */
+  /**
+   * @return whether to run string prefix analysis
+   */
   boolean stringPrefixAnalysis();
 
-  /** @return whether to stop after generating the call graph */
+  /**
+   * @return whether to stop after generating the call graph
+   */
   boolean testCGBuilder();
 
-  /** @return whether to log class hierarchy warnings */
+  /**
+   * @return whether to log class hierarchy warnings
+   */
   boolean classHierarchyWarnings();
 
-  /** @return whether to log call graph builder warnings */
+  /**
+   * @return whether to log call graph builder warnings
+   */
   boolean cgBuilderWarnings();
 
-  /** @return whether to check conformance to built-in policy */
+  /**
+   * @return whether to check conformance to built-in policy
+   */
   boolean useDefaultPolicy();
 
-  /** @return the URI pointing to the jar or apk to analyze */
+  /**
+   * @return the URI pointing to the jar or apk to analyze
+   */
   URI getClasspath();
 
-  /** @return the filename portion of the classpath to analyze */
+  /**
+   * @return the filename portion of the classpath to analyze
+   */
   String getFilename();
 
-  /** @return a URI to the Android library jar */
+  /**
+   * @return a URI to the Android library jar
+   */
   URI getAndroidLibrary();
 
-  /** @return the ReflectionOptions for this run */
+  /**
+   * @return the ReflectionOptions for this run
+   */
   ReflectionOptions getReflectionOptions();
 
-  /** @return a URI to the XML method summaries file */
+  /**
+   * @return a URI to the XML method summaries file
+   */
   URI getSummariesURI();
 }

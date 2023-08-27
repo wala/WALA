@@ -71,7 +71,9 @@ public class GraphDataflowTest extends WalaTestCase {
     assertEquals(expectedStringNodeOnly(), result);
   }
 
-  /** @return the expected dataflow result as a String */
+  /**
+   * @return the expected dataflow result as a String
+   */
   public static String expectedStringNodeOnly() {
     return "------\n"
         + "Node A(0) = { 0 }\n"
@@ -96,7 +98,9 @@ public class GraphDataflowTest extends WalaTestCase {
         + "Node H(7) = { 7 }\n";
   }
 
-  /** @return a graph with the expected structure */
+  /**
+   * @return a graph with the expected structure
+   */
   public static Graph<String> buildGraph() {
     Graph<String> G = SlowSparseNumberedGraph.make();
     for (int i = 0; i < nodeNames.length(); i++) {

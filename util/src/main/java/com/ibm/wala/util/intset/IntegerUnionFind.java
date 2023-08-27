@@ -21,6 +21,7 @@ public class IntegerUnionFind {
   private static final int MAX_VALUE = Integer.MAX_VALUE / 4;
 
   private static final int DEFAULT_SIZE = 100;
+
   /**
    * parent[i+1] =
    *
@@ -37,7 +38,9 @@ public class IntegerUnionFind {
     this(DEFAULT_SIZE);
   }
 
-  /** @param size initial size of the tables */
+  /**
+   * @param size initial size of the tables
+   */
   public IntegerUnionFind(int size) {
     if (size < 0 || size > MAX_VALUE) {
       throw new IllegalArgumentException("illegal size: " + size);
@@ -85,7 +88,9 @@ public class IntegerUnionFind {
     parent = Arrays.copyOf(parent, size + 1);
   }
 
-  /** @return representative of x's equivalence class */
+  /**
+   * @return representative of x's equivalence class
+   */
   public int find(int x) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x " + x);
@@ -98,7 +103,9 @@ public class IntegerUnionFind {
     return findInternal(x + 1) - 1;
   }
 
-  /** @return representative of x's equivalence class */
+  /**
+   * @return representative of x's equivalence class
+   */
   private int findInternal(int x) {
     int root = x;
     while (parent[root] > 0) {

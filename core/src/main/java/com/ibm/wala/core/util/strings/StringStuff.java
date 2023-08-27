@@ -145,7 +145,8 @@ public class StringStuff {
     }
 
     int i = 0;
-    while (b.get(i++) != ')') ;
+    while (b.get(i++) != ')')
+      ;
     if (b.length() < i + 1) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
@@ -250,7 +251,8 @@ public class StringStuff {
         case TypeReference.OtherPrimitiveTypeCode:
           {
             int off = i - 1;
-            while (b.get(i++) != ';') ;
+            while (b.get(i++) != ';')
+              ;
             sigs.add(l.lookupPrimitiveType(new String(b.substring(off + 1, i - off - 2))));
 
             continue;
@@ -258,7 +260,8 @@ public class StringStuff {
         case TypeReference.ClassTypeCode:
           {
             int off = i - 1;
-            while (b.get(i++) != ';') ;
+            while (b.get(i++) != ';')
+              ;
             sigs.add(TypeName.findOrCreate(b, off, i - off - 1));
 
             continue;
@@ -274,7 +277,8 @@ public class StringStuff {
             TypeName T = null;
             byte c = b.get(i++);
             if (c == TypeReference.ClassTypeCode || c == TypeReference.OtherPrimitiveTypeCode) {
-              while (b.get(i++) != ';') ;
+              while (b.get(i++) != ';')
+                ;
               T = TypeName.findOrCreate(b, off, i - off - 1);
             } else {
               T = TypeName.findOrCreate(b, off, i - off);

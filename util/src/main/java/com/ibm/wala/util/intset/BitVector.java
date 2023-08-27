@@ -319,7 +319,9 @@ public class BitVector extends BitVectorBase<BitVector> {
     return true;
   }
 
-  /** @return true iff this is a subset of other */
+  /**
+   * @return true iff this is a subset of other
+   */
   @Override
   public boolean isSubset(BitVector other) {
     if (other == null) {

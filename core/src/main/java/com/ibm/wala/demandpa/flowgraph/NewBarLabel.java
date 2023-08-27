@@ -37,7 +37,9 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-/** @author Manu Sridharan */
+/**
+ * @author Manu Sridharan
+ */
 public class NewBarLabel implements IFlowLabel {
 
   private static final NewBarLabel theInstance = new NewBarLabel();

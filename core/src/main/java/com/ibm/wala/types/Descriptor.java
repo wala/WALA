@@ -89,7 +89,9 @@ public final class Descriptor {
     return findOrCreate(l, new ImmutableByteArray(b));
   }
 
-  /** @param key "value" of this descriptor */
+  /**
+   * @param key "value" of this descriptor
+   */
   private Descriptor(Key key) {
     this.key = key;
   }
@@ -109,22 +111,30 @@ public final class Descriptor {
     return key.toString();
   }
 
-  /** @return a unicode string representation of this descriptor */
+  /**
+   * @return a unicode string representation of this descriptor
+   */
   public String toUnicodeString() {
     return key.toUnicodeString();
   }
 
-  /** @return the name of the return type of this descriptor */
+  /**
+   * @return the name of the return type of this descriptor
+   */
   public TypeName getReturnType() {
     return key.returnType;
   }
 
-  /** @return the type names for the parameters in this descriptor */
+  /**
+   * @return the type names for the parameters in this descriptor
+   */
   public TypeName[] getParameters() {
     return key.parameters;
   }
 
-  /** @return number of parameters in this descriptor */
+  /**
+   * @return number of parameters in this descriptor
+   */
   public int getNumberOfParameters() {
     return key.parameters == null ? 0 : key.parameters.length;
   }

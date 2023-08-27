@@ -45,16 +45,21 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
    */
   boolean addTarget(CallSiteReference site, CGNode target);
 
-  /** @return the "default" IR for this node used by the governing call graph */
+  /**
+   * @return the "default" IR for this node used by the governing call graph
+   */
   IR getIR();
 
-  /** @return DefUse for the "default" IR for this node used by the governing call graph */
+  /**
+   * @return DefUse for the "default" IR for this node used by the governing call graph
+   */
   DefUse getDU();
 
   /**
    * @return an Iterator of the types that may be allocated by a given method in a given context.
    */
   Iterator<NewSiteReference> iterateNewSites();
+
   /**
    * @return an Iterator of the call statements that may execute in a given method for a given
    *     context

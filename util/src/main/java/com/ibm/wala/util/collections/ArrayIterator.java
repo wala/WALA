@@ -25,7 +25,9 @@ public class ArrayIterator<T> implements Iterator<T> {
   /** The array source for the iterator */
   protected final T[] _elts;
 
-  /** @param elts the array which should be iterated over */
+  /**
+   * @param elts the array which should be iterated over
+   */
   public ArrayIterator(T[] elts) {
     this(elts, 0);
   }

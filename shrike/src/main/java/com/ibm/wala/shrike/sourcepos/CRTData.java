@@ -48,10 +48,13 @@ public final class CRTData {
 
   /** start index in the code array of the code attribute */
   private final int pc_start_index;
+
   /** end index in the code array of the code attribute */
   private final int pc_end_index;
+
   /** positions in the source file */
   private final Range source_positions;
+
   /**
    * flags
    *

@@ -23,16 +23,24 @@ import com.ibm.wala.fixpoint.UnaryOperator;
  */
 public interface ITransferFunctionProvider<T, V extends IVariable<V>> {
 
-  /** @return the transfer function from IN_node -&gt; OUT_node */
+  /**
+   * @return the transfer function from IN_node -&gt; OUT_node
+   */
   UnaryOperator<V> getNodeTransferFunction(T node);
 
-  /** @return true if this provider provides node transfer functions */
+  /**
+   * @return true if this provider provides node transfer functions
+   */
   boolean hasNodeTransferFunctions();
 
-  /** @return the transfer function from OUT_src -&gt; EDGE_&lt;src,dst&gt; */
+  /**
+   * @return the transfer function from OUT_src -&gt; EDGE_&lt;src,dst&gt;
+   */
   UnaryOperator<V> getEdgeTransferFunction(T src, T dst);
 
-  /** @return true if this provider provides edge transfer functions */
+  /**
+   * @return true if this provider provides edge transfer functions
+   */
   boolean hasEdgeTransferFunctions();
 
   /**

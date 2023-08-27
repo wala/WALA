@@ -181,12 +181,16 @@ public class InstructionArray implements Collection<Instruction> {
     return index2pc.get(index);
   }
 
-  /** @return The instruction from its id. */
+  /**
+   * @return The instruction from its id.
+   */
   public Instruction getFromId(int id) {
     return instructions.get(id);
   }
 
-  /** @return The instruction from its pc. */
+  /**
+   * @return The instruction from its pc.
+   */
   public Instruction getFromPc(int pc) {
     return instructions.get(pc2index.get(pc));
   }

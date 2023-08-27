@@ -130,7 +130,9 @@ public abstract class AbstractNestedJarFileModule implements Module {
     };
   }
 
-  /** @author sfink an entry in a nested jar file. */
+  /**
+   * @author sfink an entry in a nested jar file.
+   */
   private class Entry implements ModuleEntry {
 
     private final String name;

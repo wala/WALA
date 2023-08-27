@@ -157,6 +157,7 @@ public class ParameterAccessor {
   public static class Parameter extends SSAValue {
     /** Implicit this or regular parameter? */
     private final ParamerterDisposition disp;
+
     /** Add to number to get position in descriptor */
     private final int descriptorOffset;
 
@@ -257,7 +258,9 @@ public class ParameterAccessor {
       return this.disp;
     }
 
-    /** @throws IllegalArgumentException if you compare this to an object totally different. */
+    /**
+     * @throws IllegalArgumentException if you compare this to an object totally different.
+     */
     @Override
     public boolean equals(final Object o) {
       if (o instanceof Parameter) {
@@ -342,16 +345,21 @@ public class ParameterAccessor {
 
   /** The Constructor used to create this ParameterAceesor */
   private final BasedOn base;
+
   /** The Method associated to this ParameterAceesor if constructed using a mRef */
   private final MethodReference mRef;
+
   /** The Method associated to this ParameterAceesor if constructed using an IMethod */
   private final IMethod method;
+
   /** The Value-Number for the implicit this-pointer or -1 if there is none */
   private final int implicitThis;
+
   /**
    * SSA-Number + descriptorOffset yield the parameters position in the Descriptor starting with 1
    */
   private final int descriptorOffset;
+
   /** Number of parameters _excluding_ implicit this */
   private final int numberOfParameters;
 
@@ -1902,6 +1910,7 @@ public class ParameterAccessor {
       final IClassHierarchy cha) {
     return connectThrough(callee, overrides, defaults, cha, null);
   }
+
   // *****************************************************************************
   //
   //  Hand-through functions follow...

@@ -156,7 +156,9 @@ public class FormalTypeParameter extends Signature {
     return interfaceBounds;
   }
 
-  /** @return the formal type parameters, or null if none */
+  /**
+   * @return the formal type parameters, or null if none
+   */
   public static FormalTypeParameter[] getTypeParameters(IClass klass)
       throws InvalidClassFileException {
     if (klass instanceof ShrikeClass) {

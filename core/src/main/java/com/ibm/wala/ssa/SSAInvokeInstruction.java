@@ -94,7 +94,9 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     v.visitInvoke(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfUses() {
     if (params == null) {
@@ -124,7 +126,9 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     return result;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
+   */
   @Override
   public int getUse(int j) {
     if (params == null) {

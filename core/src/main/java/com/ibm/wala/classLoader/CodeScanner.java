@@ -36,7 +36,9 @@ import java.util.Set;
 /** Simple utilities to scan {@link IMethod}s to gather information without building an IR. */
 public class CodeScanner {
 
-  /** @throws IllegalArgumentException if m is null */
+  /**
+   * @throws IllegalArgumentException if m is null
+   */
   public static Collection<CallSiteReference> getCallSites(IMethod m)
       throws InvalidClassFileException {
     if (m == null) {
@@ -51,7 +53,9 @@ public class CodeScanner {
     }
   }
 
-  /** @throws IllegalArgumentException if m is null */
+  /**
+   * @throws IllegalArgumentException if m is null
+   */
   public static Collection<FieldReference> getFieldsRead(IMethod m)
       throws InvalidClassFileException {
     if (m == null) {
@@ -70,7 +74,9 @@ public class CodeScanner {
     }
   }
 
-  /** @throws IllegalArgumentException if m is null */
+  /**
+   * @throws IllegalArgumentException if m is null
+   */
   public static Collection<FieldReference> getFieldsWritten(IMethod m)
       throws InvalidClassFileException {
     if (m == null) {
@@ -108,7 +114,9 @@ public class CodeScanner {
     }
   }
 
-  /** @throws IllegalArgumentException if m is null */
+  /**
+   * @throws IllegalArgumentException if m is null
+   */
   public static Collection<NewSiteReference> getNewSites(IMethod m)
       throws InvalidClassFileException {
     if (m == null) {
@@ -234,7 +242,9 @@ public class CodeScanner {
     return result;
   }
 
-  /** @throws IllegalArgumentException if statements == null */
+  /**
+   * @throws IllegalArgumentException if statements == null
+   */
   public static Iterator<TypeReference> iterateCastTypes(SSAInstruction[] statements)
       throws IllegalArgumentException {
     if (statements == null) {

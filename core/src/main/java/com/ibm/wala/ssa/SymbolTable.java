@@ -35,7 +35,9 @@ public class SymbolTable implements Cloneable {
 
   private boolean copy = false;
 
-  /** @param numberOfParameters in the IR .. should be ir.getNumberOfParameters() */
+  /**
+   * @param numberOfParameters in the IR .. should be ir.getNumberOfParameters()
+   */
   public SymbolTable(int numberOfParameters) {
     if (numberOfParameters < 0) {
       throw new IllegalArgumentException("Illegal numberOfParameters: " + numberOfParameters);
@@ -342,7 +344,9 @@ public class SymbolTable implements Cloneable {
     }
   }
 
-  /** @throws IllegalArgumentException if rhs is null */
+  /**
+   * @throws IllegalArgumentException if rhs is null
+   */
   public int newPhi(int[] rhs) throws IllegalArgumentException {
     if (rhs == null) {
       throw new IllegalArgumentException("rhs is null");
@@ -436,7 +440,9 @@ public class SymbolTable implements Cloneable {
     return values[valueNumber];
   }
 
-  /** @return true iff this valueNumber is a parameter */
+  /**
+   * @return true iff this valueNumber is a parameter
+   */
   public boolean isParameter(int valueNumber) {
     return valueNumber <= getNumberOfParameters();
   }

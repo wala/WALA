@@ -53,7 +53,9 @@ public class ScopeFileCallGraph {
    * uses all public methods of class_name.
    */
   public static void main(String[] args)
-      throws IOException, ClassHierarchyException, IllegalArgumentException,
+      throws IOException,
+          ClassHierarchyException,
+          IllegalArgumentException,
           CallGraphBuilderCancelException {
     long start = System.currentTimeMillis();
     Properties p = CommandLine.parse(args);

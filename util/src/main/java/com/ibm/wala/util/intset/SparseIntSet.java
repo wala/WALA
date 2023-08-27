@@ -110,7 +110,9 @@ public class SparseIntSet implements IntSet {
     return IntSetUtil.binarySearch(elements, x, 0, size - 1) >= 0;
   }
 
-  /** @return index i s.t. elements[i] == x, or -1 if not found. */
+  /**
+   * @return index i s.t. elements[i] == x, or -1 if not found.
+   */
   public final int getIndex(int x) {
     if (elements == null) {
       return -1;
@@ -394,7 +396,9 @@ public class SparseIntSet implements IntSet {
     };
   }
 
-  /** @return the largest element in the set */
+  /**
+   * @return the largest element in the set
+   */
   @Override
   public final int max() throws IllegalStateException {
     if (elements == null) {
@@ -411,7 +415,9 @@ public class SparseIntSet implements IntSet {
     for (int i = 0; i < size; i++) action.act(elements[i]);
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction) */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
+   */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (action == null) {
@@ -521,7 +527,9 @@ public class SparseIntSet implements IntSet {
     return false;
   }
 
-  /** @return contents as an int[] */
+  /**
+   * @return contents as an int[]
+   */
   public int[] toIntArray() {
     int[] result = new int[size];
     if (size > 0) {

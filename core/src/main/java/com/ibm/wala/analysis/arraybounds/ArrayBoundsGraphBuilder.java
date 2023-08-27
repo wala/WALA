@@ -30,6 +30,7 @@ import java.util.Set;
  */
 public class ArrayBoundsGraphBuilder {
   private final IR ir;
+
   /** Variables, which were already explored. */
   private final HashSet<Integer> foundVariables;
 

@@ -62,21 +62,27 @@ import com.ibm.wala.types.TypeReference;
 public class SSAValue {
   /** The SSA Value itself */
   protected final int number;
+
   /** The type of this variable */
   protected final TypeReference type;
+
   /** All variables with the same name in the source code share a key. */
   public final VariableKey key; // TODO: Protect again?
+
   /** Method the variable is valid in */
   protected final MethodReference mRef;
+
   /** If an instruction wrote to this value (set manually) */
   private boolean isAssigned;
 
   /** All variables with the same name in the source code. */
   public interface VariableKey {}
+
   /** A key that cannot be recreated. */
   public static class UniqueKey implements VariableKey {
     public UniqueKey() {}
   }
+
   /** A key that matches variables by their type - does not compare to NamedKey. */
   public static class TypeKey implements VariableKey {
     public final TypeName type;
@@ -110,6 +116,7 @@ public class SSAValue {
       return "<TypeKey type=\"" + this.type + "\" />";
     }
   }
+
   /** This NamedKey also equals to TypeKeys. */
   public static class WeaklyNamedKey extends NamedKey {
     public WeaklyNamedKey(final TypeName type, final String name) {
@@ -141,6 +148,7 @@ public class SSAValue {
       return "<WaklyNamedKey type=\"" + this.type + "\" name=\"" + this.name + "\" />";
     }
   }
+
   /** Identify variables by a string and type. */
   public static class NamedKey implements VariableKey {
     public final String name;
@@ -296,6 +304,7 @@ public class SSAValue {
   public MethodReference getValidIn() {
     return this.mRef;
   }
+
   /**
    * Return the optional variable name.
    *

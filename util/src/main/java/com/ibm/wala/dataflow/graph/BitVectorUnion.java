@@ -23,7 +23,9 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
 
   private BitVectorUnion() {}
 
-  /** @see java.lang.Object#toString() */
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString() {
     return "UNION";

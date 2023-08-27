@@ -10,7 +10,9 @@
  */
 package staticInit;
 
-/** @author manu */
+/**
+ * @author manu
+ */
 public class TestStaticInit {
 
   private static class A {

@@ -37,7 +37,9 @@ public class SparseLongIntVector {
     this.defaultValue = defaultValue;
   }
 
-  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
   public int get(long x) {
     int index = indices.getIndex(x);
     if (index == -1) {
@@ -71,7 +73,9 @@ public class SparseLongIntVector {
     }
   }
 
-  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
+  /**
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
   public void performVerboseAction() {
     System.err.println((getClass() + " stats: "));
     System.err.println(("data.length " + data.length));

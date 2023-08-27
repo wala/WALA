@@ -38,6 +38,7 @@ public interface CAst {
 
   /** Make a node of type kind with four children. */
   CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4);
+
   /** Make a node of type kind with five children. */
   CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5);
 

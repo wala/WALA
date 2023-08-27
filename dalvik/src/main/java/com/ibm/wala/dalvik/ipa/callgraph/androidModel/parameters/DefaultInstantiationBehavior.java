@@ -307,7 +307,9 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
     return behaviours.get(typeK).exactness;
   }
 
-  /** @return InstanceBehavior.REUSE */
+  /**
+   * @return InstanceBehavior.REUSE
+   */
   @Override
   public InstanceBehavior getDafultBehavior() {
     return InstanceBehavior.REUSE;

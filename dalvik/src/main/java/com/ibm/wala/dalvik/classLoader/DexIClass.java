@@ -92,6 +92,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
   private int clinitId = -1;
 
   private final DexModuleEntry dexModuleEntry;
+
   //    public IClassLoader loader;
 
   public DexIClass(IClassLoader loader, IClassHierarchy cha, final DexModuleEntry dexEntry) {
@@ -175,7 +176,9 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     staticFields = sfs.toArray(new IField[0]);
   }
 
-  /** @return The classDef Item associated with this class. */
+  /**
+   * @return The classDef Item associated with this class.
+   */
   public ClassDef getClassDefItem() {
     return classDef;
   }
@@ -207,13 +210,17 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return (modifiers & INTERFACE.getValue()) != 0;
   }
 
-  /** @see com.ibm.wala.classLoader.IClass#isAbstract() */
+  /**
+   * @see com.ibm.wala.classLoader.IClass#isAbstract()
+   */
   @Override
   public boolean isAbstract() {
     return (modifiers & ABSTRACT.getValue()) != 0;
   }
 
-  /** @see com.ibm.wala.classLoader.IClass#isAbstract() */
+  /**
+   * @see com.ibm.wala.classLoader.IClass#isAbstract()
+   */
   @Override
   public boolean isSynthetic() {
     return (modifiers & SYNTHETIC.getValue()) != 0;
@@ -228,7 +235,9 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return modifiers;
   }
 
-  /** @see java.lang.Object#equals(Object) */
+  /**
+   * @see java.lang.Object#equals(Object)
+   */
   @Override
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final

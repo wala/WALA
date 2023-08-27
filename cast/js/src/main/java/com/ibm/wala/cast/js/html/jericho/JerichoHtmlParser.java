@@ -26,7 +26,9 @@ import net.htmlparser.jericho.Logger;
 import net.htmlparser.jericho.LoggerProvider;
 import net.htmlparser.jericho.Source;
 
-/** @author danielk Uses the Jericho parser to go over the HTML */
+/**
+ * @author danielk Uses the Jericho parser to go over the HTML
+ */
 public class JerichoHtmlParser implements IHtmlParser {
   static Set<Warning> warnings = HashSetFactory.make();
 
@@ -113,7 +115,10 @@ public class JerichoHtmlParser implements IHtmlParser {
       System.err.println("Error parsing file: " + e.getMessage());
     }
   }
-  /** @author danielk Inner class does the actual traversal of the HTML using recursion */
+
+  /**
+   * @author danielk Inner class does the actual traversal of the HTML using recursion
+   */
   private static class Parser {
     private final IHtmlCallback handler;
     private final String fileName;

@@ -15,7 +15,9 @@ import com.ibm.wala.util.perf.StopwatchGC;
 /** An object to track performance of analysis engine */
 public interface EngineStopwatch {
 
-  /** @return a String representation of the information in this object */
+  /**
+   * @return a String representation of the information in this object
+   */
   String report();
 
   /** start timing for some category */

@@ -42,7 +42,10 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
 
   @Test
   public void testArgs()
-      throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException,
+      throws IOException,
+          IllegalArgumentException,
+          CancelException,
+          ClassHierarchyException,
           WalaException {
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);

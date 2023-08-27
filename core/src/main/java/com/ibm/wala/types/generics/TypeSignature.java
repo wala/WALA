@@ -168,7 +168,8 @@ public abstract class TypeSignature extends Signature {
         case (byte) 'T':
           { // type variable
             int off = i - 1;
-            while (typeSigs.charAt(i++) != ';') ;
+            while (typeSigs.charAt(i++) != ';')
+              ;
             sigs.add(typeSigs.substring(off, i));
             continue;
           }

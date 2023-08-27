@@ -10,5 +10,7 @@
  */
 package cornerCases;
 
-/** @author sfink */
+/**
+ * @author sfink
+ */
 public class Concrete2 extends Abstract2 {}

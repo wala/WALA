@@ -101,7 +101,9 @@ public abstract class SSANewInstruction extends SSAInstruction {
     v.visitNew(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;
@@ -123,7 +125,9 @@ public abstract class SSANewInstruction extends SSAInstruction {
     return 1;
   }
 
-  /** @return TypeReference */
+  /**
+   * @return TypeReference
+   */
   public TypeReference getConcreteType() {
     return site.getDeclaredType();
   }

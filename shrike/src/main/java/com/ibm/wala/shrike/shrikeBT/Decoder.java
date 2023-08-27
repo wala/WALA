@@ -893,7 +893,9 @@ public abstract class Decoder implements Constants {
       }
     }
 
-    /** @return the offset of the bytecode instruction deemed to be invalid */
+    /**
+     * @return the offset of the bytecode instruction deemed to be invalid
+     */
     public int getIndex() {
       return index;
     }
@@ -1155,7 +1157,9 @@ public abstract class Decoder implements Constants {
     return instructionsToBytecodes;
   }
 
-  /** @return true iff the method decoded by this Decoder contains subroutines (JSRs) */
+  /**
+   * @return true iff the method decoded by this Decoder contains subroutines (JSRs)
+   */
   public final boolean containsSubroutines() {
     if (instructions == null) {
       throw new Error("Call decode() before calling containsSubroutines()");

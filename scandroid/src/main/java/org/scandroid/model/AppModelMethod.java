@@ -79,6 +79,7 @@ import org.scandroid.util.LoaderUtils;
 public class AppModelMethod {
 
   int nextLocal;
+
   /** A mapping from String (variable name) -&gt; Integer (local number) */
   private Map<String, Integer> symbolTable = null;
 

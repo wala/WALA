@@ -89,6 +89,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * merrily chugs along, tolerating the race.
    */
   private final Map<TypeReference, Node> map;
+
   /** {@link TypeReference} for the root type */
   private TypeReference rootTypeRef;
 
@@ -791,7 +792,9 @@ public class ClassHierarchy implements IClassHierarchy {
     return factory;
   }
 
-  /** @throws IllegalArgumentException if A is null */
+  /**
+   * @throws IllegalArgumentException if A is null
+   */
   @Override
   public IClass getLeastCommonSuperclass(IClass a, IClass b) {
     assert a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage());
@@ -1138,7 +1141,9 @@ public class ClassHierarchy implements IClassHierarchy {
     return new MapIterator<>(map.values().iterator(), toClass);
   }
 
-  /** @return The number of classes present in the class hierarchy. */
+  /**
+   * @return The number of classes present in the class hierarchy.
+   */
   @Override
   public int getNumberOfClasses() {
     return map.keySet().size();

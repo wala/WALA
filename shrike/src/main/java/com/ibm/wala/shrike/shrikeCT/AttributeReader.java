@@ -44,17 +44,23 @@ public abstract class AttributeReader {
     }
   }
 
-  /** @return the class reader the attribute belongs to */
+  /**
+   * @return the class reader the attribute belongs to
+   */
   public final ClassReader getClassReader() {
     return cr;
   }
 
-  /** @return the offset of the raw attribute data (including the attribute header) */
+  /**
+   * @return the offset of the raw attribute data (including the attribute header)
+   */
   public final int getRawOffset() {
     return attr;
   }
 
-  /** @return the size of the raw attribute data (including the attribute header) */
+  /**
+   * @return the size of the raw attribute data (including the attribute header)
+   */
   public final int getRawSize() {
     return length;
   }

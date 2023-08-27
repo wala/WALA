@@ -49,7 +49,9 @@ public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstructio
         + getValueString(symbolTable, val2);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitBinaryOp(this);
@@ -60,7 +62,9 @@ public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstructio
     return operator;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#isPEI() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#isPEI()
+   */
   @Override
   public boolean isPEI() {
     return mayBeInteger
@@ -68,7 +72,9 @@ public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstructio
             || operator == BinaryOpInstruction.Operator.REM);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#isFallThrough() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
+   */
   @Override
   public boolean isFallThrough() {
     return true;

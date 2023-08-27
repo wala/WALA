@@ -47,7 +47,9 @@ public class AstJavaSlicer {
     return computeSlice(sdg, ss, true);
   }
 
-  /** @param ss a collection of statements of interest */
+  /**
+   * @param ss a collection of statements of interest
+   */
   public static Collection<Statement> computeSlice(
       SDG<?> sdg, Collection<Statement> ss, boolean backward) throws CancelException {
     return new Slicer().slice(sdg, ss, backward);

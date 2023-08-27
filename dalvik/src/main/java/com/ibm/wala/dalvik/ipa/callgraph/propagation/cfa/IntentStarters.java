@@ -90,8 +90,10 @@ public class IntentStarters {
   /** Contains information on how to call a starter-function. */
   public static class StartInfo {
     private final Set<IntentType> targetAccuracy;
+
     /** used to dispatch to the correct MiniModel if intent-target could not be retreived */
     private final Set<AndroidComponent> componentType;
+
     /** relevant for the IntentContextSelector */
     private final int[] relevantParameters;
 

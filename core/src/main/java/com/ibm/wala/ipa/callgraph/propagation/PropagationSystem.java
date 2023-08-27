@@ -115,7 +115,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
   }
 
-  /** @return an object which encapsulates the pointer analysis result */
+  /**
+   * @return an object which encapsulates the pointer analysis result
+   */
   public PointerAnalysis<InstanceKey> makePointerAnalysis(PropagationCallGraphBuilder builder) {
     return new PointerAnalysisImpl(
         builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
@@ -180,7 +182,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return class2InstanceKey.get(klass);
   }
 
-  /** @return the instance key numbered with index i */
+  /**
+   * @return the instance key numbered with index i
+   */
   public InstanceKey getInstanceKey(int i) {
     return instanceKeys.getMappedObject(i);
   }
@@ -384,19 +388,25 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return newStatement(L, op, R1, R2, true, true);
   }
 
-  /** @return true iff the system changes */
+  /**
+   * @return true iff the system changes
+   */
   public boolean newFieldWrite(
       PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
-  /** @return true iff the system changes */
+  /**
+   * @return true iff the system changes
+   */
   public boolean newFieldRead(
       PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     return newConstraint(lhs, op, rhs);
   }
 
-  /** @return true iff the system changes */
+  /**
+   * @return true iff the system changes
+   */
   public boolean newConstraint(PointerKey lhs, InstanceKey value) {
     if (DEBUG) {
       System.err.println("Add constraint B: " + lhs + " U= " + value);
@@ -576,7 +586,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     addAllStatementsToWorkList();
   }
 
-  /** @return an object that encapsulates the pointer analysis results */
+  /**
+   * @return an object that encapsulates the pointer analysis results
+   */
   public PointerAnalysis<InstanceKey> extractPointerAnalysis(PropagationCallGraphBuilder builder) {
     if (pointerAnalysis == null) {
       pointerAnalysis = makePointerAnalysis(builder);
@@ -642,7 +654,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return flowGraph;
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys() */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
+   */
   public Iterator<PointerKey> iteratePointerKeys() {
     return pointsToMap.iterateKeys();
   }
@@ -706,7 +720,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return verboseInterval;
   }
 
-  /** @param verboseInterval The verboseInterval to set. */
+  /**
+   * @param verboseInterval The verboseInterval to set.
+   */
   public void setVerboseInterval(int verboseInterval) {
     this.verboseInterval = verboseInterval;
   }

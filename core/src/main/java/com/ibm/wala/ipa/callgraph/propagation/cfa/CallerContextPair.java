@@ -26,7 +26,9 @@ public class CallerContextPair extends CallerContext {
 
   private final Context baseContext;
 
-  /** @param caller the node which defines this context. */
+  /**
+   * @param caller the node which defines this context.
+   */
   public CallerContextPair(CGNode caller, Context baseContext) {
     super(caller);
     this.baseContext = baseContext;

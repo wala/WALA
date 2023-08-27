@@ -43,7 +43,9 @@ public abstract class UnaryStatement<T extends IVariable<T>>
     return lhs;
   }
 
-  /** @return the right-hand side of this equation. */
+  /**
+   * @return the right-hand side of this equation.
+   */
   public T getRightHandSide() {
     return rhs;
   }

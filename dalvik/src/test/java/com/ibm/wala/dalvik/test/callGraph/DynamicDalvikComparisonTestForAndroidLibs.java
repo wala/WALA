@@ -20,9 +20,15 @@ public class DynamicDalvikComparisonTestForAndroidLibs extends DynamicDalvikComp
 
   @Test
   public void testJLex()
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException,
-          InterruptedException, ClassNotFoundException, SecurityException,
-          InvalidClassFileException, FailureException {
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          IOException,
+          CancelException,
+          InterruptedException,
+          ClassNotFoundException,
+          SecurityException,
+          InvalidClassFileException,
+          FailureException {
     File inputFile = testFile("sample.lex");
     test(
         providedAndroidLibs(),
@@ -33,9 +39,15 @@ public class DynamicDalvikComparisonTestForAndroidLibs extends DynamicDalvikComp
 
   @Test
   public void testJavaCup()
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException,
-          InterruptedException, ClassNotFoundException, SecurityException,
-          InvalidClassFileException, FailureException {
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          IOException,
+          CancelException,
+          InterruptedException,
+          ClassNotFoundException,
+          SecurityException,
+          InvalidClassFileException,
+          FailureException {
     File inputFile = testFile("sample.cup");
     test(
         providedAndroidLibs(),

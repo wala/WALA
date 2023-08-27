@@ -26,7 +26,10 @@ public abstract class SyntheticClass implements IClass {
   private final TypeReference T;
 
   private final IClassHierarchy cha;
-  /** @param T type reference describing this class */
+
+  /**
+   * @param T type reference describing this class
+   */
   public SyntheticClass(TypeReference T, IClassHierarchy cha) {
     super();
     this.T = T;

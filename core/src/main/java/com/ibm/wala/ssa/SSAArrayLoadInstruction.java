@@ -61,7 +61,9 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
     v.visitArrayLoad(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;

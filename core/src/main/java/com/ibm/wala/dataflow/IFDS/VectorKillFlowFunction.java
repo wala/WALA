@@ -18,7 +18,9 @@ public class VectorKillFlowFunction implements IReversibleFlowFunction {
 
   private final IntSet kill;
 
-  /** @param kill the intset of facts which are killed by this flow function */
+  /**
+   * @param kill the intset of facts which are killed by this flow function
+   */
   private VectorKillFlowFunction(IntSet kill) {
     if (kill == null) {
       throw new IllegalArgumentException("null kill");

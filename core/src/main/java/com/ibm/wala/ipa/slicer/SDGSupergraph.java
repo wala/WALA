@@ -409,7 +409,9 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     return sdg.getPredNodeNumbers(node);
   }
 
-  /** @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
+   */
   @Override
   public IntSet getSuccNodeNumbers(Statement node) {
     return sdg.getSuccNodeNumbers(node);

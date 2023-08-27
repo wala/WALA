@@ -21,20 +21,28 @@ public interface IBinaryNaturalRelation extends VerboseAction, Iterable<IntPair>
    */
   boolean add(int x, int y);
 
-  /** @return IntSet of y s.t. R(x,y) or null if none. */
+  /**
+   * @return IntSet of y s.t. R(x,y) or null if none.
+   */
   IntSet getRelated(int x);
 
-  /** @return number of y s.t. R(x,y) */
+  /**
+   * @return number of y s.t. R(x,y)
+   */
   int getRelatedCount(int x);
 
-  /** @return true iff there exists pair (x,y) for some y */
+  /**
+   * @return true iff there exists pair (x,y) for some y
+   */
   boolean anyRelated(int x);
 
   void remove(int x, int y);
 
   void removeAll(int x);
 
-  /** @return true iff (x,y) \in R */
+  /**
+   * @return true iff (x,y) \in R
+   */
   boolean contains(int x, int y);
 
   int maxKeyValue();

@@ -17,6 +17,7 @@ public class IntStack {
 
   /** Comment for {@code top} */
   private int top = -1;
+
   /** Comment for {@code state} */
   private int state[] = new int[0];
 
@@ -28,7 +29,9 @@ public class IntStack {
     state[++top] = i;
   }
 
-  /** @return the int at the top of the stack */
+  /**
+   * @return the int at the top of the stack
+   */
   public int peek() {
     return state[top];
   }
@@ -42,17 +45,23 @@ public class IntStack {
     return state[top--];
   }
 
-  /** @return true iff the stack is empty */
+  /**
+   * @return true iff the stack is empty
+   */
   public boolean isEmpty() {
     return top == -1;
   }
 
-  /** @return the number of elements in the stack. */
+  /**
+   * @return the number of elements in the stack.
+   */
   public int size() {
     return top + 1;
   }
 
-  /** @return the ith int from the bottom of the stack */
+  /**
+   * @return the ith int from the bottom of the stack
+   */
   public int get(int i) {
     if (i < 0 || i > top) {
       throw new IndexOutOfBoundsException();

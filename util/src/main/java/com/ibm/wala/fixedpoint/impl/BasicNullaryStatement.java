@@ -23,7 +23,9 @@ public class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatem
     this.operator = operator;
   }
 
-  /** @return Returns the operator. */
+  /**
+   * @return Returns the operator.
+   */
   @Override
   public NullaryOperator<T> getOperator() {
     return operator;

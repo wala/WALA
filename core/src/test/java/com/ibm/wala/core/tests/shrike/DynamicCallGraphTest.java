@@ -54,8 +54,14 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testGraph()
-      throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException,
-          SecurityException, IllegalArgumentException, ClassHierarchyException, CancelException,
+      throws IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
+          IllegalArgumentException,
+          ClassHierarchyException,
+          CancelException,
           InterruptedException {
     instrument(testJarLocation);
     run("dynamicCG.MainClass", null);
@@ -65,8 +71,14 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testCallbacks()
-      throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException,
-          SecurityException, IllegalArgumentException, ClassHierarchyException, CancelException,
+      throws IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
+          IllegalArgumentException,
+          ClassHierarchyException,
+          CancelException,
           InterruptedException {
     instrument(testJarLocation);
     run("dynamicCG.CallbacksMainClass", null);
@@ -76,8 +88,14 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testExclusions()
-      throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException,
-          SecurityException, IllegalArgumentException, ClassHierarchyException, CancelException,
+      throws IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
+          IllegalArgumentException,
+          ClassHierarchyException,
+          CancelException,
           InterruptedException {
     instrument(testJarLocation);
     run("dynamicCG.MainClass", "ShrikeTestExclusions.txt");
@@ -87,8 +105,14 @@ public abstract class DynamicCallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testLambdas()
-      throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException,
-          SecurityException, IllegalArgumentException, ClassHierarchyException, CancelException,
+      throws IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
+          IllegalArgumentException,
+          ClassHierarchyException,
+          CancelException,
           InterruptedException {
     instrument(testJarLocation);
     run("lambda.SortingExample", null);

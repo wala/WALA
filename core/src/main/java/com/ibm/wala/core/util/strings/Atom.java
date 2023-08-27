@@ -366,7 +366,9 @@ public final class Atom implements Serializable {
     }
   }
 
-  /** @return true iff this atom contains the specified byte */
+  /**
+   * @return true iff this atom contains the specified byte
+   */
   public boolean contains(byte b) {
     for (byte element : val) {
       if (element == b) {

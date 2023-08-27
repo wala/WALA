@@ -44,7 +44,9 @@ public abstract class AllocationSiteInNode extends AbstractTypeInNode {
         + '}';
   }
 
-  /** @return Returns the site. */
+  /**
+   * @return Returns the site.
+   */
   public NewSiteReference getSite() {
     return site;
   }

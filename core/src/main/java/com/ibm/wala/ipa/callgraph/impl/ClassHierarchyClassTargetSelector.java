@@ -24,7 +24,9 @@ public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
 
   private final IClassHierarchy cha;
 
-  /** @param cha governing class hierarchy */
+  /**
+   * @param cha governing class hierarchy
+   */
   public ClassHierarchyClassTargetSelector(IClassHierarchy cha) {
     this.cha = cha;
   }

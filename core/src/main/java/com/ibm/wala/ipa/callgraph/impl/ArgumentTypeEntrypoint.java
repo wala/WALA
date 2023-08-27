@@ -29,7 +29,9 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
 
   private final IClassHierarchy cha;
 
-  /** @throws IllegalArgumentException if method == null */
+  /**
+   * @throws IllegalArgumentException if method == null
+   */
   protected TypeReference[][] makeParameterTypes(IMethod method) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method == null");

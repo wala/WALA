@@ -95,12 +95,16 @@ public class AndroidModelParameterManager {
   // TODO: nextLocal may be 0 on getUnamanged!
   /** The next variable not under management yet */
   private int nextLocal;
+
   /** for managing cascaded code blocks */
   private int currentScope = 0;
+
   /** For checking if type is CREATE or REUSE (optional) */
   private IInstantiationBehavior behaviour = null;
+
   /** Description only used for toString() */
   private String description;
+
   //    private MethodReference forMethod;
 
   /** Representing a ssa-number - thus a version of an instance to a type. */
@@ -468,7 +472,9 @@ public class AndroidModelParameterManager {
     return ssa;
   }
 
-  /** @throws IllegalArgumentException if type was not seen before or is null */
+  /**
+   * @throws IllegalArgumentException if type was not seen before or is null
+   */
   public List<Integer> getAllForPhi(TypeReference type) {
     if (type == null) {
       throw new IllegalArgumentException("The argument type may not be null");
@@ -583,7 +589,9 @@ public class AndroidModelParameterManager {
     throw new IllegalStateException("No suitable candidate has been found"); // TODO WRONG text
   }
 
-  /** @throws IllegalArgumentException if type was not seen before or is null */
+  /**
+   * @throws IllegalArgumentException if type was not seen before or is null
+   */
   public void invalidate(TypeReference type) {
     if (type == null) {
       throw new IllegalArgumentException("The argument type may not be null");

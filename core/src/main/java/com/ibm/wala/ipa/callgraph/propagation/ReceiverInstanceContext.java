@@ -19,7 +19,9 @@ public class ReceiverInstanceContext implements Context {
 
   private final InstanceKey ik;
 
-  /** @param I the instance key that represents the receiver */
+  /**
+   * @param I the instance key that represents the receiver
+   */
   public ReceiverInstanceContext(InstanceKey I) {
     if (I == null) {
       throw new IllegalArgumentException("null I");

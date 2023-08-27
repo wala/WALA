@@ -91,7 +91,9 @@ public abstract class OfflineInstrumenterBase {
     /** Open the resource for reading as a stream. */
     public abstract InputStream open() throws IOException;
 
-    /** @return true if this resource represents a class, false otherwise */
+    /**
+     * @return true if this resource represents a class, false otherwise
+     */
     public boolean isClass() {
       return true;
     }
@@ -327,7 +329,9 @@ public abstract class OfflineInstrumenterBase {
     return r;
   }
 
-  /** @return the number of source classes to be instrumented */
+  /**
+   * @return the number of source classes to be instrumented
+   */
   public final int getNumInputClasses() {
     return inputs.size();
   }

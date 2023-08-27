@@ -437,7 +437,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return new OrdinalSet<>(s, instanceKeys);
   }
 
-  /** @return the points-to set for the exceptional return values from a particular call site */
+  /**
+   * @return the points-to set for the exceptional return values from a particular call site
+   */
   private OrdinalSet<InstanceKey> computeImplicitExceptionsForCall(
       CGNode node, SSAInvokeInstruction call) {
     MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
@@ -451,7 +453,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return new OrdinalSet<>(S, instanceKeys);
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel() */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel()
+   */
   @Override
   public HeapModel getHeapModel() {
     return H;
@@ -562,7 +566,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointerKeys() */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointerKeys()
+   */
   @Override
   public Iterable<PointerKey> getPointerKeys() {
     return Iterator2Iterable.make(pointsToMap.iterateKeys());

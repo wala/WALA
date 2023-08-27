@@ -77,12 +77,16 @@ public final class FieldImpl implements IField {
     this(declaringClass, canonicalRef, accessFlags, annotations, null);
   }
 
-  /** @return the genericSignature */
+  /**
+   * @return the genericSignature
+   */
   public TypeSignature getGenericSignature() {
     return genericSignature;
   }
 
-  /** @see com.ibm.wala.classLoader.IMember#getDeclaringClass() */
+  /**
+   * @see com.ibm.wala.classLoader.IMember#getDeclaringClass()
+   */
   @Override
   public IClass getDeclaringClass() {
     return declaringClass;
@@ -116,7 +120,9 @@ public final class FieldImpl implements IField {
         getDeclaringClass().getReference(), getName(), getFieldTypeReference());
   }
 
-  /** @see com.ibm.wala.classLoader.IMember#getName() */
+  /**
+   * @see com.ibm.wala.classLoader.IMember#getName()
+   */
   @Override
   public Atom getName() {
     return fieldRef.getName();

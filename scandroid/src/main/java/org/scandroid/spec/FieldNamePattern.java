@@ -59,6 +59,7 @@ public class FieldNamePattern {
   final String className; // null = match any class
 
   final String memberName; // null = match any method
+
   // * used to match arbitrary substrings
   public FieldNamePattern(String c, String m) {
     className = c;

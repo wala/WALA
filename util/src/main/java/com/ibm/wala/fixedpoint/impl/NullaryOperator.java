@@ -21,6 +21,7 @@ public abstract class NullaryOperator<T extends IVariable<T>> extends AbstractOp
   public byte evaluate(T lhs, T[] rhs) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
+
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    *

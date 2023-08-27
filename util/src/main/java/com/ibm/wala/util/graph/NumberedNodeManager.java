@@ -23,6 +23,8 @@ public interface NumberedNodeManager<T> extends NodeManager<T> {
 
   int getMaxNumber();
 
-  /** @return iterator of nodes with the numbers in set s */
+  /**
+   * @return iterator of nodes with the numbers in set s
+   */
   Iterator<T> iterateNodes(IntSet s);
 }

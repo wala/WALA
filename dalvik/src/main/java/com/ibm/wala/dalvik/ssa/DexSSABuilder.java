@@ -611,7 +611,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         workingState.setLocal(dest, result);
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitCheckCast */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitCheckCast
+       */
       @Override
       public void visitCheckCast(CheckCast instruction) {
         int val = workingState.getLocal(instruction.object);
@@ -730,7 +732,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       // instruction.throwsExceptionOnOverflow()));
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+       */
       @Override
       public void visitGetField(GetField instruction) {
         int dest = instruction.destination;
@@ -762,14 +766,18 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         //              workingState.push(result);
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGoto(GotoInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGoto(GotoInstruction)
+       */
       @Override
       public void visitGoto(Goto instruction) {
         emitInstruction(
             insts.GotoInstruction(getCurrentInstructionIndex(), instruction.destination));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInstanceof */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInstanceof
+       */
       @Override
       public void visitInstanceof(InstanceOf instruction) {
         int ref = workingState.getLocal(instruction.source);
@@ -785,7 +793,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 getCurrentInstructionIndex(), result, ref, instruction.type));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction)
+       */
       @Override
       public void visitInvoke(Invoke instruction) {
         // TODO: can other methods do indirect reads from a dex method?
@@ -917,7 +927,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       //              super.visitLocalStore(instruction);
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction)
+       */
       @Override
       public void visitMonitor(Monitor instruction) {
         int ref = workingState.getLocal(instruction.object);
@@ -926,7 +938,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             insts.MonitorInstruction(getCurrentInstructionIndex(), ref, instruction.enter));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction)
+       */
       @Override
       public void visitNew(New instruction) {
         int dest = instruction.destination;
@@ -992,7 +1006,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         */
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+       */
       @Override
       public void visitPutField(PutField instruction) {
         int value = workingState.getLocal(instruction.source);
@@ -1013,7 +1029,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         }
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitReturn(ReturnInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitReturn(ReturnInstruction)
+       */
       @Override
       public void visitReturn(Return instruction) {
         if (instruction instanceof Return.ReturnDouble) {
@@ -1060,7 +1078,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       //                      true));
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction)
+       */
       @Override
       public void visitSwitch(Switch instruction) {
         int val = workingState.getLocal(instruction.regA);
@@ -1108,7 +1128,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         }
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction)
+       */
       @Override
       public void visitThrow(Throw instruction) {
         int throwable = workingState.getLocal(instruction.throwable);
@@ -1526,7 +1548,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       return result;
     }
 
-    /** @return the indices i s.t. x[i] == y, or null if none found. */
+    /**
+     * @return the indices i s.t. x[i] == y, or null if none found.
+     */
     private static int[] extractIndices(int[] x, int y) {
       int count = 0;
       for (int element : x) {

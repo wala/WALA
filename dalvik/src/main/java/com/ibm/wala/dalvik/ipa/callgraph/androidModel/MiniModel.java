@@ -73,6 +73,7 @@ public class MiniModel extends AndroidModel {
 
   private final Atom name;
   private final AndroidComponent forCompo;
+
   /**
    * Restrict the model to Activities.
    *

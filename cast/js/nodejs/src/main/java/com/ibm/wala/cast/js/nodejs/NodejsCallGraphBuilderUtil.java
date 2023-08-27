@@ -44,7 +44,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
-/** @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt; */
+/**
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
+ */
 public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
 
   public static PropagationCallGraphBuilder makeCGBuilder(File mainFile)

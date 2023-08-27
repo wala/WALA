@@ -33,7 +33,9 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
     return getValueString(symbolTable, result) + " = " + super.toString(symbolTable);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;
@@ -49,7 +51,9 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
     return result;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfUses() {
     return 2;

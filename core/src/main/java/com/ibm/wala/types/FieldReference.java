@@ -76,7 +76,9 @@ public final class FieldReference extends MemberReference {
     }
   }
 
-  /** @return the descriptor component of this member reference */
+  /**
+   * @return the descriptor component of this member reference
+   */
   public TypeReference getFieldType() {
     return fieldType;
   }

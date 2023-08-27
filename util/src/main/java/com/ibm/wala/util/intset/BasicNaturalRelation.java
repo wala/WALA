@@ -262,7 +262,9 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     return delegateStore.get(x);
   }
 
-  /** @return true iff there exists pair (x,y) for some y */
+  /**
+   * @return true iff there exists pair (x,y) for some y
+   */
   @Override
   public boolean anyRelated(int x) {
     return smallStore[0].get(x) != EMPTY_CODE;
@@ -381,7 +383,9 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     delegateStore.set(x, null);
   }
 
-  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
+  /**
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
   @Override
   public void performVerboseAction() {
     if (VERBOSE) {

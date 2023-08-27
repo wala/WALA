@@ -41,10 +41,14 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
 
   boolean hasSubgraphForNode(CGNode node);
 
-  /** @return {@code true} iff {@code pk} is a formal parameter */
+  /**
+   * @return {@code true} iff {@code pk} is a formal parameter
+   */
   boolean isParam(LocalPointerKey pk);
 
-  /** @return the {@link SSAInvokeInstruction}s passing some pointer as a parameter */
+  /**
+   * @return the {@link SSAInvokeInstruction}s passing some pointer as a parameter
+   */
   Iterator<SSAAbstractInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk);
 
   /**

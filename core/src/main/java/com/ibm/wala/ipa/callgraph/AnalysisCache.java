@@ -57,7 +57,9 @@ public class AnalysisCache implements IAnalysisCacheView {
     return irFactory;
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIR(com.ibm.wala.classLoader.IMethod) */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.IAnalysisCacheView#getIR(com.ibm.wala.classLoader.IMethod)
+   */
   @Override
   public IR getIR(IMethod method, Context context) {
     if (method == null) {

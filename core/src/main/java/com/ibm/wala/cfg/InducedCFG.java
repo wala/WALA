@@ -591,7 +591,9 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       return 1153 * getGraphNodeId() + getMethod().hashCode();
     }
 
-    /** @see java.lang.Object#toString() */
+    /**
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
       return "BB[Induced]" + getNumber() + " - " + getMethod().getSignature();

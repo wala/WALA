@@ -83,7 +83,9 @@ public class SyntheticMethod implements IMethod {
     return method.getSelector().equals(MethodReference.initSelector);
   }
 
-  /** @see com.ibm.wala.classLoader.IMethod#isStatic() */
+  /**
+   * @see com.ibm.wala.classLoader.IMethod#isStatic()
+   */
   @Override
   public boolean isStatic() {
     return isStatic;
@@ -124,7 +126,9 @@ public class SyntheticMethod implements IMethod {
     return false;
   }
 
-  /** @see com.ibm.wala.classLoader.IMethod#isAbstract() */
+  /**
+   * @see com.ibm.wala.classLoader.IMethod#isAbstract()
+   */
   @Override
   public boolean isSynchronized() {
     return false;
@@ -310,6 +314,7 @@ public class SyntheticMethod implements IMethod {
   public Descriptor getDescriptor() {
     return method.getSelector().getDescriptor();
   }
+
   /* BEGIN Custom change: : precise bytecode positions */
 
   @Override
@@ -321,6 +326,7 @@ public class SyntheticMethod implements IMethod {
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }
+
   /* END Custom change: precise bytecode positions */
 
   @Override

@@ -21,7 +21,9 @@ import com.ibm.wala.util.debug.Assertions;
 /** Convenience methods for navigating a {@link ControlFlowGraph}. */
 public class Util {
 
-  /** @return the last instruction in basic block b, as stored in the instruction array for cfg */
+  /**
+   * @return the last instruction in basic block b, as stored in the instruction array for cfg
+   */
   public static SSAInstruction getLastInstruction(
       ControlFlowGraph<? extends SSAInstruction, ?> cfg, IBasicBlock<?> b) {
     if (b == null) {

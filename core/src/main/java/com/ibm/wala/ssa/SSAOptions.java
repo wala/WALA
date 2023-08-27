@@ -46,7 +46,9 @@ public class SSAOptions {
     return defaultValues;
   }
 
-  /** @return the default SSA Options */
+  /**
+   * @return the default SSA Options
+   */
   public static SSAOptions defaultOptions() {
     return defaultOptions;
   }

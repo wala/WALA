@@ -103,7 +103,9 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<>(isect, A.mapping);
   }
 
-  /** @return true if the contents of two sets are equal */
+  /**
+   * @return true if the contents of two sets are equal
+   */
   public static <T> boolean equals(OrdinalSet<T> a, OrdinalSet<T> b) {
     if ((a == null && b == null) || a == b || (a.mapping == b.mapping && a.S == b.S)) {
       return true;
@@ -167,7 +169,9 @@ public class OrdinalSet<T> implements Iterable<T> {
     return S;
   }
 
-  /** @return true iff this set contains object */
+  /**
+   * @return true iff this set contains object
+   */
   @NullUnmarked
   public boolean contains(T object) {
     if (this == EMPTY || S == null || object == null) {
@@ -181,7 +185,9 @@ public class OrdinalSet<T> implements Iterable<T> {
     return size() == 0;
   }
 
-  /** @throws NullPointerException if instances is null */
+  /**
+   * @throws NullPointerException if instances is null
+   */
   public static <T> Collection<T> toCollection(OrdinalSet<T> instances) {
     return Iterator2Collection.toSet(instances.iterator());
   }

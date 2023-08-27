@@ -40,7 +40,9 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     this.site = site;
   }
 
-  /** @return The call site, containing the program counter location and the method being called. */
+  /**
+   * @return The call site, containing the program counter location and the method being called.
+   */
   public CallSiteReference getCallSite() {
     return site;
   }
@@ -63,13 +65,17 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return getCallSite().isSpecial();
   }
 
-  /** @return the value number of the receiver of a virtual call */
+  /**
+   * @return the value number of the receiver of a virtual call
+   */
   public int getReceiver() {
     assert site.getInvocationCode() != IInvokeInstruction.Dispatch.STATIC : toString();
     return getUse(0);
   }
 
-  /** @return the program counter (index into the method's bytecode) for this call site. */
+  /**
+   * @return the program counter (index into the method's bytecode) for this call site.
+   */
   public int getProgramCounter() {
     return site.getProgramCounter();
   }
@@ -133,7 +139,9 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
     return site.getDeclaredTarget();
   }
 
-  /** @see com.ibm.wala.classLoader.CallSiteReference#getInvocationCode() */
+  /**
+   * @see com.ibm.wala.classLoader.CallSiteReference#getInvocationCode()
+   */
   public IInvokeInstruction.IDispatch getInvocationCode() {
     return site.getInvocationCode();
   }

@@ -33,7 +33,9 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
   private int maxPage = -1;
 
-  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
   @NullUnmarked
   @Nullable
   @Override
@@ -99,13 +101,17 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
     }
   }
 
-  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
+  /**
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
   @Override
   public void performVerboseAction() {
     // do nothing;
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#intIterator() */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#intIterator()
+   */
   @Override
   public Iterator<T> iterator() {
     return new Iterator<>() {

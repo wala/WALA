@@ -683,6 +683,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
       this.rawHandler = rawHandler;
       this.catchType = catchType;
     }
+
     /**
      * @return The type-annotations targets raw handler, i.e.: a 4 tuple (startPC, endPC, catchPC,
      *     catchClassIndex)

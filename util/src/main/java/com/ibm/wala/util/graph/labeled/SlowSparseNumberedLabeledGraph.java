@@ -61,7 +61,9 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
   /** */
   private static final long serialVersionUID = -6929183520814732209L;
 
-  /** @return a graph with the same nodes and edges as g */
+  /**
+   * @return a graph with the same nodes and edges as g
+   */
   public static <T, U> SlowSparseNumberedLabeledGraph<T, U> duplicate(LabeledGraph<T, U> g) {
     SlowSparseNumberedLabeledGraph<T, U> result =
         new SlowSparseNumberedLabeledGraph<>(g.getDefaultLabel());

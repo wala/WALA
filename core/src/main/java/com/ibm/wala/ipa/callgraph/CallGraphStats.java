@@ -109,7 +109,9 @@ public class CallGraphStats {
     return new CGStats(nNodes, nEdges, collectMethods(cg).size(), countBytecodeBytes(cg));
   }
 
-  /** @throws IllegalArgumentException if cg is null */
+  /**
+   * @throws IllegalArgumentException if cg is null
+   */
   public static String getStats(CallGraph cg) {
     return getCGStats(cg).toString();
   }

@@ -96,7 +96,9 @@ public class BimodalMap<K, V> implements Map<K, V> {
     backingStore.putAll(S);
   }
 
-  /** @throws UnsupportedOperationException if the backingStore doesn't support remove */
+  /**
+   * @throws UnsupportedOperationException if the backingStore doesn't support remove
+   */
   @Nullable
   @Override
   public V remove(Object key) {
@@ -155,7 +157,9 @@ public class BimodalMap<K, V> implements Map<K, V> {
         ((backingStore == null) ? Collections.emptySet() : backingStore.values());
   }
 
-  /** @throws UnimplementedError if the backingStore implementation does */
+  /**
+   * @throws UnimplementedError if the backingStore implementation does
+   */
   @Override
   @SuppressWarnings("unchecked")
   public Set<Map.Entry<K, V>> entrySet() {

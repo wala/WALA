@@ -274,7 +274,9 @@ public final class FragmentEP {
   //  Misc
   //
 
-  /** @see ActivityEP#onActivityResult */
+  /**
+   * @see ActivityEP#onActivityResult
+   */
   public static final AndroidPossibleEntryPoint onActivityResult =
       new AndroidPossibleEntryPoint(
           "onActivityResult",
@@ -374,14 +376,19 @@ public final class FragmentEP {
   public static final AndroidPossibleEntryPoint onLowMemory =
       new AndroidPossibleEntryPoint(
           "onLowMemory", ExecutionOrder.directlyBefore(ActivityEP.onLowMemory));
-  /** @see ActivityEP#onOptionsItemSelected */
+
+  /**
+   * @see ActivityEP#onOptionsItemSelected
+   */
   public static final AndroidPossibleEntryPoint onOptionsItemSelected =
       new AndroidPossibleEntryPoint(
           "onOptionsItemSelected",
           ExecutionOrder.directlyAfter(ActivityEP.onOptionsItemSelected) // TODO: After? Before?
           );
 
-  /** @see ActivityEP#onOptionsMenuClosed */
+  /**
+   * @see ActivityEP#onOptionsMenuClosed
+   */
   public static final AndroidPossibleEntryPoint onOptionsMenuClosed =
       new AndroidPossibleEntryPoint(
           "onOptionsMenuClosed",
@@ -425,7 +432,9 @@ public final class FragmentEP {
                 onDestroy, ExecutionOrder.AT_LAST // XXX: To early
               }));
 
-  /** @see ActivityEP#onTrimMemory */
+  /**
+   * @see ActivityEP#onTrimMemory
+   */
   public static final AndroidPossibleEntryPoint onTrimMemory =
       new AndroidPossibleEntryPoint(
           "onTrimMemory", ExecutionOrder.directlyBefore(ActivityEP.onTrimMemory));

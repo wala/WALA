@@ -32,10 +32,13 @@ public abstract class AstLexicalAccess extends SSAInstruction {
   public static class Access {
     /** name being accessed */
     public final String variableName;
+
     /** name of entity that defines the variable */
     public final String variableDefiner;
+
     /** type of the lexical value */
     public final TypeReference type;
+
     /** value number used for name where access is being performed (not in the declaring entity) */
     public final int valueNumber;
 

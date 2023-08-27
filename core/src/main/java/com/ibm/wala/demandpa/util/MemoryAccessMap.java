@@ -17,10 +17,14 @@ import java.util.Collection;
 
 public interface MemoryAccessMap {
 
-  /** @return {@link Collection}&lt;{@link MemoryAccess}&gt; */
+  /**
+   * @return {@link Collection}&lt;{@link MemoryAccess}&gt;
+   */
   Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
 
-  /** @return {@link Collection}&lt;{@link MemoryAccess}&gt; */
+  /**
+   * @return {@link Collection}&lt;{@link MemoryAccess}&gt;
+   */
   Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
 
   Collection<MemoryAccess> getArrayReads(PointerKey arrayRef);

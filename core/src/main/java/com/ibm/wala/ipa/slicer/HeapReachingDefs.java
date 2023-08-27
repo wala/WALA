@@ -679,7 +679,9 @@ public class HeapReachingDefs<T extends InstanceKey> {
       }
     }
 
-    /** @return int set representing all HEAP_PARAM_CALLEE statements in the domain. */
+    /**
+     * @return int set representing all HEAP_PARAM_CALLEE statements in the domain.
+     */
     private IntSet heapEntryStatements() {
       BitVectorIntSet result = new BitVectorIntSet();
       for (Statement s : domain) {

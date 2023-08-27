@@ -85,7 +85,9 @@ public class SSAPhiInstruction extends SSAInstruction {
     v.visitPhi(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;

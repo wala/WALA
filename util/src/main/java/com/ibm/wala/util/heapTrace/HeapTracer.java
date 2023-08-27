@@ -87,7 +87,9 @@ public class HeapTracer {
     }
   }
 
-  /** @param traceStatics Should all static fields be considered roots of the heap traversal? */
+  /**
+   * @param traceStatics Should all static fields be considered roots of the heap traversal?
+   */
   HeapTracer(boolean traceStatics) {
     rootInstances = Collections.emptySet();
     this.traceStatics = traceStatics;
@@ -107,7 +109,9 @@ public class HeapTracer {
     }
   }
 
-  /** @return the name of each class that's in the classpath */
+  /**
+   * @return the name of each class that's in the classpath
+   */
   private static String[] generateRootClassesFromWorkspace() {
     String classpath = System.getProperty("java.class.path");
     Object[] binDirectories = extractBinDirectories(classpath);
@@ -145,7 +149,9 @@ public class HeapTracer {
     return result;
   }
 
-  /** @return set of strings that are names of directories that contain "bin" */
+  /**
+   * @return set of strings that are names of directories that contain "bin"
+   */
   private static Object[] extractBinDirectories(String classpath) {
     StringTokenizer t = new StringTokenizer(classpath, ";");
     HashSet<String> result = HashSetFactory.make();
@@ -185,7 +191,9 @@ public class HeapTracer {
     return result;
   }
 
-  /** @return the estimated size of the object */
+  /**
+   * @return the estimated size of the object
+   */
   private static int computeSizeOf(Object o) {
     int result = BYTES_IN_HEADER;
     Class<?> c = o.getClass();
@@ -204,7 +212,9 @@ public class HeapTracer {
     return result;
   }
 
-  /** @return the estimated size of the object */
+  /**
+   * @return the estimated size of the object
+   */
   private int sizeOf(Object o) {
     Class<?> c = o.getClass();
     if (c.isArray()) {
@@ -219,7 +229,9 @@ public class HeapTracer {
     }
   }
 
-  /** @return size of a field of type c, in bytes */
+  /**
+   * @return size of a field of type c, in bytes
+   */
   private static int sizeOfSlot(Class<?> c) {
     if (!c.isPrimitive()) {
       return 4;
@@ -436,7 +448,9 @@ public class HeapTracer {
 
   private final HashMap<Class<?>, Field[]> allReferenceFieldsCache = HashMapFactory.make();
 
-  /** @return Field[] representing reference instance fields of a class */
+  /**
+   * @return Field[] representing reference instance fields of a class
+   */
   private Field[] getAllReferenceInstanceFields(Class<?> c) {
     if (allReferenceFieldsCache.containsKey(c)) return allReferenceFieldsCache.get(c);
     else {
@@ -587,12 +601,16 @@ public class HeapTracer {
       }
     }
 
-    /** @return Returns the totalSize. */
+    /**
+     * @return Returns the totalSize.
+     */
     public int getTotalSize() {
       return totalSize;
     }
 
-    /** @return Returns the totalInstances. */
+    /**
+     * @return Returns the totalInstances.
+     */
     public int getTotalInstances() {
       return totalInstances;
     }
@@ -607,7 +625,9 @@ public class HeapTracer {
     /** a mapping from Field (static field roots) -&gt; Demographics object */
     private final HashMap<Field, Demographics> roots = HashMapFactory.make();
 
-    /** @return the Demographics object tracking objects traced from that root */
+    /**
+     * @return the Demographics object tracking objects traced from that root
+     */
     private Demographics findOrCreateDemographics(Field root) {
       Demographics d = roots.get(root);
       if (d == null) {

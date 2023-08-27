@@ -22,7 +22,9 @@ import com.ibm.wala.ssa.SSAInstruction;
 /** An object that provides an interface to local method information needed for CFA. */
 public interface SSAContextInterpreter extends RTAContextInterpreter {
 
-  /** @return the IR that models the method context, or null if it's an unmodelled native method */
+  /**
+   * @return the IR that models the method context, or null if it's an unmodelled native method
+   */
   IR getIR(CGNode node);
 
   IRView getIRView(CGNode node);
@@ -33,7 +35,9 @@ public interface SSAContextInterpreter extends RTAContextInterpreter {
    */
   DefUse getDU(CGNode node);
 
-  /** @return the number of the statements in the IR, or -1 if it's an unmodelled native method. */
+  /**
+   * @return the number of the statements in the IR, or -1 if it's an unmodelled native method.
+   */
   int getNumberOfStatements(CGNode node);
 
   ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n);

@@ -56,7 +56,9 @@ public class CGIntraproceduralExceptionAnalysis {
     }
   }
 
-  /** @return IntraproceduralExceptionAnalysis for given node. */
+  /**
+   * @return IntraproceduralExceptionAnalysis for given node.
+   */
   public IntraproceduralExceptionAnalysis getAnalysis(CGNode node) {
     if (!callGraph.containsNode(node)) {
       throw new IllegalArgumentException(

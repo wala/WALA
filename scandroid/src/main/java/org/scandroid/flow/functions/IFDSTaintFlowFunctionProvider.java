@@ -96,7 +96,9 @@ import org.scandroid.domain.LocalElement;
 import org.scandroid.domain.ReturnElement;
 import org.scandroid.flow.types.FlowType;
 
-/** @deprecated Replaced by TaintTransferFunctions. */
+/**
+ * @deprecated Replaced by TaintTransferFunctions.
+ */
 @Deprecated
 public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     implements IFlowFunctionMap<BasicBlockInContext<E>> {

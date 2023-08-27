@@ -17,7 +17,9 @@ import com.ibm.wala.types.TypeReference;
 
 /** An object that abstracts how to model instances in the heap. */
 public interface InstanceKeyFactory {
-  /** @return the instance key that represents a particular allocation */
+  /**
+   * @return the instance key that represents a particular allocation
+   */
   InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation);
 
   /**

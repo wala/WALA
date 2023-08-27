@@ -66,6 +66,7 @@ public class Util {
   public static String getNativeSpec() {
     return nativeSpec;
   }
+
   /* END Custom change: change native spec */
   /**
    * Set up an AnalysisOptions object with default selectors, corresponding to class hierarchy
@@ -236,7 +237,9 @@ public class Util {
     return makeMainEntrypoints(scope, cha, new String[] {className});
   }
 
-  /** @return Entrypoints for a set of J2SE Main classes */
+  /**
+   * @return Entrypoints for a set of J2SE Main classes
+   */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final IClassHierarchy cha, String className) {
     return makeMainEntrypoints(cha, new String[] {className});
@@ -254,7 +257,9 @@ public class Util {
     return makeMainEntrypoints(cha, classNames);
   }
 
-  /** @return Entrypoints for a set of J2SE Main classes */
+  /**
+   * @return Entrypoints for a set of J2SE Main classes
+   */
   public static Iterable<Entrypoint> makeMainEntrypoints(
       final IClassHierarchy cha, final String[] classNames) {
     if (cha == null) {
@@ -1004,6 +1009,7 @@ public class Util {
     return new ZeroXContainerCFABuilder(
         cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
   }
+
   /**
    * @deprecated
    *     <p>Use {@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}

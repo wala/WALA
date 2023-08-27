@@ -124,7 +124,9 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
     }
   }
 
-  /** @return the dataflow variable representing the value number, or null if none found. */
+  /**
+   * @return the dataflow variable representing the value number, or null if none found.
+   */
   @SuppressWarnings("unchecked")
   protected T getVariable(int valueNumber) {
     if (valueNumber < 0) {

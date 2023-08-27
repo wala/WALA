@@ -234,7 +234,9 @@ public class IntraproceduralExceptionAnalysis {
     return result;
   }
 
-  /** @return a set of all exceptions which will be caught, if thrown by the given block. */
+  /**
+   * @return a set of all exceptions which will be caught, if thrown by the given block.
+   */
   private Set<TypeReference> collectCaughtExceptions(ISSABasicBlock block) {
     LinkedHashSet<TypeReference> result = new LinkedHashSet<>();
     List<ISSABasicBlock> exceptionalSuccessors =

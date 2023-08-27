@@ -31,7 +31,9 @@ public class InvalidClassFileException extends Exception {
     this.offset = offset;
   }
 
-  /** @return the offset within the data where the problem was detected */
+  /**
+   * @return the offset within the data where the problem was detected
+   */
   public int getOffset() {
     return offset;
   }

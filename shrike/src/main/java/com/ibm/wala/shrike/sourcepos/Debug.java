@@ -23,7 +23,9 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-/** @author Juergen Graf &lt;juergen.graf@gmail.com&gt; */
+/**
+ * @author Juergen Graf &lt;juergen.graf@gmail.com&gt;
+ */
 public final class Debug {
 
   public static final boolean PRINT_CHARACTER_RANGE_TABLE = false;

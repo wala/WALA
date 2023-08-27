@@ -35,7 +35,9 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
 
   private final ClassBasedInstanceKeys classBased;
 
-  /** @param options Governing call graph construction options */
+  /**
+   * @param options Governing call graph construction options
+   */
   public SmushedAllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;

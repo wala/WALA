@@ -36,16 +36,24 @@ public interface IFixedPointSystem<T extends IVariable<T>> {
    */
   Iterator<? extends INodeWithNumber> getVariables();
 
-  /** @return true iff this system already contains an equation that is equal() to s */
+  /**
+   * @return true iff this system already contains an equation that is equal() to s
+   */
   boolean containsStatement(IFixedPointStatement<T> s);
 
-  /** @return true iff this system already contains a variable that is equal() to v. */
+  /**
+   * @return true iff this system already contains a variable that is equal() to v.
+   */
   boolean containsVariable(T v);
 
-  /** @return {@link Iterator}&lt;statement&gt;, the statements that use the variable */
+  /**
+   * @return {@link Iterator}&lt;statement&gt;, the statements that use the variable
+   */
   Iterator<? extends INodeWithNumber> getStatementsThatUse(T v);
 
-  /** @return {@link Iterator}&lt;statement&gt;, the statements that def the variable */
+  /**
+   * @return {@link Iterator}&lt;statement&gt;, the statements that def the variable
+   */
   Iterator<? extends INodeWithNumber> getStatementsThatDef(T v);
 
   int getNumberOfStatementsThatUse(T v);

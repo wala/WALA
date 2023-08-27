@@ -30,15 +30,23 @@ public interface ISSABasicBlock extends IBasicBlock<SSAInstruction> {
   @Override
   boolean isEntryBlock();
 
-  /** @return the phi instructions incoming to this block */
+  /**
+   * @return the phi instructions incoming to this block
+   */
   Iterator<SSAPhiInstruction> iteratePhis();
 
-  /** @return the pi instructions incoming to this block */
+  /**
+   * @return the pi instructions incoming to this block
+   */
   Iterator<SSAPiInstruction> iteratePis();
 
-  /** @return the last instruction in this block. */
+  /**
+   * @return the last instruction in this block.
+   */
   SSAInstruction getLastInstruction();
 
-  /** @return the set of exception types this block may catch. */
+  /**
+   * @return the set of exception types this block may catch.
+   */
   Iterator<TypeReference> getCaughtExceptionTypes();
 }

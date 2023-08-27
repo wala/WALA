@@ -27,6 +27,7 @@ public class Range {
 
   /** stores the start position */
   private final Position start;
+
   /** stores the end position */
   private final Position end;
 

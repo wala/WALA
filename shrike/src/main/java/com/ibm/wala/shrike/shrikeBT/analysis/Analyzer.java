@@ -31,7 +31,9 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
-/** @author roca */
+/**
+ * @author roca
+ */
 public class Analyzer {
 
   public static final String thisType = "THIS";
@@ -426,12 +428,16 @@ public class Analyzer {
       this.path = path;
     }
 
-    /** @return the index of the Instruction which failed to verify */
+    /**
+     * @return the index of the Instruction which failed to verify
+     */
     public int getOffset() {
       return offset;
     }
 
-    /** @return a description of the reason why verification failed */
+    /**
+     * @return a description of the reason why verification failed
+     */
     public String getReason() {
       return reason;
     }
@@ -487,17 +493,23 @@ public class Analyzer {
       this.index = index;
     }
 
-    /** @return the bytecode offset of the instruction causing a value transfer. */
+    /**
+     * @return the bytecode offset of the instruction causing a value transfer.
+     */
     public int getIndex() {
       return index;
     }
 
-    /** @return the types of the local variabls at the instruction. */
+    /**
+     * @return the types of the local variabls at the instruction.
+     */
     public String[] getLocals() {
       return locals;
     }
 
-    /** @return the types of the working stack at the instruction. */
+    /**
+     * @return the types of the working stack at the instruction.
+     */
     public String[] getStack() {
       return stack;
     }

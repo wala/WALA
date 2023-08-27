@@ -261,6 +261,7 @@ public class AndroidSpecs implements ISpecs {
   }
 
   private static MethodNamePattern[] callBacks = new MethodNamePattern[] {};
+
   //	public MethodNamePattern[] getCallBacks() {
   //		if (callBacks == null)
   //			callBacks = new MethodNamePattern[] {};

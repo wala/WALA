@@ -326,7 +326,9 @@ public class LocalPathEdges {
     }
   }
 
-  /** @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n. */
+  /**
+   * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n.
+   */
   public IntSet getReachable(int n, int d1) {
     if (PARANOID) {
       assert getReachableSlow(n, d1).sameValue(getReachableFast(n, d1));
@@ -376,7 +378,9 @@ public class LocalPathEdges {
     return result;
   }
 
-  /** @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n */
+  /**
+   * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n
+   */
   private IntSet getReachableFast(int n, int d1) {
 
     IBinaryNaturalRelation R = altPaths.get(d1);

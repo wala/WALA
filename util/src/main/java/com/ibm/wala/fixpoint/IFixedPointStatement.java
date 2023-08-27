@@ -24,9 +24,10 @@ import org.jspecify.annotations.Nullable;
  * corresponds to an "equation" in dataflow parlance, or a "constraint" in constraint solvers.
  */
 public interface IFixedPointStatement<T extends IVariable<T>> extends INodeWithNumber {
-  /** @return the left-hand side of this statement. */
-  @Nullable
-  T getLHS();
+  /**
+   * @return the left-hand side of this statement.
+   */
+  @Nullable T getLHS();
 
   /** returns the list of free variables appearing in the right-hand side of the statement */
   T[] getRHS();

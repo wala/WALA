@@ -150,7 +150,9 @@ public class LongSetUtil {
     return A;
   }
 
-  /** @return index \in [low,high] s.t. data[index] = key, or -1 if not found */
+  /**
+   * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
+   */
   public static int binarySearch(long[] data, long key, int low, int high)
       throws IllegalArgumentException {
     if (data == null) {

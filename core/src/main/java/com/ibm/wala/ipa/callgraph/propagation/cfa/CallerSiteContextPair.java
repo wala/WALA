@@ -25,7 +25,9 @@ public class CallerSiteContextPair extends CallerSiteContext {
 
   private final Context baseContext;
 
-  /** @param caller the node which defines this context. */
+  /**
+   * @param caller the node which defines this context.
+   */
   public CallerSiteContextPair(CGNode caller, CallSiteReference callSite, Context baseContext) {
     super(caller, callSite);
     if (caller == null) {

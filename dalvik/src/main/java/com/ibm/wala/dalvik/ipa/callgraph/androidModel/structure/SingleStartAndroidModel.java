@@ -93,6 +93,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
 
   private int outerLoopPC = -1;
   Map<TypeReference, SSAValue> outerStartingPhis;
+
   /**
    * Prepares the PC to get looped to.
    *

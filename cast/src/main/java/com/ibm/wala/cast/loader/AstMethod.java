@@ -348,12 +348,14 @@ public abstract class AstMethod implements IMethod {
   public int getNumberOfParameters() {
     return symtab.getParameterValueNumbers().length;
   }
+
   /* BEGIN Custom change: precise bytecode positions */
 
   @Override
   public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
     return null;
   }
+
   /* END Custom change: precise bytecode positions */
   @Override
   public int getLineNumber(int instructionIndex) {

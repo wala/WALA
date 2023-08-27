@@ -59,7 +59,9 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
     throw new UnsupportedOperationException();
   }
 
-  /** @return the heap model used in this pointer analysis. */
+  /**
+   * @return the heap model used in this pointer analysis.
+   */
   @Override
   public HeapModel getHeapModel() {
     return pa.getHeapModel();

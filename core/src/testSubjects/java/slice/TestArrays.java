@@ -13,6 +13,7 @@ package slice;
 public class TestArrays {
 
   static void doNothing(Object o) {}
+
   /** slice should include statements involving arr2 and i, exclude statements with arr1 and j */
   public static void main(String[] args) {
     Object[] arr1 = new Object[10], arr2 = new Object[10];

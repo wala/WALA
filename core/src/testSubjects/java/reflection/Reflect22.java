@@ -16,8 +16,12 @@ import java.lang.reflect.InvocationTargetException;
 /** Test of Constructor.newInstance */
 public class Reflect22 {
   public static void main(String[] args)
-      throws ClassNotFoundException, SecurityException, NoSuchMethodException,
-          IllegalAccessException, InstantiationException, IllegalArgumentException,
+      throws ClassNotFoundException,
+          SecurityException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InstantiationException,
+          IllegalArgumentException,
           InvocationTargetException {
     Class<?> helperClass = Class.forName("reflection.Helper");
     Constructor<?>[] constrs = helperClass.getDeclaredConstructors();

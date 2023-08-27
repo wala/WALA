@@ -572,7 +572,9 @@ public class ClassWriter implements ClassConstants {
   public abstract static class Element {
     public Element() {}
 
-    /** @return the number of bytes that will be generated. */
+    /**
+     * @return the number of bytes that will be generated.
+     */
     public abstract int getSize();
 
     /**

@@ -61,8 +61,10 @@ public final class MethodPositions extends PositionsAttribute {
 
   /** positions of the method declaration */
   private Range declaration;
+
   /** positions of the method parameters */
   private Range parameter;
+
   /** positions of the method block */
   private Range block_end;
 

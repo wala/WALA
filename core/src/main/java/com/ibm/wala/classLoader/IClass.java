@@ -37,16 +37,24 @@ public interface IClass extends IClassHierarchyDweller {
   /** Is this class a Java interface? */
   boolean isInterface();
 
-  /** @return true iff this class is abstract */
+  /**
+   * @return true iff this class is abstract
+   */
   boolean isAbstract();
 
-  /** @return true iff this class is public */
+  /**
+   * @return true iff this class is public
+   */
   boolean isPublic();
 
-  /** @return true iff this class is private */
+  /**
+   * @return true iff this class is private
+   */
   boolean isPrivate();
 
-  /** @return true iff this class is synthetic, i.e., compiler-generated */
+  /**
+   * @return true iff this class is synthetic, i.e., compiler-generated
+   */
   boolean isSynthetic();
 
   /**
@@ -94,7 +102,9 @@ public interface IClass extends IClassHierarchyDweller {
   /** Finds a field, given a name and a type. Returns {@code null} if not found. */
   IField getField(Atom name, TypeName type);
 
-  /** @return canonical TypeReference corresponding to this class */
+  /**
+   * @return canonical TypeReference corresponding to this class
+   */
   TypeReference getReference();
 
   /**
@@ -116,13 +126,19 @@ public interface IClass extends IClassHierarchyDweller {
    */
   Reader getSource() throws NoSuchElementException;
 
-  /** @return the method that is this class's initializer, or null if none */
+  /**
+   * @return the method that is this class's initializer, or null if none
+   */
   IMethod getClassInitializer();
 
-  /** @return true iff the class is an array class. */
+  /**
+   * @return true iff the class is an array class.
+   */
   boolean isArrayClass();
 
-  /** @return an Iterator of the IMethods declared by this class. */
+  /**
+   * @return an Iterator of the IMethods declared by this class.
+   */
   Collection<? extends IMethod> getDeclaredMethods();
 
   /** Compute the instance fields declared by this class or any of its superclasses. */
@@ -144,10 +160,14 @@ public interface IClass extends IClassHierarchyDweller {
    */
   Collection<IField> getDeclaredInstanceFields();
 
-  /** @return Collection of IField */
+  /**
+   * @return Collection of IField
+   */
   Collection<IField> getDeclaredStaticFields();
 
-  /** @return the TypeName for this class */
+  /**
+   * @return the TypeName for this class
+   */
   TypeName getName();
 
   /** Does 'this' refer to a reference type? If not, then it refers to a primitive type. */

@@ -83,6 +83,7 @@ public class ExternalModel extends AndroidModel {
 
   public final Atom name;
   private SummarizedMethod activityModel;
+
   //    private final AndroidComponent target;
   // uses AndroidModel.cha;
 

@@ -110,19 +110,25 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     return me;
   }
 
-  /** @return an Iterator of all classes loaded by this loader */
+  /**
+   * @return an Iterator of all classes loaded by this loader
+   */
   @Override
   public Iterator<IClass> iterateAllClasses() {
     return syntheticClasses.values().iterator();
   }
 
-  /** @return the number of classes in scope to be loaded by this loader */
+  /**
+   * @return the number of classes in scope to be loaded by this loader
+   */
   @Override
   public int getNumberOfClasses() {
     return syntheticClasses.size();
   }
 
-  /** @return the unique name that identifies this class loader. */
+  /**
+   * @return the unique name that identifies this class loader.
+   */
   @Override
   public Atom getName() {
     return me.getName();

@@ -66,7 +66,9 @@ import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.StaticFieldFlow;
 import org.scandroid.util.CGAnalysisContext;
 
-/** @author creswick */
+/**
+ * @author creswick
+ */
 public class StaticFieldSourceSpec extends SourceSpec {
 
   private final IField field;

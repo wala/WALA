@@ -62,7 +62,9 @@ public class ExceptionAnalysisTest {
 
   @BeforeAll
   public static void init()
-      throws IOException, ClassHierarchyException, IllegalArgumentException,
+      throws IOException,
+          ClassHierarchyException,
+          IllegalArgumentException,
           CallGraphBuilderCancelException {
     AnalysisOptions options;
     AnalysisScope scope;

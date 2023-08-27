@@ -16,8 +16,11 @@ import java.lang.reflect.InvocationTargetException;
 /** Test of Class.getConstructors(). */
 public class Reflect15 {
   public static void main(String[] args)
-      throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
-          IllegalAccessException, InvocationTargetException {
+      throws ClassNotFoundException,
+          IllegalArgumentException,
+          InstantiationException,
+          IllegalAccessException,
+          InvocationTargetException {
     Class<?> c = Class.forName("reflection.Helper");
     Constructor<?>[] ctors = c.getConstructors();
     Helper h = null;

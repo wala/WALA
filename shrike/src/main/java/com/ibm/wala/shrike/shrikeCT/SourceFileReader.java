@@ -19,7 +19,9 @@ public final class SourceFileReader extends AttributeReader {
     checkSizeEquals(attr + 6, 2);
   }
 
-  /** @return the index of the constant pool item holding the value */
+  /**
+   * @return the index of the constant pool item holding the value
+   */
   public int getSourceFileCPIndex() {
     return cr.getUShort(attr + 6);
   }

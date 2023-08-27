@@ -249,7 +249,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     return solver.getIn(cfg.entry());
   }
 
-  /** @return the state at the entry to a given block */
+  /**
+   * @return the state at the entry to a given block
+   */
   public MachineState getIn(ShrikeCFG.BasicBlock bb) {
     return solver.getIn(bb);
   }
@@ -637,7 +639,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       locals[i] = j;
     }
 
-    /** @return the number of the symbol corresponding to local i */
+    /**
+     * @return the number of the symbol corresponding to local i
+     */
     public int getLocal(int i) {
       if (locals == null || locals.length < i + 1) {
         if (OPTIMISTIC) {

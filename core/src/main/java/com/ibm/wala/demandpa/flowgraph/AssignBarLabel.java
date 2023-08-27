@@ -39,7 +39,9 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 
-/** @author Manu Sridharan */
+/**
+ * @author Manu Sridharan
+ */
 public class AssignBarLabel implements IFlowLabelWithFilter {
 
   private static final AssignBarLabel noFilter = new AssignBarLabel(null);

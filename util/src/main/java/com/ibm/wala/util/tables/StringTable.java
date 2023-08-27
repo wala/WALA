@@ -67,7 +67,9 @@ public class StringTable extends Table<String> implements Cloneable {
   //    return readFromTextFile(f, comment);
   //  }
 
-  /** @param f a file containing a table in text format, whitespace delimited */
+  /**
+   * @param f a file containing a table in text format, whitespace delimited
+   */
   public static StringTable readFromTextFile(File f, Character comment)
       throws FileNotFoundException, IOException {
     if (f == null) {
@@ -167,7 +169,9 @@ public class StringTable extends Table<String> implements Cloneable {
     }
   }
 
-  /** @param line a whitespace-delimited string of column names */
+  /**
+   * @param line a whitespace-delimited string of column names
+   */
   private void populateColumnHeadings(String line, @Nullable Character delimiter) {
     StringTokenizer st =
         delimiter == null

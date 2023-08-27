@@ -41,22 +41,30 @@ public final class CodeReader extends AttributeReader {
     }
   }
 
-  /** @return the maximum stack size used by the code, in words */
+  /**
+   * @return the maximum stack size used by the code, in words
+   */
   public int getMaxStack() {
     return cr.getUShort(attr + 6);
   }
 
-  /** @return the maximum local variable size used by the code, in words */
+  /**
+   * @return the maximum local variable size used by the code, in words
+   */
   public int getMaxLocals() {
     return cr.getUShort(attr + 8);
   }
 
-  /** @return the length of the bytecode array, in bytes */
+  /**
+   * @return the length of the bytecode array, in bytes
+   */
   public int getBytecodeLength() {
     return codeLen;
   }
 
-  /** @return the bytecode bytes */
+  /**
+   * @return the bytecode bytes
+   */
   public byte[] getBytecode() {
     byte[] r = new byte[codeLen];
     System.arraycopy(cr.getBytes(), attr + 14, r, 0, r.length);

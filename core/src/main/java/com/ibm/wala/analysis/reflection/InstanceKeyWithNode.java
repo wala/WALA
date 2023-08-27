@@ -16,6 +16,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 /** An instance key which has an associated {@link CGNode}. */
 public interface InstanceKeyWithNode extends InstanceKey {
 
-  /** @return the node which created this instance. */
+  /**
+   * @return the node which created this instance.
+   */
   CGNode getNode();
 }

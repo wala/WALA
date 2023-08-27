@@ -20,7 +20,9 @@ public class IndiscriminateFilter<T> implements Predicate<T> {
     return new IndiscriminateFilter<>();
   }
 
-  /** @see FilterIterator */
+  /**
+   * @see FilterIterator
+   */
   @Override
   public boolean test(Object o) {
     return true;

@@ -41,7 +41,9 @@ public interface IClassHierarchy extends Iterable<IClass> {
    */
   boolean addClass(IClass klass);
 
-  /** @return The number of classes present in the class hierarchy. */
+  /**
+   * @return The number of classes present in the class hierarchy.
+   */
   int getNumberOfClasses();
 
   boolean isRootClass(IClass c);
@@ -165,10 +167,14 @@ public interface IClassHierarchy extends Iterable<IClass> {
    */
   Set<IClass> getImplementors(TypeReference type);
 
-  /** @return the number of classes that immediately extend klass. */
+  /**
+   * @return the number of classes that immediately extend klass.
+   */
   int getNumberOfImmediateSubclasses(IClass klass);
 
-  /** @return the classes that immediately extend klass. */
+  /**
+   * @return the classes that immediately extend klass.
+   */
   Collection<IClass> getImmediateSubclasses(IClass klass);
 
   /**

@@ -79,7 +79,9 @@ public class CAstAnalysisScope extends AnalysisScope {
     return null;
   }
 
-  /** @return Returns the arrayClassLoader. */
+  /**
+   * @return Returns the arrayClassLoader.
+   */
   @Override
   public ArrayClassLoader getArrayClassLoader() {
     Assertions.UNREACHABLE();
@@ -102,7 +104,9 @@ public class CAstAnalysisScope extends AnalysisScope {
     Assertions.UNREACHABLE();
   }
 
-  /** @return the ClassLoaderReference specified by {@code name}. */
+  /**
+   * @return the ClassLoaderReference specified by {@code name}.
+   */
   @Override
   public ClassLoaderReference getLoader(Atom name) {
     assert name.equals(theLoader.getName());
@@ -115,7 +119,9 @@ public class CAstAnalysisScope extends AnalysisScope {
     return Collections.singleton(theLoader);
   }
 
-  /** @return the number of loaders. */
+  /**
+   * @return the number of loaders.
+   */
   @Override
   public int getNumberOfLoaders() {
     return 1;

@@ -46,7 +46,9 @@ public final class StoreInstruction extends Instruction implements IStoreInstruc
     }
   }
 
-  /** @return the index of the local variable stored */
+  /**
+   * @return the index of the local variable stored
+   */
   @Override
   public int getVarIndex() {
     return index;

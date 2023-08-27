@@ -37,7 +37,9 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-/** @author Manu Sridharan */
+/**
+ * @author Manu Sridharan
+ */
 public class AssignGlobalBarLabel implements IFlowLabel {
 
   private static final AssignGlobalBarLabel theInstance = new AssignGlobalBarLabel();

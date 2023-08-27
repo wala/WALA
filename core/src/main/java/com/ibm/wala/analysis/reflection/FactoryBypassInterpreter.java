@@ -72,7 +72,9 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   /** A cache of synthetic method implementations, indexed by Context */
   private final Map<Context, SpecializedFactoryMethod> syntheticMethodCache = HashMapFactory.make();
 
-  /** @param options governing analysis options */
+  /**
+   * @param options governing analysis options
+   */
   public FactoryBypassInterpreter(AnalysisOptions options, IAnalysisCacheView iAnalysisCacheView) {
     this.options = options;
     this.cache = iAnalysisCacheView;
@@ -128,7 +130,9 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return m.allInstructions.size();
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(CGNode) */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(CGNode)
+   */
   @Override
   public boolean understands(CGNode node) {
     if (node == null) {

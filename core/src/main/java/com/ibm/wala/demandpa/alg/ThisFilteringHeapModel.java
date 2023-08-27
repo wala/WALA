@@ -116,7 +116,9 @@ class ThisFilteringHeapModel implements HeapModel {
     }
   }
 
-  /** @return the receiver class for this method. */
+  /**
+   * @return the receiver class for this method.
+   */
   private IClass getReceiverClass(IMethod method) {
     TypeReference formalType = method.getParameterType(0);
     IClass C = cha.lookupClass(formalType);

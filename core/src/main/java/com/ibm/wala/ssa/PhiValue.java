@@ -19,7 +19,9 @@ public class PhiValue implements Value {
   /** The phi instruction that defines this value */
   private final SSAPhiInstruction phi;
 
-  /** @param phi The phi instruction that defines this value */
+  /**
+   * @param phi The phi instruction that defines this value
+   */
   PhiValue(SSAPhiInstruction phi) {
     this.phi = phi;
   }
@@ -29,7 +31,9 @@ public class PhiValue implements Value {
     return "v" + phi.getDef();
   }
 
-  /** @return The phi instruction that defines this value */
+  /**
+   * @return The phi instruction that defines this value
+   */
   public SSAPhiInstruction getPhiInstruction() {
     return phi;
   }

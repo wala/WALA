@@ -57,7 +57,9 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
     return exceptionValueNumber;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;

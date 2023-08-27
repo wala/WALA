@@ -260,13 +260,17 @@ public abstract class IR implements IRView {
     return instructions;
   }
 
-  /** @return the {@link SymbolTable} managing attributes for values in this method */
+  /**
+   * @return the {@link SymbolTable} managing attributes for values in this method
+   */
   @Override
   public SymbolTable getSymbolTable() {
     return symbolTable;
   }
 
-  /** @return the underlying {@link ControlFlowGraph} which defines this IR. */
+  /**
+   * @return the underlying {@link ControlFlowGraph} which defines this IR.
+   */
   @Override
   public SSACFG getControlFlowGraph() {
     return cfg;
@@ -353,12 +357,16 @@ public abstract class IR implements IRView {
     }
   }
 
-  /** @return array of value numbers representing parameters to this method */
+  /**
+   * @return array of value numbers representing parameters to this method
+   */
   public int[] getParameterValueNumbers() {
     return symbolTable.getParameterValueNumbers();
   }
 
-  /** @return the value number of the ith parameter */
+  /**
+   * @return the value number of the ith parameter
+   */
   public int getParameter(int i) {
     return symbolTable.getParameter(i);
   }
@@ -371,18 +379,24 @@ public abstract class IR implements IRView {
     return method.getParameterType(i);
   }
 
-  /** @return number of parameters to this method, including "this" */
+  /**
+   * @return number of parameters to this method, including "this"
+   */
   public int getNumberOfParameters() {
     return method.getNumberOfParameters();
   }
 
-  /** @return the method this IR represents */
+  /**
+   * @return the method this IR represents
+   */
   @Override
   public IMethod getMethod() {
     return method;
   }
 
-  /** @return iterator of the catch instructions in this IR */
+  /**
+   * @return iterator of the catch instructions in this IR
+   */
   public Iterator<SSAInstruction> iterateCatchInstructions() {
     return new CatchIterator();
   }
@@ -448,7 +462,9 @@ public abstract class IR implements IRView {
     }
   }
 
-  /** @return an {@link Iterator} of all "normal" instructions on this IR */
+  /**
+   * @return an {@link Iterator} of all "normal" instructions on this IR
+   */
   public Iterator<SSAInstruction> iterateNormalInstructions() {
     return new NormalIterator();
   }
@@ -490,7 +506,9 @@ public abstract class IR implements IRView {
     }
   }
 
-  /** @return an {@link Iterator} of all instructions (Normal, Phi, and Catch) */
+  /**
+   * @return an {@link Iterator} of all instructions (Normal, Phi, and Catch)
+   */
   public Iterator<SSAInstruction> iterateAllInstructions() {
     return new CompoundIterator<>(
         iterateNormalInstructions(),
@@ -498,7 +516,9 @@ public abstract class IR implements IRView {
             iterateCatchInstructions(), new CompoundIterator<>(iteratePhis(), iteratePis())));
   }
 
-  /** @return the exit basic block */
+  /**
+   * @return the exit basic block
+   */
   @Override
   public BasicBlock getExitBlock() {
     return cfg.exit();
@@ -573,7 +593,9 @@ public abstract class IR implements IRView {
     return newSiteMapping.keySet().iterator();
   }
 
-  /** @return an {@link Iterator} of all the call sites ( {@link CallSiteReference}s ) in this IR */
+  /**
+   * @return an {@link Iterator} of all the call sites ( {@link CallSiteReference}s ) in this IR
+   */
   @Override
   public Iterator<CallSiteReference> iterateCallSites() {
     return new Iterator<>() {
@@ -586,7 +608,8 @@ public abstract class IR implements IRView {
       }
 
       private void advance() {
-        while (callSiteMapping.getRelatedCount(++i) == 0 && i <= limit) ;
+        while (callSiteMapping.getRelatedCount(++i) == 0 && i <= limit)
+          ;
       }
 
       @Override
@@ -706,7 +729,9 @@ public abstract class IR implements IRView {
     return cfg.getBasicBlock(bb);
   }
 
-  /** @return the {@link SSAOptions} which controlled how this {@code IR} was built */
+  /**
+   * @return the {@link SSAOptions} which controlled how this {@code IR} was built
+   */
   public SSAOptions getOptions() {
     return options;
   }

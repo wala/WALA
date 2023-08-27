@@ -88,7 +88,9 @@ public abstract class FileModule implements Module, ModuleEntry {
     return false;
   }
 
-  /** @return Returns the file. */
+  /**
+   * @return Returns the file.
+   */
   public File getFile() {
     return file;
   }

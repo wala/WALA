@@ -19,7 +19,9 @@ import org.jspecify.annotations.Nullable;
 public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumberedGraph<T>
     implements LabeledGraph<T, U>, NumberedLabeledGraph<T, U> {
 
-  /** @return the object which manages edges in the graph */
+  /**
+   * @return the object which manages edges in the graph
+   */
   @Override
   protected abstract NumberedLabeledEdgeManager<T, U> getEdgeManager();
 

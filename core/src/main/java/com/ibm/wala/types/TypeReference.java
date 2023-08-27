@@ -553,12 +553,16 @@ public final class TypeReference implements Serializable {
     name = tn;
   }
 
-  /** @return the classloader component of this type reference */
+  /**
+   * @return the classloader component of this type reference
+   */
   public ClassLoaderReference getClassLoader() {
     return classloader;
   }
 
-  /** @return the type name component of this type reference */
+  /**
+   * @return the type name component of this type reference
+   */
   public TypeName getName() {
     return name;
   }

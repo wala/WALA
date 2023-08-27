@@ -39,7 +39,9 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.classLoader.IField;
 
-/** @author Manu Sridharan */
+/**
+ * @author Manu Sridharan
+ */
 public class GetFieldBarLabel implements IFlowLabel {
 
   private final IField field;

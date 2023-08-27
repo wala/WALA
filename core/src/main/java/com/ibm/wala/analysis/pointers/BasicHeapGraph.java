@@ -294,7 +294,9 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     }
   }
 
-  /** @return R, y \in R(x,y) if the node y is a predecessor of node x */
+  /**
+   * @return R, y \in R(x,y) if the node y is a predecessor of node x
+   */
   private IBinaryNaturalRelation computePredecessors(NumberedNodeManager<Object> nodeManager) {
     BasicNaturalRelation R =
         new BasicNaturalRelation(
@@ -376,73 +378,97 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     }
   }
 
-  /** @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(Object)
+   */
   @Override
   public int getNumber(Object N) {
     return G.getNumber(N);
   }
 
-  /** @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int) */
+  /**
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
+   */
   @Override
   public Object getNode(int number) {
     return G.getNode(number);
   }
 
-  /** @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber() */
+  /**
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
+   */
   @Override
   public int getMaxNumber() {
     return G.getMaxNumber();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#iterator() */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#iterator()
+   */
   @Override
   public Iterator<Object> iterator() {
     return G.iterator();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#iterator() */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#iterator()
+   */
   @Override
   public Stream<Object> stream() {
     return G.stream();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes() */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
+   */
   @Override
   public int getNumberOfNodes() {
     return G.getNumberOfNodes();
   }
 
-  /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(Object)
+   */
   @Override
   public Iterator<Object> getPredNodes(Object N) {
     return G.getPredNodes(N);
   }
 
-  /** @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(Object)
+   */
   @Override
   public int getPredNodeCount(Object N) {
     return G.getPredNodeCount(N);
   }
 
-  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(Object)
+   */
   @Override
   public Iterator<Object> getSuccNodes(Object N) {
     return G.getSuccNodes(N);
   }
 
-  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(Object)
+   */
   @Override
   public int getSuccNodeCount(Object N) {
     return G.getSuccNodeCount(N);
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#addNode(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#addNode(Object)
+   */
   @Override
   public void addNode(Object n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#removeNode(Object)
+   */
   @Override
   public void removeNode(Object n) throws UnimplementedError {
     Assertions.UNREACHABLE();
@@ -469,7 +495,9 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
     throw new UnsupportedOperationException();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#containsNode(Object)
+   */
   @Override
   public boolean containsNode(Object N) {
     return G.containsNode(N);

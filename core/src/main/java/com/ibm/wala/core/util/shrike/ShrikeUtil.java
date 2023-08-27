@@ -38,7 +38,9 @@ public class ShrikeUtil implements BytecodeConstants {
     primitiveMap.put(Constants.TYPE_null, TypeReference.Null);
   }
 
-  /** @param type a type as a String returned by Shrike */
+  /**
+   * @param type a type as a String returned by Shrike
+   */
   public static TypeReference makeTypeReference(ClassLoaderReference loader, String type)
       throws IllegalArgumentException {
     if (type == null) {

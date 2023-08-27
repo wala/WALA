@@ -67,8 +67,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    * Sets the default object used as label for operations where no specific edge label is provided.
    * This is due to compatibility with the EdgeManager interface
    */
-  @Nullable
-  U getDefaultLabel();
+  @Nullable U getDefaultLabel();
 
   /**
    * Return an Iterator over the immediate predecessor nodes of this Node in the Graph on edges with
@@ -85,7 +84,9 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
         getPredNodes(N), (p) -> getEdgeLabels(p, N).stream().anyMatch(pred));
   }
 
-  /** @return the labels on edges whose destination is N */
+  /**
+   * @return the labels on edges whose destination is N
+   */
   Iterator<? extends U> getPredLabels(T N);
 
   /**
@@ -106,7 +107,9 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    */
   Iterator<? extends T> getSuccNodes(T N, U label);
 
-  /** @return the labels on edges whose source is N */
+  /**
+   * @return the labels on edges whose source is N
+   */
   Iterator<? extends U> getSuccLabels(T N);
 
   /**

@@ -188,7 +188,9 @@ public class GraphIntegrity {
     }
   }
 
-  /** @throws IllegalArgumentException if c is null */
+  /**
+   * @throws IllegalArgumentException if c is null
+   */
   public static void printCollection(String string, Collection<?> c) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");

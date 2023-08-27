@@ -181,7 +181,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return new ExplicitCallGraph(abstractRootMethod, options, getAnalysisCache());
   }
 
-  /** @return true iff the klass represents java.lang.Object */
+  /**
+   * @return true iff the klass represents java.lang.Object
+   */
   protected boolean isJavaLangObject(IClass klass) {
     return klass.getReference().equals(TypeReference.JavaLangObject);
   }
@@ -693,7 +695,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     }
   }
 
-  /** @return the context selector for this call graph builder */
+  /**
+   * @return the context selector for this call graph builder
+   */
   public ContextSelector getContextSelector() {
     return contextSelector;
   }
@@ -1147,7 +1151,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return assignOperator;
     }
 
-    /** @return Returns the field. */
+    /**
+     * @return Returns the field.
+     */
     protected IField getField() {
       return field;
     }
@@ -1356,7 +1362,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return "InverseFilter";
     }
 
-    /** @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex() */
+    /**
+     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
+     */
     @Override
     public boolean isComplex() {
       return false;

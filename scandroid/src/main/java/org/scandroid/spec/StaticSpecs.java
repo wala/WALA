@@ -48,7 +48,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/** @author creswick */
+/**
+ * @author creswick
+ */
 public class StaticSpecs implements ISpecs {
 
   private final ClassHierarchy cha;

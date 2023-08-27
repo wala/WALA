@@ -87,7 +87,9 @@ import org.scandroid.spec.SinkSpec;
 import org.scandroid.spec.StaticFieldSinkSpec;
 import org.scandroid.util.CGAnalysisContext;
 
-/** @author acfoltzer */
+/**
+ * @author acfoltzer
+ */
 public class OutflowAnalysis {
 
   private final CGAnalysisContext<IExplodedBasicBlock> ctx;

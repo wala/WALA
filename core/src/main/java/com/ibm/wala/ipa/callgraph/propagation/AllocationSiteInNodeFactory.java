@@ -51,7 +51,9 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
 
   private final ClassBasedInstanceKeys classBased;
 
-  /** @param options Governing call graph construction options */
+  /**
+   * @param options Governing call graph construction options
+   */
   public AllocationSiteInNodeFactory(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;

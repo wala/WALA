@@ -55,7 +55,9 @@ import java.util.Set;
 public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T>
     implements LabeledGraph<T, U> {
 
-  /** @return the object which manages edges in the graph */
+  /**
+   * @return the object which manages edges in the graph
+   */
   @Override
   protected abstract LabeledEdgeManager<T, U> getEdgeManager();
 

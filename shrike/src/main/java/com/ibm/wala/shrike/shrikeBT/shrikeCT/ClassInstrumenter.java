@@ -67,7 +67,9 @@ public final class ClassInstrumenter {
     this(inputName, new ClassReader(bytes), cha);
   }
 
-  /** @return name of resource from which this class was read */
+  /**
+   * @return name of resource from which this class was read
+   */
   public String getInputName() {
     return inputName;
   }
@@ -99,7 +101,9 @@ public final class ClassInstrumenter {
     this.inputName = inputName;
   }
 
-  /** @return the reader for the class */
+  /**
+   * @return the reader for the class
+   */
   public ClassReader getReader() {
     return cr;
   }

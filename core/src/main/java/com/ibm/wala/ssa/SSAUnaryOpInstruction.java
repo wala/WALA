@@ -49,7 +49,9 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
         + getValueString(symbolTable, val);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitUnaryOp(this);

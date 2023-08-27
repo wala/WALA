@@ -141,7 +141,9 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     return false;
   }
 
-  /** @return a String representation of the decisions made by this */
+  /**
+   * @return a String representation of the decisions made by this
+   */
   public String getHistory() {
     StringBuilder ret = new StringBuilder();
     for (int i = 0; i < curDecision; i++) {

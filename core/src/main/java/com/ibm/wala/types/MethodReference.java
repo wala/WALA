@@ -156,7 +156,9 @@ public final class MethodReference extends MemberReference {
     return findOrCreate(t, name, d);
   }
 
-  /** @return the descriptor component of this member reference */
+  /**
+   * @return the descriptor component of this member reference
+   */
   public Descriptor getDescriptor() {
     return selector.getDescriptor();
   }
@@ -192,12 +194,16 @@ public final class MethodReference extends MemberReference {
     returnType = TypeReference.findOrCreate(getDeclaringClass().getClassLoader(), r);
   }
 
-  /** @return return type of the method */
+  /**
+   * @return return type of the method
+   */
   public TypeReference getReturnType() {
     return returnType;
   }
 
-  /** @return ith parameter to the method. This does NOT include the implicit "this" pointer. */
+  /**
+   * @return ith parameter to the method. This does NOT include the implicit "this" pointer.
+   */
   public TypeReference getParameterType(int i) throws IllegalArgumentException {
     if (parameterTypes == null || i >= parameterTypes.length) {
       throw new IllegalArgumentException("illegal parameter number " + i + " for " + this);

@@ -43,7 +43,9 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   /** A mapping from object to Integer. */
   final HashMap<T, Integer> map = HashMapFactory.make();
 
-  /** @throws IllegalArgumentException if array is null */
+  /**
+   * @throws IllegalArgumentException if array is null
+   */
   @SuppressWarnings("unchecked")
   public MutableMapping(final Object[] array) {
     if (array == null) {
@@ -116,7 +118,9 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return result.toString();
   }
 
-  /** @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator() */
+  /**
+   * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
+   */
   @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();
@@ -127,7 +131,9 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return map.keySet().stream();
   }
 
-  /** @see com.ibm.wala.util.intset.SparseIntSet#singleton(int) */
+  /**
+   * @see com.ibm.wala.util.intset.SparseIntSet#singleton(int)
+   */
   public OrdinalSet<T> makeSingleton(int i) {
     return new OrdinalSet<>(SparseIntSet.singleton(i), this);
   }

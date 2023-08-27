@@ -103,7 +103,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     return EXPANSION_FACTOR;
   }
 
-  /** @return true iff this value changes */
+  /**
+   * @return true iff this value changes
+   */
   @Override
   @SuppressWarnings("unused")
   public boolean add(int value) {
@@ -153,7 +155,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     return true;
   }
 
-  /** @throws IllegalArgumentException if that == null */
+  /**
+   * @throws IllegalArgumentException if that == null
+   */
   @NullUnmarked
   @Override
   @SuppressWarnings("unused")

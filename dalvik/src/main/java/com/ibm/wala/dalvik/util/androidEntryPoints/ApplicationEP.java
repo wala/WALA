@@ -86,6 +86,7 @@ public final class ApplicationEP {
                 ActivityEP.onConfigurationChanged, ExecutionOrder.END_OF_LOOP
               },
               new AndroidEntryPoint.IExecutionOrder[] {ExecutionOrder.AT_LAST}));
+
   /**
    * This is called when the overall system is running low on memory, and actively running processes
    * should trim their memory usage.

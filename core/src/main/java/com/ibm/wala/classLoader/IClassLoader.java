@@ -41,13 +41,19 @@ public interface IClassLoader {
    */
   ClassLoaderReference getReference();
 
-  /** @return an Iterator of all classes loaded by this loader */
+  /**
+   * @return an Iterator of all classes loaded by this loader
+   */
   Iterator<IClass> iterateAllClasses();
 
-  /** @return the number of classes in scope to be loaded by this loader */
+  /**
+   * @return the number of classes in scope to be loaded by this loader
+   */
   int getNumberOfClasses();
 
-  /** @return the unique name that identifies this class loader. */
+  /**
+   * @return the unique name that identifies this class loader.
+   */
   Atom getName();
 
   /**
@@ -98,7 +104,9 @@ public interface IClassLoader {
    */
   Reader getSource(IClass klass) throws NoSuchElementException;
 
-  /** @return the parent IClassLoader, if any, or null */
+  /**
+   * @return the parent IClassLoader, if any, or null
+   */
   IClassLoader getParent();
 
   /**

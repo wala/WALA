@@ -13,6 +13,7 @@ import java.util.Set;
 public class DirectedHyperEdge<T> {
   /** Contains all destinations of this HyperEdge */
   private final Set<HyperNode<T>> tail;
+
   /** Contains multiple sources of this HyperEdge */
   private final Set<HyperNode<T>> head;
 

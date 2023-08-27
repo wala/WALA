@@ -92,7 +92,9 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return true;
   }
 
-  /** @return A new value number def'fed by this instruction when the type check succeeds. */
+  /**
+   * @return A new value number def'fed by this instruction when the type check succeeds.
+   */
   @Override
   public int getDef() {
     return result;
@@ -104,7 +106,9 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return result;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfDefs() {
     return 1;

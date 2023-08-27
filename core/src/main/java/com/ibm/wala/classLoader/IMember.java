@@ -28,7 +28,9 @@ public interface IMember extends IClassHierarchyDweller {
    */
   IClass getDeclaringClass();
 
-  /** @return the name of this member */
+  /**
+   * @return the name of this member
+   */
   Atom getName();
 
   /** Is this member static? */

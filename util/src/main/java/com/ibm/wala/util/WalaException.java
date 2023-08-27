@@ -14,11 +14,17 @@ package com.ibm.wala.util;
 public class WalaException extends Exception {
 
   private static final long serialVersionUID = 3959226859263419122L;
-  /** @param s a message describing the failure */
+
+  /**
+   * @param s a message describing the failure
+   */
   public WalaException(String s, Throwable cause) {
     super(s, cause);
   }
-  /** @param string a message describing the failure */
+
+  /**
+   * @param string a message describing the failure
+   */
   public WalaException(String string) {
     super(string);
   }

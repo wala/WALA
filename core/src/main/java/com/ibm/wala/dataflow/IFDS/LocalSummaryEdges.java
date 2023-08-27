@@ -140,7 +140,9 @@ public class LocalSummaryEdges {
     }
   }
 
-  /** @return unique id n that represents the pair (s_p,x) */
+  /**
+   * @return unique id n that represents the pair (s_p,x)
+   */
   private int getIndexForEntryExitPair(int c, int r) {
     long id = LongUtil.pack(c, r);
     int result = entryExitMap.get(id);

@@ -21,7 +21,9 @@ public class ConeType extends TypeAbstraction {
 
   private final IClass type;
 
-  /** @throws IllegalArgumentException if type is null */
+  /**
+   * @throws IllegalArgumentException if type is null
+   */
   public ConeType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
@@ -98,7 +100,9 @@ public class ConeType extends TypeAbstraction {
     return getType().isInterface();
   }
 
-  /** @return an Iterator of IClass that implement this interface */
+  /**
+   * @return an Iterator of IClass that implement this interface
+   */
   public Iterator<IClass> iterateImplementors() {
     return type.getClassHierarchy().getImplementors(getType().getReference()).iterator();
   }

@@ -138,7 +138,9 @@ public abstract class Compiler implements Constants {
         info.getInstructionsToBytecodes());
   }
 
-  /** @return the JVM type for the class this method belongs to */
+  /**
+   * @return the JVM type for the class this method belongs to
+   */
   public final String getClassType() {
     return classType;
   }
@@ -1933,7 +1935,9 @@ public abstract class Compiler implements Constants {
       this.instructionsToOffsets = instructionsToOffsets;
     }
 
-    /** @return the actual bytecodes */
+    /**
+     * @return the actual bytecodes
+     */
     public byte[] getCode() {
       return code;
     }
@@ -1950,7 +1954,9 @@ public abstract class Compiler implements Constants {
       return name;
     }
 
-    /** @return the method signature in JVM format */
+    /**
+     * @return the method signature in JVM format
+     */
     public String getMethodSignature() {
       return signature;
     }
@@ -1963,12 +1969,16 @@ public abstract class Compiler implements Constants {
       return name != null ? (ACC_PRIVATE | (isStatic ? ACC_STATIC : 0)) : 0;
     }
 
-    /** @return the raw exception handler table in JVM format */
+    /**
+     * @return the raw exception handler table in JVM format
+     */
     public int[] getRawHandlers() {
       return rawHandlers;
     }
 
-    /** @return whether the method is static */
+    /**
+     * @return whether the method is static
+     */
     public boolean isStatic() {
       return isStatic;
     }
@@ -1981,12 +1991,16 @@ public abstract class Compiler implements Constants {
       return newBytecodesToOldBytecodes;
     }
 
-    /** @return the maximum stack size in words as required by the JVM */
+    /**
+     * @return the maximum stack size in words as required by the JVM
+     */
     public int getMaxStack() {
       return maxStack;
     }
 
-    /** @return the maximum local variable size in words as required by the JVM */
+    /**
+     * @return the maximum local variable size in words as required by the JVM
+     */
     public int getMaxLocals() {
       return maxLocals;
     }

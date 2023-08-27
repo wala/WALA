@@ -100,7 +100,9 @@ public class SimpleIntVector implements IntVector, Serializable {
     System.err.println(("occupancy:  " + computeOccupancy()));
   }
 
-  /** @return the percentage of entries in delegateStore that are non-null */
+  /**
+   * @return the percentage of entries in delegateStore that are non-null
+   */
   private double computeOccupancy() {
     int count1 = 0;
     for (int element : store) {

@@ -116,6 +116,7 @@ public abstract class AbstractAndroidModel {
 
     return returnTypes;
   }
+
   //
   //  The rest :)
   //

@@ -188,7 +188,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
     }
 
-    /** @see Visitor#visitArrayStore(com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction) */
+    /**
+     * @see Visitor#visitArrayStore(com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction)
+     */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // Assertions.UNREACHABLE();
@@ -205,7 +207,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
     }
 
-    /** @see Visitor#visitCheckCast(ITypeTestInstruction) */
+    /**
+     * @see Visitor#visitCheckCast(ITypeTestInstruction)
+     */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       Set<IClass> types = HashSetFactory.make();
@@ -228,7 +232,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(result, value, AssignLabel.make(filter));
     }
 
-    /** @see Visitor#visitReturn(ReturnInstruction) */
+    /**
+     * @see Visitor#visitReturn(ReturnInstruction)
+     */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
@@ -244,7 +250,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /** @see Visitor#visitGet(IGetInstruction) */
+    /**
+     * @see Visitor#visitGet(IGetInstruction)
+     */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
       visitGetInternal(
@@ -281,7 +289,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /** @see Visitor#visitPut(IPutInstruction) */
+    /**
+     * @see Visitor#visitPut(IPutInstruction)
+     */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
       visitPutInternal(
@@ -316,7 +326,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /** @see Visitor#visitInvoke(IInvokeInstruction) */
+    /**
+     * @see Visitor#visitInvoke(IInvokeInstruction)
+     */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
@@ -342,7 +354,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       // callDefs.put(exc, instruction);
     }
 
-    /** @see Visitor#visitNew(NewInstruction) */
+    /**
+     * @see Visitor#visitNew(NewInstruction)
+     */
     @Override
     public void visitNew(SSANewInstruction instruction) {
 
@@ -371,7 +385,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /** @see Visitor#visitThrow(ThrowInstruction) */
+    /**
+     * @see Visitor#visitThrow(ThrowInstruction)
+     */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // don't do anything: we handle exceptional edges

@@ -29,7 +29,9 @@ public final class LineNumberTableReader extends AttributeReader {
     checkSize(offset, count * 4);
   }
 
-  /** @return the raw line number table data, a flattened sequence of (startPC, lineNumber) pairs */
+  /**
+   * @return the raw line number table data, a flattened sequence of (startPC, lineNumber) pairs
+   */
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
     int[] r = new int[count * 2];

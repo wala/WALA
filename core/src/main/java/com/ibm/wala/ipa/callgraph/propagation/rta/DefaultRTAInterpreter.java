@@ -29,7 +29,9 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
 
   private final ContextInsensitiveRTAInterpreter defaultInterpreter;
 
-  /** @param options governing analysis options */
+  /**
+   * @param options governing analysis options
+   */
   public DefaultRTAInterpreter(AnalysisOptions options, IAnalysisCacheView cache) {
     defaultInterpreter = new ContextInsensitiveSSAInterpreter(options, cache);
   }

@@ -72,7 +72,9 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     return mayBeLive(ik, m, instructionIndex);
   }
 
-  /** @param instructionIndex index of an SSA instruction */
+  /**
+   * @param instructionIndex index of an SSA instruction
+   */
   @Override
   public boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) {
     if (liveEverywhere.contains(ik)) {

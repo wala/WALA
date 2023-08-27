@@ -39,7 +39,9 @@ public class MethodTypeSignature extends Signature {
     return new MethodTypeSignature(genericsSignature);
   }
 
-  /** @return null if no arguments */
+  /**
+   * @return null if no arguments
+   */
   public TypeSignature[] getArguments() {
     String typeSig = rawString().replaceAll(".*\\(", "\\(").replaceAll("\\).*", "\\)");
     String[] args = TypeSignature.parseForTypeSignatures(typeSig);
@@ -91,7 +93,9 @@ public class MethodTypeSignature extends Signature {
     return i;
   }
 
-  /** @return {@link TypeSignature} for arguments, which includes information about generic types */
+  /**
+   * @return {@link TypeSignature} for arguments, which includes information about generic types
+   */
   public static TypeSignature[] getArguments(IMethod method) throws InvalidClassFileException {
     if (method instanceof ShrikeCTMethod) {
       ShrikeCTMethod sm = (ShrikeCTMethod) method;

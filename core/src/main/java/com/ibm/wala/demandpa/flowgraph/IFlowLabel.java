@@ -46,7 +46,9 @@ public interface IFlowLabel {
 
   void visit(IFlowLabelVisitor v, Object dst);
 
-  /** @return the bar (inverse) edge corresponding to this edge */
+  /**
+   * @return the bar (inverse) edge corresponding to this edge
+   */
   IFlowLabel bar();
 
   interface IFlowLabelVisitor {
@@ -84,6 +86,8 @@ public interface IFlowLabel {
     void visitParamBar(ParamBarLabel label, Object dst);
   }
 
-  /** @return true if this is a "barred" edge */
+  /**
+   * @return true if this is a "barred" edge
+   */
   boolean isBarred();
 }

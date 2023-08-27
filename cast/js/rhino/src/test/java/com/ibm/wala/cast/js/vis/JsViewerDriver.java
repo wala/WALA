@@ -39,7 +39,11 @@ import java.util.Set;
 
 public class JsViewerDriver extends JSCallGraphBuilderUtil {
   public static void main(String args[])
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, Error,
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          IOException,
+          CancelException,
+          Error,
           WalaException {
 
     if (args.length != 1) {
