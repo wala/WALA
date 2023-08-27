@@ -135,9 +135,11 @@ public class TypeArgument extends Signature {
               ++i;
             }
             if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
-              while (typeArgs.charAt(i++) != ';') ;
+              while (typeArgs.charAt(i++) != ';')
+                ;
             } else if (typeArgs.charAt(i++) == (byte) 'T') {
-              while (typeArgs.charAt(i++) != ';') ;
+              while (typeArgs.charAt(i++) != ';')
+                ;
             }
             args.add(typeArgs.substring(off, i));
             continue;
@@ -147,7 +149,8 @@ public class TypeArgument extends Signature {
         case (byte) 'T':
           { // type variable
             int off = i - 1;
-            while (typeArgs.charAt(i++) != ';') ;
+            while (typeArgs.charAt(i++) != ';')
+              ;
             args.add(typeArgs.substring(off, i));
             continue;
           }

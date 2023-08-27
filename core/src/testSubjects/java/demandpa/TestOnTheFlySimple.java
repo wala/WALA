@@ -37,7 +37,9 @@
  */
 package demandpa;
 
-/** @author manu */
+/**
+ * @author manu
+ */
 public class TestOnTheFlySimple {
 
   static A makeA() {

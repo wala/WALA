@@ -233,7 +233,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return true;
   }
 
-  /** @return a visitor to examine instructions in the ir */
+  /**
+   * @return a visitor to examine instructions in the ir
+   */
   protected ConstraintVisitor makeVisitor(CGNode node) {
     return new ConstraintVisitor(this, node);
   }
@@ -1824,7 +1826,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
-    /** @see com.ibm.wala.fixpoint.UnaryOperator#evaluate(IVariable, IVariable) */
+    /**
+     * @see com.ibm.wala.fixpoint.UnaryOperator#evaluate(IVariable, IVariable)
+     */
     @Override
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;
@@ -2273,7 +2277,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  /** @return the receiver class for this method. */
+  /**
+   * @return the receiver class for this method.
+   */
   private IClass getReceiverClass(IMethod method) {
     TypeReference formalType = method.getParameterType(0);
     IClass C = getClassHierarchy().lookupClass(formalType);

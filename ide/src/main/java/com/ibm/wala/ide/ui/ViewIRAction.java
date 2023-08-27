@@ -80,7 +80,9 @@ public class ViewIRAction<P> extends Action {
     }
   }
 
-  /** @throws IllegalStateException if the viewer is not running */
+  /**
+   * @throws IllegalStateException if the viewer is not running
+   */
   protected IR getIRForSelection() {
     // we assume the tree viewer's current selection is a CGNode
     IStructuredSelection selection = viewer.getSelection();

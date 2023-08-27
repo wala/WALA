@@ -59,6 +59,7 @@ public class IntentModel extends AndroidModel {
 
   public final Atom name;
   public final Atom target;
+
   //    private SummarizedMethod activityModel;
   /**
    * Restrict the model to Activities.

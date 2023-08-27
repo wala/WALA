@@ -34,7 +34,9 @@ public class SSACache {
   /** A cache of DefUse information */
   private final IAuxiliaryCache duCache;
 
-  /** @param factory a factory for creating IRs */
+  /**
+   * @param factory a factory for creating IRs
+   */
   public SSACache(IRFactory<IMethod> factory, IAuxiliaryCache irCache, IAuxiliaryCache duCache) {
     this.factory = factory;
     this.irCache = irCache;

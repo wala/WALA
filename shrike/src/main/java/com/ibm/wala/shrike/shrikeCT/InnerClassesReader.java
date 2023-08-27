@@ -23,7 +23,9 @@ public final class InnerClassesReader extends AttributeReader {
     checkSizeEquals(attr + 8, 8 * count);
   }
 
-  /** @return the raw values that make up this attribute */
+  /**
+   * @return the raw values that make up this attribute
+   */
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
     int[] r = new int[count * 4];
@@ -31,7 +33,9 @@ public final class InnerClassesReader extends AttributeReader {
     return r;
   }
 
-  /** @return the names of inner classes this attribute holds information about. */
+  /**
+   * @return the names of inner classes this attribute holds information about.
+   */
   public String[] getInnerClasses() throws InvalidClassFileException {
     int count = cr.getUShort(attr + 6);
     String[] r = new String[count];

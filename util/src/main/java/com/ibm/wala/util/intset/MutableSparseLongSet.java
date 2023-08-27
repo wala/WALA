@@ -91,7 +91,9 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     }
   }
 
-  /** @return true iff this value changes */
+  /**
+   * @return true iff this value changes
+   */
   @Override
   public boolean add(long value) {
     if (value < 0) {

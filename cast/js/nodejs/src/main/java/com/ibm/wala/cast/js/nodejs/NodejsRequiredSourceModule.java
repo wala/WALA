@@ -44,7 +44,9 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 
   private final String className;
 
-  /** @param f Must be a file located below folder workingDir. */
+  /**
+   * @param f Must be a file located below folder workingDir.
+   */
   protected NodejsRequiredSourceModule(String className, File f, SourceFileModule clonedFrom)
       throws IOException {
     super(f, clonedFrom);

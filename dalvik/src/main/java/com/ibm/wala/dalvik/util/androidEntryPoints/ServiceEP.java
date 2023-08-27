@@ -578,6 +578,7 @@ public final class ServiceEP {
                 ExecutionOrder.AT_FIRST, ProviderEP.onCreate,
                 // ApplicationEP.onCreate
               }));
+
   // ,
   //    new AndroidEntryPoint.IExecutionOrder[] {
   //        // BroadcastReceivers oftain use a Service - so place it before them.

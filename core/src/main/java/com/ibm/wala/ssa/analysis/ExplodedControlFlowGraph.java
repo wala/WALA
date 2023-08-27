@@ -345,7 +345,9 @@ public class ExplodedControlFlowGraph
     return Iterator2Collection.toSet(getSuccNodes(N)).size();
   }
 
-  /** @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
+   */
   @Override
   public Iterator<IExplodedBasicBlock> getSuccNodes(IExplodedBasicBlock bb) {
     ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;

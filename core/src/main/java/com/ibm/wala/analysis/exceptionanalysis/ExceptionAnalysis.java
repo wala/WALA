@@ -149,7 +149,9 @@ public class ExceptionAnalysis {
     }
   }
 
-  /** @return if the block has uncaught exceptions */
+  /**
+   * @return if the block has uncaught exceptions
+   */
   public boolean hasUncaughtExceptions(CGNode node, ISSABasicBlock block) {
     if (!isSolved) {
       throw new IllegalStateException("You need to use .solve() first!");
@@ -237,7 +239,9 @@ public class ExceptionAnalysis {
     }
   }
 
-  /** @return the used filter */
+  /**
+   * @return the used filter
+   */
   public InterproceduralExceptionFilter<SSAInstruction> getFilter() {
     if (!isSolved) {
       throw new IllegalStateException("You need to use .solve() first!");

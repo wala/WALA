@@ -119,7 +119,9 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
     }
   }
 
-  /** @return the value of this variable as a MutableSparseIntSet ... null if the set is empty. */
+  /**
+   * @return the value of this variable as a MutableSparseIntSet ... null if the set is empty.
+   */
   @NullUnmarked
   public MutableIntSet getValue() {
     return V;

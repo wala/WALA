@@ -17,7 +17,9 @@ package com.ibm.wala.dataflow.IFDS;
  */
 public interface IFlowFunctionMap<T> {
 
-  /** @return the flow function for a "normal" edge in the supergraph from src -&gt; dest */
+  /**
+   * @return the flow function for a "normal" edge in the supergraph from src -&gt; dest
+   */
   IUnaryFlowFunction getNormalFlowFunction(T src, T dest);
 
   /**
@@ -35,7 +37,9 @@ public interface IFlowFunctionMap<T> {
    */
   IFlowFunction getReturnFlowFunction(T call, T src, T dest);
 
-  /** @return the flow function for a "call-to-return" edge in the supergraph from src -&gt; dest */
+  /**
+   * @return the flow function for a "call-to-return" edge in the supergraph from src -&gt; dest
+   */
   IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest);
 
   /**

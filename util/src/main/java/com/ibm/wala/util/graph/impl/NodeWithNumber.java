@@ -25,7 +25,9 @@ public class NodeWithNumber implements INodeWithNumber {
 
   private int number = -1;
 
-  /** @return the number which identifies this node in the numbered graph */
+  /**
+   * @return the number which identifies this node in the numbered graph
+   */
   @Override
   public int getGraphNodeId() {
     return number;

@@ -19,6 +19,8 @@ import java.util.Iterator;
  */
 public interface Module {
 
-  /** @return an Iterator of the ModuleEntries in this Module. */
+  /**
+   * @return an Iterator of the ModuleEntries in this Module.
+   */
   Iterator<? extends ModuleEntry> getEntries();
 }

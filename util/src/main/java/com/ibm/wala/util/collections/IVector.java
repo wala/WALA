@@ -18,7 +18,9 @@ import org.jspecify.annotations.Nullable;
  * <p>TODO: get rid of this and use java.util.collection.RandomAccess
  */
 public interface IVector<T> extends Iterable<T> {
-  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
   T get(int x);
 
   /**
@@ -28,9 +30,13 @@ public interface IVector<T> extends Iterable<T> {
    */
   void set(int x, @Nullable T value);
 
-  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
+  /**
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
   void performVerboseAction();
 
-  /** @return max i s.t get(i) != null */
+  /**
+   * @return max i s.t get(i) != null
+   */
   int getMaxIndex();
 }

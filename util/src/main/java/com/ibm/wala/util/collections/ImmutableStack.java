@@ -129,7 +129,9 @@ public class ImmutableStack<T> implements Iterable<T> {
     return entries[entries.length - 1];
   }
 
-  /** @throws EmptyStackException if stack is empty */
+  /**
+   * @throws EmptyStackException if stack is empty
+   */
   public ImmutableStack<T> pop() {
     if (entries.length == 0) {
       throw new EmptyStackException();

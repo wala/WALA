@@ -23,7 +23,9 @@ public interface ClassHierarchyProvider {
    */
   String getSuperClass(String cl);
 
-  /** @return the superinterfaces of the given class, or null if they are not known */
+  /**
+   * @return the superinterfaces of the given class, or null if they are not known
+   */
   String[] getSuperInterfaces(String cl);
 
   /**
@@ -32,6 +34,8 @@ public interface ClassHierarchyProvider {
    */
   String[] getSubClasses(String cl);
 
-  /** @return whether or not cl is an interface, or Constants.MAYBE if not known */
+  /**
+   * @return whether or not cl is an interface, or Constants.MAYBE if not known
+   */
   int isInterface(String cl);
 }

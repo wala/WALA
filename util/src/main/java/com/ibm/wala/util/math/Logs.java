@@ -46,7 +46,9 @@ import com.ibm.wala.util.intset.Bits;
 /** simple utilities with logarithms */
 public class Logs {
 
-  /** @return true iff x == 2^n for some integer n */
+  /**
+   * @return true iff x == 2^n for some integer n
+   */
   public static boolean isPowerOf2(int x) {
     if (x < 0) {
       return false;
@@ -55,7 +57,9 @@ public class Logs {
     }
   }
 
-  /** @param x where x == 2^n for some integer n */
+  /**
+   * @param x where x == 2^n for some integer n
+   */
   public static int log2(int x) throws IllegalArgumentException {
     if (!isPowerOf2(x)) {
       throw new IllegalArgumentException();

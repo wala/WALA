@@ -120,12 +120,16 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
 
     private BuilderType builderType = BuilderType.OPTIMISTIC;
 
-    /** @return the builderType */
+    /**
+     * @return the builderType
+     */
     public BuilderType getBuilderType() {
       return builderType;
     }
 
-    /** @param builderType the builderType to set */
+    /**
+     * @param builderType the builderType to set
+     */
     public void setBuilderType(BuilderType builderType) {
       this.builderType = builderType;
     }

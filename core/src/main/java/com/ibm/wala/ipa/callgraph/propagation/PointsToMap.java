@@ -68,7 +68,9 @@ public class PointsToMap {
    */
   private final BitVector transitiveRoots = new BitVector();
 
-  /** @return iterator of all PointerKeys tracked */
+  /**
+   * @return iterator of all PointerKeys tracked
+   */
   public Iterator<PointerKey> iterateKeys() {
     return pointerKeys.iterator();
   }
@@ -96,7 +98,9 @@ public class PointsToMap {
     return result;
   }
 
-  /** @return the {@link PointsToSetVariable} recorded for a particular id */
+  /**
+   * @return the {@link PointsToSetVariable} recorded for a particular id
+   */
   public PointsToSetVariable getPointsToSet(int id) {
     int repI = uf.find(id);
     return (PointsToSetVariable) pointsToSets.get(repI);
@@ -183,7 +187,9 @@ public class PointsToMap {
     }
   }
 
-  /** @return {@link Iterator}&lt;{@link PointerKey}&gt; */
+  /**
+   * @return {@link Iterator}&lt;{@link PointerKey}&gt;
+   */
   public Iterator<PointerKey> getTransitiveRoots() {
     return new FilterIterator<>(iterateKeys(), this::isTransitiveRoot);
   }
@@ -275,7 +281,9 @@ public class PointsToMap {
     }
   }
 
-  /** @return the unique integer that identifies this pointer key */
+  /**
+   * @return the unique integer that identifies this pointer key
+   */
   public int getIndex(PointerKey p) {
     return pointerKeys.getMappedIndex(p);
   }

@@ -55,17 +55,23 @@ public class ClassLoaderReference implements Serializable {
     this.parent = parent;
   }
 
-  /** @return the name of this class loader */
+  /**
+   * @return the name of this class loader
+   */
   public Atom getName() {
     return name;
   }
 
-  /** @return the name of the language this class loader belongs to */
+  /**
+   * @return the name of the language this class loader belongs to
+   */
   public Atom getLanguage() {
     return language;
   }
 
-  /** @return the parent of this loader in the loader hierarchy, or null if none */
+  /**
+   * @return the parent of this loader in the loader hierarchy, or null if none
+   */
   public ClassLoaderReference getParent() {
     return parent;
   }

@@ -49,7 +49,9 @@ public class RTASelectorKey implements PointerKey {
     return "RTAKey:" + selector.toString();
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter() */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter()
+   */
   public IClass getTypeFilter() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;

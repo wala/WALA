@@ -49,7 +49,9 @@ public class GetMethodContext {
   }
 
   public static void main(String[] args)
-      throws IllegalAccessException, NoSuchMethodException, IllegalArgumentException,
+      throws IllegalAccessException,
+          NoSuchMethodException,
+          IllegalArgumentException,
           InvocationTargetException {
     Method m;
     A a;

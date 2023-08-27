@@ -43,19 +43,25 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> impleme
             nodeManager, normalOutCount, BasicNaturalRelation.TWO_LEVEL);
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager() */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
+   */
   @Override
   public NumberedNodeManager<T> getNodeManager() {
     return nodeManager;
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager() */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
+   */
   @Override
   public NumberedEdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 
-  /** @return a graph with the same nodes and edges as g */
+  /**
+   * @return a graph with the same nodes and edges as g
+   */
   public static <T> SlowSparseNumberedGraph<T> duplicate(Graph<T> g) {
     SlowSparseNumberedGraph<T> result = make();
     copyInto(g, result);

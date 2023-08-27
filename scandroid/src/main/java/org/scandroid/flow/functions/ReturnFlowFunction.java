@@ -49,13 +49,17 @@ import org.scandroid.domain.IFDSTaintDomain;
 import org.scandroid.domain.LocalElement;
 import org.scandroid.domain.ReturnElement;
 
-/** @author creswick */
+/**
+ * @author creswick
+ */
 public class ReturnFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowFunction {
 
   private final IFDSTaintDomain<E> domain;
   private final CodeElement ce;
 
-  /** @param def of the invoke instruction we're returning to */
+  /**
+   * @param def of the invoke instruction we're returning to
+   */
   public ReturnFlowFunction(IFDSTaintDomain<E> domain, int def) {
     this.domain = domain;
     this.ce = new LocalElement(def);

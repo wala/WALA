@@ -230,6 +230,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     Assertions.UNREACHABLE("Unexpected method " + method);
     return null;
   }
+
   /* END Custom change: caching */
 
   @Override

@@ -85,6 +85,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   /* BEGIN Custom change: Common superclass is optional */
   private final boolean
       existsCommonSuperclass; // extension to deal with X10 that has no common superclass
+
   /* END Custom change: Common superclass is optional */
 
   /**
@@ -589,6 +590,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     // standard case: we have a common super class
     this(true, loaderRef, parent, cha);
   }
+
   /* END Custom change: Common superclass is optional */
   public IClassHierarchy getClassHierarchy() {
     return cha;
@@ -600,8 +602,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   protected abstract SourceModuleTranslator getTranslator();
+
   /* BEGIN Custom change: Optional deletion of fTypeMap */
   public static volatile boolean deleteTypeMapAfterInit = true;
+
   /* END Custom change: Optional deletion of fTypeMap */
   @Override
   public void init(List<Module> modules) throws IOException {

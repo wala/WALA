@@ -33,7 +33,9 @@ public abstract class Entrypoint implements BytecodeConstants {
   /** The method to be called */
   protected final IMethod method;
 
-  /** @param method the method to be called for this entrypoint */
+  /**
+   * @param method the method to be called for this entrypoint
+   */
   protected Entrypoint(IMethod method) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
@@ -171,15 +173,21 @@ public abstract class Entrypoint implements BytecodeConstants {
     return m.addInvocation(paramValues, site);
   }
 
-  /** @return the method this call invokes */
+  /**
+   * @return the method this call invokes
+   */
   public IMethod getMethod() {
     return method;
   }
 
-  /** @return types to allocate for parameter i; for non-static methods, parameter 0 is "this" */
+  /**
+   * @return types to allocate for parameter i; for non-static methods, parameter 0 is "this"
+   */
   public abstract TypeReference[] getParameterTypes(int i);
 
-  /** @return number of parameters to this call, including "this" for non-statics */
+  /**
+   * @return number of parameters to this call, including "this" for non-statics
+   */
   public abstract int getNumberOfParameters();
 
   @Override

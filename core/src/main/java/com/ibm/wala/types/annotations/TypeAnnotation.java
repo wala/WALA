@@ -469,7 +469,9 @@ public class TypeAnnotation {
       this.catchType = catchType;
     }
 
-    /** @return the handlers type, or {@link CatchTarget#ALL_EXCEPTIONS} */
+    /**
+     * @return the handlers type, or {@link CatchTarget#ALL_EXCEPTIONS}
+     */
     public TypeReference getCatchType() {
       return catchType;
     }
@@ -965,7 +967,9 @@ public class TypeAnnotation {
     };
   }
 
-  /** @return the {@link Annotation} of this {@code TypeAnnotation} */
+  /**
+   * @return the {@link Annotation} of this {@code TypeAnnotation}
+   */
   public Annotation getAnnotation() {
     return annotation;
   }
@@ -979,12 +983,16 @@ public class TypeAnnotation {
     return typePath;
   }
 
-  /** @return the {@link TypeAnnotationTarget} of this {@code TypeAnnotation} */
+  /**
+   * @return the {@link TypeAnnotationTarget} of this {@code TypeAnnotation}
+   */
   public TypeAnnotationTarget getTypeAnnotationTarget() {
     return typeAnnotationTarget;
   }
 
-  /** @return the {@link TargetType} of this {@code TypeAnnotation} */
+  /**
+   * @return the {@link TargetType} of this {@code TypeAnnotation}
+   */
   public TargetType getTargetType() {
     return targetType;
   }

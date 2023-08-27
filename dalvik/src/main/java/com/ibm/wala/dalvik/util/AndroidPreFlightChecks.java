@@ -229,7 +229,7 @@ public class AndroidPreFlightChecks {
       final TypeName test = ep.getMethod().getDeclaringClass().getName();
       IInstantiationBehavior.InstanceBehavior behave =
           behaviour.getBehavior(
-              test, /* asParameterTo=  */ null, /* inCall= */ null, /* withName= */ null);
+              test, /* asParameterTo= */ null, /* inCall= */ null, /* withName= */ null);
       if (behave != IInstantiationBehavior.InstanceBehavior.REUSE) {
         pass = false;
       }

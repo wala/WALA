@@ -263,7 +263,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
     return (MachineState) solver.getIn(cfg.entry());
   }
 
-  /** @return the state at the entry to a given block */
+  /**
+   * @return the state at the entry to a given block
+   */
   public MachineState getIn(BasicBlock bb) {
     return (MachineState) solver.getIn(bb);
   }
@@ -625,7 +627,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       locals[i] = j;
     }
 
-    /** @return the number of the symbol corresponding to local i */
+    /**
+     * @return the number of the symbol corresponding to local i
+     */
     public int getLocal(int i) {
       if (locals == null) {
         if (OPTIMISTIC) {
@@ -965,7 +969,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+       */
       @Override
       public void visitGetField(GetField instruction) {
         // TODO
@@ -980,7 +986,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              }
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInstanceof */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInstanceof
+       */
       @Override
       public void visitInstanceof(InstanceOf instruction) {
         // TODO
@@ -989,7 +997,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         throw new UnimplementedError();
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction)
+       */
       @Override
       public void visitInvoke(Invoke instruction) {
         // TODO
@@ -1004,7 +1014,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         //              }
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction)
+       */
       @Override
       public void visitMonitor(Monitor instruction) {
         // TODO
@@ -1024,7 +1036,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              workingState.setLocal(index, workingState.pop());
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction)
+       */
       @Override
       public void visitNew(New instruction) {
         // TODO
@@ -1040,7 +1054,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              }
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitPut(IPutInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitPut(IPutInstruction)
+       */
       @Override
       public void visitPutField(PutField instruction) {
         // TODO
@@ -1058,7 +1074,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              workingState.swap();
       //          }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction)
+       */
       @Override
       public void visitSwitch(Switch instruction) {
         // TODO
@@ -1066,7 +1084,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         throw new UnimplementedError();
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction)
+       */
       @Override
       public void visitThrow(Throw instruction) {
         // TODO

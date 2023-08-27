@@ -83,6 +83,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
 
   public static AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
   public static List<AndroidEntryPoint> ENTRIES = new ArrayList<>();
+
   /** This is TRANSIENT! */
   private transient IInstantiationBehavior instantiation = null;
 
@@ -126,6 +127,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   //
 
   private boolean flatComponents = false;
+
   /**
    * Controlls the initialization of Components.
    *
@@ -194,6 +196,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   }
 
   private transient IProgressMonitor progressMonitor = null;
+
   /**
    * Can be used to indicate the progress or to cancel operations.
    *
@@ -211,6 +214,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   }
 
   private boolean doBootSequence = true;
+
   /**
    * Whether to generate a global android environment.
    *
@@ -245,6 +249,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   }
 
   private Class<? extends AbstractAndroidModel> abstractAndroidModel = LoopAndroidModel.class;
+
   /**
    * What special handling to insert into the model.
    *
@@ -676,6 +681,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   }
 
   private final transient Map<CallSiteReference, Intent> seenIntentCalls = HashMapFactory.make();
+
   /**
    * DO NOT CALL! - This is for IntentContextSelector.
    *

@@ -240,7 +240,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       }
     }
 
-    /** @see java.lang.Object#toString() */
+    /**
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
       return "delared type := " + type;

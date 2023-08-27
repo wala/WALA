@@ -18,6 +18,7 @@ public class HyperNode<T> {
    * DirectedHyperGraph#updateNodeEdges()}
    */
   private Set<DirectedHyperEdge<T>> outEdges;
+
   /**
    * Set of edges, which have this node as source, can be set automatically with {@link
    * DirectedHyperGraph#updateNodeEdges()}

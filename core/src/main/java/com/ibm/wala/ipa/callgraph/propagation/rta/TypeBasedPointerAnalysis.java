@@ -61,7 +61,9 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     heapModel = new TypeBasedHeapModel(options, klasses, cg);
   }
 
-  /** @param c {@code Collection<IClass>} */
+  /**
+   * @param c {@code Collection<IClass>}
+   */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
     if (c == null) {
       throw new IllegalArgumentException("null c");

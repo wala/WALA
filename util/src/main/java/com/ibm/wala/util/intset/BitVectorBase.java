@@ -127,7 +127,9 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return buffer.toString();
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#contains(int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#contains(int)
+   */
   public boolean contains(int i) {
     return get(i);
   }
@@ -191,7 +193,9 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return count + (31 - j);
   }
 
-  /** @return min j &gt;= start s.t get(j) */
+  /**
+   * @return min j &gt;= start s.t get(j)
+   */
   public int nextSetBit(int start) {
     if (start < 0) {
       throw new IllegalArgumentException("illegal start: " + start);

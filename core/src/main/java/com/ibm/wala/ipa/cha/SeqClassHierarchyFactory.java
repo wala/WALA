@@ -20,7 +20,9 @@ import java.util.Set;
 
 public class SeqClassHierarchyFactory {
 
-  /** @return a ClassHierarchy object representing the analysis scope */
+  /**
+   * @return a ClassHierarchy object representing the analysis scope
+   */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
     if (scope == null) {
       throw new IllegalArgumentException("null scope");

@@ -248,7 +248,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     densePart = null;
   }
 
-  /** @return true iff this set contains integer i */
+  /**
+   * @return true iff this set contains integer i
+   */
   @Override
   public boolean contains(int i) {
     if (densePart != null && inDenseRange(i)) {
@@ -258,7 +260,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /** @return true iff this set contains integer i */
+  /**
+   * @return true iff this set contains integer i
+   */
   @Override
   public boolean containsAny(IntSet set) {
     if (set == null) {
@@ -300,7 +304,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return newThis;
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet) */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
+   */
   @Override
   public IntSet union(IntSet that) {
     SemiSparseMutableIntSet temp = new SemiSparseMutableIntSet();
@@ -310,19 +316,25 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return temp;
   }
 
-  /** @return true iff this set is empty */
+  /**
+   * @return true iff this set is empty
+   */
   @Override
   public boolean isEmpty() {
     return sparsePart.isEmpty() && (densePart == null || densePart.isZero());
   }
 
-  /** @return the number of elements in this set */
+  /**
+   * @return the number of elements in this set
+   */
   @Override
   public int size() {
     return sparsePart.size() + (densePart == null ? 0 : densePart.populationCount());
   }
 
-  /** @return a perhaps more efficient iterator */
+  /**
+   * @return a perhaps more efficient iterator
+   */
   @Override
   public IntIterator intIterator() {
     class DensePartIterator implements IntIterator {
@@ -385,7 +397,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /** @return maximum integer in this set. */
+  /**
+   * @return maximum integer in this set.
+   */
   @Override
   public int max() throws IllegalStateException {
     if (densePart == null) {
@@ -621,7 +635,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
-  /** @throws IllegalArgumentException if other is null */
+  /**
+   * @throws IllegalArgumentException if other is null
+   */
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other == null) {

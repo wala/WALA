@@ -16,7 +16,9 @@ import java.util.TreeSet;
 /** An object that creates mutable sparse int sets. */
 public class MutableSparseLongSetFactory implements MutableLongSetFactory {
 
-  /** @throws IllegalArgumentException if set is null */
+  /**
+   * @throws IllegalArgumentException if set is null
+   */
   @Override
   public MutableLongSet make(long[] set) {
     if (set == null) {

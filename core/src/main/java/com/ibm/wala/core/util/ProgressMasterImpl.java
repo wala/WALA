@@ -116,6 +116,7 @@ class ProgressMasterImpl implements IProgressMonitor {
   public void cancel() {
     setCanceled();
   }
+
   /* END Custom change: subtasks and canceling */
   @Override
   public synchronized void worked(int work) {

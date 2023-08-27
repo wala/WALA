@@ -36,7 +36,9 @@ public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable>
 
   public abstract byte evaluate(PointsToSetVariable rhs);
 
-  /** @return Returns the fixed points-to-set associated with this side effect. */
+  /**
+   * @return Returns the fixed points-to-set associated with this side effect.
+   */
   PointsToSetVariable getFixedSet() {
     return fixedSet;
   }

@@ -166,7 +166,9 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     throw new UnsupportedOperationException();
   }
 
-  /** @return the currentHops */
+  /**
+   * @return the currentHops
+   */
   public int getCurrentHops() {
     return currentHops;
   }

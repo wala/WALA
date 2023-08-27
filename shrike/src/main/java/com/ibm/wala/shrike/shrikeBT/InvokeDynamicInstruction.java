@@ -157,8 +157,12 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   }
 
   public CallSite bootstrap(Class<?> cl)
-      throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-          IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+      throws ClassNotFoundException,
+          NoSuchMethodException,
+          SecurityException,
+          IllegalAccessException,
+          IllegalArgumentException,
+          InvocationTargetException,
           NoSuchFieldException {
     ClassLoader classLoader = cl.getClassLoader();
     ClassLoader bootstrapCL = classLoader;

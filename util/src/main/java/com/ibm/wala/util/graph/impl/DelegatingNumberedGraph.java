@@ -27,13 +27,17 @@ public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges>
   private final DelegatingNumberedEdgeManager<T> edgeManager =
       new DelegatingNumberedEdgeManager<>(nodeManager);
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager() */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
+   */
   @Override
   protected NumberedNodeManager<T> getNodeManager() {
     return nodeManager;
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager() */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
+   */
   @Override
   protected NumberedEdgeManager<T> getEdgeManager() {
     return edgeManager;

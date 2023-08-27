@@ -58,7 +58,9 @@ public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstTyp
    */
   boolean isEntryBlock();
 
-  /** @return governing method for this block */
+  /**
+   * @return governing method for this block
+   */
   IMethod getMethod();
 
   /**

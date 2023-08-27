@@ -38,7 +38,9 @@ public final class CallSite extends Pair<CallSiteReference, CGNode> {
     return fst;
   }
 
-  /** @return the Selector that identifies this site */
+  /**
+   * @return the Selector that identifies this site
+   */
   public Selector getSelector() {
     return getSite().getDeclaredTarget().getSelector();
   }

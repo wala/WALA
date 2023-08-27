@@ -15,10 +15,14 @@ import org.jspecify.annotations.Nullable;
 /** Set of longs; not necessary mutable TODO: extract a smaller interface? */
 public interface LongSet {
 
-  /** @return true iff this set contains long i */
+  /**
+   * @return true iff this set contains long i
+   */
   boolean contains(long i);
 
-  /** @return true iff this set contains integer i */
+  /**
+   * @return true iff this set contains integer i
+   */
   boolean containsAny(LongSet set);
 
   /**
@@ -26,25 +30,36 @@ public interface LongSet {
    *
    * @return a new IntSet which is the intersection of this and that
    */
-  @Nullable
-  LongSet intersection(LongSet that);
+  @Nullable LongSet intersection(LongSet that);
 
-  /** @return true iff this set is empty */
+  /**
+   * @return true iff this set is empty
+   */
   boolean isEmpty();
 
-  /** @return the number of elements in this set */
+  /**
+   * @return the number of elements in this set
+   */
   int size();
 
-  /** @return maximum integer in this set. */
+  /**
+   * @return maximum integer in this set.
+   */
   long max();
 
-  /** @return true iff {@code this} has the same value as {@code that}. */
+  /**
+   * @return true iff {@code this} has the same value as {@code that}.
+   */
   boolean sameValue(LongSet that);
 
-  /** @return true iff {@code this} is a subset of {@code that}. */
+  /**
+   * @return true iff {@code this} is a subset of {@code that}.
+   */
   boolean isSubset(LongSet that);
 
-  /** @return a perhaps more efficient iterator */
+  /**
+   * @return a perhaps more efficient iterator
+   */
   LongIterator longIterator();
 
   /** Invoke an action on each element of the Set */

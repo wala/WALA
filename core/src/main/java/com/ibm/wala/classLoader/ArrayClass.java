@@ -206,7 +206,9 @@ public class ArrayClass implements IClass, Constants {
     return result;
   }
 
-  /** @see IClass#getAllImplementedInterfaces() */
+  /**
+   * @see IClass#getAllImplementedInterfaces()
+   */
   public Collection<IClass> getAllAncestorInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

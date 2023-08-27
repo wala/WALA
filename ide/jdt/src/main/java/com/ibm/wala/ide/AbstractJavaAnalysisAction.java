@@ -179,7 +179,9 @@ public abstract class AbstractJavaAnalysisAction
     }
   }
 
-  /** @see IActionDelegate#run(IAction) */
+  /**
+   * @see IActionDelegate#run(IAction)
+   */
   @Override
   public void run(IAction action) {
     IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -190,13 +192,17 @@ public abstract class AbstractJavaAnalysisAction
     }
   }
 
-  /** @see IActionDelegate#selectionChanged(IAction, ISelection) */
+  /**
+   * @see IActionDelegate#selectionChanged(IAction, ISelection)
+   */
   @Override
   public void selectionChanged(IAction action, ISelection selection) {
     currentSelection = selection;
   }
 
-  /** @return The current {@link ISelection} highlighted in the Eclipse workspace */
+  /**
+   * @return The current {@link ISelection} highlighted in the Eclipse workspace
+   */
   public ISelection getCurrentSelection() {
     return currentSelection;
   }

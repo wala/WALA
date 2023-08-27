@@ -22,18 +22,30 @@ public class DynamicDalvikComparisonJavaLibsTest extends DynamicDalvikComparison
 
   @Test
   public void testJLex()
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException,
-          InterruptedException, ClassNotFoundException, SecurityException,
-          InvalidClassFileException, FailureException {
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          IOException,
+          CancelException,
+          InterruptedException,
+          ClassNotFoundException,
+          SecurityException,
+          InvalidClassFileException,
+          FailureException {
     File inputFile = testFile("sample.lex");
     test(null, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
   }
 
   @Test
   public void testJavaCup()
-      throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException,
-          InterruptedException, ClassNotFoundException, SecurityException,
-          InvalidClassFileException, FailureException {
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          IOException,
+          CancelException,
+          InterruptedException,
+          ClassNotFoundException,
+          SecurityException,
+          InvalidClassFileException,
+          FailureException {
     File inputFile = testFile("sample.cup");
     test(null, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
   }

@@ -46,7 +46,9 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
     }
   }
 
-  /** @return the index of the local variable loaded */
+  /**
+   * @return the index of the local variable loaded
+   */
   @Override
   public int getVarIndex() {
     return index;

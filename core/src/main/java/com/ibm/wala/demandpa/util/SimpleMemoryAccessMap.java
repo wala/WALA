@@ -48,7 +48,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/** @author sfink */
+/**
+ * @author sfink
+ */
 public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
   private static final boolean DEBUG = false;

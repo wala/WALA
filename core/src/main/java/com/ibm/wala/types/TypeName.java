@@ -143,7 +143,9 @@ public final class TypeName implements Serializable {
     return findOrCreateClass(p, c);
   }
 
-  /** @return the name of the array element type for an array */
+  /**
+   * @return the name of the array element type for an array
+   */
   public TypeName parseForArrayElementName() {
     int newDim;
     if ((key.dim & ElementMask) == PrimitiveMask) {
@@ -160,7 +162,9 @@ public final class TypeName implements Serializable {
     return findOrCreate(key.packageName, key.className, newDim);
   }
 
-  /** @return a type name that represents an array of this element type */
+  /**
+   * @return a type name that represents an array of this element type
+   */
   private TypeName getDerivedTypeForElementType(byte mask) {
     int newDim;
     if (key.dim == -1) {
@@ -334,12 +338,16 @@ public final class TypeName implements Serializable {
     }
   }
 
-  /** @return the Atom naming the package for this type. */
+  /**
+   * @return the Atom naming the package for this type.
+   */
   public Atom getPackage() {
     return key.packageName;
   }
 
-  /** @return the Atom naming the class for this type (without package) */
+  /**
+   * @return the Atom naming the class for this type (without package)
+   */
   public Atom getClassName() {
     return key.className;
   }

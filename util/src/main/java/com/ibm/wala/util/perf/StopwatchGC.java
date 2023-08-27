@@ -59,17 +59,23 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
     return result;
   }
 
-  /** @return memory at the end of the phase, in MB */
+  /**
+   * @return memory at the end of the phase, in MB
+   */
   public float getEndMemory() {
     return (float) endMemory / 1000000;
   }
 
-  /** @return memory at the end of the phase, in MB */
+  /**
+   * @return memory at the end of the phase, in MB
+   */
   public float getStartMemory() {
     return (float) startMemory / 1000000;
   }
 
-  /** @return getEndMemory() - getStartMemory() */
+  /**
+   * @return getEndMemory() - getStartMemory()
+   */
   public float getFootprint() {
     return getEndMemory() - getStartMemory();
   }

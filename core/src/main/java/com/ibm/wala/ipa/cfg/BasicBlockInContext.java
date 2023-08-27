@@ -35,49 +35,65 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
     this.node = node;
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#getFirstInstructionIndex() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#getFirstInstructionIndex()
+   */
   @Override
   public int getFirstInstructionIndex() {
     return delegate.getFirstInstructionIndex();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#getLastInstructionIndex() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#getLastInstructionIndex()
+   */
   @Override
   public int getLastInstructionIndex() {
     return delegate.getLastInstructionIndex();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#iterator() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#iterator()
+   */
   @Override
   public Iterator<SSAInstruction> iterator() {
     return delegate.iterator();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#getMethod() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
+   */
   @Override
   public IMethod getMethod() {
     return delegate.getMethod();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#getNumber() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
+   */
   @Override
   public int getNumber() {
     return delegate.getNumber();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#isCatchBlock() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#isCatchBlock()
+   */
   @Override
   public boolean isCatchBlock() {
     return delegate.isCatchBlock();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
+   */
   @Override
   public boolean isEntryBlock() {
     return delegate.isEntryBlock();
   }
 
-  /** @see com.ibm.wala.cfg.IBasicBlock#isExitBlock() */
+  /**
+   * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
+   */
   @Override
   public boolean isExitBlock() {
     return delegate.isExitBlock();

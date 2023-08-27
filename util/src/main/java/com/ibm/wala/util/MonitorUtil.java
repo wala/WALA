@@ -72,6 +72,7 @@ public class MonitorUtil {
       }
     }
   }
+
   /* BEGIN Custom change: more on subtasks */
   public static void subTask(IProgressMonitor progressMonitor, String subTask)
       throws CancelException {

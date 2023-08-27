@@ -32,7 +32,9 @@ public interface CallGraphBuilder<I extends InstanceKey> {
    */
   PointerAnalysis<I> getPointerAnalysis();
 
-  /** @return A cache of various analysis artifacts used during call graph construction. */
+  /**
+   * @return A cache of various analysis artifacts used during call graph construction.
+   */
   IAnalysisCacheView getAnalysisCache();
 
   IClassHierarchy getClassHierarchy();

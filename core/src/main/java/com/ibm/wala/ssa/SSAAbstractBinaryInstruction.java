@@ -41,7 +41,9 @@ public abstract class SSAAbstractBinaryInstruction extends SSAInstruction {
     return result;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfDefs() {
     return 1;

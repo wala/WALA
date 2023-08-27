@@ -70,13 +70,17 @@ public class ShortestPath<T> {
     }
   }
 
-  /** @return weight &gt; otherWeight */
+  /**
+   * @return weight &gt; otherWeight
+   */
   private boolean greaterThen(Weight weight, Weight otherWeight) {
     return otherWeight.getType() == Type.NOT_SET
         || this.comparator.compare(weight, otherWeight) > 0;
   }
 
-  /** @return weight &lt; otherWeight */
+  /**
+   * @return weight &lt; otherWeight
+   */
   private boolean lessThen(Weight weight, Weight otherWeight) {
     return otherWeight.getType() == Type.NOT_SET
         || this.comparator.compare(weight, otherWeight) < 0;

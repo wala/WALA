@@ -108,7 +108,9 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
     addAll(other);
   }
 
-  /** @throws UnsupportedOperationException if this {@link ArraySet} is immutable (optional) */
+  /**
+   * @throws UnsupportedOperationException if this {@link ArraySet} is immutable (optional)
+   */
   @Override
   @SuppressWarnings("all")
   public boolean add(T o) {
@@ -188,7 +190,9 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
     return remove(ind);
   }
 
-  /** @return {@code true} (SJF: So why return a value?) */
+  /**
+   * @return {@code true} (SJF: So why return a value?)
+   */
   public boolean remove(int ind) {
     try {
       // hope i got this right...
@@ -205,7 +209,9 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
     _curIndex = 0;
   }
 
-  /** @see java.util.Set#iterator() */
+  /**
+   * @see java.util.Set#iterator()
+   */
   @Override
   public Iterator<T> iterator() {
     return new ArraySetIterator();

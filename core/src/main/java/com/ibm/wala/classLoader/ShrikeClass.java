@@ -47,7 +47,9 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   /** The Shrike object that knows how to read the class file */
   private final ShrikeClassReaderHandle reader;
 
-  /** @throws IllegalArgumentException if reader is null */
+  /**
+   * @throws IllegalArgumentException if reader is null
+   */
   public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha)
       throws InvalidClassFileException {
     super(loader, cha);
@@ -177,7 +179,9 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         TypeReference.findOrCreate(getClassLoader().getReference(), TypeName.findOrCreate(name));
   }
 
-  /** @see java.lang.Object#equals(Object) */
+  /**
+   * @see java.lang.Object#equals(Object)
+   */
   @Override
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final
@@ -366,6 +370,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
             : TypeAnnotationsReader.AnnotationType.RuntimeVisibleTypeAnnotations,
         iter);
   }
+
   /** read the runtime-invisible type annotations from the class file */
   public Collection<TypeAnnotation> getRuntimeInvisibleTypeAnnotations(int fieldIndex)
       throws InvalidClassFileException {

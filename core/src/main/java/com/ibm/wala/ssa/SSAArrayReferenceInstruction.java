@@ -56,7 +56,9 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     return elementType;
   }
 
-  /** @return true iff this represents an array access of a primitive type element */
+  /**
+   * @return true iff this represents an array access of a primitive type element
+   */
   public boolean typeIsPrimitive() {
     return elementType.isPrimitiveType();
   }

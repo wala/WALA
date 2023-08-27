@@ -15,10 +15,14 @@ import com.ibm.wala.util.perf.StopwatchGC;
 /** An object to track performance of an analysis engine */
 public abstract class AbstractEngineStopwatch implements EngineStopwatch {
 
-  /** @return the number of distinct categories timed by this object */
+  /**
+   * @return the number of distinct categories timed by this object
+   */
   protected abstract int getNumberOfCategories();
 
-  /** @return an array of Strings that represent names of the categories tracked */
+  /**
+   * @return an array of Strings that represent names of the categories tracked
+   */
   protected abstract String[] getCategoryNames();
 
   protected final StopwatchGC[] stopwatch;

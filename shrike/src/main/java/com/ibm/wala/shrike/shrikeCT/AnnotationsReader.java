@@ -32,14 +32,18 @@ public class AnnotationsReader extends AttributeReader {
     beginOffset = attr;
   }
 
-  /** @return number of annotations in this attribute */
+  /**
+   * @return number of annotations in this attribute
+   */
   public int getAnnotationCount() throws InvalidClassFileException {
     int offset = beginOffset + 6;
     checkSize(offset, 2);
     return cr.getUShort(offset);
   }
 
-  /** @return total length of this attribute in bytes, <b>including</b> the first 6 bytes */
+  /**
+   * @return total length of this attribute in bytes, <b>including</b> the first 6 bytes
+   */
   public int getAttributeSize() throws InvalidClassFileException {
     int offset = beginOffset + 2;
     checkSize(offset, 4);

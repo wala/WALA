@@ -18,16 +18,19 @@ public interface FixedPointConstants {
    * evaluated again.
    */
   byte CHANGED = 1;
+
   /**
    * A return value which indicates that lhs has not changed, and the statement might need to be
    * evaluated again.
    */
   byte NOT_CHANGED = 0;
+
   /**
    * A return value which indicates that lhs has changed, and the statement need not be evaluated
    * again.
    */
   byte CHANGED_AND_FIXED = 3;
+
   /**
    * A return value which indicates that lhs has not changed, and the statement need not be
    * evaluated again.
@@ -36,8 +39,10 @@ public interface FixedPointConstants {
 
   /** The bit-mask which defines the "CHANGED" flag */
   int CHANGED_MASK = 0x1;
+
   /** The bit-mask which defines the "FIXED" flag */
   int FIXED_MASK = 0x2;
+
   /** The bit-mask which defines the "SIDE EFFECT" flag */
   int SIDE_EFFECT_MASK = 0x4;
 }

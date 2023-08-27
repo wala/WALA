@@ -63,7 +63,9 @@ public class GraphReachability<T, S> {
     domain = new MutableMapping<>(Iterator2Collection.toSet(i).toArray());
   }
 
-  /** @return the set of interesting nodes reachable from n */
+  /**
+   * @return the set of interesting nodes reachable from n
+   */
   public OrdinalSet<S> getReachableSet(Object n) throws IllegalStateException {
     if (solver == null) {
       throw new IllegalStateException("must call solve() before calling getReachableSet()");

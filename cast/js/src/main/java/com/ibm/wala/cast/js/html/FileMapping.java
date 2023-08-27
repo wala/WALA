@@ -14,6 +14,8 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public interface FileMapping {
 
-  /** @return Null if no mapping for the given line. */
+  /**
+   * @return Null if no mapping for the given line.
+   */
   IncludedPosition getIncludedPosition(Position line);
 }

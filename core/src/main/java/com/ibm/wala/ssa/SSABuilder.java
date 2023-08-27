@@ -567,7 +567,9 @@ public class SSABuilder extends AbstractIntStackMachine {
                 instruction.throwsExceptionOnOverflow()));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+       */
       @Override
       public void visitGet(IGetInstruction instruction) {
         int result = reuseOrCreateDef();
@@ -592,7 +594,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         workingState.push(result);
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGoto(GotoInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGoto(GotoInstruction)
+       */
       @Override
       public void visitGoto(com.ibm.wala.shrike.shrikeBT.GotoInstruction instruction) {
         emitInstruction(
@@ -613,7 +617,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         emitInstruction(insts.InstanceofInstruction(getCurrentInstructionIndex(), result, ref, t));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction)
+       */
       @Override
       public void visitInvoke(IInvokeInstruction instruction) {
         doIndirectReads(bytecodeIndirections.indirectlyReadLocals(getCurrentInstructionIndex()));
@@ -679,7 +685,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         super.visitLocalStore(instruction);
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction)
+       */
       @Override
       public void visitMonitor(com.ibm.wala.shrike.shrikeBT.MonitorInstruction instruction) {
 
@@ -688,7 +696,9 @@ public class SSABuilder extends AbstractIntStackMachine {
             insts.MonitorInstruction(getCurrentInstructionIndex(), ref, instruction.isEnter()));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction)
+       */
       @Override
       public void visitNew(com.ibm.wala.shrike.shrikeBT.NewInstruction instruction) {
         int result = reuseOrCreateDef();
@@ -707,7 +717,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         workingState.push(result);
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
+       */
       @Override
       public void visitPut(IPutInstruction instruction) {
         int value = workingState.pop();
@@ -731,7 +743,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         }
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitReturn(ReturnInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitReturn(ReturnInstruction)
+       */
       @Override
       public void visitReturn(com.ibm.wala.shrike.shrikeBT.ReturnInstruction instruction) {
         if (instruction.getPoppedCount() == 1) {
@@ -744,7 +758,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         }
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitShift(IShiftInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitShift(IShiftInstruction)
+       */
       @Override
       public void visitShift(IShiftInstruction instruction) {
         int val2 = workingState.pop();
@@ -763,7 +779,9 @@ public class SSABuilder extends AbstractIntStackMachine {
                 true));
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction)
+       */
       @Override
       public void visitSwitch(com.ibm.wala.shrike.shrikeBT.SwitchInstruction instruction) {
         int val = workingState.pop();
@@ -807,7 +825,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         }
       }
 
-      /** @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction) */
+      /**
+       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction)
+       */
       @Override
       public void visitThrow(com.ibm.wala.shrike.shrikeBT.ThrowInstruction instruction) {
         if (instruction.isRethrow()) {
@@ -1084,6 +1104,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
       return locals;
     }
+
     /**
      * @param pc a program counter (index into ShrikeBT instruction array)
      * @param vn a value number
@@ -1108,7 +1129,9 @@ public class SSABuilder extends AbstractIntStackMachine {
       return locals == null ? null : extractIndices(locals, vn);
     }
 
-    /** @return the indices i s.t. x[i] == y, or null if none found. */
+    /**
+     * @return the indices i s.t. x[i] == y, or null if none found.
+     */
     private static int[] extractIndices(int[] x, int y) {
       assert x != null;
       int count = 0;

@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-/** @author Igor Peshansky Ripped out of Julian's AstTranslator TODO: document me. */
+/**
+ * @author Igor Peshansky Ripped out of Julian's AstTranslator TODO: document me.
+ */
 public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 
   public static boolean DEBUG = true;
@@ -57,6 +59,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected C makeFileContext(C context, CAstEntity n) {
     return context;
   }
+
   /**
    * Construct a context for a Type entity.
    *
@@ -66,6 +69,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected C makeTypeContext(C context, CAstEntity n) {
     return context;
   }
+
   /**
    * Construct a context for a Code entity.
    *
@@ -85,6 +89,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected C makeLocalContext(C context, CAstNode n) {
     return context;
   }
+
   /**
    * Construct a context for an Unwind node.
    *
@@ -268,6 +273,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     return false;
   }
+
   /**
    * Post-process an entity after visiting it.
    *
@@ -290,6 +296,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     return false;
   }
+
   /**
    * Leave any entity. Override only this to change behavior for all entities.
    *
@@ -312,6 +319,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitFileEntity(CAstEntity n, C context, C fileC, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a File entity.
    *
@@ -322,6 +330,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveFileEntity(CAstEntity n, C context, C fileContext, CAstVisitor<C> visitor) {
     visitor.leaveEntity(n, context, visitor);
   }
+
   /**
    * Visit a Field entity.
    *
@@ -332,6 +341,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitFieldEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a Field entity.
    *
@@ -341,6 +351,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveFieldEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     visitor.leaveEntity(n, context, visitor);
   }
+
   /**
    * Visit a Field entity.
    *
@@ -351,6 +362,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitGlobalEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a Field entity.
    *
@@ -360,6 +372,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveGlobalEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     visitor.leaveEntity(n, context, visitor);
   }
+
   /**
    * Visit a Type entity.
    *
@@ -372,6 +385,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, C typeContext, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a Type entity.
    *
@@ -382,6 +396,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveTypeEntity(CAstEntity n, C context, C typeContext, CAstVisitor<C> visitor) {
     visitor.leaveEntity(n, context, visitor);
   }
+
   /**
    * Visit a Function entity.
    *
@@ -394,6 +409,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a Function entity.
    *
@@ -405,6 +421,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     visitor.leaveEntity(n, context, visitor);
   }
+
   /**
    * Visit a Macro entity.
    *
@@ -417,6 +434,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a Macro entity.
    *
@@ -427,6 +445,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveMacroEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     visitor.leaveEntity(n, context, visitor);
   }
+
   /**
    * Visit a Script entity.
    *
@@ -439,6 +458,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return visitor.visitEntity(n, context, visitor);
   }
+
   /**
    * Leave a Script entity.
    *
@@ -487,6 +507,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     int end = n.getChildCount();
     for (int i = start; i < end; i++) visitor.visit(n.getChild(i), context, visitor);
   }
+
   /**
    * Visit all children of a node.
    *
@@ -496,6 +517,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   public final void visitAllChildren(CAstNode n, C context, CAstVisitor<C> visitor) {
     visitor.visitChildren(n, 0, context, visitor);
   }
+
   /**
    * Recursively visit a given node. TODO: do assertions about structure belong here?
    *
@@ -1117,6 +1139,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean enterNode(CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     return false;
   }
+
   /**
    * Post-process a node after visiting it.
    *
@@ -1138,6 +1161,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   public boolean visitNode(CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     return false;
   }
+
   /**
    * Leave any node. Override only this to change behavior for all nodes.
    *
@@ -1158,6 +1182,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitFunctionExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a FunctionExpr node.
    *
@@ -1167,6 +1192,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveFunctionExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a FunctionStmt node.
    *
@@ -1177,6 +1203,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitFunctionStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a FunctionStmt node.
    *
@@ -1197,6 +1224,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitClassStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a FunctionStmt node.
    *
@@ -1217,6 +1245,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitLocalScope(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a LocalScope node.
    *
@@ -1226,6 +1255,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveLocalScope(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a BlockExpr node.
    *
@@ -1236,6 +1266,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitBlockExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a BlockExpr node.
    *
@@ -1245,6 +1276,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveBlockExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a BlockStmt node.
    *
@@ -1255,6 +1287,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitBlockStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a BlockStmt node.
    *
@@ -1264,6 +1297,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveBlockStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Loop node.
    *
@@ -1274,6 +1308,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitLoop(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit a For..In node.
    *
@@ -1284,6 +1319,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitForIn(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit a Loop node after processing the loop header.
    *
@@ -1294,6 +1330,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave a Loop node.
    *
@@ -1303,6 +1340,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveLoop(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Leave a For..In node.
    *
@@ -1312,6 +1350,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveForIn(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a GetCaughtException node.
    *
@@ -1322,6 +1361,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitGetCaughtException(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a GetCaughtException node.
    *
@@ -1331,6 +1371,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveGetCaughtException(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a This node.
    *
@@ -1341,6 +1382,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitThis(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a This node.
    *
@@ -1350,6 +1392,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveThis(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Super node.
    *
@@ -1360,6 +1403,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitSuper(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Super node.
    *
@@ -1369,6 +1413,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveSuper(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Call node.
    *
@@ -1379,6 +1424,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitCall(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Call node.
    *
@@ -1388,6 +1434,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveCall(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Var node.
    *
@@ -1398,6 +1445,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitVar(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Var node.
    *
@@ -1407,6 +1455,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveVar(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Constant node.
    *
@@ -1417,6 +1466,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitConstant(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Constant node.
    *
@@ -1426,6 +1476,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveConstant(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a BinaryExpr node.
    *
@@ -1436,6 +1487,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitBinaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a BinaryExpr node.
    *
@@ -1445,6 +1497,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveBinaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a UnaryExpr node.
    *
@@ -1455,6 +1508,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitUnaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a UnaryExpr node.
    *
@@ -1464,6 +1518,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveUnaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an ArrayLength node.
    *
@@ -1474,6 +1529,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitArrayLength(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an ArrayLength node.
    *
@@ -1483,6 +1539,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveArrayLength(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an ArrayRef node.
    *
@@ -1493,6 +1550,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitArrayRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an ArrayRef node.
    *
@@ -1502,6 +1560,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveArrayRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a DeclStmt node.
    *
@@ -1512,6 +1571,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitDeclStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a DeclStmt node.
    *
@@ -1521,6 +1581,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveDeclStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Return node.
    *
@@ -1531,6 +1592,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitReturn(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Return node.
    *
@@ -1540,6 +1602,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveReturn(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Return node.
    *
@@ -1550,6 +1613,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitYield(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Return node.
    *
@@ -1559,6 +1623,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveYield(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an Ifgoto node.
    *
@@ -1569,6 +1634,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitIfgoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an Ifgoto node.
    *
@@ -1578,6 +1644,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveIfgoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Goto node.
    *
@@ -1588,6 +1655,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitGoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Goto node.
    *
@@ -1597,6 +1665,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveGoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a LabelStmt node.
    *
@@ -1607,6 +1676,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitLabelStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a LabelStmt node.
    *
@@ -1616,6 +1686,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveLabelStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an IfStmt node.
    *
@@ -1626,6 +1697,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitIfStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit an IfStmt node after processing the condition.
    *
@@ -1636,6 +1708,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an IfStmt node after processing the true clause.
    *
@@ -1646,6 +1719,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave an IfStmt node.
    *
@@ -1655,6 +1729,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveIfStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an IfExpr node.
    *
@@ -1665,6 +1740,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitIfExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit an IfExpr node after processing the condition.
    *
@@ -1675,6 +1751,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an IfExpr node after processing the true clause.
    *
@@ -1685,6 +1762,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave an IfExpr node.
    *
@@ -1694,6 +1772,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveIfExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a New node.
    *
@@ -1704,6 +1783,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitNew(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a New node.
    *
@@ -1713,6 +1793,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveNew(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an ObjectLiteral node.
    *
@@ -1723,6 +1804,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitObjectLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit an ObjectLiteral node after processing the {i}th field initializer.
    *
@@ -1734,6 +1816,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, int i, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave an ObjectLiteral node.
    *
@@ -1743,6 +1826,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveObjectLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an ArrayLiteral node.
    *
@@ -1753,6 +1837,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitArrayLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit an ArrayLiteral node after processing the array object.
    *
@@ -1763,6 +1848,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an ArrayLiteral node after processing the {i}th element initializer.
    *
@@ -1774,6 +1860,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, int i, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave a ArrayLiteral node.
    *
@@ -1783,6 +1870,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveArrayLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an ObjectRef node.
    *
@@ -1793,6 +1881,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitObjectRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an ObjectRef node.
    *
@@ -1802,6 +1891,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveObjectRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an Assign node. Override only this to change behavior for all assignment nodes.
    *
@@ -1812,6 +1902,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   public boolean visitAssign(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an Assign node. Override only this to change behavior for all assignment nodes.
    *
@@ -1821,6 +1912,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   public void leaveAssign(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an ArrayRef Assignment node after visiting the RHS.
    *
@@ -1835,6 +1927,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit an ArrayRef Assignment node after visiting the LHS.
    *
@@ -1847,6 +1940,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an ArrayRef Op/Assignment node after visiting the RHS.
    *
@@ -1867,6 +1961,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit an ArrayRef Op/Assignment node after visiting the LHS.
    *
@@ -1885,6 +1980,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an ObjectRef Assignment node after visiting the RHS.
    *
@@ -1899,6 +1995,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit an ObjectRef Assignment node after visiting the LHS.
    *
@@ -1911,6 +2008,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an ObjectRef Op/Assignment node after visiting the RHS.
    *
@@ -1931,6 +2029,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit an ObjectRef Op/Assignment node after visiting the LHS.
    *
@@ -1949,6 +2048,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit a BlockExpr Assignment node after visiting the RHS.
    *
@@ -1963,6 +2063,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit a BlockExpr Assignment node after visiting the LHS.
    *
@@ -1975,6 +2076,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit a BlockExpr Op/Assignment node after visiting the RHS.
    *
@@ -1995,6 +2097,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit a BlockExpr Op/Assignment node after visiting the LHS.
    *
@@ -2013,6 +2116,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit a Var Assignment node after visiting the RHS.
    *
@@ -2027,6 +2131,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit a Var Assignment node after visiting the LHS.
    *
@@ -2039,6 +2144,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an array literal Assignment node after visiting the RHS.
    *
@@ -2053,6 +2159,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit an array literal Assignment node after visiting the LHS.
    *
@@ -2065,6 +2172,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit an array literal Assignment node after visiting the RHS.
    *
@@ -2079,6 +2187,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit an array literal Assignment node after visiting the LHS.
    *
@@ -2091,6 +2200,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, CAstNode v, CAstNode a, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit a Var Op/Assignment node after visiting the RHS.
    *
@@ -2111,6 +2221,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     /* empty */
     return false;
   }
+
   /**
    * Visit a Var Op/Assignment node after visiting the LHS.
    *
@@ -2129,6 +2240,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Visit a Switch node.
    *
@@ -2139,6 +2251,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitSwitch(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit a Switch node after processing the switch value.
    *
@@ -2149,6 +2262,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave a Switch node.
    *
@@ -2158,6 +2272,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveSwitch(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Throw node.
    *
@@ -2168,6 +2283,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitThrow(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Throw node.
    *
@@ -2177,6 +2293,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveThrow(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Catch node.
    *
@@ -2187,6 +2304,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitCatch(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Catch node.
    *
@@ -2196,6 +2314,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveCatch(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an Unwind node.
    *
@@ -2206,6 +2325,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitUnwind(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an Unwind node.
    *
@@ -2215,6 +2335,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveUnwind(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Try node.
    *
@@ -2225,6 +2346,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitTry(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Visit a Try node after processing the try block.
    *
@@ -2235,6 +2357,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
     /* empty */
   }
+
   /**
    * Leave a Try node.
    *
@@ -2244,6 +2367,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveTry(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an Empty node.
    *
@@ -2254,6 +2378,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitEmpty(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an Empty node.
    *
@@ -2263,6 +2388,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveEmpty(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Primitive node.
    *
@@ -2273,6 +2399,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitPrimitive(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Primitive node.
    *
@@ -2282,6 +2409,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leavePrimitive(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Void node.
    *
@@ -2292,6 +2420,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitVoid(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Void node.
    *
@@ -2301,6 +2430,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveVoid(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit a Cast node.
    *
@@ -2311,6 +2441,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitCast(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave a Cast node.
    *
@@ -2320,6 +2451,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveCast(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an InstanceOf node.
    *
@@ -2330,6 +2462,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitInstanceOf(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an InstanceOf node.
    *
@@ -2339,6 +2472,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveInstanceOf(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an InstanceOf node.
    *
@@ -2352,6 +2486,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitAssert(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an InstanceOf node.
    *
@@ -2365,6 +2500,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveEachElementHasNext(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an InstanceOf node.
    *
@@ -2375,6 +2511,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitEachElementGet(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an FOR_EACH_ELEMENT_GET node.
    *
@@ -2384,6 +2521,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected void leaveEachElementGet(CAstNode n, C c, CAstVisitor<C> visitor) {
     visitor.leaveNode(n, c, visitor);
   }
+
   /**
    * Visit an TYPE_LITERAL_EXPR node.
    *
@@ -2394,6 +2532,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitTypeLiteralExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an TYPE_LITERAL_EXPR node.
    *
@@ -2407,6 +2546,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitIsDefinedExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an IS_DEFINED_EXPR node.
    *
@@ -2420,6 +2560,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitEcho(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an ECHO node.
    *
@@ -2433,6 +2574,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitInclude(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an INCLUDE node.
    *
@@ -2446,6 +2588,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   protected boolean visitMacroVar(CAstNode n, C c, CAstVisitor<C> visitor) {
     return visitor.visitNode(n, c, visitor);
   }
+
   /**
    * Leave an MACRO_VAR node.
    *

@@ -31,7 +31,9 @@ public class MemoryAccess {
     this.node = node;
   }
 
-  /** @return Returns the instructionIndex. */
+  /**
+   * @return Returns the instructionIndex.
+   */
   public int getInstructionIndex() {
     return instructionIndex;
   }
@@ -41,7 +43,9 @@ public class MemoryAccess {
     return "MemAccess: " + getNode() + ':' + getInstructionIndex();
   }
 
-  /** @return Returns the node. */
+  /**
+   * @return Returns the node.
+   */
   public CGNode getNode() {
     return node;
   }

@@ -80,6 +80,7 @@ public class AndroidBoot {
     /** Crate an instance of android.app.ContextImpl for the apk. */
     CREATE_APK_CONTEXT,
   }
+
   // public static Set<BootAction> BOOT_ALL = EnumSet.allOf(BootAction);
 
   //    private final  MethodReference scope;

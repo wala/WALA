@@ -16,9 +16,13 @@ import org.jspecify.annotations.Nullable;
 /** Additional functionality for edges in numbered graphs */
 public interface NumberedEdgeManager<T> extends EdgeManager<T> {
 
-  /** @return the numbers identifying the immediate successors of node */
+  /**
+   * @return the numbers identifying the immediate successors of node
+   */
   IntSet getSuccNodeNumbers(@Nullable T node);
 
-  /** @return the numbers identifying the immediate predecessors of node */
+  /**
+   * @return the numbers identifying the immediate predecessors of node
+   */
   IntSet getPredNodeNumbers(@Nullable T node);
 }

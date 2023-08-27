@@ -444,7 +444,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         makePosition(n.getName()));
   }
 
-  /** @param name Used in creating default constructor, and passed into new ClassEntity() */
+  /**
+   * @param name Used in creating default constructor, and passed into new ClassEntity()
+   */
   private CAstEntity createClassDeclaration(
       ASTNode n,
       List<BodyDeclaration> bodyDecls,
@@ -4589,7 +4591,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         makePosition(n.getName()));
   }
 
-  /** @param n for positioning. */
+  /**
+   * @param n for positioning.
+   */
   private CAstEntity createEnumConstructorWithParameters(
       IMethodBinding ctor,
       ASTNode n,

@@ -36,7 +36,9 @@ public class CallGraphBuilderCancelException extends CancelException {
     return new CallGraphBuilderCancelException(msg, cg, pointerAnalysis);
   }
 
-  /** @return the {@link CallGraph} in whatever state it was left when computation was canceled */
+  /**
+   * @return the {@link CallGraph} in whatever state it was left when computation was canceled
+   */
   public CallGraph getPartialCallGraph() {
     return cg;
   }

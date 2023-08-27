@@ -688,10 +688,14 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
-  /** @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null */
+  /**
+   * @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null
+   */
   public abstract Object getValue();
 
-  /** @return the type of the value pushed */
+  /**
+   * @return the type of the value pushed
+   */
   public abstract String getType();
 
   public static ConstantInstruction make(String type, Object constant)

@@ -62,7 +62,9 @@ public class SSAComparisonInstruction extends SSAInstruction {
     v.visitComparison(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;
@@ -79,7 +81,9 @@ public class SSAComparisonInstruction extends SSAInstruction {
     return result;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfDefs() {
     return 1;
@@ -106,7 +110,9 @@ public class SSAComparisonInstruction extends SSAInstruction {
     return true;
   }
 
-  /** @return Returns the opcode. */
+  /**
+   * @return Returns the opcode.
+   */
   public IComparisonInstruction.Operator getOperator() {
     return operator;
   }

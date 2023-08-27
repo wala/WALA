@@ -21,7 +21,9 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author roca */
+/**
+ * @author roca
+ */
 public class InterfaceAnalyzer {
   static final class TypeStats {
     int totalOccurrences;

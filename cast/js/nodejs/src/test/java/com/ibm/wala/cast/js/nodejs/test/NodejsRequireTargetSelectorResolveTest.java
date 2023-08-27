@@ -20,7 +20,9 @@ import java.io.File;
 import java.net.URL;
 import org.junit.jupiter.api.Test;
 
-/** @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt; */
+/**
+ * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
+ */
 public class NodejsRequireTargetSelectorResolveTest {
 
   @Test

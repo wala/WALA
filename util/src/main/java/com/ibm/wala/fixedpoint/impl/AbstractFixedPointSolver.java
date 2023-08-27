@@ -105,7 +105,9 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
     firstSolve = false;
   }
 
-  /** @return true iff work list is empty */
+  /**
+   * @return true iff work list is empty
+   */
   public boolean emptyWorkList() {
     return workList.isEmpty();
   }

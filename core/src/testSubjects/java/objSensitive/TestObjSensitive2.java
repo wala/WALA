@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  */
 package objSensitive;
+
 /** test case for nObjBuilder */
 public class TestObjSensitive2 {
 

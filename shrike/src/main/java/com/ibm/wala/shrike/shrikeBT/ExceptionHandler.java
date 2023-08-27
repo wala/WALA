@@ -55,7 +55,9 @@ public final class ExceptionHandler {
     this(handler, catchClass, null);
   }
 
-  /** @return the label of the handler code */
+  /**
+   * @return the label of the handler code
+   */
   public int getHandler() {
     return handler;
   }
@@ -64,7 +66,9 @@ public final class ExceptionHandler {
     return catchClassLoader;
   }
 
-  /** @return the type of exceptions to be caught, or null if all exceptions should be caught */
+  /**
+   * @return the type of exceptions to be caught, or null if all exceptions should be caught
+   */
   public String getCatchClass() {
     return catchClass;
   }

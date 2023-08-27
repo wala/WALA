@@ -228,7 +228,9 @@ public abstract class SSAInstruction {
   @Override
   public abstract int hashCode();
 
-  /** @return true iff this instruction may throw an exception. */
+  /**
+   * @return true iff this instruction may throw an exception.
+   */
   public boolean isPEI() {
     return false;
   }
@@ -244,7 +246,9 @@ public abstract class SSAInstruction {
     return Collections.emptySet();
   }
 
-  /** @return true iff this instruction may fall through to the next */
+  /**
+   * @return true iff this instruction may fall through to the next
+   */
   public abstract boolean isFallThrough();
 
   /**

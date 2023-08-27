@@ -116,6 +116,7 @@ public final class ProviderEP {
                 // ActivityEP.onResume,
                 ExecutionOrder.START_OF_LOOP
               }));
+
   /**
    * Add the EntryPoint specifications defined in this file to the given list.
    *

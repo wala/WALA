@@ -16,16 +16,24 @@ import java.io.InputStream;
 /** A ModuleEntry represents a wrapper around a file representation in a {@link Module}. */
 public interface ModuleEntry {
 
-  /** @return a String that represents the name of the file described by this object */
+  /**
+   * @return a String that represents the name of the file described by this object
+   */
   String getName();
 
-  /** @return true if the file is a class file. */
+  /**
+   * @return true if the file is a class file.
+   */
   boolean isClassFile();
 
-  /** @return true if the file is a source file. */
+  /**
+   * @return true if the file is a source file.
+   */
   boolean isSourceFile();
 
-  /** @return an InputStream which provides the contents of this logical file. */
+  /**
+   * @return an InputStream which provides the contents of this logical file.
+   */
   InputStream getInputStream();
 
   /**

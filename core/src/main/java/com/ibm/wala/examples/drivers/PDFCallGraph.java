@@ -99,7 +99,9 @@ public class PDFCallGraph {
         p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
 
-  /** @param appJar something like "c:/temp/testdata/java_cup.jar" */
+  /**
+   * @param appJar something like "c:/temp/testdata/java_cup.jar"
+   */
   public static Process run(String appJar, String exclusionFile)
       throws IllegalArgumentException, CancelException {
     try {

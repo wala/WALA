@@ -16,14 +16,18 @@ import java.util.NoSuchElementException;
 /** Simple Heap data structure. */
 public abstract class Heap<T> {
 
-  /** @return true iff elt1 is considered &lt; elt2 */
+  /**
+   * @return true iff elt1 is considered &lt; elt2
+   */
   protected abstract boolean compareElements(T elt1, T elt2);
 
   private int numberOfElements;
 
   private T[] backingStore;
 
-  /** @return number of elements in this heap */
+  /**
+   * @return number of elements in this heap
+   */
   public int size() {
     return numberOfElements;
   }
@@ -34,7 +38,9 @@ public abstract class Heap<T> {
     backingStore = (T[]) new Object[initialCapacity];
   }
 
-  /** @return true iff this heap is non-empty */
+  /**
+   * @return true iff this heap is non-empty
+   */
   public final boolean isEmpty() {
     return numberOfElements == 0;
   }
@@ -45,7 +51,9 @@ public abstract class Heap<T> {
     numberOfElements++;
   }
 
-  /** @return the first object in the priority queue */
+  /**
+   * @return the first object in the priority queue
+   */
   public T take() throws NoSuchElementException {
     if (numberOfElements == 0) {
       throw new NoSuchElementException();

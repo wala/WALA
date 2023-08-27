@@ -18,7 +18,9 @@ import com.ibm.wala.util.intset.BitVector;
 public interface ControlFlowGraph<I, T extends IBasicBlock<I>>
     extends NumberedGraph<T>, MinimalCFG<T> {
 
-  /** @return the indices of the catch blocks, as a bit vector */
+  /**
+   * @return the indices of the catch blocks, as a bit vector
+   */
   BitVector getCatchBlocks();
 
   /**
@@ -27,7 +29,9 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>>
    */
   T getBlockForInstruction(int index);
 
-  /** @return the instructions of this CFG, as an array. */
+  /**
+   * @return the instructions of this CFG, as an array.
+   */
   I[] getInstructions();
 
   /**
@@ -38,6 +42,8 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>>
    */
   int getProgramCounter(int index);
 
-  /** @return the Method this CFG represents */
+  /**
+   * @return the Method this CFG represents
+   */
   IMethod getMethod();
 }

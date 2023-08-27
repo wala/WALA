@@ -128,6 +128,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
     // }
     // return cha.isSubclassOf(method.getDeclaringClass(), cha.lookupClass(type));
   }
+
   /**
    * Implement this interface to put entitys into the AndroidModel.
    *
@@ -137,6 +138,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
   public interface IExecutionOrder extends Comparable<IExecutionOrder> {
     /** Returns an integer-representation of the ExecutionOrder. */
     int getOrderValue();
+
     /**
      * AbstractAndroidModel inserts code at section switches.
      *
@@ -198,30 +200,39 @@ public class AndroidEntryPoint extends DexEntryPoint {
     // This is an Enum-Style class
     /** Visit the EntryPoint once at the beginning of the model use that for initialization stuff */
     public static final ExecutionOrder AT_FIRST = new ExecutionOrder(0);
+
     /** Basicly the same as AT_FIRST but visited after AT_FIRST */
     public static final ExecutionOrder BEFORE_LOOP = new ExecutionOrder(Integer.MAX_VALUE / 8);
+
     /** Visit multiple times (endless) in the loop */
     public static final ExecutionOrder START_OF_LOOP =
         new ExecutionOrder(Integer.MAX_VALUE / 8 * 2);
+
     /** Basicly the same as START_OF_LOOP */
     public static final ExecutionOrder MIDDLE_OF_LOOP =
         new ExecutionOrder(Integer.MAX_VALUE / 8 * 3);
+
     /** Do multiple calls in the loop. Visited after MIDDLE_OF_LOOP, before EEN_OF_LOOP */
     public static final ExecutionOrder MULTIPLE_TIMES_IN_LOOP =
         new ExecutionOrder(Integer.MAX_VALUE / 8 * 4);
+
     /**
      * Things in END_OF_LOOP are acutually part of the loop. Use AFTER_LOOP if you want them
      * executed only once
      */
     public static final ExecutionOrder END_OF_LOOP = new ExecutionOrder(Integer.MAX_VALUE / 8 * 5);
+
     /** Basicly the same as AT_LAST but visited before */
     public static final ExecutionOrder AFTER_LOOP = new ExecutionOrder(Integer.MAX_VALUE / 8 * 6);
+
     /** Last calls in the model */
     public static final ExecutionOrder AT_LAST = new ExecutionOrder(Integer.MAX_VALUE / 8 * 7);
+
     /** This value getts used by the detection heuristic - It is not recommended for manual use. */
     public static final ExecutionOrder DEFAULT = MIDDLE_OF_LOOP;
 
     private final int value;
+
     /**
      * Unrecommended way to generate the Order based on an Integer.
      *
@@ -233,6 +244,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
     public ExecutionOrder(int val) {
       this.value = val;
     }
+
     /**
      * Unrecommended way to generate the Order based on a Label-String.
      *

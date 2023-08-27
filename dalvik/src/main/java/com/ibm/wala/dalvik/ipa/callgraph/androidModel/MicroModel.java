@@ -59,6 +59,7 @@ import com.ibm.wala.util.CancelException;
 public class MicroModel extends AndroidModel {
   public final Atom name;
   public final Atom target;
+
   //    private SummarizedMethod activityModel;
   /**
    * Restrict the model to Activities.

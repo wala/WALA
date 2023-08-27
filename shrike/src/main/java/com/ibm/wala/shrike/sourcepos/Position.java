@@ -28,8 +28,10 @@ public final class Position {
 
   /** Represents the undefined position. */
   private static final int NOPOS = 0;
+
   /** bits to shift to get the line number */
   private static final int LINE_SHIFT = 10;
+
   /** the bit mask of the column number */
   private static final int COLUMN_MASK = 1023;
 

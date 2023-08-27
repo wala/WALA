@@ -107,7 +107,9 @@ public class DexFileModule implements Module {
     this(f, AUTO_INFER_API_LEVEL);
   }
 
-  /** @param f the .dex or .apk file */
+  /**
+   * @param f the .dex or .apk file
+   */
   private DexFileModule(File f, int apiLevel) throws IllegalArgumentException {
     try {
       this.f = f;
@@ -156,12 +158,16 @@ public class DexFileModule implements Module {
     this(f, entry, AUTO_INFER_API_LEVEL);
   }
 
-  /** @return The DexFile associated to this module. */
+  /**
+   * @return The DexFile associated to this module.
+   */
   public DexFile getDexFile() {
     return dexfile;
   }
 
-  /** @return The DexFile associated to this module. */
+  /**
+   * @return The DexFile associated to this module.
+   */
   public File getFile() {
     return f;
   }

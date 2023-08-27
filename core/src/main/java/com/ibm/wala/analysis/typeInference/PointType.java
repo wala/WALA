@@ -19,7 +19,9 @@ public class PointType extends TypeAbstraction {
 
   private final IClass type;
 
-  /** @throws IllegalArgumentException if type is null */
+  /**
+   * @throws IllegalArgumentException if type is null
+   */
   public PointType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");

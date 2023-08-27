@@ -23,7 +23,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   public BitVectorVariable() {}
 
-  /** @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable) */
+  /**
+   * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
+   */
   @Override
   public void copyState(@Nullable BitVectorVariable other) {
     if (other == null) {
@@ -121,7 +123,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
   }
 
-  /** @return the value of this variable as a bit vector ... null if the bit vector is empty. */
+  /**
+   * @return the value of this variable as a bit vector ... null if the bit vector is empty.
+   */
   @Nullable
   public IntSet getValue() {
     return V;

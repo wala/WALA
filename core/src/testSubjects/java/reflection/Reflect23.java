@@ -17,8 +17,12 @@ import java.lang.reflect.Modifier;
 /** Test of Constructor.newInstance */
 public class Reflect23 {
   public static void main(String[] args)
-      throws ClassNotFoundException, SecurityException, NoSuchMethodException,
-          IllegalAccessException, InstantiationException, IllegalArgumentException,
+      throws ClassNotFoundException,
+          SecurityException,
+          NoSuchMethodException,
+          IllegalAccessException,
+          InstantiationException,
+          IllegalArgumentException,
           InvocationTargetException {
     Class<?> helperClass = Class.forName("reflection.Helper");
     Object helperObject = helperClass.newInstance();

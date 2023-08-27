@@ -49,7 +49,9 @@ import java.util.Collections;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.StaticFieldFlow;
 
-/** @author acfoltzer */
+/**
+ * @author acfoltzer
+ */
 public class StaticFieldSinkSpec extends SinkSpec {
 
   private final IField field;

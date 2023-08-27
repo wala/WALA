@@ -170,19 +170,25 @@ public final class MethodEditor {
     }
   }
 
-  /** @return the current handler array */
+  /**
+   * @return the current handler array
+   */
   public ExceptionHandler[][] getHandlers() {
     verifyState(BEFORE_PASS | DURING_PASS);
     return handlers;
   }
 
-  /** @return the current instruction array */
+  /**
+   * @return the current instruction array
+   */
   public IInstruction[] getInstructions() {
     verifyState(BEFORE_PASS | DURING_PASS);
     return instructions;
   }
 
-  /** @return the current instructions-to-bytecode-offsets map */
+  /**
+   * @return the current instructions-to-bytecode-offsets map
+   */
   public int[] getInstructionsToBytecodes() {
     verifyState(BEFORE_PASS | DURING_PASS);
     return instructionsToBytecodes;
@@ -685,7 +691,9 @@ public final class MethodEditor {
       editor = e;
     }
 
-    /** @return the index of the current instruction in the code array */
+    /**
+     * @return the index of the current instruction in the code array
+     */
     public final int getIndex() {
       return index;
     }

@@ -20,7 +20,9 @@ import java.util.Map;
  */
 public interface ITag {
 
-  /** @return tag's name (e.g., "HEAD" / "HTML" / "FORM") */
+  /**
+   * @return tag's name (e.g., "HEAD" / "HTML" / "FORM")
+   */
   String getName();
 
   /**

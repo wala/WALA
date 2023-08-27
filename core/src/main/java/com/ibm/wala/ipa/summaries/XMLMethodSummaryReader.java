@@ -217,12 +217,16 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     return summaries;
   }
 
-  /** @return Set of TypeReferences marked "allocatable" */
+  /**
+   * @return Set of TypeReferences marked "allocatable"
+   */
   public Set<TypeReference> getAllocatableClasses() {
     return allocatable;
   }
 
-  /** @return Set of Atoms representing ignorable packages */
+  /**
+   * @return Set of Atoms representing ignorable packages
+   */
   public Set<Atom> getIgnoredPackages() {
     return ignoredPackages;
   }

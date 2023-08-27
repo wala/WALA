@@ -199,7 +199,9 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   // Specific methods
   // ------------------------------------------
 
-  /** @return the EncodedMethod object for which this DexIMethod is a wrapper. */
+  /**
+   * @return the EncodedMethod object for which this DexIMethod is a wrapper.
+   */
   public Method toEncodedMethod() {
     return eMethod;
   }

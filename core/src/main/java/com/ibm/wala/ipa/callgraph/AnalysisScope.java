@@ -164,7 +164,9 @@ public class AnalysisScope {
     return getLoader(SYNTHETIC);
   }
 
-  /** @return the set of languages to be processed during this analysis session. */
+  /**
+   * @return the set of languages to be processed during this analysis session.
+   */
   public Collection<Language> getLanguages() {
     return languages.values();
   }
@@ -210,6 +212,7 @@ public class AnalysisScope {
     }
     addToScope(ClassLoaderReference.Primordial, new JarFile(path.toString(), false));
   }
+
   /**
    * Add a jar file to the scope via an {@link InputStream}. NOTE: The InputStream should *not* be a
    * {@link java.util.jar.JarInputStream}; it should be a regular {@link InputStream} for the raw
@@ -342,7 +345,9 @@ public class AnalysisScope {
     return result.toString();
   }
 
-  /** @return a String that describes exclusions from the analysis scope. */
+  /**
+   * @return a String that describes exclusions from the analysis scope.
+   */
   protected Object getExclusionString() {
     return "Exclusions: " + exclusions;
   }
@@ -363,12 +368,16 @@ public class AnalysisScope {
     return result == null ? Collections.emptyList() : result;
   }
 
-  /** @return Returns the arrayClassLoader. */
+  /**
+   * @return Returns the arrayClassLoader.
+   */
   public ArrayClassLoader getArrayClassLoader() {
     return arrayClassLoader;
   }
 
-  /** @return the rt.jar (1.4), core.jar (1.5), java.core.jmod (13) file, or null if not found. */
+  /**
+   * @return the rt.jar (1.4), core.jar (1.5), java.core.jmod (13) file, or null if not found.
+   */
   private JarFile getRtJar() {
     return RtJar.getRtJar(
         new MapIterator<>(

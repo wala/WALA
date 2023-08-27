@@ -669,7 +669,9 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     return exceptionHandlers;
   }
 
-  /** @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int) */
+  /**
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
+   */
   @Override
   public int getProgramCounter(int index) {
     return dexMethod.getAddressFromIndex(index);

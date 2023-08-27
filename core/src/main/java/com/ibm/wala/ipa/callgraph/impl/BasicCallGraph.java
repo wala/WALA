@@ -180,15 +180,21 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       return method;
     }
 
-    /** @see java.lang.Object#equals(Object) */
+    /**
+     * @see java.lang.Object#equals(Object)
+     */
     @Override
     public abstract boolean equals(Object obj);
 
-    /** @see java.lang.Object#hashCode() */
+    /**
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public abstract int hashCode();
 
-    /** @see java.lang.Object#toString() */
+    /**
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
       return "Node: " + method.toString() + " Context: " + context.toString();
@@ -237,7 +243,9 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     Assertions.UNREACHABLE();
   }
 
-  /** @return NodeImpl, or null if none found */
+  /**
+   * @return NodeImpl, or null if none found
+   */
   @Override
   public CGNode getNode(IMethod method, Context C) {
     Key key = new Key(method, C);

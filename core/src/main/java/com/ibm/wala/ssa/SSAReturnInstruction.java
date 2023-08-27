@@ -72,7 +72,9 @@ public class SSAReturnInstruction extends SSAInstruction {
     return result;
   }
 
-  /** @return true iff this return instruction returns a primitive value */
+  /**
+   * @return true iff this return instruction returns a primitive value
+   */
   public boolean returnsPrimitiveType() {
     return isPrimitive;
   }

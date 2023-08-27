@@ -96,8 +96,14 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public void dynamicCG(File javaJarPath, String mainClass, String... args)
-      throws FileNotFoundException, IOException, ClassNotFoundException, InvalidClassFileException,
-          FailureException, SecurityException, IllegalArgumentException, InterruptedException {
+      throws FileNotFoundException,
+          IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
+          IllegalArgumentException,
+          InterruptedException {
     File F;
     try (final FileInputStream in = new FileInputStream(javaJarPath)) {
       F = TemporaryFile.streamToFile(new File("build/test_jar.jar"), in);

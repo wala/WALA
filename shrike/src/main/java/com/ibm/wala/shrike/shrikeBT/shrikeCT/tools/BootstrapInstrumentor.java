@@ -77,7 +77,9 @@ public class BootstrapInstrumentor {
   }
 
   private Set<MethodData> dumpAttributes(ClassInstrumenter ci, ClassReader.AttrIterator attrs)
-      throws InvalidClassFileException, InvalidBytecodeException, SecurityException,
+      throws InvalidClassFileException,
+          InvalidBytecodeException,
+          SecurityException,
           IllegalArgumentException {
     Set<MethodData> result = HashSetFactory.make();
     ClassReader cr = ci.getReader();
@@ -155,7 +157,9 @@ public class BootstrapInstrumentor {
    * @throws IllegalArgumentException if cr is null
    */
   public Set<MethodData> doClass(final ClassInstrumenter ci)
-      throws InvalidClassFileException, InvalidBytecodeException, SecurityException,
+      throws InvalidClassFileException,
+          InvalidBytecodeException,
+          SecurityException,
           IllegalArgumentException {
     ClassReader cr = ci.getReader();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();

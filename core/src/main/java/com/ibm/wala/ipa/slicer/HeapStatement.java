@@ -109,6 +109,7 @@ public abstract class HeapStatement extends Statement {
   public static final class HeapReturnCaller extends HeapStatement {
     // index into the instruction array of the relevant call instruction
     private final int callIndex;
+
     //    private final SSAAbstractInvokeInstruction call;
 
     public HeapReturnCaller(CGNode node, int callIndex, PointerKey loc) {

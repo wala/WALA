@@ -120,7 +120,9 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  /** @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw. */
+  /**
+   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
+   */
   @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
     IClass klass = cha.lookupClass(type);
@@ -158,7 +160,9 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  /** @return Returns the class hierarchy. */
+  /**
+   * @return Returns the class hierarchy.
+   */
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }

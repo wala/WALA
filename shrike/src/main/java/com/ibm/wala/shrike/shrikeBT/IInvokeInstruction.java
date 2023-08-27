@@ -16,7 +16,9 @@ package com.ibm.wala.shrike.shrikeBT;
  */
 public interface IInvokeInstruction extends IInstruction {
 
-  /** @return one of BytecodeConstants.INVOKE[SPECIAL|VIRTUAL|STATIC|INTERFACE] */
+  /**
+   * @return one of BytecodeConstants.INVOKE[SPECIAL|VIRTUAL|STATIC|INTERFACE]
+   */
   IDispatch getInvocationCode();
 
   String getMethodSignature();

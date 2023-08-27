@@ -105,7 +105,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         cache);
   }
 
-  /** @see SyntheticMethod#getStatements() */
+  /**
+   * @see SyntheticMethod#getStatements()
+   */
   @SuppressWarnings("deprecation")
   @Override
   public SSAInstruction[] getStatements(SSAOptions options) {

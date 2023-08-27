@@ -782,7 +782,9 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  /** @return Statements representing each return instruction in the ir */
+  /**
+   * @return Statements representing each return instruction in the ir
+   */
   private Collection<NormalStatement> computeReturnStatements(final IR ir) {
     Predicate<Statement> filter =
         o -> {
@@ -798,7 +800,9 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
         new MapIterator<>(new FilterIterator<>(iterator(), filter), NormalStatement.class::cast));
   }
 
-  /** @return {@link IntSet} representing instruction indices of each PEI in the ir */
+  /**
+   * @return {@link IntSet} representing instruction indices of each PEI in the ir
+   */
   private static IntSet getPEIs(final IR ir) {
     BitVectorIntSet result = new BitVectorIntSet();
     for (int i = 0; i < ir.getInstructions().length; i++) {
@@ -845,7 +849,9 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  /** @return for each SSAInstruction, its instruction index in the ir instruction array */
+  /**
+   * @return for each SSAInstruction, its instruction index in the ir instruction array
+   */
   public static Map<SSAInstruction, Integer> computeInstructionIndices(IR ir) {
     Map<SSAInstruction, Integer> result = HashMapFactory.make();
     if (ir != null) {
@@ -1036,7 +1042,9 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  /** @return the set of all locations read by any callee at a call site. */
+  /**
+   * @return the set of all locations read by any callee at a call site.
+   */
   private static OrdinalSet<PointerKey> unionHeapLocations(
       CallGraph cg,
       CGNode n,

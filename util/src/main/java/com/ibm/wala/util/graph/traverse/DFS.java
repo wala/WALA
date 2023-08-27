@@ -138,7 +138,9 @@ public class DFS {
     }
   }
 
-  /** @return iterator of nodes of G in order of DFS discover time */
+  /**
+   * @return iterator of nodes of G in order of DFS discover time
+   */
   public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G) {
     if (G instanceof NumberedGraph) {
       return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G);

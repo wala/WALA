@@ -15,10 +15,14 @@ import java.io.Serializable;
 /** Set of integers; not necessary mutable TODO: extract a smaller interface? */
 public interface IntSet extends Serializable {
 
-  /** @return true iff this set contains integer i */
+  /**
+   * @return true iff this set contains integer i
+   */
   boolean contains(int i);
 
-  /** @return true iff this set contains integer i */
+  /**
+   * @return true iff this set contains integer i
+   */
   boolean containsAny(IntSet set);
 
   /**
@@ -35,13 +39,19 @@ public interface IntSet extends Serializable {
    */
   IntSet union(IntSet that);
 
-  /** @return true iff this set is empty */
+  /**
+   * @return true iff this set is empty
+   */
   boolean isEmpty();
 
-  /** @return the number of elements in this set */
+  /**
+   * @return the number of elements in this set
+   */
   int size();
 
-  /** @return a perhaps more efficient iterator */
+  /**
+   * @return a perhaps more efficient iterator
+   */
   IntIterator intIterator();
 
   /** Invoke an action on each element of the Set */
@@ -50,12 +60,18 @@ public interface IntSet extends Serializable {
   /** Invoke an action on each element of the Set, excluding elements of Set X */
   void foreachExcluding(IntSet X, IntSetAction action);
 
-  /** @return maximum integer in this set. */
+  /**
+   * @return maximum integer in this set.
+   */
   int max();
 
-  /** @return true iff {@code this} has the same value as {@code that}. */
+  /**
+   * @return true iff {@code this} has the same value as {@code that}.
+   */
   boolean sameValue(IntSet that);
 
-  /** @return true iff {@code this} is a subset of {@code that}. */
+  /**
+   * @return true iff {@code this} is a subset of {@code that}.
+   */
   boolean isSubset(IntSet that);
 }

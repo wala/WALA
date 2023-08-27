@@ -76,7 +76,9 @@ public interface IInstruction {
     public void visitStoreIndirect(IStoreIndirectInstruction instruction) {}
   }
 
-  /** @return true if the instruction can "fall through" to the following instruction */
+  /**
+   * @return true if the instruction can "fall through" to the following instruction
+   */
   boolean isFallThrough();
 
   /**
@@ -91,7 +93,9 @@ public interface IInstruction {
    */
   IInstruction redirectTargets(int[] targetMap);
 
-  /** @return the number of values this instruction pops off the working stack */
+  /**
+   * @return the number of values this instruction pops off the working stack
+   */
   int getPoppedCount();
 
   /**

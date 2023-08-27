@@ -22,7 +22,9 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
 
   @Nullable private T it;
 
-  /** @param o the single object in this collection, must be non-null */
+  /**
+   * @param o the single object in this collection, must be non-null
+   */
   public NonNullSingletonIterator(@Nullable T o) {
     if (o == null) {
       throw new IllegalArgumentException("o is null");

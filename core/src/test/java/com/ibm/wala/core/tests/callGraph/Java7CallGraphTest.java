@@ -51,8 +51,14 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testOcamlHelloHash()
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
-          ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException,
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          CancelException,
+          IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
           InterruptedException {
     // Known to be broken on Windows, but not intentionally so.  Please fix if you know how!
     // <https://github.com/wala/WALA/issues/608>
@@ -64,8 +70,14 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
   }
 
   private void testOCamlJar(String jarFile, String... args)
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
-          ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException,
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          CancelException,
+          IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          SecurityException,
           InterruptedException {
     File F =
         TemporaryFile.urlToFile(

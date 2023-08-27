@@ -10,7 +10,9 @@ import java.util.Collections;
 /** dummy class representing a missing superclass */
 public class PhantomClass extends SyntheticClass {
 
-  /** @param T type reference describing this class */
+  /**
+   * @param T type reference describing this class
+   */
   public PhantomClass(TypeReference T, IClassHierarchy cha) {
     super(T, cha);
   }

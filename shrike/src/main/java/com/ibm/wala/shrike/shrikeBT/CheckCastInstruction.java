@@ -46,7 +46,9 @@ public final class CheckCastInstruction extends Instruction implements ITypeTest
     return 1;
   }
 
-  /** @return the type to which the operand is cast */
+  /**
+   * @return the type to which the operand is cast
+   */
   @Override
   public String[] getTypes() {
     return new String[] {type};

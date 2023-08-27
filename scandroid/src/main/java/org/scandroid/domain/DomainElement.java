@@ -63,6 +63,7 @@ public class DomainElement {
     this.codeElement = codeElement;
     this.taintSource = taintSource;
   }
+
   /*
   @Override
   public boolean equals(Object other) {

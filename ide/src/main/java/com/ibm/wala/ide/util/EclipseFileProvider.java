@@ -41,6 +41,7 @@ public class EclipseFileProvider extends FileProvider {
   public EclipseFileProvider(Plugin plugIn) {
     this.plugIn = plugIn;
   }
+
   /**
    * This class uses reflection to access classes and methods that are only available when Eclipse
    * is running as an IDE environment. The choice to use reflection is related to builds: with this
@@ -94,7 +95,9 @@ public class EclipseFileProvider extends FileProvider {
     return getFromPlugin(CorePlugin.getDefault(), fileName);
   }
 
-  /** @return the jar file packaged with this plug-in of the given name, or null if not found. */
+  /**
+   * @return the jar file packaged with this plug-in of the given name, or null if not found.
+   */
   private JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
     URL url = getFileURLFromPlugin(p, fileName);
     if (url == null) return null;

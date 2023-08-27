@@ -695,7 +695,9 @@ public class TabulationSolver<T, P, F> {
   @SuppressWarnings("unused")
   protected void recordCall(T callNode, T callee, int d1, boolean gotReuse) {}
 
-  /** @return f(call_d, exit_d); */
+  /**
+   * @return f(call_d, exit_d);
+   */
   @SuppressWarnings("unused")
   protected IntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
@@ -705,7 +707,9 @@ public class TabulationSolver<T, P, F> {
     return result;
   }
 
-  /** @return f(d1) */
+  /**
+   * @return f(d1)
+   */
   @SuppressWarnings("unused")
   protected IntSet computeFlow(int d1, IUnaryFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
@@ -720,7 +724,9 @@ public class TabulationSolver<T, P, F> {
     }
   }
 
-  /** @return f^{-1}(d2) */
+  /**
+   * @return f^{-1}(d2)
+   */
   protected IntSet computeInverseFlow(int d2, IReversibleFlowFunction f) {
     return f.getSources(d2);
   }
@@ -963,7 +969,9 @@ public class TabulationSolver<T, P, F> {
     }
   }
 
-  /** @return Returns the supergraph. */
+  /**
+   * @return Returns the supergraph.
+   */
   public ISupergraph<T, P> getSupergraph() {
     return supergraph;
   }

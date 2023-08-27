@@ -54,7 +54,9 @@ import org.scandroid.flow.types.StaticFieldFlow;
 import org.scandroid.spec.StaticFieldSinkSpec;
 import org.scandroid.util.CGAnalysisContext;
 
-/** @author acfoltzer */
+/**
+ * @author acfoltzer
+ */
 public class StaticFieldSinkPoint implements ISinkPoint {
   //	private static final Logger logger = LoggerFactory
   //			.getLogger(StaticFieldSinkPoint.class);

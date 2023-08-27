@@ -26,10 +26,14 @@ public interface RTAContextInterpreter extends CHAContextInterpreter {
   @Override
   Iterator<NewSiteReference> iterateNewSites(CGNode node);
 
-  /** @return iterator of FieldReference */
+  /**
+   * @return iterator of FieldReference
+   */
   Iterator<FieldReference> iterateFieldsRead(CGNode node);
 
-  /** @return iterator of FieldReference */
+  /**
+   * @return iterator of FieldReference
+   */
   Iterator<FieldReference> iterateFieldsWritten(CGNode node);
 
   /**

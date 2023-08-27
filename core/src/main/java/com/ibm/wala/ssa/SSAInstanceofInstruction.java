@@ -56,7 +56,9 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     v.visitInstanceof(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;
@@ -77,7 +79,9 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     return checkedType;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfDefs() {
     return 1;

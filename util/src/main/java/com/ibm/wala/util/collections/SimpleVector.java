@@ -29,7 +29,9 @@ public class SimpleVector<T> implements IVector<T> {
 
   public SimpleVector() {}
 
-  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
   @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
@@ -44,7 +46,9 @@ public class SimpleVector<T> implements IVector<T> {
     }
   }
 
-  /** @see com.ibm.wala.util.intset.IntVector#set(int, int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
+   */
   @Override
   public void set(int x, @Nullable T value) {
     if (x < 0) {
@@ -79,7 +83,9 @@ public class SimpleVector<T> implements IVector<T> {
     System.err.println(("occupancy:  " + computeOccupancy()));
   }
 
-  /** @return the percentage of entries in delegateStore that are non-null */
+  /**
+   * @return the percentage of entries in delegateStore that are non-null
+   */
   private double computeOccupancy() {
     int count = 0;
     for (Object element : store) {

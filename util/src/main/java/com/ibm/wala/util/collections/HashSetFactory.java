@@ -23,7 +23,9 @@ public class HashSetFactory {
   /** If true, this factory returns Paranoid versions of collections */
   public static final boolean DEBUG = false;
 
-  /** @return A {@link ParanoidHashSet} if DEBUG = true, a java.util.HashSet otherwise */
+  /**
+   * @return A {@link ParanoidHashSet} if DEBUG = true, a java.util.HashSet otherwise
+   */
   public static <T> HashSet<T> make(int size) {
     if (DEBUG) {
       return new ParanoidHashSet<>(size);
@@ -32,7 +34,9 @@ public class HashSetFactory {
     }
   }
 
-  /** @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise */
+  /**
+   * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
+   */
   public static <T> HashSet<T> make() {
     if (DEBUG) {
       return new ParanoidHashSet<>();
@@ -41,7 +45,9 @@ public class HashSetFactory {
     }
   }
 
-  /** @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise */
+  /**
+   * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
+   */
   public static <T> HashSet<T> make(Collection<T> s) {
     if (s == null) {
       throw new IllegalArgumentException("null s");

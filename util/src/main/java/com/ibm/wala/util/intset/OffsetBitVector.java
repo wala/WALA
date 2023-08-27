@@ -169,7 +169,9 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     return ((bits[ss] & (1 << shiftBits)) != 0);
   }
 
-  /** @return min j &gt;= start s.t get(j) */
+  /**
+   * @return min j &gt;= start s.t get(j)
+   */
   @Override
   public int nextSetBit(int start) {
     int nb = super.nextSetBit(Math.max(0, start - offset));

@@ -62,7 +62,9 @@ public class TypeVariableSignature extends TypeSignature {
     return false;
   }
 
-  /** @return -1 if there is no match */
+  /**
+   * @return -1 if there is no match
+   */
   public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass)
       throws IllegalArgumentException {
     if (klass == null) {

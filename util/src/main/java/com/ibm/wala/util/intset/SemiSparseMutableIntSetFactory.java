@@ -16,7 +16,9 @@ import java.util.TreeSet;
 public class SemiSparseMutableIntSetFactory
     implements MutableIntSetFactory<SemiSparseMutableIntSet> {
 
-  /** @throws IllegalArgumentException if set is null */
+  /**
+   * @throws IllegalArgumentException if set is null
+   */
   @Override
   public SemiSparseMutableIntSet make(int[] set) {
     if (set == null) {

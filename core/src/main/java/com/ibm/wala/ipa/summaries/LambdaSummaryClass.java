@@ -112,13 +112,17 @@ public class LambdaSummaryClass extends SyntheticClass {
     return getClassHierarchy().getRootClass();
   }
 
-  /** @return singleton set containing the relevant functional interface */
+  /**
+   * @return singleton set containing the relevant functional interface
+   */
   @Override
   public Collection<? extends IClass> getDirectInterfaces() {
     return Collections.singleton(getClassHierarchy().lookupClass(invoke.getDeclaredResultType()));
   }
 
-  /** @return relevant functional interface and all of its super-interfaces */
+  /**
+   * @return relevant functional interface and all of its super-interfaces
+   */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     IClass iface = getClassHierarchy().lookupClass(invoke.getDeclaredResultType());

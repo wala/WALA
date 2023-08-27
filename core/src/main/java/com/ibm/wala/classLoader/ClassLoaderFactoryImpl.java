@@ -33,7 +33,9 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   /** A Mapping from ClassLoaderReference to IClassLoader */
   private final HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
 
-  /** @param exclusions A set of classes that class loaders should pretend don't exist. */
+  /**
+   * @param exclusions A set of classes that class loaders should pretend don't exist.
+   */
   public ClassLoaderFactoryImpl(SetOfClasses exclusions) {
     this.exclusions = exclusions;
   }
@@ -152,7 +154,9 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
     }
   }
 
-  /** @return the set of classes that will be ignored. */
+  /**
+   * @return the set of classes that will be ignored.
+   */
   public SetOfClasses getExclusions() {
     return exclusions;
   }

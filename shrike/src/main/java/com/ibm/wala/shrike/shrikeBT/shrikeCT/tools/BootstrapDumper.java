@@ -70,9 +70,15 @@ public class BootstrapDumper {
   }
 
   private void dumpAttributes(Class<?> cl, ClassReader.AttrIterator attrs)
-      throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException,
-          NoSuchMethodException, SecurityException, IllegalAccessException,
-          IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+      throws InvalidClassFileException,
+          InvalidBytecodeException,
+          ClassNotFoundException,
+          NoSuchMethodException,
+          SecurityException,
+          IllegalAccessException,
+          IllegalArgumentException,
+          InvocationTargetException,
+          NoSuchFieldException {
     for (; attrs.isValid(); attrs.advance()) {
       String name = attrs.getName();
       if (name.equals("Code")) {
@@ -106,9 +112,15 @@ public class BootstrapDumper {
    * @throws IllegalArgumentException if cr is null
    */
   public void doClass(ClassLoader image, final ClassReader cr)
-      throws InvalidClassFileException, InvalidBytecodeException, ClassNotFoundException,
-          NoSuchMethodException, SecurityException, IllegalAccessException,
-          IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
+      throws InvalidClassFileException,
+          InvalidBytecodeException,
+          ClassNotFoundException,
+          NoSuchMethodException,
+          SecurityException,
+          IllegalAccessException,
+          IllegalArgumentException,
+          InvocationTargetException,
+          NoSuchFieldException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }

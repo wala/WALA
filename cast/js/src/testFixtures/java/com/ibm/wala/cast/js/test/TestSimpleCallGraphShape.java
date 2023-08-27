@@ -651,6 +651,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         new Object[] {"suffix:test1", new String[] {"suffix:bar1"}},
         new Object[] {"suffix:test2", new String[] {"suffix:bar2"}}
       };
+
   // when using the ObjectSensitivityContextSelector, we additionally know that test1 does not call
   // bar2,
   // and test2 does not call bar1

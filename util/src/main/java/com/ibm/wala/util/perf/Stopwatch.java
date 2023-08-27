@@ -32,12 +32,16 @@ public class Stopwatch {
     elapsedTime += (endTime - startTime);
   }
 
-  /** @return elapsed time in ms */
+  /**
+   * @return elapsed time in ms
+   */
   public long getElapsedMillis() {
     return elapsedTime / 1000000;
   }
 
-  /** @return number of times this stopwatch was stopped */
+  /**
+   * @return number of times this stopwatch was stopped
+   */
   public int getCount() {
     return count;
   }

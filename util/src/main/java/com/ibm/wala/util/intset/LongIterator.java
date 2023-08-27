@@ -13,9 +13,13 @@ package com.ibm.wala.util.intset;
 /** a more efficient iterator for sets of longs */
 public interface LongIterator {
 
-  /** @return true iff this iterator has a next element */
+  /**
+   * @return true iff this iterator has a next element
+   */
   boolean hasNext();
 
-  /** @return next integer in the iteration */
+  /**
+   * @return next integer in the iteration
+   */
   long next();
 }

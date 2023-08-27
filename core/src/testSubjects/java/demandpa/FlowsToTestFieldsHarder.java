@@ -10,7 +10,9 @@
  */
 package demandpa;
 
-/** @author manu */
+/**
+ * @author manu
+ */
 public class FlowsToTestFieldsHarder {
 
   public static void main(String[] args) {

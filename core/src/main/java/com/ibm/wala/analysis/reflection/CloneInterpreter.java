@@ -208,7 +208,9 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return statements.toArray(new SSAInstruction[0]);
   }
 
-  /** @return an IR that encodes the behavior of the clone method for a given type. */
+  /**
+   * @return an IR that encodes the behavior of the clone method for a given type.
+   */
   private IR makeIR(IMethod method, Context context, IClass klass) {
     assert klass != null;
     SSAInstruction instrs[] = makeStatements(klass);

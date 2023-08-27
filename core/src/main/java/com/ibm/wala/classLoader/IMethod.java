@@ -62,16 +62,22 @@ public interface IMethod extends IMember, ContextItem {
   /** Is this method a bridge method? See JLS 3rd Edition 15.12.4.5 */
   boolean isBridge();
 
-  /** @return canonical MethodReference corresponding to this method */
+  /**
+   * @return canonical MethodReference corresponding to this method
+   */
   MethodReference getReference();
 
-  /** @return true iff this method has at least one exception handler */
+  /**
+   * @return true iff this method has at least one exception handler
+   */
   boolean hasExceptionHandler();
 
   /** By convention, for a non-static method, getParameterType(0) is the this pointer */
   TypeReference getParameterType(int i);
 
-  /** @return the name of the return type for this method */
+  /**
+   * @return the name of the return type for this method
+   */
   TypeReference getReturnType();
 
   /** Method getNumberOfParameters. This result includes the "this" pointer if applicable */
@@ -89,6 +95,7 @@ public interface IMethod extends IMember, ContextItem {
    *     information is not available.
    */
   int getLineNumber(int bcIndex);
+
   /* BEGIN Custom change: precise positions */
   interface SourcePosition extends Comparable<SourcePosition> {
     int getFirstLine();
@@ -107,6 +114,7 @@ public interface IMethod extends IMember, ContextItem {
   SourcePosition getSourcePosition(int instructionIndex) throws InvalidClassFileException;
 
   SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException;
+
   /* END Custom change: precise positions */
 
   /**
@@ -127,7 +135,9 @@ public interface IMethod extends IMember, ContextItem {
   /** something like: (IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer; */
   Descriptor getDescriptor();
 
-  /** @return true iff the local variable table information for this method is available */
+  /**
+   * @return true iff the local variable table information for this method is available
+   */
   boolean hasLocalVariableTable();
 
   default int getNumberOfDefaultParameters() {

@@ -44,7 +44,9 @@ public final class Util {
     return getWordSize(s, 0);
   }
 
-  /** @return the JVM "stack word size" for the given JVM type, looking at index 'index' */
+  /**
+   * @return the JVM "stack word size" for the given JVM type, looking at index 'index'
+   */
   static byte getWordSize(String s, int index) {
     switch (s.charAt(index)) {
       case 'V':
@@ -307,7 +309,9 @@ public final class Util {
     return ('[' + t).intern();
   }
 
-  /** @return true iff t is an array type */
+  /**
+   * @return true iff t is an array type
+   */
   public static boolean isArrayType(String t) {
     if (t == null || t.length() == 0) {
       return false;
@@ -321,7 +325,9 @@ public final class Util {
     }
   }
 
-  /** @return true iff t is a primitive type */
+  /**
+   * @return true iff t is a primitive type
+   */
   public static boolean isPrimitiveType(String t) {
     if (t == null || t.length() == 0) {
       return false;

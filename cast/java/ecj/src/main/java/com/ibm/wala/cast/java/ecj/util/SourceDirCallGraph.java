@@ -51,7 +51,9 @@ public class SourceDirCallGraph {
    * <p>Example args: -sourceDir /tmp/srcTest -mainClass LFoo
    */
   public static void main(String[] args)
-      throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          CallGraphBuilderCancelException,
           IOException {
     new SourceDirCallGraph()
         .doit(
@@ -68,7 +70,9 @@ public class SourceDirCallGraph {
   }
 
   public void doit(String[] args, Processor processor)
-      throws ClassHierarchyException, IllegalArgumentException, CallGraphBuilderCancelException,
+      throws ClassHierarchyException,
+          IllegalArgumentException,
+          CallGraphBuilderCancelException,
           IOException {
     long start = System.currentTimeMillis();
     Properties p = CommandLine.parse(args);

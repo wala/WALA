@@ -36,7 +36,9 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
   byte OTHER = 3;
 
-  /** @return the graph of procedures (e.g. a call graph) over which this supergraph is induced. */
+  /**
+   * @return the graph of procedures (e.g. a call graph) over which this supergraph is induced.
+   */
   Graph<P> getProcedureGraph();
 
   /**
@@ -87,10 +89,14 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
    */
   P getProcOf(T n);
 
-  /** @return the blocks in the supergraph that represents entry nodes for procedure p */
+  /**
+   * @return the blocks in the supergraph that represents entry nodes for procedure p
+   */
   T[] getEntriesForProcedure(P procedure);
 
-  /** @return the blocks in the supergraph that represents exit nodes for procedure p */
+  /**
+   * @return the blocks in the supergraph that represents exit nodes for procedure p
+   */
   T[] getExitsForProcedure(P procedure);
 
   /**
@@ -118,7 +124,9 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
    */
   boolean isReturn(T n);
 
-  /** @return true iff this node is an entry node s_p for a procedure */
+  /**
+   * @return true iff this node is an entry node s_p for a procedure
+   */
   boolean isEntry(T n);
 
   /**

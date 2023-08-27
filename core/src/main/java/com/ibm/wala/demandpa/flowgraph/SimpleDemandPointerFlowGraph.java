@@ -173,12 +173,16 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     addNode(heapModel.getPointerKeyForExceptionalReturnValue(node));
   }
 
-  /** @return Returns the heapModel. */
+  /**
+   * @return Returns the heapModel.
+   */
   protected HeapModel getHeapModel() {
     return heapModel;
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object)
+   */
   @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     if (node instanceof StaticFieldKey) {
@@ -189,7 +193,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractNumberedGraph#getSuccNodeNumbers(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractNumberedGraph#getSuccNodeNumbers(java.lang.Object)
+   */
   @Override
   public IntSet getSuccNodeNumbers(Object node) throws IllegalArgumentException {
     if (node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
@@ -199,7 +205,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return super.getSuccNodeNumbers(node);
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object)
+   */
   @Override
   public int getPredNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
@@ -210,7 +218,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getPredNodes(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getPredNodes(java.lang.Object)
+   */
   @Override
   public Iterator<Object> getPredNodes(Object N) throws IllegalArgumentException {
     if (N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
@@ -220,7 +230,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return super.getPredNodes(N);
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object)
+   */
   @Override
   public int getSuccNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
@@ -231,7 +243,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /** @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodes(java.lang.Object) */
+  /**
+   * @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodes(java.lang.Object)
+   */
   @Override
   public Iterator<Object> getSuccNodes(Object N) {
     if (N instanceof StaticFieldKey) {
@@ -299,7 +313,9 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /** @param pk value being def'fed by a call instruction (either normal or exceptional) */
+  /**
+   * @param pk value being def'fed by a call instruction (either normal or exceptional)
+   */
   private void addReturnEdges(LocalPointerKey pk, SSAInvokeInstruction callInstr) {
     boolean isExceptional = pk.getValueNumber() == callInstr.getException();
 

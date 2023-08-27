@@ -81,7 +81,9 @@ public class DefUse {
     }
   }
 
-  /** @return the maximum value number in a particular IR */
+  /**
+   * @return the maximum value number in a particular IR
+   */
   protected int getMaxValueNumber() {
     return ir.getSymbolTable().getMaxValueNumber();
   }
@@ -113,7 +115,9 @@ public class DefUse {
     return s.getNumberOfUses();
   }
 
-  /** @return the {@link SSAInstruction} that defines the variable with value number v. */
+  /**
+   * @return the {@link SSAInstruction} that defines the variable with value number v.
+   */
   public SSAInstruction getDef(int v) {
     return (v < defs.length) ? defs[v] : null;
   }
@@ -131,7 +135,9 @@ public class DefUse {
   private class UseIterator implements Iterator<SSAInstruction> {
     final IntIterator it;
 
-    /** @param uses the set of value numbers whose uses this object iterates over */
+    /**
+     * @param uses the set of value numbers whose uses this object iterates over
+     */
     UseIterator(IntSet uses) {
       it = uses.intIterator();
     }

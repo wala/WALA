@@ -223,12 +223,16 @@ public class AnalysisOptions {
     this.maxNumberOfNodes = maxNumberOfNodes;
   }
 
-  /** @return Policy that determines methods called at call sites. */
+  /**
+   * @return Policy that determines methods called at call sites.
+   */
   public MethodTargetSelector getMethodTargetSelector() {
     return methodTargetSelector;
   }
 
-  /** @return Policy that determines types allocated at new statements. */
+  /**
+   * @return Policy that determines types allocated at new statements.
+   */
   public ClassTargetSelector getClassTargetSelector() {
     return classTargetSelector;
   }
@@ -275,7 +279,9 @@ public class AnalysisOptions {
     return maxEvalBetweenTopo;
   }
 
-  /** @return a fraction x s.t. the solver will resort the system when it grows by a factor of x */
+  /**
+   * @return a fraction x s.t. the solver will resort the system when it grows by a factor of x
+   */
   public double getTopologicalGrowthFactor() {
     return topologicalGrowthFactor;
   }
@@ -288,17 +294,23 @@ public class AnalysisOptions {
     maxEvalBetweenTopo = i;
   }
 
-  /** @param d a fraction x s.t. the solver will resort the system when it grows by a factor of x */
+  /**
+   * @param d a fraction x s.t. the solver will resort the system when it grows by a factor of x
+   */
   public void setTopologicalGrowthFactor(double d) {
     topologicalGrowthFactor = d;
   }
 
-  /** @return options governing SSA construction */
+  /**
+   * @return options governing SSA construction
+   */
   public SSAOptions getSSAOptions() {
     return ssaOptions;
   }
 
-  /** @param ssaOptions options governing SSA construction */
+  /**
+   * @param ssaOptions options governing SSA construction
+   */
   public void setSSAOptions(SSAOptions ssaOptions) {
     this.ssaOptions = ssaOptions;
   }

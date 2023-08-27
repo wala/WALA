@@ -1,7 +1,7 @@
 [versions]
 eclipse = "4.21.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
-google-java-format = "1.7"
+google-java-format = "1.17.0"
 ktfmt = "0.42"
 spotless = "6.13.0"
 

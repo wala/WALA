@@ -62,14 +62,18 @@ public class DotUtil {
   /** Some versions of dot appear to croak on long labels. Reduce this if so. */
   private static final int MAX_LABEL_LENGTH = Integer.MAX_VALUE;
 
-  /** @param <T> the type of a graph node */
+  /**
+   * @param <T> the type of a graph node
+   */
   public static <T> void dotify(
       Graph<T> g, NodeDecorator<T> labels, String dotFile, String outputFile, String dotExe)
       throws WalaException {
     dotify(g, labels, null, dotFile, outputFile, dotExe);
   }
 
-  /** @param <T> the type of a graph node */
+  /**
+   * @param <T> the type of a graph node
+   */
   public static <T> void dotify(
       Graph<T> g,
       NodeDecorator<T> labels,
@@ -175,7 +179,9 @@ public class DotUtil {
     }
   }
 
-  /** @return StringBuffer holding dot output representing G */
+  /**
+   * @return StringBuffer holding dot output representing G
+   */
   public static <T> StringBuilder dotOutput(
       Graph<T> g, NodeDecorator<T> labels, @Nullable String title) throws WalaException {
     StringBuilder result = new StringBuilder("digraph \"DirectedGraph\" {\n");

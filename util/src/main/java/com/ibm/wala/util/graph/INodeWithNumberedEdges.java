@@ -18,13 +18,15 @@ import org.jspecify.annotations.Nullable;
  * NumberedGraph} interface.
  */
 public interface INodeWithNumberedEdges extends INodeWithNumber {
-  /** @return set of node numbers which are successors of this node */
-  @Nullable
-  IntSet getSuccNumbers();
+  /**
+   * @return set of node numbers which are successors of this node
+   */
+  @Nullable IntSet getSuccNumbers();
 
-  /** @return set of node numbers which are predecessors of this node */
-  @Nullable
-  IntSet getPredNumbers();
+  /**
+   * @return set of node numbers which are predecessors of this node
+   */
+  @Nullable IntSet getPredNumbers();
 
   /** Modify the graph so that node number n is a successor of this node */
   void addSucc(int n);

@@ -138,47 +138,65 @@ public final class MethodData {
     hasChanged = true;
   }
 
-  /** @return the method signature, in JVM format */
+  /**
+   * @return the method signature, in JVM format
+   */
   public String getSignature() {
     return signature;
   }
 
-  /** @return the method name */
+  /**
+   * @return the method name
+   */
   public String getName() {
     return name;
   }
 
-  /** @return the method access flags */
+  /**
+   * @return the method access flags
+   */
   public int getAccess() {
     return access;
   }
 
-  /** @return the JVM type for the class defining the method (e.g., Ljava/lang/Object;) */
+  /**
+   * @return the JVM type for the class defining the method (e.g., Ljava/lang/Object;)
+   */
   public String getClassType() {
     return classType;
   }
 
-  /** @return whether or not the method is static */
+  /**
+   * @return whether or not the method is static
+   */
   public boolean getIsStatic() {
     return (access & Constants.ACC_STATIC) != 0;
   }
 
-  /** @return whether or not the method is synchronized */
+  /**
+   * @return whether or not the method is synchronized
+   */
   public boolean getIsSynchronized() {
     return (access & Constants.ACC_SYNCHRONIZED) != 0;
   }
 
-  /** @return the exception handler lists */
+  /**
+   * @return the exception handler lists
+   */
   public ExceptionHandler[][] getHandlers() {
     return handlers;
   }
 
-  /** @return the instruction array */
+  /**
+   * @return the instruction array
+   */
   public IInstruction[] getInstructions() {
     return instructions;
   }
 
-  /** @return the map from instructions to bytecode offsets */
+  /**
+   * @return the map from instructions to bytecode offsets
+   */
   public int[] getInstructionsToBytecodes() {
     return instructionsToBytecodes;
   }
@@ -239,7 +257,9 @@ public final class MethodData {
     hasChanged = true;
   }
 
-  /** @return true iff the code has been updated at least once */
+  /**
+   * @return true iff the code has been updated at least once
+   */
   public boolean getHasChanged() {
     return hasChanged;
   }

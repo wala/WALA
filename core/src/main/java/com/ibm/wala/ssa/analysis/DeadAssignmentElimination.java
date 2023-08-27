@@ -156,7 +156,9 @@ public class DeadAssignmentElimination {
       addAllStatementsToWorkList();
     }
 
-    /** @return true iff there are no uses of the given value number */
+    /**
+     * @return true iff there are no uses of the given value number
+     */
     private boolean isDead(int value) {
       Integer V = value;
       if (trivialDead.contains(V)) {

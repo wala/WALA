@@ -30,7 +30,9 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     return insts.ThrowInstruction(iIndex(), uses == null ? getException() : uses[0]);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitThrow(this);

@@ -53,12 +53,14 @@ import com.ibm.wala.types.FieldReference;
 public class FieldElement extends CodeElement {
   private final FieldReference fieldRef;
   private final InstanceKey object;
+
   //    private TypeReference object;
 
   public FieldElement(InstanceKey object, FieldReference fieldRef) {
     this.fieldRef = fieldRef;
     this.object = object;
   }
+
   //    public FieldElement(TypeReference object, String fieldname)
   //    {
   //        this.fieldname = fieldname;

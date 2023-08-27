@@ -256,7 +256,9 @@ public class PDFSlice {
     return GraphSlicer.prune(sdg, slice::contains);
   }
 
-  /** @return a NodeDecorator that decorates statements in a slice for a dot-ted representation */
+  /**
+   * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
+   */
   public static NodeDecorator<Statement> makeNodeDecorator() {
     return s -> {
       switch (s.getKind()) {

@@ -25,16 +25,22 @@ import org.jspecify.annotations.Nullable;
  */
 public interface NodeManager<T> extends Iterable<T> {
 
-  /** @return an {@link Iterator} of the nodes in this graph */
+  /**
+   * @return an {@link Iterator} of the nodes in this graph
+   */
   @Override
   default Iterator<T> iterator() {
     return stream().iterator();
   }
 
-  /** @return a {@link Stream} of the nodes in this graph */
+  /**
+   * @return a {@link Stream} of the nodes in this graph
+   */
   Stream<T> stream();
 
-  /** @return the number of nodes in this graph */
+  /**
+   * @return the number of nodes in this graph
+   */
   int getNumberOfNodes();
 
   /** add a node to this graph */
@@ -43,6 +49,8 @@ public interface NodeManager<T> extends Iterable<T> {
   /** remove a node from this graph */
   void removeNode(T n) throws UnsupportedOperationException;
 
-  /** @return true iff the graph contains the specified node */
+  /**
+   * @return true iff the graph contains the specified node
+   */
   boolean containsNode(@Nullable T n);
 }

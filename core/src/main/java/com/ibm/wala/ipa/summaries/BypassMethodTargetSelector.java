@@ -259,7 +259,9 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     }
   }
 
-  /** @return true iff we can treat m as a no-op method */
+  /**
+   * @return true iff we can treat m as a no-op method
+   */
   protected boolean canIgnore(MemberReference m) {
     TypeReference T = m.getDeclaringClass();
     TypeName n = T.getName();

@@ -70,7 +70,8 @@ public class GetMethodContext implements Context {
     String name() {
       return getName();
     }
-  };
+  }
+  ;
 
   @Override
   public ContextItem get(ContextKey name) {

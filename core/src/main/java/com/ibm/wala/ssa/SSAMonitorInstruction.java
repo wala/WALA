@@ -73,7 +73,9 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
     return true;
   }
 
-  /** @return The value number of the object being locked or unlocked */
+  /**
+   * @return The value number of the object being locked or unlocked
+   */
   public int getRef() {
     return ref;
   }

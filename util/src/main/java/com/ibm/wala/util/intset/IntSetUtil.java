@@ -183,7 +183,9 @@ public class IntSetUtil {
     }
   }
 
-  /** @return index \in [low,high] s.t. data[index] = key, or -1 if not found */
+  /**
+   * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
+   */
   public static int binarySearch(int[] data, int key, int low, int high)
       throws IllegalArgumentException {
     if (data == null) {
@@ -213,12 +215,16 @@ public class IntSetUtil {
     }
   }
 
-  /** @return Returns the defaultIntSetFactory. */
+  /**
+   * @return Returns the defaultIntSetFactory.
+   */
   public static MutableIntSetFactory<?> getDefaultIntSetFactory() {
     return defaultIntSetFactory;
   }
 
-  /** @param defaultIntSetFactory The defaultIntSetFactory to set. */
+  /**
+   * @param defaultIntSetFactory The defaultIntSetFactory to set.
+   */
   public static void setDefaultIntSetFactory(MutableIntSetFactory<?> defaultIntSetFactory) {
     if (defaultIntSetFactory == null) {
       throw new IllegalArgumentException("null defaultIntSetFactory");

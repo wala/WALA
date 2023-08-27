@@ -30,10 +30,14 @@ public interface TabulationResult<T, P, F> {
    */
   IntSet getResult(T node);
 
-  /** @return the governing IFDS problem */
+  /**
+   * @return the governing IFDS problem
+   */
   TabulationProblem<T, P, F> getProblem();
 
-  /** @return the set of supergraph nodes for which any fact is reached */
+  /**
+   * @return the set of supergraph nodes for which any fact is reached
+   */
   Collection<T> getSupergraphNodesReached();
 
   /**
@@ -42,6 +46,8 @@ public interface TabulationResult<T, P, F> {
    */
   IntSet getSummaryTargets(T n1, int d1, T n2);
 
-  /** @return the set of all {@link PathEdge}s that were used as seeds during the tabulation. */
+  /**
+   * @return the set of all {@link PathEdge}s that were used as seeds during the tabulation.
+   */
   Collection<PathEdge<T>> getSeeds();
 }

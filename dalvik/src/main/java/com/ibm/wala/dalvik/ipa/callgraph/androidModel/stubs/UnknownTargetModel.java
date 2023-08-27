@@ -90,6 +90,7 @@ public class UnknownTargetModel extends AndroidModel {
   private MiniModel miniModel = null;
   private ExternalModel externalModel = null;
   private final AndroidComponent target;
+
   // uses AndroidModel.cha;
 
   /**
@@ -103,7 +104,9 @@ public class UnknownTargetModel extends AndroidModel {
     return false;
   }
 
-  /** @param target Component Type, may be null: No restrictions are imposed on AndroidModel then */
+  /**
+   * @param target Component Type, may be null: No restrictions are imposed on AndroidModel then
+   */
   public UnknownTargetModel(
       final IClassHierarchy cha,
       final AnalysisOptions options,

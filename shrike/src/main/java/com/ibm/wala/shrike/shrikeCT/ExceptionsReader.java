@@ -23,7 +23,9 @@ public final class ExceptionsReader extends AttributeReader {
     checkSizeEquals(attr + 8, 2 * count);
   }
 
-  /** @return the indices of the constant pool items for the exceptions */
+  /**
+   * @return the indices of the constant pool items for the exceptions
+   */
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
     int[] r = new int[count];
@@ -31,7 +33,9 @@ public final class ExceptionsReader extends AttributeReader {
     return r;
   }
 
-  /** @return the classes of exceptions that can be thrown by the method */
+  /**
+   * @return the classes of exceptions that can be thrown by the method
+   */
   public String[] getClasses() throws InvalidClassFileException {
     int count = cr.getUShort(attr + 6);
     String[] r = new String[count];

@@ -524,7 +524,9 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
     return exceptionHandlers;
   }
 
-  /** @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int) */
+  /**
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
+   */
   @Override
   public int getProgramCounter(int index) {
     try {

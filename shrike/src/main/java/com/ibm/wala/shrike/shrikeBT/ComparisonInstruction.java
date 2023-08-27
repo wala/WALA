@@ -66,7 +66,9 @@ public final class ComparisonInstruction extends Instruction implements ICompari
     }
   }
 
-  /** @return OPR_cmp (for long), OPR_cmpl, or OPR_cmpg (for float and double) */
+  /**
+   * @return OPR_cmp (for long), OPR_cmpl, or OPR_cmpg (for float and double)
+   */
   @Override
   public Operator getOperator() {
     switch (opcode) {

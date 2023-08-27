@@ -25,7 +25,9 @@ public abstract class AstPropertyWrite extends AbstractReflectivePut {
     return super.toString(symbolTable) + " = " + getValueString(symbolTable, getValue());
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   */
   @Override
   public void visit(IVisitor v) {
     assert v instanceof AstInstructionVisitor;

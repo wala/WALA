@@ -30,6 +30,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
 
   private static final long serialVersionUID = 4238700455408861924L;
+
   /** an enumeration of all nodes to search from */
   @Nullable private Iterator<? extends T> roots;
 

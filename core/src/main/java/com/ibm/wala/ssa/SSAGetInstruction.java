@@ -53,13 +53,17 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     }
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitGet(this);
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getDef() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+   */
   @Override
   public boolean hasDef() {
     return true;
@@ -76,7 +80,9 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return result;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
+   */
   @Override
   public int getNumberOfDefs() {
     return 1;
@@ -87,7 +93,9 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return isStatic() ? 0 : 1;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#getUse(int) */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
+   */
   @Override
   public int getUse(int j) {
     assert j == 0 && getRef() != -1;
@@ -99,7 +107,9 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return result * 2371 + 6521;
   }
 
-  /** @see com.ibm.wala.ssa.SSAInstruction#isFallThrough() */
+  /**
+   * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
+   */
   @Override
   public boolean isFallThrough() {
     return true;

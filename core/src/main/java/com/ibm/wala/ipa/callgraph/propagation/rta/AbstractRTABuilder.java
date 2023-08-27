@@ -355,7 +355,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     }
   }
 
-  /** @return set of IClasses determined to be allocated */
+  /**
+   * @return set of IClasses determined to be allocated
+   */
   @SuppressWarnings("unchecked")
   public Set<IClass> getAllocatedTypes() {
     return (Set<IClass>) allocatedClasses.clone();
@@ -412,7 +414,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return result;
   }
 
-  /** @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis() */
+  /**
+   * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
+   */
   @Override
   public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return TypeBasedPointerAnalysis.make(getOptions(), allocatedClasses, getCallGraph());

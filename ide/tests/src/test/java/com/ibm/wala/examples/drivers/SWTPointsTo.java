@@ -52,7 +52,9 @@ public class SWTPointsTo {
     run(p.getProperty("appJar"));
   }
 
-  /** @param appJar should be something like "c:/temp/testdata/java_cup.jar" */
+  /**
+   * @param appJar should be something like "c:/temp/testdata/java_cup.jar"
+   */
   public static ApplicationWindow run(String appJar) {
 
     try {

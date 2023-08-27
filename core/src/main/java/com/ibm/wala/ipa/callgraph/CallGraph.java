@@ -31,7 +31,9 @@ public interface CallGraph extends NumberedGraph<CGNode> {
 
   CGNode getFakeWorldClinitNode();
 
-  /** @return an Iterator of the nodes designated as "root nodes" */
+  /**
+   * @return an Iterator of the nodes designated as "root nodes"
+   */
   Collection<CGNode> getEntrypointNodes();
 
   /**
@@ -48,7 +50,9 @@ public interface CallGraph extends NumberedGraph<CGNode> {
    */
   Set<CGNode> getNodes(MethodReference m);
 
-  /** @return the governing class hierarchy for this call graph */
+  /**
+   * @return the governing class hierarchy for this call graph
+   */
   IClassHierarchy getClassHierarchy();
 
   /**
@@ -57,7 +61,9 @@ public interface CallGraph extends NumberedGraph<CGNode> {
    */
   Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site);
 
-  /** @return the number of nodes that the call site may dispatch to */
+  /**
+   * @return the number of nodes that the call site may dispatch to
+   */
   int getNumberOfTargets(CGNode node, CallSiteReference site);
 
   /**

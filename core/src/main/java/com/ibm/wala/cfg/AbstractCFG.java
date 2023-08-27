@@ -159,14 +159,18 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return exceptionalEdgeManager.getPredNodeCount(N);
   }
 
-  /** @param number number of a basic block in this cfg */
+  /**
+   * @param number number of a basic block in this cfg
+   */
   boolean hasAnyNormalOut(int number) {
     return (fallThru.get(number)
         || normalEdgeManager.getSuccNodeCount(number) > 0
         || normalToExit.get(number));
   }
 
-  /** @param number number of a basic block in this cfg */
+  /**
+   * @param number number of a basic block in this cfg
+   */
   private int getNumberOfNormalOut(int number) {
     int xtra = 0;
     if (fallThru.get(number)) {
@@ -178,7 +182,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return normalEdgeManager.getSuccNodeCount(number) + xtra;
   }
 
-  /** @param number number of a basic block in this cfg */
+  /**
+   * @param number number of a basic block in this cfg
+   */
   public int getNumberOfExceptionalOut(int number) {
     int xtra = 0;
     if (exceptionalToExit.get(number)) {
@@ -453,7 +459,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return normalEdgeManager.hasEdge(src, dst);
   }
 
-  /** @throws IllegalArgumentException if src or dst is null */
+  /**
+   * @throws IllegalArgumentException if src or dst is null
+   */
   public void addNormalEdge(T src, T dst) {
     if (src == null) {
       throw new IllegalArgumentException("src is null");
@@ -470,7 +478,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     }
   }
 
-  /** @throws IllegalArgumentException if dst is null */
+  /**
+   * @throws IllegalArgumentException if dst is null
+   */
   public void addExceptionalEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
@@ -492,19 +502,25 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     }
   }
 
-  /** @see com.ibm.wala.util.graph.Graph#removeNode(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.Graph#removeNode(Object)
+   */
   @Override
   public void removeNodeAndEdges(T N) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#removeNode(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#removeNode(Object)
+   */
   @Override
   public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /** @see com.ibm.wala.util.graph.NodeManager#containsNode(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.NodeManager#containsNode(Object)
+   */
   @Override
   public boolean containsNode(T N) {
     return nodeManager.containsNode(N);
@@ -529,7 +545,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     catchBlocks.set(i);
   }
 
-  /** @return true iff block i is a catch block */
+  /**
+   * @return true iff block i is a catch block
+   */
   public boolean isCatchBlock(int i) {
     return catchBlocks.get(i);
   }
@@ -545,7 +563,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return method;
   }
 
-  /** @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object) */
+  /**
+   * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object)
+   */
   @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();

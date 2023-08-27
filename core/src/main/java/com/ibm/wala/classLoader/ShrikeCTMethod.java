@@ -144,6 +144,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return reader.getClasses();
     }
   }
+
   /* BEGIN Custom change: precise positions */
   private static final class SPos implements SourcePosition {
     String fileName;
@@ -214,6 +215,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return fileName + '(' + firstLine + ',' + firstCol + '-' + lastLine + ',' + lastCol + ')';
     }
   }
+
   /* END Custom change: precise positions */
   @Override
   protected void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException {

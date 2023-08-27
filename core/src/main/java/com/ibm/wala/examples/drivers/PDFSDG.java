@@ -103,7 +103,9 @@ public class PDFSDG {
     return null;
   }
 
-  /** @param appJar something like "c:/temp/testdata/java_cup.jar" */
+  /**
+   * @param appJar something like "c:/temp/testdata/java_cup.jar"
+   */
   public static Process run(
       String appJar,
       String mainClass,

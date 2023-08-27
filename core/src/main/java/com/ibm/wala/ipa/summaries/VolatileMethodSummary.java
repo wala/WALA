@@ -328,6 +328,7 @@ public class VolatileMethodSummary {
 
     return this.summary;
   }
+
   // /**
   // *  Re-enable write access to VolatileMethodSummary (CAUTION...).
   // *

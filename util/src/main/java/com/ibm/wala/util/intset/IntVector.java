@@ -17,6 +17,8 @@ public interface IntVector {
 
   void set(int x, int value);
 
-  /** @return max i s.t set(i) was called. */
+  /**
+   * @return max i s.t set(i) was called.
+   */
   int getMaxIndex();
 }

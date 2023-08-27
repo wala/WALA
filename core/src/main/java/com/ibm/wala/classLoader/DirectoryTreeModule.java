@@ -20,7 +20,9 @@ public abstract class DirectoryTreeModule implements Module {
 
   protected final File root;
 
-  /** @param root a directory */
+  /**
+   * @param root a directory
+   */
   DirectoryTreeModule(File root) throws IllegalArgumentException {
     this.root = root;
     if (root == null) {

@@ -76,6 +76,7 @@ public final class ActivityEP {
                 ExecutionOrder.AT_FIRST,
                 // ApplicationEP.onCreate,      // Uncommenting would create a ring-dependency
               }));
+
   // ,
   //    new AndroidEntryPoint.IExecutionOrder[] {
   //        //ServiceEP.onCreate                // Not necessarily but let's assume it // XXX:
@@ -209,6 +210,7 @@ public final class ActivityEP {
               new AndroidEntryPoint.IExecutionOrder[] {
                 onResume, onSaveInstanceState, ExecutionOrder.MIDDLE_OF_LOOP
               }));
+
   /**
    * Perform any final cleanup before an activity is destroyed.
    *
@@ -619,6 +621,7 @@ public final class ActivityEP {
                 allInitialViewsSetUp,
                 ExecutionOrder.MULTIPLE_TIMES_IN_LOOP
               }));
+
   /**
    * Called when a generic motion event was not handled by any of the views inside of the activity.
    *
@@ -845,6 +848,7 @@ public final class ActivityEP {
   public static final AndroidPossibleEntryPoint onActionModeFinished =
       new AndroidPossibleEntryPoint(
           "onActionModeFinished", ExecutionOrder.after(onActionModeStarted));
+
   /** Give the Activity a chance to control the UI for an action mode requested by the system. */
   public static final AndroidPossibleEntryPoint onWindowStartingActionMode =
       new AndroidPossibleEntryPoint(
@@ -852,6 +856,7 @@ public final class ActivityEP {
           ExecutionOrder.between(
               ExecutionOrder.MULTIPLE_TIMES_IN_LOOP, // TODO where to put??
               onActionModeStarted));
+
   /**
    * Will be called if you have selected configurations you would like to handle with the
    * configChanges attribute in your manifest. If any configuration change occurs that is not
@@ -876,10 +881,12 @@ public final class ActivityEP {
   public static final AndroidPossibleEntryPoint onCreateDescription =
       new AndroidPossibleEntryPoint(
           "onCreateDescription", ExecutionOrder.between(onSaveInstanceState, onPause));
+
   /** This method is called before pausing */
   public static final AndroidPossibleEntryPoint onCreateThumbnail =
       new AndroidPossibleEntryPoint(
           "onCreateThumbnail", ExecutionOrder.directlyBefore(onCreateDescription));
+
   /**
    * This function will be called after any global assist callbacks.
    *
@@ -934,6 +941,7 @@ public final class ActivityEP {
    */
   public static final AndroidPossibleEntryPoint onUserLeaveHint =
       new AndroidPossibleEntryPoint("onUserLeaveHint", ExecutionOrder.directlyBefore(onPause));
+
   /** This is called whenever the current window attributes change. */
   public static final AndroidPossibleEntryPoint onWindowAttributesChanged =
       new AndroidPossibleEntryPoint(

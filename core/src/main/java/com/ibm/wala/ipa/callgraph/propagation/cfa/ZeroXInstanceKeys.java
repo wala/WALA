@@ -143,7 +143,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     this.contextInterpreter = contextInterpreter;
   }
 
-  /** @return true iff the policy smushes some allocation sites */
+  /**
+   * @return true iff the policy smushes some allocation sites
+   */
   private boolean smushMany() {
     return (policy & SMUSH_MANY) > 0;
   }
@@ -213,7 +215,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     return s.contains(c);
   }
 
-  /** @return Map: IClass -&gt; Integer, the number of allocation sites for each type. */
+  /**
+   * @return Map: IClass -&gt; Integer, the number of allocation sites for each type.
+   */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
     Map<IClass, Integer> count = HashMapFactory.make();
     for (NewSiteReference n : Iterator2Iterable.make(contextInterpreter.iterateNewSites(node))) {

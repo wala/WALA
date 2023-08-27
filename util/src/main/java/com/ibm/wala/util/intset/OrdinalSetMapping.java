@@ -15,19 +15,29 @@ import java.util.stream.Stream;
 
 /** An object that implements a bijection between whole numbers and objects. */
 public interface OrdinalSetMapping<T> extends Iterable<T> {
-  /** @return the object numbered n. */
+  /**
+   * @return the object numbered n.
+   */
   T getMappedObject(int n) throws NoSuchElementException;
 
-  /** @return the number of a given object, or -1 if the object is not currently in the range. */
+  /**
+   * @return the number of a given object, or -1 if the object is not currently in the range.
+   */
   int getMappedIndex(Object o);
 
-  /** @return whether the given object is mapped by this mapping */
+  /**
+   * @return whether the given object is mapped by this mapping
+   */
   boolean hasMappedIndex(T o);
 
-  /** @return the maximum integer mapped to an object */
+  /**
+   * @return the maximum integer mapped to an object
+   */
   int getMaximumIndex();
 
-  /** @return the current size of the bijection */
+  /**
+   * @return the current size of the bijection
+   */
   int getSize();
 
   /**

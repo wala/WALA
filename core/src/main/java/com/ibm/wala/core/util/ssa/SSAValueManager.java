@@ -87,8 +87,10 @@ public class SSAValueManager {
   // TODO: nextLocal may be 0 on getUnamanged!
   /** The next variable not under management yet */
   private int nextLocal;
+
   /** for managing cascaded code blocks */
   private int currentScope = 0;
+
   /** Description only used for toString() */
   private final String description;
 
@@ -374,6 +376,7 @@ public class SSAValueManager {
   public SSAValue getUnmanaged(TypeReference type, String name) {
     return getUnmanaged(type, new NamedKey(type.getName(), name));
   }
+
   /**
    * Retrieve the SSA-Number that is valid for a type in the current scope.
    *

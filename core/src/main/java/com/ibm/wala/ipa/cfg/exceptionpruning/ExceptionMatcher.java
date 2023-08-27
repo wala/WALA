@@ -13,7 +13,9 @@ import java.util.Set;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class ExceptionMatcher {
-  /** @return true, iff thrownExceptions is part of filteredExceptions */
+  /**
+   * @return true, iff thrownExceptions is part of filteredExceptions
+   */
   public static boolean isFiltered(
       Collection<TypeReference> thrownExceptions,
       Collection<FilteredException> filteredExceptions,

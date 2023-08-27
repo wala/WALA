@@ -26,7 +26,9 @@ public class CollectionFilter<T> implements Predicate<T> {
     this.S = S;
   }
 
-  /** @see com.ibm.wala.util.collections.FilterIterator */
+  /**
+   * @see com.ibm.wala.util.collections.FilterIterator
+   */
   @Override
   public boolean test(T o) {
     return S.contains(o);

@@ -82,6 +82,7 @@ public class SystemServiceModel extends AndroidModel {
   public final Atom name;
   private SummarizedMethod activityModel;
   private final String target;
+
   // uses AndroidModel.cha;
   /**
    * Do not call any EntryPoint.

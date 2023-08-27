@@ -31,7 +31,9 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   /** If a hash set contains more than this number of items with the same hash code, complain. */
   private final int BAD_HC = 3;
 
-  /** @throws NullPointerException if s is null */
+  /**
+   * @throws NullPointerException if s is null
+   */
   public ParanoidHashSet(Collection<T> s) throws NullPointerException {
     super(s.size());
     hcFreq = HashMapFactory.make(s.size());

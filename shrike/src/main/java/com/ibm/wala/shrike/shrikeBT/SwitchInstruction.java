@@ -24,12 +24,16 @@ public final class SwitchInstruction extends Instruction {
     this.defaultLabel = defaultLabel;
   }
 
-  /** @return the label which is branched to if none of the cases match */
+  /**
+   * @return the label which is branched to if none of the cases match
+   */
   public int getDefaultLabel() {
     return defaultLabel;
   }
 
-  /** @return an array of flattened (case, label) pairs, sorted in increasing order by case */
+  /**
+   * @return an array of flattened (case, label) pairs, sorted in increasing order by case
+   */
   public int[] getCasesAndLabels() {
     return casesAndLabels;
   }

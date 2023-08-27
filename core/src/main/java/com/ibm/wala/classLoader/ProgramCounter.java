@@ -19,7 +19,9 @@ public class ProgramCounter {
   /** Index into bytecode describing this instruction */
   private final int programCounter;
 
-  /** @param programCounter Index into bytecode describing this instruction */
+  /**
+   * @param programCounter Index into bytecode describing this instruction
+   */
   public ProgramCounter(final int programCounter) {
     if (programCounter < 0) {
       throw new IllegalArgumentException("illegal programCounter: " + programCounter);

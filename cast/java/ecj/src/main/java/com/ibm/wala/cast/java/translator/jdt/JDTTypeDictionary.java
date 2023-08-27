@@ -64,7 +64,9 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
   protected final JDTIdentityMapper fIdentityMapper; // TAGALONG
 
-  /** @param ast Needed to get root type "java.lang.Object" */
+  /**
+   * @param ast Needed to get root type "java.lang.Object"
+   */
   public JDTTypeDictionary(AST ast, JDTIdentityMapper identityMapper) {
     fAst = ast;
     fIdentityMapper = identityMapper;

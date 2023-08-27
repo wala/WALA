@@ -21,12 +21,16 @@ public class IntPair {
     this.y = y;
   }
 
-  /** @return Returns the x. */
+  /**
+   * @return Returns the x.
+   */
   public int getX() {
     return x;
   }
 
-  /** @return Returns the y. */
+  /**
+   * @return Returns the y.
+   */
   public int getY() {
     return y;
   }

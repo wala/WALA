@@ -38,7 +38,9 @@ public class FileProvider {
   private static final int DEBUG_LEVEL =
       Integer.parseInt(System.getProperty("wala.debug.file", "0"));
 
-  /** @return the jar file packaged with this plug-in of the given name, or null if not found. */
+  /**
+   * @return the jar file packaged with this plug-in of the given name, or null if not found.
+   */
   public Module getJarFileModule(String fileName) throws IOException {
     return getJarFileModule(fileName, FileProvider.class.getClassLoader());
   }

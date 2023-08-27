@@ -320,6 +320,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   private static Node getCallTarget(FunctionCall n) {
     return n.getTarget();
   }
+
   /** is n a call to "primitive" within our synthetic modeling code? */
   private static boolean isPrimitiveCall(WalkContext context, FunctionCall n) {
     return isPrologueScript(context)

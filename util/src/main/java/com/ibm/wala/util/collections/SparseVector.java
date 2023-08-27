@@ -48,7 +48,9 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     indices = new TunedMutableSparseIntSet(initialSize, expansion);
   }
 
-  /** @see com.ibm.wala.util.intset.IntVector#get(int) */
+  /**
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
   @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
@@ -86,7 +88,9 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     }
   }
 
-  /** @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction() */
+  /**
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
   @Override
   public void performVerboseAction() {
     System.err.println((getClass() + " stats: "));
@@ -94,7 +98,9 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     System.err.println(("indices.size() " + indices.size()));
   }
 
-  /** @see com.ibm.wala.util.intset.IntSet#intIterator() */
+  /**
+   * @see com.ibm.wala.util.intset.IntSet#intIterator()
+   */
   @Override
   public Iterator<T> iterator() {
     return new Iterator<>() {
@@ -123,7 +129,9 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     };
   }
 
-  /** @return max i s.t get(i) != null */
+  /**
+   * @return max i s.t get(i) != null
+   */
   @Override
   public int getMaxIndex() throws IllegalStateException {
     return indices.max();

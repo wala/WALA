@@ -155,7 +155,9 @@ public abstract class AbstractAnalysisEngine<
     addApplicationModulesToScope();
   }
 
-  /** @return a IClassHierarchy object for this analysis scope */
+  /**
+   * @return a IClassHierarchy object for this analysis scope
+   */
   public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
     ClassLoaderFactory factory = makeClassLoaderFactory(getScope().getExclusions());
@@ -181,7 +183,9 @@ public abstract class AbstractAnalysisEngine<
     return this.cha = cha;
   }
 
-  /** @return Returns the call graph */
+  /**
+   * @return Returns the call graph
+   */
   protected CallGraph getCallGraph() {
     return cg;
   }

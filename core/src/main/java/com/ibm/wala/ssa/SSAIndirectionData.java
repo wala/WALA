@@ -91,6 +91,8 @@ public interface SSAIndirectionData<T extends SSAIndirectionData.Name> {
    */
   int getUse(int instructionIndex, T name);
 
-  /** @see #getUse */
+  /**
+   * @see #getUse
+   */
   void setUse(int instructionIndex, T name, int newUse);
 }

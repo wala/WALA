@@ -21,6 +21,7 @@ import java.net.URL;
 public class SourceFileModule extends FileModule implements Module, ModuleEntry, SourceModule {
 
   private final String fileName;
+
   /** cache result of {@link #getURL()}, for performance */
   private URL url;
 

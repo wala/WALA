@@ -61,7 +61,9 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
     init(G, nodes);
   }
 
-  /** @throws NullPointerException if G is null */
+  /**
+   * @throws NullPointerException if G is null
+   */
   public SlowDFSFinishTimeIterator(Graph<T> G) throws NullPointerException {
     this(G, G == null ? null : G.iterator());
   }

@@ -26,6 +26,7 @@ import java.util.Set;
 public abstract class Iterator2Collection<T> implements Collection<T> {
 
   protected abstract Collection<T> getDelegate();
+
   /** Returns a {@link Set} containing all elements in i. Note that duplicates will be removed. */
   public static <T> Iterator2Set<T> toSet(Iterator<? extends T> i) throws IllegalArgumentException {
     if (i == null) {
