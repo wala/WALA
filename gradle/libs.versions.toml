@@ -30,7 +30,7 @@ javax-annotation-api = { module = "javax.annotation:javax.annotation-api", versi
 jericho-html = "net.htmlparser.jericho:jericho-html:3.2"
 json = "org.json:json:20230618"
 jspecify = "org.jspecify:jspecify:0.3.0"
-junit-bom = "org.junit:junit-bom:5.9.3"
+junit-bom = "org.junit:junit-bom:5.10.0"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
