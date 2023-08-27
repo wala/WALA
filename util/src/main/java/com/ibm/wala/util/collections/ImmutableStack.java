@@ -52,6 +52,24 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   private static final int MAX_SIZE = Integer.MAX_VALUE;
 
+  /**
+   * Checks whether the given size would exceed {@link #MAX_SIZE}.
+   *
+   * <p>In a standard WALA build, {@link #MAX_SIZE} is {@link Integer#MAX_VALUE}, and therefore this
+   * check must always return {@code true}. For that reason, Error Prone warns about a {@code
+   * ComparisonOutOfRange}. However, one might choose to change how {@link #MAX_SIZE} is
+   * initialized, thereby creating the possibility for this check to return {@code fail}. We want to
+   * retain that as an option, so we still perform this check and use {@link SuppressWarnings} to
+   * suppress the Error Check warning.
+   *
+   * @param proposedSize possible new size
+   * @return true if the proposed size would exceed {@link #MAX_SIZE}
+   */
+  @SuppressWarnings("ComparisonOutOfRange")
+  private static boolean isWithinSizeLimit(final int proposedSize) {
+    return proposedSize <= MAX_SIZE;
+  }
+
   public static int getMaxSize() {
     return MAX_SIZE;
   }
@@ -97,7 +115,7 @@ public class ImmutableStack<T> implements Iterable<T> {
     }
     int size = entries.length + 1;
     T[] tmpEntries = null;
-    if (size <= MAX_SIZE) {
+    if (isWithinSizeLimit(size)) {
       tmpEntries = makeInternalArray(size);
       System.arraycopy(entries, 0, tmpEntries, 0, entries.length);
       tmpEntries[size - 1] = entry;
@@ -161,7 +179,7 @@ public class ImmutableStack<T> implements Iterable<T> {
   @Override
   public String toString() {
     String objArrayToString = Arrays.toString(entries);
-    assert entries.length <= MAX_SIZE : objArrayToString;
+    assert isWithinSizeLimit(entries.length) : objArrayToString;
     return objArrayToString;
   }
 
@@ -220,7 +238,7 @@ public class ImmutableStack<T> implements Iterable<T> {
     }
     int size = entries.length + other.entries.length;
     T[] tmpEntries = null;
-    if (size <= MAX_SIZE) {
+    if (isWithinSizeLimit(size)) {
       tmpEntries = (T[]) new Object[size];
       System.arraycopy(entries, 0, tmpEntries, 0, entries.length);
       System.arraycopy(other.entries, 0, tmpEntries, entries.length, other.entries.length);
