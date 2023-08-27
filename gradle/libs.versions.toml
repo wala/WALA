@@ -22,7 +22,7 @@ gradle-download-task = "de.undercouch:gradle-download-task:5.5.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:3.0.1"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gson = "com.google.code.gson:gson:2.10"
-guava = "com.google.guava:guava:32.0.1-jre"
+guava = "com.google.guava:guava:32.1.2-jre"
 hamcrest = "org.hamcrest:hamcrest:2.2"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
