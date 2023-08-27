@@ -49,7 +49,7 @@ abstract class VerifiedDownload : DefaultTask() {
   @TaskAction
   fun downloadAndVerify() {
     downloadExtension.run {
-      src(this@VerifiedDownload.src.map { it.toURL() })
+      src(this@VerifiedDownload.src)
       dest(this@VerifiedDownload.dest)
       overwrite(true)
       onlyIfModified(true)
@@ -57,7 +57,7 @@ abstract class VerifiedDownload : DefaultTask() {
       retries(5)
     }
     verifyExtension.run {
-      src(this@VerifiedDownload.dest.get().asFile)
+      src(this@VerifiedDownload.dest)
       algorithm(this@VerifiedDownload.algorithm.get())
       checksum(this@VerifiedDownload.checksum.get())
     }
