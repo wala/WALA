@@ -58,7 +58,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    if (s.size() == 0) {
+    if (s.isEmpty()) {
       return;
     }
     this.privatePart = MutableSparseIntSet.make(s);
@@ -84,7 +84,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   private void copyValue(BitVectorIntSet s) {
-    if (s.size() == 0) {
+    if (s.isEmpty()) {
       sharedPart = null;
       privatePart = null;
     } else if (s.size() < OVERFLOW) {
@@ -316,7 +316,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   @Override
   public int max() {
     int result = -1;
-    if (privatePart != null && privatePart.size() > 0) {
+    if (privatePart != null && !privatePart.isEmpty()) {
       result = Math.max(result, privatePart.max());
     }
     if (sharedPart != null) {
@@ -798,7 +798,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (privatePart != null) {
       if (privatePart.contains(i)) {
         privatePart.remove(i);
-        if (privatePart.size() == 0) {
+        if (privatePart.isEmpty()) {
           privatePart = null;
         }
         return true;
@@ -808,7 +808,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       if (sharedPart.contains(i)) {
         privatePart = makeSparseCopy();
         privatePart.remove(i);
-        if (privatePart.size() == 0) {
+        if (privatePart.isEmpty()) {
           privatePart = null;
         }
         sharedPart = null;
@@ -1025,7 +1025,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       if (privatePart == null) {
         privatePart = MutableSparseIntSet.make(other);
         privatePart.intersectWith(filter);
-        if (privatePart.size() == 0) {
+        if (privatePart.isEmpty()) {
           privatePart = null;
         }
         checkOverflow();

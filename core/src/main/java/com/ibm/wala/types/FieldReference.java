@@ -71,8 +71,8 @@ public final class FieldReference extends MemberReference {
       if (getName().toString().indexOf('.') > -1) throw new UnimplementedError();
       if (fieldType.toString().indexOf('.') > -1)
         Assertions.UNREACHABLE("Field name: " + fieldType);
-      if (getName().toString().length() == 0) throw new UnimplementedError();
-      if (fieldType.toString().length() == 0) throw new UnimplementedError();
+      if (getName().toString().isEmpty()) throw new UnimplementedError();
+      if (fieldType.toString().isEmpty()) throw new UnimplementedError();
     }
   }
 

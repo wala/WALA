@@ -386,7 +386,7 @@ public class ParameterAccessor {
 
     final boolean hasImplicitThis;
     Set<IMethod> targets = cha.getPossibleTargets(mRef);
-    if (targets.size() < 1) {
+    if (targets.isEmpty()) {
       warn("Unable to look up the method {} starting extensive search...", mRef);
 
       targets = new HashSet<>();
@@ -421,7 +421,7 @@ public class ParameterAccessor {
         }
       }
 
-      if (targets.size() < 1) {
+      if (targets.isEmpty()) {
         warn("Still no candidates for the method - continuing with super-classes (TODO)");
 
         // TODO

@@ -227,7 +227,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     final SSAValue instance;
     if (appComponents.size() == 1) {
       instance = appComponents.get(0);
-    } else if (appComponents.size() > 0) {
+    } else if (!appComponents.isEmpty()) {
       { // Phi them together
         final int pc = this.body.getNextProgramCounter();
         instance = this.pm.getFree(T, key);

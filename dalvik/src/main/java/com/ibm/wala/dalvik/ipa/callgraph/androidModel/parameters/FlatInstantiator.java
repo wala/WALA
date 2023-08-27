@@ -350,7 +350,7 @@ public class FlatInstantiator implements IInstantiator {
       }
 
       { // Phi together everything
-        if (subInstances.size() > 0) {
+        if (!subInstances.isEmpty()) {
           final int pc = this.body.getNextProgramCounter();
           final SSAInstruction phi =
               this.instructionFactory.PhiInstruction(pc, instance, subInstances);

@@ -66,7 +66,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   public void deleteSucc(int eqNumber) {
     if (succNumbers != null) {
       succNumbers.remove(eqNumber);
-      if (succNumbers.size() == 0) {
+      if (succNumbers.isEmpty()) {
         succNumbers = null;
       }
     }
@@ -76,7 +76,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   public void deletePred(int eqNumber) {
     if (predNumbers != null) {
       predNumbers.remove(eqNumber);
-      if (predNumbers.size() == 0) {
+      if (predNumbers.isEmpty()) {
         predNumbers = null;
       }
     }

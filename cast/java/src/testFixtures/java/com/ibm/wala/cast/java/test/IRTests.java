@@ -139,7 +139,7 @@ public abstract class IRTests {
           descriptorToMethodRef(this.srcDescriptor, callGraph.getClassHierarchy());
       Set<CGNode> srcNodes = callGraph.getNodes(srcMethod);
 
-      if (srcNodes.size() == 0) {
+      if (srcNodes.isEmpty()) {
         System.err.println(("Unreachable/non-existent method: " + srcMethod));
         return;
       }
@@ -154,7 +154,7 @@ public abstract class IRTests {
         MethodReference tgtMethod = descriptorToMethodRef(target, callGraph.getClassHierarchy());
         // Assume only one node for target method
         Set<CGNode> tgtNodes = callGraph.getNodes(tgtMethod);
-        if (tgtNodes.size() == 0) {
+        if (tgtNodes.isEmpty()) {
           System.err.println(("Unreachable/non-existent method: " + tgtMethod));
           continue;
         }

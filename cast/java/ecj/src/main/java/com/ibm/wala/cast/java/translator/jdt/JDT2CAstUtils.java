@@ -240,7 +240,7 @@ public class JDT2CAstUtils {
     HashMap<ITypeBinding, IMethodBinding> overridden = new HashMap<>();
     if (met == null) return null;
     getMethodInClassOrSuperclass(met, met.getDeclaringClass(), true, overridden);
-    if (overridden.size() == 0) return null;
+    if (overridden.isEmpty()) return null;
     return overridden.values();
   }
 

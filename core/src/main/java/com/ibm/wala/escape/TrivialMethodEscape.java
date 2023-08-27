@@ -61,13 +61,13 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     }
     // nodes:= set of call graph nodes representing method m
     Set<CGNode> nodes = cg.getNodes(m);
-    if (nodes.size() == 0) {
+    if (nodes.isEmpty()) {
       throw new WalaException("could not find call graph node for method " + m);
     }
 
     // allocN := set of call graph nodes representing method allocMethod
     Set<CGNode> allocN = cg.getNodes(allocMethod);
-    if (allocN.size() == 0) {
+    if (allocN.isEmpty()) {
       throw new WalaException(
           "could not find call graph node for allocation method " + allocMethod);
     }

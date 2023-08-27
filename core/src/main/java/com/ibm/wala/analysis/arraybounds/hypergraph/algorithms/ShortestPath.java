@@ -49,7 +49,7 @@ public class ShortestPath<T> {
     this.graph = graph;
 
     this.computeShortestPaths();
-    this.hasNegativeCycle = (this.updatedEdges.size() > 0);
+    this.hasNegativeCycle = !this.updatedEdges.isEmpty();
     if (this.hasNegativeCycle) {
       // trigger, that changing values are set to infty in writeChanges:
       this.setUnlimitedOnChange = true;
@@ -64,7 +64,7 @@ public class ShortestPath<T> {
     final int nodeCount = this.graph.getNodes().size();
     for (int i = 0; i < nodeCount - 1; i++) {
       this.updateAllEdges();
-      if (this.updatedEdges.size() == 0) {
+      if (this.updatedEdges.isEmpty()) {
         break;
       }
     }

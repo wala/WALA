@@ -33,7 +33,7 @@ public class MethodTypeSignature extends Signature {
     if (genericsSignature == null) {
       throw new IllegalArgumentException("genericsSignature is null");
     }
-    if (genericsSignature.length() == 0) {
+    if (genericsSignature.isEmpty()) {
       throw new IllegalArgumentException();
     }
     return new MethodTypeSignature(genericsSignature);

@@ -38,7 +38,7 @@ public final class Util {
    * @throws IllegalArgumentException if s is null
    */
   public static byte getWordSize(String s) {
-    if (s == null || s.length() == 0) {
+    if (s == null || s.isEmpty()) {
       throw new IllegalArgumentException("invalid s: " + s);
     }
     return getWordSize(s, 0);
@@ -290,7 +290,7 @@ public final class Util {
    * @throws IllegalArgumentException if t is null
    */
   public static String getStackType(String t) {
-    if (t == null || t.length() < 1) {
+    if (t == null || t.isEmpty()) {
       throw new IllegalArgumentException("invalid t: " + t);
     }
     switch (t.charAt(0)) {
@@ -313,7 +313,7 @@ public final class Util {
    * @return true iff t is an array type
    */
   public static boolean isArrayType(String t) {
-    if (t == null || t.length() == 0) {
+    if (t == null || t.isEmpty()) {
       return false;
     } else {
       switch (t.charAt(0)) {
@@ -329,7 +329,7 @@ public final class Util {
    * @return true iff t is a primitive type
    */
   public static boolean isPrimitiveType(String t) {
-    if (t == null || t.length() == 0) {
+    if (t == null || t.isEmpty()) {
       return false;
     } else {
       switch (t.charAt(0)) {

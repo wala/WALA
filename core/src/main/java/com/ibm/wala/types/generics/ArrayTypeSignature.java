@@ -14,7 +14,7 @@ public class ArrayTypeSignature extends TypeSignature {
 
   ArrayTypeSignature(String s) throws IllegalArgumentException {
     super(s);
-    if (s.length() == 0) {
+    if (s.isEmpty()) {
       throw new IllegalArgumentException();
     }
     if (s.charAt(0) != '[') {

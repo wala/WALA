@@ -35,13 +35,16 @@ public class ArrayOutOfBoundsAnalysis {
       set.remove(NONE);
       if (set.contains(BOTH) || (set.contains(UPPER) && set.contains(LOWER))) {
         return BOTH;
-      } else if (set.size() == 0) {
-        return NONE;
-      } else if (set.size() == 1) {
-        return set.iterator().next();
       } else {
-        throw new RuntimeException(
-            "Case that should not happen, this method is implemented wrong.");
+        switch (set.size()) {
+          case 0:
+            return NONE;
+          case 1:
+            return set.iterator().next();
+          default:
+            throw new RuntimeException(
+                "Case that should not happen, this method is implemented wrong.");
+        }
       }
     }
   }

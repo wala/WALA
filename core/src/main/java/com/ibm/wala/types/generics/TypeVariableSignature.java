@@ -23,7 +23,7 @@ public class TypeVariableSignature extends TypeSignature {
 
   private TypeVariableSignature(String s) throws IllegalArgumentException {
     super(s);
-    if (s.length() == 0) {
+    if (s.isEmpty()) {
       throw new IllegalArgumentException();
     }
     if (s.charAt(s.length() - 1) != ';') {

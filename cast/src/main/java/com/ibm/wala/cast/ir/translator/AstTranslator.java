@@ -1037,7 +1037,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       // return the empty block
       if (fallThruFromPrior
           && !currentBlock.isEntryBlock()
-          && currentBlock.instructions().size() == 0) {
+          && currentBlock.instructions().isEmpty()) {
         return currentBlock;
       }
 
@@ -1247,7 +1247,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       noteLinePosition(inst);
 
-      if (currentBlock.instructions().size() == 0) {
+      if (currentBlock.instructions().isEmpty()) {
         currentBlock.setFirstIndex(inst);
       } else {
         for (SSAInstruction priorInst : currentBlock.instructions()) {

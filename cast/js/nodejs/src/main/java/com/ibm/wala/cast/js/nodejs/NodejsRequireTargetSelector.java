@@ -92,7 +92,7 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
       JavaScriptInvoke callInstr = getInvokeInstruction(caller, site);
 
       Set<String> targets = getRequireTargets(pointerAnalysis, caller, callInstr);
-      if (targets.size() == 0) {
+      if (targets.isEmpty()) {
         // There is no possible call target
         throw new RuntimeException("No require target found in method: " + caller.getMethod());
       }

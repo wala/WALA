@@ -90,7 +90,7 @@ public class ReflectionHandler {
     for (CGNode cgNode : changedNodes) {
       builder.addConstraintsFromChangedNode(cgNode, monitor);
     }
-    return changedNodes.size() > 0;
+    return !changedNodes.isEmpty();
   }
 
   private Collection<Statement> computeFactoryReturnStatements() {

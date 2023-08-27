@@ -64,7 +64,7 @@ public class SWTTypeHierarchy {
       final SWTTreeViewer<IClass> v = new SWTTreeViewer<>();
       v.setGraphInput(g);
       Collection<IClass> roots = InferGraphRoots.inferRoots(g);
-      if (roots.size() < 1) {
+      if (roots.isEmpty()) {
         System.err.println("PANIC: roots.size()=" + roots.size());
         System.exit(-1);
       }

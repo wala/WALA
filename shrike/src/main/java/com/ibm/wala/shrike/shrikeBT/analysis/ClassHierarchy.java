@@ -295,19 +295,20 @@ public final class ClassHierarchy {
     HashSet<String> t2Supers = new HashSet<>();
     boolean t2ExactClasses = collectDominatingSuperClasses(hierarchy, t2, t1Supers, t2Supers);
 
-    if (t2Supers.size() == 0) {
+    if (t2Supers.isEmpty()) {
       // we didn't find a common superclass, so we don't know what it might be
       return Constants.TYPE_unknown;
     } // otherwise we know for sure what the common superclass is
 
     boolean t2ExactInterfaces;
+    final int t2SupersSize = t2Supers.size();
     if (t1ExactInterfaces && t1ExactClasses && t1Supers.size() - t1ClassCount == 0) {
       // t1 doesn't have any interfaces so we don't need to search t2's
       // interfaces
       t2ExactInterfaces = true;
     } else {
       t2ExactInterfaces = collectDominatingSuperInterfaces(hierarchy, t2, t2Supers);
-      if (!t1ExactInterfaces && t2Supers.size() != 1) {
+      if (!t1ExactInterfaces && t2SupersSize != 1) {
         // we found an interface; it might also apply to t1; must bail
         return Constants.TYPE_unknown;
       }
@@ -334,13 +335,14 @@ public final class ClassHierarchy {
       }
     }
 
-    if (t2Supers.size() == 1) {
-      return t2Supers.iterator().next();
-    } else if (t2Supers.size() == 0) {
-      return Constants.TYPE_Object;
-    } else {
-      return Constants.TYPE_unknown; // some non-representable combination of
-      // class and interfaces
+    switch (t2SupersSize) {
+      case 1:
+        return t2Supers.iterator().next();
+      case 0:
+        return Constants.TYPE_Object;
+      default:
+        return Constants.TYPE_unknown; // some non-representable combination of
+        // class and interfaces
     }
   }
 

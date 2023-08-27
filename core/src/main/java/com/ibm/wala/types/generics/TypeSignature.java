@@ -38,10 +38,10 @@ public abstract class TypeSignature extends Signature {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    if (s.length() == 0) {
+    if (s.isEmpty()) {
       throw new IllegalArgumentException("illegal empty string s");
     }
-    assert (s.length() > 0);
+    assert !s.isEmpty();
     switch (s.charAt(0)) {
       case TypeReference.VoidTypeCode:
         Assertions.UNREACHABLE();

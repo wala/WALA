@@ -189,7 +189,7 @@ public class JavaLauncher extends Launcher {
     if (getProgramArgs() != null) {
       String[] pa = getProgramArgs().split(" ");
       for (String s : pa) {
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
           cmd.add(s);
         }
       }

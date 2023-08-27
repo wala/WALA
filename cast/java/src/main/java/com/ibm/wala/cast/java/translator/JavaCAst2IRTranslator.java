@@ -381,9 +381,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     switch (f.getKind()) {
       case CAstEntity.TYPE_ENTITY:
         {
-          return (parent.getName().length() == 0)
-              ? f.getName()
-              : parent.getName() + '/' + f.getName();
+          return parent.getName().isEmpty() ? f.getName() : parent.getName() + '/' + f.getName();
         }
       case CAstEntity.FUNCTION_ENTITY:
         {
