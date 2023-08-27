@@ -34,7 +34,7 @@ tasks.named<Test>("test") {
 
   if (project.hasProperty("excludeRequiresInternetTests") ||
       gradle.startParameter.isOffline ||
-      environment.get("CI") == "true") {
+      environment["CI"] == "true") {
     useJUnitPlatform { excludeTags("requires-Internet") }
   }
 
