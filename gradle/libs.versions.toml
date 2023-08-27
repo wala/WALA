@@ -7,7 +7,7 @@ spotless = "6.20.0"
 
 [libraries]
 android-tools = "com.android.tools:r8:2.2.42"
-ant = "org.apache.ant:ant:1.10.12"
+ant = "org.apache.ant:ant:1.10.14"
 assertj-core = "org.assertj:assertj-core:3.24.2"
 commons-cli = "commons-cli:commons-cli:1.5.0"
 commons-io = "commons-io:commons-io:2.11.0"
