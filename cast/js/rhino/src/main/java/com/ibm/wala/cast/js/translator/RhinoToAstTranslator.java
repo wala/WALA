@@ -1657,7 +1657,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         outer = new TryCatchContext(arg, unwindCatch);
       }
 
-      if (catches != null && catches.size() > 0) {
+      if (catches != null && !catches.isEmpty()) {
         String catchVarName = catches.get(0).getVarName().getString();
         CAstNode var = Ast.makeConstant(catchVarName);
 

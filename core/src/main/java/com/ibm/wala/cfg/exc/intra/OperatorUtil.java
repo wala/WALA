@@ -24,7 +24,7 @@ public class OperatorUtil {
 
     @SuppressWarnings("unchecked")
     public UnaryOperatorSequence(Collection<UnaryOperator<T>> operators) {
-      if (operators.size() == 0) throw new IllegalArgumentException("Empty Operator-Sequence");
+      if (operators.isEmpty()) throw new IllegalArgumentException("Empty Operator-Sequence");
       this.operators = operators.toArray(new UnaryOperator[0]);
     }
 

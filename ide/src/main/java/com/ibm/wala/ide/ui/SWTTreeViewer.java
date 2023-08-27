@@ -199,7 +199,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       treeViewer.setInput(getGraphInput());
 
       // create a pop-up menu
-      if (getPopUpActions().size() > 0) {
+      if (!getPopUpActions().isEmpty()) {
         MenuManager mm = new MenuManager();
         treeViewer.getTree().setMenu(mm.createContextMenu(treeViewer.getTree()));
         for (IAction iAction : getPopUpActions()) {
@@ -271,7 +271,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       public Object[] getElements(Object inputElement) {
         Collection<?> roots = getRootsInput();
         Assertions.productionAssertion(roots != null);
-        Assertions.productionAssertion(roots.size() >= 1);
+        Assertions.productionAssertion(!roots.isEmpty());
         return roots.toArray();
       }
     }

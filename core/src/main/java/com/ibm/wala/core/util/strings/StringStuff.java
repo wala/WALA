@@ -561,7 +561,7 @@ public class StringStuff {
     StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
-    if (jvmType.length() == 0) {
+    if (jvmType.isEmpty()) {
       throw new IllegalArgumentException("ill-formed type : " + jvmType);
     }
 
@@ -633,7 +633,7 @@ public class StringStuff {
     StringBuilder readable = new StringBuilder(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
-    if (jvmType.length() == 0) {
+    if (jvmType.isEmpty()) {
       throw new IllegalArgumentException("ill-formed type : " + jvmType);
     }
 

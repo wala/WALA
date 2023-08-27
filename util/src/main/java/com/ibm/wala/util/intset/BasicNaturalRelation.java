@@ -206,7 +206,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
           nextIndex = getFirstIndex(i);
           if (nextIndex == smallStore.length) {
             IntSet s = delegateStore.get(i);
-            assert s.size() > 0;
+            assert !s.isEmpty();
             delegateIterator = s.intIterator();
           }
           return;
@@ -353,7 +353,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
       // TODO: switch representation back to small store?
       MutableIntSet s = (MutableIntSet) delegateStore.get(x);
       s.remove(y);
-      if (s.size() == 0) {
+      if (s.isEmpty()) {
         delegateStore.set(x, null);
         for (IntVector element : smallStore) {
           element.set(x, EMPTY_CODE);

@@ -233,7 +233,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
       }
     }
 
-    if (strings.size() == 0) return null;
+    if (strings.isEmpty()) return null;
 
     ClassLoaderReference loader = getDeclaringClass().getClassLoader().getReference();
 
@@ -399,7 +399,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   public boolean hasExceptionHandler() {
     List<? extends TryBlock<? extends org.jf.dexlib2.iface.ExceptionHandler>> tries =
         eMethod.getImplementation().getTryBlocks();
-    return tries == null ? false : tries.size() > 0;
+    return tries != null && !tries.isEmpty();
   }
 
   /*

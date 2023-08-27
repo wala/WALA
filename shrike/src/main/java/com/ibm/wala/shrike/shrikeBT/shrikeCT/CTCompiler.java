@@ -86,7 +86,7 @@ public final class CTCompiler extends Compiler {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    if (s.length() > 0 && s.charAt(0) == 'L') {
+    if (!s.isEmpty() && s.charAt(0) == 'L') {
       return s.substring(1, s.length() - 1);
     } else {
       return s;

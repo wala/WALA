@@ -135,7 +135,7 @@ public class StringTable extends Table<String> implements Cloneable {
   }
 
   private static boolean isCommented(String line, Character commentToken) {
-    if (line.length() == 0) {
+    if (line.isEmpty()) {
       return true;
     }
     if (commentToken == null) {

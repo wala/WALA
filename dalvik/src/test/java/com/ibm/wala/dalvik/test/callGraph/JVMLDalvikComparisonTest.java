@@ -165,7 +165,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
                   }
                 }
 
-                assert alines.size() > 0 : "no debug info";
+                assert !alines.isEmpty() : "no debug info";
               }
             }
           }

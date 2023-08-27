@@ -350,7 +350,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
      */
     private boolean methodExcluded(MethodReference method) {
       Collection<IMethod> iMethods = pa.getClassHierarchy().getPossibleTargets(method);
-      return 0 == iMethods.size();
+      return iMethods.isEmpty();
     }
 
     private IField getStaticIField(IClassHierarchy ch, FieldReference declaredField) {

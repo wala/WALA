@@ -178,7 +178,7 @@ public class UnknownTargetModel extends AndroidModel {
 
           others = new HashSet<>();
         }
-        doMini = others.size() > 0;
+        doMini = !others.isEmpty();
         others.addAll(Arrays.asList(externalModel.getDescriptor().getParameters()));
         descr =
             Descriptor.findOrCreate(

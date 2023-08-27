@@ -33,7 +33,7 @@ public class ClassSignature extends Signature {
   }
 
   public static ClassSignature make(String sig) {
-    if (sig == null || sig.length() == 0) {
+    if (sig == null || sig.isEmpty()) {
       throw new IllegalArgumentException("empty or null sig");
     }
     return new ClassSignature(sig);
@@ -91,7 +91,7 @@ public class ClassSignature extends Signature {
       result.add(ClassTypeSignature.makeClassTypeSig(rawString().substring(start, end)));
       start = end;
     }
-    if (result.size() == 0) {
+    if (result.isEmpty()) {
       return null;
     }
     ClassTypeSignature[] arr = new ClassTypeSignature[result.size()];

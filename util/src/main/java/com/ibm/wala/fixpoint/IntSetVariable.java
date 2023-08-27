@@ -48,7 +48,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
   public boolean addAll(IntSet B) {
     if (V == null) {
       V = IntSetUtil.getDefaultIntSetFactory().makeCopy(B);
-      return (B.size() > 0);
+      return !B.isEmpty();
     } else {
       boolean result = V.addAll(B);
       return result;

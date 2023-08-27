@@ -901,7 +901,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     if (n.isConstructor()) mdast = createConstructorBody(n, classBinding, context, inits);
     else if ((n.getModifiers() & Modifier.ABSTRACT) != 0) // abstract
     mdast = null;
-    else if (n.getBody() == null || n.getBody().statements().size() == 0) // empty
+    else if (n.getBody() == null || n.getBody().statements().isEmpty()) // empty
     mdast = makeNode(context, fFactory, n, CAstNode.RETURN);
     else mdast = visitNode(n.getBody(), context);
     // Polyglot comment: Presumably the MethodContext's parent is a ClassContext,

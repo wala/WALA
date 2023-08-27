@@ -839,7 +839,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
 
         tool.fetchResults(resultCodes, resultData, allActivities);
 
-        if (resultCodes.size() == 0) {
+        if (resultCodes.isEmpty()) {
           throw new IllegalStateException(
               "The call "
                   + asMethod

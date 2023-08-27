@@ -83,7 +83,7 @@ public abstract class AbstractJSProjectScopeTest {
 
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
-    assertTrue(info.calls.size() > 0, "cannot find any function calls");
+    assertFalse(info.calls.isEmpty(), "cannot find any function calls");
     assertTrue(info.cg.getNumberOfNodes() > 0, "cannot find any cg nodes");
   }
 

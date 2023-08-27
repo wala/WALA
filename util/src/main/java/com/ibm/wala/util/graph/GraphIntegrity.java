@@ -160,12 +160,12 @@ public class GraphIntegrity {
     @SuppressWarnings("unchecked")
     HashSet<T> s1clone = (HashSet<T>) set1.clone();
     set1.removeAll(set2);
-    if (set1.size() > 0) {
+    if (!set1.isEmpty()) {
       Object first = set1.iterator().next();
       msg = msg + ", first iterator contained " + first;
     } else {
       set2.removeAll(s1clone);
-      if (set2.size() > 0) {
+      if (!set2.isEmpty()) {
         Object first = set2.iterator().next();
         msg = msg + ", 2nd iterator contained " + first;
       } else {

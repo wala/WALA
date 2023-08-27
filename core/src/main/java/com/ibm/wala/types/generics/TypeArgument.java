@@ -71,7 +71,7 @@ public class TypeArgument extends Signature {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    if (s.length() == 0 || s.charAt(0) != '<') {
+    if (s.isEmpty() || s.charAt(0) != '<') {
       throw new IllegalArgumentException(s);
     }
     if (s.charAt(s.length() - 1) != '>') {

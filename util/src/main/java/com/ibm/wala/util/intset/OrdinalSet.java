@@ -93,7 +93,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
-    if (A.size() != 0 && B.size() != 0) {
+    if (!A.isEmpty() && !B.isEmpty()) {
       assert A.mapping.equals(B.mapping);
     }
     if (A.S == null || B.S == null) {

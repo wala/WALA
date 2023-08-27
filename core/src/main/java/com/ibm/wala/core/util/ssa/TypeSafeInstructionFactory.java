@@ -687,7 +687,7 @@ public class TypeSafeInstructionFactory {
     if (params == null) {
       throw new IllegalArgumentException("params may not be null");
     }
-    if (params.size() < 1) {
+    if (params.isEmpty()) {
       throw new IllegalArgumentException(
           "Phi needs at least one source value. Type is " + result.getType());
     }

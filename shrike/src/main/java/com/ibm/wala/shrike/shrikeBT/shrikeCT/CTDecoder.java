@@ -50,7 +50,7 @@ public final class CTDecoder extends Decoder {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    if (s.length() > 0 && s.charAt(0) != '[') {
+    if (!s.isEmpty() && s.charAt(0) != '[') {
       return 'L' + s + ';';
     } else {
       return s;

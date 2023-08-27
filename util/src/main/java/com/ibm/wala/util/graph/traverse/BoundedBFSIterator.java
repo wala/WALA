@@ -99,7 +99,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
       }
     }
     index = 0;
-    if (Q.size() > 0) {
+    if (!Q.isEmpty()) {
       T current = Q.get(0);
       visitChildren(current);
     }

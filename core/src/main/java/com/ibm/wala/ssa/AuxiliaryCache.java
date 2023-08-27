@@ -70,7 +70,7 @@ public class AuxiliaryCache implements IAuxiliaryCache {
       for (Object object : toRemove) {
         m.remove(object);
       }
-      if (m.size() > 0) {
+      if (!m.isEmpty()) {
         dictionary.put(e.getKey(), m);
       }
     }

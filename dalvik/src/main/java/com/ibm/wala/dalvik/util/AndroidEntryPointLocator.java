@@ -508,7 +508,7 @@ public final class AndroidEntryPointLocator {
    */
   private void populatePossibleEntryPoints() {
     // Populate the list of possible EntryPoints
-    if (possibleEntryPoints.size() > 0) {
+    if (!possibleEntryPoints.isEmpty()) {
       // already populated
       return;
     }

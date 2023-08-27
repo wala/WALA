@@ -222,7 +222,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (factory == null) {
       throw new IllegalArgumentException();
     }
-    if (scope.getLanguages().size() == 0) {
+    if (scope.getLanguages().isEmpty()) {
       throw new IllegalArgumentException("AnalysisScope must contain at least 1 language");
     }
     this.scope = scope;

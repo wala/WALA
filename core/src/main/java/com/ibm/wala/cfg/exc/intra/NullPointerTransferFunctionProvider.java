@@ -145,7 +145,7 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       Arrays.setAll(uses, phi::getUse);
       phiTransferFunctions.add(NullPointerState.phiValueMeetFunction(phi.getDef(), uses));
     }
-    if (phiTransferFunctions.size() > 0) {
+    if (!phiTransferFunctions.isEmpty()) {
       return NullPointerState.phisFunction(phiTransferFunctions);
     } else {
       return NullPointerState.identityFunction();
