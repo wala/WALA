@@ -221,7 +221,7 @@ public class DemandCastChecker {
       if (ir == null) continue;
       SSAInstruction[] instrs = ir.getInstructions();
       for (SSAInstruction instr : instrs) {
-        if (numSafe + numMightFail > MAX_CASTS) break outer;
+        if ((long) numSafe + numMightFail > MAX_CASTS) break outer;
         SSAInstruction instruction = instr;
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
