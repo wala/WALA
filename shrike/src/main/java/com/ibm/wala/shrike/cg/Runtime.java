@@ -124,7 +124,7 @@ public class Runtime {
   }
 
   public static void execution(String klass, String method, Object receiver) {
-    runtime.currentSite.set(null);
+    runtime.currentSite.remove();
     if (runtime.filter == null || !runtime.filter.contains(bashToDescriptor(klass))) {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
@@ -183,7 +183,7 @@ public class Runtime {
         }
       }
 
-      runtime.currentSite.set(null);
+      runtime.currentSite.remove();
     }
   }
 
