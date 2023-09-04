@@ -199,11 +199,11 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         quote = '"';
       } else {
         quote = '"';
-        value = value.replaceAll("\"", "\\\"");
+        value = value.replaceAll("\"", "\\\\\"");
       }
 
       if (value.indexOf('\n') >= 0) {
-        value = value.replaceAll("\n", "\\n");
+        value = value.replaceAll("\n", "\\\\n");
       }
 
       return Pair.make(value, quote);

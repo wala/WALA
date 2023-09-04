@@ -43,7 +43,7 @@ public class MethodTypeSignature extends Signature {
    * @return null if no arguments
    */
   public TypeSignature[] getArguments() {
-    String typeSig = rawString().replaceAll(".*\\(", "\\(").replaceAll("\\).*", "\\)");
+    String typeSig = rawString().replaceAll(".*\\(", "(").replaceAll("\\).*", ")");
     String[] args = TypeSignature.parseForTypeSignatures(typeSig);
     if (args == null) {
       return null;
