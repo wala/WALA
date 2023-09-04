@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 package com.ibm.wala.gradle
 
 plugins {

@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
   application
   id("com.ibm.wala.gradle.eclipse-maven-central")
