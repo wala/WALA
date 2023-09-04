@@ -123,9 +123,9 @@ val mavenPublication =
       }
     }
 
-val repositories = publishing.repositories
+val repositories: RepositoryHandler = publishing.repositories
 
-val mavenRepository =
+val mavenRepository: MavenArtifactRepository =
     repositories.maven {
       url =
           uri(
