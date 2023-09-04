@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.ibm.wala.gradle.CreatePackageList
 import com.ibm.wala.gradle.VerifiedDownload
 import java.net.URI
