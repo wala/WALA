@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 
 plugins {
