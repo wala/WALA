@@ -38,11 +38,13 @@ abstract class VerifiedDownload : DefaultTask() {
 
   // plugin-provided extension for downloading a resource from some URL
   @Internal
+  @Suppress("LeakingThis")
   val downloadExtension: DownloadExtension =
       project.objects.newInstance(DownloadExtension::class.java, this)
 
   // plugin-provided extension for verifying that a file has the expected checksum
   @Internal
+  @Suppress("LeakingThis")
   val verifyExtension: VerifyExtension =
       project.objects.newInstance(VerifyExtension::class.java, this)
 
