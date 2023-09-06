@@ -197,7 +197,7 @@ public class DexUtil {
 
   static TypeName getTypeName(String fieldType) {
     ImmutableByteArray fieldTypeArray = ImmutableByteArray.make(fieldType);
-    TypeName T = null;
+    final TypeName T;
     if (fieldTypeArray.get(fieldTypeArray.length() - 1) == ';') {
       T = TypeName.findOrCreate(fieldTypeArray, 0, fieldTypeArray.length() - 1);
     } else {

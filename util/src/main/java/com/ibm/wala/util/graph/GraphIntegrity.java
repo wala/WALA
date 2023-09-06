@@ -101,11 +101,11 @@ public class GraphIntegrity {
 
   @SuppressWarnings("unused")
   private static <T> void checkNodeCount(Graph<T> G) throws UnsoundGraphException {
-    int n1 = 0;
-    int n2 = 0;
-    int n3 = 0;
-    int n4 = 0;
-    int n5 = 0;
+    final int n1;
+    int n2;
+    final int n3;
+    final int n4;
+    final int n5;
     try {
       n1 = G.getNumberOfNodes();
       n2 = 0;

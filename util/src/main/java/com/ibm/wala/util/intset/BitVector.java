@@ -349,9 +349,7 @@ public class BitVector extends BitVectorBase<BitVector> {
     if (vector == null) {
       throw new IllegalArgumentException("null vector");
     }
-    int ai = 0;
-    int bi = 0;
-    for (ai = 0, bi = 0; ai < bits.length && bi < vector.bits.length; ai++, bi++) {
+    for (int ai = 0, bi = 0; ai < bits.length && bi < vector.bits.length; ai++, bi++) {
       bits[ai] &= ~vector.bits[bi];
     }
   }

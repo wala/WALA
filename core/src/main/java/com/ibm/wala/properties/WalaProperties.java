@@ -71,7 +71,7 @@ public final class WalaProperties {
    * @see PlatformUtil#getJDKModules(boolean)
    */
   public static String[] getJDKLibraryFiles(boolean justBase) {
-    Properties p = null;
+    final Properties p;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
@@ -97,7 +97,7 @@ public final class WalaProperties {
    * @throws IllegalStateException if the J2EE_DIR property is not set
    */
   public static String[] getJ2EEJarFiles() {
-    Properties p = null;
+    final Properties p;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {

@@ -171,7 +171,6 @@ public class EntryPoints {
     // String pathToJava = new String(System.getProperty("java.home").replace(" ", "\\ ") +
     // File.separator + "bin" + File.separator);
     pathToJava = System.getProperty("java.home") + File.separator + "bin" + File.separator;
-    String s = null;
 
     // String command = new String(pathToJava + "java -jar " + pathToApkTool + "apktool.jar d -f " +
     // pathToApkFile + " " + pathToApkTool + tempFolder);
@@ -196,7 +195,7 @@ public class EntryPoints {
       BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
       // read the output from the command
-
+      String s;
       while ((s = stdInput.readLine()) != null) {}
 
       // read any errors from the attempted command
@@ -291,8 +290,8 @@ public class EntryPoints {
 
   @SuppressWarnings("unused")
   private void populateEntryPoints(ClassHierarchy cha) {
-    String method = null;
-    IMethod im = null;
+    String method;
+    IMethod im;
     for (String[] intent : ActivityIntentList) {
       // method = IntentToMethod(intent[0]);
       method = "onCreate(Landroid/os/Bundle;)V";

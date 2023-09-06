@@ -330,12 +330,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       setNumNodesTraversed(0);
       setTraversalBudget(refinementPolicy.getBudgetForPass(passNum));
       Collection<InstanceKeyAndState> curP2Set = null;
-      PointsToComputer computer = null;
       boolean completedPassInBudget = false;
       try {
         while (true) {
           try {
-            computer = new PointsToComputer(queried);
+            final PointsToComputer computer = new PointsToComputer(queried);
             computer.compute();
             curP2Set = computer.getComputedP2Set(queried);
             // System.err.println("completed pass");
@@ -382,7 +381,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         break;
       }
     }
-    PointsToResult result = null;
+    final PointsToResult result;
     if (succeeded) {
       result = PointsToResult.SUCCESS;
     } else if (passNum == numPasses) {
@@ -491,7 +490,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         break;
       }
     }
-    PointsToResult result = null;
+    final PointsToResult result;
     if (succeeded) {
       result = PointsToResult.SUCCESS;
     } else if (passNum == numPasses) {
@@ -572,7 +571,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       setNumNodesTraversed(0);
       setTraversalBudget(refinementPolicy.getBudgetForPass(passNum));
       Collection<PointerKeyAndState> curFlowsToSet = null;
-      FlowsToComputer computer = null;
+      FlowsToComputer computer;
       try {
         while (true) {
           try {
@@ -619,7 +618,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         break;
       }
     }
-    PointsToResult result = null;
+    final PointsToResult result;
     if (succeeded) {
       result = PointsToResult.SUCCESS;
     } else if (passNum == numPasses) {
@@ -2433,7 +2432,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             return null;
           }
           IR ir = node.getIR();
-          PointerKey base = null, stored = null;
+          final PointerKey base, stored;
           if (field == ArrayContents.v()) {
             final SSAInstruction instruction =
                 ir.getInstructions()[fieldWrite.getInstructionIndex()];

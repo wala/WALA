@@ -274,7 +274,7 @@ public class StringStuff {
             while (StringStuff.isTypeCodeChar(b, i)) {
               ++i;
             }
-            TypeName T = null;
+            final TypeName T;
             byte c = b.get(i++);
             if (c == TypeReference.ClassTypeCode || c == TypeReference.OtherPrimitiveTypeCode) {
               while (b.get(i++) != ';')

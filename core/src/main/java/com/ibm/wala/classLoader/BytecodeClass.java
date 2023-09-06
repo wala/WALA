@@ -211,7 +211,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   @Override
   public IField getField(Atom name, TypeName type) {
-    boolean unresolved = false;
+    boolean unresolved;
     try {
       // typically, there will be at most one field with the name
       IField field = getField(name);
@@ -452,7 +452,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
     // at this point result holds all interfaces the class directly extends.
     // now expand to a fixed point.
-    Set<IClass> last = null;
+    Set<IClass> last;
     do {
       last = HashSetFactory.make(result);
       for (IClass i : last) {
@@ -519,7 +519,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       Collection<Annotation> annotations,
       Collection<TypeAnnotation> typeAnnotations,
       TypeSignature sig) {
-    TypeName T = null;
+    final TypeName T;
     if (fieldType.get(fieldType.length() - 1) == ';') {
       T = TypeName.findOrCreate(fieldType, 0, fieldType.length() - 1);
     } else {

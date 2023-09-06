@@ -102,7 +102,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
 
   /** Compute the set of {@link InstanceKey}s which may represent a particular type. */
   private OrdinalSet<InstanceKey> computeOrdinalInstanceSet(IClass type) {
-    Collection<IClass> klasses = null;
+    final Collection<IClass> klasses;
     if (type.isInterface()) {
       klasses = getCallGraph().getClassHierarchy().getImplementors(type.getReference());
     } else {

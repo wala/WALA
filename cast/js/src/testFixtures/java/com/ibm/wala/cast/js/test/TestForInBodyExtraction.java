@@ -53,8 +53,8 @@ public abstract class TestForInBodyExtraction {
   }
 
   public void testRewriter(String testName, String in, String out) {
-    String expected = null;
-    String actual = null;
+    String expected;
+    String actual;
     try {
       final var tmp = File.createTempFile("test", ".js", tmpDir);
       FileUtil.writeFile(tmp, in);

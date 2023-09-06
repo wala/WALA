@@ -105,7 +105,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
         }
       }
     }
-    InstanceKeySite node = null;
+    InstanceKeySite node;
     for (InstanceKey k : instanceKeys) {
       // create a node for each InstanceKey of type string
       if (k.getConcreteType().getName().toString().equals("Ljava/lang/String")) {

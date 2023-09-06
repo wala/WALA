@@ -185,8 +185,7 @@ public class FlowGraph implements Iterable<Vertex> {
       private final Map<Pair<PrototypeField, ObjectVertex>, PrototypeFieldVertex> proto =
           HashMapFactory.make();
 
-      private GraphReachability<Vertex, ObjectVertex> pointerAnalysis =
-          computeClosure(graph, monitor, ObjectVertex.class);
+      private GraphReachability<Vertex, ObjectVertex> pointerAnalysis;
 
       private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<>(graph);
 
@@ -203,6 +202,9 @@ public class FlowGraph implements Iterable<Vertex> {
       }
 
       {
+        // This initial value of `pointerAnalysis` is used by the `getPointsToSet` call below.
+        pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
+
         PropVertex proto = factory.makePropVertex("prototype");
         if (graph.containsNode(proto)) {
           for (Vertex p : Iterator2Iterable.make(graph.getPredNodes(proto))) {

@@ -186,7 +186,7 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 // possible)
 
 public abstract class JDTJava2CAstTranslator<T extends Position> {
-  protected boolean dump = false;
+  protected boolean dump;
 
   protected final CAst fFactory = new CAstImpl();
 
@@ -1083,7 +1083,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       }
 
       if (fDecl != null) {
-        int i = 0; // index to start filling up with real params
+        int i; // index to start filling up with real params
         if ((fModifiers & Modifier.STATIC) != 0) {
           fParameterNames = new String[fDecl.parameters().size()];
           i = 0;

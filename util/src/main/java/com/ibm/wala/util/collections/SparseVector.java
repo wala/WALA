@@ -34,7 +34,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
   private static final int DEF_INITIAL_SIZE = 5;
 
   /** if indices[i] = x, then data[i] == get(x) */
-  private MutableSparseIntSet indices = MutableSparseIntSet.makeEmpty();
+  private MutableSparseIntSet indices;
 
   private Object[] data;
 

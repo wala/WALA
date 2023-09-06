@@ -538,7 +538,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       // create the allocation statement and add it to the method summary
       NewSiteReference ref = NewSiteReference.make(governingMethod.getNumberOfStatements(), type);
 
-      SSANewInstruction a = null;
+      final SSANewInstruction a;
       if (type.isArrayType()) {
         String size = atts.getValue(A_SIZE);
         Assertions.productionAssertion(size != null);

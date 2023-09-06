@@ -245,7 +245,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     private boolean allTheSame(int[] rhs) {
       int x = -1;
       // set x := the first non-TOP value
-      int i = 0;
+      int i;
       for (i = 0; i < rhs.length; i++) {
         if (rhs[i] != TOP) {
           x = rhs[i];

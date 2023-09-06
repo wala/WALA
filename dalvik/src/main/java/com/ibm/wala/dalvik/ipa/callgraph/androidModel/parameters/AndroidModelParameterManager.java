@@ -100,7 +100,7 @@ public class AndroidModelParameterManager {
   private int currentScope = 0;
 
   /** For checking if type is CREATE or REUSE (optional) */
-  private IInstantiationBehavior behaviour = null;
+  private final IInstantiationBehavior behaviour;
 
   /** Description only used for toString() */
   private String description;

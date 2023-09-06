@@ -550,7 +550,7 @@ public class TabulationSolver<T, P, F> {
       if (DEBUG_LEVEL > 0) {
         System.err.println(" process return site: " + returnSite);
       }
-      IUnaryFlowFunction f = null;
+      final IUnaryFlowFunction f;
       if (hasCallee) {
         f = flowFunctionMap.getCallToReturnFlowFunction(edge.target, returnSite);
       } else {

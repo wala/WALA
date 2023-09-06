@@ -170,7 +170,7 @@ public class PDFSlice {
       System.err.println("Statement: " + s);
 
       // compute the slice as a collection of statements
-      Collection<Statement> slice = null;
+      final Collection<Statement> slice;
       if (goBackward) {
         final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
         slice = Slicer.computeBackwardSlice(s, cg, pointerAnalysis, dOptions, cOptions);

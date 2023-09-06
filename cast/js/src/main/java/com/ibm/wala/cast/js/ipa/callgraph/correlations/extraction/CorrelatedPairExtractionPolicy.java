@@ -96,7 +96,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
 
     if (!entity.getPosition().getURL().toString().equals(startPos.getURL().toString())) return true;
     Set<ChildPos> startNodes = findNodesAtPos(CAstNode.OBJECT_REF, startPos, entity);
-    Set<ChildPos> endNodes = null;
+    final Set<ChildPos> endNodes;
     if (corr instanceof ReadWriteCorrelation) {
       endNodes = findNodesAtPos(CAstNode.ASSIGN, endPos, entity);
     } else if (corr instanceof EscapeCorrelation) {
@@ -207,9 +207,9 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       String parmName,
       List<String> locals) {
     ChildPos pos = startNode;
-    CAstNode block = null;
-    int start = -1, end = 0;
-    int start_inner = -1, end_inner = -1;
+    CAstNode block;
+    int start, end;
+    int start_inner, end_inner = -1;
 
     do {
       if (pos != startNode && pos.getParentPos() instanceof ChildPos)

@@ -103,7 +103,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    * @return a Relation object to track implicit equations using the operator
    */
   private static IBinaryNaturalRelation makeRelation(AbstractOperator<PointsToSetVariable> op) {
-    byte[] implementation = null;
+    final byte[] implementation;
     if (op instanceof AssignOperator) {
       // lots of assignments.
       implementation =

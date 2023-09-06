@@ -351,7 +351,7 @@ public final class ClassInstrumenter {
 
   private LineNumberTableWriter makeNewLines(
       ClassWriter w, CodeReader oldCode, Compiler.Output output) throws InvalidClassFileException {
-    int[] newLineMap = null;
+    final int[] newLineMap;
     int[] oldLineMap = LineNumberTableReader.makeBytecodeToSourceMap(oldCode);
     if (oldLineMap != null) {
       // Map the old line number map onto the new bytecodes
