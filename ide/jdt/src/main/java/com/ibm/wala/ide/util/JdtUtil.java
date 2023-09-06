@@ -290,7 +290,7 @@ public class JdtUtil {
     if (projects == null) {
       throw new IllegalArgumentException("null projects");
     }
-    IType type = null;
+    final IType type;
     try {
       type = findJavaClassInProjects(klass, projects);
     } catch (Throwable t) {

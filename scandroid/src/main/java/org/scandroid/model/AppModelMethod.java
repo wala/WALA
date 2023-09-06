@@ -311,7 +311,7 @@ public class AppModelMethod {
   private SSANewInstruction processAllocation(TypeReference tr, Integer i, boolean isInner) {
     // create the allocation statement and add it to the method summary
     NewSiteReference ref = NewSiteReference.make(methodSummary.getNumberOfStatements(), tr);
-    SSANewInstruction a = null;
+    final SSANewInstruction a;
 
     if (tr.isArrayType()) {
       int[] sizes = new int[((ArrayClass) cha.lookupClass(tr)).getDimensionality()];
@@ -335,7 +335,7 @@ public class AppModelMethod {
         // allocate an instance for the array contents
         NewSiteReference n = NewSiteReference.make(methodSummary.getNumberOfStatements(), e);
         int alloc = nextLocal++;
-        SSANewInstruction ni = null;
+        final SSANewInstruction ni;
         if (e.isArrayType()) {
           int[] sizes = new int[((ArrayClass) cha.lookupClass(tr)).getDimensionality()];
           Arrays.fill(sizes, getValueNumberForIntConstant(1));
@@ -432,7 +432,7 @@ public class AppModelMethod {
             methodSummary.getNumberOfStatements(),
             site.getDeclaredTarget(),
             site.getInvocationCode());
-    SSAAbstractInvokeInstruction s = null;
+    final SSAAbstractInvokeInstruction s;
     if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
       s =
           insts.InvokeInstruction(

@@ -346,7 +346,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
   @Override
   public Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk) {
-    CGNode callee = null;
+    final CGNode callee;
     if (formalPk instanceof LocalPointerKey) {
       callee = ((LocalPointerKey) formalPk).getNode();
     } else if (formalPk instanceof ReturnValueKey) {

@@ -175,7 +175,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
           System.err.println("FOUND RECURSION");
           System.err.println("stack " + prevStack + " contains " + callSite);
         }
-        CallerSiteContext topCallSite = null;
+        CallerSiteContext topCallSite;
         CallStack tmpStack = prevStack;
         // mark the appropriate call sites as recursive
         // and pop them

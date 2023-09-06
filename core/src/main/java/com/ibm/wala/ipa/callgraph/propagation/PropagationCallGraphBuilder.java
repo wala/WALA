@@ -1331,7 +1331,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    */
   @SuppressWarnings("unused")
   protected IntSet filterForClass(IntSet S, IClass klass) {
-    MutableIntSet filter = null;
+    final MutableIntSet filter;
     if (klass.getReference().equals(TypeReference.JavaLangObject)) {
       return S;
     } else {

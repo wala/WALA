@@ -71,7 +71,6 @@ public class ExceptionTransferFunctionProvider
      */
 
     Iterator<CallSiteReference> callsites = cg.getPossibleSites(src, dst);
-    BitVector filtered = new BitVector(transformer.getValues().getSize());
 
     if (callsites.hasNext()) {
 
@@ -84,7 +83,7 @@ public class ExceptionTransferFunctionProvider
         caught.retainAll(intraResult.getAnalysis(src).getCaughtExceptions(callsite));
       }
 
-      filtered = transformer.computeBitVector(caught);
+      BitVector filtered = transformer.computeBitVector(caught);
       return new BitVectorMinusVector(filtered);
     } else {
       // This case should not happen, as we should only get src, dst pairs,

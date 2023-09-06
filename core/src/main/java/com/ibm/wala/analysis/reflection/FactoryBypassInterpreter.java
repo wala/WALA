@@ -532,7 +532,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         typesAllocated.add(T);
         int i = getLocalForType(T);
         NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
-        SSANewInstruction a = null;
+        final SSANewInstruction a;
         if (T.isArrayType()) {
           int[] sizes = new int[((ArrayClass) klass).getDimensionality()];
           initValueNumberForConstantOne();

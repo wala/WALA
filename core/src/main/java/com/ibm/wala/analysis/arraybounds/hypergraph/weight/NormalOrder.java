@@ -13,7 +13,7 @@ public class NormalOrder implements Comparator<Weight> {
 
   @Override
   public int compare(Weight o1, Weight o2) {
-    int result = 0;
+    final int result;
 
     if (o1.getType() == Type.NOT_SET || o2.getType() == Type.NOT_SET) {
       throw new IllegalArgumentException("Tried to compare weights, which are not set yet.");

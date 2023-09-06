@@ -905,7 +905,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     //  System.out.println("debug here");
 
     instructions = new InstructionArray();
-    int instLoc = 0;
+    int instLoc;
     int instCounter = -1;
     // int pc = 0;
     int currentCodeAddress = 0;

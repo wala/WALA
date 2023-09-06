@@ -95,7 +95,7 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   @Override
   @SuppressWarnings("unchecked")
   public Object clone() {
-    BitVectorBase<T> result = null;
+    final BitVectorBase<T> result;
     try {
       result = (BitVectorBase<T>) super.clone();
     } catch (CloneNotSupportedException e) {

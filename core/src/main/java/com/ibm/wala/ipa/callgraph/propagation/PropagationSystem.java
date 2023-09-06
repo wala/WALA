@@ -470,8 +470,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
     for (int i = 1; i < dim; i++) {
       TypeReference jlo = makeArray(TypeReference.JavaLangObject, i);
-      IClass jloClass = null;
-      jloClass = aClass.getClassLoader().lookupClass(jlo.getName());
+      final IClass jloClass = aClass.getClassLoader().lookupClass(jlo.getName());
       MutableIntSet set = findOrCreateSparseSetForClass(jloClass);
       set.add(index);
     }

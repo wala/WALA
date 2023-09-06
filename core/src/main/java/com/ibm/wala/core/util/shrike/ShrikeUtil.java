@@ -51,7 +51,7 @@ public class ShrikeUtil implements BytecodeConstants {
       return p;
     }
     ImmutableByteArray b = ImmutableByteArray.make(type);
-    TypeName T = null;
+    final TypeName T;
     /*if (b.get(0) != '[') {
       T = TypeName.findOrCreate(b, 0, b.length() - 1);
     } else {*/

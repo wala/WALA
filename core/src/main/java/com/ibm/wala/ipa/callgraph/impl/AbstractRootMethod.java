@@ -149,7 +149,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     CallSiteReference newSite =
         CallSiteReference.make(
             statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
-    SSAAbstractInvokeInstruction s = null;
+    final SSAAbstractInvokeInstruction s;
     if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
       s = insts.InvokeInstruction(statements.size(), params, nextLocal++, newSite, null);
     } else {
@@ -238,7 +238,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           // allocate an instance for the array contents
           NewSiteReference n = NewSiteReference.make(statements.size(), e);
           int alloc = nextLocal++;
-          SSANewInstruction ni = null;
+          final SSANewInstruction ni;
           if (e.isArrayType()) {
             int[] sizes = new int[((ArrayClass) cha.lookupClass(T)).getDimensionality()];
             Arrays.fill(sizes, getValueNumberForIntConstant(1));

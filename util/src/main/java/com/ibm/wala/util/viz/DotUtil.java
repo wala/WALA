@@ -268,7 +268,7 @@ public class DotUtil {
   }
 
   private static <T> String getLabel(T n, NodeDecorator<T> d) throws WalaException {
-    String result = null;
+    String result;
     if (d == null) {
       result = n.toString();
     } else {

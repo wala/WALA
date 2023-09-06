@@ -70,7 +70,7 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
       Assertions.UNREACHABLE(e.getMessage());
     }
 
-    String wrapperSource = null;
+    final String wrapperSource;
     String ext = FilenameUtils.getExtension(getFile().toString()).toLowerCase();
     switch (ext) {
       case "js":

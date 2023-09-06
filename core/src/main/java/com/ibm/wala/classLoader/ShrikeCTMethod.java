@@ -269,7 +269,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 
   @Override
   public String getLocalVariableName(int bcIndex, int localNumber) {
-    int[][] map = null;
+    final int[][] map;
     try {
       map = getBCInfo().localVariableMap;
     } catch (InvalidClassFileException e1) {

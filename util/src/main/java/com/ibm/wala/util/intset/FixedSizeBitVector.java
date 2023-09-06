@@ -300,7 +300,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /** Clones the FixedSizeBitVector. */
   @Override
   public Object clone() {
-    FixedSizeBitVector result = null;
+    final FixedSizeBitVector result;
     try {
       result = (FixedSizeBitVector) super.clone();
     } catch (CloneNotSupportedException e) {

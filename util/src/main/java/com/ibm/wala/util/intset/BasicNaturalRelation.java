@@ -233,7 +233,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     @NullUnmarked
     @Override
     public IntPair next() {
-      IntPair result = null;
+      final IntPair result;
       if (nextIndex == smallStore.length) {
         int y = delegateIterator.next();
         result = new IntPair(nextX, y);

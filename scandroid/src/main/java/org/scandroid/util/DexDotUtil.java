@@ -261,7 +261,7 @@ public class DexDotUtil extends DotUtil {
   }
 
   private static <T> String getLabel(T o, NodeDecorator<T> d) throws WalaException {
-    String result = null;
+    String result;
     if (d == null) {
       // result = o.toString();
       result = cleanUpString(o.toString());

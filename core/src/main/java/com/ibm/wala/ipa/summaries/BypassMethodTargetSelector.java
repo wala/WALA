@@ -160,7 +160,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     if (syntheticMethods.containsKey(m)) {
       return syntheticMethods.get(m);
     } else {
-      MethodSummary summ = null;
+      final MethodSummary summ;
       if (canIgnore(m)) {
         TypeReference T = m.getDeclaringClass();
         IClass C = cha.lookupClass(T);
@@ -199,7 +199,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     if (syntheticMethods.containsKey(ref)) {
       return syntheticMethods.get(ref);
     } else {
-      MethodSummary summ = null;
+      final MethodSummary summ;
       if (canIgnore(ref)) {
         summ = generateNoOp(ref, isStatic);
       } else {

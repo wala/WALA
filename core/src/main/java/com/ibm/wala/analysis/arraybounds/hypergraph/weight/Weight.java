@@ -39,7 +39,7 @@ public class Weight {
    * @return this + other
    */
   public Weight add(Weight other) {
-    Weight result = null;
+    final Weight result;
     if (this.getType() == Type.NUMBER) {
       if (other.getType() == Type.NUMBER) {
         result = new Weight(Type.NUMBER, this.getNumber() + other.getNumber());

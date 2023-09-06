@@ -162,7 +162,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     int retValue = nextLocal++;
     // value number of the result of the clone()
     NewSiteReference ref = NewSiteReference.make(NEW_PC, klass.getReference());
-    SSANewInstruction N = null;
+    final SSANewInstruction N;
     if (klass.isArrayClass()) {
       int length = nextLocal++;
       statements.add(insts.ArrayLengthInstruction(statements.size(), length, 1));

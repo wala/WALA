@@ -76,10 +76,10 @@ public abstract class AbstractAndroidModel {
   private static final Logger logger = LoggerFactory.getLogger(AbstractAndroidModel.class);
 
   private ExecutionOrder currentSection = null;
-  protected VolatileMethodSummary body = null;
-  protected TypeSafeInstructionFactory insts = null;
-  protected SSAValueManager paramManager = null;
-  protected Iterable<? extends Entrypoint> entryPoints = null;
+  protected VolatileMethodSummary body;
+  protected TypeSafeInstructionFactory insts;
+  protected SSAValueManager paramManager;
+  protected Iterable<? extends Entrypoint> entryPoints;
   private IExecutionOrder lastQueriedMethod = null; // Used for sanity checks only
 
   //

@@ -175,7 +175,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     // pointer
     int args[] = new int[nargs];
     int pc = 0;
-    int parametersVn = -1; // parametersVn will hold the value number of parameters array
+    final int parametersVn; // parametersVn will hold the value number of parameters array
 
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
       // allocate the new object constructed
@@ -239,7 +239,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     }
 
     int exceptions = nextLocal++;
-    int result = -1;
+    final int result;
 
     // emit the dispatch and return instructions
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {

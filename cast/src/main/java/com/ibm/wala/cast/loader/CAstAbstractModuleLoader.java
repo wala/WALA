@@ -162,9 +162,8 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       } else {
         TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, modules);
 
-        CAstEntity fileEntity = null;
         try {
-          fileEntity = xlatorToCAst.translateToCAst();
+          final CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
           if (DEBUG) {
             CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));

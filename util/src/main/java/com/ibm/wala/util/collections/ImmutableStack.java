@@ -114,7 +114,7 @@ public class ImmutableStack<T> implements Iterable<T> {
       return emptyStack();
     }
     int size = entries.length + 1;
-    T[] tmpEntries = null;
+    final T[] tmpEntries;
     if (isWithinSizeLimit(size)) {
       tmpEntries = makeInternalArray(size);
       System.arraycopy(entries, 0, tmpEntries, 0, entries.length);
@@ -237,7 +237,7 @@ public class ImmutableStack<T> implements Iterable<T> {
       throw new IllegalArgumentException("null other");
     }
     int size = entries.length + other.entries.length;
-    T[] tmpEntries = null;
+    final T[] tmpEntries;
     if (isWithinSizeLimit(size)) {
       tmpEntries = (T[]) new Object[size];
       System.arraycopy(entries, 0, tmpEntries, 0, entries.length);

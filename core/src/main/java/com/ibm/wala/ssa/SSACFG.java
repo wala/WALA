@@ -163,7 +163,7 @@ public class SSACFG
 
   private void recordExceptionTypes(Set<ExceptionHandler> set, IClassLoader loader) {
     for (ExceptionHandler handler : set) {
-      TypeReference t = null;
+      final TypeReference t;
       if (handler.getCatchClass() == null) {
         // by convention, in ShrikeCT this means catch everything
         t = TypeReference.JavaLangThrowable;

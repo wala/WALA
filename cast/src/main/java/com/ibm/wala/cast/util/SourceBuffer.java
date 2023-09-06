@@ -103,7 +103,7 @@ public class SourceBuffer {
     try (Reader pr = p.getReader()) {
       try (BufferedReader reader = new BufferedReader(pr)) {
 
-        String currentLine = null;
+        String currentLine;
         List<String> lines = new ArrayList<>();
         int offset = 0, line = 0;
         do {
@@ -123,7 +123,7 @@ public class SourceBuffer {
         int endColumn = -1;
         int startOffset = -1;
         int startLine = line;
-        int startColumn = -1;
+        final int startColumn;
         if (p.getLastOffset() >= 0) {
           if (p.getFirstOffset() == offset) {
             startOffset = p.getFirstOffset();

@@ -646,7 +646,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       Iterator<TypeReference> it = bb.getCaughtExceptionTypes();
       TypeReference t = it.next();
       IClass klass = cha.lookupClass(t);
-      TypeAbstraction result = null;
+      TypeAbstraction result;
       if (klass == null) {
         // a type that cannot be loaded.
         // be pessimistic

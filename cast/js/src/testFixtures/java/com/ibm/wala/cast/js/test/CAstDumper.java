@@ -24,7 +24,6 @@ import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -63,7 +62,7 @@ public class CAstDumper {
   }
 
   private void dump(CAstEntity entity, int indent, StringBuilder buf) {
-    Collection<CAstEntity> scopedEntities = Collections.emptySet();
+    final Collection<CAstEntity> scopedEntities;
     if (entity.getKind() == CAstEntity.SCRIPT_ENTITY) {
       buf.append(indent(indent)).append(entity.getName()).append(":\n");
       scopedEntities = dumpScopedEntities(entity, indent + 2, buf);

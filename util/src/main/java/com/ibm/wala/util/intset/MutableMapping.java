@@ -38,7 +38,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   private Object[] array;
 
-  private int nextIndex = 0;
+  private int nextIndex;
 
   /** A mapping from object to Integer. */
   final HashMap<T, Integer> map = HashMapFactory.make();

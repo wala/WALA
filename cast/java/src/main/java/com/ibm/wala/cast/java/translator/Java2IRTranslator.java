@@ -31,7 +31,7 @@ public class Java2IRTranslator {
 
   protected final SetOfClasses exclusions;
 
-  CAstRewriterFactory<?, ?> castRewriterFactory = null;
+  CAstRewriterFactory<?, ?> castRewriterFactory;
 
   public Java2IRTranslator(JavaSourceLoaderImpl srcLoader, SetOfClasses exclusions) {
     this(srcLoader, null, exclusions);

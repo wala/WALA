@@ -46,7 +46,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
-    com.ibm.wala.shrike.shrikeBT.IInstruction[] shrikeInstructions = null;
+    final com.ibm.wala.shrike.shrikeBT.IInstruction[] shrikeInstructions;
     try {
       shrikeInstructions = method.getInstructions();
     } catch (InvalidClassFileException e) {
