@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 package com.ibm.wala.gradle
 
 plugins {
@@ -121,9 +123,9 @@ val mavenPublication =
       }
     }
 
-val repositories = publishing.repositories
+val repositories: RepositoryHandler = publishing.repositories
 
-val mavenRepository =
+val mavenRepository: MavenArtifactRepository =
     repositories.maven {
       url =
           uri(

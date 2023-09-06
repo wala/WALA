@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.VerifiedDownload
