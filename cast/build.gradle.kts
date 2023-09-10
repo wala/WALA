@@ -58,12 +58,12 @@ artifacts.add(
 tasks.named<Javadoc>("javadoc") {
   inputs.files(castJsPackageListDirectory)
 
-  inputs.property("extdocURL", castJsJavadocDestinationDirectory.singleFile)
-  inputs.property("packagelistLoc", castJsPackageListDirectory.singleFile)
-  doFirst {
-    (options as StandardJavadocDocletOptions).linksOffline(
-        inputs.properties["extdocURL"].toString(), inputs.properties["packagelistLoc"].toString())
-  }
+  val extdocURL = castJsJavadocDestinationDirectory.singleFile
+  val packagelistLoc = castJsPackageListDirectory.singleFile
+  inputs.property("extdocURL", extdocURL)
+  inputs.property("packagelistLoc", packagelistLoc)
+  (options as StandardJavadocDocletOptions).linksOffline(
+      extdocURL.toString(), packagelistLoc.toString())
 }
 
 tasks.named<Test>("test") {
