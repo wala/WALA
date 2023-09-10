@@ -86,7 +86,12 @@ application {
 
                       // main executable to run for test
                       inputs.file(linkedFile)
-                      doFirst { executable(linkedFile.get().asFile) }
+                      executable(
+                          object {
+                            val toString by lazy { linkedFile.get().asFile.toString() }
+
+                            override fun toString() = toString
+                          })
 
                       // xlator Java bytecode + implementation of native methods
                       val pathElements = project.objects.listProperty<File>()
