@@ -31,8 +31,8 @@ the<BasePluginExtension>().archivesName = "com.ibm.wala${project.path.replace(':
 val sourceSets = the<SourceSetContainer>()
 
 configurations {
-  create("ecj") { isCanBeConsumed = false }
-  named("javadocClasspath").get().extendsFrom(compileClasspath.get())
+  resolvable("ecj")
+  named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
 fun findLibrary(alias: String) =
