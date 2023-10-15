@@ -41,7 +41,7 @@ import java.util.Set;
 
 public abstract class TestCAstTranslator {
 
-  protected static class TranslatorAssertions {
+  public static class TranslatorAssertions {
     private final Set<String> classes = new HashSet<>();
 
     private final Map<String, String> supers = new HashMap<>();
