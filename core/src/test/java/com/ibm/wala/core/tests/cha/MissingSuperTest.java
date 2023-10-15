@@ -68,7 +68,7 @@ public class MissingSuperTest extends WalaTestCase {
     assertNotNull(klass, "expected class MissingSuper to load");
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
-    assertEquals(2, declaredMethods.size(), declaredMethods.toString());
+    assertEquals(2, declaredMethods.size(), declaredMethods::toString);
     for (IMethod m : declaredMethods) {
       // should succeed
       cache.getIR(m);

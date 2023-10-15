@@ -184,7 +184,7 @@ public abstract class TestCAstTranslator {
         assertEquals(
             "super of " + cls.getName() + " is " + cls.getSuperclass().getName(),
             supers.get(cls.getName().toString()),
-            cls.getSuperclass().getName().toString());
+            () -> cls.getSuperclass().getName().toString());
       }
 
       for (Object name2 : cls.getDeclaredInstanceFields()) {

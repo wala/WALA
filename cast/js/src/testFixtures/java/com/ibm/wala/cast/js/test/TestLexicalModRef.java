@@ -68,7 +68,7 @@ public abstract class TestLexicalModRef {
                       .equals(rv.toString())
                   || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]"
                       .equals(rv.toString()),
-              rv.toString());
+              rv::toString);
         }
       }
     }
