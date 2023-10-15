@@ -233,7 +233,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           if (!filter.test(callerRef)) {
             continue loop;
           }
-          assertEquals(1, nodes.size(), callerRef.toString());
+          assertEquals(1, nodes.size(), callerRef::toString);
           caller = nodes.iterator().next();
         }
 

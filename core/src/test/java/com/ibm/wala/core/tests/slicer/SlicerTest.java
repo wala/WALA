@@ -185,7 +185,7 @@ public class SlicerTest {
     Collection<Statement> slice = computeBackwardSlice;
     SlicerUtil.dumpSlice(slice);
 
-    assertEquals(9, SlicerUtil.countNormals(slice), slice.toString());
+    assertEquals(9, SlicerUtil.countNormals(slice), slice::toString);
   }
 
   @Test
@@ -211,7 +211,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice.toString());
+    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice::toString);
   }
 
   @Test
@@ -238,7 +238,7 @@ public class SlicerTest {
         Slicer.computeForwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(4, slice.size(), slice.toString());
+    assertEquals(4, slice.size(), slice::toString);
   }
 
   @Test
@@ -265,7 +265,7 @@ public class SlicerTest {
         Slicer.computeForwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(7, slice.size(), slice.toString());
+    assertEquals(7, slice.size(), slice::toString);
   }
 
   /** test unreproduced bug reported on mailing list by Sameer Madan, 7/3/2007 */
@@ -329,7 +329,7 @@ public class SlicerTest {
     slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    assertEquals(4, slice.size(), slice.toString());
+    assertEquals(4, slice.size(), slice::toString);
   }
 
   @Test
@@ -386,7 +386,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countConditionals(slice), slice.toString());
+    assertEquals(2, SlicerUtil.countConditionals(slice), slice::toString);
   }
 
   @Test
@@ -413,7 +413,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(1, SlicerUtil.countConditionals(slice), slice.toString());
+    assertEquals(1, SlicerUtil.countConditionals(slice), slice::toString);
   }
 
   @Test
@@ -440,7 +440,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(0, SlicerUtil.countConditionals(slice), slice.toString());
+    assertEquals(0, SlicerUtil.countConditionals(slice), slice::toString);
   }
 
   @Test
@@ -475,7 +475,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(1, SlicerUtil.countConditionals(slice), slice.toString());
+    assertEquals(1, SlicerUtil.countConditionals(slice), slice::toString);
   }
 
   @Test
@@ -573,7 +573,7 @@ public class SlicerTest {
             DataDependenceOptions.NONE,
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countInvokes(slice), slice.toString());
+    assertEquals(2, SlicerUtil.countInvokes(slice), slice::toString);
   }
 
   @Test
@@ -600,7 +600,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice.toString());
+    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice::toString);
   }
 
   @Test
@@ -628,8 +628,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(1, SlicerUtil.countAloads(slice), slice.toString());
+    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(1, SlicerUtil.countAloads(slice), slice::toString);
   }
 
   @Test
@@ -657,8 +657,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(1, SlicerUtil.countPutfields(slice), slice.toString());
+    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(1, SlicerUtil.countPutfields(slice), slice::toString);
   }
 
   @Test
@@ -701,8 +701,8 @@ public class SlicerTest {
             ControlDependenceOptions.NONE);
     slice = computeBackwardSlice;
     SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(1, SlicerUtil.countPutfields(slice), slice.toString());
+    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(1, SlicerUtil.countPutfields(slice), slice::toString);
   }
 
   @Test
@@ -730,9 +730,9 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(2, SlicerUtil.countPutstatics(slice), slice.toString());
-    assertEquals(2, SlicerUtil.countGetstatics(slice), slice.toString());
+    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(2, SlicerUtil.countPutstatics(slice), slice::toString);
+    assertEquals(2, SlicerUtil.countGetstatics(slice), slice::toString);
   }
 
   @Test
@@ -760,7 +760,7 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice.toString());
+    assertEquals(2, SlicerUtil.countAllocations(slice, false), slice::toString);
   }
 
   @Test
@@ -789,8 +789,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(3, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(2, SlicerUtil.countPutfields(slice), slice.toString());
+    assertEquals(3, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(2, SlicerUtil.countPutfields(slice), slice::toString);
   }
 
   @Test
@@ -821,8 +821,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(0, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(1, SlicerUtil.countPutfields(slice), slice.toString());
+    assertEquals(0, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(1, SlicerUtil.countPutfields(slice), slice::toString);
   }
 
   /**
@@ -880,8 +880,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice.toString());
-    assertEquals(1, SlicerUtil.countPutfields(slice), slice.toString());
+    assertEquals(1, SlicerUtil.countAllocations(slice, false), slice::toString);
+    assertEquals(1, SlicerUtil.countPutfields(slice), slice::toString);
   }
 
   @Test
