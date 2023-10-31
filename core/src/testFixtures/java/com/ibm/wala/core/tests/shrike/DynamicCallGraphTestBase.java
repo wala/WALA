@@ -143,7 +143,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     assertTrue(Files.exists(cgLocation), "expected to create call graph");
   }
 
-  interface EdgesTest {
+  protected interface EdgesTest {
     void edgesTest(CallGraph staticCG, CGNode caller, MethodReference callee);
   }
 
