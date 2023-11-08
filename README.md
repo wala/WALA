@@ -45,9 +45,9 @@ Gradle-based example.  We are actively re-organizing the deeper wiki
 technical documentation.  In the meantime, you can check out tutorial
 slides to get an overview of WALA:
 
-* [Core WALA](http://wala.sourceforge.net/files/PLDI_WALA_Tutorial.pdf) (PDF)
+* [Core WALA](https://wala.github.io/tutorials/PLDI_WALA_Tutorial.pdf) (PDF)
 * [WALA
-  JavaScript](http://wala.sourceforge.net/files/WALAJavaScriptTutorial.pdf)
+  JavaScript](https://wala.github.io/tutorials/WALAJavaScriptTutorial.pdf)
   (PDF)
 
 You can also watch screencasts of the WALA JavaScript tutorial [here](https://www.youtube.com/user/WALALibraries/videos).
