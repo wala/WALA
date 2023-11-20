@@ -63,6 +63,7 @@ val aggregatedJavadocClasspath: Configuration by configurations.creating { isCan
 val aggregatedJavadocSource: Configuration by configurations.creating { isCanBeConsumed = false }
 
 dependencies {
+  implementation 'com.google.code.gson:gson:2.8.6'
   subprojects {
     pluginManager.withPlugin("java-base") {
       aggregatedJavadocClasspath(

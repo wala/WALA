@@ -55,6 +55,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import com.google.gson.Gson;
+
 /**
  * Base class that represents a set of files to analyze.
  *
@@ -343,6 +345,23 @@ public class AnalysisScope {
     result.append(getExclusionString());
     result.append('\n');
     return result.toString();
+  }
+
+  public String toJson() {
+    StringBuilder result = new StringBuilder();
+    for (ClassLoaderReference loader : loadersByName.values()) {
+      result.append(loader.getName());
+      result.append('\n');
+      for (Module m : getModules(loader)) {
+        result.append(' ');
+        result.append(m);
+        result.append('\n');
+      }
+    }
+    result.append(getExclusionString());
+    result.append('\n');
+    Gson gson = new Gson();
+    return gson.toJson(result.toString());
   }
 
   /**
