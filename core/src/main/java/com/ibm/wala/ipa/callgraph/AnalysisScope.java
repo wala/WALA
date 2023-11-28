@@ -54,8 +54,10 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
 import com.google.gson.Gson;
+
+
+// import com.google.gson.Gson;
 
 /**
  * Base class that represents a set of files to analyze.
