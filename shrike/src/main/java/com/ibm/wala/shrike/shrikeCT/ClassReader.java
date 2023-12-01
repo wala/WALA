@@ -68,7 +68,7 @@ public final class ClassReader implements ClassConstants {
       throw new InvalidClassFileException(offset, "bad magic number: " + magic);
     }
     // Support class files up through JDK 17 (version 61)
-    if (majorVersion < 45 || majorVersion > 61) {
+    if (majorVersion < 45 || majorVersion > 65) {
       throw new InvalidClassFileException(
           offset, "unknown class file version: " + majorVersion + '.' + minorVersion);
     }
