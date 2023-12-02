@@ -11,7 +11,8 @@ import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -51,9 +52,11 @@ public class EclipseWebProjectPath extends JavaScriptEclipseProjectPath {
       String urlString = "file://" + htmlPage.getAbsolutePath();
       try {
         scripts =
-            WebUtil.extractScriptFromHTML(new URL(urlString), DefaultSourceExtractor.factory).fst;
+            WebUtil.extractScriptFromHTML(
+                    new URI(urlString).toURL(), DefaultSourceExtractor.factory)
+                .fst;
         s.addAll(scripts);
-      } catch (MalformedURLException e1) {
+      } catch (URISyntaxException | MalformedURLException e1) {
         assert false : "internal error constructing URL " + urlString;
       } catch (Error e1) {
         System.err.print("skipping " + htmlPage.getAbsolutePath() + ": " + e1.warning);
