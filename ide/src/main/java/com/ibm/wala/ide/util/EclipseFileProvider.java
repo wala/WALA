@@ -168,7 +168,7 @@ public class EclipseFileProvider extends FileProvider {
       lastIndex = spaceIndex + 1;
     }
     try {
-      return (new URI(fixedUpUrl.toString())).toURL();
+      return new URI(fixedUpUrl.toString()).toURL();
     } catch (MalformedURLException | URISyntaxException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
