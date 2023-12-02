@@ -20,6 +20,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.jar.JarFile;
 import org.eclipse.core.runtime.FileLocator;
@@ -166,8 +168,8 @@ public class EclipseFileProvider extends FileProvider {
       lastIndex = spaceIndex + 1;
     }
     try {
-      return new URL(fixedUpUrl.toString());
-    } catch (MalformedURLException e) {
+      return (new URI(fixedUpUrl.toString())).toURL();
+    } catch (MalformedURLException | URISyntaxException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
