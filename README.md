@@ -1,4 +1,4 @@
-![WALA logo](http://wala.sourceforge.net/wiki/images/9/94/WALA-banner.png)
+![WALA logo](https://wala.github.io/logos/WALA-banner.png)
 
 [![GitHub Actions
 status](https://github.com/wala/WALA/workflows/Continuous%20integration/badge.svg)](https://github.com/wala/WALA/actions?query=workflow%3A%22Continuous+integration%22)
