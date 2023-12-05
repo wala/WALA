@@ -28,11 +28,11 @@ public class AnalysisScopeTest {
         AnalysisScope scope =
             AnalysisScopeReader.instance.readJavaScope(
                 TestConstants.WALA_TESTDATA,
-                new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
+                // new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
+                new FileProvider().getFile("/Users/aakgna/Documents/WALA-Research/WALA/core/src/test/java/com/ibm/wala/core/tests/cha/CodeDeletedTest.java"),
                 AnalysisScopeTest.class.getClassLoader());
         Gson gson = new Gson();
-        String exp = gson.toJson(scope.toString());
-        System.out.println(scope.toString());
+        String exp = gson.toJson("scope.toString()");
         assertEquals(exp, scope.toJson());
     }
 

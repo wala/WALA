@@ -351,18 +351,26 @@ public class AnalysisScope {
 
   public String toJson() {
     StringBuilder result = new StringBuilder();
+    HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
+      ArrayList<String> arr = new ArrayList<>();
       result.append(loader.getName());
       result.append('\n');
       for (Module m : getModules(loader)) {
+        arr.add(m.toString());
         result.append(' ');
         result.append(m);
         result.append('\n');
       }
+      hashMap.put(loader.getName().toString(), arr);
     }
     result.append(getExclusionString());
     result.append('\n');
     Gson gson = new Gson();
+    // ArrayList<String> arr2 = new ArrayList<>();
+    // arr2.add(getJavaLibraryVersion());
+    // hashMap.put(getExclusionString().toString(), arr2);
+    System.out.println(gson.toJson(hashMap));
     return gson.toJson(result.toString());
   }
 
