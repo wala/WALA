@@ -17,7 +17,7 @@ eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.17.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 errorprone-core = "com.google.errorprone:error_prone_core:2.23.0"
-gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.42.2"
+gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
 gradle-download-task = "de.undercouch:gradle-download-task:5.5.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:3.0.1"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
