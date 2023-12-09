@@ -1,7 +1,5 @@
 package com.ibm.wala.gradle
 
-import org.gradle.plugins.ide.idea.model.IdeaModel
-
 // Build configuration shared by all projects *except* for the root project.
 
 plugins {
@@ -31,4 +29,4 @@ tasks.register("downloads") {
 //
 
 // workaround for <https://youtrack.jetbrains.com/issue/IDEA-140714>
-the<IdeaModel>().module.excludeDirs.add(file("bin"))
+idea.module.excludeDirs.add(file("bin"))
