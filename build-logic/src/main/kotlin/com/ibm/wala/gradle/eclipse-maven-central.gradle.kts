@@ -1,9 +1,10 @@
 package com.ibm.wala.gradle
 
-import com.diffplug.gradle.eclipse.MavenCentralExtension
 import com.diffplug.gradle.eclipse.MavenCentralExtension.ReleaseConfigurer
 import com.diffplug.gradle.eclipse.MavenCentralPlugin
 import com.diffplug.gradle.pde.EclipseRelease
+
+plugins { id("com.diffplug.eclipse.mavencentral") }
 
 /**
  * WALA-specialized adaptation of
@@ -48,8 +49,7 @@ open class WalaMavenCentralReleaseConfigurerExtension @Inject constructor(projec
    */
   private val configurer by lazy {
     project.run {
-      the<MavenCentralExtension>()
-          .ReleaseConfigurer(rootProject.extra["eclipseVersion"] as EclipseRelease)
+      eclipseMavenCentral.ReleaseConfigurer(rootProject.extra["eclipseVersion"] as EclipseRelease)
     }
   }
 

@@ -6,7 +6,6 @@ package com.ibm.wala.gradle
 
 import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import net.ltgt.gradle.errorprone.errorprone
-import org.gradle.plugins.ide.eclipse.model.EclipseModel
 
 plugins {
   eclipse
@@ -26,17 +25,14 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-the<BasePluginExtension>().archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
-
-val sourceSets = the<SourceSetContainer>()
+base.archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
   named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
-fun findLibrary(alias: String) =
-    rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary(alias).get()
+fun findLibrary(alias: String) = rootProject.versionCatalogs.named("libs").findLibrary(alias).get()
 
 dependencies {
   "ecj"(findLibrary("eclipse-ecj"))
@@ -86,8 +82,7 @@ configurations {
       substitute(module("org.hamcrest:hamcrest-core"))
           .using(
               module(
-                  rootProject
-                      .the<VersionCatalogsExtension>()
+                  rootProject.versionCatalogs
                       .named("libs")
                       .findLibrary("hamcrest")
                       .get()
@@ -108,7 +103,7 @@ configurations {
   }
 }
 
-the<EclipseModel>().synchronizationTasks("processTestResources")
+eclipse.synchronizationTasks("processTestResources")
 
 tasks.named<Test>("test") {
   useJUnitPlatform()
@@ -190,8 +185,7 @@ spotless {
 
   java {
     googleJavaFormat(
-        rootProject
-            .the<VersionCatalogsExtension>()
+        rootProject.versionCatalogs
             .named("libs")
             .findVersion("google-java-format")
             .get()
