@@ -11,11 +11,7 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 
-////////////////////////////////////////////////////////////////////////
-//
-//  specialized task for Kawa compilation into jar archive
-//
-
+/** Specialized task for Kawa compilation into jar archive. */
 @CacheableTask
 abstract class CompileKawaScheme : JavaExec() {
 
