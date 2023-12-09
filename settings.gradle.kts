@@ -1,4 +1,4 @@
-buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:2.34.1") } }
+buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:2.43.1") } }
 
 plugins { id("com.diffplug.configuration-cache-for-platform-specific-build") version "3.44.0" }
 

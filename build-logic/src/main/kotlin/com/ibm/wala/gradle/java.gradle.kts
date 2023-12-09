@@ -4,7 +4,6 @@ package com.ibm.wala.gradle
 
 // Build configuration for subprojects that include Java source code.
 
-import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
@@ -178,11 +177,6 @@ if (project.gradle.parent != null) {
 }
 
 spotless {
-  // Workaround for <https://github.com/diffplug/spotless/issues/1644>
-  // using idea found at
-  // <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
-  lineEndings = PLATFORM_NATIVE
-
   java {
     googleJavaFormat(
         rootProject.versionCatalogs
