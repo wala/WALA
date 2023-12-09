@@ -1,7 +1,5 @@
 package com.ibm.wala.gradle
 
-import javax.inject.Inject
-import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.logging.LogLevel
@@ -19,7 +17,7 @@ import org.gradle.api.tasks.PathSensitivity
 //
 
 @CacheableTask
-abstract class CompileKawaScheme @Inject constructor(project: Project) : JavaExec() {
+abstract class CompileKawaScheme : JavaExec() {
 
   @get:InputFile
   @get:PathSensitive(PathSensitivity.NONE)
