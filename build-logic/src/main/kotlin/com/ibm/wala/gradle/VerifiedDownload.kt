@@ -13,36 +13,32 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.property
 
-////////////////////////////////////////////////////////////////////////
-//
-//  download and use checksum to verify that we got what we expected
-//
-
+/** Download and use checksum to verify that we got what we expected. */
 @CacheableTask
 abstract class VerifiedDownload : DefaultTask() {
 
-  // URI of resource to download
+  /** URI of resource to download. */
   @get:Input abstract val src: Property<URI>
 
-  // expected checksum of resource as hex digits
+  /** Expected checksum of resource as hex digits. */
   @get:Input abstract val checksum: Property<String>
 
-  // algorithm to use for computing checksum
+  /** Algorithm to use for computing checksum. */
   @get:Input val algorithm: Property<String> = project.objects.property<String>().convention("MD5")
 
-  // whether to use ETag for selective downloading
+  /** Whether to use ETag for selective downloading. */
   @get:Input val useETag: Property<Boolean> = project.objects.property<Boolean>().convention(true)
 
-  // local file into which resource should be saved
+  /** Local file into which resource should be saved. */
   @get:OutputFile abstract val dest: RegularFileProperty
 
-  // plugin-provided extension for downloading a resource from some URL
+  /** Plugin-provided extension for downloading a resource from some URL. */
   @Internal
   @Suppress("LeakingThis")
   val downloadExtension: DownloadExtension =
       project.objects.newInstance(DownloadExtension::class.java, this)
 
-  // plugin-provided extension for verifying that a file has the expected checksum
+  /** Plugin-provided extension for verifying that a file has the expected checksum. */
   @Internal
   @Suppress("LeakingThis")
   val verifyExtension: VerifyExtension =
