@@ -2,6 +2,7 @@
 /compiler.xml
 /gradle.xml
 /jarRepositories.xml
+/kotlinc.xml
 /libraries/*.xml
 /modules.xml
 /other.xml
