@@ -14,12 +14,10 @@ val isSnapshot = "SNAPSHOT" in version as String
 
 val javaComponent = components["java"] as AdhocComponentWithVariants
 
-val allTestFixturesSource = the<SourceSetContainer>()["testFixtures"].allSource
+val allTestFixturesSource: SourceDirectorySet = sourceSets.testFixtures.get().allSource
 
 val testFixturesJavadoc by
-    tasks.existing(Javadoc::class) {
-      setDestinationDir(project.the<JavaPluginExtension>().docsDir.get().dir(name).asFile)
-    }
+    tasks.existing(Javadoc::class) { setDestinationDir(java.docsDir.get().dir(name).asFile) }
 
 val testFixturesJavadocJar by
     tasks.registering(Jar::class) {
@@ -40,7 +38,7 @@ val mavenPublication =
       from(javaComponent)
 
       groupId = "com.ibm.wala"
-      artifactId = the<BasePluginExtension>().archivesName.get()
+      artifactId = base.archivesName.get()
 
       val testFixturesCodeElementsNames =
           listOf("testFixturesApiElements", "testFixturesRuntimeElements")
@@ -149,7 +147,7 @@ repositories.maven {
   setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
 }
 
-configure<SigningExtension> {
+signing {
   sign(mavenPublication)
   setRequired {
     // Signatures are a hard requirement if publishing a non-snapshot to a real, remote repository.
@@ -160,7 +158,7 @@ configure<SigningExtension> {
   }
 }
 
-configure<JavaPluginExtension> {
+java {
   withJavadocJar()
   withSourcesJar()
 }
