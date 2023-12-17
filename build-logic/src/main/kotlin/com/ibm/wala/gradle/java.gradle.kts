@@ -21,8 +21,7 @@ plugins {
 repositories {
   mavenCentral()
   // to get r8
-  google()
-  // maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
+  maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
 base.archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
