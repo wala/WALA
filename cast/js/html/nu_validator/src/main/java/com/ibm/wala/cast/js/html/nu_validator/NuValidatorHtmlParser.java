@@ -22,6 +22,8 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
@@ -43,8 +45,8 @@ public class NuValidatorHtmlParser implements IHtmlParser {
       final URL url, final Reader reader, final IHtmlCallback handler, final String fileName) {
     URL xx = null;
     try {
-      xx = new URL("file://" + fileName);
-    } catch (MalformedURLException e1) {
+      xx = new URI("file://" + fileName).toURL();
+    } catch (MalformedURLException | URISyntaxException e1) {
       e1.printStackTrace();
     }
     final URL localFileName = xx;
