@@ -34,6 +34,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
 
@@ -44,7 +46,8 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
           IOException,
           CancelException,
           Error,
-          WalaException {
+          WalaException,
+          URISyntaxException {
 
     if (args.length != 1) {
       System.out.println("Usage: <URL of html page to analyze>");
@@ -52,7 +55,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
     }
     boolean domless = false;
 
-    URL url = new URL(args[0]);
+    URL url = new URI(args[0]).toURL();
 
     // computing CG + PA
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
