@@ -47,7 +47,7 @@ public class LibModelsTest extends WalaTestCase {
 
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 
-    System.err.println(cg);
+    // System.err.println(cg);
 
     // Find node corresponding to finalize
     TypeReference t =
