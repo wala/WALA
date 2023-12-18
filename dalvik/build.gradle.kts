@@ -195,7 +195,7 @@ tasks.named<Test>("test") {
   if (JavaVersion.current() == JavaVersion.VERSION_21) {
     // Disable the task for JDK 21 for now.  We have test failures due to a required r8 upgrade
     // that introduces some new behaviors we don't expect
-    // TODO open an issue to track this
+    // See https://github.com/wala/WALA/issues/1349
     enabled = false
   }
   maxHeapSize = "800M"
