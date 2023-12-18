@@ -545,8 +545,6 @@
 						fieldType="Ljava/lang/Runnable" def="z" ref="h" />
 					<call type="interface" name="run"
 						class="Ljava/lang/Runnable" descriptor="()V" arg0="z" />
-					<!--<call type="interface" name="run"
-						class="Ljava/lang/Runnable" descriptor="()V" arg0="arg0" />-->
 				</method>
 				<method name="stop0" descriptor="()V" />
 				<method name="yield" descriptor="()V" static="true" />
