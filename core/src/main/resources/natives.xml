@@ -490,6 +490,15 @@
 						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
 					<putfield class="Ljava/lang/Thread" field="target"
 						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<!-- for JDK 21 -->
+					<new def="x"
+						class="Ljava/lang/Thread/FieldHolder" />
+					<putfield class="Ljava/lang/Thread" field="holder"
+						fieldType="Ljava/lang/Thread/FieldHolder" ref="arg0" value="x" />
+					<getfield class="Ljava/lang/Thread" field="holder"
+						fieldType="Ljava/lang/Thread/FieldHolder" def="h" ref="arg0" />
+					<putfield class="Ljava/lang/Thread/FieldHolder" field="task"
+						fieldType="Ljava/lang/Runnable" ref="h" value="arg0" />
 				</method>
 				<method name="&lt;init&gt;"
 					descriptor="(Ljava/lang/Runnable;)V">
@@ -497,6 +506,15 @@
 						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
 					<putfield class="Ljava/lang/Thread" field="target"
 						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
+					<!-- for JDK 21 -->
+					<new def="x"
+						class="Ljava/lang/Thread/FieldHolder" />
+					<putfield class="Ljava/lang/Thread" field="holder"
+						fieldType="Ljava/lang/Thread/FieldHolder" ref="arg0" value="x" />
+					<getfield class="Ljava/lang/Thread" field="holder"
+						fieldType="Ljava/lang/Thread/FieldHolder" def="h" ref="arg0" />
+					<putfield class="Ljava/lang/Thread/FieldHolder" field="task"
+						fieldType="Ljava/lang/Runnable" ref="h" value="arg1" />
 				</method>
 				<method name="isAlive" descriptor="()Z"></method>
 				<method name="resume0" descriptor="()V" />
@@ -518,6 +536,17 @@
 						fieldType="Ljava/lang/Runnable" def="y" ref="arg0" />
 					<call type="interface" name="run"
 						class="Ljava/lang/Runnable" descriptor="()V" arg0="y" />
+					<!-- for JDK 21 -->
+					<getfield class="Ljava/lang/Thread" field="holder"
+						fieldType="Ljava/lang/Thread/FieldHolder" def="h" ref="arg0" />
+					<putfield class="Ljava/lang/Thread/FieldHolder" field="task"
+						fieldType="Ljava/lang/Runnable" ref="h" value="arg0" />
+					<getfield class="Ljava/lang/Thread/FieldHolder" field="task"
+						fieldType="Ljava/lang/Runnable" def="z" ref="h" />
+					<call type="interface" name="run"
+						class="Ljava/lang/Runnable" descriptor="()V" arg0="z" />
+					<!--<call type="interface" name="run"
+						class="Ljava/lang/Runnable" descriptor="()V" arg0="arg0" />-->
 				</method>
 				<method name="stop0" descriptor="()V" />
 				<method name="yield" descriptor="()V" static="true" />
