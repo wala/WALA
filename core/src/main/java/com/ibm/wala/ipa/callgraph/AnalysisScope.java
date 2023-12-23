@@ -351,7 +351,7 @@ public class AnalysisScope {
   }
 
   public String toJson() {
-    StringBuilder result = new StringBuilder();
+    // StringBuilder result = new StringBuilder();
     Set<String> track = new HashSet<>();
     HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
@@ -370,7 +370,7 @@ public class AnalysisScope {
       hashMap.put(loader.getName().toString(), arr);
     }
     Gson gson = new Gson();
-    return gson.toJson(result.toString());
+    return gson.toJson(hashMap);
   }
 
   /**
