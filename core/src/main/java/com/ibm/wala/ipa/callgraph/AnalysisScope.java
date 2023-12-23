@@ -51,6 +51,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -351,26 +352,24 @@ public class AnalysisScope {
 
   public String toJson() {
     StringBuilder result = new StringBuilder();
+    Set<String> track = new HashSet<>();
     HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
       ArrayList<String> arr = new ArrayList<>();
-      result.append(loader.getName());
-      result.append('\n');
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
-        result.append(' ');
-        result.append(m);
-        result.append('\n');
       }
+      if(!track.contains("Exclusions")) {
+        track.add("Exclusions");
+        String newStr = getExclusionString().toString().substring(12);
+        ArrayList<String> arr2 = new ArrayList<>();
+        arr2.add(newStr);
+        hashMap.put("Exclusions", arr2);
+      }
+      track.add(loader.getName().toString());
       hashMap.put(loader.getName().toString(), arr);
     }
-    result.append(getExclusionString());
-    result.append('\n');
     Gson gson = new Gson();
-    // ArrayList<String> arr2 = new ArrayList<>();
-    // arr2.add(getJavaLibraryVersion());
-    // hashMap.put(getExclusionString().toString(), arr2);
-    System.out.println(gson.toJson(hashMap));
     return gson.toJson(result.toString());
   }
 
