@@ -105,3 +105,9 @@ Several groups have built open-source tools that enhance or build on
 WALA that may be useful to other WALA users. For details, see the
 [Wala-based tools](https://github.com/wala/WALA/wiki/WALA-Based-Tools)
 page.
+
+## Acknowledgements
+
+![YourKit logo](https://www.yourkit.com/images/yklogo.png)
+
+We thank [YourKit](https://www.yourkit.com) for providing WALA developers with a complimentary license for their excellent [Java profiler](https://www.yourkit.com/java/profiler/), which we use to improve and maintain WALA performance.
