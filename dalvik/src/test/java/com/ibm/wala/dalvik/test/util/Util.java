@@ -58,7 +58,7 @@ public class Util {
 
   public static File convertJarToDex(String jarFile) throws IOException {
     Path tmpDir = Files.createTempDirectory("dex");
-    //tmpDir.toFile().deleteOnExit();
+    tmpDir.toFile().deleteOnExit();
     try {
       D8.run(
           D8Command.builder()

@@ -323,9 +323,10 @@ val collectTestDataA by
       includeEmptyDirs = false
       destinationDirectory = layout.buildDirectory.dir(name)
       exclude(
+          // This is an invalid class so don't include it, e.g., it causes D8 to crash
           "**/CodeDeleted.class",
-          "**/SortingExample.class",
-          "**/A.class",
+          //          "**/SortingExample.class",
+          //          "**/A.class",
       )
     }
 
