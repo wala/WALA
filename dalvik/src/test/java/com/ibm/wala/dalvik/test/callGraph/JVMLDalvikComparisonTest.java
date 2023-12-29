@@ -26,11 +26,8 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
@@ -40,15 +37,12 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -103,6 +97,22 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 
   private static void test(String mainClass, String javaScopeFile)
       throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
+    test(mainClass, javaScopeFile, false);
+  }
+
+  /**
+   * Run tests to compare the call graphs computing with the JVM bytecode frontend vs the Dalvik
+   * frontend
+   *
+   * @param mainClass main class for the test
+   * @param javaScopeFile scope file for the test
+   * @param allowExtraJavaCGEdges if true, allow extra edges in the JVM bytecode frontend call
+   *     graph. This flag is temporarily required due to issues with JLex caused by
+   *     https://issuetracker.google.com/issues/316744331. TODO: remove this flag once the D8 issue
+   *     is fixed.
+   */
+  private static void test(String mainClass, String javaScopeFile, boolean allowExtraJavaCGEdges)
+      throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
 
     AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
@@ -114,13 +124,15 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     Set<MethodReference> androidMethods = applicationMethods(android.fst);
     Set<MethodReference> javaMethods = applicationMethods(java.fst);
 
-    Iterator<Pair<CGNode, CGNode>> javaExtraEdges =
-        edgeDiff(java.fst, android.fst, false).iterator();
-    assert !checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges);
+    if (!allowExtraJavaCGEdges) {
+      Set<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst, false);
+      assert !checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges)
+          : "found extra edges in Java call graph";
+    }
 
-    Iterator<Pair<CGNode, CGNode>> androidExtraEdges =
-        edgeDiff(android.fst, java.fst, true).iterator();
-    assert !checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges);
+    Set<Pair<CGNode, CGNode>> androidExtraEdges = edgeDiff(android.fst, java.fst, true);
+    assert !checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges)
+        : "found extra edges in Android call graph";
 
     checkSourceLines(java.fst, android.fst);
   }
@@ -177,36 +189,29 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
   }
 
   private static boolean checkEdgeDiff(
-      Pair<CallGraph, PointerAnalysis<InstanceKey>> android,
-      Set<MethodReference> androidMethods,
-      Set<MethodReference> javaMethods,
-      Iterator<Pair<CGNode, CGNode>> javaExtraEdges) {
+      Pair<CallGraph, PointerAnalysis<InstanceKey>> firstResult,
+      Set<MethodReference> methodsInFirst,
+      Set<MethodReference> methodsInSecond,
+      Set<Pair<CGNode, CGNode>> extraEdgesInSecond) {
     boolean fail = false;
-    if (javaExtraEdges.hasNext()) {
+    if (!extraEdgesInSecond.isEmpty()) {
       fail = true;
-      Set<MethodReference> javaExtraNodes = HashSetFactory.make(javaMethods);
-      javaExtraNodes.removeAll(androidMethods);
+      Set<MethodReference> extraMethodsInSecond = HashSetFactory.make(methodsInSecond);
+      extraMethodsInSecond.removeAll(methodsInFirst);
 
-      System.err.println(Iterator2Collection.toSet(javaExtraEdges));
-      System.err.println(javaExtraNodes);
+      System.err.println(extraEdgesInSecond);
+      System.err.println(extraMethodsInSecond);
 
-      System.err.println(android.fst);
-
-      for (CGNode n : android.fst) {
-        System.err.println("### " + n);
-        if (n.getIR() != null) {
-          System.err.println(n.getIR());
-
-          System.err.println("return: " + android.snd.getPointsToSet(new ReturnValueKey(n)));
-          System.err.println(
-              "exceptions: " + android.snd.getPointsToSet(new ExceptionReturnValueKey(n)));
-          for (int i = 1; i < n.getIR().getSymbolTable().getMaxValueNumber(); i++) {
-            LocalPointerKey x = new LocalPointerKey(n, i);
-            OrdinalSet<InstanceKey> s = android.snd.getPointsToSet(x);
-            if (s != null && !s.isEmpty()) {
-              System.err.println(i + ": " + s);
-            }
-          }
+      CallGraph firstCG = firstResult.fst;
+      for (Pair<CGNode, CGNode> p : extraEdgesInSecond) {
+        System.err.println("### " + p.fst);
+        System.err.println("### " + p.snd);
+        System.err.println("### " + p.fst.getIR());
+        System.err.println("====");
+        Set<CGNode> nodes = firstCG.getNodes(p.fst.getMethod().getReference());
+        for (CGNode n : nodes) {
+          System.err.println("### " + n);
+          System.err.println("### " + n.getIR());
         }
       }
     }
@@ -216,7 +221,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
   @Test
   public void testJLex()
       throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
-    test(TestConstants.JLEX_MAIN, TestConstants.JLEX);
+    test(TestConstants.JLEX_MAIN, TestConstants.JLEX, true);
   }
 
   @Test

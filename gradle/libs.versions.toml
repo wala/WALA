@@ -6,7 +6,7 @@ ktfmt = "0.44"
 spotless = "6.23.3"
 
 [libraries]
-android-tools = "com.android.tools:r8:2.2.42"
+android-tools = "com.android.tools:r8:8.2.39"
 ant = "org.apache.ant:ant:1.10.14"
 assertj-core = "org.assertj:assertj-core:3.24.2"
 commons-cli = "commons-cli:commons-cli:1.5.0"
