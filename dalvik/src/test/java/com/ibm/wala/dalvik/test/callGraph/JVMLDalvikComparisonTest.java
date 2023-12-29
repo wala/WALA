@@ -100,6 +100,17 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     test(mainClass, javaScopeFile, false);
   }
 
+  /**
+   * Run tests to compare the call graphs computing with the JVM bytecode frontend vs the Dalvik
+   * frontend
+   *
+   * @param mainClass main class for the test
+   * @param javaScopeFile scope file for the test
+   * @param allowExtraJavaCGEdges if true, allow extra edges in the JVM bytecode frontend call
+   *     graph. This flag is temporarily required due to issues with JLex caused by
+   *     https://issuetracker.google.com/issues/316744331. TODO: remove this flag once the D8 issue
+   *     is fixed.
+   */
   private static void test(String mainClass, String javaScopeFile, boolean allowExtraJavaCGEdges)
       throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
