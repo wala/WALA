@@ -107,7 +107,6 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
     String javaJarPath = getJavaJar(javaScope);
     File androidDex = convertJarToDex(javaJarPath);
-    System.err.println(androidDex.getAbsolutePath());
     Pair<CallGraph, PointerAnalysis<InstanceKey>> android =
         makeDalvikCallGraph(null, null, mainClass, androidDex.getAbsolutePath());
 
@@ -178,7 +177,6 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
         : "inconsistent debug info: " + ajlines + " " + aalines;
   }
 
-  @SuppressWarnings("UnusedVariable")
   private static boolean checkEdgeDiff(
       Pair<CallGraph, PointerAnalysis<InstanceKey>> firstResult,
       Set<MethodReference> methodsInFirst,
@@ -205,25 +203,6 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
           System.err.println("### " + n.getIR());
         }
       }
-
-      //      for (CGNode n : firstResult.fst) {
-      //        System.err.println("### " + n);
-      //        if (n.getIR() != null) {
-      //          System.err.println(n.getIR());
-
-      //          System.err.println("return: " + android.snd.getPointsToSet(new
-      // ReturnValueKey(n)));
-      //          System.err.println(
-      //              "exceptions: " + android.snd.getPointsToSet(new ExceptionReturnValueKey(n)));
-      //          for (int i = 1; i < n.getIR().getSymbolTable().getMaxValueNumber(); i++) {
-      //            LocalPointerKey x = new LocalPointerKey(n, i);
-      //            OrdinalSet<InstanceKey> s = android.snd.getPointsToSet(x);
-      //            if (s != null && !s.isEmpty()) {
-      //              System.err.println(i + ": " + s);
-      //            }
-      //          }
-      //        }
-      //      }
     }
     return fail;
   }
