@@ -44,6 +44,7 @@ import java.io.NotSerializableException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -353,22 +354,27 @@ public class AnalysisScope {
   public String toJson() {
     // StringBuilder result = new StringBuilder();
     Set<String> track = new HashSet<>();
+    HashMap<String, Object> res = new HashMap<>();
     HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
       ArrayList<String> arr = new ArrayList<>();
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
       }
-      if(!track.contains("Exclusions")) {
-        track.add("Exclusions");
-        String newStr = getExclusionString().toString().substring(12);
-        ArrayList<String> arr2 = new ArrayList<>();
-        arr2.add(newStr);
-        hashMap.put("Exclusions", arr2);
-      }
       track.add(loader.getName().toString());
       hashMap.put(loader.getName().toString(), arr);
     }
+    res.put("Loaders", hashMap);
+    String[] exclusions = getExclusions().toString().split("\\|");
+    ArrayList<String> arr2 = new ArrayList<>();
+    for(int i = 0; i < exclusions.length; i++){
+      String word = exclusions[i];
+      word = word.replace("(", "");
+      word = word.replace(")", "");
+      arr2.add(word);
+    }
+    res.put("Exclusions", arr2);
+    System.out.println(res);
     Gson gson = new Gson();
     return gson.toJson(hashMap);
   }
