@@ -353,18 +353,16 @@ public class AnalysisScope {
 
   public String toJson() {
     // StringBuilder result = new StringBuilder();
-    Set<String> track = new HashSet<>();
     HashMap<String, Object> res = new HashMap<>();
-    HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
+    HashMap<String, ArrayList<String>> loaders = new HashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
       ArrayList<String> arr = new ArrayList<>();
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
       }
-      track.add(loader.getName().toString());
-      hashMap.put(loader.getName().toString(), arr);
+      loaders.put(loader.getName().toString(), arr);
     }
-    res.put("Loaders", hashMap);
+    res.put("Loaders", loaders);
     String[] exclusions = getExclusions().toString().split("\\|");
     ArrayList<String> arr2 = new ArrayList<>();
     for(int i = 0; i < exclusions.length; i++){
@@ -374,9 +372,8 @@ public class AnalysisScope {
       arr2.add(word);
     }
     res.put("Exclusions", arr2);
-    System.out.println(res);
     Gson gson = new Gson();
-    return gson.toJson(hashMap);
+    return gson.toJson(res);
   }
 
   /**

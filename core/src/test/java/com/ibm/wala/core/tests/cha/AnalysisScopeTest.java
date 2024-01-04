@@ -33,7 +33,7 @@ public class AnalysisScopeTest {
                 AnalysisScopeTest.class.getClassLoader());
         Gson gson = new Gson();
         String exp = gson.toJson("scope.toString()");
-        // System.out.println(scope.toJson());
+        System.out.println(scope.toJson());
         assertEquals(exp, scope.toJson());
     }
 
