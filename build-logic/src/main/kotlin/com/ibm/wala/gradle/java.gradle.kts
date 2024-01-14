@@ -13,6 +13,7 @@ plugins {
   `maven-publish`
   signing
   id("com.diffplug.spotless")
+  id("com.ibm.wala.gradle.eclipse-compatible-java")
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.subproject")
   id("net.ltgt.errorprone")
@@ -23,6 +24,9 @@ repositories {
   // to get r8
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
+
+java.toolchain.languageVersion =
+    JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
 
 base.archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
 
