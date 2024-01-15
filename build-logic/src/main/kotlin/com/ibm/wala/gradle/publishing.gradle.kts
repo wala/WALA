@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package com.ibm.wala.gradle
 
 plugins {
@@ -56,7 +54,7 @@ val mavenPublication =
       }
 
       pom {
-        name = project.properties["POM_NAME"] as String
+        name = property("POM_NAME") as String
         description = "T. J. Watson Libraries for Analysis"
         inceptionYear = "2006"
         url = "https://github.com/wala/WALA"
@@ -128,17 +126,17 @@ val mavenRepository: MavenArtifactRepository =
       url =
           uri(
               (if (isSnapshot)
-                  project.properties.getOrDefault(
+                  properties.getOrDefault(
                       "SNAPSHOT_REPOSITORY_URL",
                       "https://oss.sonatype.org/content/repositories/snapshots/")
               else
-                  project.properties.getOrDefault(
+                  properties.getOrDefault(
                       "RELEASE_REPOSITORY_URL",
                       "https://oss.sonatype.org/service/local/staging/deploy/maven2/"))
                   as String)
       credentials {
-        username = project.properties["SONATYPE_NEXUS_USERNAME"] as String?
-        password = project.properties["SONATYPE_NEXUS_PASSWORD"] as String?
+        username = properties["SONATYPE_NEXUS_USERNAME"] as String?
+        password = properties["SONATYPE_NEXUS_PASSWORD"] as String?
       }
     }
 
