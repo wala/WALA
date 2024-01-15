@@ -28,7 +28,7 @@ repositories {
 java.toolchain.languageVersion =
     JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
 
-base.archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
+base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
@@ -135,7 +135,7 @@ tasks.named<Test>("test") {
   }
 }
 
-if (project.hasProperty("excludeSlowTests")) {
+if (hasProperty("excludeSlowTests")) {
   dependencies { testImplementation(testFixtures(project(":core"))) }
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
@@ -143,7 +143,7 @@ if (project.hasProperty("excludeSlowTests")) {
 val ecjCompileTaskProviders =
     sourceSets.map { sourceSet -> JavaCompileUsingEcj.withSourceSet(project, sourceSet) }
 
-project.tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
+tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
 tasks.withType<JavaCompile>().configureEach {
   options.run {
@@ -172,7 +172,7 @@ tasks.withType<JavaCompileUsingEcj>().configureEach {
 // fixtures, we extend the main sourceSet to include all
 // test-fixture sources too.  This hack is only applied when
 // WALA itself is an included build.
-if (project.gradle.parent != null) {
+if (gradle.parent != null) {
   afterEvaluate {
     sourceSets["main"].java.srcDirs(sourceSets["testFixtures"].java.srcDirs)
 
