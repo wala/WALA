@@ -4,7 +4,16 @@ import com.diffplug.gradle.eclipse.MavenCentralExtension.ReleaseConfigurer
 import com.diffplug.gradle.eclipse.MavenCentralPlugin
 import com.diffplug.gradle.pde.EclipseRelease
 
-plugins { id("com.diffplug.eclipse.mavencentral") }
+plugins {
+  id("com.diffplug.eclipse.mavencentral")
+  id("com.ibm.wala.gradle.eclipse-compatible-java")
+  id("com.ibm.wala.gradle.java")
+}
+
+// This subproject uses one or more Eclipse dependencies. Eensure that it is using an
+// Eclipse-compatible Java toolchain. That toolchain might be newer than the Java toolchain that
+// WALA uses elsewhere.
+java.toolchain.languageVersion = the<EclipseCompatibleJavaExtension>().languageVersion
 
 /**
  * WALA-specialized adaptation of
