@@ -82,6 +82,13 @@ list](http://sourceforge.net/p/wala/mailman/), [ask a question on
 Gitter](https://gitter.im/WALAHelp/Lobby), or [open an
 issue](https://github.com/wala/WALA/issues).
 
+## Required Java Versions
+
+Most components of each [official WALA
+release](https://github.com/wala/WALA/releases) are built for use with
+Java 11 or newer.  However, components that use Eclipse require at
+least Java 17.
+
 ## Building from Source
 
 WALA uses Gradle as its build system.  If you intend to modify or
