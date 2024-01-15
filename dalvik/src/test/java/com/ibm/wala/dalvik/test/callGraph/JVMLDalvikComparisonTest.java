@@ -95,23 +95,14 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     return result;
   }
 
-  private static void test(String mainClass, String javaScopeFile)
-      throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
-    test(mainClass, javaScopeFile, false);
-  }
-
   /**
    * Run tests to compare the call graphs computing with the JVM bytecode frontend vs the Dalvik
    * frontend
    *
    * @param mainClass main class for the test
    * @param javaScopeFile scope file for the test
-   * @param allowExtraJavaCGEdges if true, allow extra edges in the JVM bytecode frontend call
-   *     graph. This flag is temporarily required due to issues with JLex caused by
-   *     https://issuetracker.google.com/issues/316744331. TODO: remove this flag once the D8 issue
-   *     is fixed.
    */
-  private static void test(String mainClass, String javaScopeFile, boolean allowExtraJavaCGEdges)
+  private static void test(String mainClass, String javaScopeFile)
       throws IllegalArgumentException, IOException, CancelException, ClassHierarchyException {
     Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
 
@@ -124,11 +115,9 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     Set<MethodReference> androidMethods = applicationMethods(android.fst);
     Set<MethodReference> javaMethods = applicationMethods(java.fst);
 
-    if (!allowExtraJavaCGEdges) {
-      Set<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst, false);
-      assert !checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges)
-          : "found extra edges in Java call graph";
-    }
+    Set<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst, false);
+    assert !checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges)
+        : "found extra edges in Java call graph";
 
     Set<Pair<CGNode, CGNode>> androidExtraEdges = edgeDiff(android.fst, java.fst, true);
     assert !checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges)
@@ -221,7 +210,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
   @Test
   public void testJLex()
       throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
-    test(TestConstants.JLEX_MAIN, TestConstants.JLEX, true);
+    test(TestConstants.JLEX_MAIN, TestConstants.JLEX);
   }
 
   @Test
