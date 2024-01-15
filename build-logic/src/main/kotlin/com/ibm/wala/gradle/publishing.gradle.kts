@@ -135,8 +135,8 @@ val mavenRepository: MavenArtifactRepository =
                       "https://oss.sonatype.org/service/local/staging/deploy/maven2/"))
                   as String)
       credentials {
-        username = properties["SONATYPE_NEXUS_USERNAME"] as String?
-        password = properties["SONATYPE_NEXUS_PASSWORD"] as String?
+        username = findProperty("SONATYPE_NEXUS_USERNAME") as String?
+        password = findProperty("SONATYPE_NEXUS_PASSWORD") as String?
       }
     }
 
