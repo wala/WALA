@@ -79,33 +79,6 @@ tasks.withType<JavaCompile>().configureEach {
   }
 }
 
-configurations {
-  all {
-    resolutionStrategy.dependencySubstitution {
-      substitute(module("org.hamcrest:hamcrest-core"))
-          .using(
-              module(
-                  rootProject.versionCatalogs
-                      .named("libs")
-                      .findLibrary("hamcrest")
-                      .get()
-                      .get()
-                      .toString()))
-          .because(
-              "junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest")
-    }
-  }
-
-  "implementation" {
-    // See https://github.com/wala/WALA/issues/823.  This group was renamed to
-    // net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
-    // com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
-    // Gradle, but not run them, excluding the group as a dependence is a reasonable
-    // solution.
-    exclude(group = "com.sun.jna")
-  }
-}
-
 eclipse.synchronizationTasks("processTestResources")
 
 tasks.named<Test>("test") {
