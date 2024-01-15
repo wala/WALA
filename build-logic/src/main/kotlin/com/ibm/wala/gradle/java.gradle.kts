@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package com.ibm.wala.gradle
 
 // Build configuration for subprojects that include Java source code.
@@ -28,7 +26,7 @@ repositories {
 java.toolchain.languageVersion =
     JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
 
-base.archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
+base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
@@ -79,33 +77,6 @@ tasks.withType<JavaCompile>().configureEach {
   }
 }
 
-configurations {
-  all {
-    resolutionStrategy.dependencySubstitution {
-      substitute(module("org.hamcrest:hamcrest-core"))
-          .using(
-              module(
-                  rootProject.versionCatalogs
-                      .named("libs")
-                      .findLibrary("hamcrest")
-                      .get()
-                      .get()
-                      .toString()))
-          .because(
-              "junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest")
-    }
-  }
-
-  "implementation" {
-    // See https://github.com/wala/WALA/issues/823.  This group was renamed to
-    // net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
-    // com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
-    // Gradle, but not run them, excluding the group as a dependence is a reasonable
-    // solution.
-    exclude(group = "com.sun.jna")
-  }
-}
-
 eclipse.synchronizationTasks("processTestResources")
 
 tasks.named<Test>("test") {
@@ -135,7 +106,7 @@ tasks.named<Test>("test") {
   }
 }
 
-if (project.hasProperty("excludeSlowTests")) {
+if (hasProperty("excludeSlowTests")) {
   dependencies { testImplementation(testFixtures(project(":core"))) }
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
@@ -143,7 +114,7 @@ if (project.hasProperty("excludeSlowTests")) {
 val ecjCompileTaskProviders =
     sourceSets.map { sourceSet -> JavaCompileUsingEcj.withSourceSet(project, sourceSet) }
 
-project.tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
+tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
 tasks.withType<JavaCompile>().configureEach {
   options.run {
@@ -172,7 +143,7 @@ tasks.withType<JavaCompileUsingEcj>().configureEach {
 // fixtures, we extend the main sourceSet to include all
 // test-fixture sources too.  This hack is only applied when
 // WALA itself is an included build.
-if (project.gradle.parent != null) {
+if (gradle.parent != null) {
   afterEvaluate {
     sourceSets["main"].java.srcDirs(sourceSets["testFixtures"].java.srcDirs)
 
