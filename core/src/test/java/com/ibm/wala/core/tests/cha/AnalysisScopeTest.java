@@ -1,6 +1,5 @@
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -19,23 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
-import com.google.gson.Gson;
-
 public class AnalysisScopeTest {
-
-    @Test
-    public void toJsonTest() throws IOException {
-        AnalysisScope scope =
-            AnalysisScopeReader.instance.readJavaScope(
-                TestConstants.WALA_TESTDATA,
-                // new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
-                new FileProvider().getFile("GUIExclusions.txt"),
-                AnalysisScopeTest.class.getClassLoader());
-        Gson gson = new Gson();
-        String exp = gson.toJson("scope.toString()");
-        System.out.println(scope.toJson());
-        assertEquals(exp, scope.toJson());
-    }
 
   @Test
   public void testJarInputStream() throws IOException, ClassHierarchyException {

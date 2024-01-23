@@ -302,7 +302,7 @@ public class CallGraphTest extends WalaTestCase {
     if (useShortProfile()) {
       return;
     }
-    
+
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             "primordial.txt",

@@ -352,7 +352,6 @@ public class AnalysisScope {
   }
 
   public String toJson() {
-    // StringBuilder result = new StringBuilder();
     HashMap<String, Object> res = new HashMap<>();
     HashMap<String, ArrayList<String>> loaders = new HashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
