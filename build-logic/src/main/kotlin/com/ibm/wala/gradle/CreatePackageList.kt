@@ -11,11 +11,7 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 
-////////////////////////////////////////////////////////////////////////
-//
-//  create a Javadoc-style "package-list" file
-//
-
+/** Create a Javadoc-style `package-list` file. */
 @CacheableTask
 open class CreatePackageList : DefaultTask() {
 
@@ -25,7 +21,7 @@ open class CreatePackageList : DefaultTask() {
 
   private var sourceFileSubdirectories: SortedSet<Path>? = null
 
-  // serializable representation of subdirs suitable for cache indexing
+  /** Serializable representation of subdirs suitable for cache indexing. */
   @Input fun getSourceFileSubdirectories() = sourceFileSubdirectories!!.map { it.toString() }
 
   fun sourceSet(sourceSet: SourceSet) {

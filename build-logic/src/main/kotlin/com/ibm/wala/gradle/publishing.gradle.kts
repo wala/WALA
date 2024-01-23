@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package com.ibm.wala.gradle
 
 plugins {
@@ -14,12 +12,10 @@ val isSnapshot = "SNAPSHOT" in version as String
 
 val javaComponent = components["java"] as AdhocComponentWithVariants
 
-val allTestFixturesSource = the<SourceSetContainer>()["testFixtures"].allSource
+val allTestFixturesSource: SourceDirectorySet = sourceSets.testFixtures.get().allSource
 
 val testFixturesJavadoc by
-    tasks.existing(Javadoc::class) {
-      setDestinationDir(project.the<JavaPluginExtension>().docsDir.get().dir(name).asFile)
-    }
+    tasks.existing(Javadoc::class) { setDestinationDir(java.docsDir.get().dir(name).asFile) }
 
 val testFixturesJavadocJar by
     tasks.registering(Jar::class) {
@@ -40,7 +36,7 @@ val mavenPublication =
       from(javaComponent)
 
       groupId = "com.ibm.wala"
-      artifactId = the<BasePluginExtension>().archivesName.get()
+      artifactId = base.archivesName.get()
 
       val testFixturesCodeElementsNames =
           listOf("testFixturesApiElements", "testFixturesRuntimeElements")
@@ -58,7 +54,7 @@ val mavenPublication =
       }
 
       pom {
-        name = project.properties["POM_NAME"] as String
+        name = property("POM_NAME") as String
         description = "T. J. Watson Libraries for Analysis"
         inceptionYear = "2006"
         url = "https://github.com/wala/WALA"
@@ -130,17 +126,17 @@ val mavenRepository: MavenArtifactRepository =
       url =
           uri(
               (if (isSnapshot)
-                  project.properties.getOrDefault(
+                  properties.getOrDefault(
                       "SNAPSHOT_REPOSITORY_URL",
                       "https://oss.sonatype.org/content/repositories/snapshots/")
               else
-                  project.properties.getOrDefault(
+                  properties.getOrDefault(
                       "RELEASE_REPOSITORY_URL",
                       "https://oss.sonatype.org/service/local/staging/deploy/maven2/"))
                   as String)
       credentials {
-        username = project.properties["SONATYPE_NEXUS_USERNAME"] as String?
-        password = project.properties["SONATYPE_NEXUS_PASSWORD"] as String?
+        username = properties["SONATYPE_NEXUS_USERNAME"] as String?
+        password = properties["SONATYPE_NEXUS_PASSWORD"] as String?
       }
     }
 
@@ -149,7 +145,7 @@ repositories.maven {
   setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
 }
 
-configure<SigningExtension> {
+signing {
   sign(mavenPublication)
   setRequired {
     // Signatures are a hard requirement if publishing a non-snapshot to a real, remote repository.
@@ -160,7 +156,7 @@ configure<SigningExtension> {
   }
 }
 
-configure<JavaPluginExtension> {
+java {
   withJavadocJar()
   withSourcesJar()
 }

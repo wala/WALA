@@ -16,6 +16,14 @@ project-level Gradle caches will make incremental rebuilds much
 faster.  Rerunning `./gradlew assemble processTestResources` with a
 warm cache in an already-built tree takes under three seconds.
 
+WALA components are built using a mix of Java 11 and Java 17.  Gradle
+will [download suitable JDKs
+automatically](https://docs.gradle.org/current/userguide/toolchains.html#sec:provisioning)
+if they are not already [locally
+installed](https://docs.gradle.org/current/userguide/toolchains.html#sec:auto_detection)
+or
+[custom-configured](https://docs.gradle.org/current/userguide/toolchains.html#sec:custom_loc).
+
 ## Eclipse
 
 ### One-Time Eclipse Configuration

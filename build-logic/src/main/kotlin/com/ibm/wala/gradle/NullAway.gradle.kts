@@ -9,8 +9,7 @@ plugins {
 }
 
 dependencies {
-  annotationProcessor(
-      rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary("nullaway").get())
+  annotationProcessor(rootProject.versionCatalogs.named("libs").findLibrary("nullaway").get())
 }
 
 tasks.withType<JavaCompile>().configureEach {

@@ -1,12 +1,12 @@
 [versions]
-eclipse = "4.21.0"
+eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 google-java-format = "1.17.0"
 ktfmt = "0.44"
-spotless = "6.20.0"
+spotless = "6.23.3"
 
 [libraries]
-android-tools = "com.android.tools:r8:2.2.42"
+android-tools = "com.android.tools:r8:8.2.46"
 ant = "org.apache.ant:ant:1.10.14"
 assertj-core = "org.assertj:assertj-core:3.24.2"
 commons-cli = "commons-cli:commons-cli:1.5.0"
@@ -16,19 +16,19 @@ eclipse-ecj = "org.eclipse.jdt:ecj:3.21.0"
 eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.17.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
-errorprone-core = "com.google.errorprone:error_prone_core:2.21.1"
-gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.42.2"
+errorprone-core = "com.google.errorprone:error_prone_core:2.24.1"
+gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
 gradle-download-task = "de.undercouch:gradle-download-task:5.5.0"
-gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:3.0.1"
+gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:3.1.0"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gson = "com.google.code.gson:gson:2.10.1"
-guava = "com.google.guava:guava:32.1.2-jre"
+guava = "com.google.guava:guava:33.0.0-jre"
 hamcrest = "org.hamcrest:hamcrest:2.2"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
 javax-annotation-api = { module = "javax.annotation:javax.annotation-api", version = { strictly = "1.3.2" } }
 jericho-html = "net.htmlparser.jericho:jericho-html:3.2"
-json = "org.json:json:20230618"
+json = "org.json:json:20231013"
 jspecify = "org.jspecify:jspecify:0.3.0"
 junit-bom = "org.junit:junit-bom:5.10.0"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
@@ -36,7 +36,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine" }
-nullaway = "com.uber.nullaway:nullaway:0.10.14"
+nullaway = "com.uber.nullaway:nullaway:0.10.21"
 rhino = "org.mozilla:rhino:1.7.14"
 slf4j-api = "org.slf4j:slf4j-api:2.0.7"
 w3c-css-sac = "org.eclipse.birt.runtime:org.w3c.css.sac:1.3.1.v200903091627"
@@ -44,9 +44,9 @@ w3c-css-sac = "org.eclipse.birt.runtime:org.w3c.css.sac:1.3.1.v200903091627"
 [plugins]
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 google-java-format = "com.github.sherter.google-java-format:0.9"
-kotlin-jvm = "org.jetbrains.kotlin.jvm:1.9.0"
+kotlin-jvm = "org.jetbrains.kotlin.jvm:1.9.20"
 ktfmt = "com.ncorti.ktfmt.gradle:0.11.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.4.6"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 task-tree = "com.dorongold.task-tree:2.1.1"
-versions = "com.github.ben-manes.versions:0.44.0"
+versions = "com.github.ben-manes.versions:0.50.0"

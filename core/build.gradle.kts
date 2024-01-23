@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.VerifiedDownload
@@ -313,10 +311,10 @@ artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirec
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  collect "com.ibm.wala.core.testdata_1.0.0a.jar"
+//  collect "com.ibm.wala.core.testdata_1.0.0a.jar" for Dalvik tests
 //
 
-val collectTestDataA by
+val collectTestDataAForDalvik by
     tasks.registering(Jar::class) {
       archiveFileName = "com.ibm.wala.core.testdata_1.0.0a.jar"
       from(compileTestSubjectsJava)
@@ -324,9 +322,8 @@ val collectTestDataA by
       includeEmptyDirs = false
       destinationDirectory = layout.buildDirectory.dir(name)
       exclude(
+          // This is an invalid class so don't include it; it causes D8 to crash
           "**/CodeDeleted.class",
-          "**/SortingExample.class",
-          "**/A.class",
       )
     }
 
@@ -387,7 +384,7 @@ val dalvikTestResources: Configuration by configurations.creating { isCanBeResol
 
 listOf(
         collectJLex,
-        collectTestDataA,
+        collectTestDataAForDalvik,
         downloadJavaCup,
         extractBcel,
     )

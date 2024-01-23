@@ -1,4 +1,4 @@
-![WALA logo](http://wala.sourceforge.net/wiki/images/9/94/WALA-banner.png)
+![WALA logo](https://wala.github.io/logos/WALA-banner.png)
 
 [![GitHub Actions
 status](https://github.com/wala/WALA/workflows/Continuous%20integration/badge.svg)](https://github.com/wala/WALA/actions?query=workflow%3A%22Continuous+integration%22)
@@ -82,6 +82,13 @@ list](http://sourceforge.net/p/wala/mailman/), [ask a question on
 Gitter](https://gitter.im/WALAHelp/Lobby), or [open an
 issue](https://github.com/wala/WALA/issues).
 
+## Required Java Versions
+
+Most components of each [official WALA
+release](https://github.com/wala/WALA/releases) are built for use with
+Java 11 or newer.  However, components that use Eclipse require at
+least Java 17.
+
 ## Building from Source
 
 WALA uses Gradle as its build system.  If you intend to modify or
@@ -105,3 +112,9 @@ Several groups have built open-source tools that enhance or build on
 WALA that may be useful to other WALA users. For details, see the
 [Wala-based tools](https://github.com/wala/WALA/wiki/WALA-Based-Tools)
 page.
+
+## Acknowledgements
+
+![YourKit logo](https://www.yourkit.com/images/yklogo.png)
+
+We thank [YourKit](https://www.yourkit.com) for providing WALA developers with a complimentary license for their excellent [Java profiler](https://www.yourkit.com/java/profiler/), which we use to improve and maintain WALA performance.

@@ -1,12 +1,8 @@
-@file:Suppress("UnstableApiUsage")
-
 package com.ibm.wala.gradle
 
 // Build configuration for subprojects that include Java source code.
 
-import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import net.ltgt.gradle.errorprone.errorprone
-import org.gradle.plugins.ide.eclipse.model.EclipseModel
 
 plugins {
   eclipse
@@ -15,6 +11,7 @@ plugins {
   `maven-publish`
   signing
   id("com.diffplug.spotless")
+  id("com.ibm.wala.gradle.eclipse-compatible-java")
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.subproject")
   id("net.ltgt.errorprone")
@@ -26,17 +23,17 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-the<BasePluginExtension>().archivesName = "com.ibm.wala${project.path.replace(':', '.')}"
+java.toolchain.languageVersion =
+    JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
 
-val sourceSets = the<SourceSetContainer>()
+base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
   named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
-fun findLibrary(alias: String) =
-    rootProject.the<VersionCatalogsExtension>().named("libs").findLibrary(alias).get()
+fun findLibrary(alias: String) = rootProject.versionCatalogs.named("libs").findLibrary(alias).get()
 
 dependencies {
   "ecj"(findLibrary("eclipse-ecj"))
@@ -80,35 +77,7 @@ tasks.withType<JavaCompile>().configureEach {
   }
 }
 
-configurations {
-  all {
-    resolutionStrategy.dependencySubstitution {
-      substitute(module("org.hamcrest:hamcrest-core"))
-          .using(
-              module(
-                  rootProject
-                      .the<VersionCatalogsExtension>()
-                      .named("libs")
-                      .findLibrary("hamcrest")
-                      .get()
-                      .get()
-                      .toString()))
-          .because(
-              "junit depends on hamcrest-core, but all hamcrest-core classes have been incorporated into hamcrest")
-    }
-  }
-
-  "implementation" {
-    // See https://github.com/wala/WALA/issues/823.  This group was renamed to
-    // net.java.dev.jna.  The com.sun.jna dependency is only pulled in from
-    // com.ibm.wala.ide.* projects.  Since we only try to compile those projects from
-    // Gradle, but not run them, excluding the group as a dependence is a reasonable
-    // solution.
-    exclude(group = "com.sun.jna")
-  }
-}
-
-the<EclipseModel>().synchronizationTasks("processTestResources")
+eclipse.synchronizationTasks("processTestResources")
 
 tasks.named<Test>("test") {
   useJUnitPlatform()
@@ -137,7 +106,7 @@ tasks.named<Test>("test") {
   }
 }
 
-if (project.hasProperty("excludeSlowTests")) {
+if (hasProperty("excludeSlowTests")) {
   dependencies { testImplementation(testFixtures(project(":core"))) }
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
@@ -145,7 +114,7 @@ if (project.hasProperty("excludeSlowTests")) {
 val ecjCompileTaskProviders =
     sourceSets.map { sourceSet -> JavaCompileUsingEcj.withSourceSet(project, sourceSet) }
 
-project.tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
+tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
 tasks.withType<JavaCompile>().configureEach {
   options.run {
@@ -174,7 +143,7 @@ tasks.withType<JavaCompileUsingEcj>().configureEach {
 // fixtures, we extend the main sourceSet to include all
 // test-fixture sources too.  This hack is only applied when
 // WALA itself is an included build.
-if (project.gradle.parent != null) {
+if (gradle.parent != null) {
   afterEvaluate {
     sourceSets["main"].java.srcDirs(sourceSets["testFixtures"].java.srcDirs)
 
@@ -183,15 +152,9 @@ if (project.gradle.parent != null) {
 }
 
 spotless {
-  // Workaround for <https://github.com/diffplug/spotless/issues/1644>
-  // using idea found at
-  // <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
-  lineEndings = PLATFORM_NATIVE
-
   java {
     googleJavaFormat(
-        rootProject
-            .the<VersionCatalogsExtension>()
+        rootProject.versionCatalogs
             .named("libs")
             .findVersion("google-java-format")
             .get()

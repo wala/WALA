@@ -4,7 +4,6 @@
 //
 
 import com.diffplug.gradle.pde.EclipseRelease
-import com.diffplug.spotless.LineEnding.PLATFORM_NATIVE
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript { dependencies.classpath(libs.commons.io) }
@@ -76,7 +75,7 @@ dependencies {
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
-  destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
+  setDestinationDir(layout.buildDirectory.dir("docs/javadoc").get().asFile)
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
   classpath = aggregatedJavadocClasspath
@@ -100,11 +99,6 @@ shellcheck {
 }
 
 tasks.named("shellcheck") { group = "verification" }
-
-// Workaround for <https://github.com/diffplug/spotless/issues/1644>
-// using idea found at
-// <https://github.com/diffplug/spotless/issues/1527#issuecomment-1409142798>.
-spotless.lineEndings = PLATFORM_NATIVE
 
 // install Java reformatter as git pre-commit hook
 tasks.register<Copy>("installGitHooks") {

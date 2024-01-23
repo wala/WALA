@@ -35,6 +35,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -78,7 +80,7 @@ public class HTMLCGBuilder {
     URL url = null;
     try {
       url = toUrl(src);
-    } catch (MalformedURLException e1) {
+    } catch (MalformedURLException | URISyntaxException e1) {
       fail("Could not find page to analyse: " + src);
     }
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
@@ -118,7 +120,7 @@ public class HTMLCGBuilder {
     }
   }
 
-  private static URL toUrl(String src) throws MalformedURLException {
+  private static URL toUrl(String src) throws MalformedURLException, URISyntaxException {
     // first try interpreting as local file name, if that doesn't work just
     // assume it's a URL
     try {
@@ -126,7 +128,7 @@ public class HTMLCGBuilder {
       URL url = f.toURI().toURL();
       return url;
     } catch (FileNotFoundException fnfe) {
-      return new URL(src);
+      return new URI(src).toURL();
     }
   }
 
