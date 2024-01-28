@@ -137,8 +137,8 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     assert understands(node);
-    GetMethodContext context = (GetMethodContext) node.getContext();
-    TypeReference tr = context.getType().getTypeReference();
+    TypeReference tr =
+        ((TypeAbstraction) node.getContext().get(ContextKey.RECEIVER)).getTypeReference();
     if (tr != null) {
       return new NonNullSingletonIterator<>(NewSiteReference.make(0, tr));
     }

@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.demandpa.AbstractPtrTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -30,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -37,6 +39,7 @@ import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
@@ -48,12 +51,14 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorUtil;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
@@ -359,6 +364,44 @@ public class CallGraphTest extends WalaTestCase {
             .findFirst()
             .isPresent(),
         "did not find call to valueOf");
+  }
+
+  /** Testing that there is no crash during iteration of points to sets */
+  @Test
+  public void testIteratingPointsToSetsForCreationSites()
+      throws CallGraphBuilderCancelException, IOException, ClassHierarchyException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(cha, "Lsimple/Example");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    IAnalysisCacheView cache = new AnalysisCacheImpl();
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+    CallGraph cg = builder.makeCallGraph(options, null);
+    PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
+    for (PointerKey pk : pointerAnalysis.getPointerKeys()) {
+      if (pk instanceof LocalPointerKey) {
+        LocalPointerKey lpk = (LocalPointerKey) pk;
+        String className = lpk.getNode().getMethod().getDeclaringClass().getName().toString();
+        String methodName = lpk.getNode().getMethod().getName().toString();
+        ClassLoaderReference clr =
+            lpk.getNode().getMethod().getDeclaringClass().getClassLoader().getReference();
+        if (clr.equals(ClassLoaderReference.Application)
+            && className.equals("Lsimple/Example")
+            && methodName.equals("foo")) {
+          if (lpk.isParameter()) {
+            for (InstanceKey ik : pointerAnalysis.getPointsToSet(lpk)) {
+              Iterator<Pair<CGNode, NewSiteReference>> iterator = ik.getCreationSites(cg);
+              while (iterator.hasNext()) {
+                iterator.next(); // making sure there is no crash here
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   /** make main entrypoints, even in the primordial loader. */
