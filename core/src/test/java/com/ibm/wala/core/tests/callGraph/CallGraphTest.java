@@ -366,6 +366,7 @@ public class CallGraphTest extends WalaTestCase {
         "did not find call to valueOf");
   }
 
+  /** Testing that there is no crash during iteration of points to sets */
   @Test
   public void testIteratingPointsToSetsForCreationSites()
       throws CallGraphBuilderCancelException, IOException, ClassHierarchyException {
@@ -392,10 +393,9 @@ public class CallGraphTest extends WalaTestCase {
             && methodName.equals("foo")) {
           if (lpk.isParameter()) {
             for (InstanceKey ik : pointerAnalysis.getPointsToSet(lpk)) {
-              System.err.println(ik);
               Iterator<Pair<CGNode, NewSiteReference>> iterator = ik.getCreationSites(cg);
               while (iterator.hasNext()) {
-                iterator.next(); // crash here
+                iterator.next(); // making sure there is no crash here
               }
             }
           }
