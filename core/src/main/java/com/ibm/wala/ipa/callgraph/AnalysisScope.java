@@ -352,8 +352,9 @@ public class AnalysisScope {
   }
 
   public String toJson() {
-    HashMap<String, Object> res = new HashMap<>();
-    HashMap<String, ArrayList<String>> loaders = new HashMap<>();
+    // make linked hashmap
+    LinkedHashMap<String, Object> res = new LinkedHashMap<>();
+    LinkedHashMap<String, ArrayList<String>> loaders = new LinkedHashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
       ArrayList<String> arr = new ArrayList<>();
       for (Module m : getModules(loader)) {

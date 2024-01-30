@@ -1,5 +1,6 @@
 package com.ibm.wala.core.tests.cha;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -55,4 +56,16 @@ public class AnalysisScopeTest {
                 ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")),
         "found unexpected class");
   }
+
+  @Test
+    public void testToJson() throws IOException {
+        AnalysisScope scope =
+            AnalysisScopeReader.instance.readJavaScope(
+                TestConstants.WALA_TESTDATA,
+                // new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
+                new FileProvider().getFile("GUIExclusions.txt"),
+                AnalysisScopeTest.class.getClassLoader());
+        String exp = "{\"Loaders\":{\"Primordial\":[\"JarFileModule:/opt/homebrew/Cellar/openjdk/21.0.1/libexec/openjdk.jdk/Contents/Home/jmods/java.base.jmod\",\"Nested Jar File:primordial.jar.model\"],\"Extension\":[],\"Application\":[\"JarFileModule:/Users/aakgna/Documents/WALA-Research/WALA/core/build/resources/test/com.ibm.wala.core.testdata_1.0.0.jar\"],\"Synthetic\":[]},\"Exclusions\":[\"java\\\\/awt\\\\/.*\",\"javax\\\\/swing\\\\/.*\",\"sun\\\\/awt\\\\/.*\",\"sun\\\\/swing\\\\/.*\"]}";
+        assertEquals(exp, scope.toJson().toString());
+    }
 }
