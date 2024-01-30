@@ -58,9 +58,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import com.google.gson.Gson;
 
-
-// import com.google.gson.Gson;
-
 /**
  * Base class that represents a set of files to analyze.
  *
@@ -352,7 +349,6 @@ public class AnalysisScope {
   }
 
   public String toJson() {
-    // make linked hashmap
     LinkedHashMap<String, Object> res = new LinkedHashMap<>();
     LinkedHashMap<String, ArrayList<String>> loaders = new LinkedHashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
