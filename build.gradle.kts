@@ -45,7 +45,7 @@ JavaVersion.current().let {
 
 group = name
 
-version = properties["VERSION_NAME"] as String
+version = property("VERSION_NAME") as String
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components.
 val eclipseVersion: EclipseRelease by extra {
