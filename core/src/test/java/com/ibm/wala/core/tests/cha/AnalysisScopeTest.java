@@ -17,7 +17,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import org.junit.jupiter.api.Test;
+import com.google.gson.Gson;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 
 public class AnalysisScopeTest {
 
@@ -65,7 +71,66 @@ public class AnalysisScopeTest {
                 // new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
                 new FileProvider().getFile("GUIExclusions.txt"),
                 AnalysisScopeTest.class.getClassLoader());
-        String exp = "{\"Loaders\":{\"Primordial\":[\"JarFileModule:/opt/homebrew/Cellar/openjdk/21.0.1/libexec/openjdk.jdk/Contents/Home/jmods/java.base.jmod\",\"Nested Jar File:primordial.jar.model\"],\"Extension\":[],\"Application\":[\"JarFileModule:/Users/aakgna/Documents/WALA-Research/WALA/core/build/resources/test/com.ibm.wala.core.testdata_1.0.0.jar\"],\"Synthetic\":[]},\"Exclusions\":[\"java\\\\/awt\\\\/.*\",\"javax\\\\/swing\\\\/.*\",\"sun\\\\/awt\\\\/.*\",\"sun\\\\/swing\\\\/.*\"]}";
-        assertEquals(exp, scope.toJson().toString());
+        Gson gson = new Gson();
+        Type type = new TypeToken<LinkedHashMap<String, Object>>(){}.getType();
+        LinkedHashMap<String, Object> map = gson.fromJson(scope.toJson(), type);
+        System.out.println(map);
+        if(map.containsKey("Exclusions")) {
+            String[] exclusions = scope.getExclusions().toString().split("\\|");
+            ArrayList<String> arr2 = new ArrayList<>();
+            for(int i = 0; i < exclusions.length; i++){
+                String word = exclusions[i];
+                word = word.replace("(", "");
+                word = word.replace(")", "");
+                arr2.add(word);
+            }
+            assertEquals(arr2, map.get("Exclusions"));
+        }
+        Type type2 = new TypeToken<LinkedHashMap<String, ArrayList<String>>>(){}.getType();
+        LinkedHashMap<String, ArrayList<String>> loaders = gson.fromJson(gson.toJson(map.get("Loaders")), type2);
+        if(loaders.containsKey("Primordial")) {
+            boolean flag = true;
+            for (int i = 0; i < scope.getModules(scope.getPrimordialLoader()).size(); i++) {
+                String s1 = scope.getModules(scope.getPrimordialLoader()).get(i).toString();
+                if (!loaders.get("Primordial").contains(s1)) {
+                    flag = false;
+                    break;
+                }
+            }
+            assertEquals(true, flag);
+        }
+        if(loaders.containsKey("Extension")) {
+            boolean flag = true;
+            for (int i = 0; i < scope.getModules(scope.getExtensionLoader()).size(); i++) {
+                String s1 = scope.getModules(scope.getExtensionLoader()).get(i).toString();
+                if (!loaders.get("Extension").contains(s1)) {
+                    flag = false;
+                    break;
+                }
+            }
+            assertEquals(true, flag);
+        }
+        if(loaders.containsKey("Application")) {
+            boolean flag = true;
+            for (int i = 0; i < scope.getModules(scope.getApplicationLoader()).size(); i++) {
+                String s1 = scope.getModules(scope.getApplicationLoader()).get(i).toString();
+                if (!loaders.get("Application").contains(s1)) {
+                    flag = false;
+                    break;
+                }
+            }
+            assertEquals(true, flag);
+        }
+        if(loaders.containsKey("Synthetic")) {
+            boolean flag = true;
+            for (int i = 0; i < scope.getModules(scope.getSyntheticLoader()).size(); i++) {
+                String s1 = scope.getModules(scope.getSyntheticLoader()).get(i).toString();
+                if (!loaders.get("Synthetic").contains(s1)) {
+                    flag = false;
+                    break;
+                }
+            }
+            assertEquals(true, flag);
+        }
     }
 }
