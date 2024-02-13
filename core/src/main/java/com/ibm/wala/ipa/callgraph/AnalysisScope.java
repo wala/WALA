@@ -353,6 +353,7 @@ public class AnalysisScope {
     LinkedHashMap<String, ArrayList<String>> loaders = new LinkedHashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
       ArrayList<String> arr = new ArrayList<>();
+
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
       }
