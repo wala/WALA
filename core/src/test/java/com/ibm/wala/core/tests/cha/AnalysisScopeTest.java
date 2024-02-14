@@ -82,6 +82,7 @@ public class AnalysisScopeTest {
         List.of("java\\/awt\\/.*", "javax\\/swing\\/.*", "sun\\/awt\\/.*", "sun\\/swing\\/.*"),
         map.get("Exclusions"));
 
+    @SuppressWarnings("unchecked")
     Map<String, List<String>> loaders = (Map<String, List<String>>) map.get("Loaders");
     Set<String> loaderKeys =
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
