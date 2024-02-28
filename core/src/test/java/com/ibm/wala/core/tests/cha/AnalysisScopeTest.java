@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -109,6 +110,7 @@ public class AnalysisScopeTest {
             AnalysisScopeTest.class.getClassLoader());
     scope.setExclusions(tempScope.getExclusions());
     String[] stdlibs = WalaProperties.getJ2SEJarFiles();
+    Arrays.sort(stdlibs);
     int cnt = 0;
     for (String stdlib : stdlibs) {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
@@ -131,10 +133,10 @@ public class AnalysisScopeTest {
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
     assertEquals(5, loaders.get("Primordial").size());
-    assertThat(loaders.get("Primordial"), hasItem("JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.security.sasl.jmod"));
+    assertThat(loaders.get("Primordial"), hasItem("JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
     assertEquals(5, loaders.get("Application").size());
     assertThat(
-        loaders.get("Application").get(0), containsString("JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.security.sasl.jmod"));
+        loaders.get("Application").get(0), containsString("JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
     assertEquals(0, loaders.get("Extension").size());
     assertEquals(0, loaders.get("Synthetic").size());
   }
