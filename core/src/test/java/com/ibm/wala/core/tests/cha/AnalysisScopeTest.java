@@ -16,6 +16,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
+import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.FileInputStream;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
-import com.ibm.wala.properties.WalaProperties;
 import org.junit.jupiter.api.Test;
 
 public class AnalysisScopeTest {
@@ -116,7 +116,7 @@ public class AnalysisScopeTest {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
       scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
       cnt++;
-      if(cnt == 5) {
+      if (cnt == 5) {
         break;
       }
     }
@@ -133,10 +133,15 @@ public class AnalysisScopeTest {
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
     assertEquals(5, loaders.get("Primordial").size());
-    assertThat(loaders.get("Primordial"), hasItem("JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
+    assertThat(
+        loaders.get("Primordial"),
+        hasItem(
+            "JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
     assertEquals(5, loaders.get("Application").size());
     assertThat(
-        loaders.get("Application").get(0), containsString("JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
+        loaders.get("Application").get(0),
+        containsString(
+            "JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
     assertEquals(0, loaders.get("Extension").size());
     assertEquals(0, loaders.get("Synthetic").size());
   }
