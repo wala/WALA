@@ -346,27 +346,38 @@ public class AnalysisScope {
     return result.toString();
   }
 
+  /**
+   * An AnalysisScope is converted to a JSON formatted variable using the loaders and exclusions
+   * hierarchy using ToJson. (Loaders) Primordial, Extension, Application, and Synthetic are the
+   * loaders keys; each one contains an arraylist of Strings. The exclusions contains an arraylist
+   * of strings.
+   *
+   * @return json variable containing contents of the AnalysisScope
+   */
   public String toJson() {
     LinkedHashMap<String, Object> res = new LinkedHashMap<>();
     LinkedHashMap<String, ArrayList<String>> loaders = new LinkedHashMap<>();
     for (ClassLoaderReference loader : loadersByName.values()) {
       ArrayList<String> arr = new ArrayList<>();
-
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
       }
       loaders.put(loader.getName().toString(), arr);
     }
     res.put("Loaders", loaders);
-    String[] exclusions = getExclusions().toString().split("\\|");
     ArrayList<String> arr2 = new ArrayList<>();
-    for (int i = 0; i < exclusions.length; i++) {
-      String word = exclusions[i];
-      word = word.replace("(", "");
-      word = word.replace(")", "");
-      arr2.add(word);
+    if (getExclusions() == null) {
+      res.put("Exclusions", arr2);
+    } else {
+      String[] exclusions = getExclusions().toString().split("\\|");
+      for (int i = 0; i < exclusions.length; i++) {
+        String word = exclusions[i];
+        word = word.replace("(", "");
+        word = word.replace(")", "");
+        arr2.add(word);
+      }
+      res.put("Exclusions", arr2);
     }
-    res.put("Exclusions", arr2);
     Gson gson = new Gson();
     return gson.toJson(res);
   }

@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -103,45 +104,37 @@ public class AnalysisScopeTest {
   public void testToJsonCustom() throws IOException {
     AnalysisScope scope;
     scope = AnalysisScope.createJavaAnalysisScope();
-    AnalysisScope tempScope =
-        AnalysisScopeReader.instance.readJavaScope(
-            TestConstants.WALA_TESTDATA,
-            new FileProvider().getFile("GUIExclusions.txt"),
-            AnalysisScopeTest.class.getClassLoader());
-    scope.setExclusions(tempScope.getExclusions());
     String[] stdlibs = WalaProperties.getJ2SEJarFiles();
     Arrays.sort(stdlibs);
-    int cnt = 0;
     for (String stdlib : stdlibs) {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
       scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
-      cnt++;
-      if (cnt == 5) {
-        break;
-      }
     }
+    scope.setExclusions(null);
     Gson gson = new Gson();
     Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
     LinkedHashMap<String, Object> map = gson.fromJson(scope.toJson(), type);
-    assertEquals(
-        List.of("java\\/awt\\/.*", "javax\\/swing\\/.*", "sun\\/awt\\/.*", "sun\\/swing\\/.*"),
-        map.get("Exclusions"));
+    assertEquals(List.of(), map.get("Exclusions"));
 
     @SuppressWarnings("unchecked")
     Map<String, List<String>> loaders = (Map<String, List<String>>) map.get("Loaders");
     Set<String> loaderKeys =
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
-    assertEquals(5, loaders.get("Primordial").size());
-    assertThat(
-        loaders.get("Primordial"),
-        hasItem(
-            "JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
-    assertEquals(5, loaders.get("Application").size());
-    assertThat(
-        loaders.get("Application").get(0),
-        containsString(
-            "JarFileModule:/Users/aakgna/Library/Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
+    assertEquals(stdlibs.length, loaders.get("Primordial").size());
+    assertTrue(
+        loaders
+            .get("Primordial")
+            .get(0)
+            .contains(
+                "Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
+    assertEquals(stdlibs.length, loaders.get("Application").size());
+    assertTrue(
+        loaders
+            .get("Application")
+            .get(0)
+            .contains(
+                "Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
     assertEquals(0, loaders.get("Extension").size());
     assertEquals(0, loaders.get("Synthetic").size());
   }
