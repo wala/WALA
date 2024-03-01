@@ -122,6 +122,7 @@ public class AnalysisScopeTest {
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
     assertEquals(stdlibs.length, loaders.get("Primordial").size());
+    assertEquals(loaders.get("Primordial").get(0), stdlibs[0]);
     assertTrue(
         loaders
             .get("Primordial")
