@@ -89,24 +89,23 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   @Override
-  @SuppressWarnings("rawtypes")
-  public void addStatement(IFixedPointStatement statement)
+  public void addStatement(IFixedPointStatement<T> statement)
       throws IllegalArgumentException, UnimplementedError {
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
     }
     if (statement instanceof UnaryStatement) {
-      addStatement((UnaryStatement) statement);
+      addStatement((UnaryStatement<T>) statement);
     } else if (statement instanceof NullaryStatement) {
-      addStatement((NullaryStatement) statement);
+      addStatement((NullaryStatement<T>) statement);
     } else if (statement instanceof GeneralStatement) {
-      addStatement((GeneralStatement) statement);
+      addStatement((GeneralStatement<T>) statement);
     } else {
       Assertions.UNREACHABLE("unexpected: " + statement.getClass());
     }
   }
 
-  public void addStatement(GeneralStatement<?> s) {
+  public void addStatement(GeneralStatement<T> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
@@ -134,7 +133,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
     }
   }
 
-  public void addStatement(UnaryStatement<?> s) {
+  public void addStatement(UnaryStatement<T> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
@@ -157,7 +156,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
     }
   }
 
-  public void addStatement(NullaryStatement<?> s) {
+  public void addStatement(NullaryStatement<T> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }

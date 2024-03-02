@@ -58,8 +58,7 @@ val processTestResources by tasks.existing(Copy::class) { from(unpackAjaxslt) { 
 val testResources: Configuration by configurations.creating { isCanBeResolved = false }
 
 artifacts {
-  val java: JavaPluginExtension by extensions
-  add(javadocDestinationDirectory.name, file("${java.docsDir}/javadoc"))
+  add(javadocDestinationDirectory.name, tasks.javadoc)
   add(packageListDirectory.name, createPackageList)
   add(testResources.name, processTestResources)
 }
