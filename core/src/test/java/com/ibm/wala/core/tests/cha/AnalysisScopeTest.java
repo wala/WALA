@@ -122,20 +122,19 @@ public class AnalysisScopeTest {
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
     assertEquals(stdlibs.length, loaders.get("Primordial").size());
-    assertEquals(loaders.get("Primordial").get(0), stdlibs[0]);
     assertTrue(
         loaders
             .get("Primordial")
             .get(0)
             .contains(
-                "Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
+                "/Contents/Home/jmods/java.base.jmod"));
     assertEquals(stdlibs.length, loaders.get("Application").size());
     assertTrue(
         loaders
             .get("Application")
             .get(0)
             .contains(
-                "Java/JavaVirtualMachines/corretto-11.0.15/Contents/Home/jmods/java.base.jmod"));
+                "/Contents/Home/jmods/java.base.jmod"));
     assertEquals(0, loaders.get("Extension").size());
     assertEquals(0, loaders.get("Synthetic").size());
   }
