@@ -6,7 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -122,9 +121,9 @@ public class AnalysisScopeTest {
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
     assertEquals(stdlibs.length, loaders.get("Primordial").size());
-    assertTrue(loaders.get("Primordial").get(0).contains("/Contents/Home/jmods/java.base.jmod"));
+    assertThat(loaders.get("Primordial"), hasItem("JarFileModule:" + stdlibs[0]));
     assertEquals(stdlibs.length, loaders.get("Application").size());
-    assertTrue(loaders.get("Application").get(0).contains("/Contents/Home/jmods/java.base.jmod"));
+    assertThat(loaders.get("Application"), hasItem("JarFileModule:" + stdlibs[0]));
     assertEquals(0, loaders.get("Extension").size());
     assertEquals(0, loaders.get("Synthetic").size());
   }
