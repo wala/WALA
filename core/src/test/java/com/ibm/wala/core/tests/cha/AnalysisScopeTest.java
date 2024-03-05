@@ -121,9 +121,11 @@ public class AnalysisScopeTest {
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
     assertEquals(loaders.keySet(), loaderKeys);
     assertEquals(stdlibs.length, loaders.get("Primordial").size());
-    assertThat(loaders.get("Primordial"), hasItem("JarFileModule:" + stdlibs[0]));
     assertEquals(stdlibs.length, loaders.get("Application").size());
-    assertThat(loaders.get("Application"), hasItem("JarFileModule:" + stdlibs[0]));
+    for (int i = 0; i < stdlibs.length; i++) {
+      assertThat(loaders.get("Primordial"), hasItem("JarFileModule:" + stdlibs[i]));
+      assertThat(loaders.get("Application"), hasItem("JarFileModule:" + stdlibs[i]));
+    }
     assertEquals(0, loaders.get("Extension").size());
     assertEquals(0, loaders.get("Synthetic").size());
   }
