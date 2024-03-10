@@ -18,6 +18,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("NullAway")
       errorproneArgs.addAll(
           "-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
+          "-XepOpt:NullAway:JSpecifyMode=true",
       )
     }
   }
