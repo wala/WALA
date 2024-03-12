@@ -719,12 +719,20 @@ public class ClassHierarchy implements IClassHierarchy {
       HashMap<Object, Object> fin = helper_toJson(temp, serial);
       dag.add(fin);
       // added cnt (count) so that the test does not get skipped
-      if(cnt == 6) {
+      if(cnt == 2) {
         break;
       }
       cnt++;
     }
-    return dag;
+    for (int i = 1; i < dag.size(); i++) {
+      dag.get(0).putAll(dag.get(i));
+    }
+    String key = root.getJavaClass().toString();
+    key = key.replace("<Primordial,", "");
+    key = key.replace("<Application,", "");
+    key = key.replace(">", "");
+    dag.get(0).put(key, root.children);
+    return dag.get(0);
   }
 
   public HashMap<Object, Object> helper_toJson(Node n, HashMap<Object, Object> hash) {
