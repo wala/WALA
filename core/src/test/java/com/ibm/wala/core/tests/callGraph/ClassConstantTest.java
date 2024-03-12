@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -78,5 +79,14 @@ public class ClassConstantTest extends WalaTestCase {
 
     // make sure call to hashCode from main
     assertTrue(cg.hasEdge(mainMethodNode, hashCodeNodes.iterator().next()));
+  }
+
+  @Test
+  public void classHierarchyToJson() throws ClassHierarchyException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    assertEquals("", cha.toJson());
   }
 }
