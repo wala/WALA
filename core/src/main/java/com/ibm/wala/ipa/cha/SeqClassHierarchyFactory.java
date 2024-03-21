@@ -15,8 +15,8 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SeqClassHierarchyFactory {
 
@@ -51,7 +51,11 @@ public class SeqClassHierarchyFactory {
       throw new IllegalArgumentException("null factory");
     }
     return new ClassHierarchy(
-        scope, factory, null, HashMapFactory.make(), ClassHierarchy.MissingSuperClassHandling.NONE);
+        scope,
+        factory,
+        null,
+        new ConcurrentHashMap<>(),
+        ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
   /**
@@ -65,7 +69,7 @@ public class SeqClassHierarchyFactory {
         scope,
         factory,
         monitor,
-        HashMapFactory.make(),
+        new ConcurrentHashMap<>(),
         ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
@@ -77,7 +81,7 @@ public class SeqClassHierarchyFactory {
         factory,
         languages,
         null,
-        HashMapFactory.make(),
+        new ConcurrentHashMap<>(),
         ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
@@ -89,7 +93,7 @@ public class SeqClassHierarchyFactory {
         factory,
         language,
         null,
-        HashMapFactory.make(),
+        new ConcurrentHashMap<>(),
         ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 
@@ -108,7 +112,7 @@ public class SeqClassHierarchyFactory {
         factory,
         language,
         monitor,
-        HashMapFactory.make(),
+        new ConcurrentHashMap<>(),
         ClassHierarchy.MissingSuperClassHandling.NONE);
   }
 }
