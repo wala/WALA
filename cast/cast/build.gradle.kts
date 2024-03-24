@@ -12,7 +12,7 @@ library {
   // https://github.com/gradle/gradle/issues/18876
   // is fixed
   if (rootProject.extra["osName"] == "Mac OS X" && rootProject.extra["archName"] == "aarch64") {
-    targetMachines.add(machines.macOS.x86_64)
+    targetMachines.append(machines.macOS.x86_64)
   }
 
   binaries.whenElementFinalized {
@@ -24,7 +24,7 @@ library {
         .configure(
             closureOf<LinkSharedLibrary> {
               if (targetMachine.operatingSystemFamily.isMacOs) {
-                linkerArgs.add("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
+                linkerArgs.append("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
               }
               addJvmLibrary(this@whenElementFinalized, this, project)
             })

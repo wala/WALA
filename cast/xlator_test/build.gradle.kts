@@ -17,7 +17,7 @@ library {
   // https://github.com/gradle/gradle/issues/18876
   // is fixed
   if (rootProject.extra["osName"] == "Mac OS X" && rootProject.extra["archName"] == "aarch64") {
-    targetMachines.add(machines.macOS.x86_64)
+    targetMachines.append(machines.macOS.x86_64)
   }
   privateHeaders.from(castHeaderDirectory)
 
