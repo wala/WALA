@@ -17,17 +17,10 @@ import org.eclipse.core.resources.IFile;
 /** A module which is a wrapper around a .java file */
 public class EclipseSourceFileModule extends SourceFileModule {
 
-  private final IFile f;
+  protected final IFile f;
 
-  public static EclipseSourceFileModule createEclipseSourceFileModule(IFile f) {
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
-    return new EclipseSourceFileModule(f);
-  }
-
-  private EclipseSourceFileModule(IFile f) {
-    super(new File(f.getFullPath().toOSString()), f.getName(), null);
+  public EclipseSourceFileModule(IFile f) {
+    super(f == null ? null : new File(f.getFullPath().toOSString()), f == null ? null : f.getName(), null);
     this.f = f;
   }
 
