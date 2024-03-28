@@ -39,6 +39,10 @@ fun createXlatorConfig(isOptimized: Boolean): Configuration =
           attributes {
             attribute(OPTIMIZED_ATTRIBUTE, isOptimized)
             attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+
+            // Dynamically determine the architecture string
+            val architectureName = rootProject.extra["archName"] as String
+            attribute(Attribute.of("org.gradle.native.architecture", String::class.java), architectureName)
           }
         }
 

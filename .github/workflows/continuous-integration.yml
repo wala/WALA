@@ -15,6 +15,9 @@ jobs:
         include:
           - os: macos-latest
             java: 11
+          # This is for an M1 Mac
+          - os: macos-14
+            java: 11
           - os: ubuntu-latest
             java: 11
           - os: windows-latest
