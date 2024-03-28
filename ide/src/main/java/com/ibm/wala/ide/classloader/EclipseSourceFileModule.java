@@ -20,7 +20,10 @@ public class EclipseSourceFileModule extends SourceFileModule {
   protected final IFile f;
 
   public EclipseSourceFileModule(IFile f) {
-    super(f == null ? null : new File(f.getFullPath().toOSString()), f == null ? null : f.getName(), null);
+    super(
+        f == null ? null : new File(f.getFullPath().toOSString()),
+        f == null ? null : f.getName(),
+        null);
     this.f = f;
   }
 
