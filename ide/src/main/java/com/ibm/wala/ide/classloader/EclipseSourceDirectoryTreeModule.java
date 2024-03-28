@@ -69,7 +69,11 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
     IWorkspaceRoot root = ws.getRoot();
     IFile ifile = root.getFile(p);
     assert ifile.exists();
-    return new EclipseSourceFileModule(ifile);
+    return this.makeFile(ifile);
+  }
+
+  protected FileModule makeFile(IFile file) {
+    return new EclipseSourceFileModule(file);
   }
 
   @Override
