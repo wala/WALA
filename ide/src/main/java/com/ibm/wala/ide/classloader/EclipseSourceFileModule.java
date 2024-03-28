@@ -21,7 +21,8 @@ public class EclipseSourceFileModule extends SourceFileModule {
 
   public EclipseSourceFileModule(IFile f) {
     super(
-        // NOTE: Passing `null` here causes an exception to be thrown in the ctor of `com.ibm.wala.classLoader.FileModule`.
+        // NOTE: Passing `null` here causes an exception to be thrown in the ctor of
+        // `com.ibm.wala.classLoader.FileModule`.
         f == null ? null : new File(f.getFullPath().toOSString()),
         f == null ? null : f.getName(),
         null);
