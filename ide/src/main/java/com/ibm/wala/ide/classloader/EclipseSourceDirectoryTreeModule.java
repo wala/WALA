@@ -73,7 +73,7 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
   }
 
   protected FileModule makeFile(IFile file) {
-    return EclipseSourceFileModule.createEclipseSourceFileModule(ifile);
+    return EclipseSourceFileModule.createEclipseSourceFileModule(file);
   }
 
   @Override
