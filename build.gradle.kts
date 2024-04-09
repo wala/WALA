@@ -28,7 +28,6 @@ repositories {
 }
 
 val osName: String by extra(System.getProperty("os.name"))
-val archName: String by extra(System.getProperty("os.arch"))
 val isWindows by extra(osName.startsWith("Windows "))
 
 JavaVersion.current().let {

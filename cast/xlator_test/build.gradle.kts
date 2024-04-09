@@ -13,12 +13,6 @@ dependencies {
 }
 
 library {
-  // Temporary change to build on M1 Mac machines, until
-  // https://github.com/gradle/gradle/issues/18876
-  // is fixed
-  if (rootProject.extra["osName"] == "Mac OS X" && rootProject.extra["archName"] == "aarch64") {
-    targetMachines.append(machines.macOS.x86_64)
-  }
   privateHeaders.from(castHeaderDirectory)
 
   dependencies { implementation(projects.cast.cast) }

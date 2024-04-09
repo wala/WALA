@@ -15,6 +15,9 @@ jobs:
         include:
           - os: macos-latest
             java: 11
+          # Apple Silicon M1 CPU according to <https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories>
+          - os: macos-14
+            java: 11
           - os: ubuntu-latest
             java: 11
           - os: windows-latest
