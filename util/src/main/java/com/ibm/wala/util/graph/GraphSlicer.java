@@ -226,8 +226,7 @@ public class GraphSlicer {
 
           private final Map<E, Collection<E>> preds = new HashMap<>();
 
-          private Set<E> getConnected(
-              @Nullable E inst, Function<E, Iterator<? extends E>> fconnected) {
+          private Set<E> getConnected(E inst, Function<E, Iterator<? extends E>> fconnected) {
             Set<E> result = new LinkedHashSet<>();
             Set<E> seenInsts = new HashSet<>();
             Set<E> newInsts = Iterator2Collection.toSet(fconnected.apply(inst));
@@ -253,11 +252,11 @@ public class GraphSlicer {
             return result;
           }
 
-          private void setPredNodes(@Nullable E N) {
+          private void setPredNodes(E N) {
             preds.put(N, getConnected(N, G::getPredNodes));
           }
 
-          private void setSuccNodes(@Nullable E N) {
+          private void setSuccNodes(E N) {
             succs.put(N, getConnected(N, G::getSuccNodes));
           }
 

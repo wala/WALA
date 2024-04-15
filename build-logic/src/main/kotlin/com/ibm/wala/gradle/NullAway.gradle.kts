@@ -16,8 +16,9 @@ tasks.withType<JavaCompile>().configureEach {
   options.errorprone {
     if (!name.contains("test", true)) {
       error("NullAway")
-      errorproneArgs.addAll(
+      errorproneArgs.appendAll(
           "-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
+          "-XepOpt:NullAway:JSpecifyMode=true",
       )
     }
   }

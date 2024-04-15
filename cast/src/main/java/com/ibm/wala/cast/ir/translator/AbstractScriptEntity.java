@@ -49,7 +49,7 @@ public abstract class AbstractScriptEntity extends AbstractCodeEntity {
 
   @Override
   public String toString() {
-    return "script " + file.getName();
+    return this.getName();
   }
 
   @Override
