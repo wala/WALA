@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.ipa.cha;
 
-import com.google.gson.Gson;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -709,20 +708,20 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   public Object toJson() {
-    int cnt = 0;
+    // int cnt = 0;
     HashMap<Object, Object> serial = new HashMap<>();
     // serial.put(root.klass, root.children);
     Iterator<Node> children = root.getChildren();
     ArrayList<HashMap<Object, Object>> dag = new ArrayList<>();
-    while(children.hasNext()) {
+    while (children.hasNext()) {
       Node temp = children.next();
       HashMap<Object, Object> fin = helper_toJson(temp, serial);
       dag.add(fin);
       // added cnt (count) so that the test does not get skipped
-      if(cnt == 2) {
-        break;
-      }
-      cnt++;
+      //      if(cnt == 2) {
+      //        break;
+      //      }
+      // cnt++;
     }
     for (int i = 1; i < dag.size(); i++) {
       dag.get(0).putAll(dag.get(i));
@@ -736,33 +735,31 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   public HashMap<Object, Object> helper_toJson(Node n, HashMap<Object, Object> hash) {
-    if(n.children.size() > 0) {
+    if (n.children.size() > 0) {
       Iterator<Node> children = n.getChildren();
-      while(children.hasNext()) {
+      while (children.hasNext()) {
         Node temp = children.next();
         HashMap<Object, Object> temp_hash = helper_toJson(temp, hash);
         String key = temp.getJavaClass().toString();
         key = key.replace("<Primordial,", "");
         key = key.replace("<Application,", "");
         key = key.replace(">", "");
-        if(!hash.containsKey(key)) {
+        if (!hash.containsKey(key)) {
           hash.put(key, temp.children);
         }
         System.out.println(temp_hash);
       }
-    }
-    else {
+    } else {
       String key = n.getJavaClass().toString();
       key = key.replace("<Primordial,", "");
       key = key.replace("<Application,", "");
       key = key.replace(">", "");
-      if(!hash.containsKey(key)) {
+      if (!hash.containsKey(key)) {
         hash.put(key, n.children);
       }
     }
     return hash;
   }
-
 
   /**
    * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree,
