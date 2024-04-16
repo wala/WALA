@@ -708,20 +708,13 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   public Object toJson() {
-    // int cnt = 0;
     HashMap<Object, Object> serial = new HashMap<>();
-    // serial.put(root.klass, root.children);
     Iterator<Node> children = root.getChildren();
     ArrayList<HashMap<Object, Object>> dag = new ArrayList<>();
     while (children.hasNext()) {
       Node temp = children.next();
       HashMap<Object, Object> fin = helper_toJson(temp, serial);
       dag.add(fin);
-      // added cnt (count) so that the test does not get skipped
-      //      if(cnt == 2) {
-      //        break;
-      //      }
-      // cnt++;
     }
     for (int i = 1; i < dag.size(); i++) {
       dag.get(0).putAll(dag.get(i));
@@ -730,7 +723,17 @@ public class ClassHierarchy implements IClassHierarchy {
     key = key.replace("<Primordial,", "");
     key = key.replace("<Application,", "");
     key = key.replace(">", "");
-    dag.get(0).put(key, root.children);
+    Iterator<Node> root_children = root.getChildren();
+    Set<String> final_root_children = new HashSet<>();
+    while(root_children.hasNext()) {
+      Node val = root_children.next();
+      String child_name = val.getJavaClass().toString();
+      child_name = child_name.replace("<Primordial,", "");
+      child_name = child_name.replace("<Application,", "");
+      child_name = child_name.replace(">", "");
+      final_root_children.add(child_name);
+    }
+    dag.get(0).put(key, final_root_children);
     return dag.get(0);
   }
 
@@ -745,7 +748,17 @@ public class ClassHierarchy implements IClassHierarchy {
         key = key.replace("<Application,", "");
         key = key.replace(">", "");
         if (!hash.containsKey(key)) {
-          hash.put(key, temp.children);
+          Iterator<Node> val = temp.getChildren();
+          Set<String> root = new HashSet<>();
+          while(val.hasNext()) {
+            Node temp_val = val.next();
+            String new_val = temp_val.getJavaClass().toString();
+            new_val = new_val.replace("<Primordial,", "");
+            new_val = new_val.replace("<Application,", "");
+            new_val = new_val.replace(">", "");
+            root.add(new_val);
+          }
+          hash.put(key, root);
         }
         System.out.println(temp_hash);
       }
