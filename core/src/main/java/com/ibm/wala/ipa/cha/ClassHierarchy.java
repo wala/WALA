@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ipa.cha;
 
+import com.google.gson.Gson;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -744,7 +745,8 @@ public class ClassHierarchy implements IClassHierarchy {
       final_root_children.add(child_name);
     }
     dag.get(0).put(key, final_root_children);
-    return dag.get(0);
+    Gson gson = new Gson();
+    return gson.toJson(dag.get(0));
   }
 
   // helper function to toJson that performs recursion to go through all of the DAG
