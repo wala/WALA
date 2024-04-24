@@ -712,20 +712,28 @@ public class ClassHierarchy implements IClassHierarchy {
    * subclasses
    */
   public Object toJson() {
-    // initialize variables (subclass and dag) to store important values like hashmap
-    // of each iteration and a list of all maps of class to subclasses
+    /*
+     * initialize variables (subclass and dag) to store important values like hashmap of each
+     * iteration and a list of all maps of class to subclasses
+     */
     HashMap<String, Set<String>> subclass = new HashMap<>();
     Iterator<Node> children = root.getChildren();
-    // lines 717-721: Goes through all subclasses of the root class, and adds the subclass hashmap
-    // to the list of all subclass hashmaps
+    /*
+     * Goes through all subclasses of the root class, and adds the subclass hashmap to the
+     * list of all subclass hashmaps
+     */
     while (children.hasNext()) {
       Node temp = children.next();
       helperToJson(temp, subclass);
     }
-    // lines 727-730: Removes unnecesarry parts from name of the class
+    /*
+     * Removes unnecesarry parts from name of the class
+     */
     String key = nodeToString(root);
-    // lines 732-742: inserting the root class to its subclasses into the main hashmap while
-    // removing unnecessary substrings from the class name
+    /*
+     * inserting the root class to its subclasses into the main hashmap while removing
+     * unnecessary substrings from the class name
+     */
     Iterator<Node> root_children = root.getChildren();
     Set<String> final_root_children = new HashSet<>();
     while (root_children.hasNext()) {
@@ -738,25 +746,35 @@ public class ClassHierarchy implements IClassHierarchy {
     return gson.toJson(subclass);
   }
 
-  // helper function to toJson that performs recursion to go through all of the DAG
+  /*
+   * helper function to toJson that performs recursion to go through all of the DAG
+   */
   public void helperToJson(Node n, HashMap<String, Set<String>> hash) {
-    // Base case of no subclasses allowing recursion to stop
     if (n.children.size() > 0) {
-      // line 750 + while loop: defines iterator to go through the class's subclasses
+      /*
+       * while loop: defines iterator to go through the class's subclasses
+       */
       Iterator<Node> children = n.getChildren();
       while (children.hasNext()) {
-        // line 753-754: puts subclass variable into temp, and start recursion from that subclass
-        // until base case reaches
+        /*
+         * puts subclass variable into temp, and start recursion from that subclass
+         * until base case reaches
+         */
         Node temp = children.next();
         helperToJson(temp, hash);
-        // line 756-759: remove unnecessary substrings from class name
+        /*
+         * remove unnecessary substrings from class name
+         */
         String key = nodeToString(temp);
-        // if statement: only adds the map from class to subclass if class name does not exist in
-        // the overall hashmap
+        /*
+         * if statement: only adds the map from class to subclass if class name does
+         * not exist in the overall hashmap
+         */
         if (!hash.containsKey(key)) {
-          // lines 763-773: Iterates through the subclass list and removes unnecessary substrings
-          // from class name --> adds that new value into varibale, root, containig all it's
-          // subclasses
+          /*
+           * Iterates through the subclass list and removes unnecessary substrings from
+           * class name --> adds that new value into varibale, root, containig all it's subclasses
+           */
           Iterator<Node> val = temp.getChildren();
           Set<String> root = new HashSet<>();
           while (val.hasNext()) {
@@ -764,13 +782,17 @@ public class ClassHierarchy implements IClassHierarchy {
             String new_val = nodeToString(temp_val);
             root.add(new_val);
           }
-          // line 774: insert into hashmap containing all class to subclass pairs
+          /*
+           * insert into hashmap containing all class to subclass pairs
+           */
           hash.put(key, root);
         }
       }
     } else {
-      // line 780-787: remove unnecessary substring from class name and map that to an empty list to
-      // add into the hashmap
+      /*
+       * remove unnecessary substring from class name and map that to an empty
+       * list to add into the hashmap
+       */
       String key = nodeToString(n);
       if (!hash.containsKey(key)) {
         Set<String> root = new HashSet<>();
@@ -779,6 +801,9 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
+  /*
+   * Removed unnecessary part of Node by turning it into a String
+   */
   public String nodeToString(Node n) {
     String key = n.getJavaClass().toString();
     key = key.replace("<Primordial,", "");
