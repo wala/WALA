@@ -711,37 +711,29 @@ public class ClassHierarchy implements IClassHierarchy {
    * Puts ClassHierarchy into a JSON readable variable that maps the class to a list of its
    * subclasses
    */
-  public Object toJson() {
-    /*
-     * initialize variables (subclass and dag) to store important values like hashmap of each
-     * iteration and a list of all maps of class to subclasses
-     */
+  public String toJson() {
+     // initialize variables (subclass and dag) to store important values like hashmap of each
+     // iteration and a list of all maps of class to subclasses
     HashMap<String, Set<String>> subclass = new HashMap<>();
     Iterator<Node> children = root.getChildren();
-    /*
-     * Goes through all subclasses of the root class, and adds the subclass hashmap to the
-     * list of all subclass hashmaps
-     */
+     // Goes through all subclasses of the root class, and adds the subclass hashmap to the
+     // list of all subclass hashmaps
     while (children.hasNext()) {
       Node temp = children.next();
       helperToJson(temp, subclass);
     }
-    /*
-     * Removes unnecesarry parts from name of the class
-     */
+     // Removes unnecesarry parts from name of the class
     String key = nodeToString(root);
-    /*
-     * inserting the root class to its subclasses into the main hashmap while removing
-     * unnecessary substrings from the class name
-     */
-    Iterator<Node> root_children = root.getChildren();
-    Set<String> final_root_children = new HashSet<>();
-    while (root_children.hasNext()) {
-      Node val = root_children.next();
+     // inserting the root class to its subclasses into the main hashmap while removing
+     // unnecessary substrings from the class name
+    Iterator<Node> rootChildren = root.getChildren();
+    Set<String> finalRootChildren = new HashSet<>();
+    while (rootChildren.hasNext()) {
+      Node val = rootChildren.next();
       String child_name = nodeToString(val);
-      final_root_children.add(child_name);
+      finalRootChildren.add(child_name);
     }
-    subclass.put(key, final_root_children);
+    subclass.put(key, finalRootChildren);
     Gson gson = new Gson();
     return gson.toJson(subclass);
   }
@@ -749,50 +741,36 @@ public class ClassHierarchy implements IClassHierarchy {
   /*
    * helper function to toJson that performs recursion to go through all of the DAG
    */
-  public void helperToJson(Node n, HashMap<String, Set<String>> hash) {
+  private void helperToJson(Node n, HashMap<String, Set<String>> hash) {
     if (n.children.size() > 0) {
-      /*
-       * while loop: defines iterator to go through the class's subclasses
-       */
+       // while loop: defines iterator to go through the class's subclasses
       Iterator<Node> children = n.getChildren();
       while (children.hasNext()) {
-        /*
-         * puts subclass variable into temp, and start recursion from that subclass
-         * until base case reaches
-         */
+         // puts subclass variable into temp, and start recursion from that subclass
+         // until base case reaches
         Node temp = children.next();
         helperToJson(temp, hash);
-        /*
-         * remove unnecessary substrings from class name
-         */
+         // remove unnecessary substrings from class name
         String key = nodeToString(temp);
-        /*
-         * if statement: only adds the map from class to subclass if class name does
-         * not exist in the overall hashmap
-         */
+         // if statement: only adds the map from class to subclass if class name does
+         // not exist in the overall hashmap
         if (!hash.containsKey(key)) {
-          /*
-           * Iterates through the subclass list and removes unnecessary substrings from
-           * class name --> adds that new value into varibale, root, containig all it's subclasses
-           */
+           // Iterates through the subclass list and removes unnecessary substrings from
+           // class name --> adds that new value into varibale, root, containig all it's subclasses
           Iterator<Node> val = temp.getChildren();
           Set<String> root = new HashSet<>();
           while (val.hasNext()) {
-            Node temp_val = val.next();
-            String new_val = nodeToString(temp_val);
-            root.add(new_val);
+            Node tempVal = val.next();
+            String newVal = nodeToString(tempVal);
+            root.add(newVal);
           }
-          /*
-           * insert into hashmap containing all class to subclass pairs
-           */
+           // insert into hashmap containing all class to subclass pairs
           hash.put(key, root);
         }
       }
     } else {
-      /*
-       * remove unnecessary substring from class name and map that to an empty
-       * list to add into the hashmap
-       */
+       // remove unnecessary substring from class name and map that to an empty
+       // list to add into the hashmap
       String key = nodeToString(n);
       if (!hash.containsKey(key)) {
         Set<String> root = new HashSet<>();
@@ -804,7 +782,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /*
    * Removed unnecessary part of Node by turning it into a String
    */
-  public String nodeToString(Node n) {
+  private String nodeToString(Node n) {
     String key = n.getJavaClass().toString();
     key = key.replace("<Primordial,", "");
     key = key.replace("<Application,", "");
