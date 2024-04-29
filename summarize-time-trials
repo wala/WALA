@@ -36,14 +36,14 @@ def main():
 
     # print slowest individual tests, showing only those in the 95% percentile
     # or higher (slower)
-    rankedTimes = pandas.DataFrame(times)
-    rankedTimes['percentRank'] = times.rank(pct=True)
-    elapsedTimes = rankedTimes['elapsedTime']
-    rankedTimes['fractionOfTotal'] = elapsedTimes / elapsedTimes.sum()
-    isSlow = rankedTimes['percentRank'] >= .95
-    slowestTests = rankedTimes[isSlow][::-1]
+    ranked_times = pandas.DataFrame(times)
+    ranked_times['percentRank'] = times.rank(pct=True)
+    elapsed_times = ranked_times['elapsedTime']
+    ranked_times['fractionOfTotal'] = elapsed_times / elapsed_times.sum()
+    is_slow = ranked_times['percentRank'] >= .95
+    slowest_tests = ranked_times[is_slow][::-1]
     print('Slowest individual tests:')
-    print(slowestTests.to_string(formatters={'percentRank': '{:.1%}'.format}))
+    print(slowest_tests.to_string(formatters={'percentRank': '{:.1%}'.format}))
 
 
 if __name__ == '__main__':

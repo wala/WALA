@@ -1,0 +1,3 @@
+Primordial,Java,stdlib,base
+Primordial,Java,jdkModule,java.desktop
+Primordial,Java,jarFile,primordial.jar.model

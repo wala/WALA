@@ -16,6 +16,14 @@ project-level Gradle caches will make incremental rebuilds much
 faster.  Rerunning `./gradlew assemble processTestResources` with a
 warm cache in an already-built tree takes under three seconds.
 
+WALA components are built using a mix of Java 11 and Java 17.  Gradle
+will [download suitable JDKs
+automatically](https://docs.gradle.org/current/userguide/toolchains.html#sec:provisioning)
+if they are not already [locally
+installed](https://docs.gradle.org/current/userguide/toolchains.html#sec:auto_detection)
+or
+[custom-configured](https://docs.gradle.org/current/userguide/toolchains.html#sec:custom_loc).
+
 ## Eclipse
 
 ### One-Time Eclipse Configuration
@@ -38,9 +46,14 @@ to import WALA into Eclipse.** Select and import the topmost level of
 your WALA source tree.  On the “Import Options” page of the import
 wizard, leave all settings at their defaults: the “Override workspace
 settings” option should be off, and the grayed-out “Gradle
-distribution” choice should be set to “Gradle wrapper”.  It is also recommended that you clear the "Gradle user home" dialog box in the **Gradle Preferences** prior to importing ([one issue](https://github.com/wala/WALA/issues/731#issuecomment-604465043) was resolved this way). You do not
-need to select each of WALA’s sub-projects; import only the top-level
-WALA source tree, and the rest will follow.
+distribution” choice should be set to “Gradle wrapper”.  It is also
+recommended that you clear the "Gradle user home" dialog box in the
+**Gradle Preferences** (not the one in the import wizard) prior to
+importing ([one
+issue](https://github.com/wala/WALA/issues/731#issuecomment-604465043)
+was resolved this way). You do not need to select each of WALA’s
+sub-projects; import only the top-level WALA source tree, and the rest
+will follow.
 
 The first time you import the WALA project, Eclipse will synchronize
 its project model with the Gradle build configuration, including
@@ -81,7 +94,7 @@ generated `.classpath` and `.project` files will have the desired
 contents, likely by using [Gradle’s `eclipse`
 plugin](https://docs.gradle.org/current/userguide/eclipse_plugin.html).
 A few WALA sub-projects already use this:  look for `eclipse.project`
-in `*/build.gradle` for examples.
+in `*/build.gradle.kt` for examples.
 
 ## IntelliJ IDEA
 

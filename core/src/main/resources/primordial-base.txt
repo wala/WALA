@@ -1,0 +1,2 @@
+Primordial,Java,stdlib,base
+Primordial,Java,jarFile,primordial.jar.model
