@@ -32,6 +32,11 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.IntIterator;
+import com.ibm.wala.util.intset.MutableIntSet;
+import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
+import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,12 +78,25 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     return builder.buildFlowGraph();
   }
 
+  private static MutableIntSet findOrCreateMutableIntSet(Map<Vertex, MutableIntSet> M, Vertex v) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    MutableIntSet mis = M.get(v);
+    if (mis == null) {
+      mis = new MutableSharedBitVectorIntSet();
+      M.put(v, mis);
+    }
+    return mis;
+  }
+
   @Override
   public Set<Pair<CallVertex, FuncVertex>> extractCallGraphEdges(
       FlowGraph flowgraph, IProgressMonitor monitor) throws CancelException {
     VertexFactory factory = flowgraph.getVertexFactory();
     Set<Vertex> worklist = HashSetFactory.make();
-    Map<Vertex, Set<FuncVertex>> reachingFunctions = HashMapFactory.make();
+    OrdinalSetMapping<FuncVertex> mapping = new MutableMapping<>(new FuncVertex[100]);
+    Map<Vertex, MutableIntSet> reachingFunctions = HashMapFactory.make();
     Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices =
         HashMapFactory.make();
     /* maps to maintain the list of reachable calls that are yet to be processed * */
@@ -89,7 +107,8 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       if (v instanceof FuncVertex) {
         FuncVertex fv = (FuncVertex) v;
         worklist.add(fv);
-        MapUtil.findOrCreateSet(reachingFunctions, fv).add(fv);
+        int mappedVal = mapping.add(fv);
+        findOrCreateMutableIntSet(reachingFunctions, fv).add(mappedVal);
       }
     }
     int cnt = 0;
@@ -101,7 +120,10 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
             && (!worklist.isEmpty()
                 || !pendingCallWorklist.isEmpty()
                 || !pendingReflectiveCallWorklist.isEmpty()))
-        || cnt < bound) {
+        || (cnt <= bound
+            && (!worklist.isEmpty()
+                || !pendingCallWorklist.isEmpty()
+                || !pendingReflectiveCallWorklist.isEmpty()))) {
       if (worklist.isEmpty()) {
         processPendingCallWorklist(
             flowgraph,
@@ -109,7 +131,8 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
             factory,
             reachingFunctions,
             reflectiveCalleeVertices,
-            worklist);
+            worklist,
+            mapping);
         processPendingReflectiveCallWorklist(
             flowgraph, pendingReflectiveCallWorklist, reflectiveCalleeVertices, worklist);
         pendingCallWorklist.clear();
@@ -120,22 +143,26 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 
         Vertex v = worklist.iterator().next();
         worklist.remove(v);
-        Set<FuncVertex> vReach = MapUtil.findOrCreateSet(reachingFunctions, v);
+        MutableIntSet vReach = findOrCreateMutableIntSet(reachingFunctions, v);
         for (Vertex w : Iterator2Iterable.make(flowgraph.getSucc(v))) {
           MonitorUtil.throwExceptionIfCanceled(monitor);
 
-          Set<FuncVertex> wReach = MapUtil.findOrCreateSet(reachingFunctions, w);
+          MutableIntSet wReach = findOrCreateMutableIntSet(reachingFunctions, w);
           boolean changed = false;
           if (w instanceof CallVertex) {
-            for (FuncVertex fv : vReach) {
-              if (wReach.add(fv)) {
+            IntIterator mappedFuncs = vReach.intIterator();
+            while (mappedFuncs.hasNext()) {
+              FuncVertex fv = mapping.getMappedObject(mappedFuncs.next());
+              if (wReach.add(mapping.getMappedIndex(fv))) {
                 changed = true;
                 MapUtil.findOrCreateSet(pendingCallWorklist, w).add(fv);
               }
             }
           } else if (handleCallApply && reflectiveCalleeVertices.containsKey(w)) {
-            for (FuncVertex fv : vReach) {
-              if (wReach.add(fv)) {
+            IntIterator mappedFuncs = vReach.intIterator();
+            while (mappedFuncs.hasNext()) {
+              FuncVertex fv = mapping.getMappedObject(mappedFuncs.next());
+              if (wReach.add(mapping.getMappedIndex(fv))) {
                 changed = true;
                 MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, (VarVertex) w).add(fv);
               }
@@ -150,11 +177,18 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       cnt += 1;
     }
 
+    System.out.println("The last executed bound was : " + cnt);
+
     Set<Pair<CallVertex, FuncVertex>> res = HashSetFactory.make();
-    for (Map.Entry<Vertex, Set<FuncVertex>> entry : reachingFunctions.entrySet()) {
+    for (Map.Entry<Vertex, MutableIntSet> entry : reachingFunctions.entrySet()) {
       final Vertex v = entry.getKey();
-      if (v instanceof CallVertex)
-        for (FuncVertex fv : entry.getValue()) res.add(Pair.make((CallVertex) v, fv));
+      if (v instanceof CallVertex) {
+        IntIterator mapped = entry.getValue().intIterator();
+        while (mapped.hasNext()) {
+          FuncVertex fv = mapping.getMappedObject(mapped.next());
+          res.add(Pair.make((CallVertex) v, fv));
+        }
+      }
     }
     return res;
   }
@@ -163,9 +197,10 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       FlowGraph flowgraph,
       Map<Vertex, Set<FuncVertex>> pendingCallWorklist,
       VertexFactory factory,
-      Map<Vertex, Set<FuncVertex>> reachingFunctions,
+      Map<Vertex, MutableIntSet> reachingFunctions,
       Map<VarVertex, Pair<JavaScriptInvoke, Boolean>> reflectiveCalleeVertices,
-      Set<Vertex> worklist) {
+      Set<Vertex> worklist,
+      OrdinalSetMapping<FuncVertex> mapping) {
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingCallWorklist.entrySet()) {
       CallVertex callVertex = (CallVertex) entry.getKey();
       for (FuncVertex fv : entry.getValue()) {
@@ -183,8 +218,12 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
           // we only add dataflow edges for Function.prototype.call
           boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
           reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
-          for (FuncVertex fw : MapUtil.findOrCreateSet(reachingFunctions, reflectiveCalleeVertex))
+          IntIterator reflectiveCalleeMapped =
+              findOrCreateMutableIntSet(reachingFunctions, reflectiveCalleeVertex).intIterator();
+          while (reflectiveCalleeMapped.hasNext()) {
+            FuncVertex fw = mapping.getMappedObject(reflectiveCalleeMapped.next());
             addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invk, fw, worklist, isCall);
+          }
         }
       }
     }
