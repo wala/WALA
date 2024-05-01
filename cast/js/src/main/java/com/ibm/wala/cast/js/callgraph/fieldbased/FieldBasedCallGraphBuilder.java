@@ -27,6 +27,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelecto
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -369,6 +370,19 @@ public abstract class FieldBasedCallGraphBuilder {
     for (final CallVertex callVertex : factory.getCallVertices()) {
       for (FuncVertex funcVertex : flowgraph.getReachingSet(callVertex, monitor)) {
         result.add(Pair.make(callVertex, funcVertex));
+        // add ReflectiveCall vertices for invocations of call and apply
+        String fullName = funcVertex.getFullName();
+        if (options instanceof JSAnalysisOptions
+            && ((JSAnalysisOptions) options).handleCallApply()
+            && (fullName.equals("Lprologue.js/Function_prototype_call")
+                || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
+          JavaScriptInvoke invk = callVertex.getInstruction();
+          VarVertex reflectiveCalleeVertex =
+              factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+          flowgraph.addEdge(
+              reflectiveCalleeVertex,
+              factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+        }
       }
     }
 
