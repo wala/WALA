@@ -100,7 +100,50 @@ Object$proto$__WALA__ =  {
   
   propertyIsEnumerable: function Object_prototype_propertyIsEnumerable (V) {
     return primitive("ObjectPropertyIsEnumerable", this, V);
+  },
+
+  create: function Object_prototype_create(proto) {
+    // TODO: model me
+  },
+
+  defineProperty: function Object_prototype_defineProperty(obj,prop,descriptor) {
+    return primitive("ObjectDefineProperty", obj, prop, descriptor);
+  },
+
+  defineProperties: function Object_prototype_defineProperties(obj, props) {
+    // TODO: model me
+  },
+
+  getPrototypeOf: function Object_prototype_getPrototypeOf(V) {
+    return primitive("ObjectGetPrototypeOf", this, V);
+    // TODO: model me
+  },
+
+  getOwnPropertyDescriptor: function Object_prototype_getOwnPropertyDescriptor(obj,prop) {
+    // TODO: model me
+  },
+
+  getOwnPropertyDescriptors: function Object_prototype_getOwnPropertyDescriptors(obj) {
+    // TODO: model me
+  },
+
+  getOwnPropertyNames: function Object_prototype_getOwnPropertyNames(obj) {
+    // TODO: model me
+  },
+
+  keys: function Object_prototype_keys(obj) {
+    // TODO: model me
+  },
+
+  freeze: function Object_prototype_freeze(obj) {
+    // TODO: model me
+  },
+
+  isExtensible: function Object_prototype_isExtensible(obj) {
+    // TODO: model me
   }
+
+
 };
 
 Object.prototype = Object$proto$__WALA__;
@@ -108,6 +151,8 @@ Object.prototype = Object$proto$__WALA__;
 /************************************************************************/
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
+
+//Function = function Function() {};
 
 Function$proto$__WALA__ = {
 
@@ -271,7 +316,7 @@ Array$proto$__WALA__ = {
     for(var l = 0; i < this.length; l++) {
       var mindex = l;
       for(var i = l; i < this.length; i++) {
-        if (fn(this[mindex], this[i]) < 0) {
+        if (fn.call(undefined,this[mindex], this[i]) < 0) {
           mindex = i;
         }
       }
@@ -408,6 +453,10 @@ Array$proto$__WALA__ = {
 	    }
 	  }
 	  return result;
+  },
+
+  lastIndexOf: function Array_prototype_lastIndexOf(searchString, position) {
+	  // TODO: model me
   }
 
 };
@@ -473,8 +522,8 @@ String$proto$__WALA__ = {
     return new String(primitive("StringToLocaleLowerCase", this));
   },
 
-  indexOf: function String_prototype_indexOf(str) {
-    return new Number(primitive("StringIndexOf", this, str));
+  indexOf: function String_prototype_indexOf(searchString, position) {
+    return new Number(primitive("StringIndexOf", this, searchString));
   },
 
   split: function String_prototype_split(separator, limit) {
@@ -502,7 +551,12 @@ String$proto$__WALA__ = {
 
   replace: function String_prototype_replace(regex, withStr) {
     // return new String(primitive("StringReplace", this, regex, withStr));
-    return this || withStr;
+    //return this || withStr;
+    if(typeof withStr === "string"){
+      return new String(primitive("StringReplace", regex, withStr));
+    }else if(typeof withStr === "function"){
+      return new String(primitive("StringReplace", regex, withStr.call(this)));
+    }
   },
   
   match: function String_prototype_match(regexp) {
@@ -522,7 +576,15 @@ String$proto$__WALA__ = {
   
   anchor: function String_prototype_anchor(url) {
 	  return new String();
-  }
+  },
+
+  fromCharCode: function String_prototype_fromCharCode(num1, num2, numN) {
+	  return new String(primitive("StringFromCharCode", this));
+  },
+  
+  search: function String_prototype_search() {
+	  // TODO: model me
+  },
 
 };
 
@@ -531,6 +593,8 @@ local_string.prototype = String$proto$__WALA__;
 /************************************************************************/
 /* Number properties, see spec 15.7					*/
 /************************************************************************/
+
+//Number = function Number() {};
 
 local_number.__proto__ = Function.prototype;
 
@@ -634,7 +698,7 @@ RegExp$proto$__WALA__ = {
   __proto__: Object.prototype,
 
   constructor: RegExp,
-  
+
   exec: function RegExp_prototype_exec(string) {
 	  return [ string, string, string, string, string ] || null;
   },
@@ -743,5 +807,3 @@ function Error(str) {
 function EvalError(str) {
 	this.message = new String();
 }
-
-
