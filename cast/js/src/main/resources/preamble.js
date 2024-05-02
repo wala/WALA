@@ -124,7 +124,6 @@ DOMNode = function DOMNode() { // An impostor for the Node class
 	this.innerText = new String();
 	this.innerHTML = new String();
 
-
 	this.collect = function collect(predicate, result) {
           if (predicate(this)) {
             result.push(this);
@@ -220,6 +219,7 @@ DOMDocument.prototype.querySelector = function Document_prototype_querySelector(
 DOMDocument.prototype.hasFeature = function Document_prototype_hasFeature(feature, version) {
 	// TODO: model me
 };
+
 
 
 HTMLBody = function HTMLBody(){
@@ -435,9 +435,11 @@ DOMElement.prototype.querySelectorAll = function Element_prototype_querySelector
 DOMElement.prototype.querySelector = function Element_prototype_querySelector(selectors) {
 	// TODO: model me
 };
+
 DOMElement.prototype.getElementsByClassName = function Element_prototype_getElementsByClassName() {
 	// TODO: model me
 };
+
 DOMElement.prototype.getElementsByName = function Element_prototype_getElementsByName() {
 	// TODO: model me
 };

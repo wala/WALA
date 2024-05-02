@@ -142,8 +142,6 @@ Object$proto$__WALA__ =  {
   isExtensible: function Object_prototype_isExtensible(obj) {
     // TODO: model me
   }
-
-
 };
 
 Object.prototype = Object$proto$__WALA__;
