@@ -13,6 +13,14 @@ var local_number = primitive("NewNumber");
 Number = local_number;
 var local_regexp = primitive("NewRegExp");
 RegExp = local_regexp;
+var local_json = primitive("NewJSON");
+JSON = local_json;
+var local_map = primitive("NewMap");
+Map = local_map;
+var local_set = primitive("NewSet");
+Set = local_set;
+var local_proxy = primitive("NewProxy");
+Proxy = local_proxy;
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -805,3 +813,101 @@ function Error(str) {
 function EvalError(str) {
 	this.message = new String();
 }
+
+//JSON
+JSON$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: JSON,
+
+  parse: function JSON_prototype_parse(value) {
+	  // TODO: model me
+  },
+  
+  stringify: function JSON_prototype_stringify(value, replacer, space) {
+	  // TODO: model me
+  }
+
+};
+
+JSON.prototype = JSON$proto$__WALA__;
+
+//Map
+Map = function Map() {};
+
+local_map.__proto__ = Function.prototype;
+
+Map$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Map,
+
+  has: function Map_prototype_has (key) {
+    // TO DO
+  }
+}
+
+local_map.prototype = Map$proto$__WALA__;
+
+//Set
+Set = function Set() {};
+
+local_set.__proto__ = Function.prototype;
+
+Set$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Set,
+
+  has: function Set_prototype_has () {
+    // TO DO
+  }
+}
+
+local_set.prototype = Set$proto$__WALA__;
+
+//Proxy
+Proxy = function Proxy() {};
+
+local_proxy.__proto__ = Function.prototype;
+
+Proxy$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Proxy,
+
+  resolve: function proxy_prototype_resolve () {
+    // TO DO
+  },
+  reject: function Proxy_prototype_reject () {
+    // TO DO
+  },
+  then: function Proxy_prototype_then (onFulfilled, onRejected) {
+    // TO DO
+  },
+}
+
+local_proxy.prototype = Proxy$proto$__WALA__;
+
+//Promise
+local_promise.__proto__ = Function.prototype;
+
+Promise$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Promise,
+
+  then: function Promise_prototype_then (onFulfilled, onRejected) {
+    // TO DO
+  },
+  catch: function Promise_prototype_catch (onRejected) {
+    // TO DO
+  }
+}
+
+local_promise.prototype = Promise$proto$__WALA__;
