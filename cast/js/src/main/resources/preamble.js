@@ -747,7 +747,7 @@ LocalStorage = function LocalStorage(){
 	}
 }
 
-Console = function Console(){
+console = function console(){
 	this.log = function console_log(){
 		// TODO: model me
 	}
