@@ -814,6 +814,25 @@ function EvalError(str) {
 	this.message = new String();
 }
 
+//JSON
+JSON$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: JSON,
+
+  parse: function JSON_prototype_parse(value) {
+	  // TODO: model me
+  },
+  
+  stringify: function JSON_prototype_stringify(value, replacer, space) {
+	  // TODO: model me
+  }
+
+};
+
+JSON.prototype = JSON$proto$__WALA__;
+
 //Map
 Map = function Map() {};
 
