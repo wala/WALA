@@ -13,6 +13,10 @@ var local_number = primitive("NewNumber");
 Number = local_number;
 var local_regexp = primitive("NewRegExp");
 RegExp = local_regexp;
+var local_map = primitive("NewMap");
+Map = local_map;
+var local_set = primitive("NewSet");
+Set = local_set;
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -805,3 +809,39 @@ function Error(str) {
 function EvalError(str) {
 	this.message = new String();
 }
+
+//MAP 
+Map = function Map() {};
+
+local_map.__proto__ = Function.prototype;
+
+Map$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Map,
+
+  has: function Map_prototype_has (key) {
+    // TO DO
+  }
+}
+
+local_map.prototype = Map$proto$__WALA__;
+
+//SET 
+Set = function Set() {};
+
+local_set.__proto__ = Function.prototype;
+
+Set$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Set,
+
+  has: function Set_prototype_has () {
+    // TO DO
+  }
+}
+
+local_set.prototype = Set$proto$__WALA__;
