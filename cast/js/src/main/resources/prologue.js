@@ -158,8 +158,6 @@ Object.prototype = Object$proto$__WALA__;
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
 
-//Function = function Function() {};
-
 Function$proto$__WALA__ = {
 
   constructor: Function,
@@ -599,8 +597,6 @@ local_string.prototype = String$proto$__WALA__;
 /************************************************************************/
 /* Number properties, see spec 15.7					*/
 /************************************************************************/
-
-//Number = function Number() {};
 
 local_number.__proto__ = Function.prototype;
 
