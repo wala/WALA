@@ -17,6 +17,8 @@ var local_map = primitive("NewMap");
 Map = local_map;
 var local_set = primitive("NewSet");
 Set = local_set;
+var local_proxy = primitive("NewProxy");
+Proxy = local_proxy;
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -845,3 +847,27 @@ Set$proto$__WALA__ = {
 }
 
 local_set.prototype = Set$proto$__WALA__;
+
+//PROXY 
+Proxy = function Proxy() {};
+
+local_proxy.__proto__ = Function.prototype;
+
+Proxy$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Proxy,
+
+  resolve: function proxy_prototype_resolve () {
+    // TO DO
+  },
+  reject: function Proxy_prototype_reject () {
+    // TO DO
+  },
+  then: function Proxy_prototype_then (onFulfilled, onRejected) {
+    // TO DO
+  },
+}
+
+local_proxy.prototype = Proxy$proto$__WALA__;
