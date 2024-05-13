@@ -19,6 +19,8 @@ var local_set = primitive("NewSet");
 Set = local_set;
 var local_proxy = primitive("NewProxy");
 Proxy = local_proxy;
+var local_promise = primitive("NewPromise");
+Proxy = local_promise;
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -871,3 +873,23 @@ Proxy$proto$__WALA__ = {
 }
 
 local_proxy.prototype = Proxy$proto$__WALA__;
+
+Promise = function Promise() {};
+
+local_promise.__proto__ = Function.prototype;
+
+Promise$proto$__WALA__ = {
+
+  __proto__: Object.prototype,
+
+  constructor: Promise,
+
+  then: function Promise_prototype_then (onFulfilled, onRejected) {
+    // TO DO
+  },
+  catch: function Promise_prototype_catch (onRejected) {
+    // TO DO
+  }
+}
+
+local_promise.prototype = Promise$proto$__WALA__;
