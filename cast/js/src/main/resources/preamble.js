@@ -133,21 +133,26 @@ DOMNode = function DOMNode() { // An impostor for the Node class
         
         this.selectNodes = function(a) {
 	}
+
+	this.hasAttribute = function(a) {
+	}
 };
 
-DOMNode.prototype.addEventListener = function Node_prototype_addEventListener(name, fn) { fn(); };
+DOMNode.prototype.addEventListener = function Node_prototype_addEventListener(name, fn, options) { fn(); };
 
-DOMNode.prototype.removeEventListener = function Node_prototype_removeEventListener(name) {};
+DOMNode.prototype.removeEventListener = function Node_prototype_removeEventListener(name, fn, options) {};
 
-DOMNode.prototype.cloneNode = function Node_prototype_cloneNode() {
+DOMNode.prototype.dispatchEvent = function Node_prototype_dispatchEvent(name) {};
+
+DOMNode.prototype.cloneNode = function Node_prototype_cloneNode(deep) {
 	// TODO: model me
 };
 
-DOMNode.prototype.compareDocumentPosition = function Node_prototype_compareDocumentPosition() {
+DOMNode.prototype.compareDocumentPosition = function Node_prototype_compareDocumentPosition(otherNode) {
 	// TODO: model me
 };
 
-DOMNode.prototype.contains = function Node_prototype_contains() {
+DOMNode.prototype.contains = function Node_prototype_contains(otherNode) {
 	return true || false;
 }
 
@@ -188,17 +193,30 @@ DOMDocument = function DOMDocument() {
 	this.writeln = function Document_prototype_writeln (stuff) {
 
 	};
+
+	this.createEvent = function Document_createEvent (stuff) {
+
+	};
 };
 DOMDocument.prototype.createDocumentFragment = function Document_prototype_createDocumentFragment() {
 	return new DOMDocument();
 };
-DOMDocument.prototype.createComment = function Document_prototype_createComment() {
+DOMDocument.prototype.createComment = function Document_prototype_createComment(data) {
 	// TODO: model me
 };
-DOMDocument.prototype.getElementsByClassName = function Document_prototype_getElementsByClassName() {
+DOMDocument.prototype.getElementsByClassName = function Document_prototype_getElementsByClassName(name) {
 	// TODO: model me
 };
-DOMDocument.prototype.querySelectorAll = function Document_prototype_querySelectorAll() {
+DOMDocument.prototype.getElementsByName = function Document_prototype_getElementsByName(name) {
+	// TODO: model me
+};
+DOMDocument.prototype.querySelectorAll = function Document_prototype_querySelectorAll(selectors) {
+	// TODO: model me
+};
+DOMDocument.prototype.querySelector = function Document_prototype_querySelector(selectors) {
+	// TODO: model me
+};
+DOMDocument.prototype.hasFeature = function Document_prototype_hasFeature(feature, version) {
 	// TODO: model me
 };
 
@@ -255,20 +273,20 @@ Image = function Image() {
 
 DOMWindow = function DOMWindow(){
 	this.name = new String();
-	this.open = function window_open(url, stuff) { 
-		note_url(url); 
+	this.open = function window_open(url, target, windowFeatures) {
+		note_url.call(this,url);
 	};
-	this.addEventListener = function Window_prototype_addEventListener(name, fn) {
-		fn();
+	this.addEventListener = function Window_prototype_addEventListener(name, fn , options) {
+		fn.call(this);
 	};
 	this.alert = function Window_prototype_alert(msg) {
 		// as everyone knows, alert is pure
 	};
 	this.setInterval = function Window_prototype_setInterval(fn, interval) {
-		fn();
+		fn.call(this);
 	};
 	this.setTimeout = function Window_prototype_setTimeout(fn, timeout) {
-		fn();
+		fn.call(this);
 	};
 	this.clearInterval = function Window_prototype_clearInterval(interval) {};
 	this.clearTimeout = function Window_prototype_clearTimeout(timeout) {};
@@ -284,6 +302,10 @@ DOMWindow.prototype.prompt = function Window_prototype_prompt() {
 
 CSS2Properties = function CSS2Properties() {
 	this.cssText = new String();
+};
+
+CSSStyleDeclaration = function CSSStyleDeclaration() {
+	this.getPropertyValue = new String();
 };
 
 DOJOObj = function DOJOObj(){
@@ -348,6 +370,8 @@ window.decodeURIComponent = decodeURIComponent;
 
 window.navigate = function navigate(a) {}
 
+Window.requestAnimationFrame = function window_requestAnimationFrame(callback){}
+
 window.document = document;
 document.defaultView = window;
 window.XMLHttpRequest = XMLHttpRequest;
@@ -400,9 +424,15 @@ DOMElement = function DOMElement() { // An impostor for the Element class
     };
 
     this.focus = function Element_prototype_focus() {};
+
+    this.hasAttribute = function Element_prototype_hasAttribute(name) {};
+    this.scrollTo = function Element_prototype_scrollTo(xcoord, ycoord) {};
 };
 
-DOMElement.prototype.querySelectorAll = function Element_prototype_querySelectorAll() {
+DOMElement.prototype.querySelectorAll = function Element_prototype_querySelectorAll(selectors) {
+	// TODO: model me
+};
+DOMElement.prototype.querySelector = function Element_prototype_querySelector(selectors) {
 	// TODO: model me
 };
 
@@ -410,6 +440,9 @@ DOMElement.prototype.getElementsByClassName = function Element_prototype_getElem
 	// TODO: model me
 };
 
+DOMElement.prototype.getElementsByName = function Element_prototype_getElementsByName() {
+	// TODO: model me
+};
 DOMElement.prototype.getBoundingClientRect = function Element_prototype_getBoundingClientRect() {
 	// TODO: model me
 };
@@ -427,6 +460,16 @@ Event.prototype.stopPropagation = function Event_prototype_stopPropagation() {
 
 Event.prototype.preventDefault = function Event_prototype_preventDefault() {
 	// TODO: model me
+};
+
+Event.prototype.initEvent = function Event_prototype_initEvent(type, bubbles, cancelable) {
+	// TODO: model me	
+};	
+EventTarget = function EventTarget() {	
+	// TODO: model me	
+};	
+EventTarget.prototype.dispatchEvent = function EventTarget_prototype_dispatchEvent() {	
+	// TODO: model me	
 };
 
 DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement class
@@ -497,6 +540,13 @@ DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
 	
 	this.getContext = function() { return new CanvasRenderingContext2D(); };
 	this.getAttribute = function() {return new String();}
+
+	this.blur = function HTMLElement_blur() {
+		// TODO: model me
+	};
+	this.focus = function HTMLElement_focus() { 
+		// TODO: model me 
+	};
 };
 
 CanvasRenderingContext2D = function CanvasRenderingContext2D() {};
@@ -583,6 +633,16 @@ DOMHTMLTableElement = function DOMHTMLTableElement () {
 	}	
 }
 
+DOMHTMLInputElement = function DOMHTMLTableElement () {
+	// inherits from HTMLElement
+	this.DOMHTMLElement = DOMHTMLElement;
+	this.DOMHTMLElement();
+	delete this.DOMHTMLElement;
+
+	this.setSelectionRange = function input_elt_setSelectionRange(selectionStart, selectionEnd, selectionDirection) {
+	}	
+}
+
 XMLHttpRequest = function XMLHttpRequest() {
 
 	this.responseText = new String();
@@ -646,4 +706,55 @@ function ActiveXObject() {
 	}
 }
 
+CSSStyleDeclaration = function CSSStyleDeclaration() {
+	this.getPropertyValue = function CSSStyleDeclaration_getPropertyValue(property) {
+		// TODO: model me
+	}
+};
 
+ArrayBuffer = function ArrayBuffer() {};
+
+Uint8Array = function Uint8Array() {};
+Uint8Array.prototype.subarray = function Uint8Array_prototype_subarray(begin,end) {
+	// TODO: model me
+};
+
+Generator = function Generator() {};
+Generator.prototype.next = function Generator_prototype_next() {
+	// TODO: model me
+};
+
+History = function History() {};
+History.prototype.pushState = function History_prototype_pushState() {
+	// TODO: model me
+};
+History.prototype.replaceState = function History_prototype_replaceState() {
+	// TODO: model me
+};
+
+LocalStorage = function LocalStorage(){
+	this.setItem = function localStorage_setItem(keyName, keyValue){
+		// TODO: model me
+	},
+	this.getItem = function localStorage_getItem(keyName){
+		// TODO: model me
+	},
+	this.removeItem = function localStorage_removeItem(keyName){
+		// TODO: model me
+	},
+	this.clear = function localStorage_clear(){
+		// TODO: model me
+	}
+}
+
+console = function console(){
+	this.log = function console_log(){
+		// TODO: model me
+	}
+	this.debug = function console_debug(msg){
+		// TODO: model me
+	}
+	this.info = function console_info(msg){
+		// TODO: model me
+	}
+}
