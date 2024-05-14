@@ -554,8 +554,6 @@ String$proto$__WALA__ = {
   },
 
   replace: function String_prototype_replace(regex, withStr) {
-    // return new String(primitive("StringReplace", this, regex, withStr));
-    //return this || withStr;
     if(typeof withStr === "string"){
       return new String(primitive("StringReplace", regex, withStr));
     }else if(typeof withStr === "function"){
