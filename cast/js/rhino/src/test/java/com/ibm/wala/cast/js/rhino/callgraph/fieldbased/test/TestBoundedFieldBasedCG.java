@@ -17,10 +17,23 @@ import com.ibm.wala.util.WalaException;
 import org.junit.jupiter.api.Test;
 
 public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
+  private static final Object[][] assertionsForBound0JS =
+      new Object[][] {
+        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
+        new Object[] {"suffix:bounded.js", new String[] {"suffix:y", "!suffix:x", "suffix:call"}},
+        new Object[] {"suffix:call", new String[] {"!suffix:m"}}
+      };
+
+  @Test
+  public void testBound0Worklist() throws WalaException, Error, CancelException {
+    runBoundedTest(
+        "tests/fieldbased/bounded.js", assertionsForBound0JS, BuilderType.OPTIMISTIC_WORKLIST, 0);
+  }
+
   private static final Object[][] assertionsForBound1JS =
       new Object[][] {
         new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-        new Object[] {"suffix:bounded.js", new String[] {"suffix:y", "!suffix:x"}},
+        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}},
         new Object[] {"suffix:call", new String[] {"!suffix:m"}}
       };
 
@@ -33,26 +46,13 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
   private static final Object[][] assertionsForBound2JS =
       new Object[][] {
         new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y"}},
-        new Object[] {"suffix:call", new String[] {"!suffix:m"}}
+        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}},
+        new Object[] {"suffix:call", new String[] {"suffix:m"}},
       };
 
   @Test
   public void testBound2Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
         "tests/fieldbased/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
-  }
-
-  private static final Object[][] assertionsForBound3JS =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}},
-        new Object[] {"suffix:call", new String[] {"suffix:m"}},
-      };
-
-  @Test
-  public void testBound3Worklist() throws WalaException, Error, CancelException {
-    runBoundedTest(
-        "tests/fieldbased/bounded.js", assertionsForBound3JS, BuilderType.OPTIMISTIC_WORKLIST, 3);
   }
 }
