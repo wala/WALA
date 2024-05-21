@@ -707,67 +707,51 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
-  /*
-   * Puts ClassHierarchy into a JSON readable variable that maps the class to a list of its
-   * subclasses
+  /**
+   * Converts ClassHierarchy to a JSON String, mapping each class name to a list of subclass names
    */
   public String toJson() {
-    // initialize variables (subclass and dag) to store important values like hashmap of each
-    // iteration and a list of all maps of class to subclasses
-    HashMap<String, Set<String>> subclass = new HashMap<>();
+    // initialize variables classNameToSubclassNames to store the <key, value> pair <class, subclass>
+    HashMap<String, Set<String>> classNameToSubclassNames = new HashMap<>();
     Iterator<Node> children = root.getChildren();
-    // Goes through all subclasses of the root class, and adds the subclass hashmap to the
-    // list of all subclass hashmaps
+    Set<String> subclassNames = new HashSet<>();
     while (children.hasNext()) {
-      helperToJson(children.next(), subclass);
+      Node temp = children.next();
+      subclassNames.add(nodeToString(temp));
+      helperToJson(temp, classNameToSubclassNames);
     }
     // Removes unnecesarry parts from name of the class
     String key = nodeToString(root);
-    // inserting the root class to its subclasses into the main hashmap while removing
-    // unnecessary substrings from the class name
-    Iterator<Node> rootChildren = root.getChildren();
-    Set<String> finalRootChildren = new HashSet<>();
-    while (rootChildren.hasNext()) {
-      finalRootChildren.add(nodeToString(rootChildren.next()));
-    }
-    subclass.put(key, finalRootChildren);
+    // inserting the root class to its subclasses into the main hashmap 
+    classNameToSubclassNames.put(key, subclassNames);
     Gson gson = new Gson();
-    return gson.toJson(subclass);
+    return gson.toJson(classNameToSubclassNames);
   }
 
-  /*
+  /**
    * helper function to toJson that performs recursion to go through all of the DAG
    */
   private void helperToJson(Node n, HashMap<String, Set<String>> hash) {
+    if (hash.containsKey(nodeToString(n))) {
+      return;
+    }
     if (n.children.size() > 0) {
-      // while loop: defines iterator to go through the class's subclasses
       Iterator<Node> children = n.getChildren();
+      Set<String> subclassNames = new HashSet<>();
       while (children.hasNext()) {
         // puts subclass variable into temp, and start recursion from that subclass
-        // until base case reaches
+        // until base cases reaches
         Node temp = children.next();
         helperToJson(temp, hash);
         // remove unnecessary substrings from class name
         String key = nodeToString(temp);
-        // if statement: only adds the map from class to subclass if class name does
-        // not exist in the overall hashmap
+        subclassNames.add(key);
+
         if (!hash.containsKey(key)) {
-          // Iterates through the subclass list and removes unnecessary substrings from
-          // class name --> adds that new value into varibale, root, containig all it's subclasses
-          Iterator<Node> val = temp.getChildren();
-          Set<String> root = new HashSet<>();
-          while (val.hasNext()) {
-            Node tempVal = val.next();
-            String newVal = nodeToString(tempVal);
-            root.add(newVal);
-          }
-          // insert into hashmap containing all class to subclass pairs
-          hash.put(key, root);
+          hash.put(key, subclassNames);
         }
       }
     } else {
-      // remove unnecessary substring from class name and map that to an empty
-      // list to add into the hashmap
       String key = nodeToString(n);
       if (!hash.containsKey(key)) {
         Set<String> root = new HashSet<>();
@@ -776,7 +760,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
-  /*
+  /**
    * Removed unnecessary part of Node by turning it into a String (Made for toJson and helperToJson)
    */
   private String nodeToString(Node n) {
