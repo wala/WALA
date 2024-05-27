@@ -65,6 +65,7 @@ dependencies {
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
   // add the testSubjects source files to enable SourceMapTest to pass
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
+  // to allow writing test subject classes that use JUnit annotations
   "testSubjectsImplementation"(libs.junit.jupiter.api)
   "testSubjectsImplementation"(platform(libs.junit.bom))
 }
