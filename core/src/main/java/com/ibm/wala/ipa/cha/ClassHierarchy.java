@@ -711,7 +711,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * Converts ClassHierarchy to a JSON String, mapping each class name to a list of subclass names
    */
   public String toJson() {
-    // initialize variables classNameToSubclassNames to store the <key, value> pair <class, subclass>
+    // initialize variables classNameToSubclassNames to store the <key, value> pair <class,
+    // subclass>
     HashMap<String, Set<String>> classNameToSubclassNames = new HashMap<>();
     Iterator<Node> children = root.getChildren();
     Set<String> subclassNames = new HashSet<>();
@@ -722,15 +723,13 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     // Removes unnecesarry parts from name of the class
     String key = nodeToString(root);
-    // inserting the root class to its subclasses into the main hashmap 
+    // inserting the root class to its subclasses into the main hashmap
     classNameToSubclassNames.put(key, subclassNames);
     Gson gson = new Gson();
     return gson.toJson(classNameToSubclassNames);
   }
 
-  /**
-   * helper function to toJson that performs recursion to go through all of the DAG
-   */
+  /** helper function to toJson that performs recursion to go through all of the DAG */
   private void helperToJson(Node n, HashMap<String, Set<String>> hash) {
     if (hash.containsKey(nodeToString(n))) {
       return;
