@@ -193,9 +193,36 @@ tasks.withType<DependencyUpdatesTask>().configureEach {
   gradleReleaseChannel = "current"
   rejectVersionIf {
     candidate.run {
-      // Apache Commons IO snapshot releases have timestamped versions like `20030203.000550`. We
-      // don't want these. We only want stable releases, which have versions like `2.11.0`.
-      group == "commons-io" && module == "commons-io" && version.matches("\\d+\\.\\d+".toRegex())
+
+      // Determine what an unwanted version looks like, if any, based on the dependency group.
+      val unwantedVersionPattern =
+          when (group) {
+
+            // Apache Commons IO snapshot releases have timestamped versions like `20030203.000550`.
+            // We only want stable releases, which have versions like `2.11.0`.
+            "commons-io" -> "\\d+\\.\\d+"
+
+            // JUnit milestone releases have versions with milestone numbers like `5.11.0-M2`. We
+            // only want stable releases, which have versions like `5.10.2`.
+            "org.junit",
+            "org.junit.jupiter",
+            "org.junit.platform",
+            "org.junit.vintage" -> ".*-M\\d+"
+
+            // SLF4J alpha releases have versions with alpha numbers like `2.1.0-alpha1`. We only
+            // want stable releases, which have versions like `2.0.13`.
+            "org.slf4j" -> ".*-alpha\\d+"
+
+            // Assume that anything not excluded above is OK.
+            else -> null
+          }
+
+      // Reject certain versions, if a rejection pattern was provided. Otherwise assume that any
+      // version is OK.
+      when (unwantedVersionPattern) {
+        null -> false
+        else -> version.matches(unwantedVersionPattern.toRegex())
+      }
     }
   }
 }
