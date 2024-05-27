@@ -6,5 +6,4 @@ public class JunitTests {
 
   @Test
   public void test1() {}
-
 }

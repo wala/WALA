@@ -14,7 +14,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class JunitEntrypointSupportTest {
