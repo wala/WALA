@@ -10,7 +10,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
 import java.util.List;
@@ -19,8 +18,7 @@ import org.junit.jupiter.api.Test;
 public class JunitEntrypointSupportTest {
 
   @Test
-  public void basic()
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  public void basic() throws ClassHierarchyException, IllegalArgumentException, IOException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
