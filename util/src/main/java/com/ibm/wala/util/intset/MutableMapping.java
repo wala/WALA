@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -36,7 +38,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
     return new MutableMapping<>();
   }
 
-  private Object[] array;
+  private @Nullable Object[] array;
 
   private int nextIndex;
 
@@ -68,7 +70,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   @SuppressWarnings("unchecked")
   public T getMappedObject(int n) {
     try {
-      return (T) array[n];
+      return (T) castToNonNull(array[n]);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("n out of range " + n, e);
     }
