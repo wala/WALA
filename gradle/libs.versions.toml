@@ -16,10 +16,10 @@ eclipse-ecj = "org.eclipse.jdt:ecj:3.21.0"
 eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.17.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
-errorprone-core = "com.google.errorprone:error_prone_core:2.26.1"
-gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
+errorprone-core = "com.google.errorprone:error_prone_core:2.27.1"
 gradle-download-task = "de.undercouch:gradle-download-task:5.6.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:3.1.0"
+gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gson = "com.google.code.gson:gson:2.10.1"
 guava = "com.google.guava:guava:33.0.0-jre"
