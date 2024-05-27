@@ -19,6 +19,7 @@ tasks.withType<JavaCompile>().configureEach {
       errorproneArgs.appendAll(
           "-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
           "-XepOpt:NullAway:JSpecifyMode=true",
+          "-XepOpt:NullAway:CastToNonNullMethod=com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull",
       )
     }
   }
