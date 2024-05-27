@@ -49,4 +49,5 @@ ktfmt = "com.ncorti.ktfmt.gradle:0.11.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.4.6"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 task-tree = "com.dorongold.task-tree:2.1.1"
+version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.4"
 versions = "com.github.ben-manes.versions:0.50.0"
