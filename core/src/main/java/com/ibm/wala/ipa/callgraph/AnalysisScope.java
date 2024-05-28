@@ -413,6 +413,7 @@ public class AnalysisScope {
   /**
    * @return the rt.jar (1.4), core.jar (1.5), java.core.jmod (13) file, or null if not found.
    */
+  @SuppressWarnings("resource")
   private JarFile getRtJar() {
     return RtJar.getRtJar(
         new MapIterator<>(
