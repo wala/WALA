@@ -15,7 +15,6 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
