@@ -132,7 +132,7 @@ public class JUnitEntryPoints {
   private static boolean isTestEntryPoint(TypeName typeName) {
     // WALA uses $ to refers to inner classes. We have to replace "$" by "."
     // to make it a valid class name in Java source code.
-    String javaName = StringStuff.jvmToReadableType(typeName.toString().replace('$', '.'));
+    String javaName = typeName.toString().replace('$', '.');
 
     return TEST_ENTRY_POINT_ANNOTATION_NAMES.contains(javaName);
   }
