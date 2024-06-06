@@ -55,6 +55,8 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Base class that represents a set of files to analyze.
@@ -365,19 +367,15 @@ public class AnalysisScope {
       loaders.put(loader.getName().toString(), arr);
     }
     res.put("Loaders", loaders);
-    ArrayList<String> arr2 = new ArrayList<>();
-    if (getExclusions() == null) {
-      res.put("Exclusions", arr2);
-    } else {
-      String[] exclusions = getExclusions().toString().split("\\|");
-      for (int i = 0; i < exclusions.length; i++) {
-        String word = exclusions[i];
-        word = word.replace("(", "");
-        word = word.replace(")", "");
-        arr2.add(word);
-      }
-      res.put("Exclusions", arr2);
-    }
+    final var exclusions = getExclusions();
+    res.put(
+        "Exclusions",
+        exclusions == null
+            ? List.of()
+            : Pattern.compile("\\|")
+                .splitAsStream(exclusions.toString())
+                .map(exclusion -> exclusion.replace("(", "").replace(")", ""))
+                .collect(Collectors.toList()));
     Gson gson = new Gson();
     return gson.toJson(res);
   }
@@ -415,6 +413,7 @@ public class AnalysisScope {
   /**
    * @return the rt.jar (1.4), core.jar (1.5), java.core.jmod (13) file, or null if not found.
    */
+  @SuppressWarnings("resource")
   private JarFile getRtJar() {
     return RtJar.getRtJar(
         new MapIterator<>(

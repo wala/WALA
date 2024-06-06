@@ -15,6 +15,7 @@ plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
+  alias(libs.plugins.version.catalog.update)
   alias(libs.plugins.versions)
   id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.eclipse-maven-central")
