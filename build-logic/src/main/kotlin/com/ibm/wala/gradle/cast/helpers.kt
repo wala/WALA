@@ -85,7 +85,7 @@ fun addJvmLibrary(binary: CppBinary, linkTask: AbstractLinkTask, project: Projec
 
 fun addRpath(linkTask: AbstractLinkTask, library: File) {
   if (!(linkTask.project.rootProject.extra["isWindows"] as Boolean)) {
-    linkTask.linkerArgs.append("-Wl,-rpath,${library.parent}")
+    linkTask.linkerArgs.add("-Wl,-rpath,${library.parent}")
   }
 }
 
