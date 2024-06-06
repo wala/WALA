@@ -105,7 +105,13 @@ tasks.register<Copy>("installGitHooks") {
   from("config/hooks/pre-commit-stub")
   rename { "pre-commit" }
   into(".git/hooks")
-  fileMode = 0b111_111_111
+  filePermissions {
+    listOf(user, group, other).forEach {
+      it.read = true
+      it.write = true
+      it.execute = true
+    }
+  }
 }
 
 listOf("check", "spotlessCheck", "spotlessApply").forEach {

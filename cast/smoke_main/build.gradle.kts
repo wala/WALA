@@ -88,16 +88,15 @@ application {
 
                       // xlator Java bytecode + implementation of native methods
                       val pathElements = project.objects.listProperty<File>()
-                      pathElements.appendAll(
-                          files("../build/classes/java/test", libxlatorTest.parent))
+                      pathElements.addAll(files("../build/classes/java/test", libxlatorTest.parent))
 
                       // "primordial.txt" resource loaded during test
-                      pathElements.append(coreResources.singleFile)
+                      pathElements.add(coreResources.singleFile)
                       inputs.files(coreResources)
 
                       // additional supporting Java class files
                       inputs.files(smokeMainExtraPathElements)
-                      pathElements.appendAll(smokeMainExtraPathElements)
+                      pathElements.addAll(smokeMainExtraPathElements)
 
                       // all combined as a colon-delimited path list
                       argumentProviders.add { listOf(pathElements.get().joinToString(":")) }

@@ -17,7 +17,7 @@ library {
         .configure(
             closureOf<LinkSharedLibrary> {
               if (targetMachine.operatingSystemFamily.isMacOs) {
-                linkerArgs.append("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
+                linkerArgs.add("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
               }
               addJvmLibrary(this@whenElementFinalized, this, project)
             })
