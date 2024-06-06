@@ -714,17 +714,18 @@ public class ClassHierarchy implements IClassHierarchy {
     // initialize variables classNameToSubclassNames to store the <key, value> pair <class,
     // subclass>
     HashMap<String, Set<String>> classNameToSubclassNames = new HashMap<>();
-    Iterator<Node> children = root.getChildren();
-    Set<String> subclassNames = new HashSet<>();
-    while (children.hasNext()) {
-      Node temp = children.next();
-      subclassNames.add(nodeToString(temp));
-      helperToJson(temp, classNameToSubclassNames);
-    }
-    // Removes unnecesarry parts from name of the class
-    String key = nodeToString(root);
-    // inserting the root class to its subclasses into the main hashmap
-    classNameToSubclassNames.put(key, subclassNames);
+    // Iterator<Node> children = root.getChildren();
+    // Set<String> subclassNames = new HashSet<>();
+    // while (children.hasNext()) {
+    //   Node temp = children.next();
+    //   subclassNames.add(nodeToString(temp));
+    //   helperToJson(temp, classNameToSubclassNames);
+    // }
+    // // Removes unnecesarry parts from name of the class
+    // String key = nodeToString(root);
+    // // inserting the root class to its subclasses into the main hashmap
+    // classNameToSubclassNames.put(key, subclassNames);
+    helperToJson(root, classNameToSubclassNames);
     Gson gson = new Gson();
     return gson.toJson(classNameToSubclassNames);
   }
