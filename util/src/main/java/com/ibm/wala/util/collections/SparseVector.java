@@ -36,7 +36,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
   /** if indices[i] = x, then data[i] == get(x) */
   private MutableSparseIntSet indices;
 
-  private Object[] data;
+  private @Nullable Object[] data;
 
   public SparseVector() {
     data = new Object[DEF_INITIAL_SIZE];

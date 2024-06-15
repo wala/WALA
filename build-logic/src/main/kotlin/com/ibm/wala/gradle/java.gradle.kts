@@ -21,6 +21,7 @@ repositories {
   mavenCentral()
   // to get r8
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
+  mavenLocal()
 }
 
 java.toolchain.languageVersion =
