@@ -99,6 +99,8 @@ shellcheck {
       }
 }
 
+tasks.named("check") { dependsOn("buildHealth") }
+
 tasks.named("shellcheck") { group = "verification" }
 
 // install Java reformatter as git pre-commit hook
