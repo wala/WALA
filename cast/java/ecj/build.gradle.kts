@@ -7,7 +7,7 @@ plugins {
 
 walaEclipseMavenCentral {
   implementation(
-      "org.eclipse.core.runtime",
+      "org.eclipse.equinox.common",
       "org.eclipse.jdt.core",
   )
 }
@@ -15,9 +15,8 @@ walaEclipseMavenCentral {
 val runSourceDirectory: Configuration by configurations.creating { isCanBeConsumed = false }
 
 dependencies {
-  implementation(
-      projects.cast,
-  )
+  implementation(libs.eclipse.ecj)
+  implementation(projects.cast)
   implementation(projects.cast.java)
   implementation(projects.core)
   implementation(projects.shrike)
@@ -25,6 +24,7 @@ dependencies {
   runSourceDirectory(
       project(
           mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory")))
+  testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.cast.java))
 }
 

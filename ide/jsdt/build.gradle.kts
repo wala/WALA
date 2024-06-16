@@ -5,8 +5,7 @@ plugins {
 }
 
 walaEclipseMavenCentral {
-  implementation(
-      "org.eclipse.core.jobs",
+  api(
       "org.eclipse.core.resources",
       "org.eclipse.core.runtime",
       "org.eclipse.equinox.common",
@@ -16,14 +15,13 @@ walaEclipseMavenCentral {
 }
 
 dependencies {
+  api(libs.eclipse.wst.jsdt.core)
+  api(libs.osgi.framework)
+  api(projects.cast.js)
+  api(projects.core)
   api(projects.ide) { because("public class JavaScriptHeadlessUtil extends class HeadlessUtil") }
-  implementation(libs.eclipse.wst.jsdt.core)
+  api(projects.util)
   implementation(libs.eclipse.wst.jsdt.ui)
-  implementation(libs.javax.annotation.api)
   implementation(projects.cast)
-  implementation(projects.cast.js)
   implementation(projects.cast.js.rhino)
-  implementation(projects.core)
-  implementation(projects.util)
-  testFixturesImplementation(libs.javax.annotation.api)
 }

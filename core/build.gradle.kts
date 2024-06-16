@@ -57,11 +57,16 @@ dependencies {
     because("public class Entrypoint implements interface BytecodeConstraints")
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
+  testFixturesApi(libs.junit.jupiter.api)
+  testFixturesApi(projects.shrike)
   testFixturesImplementation(libs.ant)
+  testFixturesImplementation(libs.junit.platform.engine)
   testFixturesImplementation(libs.junit.platform.launcher)
+  testFixturesImplementation(projects.util)
   implementation(libs.gson)
   testImplementation(libs.assertj.core)
   testImplementation(libs.hamcrest)
+  testImplementation(libs.junit.jupiter.api)
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
   // add the testSubjects source files to enable SourceMapTest to pass
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))

@@ -13,7 +13,6 @@ plugins {
   java
   alias(libs.plugins.dependency.analysis)
   alias(libs.plugins.file.lister)
-  alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)

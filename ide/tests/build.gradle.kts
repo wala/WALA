@@ -11,8 +11,13 @@ plugins {
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 walaEclipseMavenCentral {
-  testFixturesApi("org.eclipse.core.resources", "org.eclipse.core.runtime")
-  testFixturesImplementation("org.eclipse.ui.ide")
+  testFixturesApi(
+      "org.eclipse.core.resources",
+      "org.eclipse.core.runtime",
+      "org.eclipse.equinox.common",
+      "org.eclipse.ui.ide",
+  )
+  testFixturesImplementation("org.eclipse.ui.workbench")
   testImplementation("org.eclipse.jface")
 }
 
@@ -45,6 +50,10 @@ dependencies {
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
   ifdsExplorerExampleClasspath(
       project(mapOf("path" to ":core", "configuration" to "collectTestDataJar")))
+  testFixturesImplementation(libs.eclipse.osgi)
+  testImplementation(libs.eclipse.osgi)
+  testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.osgi.framework)
   testImplementation(projects.core)
   testImplementation(projects.ide)
   testImplementation(projects.util)
