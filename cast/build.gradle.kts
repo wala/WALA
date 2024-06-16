@@ -37,16 +37,19 @@ dependencies {
   api(projects.core) {
     because("public method AstCGNode.addTarget receives an argument of type CGNode")
   }
+  api(projects.shrike)
+  api(projects.util)
   implementation(libs.commons.io)
-  implementation(projects.shrike)
-  implementation(projects.util)
   castJsJavadocDestinationDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory")))
   castCastSharedLibrary(projects.cast.cast)
   castJsPackageListDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory")))
   javadocClasspath(projects.cast.js)
-  xlatorTestSharedLibrary(project("xlator_test"))
+  testFixturesApi(projects.core)
+  testFixturesImplementation(projects.util)
+  testImplementation(libs.junit.jupiter.api)
+  xlatorTestSharedLibrary(projects.cast.xlatorTest)
 }
 
 val castHeaderDirectory: Configuration by configurations.creating { isCanBeResolved = false }

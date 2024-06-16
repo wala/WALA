@@ -8,14 +8,14 @@ walaEclipseMavenCentral {
   testImplementation(
       "org.eclipse.core.runtime",
       "org.eclipse.equinox.common",
-      "org.eclipse.osgi",
   )
 }
 
 dependencies {
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.wst.jsdt.core)
-  testImplementation(libs.javax.annotation.api)
+  testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.osgi.framework)
   testImplementation(projects.cast)
   testImplementation(projects.cast.js)
   testImplementation(projects.cast.js.rhino)

@@ -4,10 +4,10 @@ plugins {
 }
 
 dependencies {
+  api(projects.core)
+  api(projects.util)
   implementation(libs.commons.cli)
   implementation(libs.guava)
-  implementation(projects.core)
   implementation(projects.dalvik)
   implementation(projects.shrike)
-  implementation(projects.util)
 }

@@ -6,10 +6,13 @@ plugins {
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 dependencies {
-  implementation(projects.cast)
-  implementation(projects.core)
+  api(projects.cast)
+  api(projects.core)
+  api(projects.util)
   implementation(projects.shrike)
-  implementation(projects.util)
+  testFixturesApi(libs.junit.jupiter.api)
+  testFixturesApi(projects.core)
+  testFixturesApi(projects.util)
   testFixturesImplementation(projects.cast)
-  testFixturesImplementation(projects.core)
+  testFixturesImplementation(projects.shrike)
 }

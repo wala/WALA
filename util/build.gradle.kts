@@ -10,6 +10,7 @@ dependencies {
   compileOnly(libs.jspecify)
   javadocClasspath(projects.core)
   testImplementation(libs.hamcrest)
+  testImplementation(libs.junit.jupiter.api)
 }
 
 tasks.named<Javadoc>("javadoc") {
