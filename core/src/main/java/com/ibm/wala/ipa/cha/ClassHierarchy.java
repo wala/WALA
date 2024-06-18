@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ipa.cha;
 
+import com.google.gson.Gson;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -704,6 +705,70 @@ public class ClassHierarchy implements IClassHierarchy {
     for (Node child : Iterator2Iterable.make(n.getChildren())) {
       recursiveStringify(child, buffer);
     }
+  }
+
+  /**
+   * Converts ClassHierarchy to a JSON String, mapping each class name to a list of subclass names
+   */
+  public String toJson() {
+    // initialize variables classNameToSubclassNames to store the <key, value> pair <class,
+    // subclass>
+    HashMap<String, Set<String>> classNameToSubclassNames = new HashMap<>();
+    // Iterator<Node> children = root.getChildren();
+    // Set<String> subclassNames = new HashSet<>();
+    // while (children.hasNext()) {
+    //   Node temp = children.next();
+    //   subclassNames.add(nodeToString(temp));
+    //   helperToJson(temp, classNameToSubclassNames);
+    // }
+    // // Removes unnecesarry parts from name of the class
+    // String key = nodeToString(root);
+    // // inserting the root class to its subclasses into the main hashmap
+    // classNameToSubclassNames.put(key, subclassNames);
+    helperToJson(root, classNameToSubclassNames);
+    Gson gson = new Gson();
+    return gson.toJson(classNameToSubclassNames);
+  }
+
+  /** helper function to toJson that performs recursion to go through all of the DAG */
+  private void helperToJson(Node n, HashMap<String, Set<String>> hash) {
+    if (hash.containsKey(nodeToString(n))) {
+      return;
+    }
+    if (n.children.size() > 0) {
+      Iterator<Node> children = n.getChildren();
+      Set<String> subclassNames = new HashSet<>();
+      while (children.hasNext()) {
+        // puts subclass variable into temp, and start recursion from that subclass
+        // until base cases reaches
+        Node temp = children.next();
+        helperToJson(temp, hash);
+        // remove unnecessary substrings from class name
+        String key = nodeToString(temp);
+        subclassNames.add(key);
+
+        if (!hash.containsKey(key)) {
+          hash.put(key, subclassNames);
+        }
+      }
+    } else {
+      String key = nodeToString(n);
+      if (!hash.containsKey(key)) {
+        Set<String> root = new HashSet<>();
+        hash.put(key, root);
+      }
+    }
+  }
+
+  /**
+   * Removed unnecessary part of Node by turning it into a String (Made for toJson and helperToJson)
+   */
+  private String nodeToString(Node n) {
+    String key = n.getJavaClass().toString();
+    key = key.replace("<Primordial,", "");
+    key = key.replace("<Application,", "");
+    key = key.replace(">", "");
+    return key;
   }
 
   /**

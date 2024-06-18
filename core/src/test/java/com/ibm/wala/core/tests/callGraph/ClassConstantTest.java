@@ -79,4 +79,14 @@ public class ClassConstantTest extends WalaTestCase {
     // make sure call to hashCode from main
     assertTrue(cg.hasEdge(mainMethodNode, hashCodeNodes.iterator().next()));
   }
+
+  @Test
+  public void classHierarchyToJson() throws ClassHierarchyException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Object unused = cha.toJson();
+    // assertEquals("", json);
+  }
 }
