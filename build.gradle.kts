@@ -11,8 +11,8 @@ buildscript { dependencies.classpath(libs.commons.io) }
 plugins {
   idea
   java
+  alias(libs.plugins.dependency.analysis)
   alias(libs.plugins.file.lister)
-  alias(libs.plugins.kotlin.jvm)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)
@@ -87,6 +87,9 @@ tasks.register<Javadoc>("aggregatedJavadocs") {
 //  linters for various specific languages or file formats
 //
 
+// Gradle dependencies
+dependencyAnalysis.issues { all { onAny { severity("fail") } } }
+
 // shell scripts, provided they have ".sh" extension
 shellcheck {
   isUseDocker = false
@@ -97,6 +100,8 @@ shellcheck {
         include("**/*.sh")
       }
 }
+
+tasks.named("check") { dependsOn("buildHealth") }
 
 tasks.named("shellcheck") { group = "verification" }
 

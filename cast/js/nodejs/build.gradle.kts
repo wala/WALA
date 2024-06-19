@@ -7,12 +7,13 @@ dependencies {
   api(projects.cast.js) {
     because("public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil")
   }
+  api(projects.core)
+  api(projects.util)
   implementation(libs.commons.io)
   implementation(libs.json)
   implementation(projects.cast)
   implementation(projects.cast.js.rhino)
-  implementation(projects.core)
-  implementation(projects.util)
+  testImplementation(libs.junit.jupiter.api)
 }
 
 val downloadNodeJS by

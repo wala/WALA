@@ -9,17 +9,21 @@ val extraTestResources: Configuration by configurations.creating { isCanBeConsum
 
 dependencies {
   extraTestResources(project(mapOf("path" to ":cast:js", "configuration" to "testResources")))
-  implementation(libs.rhino)
-  implementation(projects.cast)
-  implementation(projects.cast.js)
-  implementation(projects.core)
-  implementation(projects.util)
+  api(libs.rhino)
+  api(projects.cast)
+  api(projects.cast.js)
+  api(projects.core)
+  api(projects.util)
+  testFixturesApi(libs.junit.jupiter.api)
+  testFixturesApi(projects.cast.js)
+  testFixturesApi(projects.util)
+  testFixturesApi(testFixtures(projects.cast.js))
+  testFixturesImplementation(projects.cast)
+  testFixturesImplementation(projects.core)
   testImplementation(libs.gson)
   testImplementation(libs.hamcrest)
-  testImplementation(testFixtures(projects.cast))
+  testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.cast.js))
-  testFixturesImplementation(testFixtures(projects.cast))
-  testFixturesImplementation(testFixtures(projects.cast.js))
 }
 
 tasks.named<Copy>("processTestResources") { from(extraTestResources) }

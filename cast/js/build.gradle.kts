@@ -8,16 +8,20 @@ plugins {
 }
 
 dependencies {
+  api(libs.jericho.html)
   api(projects.cast) { because("public class JSCallGraphUtil extends class CAstCallGraphUtil") }
+  api(projects.core)
+  api(projects.util)
   implementation(libs.commons.io)
   implementation(libs.gson)
-  implementation(libs.jericho.html)
-  implementation(projects.core)
   implementation(projects.shrike)
-  implementation(projects.util)
   javadocClasspath(projects.cast.js.rhino)
-  testFixturesImplementation(testFixtures(projects.cast))
-  testImplementation(testFixtures(projects.cast))
+  testFixturesApi(libs.junit.jupiter.api)
+  testFixturesApi(projects.cast)
+  testFixturesApi(projects.core)
+  testFixturesApi(projects.util)
+  testFixturesApi(testFixtures(projects.cast))
+  testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.core))
 }
 

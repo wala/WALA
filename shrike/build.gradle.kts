@@ -5,4 +5,4 @@ plugins {
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
-dependencies { implementation(projects.util) }
+dependencies { api(projects.util) }
