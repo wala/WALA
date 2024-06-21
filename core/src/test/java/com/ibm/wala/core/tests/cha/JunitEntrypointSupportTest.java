@@ -25,12 +25,18 @@ public class JunitEntrypointSupportTest {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     List<Entrypoint> entrypoints =
         Iterator2Collection.toList(JUnitEntryPoints.make(cha).iterator());
-    assertEquals(2, entrypoints.size());
+    assertEquals(4, entrypoints.size());
     assertEquals(
-        "< Application, Ljunit/JunitTests, test1()V >([<Application,Ljunit/JunitTests>])",
+        "< Application, Ljunit/JunitTests$A, test2()V >([<Application,Ljunit/JunitTests$A>])",
         entrypoints.get(0).toString());
     assertEquals(
-        "< Application, Ljunit/JunitTests, <init>()V >([<Application,Ljunit/JunitTests>])",
+        "< Application, Ljunit/JunitTests$A, <init>()V >([<Application,Ljunit/JunitTests$A>])",
         entrypoints.get(1).toString());
+    assertEquals(
+        "< Application, Ljunit/JunitTests, test1()V >([<Application,Ljunit/JunitTests>])",
+        entrypoints.get(2).toString());
+    assertEquals(
+        "< Application, Ljunit/JunitTests, <init>()V >([<Application,Ljunit/JunitTests>])",
+        entrypoints.get(3).toString());
   }
 }
