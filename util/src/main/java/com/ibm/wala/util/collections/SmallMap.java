@@ -35,7 +35,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   // this Map contains keysAndValues.length / 2 entries.
   // in the following array, entries 0 ... keysAndValues.length/2 - 1 are keys.
   // entries keysAndValues.length/2 .. keysAndValues.length are values.
-  private @Nullable Object @Nullable [] keysAndValues;
+  private Object @Nullable [] keysAndValues;
 
   /*
    */
@@ -89,6 +89,9 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Override
   public boolean containsKey(Object key) {
+    if (keysAndValues == null) {
+      return false;
+    }
     for (int i = 0; i < size(); i++) {
       if (keysAndValues[i].equals(key)) {
         return true;
@@ -159,11 +162,13 @@ public class SmallMap<K, V> implements Map<K, V> {
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }
-    for (int i = 0; i < size(); i++) {
-      if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
-        V result = (V) keysAndValues[size() + i];
-        keysAndValues[size() + i] = value;
-        return result;
+    if (keysAndValues != null) {
+      for (int i = 0; i < size(); i++) {
+        if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
+          V result = (V) keysAndValues[size() + i];
+          keysAndValues[size() + i] = value;
+          return result;
+        }
       }
     }
     if (DEBUG_USAGE && size() >= DEBUG_MAX_SIZE) {

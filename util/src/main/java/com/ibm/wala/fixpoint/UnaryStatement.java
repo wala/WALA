@@ -53,7 +53,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
   /** Return the operands in this equation. */
   public IVariable<T>[] getOperands() {
     @SuppressWarnings("unchecked")
-    IVariable<T>[] result = new IVariable[2];
+    @Nullable IVariable<T>[] result = new IVariable[2];
     result[0] = lhs;
     result[1] = rhs;
     return result;
