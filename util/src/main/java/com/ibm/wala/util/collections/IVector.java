@@ -17,7 +17,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>TODO: get rid of this and use java.util.collection.RandomAccess
  */
-public interface IVector<T> extends Iterable<T> {
+public interface IVector<T extends @Nullable Object> extends Iterable<T> {
   /**
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
@@ -28,7 +28,7 @@ public interface IVector<T> extends Iterable<T> {
    *
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
-  void set(int x, @Nullable T value);
+  void set(int x, T value);
 
   /**
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+
 import com.ibm.wala.util.debug.Assertions;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
@@ -49,7 +51,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   }
 
   /**
-   * Use with care.
+   * Use with care. Fails if key is null.
    *
    * @return the ith key
    */
@@ -59,14 +61,14 @@ public class SmallMap<K, V> implements Map<K, V> {
       throw new IllegalStateException("getKey on empty map");
     }
     try {
-      return (K) keysAndValues[i];
+      return (K) castToNonNull(keysAndValues[i]);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid i: " + i, e);
     }
   }
 
   /**
-   * Use with care.
+   * Use with care. Fails if key is null.
    *
    * @return the ith key
    */
@@ -76,7 +78,7 @@ public class SmallMap<K, V> implements Map<K, V> {
       throw new IllegalStateException("getValue on empty map");
     }
     try {
-      return (V) keysAndValues[size() + i];
+      return (V) castToNonNull(keysAndValues[size() + i]);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal i: " + i, e);
     }
@@ -93,7 +95,7 @@ public class SmallMap<K, V> implements Map<K, V> {
       return false;
     }
     for (int i = 0; i < size(); i++) {
-      if (keysAndValues[i].equals(key)) {
+      if (castToNonNull(keysAndValues[i]).equals(key)) {
         return true;
       }
     }
@@ -158,7 +160,7 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Nullable
   @Override
-  @SuppressWarnings({"unchecked", "unused"})
+  @SuppressWarnings({"unchecked", "unused", "NullAway"})
   public V put(Object key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("null key");

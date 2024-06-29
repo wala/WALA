@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+
 import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.collections.TwoLevelVector;
@@ -58,7 +60,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
   final IntVector[] smallStore;
 
   /** delegateStore[x] holds an int set of the y's s.t. R(x,y) */
-  final IVector<IntSet> delegateStore;
+  final IVector<@Nullable IntSet> delegateStore;
 
   /**
    * @param implementation a set of codes that represent how the first n IntVectors should be
@@ -205,7 +207,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
           nextX = i;
           nextIndex = getFirstIndex(i);
           if (nextIndex == smallStore.length) {
-            IntSet s = delegateStore.get(i);
+            IntSet s = castToNonNull(delegateStore.get(i));
             assert !s.isEmpty();
             delegateIterator = s.intIterator();
           }
@@ -259,7 +261,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
   }
 
   private IntSet getDelegate(int x) {
-    return delegateStore.get(x);
+    return castToNonNull(delegateStore.get(x));
   }
 
   /**
@@ -351,7 +353,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     }
     if (usingDelegate(x)) {
       // TODO: switch representation back to small store?
-      MutableIntSet s = (MutableIntSet) delegateStore.get(x);
+      MutableIntSet s = (MutableIntSet) castToNonNull(delegateStore.get(x));
       s.remove(y);
       if (s.isEmpty()) {
         delegateStore.set(x, null);

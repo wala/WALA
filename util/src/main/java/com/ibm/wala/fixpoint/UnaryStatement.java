@@ -17,7 +17,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
     extends AbstractStatement<T, UnaryOperator<T>> {
 
   /** The operands */
-  @Nullable protected final T lhs;
+  protected final T lhs;
 
   protected final T rhs;
 
@@ -53,7 +53,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
   /** Return the operands in this equation. */
   public IVariable<T>[] getOperands() {
     @SuppressWarnings("unchecked")
-    @Nullable IVariable<T>[] result = new IVariable[2];
+    IVariable<T>[] result = new IVariable[2];
     result[0] = lhs;
     result[1] = rhs;
     return result;
@@ -95,7 +95,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    * @param lhs the lattice cell set by this equation
    * @param rhs the first operand on the rhs
    */
-  protected UnaryStatement(@Nullable T lhs, T rhs) {
+  protected UnaryStatement(T lhs, T rhs) {
     super();
     this.lhs = lhs;
     this.rhs = rhs;
