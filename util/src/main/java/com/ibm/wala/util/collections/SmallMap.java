@@ -35,7 +35,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   // this Map contains keysAndValues.length / 2 entries.
   // in the following array, entries 0 ... keysAndValues.length/2 - 1 are keys.
   // entries keysAndValues.length/2 .. keysAndValues.length are values.
-  private Object @Nullable [] keysAndValues;
+  private @Nullable Object @Nullable [] keysAndValues;
 
   /*
    */
@@ -135,6 +135,7 @@ public class SmallMap<K, V> implements Map<K, V> {
     return null;
   }
 
+  // TODO export @EnsuresNonNull from NullAway annotations and annotate here
   private void growByOne() {
     if (keysAndValues == null) keysAndValues = new Object[2];
     else {
@@ -175,6 +176,7 @@ public class SmallMap<K, V> implements Map<K, V> {
       Assertions.UNREACHABLE("too many elements in a SmallMap");
     }
     growByOne();
+    // TODO will be fixed when we add @EnsuresNonNull to growByOne()
     keysAndValues[size() - 1] = key;
     keysAndValues[keysAndValues.length - 1] = value;
     return null;
