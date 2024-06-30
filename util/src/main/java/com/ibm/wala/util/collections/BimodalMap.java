@@ -15,14 +15,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /**
  * This implementation of {@link Map} chooses between one of two implementations, depending on the
  * size of the map.
  */
-public class BimodalMap<K, V> implements Map<K, V> {
+public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   // what's the cutoff between small and big maps?
   // this may be a time-space tradeoff; the caller must determine if
@@ -88,9 +87,10 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /** Switch backing implementation from a SmallMap to a HashMap */
-  @NullUnmarked
   private void transferBackingStore() {
-    assert backingStore instanceof SmallMap;
+    if (!(backingStore instanceof SmallMap)) {
+      throw new IllegalStateException("invalid backingStore");
+    }
     SmallMap<K, V> S = (SmallMap<K, V>) backingStore;
     backingStore = HashMapFactory.make(2 * S.size());
     backingStore.putAll(S);

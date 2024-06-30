@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedCastToNonNull;
 
 import com.ibm.wala.util.debug.Assertions;
 import java.util.AbstractMap;
@@ -28,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not
  * time -- use with care.
  */
-public class SmallMap<K, V> implements Map<K, V> {
+public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   private static final boolean DEBUG_USAGE = false;
 
@@ -78,7 +79,10 @@ public class SmallMap<K, V> implements Map<K, V> {
       throw new IllegalStateException("getValue on empty map");
     }
     try {
-      return (V) castToNonNull(keysAndValues[size() + i]);
+      // This can return null only when V gets instantiated as a @Nullable type.  But we cannot
+      // express that in the type system; we can only mark the contents of keysAndValues as
+      // @Nullable.  So we use an unchecked cast.
+      return (V) uncheckedCastToNonNull(keysAndValues[size() + i]);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal i: " + i, e);
     }
@@ -213,8 +217,7 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Override
   public Collection<V> values() {
-    //noinspection rawtypes
-    return new SlotIteratingSet<>() {
+    return new SlotIteratingSet<V>() {
       @Override
       protected V getItemInSlot(int slot) {
         return getValue(slot);
@@ -238,7 +241,7 @@ public class SmallMap<K, V> implements Map<K, V> {
    *
    * @param <E> the type of elements maintained by this set
    */
-  private abstract class SlotIteratingSet<E> extends AbstractSet<E> {
+  private abstract class SlotIteratingSet<E extends @Nullable Object> extends AbstractSet<E> {
 
     @Override
     public Iterator<E> iterator() {

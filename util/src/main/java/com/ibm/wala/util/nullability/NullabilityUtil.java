@@ -12,4 +12,9 @@ public class NullabilityUtil {
     }
     return obj;
   }
+
+  @SuppressWarnings("NullAway")
+  public static <T> T uncheckedCastToNonNull(@Nullable T obj) {
+    return obj;
+  }
 }
