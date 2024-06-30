@@ -217,7 +217,8 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   @Override
   public Collection<V> values() {
-    return new SlotIteratingSet<V>() {
+    //noinspection rawtypes
+    return new SlotIteratingSet<>() {
       @Override
       protected V getItemInSlot(int slot) {
         return getValue(slot);

@@ -38,11 +38,13 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
 
   private T[] data;
 
+  @SuppressWarnings("unchecked")
   public SparseVector() {
     data = (T[]) new Object[DEF_INITIAL_SIZE];
     indices = MutableSparseIntSet.makeEmpty();
   }
 
+  @SuppressWarnings("unchecked")
   public SparseVector(int initialSize, float expansion) {
     data = (T[]) new Object[DEF_INITIAL_SIZE];
     indices = new TunedMutableSparseIntSet(initialSize, expansion);
@@ -53,7 +55,6 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
    */
   @NullUnmarked
   @Override
-  @SuppressWarnings("unchecked")
   public T get(int x) {
     int index = indices.getIndex(x);
     if (index == -1) {
@@ -113,7 +114,6 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
       }
 
       @Override
-      @SuppressWarnings("unchecked")
       public T next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -153,6 +153,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
     return MutableSparseIntSet.make(indices).intIterator();
   }
 
+  @SuppressWarnings("unchecked")
   public void clear() {
     data = (T[]) new Object[DEF_INITIAL_SIZE];
     indices = MutableSparseIntSet.makeEmpty();
