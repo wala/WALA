@@ -1,7 +1,6 @@
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
-import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URI
+import com.ibm.wala.gradle.adHocDownload
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
@@ -75,17 +74,11 @@ interface ExtractServices {
 //  download and extract kawa 3.0 "kawa.jar"
 //
 
-val downloadKawa by
-    tasks.registering(VerifiedDownload::class) {
-      val archive = "kawa-3.0.zip"
-      src = URI("https://ftp.gnu.org/pub/gnu/kawa/$archive")
-      dest = project.layout.buildDirectory.file(archive)
-      checksum = "2713e6dfb939274ba3b1d36daea68436"
-    }
+val kawa = adHocDownload(uri("https://ftp.gnu.org/pub/gnu/kawa"), "kawa", "zip", "3.0")
 
 val extractKawa by
     tasks.registering {
-      inputs.files(downloadKawa.map { it.outputs.files })
+      inputs.files(kawa)
       outputs.file(layout.buildDirectory.file("$name/kawa.jar"))
 
       objects.newInstance<ExtractServices>().run {
@@ -109,16 +102,13 @@ val extractKawa by
 
 val kawaChessCommitHash = "f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8"
 
-val downloadKawaChess by
-    tasks.registering(VerifiedDownload::class) {
-      src = URI("https://github.com/ttu-fpclub/kawa-chess/archive/${kawaChessCommitHash}.zip")
-      dest = project.layout.buildDirectory.file("kawa-chess.zip")
-      checksum = "cf29613d2be5f476a475ee28b4df9d9e"
-    }
+val kawaChess =
+    adHocDownload(
+        uri("https://github.com/ttu-fpclub/kawa-chess/archive"), kawaChessCommitHash, "zip")
 
 val unpackKawaChess by
     tasks.registering {
-      inputs.files(downloadKawaChess.map { it.outputs.files })
+      inputs.files(kawaChess)
       outputs.dir(project.layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
 
       objects.newInstance<ExtractServices>().run {
@@ -168,37 +158,17 @@ val buildKawaTestJar by
 //  download and extract "bcel-5.2.jar"
 //
 
-val downloadBcel by
-    tasks.registering(VerifiedDownload::class) {
-      val basename = "bcel-5.2"
-      inputs.property("basename", basename)
-      val archive = "${basename}.tar.gz"
-      src = URI("https://archive.apache.org/dist/jakarta/bcel/binaries/$archive")
-      dest = project.layout.buildDirectory.file(archive)
-      checksum = "19bffd7f217b0eae415f1ef87af2f0bc"
-      useETag = false
-    }
+val downloadBcel =
+    adHocDownload(
+        uri("https://archive.apache.org/dist/jakarta/bcel/binaries"), "bcel", "tar.gz", "5.2")
 
 val extractBcel by
-    tasks.registering {
-      val basename = downloadBcel.map { it.inputs.properties["basename"] as String }
-      val jarFile = basename.flatMap { layout.buildDirectory.file("$name/${it}.jar") }
-      inputs.files(downloadBcel.map { it.outputs.files })
-      outputs.file(jarFile)
-
-      objects.newInstance<ExtractServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.tarTree(inputs.files.singleFile)) {
-              val downloadBcelBasename = basename.get()
-              include("$downloadBcelBasename/$downloadBcelBasename.jar")
-              eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
-            }
-            into(jarFile.get().asFile.parent)
-            includeEmptyDirs = false
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from(tarTree { downloadBcel.singleFile })
+      include("**/*.jar")
+      into(layout.buildDirectory.map { "$it/$name" })
+      eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+      includeEmptyDirs = false
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -206,13 +176,8 @@ val extractBcel by
 //  download "java-cup-11a.jar"
 //
 
-val downloadJavaCup by
-    tasks.registering(VerifiedDownload::class) {
-      val archive = "java-cup-11a.jar"
-      src = URI("https://www2.cs.tum.edu/projects/cup/$archive")
-      dest = layout.buildDirectory.file("$name/$archive")
-      checksum = "2bda8c40abd0cbc295d3038643d6e4ec"
-    }
+val downloadJavaCup =
+    adHocDownload(uri("https://www2.cs.tum.edu/projects/cup"), "java-cup", "jar", "11a")
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -240,20 +205,29 @@ val collectJLex by
 //  generate "hello_hash.jar"
 //
 
-val downloadOcamlJava by
-    tasks.registering(VerifiedDownload::class) {
-      val version = "2.0-alpha1"
-      val basename by extra("ocamljava-$version")
-      val archive = "$basename.tar.gz"
-      src = URI("http://www.ocamljava.org/downloads/download.php?version=$version-bin")
-      dest = project.layout.buildDirectory.file(archive)
-      checksum = "45feec6e3889f5073a39c2c4c84878d1"
-    }
+val ocamlJavaVersion = "2.0-alpha1"
 
+val downloadOcamlJava =
+    adHocDownload(
+        uri("http://www.ocamljava.org/files/distrib"),
+        "ocamljava",
+        "tar.gz",
+        ocamlJavaVersion,
+        "bin")
+
+// Ideally this would be a `Sync` task using `from(tarTree { downloadOcamlJava.singleFile })`.
+// However, this specific tar archive contains a member with a leading slash, and that apparently
+// causes Gradle's native tar support to fail.
 val unpackOcamlJava by
-    tasks.registering(Sync::class) {
-      from(downloadOcamlJava.map { tarTree(it.dest) })
-      into(project.layout.buildDirectory.dir(name))
+    tasks.registering(Exec::class) {
+      commandLine(
+          "tar",
+          "xzf",
+          downloadOcamlJava.singleFile,
+          "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
+      val outputDir = project.layout.buildDirectory.dir(name)
+      workingDir(outputDir)
+      outputs.dir(outputDir)
     }
 
 val prepareGenerateHelloHashJar by
@@ -261,31 +235,28 @@ val prepareGenerateHelloHashJar by
       from("ocaml/hello_hash.ml")
       val outputDir = project.layout.buildDirectory.dir(name)
       into(outputDir)
-      extra["copiedOcamlSource"] = file("$outputDir/${source.singleFile.name}")
+      extra["copiedOcamlSource"] = file("${outputDir.get()}/${source.singleFile.name}")
     }
 
 val generateHelloHashJar by
     tasks.registering(JavaExec::class) {
-      val ocamlSource = prepareGenerateHelloHashJar.map { it.extra["copiedOcamlSource"] as String }
+      val ocamlSource = prepareGenerateHelloHashJar.map { it.extra["copiedOcamlSource"] as File }
       inputs.file(ocamlSource)
 
       val jarTarget = layout.projectDirectory.file("ocaml/hello_hash.jar")
       outputs.file(jarTarget)
       outputs.cacheIf { true }
 
-      val downloadOcamlJavaBasename = downloadOcamlJava.map { it.extra["basename"] as String }
-      inputs.property("downloadOcamlJavaBasename", downloadOcamlJavaBasename)
-
       val ocamlJavaJar =
           unpackOcamlJava.map {
-            file("${it.destinationDir}/${downloadOcamlJavaBasename.get()}/lib/ocamljava.jar")
+            file("${it.workingDir}/ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
           }
       inputs.file(ocamlJavaJar)
       classpath(ocamlJavaJar)
 
       mainClass = "ocaml.compilers.ocamljavaMain"
       args("-o", jarTarget)
-      argumentProviders.add { listOf(ocamlSource.get()) }
+      argumentProviders.add { listOf(ocamlSource.get().toString()) }
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -382,7 +353,7 @@ val dalvikTestResources by configurations.registering { isCanBeResolved = false 
 listOf(
         collectJLex,
         collectTestDataAForDalvik,
-        downloadJavaCup,
+        downloadJavaCup.singleFile,
         extractBcel,
     )
     .forEach { artifacts.add(dalvikTestResources.name, it) }
