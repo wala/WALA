@@ -1,5 +1,4 @@
-import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URI
+import com.ibm.wala.gradle.adHocDownload
 
 plugins { id("com.ibm.wala.gradle.java") }
 
@@ -17,22 +16,18 @@ dependencies {
   testImplementation(libs.junit.jupiter.api)
 }
 
-val downloadNodeJS by
-    tasks.registering(VerifiedDownload::class) {
-      src = URI("https://nodejs.org/dist/v0.12.4/node-v0.12.4.tar.gz")
-      dest = project.layout.buildDirectory.file("nodejs.tar.gz")
-      algorithm = "SHA-1"
-      checksum = "147ff79947752399b870fcf3f1fc37102100b545"
-    }
+val downloadNodeJS =
+    adHocDownload(uri("https://nodejs.org/dist/v0.12.4"), "node", "tar.gz", "v0.12.4")
 
 val unpackNodeJSLib by
     tasks.registering(Sync::class) {
-      from(downloadNodeJS.map { tarTree(it.dest) }) {
+      from(tarTree { downloadNodeJS.singleFile }) {
         include("*/lib/*.js")
         eachFile { path = name }
       }
 
       into(layout.buildDirectory.dir(name))
+      includeEmptyDirs = false
     }
 
 tasks.named<Copy>("processResources") {
