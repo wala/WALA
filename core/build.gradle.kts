@@ -268,7 +268,7 @@ val unpackOcamlJava by
     }
 
 val prepareGenerateHelloHashJar by
-    tasks.registering(Copy::class) {
+    tasks.registering(Sync::class) {
       from("ocaml/hello_hash.ml")
       val outputDir = project.layout.buildDirectory.dir(name)
       into(outputDir)
