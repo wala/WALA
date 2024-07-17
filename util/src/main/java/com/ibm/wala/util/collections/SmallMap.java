@@ -14,6 +14,7 @@ import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.uber.nullaway.annotations.EnsuresNonNull;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -142,7 +143,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
     return null;
   }
 
-  // TODO export @EnsuresNonNull from NullAway annotations and annotate here
+  @EnsuresNonNull("keysAndValues")
   private void growByOne() {
     if (keysAndValues == null) keysAndValues = new Object[2];
     else {
@@ -165,7 +166,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   @Nullable
   @Override
-  @SuppressWarnings({"unchecked", "unused", "NullAway"})
+  @SuppressWarnings({"unchecked", "unused"})
   public V put(Object key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
@@ -183,7 +184,6 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
       Assertions.UNREACHABLE("too many elements in a SmallMap");
     }
     growByOne();
-    // TODO will be fixed when we add @EnsuresNonNull to growByOne()
     keysAndValues[size() - 1] = key;
     keysAndValues[keysAndValues.length - 1] = value;
     return null;
@@ -199,7 +199,6 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  @NullUnmarked
   @Override
   public void clear() {
     keysAndValues = null;
