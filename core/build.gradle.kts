@@ -220,7 +220,7 @@ val extractBcel by
 val downloadJavaCup by
     tasks.registering(VerifiedDownload::class) {
       val archive = "java-cup-11a.jar"
-      src = URI("http://www2.cs.tum.edu/projects/cup/$archive")
+      src = URI("https://www2.cs.tum.edu/projects/cup/$archive")
       dest = layout.buildDirectory.file("$name/$archive")
       checksum = "2bda8c40abd0cbc295d3038643d6e4ec"
     }
@@ -268,7 +268,7 @@ val unpackOcamlJava by
     }
 
 val prepareGenerateHelloHashJar by
-    tasks.registering(Copy::class) {
+    tasks.registering(Sync::class) {
       from("ocaml/hello_hash.ml")
       val outputDir = project.layout.buildDirectory.dir(name)
       into(outputDir)
