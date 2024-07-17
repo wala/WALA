@@ -16,7 +16,7 @@ public class NullabilityUtil {
   }
 
   @SuppressWarnings("NullAway")
-  public static <T> T uncheckedCastToNonNull(@Nullable T obj) {
-    return obj;
+  public static <T extends @Nullable Object> T uncheckedNull() {
+    return null;
   }
 }

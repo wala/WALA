@@ -11,7 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
-import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedCastToNonNull;
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import com.ibm.wala.util.debug.Assertions;
 import java.util.AbstractMap;
@@ -81,8 +81,9 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
     try {
       // This can return null only when V gets instantiated as a @Nullable type.  But we cannot
       // express that in the type system; we can only mark the contents of keysAndValues as
-      // @Nullable.  So we use an unchecked cast.
-      return (V) uncheckedCastToNonNull(keysAndValues[size() + i]);
+      // @Nullable.  So we use an uncheckedNull() call.
+      V theValue = (V) keysAndValues[size() + i];
+      return theValue == null ? uncheckedNull() : theValue;
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal i: " + i, e);
     }
