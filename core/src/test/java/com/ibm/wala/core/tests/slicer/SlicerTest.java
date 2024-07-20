@@ -1030,7 +1030,7 @@ public class SlicerTest {
             .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
             .collect(Collectors.toList());
     normalsInMain.stream().forEach(System.err::println);
-    assertEquals(7, normalsInMain.size());
+    assertEquals(5, normalsInMain.size());
   }
 
   @Test

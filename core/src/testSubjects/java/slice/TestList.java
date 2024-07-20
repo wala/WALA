@@ -8,10 +8,10 @@ public class TestList {
   static void doNothing(Object o) {}
 
   public static void main(String[] args) {
-    List<Integer> list = new ArrayList<>();
+    List<String> list = new ArrayList<>();
 
-    list.add(2);
-    list.add(3);
+    list.add("hi");
+    list.add("bye");
 
     doNothing(list.get(0));
   }
