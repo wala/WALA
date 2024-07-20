@@ -361,11 +361,7 @@ tasks.named<Test>("test") {
   classpath += files(sourceSets.test.get().output.classesDirs)
   testLogging {
     exceptionFormat = TestExceptionFormat.FULL
-    events("passed", "skipped", "failed", "started")
-    afterTest(
-        KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-          println("Test ${descriptor.name} completed in ${result.endTime - result.startTime} ms")
-        }))
+    events("passed", "skipped", "failed")
   }
   // temporarily turn off some tests on JDK 11+
   if (JavaVersion.current() >= JavaVersion.VERSION_11) {
