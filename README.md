@@ -1,11 +1,11 @@
+# WALA
+
 ![WALA logo](https://wala.github.io/logos/WALA-banner.png)
 
-[![GitHub Actions
-status](https://github.com/wala/WALA/workflows/Continuous%20integration/badge.svg)](https://github.com/wala/WALA/actions?query=workflow%3A%22Continuous+integration%22)
-[![Join the chat at
-https://gitter.im/WALAHelp/Lobby](https://badges.gitter.im/WALAHelp/Lobby.svg)](https://gitter.im/WALAHelp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GitHub Actions status](https://github.com/wala/WALA/workflows/Continuous%20integration/badge.svg)](https://github.com/wala/WALA/actions?query=workflow%3A%22Continuous+integration%22)
+[![Join the chat at https://gitter.im/WALAHelp/Lobby](https://badges.gitter.im/WALAHelp/Lobby.svg)](https://gitter.im/WALAHelp/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
--------------------------
+---
 
 The T. J. Watson Libraries for Analysis (WALA) provide static analysis
 capabilities for Java bytecode and related languages and for
@@ -46,8 +46,7 @@ technical documentation.  In the meantime, you can check out tutorial
 slides to get an overview of WALA:
 
 * [Core WALA](https://wala.github.io/tutorials/PLDI_WALA_Tutorial.pdf) (PDF)
-* [WALA
-  JavaScript](https://wala.github.io/tutorials/WALAJavaScriptTutorial.pdf)
+* [WALA JavaScript](https://wala.github.io/tutorials/WALAJavaScriptTutorial.pdf)
   (PDF)
 
 You can also watch screencasts of the WALA JavaScript tutorial [here](https://www.youtube.com/user/WALALibraries/videos).
@@ -60,7 +59,7 @@ graph"](https://github.com/wala/WALA/search?q=call+graph&type=wikis).
 
 We're hosting documentation for WALA on [the GitHub
 wiki](https://github.com/wala/WALA/wiki).  **We've chosen a wiki
-format just so that _you_ can contribute.** Don't be shy!
+format just so that *you* can contribute.** Don't be shy!
 
 The WALA publications department is populating this wiki with
 technical documentation on a demand-driven basis, driven by questions
@@ -117,4 +116,7 @@ page.
 
 ![YourKit logo](https://www.yourkit.com/images/yklogo.png)
 
-We thank [YourKit](https://www.yourkit.com) for providing WALA developers with a complimentary license for their excellent [Java profiler](https://www.yourkit.com/java/profiler/), which we use to improve and maintain WALA performance.
+We thank [YourKit](https://www.yourkit.com) for providing WALA developers with
+a complimentary license for their excellent
+[Java profiler](https://www.yourkit.com/java/profiler/), which we use to
+improve and maintain WALA performance.
