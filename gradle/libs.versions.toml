@@ -48,6 +48,7 @@ dependency-analysis = "com.autonomousapps.dependency-analysis:1.32.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 google-java-format = "com.github.sherter.google-java-format:0.9"
 ktfmt = "com.ncorti.ktfmt.gradle:0.18.0"
+markdown = "com.appmattus.markdown:0.6.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.4.6"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 task-tree = "com.dorongold.task-tree:3.0.0"

@@ -3,6 +3,11 @@
 //  plugin configuration must precede everything else
 //
 
+import com.appmattus.markdown.rules.ConsistentHeaderStyleRule
+import com.appmattus.markdown.rules.ConsistentUlStyleRule
+import com.appmattus.markdown.rules.LowerCaseFilenameRule
+import com.appmattus.markdown.rules.config.HeaderStyle
+import com.appmattus.markdown.rules.config.UnorderedListStyle
 import com.diffplug.gradle.pde.EclipseRelease
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
@@ -13,6 +18,7 @@ plugins {
   java
   alias(libs.plugins.dependency.analysis)
   alias(libs.plugins.file.lister)
+  alias(libs.plugins.markdown)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)
@@ -101,7 +107,20 @@ shellcheck {
       }
 }
 
-tasks.named("check") { dependsOn("buildHealth") }
+// Markdown
+markdownlint {
+  rules {
+    +ConsistentHeaderStyleRule(HeaderStyle.Consistent)
+    +ConsistentUlStyleRule(UnorderedListStyle.Consistent)
+    +LowerCaseFilenameRule { excludes = listOf(".*/README-Gradle.md") }
+  }
+}
+
+tasks.named("markdownlint") {
+  notCompatibleWithConfigurationCache("https://github.com/appmattus/markdown-lint/issues/39")
+}
+
+tasks.named("check") { dependsOn("buildHealth", "markdownlint") }
 
 tasks.named("shellcheck") { group = "verification" }
 
