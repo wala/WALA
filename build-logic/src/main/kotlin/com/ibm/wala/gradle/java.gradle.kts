@@ -59,6 +59,7 @@ tasks.withType<JavaCompile>().configureEach {
     error("UnnecessaryParentheses")
     error("UnusedVariable")
     error("JdkObsolete")
+    error("AnnotationPosition")
     // checks we do not intend to try to fix in the near-term:
     // Just too many of these; proper Javadoc would be a great long-term goal
     disable("MissingSummary")
