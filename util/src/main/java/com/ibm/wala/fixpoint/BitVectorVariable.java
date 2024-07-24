@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 /** A bit vector variable for dataflow analysis. */
 public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
-  @Nullable private MutableSharedBitVectorIntSet V;
+  private @Nullable MutableSharedBitVectorIntSet V;
 
   public BitVectorVariable() {}
 
@@ -126,8 +126,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
   /**
    * @return the value of this variable as a bit vector ... null if the bit vector is empty.
    */
-  @Nullable
-  public IntSet getValue() {
+  public @Nullable IntSet getValue() {
     return V;
   }
 

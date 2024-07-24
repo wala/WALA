@@ -31,7 +31,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   private static final long serialVersionUID = 8440061593631309429L;
 
   /** the current next element in finishing time order */
-  @Nullable private T theNextElement;
+  private @Nullable T theNextElement;
 
   /** an enumeration of all nodes to search from */
   private Iterator<? extends T> roots;
@@ -61,8 +61,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     return (!empty() || (theNextElement != null && getPendingChildren(theNextElement) == null));
   }
 
-  @Nullable
-  abstract Iterator<T> getPendingChildren(@Nullable T n);
+  abstract @Nullable Iterator<T> getPendingChildren(@Nullable T n);
 
   abstract void setPendingChildren(@Nullable T v, Iterator<T> iterator);
 
@@ -85,10 +84,9 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    *
    * @return the next graph node in finishing time order.
    */
-  @Nullable
   @Override
   @SuppressWarnings("unchecked")
-  public T next() throws NoSuchElementException {
+  public @Nullable T next() throws NoSuchElementException {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }

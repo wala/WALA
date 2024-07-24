@@ -4,24 +4,27 @@ plugins {
 }
 
 walaEclipseMavenCentral {
-  api("org.eclipse.equinox.common")
-  implementation(
-      "org.eclipse.core.jobs",
+  api(
       "org.eclipse.core.resources",
-      "org.eclipse.core.runtime",
       "org.eclipse.equinox.app",
+      "org.eclipse.equinox.common",
       "org.eclipse.jdt.core",
       "org.eclipse.jface",
       "org.eclipse.osgi",
       "org.eclipse.ui.workbench",
   )
+  implementation(
+      "org.eclipse.core.jobs",
+  )
 }
 
 dependencies {
-  implementation(projects.cast)
-  implementation(projects.cast.java)
-  implementation(projects.cast.java.ecj)
-  implementation(projects.core)
-  implementation(projects.ide)
-  implementation(projects.util)
+  api(libs.osgi.framework)
+  api(projects.cast)
+  api(projects.cast.java)
+  api(projects.cast.java.ecj)
+  api(projects.core)
+  api(projects.ide)
+  api(projects.util)
+  implementation(libs.eclipse.ecj)
 }

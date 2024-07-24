@@ -5,23 +5,17 @@ plugins {
 
 walaEclipseMavenCentral {
   testImplementation(
-      "org.eclipse.core.contenttype",
       "org.eclipse.core.runtime",
-      "org.eclipse.equinox.preferences",
-      "org.eclipse.jdt.core",
-      "org.eclipse.osgi",
   )
 }
 
 dependencies {
   testImplementation(libs.eclipse.osgi)
-  testImplementation(projects.cast)
+  testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.osgi.framework)
   testImplementation(projects.cast.java)
-  testImplementation(projects.cast.java.ecj)
   testImplementation(projects.core)
-  testImplementation(projects.ide)
   testImplementation(projects.ide.jdt)
-  testImplementation(projects.shrike)
   testImplementation(projects.util)
   testImplementation(testFixtures(projects.cast.java))
   testImplementation(testFixtures(projects.ide.tests))

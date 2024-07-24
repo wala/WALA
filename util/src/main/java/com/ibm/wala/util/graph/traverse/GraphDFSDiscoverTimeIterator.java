@@ -20,7 +20,7 @@ abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T
   private static final long serialVersionUID = -5673397879499010863L;
 
   /** the graph being searched */
-  @Nullable private Graph<T> G;
+  private @Nullable Graph<T> G;
 
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     if (G == null) {

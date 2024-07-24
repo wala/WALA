@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 public abstract class ComposedIterator<O, I> implements Iterator<I> {
 
   private final Iterator<O> outer;
-  @Nullable private Iterator<? extends I> inner;
+  private @Nullable Iterator<? extends I> inner;
 
   public ComposedIterator(Iterator<O> outer) {
     this.outer = outer;

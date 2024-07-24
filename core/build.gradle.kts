@@ -57,11 +57,16 @@ dependencies {
     because("public class Entrypoint implements interface BytecodeConstraints")
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
+  testFixturesApi(libs.junit.jupiter.api)
+  testFixturesApi(projects.shrike)
   testFixturesImplementation(libs.ant)
+  testFixturesImplementation(libs.junit.platform.engine)
   testFixturesImplementation(libs.junit.platform.launcher)
+  testFixturesImplementation(projects.util)
   implementation(libs.gson)
   testImplementation(libs.assertj.core)
   testImplementation(libs.hamcrest)
+  testImplementation(libs.junit.jupiter.api)
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
   // add the testSubjects source files to enable SourceMapTest to pass
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
@@ -215,7 +220,7 @@ val extractBcel by
 val downloadJavaCup by
     tasks.registering(VerifiedDownload::class) {
       val archive = "java-cup-11a.jar"
-      src = URI("http://www2.cs.tum.edu/projects/cup/$archive")
+      src = URI("https://www2.cs.tum.edu/projects/cup/$archive")
       dest = layout.buildDirectory.file("$name/$archive")
       checksum = "2bda8c40abd0cbc295d3038643d6e4ec"
     }
@@ -263,7 +268,7 @@ val unpackOcamlJava by
     }
 
 val prepareGenerateHelloHashJar by
-    tasks.registering(Copy::class) {
+    tasks.registering(Sync::class) {
       from("ocaml/hello_hash.ml")
       val outputDir = project.layout.buildDirectory.dir(name)
       into(outputDir)

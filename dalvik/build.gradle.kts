@@ -79,25 +79,23 @@ val installAndroidSdk by
 eclipse { synchronizationTasks(installAndroidSdk) }
 
 dependencies {
+  api(libs.dexlib2)
+  api(projects.core)
+  api(projects.shrike)
+  api(projects.util)
+
   coreTestJar(project("path" to ":core", "configuration" to "testJarConfig"))
   extraTestResources(project("path" to ":core", "configuration" to "dalvikTestResources"))
 
   implementation(libs.slf4j.api)
-  implementation(libs.dexlib2)
   implementation(libs.guava)
-  implementation(projects.core)
-  implementation(projects.shrike)
-  implementation(projects.util)
 
   sampleCupSources(libs.java.cup.map { "$it:sources" })
 
   testImplementation(libs.android.tools)
-  testImplementation(libs.dexlib2)
+  testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
-  testImplementation(projects.core)
   testImplementation(projects.dalvik)
-  testImplementation(projects.shrike)
-  testImplementation(projects.util)
   testImplementation(testFixtures(projects.core))
 
   // directory containing "android.jar", which various tests want to find as a resource

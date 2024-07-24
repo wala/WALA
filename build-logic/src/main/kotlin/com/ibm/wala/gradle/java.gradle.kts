@@ -41,10 +41,8 @@ dependencies {
   "javadocSource"(sourceSets.main.get().allJava)
 
   testFixturesImplementation(platform(findLibrary("junit-bom")))
-  testFixturesImplementation(findLibrary("junit-jupiter-api"))
 
   testImplementation(platform(findLibrary("junit-bom")))
-  testImplementation(findLibrary("junit-jupiter-api"))
   testRuntimeOnly(findLibrary("junit-jupiter-engine"))
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
@@ -61,6 +59,7 @@ tasks.withType<JavaCompile>().configureEach {
     error("UnnecessaryParentheses")
     error("UnusedVariable")
     error("JdkObsolete")
+    error("AnnotationPosition")
     // checks we do not intend to try to fix in the near-term:
     // Just too many of these; proper Javadoc would be a great long-term goal
     disable("MissingSummary")
@@ -69,11 +68,11 @@ tasks.withType<JavaCompile>().configureEach {
     // that could introduce bugs
     disable("ReferenceEquality")
     // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-    // check name to the one you want to patch
-    //			errorproneArgs.appendAll(
-    //					"-XepPatchChecks:UnnecessaryParentheses",
-    //					"-XepPatchLocation:IN_PLACE"
-    //			)
+    // check name to the one you want to patch, and also disable -Werror below
+    //    		errorproneArgs.addAll(
+    //    				"-XepPatchChecks:UnnecessaryParentheses",
+    //    				"-XepPatchLocation:IN_PLACE"
+    //    		)
   }
 }
 

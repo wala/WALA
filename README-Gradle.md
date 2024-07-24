@@ -1,10 +1,12 @@
+# WALA’s Gradle Build System
+
 This document describes some WALA-specific aspects of our Gradle build
 system, plus a few general Gradle features that may be of particular
 interest to WALA developers.  However, it is not a Gradle tutorial.
 
-# Getting Started
+## Getting Started
 
-## External Dependencies: Patience is a Virtue
+### External Dependencies: Patience is a Virtue
 
 Gradle downloads many packages and supporting Java libraries as
 needed.  Your first Gradle build may take a long time.  On a fast
@@ -17,32 +19,31 @@ faster.  Rerunning `./gradlew assemble processTestResources` with a
 warm cache in an already-built tree takes under three seconds.
 
 WALA components are built using a mix of Java 11 and Java 17.  Gradle
-will [download suitable JDKs
-automatically](https://docs.gradle.org/current/userguide/toolchains.html#sec:provisioning)
-if they are not already [locally
-installed](https://docs.gradle.org/current/userguide/toolchains.html#sec:auto_detection)
+will
+[download suitable JDKs automatically](https://docs.gradle.org/current/userguide/toolchains.html#sec:provisioning)
+if they are not already
+[locally installed](https://docs.gradle.org/current/userguide/toolchains.html#sec:auto_detection)
 or
 [custom-configured](https://docs.gradle.org/current/userguide/toolchains.html#sec:custom_loc).
 
-## Eclipse
+### Eclipse
 
-### One-Time Eclipse Configuration
+#### One-Time Eclipse Configuration
 
 To work with WALA inside Eclipse, first **install Eclipse Buildship
-3.1 or later** using either [the Eclipse
-Marketplace](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-marketplace)
-or [the Eclipse update
-manager](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-eclipse-update-manager).
+3.1 or later** using either
+[the Eclipse Marketplace](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-marketplace)
+or
+[the Eclipse update manager](http://www.vogella.com/tutorials/EclipseGradle/article.html#installation-via-the-eclipse-update-manager).
 Buildship integrates Eclipse with Gradle, much like how M2Eclipse
 integrates Eclipse with Maven.  Restart Eclipse after installing this
 feature.
 
-### Importing WALA Projects Into Eclipse
+#### Importing WALA Projects Into Eclipse
 
-Once you are running a Buildship-enabled Eclipse, **[use the “Existing
-Gradle Project” import
-wizard](http://www.vogella.com/tutorials/EclipseGradle/article.html#import-an-existing-gradle-project)
-to import WALA into Eclipse.** Select and import the topmost level of
+Once you are running a Buildship-enabled Eclipse,
+[use the “Existing Gradle Project” import wizard](http://www.vogella.com/tutorials/EclipseGradle/article.html#import-an-existing-gradle-project)
+to import WALA into Eclipse.  Select and import the topmost level of
 your WALA source tree.  On the “Import Options” page of the import
 wizard, leave all settings at their defaults: the “Override workspace
 settings” option should be off, and the grayed-out “Gradle
@@ -67,15 +68,14 @@ connection.
 
 Note: a pristine WALA source tree is *not* pre-configured as a group
 of Eclipse projects.  Using the standard Eclipse “Existing Projects
-into Workspace” import wizard will not work correctly.  You must [use
-the “Existing Gradle Project” import
-wizard](http://www.vogella.com/tutorials/EclipseGradle/article.html#import-an-existing-gradle-project)
+into Workspace” import wizard will not work correctly.  You must
+[use the “Existing Gradle Project” import wizard](http://www.vogella.com/tutorials/EclipseGradle/article.html#import-an-existing-gradle-project)
 instead.
 
-### `.classpath` and `.project` as Generated Files
+#### `.classpath` and `.project` as Generated Files
 
 You will find no `.classpath` or `.project` files anywhere in [the
-Gradle fork of WALA’s git repository](https://github.com/liblit/WALA).
+Gradle fork of WALA’s Git repository](https://github.com/liblit/WALA).
 Importing using the “Existing Gradle Project” wizard creates these
 Eclipse project configuration files automatically based on the
 underlying Gradle configuration.
@@ -96,9 +96,9 @@ plugin](https://docs.gradle.org/current/userguide/eclipse_plugin.html).
 A few WALA sub-projects already use this:  look for `eclipse.project`
 in `*/build.gradle.kt` for examples.
 
-## IntelliJ IDEA
+### IntelliJ IDEA
 
-### Opening WALA in IntelliJ IDEA
+#### Opening WALA in IntelliJ IDEA
 
 Open the top-level WALA directory as a project; it should have a
 distinctive badge on its folder icon marking it as a directory
@@ -115,7 +115,7 @@ patient](#external-dependencies-patience-is-a-virtue) during the
 initial project open, especially if you have a slow network
 connection.
 
-### Benign Warning About Non-Managed Maven Project
+#### Benign Warning About Non-Managed Maven Project
 
 Each time you open the WALA project, IntelliJ IDEA may report
 “Non-managed pom.xml file found” in its event log.  This arises
@@ -125,7 +125,7 @@ safely ignore this notification, permanently disable it using the
 offered “Disable notification” link, or even disable the IntelliJ IDEA
 Maven plugin entirely if you have no other need for it.
 
-### Project Configuration as Derived Model
+#### Project Configuration as Derived Model
 
 IntelliJ IDEA automatically derives its project models from the Gradle
 build configuration, including all information about both internal and
@@ -142,7 +142,7 @@ to change module and library settings is to change the Gradle
 configuration such that the *derived* IntelliJ IDEA model is what you
 want it to be.
 
-## Gradle Command Line
+### Gradle Command Line
 
 You do not need to install Gradle separately.  **WALA includes its own
 copy of Gradle, available as the `gradlew` script in the top-level
@@ -156,7 +156,7 @@ under `*/build`.  For example the jar archives created by the
 that Eclipse-generated artifacts will appear in Eclipse-specific
 places, such as `*/bin` and `*/target`.
 
-### Trustworthy Dependencies For Incremental Builds
+#### Trustworthy Dependencies For Incremental Builds
 
 Gradle has excellent understanding of task and file dependencies.  You
 can trust it to perform incremental rebuilds rather than always
@@ -165,7 +165,7 @@ and rebuilding from scratch after every change, I recommend that you
 drop `clean` as a reflexive extra step and **trust Gradle to do
 incremental builds correctly.**
 
-### Favorite Build Tasks
+#### Favorite Build Tasks
 
 Some useful Gradle tasks include:
 
@@ -182,7 +182,7 @@ Some useful Gradle tasks include:
 
 - `clean`: remove all Gradle-generated artifacts
 
-### Tasks in Specific Sub-Projects
+#### Tasks in Specific Sub-Projects
 
 When you run `./gradlew` in the top-level WALA directory, any tasks
 you list will be built in all sub-projects.  For example, `./gradlew
@@ -198,15 +198,14 @@ want to build tasks only in specific sub-projects, you have two options:
    and then run `../gradlew assemble`.  Note the proper relative path
    to the top-level Gradle script: `../gradle` instead of `./gradlew`.
 
-### Task Name Abbreviation
+#### Task Name Abbreviation
 
-[Any build task can be
-abbreviated](https://docs.gradle.org/current/userguide/command_line_interface.html#_task_name_abbreviation)
+[Any build task can be abbreviated](https://docs.gradle.org/current/userguide/command_line_interface.html#_task_name_abbreviation)
 by shortening each camel-case-delimited word in its name.  For
 example, the `processTestResources` task can probably be abbreviated
 as `procTeRes` or even `pTR`.
 
-### Useful Command-Line Flags
+#### Useful Command-Line Flags
 
 Among Gradle’s command-line flags, I have found the following
 particularly useful:
@@ -217,8 +216,7 @@ particularly useful:
   see multiple test failures rather than giving up after the first
   failure.
 
-- [`-t`,
-  `--continuous`](https://docs.gradle.org/current/userguide/command_line_interface.html#_continuous_build):
+- [`-t`, `--continuous`](https://docs.gradle.org/current/userguide/command_line_interface.html#_continuous_build):
   keep Gradle process running and re-execute the given tasks whenever
   input files change.  Similar to Eclipse’s behavior of updating the
   build whenever you change and save a file.
@@ -236,7 +234,7 @@ particularly useful:
   good way to gain insights into why Gradle did what it did, and how
   long each piece took.
 
-### Composite Builds
+#### Composite Builds
 
 Gradle’s [composite
 builds](https://docs.gradle.org/current/userguide/composite_builds.html)

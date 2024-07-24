@@ -79,10 +79,10 @@ public class JavaLauncher extends Launcher {
   private final List<String> xtraClasspath = new ArrayList<>();
 
   /** A {@link Thread} which spins and drains stdout of the running process. */
-  @Nullable private Thread stdOutDrain;
+  private @Nullable Thread stdOutDrain;
 
   /** A {@link Thread} which spins and drains stderr of the running process. */
-  @Nullable private Thread stdErrDrain;
+  private @Nullable Thread stdErrDrain;
 
   /** Absolute path of the 'java' executable to use. */
   private String javaExe;
@@ -91,7 +91,7 @@ public class JavaLauncher extends Launcher {
   private final List<String> vmArgs = new ArrayList<>();
 
   /** The last process returned by a call to start() on this object. */
-  @Nullable private Process lastProcess;
+  private @Nullable Process lastProcess;
 
   private JavaLauncher(
       String programArgs,
@@ -205,13 +205,11 @@ public class JavaLauncher extends Launcher {
     return p;
   }
 
-  @Nullable
-  public Process getLastProcess() {
+  public @Nullable Process getLastProcess() {
     return lastProcess;
   }
 
-  @Nullable
-  private static String makeLibPath() {
+  private static @Nullable String makeLibPath() {
     String libPath = System.getProperty("java.library.path");
     if (libPath == null) {
       return null;

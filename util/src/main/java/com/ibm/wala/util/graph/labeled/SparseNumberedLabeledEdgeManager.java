@@ -71,7 +71,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   private static final long serialVersionUID = 5298089288917726790L;
 
   /** the label to be attached to an edge when no label is specified */
-  @Nullable private final U defaultLabel;
+  private final @Nullable U defaultLabel;
 
   private final NumberedNodeManager<T> nodeManager;
 
@@ -283,9 +283,8 @@ public class SparseNumberedLabeledEdgeManager<T, U>
     }
   }
 
-  @Nullable
   @Override
-  public U getDefaultLabel() {
+  public @Nullable U getDefaultLabel() {
     return defaultLabel;
   }
 

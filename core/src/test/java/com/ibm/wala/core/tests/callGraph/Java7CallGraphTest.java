@@ -42,7 +42,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
-  private @TempDir Path temporaryDirectory;
+  @TempDir private Path temporaryDirectory;
 
   @Override
   protected Path getTemporaryDirectory() {

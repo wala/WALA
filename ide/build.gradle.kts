@@ -6,24 +6,25 @@ plugins {
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 walaEclipseMavenCentral {
-  api("org.eclipse.pde.core")
-  implementation(
-      "org.eclipse.core.commands",
-      "org.eclipse.core.jobs",
+  api(
       "org.eclipse.core.resources",
       "org.eclipse.core.runtime",
       "org.eclipse.equinox.common",
-      "org.eclipse.jdt.core",
       "org.eclipse.jface",
       "org.eclipse.osgi",
+      "org.eclipse.pde.core",
+  )
+  implementation(
+      "org.eclipse.jdt.core",
       "org.eclipse.swt",
       "org.eclipse.ui.workbench",
   )
 }
 
 dependencies {
-  implementation(projects.core)
-  implementation(projects.util)
+  api(libs.osgi.framework)
+  api(projects.core)
+  api(projects.util)
 }
 
 configurations.all {
@@ -32,5 +33,16 @@ configurations.all {
         .using(module(libs.w3c.css.sac.get().toString()))
         .because(
             "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
+  }
+}
+
+dependencyAnalysis.issues {
+  onIncorrectConfiguration { exclude("org.eclipse.pde:org.eclipse.pde.core") }
+  onUsedTransitiveDependencies {
+    exclude(
+        "org.eclipse.platform:org.eclipse.swt.cocoa.macosx.aarch64",
+        "org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64",
+        "org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64",
+    )
   }
 }

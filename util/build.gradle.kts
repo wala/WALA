@@ -7,9 +7,10 @@ plugins {
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 dependencies {
-  compileOnly(libs.jspecify)
+  api(libs.jspecify)
   javadocClasspath(projects.core)
   testImplementation(libs.hamcrest)
+  testImplementation(libs.junit.jupiter.api)
 }
 
 tasks.named<Javadoc>("javadoc") {

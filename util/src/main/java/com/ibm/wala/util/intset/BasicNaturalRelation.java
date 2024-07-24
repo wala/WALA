@@ -192,7 +192,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
      */
     private int nextIndex = -1;
 
-    @Nullable private IntIterator delegateIterator = null;
+    private @Nullable IntIterator delegateIterator = null;
 
     TotalIterator() {
       advanceX();
