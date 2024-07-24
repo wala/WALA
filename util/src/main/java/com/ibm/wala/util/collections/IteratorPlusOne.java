@@ -26,7 +26,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
   private final Iterator<? extends T> it;
 
   // the following field will be nulled out after visiting xtra.
-  @Nullable private T xtra;
+  private @Nullable T xtra;
 
   private IteratorPlusOne(Iterator<? extends T> it, T xtra) {
     this.it = it;

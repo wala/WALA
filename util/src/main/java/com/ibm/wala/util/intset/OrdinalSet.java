@@ -21,9 +21,9 @@ import org.jspecify.annotations.Nullable;
 /** A Set backed by a set of integers. */
 public class OrdinalSet<T> implements Iterable<T> {
 
-  @Nullable private final IntSet S;
+  private final @Nullable IntSet S;
 
-  @Nullable private final OrdinalSetMapping<T> mapping;
+  private final @Nullable OrdinalSetMapping<T> mapping;
 
   @SuppressWarnings("rawtypes")
   private static final OrdinalSet EMPTY = new OrdinalSet();
@@ -164,8 +164,7 @@ public class OrdinalSet<T> implements Iterable<T> {
   /**
    * Dangerous. Added for performance reasons. Use this only if you really know what you are doing.
    */
-  @Nullable
-  public IntSet getBackingSet() {
+  public @Nullable IntSet getBackingSet() {
     return S;
   }
 
@@ -214,8 +213,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<>(s, m);
   }
 
-  @Nullable
-  public OrdinalSetMapping<T> getMapping() {
+  public @Nullable OrdinalSetMapping<T> getMapping() {
     return mapping;
   }
 }

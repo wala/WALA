@@ -254,8 +254,7 @@ public class DotUtil {
     return Iterator2Collection.toSet(g.iterator());
   }
 
-  @Nullable
-  private static String getRankDir() {
+  private static @Nullable String getRankDir() {
     return null;
   }
 

@@ -114,8 +114,8 @@ public class Util {
    * @return The first element satisfying the predicate; otherwise null.
    * @throws IllegalArgumentException if c == null
    */
-  @Nullable
-  public static <T> T find(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
+  public static <T> @Nullable T find(Collection<T> c, Predicate<T> p)
+      throws IllegalArgumentException {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
     }
@@ -266,8 +266,7 @@ public class Util {
   }
 
   /** Remove the package name from a fully qualified class name */
-  @Nullable
-  public static String removePackageName(String fully_qualified_name_) {
+  public static @Nullable String removePackageName(String fully_qualified_name_) {
     if (fully_qualified_name_ == null) return null;
 
     int lastdot = fully_qualified_name_.lastIndexOf('.');

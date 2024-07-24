@@ -153,10 +153,9 @@ public class SmallMap<K, V> implements Map<K, V> {
     }
   }
 
-  @Nullable
   @Override
   @SuppressWarnings({"unchecked", "unused"})
-  public V put(Object key, Object value) {
+  public @Nullable V put(Object key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }

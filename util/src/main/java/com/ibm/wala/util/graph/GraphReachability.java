@@ -44,7 +44,7 @@ public class GraphReachability<T, S> {
   private final Graph<T> g;
 
   /** Killdall-style dataflow solver */
-  @Nullable private DataflowSolver<T, BitVectorVariable> solver;
+  private @Nullable DataflowSolver<T, BitVectorVariable> solver;
 
   /** set of "interesting" CGNodes */
   final OrdinalSetMapping<S> domain;
@@ -112,9 +112,9 @@ public class GraphReachability<T, S> {
            * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
            */
           @NullUnmarked
-          @Nullable
           @Override
-          public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(Object from, Object to) {
+          public @Nullable UnaryOperator<BitVectorVariable> getEdgeTransferFunction(
+              Object from, Object to) {
             Assertions.UNREACHABLE();
             return null;
           }

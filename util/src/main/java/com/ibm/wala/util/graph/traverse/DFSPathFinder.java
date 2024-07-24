@@ -99,8 +99,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
    * @return a List of nodes that specifies the first path found from a root to a node accepted by
    *     the filter. Returns null if no path found.
    */
-  @Nullable
-  public List<T> find() {
+  public @Nullable List<T> find() {
     if (!initialized) {
       init();
     }
@@ -138,8 +137,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
    *
    * @return Object
    */
-  @Nullable
-  protected Iterator<? extends T> getPendingChildren(T n) {
+  protected @Nullable Iterator<? extends T> getPendingChildren(T n) {
     return pendingChildren.get(n);
   }
 

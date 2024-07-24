@@ -17,7 +17,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
     extends AbstractStatement<T, UnaryOperator<T>> {
 
   /** The operands */
-  @Nullable protected final T lhs;
+  protected final @Nullable T lhs;
 
   protected final T rhs;
 
@@ -37,9 +37,8 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    *
    * @return the lattice cell this equation computes
    */
-  @Nullable
   @Override
-  public T getLHS() {
+  public @Nullable T getLHS() {
     return lhs;
   }
 

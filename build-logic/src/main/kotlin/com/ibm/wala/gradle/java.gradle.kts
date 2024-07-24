@@ -68,11 +68,11 @@ tasks.withType<JavaCompile>().configureEach {
     // that could introduce bugs
     disable("ReferenceEquality")
     // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-    // check name to the one you want to patch
-    //			errorproneArgs.appendAll(
-    //					"-XepPatchChecks:UnnecessaryParentheses",
-    //					"-XepPatchLocation:IN_PLACE"
-    //			)
+    // check name to the one you want to patch, and also disable -Werror below
+    //    		errorproneArgs.addAll(
+    //    				"-XepPatchChecks:UnnecessaryParentheses",
+    //    				"-XepPatchLocation:IN_PLACE"
+    //    		)
   }
 }
 

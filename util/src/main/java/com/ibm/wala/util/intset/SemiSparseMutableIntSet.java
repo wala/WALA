@@ -27,7 +27,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   @SuppressWarnings("NullAway.Init")
   private MutableSparseIntSet sparsePart;
 
-  @Nullable private OffsetBitVector densePart = null;
+  private @Nullable OffsetBitVector densePart = null;
 
   public SemiSparseMutableIntSet() {
     this(MutableSparseIntSet.makeEmpty());

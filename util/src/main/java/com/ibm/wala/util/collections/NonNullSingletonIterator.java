@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class NonNullSingletonIterator<T> implements Iterator<T> {
 
-  @Nullable private T it;
+  private @Nullable T it;
 
   /**
    * @param o the single object in this collection, must be non-null

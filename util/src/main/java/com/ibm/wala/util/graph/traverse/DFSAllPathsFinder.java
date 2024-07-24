@@ -44,9 +44,8 @@ public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
     return new FilterIterator<>(G.getSuccNodes(n), o -> !cp.contains(o));
   }
 
-  @Nullable
   @Override
-  protected Iterator<? extends T> getPendingChildren(T n) {
+  protected @Nullable Iterator<? extends T> getPendingChildren(T n) {
     Pair<List<T>, T> key = Pair.make(currentPath(), n);
     return pendingChildren.get(key);
   }

@@ -21,7 +21,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
 
   final Predicate<? super T> f;
 
-  @Nullable private T next = null;
+  private @Nullable T next = null;
 
   private boolean done = false;
 
@@ -53,9 +53,8 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     done = true;
   }
 
-  @Nullable
   @Override
-  public T next() throws NoSuchElementException {
+  public @Nullable T next() throws NoSuchElementException {
     if (done) {
       throw new java.util.NoSuchElementException();
     }

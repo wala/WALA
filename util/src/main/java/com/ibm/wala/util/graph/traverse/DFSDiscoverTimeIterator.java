@@ -32,7 +32,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
   private static final long serialVersionUID = 4238700455408861924L;
 
   /** an enumeration of all nodes to search from */
-  @Nullable private Iterator<? extends T> roots;
+  private @Nullable Iterator<? extends T> roots;
 
   /** subclass constructors must call this! */
   protected void init(Iterator<? extends T> nodes) {
@@ -60,8 +60,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
     return !empty();
   }
 
-  @Nullable
-  protected abstract Iterator<? extends T> getPendingChildren(T n);
+  protected abstract @Nullable Iterator<? extends T> getPendingChildren(T n);
 
   protected abstract void setPendingChildren(T v, Iterator<? extends T> iterator);
 

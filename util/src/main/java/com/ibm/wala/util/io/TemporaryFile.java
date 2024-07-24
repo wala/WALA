@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 
 public class TemporaryFile {
 
-  @Nullable private static Path outputDir;
+  private static @Nullable Path outputDir;
 
   public static File urlToFile(String fileName, URL input) throws IOException {
     if (input == null) {

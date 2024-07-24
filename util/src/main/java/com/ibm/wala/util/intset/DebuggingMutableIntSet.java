@@ -160,9 +160,8 @@ class DebuggingMutableIntSet implements MutableIntSet {
    * @return a new IntSet which is the intersection of this and that
    */
   @NullUnmarked
-  @Nullable
   @Override
-  public IntSet intersection(IntSet that) {
+  public @Nullable IntSet intersection(IntSet that) {
     if (that instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
       IntSet ppr = primaryImpl.intersection(db.primaryImpl);
