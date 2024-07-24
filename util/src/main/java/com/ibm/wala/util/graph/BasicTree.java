@@ -34,8 +34,7 @@ public class BasicTree<T> {
     return value;
   }
 
-  @Nullable
-  public T getChildValue(int i) {
+  public @Nullable T getChildValue(int i) {
     if (children.get(i) == null) {
       return null;
     } else {

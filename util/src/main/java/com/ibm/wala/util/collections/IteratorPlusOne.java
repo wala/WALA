@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
 
 /** A utility to efficiently compose an iterator and a singleton */
@@ -25,7 +26,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
   private final Iterator<? extends T> it;
 
   // the following field will be nulled out after visiting xtra.
-  @Nullable private T xtra;
+  private @Nullable T xtra;
 
   private IteratorPlusOne(Iterator<? extends T> it, T xtra) {
     this.it = it;
@@ -37,15 +38,18 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     return it.hasNext() || (xtra != null);
   }
 
-  @Nullable
   @Override
   public T next() {
     if (it.hasNext()) {
       return it.next();
     } else {
       T result = xtra;
-      xtra = null;
-      return result;
+      if (result != null) {
+        xtra = null;
+        return result;
+      } else {
+        throw new NoSuchElementException();
+      }
     }
   }
 

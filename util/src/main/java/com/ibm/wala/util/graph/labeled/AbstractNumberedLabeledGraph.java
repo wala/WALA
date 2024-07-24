@@ -85,9 +85,8 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
     return getEdgeManager().getEdgeLabels(src, dst);
   }
 
-  @Nullable
   @Override
-  public U getDefaultLabel() {
+  public @Nullable U getDefaultLabel() {
     return getEdgeManager().getDefaultLabel();
   }
 

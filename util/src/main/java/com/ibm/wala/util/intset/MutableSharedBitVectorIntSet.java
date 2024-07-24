@@ -31,9 +31,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   private static final int OVERFLOW = 20;
 
-  @Nullable private MutableSparseIntSet privatePart;
+  private @Nullable MutableSparseIntSet privatePart;
 
-  @Nullable private BitVectorIntSet sharedPart;
+  private @Nullable BitVectorIntSet sharedPart;
 
   /** */
   public MutableSharedBitVectorIntSet() {}

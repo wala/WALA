@@ -26,6 +26,8 @@ jobs:
             java: 17
           - os: ubuntu-latest
             java: 21
+          - os: ubuntu-latest
+            java: 22
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:

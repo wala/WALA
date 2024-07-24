@@ -66,9 +66,8 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
     init(G, G.iterator());
   }
 
-  @Nullable
   @Override
-  protected Iterator<? extends T> getPendingChildren(Object n) {
+  protected @Nullable Iterator<? extends T> getPendingChildren(Object n) {
     return pendingChildren.get(n);
   }
 

@@ -65,7 +65,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
-  private @TempDir Path temporaryDirectory;
+  @TempDir private Path temporaryDirectory;
 
   @Override
   protected Path getTemporaryDirectory() {

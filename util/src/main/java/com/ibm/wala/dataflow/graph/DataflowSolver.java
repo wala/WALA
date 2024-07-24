@@ -98,8 +98,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
     return node2In.get(node);
   }
 
-  @Nullable
-  public V getEdge(Object key) {
+  public @Nullable V getEdge(Object key) {
     return edge2Var.get(key);
   }
 

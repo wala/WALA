@@ -156,9 +156,8 @@ public class BimodalMutableIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
   @NullUnmarked
-  @Nullable
   @Override
-  public IntSet intersection(IntSet that) throws UnimplementedError {
+  public @Nullable IntSet intersection(IntSet that) throws UnimplementedError {
     if (that instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
       return impl.intersection(b.impl);

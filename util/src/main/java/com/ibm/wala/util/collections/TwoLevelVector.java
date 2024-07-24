@@ -37,9 +37,8 @@ public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, S
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   @NullUnmarked
-  @Nullable
   @Override
-  public T get(int x) {
+  public @Nullable T get(int x) {
     if (x < 0) {
       throw new IllegalArgumentException("invalid x: " + x);
     }

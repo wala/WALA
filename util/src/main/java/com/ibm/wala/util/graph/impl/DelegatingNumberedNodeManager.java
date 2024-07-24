@@ -93,10 +93,9 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
         return nextCounter != -1;
       }
 
-      @Nullable
       @Override
       @SuppressWarnings("unchecked")
-      public T next() {
+      public @Nullable T next() {
         if (hasNext()) {
           int r = nextCounter;
           advance();

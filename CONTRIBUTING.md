@@ -26,7 +26,7 @@ Beyond tests, other checks run as part of `./gradlew check` and
 
 1. Compilation with the Java compiler from [Eclipse JDT
    Core](https://www.eclipse.org/jdt/core/), which runs additional
-   lint checks
+   Lint checks
 
 1. Checking that all Java and Kotlin code is formatted according to
    [Google Java Format](https://github.com/google/google-java-format)

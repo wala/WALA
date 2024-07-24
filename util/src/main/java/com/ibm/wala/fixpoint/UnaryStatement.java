@@ -37,9 +37,8 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    *
    * @return the lattice cell this equation computes
    */
-  @Nullable
   @Override
-  public T getLHS() {
+  public @Nullable T getLHS() {
     return lhs;
   }
 

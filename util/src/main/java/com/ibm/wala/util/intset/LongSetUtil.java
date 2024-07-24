@@ -21,7 +21,7 @@ public class LongSetUtil {
   public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME =
       "com.ibm.wala.mutableLongSetFactory";
 
-  @Nullable private static MutableLongSetFactory defaultLongSetFactory;
+  private static @Nullable MutableLongSetFactory defaultLongSetFactory;
 
   static {
     MutableLongSetFactory defaultFactory = new MutableSparseLongSetFactory();
@@ -63,8 +63,7 @@ public class LongSetUtil {
    *     com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
    * @throws IllegalArgumentException if set == null
    */
-  @Nullable
-  public static MutableLongSet makeMutableCopy(LongSet set)
+  public static @Nullable MutableLongSet makeMutableCopy(LongSet set)
       throws IllegalArgumentException, UnimplementedError {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
@@ -182,8 +181,7 @@ public class LongSetUtil {
     }
   }
 
-  @Nullable
-  public static MutableLongSetFactory getDefaultLongSetFactory() {
+  public static @Nullable MutableLongSetFactory getDefaultLongSetFactory() {
     return defaultLongSetFactory;
   }
 
