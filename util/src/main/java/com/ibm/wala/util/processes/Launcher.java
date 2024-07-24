@@ -28,9 +28,9 @@ public abstract class Launcher {
   // use a fairly big buffer size to avoid performance problems with the default
   private static final int BUFFER_SIZE = 32 * 1024;
 
-  @Nullable protected File workingDir = null;
+  protected @Nullable File workingDir = null;
 
-  @Nullable protected Map<String, String> env = null;
+  protected @Nullable Map<String, String> env = null;
 
   protected byte @Nullable [] stdOut = null;
 
@@ -60,8 +60,7 @@ public abstract class Launcher {
     this.logger = logger;
   }
 
-  @Nullable
-  public File getWorkingDir() {
+  public @Nullable File getWorkingDir() {
     return workingDir;
   }
 
@@ -69,8 +68,7 @@ public abstract class Launcher {
     workingDir = newWorkingDir;
   }
 
-  @Nullable
-  public Map<String, String> getEnv() {
+  public @Nullable Map<String, String> getEnv() {
     return env;
   }
 
@@ -211,7 +209,7 @@ public abstract class Launcher {
 
     private final Process p;
 
-    @Nullable private ByteArrayOutputStream capture;
+    private @Nullable ByteArrayOutputStream capture;
 
     /** Drain data from the stream, but don't block. */
     abstract void drain() throws IOException;
@@ -333,14 +331,12 @@ public abstract class Launcher {
   }
 
   @NullUnmarked
-  @Nullable
-  public byte[] getStdOut() {
+  public @Nullable byte[] getStdOut() {
     return stdOut;
   }
 
   @NullUnmarked
-  @Nullable
-  public byte[] getStderr() {
+  public @Nullable byte[] getStderr() {
     return stdErr;
   }
 
@@ -353,8 +349,7 @@ public abstract class Launcher {
   }
 
   @NullUnmarked
-  @Nullable
-  public byte[] getInput() {
+  public @Nullable byte[] getInput() {
     return input;
   }
 

@@ -27,9 +27,9 @@ public class FileOfClasses extends SetOfClasses {
 
   private static final boolean DEBUG = false;
 
-  @Nullable private Pattern pattern = null;
+  private @Nullable Pattern pattern = null;
 
-  @Nullable private String regex = null;
+  private @Nullable String regex = null;
 
   private boolean needsCompile = false;
 
@@ -97,9 +97,8 @@ public class FileOfClasses extends SetOfClasses {
     needsCompile = true;
   }
 
-  @Nullable
   @Override
-  public String toString() {
+  public @Nullable String toString() {
     return this.regex;
   }
 }

@@ -20,19 +20,17 @@ import org.jspecify.annotations.Nullable;
 /** Simple implementation of {@link INodeWithNumberedEdges} */
 public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNumberedEdges {
 
-  @Nullable private BimodalMutableIntSet predNumbers;
+  private @Nullable BimodalMutableIntSet predNumbers;
 
-  @Nullable private BimodalMutableIntSet succNumbers;
+  private @Nullable BimodalMutableIntSet succNumbers;
 
-  @Nullable
   @Override
-  public IntSet getSuccNumbers() {
+  public @Nullable IntSet getSuccNumbers() {
     return succNumbers;
   }
 
-  @Nullable
   @Override
-  public IntSet getPredNumbers() {
+  public @Nullable IntSet getPredNumbers() {
     return predNumbers;
   }
 

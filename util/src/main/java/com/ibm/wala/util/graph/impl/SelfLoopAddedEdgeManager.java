@@ -9,7 +9,7 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
   private class PrependItterator implements Iterator<T> {
     private boolean usedFirst = false;
     private final Iterator<T> original;
-    @Nullable private T first;
+    private @Nullable T first;
 
     public PrependItterator(Iterator<T> original, @Nullable T first) {
       super();
@@ -26,9 +26,8 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
       }
     }
 
-    @Nullable
     @Override
-    public T next() {
+    public @Nullable T next() {
       if (!usedFirst) {
         T tmp = first;
         first = null;

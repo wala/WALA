@@ -13,7 +13,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 public class DynamicDalvikComparisonJavaLibsTest extends DynamicDalvikComparisonTest {
 
-  private @TempDir Path temporaryDirectory;
+  @TempDir private Path temporaryDirectory;
 
   @Override
   protected Path getTemporaryDirectory() {

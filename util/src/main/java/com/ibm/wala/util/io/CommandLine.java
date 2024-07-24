@@ -51,8 +51,7 @@ public class CommandLine {
   }
 
   /** if string is of the form "-foo" or "-foo=", return "foo". else return null. */
-  @Nullable
-  private static String parseForKey(String string) {
+  private static @Nullable String parseForKey(String string) {
     if (string.charAt(0) == '-') {
       if (string.contains("=")) {
         return string.substring(1, string.indexOf('='));

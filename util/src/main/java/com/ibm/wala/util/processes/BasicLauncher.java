@@ -18,14 +18,13 @@ import org.jspecify.annotations.Nullable;
 /** A generic process launcher */
 public class BasicLauncher extends Launcher {
 
-  @Nullable protected String cmd;
+  protected @Nullable String cmd;
 
   public BasicLauncher(boolean captureOutput, boolean captureErr, Logger logger) {
     super(captureOutput, captureErr, logger);
   }
 
-  @Nullable
-  public String getCmd() {
+  public @Nullable String getCmd() {
     return cmd;
   }
 

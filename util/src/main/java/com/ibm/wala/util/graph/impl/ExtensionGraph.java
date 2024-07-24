@@ -36,7 +36,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         private final Map<T, MutableIntSet> inEdges = HashMapFactory.make();
         private final Map<T, MutableIntSet> outEdges = HashMapFactory.make();
 
-        private Iterator<T> nodes(@Nullable final T node, final Map<T, ? extends IntSet> extra) {
+        private Iterator<T> nodes(final @Nullable T node, final Map<T, ? extends IntSet> extra) {
           if (extra.containsKey(node)) {
             return new Iterator<>() {
               private final IntIterator i = extra.get(node).intIterator();

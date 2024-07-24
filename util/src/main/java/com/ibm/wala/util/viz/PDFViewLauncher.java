@@ -22,20 +22,19 @@ import org.jspecify.annotations.Nullable;
  */
 public class PDFViewLauncher {
 
-  @Nullable private Process process;
+  private @Nullable Process process;
 
   /** Name of the postscript file to view */
-  @Nullable protected String pdffile = null;
+  protected @Nullable String pdffile = null;
 
   /** Path to ghostview executable */
-  @Nullable protected String gvExe = null;
+  protected @Nullable String gvExe = null;
 
   public PDFViewLauncher() {
     super();
   }
 
-  @Nullable
-  public String getPDFFile() {
+  public @Nullable String getPDFFile() {
     return pdffile;
   }
 
@@ -43,8 +42,7 @@ public class PDFViewLauncher {
     pdffile = newPsfile;
   }
 
-  @Nullable
-  public String getGvExe() {
+  public @Nullable String getGvExe() {
     return gvExe;
   }
 
@@ -57,7 +55,7 @@ public class PDFViewLauncher {
     return super.toString() + ", psfile: " + pdffile + ", gvExe: " + gvExe + ')';
   }
 
-  @Nullable private WalaException exception = null;
+  private @Nullable WalaException exception = null;
 
   /**
    * @see java.lang.Runnable#run()
@@ -73,13 +71,11 @@ public class PDFViewLauncher {
     }
   }
 
-  @Nullable
-  public WalaException getException() {
+  public @Nullable WalaException getException() {
     return exception;
   }
 
-  @Nullable
-  public Process getProcess() {
+  public @Nullable Process getProcess() {
     return process;
   }
 

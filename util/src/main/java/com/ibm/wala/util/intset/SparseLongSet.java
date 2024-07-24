@@ -334,9 +334,9 @@ public class SparseLongSet implements LongSet {
   /**
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
-  @Nullable
   @Override
-  public LongSet intersection(LongSet that) throws IllegalArgumentException, UnimplementedError {
+  public @Nullable LongSet intersection(LongSet that)
+      throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }

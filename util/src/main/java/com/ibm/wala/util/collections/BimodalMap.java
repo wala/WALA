@@ -31,7 +31,7 @@ public class BimodalMap<K, V> implements Map<K, V> {
   private final int cutOff;
 
   /** The implementation we delegate to */
-  @Nullable private Map<K, V> backingStore;
+  private @Nullable Map<K, V> backingStore;
 
   /**
    * @param cutoff the map size at which to switch from the small map implementation to the large
@@ -61,15 +61,13 @@ public class BimodalMap<K, V> implements Map<K, V> {
     return (backingStore == null) ? false : backingStore.containsValue(value);
   }
 
-  @Nullable
   @Override
-  public V get(Object key) {
+  public @Nullable V get(Object key) {
     return (backingStore == null) ? null : backingStore.get(key);
   }
 
-  @Nullable
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     if (backingStore == null) {
       backingStore = new SmallMap<>();
       backingStore.put(key, value);
@@ -99,9 +97,8 @@ public class BimodalMap<K, V> implements Map<K, V> {
   /**
    * @throws UnsupportedOperationException if the backingStore doesn't support remove
    */
-  @Nullable
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(Object key) {
     return (backingStore == null) ? null : backingStore.remove(key);
   }
 

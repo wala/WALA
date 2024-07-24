@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
 /** Converts an {@link Iterator} to an {@link Iterable}. */
 public class Iterator2Iterable<T> implements Iterable<T> {
 
-  @Nullable private final Iterator<T> iter;
+  private final @Nullable Iterator<T> iter;
 
   public static <T> Iterator2Iterable<T> make(@Nullable Iterator<T> iter) {
     return new Iterator2Iterable<>(iter);
@@ -26,9 +26,8 @@ public class Iterator2Iterable<T> implements Iterable<T> {
     this.iter = iter;
   }
 
-  @Nullable
   @Override
-  public Iterator<T> iterator() {
+  public @Nullable Iterator<T> iterator() {
     return iter;
   }
 }

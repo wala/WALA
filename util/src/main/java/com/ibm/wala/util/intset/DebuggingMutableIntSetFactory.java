@@ -55,9 +55,8 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
   }
 
   @NullUnmarked
-  @Nullable
   @Override
-  public DebuggingMutableIntSet makeCopy(IntSet x) throws UnimplementedError {
+  public @Nullable DebuggingMutableIntSet makeCopy(IntSet x) throws UnimplementedError {
     if (x == null) {
       throw new IllegalArgumentException("null x");
     }

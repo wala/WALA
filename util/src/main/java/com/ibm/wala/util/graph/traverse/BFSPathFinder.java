@@ -138,16 +138,15 @@ public class BFSPathFinder<T> {
     }
   }
 
-  @Nullable private ArrayDeque<T> Q = null;
-  @Nullable private HashMap<Object, T> history = null;
+  private @Nullable ArrayDeque<T> Q = null;
+  private @Nullable HashMap<Object, T> history = null;
 
   /**
    * @return a List of nodes that specifies the first path found from a root to a node accepted by
    *     the filter. Returns null if no path found.
    */
   @NullUnmarked
-  @Nullable
-  public List<T> find() {
+  public @Nullable List<T> find() {
     if (Q == null) {
       Q = new ArrayDeque<>();
       history = HashMapFactory.make();
