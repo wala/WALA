@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
@@ -54,14 +56,15 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
   }
 
   @Override
-  public @Nullable T next() throws NoSuchElementException {
+  public T next() throws NoSuchElementException {
     if (done) {
       throw new java.util.NoSuchElementException();
     }
     T o = next;
     advance();
-    // TODO this can only return null when T is nullable, but we don't have a way to express that
-    return o;
+    // This can only return null when T is @Nullable, but the type system cannot express that,
+    // so use an uncheckedNull() call to avoid declaring the method return type as @Nullable.
+    return o != null ? o : uncheckedNull();
   }
 
   @Override
