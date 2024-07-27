@@ -60,6 +60,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     }
     T o = next;
     advance();
+    // TODO this can only return null when T is nullable, but we don't have a way to express that
     return o;
   }
 
