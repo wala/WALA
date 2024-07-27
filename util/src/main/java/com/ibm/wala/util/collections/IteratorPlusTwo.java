@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
 
 public class IteratorPlusTwo<T> implements Iterator<T> {
@@ -36,7 +36,7 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
   }
 
   @Override
-  public @Nullable T next() {
+  public T next() {
     if (it.hasNext()) {
       return it.next();
     } else if (xtra1 != null) {
@@ -45,13 +45,17 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
       return result;
     } else {
       T result = xtra2;
-      xtra2 = null;
-      return result;
+      if (result != null) {
+        xtra2 = null;
+        return result;
+      } else {
+        throw new NoSuchElementException();
+      }
     }
   }
 
   @Override
-  public void remove() throws UnimplementedError {
-    throw new UnimplementedError();
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 }
