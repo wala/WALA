@@ -10,7 +10,11 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
+
 import com.ibm.wala.util.debug.Assertions;
+import com.uber.nullaway.annotations.EnsuresNonNull;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -26,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not
  * time -- use with care.
  */
-public class SmallMap<K, V> implements Map<K, V> {
+public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   private static final boolean DEBUG_USAGE = false;
 
@@ -35,8 +39,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   // this Map contains keysAndValues.length / 2 entries.
   // in the following array, entries 0 ... keysAndValues.length/2 - 1 are keys.
   // entries keysAndValues.length/2 .. keysAndValues.length are values.
-  @SuppressWarnings("NullAway.Init")
-  private Object[] keysAndValues;
+  private @Nullable Object @Nullable [] keysAndValues;
 
   /*
    */
@@ -50,7 +53,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   }
 
   /**
-   * Use with care.
+   * Use with care. Fails if key is null.
    *
    * @return the ith key
    */
@@ -60,7 +63,7 @@ public class SmallMap<K, V> implements Map<K, V> {
       throw new IllegalStateException("getKey on empty map");
     }
     try {
-      return (K) keysAndValues[i];
+      return (K) castToNonNull(keysAndValues[i]);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid i: " + i, e);
     }
@@ -77,7 +80,11 @@ public class SmallMap<K, V> implements Map<K, V> {
       throw new IllegalStateException("getValue on empty map");
     }
     try {
-      return (V) keysAndValues[size() + i];
+      // This can return null only when V gets instantiated as a @Nullable type.  But we cannot
+      // express that in the type system; we can only mark the contents of keysAndValues as
+      // @Nullable.  So we use an uncheckedNull() call.
+      V theValue = (V) keysAndValues[size() + i];
+      return theValue == null ? uncheckedNull() : theValue;
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal i: " + i, e);
     }
@@ -90,8 +97,11 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   @Override
   public boolean containsKey(Object key) {
+    if (keysAndValues == null) {
+      return false;
+    }
     for (int i = 0; i < size(); i++) {
-      if (keysAndValues[i].equals(key)) {
+      if (castToNonNull(keysAndValues[i]).equals(key)) {
         return true;
       }
     }
@@ -133,6 +143,7 @@ public class SmallMap<K, V> implements Map<K, V> {
     return null;
   }
 
+  @EnsuresNonNull("keysAndValues")
   private void growByOne() {
     if (keysAndValues == null) keysAndValues = new Object[2];
     else {
@@ -159,11 +170,13 @@ public class SmallMap<K, V> implements Map<K, V> {
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }
-    for (int i = 0; i < size(); i++) {
-      if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
-        V result = (V) keysAndValues[size() + i];
-        keysAndValues[size() + i] = value;
-        return result;
+    if (keysAndValues != null) {
+      for (int i = 0; i < size(); i++) {
+        if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
+          V result = (V) keysAndValues[size() + i];
+          keysAndValues[size() + i] = value;
+          return result;
+        }
       }
     }
     if (DEBUG_USAGE && size() >= DEBUG_MAX_SIZE) {
@@ -185,7 +198,6 @@ public class SmallMap<K, V> implements Map<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  @NullUnmarked
   @Override
   public void clear() {
     keysAndValues = null;
@@ -229,7 +241,7 @@ public class SmallMap<K, V> implements Map<K, V> {
    *
    * @param <E> the type of elements maintained by this set
    */
-  private abstract class SlotIteratingSet<E> extends AbstractSet<E> {
+  private abstract class SlotIteratingSet<E extends @Nullable Object> extends AbstractSet<E> {
 
     @Override
     public Iterator<E> iterator() {

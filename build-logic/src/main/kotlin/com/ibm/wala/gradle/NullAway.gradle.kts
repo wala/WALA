@@ -10,6 +10,7 @@ plugins {
 
 dependencies {
   annotationProcessor(rootProject.versionCatalogs.named("libs").findLibrary("nullaway").get())
+  compileOnly(rootProject.versionCatalogs.named("libs").findLibrary("nullaway-annotations").get())
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -19,6 +20,7 @@ tasks.withType<JavaCompile>().configureEach {
       errorproneArgs.addAll(
           "-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
           "-XepOpt:NullAway:JSpecifyMode=true",
+          "-XepOpt:NullAway:CastToNonNullMethod=com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull",
       )
     }
   }

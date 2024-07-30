@@ -19,7 +19,7 @@ import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /** An {@link IVector} implementation which delegates to pages of int vectors. */
-public class TwoLevelVector<T> implements IVector<T>, Serializable {
+public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, Serializable {
 
   private static final long serialVersionUID = -835376054736611070L;
 
@@ -68,7 +68,7 @@ public class TwoLevelVector<T> implements IVector<T>, Serializable {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
-  public void set(int x, @Nullable T value) {
+  public void set(int x, T value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
     }

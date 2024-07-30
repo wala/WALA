@@ -25,7 +25,7 @@ public abstract class UnaryOperator<T extends IVariable<T>> extends AbstractOper
   public abstract byte evaluate(@Nullable T lhs, T rhs);
 
   /** Create an equation which uses this operator Override in subclasses for efficiency. */
-  public UnaryStatement<T> makeEquation(@Nullable T lhs, T rhs) {
+  public UnaryStatement<T> makeEquation(T lhs, T rhs) {
     return new BasicUnaryStatement<>(lhs, this, rhs);
   }
 

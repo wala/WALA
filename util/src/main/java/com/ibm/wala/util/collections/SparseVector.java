@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>This should only be used for small sets ... insertion and deletion are linear in size of set.
  */
-public class SparseVector<T> implements IVector<T>, Serializable {
+public class SparseVector<T extends @Nullable Object> implements IVector<T>, Serializable {
 
   private static final long serialVersionUID = -6220164684358954867L;
 
@@ -36,15 +36,17 @@ public class SparseVector<T> implements IVector<T>, Serializable {
   /** if indices[i] = x, then data[i] == get(x) */
   private MutableSparseIntSet indices;
 
-  private Object[] data;
+  private T[] data;
 
+  @SuppressWarnings("unchecked")
   public SparseVector() {
-    data = new Object[DEF_INITIAL_SIZE];
+    data = (T[]) new Object[DEF_INITIAL_SIZE];
     indices = MutableSparseIntSet.makeEmpty();
   }
 
+  @SuppressWarnings("unchecked")
   public SparseVector(int initialSize, float expansion) {
-    data = new Object[DEF_INITIAL_SIZE];
+    data = (T[]) new Object[DEF_INITIAL_SIZE];
     indices = new TunedMutableSparseIntSet(initialSize, expansion);
   }
 
@@ -53,7 +55,6 @@ public class SparseVector<T> implements IVector<T>, Serializable {
    */
   @NullUnmarked
   @Override
-  @SuppressWarnings("unchecked")
   public T get(int x) {
     int index = indices.getIndex(x);
     if (index == -1) {
@@ -69,7 +70,7 @@ public class SparseVector<T> implements IVector<T>, Serializable {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   @Override
-  public void set(int x, @Nullable T value) {
+  public void set(int x, T value) {
     int index = indices.getIndex(x);
     if (index == -1) {
       indices.add(x);
@@ -113,7 +114,6 @@ public class SparseVector<T> implements IVector<T>, Serializable {
       }
 
       @Override
-      @SuppressWarnings("unchecked")
       public T next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
@@ -153,8 +153,9 @@ public class SparseVector<T> implements IVector<T>, Serializable {
     return MutableSparseIntSet.make(indices).intIterator();
   }
 
+  @SuppressWarnings("unchecked")
   public void clear() {
-    data = new Object[DEF_INITIAL_SIZE];
+    data = (T[]) new Object[DEF_INITIAL_SIZE];
     indices = MutableSparseIntSet.makeEmpty();
   }
 
