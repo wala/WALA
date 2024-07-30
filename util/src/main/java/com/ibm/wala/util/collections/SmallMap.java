@@ -70,7 +70,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   /**
-   * Use with care. Fails if key is null.
+   * Use with care.
    *
    * @return the ith key
    */
