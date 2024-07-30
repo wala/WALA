@@ -7,7 +7,8 @@ public class NullabilityUtil {
 
   /** Exception thrown when a {@link #castToNonNull(Object)} call fails. */
   public static class CastToNonNullFailedException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = -4118612881206393972L;
   }
 
   /**
