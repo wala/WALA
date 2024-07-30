@@ -10,7 +10,7 @@ plugins {
 
 dependencies {
   annotationProcessor(rootProject.versionCatalogs.named("libs").findLibrary("nullaway").get())
-  implementation(
+  compileOnly(
       rootProject.versionCatalogs.named("libs").findLibrary("nullaway-annotations").get())
 }
 
