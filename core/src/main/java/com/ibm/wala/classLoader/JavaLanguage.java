@@ -701,11 +701,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       case OP_invokeinterface:
       case OP_monitorenter:
       case OP_monitorexit:
-        // we're currently ignoring MonitorStateExceptions, since J2EE stuff
-        // should be
-        // logically single-threaded
+      // we're currently ignoring MonitorStateExceptions, since J2EE stuff
+      // should be
+      // logically single-threaded
       case OP_athrow:
-        // N.B: the caller must handle the explicitly-thrown exception
+      // N.B: the caller must handle the explicitly-thrown exception
       case OP_arraylength:
         return getNullPointerException();
       case OP_idiv:

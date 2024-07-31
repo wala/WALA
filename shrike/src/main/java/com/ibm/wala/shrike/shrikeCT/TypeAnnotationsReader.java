@@ -255,15 +255,15 @@ public class TypeAnnotationsReader extends AnnotationsReader {
           return Pair.<TypeAnnotationTarget, Integer>make(
               new ThrowsTarget(exceptionReader.getClasses()[throwsIndex]), 2);
         }
-        /*
-        * localvar_target {
-        * u2 table_length;
-        *   { u2 start_pc;
-              u2 length;
-              u2 index;
-        *   } table[table_length];
-        * }
-        */
+      /*
+      * localvar_target {
+      * u2 table_length;
+      *   { u2 start_pc;
+            u2 length;
+            u2 index;
+      *   } table[table_length];
+      * }
+      */
       case localvar_target:
         {
           checkSize(begin, 2);

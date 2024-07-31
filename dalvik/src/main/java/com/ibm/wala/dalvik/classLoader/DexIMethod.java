@@ -1367,7 +1367,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     this));
             break;
           }
-          // TODO: FILLED ARRAYS
+        // TODO: FILLED ARRAYS
         case FILLED_NEW_ARRAY:
           {
             int registerCount = ((Instruction35c) inst).getRegisterCount();

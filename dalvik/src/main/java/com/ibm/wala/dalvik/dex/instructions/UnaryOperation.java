@@ -146,7 +146,7 @@ public class UnaryOperation extends Instruction {
 
   public IOperator getOperator() {
     switch (op) {
-        // SSA unary ops
+      // SSA unary ops
       case NOT:
       case NOTLONG:
       case NOTINT:

@@ -604,7 +604,7 @@ public abstract class Compiler implements Constants {
             if (!fallToConditional) {
               break;
             }
-            // $FALL-THROUGH$
+          // $FALL-THROUGH$
           case OP_aconst_null:
             if (!fallToConditional
                 && inBasicBlock(i, 2)
@@ -620,8 +620,8 @@ public abstract class Compiler implements Constants {
             if (!fallToConditional) {
               break;
             }
-            // by Xiangyu
-            // $FALL-THROUGH$
+          // by Xiangyu
+          // $FALL-THROUGH$
           case OP_ifeq:
           case OP_ifge:
           case OP_ifgt:
@@ -675,7 +675,7 @@ public abstract class Compiler implements Constants {
               }
               break;
             }
-            // by Xiangyu
+          // by Xiangyu
 
           case OP_if_icmpeq:
           case OP_if_icmpge:
@@ -866,7 +866,7 @@ public abstract class Compiler implements Constants {
                 break;
               }
             }
-            // $FALL-THROUGH$
+          // $FALL-THROUGH$
           case OP_lload:
           case OP_fload:
           case OP_dload:

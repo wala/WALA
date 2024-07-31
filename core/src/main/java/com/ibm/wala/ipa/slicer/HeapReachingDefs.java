@@ -417,7 +417,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
             }
           }
         case HEAP_PARAM_CALLEE:
-          // no statements in this method will def the heap being passed in
+        // no statements in this method will def the heap being passed in
         case NORMAL_RET_CALLEE:
         case NORMAL_RET_CALLER:
         case PARAM_CALLEE:
