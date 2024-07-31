@@ -1,6 +1,5 @@
 package com.ibm.wala.gradle
 
-import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
@@ -22,7 +21,7 @@ val testFixturesJavadocJar by
       from(testFixturesJavadoc.map { it.destinationDir!! })
     }
 
-configure<MavenPublishBaseExtension> {
+mavenPublishing {
   configureBasedOnAppliedPlugins()
   publishToMavenCentral(SonatypeHost.DEFAULT)
   signAllPublications()
@@ -92,7 +91,7 @@ configure<MavenPublishBaseExtension> {
   }
 }
 
-configure<PublishingExtension> {
+publishing {
   repositories.maven {
     name = "fakeRemote"
     setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
@@ -100,7 +99,7 @@ configure<PublishingExtension> {
 
   publications.named<MavenPublication>("maven") {
     groupId = "com.ibm.wala"
-    artifactId = the<BasePluginExtension>().archivesName.get()
+    artifactId = base.archivesName.get()
 
     val testFixturesCodeElementsNames =
         listOf("testFixturesApiElements", "testFixturesRuntimeElements")
@@ -122,7 +121,7 @@ configure<PublishingExtension> {
   }
 }
 
-configure<SigningExtension> {
+signing {
   setRequired {
     // Signatures are a hard requirement if publishing a non-snapshot to Maven Central.
     !isSnapshot &&
