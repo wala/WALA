@@ -34,7 +34,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
       case NORMAL_RET_CALLER:
       case PARAM_CALLER:
       case EXC_RET_CALLER:
-        // uh oh. anything that flows into the missing function will be killed.
+      // uh oh. anything that flows into the missing function will be killed.
       case NORMAL:
         // only control dependence flows into the missing function.
         // this control dependence does not flow back to the caller.

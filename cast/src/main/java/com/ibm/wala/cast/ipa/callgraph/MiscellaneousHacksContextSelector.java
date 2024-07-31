@@ -47,7 +47,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     for (String[] descr : descriptors) {
       switch (descr.length) {
 
-          // loader name, loader language, classname, method name, method descr
+        // loader name, loader language, classname, method name, method descr
         case 5:
           {
             ClassLoaderReference clr =
@@ -67,7 +67,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
             break;
           }
 
-          // classname, method name, method descr
+        // classname, method name, method descr
         case 3:
           {
             MethodReference ref =
@@ -81,7 +81,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
             break;
           }
 
-          // loader name, classname, meaning all methods of that class
+        // loader name, classname, meaning all methods of that class
         case 2:
           {
             IClass klass =
@@ -100,7 +100,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
             break;
           }
 
-          // classname, meaning all methods of that class
+        // classname, meaning all methods of that class
         case 1:
           {
             IClass klass =

@@ -24,7 +24,7 @@ public class RtJar {
           return JF;
         case "classes.jar":
           if (PlatformUtil.onMacOSX()) return JF;
-          // $FALL-THROUGH$
+        // $FALL-THROUGH$
         default:
       }
     }

@@ -208,9 +208,9 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
 
                 break;
               case STANDARD_ACTION:
-                // TODO!
-                // In Order to correctly evaluate a standard-action we would also have to look
-                // at the URI of the Intent.
+              // TODO!
+              // In Order to correctly evaluate a standard-action we would also have to look
+              // at the URI of the Intent.
               case UNKNOWN_TARGET:
                 info = intentStarters.getInfo(method.getReference());
 
