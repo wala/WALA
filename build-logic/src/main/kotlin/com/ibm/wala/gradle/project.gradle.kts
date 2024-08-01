@@ -19,11 +19,10 @@ repositories.mavenCentral()
 
 // workaround for <https://github.com/gradle/gradle/issues/4802>
 eclipse.classpath.file.whenMerged {
-  (this as Classpath).run {
-    entries.forEach {
-      if (it is AbstractClasspathEntry && it.entryAttributes["gradle_used_by_scope"] == "test")
-          it.entryAttributes["test"] = true
-    }
+  this as Classpath
+  entries.forEach {
+    if (it is AbstractClasspathEntry && it.entryAttributes["gradle_used_by_scope"] == "test")
+        it.entryAttributes["test"] = true
   }
 }
 
