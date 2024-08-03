@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
@@ -31,6 +34,10 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -86,7 +93,26 @@ public class ClassConstantTest extends WalaTestCase {
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Object unused = cha.toJson();
-    // assertEquals("", json);
+    Gson gson = new Gson();
+    Type type = new TypeToken<HashMap<String, Set<String>>>() {}.getType();
+    HashMap<String, Set<String>> list = gson.fromJson(cha.toJson(), type);
+    assertTrue(list.containsKey(nodeToString(cha.getRootClass().toString())));
+
+    Set<String> subclassNames = new HashSet<>();
+    Iterator<IClass> children = cha.computeSubClasses(cha.getRootClass().getReference()).iterator();
+    while (children.hasNext()) {
+      String temp = nodeToString(children.next().toString());
+      subclassNames.add(temp);
+    }
+    assertTrue(subclassNames.containsAll(list.get(nodeToString(cha.getRootClass().toString()))));
+  }
+
+  private String nodeToString(String key) {
+    key = key.replace("<Primordial,", "");
+    key = key.replace("<Application,", "");
+    key = key.replace("<Extension,", "");
+    key = key.replace("<Synthetic,", "");
+    key = key.replace(">", "");
+    return key;
   }
 }
