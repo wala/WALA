@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
@@ -100,12 +102,11 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
     return edge2Var.get(key);
   }
 
-  public @Nullable V getEdge(Object src, Object dst) {
+  public V getEdge(Object src, Object dst) {
     assert src != null;
     assert dst != null;
     V v = getEdge(Pair.make(src, dst));
-    assert v != null;
-    return v;
+    return castToNonNull(v);
   }
 
   private class UnionFind {

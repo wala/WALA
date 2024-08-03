@@ -23,7 +23,7 @@ public class SimpleVector<T> implements IVector<T> {
 
   private static final double GROWTH_FACTOR = 1.5;
 
-  Object[] store = new Object[1];
+  @Nullable Object[] store = new Object[1];
 
   int maxIndex = -1;
 

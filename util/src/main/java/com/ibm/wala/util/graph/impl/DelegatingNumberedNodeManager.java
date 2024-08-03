@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.NumberedNodeManager;
@@ -32,7 +34,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   private final double BUFFER_FACTOR = 1.5;
 
-  private INodeWithNumber[] nodes = new INodeWithNumber[20];
+  private @Nullable INodeWithNumber[] nodes = new INodeWithNumber[20];
 
   private int maxNumber = -1;
 
@@ -51,7 +53,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
   @SuppressWarnings("unchecked")
   public T getNode(int number) {
     try {
-      return (T) nodes[number];
+      return (T) castToNonNull(nodes[number]);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Invalid number " + number, e);
     }
@@ -68,7 +70,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
   @Override
   @SuppressWarnings("unused")
   public Iterator<T> iterator() {
-    final INodeWithNumber[] arr = nodes;
+    final @Nullable INodeWithNumber[] arr = nodes;
     return new Iterator<T>() {
       int nextCounter = -1;
 
