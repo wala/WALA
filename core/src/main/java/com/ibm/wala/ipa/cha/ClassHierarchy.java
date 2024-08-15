@@ -25,6 +25,7 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.core.util.ref.CacheReference;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -754,13 +755,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * Removed unnecessary part of Node by turning it into a String (Made for toJson and helperToJson)
    */
   private String nodeToString(Node n) {
-    String key = n.getJavaClass().toString();
-    key = key.replace("<Primordial,", "");
-    key = key.replace("<Application,", "");
-    key = key.replace("<Extension,", "");
-    key = key.replace("<Synthetic,", "");
-    key = key.replace(">", "");
-    return key;
+    return StringStuff.jvmToBinaryName(n.getJavaClass().getName().toString());
   }
 
   /**

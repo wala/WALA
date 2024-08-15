@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -95,24 +96,21 @@ public class ClassConstantTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Gson gson = new Gson();
     Type type = new TypeToken<HashMap<String, Set<String>>>() {}.getType();
-    HashMap<String, Set<String>> list = gson.fromJson(cha.toJson(), type);
-    assertTrue(list.containsKey(nodeToString(cha.getRootClass().toString())));
+    String json = cha.toJson();
+    System.err.println(json);
+    HashMap<String, Set<String>> list = gson.fromJson(json, type);
+    assertTrue(list.containsKey(nodeToString(cha.getRootClass())));
 
     Set<String> subclassNames = new HashSet<>();
     Iterator<IClass> children = cha.computeSubClasses(cha.getRootClass().getReference()).iterator();
     while (children.hasNext()) {
-      String temp = nodeToString(children.next().toString());
+      String temp = nodeToString(children.next());
       subclassNames.add(temp);
     }
-    assertTrue(subclassNames.containsAll(list.get(nodeToString(cha.getRootClass().toString()))));
+    assertTrue(subclassNames.containsAll(list.get(nodeToString(cha.getRootClass()))));
   }
 
-  private String nodeToString(String key) {
-    key = key.replace("<Primordial,", "");
-    key = key.replace("<Application,", "");
-    key = key.replace("<Extension,", "");
-    key = key.replace("<Synthetic,", "");
-    key = key.replace(">", "");
-    return key;
+  private String nodeToString(IClass klass) {
+    return StringStuff.jvmToBinaryName(klass.getName().toString());
   }
 }
