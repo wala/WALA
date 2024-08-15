@@ -108,7 +108,6 @@ tasks.named<Test>("test") {
 }
 
 if (hasProperty("excludeSlowTests")) {
-  dependencies { testImplementation(testFixtures(project(":core"))) }
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
 
