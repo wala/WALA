@@ -1,10 +1,12 @@
 package com.ibm.wala.gradle.cast
 
 import java.io.File
-import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskInstantiationException
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.internal.jvm.Jvm
 import org.gradle.kotlin.dsl.closureOf
 import org.gradle.kotlin.dsl.extra
@@ -18,74 +20,68 @@ import org.gradle.nativeplatform.tasks.LinkSharedLibrary
 //  helpers for building native CAst components
 //
 
-fun addCastLibrary(binary: CppBinary, linkTask: AbstractLinkTask, project: Project) {
-  linkTask.configure(
-      project.closureOf<AbstractLinkTask> {
+/**
+ * Configures the provided [Task] using the given action.
+ *
+ * [TaskProvider] already offers a [TaskProvider.configure] method that is compatible with Gradle's
+ * [task configuration avoidance APIs](https://docs.gradle.org/current/userguide/task_configuration_avoidance.html).
+ * Unfortunately, many of the APIs for native compilation provide access only to [Provider]<[Task]>
+ * instances, which have no configuration-avoiding `configure` method. Instead, the best we can do
+ * is to [get][Provider.get] the provided [Task], then configure it using [Task.configure].
+ *
+ * @param action The configuration action to be applied to the task.
+ */
+fun <T : Task> Provider<T>.configure(action: T.() -> Unit) {
+  get().configure(closureOf(action))
+}
+
+fun AbstractLinkTask.addCastLibrary(binary: CppBinary) {
+  configure(
+      closureOf<AbstractLinkTask> {
         project.project(":cast:cast").tasks.named(name, LinkSharedLibrary::class.java) {
-          addRpath(linkTask, nativeLibraryOutput)
+          this@addCastLibrary.addRpath(nativeLibraryOutput)
         }
-        addJvmLibrary(binary, linkTask, project)
+        addJvmLibrary(binary)
       })
 }
 
-fun findJvmLibrary(
-    project: Project,
-    extension: String,
-    currentJavaHome: File,
-    subdirs: List<String>
-) = subdirs.map { project.file("$currentJavaHome/$it/libjvm.$extension") }.find { it.exists() }!!
+private fun File.findJvmLibrary(extension: String, subdirs: List<String>) =
+    subdirs.map { resolve("$it/libjvm.$extension") }.find { it.exists() }!!
 
-fun addJvmLibrary(binary: CppBinary, linkTask: AbstractLinkTask, project: Project) =
-    project.dependencies(
-        project.closureOf<DependencyHandler> {
-          val currentJavaHome = Jvm.current().javaHome
-          val family = binary.targetMachine.operatingSystemFamily
+fun AbstractLinkTask.addJvmLibrary(binary: CppBinary) {
+  project.dependencies(
+      closureOf<DependencyHandler> {
+        val currentJavaHome = Jvm.current().javaHome
+        val family = binary.targetMachine.operatingSystemFamily
 
-          data class Details(
-              val osIncludeSubdir: String,
-              val libJVM: File,
-          )
-          when (family.name) {
-            OperatingSystemFamily.LINUX ->
-                Details(
-                    "linux",
-                    findJvmLibrary(
-                        project,
-                        "so",
-                        currentJavaHome,
-                        listOf(
-                            "jre/lib/amd64/server",
-                            "lib/amd64/server",
-                            "lib/server",
-                        )))
-            OperatingSystemFamily.MACOS ->
-                Details(
-                    "darwin",
-                    findJvmLibrary(
-                        project,
-                        "dylib",
-                        currentJavaHome,
-                        listOf(
-                            "jre/lib/server",
-                            "lib/server",
-                        )))
-            OperatingSystemFamily.WINDOWS ->
-                Details("win32", project.file("$currentJavaHome/lib/jvm.lib"))
-            else ->
-                throw TaskInstantiationException("unrecognized operating system family \"$family\"")
-          }.run {
-            val jniIncludeDir = "$currentJavaHome/include"
-            binary.compileTask
-                .get()
-                .includes(project.files(jniIncludeDir, "$jniIncludeDir/$osIncludeSubdir"))
-            add((binary.linkLibraries as Configuration).name, project.files(libJVM))
-            addRpath(linkTask, libJVM)
-          }
-        })
+        val (osIncludeSubdir, libJVM) =
+            when (family.name) {
+              OperatingSystemFamily.LINUX ->
+                  "linux" to
+                      currentJavaHome.findJvmLibrary(
+                          "so", listOf("jre/lib/amd64/server", "lib/amd64/server", "lib/server"))
+              OperatingSystemFamily.MACOS ->
+                  "darwin" to
+                      currentJavaHome.findJvmLibrary(
+                          "dylib", listOf("jre/lib/server", "lib/server"))
+              OperatingSystemFamily.WINDOWS -> "win32" to currentJavaHome.resolve("lib/jvm.lib")
+              else ->
+                  throw TaskInstantiationException(
+                      "unrecognized operating system family \"$family\"")
+            }
 
-fun addRpath(linkTask: AbstractLinkTask, library: File) {
-  if (!(linkTask.project.rootProject.extra["isWindows"] as Boolean)) {
-    linkTask.linkerArgs.add("-Wl,-rpath,${library.parent}")
+        val jniIncludeDir = "$currentJavaHome/include"
+        binary.compileTask
+            .get()
+            .includes(project.files(jniIncludeDir, "$jniIncludeDir/$osIncludeSubdir"))
+        add((binary.linkLibraries as Configuration).name, project.files(libJVM))
+        addRpath(libJVM)
+      })
+}
+
+fun AbstractLinkTask.addRpath(library: File) {
+  if (!(project.rootProject.extra["isWindows"] as Boolean)) {
+    linkerArgs.add("-Wl,-rpath,${library.parent}")
   }
 }
 
