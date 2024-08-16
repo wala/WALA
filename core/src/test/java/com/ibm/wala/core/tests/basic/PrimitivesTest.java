@@ -34,6 +34,7 @@ import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorBase;
 import com.ibm.wala.util.intset.BitVectorIntSetFactory;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
@@ -835,7 +836,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     R.remove(5, 1);
     x = R.getRelated(5);
-    assertNull(x);
+    assertEquals(x, EmptyIntSet.instance);
 
     R.add(2, 1);
     R.add(2, 2);
@@ -845,10 +846,10 @@ public class PrimitivesTest extends WalaTestCase {
 
     R.removeAll(3);
     x = R.getRelated(3);
-    assertNull(x);
+    assertEquals(x, EmptyIntSet.instance);
 
     x = R.getRelated(0);
-    assertNull(x);
+    assertEquals(x, EmptyIntSet.instance);
 
     for (int i = 0; i < 100; i++) {
       R.add(1, i);

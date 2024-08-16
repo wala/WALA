@@ -17,6 +17,7 @@ import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.Graph;
 
 /** Convenience methods for navigating a {@link ControlFlowGraph}. */
 public class Util {
@@ -38,13 +39,15 @@ public class Util {
   /** Does basic block b end with a conditional branch instruction? */
   public static boolean endsWithConditionalBranch(
       ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
-    return getLastInstruction(G, b) instanceof SSAConditionalBranchInstruction;
+    return b.getLastInstructionIndex() >= 0
+        && getLastInstruction(G, b) instanceof SSAConditionalBranchInstruction;
   }
 
   /** Does basic block b end with a switch instruction? */
   public static boolean endsWithSwitch(
       ControlFlowGraph<? extends SSAInstruction, ?> G, IBasicBlock<?> b) {
-    return getLastInstruction(G, b) instanceof SSASwitchInstruction;
+    return b.getLastInstructionIndex() >= 0
+        && getLastInstruction(G, b) instanceof SSASwitchInstruction;
   }
 
   /**
@@ -190,7 +193,7 @@ public class Util {
    * which a appears? Note that this order corresponds to the order of operands in a phi
    * instruction.
    */
-  public static <I, T extends IBasicBlock<I>> int whichPred(ControlFlowGraph<I, T> cfg, T a, T b) {
+  public static <I, T extends IBasicBlock<I>> int whichPred(Graph<T> cfg, T a, T b) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
     }

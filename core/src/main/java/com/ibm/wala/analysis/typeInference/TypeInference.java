@@ -779,4 +779,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
   protected TypeVariable[] makeStmtRHS(int size) {
     return new TypeVariable[size];
   }
+
+  public void copyType(@SuppressWarnings("unused") int fromVn, int toVn) {
+    ensureVariable(toVn);
+  }
 }

@@ -70,7 +70,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IR ir = caller.getIR();
-    if (ir.getCallInstructionIndices(site) != null) {
+    if (!ir.getCallInstructionIndices(site).isEmpty()) {
       SSAAbstractInvokeInstruction call = ir.getCalls(site)[0];
       if (call instanceof SSAInvokeDynamicInstruction) {
         SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction) call;

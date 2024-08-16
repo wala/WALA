@@ -379,6 +379,10 @@ public class CAstPattern {
     }
   }
 
+  public static Collection<Segments> findAll(final CAstPattern p, final CAstNode e) {
+    return p.new Matcher().findAll(null, e);
+  }
+
   public static Collection<Segments> findAll(final CAstPattern p, final CAstEntity e) {
     return p.new Matcher()
         .findAll(

@@ -16,6 +16,7 @@ package com.ibm.wala.cast.tree;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public interface CAstType {
   /** Returns the fully-qualified (e.g. bytecode-compliant for Java) type name. */
@@ -33,6 +34,10 @@ public interface CAstType {
     boolean isInterface();
 
     Collection<CAstQualifier> getQualifiers();
+
+    default Map<String, CAstType> members() {
+      return Collections.emptyMap();
+    }
   }
 
   interface Array extends Reference {

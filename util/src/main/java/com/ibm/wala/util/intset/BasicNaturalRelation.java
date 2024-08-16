@@ -272,7 +272,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     return smallStore[0].get(x) != EMPTY_CODE;
   }
 
-  @NullUnmarked
   @Override
   public IntSet getRelated(int x) {
     if (DEBUG) {
@@ -280,7 +279,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     }
     int ss0 = smallStore[0].get(x);
     if (ss0 == EMPTY_CODE) {
-      return null;
+      return EmptyIntSet.instance;
     } else {
       if (ss0 == DELEGATE_CODE) {
         return getDelegate(x);

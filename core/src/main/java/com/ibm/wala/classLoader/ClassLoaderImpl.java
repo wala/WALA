@@ -140,7 +140,9 @@ public class ClassLoaderImpl implements IClassLoader {
       System.err.println("Get class files for " + M);
     }
     HashSet<ModuleEntry> result = HashSetFactory.make();
-    for (ModuleEntry entry : Iterator2Iterable.make(M.getEntries())) {
+    Iterator<? extends ModuleEntry> mes = M.getEntries();
+    while (mes.hasNext()) {
+      ModuleEntry entry = mes.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("ClassLoaderImpl.getClassFiles:Got entry: " + entry);
       }

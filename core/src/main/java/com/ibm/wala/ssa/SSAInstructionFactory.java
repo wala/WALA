@@ -140,4 +140,7 @@ public interface SSAInstructionFactory {
 
   SSAUnaryOpInstruction UnaryOpInstruction(
       int iindex, IUnaryOpInstruction.IOperator operator, int result, int val);
+
+  <T> SSAUnspecifiedExprInstruction<T> UnspecifiedExprInstruction(
+      int iindex, int result, TypeReference resultType, T payload);
 }

@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -353,5 +354,78 @@ public class GraphSlicer {
         return nodeManager;
       }
     };
+  }
+
+  /** Prune a graph to only the edges accepted by the {@link Predicate} p */
+  public static <T> Graph<T> prune(final Graph<T> g, final BiPredicate<T, T> p) {
+    final EdgeManager<T> e =
+        new EdgeManager<>() {
+
+          @Override
+          public Iterator<T> getPredNodes(@Nullable T n) {
+            return new FilterIterator<>(g.getPredNodes(n), pred -> p.test(pred, n));
+          }
+
+          @Override
+          public int getPredNodeCount(T n) {
+            return IteratorUtil.count(getPredNodes(n));
+          }
+
+          @Override
+          public Iterator<T> getSuccNodes(@Nullable T n) {
+            return new FilterIterator<>(g.getSuccNodes(n), succ -> p.test(n, succ));
+          }
+
+          @Override
+          public int getSuccNodeCount(T N) {
+            return IteratorUtil.count(getSuccNodes(N));
+          }
+
+          @Override
+          public void addEdge(T src, T dst) {
+            Assertions.UNREACHABLE();
+          }
+
+          @Override
+          public void removeEdge(T src, T dst) {
+            Assertions.UNREACHABLE();
+          }
+
+          @Override
+          public void removeAllIncidentEdges(T node) {
+            Assertions.UNREACHABLE();
+          }
+
+          @Override
+          public void removeIncomingEdges(T node) {
+            Assertions.UNREACHABLE();
+          }
+
+          @Override
+          public void removeOutgoingEdges(T node) {
+            Assertions.UNREACHABLE();
+          }
+
+          @Override
+          public boolean hasEdge(@Nullable T src, @Nullable T dst) {
+            return g.hasEdge(src, dst) && p.test(src, dst);
+          }
+        };
+
+    AbstractGraph<T> output =
+        new AbstractGraph<>() {
+
+          @Override
+          protected NodeManager<T> getNodeManager() {
+            return g;
+          }
+
+          @Override
+          protected EdgeManager<T> getEdgeManager() {
+            return e;
+          }
+        };
+
+    return output;
   }
 }

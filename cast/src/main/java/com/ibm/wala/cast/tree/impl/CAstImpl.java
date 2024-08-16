@@ -102,6 +102,15 @@ public class CAstImpl implements CAst {
   }
 
   @Override
+  public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode[] cs) {
+    List<CAstNode> children = new ArrayList<>(cs.length + 1);
+    children.add(c1);
+    children.add(c2);
+    children.addAll(Arrays.asList(cs));
+    return makeNode(kind, children);
+  }
+
+  @Override
   public CAstNode makeNode(int kind) {
     return makeNode(kind, Collections.emptyList());
   }

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceBuffer {
-  private static final class DetailedPosition implements Position {
+  private final class DetailedPosition implements Position {
     private final int endOffset;
     private final int endLine;
     private final int endColumn;
@@ -103,7 +103,7 @@ public class SourceBuffer {
     try (Reader pr = p.getReader()) {
       try (BufferedReader reader = new BufferedReader(pr)) {
 
-        String currentLine;
+        String currentLine = null;
         List<String> lines = new ArrayList<>();
         int offset = 0, line = 0;
         do {
@@ -123,7 +123,7 @@ public class SourceBuffer {
         int endColumn = -1;
         int startOffset = -1;
         int startLine = line;
-        final int startColumn;
+        int startColumn = -1;
         if (p.getLastOffset() >= 0) {
           if (p.getFirstOffset() == offset) {
             startOffset = p.getFirstOffset();
@@ -142,11 +142,15 @@ public class SourceBuffer {
             }
           }
         } else {
-          lines.add(currentLine.substring(Math.max(p.getFirstCol(), 0)));
+          if (p.getLastLine() > p.getFirstLine()) {
+            lines.add(currentLine.substring(Math.max(p.getFirstCol(), 0)));
+          } else {
+            lines.add(currentLine.substring(Math.max(p.getFirstCol(), 0), p.getLastCol() + 1));
+          }
           startColumn = p.getFirstCol();
         }
 
-        while (p.getLastOffset() >= 0 ? p.getLastOffset() >= offset : p.getLastLine() >= line) {
+        while (p.getLastOffset() >= 0 ? p.getLastOffset() > offset : p.getLastLine() > line) {
           currentLine = reader.readLine();
 
           if (currentLine == null) {
@@ -168,7 +172,7 @@ public class SourceBuffer {
             }
           } else {
             if (p.getLastLine() == line) {
-              lines.add(currentLine.substring(0, p.getLastCol()));
+              lines.add(currentLine.substring(0, p.getLastCol() + 1));
               endColumn = p.getLastCol();
               endLine = line;
               endOffset = offset - (currentLine.length() - p.getLastCol());

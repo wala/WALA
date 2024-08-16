@@ -38,6 +38,9 @@ public class ConstantValue implements Value {
     return "#" + constant;
   }
 
+  /*
+   * @see com.ibm.wala.ssa.Value#isStringConstant()
+   */
   @Override
   public boolean isStringConstant() {
     return constant instanceof String;
@@ -98,5 +101,13 @@ public class ConstantValue implements Value {
   @Override
   public int hashCode() {
     return constant == null ? 74 : 91 * constant.hashCode();
+  }
+
+  public boolean hashPosition() {
+    return getPosition() == SymbolTable.NO_POSITION;
+  }
+
+  public Object getPosition() {
+    return SymbolTable.NO_POSITION;
   }
 }

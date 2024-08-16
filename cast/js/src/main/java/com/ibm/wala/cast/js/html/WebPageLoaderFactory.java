@@ -73,7 +73,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
                       ? super.doLocalRead(context, "this", JavaScriptTypes.Root)
                       : super.doGlobalRead(n, context, "window", type);
               int isDefined = context.currentScope().allocateTempValue();
-              context.currentScope().getConstantValue(name);
+              context.currentScope().getConstantValue(name, null);
               doIsFieldDefined(context, isDefined, windowVal, Ast.makeConstant(name));
               context
                   .cfg()
@@ -83,7 +83,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
                           translateConditionOpcode(CAstOperator.OP_NE),
                           null,
                           isDefined,
-                          context.currentScope().getConstantValue(0),
+                          context.currentScope().getConstantValue(0, null),
                           -1));
               PreBasicBlock srcB = context.cfg().getCurrentBlock();
 
@@ -132,7 +132,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
                 && !"window".equals(nm)
                 && !nm.startsWith("$$destructure")) {
               int windowVal = super.doLocalRead(context, "this", type);
-              context.currentScope().getConstantValue(nm);
+              context.currentScope().getConstantValue(nm, null);
               context
                   .cfg()
                   .addInstruction(

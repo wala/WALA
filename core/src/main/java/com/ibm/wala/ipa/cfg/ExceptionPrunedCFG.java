@@ -37,4 +37,16 @@ public class ExceptionPrunedCFG {
   public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(ControlFlowGraph<I, T> cfg) {
     return PrunedCFG.make(cfg, new ExceptionEdgePruner<>(cfg));
   }
+
+  public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> makeDefiniteUncaught(
+      ControlFlowGraph<I, T> cfg) {
+    return PrunedCFG.make(
+        cfg,
+        new ExceptionEdgePruner<>(cfg) {
+          @Override
+          public boolean hasExceptionalEdge(T src, T dst) {
+            return dst.isExitBlock() ? cfg.getExceptionalSuccessors(src).isEmpty() : false;
+          }
+        });
+  }
 }

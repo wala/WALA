@@ -41,7 +41,6 @@ import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
-import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.tree.CAst;
@@ -63,6 +62,7 @@ import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -199,7 +199,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   protected final JDTTypeDictionary fTypeDict;
 
-  protected final JavaSourceLoaderImpl fSourceLoader;
+  protected final ClassLoaderReference fSourceLoader;
 
   protected final ITypeBinding fDivByZeroExcType;
 
@@ -226,7 +226,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   //
 
   public JDTJava2CAstTranslator(
-      JavaSourceLoaderImpl sourceLoader,
+      ClassLoaderReference sourceLoader,
       CompilationUnit astRoot,
       String fullPath,
       boolean replicateForDoLoops) {
@@ -234,7 +234,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   public JDTJava2CAstTranslator(
-      JavaSourceLoaderImpl sourceLoader,
+      ClassLoaderReference sourceLoader,
       CompilationUnit astRoot,
       String fullPath,
       boolean replicateForDoLoops,
@@ -257,7 +257,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     this.dump = dump;
 
     // FIXME: we might need one AST (-> "Object" class) for all files.
-    fIdentityMapper = new JDTIdentityMapper(fSourceLoader.getReference(), ast);
+    fIdentityMapper = new JDTIdentityMapper(fSourceLoader, ast);
     fTypeDict = new JDTTypeDictionary(ast, fIdentityMapper);
 
     fRuntimeExcType = ast.resolveWellKnownType("java.lang.RuntimeException");

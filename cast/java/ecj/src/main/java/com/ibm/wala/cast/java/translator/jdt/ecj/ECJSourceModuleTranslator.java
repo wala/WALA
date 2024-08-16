@@ -37,7 +37,6 @@
  */
 package com.ibm.wala.cast.java.translator.jdt.ecj;
 
-import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.cast.java.translator.jdt.JDTJava2CAstTranslator;
@@ -84,7 +83,7 @@ import org.eclipse.jdt.core.dom.FileASTRequestor;
 public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   protected static class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
     public ECJJavaToCAstTranslator(
-        JavaSourceLoaderImpl sourceLoader,
+        ClassLoaderReference sourceLoader,
         CompilationUnit astRoot,
         String fullPath,
         boolean replicateForDoLoops,
@@ -265,6 +264,6 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
 
   protected JDTJava2CAstTranslator<Position> makeCAstTranslator(
       CompilationUnit cu, String fullPath) {
-    return new ECJJavaToCAstTranslator(sourceLoader, cu, fullPath, false, dump);
+    return new ECJJavaToCAstTranslator(sourceLoader.getReference(), cu, fullPath, false, dump);
   }
 }

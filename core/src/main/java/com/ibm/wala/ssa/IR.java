@@ -74,7 +74,7 @@ public abstract class IR implements IRView {
   private Map<SSAInstruction, ISSABasicBlock> instruction2Block;
 
   /** subclasses must provide a source name mapping, if they want one (or null otherwise) */
-  protected abstract SSA2LocalMap getLocalMap();
+  public abstract SSA2LocalMap getLocalMap();
 
   /**
    * subclasses must provide information about indirect use of values, if appropriate, and otherwise

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.util;
 
+import static com.ibm.wala.cast.util.UglyBrackets.*;
+
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
@@ -18,6 +20,7 @@ import java.io.Writer;
 import java.util.Collection;
 
 public class CAstPrinter {
+
   private static final class StringWriter extends Writer {
     private final StringBuilder sb;
 
@@ -216,16 +219,16 @@ public class CAstPrinter {
     return sb.toString();
   }
 
-  public String doPrint(CAstEntity ce) {
+  public String doPrint(CAstEntity ce, UglyBrackets uglyBrackets) {
     final StringBuilder sb = new StringBuilder();
     try (final StringWriter writer = new StringWriter(sb)) {
-      printTo(ce, writer);
+      printTo(ce, writer, uglyBrackets);
     }
     return sb.toString();
   }
 
-  public static String print(CAstEntity ce) {
-    return instance.doPrint(ce);
+  public static String print(CAstEntity ce, UglyBrackets uglyBrackets) {
+    return instance.doPrint(ce, uglyBrackets);
   }
 
   public static void printTo(CAstNode top, Writer w) {
@@ -233,7 +236,7 @@ public class CAstPrinter {
   }
 
   public void doPrintTo(CAstNode top, Writer w) {
-    printTo(top, null, w, 0, false);
+    printTo(top, null, w, 0, NONE);
   }
 
   public static void printTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
@@ -241,7 +244,7 @@ public class CAstPrinter {
   }
 
   public void doPrintTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
-    printTo(top, pos, w, 0, false);
+    printTo(top, pos, w, 0, NONE);
   }
 
   public static void xmlTo(CAstNode top, Writer w) {
@@ -249,7 +252,7 @@ public class CAstPrinter {
   }
 
   public void doXmlTo(CAstNode top, Writer w) {
-    printTo(top, null, w, 0, true);
+    printTo(top, null, w, 0, XML);
   }
 
   public static void xmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
@@ -257,7 +260,15 @@ public class CAstPrinter {
   }
 
   private static void doXmlTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
-    printTo(top, pos, w, 0, true);
+    printTo(top, pos, w, 0, XML);
+  }
+
+  public static void jsonTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
+    doJsonTo(top, pos, w);
+  }
+
+  private static void doJsonTo(CAstNode top, CAstSourcePositionMap pos, Writer w) {
+    printTo(top, pos, w, 0, JSON);
   }
 
   private static String escapeForXML(String x, char from, String to) {
@@ -272,23 +283,29 @@ public class CAstPrinter {
   }
 
   public static void printTo(
-      CAstNode top, CAstSourcePositionMap pos, Writer w, int depth, boolean uglyBrackets) {
+      CAstNode top, CAstSourcePositionMap pos, Writer w, int depth, UglyBrackets uglyBrackets) {
     instance.doPrintTo(top, pos, w, depth, uglyBrackets);
   }
 
   public void doPrintTo(
-      CAstNode top, CAstSourcePositionMap pos, Writer w, int depth, boolean uglyBrackets) {
+      CAstNode top, CAstSourcePositionMap pos, Writer w, int depth, UglyBrackets uglyBrackets) {
     try {
       CAstSourcePositionMap.Position p = (pos != null) ? pos.getPosition(top) : null;
       for (int i = 0; i < depth; i++) w.write("  ");
       if (top == null) {
         w.write("(null)\n");
       } else if (top.getValue() != null) {
-        if (uglyBrackets) {
+        if (uglyBrackets == XML) {
           w.write("<constant value=\"");
           w.write(escapeForXML(top.getValue().toString()));
           w.write("\" type=\"");
           w.write(top.getValue().getClass().toString());
+          w.write("\"");
+        } else if (uglyBrackets == JSON) {
+          w.write("{ \"kind\": \"constant\", \"type\": \"");
+          w.write(top.getValue().getClass().toString());
+          w.write("\", \"value\": \"");
+          w.write(top.getValue().toString());
           w.write("\"");
         } else {
           w.write("\"");
@@ -296,25 +313,57 @@ public class CAstPrinter {
           w.write("\"");
         }
         if (p != null) {
-          if (uglyBrackets) w.write(" lineNumber=\"" + p + '"');
+          if (uglyBrackets == XML) w.write(" lineNumber=\"" + p + '"');
+          else if (uglyBrackets == JSON) w.write(", \"lineNumber\": \"" + p + '"');
           else w.write(" at " + p);
         }
-        if (uglyBrackets) w.write("/>");
+        if (uglyBrackets == XML) w.write("/>");
+        if (uglyBrackets == JSON) w.write("}");
         w.write("\n");
       } else {
-        if (uglyBrackets) w.write("<");
-        w.write(kindAsString(top.getKind()));
-        if (p != null)
-          if (uglyBrackets) w.write(" position=\"" + p + '"');
-          else w.write(" at " + p);
-        if (uglyBrackets) w.write(">");
-        w.write("\n");
-        for (CAstNode child : top.getChildren()) {
-          doPrintTo(child, pos, w, depth + 1, uglyBrackets);
+        if (uglyBrackets == XML) {
+          w.write("<");
+          w.write(kindAsString(top.getKind()));
+        } else if (uglyBrackets == JSON) {
+          w.write("{ \"kind\": \"");
+          w.write(kindAsString(top.getKind()));
+          w.write("\" ");
+        } else {
+          w.write(kindAsString(top.getKind()));
         }
-        if (uglyBrackets) {
+        if (p != null)
+          if (uglyBrackets == XML) w.write(" position=\"" + p + '"');
+          else if (uglyBrackets == JSON) w.write(" \"position\": \"" + p + '"');
+          else w.write(" at " + p);
+        if (uglyBrackets == XML) w.write(">");
+        else if (uglyBrackets == JSON) w.write("}");
+        w.write("\n");
+        if (uglyBrackets == JSON) {
           for (int i = 0; i < depth; i++) w.write("  ");
-          w.write("</" + kindAsString(top.getKind()) + ">\n");
+          w.write(" \"children\": [\n");
+        }
+        boolean first = true;
+        for (CAstNode child : top.getChildren()) {
+          if (uglyBrackets == JSON && !first) w.write(",");
+          doPrintTo(child, pos, w, depth + 1, uglyBrackets);
+          first = false;
+        }
+        if (uglyBrackets == JSON) {
+          for (int i = 0; i < depth; i++) w.write("  ");
+          w.write("]\n");
+        }
+        if (uglyBrackets != NONE) {
+          for (int i = 0; i < depth; i++) w.write("  ");
+          switch (uglyBrackets) {
+            case XML:
+              w.write("</" + kindAsString(top.getKind()) + ">\n");
+              break;
+            case JSON:
+              w.write("}\n");
+              break;
+            default:
+              break;
+          }
         }
       }
     } catch (java.io.IOException e) {
@@ -347,30 +396,55 @@ public class CAstPrinter {
 
   public static void printTo(CAstEntity e, Writer w) {
     // anca: check if the writer is null
-    if (w != null) instance.doPrintTo(e, w);
+    if (w != null) instance.doPrintTo(e, w, NONE);
   }
 
-  protected void doPrintTo(CAstEntity e, Writer w) {
+  public static void printTo(CAstEntity e, Writer w, UglyBrackets uglyBrackets) {
+    // anca: check if the writer is null
+    if (w != null) instance.doPrintTo(e, w, uglyBrackets);
+  }
+
+  protected void doPrintTo(CAstEntity e, Writer w, UglyBrackets uglyBrackets) {
     try {
-      w.write(getEntityKindAsString(e.getKind()));
-      w.write(": ");
-      w.write(e.getName());
-      w.write('\n');
-      if (e.getArgumentNames().length > 0) {
-        w.write("(");
-        String[] names = e.getArgumentNames();
-        for (String name : names) {
-          w.write("  " + name);
+      if (uglyBrackets == JSON) {
+        w.write("{ \"entityType\": \"" + getEntityKindAsString(e.getKind()) + "\", ");
+        w.write("  \"name\": \"" + e.getName() + "\",");
+        if (e.getArgumentNames().length > 0) {
+          w.write(" \"arguments\": [");
+          String[] names = e.getArgumentNames();
+          for (String name : names) {
+            w.write("\"" + name + "\", ");
+          }
+          w.write("], ");
         }
-        w.write("  )\n");
+
+      } else {
+        w.write(getEntityKindAsString(e.getKind()));
+        w.write(": ");
+        w.write(e.getName());
+        w.write('\n');
+        if (e.getArgumentNames().length > 0) {
+          w.write("(");
+          String[] names = e.getArgumentNames();
+          for (String name : names) {
+            w.write("  " + name);
+          }
+          w.write("  )\n");
+        }
       }
       if (e.getAST() != null) {
-        doPrintTo(e.getAST(), e.getSourceMap(), w);
+        if (uglyBrackets == JSON) {
+          w.write("ast: [");
+        }
+        printTo(e.getAST(), e.getSourceMap(), w, 0, uglyBrackets);
         w.write('\n');
       }
       for (Collection<CAstEntity> collection : e.getAllScopedEntities().values()) {
         for (CAstEntity entity : collection) {
-          doPrintTo(entity, w);
+          doPrintTo(entity, w, uglyBrackets);
+        }
+        if (uglyBrackets == JSON) {
+          w.write("]");
         }
       }
       w.flush();

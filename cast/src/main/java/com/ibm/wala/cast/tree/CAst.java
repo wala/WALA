@@ -52,6 +52,9 @@ public interface CAst {
   /** Make a node of type kind giving a first child and array of the rest. */
   CAstNode makeNode(int kind, CAstNode firstChild, CAstNode[] otherChildren);
 
+  /** Make a node of type kind giving a first child and array of the rest. */
+  CAstNode makeNode(int kind, CAstNode firstChild, CAstNode secondChild, CAstNode[] otherChildren);
+
   /** Make a node of type kind specifying a list of children. */
   CAstNode makeNode(int kind, List<CAstNode> cs);
 

@@ -66,7 +66,7 @@ public abstract class SSAInstruction {
 
   /** This interface is used by Instruction.visit to dispatch based on the instruction type. */
   @SuppressWarnings("unused")
-  public interface IVisitor {
+  public static interface IVisitor {
     default void visitGoto(SSAGotoInstruction instruction) {}
 
     default void visitArrayLoad(SSAArrayLoadInstruction instruction) {}
@@ -112,6 +112,10 @@ public abstract class SSAInstruction {
     default void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {}
 
     default void visitLoadMetadata(SSALoadMetadataInstruction instruction) {}
+
+    default <T> void visitUnspecified(SSAUnspecifiedInstruction<T> instruction) {}
+
+    default <T> void visitUnspecifiedExpr(SSAUnspecifiedExprInstruction<T> instruction) {}
   }
 
   /** A base visitor implementation that does nothing. */
@@ -275,5 +279,13 @@ public abstract class SSAInstruction {
 
   public void setInstructionIndex(int instructionIndex) {
     this.instructionIndex = instructionIndex;
+  }
+
+  public String[] useNames() {
+    String[] args = new String[getNumberOfUses()];
+    for (int i = 0; i < getNumberOfUses(); i++) {
+      args[i] = "argument" + i;
+    }
+    return args;
   }
 }

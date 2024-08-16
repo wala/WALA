@@ -817,7 +817,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
   }
 
-  protected static final InstructionFactory insts = new InstructionFactory();
+  public static final InstructionFactory insts = new InstructionFactory();
 
   @Override
   public InstructionFactory getInstructionFactory() {

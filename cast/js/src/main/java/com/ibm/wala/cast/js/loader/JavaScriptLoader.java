@@ -109,6 +109,7 @@ import com.ibm.wala.ssa.SSAStoreIndirectInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
+import com.ibm.wala.ssa.SSAUnspecifiedExprInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -735,6 +736,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             @Override
             public SetPrototype SetPrototype(int iindex, int object, int prototype) {
               return new SetPrototype(iindex, object, prototype);
+            }
+
+            @Override
+            public <T> SSAUnspecifiedExprInstruction<T> UnspecifiedExprInstruction(
+                int arg0, int arg1, TypeReference arg2, T arg3) {
+              throw new UnsupportedOperationException();
             }
           };
         }

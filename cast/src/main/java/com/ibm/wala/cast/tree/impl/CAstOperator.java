@@ -12,6 +12,8 @@ package com.ibm.wala.cast.tree.impl;
 
 import com.ibm.wala.cast.tree.CAstLeafNode;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.util.collections.HashMapFactory;
+import java.util.Map;
 
 /**
  * Various operators that are built in to many languages, and hence perhaps deserve special notice
@@ -21,10 +23,21 @@ import com.ibm.wala.cast.tree.CAstNode;
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class CAstOperator implements CAstLeafNode {
+  private static final Map<String, CAstOperator> ops = HashMapFactory.make();
+
+  public static CAstOperator get(String op) {
+    return ops.get(op);
+  }
+
+  protected static void alias(String from, String to) {
+    ops.put(to, ops.get(from));
+  }
+
   private final String op;
 
   protected CAstOperator(String op) {
     this.op = op;
+    ops.put(op, this);
   }
 
   @Override
@@ -38,7 +51,7 @@ public class CAstOperator implements CAstLeafNode {
   }
 
   @Override
-  public Object getValue() {
+  public String getValue() {
     return op;
   }
 
@@ -77,4 +90,5 @@ public class CAstOperator implements CAstLeafNode {
   public static final CAstOperator OP_REL_XOR = new CAstOperator("^^");
   public static final CAstOperator OP_IN = new CAstOperator("in");
   public static final CAstOperator OP_NOT_IN = new CAstOperator("not in");
+  public static final CAstOperator OP_EXP = new CAstOperator("**");
 }

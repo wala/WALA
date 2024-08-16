@@ -74,6 +74,7 @@ import com.ibm.wala.ssa.SSAStoreIndirectInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
+import com.ibm.wala.ssa.SSAUnspecifiedExprInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
@@ -452,6 +453,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     @Override
     public SSAStoreIndirectInstruction StoreIndirectInstruction(
         int iindex, int addressVal, int rval, TypeReference pointeeType) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> SSAUnspecifiedExprInstruction<T> UnspecifiedExprInstruction(
+        int iindex, int result, TypeReference resultType, T payload) {
       throw new UnsupportedOperationException();
     }
   }

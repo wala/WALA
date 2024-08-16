@@ -69,14 +69,21 @@ public class SymbolTable implements Cloneable {
     return findOrCreateConstant(o, false);
   }
 
+  static final Object NO_POSITION = new Object();
+
+  int findOrCreateConstant(Object o, boolean isDefault) {
+    return findOrCreateConstant(o, isDefault, NO_POSITION);
+  }
+
   /**
    * Common part of getConstant functions.
    *
    * @param o instance of a Java 'boxed-primitive' class, String or NULL.
    * @return value number for constant.
    */
-  int findOrCreateConstant(Object o, boolean isDefault) {
-    ConstantValue v = new ConstantValue(o);
+  int findOrCreateConstant(Object o, boolean isDefault, Object p) {
+    ConstantValue v =
+        p == NO_POSITION || p == null ? new ConstantValue(o) : new ConstantValueWithPosition(o, p);
     Integer result = constants.get(v);
     if (result == null) {
       assert !(copy && !isDefault) : "making value for " + o;
@@ -128,6 +135,14 @@ public class SymbolTable implements Cloneable {
     return findOrCreateConstant(defaultValues[vn], true);
   }
 
+  public boolean hasPosition(int vn) {
+    return values[vn] instanceof ConstantValueWithPosition;
+  }
+
+  public Object getPosition(int vn) {
+    return ((ConstantValue) values[vn]).getPosition();
+  }
+
   public int getNullConstant() {
     return findOrCreateConstant(null);
   }
@@ -158,6 +173,38 @@ public class SymbolTable implements Cloneable {
 
   public int getConstant(String s) {
     return findOrCreateConstant(s);
+  }
+
+  public int getNullConstant(Object p) {
+    return findOrCreateConstant(null, false, p);
+  }
+
+  public int getConstant(boolean b, Object p) {
+    return findOrCreateConstant(b, false, p);
+  }
+
+  public int getConstant(int i, Object p) {
+    return findOrCreateConstant(i, false, p);
+  }
+
+  public int getConstant(long l, Object p) {
+    return findOrCreateConstant(l, false, p);
+  }
+
+  public int getConstant(float f, Object p) {
+    return findOrCreateConstant(f, false, p);
+  }
+
+  public int getConstant(double d, Object p) {
+    return findOrCreateConstant(d, false, p);
+  }
+
+  public int getOtherConstant(Object v, Object p) {
+    return findOrCreateConstant(v, false, p);
+  }
+
+  public int getConstant(String s, Object p) {
+    return findOrCreateConstant(s, false, p);
   }
 
   /**
