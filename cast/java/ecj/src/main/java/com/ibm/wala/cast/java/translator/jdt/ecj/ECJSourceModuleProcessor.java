@@ -68,7 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -270,8 +269,7 @@ public class ECJSourceModuleProcessor implements CAstGenerator {
     options.put(JavaCore.COMPILER_SOURCE, "1.8");
     options.put(JavaCore.COMPILER_COMPLIANCE, "1.8");
     parser.setCompilerOptions(options);
-    parser.createASTs(
-        sourceFiles, null, new String[0], xlator.apply(sourceMap), new NullProgressMonitor());
+    parser.createASTs(sourceFiles, null, new String[0], xlator.apply(sourceMap), null);
   }
 
   protected JDTJava2CAstTranslator<Position> makeCAstTranslator(
