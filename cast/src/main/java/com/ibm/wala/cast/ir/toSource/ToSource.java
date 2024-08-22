@@ -91,7 +91,7 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
-import com.ibm.wala.util.graph.dominators.Dominators;
+// import com.ibm.wala.util.graph.dominators.Dominators;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -126,7 +126,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+// import java.util.stream.Stream;
 import org.apache.commons.io.output.TeeWriter;
 
 public abstract class ToSource {
@@ -838,144 +838,151 @@ public abstract class ToSource {
                 System.err.println(e);
               });
 
-      Graph<ISSABasicBlock> FD = Dominators.make(cfg, cfg.entry()).dominatorTree();
-      for (ISSABasicBlock bb : cfg) {
-        cdg.getSuccNodes(bb)
-            .forEachRemaining(
-                cb -> {
-                  cdg.getEdgeLabels(bb, cb)
-                      .forEach(
-                          lb -> {
-                            cdg.getSuccNodes(bb)
-                                .forEachRemaining(
-                                    ob -> {
-                                      if (ob != cb) {
-                                        Set<ISSABasicBlock> obb =
-                                            DFS.getReachableNodes(cdg, Collections.singleton(ob));
-                                        cdg.getEdgeLabels(bb, ob)
-                                            .forEach(
-                                                olb -> {
-                                                  if (lb != olb) {
-                                                    if (obb.contains(cb)
-                                                        && DFS.getReachableNodes(
-                                                                FD, Collections.singleton(bb))
-                                                            .contains(cb)
-                                                        && DFS.getReachableNodes(
-                                                                FD, Collections.singleton(bb))
-                                                            .contains(ob)) {
-                                                      //
-                                                      //          if
-                                                      // (!moveAfterWithLabel.containsKey(bb)) {
-                                                      //
-                                                      //            moveAfterWithLabel.put(
-                                                      //
-                                                      //                bb, HashSetFactory.make());
-                                                      //
-                                                      //          }
-                                                      //
-                                                      //
-                                                      // moveAfterWithLabel.get(bb).add(cb);
-                                                      //
-                                                      //
-                                                      //          obb.stream()
-                                                      //
-                                                      //              .filter(rnb ->
-                                                      // cdg.hasEdge(rnb, cb))
-                                                      //
-                                                      //              .forEach(
-                                                      //
-                                                      //                  rnb -> {
-                                                      //
-                                                      //                    if
-                                                      // (!skipDueToLabel.containsKey(
-                                                      //
-                                                      //                        rnb)) {
-                                                      //
-                                                      //                      skipDueToLabel.put(
-                                                      //
-                                                      //                          rnb,
-                                                      // HashSetFactory.make());
-                                                      //
-                                                      //                    }
-                                                      //
-                                                      //
-                                                      // skipDueToLabel.get(rnb).add(cb);
-                                                      //
-                                                      //                  });
-
-                                                      Iterator<ISSABasicBlock> landings =
-                                                          obb.stream()
-                                                              .map(
-                                                                  xb ->
-                                                                      IteratorUtil.streamify(
-                                                                              cfg.getSuccNodes(xb))
-                                                                          .filter(
-                                                                              xxb ->
-                                                                                  !obb.contains(
-                                                                                      xxb)))
-                                                              .reduce((a, b) -> Stream.concat(a, b))
-                                                              .get()
-                                                              .distinct()
-                                                              .iterator();
-                                                      if (landings.hasNext()) {
-                                                        //
-                                                        //              ISSABasicBlock landing =
-                                                        // landings.next();
-                                                        //
-                                                        //              if (!landings.hasNext()) {
-                                                        //
-                                                        //                obb.stream()
-                                                        //
-                                                        //                    .filter(
-                                                        //
-                                                        //                        xb ->
-                                                        //
-                                                        //
-                                                        // cfg.getNormalSuccessors(xb)
-                                                        //
-                                                        //
-                                                        // .contains(landing))
-                                                        //
-                                                        //                    .forEach(
-                                                        //
-                                                        //                        xb -> {
-                                                        //
-                                                        //                          if
-                                                        // (!breakDueToLabel
-                                                        //
-                                                        //
-                                                        // .containsKey(xb)) {
-                                                        //
-                                                        //
-                                                        // breakDueToLabel.put(
-                                                        //
-                                                        //                                xb,
-                                                        //
-                                                        //
-                                                        // HashMapFactory.make());
-                                                        //
-                                                        //                          }
-                                                        //
-                                                        //                          breakDueToLabel
-                                                        //
-                                                        //                              .get(xb)
-                                                        //
-                                                        //
-                                                        // .put(landing, bb);
-                                                        //
-                                                        //                        });
-                                                        //
-                                                        //              }
-                                                      }
-                                                    }
-                                                  }
-                                                });
-                                      }
-                                    });
-                          });
-                });
-      }
-
+      //      Graph<ISSABasicBlock> FD = Dominators.make(cfg, cfg.entry()).dominatorTree();
+      //      for (ISSABasicBlock bb : cfg) {
+      //        cdg.getSuccNodes(bb)
+      //            .forEachRemaining(
+      //                cb -> {
+      //                  cdg.getEdgeLabels(bb, cb)
+      //                      .forEach(
+      //                          lb -> {
+      //                            cdg.getSuccNodes(bb)
+      //                                .forEachRemaining(
+      //                                    ob -> {
+      //                                      if (ob != cb) {
+      //                                        Set<ISSABasicBlock> obb =
+      //                                            DFS.getReachableNodes(cdg,
+      // Collections.singleton(ob));
+      //                                        cdg.getEdgeLabels(bb, ob)
+      //                                            .forEach(
+      //                                                olb -> {
+      //                                                  if (lb != olb) {
+      //                                                    if (obb.contains(cb)
+      //                                                        && DFS.getReachableNodes(
+      //                                                                FD,
+      // Collections.singleton(bb))
+      //                                                            .contains(cb)
+      //                                                        && DFS.getReachableNodes(
+      //                                                                FD,
+      // Collections.singleton(bb))
+      //                                                            .contains(ob)) {
+      //
+      //          if
+      // (!moveAfterWithLabel.containsKey(bb)) {
+      //
+      //            moveAfterWithLabel.put(
+      //
+      //                bb, HashSetFactory.make());
+      //
+      //          }
+      //
+      //
+      // moveAfterWithLabel.get(bb).add(cb);
+      //
+      //
+      //          obb.stream()
+      //
+      //              .filter(rnb ->
+      // cdg.hasEdge(rnb, cb))
+      //
+      //              .forEach(
+      //
+      //                  rnb -> {
+      //
+      //                    if
+      // (!skipDueToLabel.containsKey(
+      //
+      //                        rnb)) {
+      //
+      //                      skipDueToLabel.put(
+      //
+      //                          rnb,
+      // HashSetFactory.make());
+      //
+      //                    }
+      //
+      //
+      // skipDueToLabel.get(rnb).add(cb);
+      //
+      //                  });
+      //
+      //                                                      Iterator<ISSABasicBlock> landings =
+      //                                                          obb.stream()
+      //                                                              .map(
+      //                                                                  xb ->
+      //
+      // IteratorUtil.streamify(
+      //
+      // cfg.getSuccNodes(xb))
+      //                                                                          .filter(
+      //                                                                              xxb ->
+      //
+      // !obb.contains(
+      //                                                                                      xxb)))
+      //                                                              .reduce((a, b) ->
+      // Stream.concat(a, b))
+      //                                                              .get()
+      //                                                              .distinct()
+      //                                                              .iterator();
+      //                                                      if (landings.hasNext()) {
+      //
+      //              ISSABasicBlock landing =
+      // landings.next();
+      //
+      //              if (!landings.hasNext()) {
+      //
+      //                obb.stream()
+      //
+      //                    .filter(
+      //
+      //                        xb ->
+      //
+      //
+      // cfg.getNormalSuccessors(xb)
+      //
+      //
+      // .contains(landing))
+      //
+      //                    .forEach(
+      //
+      //                        xb -> {
+      //
+      //                          if
+      // (!breakDueToLabel
+      //
+      //
+      // .containsKey(xb)) {
+      //
+      //
+      // breakDueToLabel.put(
+      //
+      //                                xb,
+      //
+      //
+      // HashMapFactory.make());
+      //
+      //                          }
+      //
+      //                          breakDueToLabel
+      //
+      //                              .get(xb)
+      //
+      //
+      // .put(landing, bb);
+      //
+      //                        });
+      //
+      //              }
+      //                                                      }
+      //                                                    }
+      //                                                  }
+      //                                                });
+      //                                      }
+      //                                    });
+      //                          });
+      //                });
+      //      }
+      //
       //      if (!moveAfterWithLabel.isEmpty()) {
       //        System.err.println("found move after: " + moveAfterWithLabel);
       //      }
@@ -1428,29 +1435,30 @@ public abstract class ToSource {
                             p -> {
                               //                              skip:
                               //                              {
-                              for (SSAInstruction inst : chunk) {
-                                if (!(inst instanceof AssignInstruction)) {
-                                  //                                  ISSABasicBlock ctlBB =
-                                  // cfg.getBlockForInstruction(p.fst.iIndex());
-                                  //                                  ISSABasicBlock instBB =
-                                  // cfg.getBlockForInstruction(inst.iIndex());
-                                  //                                    if
-                                  // (skipDueToLabel.containsKey(ctlBB)) {
-                                  //                                      if
-                                  // (skipDueToLabel.get(ctlBB).contains(instBB)) {
-                                  //
-                                  // System.err.println("skip");
-                                  //                                        break skip;
-                                  //                                      }
-                                  //                                    }
-                                }
-                                //                                }
+                              //                              for (SSAInstruction inst : chunk) {
+                              //                                if (!(inst instanceof
+                              // AssignInstruction)) {
+                              //                                  ISSABasicBlock ctlBB =
+                              // cfg.getBlockForInstruction(p.fst.iIndex());
+                              //                                  ISSABasicBlock instBB =
+                              // cfg.getBlockForInstruction(inst.iIndex());
+                              //                                    if
+                              // (skipDueToLabel.containsKey(ctlBB)) {
+                              //                                      if
+                              // (skipDueToLabel.get(ctlBB).contains(instBB)) {
+                              //
+                              // System.err.println("skip");
+                              //                                        break skip;
+                              //                                      }
+                              //                                    }
+                              //                                }
+                              //                                }
 
-                                if (!regionChunks.containsKey(p)) {
-                                  regionChunks.put(p, new ArrayList<>());
-                                }
-                                regionChunks.get(p).add(chunk);
+                              if (!regionChunks.containsKey(p)) {
+                                regionChunks.put(p, new ArrayList<>());
                               }
+                              regionChunks.get(p).add(chunk);
+                              //                              }
                             });
                   }
                 }
@@ -3482,8 +3490,9 @@ public abstract class ToSource {
         case CAstNode.BREAK:
           {
             indent();
-            String lbl = n.getChildCount() > 0 ? " " + n.getChild(0).getValue() : "";
-            out.println("break" + lbl + ";");
+            //            String lbl = n.getChildCount() > 0 ? " " + n.getChild(0).getValue() : "";
+            //            out.println("break" + lbl + ";");
+            out.println("break;");
             return true;
           }
         case CAstNode.CONTINUE:
@@ -3649,11 +3658,11 @@ public abstract class ToSource {
         ExceptionPrunedCFG.makeDefiniteUncaught(ir.getControlFlowGraph());
     System.err.println("IR:\n" + ir);
 
-    Dominators<ISSABasicBlock> FD = Dominators.make(cfg, ir.getControlFlowGraph().entry());
-    System.err.println("forward dominators: " + FD.dominatorTree());
-    Dominators<ISSABasicBlock> RD =
-        Dominators.make(GraphInverter.invert(cfg), ir.getControlFlowGraph().exit());
-    System.err.println("reverse dominators: " + RD.dominatorTree());
+    //    Dominators<ISSABasicBlock> FD = Dominators.make(cfg, ir.getControlFlowGraph().entry());
+    //    System.err.println("forward dominators: " + FD.dominatorTree());
+    //    Dominators<ISSABasicBlock> RD =
+    //        Dominators.make(GraphInverter.invert(cfg), ir.getControlFlowGraph().exit());
+    //    System.err.println("reverse dominators: " + RD.dominatorTree());
 
     RegionTreeNode root = makeTreeNode(ir, cha, types, cfg);
 
