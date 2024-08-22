@@ -3903,7 +3903,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveGetCaughtException(
       CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
-    String nm = (String) n.getChild(0).getValue();
+    String nm = (String) n.getChild(n.getKind() == CAstNode.PRIMITIVE ? 1 : 0).getValue();
     context.currentScope().declare(new FinalCAstSymbol(nm, exceptionType()));
     int v = context.currentScope().allocateTempValue();
     context
@@ -3973,7 +3973,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   @Override
   protected void leaveVar(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
-    String nm = (String) n.getChild(0).getValue();
+    String nm = (String) n.getChild(n.getKind() == CAstNode.PRIMITIVE ? 1 : 0).getValue();
     assert nm != null : "cannot find var for " + CAstPrinter.print(n, context.getSourceMap());
     Symbol s = context.currentScope().lookup(nm);
     assert s != null
