@@ -606,9 +606,9 @@ public abstract class ToSource {
     private BasicNaturalRelation livenessConflicts;
     protected final Map<Integer, String> sourceNames;
     private Graph<ISSABasicBlock> cfgNoBack;
-    private Map<ISSABasicBlock, Set<ISSABasicBlock>> moveAfterWithLabel;
-    private Map<ISSABasicBlock, Set<ISSABasicBlock>> skipDueToLabel;
-    private Map<ISSABasicBlock, Map<ISSABasicBlock, ISSABasicBlock>> breakDueToLabel;
+    //    private Map<ISSABasicBlock, Set<ISSABasicBlock>> moveAfterWithLabel;
+    //    private Map<ISSABasicBlock, Set<ISSABasicBlock>> skipDueToLabel;
+    //    private Map<ISSABasicBlock, Map<ISSABasicBlock, ISSABasicBlock>> breakDueToLabel;
     protected final Map<SSAInstruction, Map<ISSABasicBlock, RegionTreeNode>> children =
         HashMapFactory.make();
     protected final CAstSourcePositionRecorder positionRecorder;
@@ -685,9 +685,9 @@ public abstract class ToSource {
       this.sourceNames = parent.sourceNames;
       this.positionRecorder = parent.positionRecorder;
       this.cfgNoBack = parent.cfgNoBack;
-      this.moveAfterWithLabel = parent.moveAfterWithLabel;
-      this.skipDueToLabel = parent.skipDueToLabel;
-      this.breakDueToLabel = parent.breakDueToLabel;
+      //      this.moveAfterWithLabel = parent.moveAfterWithLabel;
+      //      this.skipDueToLabel = parent.skipDueToLabel;
+      //      this.breakDueToLabel = parent.breakDueToLabel;
       initChildren();
       System.err.println("added children for " + r + "," + l + ": " + children);
     }
@@ -773,9 +773,9 @@ public abstract class ToSource {
       du = new DefUse(ir);
       cfg = ExceptionPrunedCFG.makeDefiniteUncaught(ir.getControlFlowGraph());
       packages = HashMapFactory.make();
-      moveAfterWithLabel = HashMapFactory.make();
-      skipDueToLabel = HashMapFactory.make();
-      breakDueToLabel = HashMapFactory.make();
+      //      moveAfterWithLabel = HashMapFactory.make();
+      //      skipDueToLabel = HashMapFactory.make();
+      //      breakDueToLabel = HashMapFactory.make();
 
       livenessConflicts = new BasicNaturalRelation();
       LiveAnalysis.Result liveness = LiveAnalysis.perform(ir);
@@ -863,23 +863,45 @@ public abstract class ToSource {
                                                         && DFS.getReachableNodes(
                                                                 FD, Collections.singleton(bb))
                                                             .contains(ob)) {
-                                                      if (!moveAfterWithLabel.containsKey(bb)) {
-                                                        moveAfterWithLabel.put(
-                                                            bb, HashSetFactory.make());
-                                                      }
-                                                      moveAfterWithLabel.get(bb).add(cb);
-
-                                                      obb.stream()
-                                                          .filter(rnb -> cdg.hasEdge(rnb, cb))
-                                                          .forEach(
-                                                              rnb -> {
-                                                                if (!skipDueToLabel.containsKey(
-                                                                    rnb)) {
-                                                                  skipDueToLabel.put(
-                                                                      rnb, HashSetFactory.make());
-                                                                }
-                                                                skipDueToLabel.get(rnb).add(cb);
-                                                              });
+                                                      //
+                                                      //          if
+                                                      // (!moveAfterWithLabel.containsKey(bb)) {
+                                                      //
+                                                      //            moveAfterWithLabel.put(
+                                                      //
+                                                      //                bb, HashSetFactory.make());
+                                                      //
+                                                      //          }
+                                                      //
+                                                      //
+                                                      // moveAfterWithLabel.get(bb).add(cb);
+                                                      //
+                                                      //
+                                                      //          obb.stream()
+                                                      //
+                                                      //              .filter(rnb ->
+                                                      // cdg.hasEdge(rnb, cb))
+                                                      //
+                                                      //              .forEach(
+                                                      //
+                                                      //                  rnb -> {
+                                                      //
+                                                      //                    if
+                                                      // (!skipDueToLabel.containsKey(
+                                                      //
+                                                      //                        rnb)) {
+                                                      //
+                                                      //                      skipDueToLabel.put(
+                                                      //
+                                                      //                          rnb,
+                                                      // HashSetFactory.make());
+                                                      //
+                                                      //                    }
+                                                      //
+                                                      //
+                                                      // skipDueToLabel.get(rnb).add(cb);
+                                                      //
+                                                      //                  });
 
                                                       Iterator<ISSABasicBlock> landings =
                                                           obb.stream()
@@ -896,26 +918,54 @@ public abstract class ToSource {
                                                               .distinct()
                                                               .iterator();
                                                       if (landings.hasNext()) {
-                                                        ISSABasicBlock landing = landings.next();
-                                                        if (!landings.hasNext()) {
-                                                          obb.stream()
-                                                              .filter(
-                                                                  xb ->
-                                                                      cfg.getNormalSuccessors(xb)
-                                                                          .contains(landing))
-                                                              .forEach(
-                                                                  xb -> {
-                                                                    if (!breakDueToLabel
-                                                                        .containsKey(xb)) {
-                                                                      breakDueToLabel.put(
-                                                                          xb,
-                                                                          HashMapFactory.make());
-                                                                    }
-                                                                    breakDueToLabel
-                                                                        .get(xb)
-                                                                        .put(landing, bb);
-                                                                  });
-                                                        }
+                                                        //
+                                                        //              ISSABasicBlock landing =
+                                                        // landings.next();
+                                                        //
+                                                        //              if (!landings.hasNext()) {
+                                                        //
+                                                        //                obb.stream()
+                                                        //
+                                                        //                    .filter(
+                                                        //
+                                                        //                        xb ->
+                                                        //
+                                                        //
+                                                        // cfg.getNormalSuccessors(xb)
+                                                        //
+                                                        //
+                                                        // .contains(landing))
+                                                        //
+                                                        //                    .forEach(
+                                                        //
+                                                        //                        xb -> {
+                                                        //
+                                                        //                          if
+                                                        // (!breakDueToLabel
+                                                        //
+                                                        //
+                                                        // .containsKey(xb)) {
+                                                        //
+                                                        //
+                                                        // breakDueToLabel.put(
+                                                        //
+                                                        //                                xb,
+                                                        //
+                                                        //
+                                                        // HashMapFactory.make());
+                                                        //
+                                                        //                          }
+                                                        //
+                                                        //                          breakDueToLabel
+                                                        //
+                                                        //                              .get(xb)
+                                                        //
+                                                        //
+                                                        // .put(landing, bb);
+                                                        //
+                                                        //                        });
+                                                        //
+                                                        //              }
                                                       }
                                                     }
                                                   }
@@ -926,9 +976,9 @@ public abstract class ToSource {
                 });
       }
 
-      if (!moveAfterWithLabel.isEmpty()) {
-        System.err.println("found move after: " + moveAfterWithLabel);
-      }
+      //      if (!moveAfterWithLabel.isEmpty()) {
+      //        System.err.println("found move after: " + moveAfterWithLabel);
+      //      }
 
       Map<ISSABasicBlock, Integer> cfgFinishTimes =
           computeFinishTimes(() -> NonNullSingletonIterator.make(cfg.entry()), cfg);
@@ -1376,22 +1426,25 @@ public abstract class ToSource {
                     es.getKey()
                         .forEach(
                             p -> {
-                              skip:
-                              {
-                                for (SSAInstruction inst : chunk) {
-                                  if (!(inst instanceof AssignInstruction)) {
-                                    ISSABasicBlock ctlBB =
-                                        cfg.getBlockForInstruction(p.fst.iIndex());
-                                    ISSABasicBlock instBB =
-                                        cfg.getBlockForInstruction(inst.iIndex());
-                                    if (skipDueToLabel.containsKey(ctlBB)) {
-                                      if (skipDueToLabel.get(ctlBB).contains(instBB)) {
-                                        System.err.println("skip");
-                                        break skip;
-                                      }
-                                    }
-                                  }
+                              //                              skip:
+                              //                              {
+                              for (SSAInstruction inst : chunk) {
+                                if (!(inst instanceof AssignInstruction)) {
+                                  //                                  ISSABasicBlock ctlBB =
+                                  // cfg.getBlockForInstruction(p.fst.iIndex());
+                                  //                                  ISSABasicBlock instBB =
+                                  // cfg.getBlockForInstruction(inst.iIndex());
+                                  //                                    if
+                                  // (skipDueToLabel.containsKey(ctlBB)) {
+                                  //                                      if
+                                  // (skipDueToLabel.get(ctlBB).contains(instBB)) {
+                                  //
+                                  // System.err.println("skip");
+                                  //                                        break skip;
+                                  //                                      }
+                                  //                                    }
                                 }
+                                //                                }
 
                                 if (!regionChunks.containsKey(p)) {
                                   regionChunks.put(p, new ArrayList<>());
@@ -2253,20 +2306,23 @@ public abstract class ToSource {
         @Override
         public void visitGoto(SSAGotoInstruction inst) {
           ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
-          if (inst.getTarget() >= 0) {
-            ISSABasicBlock target = cfg.getBlockForInstruction(inst.getTarget());
-            if (breakDueToLabel.containsKey(bb) && breakDueToLabel.get(bb).containsKey(target)) {
-              System.err.println("found landing for " + breakDueToLabel.get(bb).get(target));
-              node =
-                  ast.makeNode(
-                      CAstNode.BLOCK_STMT,
-                      ast.makeNode(
-                          CAstNode.BREAK,
-                          ast.makeConstant(
-                              "lbl_" + breakDueToLabel.get(bb).get(target).getNumber())));
-              return;
-            }
-          }
+          //          if (inst.getTarget() >= 0) {
+          //            ISSABasicBlock target = cfg.getBlockForInstruction(inst.getTarget());
+          //            if (breakDueToLabel.containsKey(bb) &&
+          // breakDueToLabel.get(bb).containsKey(target)) {
+          //              System.err.println("found landing for " +
+          // breakDueToLabel.get(bb).get(target));
+          //              node =
+          //                  ast.makeNode(
+          //                      CAstNode.BLOCK_STMT,
+          //                      ast.makeNode(
+          //                          CAstNode.BREAK,
+          //                          ast.makeConstant(
+          //                              "lbl_" +
+          // breakDueToLabel.get(bb).get(target).getNumber())));
+          //              return;
+          //            }
+          //          }
 
           if (loop != null
               && loop.getLoopHeader().equals(cfg.getNormalSuccessors(bb).iterator().next())
@@ -2675,38 +2731,40 @@ public abstract class ToSource {
           }
           takenStmt = checkLinePhi(takenStmt, instruction, taken);
 
-          if (moveAfterWithLabel.containsKey(branchBB)) {
-            assert taken != null;
-            assert notTaken != null;
-            CAstNode block;
-            if (moveAfterWithLabel.get(branchBB).contains(notTaken)) {
-              block =
-                  ast.makeNode(
-                      CAstNode.BLOCK_STMT, CAstHelper.makeIfStmt(test, takenStmt), notTakenStmt);
-            } else {
-              block =
-                  ast.makeNode(
-                      CAstNode.BLOCK_STMT,
-                      CAstHelper.makeIfStmt(
-                          ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
-                          notTakenStmt),
-                      takenStmt);
-            }
+          //          if (moveAfterWithLabel.containsKey(branchBB)) {
+          //            assert taken != null;
+          //            assert notTaken != null;
+          //            CAstNode block;
+          //            if (moveAfterWithLabel.get(branchBB).contains(notTaken)) {
+          //              block =
+          //                  ast.makeNode(
+          //                      CAstNode.BLOCK_STMT, CAstHelper.makeIfStmt(test, takenStmt),
+          // notTakenStmt);
+          //            } else {
+          //              block =
+          //                  ast.makeNode(
+          //                      CAstNode.BLOCK_STMT,
+          //                      CAstHelper.makeIfStmt(
+          //                          ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
+          //                          notTakenStmt),
+          //                      takenStmt);
+          //            }
+          //
+          //            node =
+          //                ast.makeNode(
+          //                    CAstNode.LABEL_STMT, ast.makeConstant("lbl_" +
+          // branchBB.getNumber()), block);
+          //
+          //          } else {
 
-            node =
-                ast.makeNode(
-                    CAstNode.LABEL_STMT, ast.makeConstant("lbl_" + branchBB.getNumber()), block);
-
+          if (takenStmt != null) {
+            node = CAstHelper.makeIfStmt(test, takenStmt, notTakenStmt);
           } else {
-
-            if (takenStmt != null) {
-              node = CAstHelper.makeIfStmt(test, takenStmt, notTakenStmt);
-            } else {
-              node =
-                  CAstHelper.makeIfStmt(
-                      ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test), notTakenStmt);
-            }
+            node =
+                CAstHelper.makeIfStmt(
+                    ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test), notTakenStmt);
           }
+          //          }
 
           markPosition(node, instruction.iIndex());
         }
