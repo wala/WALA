@@ -31,6 +31,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -387,6 +388,16 @@ public abstract class IRTests {
       throws IllegalArgumentException, CancelException, IOException {
     AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> engine =
         getAnalysisEngine(mainClassDescriptors, sources, libs);
+    return runTest(sources, ca, assertReachable, exclusionsFile, engine);
+  }
+
+  public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
+      Collection<String> sources,
+      List<? extends IRAssertion> ca,
+      boolean assertReachable,
+      String exclusionsFile,
+      AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> engine)
+      throws IllegalArgumentException, CancelException, IOException {
 
     if (exclusionsFile != null) {
       engine.setExclusionsFile(exclusionsFile);
@@ -503,6 +514,16 @@ public abstract class IRTests {
       }
     }
     assert foundLib : "couldn't find library file from " + libs;
+    populateScope(engine, sources);
+  }
+
+  public static void populateScope(
+      JavaSourceAnalysisEngine engine, Collection<String> sources, JrtModule libs) {
+    engine.addSystemModule(libs);
+    populateScope(engine, sources);
+  }
+
+  public static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources) {
 
     for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
