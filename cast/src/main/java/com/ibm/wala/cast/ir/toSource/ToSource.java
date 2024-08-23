@@ -8,6 +8,7 @@ import static com.ibm.wala.types.TypeReference.Int;
 import static com.ibm.wala.types.TypeReference.Long;
 import static com.ibm.wala.types.TypeReference.Void;
 
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstPreInstructionVisitor;
@@ -2209,7 +2210,12 @@ public abstract class ToSource {
                 CAstNode val = node;
                 CAstType type;
                 try {
-                  type = toSource(c.getTypes().getType(def).getTypeReference());
+                  TypeAbstraction typeAbs = c.getTypes().getType(def);
+                  if (typeAbs.equals(TypeAbstraction.TOP)) {
+                    type = toSource(TypeReference.Int);
+                  } else {
+                    type = toSource(typeAbs.getTypeReference());
+                  }
                 } catch (IndexOutOfBoundsException e) {
                   type = toSource(TypeReference.Int);
                 }
