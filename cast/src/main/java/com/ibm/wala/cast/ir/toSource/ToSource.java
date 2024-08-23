@@ -119,6 +119,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -1149,17 +1151,17 @@ public abstract class ToSource {
                 List<SSAInstruction> regionInsts = new ArrayList<>();
                 es.getValue().stream()
                     .sorted((a, b) -> a.getLastInstructionIndex() - b.getLastInstructionIndex())
-                    /*.filter(
-                    rbb -> {
-                      for (Pair<SSAInstruction, ISSABasicBlock> p : es.getKey()) {
-                        ISSABasicBlock pb = cfg.getBlockForInstruction(p.fst.iIndex());
-                        if (skipDueToLabel.containsKey(pb)
-                            && skipDueToLabel.get(pb).contains(rbb)) {
-                          return false;
-                        }
-                      }
-                      return true;
-                    })*/
+                    .filter(
+                        rbb -> {
+                          for (Pair<SSAInstruction, ISSABasicBlock> p : es.getKey()) {
+                            ISSABasicBlock pb = cfg.getBlockForInstruction(p.fst.iIndex());
+                            if (skipDueToLabel.containsKey(pb)
+                                && skipDueToLabel.get(pb).contains(rbb)) {
+                              return false;
+                            }
+                          }
+                          return true;
+                        })
                     .forEach(
                         bb -> {
                           bb.iterator()
@@ -1280,102 +1282,48 @@ public abstract class ToSource {
                                   });
                         });
 
-                Heap<List<SSAInstruction>> chunks =
-                    new Heap<List<SSAInstruction>>(regionInsts.size()) {
-                      @Override
-                      protected boolean compareElements(
-                          List<SSAInstruction> elt1, List<SSAInstruction> elt2) {
-                        return elt1.size() > elt2.size()
-                            ? true
-                            : elt1.size() < elt2.size()
-                                ? false
-                                : elt1.toString().compareTo(elt2.toString()) > 0;
-                      }
-                    };
                 System.err.println("insts: " + regionInsts);
                 List<SSAInstruction> all = new ArrayList<>(regionInsts);
-                regionInsts.forEach(
-                    inst -> {
-                      Set<SSAInstruction> insts = HashSetFactory.make();
-                      makeTreeBuilder(ir, cha, cfg, cdg)
-                          .gatherInstructions(
-                              insts,
-                              ir,
-                              du,
-                              regionInsts,
-                              inst,
-                              chunks,
-                              unmergeableValues,
-                              (inst instanceof SSAConditionalBranchInstruction)
-                                      && loopControls.containsKey(
-                                          cfg.getBlockForInstruction(inst.iIndex()))
-                                      // If it's a while loop then merge instructions in test
-                                      // otherwise return null then the instructions will be
-                                      // translated
-                                      // into several lines and might be placed in different places
-                                      && isWhileLoop(inst, unmergeableValues)
-                                  ? inst
-                                  : null);
-                      if (insts.isEmpty()) {
-                        insts.add(inst);
-                        chunks.insert(new ArrayList<>(insts));
-                      }
-                      System.err.println("chunk for " + inst + ": " + insts);
-                    });
+                Heap<List<SSAInstruction>> chunks =
+                    computeChunks(ir, cha, unmergeableValues, regionInsts);
                 System.err.println("chunks: " + chunks);
-                while (chunks.size() > 0 && !regionInsts.isEmpty()) {
-                  List<SSAInstruction> chunk = chunks.take();
-                  System.err.println(
-                      "taking "
-                          + chunk.stream()
-                              .map(i -> i + " " + i.iIndex())
-                              .reduce("", (a, b) -> a + ", " + b));
-                  if (hasAllByIdentity(regionInsts, chunk)) {
-                    removeAllByIdentity(regionInsts, chunk);
-                    System.err.println(
-                        "using "
-                            + chunk.stream()
-                                .map(i -> i + " " + i.iIndex())
-                                .reduce("", (a, b) -> a + ", " + b));
-                    es.getKey()
-                        .forEach(
-                            p -> {
-                              skip:
-                              {
-                                for (SSAInstruction inst : chunk) {
-                                  if (!(inst instanceof AssignInstruction)) {
-                                    ISSABasicBlock ctlBB =
-                                        cfg.getBlockForInstruction(p.fst.iIndex());
-                                    ISSABasicBlock instBB =
-                                        cfg.getBlockForInstruction(inst.iIndex());
-                                    if (skipDueToLabel.containsKey(ctlBB)) {
-                                      if (skipDueToLabel.get(ctlBB).contains(instBB)) {
-                                        System.err.println("skip");
-                                        break skip;
+                processChunks(
+                    regionInsts,
+                    chunks,
+                    (chunk) -> {
+                      es.getKey()
+                          .forEach(
+                              p -> {
+                                skip:
+                                {
+                                  for (SSAInstruction inst : chunk) {
+                                    if (!(inst instanceof AssignInstruction)) {
+                                      ISSABasicBlock ctlBB =
+                                          cfg.getBlockForInstruction(p.fst.iIndex());
+                                      ISSABasicBlock instBB =
+                                          cfg.getBlockForInstruction(inst.iIndex());
+                                      if (skipDueToLabel.containsKey(ctlBB)) {
+                                        if (skipDueToLabel.get(ctlBB).contains(instBB)) {
+                                          System.err.println("skip");
+                                          break skip;
+                                        }
                                       }
                                     }
                                   }
-                                }
 
-                                if (!regionChunks.containsKey(p)) {
-                                  regionChunks.put(p, new ArrayList<>());
+                                  if (!regionChunks.containsKey(p)) {
+                                    regionChunks.put(p, new ArrayList<>());
+                                  }
+                                  regionChunks.get(p).add(chunk);
                                 }
-                                regionChunks.get(p).add(chunk);
-                              }
-                            });
-                  }
-                }
+                              });
+                    });
 
                 es.getKey()
                     .forEach(
                         p -> {
                           if (regionChunks.containsKey(p)) {
-                            regionChunks
-                                .get(p)
-                                .sort(
-                                    (lc, rc) ->
-                                        positionByIdentity(all, lc.iterator().next())
-                                            - positionByIdentity(all, rc.iterator().next()));
+                            orderChunk(all, regionChunks.get(p));
                           }
                         });
 
@@ -1398,6 +1346,87 @@ public abstract class ToSource {
               });
 
       initChildren();
+    }
+
+    private void orderChunk(List<SSAInstruction> all, List<List<SSAInstruction>> list) {
+      list.sort(
+          (lc, rc) ->
+              positionByIdentity(all, lc.iterator().next())
+                  - positionByIdentity(all, rc.iterator().next()));
+    }
+
+    private Heap<List<SSAInstruction>> computeChunks(
+        IR ir,
+        IClassHierarchy cha,
+        MutableIntSet unmergeableValues,
+        List<SSAInstruction> regionInsts) {
+      Heap<List<SSAInstruction>> chunks =
+          new Heap<>(regionInsts.size()) {
+            @Override
+            protected boolean compareElements(
+                List<SSAInstruction> elt1, List<SSAInstruction> elt2) {
+              return elt1.size() > elt2.size()
+                  ? true
+                  : elt1.size() < elt2.size()
+                      ? false
+                      : elt1.toString().compareTo(elt2.toString()) > 0;
+            }
+          };
+      regionInsts.forEach(
+          inst -> {
+            Set<SSAInstruction> insts = HashSetFactory.make();
+            makeTreeBuilder(ir, cha, cfg, cdg)
+                .gatherInstructions(
+                    insts,
+                    ir,
+                    du,
+                    regionInsts,
+                    inst,
+                    chunks,
+                    unmergeableValues,
+                    (inst instanceof SSAConditionalBranchInstruction)
+                            && loopControls.containsKey(cfg.getBlockForInstruction(inst.iIndex()))
+                            // If it's a while loop then merge instructions in test
+                            // otherwise return null then the instructions will be
+                            // translated
+                            // into several lines and might be placed in different places
+                            && isWhileLoop(inst, unmergeableValues)
+                        ? inst
+                        : null);
+            if (insts.isEmpty()) {
+              insts.add(inst);
+              chunks.insert(new ArrayList<>(insts));
+            }
+            System.err.println("chunk for " + inst + ": " + insts);
+          });
+      return chunks;
+    }
+
+    void processChunks(
+        List<SSAInstruction> regionInsts,
+        Heap<List<SSAInstruction>> chunks,
+        Consumer<List<SSAInstruction>> f) {
+      SortedSet<List<SSAInstruction>> orderedChunks =
+          new TreeSet<>((a, b) -> a.iterator().next().iIndex() - b.iterator().next().iIndex());
+      while (chunks.size() > 0 && !regionInsts.isEmpty()) {
+        List<SSAInstruction> chunk = chunks.take();
+        System.err.println(
+            "taking "
+                + chunk.stream().map(i -> i + " " + i.iIndex()).reduce("", (a, b) -> a + ", " + b));
+        if (hasAllByIdentity(regionInsts, chunk)) {
+          removeAllByIdentity(regionInsts, chunk);
+          System.err.println(
+              "using "
+                  + chunk.stream()
+                      .map(i -> i + " " + i.iIndex())
+                      .reduce("", (a, b) -> a + ", " + b));
+          orderedChunks.add(chunk);
+        }
+      }
+
+      for (List<SSAInstruction> c : orderedChunks) {
+        f.accept(c);
+      }
     }
 
     // detect the loop type, in this case only care about if it's a normal while loop
@@ -2529,10 +2558,38 @@ public abstract class ToSource {
             if (moveAfterWithLabel.containsKey(branchBB)) {
               assert taken != null;
               assert notTaken != null;
+
+              List<SSAInstruction> afterInsts = new ArrayList<>();
+              moveAfterWithLabel
+                  .get(branchBB)
+                  .forEach(
+                      bb -> {
+                        bb.forEach(
+                            inst -> {
+                              afterInsts.add(inst);
+                            });
+                      });
+
+              List<CAstNode> afterCode = new ArrayList<>();
+              Heap<List<SSAInstruction>> afterChunks =
+                  computeChunks(ir, cha, IntSetUtil.make(), afterInsts);
+              processChunks(
+                  afterInsts,
+                  afterChunks,
+                  c -> {
+                    Pair<CAstNode, List<CAstNode>> stuff =
+                        makeToCAst(c).processChunk(decls, packages, false);
+
+                    afterCode.add(stuff.fst);
+                  });
+              System.err.println(afterCode);
+
               CAstNode block;
+              CAstNode[] afterCAst = afterCode.toArray(new CAstNode[afterCode.size()]);
               if (moveAfterWithLabel.get(branchBB).contains(notTaken)) {
-                block = 
-                    ast.makeNode(CAstNode.BLOCK_STMT, makeIfStmt(test, takenStmt), notTakenStmt);
+                block =
+                    ast.makeNode(
+                        CAstNode.BLOCK_STMT, makeIfStmt(test, takenStmt), notTakenStmt, afterCAst);
               } else {
                 block =
                     ast.makeNode(
@@ -2540,7 +2597,8 @@ public abstract class ToSource {
                         makeIfStmt(
                             ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
                             notTakenStmt),
-                        takenStmt);
+                        takenStmt,
+                        afterCAst);
               }
 
               node =
@@ -3235,7 +3293,7 @@ public abstract class ToSource {
           out.println(")");
           out.print(elseJavaText);
 
-        } else {
+        } else if (!isPrimitiveExpr(n.getChild(0))) {
           ToJavaVisitor cif = makeToJavaVisitor(ir, out, indent + 1, varTypes);
           cif.visit(n.getChild(0), c, cif);
           out.println(";");
@@ -3243,6 +3301,21 @@ public abstract class ToSource {
       }
 
       return true;
+    }
+
+    private boolean isPrimitiveExpr(CAstNode child) {
+      switch (child.getKind()) {
+        case CAstNode.BINARY_EXPR:
+        case CAstNode.UNARY_EXPR:
+        case CAstNode.CONSTANT:
+          {
+            return true;
+          }
+        default:
+          {
+            return false;
+          }
+      }
     }
 
     @Override
