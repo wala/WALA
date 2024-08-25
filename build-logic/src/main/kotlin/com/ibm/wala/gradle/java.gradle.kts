@@ -23,8 +23,7 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-java.toolchain.languageVersion =
-    JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
+java.toolchain.languageVersion = JavaLanguageVersion.of("11")
 
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
