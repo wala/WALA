@@ -92,9 +92,22 @@ mavenPublishing {
 }
 
 publishing {
-  repositories.maven {
-    name = "fakeRemote"
-    setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
+  repositories {
+    maven {
+      name = "fakeRemote"
+      url = uri(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
+    }
+
+    maven {
+      name = "artifactory"
+      url =
+          uri(
+              "https://eu.artifactory.swg-devops.com/artifactory/zeus-ez-libs-snapshot-local") // TODO: change to zeus-ez-libs-release-local if it's not snapshot
+      credentials {
+        username = property("mavenUserName") as String
+        password = property("mavenPassword") as String
+      }
+    }
   }
 
   publications.named<MavenPublication>("maven") {
