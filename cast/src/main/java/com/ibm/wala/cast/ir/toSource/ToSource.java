@@ -1838,10 +1838,14 @@ public abstract class ToSource {
         @Override
         public void visitGoto(SSAGotoInstruction inst) {
           ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
-          if (inst.getTarget() >= 0) {
-            ISSABasicBlock target = cfg.getBlockForInstruction(inst.getTarget());
-            if (breakDueToLabel.containsKey(bb) && breakDueToLabel.get(bb).containsKey(target)) {
-              System.err.println("found landing for " + breakDueToLabel.get(bb).get(target));
+          ISSABasicBlock target =
+              inst.getTarget() == -1
+                  ? ir.getExitBlock()
+                  : cfg.getBlockForInstruction(inst.getTarget());
+
+          if (breakDueToLabel.containsKey(bb) && breakDueToLabel.get(bb).containsKey(target)) {
+            System.err.println("found landing for " + breakDueToLabel.get(bb).get(target));
+            if (inst.getTarget() >= 0) {
               node =
                   ast.makeNode(
                       CAstNode.BLOCK_STMT,
@@ -1849,8 +1853,10 @@ public abstract class ToSource {
                           CAstNode.BREAK,
                           ast.makeConstant(
                               "lbl_" + breakDueToLabel.get(bb).get(target).getNumber())));
-              return;
+            } else {
+              node = ast.makeNode(CAstNode.RETURN);
             }
+            return;
           }
           if (loopHeaders.containsAll(cfg.getNormalSuccessors(bb)) && inLoop(bb)) {
             node = ast.makeNode(CAstNode.CONTINUE);
