@@ -3513,9 +3513,8 @@ public abstract class ToSource {
         case CAstNode.BREAK:
           {
             indent();
-            //            String lbl = n.getChildCount() > 0 ? " " + n.getChild(0).getValue() : "";
-            //            out.println("break" + lbl + ";");
-            out.println("break;");
+            String lbl = n.getChildCount() > 0 ? " " + n.getChild(0).getValue() : "";
+            out.println("break" + lbl + ";");
             return true;
           }
         case CAstNode.CONTINUE:
@@ -3681,11 +3680,11 @@ public abstract class ToSource {
         ExceptionPrunedCFG.makeDefiniteUncaught(ir.getControlFlowGraph());
     System.err.println("IR:\n" + ir);
 
-    //    Dominators<ISSABasicBlock> FD = Dominators.make(cfg, ir.getControlFlowGraph().entry());
-    //    System.err.println("forward dominators: " + FD.dominatorTree());
-    //    Dominators<ISSABasicBlock> RD =
-    //        Dominators.make(GraphInverter.invert(cfg), ir.getControlFlowGraph().exit());
-    //    System.err.println("reverse dominators: " + RD.dominatorTree());
+    Dominators<ISSABasicBlock> FD = Dominators.make(cfg, ir.getControlFlowGraph().entry());
+    System.err.println("forward dominators: " + FD.dominatorTree());
+    Dominators<ISSABasicBlock> RD =
+        Dominators.make(GraphInverter.invert(cfg), ir.getControlFlowGraph().exit());
+    System.err.println("reverse dominators: " + RD.dominatorTree());
 
     RegionTreeNode root = makeTreeNode(ir, cha, types, cfg);
 
