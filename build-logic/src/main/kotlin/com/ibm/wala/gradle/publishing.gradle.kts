@@ -92,9 +92,24 @@ mavenPublishing {
 }
 
 publishing {
-  repositories.maven {
-    name = "fakeRemote"
-    setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
+  repositories {
+    maven {
+      name = "fakeRemote"
+      url = uri(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
+    }
+
+    maven {
+      name = "artifactory"
+      if (isSnapshot) {
+        url = uri(property("mavenSnapshotUrl") as String)
+      } else {
+        url = uri(property("mavenReleaseUrl") as String)
+      }
+      credentials {
+        username = property("mavenUsername") as String
+        password = property("mavenPassword") as String
+      }
+    }
   }
 
   publications.named<MavenPublication>("maven") {

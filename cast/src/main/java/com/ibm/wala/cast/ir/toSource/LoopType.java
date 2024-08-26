@@ -16,6 +16,7 @@ package com.ibm.wala.cast.ir.toSource;
  * @author Lisa Li (lisa.h.li@ibm.com)
  */
 public enum LoopType {
+  FOR,
   WHILE,
   DOWHILE,
   WHILETRUE
