@@ -100,11 +100,13 @@ publishing {
 
     maven {
       name = "artifactory"
-      url =
-          uri(
-              "https://eu.artifactory.swg-devops.com/artifactory/zeus-ez-libs-snapshot-local") // TODO: change to zeus-ez-libs-release-local if it's not snapshot
+      if (isSnapshot) {
+        url = uri(property("mavenSnapshotUrl") as String)
+      } else {
+        url = uri(property("mavenReleaseUrl") as String)
+      }
       credentials {
-        username = property("mavenUserName") as String
+        username = property("mavenUsername") as String
         password = property("mavenPassword") as String
       }
     }
