@@ -2295,28 +2295,29 @@ public abstract class ToSource {
         @Override
         public void visitGoto(SSAGotoInstruction inst) {
           ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
-                    if (inst.getTarget() >= 0) {
-                      ISSABasicBlock target = cfg.getBlockForInstruction(inst.getTarget());
-                      if (breakDueToLabel.containsKey(bb) &&
-           breakDueToLabel.get(bb).containsKey(target)) {
-                        System.err.println("found landing for " +
-           breakDueToLabel.get(bb).get(target));
-                        node =
-                            ast.makeNode(
-                                CAstNode.BLOCK_STMT,
-                                ast.makeNode(
-                                    CAstNode.BREAK,
-                                    ast.makeConstant(
-                                        "lbl_" +
-           breakDueToLabel.get(bb).get(target).getNumber())));
-                        return;
-                      }
-                    }
+          ISSABasicBlock target =
+                  inst.getTarget() == -1
+                      ? ir.getExitBlock()
+                      : cfg.getBlockForInstruction(inst.getTarget());
 
-          if (loop != null
-              && loop.getLoopHeader().equals(cfg.getNormalSuccessors(bb).iterator().next())
-              && !loop.isLastBlock(bb)) {
-            // if there are more than one loop part, only last one should not generate CONTINUE
+              if (breakDueToLabel.containsKey(bb) && breakDueToLabel.get(bb).containsKey(target)) {
+                System.err.println("found landing for " + breakDueToLabel.get(bb).get(target));
+                if (inst.getTarget() >= 0) {
+                  node =
+                      ast.makeNode(
+                          CAstNode.BLOCK_STMT,
+                          ast.makeNode(
+                              CAstNode.BREAK,
+                              ast.makeConstant(
+                                  "lbl_" + breakDueToLabel.get(bb).get(target).getNumber())));
+                } else {
+                  node = ast.makeNode(CAstNode.RETURN);
+                }
+                return;
+              }
+              if (loop != null
+                  && loop.getLoopHeader().equals(cfg.getNormalSuccessors(bb).iterator().next())
+                  && !loop.isLastBlock(bb)) {
             node = ast.makeNode(CAstNode.CONTINUE);
           } else if (loop != null && loop.getLoopExits().containsAll(cfg.getNormalSuccessors(bb))) {
             node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK));
