@@ -93,7 +93,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.dominators.Dominators;
-// import com.ibm.wala.util.graph.dominators.Dominators;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -131,8 +130,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-// import java.util.stream.Stream;
 import org.apache.commons.io.output.TeeWriter;
 
 public abstract class ToSource {
@@ -612,9 +609,9 @@ public abstract class ToSource {
     private BasicNaturalRelation livenessConflicts;
     protected final Map<Integer, String> sourceNames;
     private Graph<ISSABasicBlock> cfgNoBack;
-        private Map<ISSABasicBlock, Set<ISSABasicBlock>> moveAfterWithLabel;
-        private Map<ISSABasicBlock, Set<ISSABasicBlock>> skipDueToLabel;
-        private Map<ISSABasicBlock, Map<ISSABasicBlock, ISSABasicBlock>> breakDueToLabel;
+    private Map<ISSABasicBlock, Set<ISSABasicBlock>> moveAfterWithLabel;
+    private Map<ISSABasicBlock, Set<ISSABasicBlock>> skipDueToLabel;
+    private Map<ISSABasicBlock, Map<ISSABasicBlock, ISSABasicBlock>> breakDueToLabel;
     protected final Map<SSAInstruction, Map<ISSABasicBlock, RegionTreeNode>> children =
         HashMapFactory.make();
     protected final CAstSourcePositionRecorder positionRecorder;
@@ -691,9 +688,9 @@ public abstract class ToSource {
       this.sourceNames = parent.sourceNames;
       this.positionRecorder = parent.positionRecorder;
       this.cfgNoBack = parent.cfgNoBack;
-            this.moveAfterWithLabel = parent.moveAfterWithLabel;
-            this.skipDueToLabel = parent.skipDueToLabel;
-            this.breakDueToLabel = parent.breakDueToLabel;
+      this.moveAfterWithLabel = parent.moveAfterWithLabel;
+      this.skipDueToLabel = parent.skipDueToLabel;
+      this.breakDueToLabel = parent.breakDueToLabel;
       initChildren();
       System.err.println("added children for " + r + "," + l + ": " + children);
     }
@@ -779,9 +776,9 @@ public abstract class ToSource {
       du = new DefUse(ir);
       cfg = ExceptionPrunedCFG.makeDefiniteUncaught(ir.getControlFlowGraph());
       packages = HashMapFactory.make();
-            moveAfterWithLabel = HashMapFactory.make();
-            skipDueToLabel = HashMapFactory.make();
-            breakDueToLabel = HashMapFactory.make();
+      moveAfterWithLabel = HashMapFactory.make();
+      skipDueToLabel = HashMapFactory.make();
+      breakDueToLabel = HashMapFactory.make();
 
       livenessConflicts = new BasicNaturalRelation();
       LiveAnalysis.Result liveness = LiveAnalysis.perform(ir);
@@ -1329,43 +1326,43 @@ public abstract class ToSource {
 
                 System.err.println("insts: " + regionInsts);
                 List<SSAInstruction> all = new ArrayList<>(regionInsts);
-                
+
                 Heap<List<SSAInstruction>> chunks =
-                        computeChunks(ir, cha, unmergeableValues, regionInsts);
-                
+                    computeChunks(ir, cha, unmergeableValues, regionInsts);
+
                 System.err.println("chunks: " + chunks);
-                
+
                 processChunks(
-                        regionInsts,
-                        chunks,
-                        (chunk) -> {
-                          es.getKey()
-                              .forEach(
-                                  p -> {
-                                    skip:
-                                    {
-                                      for (SSAInstruction inst : chunk) {
-                                        if (!(inst instanceof AssignInstruction)) {
-                                          ISSABasicBlock ctlBB =
-                                              cfg.getBlockForInstruction(p.fst.iIndex());
-                                          ISSABasicBlock instBB =
-                                              cfg.getBlockForInstruction(inst.iIndex());
-                                          if (skipDueToLabel.containsKey(ctlBB)) {
-                                            if (skipDueToLabel.get(ctlBB).contains(instBB)) {
-                                              System.err.println("skip");
-                                              break skip;
-                                            }
-                                          }
+                    regionInsts,
+                    chunks,
+                    (chunk) -> {
+                      es.getKey()
+                          .forEach(
+                              p -> {
+                                skip:
+                                {
+                                  for (SSAInstruction inst : chunk) {
+                                    if (!(inst instanceof AssignInstruction)) {
+                                      ISSABasicBlock ctlBB =
+                                          cfg.getBlockForInstruction(p.fst.iIndex());
+                                      ISSABasicBlock instBB =
+                                          cfg.getBlockForInstruction(inst.iIndex());
+                                      if (skipDueToLabel.containsKey(ctlBB)) {
+                                        if (skipDueToLabel.get(ctlBB).contains(instBB)) {
+                                          System.err.println("skip");
+                                          break skip;
                                         }
                                       }
-
-                                      if (!regionChunks.containsKey(p)) {
-                                        regionChunks.put(p, new ArrayList<>());
-                                      }
-                                      regionChunks.get(p).add(chunk);
                                     }
-                                  });
-                        });
+                                  }
+
+                                  if (!regionChunks.containsKey(p)) {
+                                    regionChunks.put(p, new ArrayList<>());
+                                  }
+                                  regionChunks.get(p).add(chunk);
+                                }
+                              });
+                    });
 
                 es.getKey()
                     .forEach(
@@ -1437,10 +1434,10 @@ public abstract class ToSource {
                     chunks,
                     unmergeableValues,
                     // If it's a while loop then merge instructions in test
-                        // otherwise return null then the instructions will be
-                        // translated
-                        // into several lines and might be placed in different places
-                        LoopHelper.shouldMergeTest(cfg, ST, inst, loops) ? inst : null);
+                    // otherwise return null then the instructions will be
+                    // translated
+                    // into several lines and might be placed in different places
+                    LoopHelper.shouldMergeTest(cfg, ST, inst, loops) ? inst : null);
             if (insts.isEmpty()) {
               insts.add(inst);
               chunks.insert(new ArrayList<>(insts));
@@ -2296,28 +2293,28 @@ public abstract class ToSource {
         public void visitGoto(SSAGotoInstruction inst) {
           ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
           ISSABasicBlock target =
-                  inst.getTarget() == -1
-                      ? ir.getExitBlock()
-                      : cfg.getBlockForInstruction(inst.getTarget());
+              inst.getTarget() == -1
+                  ? ir.getExitBlock()
+                  : cfg.getBlockForInstruction(inst.getTarget());
 
-              if (breakDueToLabel.containsKey(bb) && breakDueToLabel.get(bb).containsKey(target)) {
-                System.err.println("found landing for " + breakDueToLabel.get(bb).get(target));
-                if (inst.getTarget() >= 0) {
-                  node =
+          if (breakDueToLabel.containsKey(bb) && breakDueToLabel.get(bb).containsKey(target)) {
+            System.err.println("found landing for " + breakDueToLabel.get(bb).get(target));
+            if (inst.getTarget() >= 0) {
+              node =
+                  ast.makeNode(
+                      CAstNode.BLOCK_STMT,
                       ast.makeNode(
-                          CAstNode.BLOCK_STMT,
-                          ast.makeNode(
-                              CAstNode.BREAK,
-                              ast.makeConstant(
-                                  "lbl_" + breakDueToLabel.get(bb).get(target).getNumber())));
-                } else {
-                  node = ast.makeNode(CAstNode.RETURN);
-                }
-                return;
-              }
-              if (loop != null
-                  && loop.getLoopHeader().equals(cfg.getNormalSuccessors(bb).iterator().next())
-                  && !loop.isLastBlock(bb)) {
+                          CAstNode.BREAK,
+                          ast.makeConstant(
+                              "lbl_" + breakDueToLabel.get(bb).get(target).getNumber())));
+            } else {
+              node = ast.makeNode(CAstNode.RETURN);
+            }
+            return;
+          }
+          if (loop != null
+              && loop.getLoopHeader().equals(cfg.getNormalSuccessors(bb).iterator().next())
+              && !loop.isLastBlock(bb)) {
             node = ast.makeNode(CAstNode.CONTINUE);
           } else if (loop != null && loop.getLoopExits().containsAll(cfg.getNormalSuccessors(bb))) {
             node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK));
@@ -2755,7 +2752,10 @@ public abstract class ToSource {
             if (moveAfterWithLabel.get(branchBB).contains(notTaken)) {
               block =
                   ast.makeNode(
-                      CAstNode.BLOCK_STMT, CAstHelper.makeIfStmt(test, takenStmt), notTakenStmt, afterCAst);
+                      CAstNode.BLOCK_STMT,
+                      CAstHelper.makeIfStmt(test, takenStmt),
+                      notTakenStmt,
+                      afterCAst);
             } else {
               block =
                   ast.makeNode(
