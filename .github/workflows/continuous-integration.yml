@@ -50,13 +50,13 @@ jobs:
 #        uses: gradle/gradle-build-action@v3
 #        with:
 #          gradle-executable: xvfb-gradle.sh
-        run: ./gradlew aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository shellcheck --no-configuration-cache -Pcom.ibm.wala.jdk-version=${{ matrix.java }}
+        run: ./xvfb-gradle.sh aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository shellcheck --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ
 #        uses: gradle/gradle-build-action@v3
 #        with:
-        run: ./gradlew aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks --no-configuration-cache -Pcom.ibm.wala.jdk-version=${{ matrix.java }}
+        run: ./gradlew aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
