@@ -33,12 +33,12 @@ jobs:
     steps:
       - name: Check out WALA sources
         uses: actions/checkout@v4
-      - name: Cache Goomph
-        uses: actions/cache@v4
-        with:
-          path: ~/.goomph
-          key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
-          restore-keys: ${{ runner.os }}-goomph-
+#      - name: Cache Goomph
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.goomph
+#          key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
+#          restore-keys: ${{ runner.os }}-goomph-
       - name: 'Set up JDK ${{ matrix.java }}'
         uses: actions/setup-java@v4
         with:
