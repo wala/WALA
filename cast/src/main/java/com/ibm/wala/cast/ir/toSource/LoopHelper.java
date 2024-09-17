@@ -269,12 +269,14 @@ public class LoopHelper {
     return result.isPresent() ? result.get() : null;
   }
 
-  public static boolean isNestedLoop(Loop loop, Map<ISSABasicBlock, Loop> loops) {
-    return loops.values().stream()
-        .anyMatch(
-            p -> {
-              return p.containsNestedLoop(loop);
-            });
+  public static boolean containsInNestedLoop(
+      Loop loop, Map<ISSABasicBlock, Loop> loops, ISSABasicBlock assignmentBlock) {
+    return loop.containsNestedLoop()
+        && loops.values().stream()
+            .anyMatch(
+                p -> {
+                  return p.getAllBlocks().contains(assignmentBlock) && loop.containsNestedLoop(p);
+                });
   }
 
   /**
@@ -309,12 +311,16 @@ public class LoopHelper {
     if (currentBB.getNumber() > loop.getLoopControl().getNumber()) {
       return false;
     } else if (currentBB.getNumber() < loop.getLoopControl().getNumber()) {
-      // if it is assignment, should be outside of loop
       if (isAssignment(chunk)) {
-        return !isNestedLoop(loop, loops);
+        // if it is assignment, for perf-with-goto-1-4.cbl, it should be in outer loop but not in
+        // inner loop
+        // this is a temp solution as we can't tell other clue to make it happen
+        if (containsInNestedLoop(loop, loops, currentBB)) return true;
+        return false;
+      } else {
+        // If the block is before loop control, return true
+        return true;
       }
-      // If the block is before loop control, return true
-      return true;
     } else {
       if (isAssignment(chunk)) {
         // if it is loop control, assignment should be ignored

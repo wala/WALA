@@ -1651,8 +1651,6 @@ public abstract class ToSource {
         test = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test);
       }
 
-      CAstNode originalTest = test;
-
       List<CAstNode> loopBodyNodes = new ArrayList<>();
       CAstNode bodyNode = null;
       if (elts != null && elts.size() > 0) {
@@ -1832,8 +1830,7 @@ public abstract class ToSource {
               bodyNode,
               // reuse LOOP type but add third child as a boolean to tell if it's a do while
               // loop
-              ast.makeConstant(LoopType.DOWHILE.equals(loopType)),
-              originalTest);
+              ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
 
       ISSABasicBlock next =
           cfg.getBlockForInstruction(((SSAConditionalBranchInstruction) instruction).getTarget());
@@ -1926,17 +1923,6 @@ public abstract class ToSource {
 
       Pair<CAstNode, List<CAstNode>> stuff =
           toLoopCAst(loopChunks, decls, parentLoops, new ArrayList<>());
-
-      List<CAstNode> body = stuff.fst.getChildren();
-
-      // TODO: check if parent loop and current loop, loop control is the same, if yes, a if-else
-      // should be added
-      if (body.size() > 0
-          && body.get(0).getKind() == CAstNode.BLOCK_STMT
-          && body.get(0).getChildCount() > 0
-          && body.get(0).getChild(0).getKind() == CAstNode.LOOP) {
-        System.out.println("here");
-      }
       elts.addAll(stuff.fst.getChildren());
       loopChunks.clear();
     }

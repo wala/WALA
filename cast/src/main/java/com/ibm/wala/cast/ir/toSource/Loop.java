@@ -161,6 +161,10 @@ public class Loop {
                 .toArray());
   }
 
+  public boolean containsNestedLoop() {
+    return !nestedLoops.isEmpty();
+  }
+
   public boolean containsNestedLoop(Loop loop) {
     return nestedLoops.contains(loop);
   }
