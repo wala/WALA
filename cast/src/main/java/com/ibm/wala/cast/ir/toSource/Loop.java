@@ -160,4 +160,8 @@ public class Loop {
                 .collect(Collectors.toList())
                 .toArray());
   }
+
+  public boolean hasNestedLoop() {
+    return nestedLoops.size() > 0;
+  }
 }
