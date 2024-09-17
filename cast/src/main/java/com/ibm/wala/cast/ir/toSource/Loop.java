@@ -161,7 +161,7 @@ public class Loop {
                 .toArray());
   }
 
-  public boolean hasNestedLoop() {
-    return nestedLoops.size() > 0;
+  public boolean containsNestedLoop(Loop loop) {
+    return nestedLoops.contains(loop);
   }
 }

@@ -13,7 +13,6 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnspecifiedExprInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.IteratorUtil;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -76,84 +75,74 @@ public class LoopHelper {
   }
 
   private static boolean isWhileLoop(PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Loop loop) {
-    //    if (loop.getLoopHeader().equals(loop.getLoopControl())) {
-    boolean notWhileLoop = false;
+    if (loop.getLoopHeader().equals(loop.getLoopControl())) {
+      boolean notWhileLoop = false;
 
-    // If there are any other instructions
-    // before Conditional Branch, if no, it is a while loop
-    // For now it is simply check by instruction type
-    // It should be checking `result` of the current instruction should be val1 of the
-    // next instruction
-    List<SSAInstruction> instsBeforeLoopControl = new ArrayList<>();
-    loop.getAllBlocks()
-        .forEach(
-            bb -> {
-              if (bb.getNumber() <= loop.getLoopControl().getNumber())
-                instsBeforeLoopControl.addAll(
-                    IteratorUtil.streamify(bb.iterator()).collect(Collectors.toList()));
-            });
-
-    for (SSAInstruction inst : instsBeforeLoopControl) {
-      if (inst.iIndex() < 0) continue;
-      if (inst instanceof SSAUnaryOpInstruction) {
-        continue;
-      }
-      if (inst instanceof SSABinaryOpInstruction) {
-        continue;
-      }
-      if (inst instanceof SSAConditionalBranchInstruction) {
-        continue;
-      }
-      // TODO: this is a temporary change especially this one
-      // to help identify if there are only instructions related with test
-      if (inst instanceof SSAUnspecifiedExprInstruction) {
-        continue;
-      }
-      if (inst instanceof SSAGotoInstruction) {
-        continue;
-      }
-      notWhileLoop = true;
-      break;
-    }
-
-    if (!notWhileLoop) {
-      // check loop exits
-      if (loop.getLoopExits().size() > 1) {
-        // if there are more than one loop exit and there are some instructions after loop
-        // control, it should not be a while loop
-        Collection<ISSABasicBlock> loopExits = cfg.getNormalSuccessors(loop.getLoopControl());
-        loopExits.retainAll(loop.getLoopExits());
-        assert (loopExits.size() > 0);
-        List<SSAInstruction> exitInsts =
-            IteratorUtil.streamify(loopExits.iterator().next().iterator())
-                .collect(Collectors.toList());
-        for (SSAInstruction inst : exitInsts) {
-          if (inst.iIndex() < 0) continue;
-          // TODO: need to check if any other case should be placed here
-          if (inst instanceof SSAReturnInstruction) {
-            continue;
-          }
-          notWhileLoop = true;
-          break;
+      // If loopHeader and loopControl are the same, check if there are any other instructions
+      // before Conditional Branch, if no, it is a while loop
+      // For now it is simply check by instruction type
+      // It should be checking `result` of the current instruction should be val1 of the
+      // next instruction
+      List<SSAInstruction> headerInsts =
+          IteratorUtil.streamify(loop.getLoopHeader().iterator()).collect(Collectors.toList());
+      for (SSAInstruction inst : headerInsts) {
+        if (inst.iIndex() < 0) continue;
+        if (inst instanceof SSAUnaryOpInstruction) {
+          continue;
         }
+        if (inst instanceof SSABinaryOpInstruction) {
+          continue;
+        }
+        if (inst instanceof SSAConditionalBranchInstruction) {
+          continue;
+        }
+        // TODO: this is a temporary change especially this one
+        // to help identify if there are only instructions related with test
+        if (inst instanceof SSAUnspecifiedExprInstruction) {
+          continue;
+        }
+        notWhileLoop = true;
+        break;
+      }
 
-        if (!notWhileLoop) {
-          // if all loop exits normal successor are the same, it's while loop
-          List<ISSABasicBlock> nextBBs =
-              loop.getLoopExits().stream()
-                  .map(ex -> cfg.getNormalSuccessors(ex))
-                  .flatMap(Collection::stream)
-                  .distinct()
+      if (!notWhileLoop) {
+        // check loop exits
+        if (loop.getLoopExits().size() > 1) {
+          // if there are more than one loop exit and there are some instructions after loop
+          // control, it should not be a while loop
+          Collection<ISSABasicBlock> loopExits = cfg.getNormalSuccessors(loop.getLoopControl());
+          loopExits.retainAll(loop.getLoopExits());
+          assert (loopExits.size() > 0);
+          List<SSAInstruction> exitInsts =
+              IteratorUtil.streamify(loopExits.iterator().next().iterator())
                   .collect(Collectors.toList());
-          return nextBBs.size() < 2;
+          for (SSAInstruction inst : exitInsts) {
+            if (inst.iIndex() < 0) continue;
+            // TODO: need to check if any other case should be placed here
+            if (inst instanceof SSAReturnInstruction) {
+              continue;
+            }
+            notWhileLoop = true;
+            break;
+          }
+
+          if (!notWhileLoop) {
+            // if all loop exits normal successor are the same, it's while loop
+            List<ISSABasicBlock> nextBBs =
+                loop.getLoopExits().stream()
+                    .map(ex -> cfg.getNormalSuccessors(ex))
+                    .flatMap(Collection::stream)
+                    .distinct()
+                    .collect(Collectors.toList());
+            return nextBBs.size() < 2;
+          } else {
+            return false;
+          }
         } else {
-          return false;
+          return true;
         }
-      } else {
-        return true;
       }
     }
-    //    }
     return false;
   }
 
@@ -194,12 +183,14 @@ public class LoopHelper {
    */
   public static LoopType getLoopType(
       PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, SymbolTable ST, Loop loop) {
-    // check if it's for loop
-    // For now a for-loop refers PERFORM n TIMES
-    if (isForLoop(ST, loop)) return LoopType.FOR;
+    if (loop.getLoopHeader().equals(loop.getLoopControl())) {
+      // check if it's for loop
+      // For now a for-loop refers PERFORM n TIMES
+      if (isForLoop(ST, loop)) return LoopType.FOR;
 
-    // usually for loop will be detected as while loop too, so that check for-loop first
-    if (isWhileLoop(cfg, loop)) return LoopType.WHILE;
+      // usually for loop will be detected as while loop too, so that check for-loop first
+      if (isWhileLoop(cfg, loop)) return LoopType.WHILE;
+    }
 
     // TODO: check unsupported loop types or add a loop type of ugly loop
     if (isDoLoop(cfg, loop)) return LoopType.DOWHILE;
@@ -241,7 +232,8 @@ public class LoopHelper {
   }
 
   /**
-   * Find out the loop that the given chunk belongs to and not the loop that's provided
+   * Find out the loop that the given chunk belongs to and not the loop that's provided It should
+   * scan from first to last since the skipped loops are provided
    *
    * @param cfg The control flow graph
    * @param chunk The instructions to be used to check
@@ -266,7 +258,7 @@ public class LoopHelper {
         loops.values().stream()
             .sorted(
                 (a, b) -> {
-                  return b.getLoopHeader().getNumber() - a.getLoopHeader().getNumber();
+                  return a.getLoopHeader().getNumber() - b.getLoopHeader().getNumber();
                 })
             .filter(
                 loop ->
@@ -275,6 +267,14 @@ public class LoopHelper {
                             .contains(cfg.getBlockForInstruction(first.get().iIndex())))
             .findFirst();
     return result.isPresent() ? result.get() : null;
+  }
+
+  public static boolean isNestedLoop(Loop loop, Map<ISSABasicBlock, Loop> loops) {
+    return loops.values().stream()
+        .anyMatch(
+            p -> {
+              return p.containsNestedLoop(loop);
+            });
   }
 
   /**
@@ -311,27 +311,7 @@ public class LoopHelper {
     } else if (currentBB.getNumber() < loop.getLoopControl().getNumber()) {
       // if it is assignment, should be outside of loop
       if (isAssignment(chunk)) {
-        // check if there are assignment to the variable, if yes, it should stay outside of the
-        // loop, which is returning false
-        List<SSAInstruction> instsAfterBB = new ArrayList<>();
-        loop.getAllBlocks()
-            .forEach(
-                bb -> {
-                  if (bb.getNumber() >= currentBB.getNumber())
-                    instsAfterBB.addAll(
-                        IteratorUtil.streamify(bb.iterator()).collect(Collectors.toList()));
-                });
-
-        int def = ((AssignInstruction) chunk.get(0)).getDef();
-        Optional<SSAInstruction> assignInst =
-            instsAfterBB.stream()
-                .filter(
-                    inst -> {
-                      return (inst instanceof AssignInstruction)
-                          && ((AssignInstruction) inst).getVal() == def;
-                    })
-                .findFirst();
-        if (assignInst.isPresent()) return false;
+        return !isNestedLoop(loop, loops);
       }
       // If the block is before loop control, return true
       return true;
