@@ -279,6 +279,14 @@ public class LoopHelper {
                 });
   }
 
+  public static boolean hasInnerLoopShareLoopControl(Loop loop, Map<ISSABasicBlock, Loop> loops) {
+    return loops.values().stream()
+        .anyMatch(
+            c -> {
+              return loop.containsNestedLoop(c) && loop.getLoopControl().equals(c.getLoopControl());
+            });
+  }
+
   /**
    * Find out if the given chunk is in the loop and before the conditional branch of the loop
    * control
