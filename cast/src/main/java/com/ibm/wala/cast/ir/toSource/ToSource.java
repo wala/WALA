@@ -1537,7 +1537,6 @@ public abstract class ToSource {
               .filter(inst -> (inst instanceof SSAConditionalBranchInstruction))
               .findFirst()
               .get();
-      //      condChunk.remove(instruction);
 
       CAstNode test;
       if (condChunkWithoutConditional.size() > 0) {
@@ -1857,11 +1856,12 @@ public abstract class ToSource {
                           loopChunks,
                           decls,
                           currentLoops,
-                          new ArrayList<>()); // TODO: lisa check last param
+                          new ArrayList<>());
                   elts.addAll(stuff.fst.getChildren());
                   loopChunks.clear();
                 }
 
+                // For the call comes from toCAst, the body should always be called, otherwise, skip loop control
                 if (!(verifyConditional
                     && (LoopHelper.isConditional(chunks.get(chunks.size() - 1))
                         && chunkInsts.equals(chunks.get(chunks.size() - 1))))) {

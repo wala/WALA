@@ -207,6 +207,7 @@ public class LoopHelper {
 
   /**
    * Find out the loop that contains the instruction
+   * It'll try to find the inner loop first and then outer loop (backwards)
    *
    * @param cfg The control flow graph
    * @param instruction The instruction to be used to look for a loop
@@ -269,6 +270,7 @@ public class LoopHelper {
     return result.isPresent() ? result.get() : null;
   }
 
+  // check if the assignment is in both inner and outer loop
   public static boolean containsInNestedLoop(
       Loop loop, Map<ISSABasicBlock, Loop> loops, ISSABasicBlock assignmentBlock) {
     return loop.containsNestedLoop()
@@ -279,6 +281,7 @@ public class LoopHelper {
                 });
   }
 
+  // check if the given loop has nested loops and one of the nested loops has the same loop control as the outer one
   public static boolean hasInnerLoopShareLoopControl(Loop loop, Map<ISSABasicBlock, Loop> loops) {
     return loops.values().stream()
         .anyMatch(
@@ -369,6 +372,7 @@ public class LoopHelper {
 
   /**
    * Check if the given instruction is part of loop control
+   * It will check inner loop first
    *
    * @param cfg The control flow graph
    * @param inst The instruction to be used to check
