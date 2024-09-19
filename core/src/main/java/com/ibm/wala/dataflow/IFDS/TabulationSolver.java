@@ -53,8 +53,6 @@ import java.util.TreeSet;
  *   <li>it stores summary edges at each callee instead of at each call site.
  * </ul>
  *
- * <p>
- *
  * @param <T> type of node in the supergraph
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
