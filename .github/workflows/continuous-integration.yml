@@ -72,23 +72,20 @@ jobs:
     needs: build_gradle
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    env:
+      JDK_VERSION: 23
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
-      - name: Cache Goomph
-        uses: actions/cache@v4
-        with:
-          path: ~/.goomph
-          key: ${{ runner.os }}-goomph-${{ hashFiles('build.gradle') }}
-          restore-keys: ${{ runner.os }}-goomph-
-      - name: 'Set up JDK 21'
+      - name: 'Set up JDK'
         uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: ${{ env.JDK_VERSION }}
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: 'Generate latest docs'
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
-        run: ./generate-latest-docs.sh
+        run: ./generate-latest-docs.sh ${{ env.JDK_VERSION }}
+

@@ -18,6 +18,13 @@
 
 echo -e "Publishing docs...\n"
 
+if [ $# -eq 0 ]; then
+    echo "No JDK version provided. Usage: $0 <JDK_VERSION>"
+    exit 1
+fi
+
+JDK_VERSION=$1
+
 JAVADOC_DIR=$HOME/wala-javadoc
 
 git clone --quiet --filter=tree:0 https://x-access-token:"${GITHUB_TOKEN}"@github.com/wala/javadoc "$JAVADOC_DIR" > /dev/null
@@ -26,7 +33,7 @@ git clone --quiet --filter=tree:0 https://x-access-token:"${GITHUB_TOKEN}"@githu
   rm -rf ./*
 )
 
-./gradlew aggregatedJavadocs --no-configuration-cache
+./gradlew aggregatedJavadocs --no-configuration-cache "-Pcom.ibm.wala.jdk-version=$JDK_VERSION"
 rsync -a build/docs/javadoc/ "${JAVADOC_DIR}"
 
 cd "$JAVADOC_DIR"
