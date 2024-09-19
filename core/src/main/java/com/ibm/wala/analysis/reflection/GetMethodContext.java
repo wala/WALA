@@ -37,10 +37,12 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
  * GetMethodContextSelector} should be placed in be placed in front of {@link
  * JavaLangClassContextInterpreter} and {@link JavaLangClassContextSelector} .
  *
+ * <p>TODO Do the same for {@link Class#getField(String)} and {@link
+ * Class#getDeclaredField(String)}.
+ *
  * @author Michael Heilmann
  * @see com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
- * @see com.ibm.wala.analysis.reflection.GetMethodContextSelector TODO Do the same for {@link
- *     Class#getField(String)} and {@link Class#getDeclaredField(String)}.
+ * @see com.ibm.wala.analysis.reflection.GetMethodContextSelector
  */
 public class GetMethodContext implements Context {
   /** The type abstraction. */
