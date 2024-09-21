@@ -99,6 +99,7 @@ publishing {
 
   publications.named<MavenPublication>("maven") {
     groupId = "com.ibm.wala"
+    group = "com.ibm.wala"
     artifactId = base.archivesName.get()
 
     val testFixturesCodeElementsNames =
