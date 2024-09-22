@@ -1117,7 +1117,7 @@ public class SSACFG
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + type + ' ' + method;
+      return getClass() + " : " + type + ' ' + method;
     }
 
     public static ExceptionLoadFailure create(TypeReference type, IMethod method) {

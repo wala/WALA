@@ -2417,7 +2417,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + type;
+      return getClass() + " : " + type;
     }
 
     public static CheckcastFailure create(TypeReference type) {
@@ -2440,7 +2440,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + field;
+      return getClass() + " : " + field;
     }
 
     public static FieldResolutionFailure create(FieldReference field) {

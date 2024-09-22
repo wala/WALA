@@ -276,7 +276,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + entrypoint;
+      return getClass() + " : " + entrypoint;
     }
 
     public static EntrypointResolutionWarning create(Entrypoint entrypoint) {
@@ -467,7 +467,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + t;
+      return getClass() + " : " + t;
     }
 
     public static ExceptionLookupFailure create(TypeReference t) {

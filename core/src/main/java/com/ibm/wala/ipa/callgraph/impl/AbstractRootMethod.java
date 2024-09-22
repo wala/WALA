@@ -316,7 +316,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + t;
+      return getClass() + " : " + t;
     }
 
     public static AllocationFailure create(TypeReference t) {

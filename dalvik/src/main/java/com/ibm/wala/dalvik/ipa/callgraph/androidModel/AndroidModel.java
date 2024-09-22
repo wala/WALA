@@ -915,7 +915,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       System.err.println("\tcaller=\t" + caller);
       System.err.println("\tinfo=\t" + info);
       System.err.println("\tcallerND=\t" + callerNd);
-      System.err.println("\tthis=\t" + this.getClass().toString());
+      System.err.println("\tthis=\t" + this.getClass());
       System.err.println("\tthis.name=\t" + this.name);
 
       throw new IllegalStateException(e);
@@ -954,7 +954,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
         new TypeSafeInstructionFactory(getClassHierarchy());
     final ParameterAccessor acc = new ParameterAccessor(asMethod, /* hasImplicitThis: */ false);
     final SSAValueManager pm = new SSAValueManager(acc);
-    pm.breadCrumb = "Encap: " + this.getClass().toString();
+    pm.breadCrumb = "Encap: " + this.getClass();
 
     final SummarizedMethod model = getMethod();
 

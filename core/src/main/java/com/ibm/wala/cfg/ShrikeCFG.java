@@ -550,7 +550,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + T;
+      return getClass() + " : " + T;
     }
 
     public static FailedExceptionResolutionWarning create(TypeReference T) {
