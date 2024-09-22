@@ -172,7 +172,7 @@ final class IntraprocAnalysisState
       return "";
     }
 
-    final String ls = System.getProperty("line.separator");
+    final String ls = System.lineSeparator();
 
     return statesOfSsaVars + ls + valuesOfSsaVars + ls + numbersOfSsaVarsThatAreParemerters;
   }
