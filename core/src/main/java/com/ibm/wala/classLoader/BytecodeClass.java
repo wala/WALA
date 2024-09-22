@@ -113,7 +113,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + className;
+      return getClass() + " : " + className;
     }
 
     public static ClassNotFoundWarning create(ImmutableByteArray className) {

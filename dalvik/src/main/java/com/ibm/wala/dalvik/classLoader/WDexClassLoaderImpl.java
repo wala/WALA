@@ -194,7 +194,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + className;
+      return getClass() + " : " + className;
     }
 
     public static MultipleDexImplementationsWarning create(String className) {
@@ -214,7 +214,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + className;
+      return getClass() + " : " + className;
     }
 
     public static InvalidDexFile create(String className) {

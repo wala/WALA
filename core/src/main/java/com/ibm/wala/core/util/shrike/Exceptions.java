@@ -28,7 +28,7 @@ public class Exceptions {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + method;
+      return getClass() + " : " + method;
     }
 
     public static MethodResolutionFailure moderate(MemberReference method) {

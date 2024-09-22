@@ -690,7 +690,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + T;
+      return getClass() + " : " + T;
     }
 
     public static FailedExceptionResolutionWarning create(TypeReference T) {

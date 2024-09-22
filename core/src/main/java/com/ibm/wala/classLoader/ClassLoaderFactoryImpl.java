@@ -146,7 +146,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + impl;
+      return getClass() + " : " + impl;
     }
 
     public static InvalidClassLoaderImplementation create(String impl) {
