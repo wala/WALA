@@ -472,10 +472,9 @@ public class SSACFG
         @Override
         public SSAInstruction next() {
           SSAInstruction i = instructions[start];
-          start++;
-          while (start <= end && instructions[start] == null) {
+          do {
             start++;
-          }
+          } while (start <= end && instructions[start] == null);
           return i;
         }
 
