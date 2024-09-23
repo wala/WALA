@@ -207,6 +207,7 @@ public class LoopHelper {
 
   /**
    * Find out the loop that contains the instruction
+   * It'll try to find the inner loop first and then outer loop (backwards)
    *
    * @param cfg The control flow graph
    * @param instruction The instruction to be used to look for a loop
@@ -220,6 +221,10 @@ public class LoopHelper {
     if (instruction.iIndex() < 0) return null;
     Optional<Loop> result =
         loops.values().stream()
+            .sorted(
+                (a, b) -> {
+                  return b.getLoopHeader().getNumber() - a.getLoopHeader().getNumber();
+                })
             .filter(
                 loop ->
                     loop.getAllBlocks().contains(cfg.getBlockForInstruction(instruction.iIndex())))
@@ -228,7 +233,8 @@ public class LoopHelper {
   }
 
   /**
-   * Find out the loop that the given chunk belongs to and not the loop that's provided
+   * Find out the loop that the given chunk belongs to and not the loop that's provided It should
+   * scan from first to last since the skipped loops are provided
    *
    * @param cfg The control flow graph
    * @param chunk The instructions to be used to check
@@ -251,6 +257,10 @@ public class LoopHelper {
     // Find out the loop
     Optional<Loop> result =
         loops.values().stream()
+            .sorted(
+                (a, b) -> {
+                  return a.getLoopHeader().getNumber() - b.getLoopHeader().getNumber();
+                })
             .filter(
                 loop ->
                     (skipLoop == null || !skipLoop.contains(loop))
@@ -258,6 +268,26 @@ public class LoopHelper {
                             .contains(cfg.getBlockForInstruction(first.get().iIndex())))
             .findFirst();
     return result.isPresent() ? result.get() : null;
+  }
+
+  // check if the assignment is in both inner and outer loop
+  public static boolean containsInNestedLoop(
+      Loop loop, Map<ISSABasicBlock, Loop> loops, ISSABasicBlock assignmentBlock) {
+    return loop.containsNestedLoop()
+        && loops.values().stream()
+            .anyMatch(
+                p -> {
+                  return p.getAllBlocks().contains(assignmentBlock) && loop.containsNestedLoop(p);
+                });
+  }
+
+  // check if the given loop has nested loops and one of the nested loops has the same loop control as the outer one
+  public static boolean hasInnerLoopShareLoopControl(Loop loop, Map<ISSABasicBlock, Loop> loops) {
+    return loops.values().stream()
+        .anyMatch(
+            c -> {
+              return loop.containsNestedLoop(c) && loop.getLoopControl().equals(c.getLoopControl());
+            });
   }
 
   /**
@@ -292,8 +322,16 @@ public class LoopHelper {
     if (currentBB.getNumber() > loop.getLoopControl().getNumber()) {
       return false;
     } else if (currentBB.getNumber() < loop.getLoopControl().getNumber()) {
-      // If the block is before loop control, return true
-      return true;
+      if (isAssignment(chunk)) {
+        // if it is assignment, for perf-with-goto-1-4.cbl, it should be in outer loop but not in
+        // inner loop
+        // this is a temp solution as we can't tell other clue to make it happen
+        if (containsInNestedLoop(loop, loops, currentBB)) return true;
+        return false;
+      } else {
+        // If the block is before loop control, return true
+        return true;
+      }
     } else {
       if (isAssignment(chunk)) {
         // if it is loop control, assignment should be ignored
@@ -334,6 +372,7 @@ public class LoopHelper {
 
   /**
    * Check if the given instruction is part of loop control
+   * It will check inner loop first
    *
    * @param cfg The control flow graph
    * @param inst The instruction to be used to check
@@ -346,6 +385,10 @@ public class LoopHelper {
       Map<ISSABasicBlock, Loop> loops) {
     return inst.iIndex() > 0
         ? loops.values().stream()
+            .sorted(
+                (a, b) -> {
+                  return b.getLoopHeader().getNumber() - a.getLoopHeader().getNumber();
+                })
             .map(loop -> loop.getLoopControl())
             .anyMatch(control -> control.equals(cfg.getBlockForInstruction(inst.iIndex())))
         : false;
