@@ -162,10 +162,18 @@ public class Loop {
   }
 
   public boolean containsNestedLoop() {
-    return !nestedLoops.isEmpty();
+    return nestedLoops.size() > 0;
   }
 
   public boolean containsNestedLoop(Loop loop) {
     return nestedLoops.contains(loop);
+  }
+
+  public ISSABasicBlock getLoopBreakerByExit(ISSABasicBlock exit) {
+    return loopBreakers.stream()
+        .filter(pair -> exit.equals(pair.snd))
+        .map(pair -> pair.fst)
+        .findFirst()
+        .get();
   }
 }

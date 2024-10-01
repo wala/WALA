@@ -598,6 +598,8 @@ public abstract class ToSource {
     private final PrunedCFG<SSAInstruction, ISSABasicBlock> cfg;
     // The key is loop header basic block while the value is the loop object in IR
     private final Map<ISSABasicBlock, Loop> loops;
+    // The key is loop breaker and the value is the list of loops that'll been jumped over
+    private final Map<ISSABasicBlock, List<Loop>> jumpLoops;
     private final SSAInstruction r;
     private final ISSABasicBlock l;
     private final ControlDependenceGraph<ISSABasicBlock> cdg;
@@ -677,6 +679,7 @@ public abstract class ToSource {
       this.cdg = parent.cdg;
       this.packages = parent.packages;
       this.loops = parent.loops;
+      this.jumpLoops = parent.jumpLoops;
       this.ir = parent.ir;
       this.sourceNames = parent.sourceNames;
       this.positionRecorder = parent.positionRecorder;
@@ -950,26 +953,7 @@ public abstract class ToSource {
 
       // figure out nested loops
       // handle nested loop
-      loops.keySet().stream()
-          .sorted(
-              (a, b) -> {
-                return b.getNumber() - a.getNumber();
-              })
-          .forEach(
-              loopHeader -> {
-                for (Loop parent : loops.values()) {
-
-                  // check if loop header belongs to a loop
-                  if (parent != loops.get(loopHeader)
-                      && parent.getAllBlocks().contains(loopHeader)
-                      && parent
-                          .getAllBlocks()
-                          .containsAll(loops.get(loopHeader).getLoopBreakers())) {
-                    // this is nested loop
-                    parent.addLoopNested(loops.get(loopHeader));
-                  }
-                }
-              });
+      jumpLoops = LoopHelper.updateLoopRelationship(loops);
 
       System.err.println(
           "loop controls: "
@@ -1031,8 +1015,16 @@ public abstract class ToSource {
                                   });
                               currentUseConflicts.foreach(
                                   vn -> {
-                                    livenessConflicts.add(mergePhis.find(def), mergePhis.find(vn));
-                                    livenessConflicts.add(mergePhis.find(vn), mergePhis.find(def));
+                                    // in some case -1 will not be counted as a value of the set but
+                                    // foreach will visit it
+                                    if (vn != -1) {
+                                      livenessConflicts.add(
+                                          mergePhis.find(def), mergePhis.find(vn));
+                                      livenessConflicts.add(
+                                          mergePhis.find(vn), mergePhis.find(def));
+                                    } else {
+                                      System.out.println("should not be here>>>>>>>>>>>>>>");
+                                    }
                                   });
 
                               mergePhis.union(def, use);
@@ -1591,8 +1583,9 @@ public abstract class ToSource {
       }
 
       CAstNode condSuccessor = null;
-      // if nested loop has same loop control, then no need to generate else branch
-      if (LoopHelper.hasInnerLoopShareLoopControl(currentLoop, loops)) {
+      // if current loop was jumped by it's loop control, then no need to generate else branch
+      if (jumpLoops.containsKey(currentLoop.getLoopControl())
+          && jumpLoops.get(currentLoop.getLoopControl()).contains(currentLoop)) {
         condSuccessor = ast.makeNode(CAstNode.EMPTY);
       } else {
         // translate loop body after conditional
@@ -1742,6 +1735,53 @@ public abstract class ToSource {
               // loop
               ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
 
+      ISSABasicBlock loopBreaker = cfg.getBlockForInstruction(instruction.iIndex());
+      if (jumpLoops.containsKey(loopBreaker) && jumpLoops.get(loopBreaker).contains(currentLoop)) {
+        // TODO: create if break  statement
+        //        CAstNode ifCont =
+        //            ast.makeNode(
+        //                CAstNode.IF_STMT, copyOfOriginalTest, ast.makeNode(CAstNode.BLOCK_STMT,
+        // ifConts));
+        //        loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode, ifCont);
+      }
+      /*
+            //      if (LoopHelper.hasInnerLoopShareLoopBreaker(
+            //          currentLoop, loops, cfg.getBlockForInstruction(instruction.iIndex()))) {
+            //        loopNode =
+            //            ast.makeNode(
+            //                CAstNode.BLOCK_STMT,
+            //                loopNode,
+            //                ast.makeNode(CAstNode.IF_STMT, originalTest, ast.makeNode(CAstNode.BREAK)));
+            //      }
+
+            if (breakers != null) {
+              List<CAstNode> ifConts = new ArrayList<>();
+
+              breakers.forEach(
+                  bb -> {
+                    // find test from block
+                    List<SSAInstruction> testInsts = LoopHelper.findTestInstructions(bb);
+                    CAstNode breakerTest =
+                        makeToCAst(testInsts).processChunk(decls, packages, currentLoop).fst;
+
+                    if (CAstNode.DECL_STMT == breakerTest.getKind() && breakerTest.getChildCount() > 2) {
+                      breakerTest = breakerTest.getChild(2);
+                    }
+                    assert (breakerTest.getKind() == CAstNode.BINARY_EXPR);
+
+                    // if original test was not met, then check if breaker test was met, if yes, break
+                    // current loop so to continue the parent loop
+                    ifConts.add(
+                        ast.makeNode(CAstNode.IF_STMT, breakerTest, ast.makeNode(CAstNode.BREAK)));
+                  });
+              if (ifConts.size() > 0) {
+                CAstNode ifCont =
+                    ast.makeNode(
+                        CAstNode.IF_STMT, copyOfOriginalTest, ast.makeNode(CAstNode.BLOCK_STMT, ifConts));
+                loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode, ifCont);
+              }
+            }
+      */
       ISSABasicBlock next =
           cfg.getBlockForInstruction(((SSAConditionalBranchInstruction) instruction).getTarget());
       loopNode = checkLinePhi(loopNode, instruction, next, decls);
@@ -1762,7 +1802,8 @@ public abstract class ToSource {
         }
       } else {
         // still need to wrap into a block
-        loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode);
+        if (loopNode.getKind() != CAstNode.BLOCK_STMT)
+          loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode);
       }
 
       chunks.stream()
@@ -1852,16 +1893,13 @@ public abstract class ToSource {
                       LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops));
 
                   Pair<CAstNode, List<CAstNode>> stuff =
-                      toLoopCAst(
-                          loopChunks,
-                          decls,
-                          currentLoops,
-                          new ArrayList<>());
+                      toLoopCAst(loopChunks, decls, currentLoops, new ArrayList<>());
                   elts.addAll(stuff.fst.getChildren());
                   loopChunks.clear();
                 }
 
-                // For the call comes from toCAst, the body should always be called, otherwise, skip loop control
+                // For the call comes from toCAst, the body should always be called, otherwise, skip
+                // loop control
                 if (!(verifyConditional
                     && (LoopHelper.isConditional(chunks.get(chunks.size() - 1))
                         && chunkInsts.equals(chunks.get(chunks.size() - 1))))) {
