@@ -132,6 +132,8 @@ public abstract class ToSource {
 
   private final CAst ast = new CAstImpl();
 
+  public static final String CT_LOOP_JUMP_VAR_NAME = "ctloopjump";
+
   protected abstract String nameToJava(String name, boolean isTypeName);
 
   private static CAstPattern varDefPattern(CAstNode varName) {
@@ -1737,7 +1739,7 @@ public abstract class ToSource {
         CAstNode ifCont =
             ast.makeNode(
                 CAstNode.IF_STMT,
-                ast.makeNode(CAstNode.VAR, ast.makeConstant("ct_loop_jump")),
+                ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                 ast.makeNode(CAstNode.BREAK));
         jumpList.addAll(bodyNode.getChildren());
         jumpList.add(ifCont);
@@ -1754,7 +1756,7 @@ public abstract class ToSource {
                 CAstNode.EXPR_STMT,
                 ast.makeNode(
                     CAstNode.ASSIGN,
-                    ast.makeNode(CAstNode.VAR, ast.makeConstant("ct_loop_jump")),
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                     ast.makeConstant(false)));
 
         jumpList.add(setFalse);
@@ -1791,8 +1793,7 @@ public abstract class ToSource {
         }
       } else {
         // still need to wrap into a block
-        if (loopNode.getKind() != CAstNode.BLOCK_STMT)
-          loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode);
+        loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode);
       }
 
       chunks.stream()
@@ -2557,7 +2558,7 @@ public abstract class ToSource {
                           CAstNode.EXPR_STMT,
                           ast.makeNode(
                               CAstNode.ASSIGN,
-                              ast.makeNode(CAstNode.VAR, ast.makeConstant("ct_loop_jump")),
+                              ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                               ast.makeConstant(true)));
                   notTakenBlock.add(0, setTrue);
                 }
@@ -3619,12 +3620,14 @@ public abstract class ToSource {
       }
     }
 
-    // TODO: search and decide if jump should be defined
-    inits.add(
-        cast.makeNode(
-            CAstNode.DECL_STMT,
-            cast.makeNode(CAstNode.VAR, cast.makeConstant("ct_loop_jump")),
-            cast.makeConstant(toSource(TypeReference.Boolean))));
+    // search and decide if jump should be defined
+    if (CAstHelper.hasVarAssigned(ast, CT_LOOP_JUMP_VAR_NAME)) {
+      inits.add(
+          cast.makeNode(
+              CAstNode.DECL_STMT,
+              cast.makeNode(CAstNode.VAR, cast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+              cast.makeConstant(toSource(TypeReference.Boolean))));
+    }
 
     for (int i = hasExplicitCtorCall ? 1 : 0; i < ast.getChildCount(); i++) {
       inits.add(ast.getChild(i));

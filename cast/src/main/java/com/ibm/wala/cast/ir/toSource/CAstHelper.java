@@ -4,6 +4,7 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.util.collections.Pair;
 
 /** The helper class for some methods of loop */
@@ -126,5 +127,10 @@ public class CAstHelper {
       } else varName = test.getChild(1).getChild(0).getValue();
     }
     return varName;
+  }
+
+  public static boolean hasVarAssigned(CAstNode node, String var) {
+    CAstPattern jumpAssign = CAstPattern.parse("ASSIGN(VAR(\"" + var + "\"),**)");
+    return !CAstPattern.findAll(jumpAssign, node).isEmpty();
   }
 }
