@@ -1739,7 +1739,11 @@ public abstract class ToSource {
         CAstNode ifCont =
             ast.makeNode(
                 CAstNode.IF_STMT,
-                ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                ast.makeNode(
+                    CAstNode.BINARY_EXPR,
+                    CAstOperator.OP_NE,
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                    ast.makeConstant(0)),
                 ast.makeNode(CAstNode.BREAK));
         jumpList.addAll(bodyNode.getChildren());
         jumpList.add(ifCont);
@@ -1757,7 +1761,7 @@ public abstract class ToSource {
                 ast.makeNode(
                     CAstNode.ASSIGN,
                     ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
-                    ast.makeConstant(false)));
+                    ast.makeConstant(0)));
 
         jumpList.add(setFalse);
         jumpList.addAll(bodyNode.getChildren());
@@ -2559,7 +2563,7 @@ public abstract class ToSource {
                           ast.makeNode(
                               CAstNode.ASSIGN,
                               ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
-                              ast.makeConstant(true)));
+                              ast.makeConstant(1)));
                   notTakenBlock.add(0, setTrue);
                 }
               }
@@ -3626,7 +3630,7 @@ public abstract class ToSource {
           cast.makeNode(
               CAstNode.DECL_STMT,
               cast.makeNode(CAstNode.VAR, cast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
-              cast.makeConstant(toSource(TypeReference.Boolean))));
+              cast.makeConstant(toSource(TypeReference.Int))));
     }
 
     for (int i = hasExplicitCtorCall ? 1 : 0; i < ast.getChildCount(); i++) {
