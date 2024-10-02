@@ -1726,6 +1726,42 @@ public abstract class ToSource {
                 condSuccessor.getChildren().toArray(new CAstNode[condSuccessor.getChildCount()]));
       }
 
+      // if this is the loop recorded in jumpLoops, then generate if-break node
+      List<CAstNode> jumpList = new ArrayList<>();
+      if (jumpLoops.keySet().stream()
+          .anyMatch(
+              breaker ->
+                  jumpLoops.get(breaker).contains(currentLoop)
+                      // if it is not loop control
+                      && !currentLoop.getLoopControl().equals(breaker))) {
+        CAstNode ifCont =
+            ast.makeNode(
+                CAstNode.IF_STMT,
+                ast.makeNode(CAstNode.VAR, ast.makeConstant("ct_loop_jump")),
+                ast.makeNode(CAstNode.BREAK));
+        jumpList.addAll(bodyNode.getChildren());
+        jumpList.add(ifCont);
+
+        bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+      }
+      // if this is the parent loop contains the loops been jumped, insert jump assignment at the
+      // beginning of the loop
+      // TODO: first or last?
+      else if (jumpLoops.keySet().stream()
+          .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpLoops.get(breaker).get(0)))) {
+        CAstNode setFalse =
+            ast.makeNode(
+                CAstNode.EXPR_STMT,
+                ast.makeNode(
+                    CAstNode.ASSIGN,
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant("ct_loop_jump")),
+                    ast.makeConstant(false)));
+
+        jumpList.add(setFalse);
+        jumpList.addAll(bodyNode.getChildren());
+        bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+      }
+
       CAstNode loopNode =
           ast.makeNode(
               CAstNode.LOOP,
@@ -1735,53 +1771,6 @@ public abstract class ToSource {
               // loop
               ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
 
-      ISSABasicBlock loopBreaker = cfg.getBlockForInstruction(instruction.iIndex());
-      if (jumpLoops.containsKey(loopBreaker) && jumpLoops.get(loopBreaker).contains(currentLoop)) {
-        // TODO: create if break  statement
-        //        CAstNode ifCont =
-        //            ast.makeNode(
-        //                CAstNode.IF_STMT, copyOfOriginalTest, ast.makeNode(CAstNode.BLOCK_STMT,
-        // ifConts));
-        //        loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode, ifCont);
-      }
-      /*
-            //      if (LoopHelper.hasInnerLoopShareLoopBreaker(
-            //          currentLoop, loops, cfg.getBlockForInstruction(instruction.iIndex()))) {
-            //        loopNode =
-            //            ast.makeNode(
-            //                CAstNode.BLOCK_STMT,
-            //                loopNode,
-            //                ast.makeNode(CAstNode.IF_STMT, originalTest, ast.makeNode(CAstNode.BREAK)));
-            //      }
-
-            if (breakers != null) {
-              List<CAstNode> ifConts = new ArrayList<>();
-
-              breakers.forEach(
-                  bb -> {
-                    // find test from block
-                    List<SSAInstruction> testInsts = LoopHelper.findTestInstructions(bb);
-                    CAstNode breakerTest =
-                        makeToCAst(testInsts).processChunk(decls, packages, currentLoop).fst;
-
-                    if (CAstNode.DECL_STMT == breakerTest.getKind() && breakerTest.getChildCount() > 2) {
-                      breakerTest = breakerTest.getChild(2);
-                    }
-                    assert (breakerTest.getKind() == CAstNode.BINARY_EXPR);
-
-                    // if original test was not met, then check if breaker test was met, if yes, break
-                    // current loop so to continue the parent loop
-                    ifConts.add(
-                        ast.makeNode(CAstNode.IF_STMT, breakerTest, ast.makeNode(CAstNode.BREAK)));
-                  });
-              if (ifConts.size() > 0) {
-                CAstNode ifCont =
-                    ast.makeNode(
-                        CAstNode.IF_STMT, copyOfOriginalTest, ast.makeNode(CAstNode.BLOCK_STMT, ifConts));
-                loopNode = ast.makeNode(CAstNode.BLOCK_STMT, loopNode, ifCont);
-              }
-            }
-      */
       ISSABasicBlock next =
           cfg.getBlockForInstruction(((SSAConditionalBranchInstruction) instruction).getTarget());
       loopNode = checkLinePhi(loopNode, instruction, next, decls);
@@ -2558,6 +2547,20 @@ public abstract class ToSource {
                 System.out.println(
                     "notTakenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
                 notTakenBlock.add(ast.makeNode(CAstNode.BREAK));
+              }
+
+              // If a loop breaker is found in jumpLoops, set ct_loop_jump=true
+              if (jumpLoops.containsKey(branchBB)) {
+                if (jumpLoops.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop))) {
+                  CAstNode setTrue =
+                      ast.makeNode(
+                          CAstNode.EXPR_STMT,
+                          ast.makeNode(
+                              CAstNode.ASSIGN,
+                              ast.makeNode(CAstNode.VAR, ast.makeConstant("ct_loop_jump")),
+                              ast.makeConstant(true)));
+                  notTakenBlock.add(0, setTrue);
+                }
               }
 
             } else {
@@ -3615,6 +3618,13 @@ public abstract class ToSource {
                 cast.makeConstant(toSource(types.getType(vn).getTypeReference()))));
       }
     }
+
+    // TODO: search and decide if jump should be defined
+    inits.add(
+        cast.makeNode(
+            CAstNode.DECL_STMT,
+            cast.makeNode(CAstNode.VAR, cast.makeConstant("ct_loop_jump")),
+            cast.makeConstant(toSource(TypeReference.Boolean))));
 
     for (int i = hasExplicitCtorCall ? 1 : 0; i < ast.getChildCount(); i++) {
       inits.add(ast.getChild(i));
