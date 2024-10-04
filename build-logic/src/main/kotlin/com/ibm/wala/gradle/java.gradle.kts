@@ -49,7 +49,7 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
-  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(22) }
+  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(23) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
   options.release = 11
   options.errorprone {
@@ -108,7 +108,6 @@ tasks.named<Test>("test") {
 }
 
 if (hasProperty("excludeSlowTests")) {
-  dependencies { testImplementation(testFixtures(project(":core"))) }
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
 

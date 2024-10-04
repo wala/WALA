@@ -18,6 +18,7 @@ library {
   dependencies { implementation(projects.cast.cast) }
 
   binaries.whenElementFinalized {
-    addCastLibrary(this, (this as CppSharedLibrary).linkTask.get(), project)
+    this as CppSharedLibrary
+    linkTask.get().addCastLibrary(this)
   }
 }

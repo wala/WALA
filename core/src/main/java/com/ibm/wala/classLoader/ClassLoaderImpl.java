@@ -350,7 +350,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + className;
+      return getClass() + " : " + className;
     }
 
     public static MultipleImplementationsWarning create(String className) {
@@ -370,7 +370,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + className;
+      return getClass() + " : " + className;
     }
 
     public static InvalidClassFile create(String className) {

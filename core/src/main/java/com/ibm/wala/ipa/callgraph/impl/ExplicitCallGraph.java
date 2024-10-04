@@ -226,10 +226,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
       }
     }
 
-    /**
-     * @see
-     *     com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#removeNodeAndEdges(com.ibm.wala.ipa.callgraph.CGNode)
-     */
     public void removeTarget(CGNode target) {
       allTargets.remove(getCallGraph().getNumber(target));
       for (IntIterator it = targets.safeIterateIndices(); it.hasNext(); ) {

@@ -24,7 +24,7 @@ public class ClassHierarchyWarning extends Warning {
 
   @Override
   public String getMsg() {
-    return getClass().toString() + " : " + message;
+    return getClass() + " : " + message;
   }
 
   public static ClassHierarchyWarning create(String message) {

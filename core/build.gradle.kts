@@ -15,11 +15,10 @@ plugins {
 eclipse {
   project.natures("org.eclipse.pde.PluginNature")
   classpath.file.whenMerged {
-    (this as Classpath).run {
-      entries.forEach {
-        if (it is AbstractClasspathEntry && it.path == "src/testSubjects/java") {
-          it.entryAttributes["ignore_optional_problems"] = true
-        }
+    this as Classpath
+    entries.forEach {
+      if (it is AbstractClasspathEntry && it.path == "src/testSubjects/java") {
+        it.entryAttributes["ignore_optional_problems"] = true
       }
     }
   }

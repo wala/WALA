@@ -1259,7 +1259,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + klass + ' ' + message;
+      return getClass() + " : " + klass + ' ' + message;
     }
 
     public static ClassExclusion create(TypeReference klass, String message) {

@@ -1,5 +1,6 @@
 import com.ibm.wala.gradle.cast.addCastLibrary
 import com.ibm.wala.gradle.cast.addRpath
+import com.ibm.wala.gradle.cast.configure
 import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
@@ -59,65 +60,61 @@ application {
   }
 
   binaries.whenElementFinalized {
-    (this as CppExecutable)
-        .linkTask
-        .get()
-        .configure(
-            closureOf<LinkExecutable> {
-              val libxlatorTest =
-                  (if (isOptimized) xlatorTestReleaseSharedLibraryConfig
-                      else xlatorTestDebugSharedLibraryConfig)
-                      .singleFile
-              addRpath(this, libxlatorTest)
-              addCastLibrary(this@whenElementFinalized, this, project)
+    this as CppExecutable
+    linkTask.configure {
+      val libxlatorTest =
+          (if (isOptimized) xlatorTestReleaseSharedLibraryConfig
+              else xlatorTestDebugSharedLibraryConfig)
+              .singleFile
+      addRpath(libxlatorTest)
+      addCastLibrary(this@whenElementFinalized)
 
-              if (isDebuggable && !isOptimized) {
-                val checkSmokeMain by
-                    tasks.registering(Exec::class) {
-                      notCompatibleWithConfigurationCache(
-                          "https://github.com/gradle/gradle/issues/13485")
+      if (isDebuggable && !isOptimized) {
+        val checkSmokeMain by
+            tasks.registering(Exec::class) {
+              notCompatibleWithConfigurationCache("https://github.com/gradle/gradle/issues/13485")
 
-                      // main executable to run for test
-                      inputs.file(linkedFile)
-                      executable(
-                          object {
-                            val toString by lazy { linkedFile.get().asFile.toString() }
+              // main executable to run for test
+              inputs.file(linkedFile)
+              executable(
+                  object {
+                    val toString by lazy { linkedFile.get().asFile.toString() }
 
-                            override fun toString() = toString
-                          })
+                    override fun toString() = toString
+                  })
 
-                      // xlator Java bytecode + implementation of native methods
-                      val pathElements = project.objects.listProperty<File>()
-                      pathElements.addAll(files("../build/classes/java/test", libxlatorTest.parent))
+              // xlator Java bytecode + implementation of native methods
+              val pathElements = project.objects.listProperty<File>()
+              pathElements.addAll(files("../build/classes/java/test", libxlatorTest.parent))
 
-                      // "primordial.txt" resource loaded during test
-                      pathElements.add(coreResources.singleFile)
-                      inputs.files(coreResources)
+              // "primordial.txt" resource loaded during test
+              pathElements.add(coreResources.singleFile)
+              inputs.files(coreResources)
 
-                      // additional supporting Java class files
-                      inputs.files(smokeMainExtraPathElements)
-                      pathElements.addAll(smokeMainExtraPathElements)
+              // additional supporting Java class files
+              inputs.files(smokeMainExtraPathElements)
+              pathElements.addAll(smokeMainExtraPathElements)
 
-                      // all combined as a colon-delimited path list
-                      argumentProviders.add { listOf(pathElements.get().joinToString(":")) }
+              // all combined as a colon-delimited path list
+              argumentProviders.add { listOf(pathElements.get().joinToString(":")) }
 
-                      // log output to file, although we don"t validate it
-                      val outFile = project.layout.buildDirectory.file("${name}.log")
-                      outputs.file(outFile)
-                      doFirst {
-                        outFile.get().asFile.outputStream().let {
-                          standardOutput = it
-                          errorOutput = it
-                        }
-                      }
-                    }
-
-                if (!(rootProject.extra["isWindows"] as Boolean)) {
-                  // Known to be broken on Windows, but not intentionally so.  Please fix if you
-                  // know how!  <https://github.com/wala/WALA/issues/608>
-                  tasks.named("check").configure { dependsOn(checkSmokeMain) }
+              // log output to file, although we don"t validate it
+              val outFile = project.layout.buildDirectory.file("${name}.log")
+              outputs.file(outFile)
+              doFirst {
+                outFile.get().asFile.outputStream().let {
+                  standardOutput = it
+                  errorOutput = it
                 }
               }
-            })
+            }
+
+        if (!(rootProject.extra["isWindows"] as Boolean)) {
+          // Known to be broken on Windows, but not intentionally so.  Please fix if you
+          // know how!  <https://github.com/wala/WALA/issues/608>
+          tasks.named("check").configure { dependsOn(checkSmokeMain) }
+        }
+      }
+    }
   }
 }
