@@ -12,8 +12,11 @@ import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnspecifiedExprInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.IteratorUtil;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -206,8 +209,8 @@ public class LoopHelper {
   }
 
   /**
-   * Find out the loop that contains the instruction
-   * It'll try to find the inner loop first and then outer loop (backwards)
+   * Find out the loop that contains the instruction It'll try to find the inner loop first and then
+   * outer loop (backwards)
    *
    * @param cfg The control flow graph
    * @param instruction The instruction to be used to look for a loop
@@ -279,15 +282,6 @@ public class LoopHelper {
                 p -> {
                   return p.getAllBlocks().contains(assignmentBlock) && loop.containsNestedLoop(p);
                 });
-  }
-
-  // check if the given loop has nested loops and one of the nested loops has the same loop control as the outer one
-  public static boolean hasInnerLoopShareLoopControl(Loop loop, Map<ISSABasicBlock, Loop> loops) {
-    return loops.values().stream()
-        .anyMatch(
-            c -> {
-              return loop.containsNestedLoop(c) && loop.getLoopControl().equals(c.getLoopControl());
-            });
   }
 
   /**
@@ -371,8 +365,7 @@ public class LoopHelper {
   }
 
   /**
-   * Check if the given instruction is part of loop control
-   * It will check inner loop first
+   * Check if the given instruction is part of loop control It will check inner loop first
    *
    * @param cfg The control flow graph
    * @param inst The instruction to be used to check
@@ -455,5 +448,75 @@ public class LoopHelper {
       }
     }
     return loopBB;
+  }
+
+  public static HashMap<ISSABasicBlock, List<Loop>> updateLoopRelationship(
+      Map<ISSABasicBlock, Loop> loops) {
+    // collect loop break and the jumps, key: loopBreaker,
+    // value: the loops been jumped, not including the inner loop and outer loop
+    HashMap<ISSABasicBlock, List<Loop>> jumpLoops = HashMapFactory.make();
+
+    // if there are only one loop, there wont be any nested loops
+    if (loops.size() < 2) return jumpLoops;
+
+    List<Loop> sortedLoops =
+        loops.values().stream()
+            .sorted(
+                (a, b) -> {
+                  return b.getLoopHeader().getNumber() - a.getLoopHeader().getNumber();
+                })
+            .collect(Collectors.toList());
+
+    HashMap<Loop, Loop> childParentMap = HashMapFactory.make();
+    for (int i = 0; i < sortedLoops.size() - 1; i++) {
+      ISSABasicBlock header = sortedLoops.get(i).getLoopHeader();
+      // Per each loop, check if it's header belongs to another loop, if yes, mark them as nested
+      for (int j = i + 1; j < sortedLoops.size(); j++) {
+        if (sortedLoops.get(j).getAllBlocks().contains(header)) {
+          sortedLoops.get(j).addLoopNested(sortedLoops.get(i));
+          childParentMap.put(sortedLoops.get(i), sortedLoops.get(j));
+          break;
+        }
+      }
+    }
+
+    sortedLoops.forEach(
+        ll -> {
+          // check if there are any loop has no loop breakers
+          if (ll.getLoopBreakers().size() < 1) {
+            System.out.println("Unsupported: no loop breakers - " + ll);
+            return;
+          }
+          // no need to check loop breakers for top level loops
+          if (!childParentMap.containsKey(ll)) {
+            return;
+          }
+
+          // start to check loop breakers to see if there are any jump more than one layers
+          // since each loop breaker only has one loop exit, use loop exit here to ease the search
+          for (ISSABasicBlock loopExit : ll.getLoopExits()) {
+            // first loop exit should not belongs to it's direct parent
+            if (!childParentMap.get(ll).getAllBlocks().contains(loopExit)) {
+              Loop currentLoop = childParentMap.get(ll);
+              List<Loop> jumpPath = new ArrayList<>();
+              jumpPath.add(currentLoop);
+              // try to find out the loops been jumped over
+              while (childParentMap.containsKey(currentLoop)) {
+                if (!childParentMap.get(currentLoop).getAllBlocks().contains(loopExit)) {
+                  currentLoop = childParentMap.get(currentLoop);
+                  jumpPath.add(0, currentLoop);
+                } else {
+                  break;
+                }
+              }
+              jumpLoops.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+              System.out.println(
+                  "This is an example of jump from inner loop to outer-most" + jumpPath);
+            }
+          }
+        });
+
+    System.out.println("====loop jumps:\n" + jumpLoops);
+    return jumpLoops;
   }
 }
