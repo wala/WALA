@@ -1478,11 +1478,6 @@ public abstract class ToSource {
       List<CAstNode> decls = new ArrayList<>();
       List<List<SSAInstruction>> chunks = regionChunks.get(Pair.make(r, l));
 
-      Loop currentLoop =
-          (currentLoops == null || currentLoops.size() < 1)
-              ? null
-              : currentLoops.get(currentLoops.size() - 1);
-
       // translate the chunks that's not gotos
       createLoop(
           cfg, chunks, currentLoops == null ? new ArrayList<>() : currentLoops, decls, elts, false);
@@ -1493,7 +1488,7 @@ public abstract class ToSource {
           .forEach(
               c -> {
                 Pair<CAstNode, List<CAstNode>> stuff =
-                    makeToCAst(c).processChunk(decls, packages, currentLoop);
+                    makeToCAst(c).processChunk(decls, packages, currentLoops);
                 elts.add(stuff.fst);
                 decls.addAll(stuff.snd);
               });
@@ -1535,7 +1530,7 @@ public abstract class ToSource {
       CAstNode test;
       if (condChunkWithoutConditional.size() > 0) {
         test =
-            makeToCAst(condChunkWithoutConditional).processChunk(decls, packages, currentLoop).fst;
+            makeToCAst(condChunkWithoutConditional).processChunk(decls, packages, parentLoops).fst;
         if (CAstNode.DECL_STMT == test.getKind()) {
           test = test.getChild(test.getChildCount() - 1);
 
@@ -1805,7 +1800,7 @@ public abstract class ToSource {
           .forEach(
               c -> {
                 Pair<CAstNode, List<CAstNode>> stuff =
-                    makeToCAst(c).processChunk(decls, packages, currentLoop);
+                    makeToCAst(c).processChunk(decls, packages, parentLoops);
                 elts.add(stuff.fst);
                 decls.addAll(stuff.snd);
               });
@@ -1865,9 +1860,6 @@ public abstract class ToSource {
         List<CAstNode> elts,
         boolean verifyConditional) {
 
-      // retrieve the current loop, it might be null
-      Loop currentLoop = currentLoops.size() < 1 ? null : currentLoops.get(currentLoops.size() - 1);
-
       List<List<SSAInstruction>> loopChunks = new ArrayList<>();
       chunks.forEach(
           chunkInsts -> {
@@ -1898,7 +1890,7 @@ public abstract class ToSource {
                     && (LoopHelper.isConditional(chunks.get(chunks.size() - 1))
                         && chunkInsts.equals(chunks.get(chunks.size() - 1))))) {
                   Pair<CAstNode, List<CAstNode>> stuff =
-                      makeToCAst(chunkInsts).processChunk(decls, packages, currentLoop);
+                      makeToCAst(chunkInsts).processChunk(decls, packages, currentLoops);
                   elts.add(stuff.fst);
                   decls.addAll(stuff.snd);
                 }
@@ -1986,7 +1978,7 @@ public abstract class ToSource {
         protected final List<CAstNode> parentDecls;
         private final List<CAstNode> decls = new ArrayList<>();
         private final Map<String, Set<String>> packages;
-        private Loop loop = null;
+        private List<Loop> currentLoops = null;
         private final CAstSourcePositionRecorder positionRecorder;
 
         private void logHistory(SSAInstruction inst) {
@@ -2050,8 +2042,8 @@ public abstract class ToSource {
             List<CAstNode> parentDecls,
             Map<String, Set<String>> parentPackages,
             Map<SSAInstruction, Map<ISSABasicBlock, RegionTreeNode>> children,
-            Loop loop) {
-          this.loop = loop;
+            List<Loop> currentLoops) {
+          this.currentLoops = currentLoops;
           this.root = root;
           this.chunk = chunk;
           this.children = children;
@@ -2185,6 +2177,7 @@ public abstract class ToSource {
 
         @Override
         public void visitGoto(SSAGotoInstruction inst) {
+          Loop loop = currentLoops.size() > 0 ? currentLoops.get(currentLoops.size() - 1) : null;
           ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
 
           if (loop != null
@@ -2450,6 +2443,7 @@ public abstract class ToSource {
             CAstNode v2,
             CAstNode v1,
             BasicBlock branchBB) {
+          Loop loop = currentLoops.size() > 0 ? currentLoops.get(currentLoops.size() - 1) : null;
           CAstOperator castOp = null;
           IConditionalBranchInstruction.IOperator op = instruction.getOperator();
           if (op instanceof IConditionalBranchInstruction.Operator) {
@@ -2500,6 +2494,7 @@ public abstract class ToSource {
 
         @Override
         public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
+          Loop loop = currentLoops.size() > 0 ? currentLoops.get(currentLoops.size() - 1) : null;
           assert children.containsKey(instruction) : "children of " + instruction + ":" + children;
           Map<ISSABasicBlock, RegionTreeNode> cc = children.get(instruction);
 
@@ -2522,7 +2517,7 @@ public abstract class ToSource {
             List<List<SSAInstruction>> takenChunks =
                 regionChunks.get(Pair.make(instruction, taken));
             RegionTreeNode tr = cc.get(taken);
-            takenBlock = handleBlock(takenChunks, tr, loop);
+            takenBlock = handleBlock(takenChunks, tr, currentLoops);
 
           } else {
 
@@ -2535,7 +2530,7 @@ public abstract class ToSource {
               Pair.make(instruction, notTaken);
           List<List<SSAInstruction>> notTakenChunks = regionChunks.get(notTakenKey);
           RegionTreeNode fr = cc.get(notTaken);
-          List<CAstNode> notTakenBlock = handleBlock(notTakenChunks, fr, loop);
+          List<CAstNode> notTakenBlock = handleBlock(notTakenChunks, fr, currentLoops);
 
           if (loop != null
               && loop.getLoopBreakers().contains(branchBB)
@@ -2620,41 +2615,29 @@ public abstract class ToSource {
         }
 
         private List<CAstNode> handleBlock(
-            List<List<SSAInstruction>> loopChunks, RegionTreeNode lr, Loop loop) {
+            List<List<SSAInstruction>> loopChunks, RegionTreeNode lr, List<Loop> currentLoops) {
+          List<CAstNode> elts = new ArrayList<>();
+          lr.createLoop(
+              cfg,
+              loopChunks,
+              currentLoops == null ? new ArrayList<>() : currentLoops,
+              decls,
+              elts,
+              false);
 
-          List<Pair<CAstNode, List<CAstNode>>> normalStuff =
-              handleInsts(
-                  loopChunks, lr, x -> !(x.iterator().next() instanceof SSAGotoInstruction), loop);
+          // translate gotos
+          loopChunks.stream()
+              .filter(cs -> LoopHelper.gotoChunk(cs))
+              .forEach(
+                  c -> {
+                    Pair<CAstNode, List<CAstNode>> stuff =
+                        lr.makeToCAst(c).processChunk(decls, packages, currentLoops);
+                    elts.add(stuff.fst);
+                    decls.addAll(stuff.snd);
+                  });
 
-          List<Pair<CAstNode, List<CAstNode>>> gotoStuff =
-              handleInsts(
-                  loopChunks, lr, x -> x.iterator().next() instanceof SSAGotoInstruction, loop);
-
-          List<CAstNode> block = new ArrayList<>();
-          normalStuff.forEach(p -> block.addAll(p.snd));
-          gotoStuff.forEach(p -> block.addAll(p.snd));
-          normalStuff.forEach(p -> block.add(p.fst));
-          gotoStuff.forEach(p -> block.add(p.fst));
-          System.err.println("final block: " + block);
-          return block;
-        }
-
-        private List<Pair<CAstNode, List<CAstNode>>> handleInsts(
-            List<List<SSAInstruction>> loopChunks,
-            RegionTreeNode lr,
-            Predicate<? super List<SSAInstruction>> assignFilter,
-            Loop loop) {
-          if (loopChunks == null || loopChunks.isEmpty()) {
-            return Collections.emptyList();
-          } else {
-            return IteratorUtil.streamify(loopChunks)
-                .filter(assignFilter)
-                .map(
-                    c -> {
-                      return lr.makeToCAst(c).processChunk(parentDecls, packages, loop);
-                    })
-                .collect(Collectors.toList());
-          }
+          System.err.println("final block: " + elts);
+          return elts;
         }
 
         @Override
@@ -2672,7 +2655,7 @@ public abstract class ToSource {
             List<List<SSAInstruction>> labelChunks =
                 regionChunks.get(Pair.make(instruction, caseBlock));
             RegionTreeNode fr = cc.get(caseBlock);
-            List<CAstNode> labelBlock = handleBlock(labelChunks, fr, loop);
+            List<CAstNode> labelBlock = handleBlock(labelChunks, fr, currentLoops);
             switchCode.add(
                 ast.makeNode(
                     CAstNode.LABEL_STMT,
@@ -2686,7 +2669,7 @@ public abstract class ToSource {
           List<List<SSAInstruction>> defaultChunks =
               regionChunks.get(Pair.make(instruction, defaultBlock));
           RegionTreeNode fr = cc.get(defaultBlock);
-          List<CAstNode> defaultStuff = handleBlock(defaultChunks, fr, loop);
+          List<CAstNode> defaultStuff = handleBlock(defaultChunks, fr, currentLoops);
 
           node =
               ast.makeNode(
@@ -2923,8 +2906,8 @@ public abstract class ToSource {
           List<SSAInstruction> chunk2,
           List<CAstNode> parentDecls,
           Map<String, Set<String>> packages,
-          Loop loop) {
-        return new Visitor(root, c, chunk2, parentDecls, packages, children, loop);
+          List<Loop> currentLoops) {
+        return new Visitor(root, c, chunk2, parentDecls, packages, children, currentLoops);
       }
 
       public ToCAst(List<SSAInstruction> insts, CodeGenerationContext c) {
@@ -2933,9 +2916,9 @@ public abstract class ToSource {
       }
 
       Pair<CAstNode, List<CAstNode>> processChunk(
-          List<CAstNode> parentDecls, Map<String, Set<String>> packages, Loop currentLoop) {
+          List<CAstNode> parentDecls, Map<String, Set<String>> packages, List<Loop> currentLoops) {
         SSAInstruction root = chunk.iterator().next();
-        Visitor x = makeVisitor(root, c, chunk, parentDecls, packages, currentLoop);
+        Visitor x = makeVisitor(root, c, chunk, parentDecls, packages, currentLoops);
         return Pair.make(x.node, x.decls);
       }
     }
