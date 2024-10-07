@@ -1978,7 +1978,7 @@ public abstract class ToSource {
         protected final List<CAstNode> parentDecls;
         private final List<CAstNode> decls = new ArrayList<>();
         private final Map<String, Set<String>> packages;
-        private List<Loop> currentLoops = null;
+        private List<Loop> currentLoops = new ArrayList<>();
         private final CAstSourcePositionRecorder positionRecorder;
 
         private void logHistory(SSAInstruction inst) {
@@ -2043,7 +2043,7 @@ public abstract class ToSource {
             Map<String, Set<String>> parentPackages,
             Map<SSAInstruction, Map<ISSABasicBlock, RegionTreeNode>> children,
             List<Loop> currentLoops) {
-          this.currentLoops = currentLoops;
+          if (currentLoops != null) this.currentLoops = currentLoops;
           this.root = root;
           this.chunk = chunk;
           this.children = children;
