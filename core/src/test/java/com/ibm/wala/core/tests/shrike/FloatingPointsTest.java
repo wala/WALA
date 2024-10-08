@@ -1,6 +1,7 @@
 package com.ibm.wala.core.tests.shrike;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -196,7 +197,7 @@ public class FloatingPointsTest extends WalaTestCase {
     IInstruction instruction = instructions[index];
 
     // Check that the instruction type has not been changed
-    assertTrue(instruction instanceof ConstantInstruction);
+    assertInstanceOf(ConstantInstruction.class, instruction);
 
     // The type type should be the same as well
     ConstantInstruction instruction2 = (ConstantInstruction) instruction;
