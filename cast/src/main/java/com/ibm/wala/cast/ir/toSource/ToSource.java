@@ -2509,7 +2509,11 @@ public abstract class ToSource {
           {
             if (v2.getValue() instanceof Number && ((Number) v2.getValue()).equals(0)) {
               if (castOp == CAstOperator.OP_NE) {
-                test = v1;
+                if (loop != null && loop.getLoopControl().equals(branchBB)) {
+                  test = v1;
+                } else {
+                  test = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, v1);
+                }
                 break test;
               } else if (castOp == CAstOperator.OP_EQ) {
                 if (loop != null && loop.getLoopControl().equals(branchBB)) {
