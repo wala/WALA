@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.ir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -160,7 +161,8 @@ public abstract class AnnotationTest extends WalaTestCase {
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
     assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
-    assertTrue(classUnderTest instanceof BytecodeClass, classUnderTest + " must be BytecodeClass");
+    assertInstanceOf(
+        BytecodeClass.class, classUnderTest, classUnderTest + " must be BytecodeClass");
     BytecodeClass<?> bcClassUnderTest = (BytecodeClass<?>) classUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
@@ -191,8 +193,8 @@ public abstract class AnnotationTest extends WalaTestCase {
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     assertNotNull(methodUnderTest, methodRefUnderTest + " not found");
-    assertTrue(
-        methodUnderTest instanceof IBytecodeMethod, methodUnderTest + " must be IBytecodeMethod");
+    assertInstanceOf(
+        IBytecodeMethod.class, methodUnderTest, methodUnderTest + " must be IBytecodeMethod");
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
         (IBytecodeMethod<IInstruction>) methodUnderTest;
 
@@ -301,8 +303,8 @@ public abstract class AnnotationTest extends WalaTestCase {
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     assertNotNull(methodUnderTest, methodRefUnderTest + " not found");
-    assertTrue(
-        methodUnderTest instanceof IBytecodeMethod, methodUnderTest + " must be bytecode method");
+    assertInstanceOf(
+        IBytecodeMethod.class, methodUnderTest, methodUnderTest + " must be bytecode method");
     IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
 
     Collection<Annotation>[] parameterAnnotations =

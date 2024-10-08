@@ -15,6 +15,7 @@ package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -258,7 +259,7 @@ public abstract class JavaIRTests extends IRTests {
 
               CGNode node = cg.getNodes(mref).iterator().next();
               SSAInstruction s = node.getIR().getInstructions()[2];
-              assertTrue(s instanceof SSANewInstruction, "Did not find new array instruction.");
+              assertInstanceOf(SSANewInstruction.class, s, "Did not find new array instruction.");
               assertTrue(((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType(), "");
             }),
         true,
@@ -304,8 +305,9 @@ public abstract class JavaIRTests extends IRTests {
               {
                 final SymbolTable symbolTable = node.getIR().getSymbolTable();
                 for (int i = 4; i <= 7; i++) {
-                  assertTrue(
-                      instructions[i] instanceof SSAArrayStoreInstruction,
+                  assertInstanceOf(
+                      SSAArrayStoreInstruction.class,
+                      instructions[i],
                       "Expected only array stores.");
 
                   SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
