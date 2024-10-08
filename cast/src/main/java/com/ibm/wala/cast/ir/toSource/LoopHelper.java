@@ -15,6 +15,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.IteratorUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -450,15 +451,18 @@ public class LoopHelper {
     return loopBB;
   }
 
-  public static HashMap<ISSABasicBlock, List<Loop>> updateLoopRelationship(
+  public static List<HashMap<ISSABasicBlock, List<Loop>>> updateLoopRelationship(
       Map<ISSABasicBlock, Loop> loops) {
     // collect loop break and the jumps, key: loopBreaker,
     // value: the loops been jumped, not including the inner loop and outer loop
-    HashMap<ISSABasicBlock, List<Loop>> jumpLoops = HashMapFactory.make();
+    HashMap<ISSABasicBlock, List<Loop>> jumpToTop = HashMapFactory.make();
+    HashMap<ISSABasicBlock, List<Loop>> jumpToOutside = HashMapFactory.make();
+    HashMap<ISSABasicBlock, List<Loop>> sharedLoopControl = HashMapFactory.make();
 
     // if there are only one loop, there wont be any nested loops
-    if (loops.size() < 2) return jumpLoops;
+    if (loops.size() < 2) return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl);
 
+    // order loops by header from large to small
     List<Loop> sortedLoops =
         loops.values().stream()
             .sorted(
@@ -495,12 +499,14 @@ public class LoopHelper {
           // start to check loop breakers to see if there are any jump more than one layers
           // since each loop breaker only has one loop exit, use loop exit here to ease the search
           for (ISSABasicBlock loopExit : ll.getLoopExits()) {
-            // first loop exit should not belongs to it's direct parent
+            // first, loop exit should not belongs to it's direct parent
             if (!childParentMap.get(ll).getAllBlocks().contains(loopExit)) {
+              // second, find out the parent and add it into jumpPath
               Loop currentLoop = childParentMap.get(ll);
+              // create jump path from outer loop to inner loop
               List<Loop> jumpPath = new ArrayList<>();
               jumpPath.add(currentLoop);
-              // try to find out the loops been jumped over
+              // third, try to find out the loops been jumped over besides currentLoop
               while (childParentMap.containsKey(currentLoop)) {
                 if (!childParentMap.get(currentLoop).getAllBlocks().contains(loopExit)) {
                   currentLoop = childParentMap.get(currentLoop);
@@ -509,14 +515,26 @@ public class LoopHelper {
                   break;
                 }
               }
-              jumpLoops.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+              if (!childParentMap.containsKey(jumpPath.get(0))) {
+                // if the jumpPath includes top ones
+                if (jumpPath.get(0).getLoopControl().equals(ll.getLoopBreakerByExit(loopExit))) {
+                  sharedLoopControl.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+                } else {
+                  jumpToOutside.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+                }
+              } else {
+                jumpToTop.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+              }
+
               System.out.println(
                   "This is an example of jump from inner loop to outer-most" + jumpPath);
             }
           }
         });
 
-    System.out.println("====loop jumps:\n" + jumpLoops);
-    return jumpLoops;
+    System.out.println("====loop jumps to top:\n" + jumpToTop);
+    System.out.println("====loop jumps to outside:\n" + jumpToOutside);
+    System.out.println("====loop shared control:\n" + sharedLoopControl);
+    return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl);
   }
 }

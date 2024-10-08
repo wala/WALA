@@ -600,8 +600,12 @@ public abstract class ToSource {
     private final PrunedCFG<SSAInstruction, ISSABasicBlock> cfg;
     // The key is loop header basic block while the value is the loop object in IR
     private final Map<ISSABasicBlock, Loop> loops;
-    // The key is loop breaker and the value is the list of loops that'll been jumped over
-    private final Map<ISSABasicBlock, List<Loop>> jumpLoops;
+    // The key is loop breaker and the value is the list of loops that'll be jumped over
+    private final Map<ISSABasicBlock, List<Loop>> jumpToTop;
+    // The key is loop breaker and the value is the list of loops that'll be jumped over
+    private final Map<ISSABasicBlock, List<Loop>> jumpToOutside;
+    // The key is loop breaker and the value is the list of loops that'll be jumped over
+    private final Map<ISSABasicBlock, List<Loop>> sharedLoopControl;
     private final SSAInstruction r;
     private final ISSABasicBlock l;
     private final ControlDependenceGraph<ISSABasicBlock> cdg;
@@ -681,7 +685,9 @@ public abstract class ToSource {
       this.cdg = parent.cdg;
       this.packages = parent.packages;
       this.loops = parent.loops;
-      this.jumpLoops = parent.jumpLoops;
+      this.jumpToTop = parent.jumpToTop;
+      this.jumpToOutside = parent.jumpToOutside;
+      this.sharedLoopControl = parent.sharedLoopControl;
       this.ir = parent.ir;
       this.sourceNames = parent.sourceNames;
       this.positionRecorder = parent.positionRecorder;
@@ -955,7 +961,12 @@ public abstract class ToSource {
 
       // figure out nested loops
       // handle nested loop
-      jumpLoops = LoopHelper.updateLoopRelationship(loops);
+      List<HashMap<ISSABasicBlock, List<Loop>>> loopRelation =
+          LoopHelper.updateLoopRelationship(loops);
+      assert (loopRelation.size() == 3);
+      jumpToTop = loopRelation.get(0);
+      jumpToOutside = loopRelation.get(1);
+      sharedLoopControl = loopRelation.get(2);
 
       System.err.println(
           "loop controls: "
@@ -1581,8 +1592,8 @@ public abstract class ToSource {
 
       CAstNode condSuccessor = null;
       // if current loop was jumped by it's loop control, then no need to generate else branch
-      if (jumpLoops.containsKey(currentLoop.getLoopControl())
-          && jumpLoops.get(currentLoop.getLoopControl()).contains(currentLoop)) {
+      if (sharedLoopControl.containsKey(currentLoop.getLoopControl())
+          && sharedLoopControl.get(currentLoop.getLoopControl()).contains(currentLoop)) {
         condSuccessor = ast.makeNode(CAstNode.EMPTY);
       } else {
         // translate loop body after conditional
@@ -1723,14 +1734,12 @@ public abstract class ToSource {
                 condSuccessor.getChildren().toArray(new CAstNode[condSuccessor.getChildCount()]));
       }
 
-      // if this is the loop recorded in jumpLoops, then generate if-break node
+      // if this is the loop recorded in jumpToTop or jumpToOutside, then generate if-break node
       List<CAstNode> jumpList = new ArrayList<>();
-      if (jumpLoops.keySet().stream()
-          .anyMatch(
-              breaker ->
-                  jumpLoops.get(breaker).contains(currentLoop)
-                      // if it is not loop control
-                      && !currentLoop.getLoopControl().equals(breaker))) {
+      if (jumpToTop.keySet().stream()
+          .anyMatch(breaker -> jumpToTop.get(breaker).contains(currentLoop))) {
+        //          || jumpToOutside.keySet().stream()
+        //              .anyMatch(breaker -> jumpToOutside.get(breaker).contains(currentLoop))) {
         CAstNode ifCont =
             ast.makeNode(
                 CAstNode.IF_STMT,
@@ -1747,9 +1756,10 @@ public abstract class ToSource {
       }
       // if this is the parent loop contains the loops been jumped, insert jump assignment at the
       // beginning of the loop
+      // and generate if loopjump then continue
       // TODO: first or last?
-      else if (jumpLoops.keySet().stream()
-          .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpLoops.get(breaker).get(0)))) {
+      else if (jumpToTop.keySet().stream()
+          .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))) {
         CAstNode setFalse =
             ast.makeNode(
                 CAstNode.EXPR_STMT,
@@ -1757,9 +1767,20 @@ public abstract class ToSource {
                     CAstNode.ASSIGN,
                     ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                     ast.makeConstant(0)));
-
         jumpList.add(setFalse);
+
+        CAstNode ifCont =
+            ast.makeNode(
+                CAstNode.IF_STMT,
+                ast.makeNode(
+                    CAstNode.BINARY_EXPR,
+                    CAstOperator.OP_NE,
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                    ast.makeConstant(0)),
+                ast.makeNode(CAstNode.CONTINUE));
         jumpList.addAll(bodyNode.getChildren());
+        jumpList.add(ifCont);
+
         bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
       }
 
@@ -1875,11 +1896,13 @@ public abstract class ToSource {
                     // not be empty
                     && LoopHelper.isConditional(loopChunks.get(loopChunks.size() - 1))) {
                   // create loop
-                  currentLoops.add(
+                  List<Loop> passLoops = new ArrayList<>();
+                  passLoops.addAll(currentLoops);
+                  passLoops.add(
                       LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops));
 
                   Pair<CAstNode, List<CAstNode>> stuff =
-                      toLoopCAst(loopChunks, decls, currentLoops, new ArrayList<>());
+                      toLoopCAst(loopChunks, decls, passLoops, new ArrayList<>());
                   elts.addAll(stuff.fst.getChildren());
                   loopChunks.clear();
                 }
@@ -2549,18 +2572,21 @@ public abstract class ToSource {
                 notTakenBlock.add(ast.makeNode(CAstNode.BREAK));
               }
 
-              // If a loop breaker is found in jumpLoops, set ct_loop_jump=true
-              if (jumpLoops.containsKey(branchBB)) {
-                if (jumpLoops.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop))) {
-                  CAstNode setTrue =
-                      ast.makeNode(
-                          CAstNode.EXPR_STMT,
-                          ast.makeNode(
-                              CAstNode.ASSIGN,
-                              ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
-                              ast.makeConstant(1)));
-                  notTakenBlock.add(0, setTrue);
-                }
+              // If a loop breaker is found in jumpToTop or jumpToOutside, set ct_loop_jump=true
+              if ((jumpToTop.containsKey(branchBB)
+                  && jumpToTop.get(branchBB).stream()
+                      .anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+                //                  || (jumpToOutside.containsKey(branchBB)
+                //                      && jumpToOutside.get(branchBB).stream()
+                //                          .anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+                CAstNode setTrue =
+                    ast.makeNode(
+                        CAstNode.EXPR_STMT,
+                        ast.makeNode(
+                            CAstNode.ASSIGN,
+                            ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                            ast.makeConstant(1)));
+                notTakenBlock.add(0, setTrue);
               }
 
             } else {
