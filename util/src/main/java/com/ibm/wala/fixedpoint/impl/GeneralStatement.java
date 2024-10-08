@@ -12,6 +12,7 @@ package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
+import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import org.jspecify.annotations.NullUnmarked;
 
@@ -30,7 +31,8 @@ public abstract class GeneralStatement<T extends IVariable<T>>
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    *
-   * @return true if the lhs value changed. false otherwise
+   * @return a constant defined by {@link FixedPointConstants} that reflects whether the lhs value
+   *     changed
    */
   @Override
   public byte evaluate() {

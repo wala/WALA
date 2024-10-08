@@ -12,6 +12,7 @@
 package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.AbstractOperator;
+import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 
 /** An operator of the form lhs = op */
@@ -25,7 +26,8 @@ public abstract class NullaryOperator<T extends IVariable<T>> extends AbstractOp
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    *
-   * @return true if the lhs value changes. false otherwise.
+   * @return a constant defined by {@link FixedPointConstants} that reflects whether the lhs value
+   *     changed
    */
   public abstract byte evaluate(T lhs);
 }
