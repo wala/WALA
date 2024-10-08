@@ -1768,19 +1768,29 @@ public abstract class ToSource {
                     ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                     ast.makeConstant(0)));
         jumpList.add(setFalse);
-
-        CAstNode ifCont =
-            ast.makeNode(
-                CAstNode.IF_STMT,
-                ast.makeNode(
-                    CAstNode.BINARY_EXPR,
-                    CAstOperator.OP_NE,
-                    ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
-                    ast.makeConstant(0)),
-                ast.makeNode(CAstNode.CONTINUE));
         jumpList.addAll(bodyNode.getChildren());
-        jumpList.add(ifCont);
 
+        if (LoopType.WHILETRUE.equals(loopType)) {
+          // change loop type in this case
+          test =
+              ast.makeNode(
+                  CAstNode.BINARY_EXPR,
+                  CAstOperator.OP_NE,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                  ast.makeConstant(0));
+          loopType = LoopType.DOWHILE;
+        } else {
+          CAstNode ifCont =
+              ast.makeNode(
+                  CAstNode.IF_STMT,
+                  ast.makeNode(
+                      CAstNode.BINARY_EXPR,
+                      CAstOperator.OP_NE,
+                      ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                      ast.makeConstant(0)),
+                  ast.makeNode(CAstNode.CONTINUE));
+          jumpList.add(ifCont);
+        }
         bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
       }
 
