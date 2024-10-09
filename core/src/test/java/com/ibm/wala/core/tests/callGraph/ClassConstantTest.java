@@ -14,8 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -31,6 +35,10 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -78,5 +86,31 @@ public class ClassConstantTest extends WalaTestCase {
 
     // make sure call to hashCode from main
     assertTrue(cg.hasEdge(mainMethodNode, hashCodeNodes.iterator().next()));
+  }
+
+  @Test
+  public void classHierarchyToJson() throws ClassHierarchyException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Gson gson = new Gson();
+    Type type = new TypeToken<HashMap<String, Set<String>>>() {}.getType();
+    String json = cha.toJson();
+    System.err.println(json);
+    HashMap<String, Set<String>> list = gson.fromJson(json, type);
+    assertTrue(list.containsKey(nodeToString(cha.getRootClass())));
+
+    Set<String> subclassNames = new HashSet<>();
+    Iterator<IClass> children = cha.computeSubClasses(cha.getRootClass().getReference()).iterator();
+    while (children.hasNext()) {
+      String temp = nodeToString(children.next());
+      subclassNames.add(temp);
+    }
+    assertTrue(subclassNames.containsAll(list.get(nodeToString(cha.getRootClass()))));
+  }
+
+  private String nodeToString(IClass klass) {
+    return StringStuff.jvmToBinaryName(klass.getName().toString());
   }
 }
