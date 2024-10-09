@@ -1518,13 +1518,19 @@ public abstract class ToSource {
 
       // usually loop control is the last chunk passed in from the caller
       assert (chunks != null && chunks.size() > 0);
-      List<SSAInstruction> condChunk = chunks.get(chunks.size() - 1);
-      assert LoopHelper.isConditional(condChunk);
+      List<SSAInstruction> condChunk =
+          chunks.stream()
+              .filter(
+                  chunk ->
+                      LoopHelper.isConditional(chunk)
+                          // TODO: this is based on the assumption that the first conditional will
+                          // be the loop control
+                          && LoopHelper.isLoopControl(cfg, chunk, currentLoop))
+              .findFirst()
+              .orElse(null);
+      assert condChunk != null;
 
       createLoop(cfg, chunks, parentLoops, decls, elts, true);
-
-      // TODO: this is based on the assumption that the first conditional will be the loop control
-      assert LoopHelper.isLoopControl(cfg, condChunk, currentLoop);
 
       LoopType loopType = LoopHelper.getLoopType(cfg, ST, currentLoop);
 
