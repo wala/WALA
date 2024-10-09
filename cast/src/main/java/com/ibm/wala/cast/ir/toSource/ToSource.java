@@ -600,8 +600,12 @@ public abstract class ToSource {
     private final PrunedCFG<SSAInstruction, ISSABasicBlock> cfg;
     // The key is loop header basic block while the value is the loop object in IR
     private final Map<ISSABasicBlock, Loop> loops;
-    // The key is loop breaker and the value is the list of loops that'll been jumped over
-    private final Map<ISSABasicBlock, List<Loop>> jumpLoops;
+    // The key is loop breaker and the value is the list of loops that'll be jumped over
+    private final Map<ISSABasicBlock, List<Loop>> jumpToTop;
+    // The key is loop breaker and the value is the list of loops that'll be jumped over
+    private final Map<ISSABasicBlock, List<Loop>> jumpToOutside;
+    // The key is loop breaker and the value is the list of loops that'll be jumped over
+    private final Map<ISSABasicBlock, List<Loop>> sharedLoopControl;
     private final SSAInstruction r;
     private final ISSABasicBlock l;
     private final ControlDependenceGraph<ISSABasicBlock> cdg;
@@ -681,7 +685,9 @@ public abstract class ToSource {
       this.cdg = parent.cdg;
       this.packages = parent.packages;
       this.loops = parent.loops;
-      this.jumpLoops = parent.jumpLoops;
+      this.jumpToTop = parent.jumpToTop;
+      this.jumpToOutside = parent.jumpToOutside;
+      this.sharedLoopControl = parent.sharedLoopControl;
       this.ir = parent.ir;
       this.sourceNames = parent.sourceNames;
       this.positionRecorder = parent.positionRecorder;
@@ -955,7 +961,12 @@ public abstract class ToSource {
 
       // figure out nested loops
       // handle nested loop
-      jumpLoops = LoopHelper.updateLoopRelationship(loops);
+      List<HashMap<ISSABasicBlock, List<Loop>>> loopRelation =
+          LoopHelper.updateLoopRelationship(loops);
+      assert (loopRelation.size() == 3);
+      jumpToTop = loopRelation.get(0);
+      jumpToOutside = loopRelation.get(1);
+      sharedLoopControl = loopRelation.get(2);
 
       System.err.println(
           "loop controls: "
@@ -1478,11 +1489,6 @@ public abstract class ToSource {
       List<CAstNode> decls = new ArrayList<>();
       List<List<SSAInstruction>> chunks = regionChunks.get(Pair.make(r, l));
 
-      Loop currentLoop =
-          (currentLoops == null || currentLoops.size() < 1)
-              ? null
-              : currentLoops.get(currentLoops.size() - 1);
-
       // translate the chunks that's not gotos
       createLoop(
           cfg, chunks, currentLoops == null ? new ArrayList<>() : currentLoops, decls, elts, false);
@@ -1493,7 +1499,7 @@ public abstract class ToSource {
           .forEach(
               c -> {
                 Pair<CAstNode, List<CAstNode>> stuff =
-                    makeToCAst(c).processChunk(decls, packages, currentLoop);
+                    makeToCAst(c).processChunk(decls, packages, currentLoops);
                 elts.add(stuff.fst);
                 decls.addAll(stuff.snd);
               });
@@ -1535,7 +1541,7 @@ public abstract class ToSource {
       CAstNode test;
       if (condChunkWithoutConditional.size() > 0) {
         test =
-            makeToCAst(condChunkWithoutConditional).processChunk(decls, packages, currentLoop).fst;
+            makeToCAst(condChunkWithoutConditional).processChunk(decls, packages, parentLoops).fst;
         if (CAstNode.DECL_STMT == test.getKind()) {
           test = test.getChild(test.getChildCount() - 1);
 
@@ -1586,8 +1592,8 @@ public abstract class ToSource {
 
       CAstNode condSuccessor = null;
       // if current loop was jumped by it's loop control, then no need to generate else branch
-      if (jumpLoops.containsKey(currentLoop.getLoopControl())
-          && jumpLoops.get(currentLoop.getLoopControl()).contains(currentLoop)) {
+      if (sharedLoopControl.containsKey(currentLoop.getLoopControl())
+          && sharedLoopControl.get(currentLoop.getLoopControl()).contains(currentLoop)) {
         condSuccessor = ast.makeNode(CAstNode.EMPTY);
       } else {
         // translate loop body after conditional
@@ -1728,14 +1734,12 @@ public abstract class ToSource {
                 condSuccessor.getChildren().toArray(new CAstNode[condSuccessor.getChildCount()]));
       }
 
-      // if this is the loop recorded in jumpLoops, then generate if-break node
+      // if this is the loop recorded in jumpToTop or jumpToOutside, then generate if-break node
       List<CAstNode> jumpList = new ArrayList<>();
-      if (jumpLoops.keySet().stream()
-          .anyMatch(
-              breaker ->
-                  jumpLoops.get(breaker).contains(currentLoop)
-                      // if it is not loop control
-                      && !currentLoop.getLoopControl().equals(breaker))) {
+      if (jumpToTop.keySet().stream()
+          .anyMatch(breaker -> jumpToTop.get(breaker).contains(currentLoop))) {
+        //          || jumpToOutside.keySet().stream()
+        //              .anyMatch(breaker -> jumpToOutside.get(breaker).contains(currentLoop))) {
         CAstNode ifCont =
             ast.makeNode(
                 CAstNode.IF_STMT,
@@ -1752,9 +1756,10 @@ public abstract class ToSource {
       }
       // if this is the parent loop contains the loops been jumped, insert jump assignment at the
       // beginning of the loop
+      // and generate if loopjump then continue
       // TODO: first or last?
-      else if (jumpLoops.keySet().stream()
-          .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpLoops.get(breaker).get(0)))) {
+      else if (jumpToTop.keySet().stream()
+          .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))) {
         CAstNode setFalse =
             ast.makeNode(
                 CAstNode.EXPR_STMT,
@@ -1762,9 +1767,30 @@ public abstract class ToSource {
                     CAstNode.ASSIGN,
                     ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                     ast.makeConstant(0)));
-
         jumpList.add(setFalse);
         jumpList.addAll(bodyNode.getChildren());
+
+        if (LoopType.WHILETRUE.equals(loopType)) {
+          // change loop type in this case
+          test =
+              ast.makeNode(
+                  CAstNode.BINARY_EXPR,
+                  CAstOperator.OP_NE,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                  ast.makeConstant(0));
+          loopType = LoopType.DOWHILE;
+        } else {
+          CAstNode ifCont =
+              ast.makeNode(
+                  CAstNode.IF_STMT,
+                  ast.makeNode(
+                      CAstNode.BINARY_EXPR,
+                      CAstOperator.OP_NE,
+                      ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                      ast.makeConstant(0)),
+                  ast.makeNode(CAstNode.CONTINUE));
+          jumpList.add(ifCont);
+        }
         bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
       }
 
@@ -1805,7 +1831,7 @@ public abstract class ToSource {
           .forEach(
               c -> {
                 Pair<CAstNode, List<CAstNode>> stuff =
-                    makeToCAst(c).processChunk(decls, packages, currentLoop);
+                    makeToCAst(c).processChunk(decls, packages, parentLoops);
                 elts.add(stuff.fst);
                 decls.addAll(stuff.snd);
               });
@@ -1865,9 +1891,6 @@ public abstract class ToSource {
         List<CAstNode> elts,
         boolean verifyConditional) {
 
-      // retrieve the current loop, it might be null
-      Loop currentLoop = currentLoops.size() < 1 ? null : currentLoops.get(currentLoops.size() - 1);
-
       List<List<SSAInstruction>> loopChunks = new ArrayList<>();
       chunks.forEach(
           chunkInsts -> {
@@ -1882,12 +1905,20 @@ public abstract class ToSource {
                     // that should be translated as a normal chunk and at that time loopChunks might
                     // not be empty
                     && LoopHelper.isConditional(loopChunks.get(loopChunks.size() - 1))) {
-                  // create loop
-                  currentLoops.add(
-                      LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops));
+                  // create loop list
+                  List<Loop> passLoops = new ArrayList<>();
+                  Loop loopByChunk =
+                      LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops);
+                  if (currentLoops.size() > 0
+                      && currentLoops
+                          .get(currentLoops.size() - 1)
+                          .containsNestedLoop(loopByChunk)) {
+                    passLoops.addAll(currentLoops);
+                  }
+                  passLoops.add(loopByChunk);
 
                   Pair<CAstNode, List<CAstNode>> stuff =
-                      toLoopCAst(loopChunks, decls, currentLoops, new ArrayList<>());
+                      toLoopCAst(loopChunks, decls, passLoops, new ArrayList<>());
                   elts.addAll(stuff.fst.getChildren());
                   loopChunks.clear();
                 }
@@ -1898,7 +1929,7 @@ public abstract class ToSource {
                     && (LoopHelper.isConditional(chunks.get(chunks.size() - 1))
                         && chunkInsts.equals(chunks.get(chunks.size() - 1))))) {
                   Pair<CAstNode, List<CAstNode>> stuff =
-                      makeToCAst(chunkInsts).processChunk(decls, packages, currentLoop);
+                      makeToCAst(chunkInsts).processChunk(decls, packages, currentLoops);
                   elts.add(stuff.fst);
                   decls.addAll(stuff.snd);
                 }
@@ -1908,12 +1939,61 @@ public abstract class ToSource {
 
       // there's a case loopChunks are the last few chunks in the list, then parse it
       if (loopChunks.size() > 0) {
-        // create loop
-        currentLoops.add(LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops));
+        // those chunks might belongs to different loops
+        int startIndex = 0;
+        int endIndex = 1;
+        Loop loopByChunk =
+            LoopHelper.findLoopByChunk(cfg, loopChunks.get(startIndex), loops, currentLoops);
+        while (endIndex < loopChunks.size()) {
+          Loop nextLoopByChunk =
+              LoopHelper.findLoopByChunk(cfg, loopChunks.get(endIndex), loops, currentLoops);
+          if ((loopByChunk == null && nextLoopByChunk == null)
+              || (loopByChunk != null && loopByChunk.equals(nextLoopByChunk))) {
+            // they belongs to same loop
+            endIndex++;
+          } else {
+            // they belongs to different loops
+            // parse previous loop
+            // create loop list
+            List<Loop> passLoops = new ArrayList<>();
+            if (currentLoops.size() > 0
+                && currentLoops.get(currentLoops.size() - 1).containsNestedLoop(loopByChunk)) {
+              // if they are nested then pass the loop hierarchy
+              passLoops.addAll(currentLoops);
+            }
+            if (!passLoops.contains(loopByChunk))
+              passLoops.add(loopByChunk); // TODO: will the loopByChunk=null?
+
+            Pair<CAstNode, List<CAstNode>> stuff =
+                toLoopCAst(
+                    loopChunks.subList(startIndex, endIndex), decls, passLoops, new ArrayList<>());
+            elts.addAll(stuff.fst.getChildren());
+
+            loopByChunk = nextLoopByChunk;
+            startIndex = endIndex;
+            endIndex = endIndex++;
+          }
+        }
+
+        // parse last loop
+        // create loop list
+        List<Loop> passLoops = new ArrayList<>();
+        if (currentLoops.size() > 0
+            && currentLoops.get(currentLoops.size() - 1).containsNestedLoop(loopByChunk)) {
+          // if they are nested then pass the loop hierarchy
+          passLoops.addAll(currentLoops);
+        }
+        if (!passLoops.contains(loopByChunk))
+          passLoops.add(loopByChunk); // TODO: will the loopByChunk=null?
 
         Pair<CAstNode, List<CAstNode>> stuff =
-            toLoopCAst(loopChunks, decls, currentLoops, new ArrayList<>());
+            toLoopCAst(
+                loopChunks.subList(startIndex, loopChunks.size()),
+                decls,
+                passLoops,
+                new ArrayList<>());
         elts.addAll(stuff.fst.getChildren());
+
         loopChunks.clear();
       }
     }
@@ -1986,7 +2066,7 @@ public abstract class ToSource {
         protected final List<CAstNode> parentDecls;
         private final List<CAstNode> decls = new ArrayList<>();
         private final Map<String, Set<String>> packages;
-        private Loop loop = null;
+        private List<Loop> currentLoops = new ArrayList<>();
         private final CAstSourcePositionRecorder positionRecorder;
 
         private void logHistory(SSAInstruction inst) {
@@ -2050,8 +2130,8 @@ public abstract class ToSource {
             List<CAstNode> parentDecls,
             Map<String, Set<String>> parentPackages,
             Map<SSAInstruction, Map<ISSABasicBlock, RegionTreeNode>> children,
-            Loop loop) {
-          this.loop = loop;
+            List<Loop> currentLoops) {
+          if (currentLoops != null) this.currentLoops = currentLoops;
           this.root = root;
           this.chunk = chunk;
           this.children = children;
@@ -2185,6 +2265,7 @@ public abstract class ToSource {
 
         @Override
         public void visitGoto(SSAGotoInstruction inst) {
+          Loop loop = currentLoops.size() > 0 ? currentLoops.get(currentLoops.size() - 1) : null;
           ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
 
           if (loop != null
@@ -2450,6 +2531,7 @@ public abstract class ToSource {
             CAstNode v2,
             CAstNode v1,
             BasicBlock branchBB) {
+          Loop loop = currentLoops.size() > 0 ? currentLoops.get(currentLoops.size() - 1) : null;
           CAstOperator castOp = null;
           IConditionalBranchInstruction.IOperator op = instruction.getOperator();
           if (op instanceof IConditionalBranchInstruction.Operator) {
@@ -2482,7 +2564,11 @@ public abstract class ToSource {
           {
             if (v2.getValue() instanceof Number && ((Number) v2.getValue()).equals(0)) {
               if (castOp == CAstOperator.OP_NE) {
-                test = v1;
+                if (loop != null && loop.getLoopControl().equals(branchBB)) {
+                  test = v1;
+                } else {
+                  test = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, v1);
+                }
                 break test;
               } else if (castOp == CAstOperator.OP_EQ) {
                 if (loop != null && loop.getLoopControl().equals(branchBB)) {
@@ -2500,6 +2586,7 @@ public abstract class ToSource {
 
         @Override
         public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
+          Loop loop = currentLoops.size() > 0 ? currentLoops.get(currentLoops.size() - 1) : null;
           assert children.containsKey(instruction) : "children of " + instruction + ":" + children;
           Map<ISSABasicBlock, RegionTreeNode> cc = children.get(instruction);
 
@@ -2522,7 +2609,7 @@ public abstract class ToSource {
             List<List<SSAInstruction>> takenChunks =
                 regionChunks.get(Pair.make(instruction, taken));
             RegionTreeNode tr = cc.get(taken);
-            takenBlock = handleBlock(takenChunks, tr, loop);
+            takenBlock = handleBlock(takenChunks, tr, currentLoops);
 
           } else {
 
@@ -2535,7 +2622,7 @@ public abstract class ToSource {
               Pair.make(instruction, notTaken);
           List<List<SSAInstruction>> notTakenChunks = regionChunks.get(notTakenKey);
           RegionTreeNode fr = cc.get(notTaken);
-          List<CAstNode> notTakenBlock = handleBlock(notTakenChunks, fr, loop);
+          List<CAstNode> notTakenBlock = handleBlock(notTakenChunks, fr, currentLoops);
 
           if (loop != null
               && loop.getLoopBreakers().contains(branchBB)
@@ -2554,18 +2641,21 @@ public abstract class ToSource {
                 notTakenBlock.add(ast.makeNode(CAstNode.BREAK));
               }
 
-              // If a loop breaker is found in jumpLoops, set ct_loop_jump=true
-              if (jumpLoops.containsKey(branchBB)) {
-                if (jumpLoops.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop))) {
-                  CAstNode setTrue =
-                      ast.makeNode(
-                          CAstNode.EXPR_STMT,
-                          ast.makeNode(
-                              CAstNode.ASSIGN,
-                              ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
-                              ast.makeConstant(1)));
-                  notTakenBlock.add(0, setTrue);
-                }
+              // If a loop breaker is found in jumpToTop or jumpToOutside, set ct_loop_jump=true
+              if ((jumpToTop.containsKey(branchBB)
+                  && jumpToTop.get(branchBB).stream()
+                      .anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+                //                  || (jumpToOutside.containsKey(branchBB)
+                //                      && jumpToOutside.get(branchBB).stream()
+                //                          .anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+                CAstNode setTrue =
+                    ast.makeNode(
+                        CAstNode.EXPR_STMT,
+                        ast.makeNode(
+                            CAstNode.ASSIGN,
+                            ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                            ast.makeConstant(1)));
+                notTakenBlock.add(0, setTrue);
               }
 
             } else {
@@ -2620,41 +2710,29 @@ public abstract class ToSource {
         }
 
         private List<CAstNode> handleBlock(
-            List<List<SSAInstruction>> loopChunks, RegionTreeNode lr, Loop loop) {
+            List<List<SSAInstruction>> loopChunks, RegionTreeNode lr, List<Loop> currentLoops) {
+          List<CAstNode> elts = new ArrayList<>();
+          lr.createLoop(
+              cfg,
+              loopChunks,
+              currentLoops == null ? new ArrayList<>() : currentLoops,
+              decls,
+              elts,
+              false);
 
-          List<Pair<CAstNode, List<CAstNode>>> normalStuff =
-              handleInsts(
-                  loopChunks, lr, x -> !(x.iterator().next() instanceof SSAGotoInstruction), loop);
+          // translate gotos
+          loopChunks.stream()
+              .filter(cs -> LoopHelper.gotoChunk(cs))
+              .forEach(
+                  c -> {
+                    Pair<CAstNode, List<CAstNode>> stuff =
+                        lr.makeToCAst(c).processChunk(decls, packages, currentLoops);
+                    elts.add(stuff.fst);
+                    decls.addAll(stuff.snd);
+                  });
 
-          List<Pair<CAstNode, List<CAstNode>>> gotoStuff =
-              handleInsts(
-                  loopChunks, lr, x -> x.iterator().next() instanceof SSAGotoInstruction, loop);
-
-          List<CAstNode> block = new ArrayList<>();
-          normalStuff.forEach(p -> block.addAll(p.snd));
-          gotoStuff.forEach(p -> block.addAll(p.snd));
-          normalStuff.forEach(p -> block.add(p.fst));
-          gotoStuff.forEach(p -> block.add(p.fst));
-          System.err.println("final block: " + block);
-          return block;
-        }
-
-        private List<Pair<CAstNode, List<CAstNode>>> handleInsts(
-            List<List<SSAInstruction>> loopChunks,
-            RegionTreeNode lr,
-            Predicate<? super List<SSAInstruction>> assignFilter,
-            Loop loop) {
-          if (loopChunks == null || loopChunks.isEmpty()) {
-            return Collections.emptyList();
-          } else {
-            return IteratorUtil.streamify(loopChunks)
-                .filter(assignFilter)
-                .map(
-                    c -> {
-                      return lr.makeToCAst(c).processChunk(parentDecls, packages, loop);
-                    })
-                .collect(Collectors.toList());
-          }
+          System.err.println("final block: " + elts);
+          return elts;
         }
 
         @Override
@@ -2672,7 +2750,7 @@ public abstract class ToSource {
             List<List<SSAInstruction>> labelChunks =
                 regionChunks.get(Pair.make(instruction, caseBlock));
             RegionTreeNode fr = cc.get(caseBlock);
-            List<CAstNode> labelBlock = handleBlock(labelChunks, fr, loop);
+            List<CAstNode> labelBlock = handleBlock(labelChunks, fr, currentLoops);
             switchCode.add(
                 ast.makeNode(
                     CAstNode.LABEL_STMT,
@@ -2686,7 +2764,7 @@ public abstract class ToSource {
           List<List<SSAInstruction>> defaultChunks =
               regionChunks.get(Pair.make(instruction, defaultBlock));
           RegionTreeNode fr = cc.get(defaultBlock);
-          List<CAstNode> defaultStuff = handleBlock(defaultChunks, fr, loop);
+          List<CAstNode> defaultStuff = handleBlock(defaultChunks, fr, currentLoops);
 
           node =
               ast.makeNode(
@@ -2923,8 +3001,8 @@ public abstract class ToSource {
           List<SSAInstruction> chunk2,
           List<CAstNode> parentDecls,
           Map<String, Set<String>> packages,
-          Loop loop) {
-        return new Visitor(root, c, chunk2, parentDecls, packages, children, loop);
+          List<Loop> currentLoops) {
+        return new Visitor(root, c, chunk2, parentDecls, packages, children, currentLoops);
       }
 
       public ToCAst(List<SSAInstruction> insts, CodeGenerationContext c) {
@@ -2933,9 +3011,9 @@ public abstract class ToSource {
       }
 
       Pair<CAstNode, List<CAstNode>> processChunk(
-          List<CAstNode> parentDecls, Map<String, Set<String>> packages, Loop currentLoop) {
+          List<CAstNode> parentDecls, Map<String, Set<String>> packages, List<Loop> currentLoops) {
         SSAInstruction root = chunk.iterator().next();
-        Visitor x = makeVisitor(root, c, chunk, parentDecls, packages, currentLoop);
+        Visitor x = makeVisitor(root, c, chunk, parentDecls, packages, currentLoops);
         return Pair.make(x.node, x.decls);
       }
     }
