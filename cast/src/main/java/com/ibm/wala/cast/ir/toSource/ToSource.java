@@ -1905,11 +1905,17 @@ public abstract class ToSource {
                     // that should be translated as a normal chunk and at that time loopChunks might
                     // not be empty
                     && LoopHelper.isConditional(loopChunks.get(loopChunks.size() - 1))) {
-                  // create loop
+                  // create loop list
                   List<Loop> passLoops = new ArrayList<>();
-                  passLoops.addAll(currentLoops);
-                  passLoops.add(
-                      LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops));
+                  Loop loopByChunk =
+                      LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops);
+                  if (currentLoops.size() > 0
+                      && currentLoops
+                          .get(currentLoops.size() - 1)
+                          .containsNestedLoop(loopByChunk)) {
+                    passLoops.addAll(currentLoops);
+                  }
+                  passLoops.add(loopByChunk);
 
                   Pair<CAstNode, List<CAstNode>> stuff =
                       toLoopCAst(loopChunks, decls, passLoops, new ArrayList<>());
@@ -1933,12 +1939,61 @@ public abstract class ToSource {
 
       // there's a case loopChunks are the last few chunks in the list, then parse it
       if (loopChunks.size() > 0) {
-        // create loop
-        currentLoops.add(LoopHelper.findLoopByChunk(cfg, loopChunks.get(0), loops, currentLoops));
+        // those chunks might belongs to different loops
+        int startIndex = 0;
+        int endIndex = 1;
+        Loop loopByChunk =
+            LoopHelper.findLoopByChunk(cfg, loopChunks.get(startIndex), loops, currentLoops);
+        while (endIndex < loopChunks.size()) {
+          Loop nextLoopByChunk =
+              LoopHelper.findLoopByChunk(cfg, loopChunks.get(endIndex), loops, currentLoops);
+          if ((loopByChunk == null && nextLoopByChunk == null)
+              || (loopByChunk != null && loopByChunk.equals(nextLoopByChunk))) {
+            // they belongs to same loop
+            endIndex++;
+          } else {
+            // they belongs to different loops
+            // parse previous loop
+            // create loop list
+            List<Loop> passLoops = new ArrayList<>();
+            if (currentLoops.size() > 0
+                && currentLoops.get(currentLoops.size() - 1).containsNestedLoop(loopByChunk)) {
+              // if they are nested then pass the loop hierarchy
+              passLoops.addAll(currentLoops);
+            }
+            if (!passLoops.contains(loopByChunk))
+              passLoops.add(loopByChunk); // TODO: will the loopByChunk=null?
+
+            Pair<CAstNode, List<CAstNode>> stuff =
+                toLoopCAst(
+                    loopChunks.subList(startIndex, endIndex), decls, passLoops, new ArrayList<>());
+            elts.addAll(stuff.fst.getChildren());
+
+            loopByChunk = nextLoopByChunk;
+            startIndex = endIndex;
+            endIndex = endIndex++;
+          }
+        }
+
+        // parse last loop
+        // create loop list
+        List<Loop> passLoops = new ArrayList<>();
+        if (currentLoops.size() > 0
+            && currentLoops.get(currentLoops.size() - 1).containsNestedLoop(loopByChunk)) {
+          // if they are nested then pass the loop hierarchy
+          passLoops.addAll(currentLoops);
+        }
+        if (!passLoops.contains(loopByChunk))
+          passLoops.add(loopByChunk); // TODO: will the loopByChunk=null?
 
         Pair<CAstNode, List<CAstNode>> stuff =
-            toLoopCAst(loopChunks, decls, currentLoops, new ArrayList<>());
+            toLoopCAst(
+                loopChunks.subList(startIndex, loopChunks.size()),
+                decls,
+                passLoops,
+                new ArrayList<>());
         elts.addAll(stuff.fst.getChildren());
+
         loopChunks.clear();
       }
     }
