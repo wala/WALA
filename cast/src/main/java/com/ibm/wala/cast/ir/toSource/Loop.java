@@ -188,11 +188,11 @@ public class Loop {
                           .max(Comparator.comparing(ISSABasicBlock::getNumber))
                           .get())
               .collect(Collectors.toList());
-      return allLastBlocks.contains(lastBlock)
-          && !allLastBlocks.stream()
-              .max(Comparator.comparing(ISSABasicBlock::getNumber))
-              .get()
-              .equals(lastBlock);
+      return allLastBlocks.contains(lastBlock);
+      //          && !allLastBlocks.stream()
+      //              .max(Comparator.comparing(ISSABasicBlock::getNumber))
+      //              .get()
+      //              .equals(lastBlock);
     }
     return false;
   }
