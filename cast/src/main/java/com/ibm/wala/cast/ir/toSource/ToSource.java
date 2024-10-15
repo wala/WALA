@@ -1653,28 +1653,40 @@ public abstract class ToSource {
           } else elseNodes.add(ast.makeNode(CAstNode.BREAK));
         }
 
-        CAstNode ifStmt =
-            CAstHelper.makeIfStmt(
-                ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
-                // include the nodes in the else branch
-                elseNodes.size() < 1
-                    ? ast.makeNode(CAstNode.BREAK)
-                    : (elseNodes.size() == 1
-                        ? elseNodes.get(0)
-                        : ast.makeNode(
-                            CAstNode.BLOCK_STMT,
-                            elseNodes.toArray(new CAstNode[elseNodes.size()]))),
-                // it should be a block instead of array of AST nodes
-                condSuccessor);
-
-        if (loopBodyNodes.size() == 0) {
-          bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, ifStmt);
+        // if there are loop jump and no condSuccessor and elseNodes are empty, do not need to
+        // generate if statement
+        if (CAstNode.EMPTY == condSuccessor.getKind()
+            && elseNodes.size() < 1
+            && (jumpToTop.keySet().stream()
+                    .anyMatch(
+                        breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))
+                || returnToParentHeader.keySet().stream()
+                    .anyMatch(
+                        breaker ->
+                            currentLoop.containsNestedLoop(
+                                returnToParentHeader.get(breaker).get(0))))) {
+          // do nothing
         } else {
+
+          CAstNode ifStmt =
+              CAstHelper.makeIfStmt(
+                  ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
+                  // include the nodes in the else branch
+                  elseNodes.size() < 1
+                      ? ast.makeNode(CAstNode.BREAK)
+                      : (elseNodes.size() == 1
+                          ? elseNodes.get(0)
+                          : ast.makeNode(
+                              CAstNode.BLOCK_STMT,
+                              elseNodes.toArray(new CAstNode[elseNodes.size()]))),
+                  // it should be a block instead of array of AST nodes
+                  condSuccessor);
           loopBodyNodes.add(ifStmt);
-          bodyNode =
-              ast.makeNode(
-                  CAstNode.BLOCK_STMT, loopBodyNodes.toArray(new CAstNode[loopBodyNodes.size()]));
         }
+
+        bodyNode =
+            ast.makeNode(
+                CAstNode.BLOCK_STMT, loopBodyNodes.toArray(new CAstNode[loopBodyNodes.size()]));
 
         test = ast.makeConstant(true);
       } else if (LoopType.FOR.equals(loopType)) {
