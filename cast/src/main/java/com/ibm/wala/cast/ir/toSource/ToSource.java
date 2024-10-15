@@ -1665,7 +1665,17 @@ public abstract class ToSource {
                         breaker ->
                             currentLoop.containsNestedLoop(
                                 returnToParentHeader.get(breaker).get(0))))) {
-          // do nothing
+          // do not generate if statement
+          bodyNode =
+              ast.makeNode(
+                  CAstNode.BLOCK_STMT, loopBodyNodes.toArray(new CAstNode[loopBodyNodes.size()]));
+
+          test = ast.makeConstant(true);
+        } else if (loopBodyNodes.isEmpty() && CAstHelper.containsOnlyGotoAndBreak(elseNodes)) {
+          // if if-statement is the only thing in body, test should not change
+          // loop body should be the elements in condSuccessor, it will become a while loop
+          bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, condSuccessor.getChildren());
+          loopType = LoopType.WHILE;
         } else {
 
           CAstNode ifStmt =
@@ -1682,13 +1692,12 @@ public abstract class ToSource {
                   // it should be a block instead of array of AST nodes
                   condSuccessor);
           loopBodyNodes.add(ifStmt);
+          bodyNode =
+              ast.makeNode(
+                  CAstNode.BLOCK_STMT, loopBodyNodes.toArray(new CAstNode[loopBodyNodes.size()]));
+
+          test = ast.makeConstant(true);
         }
-
-        bodyNode =
-            ast.makeNode(
-                CAstNode.BLOCK_STMT, loopBodyNodes.toArray(new CAstNode[loopBodyNodes.size()]));
-
-        test = ast.makeConstant(true);
       } else if (LoopType.FOR.equals(loopType)) {
         assert (condSuccessor.getChildCount() > 1);
 

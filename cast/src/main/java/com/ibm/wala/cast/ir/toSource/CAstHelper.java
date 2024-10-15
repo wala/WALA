@@ -6,6 +6,7 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.util.collections.Pair;
+import java.util.List;
 
 /** The helper class for some methods of loop */
 public class CAstHelper {
@@ -132,5 +133,23 @@ public class CAstHelper {
   public static boolean hasVarAssigned(CAstNode node, String var) {
     CAstPattern jumpAssign = CAstPattern.parse("ASSIGN(VAR(\"" + var + "\"),**)");
     return !CAstPattern.findAll(jumpAssign, node).isEmpty();
+  }
+
+  public static boolean containsOnlyGotoAndBreak(List<CAstNode> nodes) {
+    boolean result = true;
+    if (nodes.isEmpty()) return result;
+
+    for (CAstNode nn : nodes) {
+      if (nn.getKind() == CAstNode.GOTO) continue;
+      if (nn.getKind() == CAstNode.BREAK) continue;
+      if (nn.getKind() == CAstNode.BLOCK_STMT) {
+        result = containsOnlyGotoAndBreak(nn.getChildren());
+        if (!result) break;
+      }
+      result = false;
+      break;
+    }
+
+    return result;
   }
 }
