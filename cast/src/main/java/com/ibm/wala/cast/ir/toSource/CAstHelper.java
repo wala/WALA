@@ -145,7 +145,9 @@ public class CAstHelper {
       if (nn.getKind() == CAstNode.BLOCK_STMT) {
         result = containsOnlyGotoAndBreak(nn.getChildren());
         if (!result) break;
+        else continue;
       }
+      // for other cases, return false
       result = false;
       break;
     }
