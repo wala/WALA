@@ -458,6 +458,9 @@ public class LoopHelper {
     // value: the loops been jumped, not including the inner loop and outer loop
     HashMap<ISSABasicBlock, List<Loop>> jumpToTop = HashMapFactory.make();
     // collect loop break and the jumps, key: loopBreaker,
+    // value: the loop that has middle loop part which will go to header of the parent
+    HashMap<ISSABasicBlock, List<Loop>> returnToParentHeader = HashMapFactory.make();
+    // collect loop break and the jumps, key: loopBreaker,
     // value: the loops been jumped, not includes the inner loop, but includes the outer most loop
     HashMap<ISSABasicBlock, List<Loop>> jumpToOutside = HashMapFactory.make();
     // collect loop break and the jumps, key: loopBreaker,
@@ -465,7 +468,8 @@ public class LoopHelper {
     HashMap<ISSABasicBlock, List<Loop>> sharedLoopControl = HashMapFactory.make();
 
     // if there are only one loop, there wont be any nested loops
-    if (loops.size() < 2) return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl);
+    if (loops.size() < 2)
+      return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
 
     // order loops by header from large to small
     List<Loop> sortedLoops =
@@ -539,13 +543,14 @@ public class LoopHelper {
                     .get(ll)
                     .getLoopControl()
                     .equals(ll.getLoopBreakerByExit(loopExit))
-                && ll.isLastBlockOfMiddlePart(ll.getLoopBreakerByExit(loopExit))) {
+                && childParentMap.get(ll).isLastBlockOfMiddlePart(loopExit)) {
               // there's a case where level 2 loop jump to the header of level 1 loop from loop
               // breaker which is other than loop control, then it
-              // should be part of jumpToTop
+              // should be similar to jumpToTop
               // create jump path from outer loop to inner loop
-              assert !jumpToTop.containsKey(ll.getLoopBreakerByExit(loopExit));
-              jumpToTop.put(ll.getLoopBreakerByExit(loopExit), Collections.singletonList(ll));
+              assert !returnToParentHeader.containsKey(ll.getLoopBreakerByExit(loopExit));
+              returnToParentHeader.put(
+                  ll.getLoopBreakerByExit(loopExit), Collections.singletonList(ll));
             }
           }
         });
@@ -553,6 +558,7 @@ public class LoopHelper {
     System.out.println("====loop jumps to top:\n" + jumpToTop);
     System.out.println("====loop jumps to outside:\n" + jumpToOutside);
     System.out.println("====loop shared control:\n" + sharedLoopControl);
-    return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl);
+    System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
+    return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
   }
 }
