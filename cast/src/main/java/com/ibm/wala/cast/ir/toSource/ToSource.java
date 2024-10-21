@@ -1615,8 +1615,6 @@ public abstract class ToSource {
         elts.clear();
       }
 
-      //      CAstNode checkTestFalse = null;
-
       // generate loop body that's after control
       CAstNode condSuccessor = null;
       // if current loop was jumped by it's loop control, then no need to generate loop body because
@@ -1705,44 +1703,14 @@ public abstract class ToSource {
           bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, condSuccessor.getChildren());
           loopType = LoopType.WHILE;
         } else {
-          CAstNode ifStmt = null;
-          // if current loop was jumped by it's loop control, then need
+          // if current loop is not jumped by it's loop control, then need
           // to generate a different if statement
-          if (sharedLoopControl.containsKey(currentLoop.getLoopControl())
+          if (!(sharedLoopControl.containsKey(currentLoop.getLoopControl())
               && sharedLoopControl.get(currentLoop.getLoopControl()).contains(currentLoop)
               && CAstNode.EMPTY == condSuccessor.getKind()
-              && afterNodes.size() < 1) {
-            //            ifStmt =
-            //                ast.makeNode(
-            //                    CAstNode.IF_STMT,
-            //                    ast.makeNode(
-            //                        CAstNode.BINARY_EXPR,
-            //                        CAstOperator.OP_EQ,
-            //                        ast.makeNode(CAstNode.VAR,
-            // ast.makeConstant(CT_LOOP_TEST_VAR_NAME)),
-            //                        ast.makeConstant(0)),
-            //                    ast.makeNode(CAstNode.BREAK));
-          } else {
-            // If it is the inner most loop, set ctlooptest in both branches of if statement
-            if (sharedLoopControl.containsKey(currentLoop.getLoopControl())
-                && sharedLoopControl
-                    .get(currentLoop.getLoopControl())
-                    .get(sharedLoopControl.get(currentLoop.getLoopControl()).size() - 1)
-                    .containsNestedLoop(currentLoop)) {
-              // set false in else branch
-              //                        CAstNode setTestFalse =
-              //                            ast.makeNode(
-              //                                CAstNode.EXPR_STMT,
-              //                                ast.makeNode(
-              //                                    CAstNode.ASSIGN,
-              //                                    ast.makeNode(CAstNode.VAR,
-              //           ast.makeConstant(CT_LOOP_TEST_VAR_NAME)),
-              //                                    ast.makeConstant(0)));
-              //                        afterNodes.add(setTestFalse);
-              //                        afterNodes.add(ast.makeNode(CAstNode.BREAK));
-            }
+              && afterNodes.size() < 1)) {
 
-            ifStmt =
+            CAstNode ifStmt =
                 CAstHelper.makeIfStmt(
                     ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
                     // include the nodes in the else branch
