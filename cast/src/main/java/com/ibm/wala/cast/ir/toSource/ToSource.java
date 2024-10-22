@@ -2717,7 +2717,10 @@ public abstract class ToSource {
                             CAstNode.ASSIGN,
                             ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
                             ast.makeConstant(1)));
-                notTakenBlock.add(0, setTrue);
+                // TODO add it before break
+                if (notTakenBlock.get(notTakenBlock.size() - 1).getKind() == CAstNode.BREAK)
+                  notTakenBlock.add(notTakenBlock.size() - 1, setTrue);
+                else notTakenBlock.add(0, setTrue);
               }
 
             } else {
@@ -2738,6 +2741,33 @@ public abstract class ToSource {
                 System.out.println(
                     "takenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
                 tempNodes.add(ast.makeNode(CAstNode.BREAK));
+              }
+
+              // If a loop breaker is found in jumpToTop, set ct_loop_jump=true
+              // find out the inner most loop
+              if ((jumpToTop.containsKey(branchBB)
+                      && !jumpToTop.get(branchBB).contains(loop)
+                      && jumpToTop.get(branchBB).stream()
+                          .anyMatch(ll -> ll.containsNestedLoop(loop)))
+                  || (sharedLoopControl.containsKey(branchBB)
+                      && !sharedLoopControl.get(branchBB).contains(loop)
+                      && sharedLoopControl.get(branchBB).stream()
+                          .anyMatch(ll -> ll.containsNestedLoop(loop)))
+                  || (returnToParentHeader.containsKey(branchBB)
+                      && returnToParentHeader
+                          .get(branchBB)
+                          .get(returnToParentHeader.get(branchBB).size() - 1)
+                          .equals(loop))) {
+                CAstNode setTrue =
+                    ast.makeNode(
+                        CAstNode.EXPR_STMT,
+                        ast.makeNode(
+                            CAstNode.ASSIGN,
+                            ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                            ast.makeConstant(1)));
+                if (tempNodes.get(tempNodes.size() - 1).getKind() == CAstNode.BREAK)
+                  tempNodes.add(tempNodes.size() - 1, setTrue);
+                else tempNodes.add(0, setTrue);
               }
 
               takenBlock = tempNodes;

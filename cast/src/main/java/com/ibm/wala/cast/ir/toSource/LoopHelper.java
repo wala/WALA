@@ -537,17 +537,20 @@ public class LoopHelper {
 
               System.out.println(
                   "This is an example of jump from inner loop to outer-most" + jumpPath);
-            } else if (cfg.getNormalSuccessors(loopExit)
-                    .contains(childParentMap.get(ll).getLoopHeader())
-                && !childParentMap
-                    .get(ll)
-                    .getLoopControl()
-                    .equals(ll.getLoopBreakerByExit(loopExit))
-                && childParentMap.get(ll).isLastBlockOfMiddlePart(loopExit)) {
+            } else if ((cfg.getNormalSuccessors(loopExit)
+                        .contains(childParentMap.get(ll).getLoopHeader())
+                    && !childParentMap
+                        .get(ll)
+                        .getLoopControl()
+                        .equals(ll.getLoopBreakerByExit(loopExit))
+                    && childParentMap.get(ll).isLastBlockOfMiddlePart(loopExit))
+                || (ll.getLoopExits().size() > 1
+                    && gotoHeader(cfg, childParentMap.get(ll), loopExit))) {
               // there's a case where level 2 loop jump to the header of level 1 loop from loop
               // breaker which is other than loop control, then it
               // should be similar to jumpToTop
               // create jump path from outer loop to inner loop
+              // For indirect jump, need to check all successors and the number of loop exits
               assert !returnToParentHeader.containsKey(ll.getLoopBreakerByExit(loopExit));
               returnToParentHeader.put(
                   ll.getLoopBreakerByExit(loopExit), Collections.singletonList(ll));
@@ -565,5 +568,22 @@ public class LoopHelper {
     // and middle loop(if any, usually only one value for this case) will be included
     System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
     return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
+  }
+
+  private static boolean gotoHeader(
+      PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Loop loop, ISSABasicBlock block) {
+    // check if all branches will goto loop header
+    boolean result = true;
+    Collection<ISSABasicBlock> nextBBs = cfg.getNormalSuccessors(block);
+    for (ISSABasicBlock next : nextBBs) {
+      if (loop.getLoopHeader().equals(next)) {
+        continue;
+      } else if (loop.getAllBlocks().contains(next)) {
+        result = gotoHeader(cfg, loop, next);
+      } else {
+        result = false;
+      }
+    }
+    return result;
   }
 }
