@@ -124,19 +124,23 @@ public class DexUtil {
         return new ConstantElementValue(d);
 
       case ENUM:
-        org.jf.dexlib2.iface.reference.FieldReference o = ((EnumEncodedValue) v).getValue();
-        return new EnumElementValue(o.getType(), o.getName());
+        {
+          org.jf.dexlib2.iface.reference.FieldReference o = ((EnumEncodedValue) v).getValue();
+          return new EnumElementValue(o.getType(), o.getName());
+        }
 
       case FIELD:
-        o =
-            v.getValueType() == ENUM
-                ? ((EnumEncodedValue) v).getValue()
-                : ((FieldEncodedValue) v).getValue();
-        String fieldName = o.getName();
-        TypeReference ft = getTypeRef(o.getType(), clr);
-        TypeReference ct = getTypeRef(o.getDefiningClass(), clr);
-        return new ConstantElementValue(
-            FieldReference.findOrCreate(ct, Atom.findOrCreateUnicodeAtom(fieldName), ft));
+        {
+          org.jf.dexlib2.iface.reference.FieldReference o =
+              v.getValueType() == ENUM
+                  ? ((EnumEncodedValue) v).getValue()
+                  : ((FieldEncodedValue) v).getValue();
+          String fieldName = o.getName();
+          TypeReference ft = getTypeRef(o.getType(), clr);
+          TypeReference ct = getTypeRef(o.getDefiningClass(), clr);
+          return new ConstantElementValue(
+              FieldReference.findOrCreate(ct, Atom.findOrCreateUnicodeAtom(fieldName), ft));
+        }
 
       case FLOAT:
         Float f = ((FloatEncodedValue) v).getValue();
@@ -152,7 +156,7 @@ public class DexUtil {
 
       case METHOD:
         org.jf.dexlib2.iface.reference.MethodReference m = ((MethodEncodedValue) v).getValue();
-        ct = getTypeRef(m.getDefiningClass(), clr);
+        TypeReference ct = getTypeRef(m.getDefiningClass(), clr);
         String methodName = m.getName();
         String methodSig = getSignature(m);
         return new ConstantElementValue(

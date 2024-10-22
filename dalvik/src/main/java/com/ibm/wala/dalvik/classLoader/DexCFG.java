@@ -410,7 +410,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         throw new IllegalArgumentException("pei is null");
       }
       switch (pei.getOpcode()) {
-          // TODO: Make sure all the important cases and exceptions are covered.
+        // TODO: Make sure all the important cases and exceptions are covered.
         case AGET:
         case AGET_WIDE:
         case AGET_OBJECT:
@@ -418,17 +418,17 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         case AGET_BYTE:
         case AGET_CHAR:
         case AGET_SHORT:
-          //      case OP_iaload:
-          //      case OP_laload:
-          //      case OP_faload:
-          //      case OP_daload:
-          //      case OP_aaload:
-          //      case OP_baload:
-          //      case OP_caload:
-          //      case OP_saload:
+        //      case OP_iaload:
+        //      case OP_laload:
+        //      case OP_faload:
+        //      case OP_daload:
+        //      case OP_aaload:
+        //      case OP_baload:
+        //      case OP_caload:
+        //      case OP_saload:
         case APUT:
         case APUT_WIDE:
-          //      case APUT_OBJECT:
+        //      case APUT_OBJECT:
         case APUT_BOOLEAN:
         case APUT_BYTE:
         case APUT_CHAR:
@@ -451,7 +451,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         case IGET_BYTE:
         case IGET_CHAR:
         case IGET_SHORT:
-          //      case OP_getfield:
+        //      case OP_getfield:
         case IPUT:
         case IPUT_WIDE:
         case IPUT_OBJECT:
@@ -459,31 +459,31 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         case IPUT_BYTE:
         case IPUT_CHAR:
         case IPUT_SHORT:
-          //      case OP_putfield:
+        //      case OP_putfield:
 
-          // Shrike imp does not include the static invoke calls, so likewise will do the same
+        // Shrike imp does not include the static invoke calls, so likewise will do the same
         case INVOKE_VIRTUAL:
         case INVOKE_SUPER:
         case INVOKE_DIRECT:
-          // case INVOKE_STATIC:
+        // case INVOKE_STATIC:
         case INVOKE_INTERFACE:
         case INVOKE_VIRTUAL_RANGE:
         case INVOKE_SUPER_RANGE:
         case INVOKE_DIRECT_RANGE:
-          // case INVOKE_STATIC_RANGE:
+        // case INVOKE_STATIC_RANGE:
         case INVOKE_INTERFACE_RANGE:
-          //      case OP_invokevirtual:
-          //      case OP_invokespecial:
-          //      case OP_invokeinterface:
+        //      case OP_invokevirtual:
+        //      case OP_invokespecial:
+        //      case OP_invokeinterface:
         case ARRAY_LENGTH:
-          //      case OP_arraylength:
+        //      case OP_arraylength:
         case MONITOR_ENTER:
         case MONITOR_EXIT:
-          //      case OP_monitorenter:
-          //      case OP_monitorexit:
-          // we're currently ignoring MonitorStateExceptions, since J2EE stuff
-          // should be
-          // logically single-threaded
+        //      case OP_monitorenter:
+        //      case OP_monitorexit:
+        // we're currently ignoring MonitorStateExceptions, since J2EE stuff
+        // should be
+        // logically single-threaded
         case THROW:
           //      case OP_athrow:
           // N.B: the caller must handle the explicitly-thrown exception
@@ -519,12 +519,12 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
           //      case OP_checkcast:
           return JavaLanguage.getClassCastException();
 
-          // I Don't think dalvik has to worry about this?
-          //      case OP_ldc_w:
-          //        if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
-          //          return JavaLanguage.getClassNotFoundException();
-          //        else
-          //          return null;
+        // I Don't think dalvik has to worry about this?
+        //      case OP_ldc_w:
+        //        if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
+        //          return JavaLanguage.getClassNotFoundException();
+        //        else
+        //          return null;
 
         case SGET:
         case SGET_BOOLEAN:
@@ -690,7 +690,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + T;
+      return getClass() + " : " + T;
     }
 
     public static FailedExceptionResolutionWarning create(TypeReference T) {

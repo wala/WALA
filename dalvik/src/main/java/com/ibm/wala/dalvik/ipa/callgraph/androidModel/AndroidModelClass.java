@@ -104,7 +104,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
       throw new IllegalArgumentException(
           String.format(
               "android model class does not have expected type %s, but %s!",
-              AndroidModelClass.class, android.getClass().toString()));
+              AndroidModelClass.class, android.getClass()));
     } else {
       mClass = (AndroidModelClass) android;
     }
