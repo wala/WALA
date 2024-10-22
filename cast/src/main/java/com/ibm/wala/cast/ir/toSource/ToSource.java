@@ -1652,8 +1652,9 @@ public abstract class ToSource {
             && (jumpToTop.keySet().stream()
                     .anyMatch(
                         breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))
-                || sharedLoopControl.keySet().stream()
-                    .anyMatch(breaker -> currentLoop.equals(sharedLoopControl.get(breaker).get(0)))
+                //                || sharedLoopControl.keySet().stream()
+                //                    .anyMatch(breaker ->
+                // currentLoop.equals(sharedLoopControl.get(breaker).get(0)))
                 || returnToParentHeader.keySet().stream()
                     .anyMatch(
                         breaker ->
@@ -1791,13 +1792,19 @@ public abstract class ToSource {
       List<CAstNode> jumpList = new ArrayList<>();
       if (jumpToTop.keySet().stream()
               .anyMatch(breaker -> jumpToTop.get(breaker).contains(currentLoop))
-          || sharedLoopControl.keySet().stream()
+          //          || sharedLoopControl.keySet().stream()
+          //              .anyMatch(
+          //                  breaker ->
+          //                      sharedLoopControl.get(breaker).contains(currentLoop)
+          //                          && !sharedLoopControl.get(breaker).get(0).equals(currentLoop))
+          || returnToParentHeader.keySet().stream()
               .anyMatch(
                   breaker ->
-                      sharedLoopControl.get(breaker).contains(currentLoop)
-                          && !sharedLoopControl.get(breaker).get(0).equals(currentLoop))
-          || returnToParentHeader.keySet().stream()
-              .anyMatch(breaker -> returnToParentHeader.get(breaker).contains(currentLoop))) {
+                      returnToParentHeader.get(breaker).contains(currentLoop)
+                          && !returnToParentHeader
+                              .get(breaker)
+                              .get(returnToParentHeader.get(breaker).size() - 1)
+                              .equals(currentLoop))) {
         CAstNode ifCont =
             ast.makeNode(
                 CAstNode.IF_STMT,
@@ -1815,8 +1822,9 @@ public abstract class ToSource {
       // find out the top loop
       if (jumpToTop.keySet().stream()
               .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))
-          || sharedLoopControl.keySet().stream()
-              .anyMatch(breaker -> currentLoop.equals(sharedLoopControl.get(breaker).get(0)))
+          //          || sharedLoopControl.keySet().stream()
+          //              .anyMatch(breaker ->
+          // currentLoop.equals(sharedLoopControl.get(breaker).get(0)))
           || returnToParentHeader.keySet().stream()
               .anyMatch(
                   breaker ->
@@ -2701,10 +2709,10 @@ public abstract class ToSource {
                       && !jumpToTop.get(branchBB).contains(loop)
                       && jumpToTop.get(branchBB).stream()
                           .anyMatch(ll -> ll.containsNestedLoop(loop)))
-                  || (sharedLoopControl.containsKey(branchBB)
-                      && !sharedLoopControl.get(branchBB).contains(loop)
-                      && sharedLoopControl.get(branchBB).stream()
-                          .anyMatch(ll -> ll.containsNestedLoop(loop)))
+                  //                  || (sharedLoopControl.containsKey(branchBB)
+                  //                      && !sharedLoopControl.get(branchBB).contains(loop)
+                  //                      && sharedLoopControl.get(branchBB).stream()
+                  //                          .anyMatch(ll -> ll.containsNestedLoop(loop)))
                   || (returnToParentHeader.containsKey(branchBB)
                       && returnToParentHeader
                           .get(branchBB)
@@ -2749,10 +2757,10 @@ public abstract class ToSource {
                       && !jumpToTop.get(branchBB).contains(loop)
                       && jumpToTop.get(branchBB).stream()
                           .anyMatch(ll -> ll.containsNestedLoop(loop)))
-                  || (sharedLoopControl.containsKey(branchBB)
-                      && !sharedLoopControl.get(branchBB).contains(loop)
-                      && sharedLoopControl.get(branchBB).stream()
-                          .anyMatch(ll -> ll.containsNestedLoop(loop)))
+                  //                  || (sharedLoopControl.containsKey(branchBB)
+                  //                      && !sharedLoopControl.get(branchBB).contains(loop)
+                  //                      && sharedLoopControl.get(branchBB).stream()
+                  //                          .anyMatch(ll -> ll.containsNestedLoop(loop)))
                   || (returnToParentHeader.containsKey(branchBB)
                       && returnToParentHeader
                           .get(branchBB)

@@ -545,7 +545,9 @@ public class LoopHelper {
                         .equals(ll.getLoopBreakerByExit(loopExit))
                     && childParentMap.get(ll).isLastBlockOfMiddlePart(loopExit))
                 || (ll.getLoopExits().size() > 1
-                    && gotoHeader(cfg, childParentMap.get(ll), loopExit))) {
+                    && gotoHeader(cfg, childParentMap.get(ll), loopExit)
+                    // TODO: not sure how to tell a regular return to top by PERFORM and GOTO top
+                    && ll.getLoopControl().equals(childParentMap.get(ll).getLoopControl()))) {
               // there's a case where level 2 loop jump to the header of level 1 loop from loop
               // breaker which is other than loop control, then it
               // should be similar to jumpToTop
