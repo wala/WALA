@@ -555,9 +555,14 @@ public class LoopHelper {
           }
         });
 
+    // The value only contains the middle loops who will be jumped over
     System.out.println("====loop jumps to top:\n" + jumpToTop);
     System.out.println("====loop jumps to outside:\n" + jumpToOutside);
+    // The value will contain the loops that share same loop control which means outer loop will be
+    // included while inner loop not
     System.out.println("====loop shared control:\n" + sharedLoopControl);
+    // The value will contain the loop that will jump back to it's parent header, so that inner loop
+    // and middle loop(if any, usually only one value for this case) will be included
     System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
     return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
   }
