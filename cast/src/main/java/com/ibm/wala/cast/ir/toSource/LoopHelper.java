@@ -537,17 +537,22 @@ public class LoopHelper {
 
               System.out.println(
                   "This is an example of jump from inner loop to outer-most" + jumpPath);
-            } else if (cfg.getNormalSuccessors(loopExit)
-                    .contains(childParentMap.get(ll).getLoopHeader())
-                && !childParentMap
-                    .get(ll)
-                    .getLoopControl()
-                    .equals(ll.getLoopBreakerByExit(loopExit))
-                && childParentMap.get(ll).isLastBlockOfMiddlePart(loopExit)) {
+            } else if ((cfg.getNormalSuccessors(loopExit)
+                        .contains(childParentMap.get(ll).getLoopHeader())
+                    && !childParentMap
+                        .get(ll)
+                        .getLoopControl()
+                        .equals(ll.getLoopBreakerByExit(loopExit))
+                    && childParentMap.get(ll).isLastBlockOfMiddlePart(loopExit))
+                || (ll.getLoopExits().size() > 1
+                    && gotoHeader(cfg, childParentMap.get(ll), loopExit)
+                    // TODO: not sure how to tell a regular return to top by PERFORM and GOTO top
+                    && ll.getLoopControl().equals(childParentMap.get(ll).getLoopControl()))) {
               // there's a case where level 2 loop jump to the header of level 1 loop from loop
               // breaker which is other than loop control, then it
               // should be similar to jumpToTop
               // create jump path from outer loop to inner loop
+              // For indirect jump, need to check all successors and the number of loop exits
               assert !returnToParentHeader.containsKey(ll.getLoopBreakerByExit(loopExit));
               returnToParentHeader.put(
                   ll.getLoopBreakerByExit(loopExit), Collections.singletonList(ll));
@@ -555,10 +560,32 @@ public class LoopHelper {
           }
         });
 
+    // The value only contains the middle loops who will be jumped over
     System.out.println("====loop jumps to top:\n" + jumpToTop);
     System.out.println("====loop jumps to outside:\n" + jumpToOutside);
+    // The value will contain the loops that share same loop control which means outer loop will be
+    // included while inner loop not
     System.out.println("====loop shared control:\n" + sharedLoopControl);
+    // The value will contain the loop that will jump back to it's parent header, so that inner loop
+    // and middle loop(if any, usually only one value for this case) will be included
     System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
     return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
+  }
+
+  private static boolean gotoHeader(
+      PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Loop loop, ISSABasicBlock block) {
+    // check if all branches will goto loop header
+    boolean result = true;
+    Collection<ISSABasicBlock> nextBBs = cfg.getNormalSuccessors(block);
+    for (ISSABasicBlock next : nextBBs) {
+      if (loop.getLoopHeader().equals(next)) {
+        continue;
+      } else if (loop.getAllBlocks().contains(next)) {
+        result = gotoHeader(cfg, loop, next);
+      } else {
+        result = false;
+      }
+    }
+    return result;
   }
 }

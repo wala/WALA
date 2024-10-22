@@ -10,6 +10,7 @@ import java.util.List;
 
 /** The helper class for some methods of loop */
 public class CAstHelper {
+  private static final CAst ast = new CAstImpl();
 
   /**
    * Remove redundant negation from test node.
@@ -28,7 +29,7 @@ public class CAstHelper {
    *     negation removed from test and possible then/else branches swapped.
    */
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch, CAstNode elseBranch) {
-    CAst ast = new CAstImpl();
+
     Pair<Integer, CAstNode> countAndTest = countAndRemoveLeadingNegation(test);
     if (countAndTest.fst % 2 == 0) {
       return ast.makeNode(CAstNode.IF_STMT, countAndTest.snd, thenBranch, elseBranch);
@@ -38,7 +39,6 @@ public class CAstHelper {
   }
 
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch) {
-    CAst ast = new CAstImpl();
     return ast.makeNode(CAstNode.IF_STMT, stableRemoveLeadingNegation(test), thenBranch);
   }
 
@@ -53,28 +53,7 @@ public class CAstHelper {
    * @param pred The node from which negation should be removed.
    * @return The input node, with pairs of leading negation removed.
    */
-  private static CAstNode stableRemoveLeadingNegation(CAstNode pred) {
-    CAst ast = new CAstImpl();
-    Pair<Integer, CAstNode> countAndPred = countAndRemoveLeadingNegation(pred);
-    if (countAndPred.fst % 2 == 0) {
-      return countAndPred.snd;
-    } else /* odd negation count (at least one) */ {
-      return ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, countAndPred.snd);
-    }
-  }
-
-  /**
-   * Remove redundant negation from test node.
-   *
-   * <ul>
-   *   <li>Even or zero negation count: all negation can be removed.
-   *   <li>Odd count: remove negation and flip branches.
-   * </ul>
-   *
-   * @param pred The node from which negation should be removed.
-   * @return The input node, with pairs of leading negation removed.
-   */
-  public static CAstNode stableRemoveLeadingNegation(CAst ast, CAstNode pred) {
+  public static CAstNode stableRemoveLeadingNegation(CAstNode pred) {
     Pair<Integer, CAstNode> countAndPred = countAndRemoveLeadingNegation(pred);
     if (countAndPred.fst % 2 == 0) {
       return countAndPred.snd;
@@ -153,5 +132,14 @@ public class CAstHelper {
     }
 
     return result;
+  }
+
+  public static CAstNode makeAssignNode(String varName, int varValue) {
+    return ast.makeNode(
+        CAstNode.EXPR_STMT,
+        ast.makeNode(
+            CAstNode.ASSIGN,
+            ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+            ast.makeConstant(varValue)));
   }
 }
