@@ -11,6 +11,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnspecifiedExprInstruction;
+import com.ibm.wala.ssa.SSAUnspecifiedInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.IteratorUtil;
@@ -125,6 +126,13 @@ public class LoopHelper {
             if (inst.iIndex() < 0) continue;
             // TODO: need to check if any other case should be placed here
             if (inst instanceof SSAReturnInstruction) {
+              continue;
+            }
+            if (inst instanceof SSAUnspecifiedInstruction
+                && ((SSAUnspecifiedInstruction<?>) inst).getPayload() != null
+                && "STOP RUN"
+                    .equalsIgnoreCase(
+                        ((SSAUnspecifiedInstruction<?>) inst).getPayload().toString())) {
               continue;
             }
             notWhileLoop = true;
