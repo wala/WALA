@@ -5,8 +5,12 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.util.CAstPattern;
+import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.collections.Pair;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /** The helper class for some methods of loop */
 public class CAstHelper {
@@ -141,5 +145,192 @@ public class CAstHelper {
             CAstNode.ASSIGN,
             ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
             ast.makeConstant(varValue)));
+  }
+
+  public static CAstNode generateInnerLoopJumpToHeader(
+      Map<ISSABasicBlock, List<Loop>> jumpToTop,
+      Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      Loop currentLoop,
+      CAstNode bodyNode,
+      String varName,
+      LoopType loopType,
+      CAstNode test) {
+    // if this is the loop recorded in jumpToTop, then generate if-break node
+    // check if it's middle loop, the ones that's not the outer most loop and not the inner most
+    // loop
+    List<CAstNode> jumpList = new ArrayList<>();
+    if (jumpToTop.keySet().stream()
+            .anyMatch(breaker -> jumpToTop.get(breaker).contains(currentLoop))
+        || returnToParentHeader.keySet().stream()
+            .anyMatch(
+                breaker ->
+                    returnToParentHeader.get(breaker).contains(currentLoop)
+                        && !returnToParentHeader
+                            .get(breaker)
+                            .get(returnToParentHeader.get(breaker).size() - 1)
+                            .equals(currentLoop))) {
+      CAstNode ifCont =
+          ast.makeNode(
+              CAstNode.IF_STMT,
+              ast.makeNode(
+                  CAstNode.BINARY_EXPR,
+                  CAstOperator.OP_NE,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeConstant(0)),
+              ast.makeNode(CAstNode.BREAK));
+      jumpList.addAll(bodyNode.getChildren());
+      jumpList.add(ifCont);
+
+      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+    } else
+    // find out the top loop
+    if (jumpToTop.keySet().stream()
+            .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))
+        || returnToParentHeader.keySet().stream()
+            .anyMatch(
+                breaker ->
+                    currentLoop.containsNestedLoop(returnToParentHeader.get(breaker).get(0)))) {
+      // if this is the parent loop contains the loops been jumped, insert jump assignment at the
+      // beginning of the loop
+      // and generate if !loopjump then break
+      // TODO: first or last?
+      CAstNode setFalse =
+          ast.makeNode(
+              CAstNode.EXPR_STMT,
+              ast.makeNode(
+                  CAstNode.ASSIGN,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeConstant(0)));
+      jumpList.add(setFalse);
+      jumpList.addAll(bodyNode.getChildren());
+
+      if (LoopType.WHILETRUE.equals(loopType)) {
+        // change loop type in this case
+        test =
+            ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                CAstOperator.OP_NE,
+                ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                ast.makeConstant(0));
+      } else {
+        CAstNode ifCont =
+            ast.makeNode(
+                CAstNode.IF_STMT,
+                ast.makeNode(
+                    CAstNode.BINARY_EXPR,
+                    CAstOperator.OP_EQ,
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                    ast.makeConstant(0)),
+                ast.makeNode(CAstNode.BREAK));
+        jumpList.add(ifCont);
+      }
+
+      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+    }
+
+    // if test has been changed then set loop type to be do while
+    return test;
+  }
+
+  public static CAstNode generateInnerLoopJumpToOutside(
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Loop currentLoop,
+      CAstNode bodyNode,
+      String varName) {
+    // if this is the loop recorded in jumpToOutside, then generate if-break node
+    // check if it's middle loop, the ones that might be the outer most loop and not the inner most
+    // loop
+    List<CAstNode> jumpList = new ArrayList<>();
+    if (jumpToOutside.keySet().stream()
+        .anyMatch(breaker -> jumpToOutside.get(breaker).contains(currentLoop))) {
+      // find out the top loop
+      if (jumpToOutside.keySet().stream()
+          .anyMatch(breaker -> jumpToOutside.get(breaker).get(0).equals(currentLoop))) {
+        // if this is the parent loop contains the loops been jumped, insert jump assignment at the
+        // beginning of the loop
+        // and generate if !loopjump then break
+        // TODO: first or last?
+        CAstNode setFalse =
+            ast.makeNode(
+                CAstNode.EXPR_STMT,
+                ast.makeNode(
+                    CAstNode.ASSIGN,
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                    ast.makeConstant(0)));
+        jumpList.add(setFalse);
+      }
+      jumpList.addAll(bodyNode.getChildren());
+      CAstNode ifCont =
+          ast.makeNode(
+              CAstNode.IF_STMT,
+              ast.makeNode(
+                  CAstNode.BINARY_EXPR,
+                  CAstOperator.OP_NE,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeConstant(0)),
+              ast.makeNode(CAstNode.BREAK));
+      jumpList.add(ifCont);
+
+      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+    }
+
+    // return bodyNode in this case because it might be changed
+    return bodyNode;
+  }
+
+  public static void generateInnerLoopJumpToHeaderTrue(
+      Map<ISSABasicBlock, List<Loop>> jumpToTop,
+      Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      BasicBlock branchBB,
+      Loop loop,
+      List<CAstNode> nodeBlock,
+      String varName) {
+    // If a loop breaker is found in jumpToTop, set ct_loop_jump=true
+    // find out the inner most loop
+    if ((jumpToTop.containsKey(branchBB)
+            && !jumpToTop.get(branchBB).contains(loop)
+            && jumpToTop.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))
+        || (returnToParentHeader.containsKey(branchBB)
+            && returnToParentHeader
+                .get(branchBB)
+                .get(returnToParentHeader.get(branchBB).size() - 1)
+                .equals(loop))) {
+      CAstNode setTrue =
+          ast.makeNode(
+              CAstNode.EXPR_STMT,
+              ast.makeNode(
+                  CAstNode.ASSIGN,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeConstant(1)));
+      // add it before break
+      if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
+        nodeBlock.add(nodeBlock.size() - 1, setTrue);
+      else nodeBlock.add(0, setTrue);
+    }
+  }
+
+  public static void generateLoopJumpToOutsideTrue(
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      BasicBlock branchBB,
+      Loop loop,
+      List<CAstNode> nodeBlock,
+      String varName) {
+    // If a loop breaker is found in jumpToOutside, set ct_loop_jump=true
+    // find out the inner most loop
+    if ((jumpToOutside.containsKey(branchBB)
+        && !jumpToOutside.get(branchBB).contains(loop)
+        && jumpToOutside.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+      CAstNode setTrue =
+          ast.makeNode(
+              CAstNode.EXPR_STMT,
+              ast.makeNode(
+                  CAstNode.ASSIGN,
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeConstant(1)));
+      // add it before break
+      if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
+        nodeBlock.add(nodeBlock.size() - 1, setTrue);
+      else nodeBlock.add(0, setTrue);
+    }
   }
 }
