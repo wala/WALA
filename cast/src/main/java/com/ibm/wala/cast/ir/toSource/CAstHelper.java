@@ -303,9 +303,9 @@ public class CAstHelper {
                   ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
                   ast.makeConstant(1)));
       // add it before break
-      /*if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
+      if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
         nodeBlock.add(nodeBlock.size() - 1, setTrue);
-      else*/ nodeBlock.add(0, setTrue);
+      else nodeBlock.add(0, setTrue);
     }
   }
 

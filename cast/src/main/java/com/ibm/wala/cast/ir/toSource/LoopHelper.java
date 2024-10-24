@@ -557,12 +557,15 @@ public class LoopHelper {
               if (!childParentMap.containsKey(jumpPath.get(0))) {
                 // if the jumpPath includes top ones
                 if (jumpPath.get(0).getLoopControl().equals(ll.getLoopBreakerByExit(loopExit))) {
+                  assert !sharedLoopControl.containsKey(ll.getLoopBreakerByExit(loopExit));
                   sharedLoopControl.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
                 } else {
+                  assert !jumpToOutside.containsKey(ll.getLoopBreakerByExit(loopExit));
                   jumpToOutside.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
                 }
               } else {
-                jumpToTop.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+                if (!jumpToTop.containsKey(ll.getLoopBreakerByExit(loopExit)))
+                  jumpToTop.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
               }
 
               System.out.println(
