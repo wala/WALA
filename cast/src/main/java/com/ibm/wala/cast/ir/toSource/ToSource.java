@@ -1785,7 +1785,7 @@ public abstract class ToSource {
                 condSuccessor.getChildren().toArray(new CAstNode[condSuccessor.getChildCount()]));
       }
 
-      CAstNode newTestByJump =
+      Pair<CAstNode, CAstNode> newNodeByJump =
           CAstHelper.generateInnerLoopJumpToHeader(
               jumpToTop,
               returnToParentHeader,
@@ -1794,11 +1794,12 @@ public abstract class ToSource {
               CT_LOOP_JUMP_VAR_NAME,
               loopType,
               test);
-      if (!test.equals(newTestByJump)) {
+      if (!test.equals(newNodeByJump.fst)) {
         // there's only one case of changing test, which will lead to change loop type
-        test = newTestByJump;
+        test = newNodeByJump.fst;
         loopType = LoopType.DOWHILE;
       }
+      bodyNode = newNodeByJump.snd;
 
       bodyNode =
           CAstHelper.generateInnerLoopJumpToOutside(

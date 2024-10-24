@@ -472,6 +472,9 @@ public class LoopHelper {
     // value: the loops been jumped, not includes the inner loop, but includes the outer most loop
     HashMap<ISSABasicBlock, List<Loop>> jumpToOutside = HashMapFactory.make();
     // collect loop break and the jumps, key: loopBreaker,
+    // value: the loop, usually is the top one, that will jump to outside tail
+    HashMap<ISSABasicBlock, List<Loop>> returnToOutsideTail = HashMapFactory.make();
+    // collect loop break and the jumps, key: loopBreaker,
     // value: the nest loop hierarchy that share same loop control
     HashMap<ISSABasicBlock, List<Loop>> sharedLoopControl = HashMapFactory.make();
 
@@ -508,8 +511,16 @@ public class LoopHelper {
             System.out.println("Unsupported: no loop breakers - " + ll);
             return;
           }
-          // no need to check loop breakers for top level loops
+          // for most cases, no need to check loop breakers for top level loops
           if (!childParentMap.containsKey(ll)) {
+            for (ISSABasicBlock loopExit : ll.getLoopExits()) {
+              // There's a case where the top loop breaker will jump to the tail of outside
+              ISSABasicBlock loopBreaker = ll.getLoopBreakerByExit(loopExit);
+              if(!ll.isLastBlock(loopBreaker) && ll.isExitOfNestedLoop(loopBreaker)) {
+                assert !returnToOutsideTail.containsKey(loopExit);
+                returnToOutsideTail.put(loopExit, Collections.singletonList(ll));
+              }
+            }
             return;
           }
 
@@ -577,6 +588,9 @@ public class LoopHelper {
     // The value will contain the loop that will jump back to it's parent header, so that inner loop
     // and middle loop(if any, usually only one value for this case) will be included
     System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
+    // The value will contain the loop that will jump back to it's parent tail, so that top loop
+    // will be the only element in the path
+    System.out.println("====loop return to outside tail from inner:\n" + returnToOutsideTail);
     return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
   }
 

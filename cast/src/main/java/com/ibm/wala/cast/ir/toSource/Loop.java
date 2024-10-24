@@ -196,4 +196,8 @@ public class Loop {
     }
     return false;
   }
+
+  public boolean isExitOfNestedLoop(ISSABasicBlock loopBreaker) {
+    return nestedLoops.size()>0 && nestedLoops.stream().anyMatch(ll -> ll.getLoopExits().contains(loopBreaker));
+  }
 }

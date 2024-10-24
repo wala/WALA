@@ -147,7 +147,7 @@ public class CAstHelper {
             ast.makeConstant(varValue)));
   }
 
-  public static CAstNode generateInnerLoopJumpToHeader(
+  public static Pair<CAstNode, CAstNode> generateInnerLoopJumpToHeader(
       Map<ISSABasicBlock, List<Loop>> jumpToTop,
       Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
       Loop currentLoop,
@@ -229,7 +229,7 @@ public class CAstHelper {
     }
 
     // if test has been changed then set loop type to be do while
-    return test;
+    return Pair.make(test, bodyNode);
   }
 
   public static CAstNode generateInnerLoopJumpToOutside(
@@ -303,9 +303,9 @@ public class CAstHelper {
                   ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
                   ast.makeConstant(1)));
       // add it before break
-      if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
+      /*if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
         nodeBlock.add(nodeBlock.size() - 1, setTrue);
-      else nodeBlock.add(0, setTrue);
+      else*/ nodeBlock.add(0, setTrue);
     }
   }
 
