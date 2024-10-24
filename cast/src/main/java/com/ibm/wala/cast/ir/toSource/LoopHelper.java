@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -516,9 +517,19 @@ public class LoopHelper {
             for (ISSABasicBlock loopExit : ll.getLoopExits()) {
               // There's a case where the top loop breaker will jump to the tail of outside
               ISSABasicBlock loopBreaker = ll.getLoopBreakerByExit(loopExit);
-              if(!ll.isLastBlock(loopBreaker) && ll.isExitOfNestedLoop(loopBreaker)) {
+              Optional<Entry<Loop, Loop>> nestedLoop =
+                  childParentMap.entrySet().stream()
+                      .filter(
+                          entry ->
+                              entry.getValue().equals(ll)
+                                  && entry.getKey().getLoopExits().contains(loopBreaker))
+                      .findFirst();
+              if (!ll.isLastBlock(loopBreaker) && nestedLoop.isPresent()) {
                 assert !returnToOutsideTail.containsKey(loopExit);
-                returnToOutsideTail.put(loopExit, Collections.singletonList(ll));
+                List<Loop> jumpPath = new ArrayList<>();
+                jumpPath.add(ll);
+                jumpPath.add(nestedLoop.get().getKey());
+                returnToOutsideTail.put(loopExit, jumpPath);
               }
             }
             return;
