@@ -534,6 +534,10 @@ public class LoopHelper {
                 // TODO: need to check more than 3 layer's loop
                 ISSABasicBlock innerLoopBreak =
                     nestedLoop.get().getKey().getLoopBreakerByExit(loopBreaker);
+                if (nestedLoop.get().getKey().getLoopControl().equals(innerLoopBreak)) {
+                  // Skip loop control
+                  continue;
+                }
                 assert !returnToOutsideTail.containsKey(innerLoopBreak);
                 List<Loop> jumpPath = new ArrayList<>();
                 jumpPath.add(ll);
