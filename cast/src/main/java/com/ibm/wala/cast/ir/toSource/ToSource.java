@@ -1628,7 +1628,9 @@ public abstract class ToSource {
         condSuccessor = lr.toCAst(currentLoops);
       }
 
-      if (after != null) {
+      if (after != null
+          && !(sharedLoopControl.containsKey(currentLoop.getLoopControl())
+              && sharedLoopControl.get(currentLoop.getLoopControl()).get(0).equals(currentLoop))) {
         RegionTreeNode rt = children.get(instruction).get(after);
         afterNodes.addAll(rt.toCAst(currentLoops).getChildren());
       }
