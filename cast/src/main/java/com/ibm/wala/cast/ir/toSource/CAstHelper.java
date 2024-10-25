@@ -214,7 +214,7 @@ public class CAstHelper {
         // TODO generate and with test in line 194
         ifCondTest =
             ast.makeNode(
-                CAstNode.BINARY_EXPR, CAstOperator.OP_REL_OR, ifCondTest, generateJumpToTailIfTest);
+                CAstNode.BINARY_EXPR, CAstOperator.OP_REL_OR, generateJumpToTailIfTest, ifCondTest);
         needToGenerateJumpToTail = false;
       }
       CAstNode ifCont = ast.makeNode(CAstNode.IF_STMT, ifCondTest, ast.makeNode(CAstNode.BREAK));
@@ -266,8 +266,8 @@ public class CAstHelper {
               ast.makeNode(
                   CAstNode.BINARY_EXPR,
                   CAstOperator.OP_REL_OR,
-                  ifCondTest,
-                  generateJumpToTailIfTest);
+                  generateJumpToTailIfTest,
+                  ifCondTest);
           needToGenerateJumpToTail = false;
         }
         CAstNode ifCont = ast.makeNode(CAstNode.IF_STMT, ifCondTest, ast.makeNode(CAstNode.BREAK));
@@ -362,18 +362,30 @@ public class CAstHelper {
                 .anyMatch(ll -> ll.containsNestedLoop(loop)));
   }
 
-  public static void generateInnerLoopJumpToHeaderTrue(
+  public static void generateInnerLoopJumpToHeaderOrTailTrue(
       Map<ISSABasicBlock, List<Loop>> jumpToTop,
       Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
       BasicBlock branchBB,
       Loop loop,
       List<CAstNode> nodeBlock,
-      String varNameHeader) {
+      String varNameHeader,
+      String varNameTail) {
     // If a loop breaker is found in jumpToTop, set ct_loop_jump=true
     // find out the inner most loop
     boolean isInnerMostLoopJumpToHeader =
         isInnerMostLoopJumpToHeader(jumpToTop, returnToParentHeader, branchBB, loop);
-    if (isInnerMostLoopJumpToHeader) {
+
+    // If a loop breaker is found in jumpToOutside or returnToOutsideTail, set ct_loop_jump=true
+    // find out the inner most loop
+    boolean isInnerMostLoopJumpToTail =
+        isInnerMostLoopJumpToTail(jumpToOutside, returnToOutsideTail, branchBB, loop);
+
+    if (isInnerMostLoopJumpToHeader && isInnerMostLoopJumpToTail) {
+      System.out.println(
+          "This is the case to out setTrue in different branches, which will be handed in visitConditionalBranch");
+    } else if (isInnerMostLoopJumpToHeader) {
       CAstNode setTrue =
           ast.makeNode(
               CAstNode.EXPR_STMT,
@@ -385,21 +397,7 @@ public class CAstHelper {
       if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
         nodeBlock.add(nodeBlock.size() - 1, setTrue);
       else nodeBlock.add(0, setTrue);
-    }
-  }
-
-  public static void generateLoopJumpToOutsideTrue(
-      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
-      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
-      BasicBlock branchBB,
-      Loop loop,
-      List<CAstNode> nodeBlock,
-      String varNameTail) {
-    // If a loop breaker is found in jumpToOutside or returnToOutsideTail, set ct_loop_jump=true
-    // find out the inner most loop
-    boolean isInnerMostLoopJumpToTail =
-        isInnerMostLoopJumpToTail(jumpToOutside, returnToOutsideTail, branchBB, loop);
-    if (isInnerMostLoopJumpToTail) {
+    } else if (isInnerMostLoopJumpToTail) {
       CAstNode setTrue =
           ast.makeNode(
               CAstNode.EXPR_STMT,

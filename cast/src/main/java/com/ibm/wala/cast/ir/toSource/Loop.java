@@ -188,6 +188,14 @@ public class Loop {
         .get();
   }
 
+  public ISSABasicBlock getLoopExitrByBreaker(ISSABasicBlock breaker) {
+    return loopBreakers.stream()
+        .filter(pair -> breaker.equals(pair.fst))
+        .map(pair -> pair.snd)
+        .findFirst()
+        .get();
+  }
+
   public boolean isLastBlockOfMiddlePart(ISSABasicBlock lastBlock) {
     if (parts.size() > 1) {
       List<ISSABasicBlock> allLastBlocks =

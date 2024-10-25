@@ -623,7 +623,7 @@ public class LoopHelper {
         jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader, returnToOutsideTail);
   }
 
-  private static boolean gotoHeader(
+  public static boolean gotoHeader(
       PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Loop loop, ISSABasicBlock block) {
     // check if all branches will goto loop header
     boolean result = true;

@@ -118,6 +118,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -2646,19 +2647,15 @@ public abstract class ToSource {
                 notTakenBlock.add(ast.makeNode(CAstNode.BREAK));
               }
 
-              CAstHelper.generateInnerLoopJumpToHeaderTrue(
+              CAstHelper.generateInnerLoopJumpToHeaderOrTailTrue(
                   jumpToTop,
                   returnToParentHeader,
-                  branchBB,
-                  loop,
-                  notTakenBlock,
-                  CT_LOOP_JUMP_VAR_NAME);
-              CAstHelper.generateLoopJumpToOutsideTrue(
                   jumpToOutside,
                   returnToOutsideTail,
                   branchBB,
                   loop,
                   notTakenBlock,
+                  CT_LOOP_JUMP_VAR_NAME,
                   CT_LOOP_BREAK_VAR_NAME);
             } else {
               if (takenBlock.get(takenBlock.size() - 1).getKind() == CAstNode.BLOCK_STMT
@@ -2674,20 +2671,61 @@ public abstract class ToSource {
                 takenBlock.add(ast.makeNode(CAstNode.BREAK));
               }
 
-              CAstHelper.generateInnerLoopJumpToHeaderTrue(
+              CAstHelper.generateInnerLoopJumpToHeaderOrTailTrue(
                   jumpToTop,
                   returnToParentHeader,
-                  branchBB,
-                  loop,
-                  takenBlock,
-                  CT_LOOP_JUMP_VAR_NAME);
-              CAstHelper.generateLoopJumpToOutsideTrue(
                   jumpToOutside,
                   returnToOutsideTail,
                   branchBB,
                   loop,
                   takenBlock,
+                  CT_LOOP_JUMP_VAR_NAME,
                   CT_LOOP_BREAK_VAR_NAME);
+            }
+          } else {
+            Optional<ISSABasicBlock> innerMostLoopBreaker =
+                returnToOutsideTail.keySet().stream()
+                    .filter(
+                        breaker ->
+                            // If it is the correct inner most loop
+                            loop.getLoopBreakers().contains(breaker)
+                                && loop.getLoopExitrByBreaker(breaker).equals(branchBB)
+                                && returnToOutsideTail
+                                    .get(breaker)
+                                    .get(returnToOutsideTail.get(breaker).size() - 1)
+                                    .containsNestedLoop(loop))
+                    .findFirst();
+            if (innerMostLoopBreaker.isPresent()) {
+              assert takenBlock != null && notTakenBlock != null;
+
+              Loop topLoop = returnToOutsideTail.get(innerMostLoopBreaker.get()).get(0);
+              // TODO: more than 3 layers are not tested yet
+              System.out.println(
+                  "This is the case to set jump to header and tail to be True in different blocks");
+
+              CAstNode setJumpTrue =
+                  ast.makeNode(
+                      CAstNode.EXPR_STMT,
+                      ast.makeNode(
+                          CAstNode.ASSIGN,
+                          ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_JUMP_VAR_NAME)),
+                          ast.makeConstant(1)));
+
+              CAstNode setBreakTrue =
+                  ast.makeNode(
+                      CAstNode.EXPR_STMT,
+                      ast.makeNode(
+                          CAstNode.ASSIGN,
+                          ast.makeNode(CAstNode.VAR, ast.makeConstant(CT_LOOP_BREAK_VAR_NAME)),
+                          ast.makeConstant(1)));
+
+              if (LoopHelper.gotoHeader(cfg, topLoop, taken)) {
+                takenBlock.add(setJumpTrue);
+                notTakenBlock.add(setBreakTrue);
+              } else {
+                takenBlock.add(setBreakTrue);
+                notTakenBlock.add(setJumpTrue);
+              }
             }
           }
 
