@@ -609,6 +609,9 @@ public abstract class ToSource {
     private final Map<ISSABasicBlock, List<Loop>> sharedLoopControl;
     // The key is loop breaker and the value is the list of loops that'll jump to its parent header
     private final Map<ISSABasicBlock, List<Loop>> returnToParentHeader;
+    // The key is loop breaker in inner most loop and the value is the list of loops that'll jump
+    // over includes top loop but not inner most loop
+    private final Map<ISSABasicBlock, List<Loop>> returnToOutsideTail;
     private final SSAInstruction r;
     private final ISSABasicBlock l;
     private final ControlDependenceGraph<ISSABasicBlock> cdg;
@@ -692,6 +695,7 @@ public abstract class ToSource {
       this.jumpToOutside = parent.jumpToOutside;
       this.sharedLoopControl = parent.sharedLoopControl;
       this.returnToParentHeader = parent.returnToParentHeader;
+      this.returnToOutsideTail = parent.returnToOutsideTail;
       this.ir = parent.ir;
       this.sourceNames = parent.sourceNames;
       this.positionRecorder = parent.positionRecorder;
@@ -967,11 +971,12 @@ public abstract class ToSource {
       // handle nested loop
       List<HashMap<ISSABasicBlock, List<Loop>>> loopRelation =
           LoopHelper.updateLoopRelationship(cfg, loops);
-      assert (loopRelation.size() == 4);
+      assert (loopRelation.size() == 5);
       jumpToTop = loopRelation.get(0);
       jumpToOutside = loopRelation.get(1);
       sharedLoopControl = loopRelation.get(2);
       returnToParentHeader = loopRelation.get(3);
+      returnToOutsideTail = loopRelation.get(4);
 
       System.err.println(
           "loop controls: "
@@ -1805,7 +1810,7 @@ public abstract class ToSource {
 
       bodyNode =
           CAstHelper.generateInnerLoopJumpToOutside(
-              jumpToOutside, currentLoop, bodyNode, CT_LOOP_BREAK_VAR_NAME);
+              jumpToOutside, returnToOutsideTail, currentLoop, bodyNode, CT_LOOP_BREAK_VAR_NAME);
 
       CAstNode loopNode =
           ast.makeNode(
@@ -2650,7 +2655,12 @@ public abstract class ToSource {
                   notTakenBlock,
                   CT_LOOP_JUMP_VAR_NAME);
               CAstHelper.generateLoopJumpToOutsideTrue(
-                  jumpToOutside, branchBB, loop, notTakenBlock, CT_LOOP_BREAK_VAR_NAME);
+                  jumpToOutside,
+                  returnToOutsideTail,
+                  branchBB,
+                  loop,
+                  notTakenBlock,
+                  CT_LOOP_BREAK_VAR_NAME);
             } else {
               if (takenBlock.get(takenBlock.size() - 1).getKind() == CAstNode.BLOCK_STMT
                   && takenBlock.get(takenBlock.size() - 1).getChild(0).getKind()
@@ -2673,7 +2683,12 @@ public abstract class ToSource {
                   takenBlock,
                   CT_LOOP_JUMP_VAR_NAME);
               CAstHelper.generateLoopJumpToOutsideTrue(
-                  jumpToOutside, branchBB, loop, takenBlock, CT_LOOP_BREAK_VAR_NAME);
+                  jumpToOutside,
+                  returnToOutsideTail,
+                  branchBB,
+                  loop,
+                  takenBlock,
+                  CT_LOOP_BREAK_VAR_NAME);
             }
           }
 

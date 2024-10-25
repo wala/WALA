@@ -234,6 +234,7 @@ public class CAstHelper {
 
   public static CAstNode generateInnerLoopJumpToOutside(
       Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
       Loop currentLoop,
       CAstNode bodyNode,
       String varName) {
@@ -242,10 +243,14 @@ public class CAstHelper {
     // loop
     List<CAstNode> jumpList = new ArrayList<>();
     if (jumpToOutside.keySet().stream()
-        .anyMatch(breaker -> jumpToOutside.get(breaker).contains(currentLoop))) {
+            .anyMatch(breaker -> jumpToOutside.get(breaker).contains(currentLoop))
+        || returnToOutsideTail.keySet().stream()
+            .anyMatch(breaker -> returnToOutsideTail.get(breaker).contains(currentLoop))) {
       // find out the top loop
       if (jumpToOutside.keySet().stream()
-          .anyMatch(breaker -> jumpToOutside.get(breaker).get(0).equals(currentLoop))) {
+              .anyMatch(breaker -> jumpToOutside.get(breaker).get(0).equals(currentLoop))
+          || returnToOutsideTail.keySet().stream()
+              .anyMatch(breaker -> returnToOutsideTail.get(breaker).get(0).equals(currentLoop))) {
         // if this is the parent loop contains the loops been jumped, insert jump assignment at the
         // beginning of the loop
         // and generate if !loopjump then break
@@ -311,15 +316,20 @@ public class CAstHelper {
 
   public static void generateLoopJumpToOutsideTrue(
       Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
       BasicBlock branchBB,
       Loop loop,
       List<CAstNode> nodeBlock,
       String varName) {
-    // If a loop breaker is found in jumpToOutside, set ct_loop_jump=true
+    // If a loop breaker is found in jumpToOutside or returnToOutsideTail, set ct_loop_jump=true
     // find out the inner most loop
     if ((jumpToOutside.containsKey(branchBB)
-        && !jumpToOutside.get(branchBB).contains(loop)
-        && jumpToOutside.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+            && !jumpToOutside.get(branchBB).contains(loop)
+            && jumpToOutside.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))
+        || (returnToOutsideTail.containsKey(branchBB)
+            && !returnToOutsideTail.get(branchBB).contains(loop)
+            && returnToOutsideTail.get(branchBB).stream()
+                .anyMatch(ll -> ll.containsNestedLoop(loop)))) {
       CAstNode setTrue =
           ast.makeNode(
               CAstNode.EXPR_STMT,

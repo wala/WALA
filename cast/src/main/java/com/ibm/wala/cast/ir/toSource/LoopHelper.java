@@ -481,7 +481,8 @@ public class LoopHelper {
 
     // if there are only one loop, there wont be any nested loops
     if (loops.size() < 2)
-      return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
+      return Arrays.asList(
+          jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader, returnToOutsideTail);
 
     // order loops by header from large to small
     List<Loop> sortedLoops =
@@ -517,6 +518,11 @@ public class LoopHelper {
             for (ISSABasicBlock loopExit : ll.getLoopExits()) {
               // There's a case where the top loop breaker will jump to the tail of outside
               ISSABasicBlock loopBreaker = ll.getLoopBreakerByExit(loopExit);
+              if (ll.getLoopControl().equals(loopBreaker)) {
+                // Skip loop control
+                continue;
+              }
+              // TODO how about more than 3 layers?
               Optional<Entry<Loop, Loop>> nestedLoop =
                   childParentMap.entrySet().stream()
                       .filter(
@@ -525,11 +531,14 @@ public class LoopHelper {
                                   && entry.getKey().getLoopExits().contains(loopBreaker))
                       .findFirst();
               if (!ll.isLastBlock(loopBreaker) && nestedLoop.isPresent()) {
-                assert !returnToOutsideTail.containsKey(loopExit);
+                // TODO: need to check more than 3 layer's loop
+                ISSABasicBlock innerLoopBreak =
+                    nestedLoop.get().getKey().getLoopBreakerByExit(loopBreaker);
+                assert !returnToOutsideTail.containsKey(innerLoopBreak);
                 List<Loop> jumpPath = new ArrayList<>();
                 jumpPath.add(ll);
                 jumpPath.add(nestedLoop.get().getKey());
-                returnToOutsideTail.put(loopExit, jumpPath);
+                returnToOutsideTail.put(innerLoopBreak, jumpPath);
               }
             }
             return;
@@ -606,7 +615,8 @@ public class LoopHelper {
     // The value will contain the loop that will jump back to it's parent tail, so that top loop
     // will be the only element in the path
     System.out.println("====loop return to outside tail from inner:\n" + returnToOutsideTail);
-    return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
+    return Arrays.asList(
+        jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader, returnToOutsideTail);
   }
 
   private static boolean gotoHeader(
