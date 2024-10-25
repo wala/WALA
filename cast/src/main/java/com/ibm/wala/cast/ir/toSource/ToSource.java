@@ -1793,12 +1793,15 @@ public abstract class ToSource {
       }
 
       Pair<CAstNode, CAstNode> newNodeByJump =
-          CAstHelper.generateInnerLoopJumpToHeader(
+          CAstHelper.generateInnerLoopJumpToHeaderOrTail(
               jumpToTop,
               returnToParentHeader,
+              jumpToOutside,
+              returnToOutsideTail,
               currentLoop,
               bodyNode,
               CT_LOOP_JUMP_VAR_NAME,
+              CT_LOOP_BREAK_VAR_NAME,
               loopType,
               test);
       if (!test.equals(newNodeByJump.fst)) {
@@ -1807,10 +1810,6 @@ public abstract class ToSource {
         loopType = LoopType.DOWHILE;
       }
       bodyNode = newNodeByJump.snd;
-
-      bodyNode =
-          CAstHelper.generateInnerLoopJumpToOutside(
-              jumpToOutside, returnToOutsideTail, currentLoop, bodyNode, CT_LOOP_BREAK_VAR_NAME);
 
       CAstNode loopNode =
           ast.makeNode(

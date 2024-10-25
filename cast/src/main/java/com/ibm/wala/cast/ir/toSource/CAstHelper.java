@@ -147,18 +147,22 @@ public class CAstHelper {
             ast.makeConstant(varValue)));
   }
 
-  public static Pair<CAstNode, CAstNode> generateInnerLoopJumpToHeader(
+  public static Pair<CAstNode, CAstNode> generateInnerLoopJumpToHeaderOrTail(
       Map<ISSABasicBlock, List<Loop>> jumpToTop,
       Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
       Loop currentLoop,
       CAstNode bodyNode,
-      String varName,
+      String varNameJump,
+      String varNameBreak,
       LoopType loopType,
       CAstNode test) {
     // if this is the loop recorded in jumpToTop, then generate if-break node
     // check if it's middle loop, the ones that's not the outer most loop and not the inner most
     // loop
     List<CAstNode> jumpList = new ArrayList<>();
+    jumpList.addAll(bodyNode.getChildren());
     boolean isMiddleLoopJumpToHeader =
         isMiddleLoopJumpToHeader(jumpToTop, returnToParentHeader, currentLoop);
     boolean isTopLoopJumpToHeader =
@@ -170,13 +174,12 @@ public class CAstHelper {
               ast.makeNode(
                   CAstNode.BINARY_EXPR,
                   CAstOperator.OP_NE,
-                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameJump)),
                   ast.makeConstant(0)),
               ast.makeNode(CAstNode.BREAK));
-      jumpList.addAll(bodyNode.getChildren());
-      jumpList.add(ifCont);
 
-      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+      jumpList.add(ifCont);
+      //      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
     } else
     // find out the top loop
     if (isTopLoopJumpToHeader) {
@@ -189,10 +192,9 @@ public class CAstHelper {
               CAstNode.EXPR_STMT,
               ast.makeNode(
                   CAstNode.ASSIGN,
-                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameJump)),
                   ast.makeConstant(0)));
-      jumpList.add(setFalse);
-      jumpList.addAll(bodyNode.getChildren());
+      jumpList.add(0, setFalse);
 
       if (LoopType.WHILETRUE.equals(loopType)) {
         // change loop type in this case
@@ -200,7 +202,7 @@ public class CAstHelper {
             ast.makeNode(
                 CAstNode.BINARY_EXPR,
                 CAstOperator.OP_NE,
-                ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameJump)),
                 ast.makeConstant(0));
       } else {
         CAstNode ifCont =
@@ -209,29 +211,21 @@ public class CAstHelper {
                 ast.makeNode(
                     CAstNode.BINARY_EXPR,
                     CAstOperator.OP_EQ,
-                    ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameJump)),
                     ast.makeConstant(0)),
                 ast.makeNode(CAstNode.BREAK));
         jumpList.add(ifCont);
       }
 
-      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+      //      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
     }
 
     // if test has been changed then set loop type to be do while
-    return Pair.make(test, bodyNode);
-  }
+    //    return Pair.make(test, bodyNode);
 
-  public static CAstNode generateInnerLoopJumpToOutside(
-      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
-      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
-      Loop currentLoop,
-      CAstNode bodyNode,
-      String varName) {
     // if this is the loop recorded in jumpToOutside, then generate if-break node
     // check if it's middle loop, the ones that might be the outer most loop and not the inner most
     // loop
-    List<CAstNode> jumpList = new ArrayList<>();
     boolean isOtherLoopJumpToTail =
         isOtherLoopJumpToTail(jumpToOutside, returnToOutsideTail, currentLoop);
     if (isOtherLoopJumpToTail) {
@@ -248,27 +242,28 @@ public class CAstHelper {
                 CAstNode.EXPR_STMT,
                 ast.makeNode(
                     CAstNode.ASSIGN,
-                    ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                    ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameBreak)),
                     ast.makeConstant(0)));
-        jumpList.add(setFalse);
+        jumpList.add(0, setFalse);
       }
-      jumpList.addAll(bodyNode.getChildren());
+      //      jumpList.addAll(bodyNode.getChildren());
       CAstNode ifCont =
           ast.makeNode(
               CAstNode.IF_STMT,
               ast.makeNode(
                   CAstNode.BINARY_EXPR,
                   CAstOperator.OP_NE,
-                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameBreak)),
                   ast.makeConstant(0)),
               ast.makeNode(CAstNode.BREAK));
       jumpList.add(ifCont);
-
-      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
     }
 
+    if (jumpList.size() != bodyNode.getChildCount())
+      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+
     // return bodyNode in this case because it might be changed
-    return bodyNode;
+    return Pair.make(test, bodyNode);
   }
 
   private static boolean isTopLoopJumpToHeader(
