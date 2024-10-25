@@ -561,8 +561,8 @@ public class LoopHelper {
                   sharedLoopControl.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
                 } else if (!ll.getLoopControl().equals(ll.getLoopBreakerByExit(loopExit))) {
                   // jumpToOutside should not be the case of loop control
-                  assert !jumpToOutside.containsKey(ll.getLoopBreakerByExit(loopExit));
-                  jumpToOutside.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+                  if (!jumpToOutside.containsKey(ll.getLoopBreakerByExit(loopExit)))
+                    jumpToOutside.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
                 }
               } else {
                 if (!jumpToTop.containsKey(ll.getLoopBreakerByExit(loopExit)))
