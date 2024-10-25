@@ -159,16 +159,11 @@ public class CAstHelper {
     // check if it's middle loop, the ones that's not the outer most loop and not the inner most
     // loop
     List<CAstNode> jumpList = new ArrayList<>();
-    if (jumpToTop.keySet().stream()
-            .anyMatch(breaker -> jumpToTop.get(breaker).contains(currentLoop))
-        || returnToParentHeader.keySet().stream()
-            .anyMatch(
-                breaker ->
-                    returnToParentHeader.get(breaker).contains(currentLoop)
-                        && !returnToParentHeader
-                            .get(breaker)
-                            .get(returnToParentHeader.get(breaker).size() - 1)
-                            .equals(currentLoop))) {
+    boolean isMiddleLoopJumpToHeader =
+        isMiddleLoopJumpToHeader(jumpToTop, returnToParentHeader, currentLoop);
+    boolean isTopLoopJumpToHeader =
+        isTopLoopJumpToHeader(jumpToTop, returnToParentHeader, currentLoop);
+    if (isMiddleLoopJumpToHeader) {
       CAstNode ifCont =
           ast.makeNode(
               CAstNode.IF_STMT,
@@ -184,12 +179,7 @@ public class CAstHelper {
       bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
     } else
     // find out the top loop
-    if (jumpToTop.keySet().stream()
-            .anyMatch(breaker -> currentLoop.containsNestedLoop(jumpToTop.get(breaker).get(0)))
-        || returnToParentHeader.keySet().stream()
-            .anyMatch(
-                breaker ->
-                    currentLoop.containsNestedLoop(returnToParentHeader.get(breaker).get(0)))) {
+    if (isTopLoopJumpToHeader) {
       // if this is the parent loop contains the loops been jumped, insert jump assignment at the
       // beginning of the loop
       // and generate if !loopjump then break
@@ -242,15 +232,13 @@ public class CAstHelper {
     // check if it's middle loop, the ones that might be the outer most loop and not the inner most
     // loop
     List<CAstNode> jumpList = new ArrayList<>();
-    if (jumpToOutside.keySet().stream()
-            .anyMatch(breaker -> jumpToOutside.get(breaker).contains(currentLoop))
-        || returnToOutsideTail.keySet().stream()
-            .anyMatch(breaker -> returnToOutsideTail.get(breaker).contains(currentLoop))) {
+    boolean isOtherLoopJumpToTail =
+        isOtherLoopJumpToTail(jumpToOutside, returnToOutsideTail, currentLoop);
+    if (isOtherLoopJumpToTail) {
       // find out the top loop
-      if (jumpToOutside.keySet().stream()
-              .anyMatch(breaker -> jumpToOutside.get(breaker).get(0).equals(currentLoop))
-          || returnToOutsideTail.keySet().stream()
-              .anyMatch(breaker -> returnToOutsideTail.get(breaker).get(0).equals(currentLoop))) {
+      boolean isTopLoopJumpToTail =
+          isTopLoopJumpToTail(jumpToOutside, returnToOutsideTail, currentLoop);
+      if (isTopLoopJumpToTail) {
         // if this is the parent loop contains the loops been jumped, insert jump assignment at the
         // beginning of the loop
         // and generate if !loopjump then break
@@ -283,29 +271,98 @@ public class CAstHelper {
     return bodyNode;
   }
 
-  public static void generateInnerLoopJumpToHeaderTrue(
+  private static boolean isTopLoopJumpToHeader(
+      Map<ISSABasicBlock, List<Loop>> jumpToTop,
+      Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      Loop loop) {
+    return jumpToTop.keySet().stream()
+            .anyMatch(breaker -> loop.containsNestedLoop(jumpToTop.get(breaker).get(0)))
+        || returnToParentHeader.keySet().stream()
+            .anyMatch(breaker -> loop.containsNestedLoop(returnToParentHeader.get(breaker).get(0)));
+  }
+
+  private static boolean isMiddleLoopJumpToHeader(
+      Map<ISSABasicBlock, List<Loop>> jumpToTop,
+      Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      Loop loop) {
+    return jumpToTop.keySet().stream().anyMatch(breaker -> jumpToTop.get(breaker).contains(loop))
+        || returnToParentHeader.keySet().stream()
+            .anyMatch(
+                breaker ->
+                    returnToParentHeader.get(breaker).contains(loop)
+                        && !returnToParentHeader
+                            .get(breaker)
+                            .get(returnToParentHeader.get(breaker).size() - 1)
+                            .equals(loop));
+  }
+
+  private static boolean isInnerMostLoopJumpToHeader(
       Map<ISSABasicBlock, List<Loop>> jumpToTop,
       Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
       BasicBlock branchBB,
-      Loop loop,
-      List<CAstNode> nodeBlock,
-      String varName) {
-    // If a loop breaker is found in jumpToTop, set ct_loop_jump=true
-    // find out the inner most loop
-    if ((jumpToTop.containsKey(branchBB)
+      Loop loop) {
+    return (jumpToTop.containsKey(branchBB)
             && !jumpToTop.get(branchBB).contains(loop)
             && jumpToTop.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))
         || (returnToParentHeader.containsKey(branchBB)
             && returnToParentHeader
                 .get(branchBB)
                 .get(returnToParentHeader.get(branchBB).size() - 1)
-                .equals(loop))) {
+                .equals(loop));
+  }
+
+  private static boolean isOtherLoopJumpToTail(
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
+      Loop loop) {
+    return jumpToOutside.keySet().stream()
+            .anyMatch(breaker -> jumpToOutside.get(breaker).contains(loop))
+        || returnToOutsideTail.keySet().stream()
+            .anyMatch(breaker -> returnToOutsideTail.get(breaker).contains(loop));
+  }
+
+  private static boolean isTopLoopJumpToTail(
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
+      Loop loop) {
+    return jumpToOutside.keySet().stream()
+            .anyMatch(breaker -> jumpToOutside.get(breaker).get(0).equals(loop))
+        || returnToOutsideTail.keySet().stream()
+            .anyMatch(breaker -> returnToOutsideTail.get(breaker).get(0).equals(loop));
+  }
+
+  private static boolean isInnerMostLoopJumpToTail(
+      Map<ISSABasicBlock, List<Loop>> jumpToOutside,
+      Map<ISSABasicBlock, List<Loop>> returnToOutsideTail,
+      BasicBlock branchBB,
+      Loop loop) {
+    return (jumpToOutside.containsKey(branchBB)
+            && !jumpToOutside.get(branchBB).contains(loop)
+            && jumpToOutside.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))
+        || (returnToOutsideTail.containsKey(branchBB)
+            && !returnToOutsideTail.get(branchBB).contains(loop)
+            && returnToOutsideTail.get(branchBB).stream()
+                .anyMatch(ll -> ll.containsNestedLoop(loop)));
+  }
+
+  public static void generateInnerLoopJumpToHeaderTrue(
+      Map<ISSABasicBlock, List<Loop>> jumpToTop,
+      Map<ISSABasicBlock, List<Loop>> returnToParentHeader,
+      BasicBlock branchBB,
+      Loop loop,
+      List<CAstNode> nodeBlock,
+      String varNameHeader) {
+    // If a loop breaker is found in jumpToTop, set ct_loop_jump=true
+    // find out the inner most loop
+    boolean isInnerMostLoopJumpToHeader =
+        isInnerMostLoopJumpToHeader(jumpToTop, returnToParentHeader, branchBB, loop);
+    if (isInnerMostLoopJumpToHeader) {
       CAstNode setTrue =
           ast.makeNode(
               CAstNode.EXPR_STMT,
               ast.makeNode(
                   CAstNode.ASSIGN,
-                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameHeader)),
                   ast.makeConstant(1)));
       // add it before break
       if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
@@ -320,22 +377,18 @@ public class CAstHelper {
       BasicBlock branchBB,
       Loop loop,
       List<CAstNode> nodeBlock,
-      String varName) {
+      String varNameTail) {
     // If a loop breaker is found in jumpToOutside or returnToOutsideTail, set ct_loop_jump=true
     // find out the inner most loop
-    if ((jumpToOutside.containsKey(branchBB)
-            && !jumpToOutside.get(branchBB).contains(loop)
-            && jumpToOutside.get(branchBB).stream().anyMatch(ll -> ll.containsNestedLoop(loop)))
-        || (returnToOutsideTail.containsKey(branchBB)
-            && !returnToOutsideTail.get(branchBB).contains(loop)
-            && returnToOutsideTail.get(branchBB).stream()
-                .anyMatch(ll -> ll.containsNestedLoop(loop)))) {
+    boolean isInnerMostLoopJumpToTail =
+        isInnerMostLoopJumpToTail(jumpToOutside, returnToOutsideTail, branchBB, loop);
+    if (isInnerMostLoopJumpToTail) {
       CAstNode setTrue =
           ast.makeNode(
               CAstNode.EXPR_STMT,
               ast.makeNode(
                   CAstNode.ASSIGN,
-                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varName)),
+                  ast.makeNode(CAstNode.VAR, ast.makeConstant(varNameTail)),
                   ast.makeConstant(1)));
       // add it before break
       if (nodeBlock.get(nodeBlock.size() - 1).getKind() == CAstNode.BREAK)
