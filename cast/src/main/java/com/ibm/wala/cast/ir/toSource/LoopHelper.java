@@ -461,6 +461,15 @@ public class LoopHelper {
     return loopBB;
   }
 
+  private static Optional<Entry<Loop, Loop>> findNestedLoop(
+      HashMap<Loop, Loop> childParentMap, Loop ll, ISSABasicBlock loopBreaker) {
+    return childParentMap.entrySet().stream()
+        .filter(
+            entry ->
+                entry.getValue().equals(ll) && entry.getKey().getLoopExits().contains(loopBreaker))
+        .findFirst();
+  }
+
   public static List<HashMap<ISSABasicBlock, List<Loop>>> updateLoopRelationship(
       PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Map<ISSABasicBlock, Loop> loops) {
     // collect loop break and the jumps, key: loopBreaker,
@@ -522,26 +531,29 @@ public class LoopHelper {
                 // Skip loop control
                 continue;
               }
-              // TODO how about more than 3 layers?
-              Optional<Entry<Loop, Loop>> nestedLoop =
-                  childParentMap.entrySet().stream()
-                      .filter(
-                          entry ->
-                              entry.getValue().equals(ll)
-                                  && entry.getKey().getLoopExits().contains(loopBreaker))
-                      .findFirst();
-              if (!ll.isLastBlock(loopBreaker) && nestedLoop.isPresent()) {
-                // TODO: need to check more than 3 layer's loop
-                ISSABasicBlock innerLoopBreak =
-                    nestedLoop.get().getKey().getLoopBreakerByExit(loopBreaker);
-                if (nestedLoop.get().getKey().getLoopControl().equals(innerLoopBreak)) {
+
+              Loop nextLoop = ll;
+              ISSABasicBlock innerLoopBreak = loopBreaker;
+
+              List<Loop> jumpPath = new ArrayList<>();
+              jumpPath.add(ll);
+              
+              // need to check more than 3 layer's loop
+              while (!nextLoop.isLastBlock(loopBreaker)
+                  && findNestedLoop(childParentMap, nextLoop, loopBreaker).isPresent()) {
+                nextLoop = findNestedLoop(childParentMap, nextLoop, loopBreaker).get().getKey();
+                innerLoopBreak = nextLoop.getLoopBreakerByExit(loopBreaker);
+                if (nextLoop.getLoopControl().equals(innerLoopBreak)) {
                   // Skip loop control
-                  continue;
+                  break;
                 }
+                jumpPath.add(nextLoop);
+              }
+
+              if (innerLoopBreak != loopBreaker) {
+                jumpPath.remove(jumpPath.size() - 1); // remove the inner most of the path
+
                 assert !returnToOutsideTail.containsKey(innerLoopBreak);
-                List<Loop> jumpPath = new ArrayList<>();
-                jumpPath.add(ll);
-                jumpPath.add(nestedLoop.get().getKey());
                 returnToOutsideTail.put(innerLoopBreak, jumpPath);
               }
             }
