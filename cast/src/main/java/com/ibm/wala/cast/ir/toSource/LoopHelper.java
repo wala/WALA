@@ -537,7 +537,7 @@ public class LoopHelper {
 
               List<Loop> jumpPath = new ArrayList<>();
               jumpPath.add(ll);
-              
+
               // need to check more than 3 layer's loop
               while (!nextLoop.isLastBlock(loopBreaker)
                   && findNestedLoop(childParentMap, nextLoop, loopBreaker).isPresent()) {
@@ -642,12 +642,15 @@ public class LoopHelper {
     Collection<ISSABasicBlock> nextBBs = cfg.getNormalSuccessors(block);
     for (ISSABasicBlock next : nextBBs) {
       if (loop.getLoopHeader().equals(next)) {
-        continue;
+        result = true;
       } else if (loop.getAllBlocks().contains(next)) {
         result = gotoHeader(cfg, loop, next);
       } else {
         result = false;
       }
+
+      if (result) // found
+      break;
     }
     return result;
   }
