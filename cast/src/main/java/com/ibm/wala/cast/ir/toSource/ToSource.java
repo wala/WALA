@@ -133,7 +133,7 @@ public abstract class ToSource {
 
   private final CAst ast = new CAstImpl();
 
-  public static final String CT_LOOP_JUMP_VAR_NAME = "ctloopjump";
+  public static final String CT_LOOP_JUMP_VAR_NAME = "RESTART-LOOP";
   public static final String CT_LOOP_BREAK_VAR_NAME = "ctloopbreak";
 
   protected abstract String nameToJava(String name, boolean isTypeName);
