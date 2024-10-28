@@ -11,6 +11,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnspecifiedExprInstruction;
+import com.ibm.wala.ssa.SSAUnspecifiedInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.IteratorUtil;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,6 +127,13 @@ public class LoopHelper {
             if (inst.iIndex() < 0) continue;
             // TODO: need to check if any other case should be placed here
             if (inst instanceof SSAReturnInstruction) {
+              continue;
+            }
+            if (inst instanceof SSAUnspecifiedInstruction
+                && ((SSAUnspecifiedInstruction<?>) inst).getPayload() != null
+                && "STOP RUN"
+                    .equalsIgnoreCase(
+                        ((SSAUnspecifiedInstruction<?>) inst).getPayload().toString())) {
               continue;
             }
             notWhileLoop = true;
@@ -452,6 +461,15 @@ public class LoopHelper {
     return loopBB;
   }
 
+  private static Optional<Entry<Loop, Loop>> findNestedLoop(
+      HashMap<Loop, Loop> childParentMap, Loop ll, ISSABasicBlock loopBreaker) {
+    return childParentMap.entrySet().stream()
+        .filter(
+            entry ->
+                entry.getValue().equals(ll) && entry.getKey().getLoopExits().contains(loopBreaker))
+        .findFirst();
+  }
+
   public static List<HashMap<ISSABasicBlock, List<Loop>>> updateLoopRelationship(
       PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Map<ISSABasicBlock, Loop> loops) {
     // collect loop break and the jumps, key: loopBreaker,
@@ -464,12 +482,16 @@ public class LoopHelper {
     // value: the loops been jumped, not includes the inner loop, but includes the outer most loop
     HashMap<ISSABasicBlock, List<Loop>> jumpToOutside = HashMapFactory.make();
     // collect loop break and the jumps, key: loopBreaker,
+    // value: the loop, usually is the top one, that will jump to outside tail
+    HashMap<ISSABasicBlock, List<Loop>> returnToOutsideTail = HashMapFactory.make();
+    // collect loop break and the jumps, key: loopBreaker,
     // value: the nest loop hierarchy that share same loop control
     HashMap<ISSABasicBlock, List<Loop>> sharedLoopControl = HashMapFactory.make();
 
     // if there are only one loop, there wont be any nested loops
     if (loops.size() < 2)
-      return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
+      return Arrays.asList(
+          jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader, returnToOutsideTail);
 
     // order loops by header from large to small
     List<Loop> sortedLoops =
@@ -500,8 +522,41 @@ public class LoopHelper {
             System.out.println("Unsupported: no loop breakers - " + ll);
             return;
           }
-          // no need to check loop breakers for top level loops
+          // for most cases, no need to check loop breakers for top level loops
           if (!childParentMap.containsKey(ll)) {
+            for (ISSABasicBlock loopExit : ll.getLoopExits()) {
+              // There's a case where the top loop breaker will jump to the tail of outside
+              ISSABasicBlock loopBreaker = ll.getLoopBreakerByExit(loopExit);
+              if (ll.getLoopControl().equals(loopBreaker)) {
+                // Skip loop control
+                continue;
+              }
+
+              Loop nextLoop = ll;
+              ISSABasicBlock innerLoopBreak = loopBreaker;
+
+              List<Loop> jumpPath = new ArrayList<>();
+              jumpPath.add(ll);
+
+              // need to check more than 3 layer's loop
+              while (!nextLoop.isLastBlock(loopBreaker)
+                  && findNestedLoop(childParentMap, nextLoop, loopBreaker).isPresent()) {
+                nextLoop = findNestedLoop(childParentMap, nextLoop, loopBreaker).get().getKey();
+                innerLoopBreak = nextLoop.getLoopBreakerByExit(loopBreaker);
+                if (nextLoop.getLoopControl().equals(innerLoopBreak)) {
+                  // Skip loop control
+                  break;
+                }
+                jumpPath.add(nextLoop);
+              }
+
+              if (innerLoopBreak != loopBreaker) {
+                jumpPath.remove(jumpPath.size() - 1); // remove the inner most of the path
+
+                assert !returnToOutsideTail.containsKey(innerLoopBreak);
+                returnToOutsideTail.put(innerLoopBreak, jumpPath);
+              }
+            }
             return;
           }
 
@@ -527,12 +582,16 @@ public class LoopHelper {
               if (!childParentMap.containsKey(jumpPath.get(0))) {
                 // if the jumpPath includes top ones
                 if (jumpPath.get(0).getLoopControl().equals(ll.getLoopBreakerByExit(loopExit))) {
+                  assert !sharedLoopControl.containsKey(ll.getLoopBreakerByExit(loopExit));
                   sharedLoopControl.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
-                } else {
-                  jumpToOutside.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+                } else if (!ll.getLoopControl().equals(ll.getLoopBreakerByExit(loopExit))) {
+                  // jumpToOutside should not be the case of loop control
+                  if (!jumpToOutside.containsKey(ll.getLoopBreakerByExit(loopExit)))
+                    jumpToOutside.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
                 }
               } else {
-                jumpToTop.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
+                if (!jumpToTop.containsKey(ll.getLoopBreakerByExit(loopExit)))
+                  jumpToTop.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
               }
 
               System.out.println(
@@ -569,22 +628,29 @@ public class LoopHelper {
     // The value will contain the loop that will jump back to it's parent header, so that inner loop
     // and middle loop(if any, usually only one value for this case) will be included
     System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
-    return Arrays.asList(jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader);
+    // The value will contain the loop that will jump back to it's parent tail, so that top loop
+    // will be the only element in the path
+    System.out.println("====loop return to outside tail from inner:\n" + returnToOutsideTail);
+    return Arrays.asList(
+        jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader, returnToOutsideTail);
   }
 
-  private static boolean gotoHeader(
+  public static boolean gotoHeader(
       PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Loop loop, ISSABasicBlock block) {
     // check if all branches will goto loop header
     boolean result = true;
     Collection<ISSABasicBlock> nextBBs = cfg.getNormalSuccessors(block);
     for (ISSABasicBlock next : nextBBs) {
       if (loop.getLoopHeader().equals(next)) {
-        continue;
+        result = true;
       } else if (loop.getAllBlocks().contains(next)) {
         result = gotoHeader(cfg, loop, next);
       } else {
         result = false;
       }
+
+      if (result) // found
+      break;
     }
     return result;
   }
