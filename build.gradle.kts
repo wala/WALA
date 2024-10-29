@@ -51,7 +51,7 @@ JavaVersion.current().let {
 
 group = name
 
-version = "1.6.7.1-SNAPSHOT"
+version = "1.6.8-SNAPSHOT"
 
 // version of Eclipse JARs to use for Eclipse-integrated WALA components.
 val eclipseVersion: EclipseRelease by extra {
