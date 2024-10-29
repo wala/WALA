@@ -2568,7 +2568,7 @@ public abstract class ToSource {
           CAstNode test;
           test:
           {
-            if (v2.getValue() instanceof Number && ((Number) v2.getValue()).equals(0)) {
+            if (v2.getValue() instanceof Number && v2.getValue().equals(0)) {
               if (castOp == CAstOperator.OP_NE) {
                 if (loop != null && loop.getLoopControl().equals(branchBB)) {
                   test = v1;

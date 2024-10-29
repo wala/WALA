@@ -56,7 +56,7 @@ public class CAstPrinter {
 
   public String getKindAsString(int kind) {
     switch (kind) {
-        // statements
+      // statements
       case CAstNode.SWITCH:
         return "SWITCH";
       case CAstNode.LOOP:
@@ -110,7 +110,7 @@ public class CAstPrinter {
       case CAstNode.FORIN_LOOP:
         return "FOR..IN";
 
-        // expression kinds
+      // expression kinds
       case CAstNode.FUNCTION_EXPR:
         return "FUNCTION_EXPR";
       case CAstNode.EXPR_LIST:
@@ -172,19 +172,19 @@ public class CAstPrinter {
       case CAstNode.NARY_EXPR:
         return "NARY_EXPR";
 
-        // explicit lexical scopes
+      // explicit lexical scopes
       case CAstNode.LOCAL_SCOPE:
         return "SCOPE";
       case CAstNode.SPECIAL_PARENT_SCOPE:
         return "SPECIAL PARENT SCOPE";
 
-        // literal expression kinds
+      // literal expression kinds
       case CAstNode.CONSTANT:
         return "CONSTANT";
       case CAstNode.OPERATOR:
         return "OPERATOR";
 
-        // special stuff
+      // special stuff
       case CAstNode.PRIMITIVE:
         return "PRIMITIVE";
       case CAstNode.VOID:

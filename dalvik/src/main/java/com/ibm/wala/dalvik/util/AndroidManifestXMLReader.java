@@ -587,7 +587,7 @@ public class AndroidManifestXMLReader {
               names.add((String) oName);
             } else {
               throw new IllegalStateException(
-                  "Unexpected Attribute type for name: " + oName.getClass().toString());
+                  "Unexpected Attribute type for name: " + oName.getClass());
             }
           } else if (current == Tag.DATA) {
             Object oUrl = attributesHistory.get(Attr.SCHEME).peek();
@@ -597,7 +597,7 @@ public class AndroidManifestXMLReader {
               urls.add((String) oUrl);
             } else {
               throw new IllegalStateException(
-                  "Unexpected Attribute type for name: " + oUrl.getClass().toString());
+                  "Unexpected Attribute type for name: " + oUrl.getClass());
             }
           } else {
             throw new IllegalStateException("Error in parser implementation");
@@ -671,7 +671,7 @@ public class AndroidManifestXMLReader {
               overrideTargets.add((Intent) oIntent);
             } else {
               throw new IllegalStateException(
-                  "Unexpected Attribute type for Intent: " + oIntent.getClass().toString());
+                  "Unexpected Attribute type for Intent: " + oIntent.getClass());
             }
           } else {
             throw new IllegalStateException("Error in parser implementation");

@@ -354,7 +354,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
               .append('/')
               .append(n.getMethod().getName())
               .append('/')
-              .append(n.getContext().getClass().toString());
+              .append(n.getContext().getClass());
 
       if (n.getContext().isA(ReceiverInstanceContext.class)) {
         nmBuilder

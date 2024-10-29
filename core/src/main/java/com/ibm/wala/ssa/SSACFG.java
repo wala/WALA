@@ -472,10 +472,9 @@ public class SSACFG
         @Override
         public SSAInstruction next() {
           SSAInstruction i = instructions[start];
-          start++;
-          while (start <= end && instructions[start] == null) {
+          do {
             start++;
-          }
+          } while (start <= end && instructions[start] == null);
           return i;
         }
 
@@ -1117,7 +1116,7 @@ public class SSACFG
 
     @Override
     public String getMsg() {
-      return getClass().toString() + " : " + type + ' ' + method;
+      return getClass() + " : " + type + ' ' + method;
     }
 
     public static ExceptionLoadFailure create(TypeReference type, IMethod method) {
