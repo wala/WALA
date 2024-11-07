@@ -471,7 +471,7 @@ public class LoopHelper {
   }
 
   public static List<HashMap<ISSABasicBlock, List<Loop>>> updateLoopRelationship(
-      PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Map<ISSABasicBlock, Loop> loops) {
+      PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, Map<ISSABasicBlock, Loop> loops, boolean isDebug) {
     // collect loop break and the jumps, key: loopBreaker,
     // value: the loops been jumped, not including the inner loop and outer loop
     HashMap<ISSABasicBlock, List<Loop>> jumpToTop = HashMapFactory.make();
@@ -519,7 +519,8 @@ public class LoopHelper {
         ll -> {
           // check if there are any loop has no loop breakers
           if (ll.getLoopBreakers().size() < 1) {
-            System.out.println("Unsupported: no loop breakers - " + ll);
+            if(isDebug)
+            System.err.println("Unsupported: no loop breakers - " + ll);
             return;
           }
           // for most cases, no need to check loop breakers for top level loops
@@ -594,7 +595,8 @@ public class LoopHelper {
                   jumpToTop.put(ll.getLoopBreakerByExit(loopExit), jumpPath);
               }
 
-              System.out.println(
+              if(isDebug)
+              System.err.println(
                   "This is an example of jump from inner loop to outer-most" + jumpPath);
             } else if ((cfg.getNormalSuccessors(loopExit)
                         .contains(childParentMap.get(ll).getLoopHeader())
@@ -619,18 +621,20 @@ public class LoopHelper {
           }
         });
 
+    if(isDebug) {
     // The value only contains the middle loops who will be jumped over
-    System.out.println("====loop jumps to top:\n" + jumpToTop);
-    System.out.println("====loop jumps to outside:\n" + jumpToOutside);
+    System.err.println("====loop jumps to top:\n" + jumpToTop);
+    System.err.println("====loop jumps to outside:\n" + jumpToOutside);
     // The value will contain the loops that share same loop control which means outer loop will be
     // included while inner loop not
-    System.out.println("====loop shared control:\n" + sharedLoopControl);
+    System.err.println("====loop shared control:\n" + sharedLoopControl);
     // The value will contain the loop that will jump back to it's parent header, so that inner loop
     // and middle loop(if any, usually only one value for this case) will be included
-    System.out.println("====loop return to parent header from middle:\n" + returnToParentHeader);
+    System.err.println("====loop return to parent header from middle:\n" + returnToParentHeader);
     // The value will contain the loop that will jump back to it's parent tail, so that top loop
     // will be the only element in the path
-    System.out.println("====loop return to outside tail from inner:\n" + returnToOutsideTail);
+    System.err.println("====loop return to outside tail from inner:\n" + returnToOutsideTail);
+    }
     return Arrays.asList(
         jumpToTop, jumpToOutside, sharedLoopControl, returnToParentHeader, returnToOutsideTail);
   }
