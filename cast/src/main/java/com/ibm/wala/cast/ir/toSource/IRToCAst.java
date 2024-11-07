@@ -134,8 +134,7 @@ public class IRToCAst {
     boolean fresh = true;
     for (Iterator<ISSABasicBlock> bbs = ReverseIterator.reverse(top.iterator()); bbs.hasNext(); ) {
       ISSABasicBlock bb = bbs.next();
-      if(isDebug)
-      System.err.println("looking at " + bb);
+      if (isDebug) System.err.println("looking at " + bb);
       if (fresh || cfg.getPredNodeCount(bb) == 1) {
         fresh = false;
       } else {

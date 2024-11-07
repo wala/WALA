@@ -130,8 +130,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.output.TeeWriter;
 
 public abstract class ToSource {
-  
-  protected static final boolean DEBUG = false;
+
+  protected static boolean DEBUG = false;
 
   private final CAst ast = new CAstImpl();
 
@@ -286,20 +286,17 @@ public abstract class ToSource {
         SSAInstruction loopControl) {
 
       if (inst instanceof SSAPhiInstruction) {
-        if(DEBUG)
-          System.err.println("looking at PHI " + inst + " for " + regionInsts);
+        if (DEBUG) System.err.println("looking at PHI " + inst + " for " + regionInsts);
         boolean ok = true;
         ISSABasicBlock bb = findBlock((SSAPhiInstruction) inst);
-        if(DEBUG)
-          System.err.println("block " + bb);
+        if (DEBUG) System.err.println("block " + bb);
         ISSABasicBlock condPred = null;
         Map<ISSABasicBlock, Object> condPredLabels = HashMapFactory.make();
         check_preds:
         {
           for (Iterator<ISSABasicBlock> pbs = cfg.getPredNodes(bb); pbs.hasNext(); ) {
             ISSABasicBlock pb = pbs.next();
-            if(DEBUG)
-              System.err.println("pred " + pb);
+            if (DEBUG) System.err.println("pred " + pb);
             for (Iterator<ISSABasicBlock> cps = cdg.getPredNodes(pb); cps.hasNext(); ) {
               ISSABasicBlock cp = cps.next();
 
@@ -332,9 +329,9 @@ public abstract class ToSource {
         }
 
         if (ok) {
-          if(DEBUG)
+          if (DEBUG)
             System.err.println(
-              "found nested for " + inst + " and " + condPred + ", " + condPredLabels);
+                "found nested for " + inst + " and " + condPred + ", " + condPredLabels);
         }
       }
 
@@ -345,8 +342,7 @@ public abstract class ToSource {
           ISSABasicBlock loop = cfg.getBlockForInstruction(loopControl.iIndex());
           ISSABasicBlock me = cfg.getBlockForInstruction(inst.iIndex());
           if (loop == me || cdg.hasEdge(loop, me)) {
-            if(DEBUG)
-              System.err.println("depOK: " + loop + " " + me);
+            if (DEBUG) System.err.println("depOK: " + loop + " " + me);
             depOk = true;
           }
         }
@@ -661,8 +657,7 @@ public abstract class ToSource {
               });
 
       BasicNaturalRelation rename = new BasicNaturalRelation();
-      if(DEBUG)
-        System.err.println("phi scc: ------- ");
+      if (DEBUG) System.err.println("phi scc: ------- ");
       new SCCIterator<>(G)
           .forEachRemaining(
               new Consumer<Set<SSAPhiInstruction>>() {
@@ -670,12 +665,11 @@ public abstract class ToSource {
 
                 @Override
                 public void accept(Set<SSAPhiInstruction> t) {
-                  if(DEBUG)
-                    System.err.println("phi scc: " + t);
+                  if (DEBUG) System.err.println("phi scc: " + t);
                   if (t.size() > 1) {
-                    if(DEBUG)
+                    if (DEBUG)
                       System.err.println(
-                        mergePhis.find(t.iterator().next().getDef()) + " --> " + idx);
+                          mergePhis.find(t.iterator().next().getDef()) + " --> " + idx);
                     rename.add(mergePhis.find(t.iterator().next().getDef()), idx++);
                   }
                 }
@@ -712,8 +706,7 @@ public abstract class ToSource {
       this.positionRecorder = parent.positionRecorder;
       this.cfgNoBack = parent.cfgNoBack;
       initChildren();
-      if(DEBUG)
-        System.err.println("added children for " + r + "," + l + ": " + children);
+      if (DEBUG) System.err.println("added children for " + r + "," + l + ": " + children);
     }
 
     private boolean hasAllByIdentity(List<SSAInstruction> all, List<SSAInstruction> some) {
@@ -848,19 +841,19 @@ public abstract class ToSource {
               });
         }
       }
-      if(DEBUG) {
+      if (DEBUG) {
         System.err.println("liveness conflicts");
         System.err.println(livenessConflicts);
       }
       cdg = new ControlDependenceGraph<>(cfg, true);
-      if(DEBUG) {
+      if (DEBUG) {
         System.err.println(cdg);
-      IRToCAst.toCAst(ir, DEBUG)
-          .entrySet()
-          .forEach(
-              e -> {
-                System.err.println(e);
-              });
+        IRToCAst.toCAst(ir, DEBUG)
+            .entrySet()
+            .forEach(
+                e -> {
+                  System.err.println(e);
+                });
       }
 
       Map<ISSABasicBlock, Integer> cfgFinishTimes =
@@ -888,8 +881,7 @@ public abstract class ToSource {
                   })
               .collect(Collectors.toSet());
 
-      if(DEBUG)
-        System.err.println("loop headers: " + loopHeaders);
+      if (DEBUG) System.err.println("loop headers: " + loopHeaders);
 
       loops = HashMapFactory.make();
       loopHeaders.forEach((header) -> loops.put(header, new Loop(header)));
@@ -901,8 +893,7 @@ public abstract class ToSource {
                 .forEachRemaining(
                     p -> {
                       if (isBackEdge.test(p, n)) {
-                        if(DEBUG)
-                          System.err.println("back:" + p + " --> " + n);
+                        if (DEBUG) System.err.println("back:" + p + " --> " + n);
 
                         LoopPart part = new LoopPart();
 
@@ -924,16 +915,14 @@ public abstract class ToSource {
                                 .min(Comparator.comparing(ISSABasicBlock::getNumber))
                                 .get());
 
-                        if(DEBUG)
-                          System.err.println("loop: " + allBlocks);
+                        if (DEBUG) System.err.println("loop: " + allBlocks);
 
                         Set<ISSABasicBlock> breakers = HashSetFactory.make();
                         breakers.addAll(
                             allBlocks.stream()
                                 .filter(
                                     bb -> {
-                                      if(DEBUG)
-                                        System.err.println("1: " + bb);
+                                      if (DEBUG) System.err.println("1: " + bb);
                                       return IteratorUtil.streamify(cfg.getSuccNodes(bb))
                                           .anyMatch(
                                               b -> {
@@ -942,15 +931,15 @@ public abstract class ToSource {
                                     })
                                 .filter(
                                     bb -> {
-                                      if(DEBUG)
+                                      if (DEBUG)
                                         System.err.println(
-                                          "2: "
-                                              + bb
-                                              + ": "
-                                              + DFS.getReachableNodes(
-                                                  GraphSlicer.prune(
-                                                      cfgNoBack, (pb, s) -> pb.equals(bb)),
-                                                  Collections.singleton(n)));
+                                            "2: "
+                                                + bb
+                                                + ": "
+                                                + DFS.getReachableNodes(
+                                                    GraphSlicer.prune(
+                                                        cfgNoBack, (pb, s) -> pb.equals(bb)),
+                                                    Collections.singleton(n)));
 
                                       return n.equals(bb)
                                           || !DFS.getReachableNodes(
@@ -999,41 +988,38 @@ public abstract class ToSource {
       returnToParentHeader = loopRelation.get(3);
       returnToOutsideTail = loopRelation.get(4);
 
-      if(DEBUG) {
-      System.err.println(
-          "loop controls: "
-              + loops.values().stream()
-                  .map(loop -> loop.getLoopControl())
-                  .collect(Collectors.toList()));
-      System.err.println(
-          "loops: "
-              + loops.values().stream().map(loop -> loop.toString()).collect(Collectors.toList()));
+      if (DEBUG) {
+        System.err.println(
+            "loop controls: "
+                + loops.values().stream()
+                    .map(loop -> loop.getLoopControl())
+                    .collect(Collectors.toList()));
+        System.err.println(
+            "loops: "
+                + loops.values().stream()
+                    .map(loop -> loop.toString())
+                    .collect(Collectors.toList()));
       }
 
       for (ISSABasicBlock b : cfg) {
         if (loopHeaders.contains(b)) {
-          if(DEBUG)
-            System.err.println("bad flow: starting " + b);
+          if (DEBUG) System.err.println("bad flow: starting " + b);
           cfg.getPredNodes(b)
               .forEachRemaining(
                   s -> {
-                    if(DEBUG)
-                      System.err.println("bad flow: pred " + s);
+                    if (DEBUG) System.err.println("bad flow: pred " + s);
                     if (isBackEdge.test(s, b)) {
-                      if(DEBUG)
-                        System.err.println("bad flow: back edge");
+                      if (DEBUG) System.err.println("bad flow: back edge");
                       int n = Util.whichPred(cfg, s, b);
                       b.iteratePhis()
                           .forEachRemaining(
                               phi -> {
-                                if(DEBUG)
-                                  System.err.println("bad flow: phi " + phi);
+                                if (DEBUG) System.err.println("bad flow: phi " + phi);
                                 int vn = phi.getUse(n);
                                 SSAInstruction def = du.getDef(vn);
-                                if(DEBUG)
-                                  System.err.println("bad flow: def " + def);
+                                if (DEBUG) System.err.println("bad flow: def " + def);
                                 if (def instanceof SSAPhiInstruction) {
-                                  if(DEBUG)
+                                  if (DEBUG)
                                     System.err.println("bad flow: " + vn + " --> " + phi.getDef());
                                   for (int i = 0; i < def.getNumberOfUses(); i++) {
                                     livenessConflicts.add(def.getDef(), def.getUse(i));
@@ -1075,15 +1061,20 @@ public abstract class ToSource {
                                       livenessConflicts.add(
                                           mergePhis.find(vn), mergePhis.find(def));
                                     } else {
-                                      if(DEBUG)
+                                      if (DEBUG)
                                         System.err.println("should not be here>>>>>>>>>>>>>>");
                                     }
                                   });
 
                               mergePhis.union(def, use);
-                              if(DEBUG)
+                              if (DEBUG)
                                 System.err.println(
-                                  "merging " + def + " and " + use + " as " + mergePhis.find(def));
+                                    "merging "
+                                        + def
+                                        + " and "
+                                        + use
+                                        + " as "
+                                        + mergePhis.find(def));
                               mergedValues.add(use);
                               mergedValues.add(def);
                             }
@@ -1116,15 +1107,15 @@ public abstract class ToSource {
             }
             regions.get(regionKey).add(node);
           });
-      if(DEBUG)
-      regions
-          .entrySet()
-          .forEach(
-              es -> {
-                System.err.println("----");
-                System.err.println(es.getKey());
-                System.err.println(es.getValue());
-              });
+      if (DEBUG)
+        regions
+            .entrySet()
+            .forEach(
+                es -> {
+                  System.err.println("----");
+                  System.err.println(es.getKey());
+                  System.err.println(es.getValue());
+                });
 
       MutableIntSet unmergeableValues = IntSetUtil.make();
       regionChunks = HashMapFactory.make();
@@ -1171,9 +1162,8 @@ public abstract class ToSource {
 
                                     Pair<BasicNaturalRelation, Iterable<SSAPhiInstruction>> order =
                                         orderPhisAndDetectCycles(sb.iteratePhis());
-                                    
-                                    if(DEBUG)
-                                      System.err.println("order: " + order);
+
+                                    if (DEBUG) System.err.println("order: " + order);
 
                                     List<AssignInstruction> as = new ArrayList<>();
                                     order
@@ -1181,14 +1171,14 @@ public abstract class ToSource {
                                         .iterator()
                                         .forEachRemaining(
                                             phi -> {
-                                              if(DEBUG)
+                                              if (DEBUG)
                                                 System.err.println(
-                                                  "phi at "
-                                                      + bb
-                                                      + " with "
-                                                      + bb.getLastInstruction()
-                                                      + " "
-                                                      + cfg.getSuccNodeCount(bb));
+                                                    "phi at "
+                                                        + bb
+                                                        + " with "
+                                                        + bb.getLastInstruction()
+                                                        + " "
+                                                        + cfg.getSuccNodeCount(bb));
                                               int lv = phi.getDef();
                                               int rv = phi.getUse(Util.whichPred(cfg, bb, sb));
                                               if (mergePhis.find(lv) != mergePhis.find(rv)) {
@@ -1222,39 +1212,37 @@ public abstract class ToSource {
                                                 AssignInstruction assign =
                                                     new AssignInstruction(
                                                         bb.getLastInstructionIndex() + 1, lh, rh);
-                                                if(DEBUG) {
-                                                if (backEdge
-                                                    && sb.getLastInstruction()
-                                                        instanceof
-                                                        SSAConditionalBranchInstruction) {
-                                                  
-                                                  System.err.println(
-                                                      "back edge for "
-                                                          + sb.getLastInstructionIndex());
-                                                  System.err.println("back edge for " + assign);
-                                                  System.err.println(
-                                                      "back edge for " + es.getKey());
-                                                  
-                                                }
-                                                if (Util.endsWithConditionalBranch(cfg, bb)
-                                                    && (Util.getTakenSuccessor(cfg, bb).equals(sb)
-                                                        || Util.getNotTakenSuccessor(cfg, bb)
-                                                            .equals(bb))) {
-                                                  System.err.println(
-                                                      "found line phi for "
-                                                          + bb
-                                                          + " to "
-                                                          + sb
-                                                          + " for "
-                                                          + rv
-                                                          + " -> "
-                                                          + lv);
-                                                }
-                                                
+                                                if (DEBUG) {
+                                                  if (backEdge
+                                                      && sb.getLastInstruction()
+                                                          instanceof
+                                                          SSAConditionalBranchInstruction) {
 
-                                                System.err.println(
-                                                    "adding " + assign + " for " + bb + " --> "
-                                                        + sb);
+                                                    System.err.println(
+                                                        "back edge for "
+                                                            + sb.getLastInstructionIndex());
+                                                    System.err.println("back edge for " + assign);
+                                                    System.err.println(
+                                                        "back edge for " + es.getKey());
+                                                  }
+                                                  if (Util.endsWithConditionalBranch(cfg, bb)
+                                                      && (Util.getTakenSuccessor(cfg, bb).equals(sb)
+                                                          || Util.getNotTakenSuccessor(cfg, bb)
+                                                              .equals(bb))) {
+                                                    System.err.println(
+                                                        "found line phi for "
+                                                            + bb
+                                                            + " to "
+                                                            + sb
+                                                            + " for "
+                                                            + rv
+                                                            + " -> "
+                                                            + lv);
+                                                  }
+
+                                                  System.err.println(
+                                                      "adding " + assign + " for " + bb + " --> "
+                                                          + sb);
                                                 }
                                                 as.add(assign);
                                               }
@@ -1275,8 +1263,7 @@ public abstract class ToSource {
                                 : elt1.toString().compareTo(elt2.toString()) > 0;
                       }
                     };
-                   if(DEBUG)
-                System.err.println("insts: " + regionInsts);
+                if (DEBUG) System.err.println("insts: " + regionInsts);
                 List<SSAInstruction> all = new ArrayList<>(regionInsts);
                 regionInsts.forEach(
                     inst -> {
@@ -1299,27 +1286,25 @@ public abstract class ToSource {
                         insts.add(inst);
                         chunks.insert(new ArrayList<>(insts));
                       }
-                      if(DEBUG)
-                      System.err.println("chunk for " + inst + ": " + insts);
+                      if (DEBUG) System.err.println("chunk for " + inst + ": " + insts);
                     });
-                if(DEBUG)
-                System.err.println("chunks: " + chunks);
+                if (DEBUG) System.err.println("chunks: " + chunks);
                 while (chunks.size() > 0 && !regionInsts.isEmpty()) {
                   List<SSAInstruction> chunk = chunks.take();
-                  if(DEBUG)
-                  System.err.println(
-                      "taking "
-                          + chunk.stream()
-                              .map(i -> i + " " + i.iIndex())
-                              .reduce("", (a, b) -> a + ", " + b));
-                  if (hasAllByIdentity(regionInsts, chunk)) {
-                    removeAllByIdentity(regionInsts, chunk);
-                    if(DEBUG)
+                  if (DEBUG)
                     System.err.println(
-                        "using "
+                        "taking "
                             + chunk.stream()
                                 .map(i -> i + " " + i.iIndex())
                                 .reduce("", (a, b) -> a + ", " + b));
+                  if (hasAllByIdentity(regionInsts, chunk)) {
+                    removeAllByIdentity(regionInsts, chunk);
+                    if (DEBUG)
+                      System.err.println(
+                          "using "
+                              + chunk.stream()
+                                  .map(i -> i + " " + i.iIndex())
+                                  .reduce("", (a, b) -> a + ", " + b));
                     es.getKey()
                         .forEach(
                             p -> {
@@ -1348,25 +1333,25 @@ public abstract class ToSource {
                 assert regionInsts.isEmpty() : regionInsts + " remaining, with chunks " + chunks;
               });
 
-      if(DEBUG) {
-      System.err.println("root region chunks: " + regionChunks);
+      if (DEBUG) {
+        System.err.println("root region chunks: " + regionChunks);
 
-      ir.iterateNormalInstructions()
-          .forEachRemaining(
-              inst -> {
-                if (inst instanceof SSAGotoInstruction) {
-                  ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
-                  if (loopHeaders.containsAll(cfg.getNormalSuccessors(bb))) {
-                    System.err.println("loop edge " + inst);
-                  } else if (loops.values().stream()
-                      .map(loop -> loop.getLoopExits())
-                      .flatMap(Collection::stream)
-                      .collect(Collectors.toSet())
-                      .containsAll(cfg.getNormalSuccessors(bb))) {
-                    System.err.println("break edge " + inst);
+        ir.iterateNormalInstructions()
+            .forEachRemaining(
+                inst -> {
+                  if (inst instanceof SSAGotoInstruction) {
+                    ISSABasicBlock bb = cfg.getBlockForInstruction(inst.iIndex());
+                    if (loopHeaders.containsAll(cfg.getNormalSuccessors(bb))) {
+                      System.err.println("loop edge " + inst);
+                    } else if (loops.values().stream()
+                        .map(loop -> loop.getLoopExits())
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toSet())
+                        .containsAll(cfg.getNormalSuccessors(bb))) {
+                      System.err.println("break edge " + inst);
+                    }
                   }
-                }
-              });
+                });
       }
 
       initChildren();
@@ -1383,28 +1368,27 @@ public abstract class ToSource {
                           es.getKey()
                               .forEach(
                                   k -> {
-                                    if(DEBUG)
-                                    System.err.println(
-                                        "checking " + k.fst + " with " + bb.getLastInstruction());
+                                    if (DEBUG)
+                                      System.err.println(
+                                          "checking " + k.fst + " with " + bb.getLastInstruction());
                                     if (k.fst.equals(bb.getLastInstruction())) {
                                       if (!children.containsKey(k.fst)) {
                                         children.put(k.fst, HashMapFactory.make());
                                       }
                                       children.get(k.fst).put(k.snd, makeChild(k));
-                                      if(DEBUG)
-                                      System.err.println(
-                                          "child of "
-                                              + k.fst
-                                              + " for "
-                                              + k.snd
-                                              + " is "
-                                              + children.get(k.fst).get(k.snd));
+                                      if (DEBUG)
+                                        System.err.println(
+                                            "child of "
+                                                + k.fst
+                                                + " for "
+                                                + k.snd
+                                                + " is "
+                                                + children.get(k.fst).get(k.snd));
                                     }
                                   });
                         });
               });
-      if(DEBUG)
-      System.err.println("children for " + this + ": " + children);
+      if (DEBUG) System.err.println("children for " + this + ": " + children);
     }
 
     protected RegionTreeNode makeChild(Pair<SSAInstruction, ISSABasicBlock> k) {
@@ -1734,15 +1718,15 @@ public abstract class ToSource {
           if (afterNodes.size() > 0) {
             if (afterNodes.get(afterNodes.size() - 1).getKind() == CAstNode.BLOCK_STMT
                 && afterNodes.get(afterNodes.size() - 1).getChild(0).getKind() == CAstNode.BREAK) {
-              if(DEBUG)
-              System.err.println(
-                  "afterNodes is end with break, no need to add break"); // TODO: need it for a
+              if (DEBUG)
+                System.err.println(
+                    "afterNodes is end with break, no need to add break"); // TODO: need it for a
               // while to see when
               // to add break
             } else {
-              if(DEBUG)
-              System.err.println(
-                  "afterNodes is having nodes and not end with break, need to add break"); // TODO:
+              if (DEBUG)
+                System.err.println(
+                    "afterNodes is having nodes and not end with break, need to add break"); // TODO:
               // need it
               // for a
               // while
@@ -1904,14 +1888,14 @@ public abstract class ToSource {
         CAstNode block, SSAInstruction branch, ISSABasicBlock target, List<CAstNode> parentDecls) {
       CAst ast = new CAstImpl();
       Pair<SSAInstruction, ISSABasicBlock> key = Pair.make(branch, target);
-      if(DEBUG)
-      System.err.println(
-          "checking for line phi for instruction "
-              + branch
-              + " and target "
-              + target
-              + "in "
-              + linePhis);
+      if (DEBUG)
+        System.err.println(
+            "checking for line phi for instruction "
+                + branch
+                + " and target "
+                + target
+                + "in "
+                + linePhis);
       if (linePhis.containsKey(key)) {
         List<SSAInstruction> insts = linePhis.get(key);
         List<CAstNode> lp = handlePhiAssignments(insts, parentDecls);
@@ -2548,14 +2532,14 @@ public abstract class ToSource {
         private CAstNode checkLinePhi(
             CAstNode block, SSAInstruction branch, ISSABasicBlock target) {
           Pair<SSAInstruction, ISSABasicBlock> key = Pair.make(branch, target);
-          if(DEBUG)
-          System.err.println(
-              "checking for line phi for instruction "
-                  + branch
-                  + " and target "
-                  + target
-                  + "in "
-                  + linePhis);
+          if (DEBUG)
+            System.err.println(
+                "checking for line phi for instruction "
+                    + branch
+                    + " and target "
+                    + target
+                    + "in "
+                    + linePhis);
           if (linePhis.containsKey(key)) {
             List<SSAInstruction> insts = linePhis.get(key);
             List<CAstNode> lp = handlePhiAssignments(insts);
@@ -2690,15 +2674,16 @@ public abstract class ToSource {
               if (notTakenBlock.get(notTakenBlock.size() - 1).getKind() == CAstNode.BLOCK_STMT
                   && notTakenBlock.get(notTakenBlock.size() - 1).getChild(0).getKind()
                       == CAstNode.BREAK) {
-                if(DEBUG)
-                System.err.println(
-                    " notTakenBlock is end with break, no need to add break"); // TODO: need it for
+                if (DEBUG)
+                  System.err.println(
+                      " notTakenBlock is end with break, no need to add break"); // TODO: need it
+                // for
                 // a while to see
                 // when to add break
               } else {
-                if(DEBUG)
-                System.err.println(
-                    "notTakenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
+                if (DEBUG)
+                  System.err.println(
+                      "notTakenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
                 notTakenBlock.add(ast.makeNode(CAstNode.BREAK));
               }
 
@@ -2711,20 +2696,21 @@ public abstract class ToSource {
                   loop,
                   notTakenBlock,
                   CT_LOOP_JUMP_VAR_NAME,
-                  CT_LOOP_BREAK_VAR_NAME, DEBUG);
+                  CT_LOOP_BREAK_VAR_NAME,
+                  DEBUG);
             } else {
               if (takenBlock.get(takenBlock.size() - 1).getKind() == CAstNode.BLOCK_STMT
                   && takenBlock.get(takenBlock.size() - 1).getChild(0).getKind()
                       == CAstNode.BREAK) {
-                if(DEBUG)
-                System.err.println(
-                    " takenBlock is end with break, no need to add break"); // TODO: need it for
+                if (DEBUG)
+                  System.err.println(
+                      " takenBlock is end with break, no need to add break"); // TODO: need it for
                 // a while to see
                 // when to add break
               } else {
-                if(DEBUG)
-                System.err.println(
-                    "takenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
+                if (DEBUG)
+                  System.err.println(
+                      "takenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
                 takenBlock.add(ast.makeNode(CAstNode.BREAK));
               }
 
@@ -2737,7 +2723,8 @@ public abstract class ToSource {
                   loop,
                   takenBlock,
                   CT_LOOP_JUMP_VAR_NAME,
-                  CT_LOOP_BREAK_VAR_NAME, DEBUG);
+                  CT_LOOP_BREAK_VAR_NAME,
+                  DEBUG);
             }
           } else {
             Optional<ISSABasicBlock> innerMostLoopBreaker =
@@ -2757,9 +2744,9 @@ public abstract class ToSource {
 
               Loop topLoop = returnToOutsideTail.get(innerMostLoopBreaker.get()).get(0);
               // TODO: more than 3 layers are not tested yet
-              if(DEBUG)
-              System.err.println(
-                  "This is the case to set jump to header and tail to be True in different blocks");
+              if (DEBUG)
+                System.err.println(
+                    "This is the case to set jump to header and tail to be True in different blocks");
 
               CAstNode setJumpTrue =
                   ast.makeNode(
@@ -2839,8 +2826,7 @@ public abstract class ToSource {
                     decls.addAll(stuff.snd);
                   });
 
-          if(DEBUG)
-          System.err.println("final block: " + elts);
+          if (DEBUG) System.err.println("final block: " + elts);
           return elts;
         }
 
@@ -2963,8 +2949,8 @@ public abstract class ToSource {
 
           if (inst.getCallSite().isStatic() || inst.getDeclaredTarget().isInit()) {
             recordPackage(inst.getDeclaredTarget().getDeclaringClass());
-            if(DEBUG)
-            System.err.println("looking at type " + inst.getDeclaredTarget().getDeclaringClass());
+            if (DEBUG)
+              System.err.println("looking at type " + inst.getDeclaredTarget().getDeclaringClass());
           }
 
           args[1] = ast.makeConstant(inst.getCallSite().isStatic());
@@ -3686,19 +3672,17 @@ public abstract class ToSource {
       Map<MethodReference, String> codeRecorder) {
     PrunedCFG<SSAInstruction, ISSABasicBlock> cfg =
         ExceptionPrunedCFG.makeDefiniteUncaught(ir.getControlFlowGraph());
-    if(DEBUG)
-    System.err.println("IR:\n" + ir);
+    if (DEBUG) System.err.println("IR:\n" + ir);
 
     RegionTreeNode root = makeTreeNode(ir, cha, types, cfg);
 
-    if(DEBUG) {
-    System.err.println("tree");
-    System.err.println(root);
+    if (DEBUG) {
+      System.err.println("tree");
+      System.err.println(root);
     }
     CAstEntity entity = root.toCAstEntity(null);
     CAstNode ast = entity.getAST();
-    if(DEBUG)
-    System.err.println(ast);
+    if (DEBUG) System.err.println(ast);
 
     Map<String, Object> varTypes = HashMapFactory.make();
     CAstPattern decls = CAstPattern.parse("DECL_STMT(VAR(<name>*),<type>*,**)");
@@ -3793,8 +3777,7 @@ public abstract class ToSource {
             && (ast.getChild(0).getChild(0).getChild(2).getKind() == CAstNode.THIS
                 || ast.getChild(0).getChild(0).getChild(2).getKind() == CAstNode.SUPER);
 
-            if(DEBUG)
-    System.err.println("looking at " + ast);
+    if (DEBUG) System.err.println("looking at " + ast);
 
     if (hasExplicitCtorCall) {
       inits.add(ast.getChild(0));
@@ -3807,8 +3790,7 @@ public abstract class ToSource {
       if (!done.contains(root.mergePhis.find(vn))
           && !CAstPattern.findAll(varUsePattern(srcName), ast).isEmpty()
           && CAstPattern.findAll(varDefPattern(srcName), ast).isEmpty()) {
-        if(DEBUG)
-        System.err.println("found " + vn);
+        if (DEBUG) System.err.println("found " + vn);
         done.add(root.mergePhis.find(vn));
         inits.add(
             cast.makeNode(
@@ -3870,8 +3852,7 @@ public abstract class ToSource {
           .forEach(
               s -> {
                 CAstNode e = (CAstNode) s.get("expr");
-                if(DEBUG)
-                System.err.println("expr:: " + e);
+                if (DEBUG) System.err.println("expr:: " + e);
                 ToJavaVisitor ev = makeToJavaVisitor(ir, o, level, varTypes);
                 try {
                   if (s.containsKey("v")) {
@@ -3895,8 +3876,7 @@ public abstract class ToSource {
                 }
               });
     }
-    if(DEBUG)
-    System.err.println(b.toString());
+    if (DEBUG) System.err.println(b.toString());
 
     if (m.isClinit() && (ast.getKind() != CAstNode.BLOCK_STMT || ast.getChildCount() == 1)) {
       out.println("  }");
