@@ -371,7 +371,8 @@ public class CAstHelper {
       Loop loop,
       List<CAstNode> nodeBlock,
       String varNameHeader,
-      String varNameTail) {
+      String varNameTail,
+      boolean isDebug) {
     // If a loop breaker is found in jumpToTop, set ct_loop_jump=true
     // find out the inner most loop
     boolean isInnerMostLoopJumpToHeader =
@@ -383,8 +384,9 @@ public class CAstHelper {
         isInnerMostLoopJumpToTail(jumpToOutside, returnToOutsideTail, branchBB, loop);
 
     if (isInnerMostLoopJumpToHeader && isInnerMostLoopJumpToTail) {
-      System.out.println(
-          "This is the case to out setTrue in different branches, which will be handed in visitConditionalBranch");
+      if (isDebug)
+        System.err.println(
+            "This is the case to out setTrue in different branches, which will be handed in visitConditionalBranch");
     } else if (isInnerMostLoopJumpToHeader) {
       CAstNode setTrue =
           ast.makeNode(

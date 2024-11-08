@@ -46,7 +46,7 @@ public class IRToCAst {
     return dfsStart;
   }
 
-  public static Map<ISSABasicBlock, Set<ISSABasicBlock>> toCAst(IR ir) {
+  public static Map<ISSABasicBlock, Set<ISSABasicBlock>> toCAst(IR ir, boolean isDebug) {
     SSACFG cfg = ir.getControlFlowGraph();
 
     Map<ISSABasicBlock, Integer> dfsFinish = computeFinishTimes(cfg.entry(), cfg);
@@ -134,7 +134,7 @@ public class IRToCAst {
     boolean fresh = true;
     for (Iterator<ISSABasicBlock> bbs = ReverseIterator.reverse(top.iterator()); bbs.hasNext(); ) {
       ISSABasicBlock bb = bbs.next();
-      System.err.println("looking at " + bb);
+      if (isDebug) System.err.println("looking at " + bb);
       if (fresh || cfg.getPredNodeCount(bb) == 1) {
         fresh = false;
       } else {
