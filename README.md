@@ -55,6 +55,14 @@ Finally, for now, to search the wiki documentation, we recommend a
 site-specific search on GitHub, e.g., [a search for "call
 graph"](https://github.com/wala/WALA/search?q=call+graph&type=wikis).
 
+### *Working on Visual Studio Code*
+<img width="393" alt="Screenshot 2024-11-15 at 4 22 59 PM" src="https://github.com/user-attachments/assets/3824add4-f212-487e-9dd2-371c4a3770d8"> <br />
+<img width="407" alt="Screenshot 2024-11-15 at 4 22 47 PM" src="https://github.com/user-attachments/assets/e2961958-7d67-4694-94a4-be3aaf8f0d6a"> <br />
+Add the following extensions for *gradle* and *java* on VSCode at the market place. If you have already `built` the repo, clone the repo again. 
+Then restart the VSCode, so it picks up new packages, and open the freshly cloned repo.  
+If extensions are fully installed, will notice builds happening at the footer of VSCode. 
+When the system is ready, will be able to do a right click on the test files to click "Run Test".
+
 ## Documentation
 
 We're hosting documentation for WALA on [the GitHub
