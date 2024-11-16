@@ -10,7 +10,6 @@ import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 
 plugins {
   `cpp-application`
-  id("com.ibm.wala.gradle.cast.native")
   id("com.ibm.wala.gradle.subproject")
 }
 
@@ -72,7 +71,6 @@ application {
       if (isDebuggable && !isOptimized) {
         val checkSmokeMain by
             tasks.registering(Exec::class) {
-              notCompatibleWithConfigurationCache("https://github.com/gradle/gradle/issues/13485")
 
               // main executable to run for test
               inputs.file(linkedFile)
