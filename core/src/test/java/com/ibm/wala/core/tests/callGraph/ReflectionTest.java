@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.callGraph;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -753,7 +754,7 @@ public class ReflectionTest extends WalaTestCase {
 
     for (InstanceKey mappedObject : pts) {
       // the type corresponding to the 0th parameter should be Helper
-      assertTrue(mappedObject instanceof ConstantKey);
+      assertInstanceOf(ConstantKey.class, mappedObject);
       assertEquals(((ConstantKey<?>) mappedObject).getValue(), helperClass);
     }
   }
