@@ -53,7 +53,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.ipa.callgraph.propagation.AllocationSite;
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -170,9 +169,9 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
               //                          }
             }
           }
-        } else if (k instanceof AllocationSite) {
+        } /*else if (k instanceof AllocationSite) {
 
-        } else {
+          } */ else {
 
         }
         // create an edge for dependencies used in the creation of each instance key

@@ -262,9 +262,9 @@ public class SSAValueManager {
             info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
             param.status = ValueStatus.FREE_CLOSED;
           }
-        } else if (param.setInScope < currentScope) {
-          // param.status = ValueStatus.INVALIDATED;
-        } else {
+        } /*else if (param.setInScope < currentScope) {
+            // param.status = ValueStatus.INVALIDATED;
+          } */ else {
           // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
           // error("MISSING PHI for "
           // throw new IllegalStateException("You forgot Phis in subordinate blocks");
