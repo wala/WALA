@@ -19,8 +19,6 @@ class MethodTypeSignatureTest {
 
   @Test
   void getVoidReturn() {
-    assertThat(
-        MethodTypeSignature.make("(I)V").getReturnType(),
-        is(TypeSignature.make("V")));
+    assertThat(MethodTypeSignature.make("(I)V").getReturnType(), is(TypeSignature.make("V")));
   }
 }
