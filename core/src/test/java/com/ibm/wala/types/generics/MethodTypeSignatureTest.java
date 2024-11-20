@@ -16,4 +16,11 @@ class MethodTypeSignatureTest {
         MethodTypeSignature.make("(I)V").getArguments(),
         arrayContaining(is(TypeSignature.make("I"))));
   }
+
+  @Test
+  void getVoidReturn() {
+    assertThat(
+        MethodTypeSignature.make("(I)V").getReturnType(),
+        is(TypeSignature.make("V")));
+  }
 }
