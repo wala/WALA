@@ -169,11 +169,12 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
               //                          }
             }
           }
-        } /*else if (k instanceof AllocationSite) {
-
-          } */ else {
-
         }
+        //        else if (k instanceof AllocationSite) {
+        //
+        //        } else {
+        //
+        //        }
         // create an edge for dependencies used in the creation of each instance key
       } else {
 

@@ -288,13 +288,14 @@ public class AndroidModelParameterManager {
 
             param.status = ValueStatus.FREE_CLOSED;
           }
-        } /*else if (param.setInScope < currentScope) {
-            // param.status = ValueStatus.INVALIDATED;
-          } */ else {
-          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
-          // logger.error("MISSING PHI for "
-          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
         }
+        //        else if (param.setInScope < currentScope) {
+        //            // param.status = ValueStatus.INVALIDATED;
+        //        } else {
+        //          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
+        //          // logger.error("MISSING PHI for "
+        //          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
+        //        }
       }
       assert didPhi;
     } else {
