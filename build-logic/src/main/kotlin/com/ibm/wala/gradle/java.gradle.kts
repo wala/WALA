@@ -164,3 +164,8 @@ spotless {
             .toString())
   }
 }
+
+// Google Java Format versions 1.25.0 and higher require Java 17
+tasks.named("spotlessJava") {
+  onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
+}
