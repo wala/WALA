@@ -54,8 +54,6 @@ tasks.withType<JavaCompile>().configureEach {
   options.release = 11
   options.errorprone {
     // don't run warning-level checks by default as they add too much noise to build output
-    // NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
-    // we need to customize the level of at least one specific check to make this flag work
     disableAllWarnings = true
     // warning-level checks upgraded to error, since we've fixed all the warnings
     error("UnnecessaryParentheses")
