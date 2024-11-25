@@ -260,7 +260,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   private final ArrayDeque<CGNode> newNodes = new ArrayDeque<>();
 
-  @SuppressWarnings("UnusedVariable")
   private final Set<MethodReference> functionalInterfaceMethodsForLambdas = HashSetFactory.make();
 
   private void closure() throws CancelException {
