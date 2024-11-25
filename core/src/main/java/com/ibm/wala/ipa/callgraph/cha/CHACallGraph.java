@@ -160,6 +160,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     Set<IMethod> result = targetCache.get(site);
     if (result == null) {
       if (site.isDispatch()) {
+        // TODO the cha has its own targetCache.  Eventually when we do a second iteration we are
+        //  going to have to clear that
         result = cha.getPossibleTargets(site.getDeclaredTarget());
       } else {
         IMethod m = cha.resolveMethod(site.getDeclaredTarget());
@@ -263,6 +265,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   private final ArrayDeque<CGNode> newNodes = new ArrayDeque<>();
 
+  @SuppressWarnings("UnusedVariable")
   private final Set<MethodReference> functionalInterfaceMethodsForLambdas = HashSetFactory.make();
 
   private void closure() throws CancelException {
@@ -284,25 +287,32 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
                   // this can happen if the interface type cannot be resolved
                   continue;
                 }
-                IClass functionalInterface = directInterfaces.iterator().next();
-                Collection<? extends IMethod> declaredMethods =
-                    functionalInterface.getDeclaredMethods();
                 // should have a single method; if not, give up on modeling the lambda
-                if (declaredMethods.size() != 1) {
-                  continue;
-                }
-                functionalInterfaceMethodsForLambdas.add(
-                    declaredMethods.iterator().next().getReference());
-                IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
-                CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-                if (callee == null) {
-                  callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-                  if (n == getFakeRootNode()) {
-                    registerEntrypoint(callee);
-                  }
-                }
-                edgeManager.addEdge(n, callee);
-                targetCache.put(site, Collections.singleton(target));
+                // correction, should have a single abstract method, excluding those methods in
+                // java.lang.Object
+                // TODO fix
+                //                IClass functionalInterface = directInterfaces.iterator().next();
+                //                Collection<? extends IMethod> declaredMethods =
+                //                    functionalInterface.getDeclaredMethods();
+                //                if (declaredMethods.size() != 1) {
+                //                  continue;
+                //                }
+                //                functionalInterfaceMethodsForLambdas.add(
+                //                    declaredMethods.iterator().next().getReference());
+                // TODO this should really be calling the lambda factory summary, see
+                // com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector.getLambdaFactorySummary
+                //  not strictly necessary for a complete call graph
+                //                IMethod target =
+                // lambdaSummaryClass.getDeclaredMethods().iterator().next();
+                //                CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+                //                if (callee == null) {
+                //                  callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+                //                  if (n == getFakeRootNode()) {
+                //                    registerEntrypoint(callee);
+                //                  }
+                //                }
+                //                edgeManager.addEdge(n, callee);
+                //                targetCache.put(site, Collections.singleton(target));
               } catch (UnresolvedLambdaBodyException e) {
                 // give up on modeling the lambda
               }
