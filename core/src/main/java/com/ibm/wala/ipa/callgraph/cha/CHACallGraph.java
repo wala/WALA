@@ -27,9 +27,11 @@ import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass;
+import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -47,6 +49,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -266,53 +269,67 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     while (!newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        // It's a lambda creation site if the target is LambdaMetaFactory
-        // site.getDeclaredTarget().getDeclaringClass().getName().equals(TypeReference.LambdaMetaFactory.getName())
-        // In that case, we need to build an IR and create a LambdaSummaryClass using the
-        // invokedynamic IR instruction,
-        // add that new class to the class hierarchy, and keep track of its inferface in
-        // functionalInterfaceMethodsForLambdas
-        // also need its synthetic method marked as a target here
-        if (isLambdaCreationSite(site)) {
-          // Build an IR for the CGNode
+        if (isCallToLambdaMetafactoryMethod(site)) {
           IR ir = n.getIR();
-          SSAInvokeDynamicInstruction inst = (SSAInvokeDynamicInstruction) ir.getCalls(site)[0];
-          // create the LambdaSummaryClass
-          LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n, inst);
-          IClass functionalInterface = lambdaSummaryClass.getDirectInterfaces().iterator().next();
-          // should have a single method
-          functionalInterfaceMethodsForLambdas.add(
-              functionalInterface.getDeclaredMethods().iterator().next().getReference());
-          IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
-          CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-          if (callee == null) {
-            callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-            if (n == getFakeRootNode()) {
-              registerEntrypoint(callee);
+          SSAAbstractInvokeInstruction inst = ir.getCalls(site)[0];
+          if (inst instanceof SSAInvokeDynamicInstruction) {
+            SSAInvokeDynamicInstruction dynInst = (SSAInvokeDynamicInstruction) inst;
+            if (dynInst.getBootstrap().isBootstrapForJavaLambdas()) {
+              try {
+                // create the LambdaSummaryClass
+                LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n, dynInst);
+                Collection<? extends IClass> directInterfaces =
+                    lambdaSummaryClass.getDirectInterfaces();
+                if (directInterfaces.isEmpty()) {
+                  // this can happen if the interface type cannot be resolved
+                  continue;
+                }
+                IClass functionalInterface = directInterfaces.iterator().next();
+                Collection<? extends IMethod> declaredMethods =
+                    functionalInterface.getDeclaredMethods();
+                // should have a single method; if not, give up on modeling the lambda
+                if (declaredMethods.size() != 1) {
+                  continue;
+                }
+                functionalInterfaceMethodsForLambdas.add(
+                    declaredMethods.iterator().next().getReference());
+                IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
+                CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+                if (callee == null) {
+                  callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+                  if (n == getFakeRootNode()) {
+                    registerEntrypoint(callee);
+                  }
+                }
+                edgeManager.addEdge(n, callee);
+                targetCache.put(site, Collections.singleton(target));
+              } catch (UnresolvedLambdaBodyException e) {
+                // give up on modeling the lambda
+              }
+              continue;
             }
           }
-          edgeManager.addEdge(n, callee);
-        } else {
-          Iterator<IMethod> methods = getPossibleTargets(site);
-          while (methods.hasNext()) {
-            IMethod target = methods.next();
-            if (isRelevantMethod(target)) {
-              CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-              if (callee == null) {
-                callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-                if (n == getFakeRootNode()) {
-                  registerEntrypoint(callee);
-                }
+        }
+        // if we reach this point, it is not a lambda creation site
+        Iterator<IMethod> methods = getPossibleTargets(site);
+        while (methods.hasNext()) {
+          IMethod target = methods.next();
+          if (isRelevantMethod(target)) {
+            CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+            if (callee == null) {
+              callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+              if (n == getFakeRootNode()) {
+                registerEntrypoint(callee);
               }
-              edgeManager.addEdge(n, callee);
             }
+            edgeManager.addEdge(n, callee);
           }
         }
       }
     }
   }
 
-  private boolean isLambdaCreationSite(CallSiteReference site) {
+  private boolean isCallToLambdaMetafactoryMethod(CallSiteReference site) {
     return site.getDeclaredTarget()
         .getDeclaringClass()
         .getName()

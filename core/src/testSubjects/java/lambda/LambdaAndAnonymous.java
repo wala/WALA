@@ -6,15 +6,13 @@ public class LambdaAndAnonymous {
   }
 
   public static void main(String[] args) {
-    A x = new A() {
-      @Override
-      public void target() {
-      }
-    };
+    A x =
+        new A() {
+          @Override
+          public void target() {}
+        };
     x.target();
-    A y = () -> {
-    };
+    A y = () -> {};
     y.target();
   }
-
 }

@@ -117,7 +117,8 @@ public class LambdaSummaryClass extends SyntheticClass {
    */
   @Override
   public Collection<? extends IClass> getDirectInterfaces() {
-    return Collections.singleton(getClassHierarchy().lookupClass(invoke.getDeclaredResultType()));
+    IClass resultType = getClassHierarchy().lookupClass(invoke.getDeclaredResultType());
+    return resultType != null ? Collections.singleton(resultType) : Collections.emptySet();
   }
 
   /**
@@ -126,6 +127,9 @@ public class LambdaSummaryClass extends SyntheticClass {
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     IClass iface = getClassHierarchy().lookupClass(invoke.getDeclaredResultType());
+    if (iface == null) {
+      return Collections.emptySet();
+    }
     Set<IClass> result = HashSetFactory.make(iface.getAllImplementedInterfaces());
     result.add(iface);
     return result;
@@ -448,7 +452,7 @@ public class LambdaSummaryClass extends SyntheticClass {
    * Exception thrown when the method containing the body of the lambda (or the target of a method
    * reference) cannot be resolved.
    */
-  static class UnresolvedLambdaBodyException extends RuntimeException {
+  public static class UnresolvedLambdaBodyException extends RuntimeException {
 
     private static final long serialVersionUID = -6504849409929928820L;
 

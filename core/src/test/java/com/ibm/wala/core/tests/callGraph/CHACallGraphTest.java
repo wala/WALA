@@ -61,10 +61,11 @@ public class CHACallGraphTest {
             "Llambda/LambdaAndAnonymous",
             CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     System.err.println(cg);
-    for (CGNode n: cg) {
+    for (CGNode n : cg) {
       System.err.println("NODE: " + n);
     }
   }
+
   @Test
   public void testLambdaParamsAndCapture()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
