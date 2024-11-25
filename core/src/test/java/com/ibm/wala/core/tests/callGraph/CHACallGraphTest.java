@@ -53,11 +53,13 @@ public class CHACallGraphTest {
   }
 
   @Test
-  public void testLambdas() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    CallGraph cg = testCHA(
-        TestConstants.WALA_TESTDATA,
-        "Llambda/ParamsAndCapture",
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+  public void testLambdas()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    CallGraph cg =
+        testCHA(
+            TestConstants.WALA_TESTDATA,
+            "Llambda/ParamsAndCapture",
+            CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     System.err.println(cg);
     Function<String, MethodReference> getTargetRef =
         (klass) ->
@@ -91,8 +93,8 @@ public class CHACallGraphTest {
     checkCalledFromOneSite.accept("C3");
     checkCalledFromOneSite.accept("C4");
     checkCalledFromOneSite.accept("C5");
-
   }
+
   public static CallGraph testCHA(
       String scopeFile, final String mainClass, final String exclusionsFile)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
