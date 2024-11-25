@@ -53,6 +53,19 @@ public class CHACallGraphTest {
   }
 
   @Test
+  public void testLambdaAndAnonymous()
+      throws ClassHierarchyException, CancelException, IOException {
+    CallGraph cg =
+        testCHA(
+            TestConstants.WALA_TESTDATA,
+            "Llambda/LambdaAndAnonymous",
+            CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    System.err.println(cg);
+    for (CGNode n: cg) {
+      System.err.println("NODE: " + n);
+    }
+  }
+  @Test
   public void testLambdaParamsAndCapture()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     CallGraph cg =
@@ -126,6 +139,7 @@ public class CHACallGraphTest {
                 assertTrue(predNodeNumbers.contains(nodeNum));
               });
     }
+    System.err.println(CallGraphStats.getCGStats(CG));
     return CG;
   }
 
