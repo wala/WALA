@@ -10,10 +10,13 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -24,9 +27,17 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +52,47 @@ public class CHACallGraphTest {
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
   }
 
+  @Test
+  public void testLambdas() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    CallGraph cg = testCHA(
+        TestConstants.WALA_TESTDATA,
+        "Llambda/ParamsAndCapture",
+        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    System.err.println(cg);
+    Function<String, MethodReference> getTargetRef =
+        (klass) ->
+            MethodReference.findOrCreate(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Llambda/ParamsAndCapture$" + klass),
+                Atom.findOrCreateUnicodeAtom("target"),
+                Descriptor.findOrCreateUTF8("()V"));
+
+    Consumer<String> checkCalledFromOneSite =
+        (klassName) -> {
+          Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
+          assertEquals(1, nodes.size(), "expected " + klassName + ".target() to be reachable");
+          CGNode node = nodes.iterator().next();
+          List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
+          assertEquals(
+              1,
+              predNodes.size(),
+              "expected " + klassName + ".target() to be invoked from one calling method");
+          CGNode pred = predNodes.get(0);
+          List<CallSiteReference> sites =
+              Iterator2Collection.toList(cg.getPossibleSites(pred, node));
+          assertEquals(
+              5,
+              sites.size(),
+              "expected " + klassName + ".target() to be invoked from five call sites");
+        };
+
+    checkCalledFromOneSite.accept("C1");
+    checkCalledFromOneSite.accept("C2");
+    checkCalledFromOneSite.accept("C3");
+    checkCalledFromOneSite.accept("C4");
+    checkCalledFromOneSite.accept("C5");
+
+  }
   public static CallGraph testCHA(
       String scopeFile, final String mainClass, final String exclusionsFile)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

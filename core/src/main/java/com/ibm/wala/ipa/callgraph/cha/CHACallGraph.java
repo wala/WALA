@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.cha;
 
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -25,9 +26,13 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.LambdaSummaryClass;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.ComposedIterator;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -255,26 +260,64 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   private final ArrayDeque<CGNode> newNodes = new ArrayDeque<>();
 
+  @SuppressWarnings("UnusedVariable")
+  private final Set<MethodReference> functionalInterfaceMethodsForLambdas = HashSetFactory.make();
+
   private void closure() throws CancelException {
     while (!newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        Iterator<IMethod> methods = getPossibleTargets(site);
-        while (methods.hasNext()) {
-          IMethod target = methods.next();
-          if (isRelevantMethod(target)) {
-            CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-            if (callee == null) {
-              callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-              if (n == getFakeRootNode()) {
-                registerEntrypoint(callee);
-              }
+        // It's a lambda creation site if the target is LambdaMetaFactory
+        // site.getDeclaredTarget().getDeclaringClass().getName().equals(TypeReference.LambdaMetaFactory.getName())
+        // In that case, we need to build an IR and create a LambdaSummaryClass using the
+        // invokedynamic IR instruction,
+        // add that new class to the class hierarchy, and keep track of its inferface in
+        // functionalInterfaceMethodsForLambdas
+        // also need its synthetic method marked as a target here
+        if (isLambdaCreationSite(site)) {
+          // Build an IR for the CGNode
+          IR ir = n.getIR();
+          SSAInvokeDynamicInstruction inst = (SSAInvokeDynamicInstruction) ir.getCalls(site)[0];
+          // create the LambdaSummaryClass
+          LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n, inst);
+          IClass functionalInterface = lambdaSummaryClass.getDirectInterfaces().iterator().next();
+          // should have a single method
+          functionalInterfaceMethodsForLambdas.add(
+              functionalInterface.getDeclaredMethods().iterator().next().getReference());
+          IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
+          CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+          if (callee == null) {
+            callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+            if (n == getFakeRootNode()) {
+              registerEntrypoint(callee);
             }
-            edgeManager.addEdge(n, callee);
+          }
+          edgeManager.addEdge(n, callee);
+        } else {
+          Iterator<IMethod> methods = getPossibleTargets(site);
+          while (methods.hasNext()) {
+            IMethod target = methods.next();
+            if (isRelevantMethod(target)) {
+              CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+              if (callee == null) {
+                callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+                if (n == getFakeRootNode()) {
+                  registerEntrypoint(callee);
+                }
+              }
+              edgeManager.addEdge(n, callee);
+            }
           }
         }
       }
     }
+  }
+
+  private boolean isLambdaCreationSite(CallSiteReference site) {
+    return site.getDeclaredTarget()
+        .getDeclaringClass()
+        .getName()
+        .equals(TypeReference.LambdaMetaFactory.getName());
   }
 
   private boolean isRelevantMethod(IMethod target) {
