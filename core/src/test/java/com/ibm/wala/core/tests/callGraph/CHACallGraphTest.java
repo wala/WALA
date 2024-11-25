@@ -137,7 +137,9 @@ public class CHACallGraphTest {
                 assertNotNull(
                     predNodeNumbers,
                     "no predecessors for " + succNode + " which is called by " + node);
-                assertTrue(predNodeNumbers.contains(nodeNum));
+                assertTrue(
+                    predNodeNumbers.contains(nodeNum),
+                    "missing predecessor " + node + " for " + succNode);
               });
     }
     System.err.println(CallGraphStats.getCGStats(CG));
