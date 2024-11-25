@@ -53,7 +53,7 @@ public class CHACallGraphTest {
   }
 
   @Test
-  public void testLambdas()
+  public void testLambdaParamsAndCapture()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     CallGraph cg =
         testCHA(
