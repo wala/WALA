@@ -15,6 +15,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
+import com.uber.nullaway.annotations.Initializer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -32,9 +33,10 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
   private static final long serialVersionUID = 4238700455408861924L;
 
   /** an enumeration of all nodes to search from */
-  private @Nullable Iterator<? extends T> roots;
+  private Iterator<? extends T> roots;
 
   /** subclass constructors must call this! */
+  @Initializer
   protected void init(Iterator<? extends T> nodes) {
     roots = nodes;
     assert nodes != null;
