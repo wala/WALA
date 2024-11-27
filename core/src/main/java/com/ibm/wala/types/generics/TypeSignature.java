@@ -44,8 +44,7 @@ public abstract class TypeSignature extends Signature {
     assert !s.isEmpty();
     switch (s.charAt(0)) {
       case TypeReference.VoidTypeCode:
-        Assertions.UNREACHABLE();
-        return null;
+        return BaseType.VOID;
       case TypeReference.BooleanTypeCode:
         return BaseType.BOOLEAN;
       case TypeReference.ByteTypeCode:

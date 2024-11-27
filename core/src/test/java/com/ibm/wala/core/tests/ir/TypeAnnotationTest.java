@@ -13,8 +13,8 @@ package com.ibm.wala.core.tests.ir;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -265,7 +265,7 @@ public class TypeAnnotationTest extends WalaTestCase {
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
     assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
-    assertTrue(classUnderTest instanceof ShrikeClass, classUnderTest + " must be BytecodeClass");
+    assertInstanceOf(ShrikeClass.class, classUnderTest, classUnderTest + " must be BytecodeClass");
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations =
@@ -286,8 +286,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       throws InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
     assertNotNull(methodUnderTest, methodRefUnderTest.toString() + " not found");
-    assertTrue(
-        methodUnderTest instanceof ShrikeCTMethod, methodUnderTest + " must be ShrikeCTMethod");
+    assertInstanceOf(
+        ShrikeCTMethod.class, methodUnderTest, methodUnderTest + " must be ShrikeCTMethod");
     ShrikeCTMethod bcMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
@@ -311,7 +311,7 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedAnnotations) {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
     assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
-    assertTrue(classUnderTest instanceof ShrikeClass, classUnderTest + " must be BytecodeClass");
+    assertInstanceOf(ShrikeClass.class, classUnderTest, classUnderTest + " must be BytecodeClass");
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     final Atom fieldName = Atom.findOrCreateUnicodeAtom(fieldNameStr);

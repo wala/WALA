@@ -1,7 +1,7 @@
 [versions]
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
-google-java-format = "1.24.0"
+google-java-format = "1.25.0"
 ktfmt = "0.44"
 spotless = "6.25.0"
 
@@ -16,7 +16,7 @@ eclipse-ecj = "org.eclipse.jdt:ecj:3.37.0"
 eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.19.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
-errorprone-core = "com.google.errorprone:error_prone_core:2.35.1"
+errorprone-core = "com.google.errorprone:error_prone_core:2.36.0"
 gradle-download-task = "de.undercouch:gradle-download-task:5.6.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.1.0"
 gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
@@ -49,7 +49,7 @@ dependency-analysis = "com.autonomousapps.dependency-analysis:1.32.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 google-java-format = "com.github.sherter.google-java-format:0.9"
 markdown = "com.appmattus.markdown:0.6.0"
-shellcheck = "com.felipefzdz.gradle.shellcheck:1.4.6"
+shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.0"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 task-tree = "com.dorongold.task-tree:3.0.0"
 version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.4"
