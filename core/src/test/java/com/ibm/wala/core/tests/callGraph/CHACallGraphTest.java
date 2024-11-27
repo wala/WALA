@@ -35,6 +35,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -60,10 +61,23 @@ public class CHACallGraphTest {
             TestConstants.WALA_TESTDATA,
             "Llambda/LambdaAndAnonymous",
             CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    System.err.println(cg);
-    for (CGNode n : cg) {
-      System.err.println("NODE: " + n);
+    CGNode mainMethod =
+        cg.getNodes(
+                MethodReference.findOrCreate(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, "Llambda/LambdaAndAnonymous"),
+                    "main",
+                    "([Ljava/lang/String;)V"))
+            .iterator()
+            .next();
+    Iterator<CallSiteReference> callSiteReferenceIterator = mainMethod.iterateCallSites();
+    while (callSiteReferenceIterator.hasNext()) {
+      CallSiteReference site = callSiteReferenceIterator.next();
+      if (site.isInterface() && site.getDeclaredTarget().getName().toString().equals("target")) {
+        assertEquals(2, cg.getNumberOfTargets(mainMethod, site));
+      }
     }
+    System.err.println(cg);
   }
 
   @Test
