@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.cha;
 
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -34,7 +33,6 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.ComposedIterator;
@@ -50,32 +48,17 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /** Call graph in which call targets are determined entirely based on an {@link IClassHierarchy}. */
 public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
   private final AnalysisOptions options;
   private final IAnalysisCacheView cache;
-
-  private static final Set<MethodReference> OBJECT_METHODS =
-      Set.of(
-          MethodReference.findOrCreate(
-              TypeReference.JavaLangObject, "toString", "()Ljava/lang/String;"),
-          MethodReference.findOrCreate(
-              TypeReference.JavaLangObject, "equals", "(Ljava/lang/Object;)Z"),
-          MethodReference.findOrCreate(TypeReference.JavaLangObject, "hashCode", "()I"));
-
-  private static boolean isObjectMethod(IMethod method) {
-    return OBJECT_METHODS.contains(method.getReference());
-  }
 
   /**
    * if set to true, do not include call graph edges in classes outside the application class
@@ -340,41 +323,16 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
               try {
                 // create the LambdaSummaryClass
                 LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n, dynInst);
-                Collection<? extends IClass> directInterfaces =
-                    lambdaSummaryClass.getDirectInterfaces();
-                if (directInterfaces.isEmpty()) {
-                  // this can happen if the interface type cannot be resolved
-                  continue;
-                }
-                // should have a single method; if not, give up on modeling the lambda
-                // correction, should have a single abstract method, excluding those methods in
-                // java.lang.Object
-                //                IClass functionalInterface = directInterfaces.iterator().next();
-                //                List<IMethod> abstractMethods =
-                //                    functionalInterface.getAllMethods().stream()
-                //                        .filter(
-                //                            method ->
-                //                                !method.isStatic()
-                //                                    && method.isAbstract()
-                //                                    && !isObjectMethod(method))
-                //                        .collect(Collectors.toList());
-                //                if (abstractMethods.size() == 1) {
-                //                  functionalInterfaceMethodsForLambdas.add(
-                //                      abstractMethods.iterator().next().getReference());
-                //                } else {
-                //                  System.err.println("Weird functional interface!!!  " +
-                // abstractMethods);
-                //                }
                 // TODO this should really be calling the lambda factory summary, see
                 // com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector.getLambdaFactorySummary
                 //  not strictly necessary for a complete call graph
+
+                // create the CGNode so we construct the CG reachable from the lambda, under the
+                // assumption the lambda will be called somewhere
                 IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
                 CGNode callee = getNode(target, Everywhere.EVERYWHERE);
                 if (callee == null) {
                   callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-                  //                  if (n == getFakeRootNode()) {
-                  //                    registerEntrypoint(callee);
-                  //                  }
                 }
               } catch (UnresolvedLambdaBodyException e) {
                 // give up on modeling the lambda
