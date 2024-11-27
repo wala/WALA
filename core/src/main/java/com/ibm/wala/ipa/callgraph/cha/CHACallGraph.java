@@ -156,7 +156,13 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   private final Map<CallSiteReference, Set<IMethod>> targetCache = HashMapFactory.make();
 
-  private Iterator<IMethod> getPossibleTargets(CallSiteReference site) {
+  /**
+   * Gets the possible targets of a call site, caching the result if it has not been computed.
+   *
+   * @param site the call site
+   * @return an iterator of possible targets
+   */
+  private Iterator<IMethod> getOrUpdatePossibleTargets(CallSiteReference site) {
     Set<IMethod> result = targetCache.get(site);
     if (result == null) {
       if (site.isDispatch()) {
@@ -176,11 +182,25 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return result.iterator();
   }
 
+  /**
+   * Gets the possible targets of a call site from the cache.
+   *
+   * @param site the call site
+   * @return an iterator of possible targets
+   */
+  private Iterator<IMethod> getPossibleTargetsFromCache(CallSiteReference site) {
+    Set<IMethod> result = targetCache.get(site);
+    if (result == null) {
+      return Collections.emptyIterator();
+    }
+    return result.iterator();
+  }
+
   @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
         new MapIterator<>(
-            new FilterIterator<>(getPossibleTargets(site), this::isRelevantMethod),
+            new FilterIterator<>(getPossibleTargetsFromCache(site), this::isRelevantMethod),
             object -> {
               try {
                 return findOrCreateNode(object, Everywhere.EVERYWHERE);
@@ -193,7 +213,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   @Override
   public int getNumberOfTargets(CGNode node, CallSiteReference site) {
-    return IteratorUtil.count(getPossibleTargets(site));
+    return IteratorUtil.count(getPossibleTargetsFromCache(site));
   }
 
   @Override
@@ -321,7 +341,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
           }
         }
         // if we reach this point, it is not a lambda creation site
-        Iterator<IMethod> methods = getPossibleTargets(site);
+        Iterator<IMethod> methods = getOrUpdatePossibleTargets(site);
         while (methods.hasNext()) {
           IMethod target = methods.next();
           if (isRelevantMethod(target)) {
