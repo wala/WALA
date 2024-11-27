@@ -156,7 +156,6 @@ public class CHACallGraphTest {
                     "missing predecessor " + node + " for " + succNode);
               });
     }
-    System.err.println(CallGraphStats.getCGStats(CG));
     return CG;
   }
 
