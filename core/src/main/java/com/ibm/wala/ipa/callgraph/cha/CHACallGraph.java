@@ -189,32 +189,30 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    */
   private Iterator<IMethod> getOrUpdatePossibleTargets(CGNode caller, CallSiteReference site)
       throws CancelException {
-    Set<IMethod> result = targetCache.get(site);
-    if (result == null) {
-      if (isCallToLambdaMetafactoryMethod(site)) {
-        IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
-        if (calleeTarget != null) {
-          // it's for a lambda
-          result = Collections.singleton(calleeTarget);
-          LambdaSummaryClass lambdaSummaryClass =
-              lambdaMethodTargetSelector.getLambdaSummaryClass(caller, site);
-          IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
-          CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-          if (callee == null) {
-            callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-          }
+    Set<IMethod> result = null;
+    if (isCallToLambdaMetafactoryMethod(site)) {
+      IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
+      if (calleeTarget != null) {
+        // it's for a lambda
+        result = Collections.singleton(calleeTarget);
+        LambdaSummaryClass lambdaSummaryClass =
+            lambdaMethodTargetSelector.getLambdaSummaryClass(caller, site);
+        IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
+        CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+        if (callee == null) {
+          callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
         }
       }
-      if (result == null) {
-        if (site.isDispatch()) {
-          result = cha.getPossibleTargets(site.getDeclaredTarget());
+    }
+    if (result == null) {
+      if (site.isDispatch()) {
+        result = cha.getPossibleTargets(site.getDeclaredTarget());
+      } else {
+        IMethod m = cha.resolveMethod(site.getDeclaredTarget());
+        if (m != null) {
+          result = Collections.singleton(m);
         } else {
-          IMethod m = cha.resolveMethod(site.getDeclaredTarget());
-          if (m != null) {
-            result = Collections.singleton(m);
-          } else {
-            result = Collections.emptySet();
-          }
+          result = Collections.emptySet();
         }
       }
       targetCache.put(site, result);
@@ -228,7 +226,14 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    * @param site the call site
    * @return an iterator of possible targets
    */
-  private Iterator<IMethod> getPossibleTargetsFromCache(CallSiteReference site) {
+  private Iterator<IMethod> getPossibleTargetsFromCache(CGNode caller, CallSiteReference site) {
+    if (isCallToLambdaMetafactoryMethod(site)) {
+      IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
+      if (calleeTarget != null) {
+        // it's for a lambda
+        return Collections.singleton(calleeTarget).iterator();
+      }
+    }
     Set<IMethod> result = targetCache.get(site);
     if (result == null) {
       return Collections.emptyIterator();
@@ -240,7 +245,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
         new MapIterator<>(
-            new FilterIterator<>(getPossibleTargetsFromCache(site), this::isRelevantMethod),
+            new FilterIterator<>(getPossibleTargetsFromCache(node, site), this::isRelevantMethod),
             object -> {
               try {
                 return findOrCreateNode(object, Everywhere.EVERYWHERE);
@@ -253,7 +258,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   @Override
   public int getNumberOfTargets(CGNode node, CallSiteReference site) {
-    return IteratorUtil.count(getPossibleTargetsFromCache(site));
+    return IteratorUtil.count(getPossibleTargetsFromCache(node, site));
   }
 
   @Override
