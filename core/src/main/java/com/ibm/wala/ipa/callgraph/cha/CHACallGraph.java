@@ -25,13 +25,11 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass;
-import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.ComposedIterator;
@@ -64,6 +62,9 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    * loader. This means callbacks from library to application will be ignored.
    */
   private final boolean applicationOnly;
+
+  private final LambdaMethodTargetSelector lambdaMethodTargetSelector =
+      new LambdaMethodTargetSelector((caller, site, receiver) -> null);
 
   private boolean isInitialized = false;
 
@@ -146,12 +147,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     // classes simulating lambdas may have been added to the CHA via the previous closure() call.
     // to update call targets to include lambdas, we clear all call target caches, iterate through
     // all call sites, and re-compute the targets.
-    // TODO optimize
+    // TODO optimize if needed
     targetCache.clear();
     cha.clearCaches();
     for (CGNode n : this) {
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        Iterator<IMethod> methods = getOrUpdatePossibleTargets(site);
+        Iterator<IMethod> methods = getOrUpdatePossibleTargets(n, site);
         while (methods.hasNext()) {
           IMethod target = methods.next();
           if (isRelevantMethod(target)) {
@@ -172,9 +173,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return cha;
   }
 
-  // TODO why do we even have this cache when there is already a cache internal to ClassHierarchy?
-  //  In any case, I think this cache could be keyed on the MethodReference target rather than the
-  //  entire CallSiteReference, to save space
+  /**
+   * Cache of possible targets for call sites.
+   *
+   * <p>In the future, this cache could be keyed on (MethodReference,isDispatch) pairs to save space
+   * and possibly time, where isDispatch indicates whether the call site is a virtual dispatch.
+   */
   private final Map<CallSiteReference, Set<IMethod>> targetCache = HashMapFactory.make();
 
   /**
@@ -183,19 +187,34 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    * @param site the call site
    * @return an iterator of possible targets
    */
-  private Iterator<IMethod> getOrUpdatePossibleTargets(CallSiteReference site) {
+  private Iterator<IMethod> getOrUpdatePossibleTargets(CGNode caller, CallSiteReference site)
+      throws CancelException {
     Set<IMethod> result = targetCache.get(site);
     if (result == null) {
-      if (site.isDispatch()) {
-        // TODO the cha has its own targetCache.  Eventually when we do a second iteration we are
-        //  going to have to clear that
-        result = cha.getPossibleTargets(site.getDeclaredTarget());
-      } else {
-        IMethod m = cha.resolveMethod(site.getDeclaredTarget());
-        if (m != null) {
-          result = Collections.singleton(m);
+      if (isCallToLambdaMetafactoryMethod(site)) {
+        IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
+        if (calleeTarget != null) {
+          // it's for a lambda
+          result = Collections.singleton(calleeTarget);
+          LambdaSummaryClass lambdaSummaryClass =
+              lambdaMethodTargetSelector.getLambdaSummaryClass(caller, site);
+          IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
+          CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+          if (callee == null) {
+            callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+          }
+        }
+      }
+      if (result == null) {
+        if (site.isDispatch()) {
+          result = cha.getPossibleTargets(site.getDeclaredTarget());
         } else {
-          result = Collections.emptySet();
+          IMethod m = cha.resolveMethod(site.getDeclaredTarget());
+          if (m != null) {
+            result = Collections.singleton(m);
+          } else {
+            result = Collections.emptySet();
+          }
         }
       }
       targetCache.put(site, result);
@@ -313,35 +332,38 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     while (!newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        if (isCallToLambdaMetafactoryMethod(site)) {
-          IR ir = n.getIR();
-          SSAAbstractInvokeInstruction inst = ir.getCalls(site)[0];
-          if (inst instanceof SSAInvokeDynamicInstruction) {
-            SSAInvokeDynamicInstruction dynInst = (SSAInvokeDynamicInstruction) inst;
-            if (dynInst.getBootstrap().isBootstrapForJavaLambdas()) {
-              try {
-                // create the LambdaSummaryClass
-                LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n, dynInst);
-                // TODO this should really be calling the lambda factory summary, see
-                // com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector.getLambdaFactorySummary
-                //  not strictly necessary for a complete call graph
-
-                // create the CGNode so we construct the CG reachable from the lambda, under the
-                // assumption the lambda will be called somewhere
-                IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
-                CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-                if (callee == null) {
-                  callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-                }
-              } catch (UnresolvedLambdaBodyException e) {
-                // give up on modeling the lambda
-              }
-              continue;
-            }
-          }
-        }
+        //        if (isCallToLambdaMetafactoryMethod(site)) {
+        //          IR ir = n.getIR();
+        //          SSAAbstractInvokeInstruction inst = ir.getCalls(site)[0];
+        //          if (inst instanceof SSAInvokeDynamicInstruction) {
+        //            SSAInvokeDynamicInstruction dynInst = (SSAInvokeDynamicInstruction) inst;
+        //            if (dynInst.getBootstrap().isBootstrapForJavaLambdas()) {
+        //              try {
+        //                // create the LambdaSummaryClass
+        //                LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n,
+        // dynInst);
+        //                // TODO this should really be calling the lambda factory summary, see
+        //                //
+        // com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector.getLambdaFactorySummary
+        //                //  not strictly necessary for a complete call graph
+        //
+        // create the CGNode so we construct the CG reachable from the lambda, under the
+        // assumption the lambda will be called somewhere
+        //                        IMethod target =
+        // lambdaSummaryClass.getDeclaredMethods().iterator().next();
+        //                        CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+        //                        if (callee == null) {
+        //                          callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+        //                        }
+        //              } catch (UnresolvedLambdaBodyException e) {
+        //                // give up on modeling the lambda
+        //              }
+        //              continue;
+        //            }
+        //          }
+        //        }
         // if we reach this point, it is not a lambda creation site
-        Iterator<IMethod> methods = getOrUpdatePossibleTargets(site);
+        Iterator<IMethod> methods = getOrUpdatePossibleTargets(n, site);
         while (methods.hasNext()) {
           IMethod target = methods.next();
           if (isRelevantMethod(target)) {
