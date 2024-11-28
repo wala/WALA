@@ -63,6 +63,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    */
   private final boolean applicationOnly;
 
+  /** To handle lambdas. We pass a selector that always returns null as the base selector. */
   private final LambdaMethodTargetSelector lambdaMethodTargetSelector =
       new LambdaMethodTargetSelector((caller, site, receiver) -> null);
 
@@ -196,12 +197,15 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       if (calleeTarget != null) {
         // it's for a lambda
         result = Collections.singleton(calleeTarget);
+        // we eagerly create a CGNode for the "trampoline" method that invokes the body of the
+        // lambda.  This way, the new node gets added to the worklist, so we process all methods
+        // reachable from the lambda body in the first pass.
         LambdaSummaryClass lambdaSummaryClass =
             lambdaMethodTargetSelector.getLambdaSummaryClass(caller, site);
-        IMethod target = lambdaSummaryClass.getDeclaredMethods().iterator().next();
-        CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+        IMethod trampoline = lambdaSummaryClass.getDeclaredMethods().iterator().next();
+        CGNode callee = getNode(trampoline, Everywhere.EVERYWHERE);
         if (callee == null) {
-          callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+          callee = findOrCreateNode(trampoline, Everywhere.EVERYWHERE);
         }
       }
     }
