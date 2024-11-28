@@ -338,37 +338,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     while (!newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        //        if (isCallToLambdaMetafactoryMethod(site)) {
-        //          IR ir = n.getIR();
-        //          SSAAbstractInvokeInstruction inst = ir.getCalls(site)[0];
-        //          if (inst instanceof SSAInvokeDynamicInstruction) {
-        //            SSAInvokeDynamicInstruction dynInst = (SSAInvokeDynamicInstruction) inst;
-        //            if (dynInst.getBootstrap().isBootstrapForJavaLambdas()) {
-        //              try {
-        //                // create the LambdaSummaryClass
-        //                LambdaSummaryClass lambdaSummaryClass = LambdaSummaryClass.create(n,
-        // dynInst);
-        //                // TODO this should really be calling the lambda factory summary, see
-        //                //
-        // com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector.getLambdaFactorySummary
-        //                //  not strictly necessary for a complete call graph
-        //
-        // create the CGNode so we construct the CG reachable from the lambda, under the
-        // assumption the lambda will be called somewhere
-        //                        IMethod target =
-        // lambdaSummaryClass.getDeclaredMethods().iterator().next();
-        //                        CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-        //                        if (callee == null) {
-        //                          callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-        //                        }
-        //              } catch (UnresolvedLambdaBodyException e) {
-        //                // give up on modeling the lambda
-        //              }
-        //              continue;
-        //            }
-        //          }
-        //        }
-        // if we reach this point, it is not a lambda creation site
         Iterator<IMethod> methods = getOrUpdatePossibleTargets(n, site);
         while (methods.hasNext()) {
           IMethod target = methods.next();
