@@ -105,7 +105,8 @@ public class ClassHierarchy implements IClassHierarchy {
   /** A mapping from IClass -&gt; Selector -&gt; Set of IMethod */
   private final HashMap<IClass, Object> targetCache = HashMapFactory.make();
 
-  public void clearTargetCache() {
+  @Override
+  public void clearCaches() {
     targetCache.clear();
   }
 

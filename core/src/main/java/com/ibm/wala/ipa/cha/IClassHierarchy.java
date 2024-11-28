@@ -186,4 +186,10 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @throws IllegalArgumentException if c2 is null
    */
   boolean isAssignableFrom(IClass c1, IClass c2);
+
+  /**
+   * clear internal caches that may be invalidated by addition of new classes, e.g., a cache of the
+   * results of {@link #getPossibleTargets(MethodReference)}
+   */
+  void clearCaches();
 }

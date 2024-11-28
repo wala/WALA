@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.impl.BasicCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass;
 import com.ibm.wala.ipa.summaries.LambdaSummaryClass.UnresolvedLambdaBodyException;
@@ -144,8 +143,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     }
     newNodes.push(root);
     closure();
+    // classes simulating lambdas may have been added to the CHA via the previous closure() call.
+    // to update call targets to include lambdas, we clear all call target caches, iterate through
+    // all call sites, and re-compute the targets.
+    // TODO optimize
     targetCache.clear();
-    ((ClassHierarchy) cha).clearTargetCache();
+    cha.clearCaches();
     for (CGNode n : this) {
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
         Iterator<IMethod> methods = getOrUpdatePossibleTargets(site);
@@ -155,10 +158,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
             CGNode callee = getNode(target, Everywhere.EVERYWHERE);
             if (callee == null) {
               throw new RuntimeException(target.toString());
-              //              callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-              //              if (n == getFakeRootNode()) {
-              //                registerEntrypoint(callee);
-              //              }
             }
             edgeManager.addEdge(n, callee);
           }
