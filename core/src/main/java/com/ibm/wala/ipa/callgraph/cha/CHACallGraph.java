@@ -195,11 +195,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     if (isCallToLambdaMetafactoryMethod(site)) {
       IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
       if (calleeTarget != null) {
-        // it's for a lambda
+        // It's for a lambda.  The result method is a synthetic method that allocates the class
+        // generated for the lambda.
         result = Collections.singleton(calleeTarget);
         // we eagerly create a CGNode for the "trampoline" method that invokes the body of the
-        // lambda.  This way, the new node gets added to the worklist, so we process all methods
-        // reachable from the lambda body in the first pass.
+        // lambda itself.  This way, the new node gets added to the worklist, so we process all
+        // methods reachable from the lambda body in the first pass.
         LambdaSummaryClass lambdaSummaryClass =
             lambdaMethodTargetSelector.getLambdaSummaryClass(caller, site);
         IMethod trampoline = lambdaSummaryClass.getDeclaredMethods().iterator().next();
