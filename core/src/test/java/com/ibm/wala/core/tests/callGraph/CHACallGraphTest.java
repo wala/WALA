@@ -78,7 +78,6 @@ public class CHACallGraphTest {
             TestConstants.WALA_TESTDATA,
             "Llambda/ParamsAndCapture",
             CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    System.err.println(cg);
     Function<String, MethodReference> getTargetRef =
         (klass) ->
             MethodReference.findOrCreate(
@@ -111,6 +110,35 @@ public class CHACallGraphTest {
     checkCalledFromFiveSites.accept("C3");
     checkCalledFromFiveSites.accept("C4");
     checkCalledFromFiveSites.accept("C5");
+  }
+
+  @Test
+  public void testMethodRefs()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+
+    CallGraph cg =
+        testCHA(
+            TestConstants.WALA_TESTDATA,
+            "Llambda/MethodRefs",
+            CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+
+    Function<String, MethodReference> getTargetRef =
+        (klass) ->
+            MethodReference.findOrCreate(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Llambda/MethodRefs$" + klass),
+                Atom.findOrCreateUnicodeAtom("target"),
+                Descriptor.findOrCreateUTF8("()V"));
+    assertEquals(
+        1, cg.getNodes(getTargetRef.apply("C1")).size(), "expected C1.target() to be reachable");
+    assertEquals(
+        1, cg.getNodes(getTargetRef.apply("C2")).size(), "expected C2.target() to be reachable");
+    assertEquals(
+        1, cg.getNodes(getTargetRef.apply("C3")).size(), "expected C3.target() to be reachable");
+    assertEquals(
+        1, cg.getNodes(getTargetRef.apply("C4")).size(), "expected C4.target() to be reachable");
+    assertEquals(
+        1, cg.getNodes(getTargetRef.apply("C5")).size(), "expected C5.target() to be reachable");
   }
 
   public static CallGraph testCHA(
