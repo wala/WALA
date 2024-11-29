@@ -87,7 +87,7 @@ public class CHACallGraphTest {
                 Atom.findOrCreateUnicodeAtom("target"),
                 Descriptor.findOrCreateUTF8("()V"));
 
-    Consumer<String> checkCalledFromOneSite =
+    Consumer<String> checkCalledFromFiveSites =
         (klassName) -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
           assertEquals(1, nodes.size(), "expected " + klassName + ".target() to be reachable");
@@ -106,11 +106,11 @@ public class CHACallGraphTest {
               "expected " + klassName + ".target() to be invoked from five call sites");
         };
 
-    checkCalledFromOneSite.accept("C1");
-    checkCalledFromOneSite.accept("C2");
-    checkCalledFromOneSite.accept("C3");
-    checkCalledFromOneSite.accept("C4");
-    checkCalledFromOneSite.accept("C5");
+    checkCalledFromFiveSites.accept("C1");
+    checkCalledFromFiveSites.accept("C2");
+    checkCalledFromFiveSites.accept("C3");
+    checkCalledFromFiveSites.accept("C4");
+    checkCalledFromFiveSites.accept("C5");
   }
 
   public static CallGraph testCHA(
