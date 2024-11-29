@@ -327,8 +327,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       assert !isInitialized;
       n = makeNewNode(method, C);
 
-      // TODO write test where a method is only invoked from within a lambda to make sure it is
-      //  reachable
       IMethod clinit = method.getDeclaringClass().getClassInitializer();
       if (clinit != null && getNode(clinit, Everywhere.EVERYWHERE) == null) {
         CGNode cln = makeNewNode(clinit, Everywhere.EVERYWHERE);
