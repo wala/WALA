@@ -452,7 +452,7 @@ public class LambdaSummaryClass extends SyntheticClass {
    * Exception thrown when the method containing the body of the lambda (or the target of a method
    * reference) cannot be resolved.
    */
-  public static class UnresolvedLambdaBodyException extends RuntimeException {
+  static class UnresolvedLambdaBodyException extends RuntimeException {
 
     private static final long serialVersionUID = -6504849409929928820L;
 
