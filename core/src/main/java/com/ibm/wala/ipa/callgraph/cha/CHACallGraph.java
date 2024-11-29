@@ -220,7 +220,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         if (m != null) {
           result = Collections.singleton(m);
         } else {
-          result = Collections.emptySet();
+          IMethod fakeWorldClinitMethod = getFakeWorldClinitNode().getMethod();
+          if (site.getDeclaredTarget().equals(fakeWorldClinitMethod.getReference())) {
+            result = Collections.singleton(fakeWorldClinitMethod);
+          } else {
+            result = Collections.emptySet();
+          }
         }
       }
       targetCache.put(site, result);
@@ -322,7 +327,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       assert !isInitialized;
       n = makeNewNode(method, C);
 
-      // TODO right now fake root does not call fake world clinit!
       // TODO write test where a method is only invoked from within a lambda to make sure it is
       //  reachable
       IMethod clinit = method.getDeclaringClass().getClassInitializer();
