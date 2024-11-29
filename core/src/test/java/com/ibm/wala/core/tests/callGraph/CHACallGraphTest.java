@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.cha.CHACallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.util.CallGraphSearchUtil;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -33,9 +34,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -61,23 +62,12 @@ public class CHACallGraphTest {
             TestConstants.WALA_TESTDATA,
             "Llambda/LambdaAndAnonymous",
             CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    CGNode mainMethod =
-        cg.getNodes(
-                MethodReference.findOrCreate(
-                    TypeReference.findOrCreate(
-                        ClassLoaderReference.Application, "Llambda/LambdaAndAnonymous"),
-                    "main",
-                    "([Ljava/lang/String;)V"))
-            .iterator()
-            .next();
-    Iterator<CallSiteReference> callSiteReferenceIterator = mainMethod.iterateCallSites();
-    while (callSiteReferenceIterator.hasNext()) {
-      CallSiteReference site = callSiteReferenceIterator.next();
+    CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
+    for (CallSiteReference site : Iterator2Iterable.make(mainMethod.iterateCallSites())) {
       if (site.isInterface() && site.getDeclaredTarget().getName().toString().equals("target")) {
         assertEquals(2, cg.getNumberOfTargets(mainMethod, site));
       }
     }
-    System.err.println(cg);
   }
 
   @Test
