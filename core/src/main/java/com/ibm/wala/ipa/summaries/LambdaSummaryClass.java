@@ -117,7 +117,8 @@ public class LambdaSummaryClass extends SyntheticClass {
    */
   @Override
   public Collection<? extends IClass> getDirectInterfaces() {
-    return Collections.singleton(getClassHierarchy().lookupClass(invoke.getDeclaredResultType()));
+    IClass resultType = getClassHierarchy().lookupClass(invoke.getDeclaredResultType());
+    return resultType != null ? Collections.singleton(resultType) : Collections.emptySet();
   }
 
   /**
@@ -126,6 +127,9 @@ public class LambdaSummaryClass extends SyntheticClass {
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     IClass iface = getClassHierarchy().lookupClass(invoke.getDeclaredResultType());
+    if (iface == null) {
+      return Collections.emptySet();
+    }
     Set<IClass> result = HashSetFactory.make(iface.getAllImplementedInterfaces());
     result.add(iface);
     return result;
