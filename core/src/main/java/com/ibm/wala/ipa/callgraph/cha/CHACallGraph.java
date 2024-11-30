@@ -157,8 +157,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
           if (isRelevantMethod(target)) {
             CGNode callee = getNode(target, Everywhere.EVERYWHERE);
             if (callee == null) {
-              throw new RuntimeException(
-                  "should have already created CGNode for " + target);
+              throw new RuntimeException("should have already created CGNode for " + target);
             }
             edgeManager.addEdge(n, callee);
           }
