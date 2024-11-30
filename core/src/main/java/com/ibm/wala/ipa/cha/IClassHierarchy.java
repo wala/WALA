@@ -188,8 +188,8 @@ public interface IClassHierarchy extends Iterable<IClass> {
   boolean isAssignableFrom(IClass c1, IClass c2);
 
   /**
-   * clear internal caches that may be invalidated by addition of new classes, e.g., a cache of the
-   * results of {@link #getPossibleTargets(MethodReference)}
+   * Clear internal caches that may be invalidated by addition of new classes, e.g., a cache of the
+   * results of {@link #getPossibleTargets(MethodReference)}.
    */
   void clearCaches();
 }

@@ -281,8 +281,6 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   @Override
   public void clearCaches() {
-    for (IClassHierarchy cha : hierarchies.values()) {
-      cha.clearCaches();
-    }
+    hierarchies.values().forEach(IClassHierarchy::clearCaches);
   }
 }

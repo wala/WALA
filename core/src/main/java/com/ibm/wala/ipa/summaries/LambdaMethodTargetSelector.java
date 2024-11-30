@@ -100,11 +100,11 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
   }
 
   /**
-   * Get the summary class for a lambda factory, if it has already been created.
+   * Gets the summary class for a lambda factory, if it has already been created.
    *
    * @param caller the caller node
    * @param site the call site reference
-   * @return the summary class for the lambda factory, or null if it has not been created
+   * @return the summary class for the lambda factory, or {@code null} if it has not been created
    */
   public LambdaSummaryClass getLambdaSummaryClass(CGNode caller, CallSiteReference site) {
     IR ir = caller.getIR();

@@ -153,14 +153,12 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     cha.clearCaches();
     for (CGNode n : this) {
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        Iterator<IMethod> methods = getOrUpdatePossibleTargets(n, site);
-        while (methods.hasNext()) {
-          IMethod target = methods.next();
+        for (IMethod target : Iterator2Iterable.make(getOrUpdatePossibleTargets(n, site))) {
           if (isRelevantMethod(target)) {
             CGNode callee = getNode(target, Everywhere.EVERYWHERE);
             if (callee == null) {
               throw new RuntimeException(
-                  "should have already created CGNode for " + target.toString());
+                  "should have already created CGNode for " + target);
             }
             edgeManager.addEdge(n, callee);
           }
@@ -178,8 +176,9 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   /**
    * Cache of possible targets for call sites.
    *
-   * <p>In the future, this cache could be keyed on (MethodReference,isDispatch) pairs to save space
-   * and possibly time, where isDispatch indicates whether the call site is a virtual dispatch.
+   * <p>In the future, this cache could be keyed on ({@link com.ibm.wala.types.MethodReference},
+   * {@code isDispatch}) pairs to save space and possibly time, where {@code isDispatch} indicates
+   * whether the call site is a virtual dispatch.
    */
   private final Map<CallSiteReference, Set<IMethod>> targetCache = HashMapFactory.make();
 
@@ -347,9 +346,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     while (!newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        Iterator<IMethod> methods = getOrUpdatePossibleTargets(n, site);
-        while (methods.hasNext()) {
-          IMethod target = methods.next();
+        for (IMethod target : Iterator2Iterable.make(getOrUpdatePossibleTargets(n, site))) {
           if (isRelevantMethod(target)) {
             CGNode callee = getNode(target, Everywhere.EVERYWHERE);
             if (callee == null) {
