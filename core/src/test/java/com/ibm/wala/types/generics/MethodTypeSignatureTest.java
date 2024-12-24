@@ -33,5 +33,9 @@ class MethodTypeSignatureTest {
             is(TypeSignature.make("[J")),
             is(TypeSignature.make("[D")),
             is(TypeSignature.make("B"))));
+    assertThat(
+        MethodTypeSignature.make("([Ljava/lang/String;B)V").getArguments(),
+        arrayContaining(
+            is(TypeSignature.make("[Ljava/lang/String;")), is(TypeSignature.make("B"))));
   }
 }
