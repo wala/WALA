@@ -141,8 +141,14 @@ public abstract class TypeSignature extends Signature {
             switch (typeSigs.charAt(i)) {
               case TypeReference.BooleanTypeCode:
               case TypeReference.ByteTypeCode:
+              case TypeReference.ShortTypeCode:
               case TypeReference.IntTypeCode:
+              case TypeReference.LongTypeCode:
+              case TypeReference.FloatTypeCode:
+              case TypeReference.DoubleTypeCode:
+              case TypeReference.CharTypeCode:
                 sigs.add(typeSigs.substring(i - 1, i + 1));
+                i++;
                 break;
               case 'T':
               case TypeReference.ClassTypeCode:
