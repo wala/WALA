@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
 import static org.hamcrest.Matchers.is;
 
-import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 public class TypeSignatureTest {
@@ -22,5 +21,4 @@ public class TypeSignatureTest {
         TypeSignature.parseForTypeSignatures("<[[Ljava/lang/String;[[[J>"),
         arrayContaining(is("[[Ljava/lang/String;"), is("[[[J")));
   }
-
 }

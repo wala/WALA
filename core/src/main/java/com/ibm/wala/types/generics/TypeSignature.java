@@ -82,7 +82,12 @@ public abstract class TypeSignature extends Signature {
 
   /**
    * Split a string of consecutive type signatures (TypeSignature*) into its top-level type
-   * signatures. The string should start with either '(' or '<' and have a matching ')' or '>'.
+   * signatures. The string should start with either {@code (} or {@code <} and have a respective
+   * matching {@code )} or {@code >}.
+   *
+   * <p>TODO handle wildcards
+   *
+   * <p>TODO test on all methods in JDK
    *
    * @param typeSigs a string of consecutive type signatures
    * @return an array of top-level type signatures
@@ -137,7 +142,7 @@ public abstract class TypeSignature extends Signature {
           }
         case TypeReference.ArrayTypeCode:
           {
-            int arrayStart = i-1;
+            int arrayStart = i - 1;
             while (typeSigs.charAt(i) == TypeReference.ArrayTypeCode) {
               i++;
             }
