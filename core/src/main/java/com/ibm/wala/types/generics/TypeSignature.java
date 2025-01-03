@@ -85,10 +85,6 @@ public abstract class TypeSignature extends Signature {
    * signatures. The string should start with either {@code (} or {@code <} and have a respective
    * matching {@code )} or {@code >}.
    *
-   * <p>TODO handle wildcards
-   *
-   * <p>TODO test on all methods in JDK
-   *
    * @param typeSigs a string of consecutive type signatures
    * @return an array of top-level type signatures
    */
@@ -189,6 +185,16 @@ public abstract class TypeSignature extends Signature {
             result[j] = it.next();
           }
           return result;
+        case (byte) '*': // unbounded wildcard
+          sigs.add("*");
+          break;
+        case (byte) '-': // bounded wildcard
+        case (byte) '+': // bounded wildcard
+          int boundedStart = i - 1;
+          i++; // to skip 'L'
+          i = getEndIndexOfClassType(typeSigs, i);
+          sigs.add(typeSigs.substring(boundedStart, i));
+          break;
         default:
           throw new IllegalArgumentException("bad type signature list " + typeSigs);
       }
