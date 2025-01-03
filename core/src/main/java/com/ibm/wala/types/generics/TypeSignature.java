@@ -13,7 +13,6 @@ package com.ibm.wala.types.generics;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * UNDER CONSTRUCTION.
@@ -173,18 +172,6 @@ public abstract class TypeSignature extends Signature {
             sigs.add(typeSigs.substring(off, i));
             continue;
           }
-        case (byte) ')': // end of parameter list
-        case (byte) '>': // end of type argument list
-          int size = sigs.size();
-          if (size == 0) {
-            return new String[0];
-          }
-          Iterator<String> it = sigs.iterator();
-          String[] result = new String[size];
-          for (int j = 0; j < size; j++) {
-            result[j] = it.next();
-          }
-          return result;
         case (byte) '*': // unbounded wildcard
           sigs.add("*");
           break;
@@ -195,6 +182,9 @@ public abstract class TypeSignature extends Signature {
           i = getEndIndexOfClassType(typeSigs, i);
           sigs.add(typeSigs.substring(boundedStart, i));
           break;
+        case (byte) ')': // end of parameter list
+        case (byte) '>': // end of type argument list
+          return sigs.toArray(new String[sigs.size()]);
         default:
           throw new IllegalArgumentException("bad type signature list " + typeSigs);
       }
