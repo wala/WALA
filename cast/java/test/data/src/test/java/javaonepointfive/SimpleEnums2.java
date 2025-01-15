@@ -72,6 +72,7 @@ public class SimpleEnums2 {
 		System.out.println(x);
 		Direction y = Direction.myValues()[0];
 		System.out.println(y);
+		Direction.NORTH.hello();
 	}
 	
 //	public static class Foo {
