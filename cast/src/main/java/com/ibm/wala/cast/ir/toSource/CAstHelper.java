@@ -299,9 +299,9 @@ public class CAstHelper {
         break;
       }
     }
-    if (i < jumpList.size() - 1) {
-      jumpList.add(i + 1, ifCont);
-    } else jumpList.add(ifCont);
+    if (i < 0) {
+      jumpList.add(ifCont);
+    } else jumpList.add(i + 1, ifCont);
   }
 
   private static boolean isTopLoopJumpToHeader(
