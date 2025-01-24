@@ -1281,7 +1281,9 @@ public abstract class ToSource {
                               // otherwise return null then the instructions will be
                               // translated
                               // into several lines and might be placed in different places
-                              LoopHelper.shouldMergeTest(cfg, ST, inst, loops) ? inst : null);
+                              LoopHelper.shouldMergeTest(cfg, ST, inst, loops, jumpToTop)
+                                  ? inst
+                                  : null);
                       if (insts.isEmpty()) {
                         insts.add(inst);
                         chunks.insert(new ArrayList<>(insts));
@@ -1578,7 +1580,7 @@ public abstract class ToSource {
       createLoop(cfg, chunks, currentLoops, decls, elts, true);
 
       // find out the initial loop type
-      LoopType loopType = LoopHelper.getLoopType(cfg, ST, currentLoop);
+      LoopType loopType = LoopHelper.getLoopType(cfg, ST, currentLoop, jumpToTop);
 
       List<SSAInstruction> condChunkWithoutConditional =
           condChunk.stream()
@@ -1790,23 +1792,10 @@ public abstract class ToSource {
         CAstNode assignNode = null;
         Object varName = CAstHelper.findVariableNameFromTest(test);
         if (varName != null) {
-          for (int i = nodesBeforeControl.size() - 2; i >= 0; i--) {
-            if (CAstNode.EXPR_STMT == nodesBeforeControl.get(i).getKind()
-                && nodesBeforeControl.get(i).getChildCount() > 0
-                && CAstNode.ASSIGN == nodesBeforeControl.get(i).getChild(0).getKind()
-                && nodesBeforeControl.get(i).getChild(0).getChildCount() > 0
-                && CAstNode.VAR == nodesBeforeControl.get(i).getChild(0).getChild(0).getKind()
-                && nodesBeforeControl.get(i).getChild(0).getChild(0).getChildCount() > 0
-                && varName.equals(
-                    nodesBeforeControl.get(i).getChild(0).getChild(0).getChild(0).getValue())) {
-              assignNode = nodesBeforeControl.get(i);
-              break;
-            }
-          }
+          assignNode = CAstHelper.seekAssignmentAndRemove(nodesBeforeControl, varName.toString());
         }
 
         if (assignNode != null) {
-          nodesBeforeControl.remove(assignNode);
           assignNode = assignNode.getChild(0);
           forConditions.add(assignNode);
         } else {
@@ -2007,7 +1996,8 @@ public abstract class ToSource {
           chunkInsts -> {
             // Ignore goto chunks for now
             if (!LoopHelper.gotoChunk(chunkInsts)) {
-              if (LoopHelper.shouldMoveAsLoopBody(cfg, ST, chunkInsts, loops, currentLoops)) {
+              if (LoopHelper.shouldMoveAsLoopBody(
+                  cfg, ST, chunkInsts, loops, currentLoops, jumpToTop)) {
                 // move to loop chunks
                 loopChunks.add(chunkInsts);
               } else {

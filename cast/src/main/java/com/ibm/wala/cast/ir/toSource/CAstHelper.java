@@ -219,7 +219,7 @@ public class CAstHelper {
       }
       CAstNode ifCont = ast.makeNode(CAstNode.IF_STMT, ifCondTest, ast.makeNode(CAstNode.BREAK));
 
-      jumpList.add(ifCont);
+      addAfterLoop(jumpList, ifCont);
     } else
     // find out the top loop
     if (isTopLoopJumpToHeader) {
@@ -271,14 +271,14 @@ public class CAstHelper {
           needToGenerateJumpToTail = false;
         }
         CAstNode ifCont = ast.makeNode(CAstNode.IF_STMT, ifCondTest, ast.makeNode(CAstNode.BREAK));
-        jumpList.add(ifCont);
+        addAfterLoop(jumpList, ifCont);
       }
     }
 
     if (needToGenerateJumpToTail && generateJumpToTailIfTest != null) {
       CAstNode ifCont =
           ast.makeNode(CAstNode.IF_STMT, generateJumpToTailIfTest, ast.makeNode(CAstNode.BREAK));
-      jumpList.add(ifCont);
+      addAfterLoop(jumpList, ifCont);
     }
 
     if (jumpList.size() != bodyNode.getChildCount())
@@ -286,6 +286,22 @@ public class CAstHelper {
 
     // return bodyNode and test in this case because it might be changed
     return Pair.make(test, bodyNode);
+  }
+
+  private static void addAfterLoop(List<CAstNode> jumpList, CAstNode ifCont) {
+    int i = 0;
+    for (i = jumpList.size() - 1; i >= 0; i--) {
+      // TODO: only check the first child for now
+      if (CAstNode.BLOCK_STMT == jumpList.get(i).getKind()
+          && jumpList.get(i).getChildCount() > 0
+          && CAstNode.LOOP == jumpList.get(i).getChild(0).getKind()) {
+        // add jump to header block right after the loop
+        break;
+      }
+    }
+    if (i < jumpList.size() - 1) {
+      jumpList.add(i + 1, ifCont);
+    } else jumpList.add(ifCont);
   }
 
   private static boolean isTopLoopJumpToHeader(
@@ -412,5 +428,34 @@ public class CAstHelper {
         nodeBlock.add(nodeBlock.size() - 1, setTrue);
       else nodeBlock.add(0, setTrue);
     }
+  }
+
+  public static CAstNode seekAssignmentAndRemove(List<CAstNode> nodes, String varName) {
+    CAstNode assignNode = null;
+    int i = 0;
+    for (i = nodes.size() - 1; i >= 0; i--) {
+      if (CAstNode.EXPR_STMT == nodes.get(i).getKind()) {
+        if (nodes.get(i).getChildCount() > 0
+            && CAstNode.ASSIGN == nodes.get(i).getChild(0).getKind()
+            && nodes.get(i).getChild(0).getChildCount() > 0
+            && CAstNode.VAR == nodes.get(i).getChild(0).getChild(0).getKind()
+            && nodes.get(i).getChild(0).getChild(0).getChildCount() > 0
+            && varName.equals(nodes.get(i).getChild(0).getChild(0).getChild(0).getValue())) {
+          assignNode = nodes.remove(i);
+        }
+      } else if (nodes.get(i).getChildCount() > 0) {
+        // try to seek in it's children
+        List<CAstNode> children = new ArrayList<>();
+        children.addAll(nodes.get(i).getChildren());
+        assignNode = seekAssignmentAndRemove(children, varName);
+        // if it's found, try to update the child list to remove it
+        if (assignNode != null) {
+          nodes.set(i, ast.makeNode(nodes.get(i).getKind(), children));
+        }
+      }
+
+      if (assignNode != null) break;
+    }
+    return assignNode;
   }
 }
