@@ -176,4 +176,37 @@ public class ECJJava15IRTest extends IRTests {
         true,
         null);
   }
+
+  @Test
+  public void testCocovariant() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testExplicitBoxingTest() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testWildcards() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
 }
