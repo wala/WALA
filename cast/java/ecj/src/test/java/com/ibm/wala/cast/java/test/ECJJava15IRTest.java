@@ -110,4 +110,70 @@ public class ECJJava15IRTest extends IRTests {
         true,
         null);
   }
+
+  @Test
+  public void testAnonGeneNullarySimple() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testAnonymousGenerics() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testNotSoSimpleEnums() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testVarargs() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testGenericArrays() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testAnnotations() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
 }
