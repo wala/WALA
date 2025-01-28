@@ -1738,7 +1738,7 @@ public abstract class ToSource {
               // break
               afterNodes.add(ast.makeNode(CAstNode.BREAK));
             }
-          } else afterNodes.add(ast.makeNode(CAstNode.BREAK));
+          } else afterNodes.add(ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK)));
 
           CAstNode ifStmt =
               CAstHelper.makeIfStmt(
