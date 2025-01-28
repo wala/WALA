@@ -219,7 +219,7 @@ public class CAstHelper {
       }
       CAstNode ifCont = ast.makeNode(CAstNode.IF_STMT, ifCondTest, ast.makeNode(CAstNode.BREAK));
 
-      jumpList.add(ifCont);
+      addAfterLoop(jumpList, ifCont, true);
     } else
     // find out the top loop
     if (isTopLoopJumpToHeader) {
@@ -271,21 +271,87 @@ public class CAstHelper {
           needToGenerateJumpToTail = false;
         }
         CAstNode ifCont = ast.makeNode(CAstNode.IF_STMT, ifCondTest, ast.makeNode(CAstNode.BREAK));
-        jumpList.add(ifCont);
+        addAfterLoop(jumpList, ifCont, true);
       }
     }
 
     if (needToGenerateJumpToTail && generateJumpToTailIfTest != null) {
       CAstNode ifCont =
           ast.makeNode(CAstNode.IF_STMT, generateJumpToTailIfTest, ast.makeNode(CAstNode.BREAK));
-      jumpList.add(ifCont);
+      addAfterLoop(jumpList, ifCont, true);
     }
 
-    if (jumpList.size() != bodyNode.getChildCount())
-      bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
+    // always restore bodyNode
+    bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, jumpList);
 
     // return bodyNode and test in this case because it might be changed
     return Pair.make(test, bodyNode);
+  }
+
+  private static boolean addAfterLoop(
+      List<CAstNode> jumpList, CAstNode ifCont, boolean appendToLast) {
+    int i = 0;
+    for (i = jumpList.size() - 1; i >= 0; i--) {
+      // TODO: only check the first child for now
+      if (CAstNode.BLOCK_STMT == jumpList.get(i).getKind()
+          && jumpList.get(i).getChildCount() > 0
+          && CAstNode.LOOP == jumpList.get(i).getChild(0).getKind()) {
+        // add jump to header block right after the loop
+        jumpList.add(i + 1, ifCont);
+        return true;
+      } else if (CAstNode.IF_STMT == jumpList.get(i).getKind()) {
+        // TODO: only check if statement for now
+        List<CAstNode> childList = new ArrayList<>();
+        childList.addAll(jumpList.get(i).getChildren());
+
+        List<CAstNode> thenBlock = new ArrayList<>();
+        thenBlock.addAll(childList.get(1).getChildren());
+        // TODO: check what will happen if remove another layer of block
+        if (thenBlock.size() == 1
+            && CAstNode.BLOCK_STMT == thenBlock.get(0).getKind()
+            && thenBlock.get(0).getChildCount() > 0
+            && CAstNode.LOOP != thenBlock.get(0).getChild(0).getKind()) {
+          thenBlock.clear();
+          thenBlock.addAll(childList.get(1).getChild(0).getChildren());
+        }
+
+        List<CAstNode> elseBlock = new ArrayList<>();
+        if (childList.size() > 2) {
+          elseBlock.addAll(childList.get(2).getChildren());
+          // TODO: check what will happen if remove another layer of block
+          if (elseBlock.size() == 1
+              && CAstNode.BLOCK_STMT == elseBlock.get(0).getKind()
+              && elseBlock.get(0).getChildCount() > 0
+              && CAstNode.LOOP != elseBlock.get(0).getChild(0).getKind()) {
+            elseBlock.clear();
+            elseBlock.addAll(childList.get(2).getChild(0).getChildren());
+          }
+        }
+        boolean result = addAfterLoop(elseBlock, ifCont, false);
+        // if it is not added, try another one
+        if (!result) {
+          result = addAfterLoop(thenBlock, ifCont, false);
+        }
+
+        if (result) {
+          // recreate if statement
+          jumpList.set(
+              i,
+              ast.makeNode(
+                  CAstNode.IF_STMT,
+                  childList.get(0),
+                  ast.makeNode(CAstNode.BLOCK_STMT, thenBlock),
+                  ast.makeNode(CAstNode.BLOCK_STMT, elseBlock)));
+          return true;
+        }
+      }
+    }
+    if (appendToLast) {
+      // if loop can not found and the caller wants to append it anyways, then add it
+      jumpList.add(ifCont);
+      return true;
+    }
+    return false;
   }
 
   private static boolean isTopLoopJumpToHeader(
@@ -412,5 +478,34 @@ public class CAstHelper {
         nodeBlock.add(nodeBlock.size() - 1, setTrue);
       else nodeBlock.add(0, setTrue);
     }
+  }
+
+  public static CAstNode seekAssignmentAndRemove(List<CAstNode> nodes, String varName) {
+    CAstNode assignNode = null;
+    int i = 0;
+    for (i = nodes.size() - 1; i >= 0; i--) {
+      if (CAstNode.EXPR_STMT == nodes.get(i).getKind()) {
+        if (nodes.get(i).getChildCount() > 0
+            && CAstNode.ASSIGN == nodes.get(i).getChild(0).getKind()
+            && nodes.get(i).getChild(0).getChildCount() > 0
+            && CAstNode.VAR == nodes.get(i).getChild(0).getChild(0).getKind()
+            && nodes.get(i).getChild(0).getChild(0).getChildCount() > 0
+            && varName.equals(nodes.get(i).getChild(0).getChild(0).getChild(0).getValue())) {
+          assignNode = nodes.remove(i);
+        }
+      } else if (nodes.get(i).getChildCount() > 0) {
+        // try to seek in it's children
+        List<CAstNode> children = new ArrayList<>();
+        children.addAll(nodes.get(i).getChildren());
+        assignNode = seekAssignmentAndRemove(children, varName);
+        // if it's found, try to update the child list to remove it
+        if (assignNode != null) {
+          nodes.set(i, ast.makeNode(nodes.get(i).getKind(), children));
+        }
+      }
+
+      if (assignNode != null) break;
+    }
+    return assignNode;
   }
 }
