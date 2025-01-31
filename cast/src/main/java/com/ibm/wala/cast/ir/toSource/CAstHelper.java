@@ -29,17 +29,50 @@ public class CAstHelper {
    *     negation count is odd.
    * @param elseBranch The 'false' branch of the if-stmt. May be flipped with the then branch if
    *     negation count is odd.
+   * @param inLoop If the CAsnNode is in a loop.
    * @return A CAstNode of type IF_STMT equivalent to (if test thenBranch elseBranch), with leading
    *     negation removed from test and possible then/else branches swapped.
    */
-  public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch, CAstNode elseBranch) {
-
+  public static List<CAstNode> makeIfStmt(
+      CAstNode test, CAstNode thenBranch, CAstNode elseBranch, boolean inLoop) {
+    List<CAstNode> result = new ArrayList<>();
     Pair<Integer, CAstNode> countAndTest = countAndRemoveLeadingNegation(test);
-    if (countAndTest.fst % 2 == 0) {
-      return ast.makeNode(CAstNode.IF_STMT, countAndTest.snd, thenBranch, elseBranch);
-    } else {
-      return ast.makeNode(CAstNode.IF_STMT, countAndTest.snd, elseBranch, thenBranch);
+    CAstNode newTest = countAndTest.snd;
+    if (countAndTest.fst % 2 != 0) {
+      // switch then else branch
+      CAstNode temp = elseBranch;
+      elseBranch = thenBranch;
+      thenBranch = temp;
     }
+
+    if (inLoop && endingWithBreak(thenBranch)) {
+      // move elseBranch after the if statement
+      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
+      if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
+        result.addAll(elseBranch.getChildren());
+      } else result.add(elseBranch);
+    } else if (inLoop && endingWithBreak(elseBranch) && newTest.getKind() != CAstNode.PRIMITIVE) {
+      // Negation the test
+      if (isLeadingNegation(newTest)) {
+        newTest = stableRemoveLeadingNegation(newTest);
+      } else {
+        newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
+      }
+      // move thenBranch after the if statement
+      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, elseBranch));
+      if (thenBranch.getKind() == CAstNode.BLOCK_STMT) {
+        result.addAll(thenBranch.getChildren());
+      } else result.add(thenBranch);
+    } else result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
+    return result;
+  }
+
+  public static boolean endingWithBreak(CAstNode block) {
+    if (block.getKind() == CAstNode.BREAK) return true;
+    else if (block.getKind() == CAstNode.BLOCK_STMT) {
+      if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
+    }
+    return false;
   }
 
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch) {

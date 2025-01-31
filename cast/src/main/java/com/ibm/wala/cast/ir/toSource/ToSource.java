@@ -1740,7 +1740,7 @@ public abstract class ToSource {
             }
           } else afterNodes.add(ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK)));
 
-          CAstNode ifStmt =
+          List<CAstNode> ifStmt =
               CAstHelper.makeIfStmt(
                   ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
                   // include the nodes in the else branch
@@ -1752,8 +1752,9 @@ public abstract class ToSource {
                               CAstNode.BLOCK_STMT,
                               afterNodes.toArray(new CAstNode[afterNodes.size()]))),
                   // it should be a block instead of array of AST nodes
-                  condSuccessor);
-          nodesBeforeControl.add(ifStmt);
+                  condSuccessor,
+                  true);
+          nodesBeforeControl.addAll(ifStmt);
           bodyNode =
               ast.makeNode(
                   CAstNode.BLOCK_STMT,
@@ -2784,7 +2785,12 @@ public abstract class ToSource {
           takenStmt = checkLinePhi(takenStmt, instruction, taken);
 
           if (takenStmt != null) {
-            node = CAstHelper.makeIfStmt(test, takenStmt, notTakenStmt);
+            List<CAstNode> ifStmt =
+                CAstHelper.makeIfStmt(test, takenStmt, notTakenStmt, loop != null);
+            if (ifStmt.size() == 1) node = ifStmt.get(0);
+            else {
+              node = ast.makeNode(CAstNode.BLOCK_STMT, ifStmt);
+            }
           } else {
             node =
                 CAstHelper.makeIfStmt(
