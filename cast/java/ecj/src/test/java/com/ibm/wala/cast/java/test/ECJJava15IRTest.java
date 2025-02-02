@@ -52,8 +52,7 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testEnumSwitch()
-      throws IllegalArgumentException, CancelException, IOException {
+  public void testEnumSwitch() throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
@@ -76,7 +75,40 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testVarargsCovariant()
+  public void testVarargsCovariant() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testSimpleEnums() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testGenericSuperSink() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc("javaonepointfive"),
+        rtJar,
+        simplePkgTestEntryPoint("javaonepointfive"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
+  public void testAnonGeneNullarySimple()
       throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
@@ -88,42 +120,8 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testSimpleEnums()
+  public void testAnonymousGenerics()
       throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testGenericSuperSink()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testAnonGeneNullarySimple() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testAnonymousGenerics() throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
@@ -189,7 +187,8 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testExplicitBoxingTest() throws IllegalArgumentException, CancelException, IOException {
+  public void testExplicitBoxingTest()
+      throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
@@ -222,7 +221,8 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testCustomGenericsAndFields() throws IllegalArgumentException, CancelException, IOException {
+  public void testCustomGenericsAndFields()
+      throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
@@ -233,7 +233,8 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testTypeInferencePrimAndStringOp() throws IllegalArgumentException, CancelException, IOException {
+  public void testTypeInferencePrimAndStringOp()
+      throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
@@ -255,7 +256,8 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testGenericMemberClasses() throws IllegalArgumentException, CancelException, IOException {
+  public void testGenericMemberClasses()
+      throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
@@ -266,7 +268,8 @@ public class ECJJava15IRTest extends IRTests {
   }
 
   @Test
-  public void testMoreOverriddenGenerics() throws IllegalArgumentException, CancelException, IOException {
+  public void testMoreOverriddenGenerics()
+      throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc("javaonepointfive"),
         rtJar,
