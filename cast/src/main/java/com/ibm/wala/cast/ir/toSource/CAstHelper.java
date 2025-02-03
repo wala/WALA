@@ -15,6 +15,26 @@ import java.util.Map;
 /** The helper class for some methods of loop */
 public class CAstHelper {
   private static final CAst ast = new CAstImpl();
+  
+//hard code the conditional statements for now
+  private static final String[] supportedStatements =
+      new String[] {
+        "ADD",
+        "COMPUTE",
+        "DIVIDE",
+        "MULTIPLY",
+        "SUBTRACT",
+        "START",
+        "READ",
+        "WRITE",
+        "REWRITE",
+        "DELETE",
+        "UNSTRING",
+        "STRING",
+        "XML",
+        "JSON",
+        "CALL"
+      };
 
   /**
    * Remove redundant negation from test node.
@@ -45,13 +65,13 @@ public class CAstHelper {
       thenBranch = temp;
     }
 
-    if (inLoop && endingWithBreak(thenBranch)) {
+    if (inLoop && endingWithBreak(thenBranch) && !isConditionalStatement(newTest)) {
       // move elseBranch after the if statement
       result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
       if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
         result.addAll(elseBranch.getChildren());
       } else result.add(elseBranch);
-    } else if (inLoop && endingWithBreak(elseBranch) && newTest.getKind() != CAstNode.PRIMITIVE) {
+    } else if (inLoop && endingWithBreak(elseBranch) && !isConditionalStatement(newTest)) {
       // Negation the test
       if (isLeadingNegation(newTest)) {
         newTest = stableRemoveLeadingNegation(newTest);
@@ -67,9 +87,21 @@ public class CAstHelper {
     return result;
   }
 
+  private static boolean isConditionalStatement(CAstNode test) {
+    if (CAstNode.PRIMITIVE == test.getKind()) {
+      String testStr = test.getChild(0).getValue().toString().toUpperCase();
+      for (int i = 0; i < supportedStatements.length; i++) {
+        if (testStr.startsWith(supportedStatements[i] + " ")) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   public static boolean endingWithBreak(CAstNode block) {
     if (block.getKind() == CAstNode.BREAK) return true;
-    else if (block.getKind() == CAstNode.BLOCK_STMT) {
+    else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
       if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
     }
     return false;
@@ -326,12 +358,20 @@ public class CAstHelper {
     int i = 0;
     for (i = jumpList.size() - 1; i >= 0; i--) {
       // TODO: only check the first child for now
-      if (CAstNode.BLOCK_STMT == jumpList.get(i).getKind()
-          && jumpList.get(i).getChildCount() > 0
-          && CAstNode.LOOP == jumpList.get(i).getChild(0).getKind()) {
+      if (CAstNode.BLOCK_STMT == jumpList.get(i).getKind() && jumpList.get(i).getChildCount() > 0) {
         // add jump to header block right after the loop
-        jumpList.add(i + 1, ifCont);
-        return true;
+        if (CAstNode.LOOP == jumpList.get(i).getChild(0).getKind()) {
+          jumpList.add(i + 1, ifCont);
+          return true;
+        } else {
+          List<CAstNode> cc = new ArrayList<>();
+          cc.addAll(jumpList.get(i).getChildren());
+          if (addAfterLoop(cc, ifCont, false)) {
+            // recreate block statement
+            jumpList.set(i, ast.makeNode(CAstNode.BLOCK_STMT, cc));
+            return true;
+          }
+        }
       } else if (CAstNode.IF_STMT == jumpList.get(i).getKind()) {
         // TODO: only check if statement for now
         List<CAstNode> childList = new ArrayList<>();
