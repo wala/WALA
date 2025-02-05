@@ -15,8 +15,8 @@ import java.util.Map;
 /** The helper class for some methods of loop */
 public class CAstHelper {
   private static final CAst ast = new CAstImpl();
-  
-//hard code the conditional statements for now
+
+  // hard code the conditional statements for now
   private static final String[] supportedStatements =
       new String[] {
         "ADD",
@@ -580,5 +580,15 @@ public class CAstHelper {
       if (assignNode != null) break;
     }
     return assignNode;
+  }
+
+  public static CAstNode createExitParagraph() {
+    // If goto instruction will go to -1 that should be an EXIT PARAGRAPGH
+    return ast.makeNode(
+        CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.GOTO, ast.makeConstant("EXIT PARAGRAPH")));
+    // List<CAstNode> args = new ArrayList<>();
+    // args.add(ast.makeConstant("EXIT PARAGRAPH"));
+    // return ast.makeNode(CAstNode.PRIMITIVE, args.toArray(new
+    // CAstNode[args.size()]));
   }
 }

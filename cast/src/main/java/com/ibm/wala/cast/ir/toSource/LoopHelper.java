@@ -40,8 +40,18 @@ public class LoopHelper {
     Set<ISSABasicBlock> breakers = loop.getLoopBreakers();
     Optional<ISSABasicBlock> key =
         breakers.stream().filter(bb -> jumpToTop.containsKey(bb)).findFirst();
-    if (!key.isPresent()) // if cannot find it then it wont be a for loop
-    return false;
+    if (!key.isPresent()) { // if cannot find it then it might not be a for loop
+      int totalBreakers = breakers.size();
+      SSAInstruction ii = null;
+      for (ISSABasicBlock bb : breakers) {
+        ii = loop.getLoopExitrByBreaker(bb).getLastInstruction();
+        if (ii instanceof SSAGotoInstruction && ((SSAGotoInstruction) ii).getTarget() == -1)
+          totalBreakers--;
+      }
+      if (totalBreakers == 1) // other breakers ended with termination
+      return true;
+      return false;
+    }
 
     // check if the other loop exit is the last block of the parent loop
     return breakers.stream()
