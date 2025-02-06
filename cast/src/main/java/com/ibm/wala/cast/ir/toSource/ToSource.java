@@ -2308,18 +2308,10 @@ public abstract class ToSource {
             node = ast.makeNode(CAstNode.CONTINUE);
           } else if (loop != null && loop.getLoopExits().containsAll(cfg.getNormalSuccessors(bb))) {
             node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK));
-          } else {
-            if (inst.getTarget() == -1) {
-              node = CAstHelper.createExitParagraph();
-            } else if (cfg.getBlockForInstruction(inst.getTarget()).getLastInstructionIndex()
-                    == inst.getTarget()
-                && cfg.getBlockForInstruction(inst.getTarget()).getLastInstruction()
-                    instanceof SSAReturnInstruction
-                && (inst.iIndex() + 1) != inst.getTarget()) {
-              // if it's a jump from middle to the end
-              node = CAstHelper.createExitParagraph();
-            } else node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.GOTO));
-          }
+          } else if (CAstHelper.needsExitParagraph(inst, cfg)) {
+            // if it's a jump from middle to the end
+            node = CAstHelper.createExitParagraph();
+          } else node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.GOTO));
           markPosition(node, inst.iIndex());
         }
 
