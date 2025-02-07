@@ -2308,7 +2308,7 @@ public abstract class ToSource {
             node = ast.makeNode(CAstNode.CONTINUE);
           } else if (loop != null && loop.getLoopExits().containsAll(cfg.getNormalSuccessors(bb))) {
             node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK));
-          } else if (CAstHelper.needsExitParagraph(inst, cfg)) {
+          } else if (CAstHelper.needsExitParagraph(inst)) {
             // if it's a jump from middle to the end
             node = CAstHelper.createExitParagraph();
           } else node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.GOTO));

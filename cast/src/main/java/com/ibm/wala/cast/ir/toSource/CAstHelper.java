@@ -5,15 +5,11 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.util.CAstPattern;
-import com.ibm.wala.ipa.cfg.PrunedCFG;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAGotoInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -587,31 +583,34 @@ public class CAstHelper {
     return assignNode;
   }
 
-  public static boolean needsExitParagraph(
-      SSAGotoInstruction inst, PrunedCFG<SSAInstruction, ISSABasicBlock> cfg) {
+  public static boolean needsExitParagraph(SSAGotoInstruction inst) {
     // check if it's a jump from middle to the end
     if (inst.getTarget() == -1) {
       // goto -1 means EXIT PARAGRAPH
       return true;
     }
+    return false;
 
-    if ((inst.iIndex() + 1) == inst.getTarget()) {
-      // goto next instruction then ignore this goto
-      return false;
-    }
-
-    ISSABasicBlock targetBlock = cfg.getBlockForInstruction(inst.getTarget());
-    Collection<ISSABasicBlock> succBlock =
-        cfg.getNormalSuccessors(cfg.getBlockForInstruction(inst.iIndex()));
-    if (succBlock.size() == 1
-        && succBlock.iterator().next().equals(targetBlock)
-        && targetBlock.getFirstInstructionIndex() == targetBlock.getLastInstructionIndex()
-        && targetBlock.getLastInstruction() instanceof SSAReturnInstruction) {
-      // skip the case where it'll move on to RETURN
-      return false;
-    }
-    return targetBlock.getLastInstructionIndex() == inst.getTarget()
-        && targetBlock.getLastInstruction() instanceof SSAReturnInstruction;
+    // TODO: I though there are other cases that EXIT PARAGRAPH should be needed but test result
+    // shows that these conditionals are not needed. I'll keep them as comment for now in case if
+    // needed in future
+    //    if ((inst.iIndex() + 1) == inst.getTarget()) {
+    //      // goto next instruction then ignore this goto
+    //      return false;
+    //    }
+    //
+    //    ISSABasicBlock targetBlock = cfg.getBlockForInstruction(inst.getTarget());
+    //    Collection<ISSABasicBlock> succBlock =
+    //        cfg.getNormalSuccessors(cfg.getBlockForInstruction(inst.iIndex()));
+    //    if (succBlock.size() == 1
+    //        && succBlock.iterator().next().equals(targetBlock)
+    //        && targetBlock.getFirstInstructionIndex() == targetBlock.getLastInstructionIndex()
+    //        && targetBlock.getLastInstruction() instanceof SSAReturnInstruction) {
+    //      // skip the case where it'll move on to RETURN
+    //      return false;
+    //    }
+    //    return targetBlock.getLastInstructionIndex() == inst.getTarget()
+    //        && targetBlock.getLastInstruction() instanceof SSAReturnInstruction;
   }
 
   public static CAstNode createExitParagraph() {
