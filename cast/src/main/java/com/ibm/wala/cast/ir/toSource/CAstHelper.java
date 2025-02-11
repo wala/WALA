@@ -7,6 +7,7 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,26 @@ import java.util.Map;
 /** The helper class for some methods of loop */
 public class CAstHelper {
   private static final CAst ast = new CAstImpl();
+
+  // hard code the conditional statements for now
+  private static final String[] supportedStatements =
+      new String[] {
+        "ADD",
+        "COMPUTE",
+        "DIVIDE",
+        "MULTIPLY",
+        "SUBTRACT",
+        "START",
+        "READ",
+        "WRITE",
+        "REWRITE",
+        "DELETE",
+        "UNSTRING",
+        "STRING",
+        "XML",
+        "JSON",
+        "CALL"
+      };
 
   /**
    * Remove redundant negation from test node.
@@ -29,17 +50,62 @@ public class CAstHelper {
    *     negation count is odd.
    * @param elseBranch The 'false' branch of the if-stmt. May be flipped with the then branch if
    *     negation count is odd.
+   * @param inLoop If the CAsnNode is in a loop.
    * @return A CAstNode of type IF_STMT equivalent to (if test thenBranch elseBranch), with leading
    *     negation removed from test and possible then/else branches swapped.
    */
-  public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch, CAstNode elseBranch) {
-
+  public static List<CAstNode> makeIfStmt(
+      CAstNode test, CAstNode thenBranch, CAstNode elseBranch, boolean inLoop) {
+    List<CAstNode> result = new ArrayList<>();
     Pair<Integer, CAstNode> countAndTest = countAndRemoveLeadingNegation(test);
-    if (countAndTest.fst % 2 == 0) {
-      return ast.makeNode(CAstNode.IF_STMT, countAndTest.snd, thenBranch, elseBranch);
-    } else {
-      return ast.makeNode(CAstNode.IF_STMT, countAndTest.snd, elseBranch, thenBranch);
+    CAstNode newTest = countAndTest.snd;
+    if (countAndTest.fst % 2 != 0) {
+      // switch then else branch
+      CAstNode temp = elseBranch;
+      elseBranch = thenBranch;
+      thenBranch = temp;
     }
+
+    if (inLoop && endingWithBreak(thenBranch) && !isConditionalStatement(newTest)) {
+      // move elseBranch after the if statement
+      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
+      if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
+        result.addAll(elseBranch.getChildren());
+      } else result.add(elseBranch);
+    } else if (inLoop && endingWithBreak(elseBranch) && !isConditionalStatement(newTest)) {
+      // Negation the test
+      if (isLeadingNegation(newTest)) {
+        newTest = stableRemoveLeadingNegation(newTest);
+      } else {
+        newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
+      }
+      // move thenBranch after the if statement
+      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, elseBranch));
+      if (thenBranch.getKind() == CAstNode.BLOCK_STMT) {
+        result.addAll(thenBranch.getChildren());
+      } else result.add(thenBranch);
+    } else result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
+    return result;
+  }
+
+  private static boolean isConditionalStatement(CAstNode test) {
+    if (CAstNode.PRIMITIVE == test.getKind()) {
+      String testStr = test.getChild(0).getValue().toString().toUpperCase();
+      for (int i = 0; i < supportedStatements.length; i++) {
+        if (testStr.startsWith(supportedStatements[i] + " ")) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public static boolean endingWithBreak(CAstNode block) {
+    if (block.getKind() == CAstNode.BREAK) return true;
+    else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
+      if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
+    }
+    return false;
   }
 
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch) {
@@ -293,12 +359,20 @@ public class CAstHelper {
     int i = 0;
     for (i = jumpList.size() - 1; i >= 0; i--) {
       // TODO: only check the first child for now
-      if (CAstNode.BLOCK_STMT == jumpList.get(i).getKind()
-          && jumpList.get(i).getChildCount() > 0
-          && CAstNode.LOOP == jumpList.get(i).getChild(0).getKind()) {
+      if (CAstNode.BLOCK_STMT == jumpList.get(i).getKind() && jumpList.get(i).getChildCount() > 0) {
         // add jump to header block right after the loop
-        jumpList.add(i + 1, ifCont);
-        return true;
+        if (CAstNode.LOOP == jumpList.get(i).getChild(0).getKind()) {
+          jumpList.add(i + 1, ifCont);
+          return true;
+        } else {
+          List<CAstNode> cc = new ArrayList<>();
+          cc.addAll(jumpList.get(i).getChildren());
+          if (addAfterLoop(cc, ifCont, false)) {
+            // recreate block statement
+            jumpList.set(i, ast.makeNode(CAstNode.BLOCK_STMT, cc));
+            return true;
+          }
+        }
       } else if (CAstNode.IF_STMT == jumpList.get(i).getKind()) {
         // TODO: only check if statement for now
         List<CAstNode> childList = new ArrayList<>();
@@ -507,5 +581,45 @@ public class CAstHelper {
       if (assignNode != null) break;
     }
     return assignNode;
+  }
+
+  public static boolean needsExitParagraph(SSAGotoInstruction inst) {
+    // check if it's a jump from middle to the end
+    if (inst.getTarget() == -1) {
+      // goto -1 means EXIT PARAGRAPH
+      return true;
+    }
+    return false;
+
+    // TODO: I though there are other cases that EXIT PARAGRAPH should be needed but test result
+    // shows that these conditionals are not needed. I'll keep them as comment for now in case if
+    // needed in future
+    //    if ((inst.iIndex() + 1) == inst.getTarget()) {
+    //      // goto next instruction then ignore this goto
+    //      return false;
+    //    }
+    //
+    //    ISSABasicBlock targetBlock = cfg.getBlockForInstruction(inst.getTarget());
+    //    Collection<ISSABasicBlock> succBlock =
+    //        cfg.getNormalSuccessors(cfg.getBlockForInstruction(inst.iIndex()));
+    //    if (succBlock.size() == 1
+    //        && succBlock.iterator().next().equals(targetBlock)
+    //        && targetBlock.getFirstInstructionIndex() == targetBlock.getLastInstructionIndex()
+    //        && targetBlock.getLastInstruction() instanceof SSAReturnInstruction) {
+    //      // skip the case where it'll move on to RETURN
+    //      return false;
+    //    }
+    //    return targetBlock.getLastInstructionIndex() == inst.getTarget()
+    //        && targetBlock.getLastInstruction() instanceof SSAReturnInstruction;
+  }
+
+  public static CAstNode createExitParagraph() {
+    // If goto instruction will go to -1 that should be an EXIT PARAGRAPGH
+    return ast.makeNode(
+        CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.GOTO, ast.makeConstant("EXIT PARAGRAPH")));
+    // List<CAstNode> args = new ArrayList<>();
+    // args.add(ast.makeConstant("EXIT PARAGRAPH"));
+    // return ast.makeNode(CAstNode.PRIMITIVE, args.toArray(new
+    // CAstNode[args.size()]));
   }
 }
