@@ -354,6 +354,11 @@ public abstract class IRTests {
         getTestSrcPath() + File.separator + singleJavaPkgInputForTest(pkgName));
   }
 
+  protected Collection<String> singlePkgTestSrc(String pkgName, String testName) {
+    return Collections.singletonList(
+        getTestSrcPath() + File.separator + pkgName + File.separator + testName + ".java");
+  }
+
   protected String getTestName() {
     StackTraceElement stack[] = new Throwable().getStackTrace();
     for (int i = 0; i <= stack.length; i++) {
@@ -371,6 +376,10 @@ public abstract class IRTests {
 
   protected String[] simplePkgTestEntryPoint(String pkgName) {
     return new String[] {"L" + pkgName + "/" + getTestName().substring(4)};
+  }
+
+  protected String[] simplePkgTestEntryPoint(String pkgName, String testName) {
+    return new String[] {"L" + pkgName + "/" + testName};
   }
 
   protected abstract AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?>
