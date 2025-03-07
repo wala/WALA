@@ -24,7 +24,13 @@ public abstract class Issue667Test extends IRTests {
   @Test
   public void testDominanceFrontierCase() throws CancelException, IOException {
     Pair<CallGraph, ?> result =
-        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+        runTest(
+            singleTestSrc("DominanceFrontierCase"),
+            rtJar,
+            simpleTestEntryPoint("DominanceFrontierCase"),
+            emptyList,
+            true,
+            null);
 
     MethodReference cm =
         MethodReference.findOrCreate(

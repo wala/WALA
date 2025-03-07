@@ -60,7 +60,13 @@ public class ECJTestComments extends IRTests {
   @Test
   public void testComments() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result =
-        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+        runTest(
+            singleTestSrc("Comments"),
+            rtJar,
+            simpleTestEntryPoint("Comments"),
+            emptyList,
+            true,
+            null);
     for (CGNode node : result.fst.getNodes(testMethod)) {
       if (node.getMethod() instanceof AstMethod) {
         AstMethod m = (AstMethod) node.getMethod();

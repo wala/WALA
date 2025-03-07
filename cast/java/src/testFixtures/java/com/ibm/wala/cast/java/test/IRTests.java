@@ -340,18 +340,8 @@ public abstract class IRTests {
     }
   }
 
-  protected Collection<String> singleTestSrc() {
-    return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
-  }
-
-  protected Collection<String> singleTestSrc(final String folder) {
-    return Collections.singletonList(
-        getTestSrcPath() + File.separator + folder + File.separator + singleJavaInputForTest());
-  }
-
-  protected Collection<String> singlePkgTestSrc(String pkgName) {
-    return Collections.singletonList(
-        getTestSrcPath() + File.separator + singleJavaPkgInputForTest(pkgName));
+  protected Collection<String> singleTestSrc(String testName) {
+    return Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
   }
 
   protected Collection<String> singlePkgTestSrc(String pkgName, String testName) {
@@ -359,23 +349,8 @@ public abstract class IRTests {
         getTestSrcPath() + File.separator + pkgName + File.separator + testName + ".java");
   }
 
-  protected String getTestName() {
-    StackTraceElement stack[] = new Throwable().getStackTrace();
-    for (int i = 0; i <= stack.length; i++) {
-      if (stack[i].getMethodName().startsWith("test")) {
-        return stack[i].getMethodName();
-      }
-    }
-
-    throw new Error("test method not found");
-  }
-
-  protected String[] simpleTestEntryPoint() {
-    return new String[] {'L' + getTestName().substring(4)};
-  }
-
-  protected String[] simplePkgTestEntryPoint(String pkgName) {
-    return new String[] {"L" + pkgName + "/" + getTestName().substring(4)};
+  protected String[] simpleTestEntryPoint(String testName) {
+    return new String[] {'L' + testName};
   }
 
   protected String[] simplePkgTestEntryPoint(String pkgName, String testName) {
@@ -533,15 +508,11 @@ public abstract class IRTests {
     return testSrcPath;
   }
 
-  protected String singleJavaInputForTest() {
-    return getTestName().substring(4) + ".java";
+  protected static String singleInputForTest(String testName) {
+    return testName;
   }
 
-  protected String singleInputForTest() {
-    return getTestName().substring(4);
-  }
-
-  protected String singleJavaPkgInputForTest(String pkgName) {
-    return pkgName + File.separator + getTestName().substring(4) + ".java";
+  protected String singleJavaPkgInputForTest(String pkgName, String testName) {
+    return pkgName + File.separator + testName + ".java";
   }
 }
