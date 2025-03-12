@@ -361,6 +361,12 @@ public abstract class IRTests {
       getAnalysisEngine(
           String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
+  public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(String testName)
+      throws CancelException, IOException {
+    return runTest(
+        singleTestSrc(testName), rtJar, simpleTestEntryPoint(testName), emptyList, true, null);
+  }
+
   public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
       Collection<String> sources,
       List<String> libs,

@@ -61,7 +61,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -481,14 +480,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testInnerClassA() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
-        runTest(
-            singleTestSrc("InnerClassA"),
-            rtJar,
-            simpleTestEntryPoint("InnerClassA"),
-            new ArrayList<>(),
-            true,
-            null);
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x = runTest("InnerClassA");
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
@@ -555,14 +547,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testInnerClassSuper() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
-        runTest(
-            singleTestSrc("InnerClassSuper"),
-            rtJar,
-            simpleTestEntryPoint("InnerClassSuper"),
-            new ArrayList<>(),
-            true,
-            null);
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x = runTest("InnerClassSuper");
 
     // can't do an IRAssertion() -- we need the pointer analysis
 
@@ -605,14 +590,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
-        runTest(
-            singleTestSrc("MiniaturSliceBug"),
-            rtJar,
-            simpleTestEntryPoint("MiniaturSliceBug"),
-            emptyList,
-            true,
-            null);
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x = runTest("MiniaturSliceBug");
 
     PointerAnalysis<? extends InstanceKey> pa =
         ((PropagationCallGraphBuilder) x.snd).getPointerAnalysis();
