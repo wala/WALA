@@ -30,3 +30,4 @@ jobs:
           event_file: artifacts/Event file/event.json
           event_name: ${{ github.event.workflow_run.event }}
           files: "artifacts/**/*.xml"
+          test_changes_limit: 500
