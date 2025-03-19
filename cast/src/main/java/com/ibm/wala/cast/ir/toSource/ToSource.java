@@ -2018,8 +2018,12 @@ public abstract class ToSource {
                         && chunkInsts.equals(chunks.get(chunks.size() - 1))))) {
                   Pair<CAstNode, List<CAstNode>> stuff =
                       makeToCAst(chunkInsts).processChunk(decls, packages, currentLoops);
-                  elts.add(stuff.fst);
-                  decls.addAll(stuff.snd);
+                  if (chunkInsts.equals(chunks.get(0))
+                      || !CAstHelper.isConditionalPhrase(stuff.fst)) {
+                    // ignored the chunk with only conditional phrase
+                    elts.add(stuff.fst);
+                    decls.addAll(stuff.snd);
+                  }
                 }
               }
             }

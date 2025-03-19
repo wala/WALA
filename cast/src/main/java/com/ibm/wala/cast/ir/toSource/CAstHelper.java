@@ -10,6 +10,7 @@ import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class CAstHelper {
         "SUBTRACT",
         "START",
         "READ",
+        "RETURN",
         "WRITE",
         "REWRITE",
         "DELETE",
@@ -35,6 +37,23 @@ public class CAstHelper {
         "XML",
         "JSON",
         "CALL"
+      };
+
+  // hard code the conditional statements for now
+  private static final String[] supportedPhrases =
+      new String[] {
+        "INVALID KEY",
+        "NOT INVALID KEY",
+        "AT END-OF-PAGE",
+        "NOT AT END-OF-PAGE",
+        "AT END",
+        "NOT AT END",
+        "ON OVERFLOW",
+        "NOT ON OVERFLOW",
+        "ON SIZE ERROR",
+        "NOT ON SIZE ERROR",
+        "ON EXCEPTION",
+        "NOT ON EXCEPTION"
       };
 
   /**
@@ -96,6 +115,18 @@ public class CAstHelper {
           return true;
         }
       }
+    }
+    return false;
+  }
+
+  public static boolean isConditionalPhrase(CAstNode node) {
+    if (CAstNode.PRIMITIVE == node.getKind()) {
+      String testStr = node.getChild(0).getValue().toString().toUpperCase();
+      return Arrays.asList(supportedPhrases).stream()
+          .anyMatch(
+              sp -> {
+                return testStr.equals(sp);
+              });
     }
     return false;
   }
