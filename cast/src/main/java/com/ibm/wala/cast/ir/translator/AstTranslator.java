@@ -494,7 +494,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   /** for keeping position information for the generated SSAInstructions and SSA locals */
-  private static class AstDebuggingInformation implements DebuggingInformation {
+  public static class AstDebuggingInformation implements DebuggingInformation {
     private final Position codeBodyPosition;
 
     private final Position codeBodyNamePosition;
@@ -511,7 +511,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private final String[] names;
 
-    AstDebuggingInformation(
+    public AstDebuggingInformation(
         Position codeBodyNamePosition,
         Position codeBodyPosition,
         Position[] instructionPositions,
@@ -1017,11 +1017,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return currentBlock;
     }
 
-    boolean hasCatchBlock() {
+    public boolean hasCatchBlock() {
       return hasCatchBlock;
     }
 
-    boolean hasMonitorOp() {
+    public boolean hasMonitorOp() {
       return hasMonitorOp;
     }
 
@@ -1029,7 +1029,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       hasCatchBlock = true;
     }
 
-    Position[] getLinePositionMap() {
+    public Position[] getLinePositionMap() {
       return linePositions;
     }
 
@@ -1081,7 +1081,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       bb.makeEntryBlock();
     }
 
-    void makeExitBlock(PreBasicBlock bb) {
+    public void makeExitBlock(PreBasicBlock bb) {
       bb.makeExitBlock();
 
       for (PreBasicBlock p : Iterator2Iterable.make(getPredNodes(bb))) normalToExit.add(p);
@@ -1364,7 +1364,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return true;
     }
 
-    AstCFG(CAstEntity n, IncipientCFG icfg, SymbolTable symtab, SSAInstructionFactory insts) {
+    public AstCFG(
+        CAstEntity n, IncipientCFG icfg, SymbolTable symtab, SSAInstructionFactory insts) {
       super(null);
 
       Set<PreBasicBlock> liveBlocks =
@@ -1780,7 +1781,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private final Map<String, String> caseInsensitiveNames = new LinkedHashMap<>();
 
-    protected abstract SymbolTable getUnderlyingSymtab();
+    public abstract SymbolTable getUnderlyingSymtab();
 
     @Override
     public Scope getParent() {
@@ -3101,7 +3102,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
     }
 
-    AstLexicalInformation(
+    public AstLexicalInformation(
         String entityName,
         Scope scope,
         SSAInstruction[] instrs,
@@ -3687,7 +3688,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
 
           @Override
-          protected SymbolTable getUnderlyingSymtab() {
+          public SymbolTable getUnderlyingSymtab() {
             return ((AbstractScope) context.currentScope()).getUnderlyingSymtab();
           }
 
