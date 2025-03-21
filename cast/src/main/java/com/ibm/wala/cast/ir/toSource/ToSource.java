@@ -1112,7 +1112,7 @@ public abstract class ToSource {
             .entrySet()
             .forEach(
                 es -> {
-                  System.err.println("----");
+                  System.err.println("--region--");
                   System.err.println(es.getKey());
                   System.err.println(es.getValue());
                 });
@@ -1845,6 +1845,55 @@ public abstract class ToSource {
               // reuse LOOP type but add third child as a boolean to tell if it's a do while
               // loop
               ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
+
+      if (CAstHelper.isLeadingNegation(test)
+          && CAstHelper.isConditionalStatement(CAstHelper.removeSingleNegation(test))) {
+        // force to while true loop for conditional statements
+        loopType = LoopType.WHILETRUE;
+
+        CAstNode phrase1 =
+            afterNodes.size() < 1
+                ? ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK))
+                : (afterNodes.size() == 1
+                    ? afterNodes.get(0)
+                    : ast.makeNode(
+                        CAstNode.BLOCK_STMT, afterNodes.toArray(new CAstNode[afterNodes.size()])));
+
+        CAstNode phrase2 =
+            bodyNode.getKind() == CAstNode.BLOCK_STMT
+                ? bodyNode
+                : ast.makeNode(CAstNode.BLOCK_STMT, bodyNode);
+
+        List<CAstNode> ifStmt =
+            CAstHelper.makeIfStmt(
+                CAstHelper.removeSingleNegation(test),
+                // include the nodes in the else branch as block
+                phrase1,
+                // it should be a block instead of array of AST nodes
+                phrase2,
+                true);
+
+        List<CAstNode> loopBody = new ArrayList<>();
+
+        if (CAstHelper.isConditionalPhrase(phrase2.getChild(0))) {
+          loopBody.addAll(ifStmt);
+        } else {
+          loopBody.add(
+              ast.makeNode(CAstNode.IF_STMT, CAstHelper.removeSingleNegation(test), phrase1));
+          loopBody.addAll(phrase2.getChildren());
+        }
+
+        afterNodes.clear(); // avoid duplication;
+
+        loopNode =
+            ast.makeNode(
+                CAstNode.LOOP,
+                ast.makeConstant(true),
+                ast.makeNode(CAstNode.BLOCK_STMT, loopBody),
+                // reuse LOOP type but add third child as a boolean to tell if it's a do while
+                // loop
+                ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
+      }
 
       ISSABasicBlock next =
           cfg.getBlockForInstruction(((SSAConditionalBranchInstruction) instruction).getTarget());
