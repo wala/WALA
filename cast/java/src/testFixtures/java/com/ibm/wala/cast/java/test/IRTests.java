@@ -340,42 +340,32 @@ public abstract class IRTests {
     }
   }
 
-  protected Collection<String> singleTestSrc() {
-    return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
+  protected Collection<String> singleTestSrc(String testName) {
+    return Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
   }
 
-  protected Collection<String> singleTestSrc(final String folder) {
+  protected Collection<String> singlePkgTestSrc(String pkgName, String testName) {
     return Collections.singletonList(
-        getTestSrcPath() + File.separator + folder + File.separator + singleJavaInputForTest());
+        getTestSrcPath() + File.separator + pkgName + File.separator + testName + ".java");
   }
 
-  protected Collection<String> singlePkgTestSrc(String pkgName) {
-    return Collections.singletonList(
-        getTestSrcPath() + File.separator + singleJavaPkgInputForTest(pkgName));
+  protected String[] simpleTestEntryPoint(String testName) {
+    return new String[] {'L' + testName};
   }
 
-  protected String getTestName() {
-    StackTraceElement stack[] = new Throwable().getStackTrace();
-    for (int i = 0; i <= stack.length; i++) {
-      if (stack[i].getMethodName().startsWith("test")) {
-        return stack[i].getMethodName();
-      }
-    }
-
-    throw new Error("test method not found");
-  }
-
-  protected String[] simpleTestEntryPoint() {
-    return new String[] {'L' + getTestName().substring(4)};
-  }
-
-  protected String[] simplePkgTestEntryPoint(String pkgName) {
-    return new String[] {"L" + pkgName + "/" + getTestName().substring(4)};
+  protected String[] simplePkgTestEntryPoint(String pkgName, String testName) {
+    return new String[] {"L" + pkgName + "/" + testName};
   }
 
   protected abstract AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?>
       getAnalysisEngine(
           String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
+
+  public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(String testName)
+      throws CancelException, IOException {
+    return runTest(
+        singleTestSrc(testName), rtJar, simpleTestEntryPoint(testName), emptyList, true, null);
+  }
 
   public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
       Collection<String> sources,
@@ -524,15 +514,11 @@ public abstract class IRTests {
     return testSrcPath;
   }
 
-  protected String singleJavaInputForTest() {
-    return getTestName().substring(4) + ".java";
+  protected static String singleInputForTest(String testName) {
+    return testName;
   }
 
-  protected String singleInputForTest() {
-    return getTestName().substring(4);
-  }
-
-  protected String singleJavaPkgInputForTest(String pkgName) {
-    return pkgName + File.separator + getTestName().substring(4) + ".java";
+  protected String singleJavaPkgInputForTest(String pkgName, String testName) {
+    return pkgName + File.separator + testName + ".java";
   }
 }

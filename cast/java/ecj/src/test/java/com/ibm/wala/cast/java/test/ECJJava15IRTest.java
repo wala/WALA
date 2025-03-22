@@ -14,7 +14,9 @@ import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class ECJJava15IRTest extends IRTests {
 
@@ -39,241 +41,39 @@ public class ECJJava15IRTest extends IRTests {
     return engine;
   }
 
-  @Test
-  public void testVarargsOverriding()
+  static Stream<String> java15IRTestNames() {
+    return Stream.of(
+        "AnonGeneNullarySimple",
+        "AnonymousGenerics",
+        "Annotations",
+        "BasicsGenerics",
+        "Cocovariant",
+        "CustomGenericsAndFields",
+        "EnumSwitch",
+        "ExplicitBoxingTest",
+        "GenericArrays",
+        "GenericMemberClasses",
+        "GenericSuperSink",
+        "MoreOverriddenGenerics",
+        "NotSoSimpleEnums",
+        "OverridesOnePointFour",
+        "SimpleEnums",
+        "SimpleEnums2",
+        "TypeInferencePrimAndStringOp",
+        "Varargs",
+        "VarargsCovariant",
+        "VarargsOverriding",
+        "Wildcards");
+  }
+
+  @ParameterizedTest
+  @MethodSource("java15IRTestNames")
+  public void runJava15IRTests(String java15IRTestName)
       throws IllegalArgumentException, CancelException, IOException {
     runTest(
-        singlePkgTestSrc("javaonepointfive"),
+        singlePkgTestSrc("javaonepointfive", java15IRTestName),
         rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testEnumSwitch() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testOverridesOnePointFour()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testVarargsCovariant() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testSimpleEnums() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testGenericSuperSink() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testAnonGeneNullarySimple()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testAnonymousGenerics()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testNotSoSimpleEnums() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testVarargs() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testGenericArrays() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testAnnotations() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testCocovariant() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testExplicitBoxingTest()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testWildcards() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testBasicsGenerics() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testCustomGenericsAndFields()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testTypeInferencePrimAndStringOp()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testSimpleEnums2() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testGenericMemberClasses()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testMoreOverriddenGenerics()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointfive"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointfive"),
+        simplePkgTestEntryPoint("javaonepointfive", java15IRTestName),
         emptyList,
         true,
         null);

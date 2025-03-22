@@ -11,6 +11,7 @@ dependencies {
   api(projects.util)
   implementation(projects.shrike)
   testFixturesApi(libs.junit.jupiter.api)
+  testFixturesApi(libs.junit.jupiter.params)
   testFixturesApi(projects.core)
   testFixturesApi(projects.util)
   testFixturesImplementation(projects.cast)

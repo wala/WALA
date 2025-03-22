@@ -22,7 +22,13 @@ public abstract class Issue666Test extends IRTests {
   @Test
   public void testPeekErrorCase() throws CancelException, IOException {
     Pair<CallGraph, ?> result =
-        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+        runTest(
+            singleTestSrc("PeekErrorCase"),
+            rtJar,
+            simpleTestEntryPoint("PeekErrorCase"),
+            emptyList,
+            true,
+            null);
 
     assert result != null;
 
