@@ -773,7 +773,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return "PreBB" + number + ':' + firstIndex + ".." + lastIndex;
     }
 
-    private List<SSAInstruction> instructions() {
+    public List<SSAInstruction> instructions() {
       return instructions;
     }
 
