@@ -14,6 +14,7 @@ import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstPreInstructionVisitor;
 import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.cast.ir.ssa.CAstUnaryOp;
+import com.ibm.wala.cast.ir.ssa.SSAUnspecifiedConditionalExprInstruction;
 import com.ibm.wala.cast.ir.ssa.analysis.LiveAnalysis;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAst;
@@ -1846,7 +1847,7 @@ public abstract class ToSource {
               // loop
               ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
 
-      if (CAstHelper.isLeadingNegation(test)
+      /*if (CAstHelper.isLeadingNegation(test)
           && CAstHelper.isConditionalStatement(CAstHelper.removeSingleNegation(test))) {
         // force to while true loop for conditional statements
         loopType = LoopType.WHILETRUE;
@@ -1864,24 +1865,24 @@ public abstract class ToSource {
                 ? bodyNode
                 : ast.makeNode(CAstNode.BLOCK_STMT, bodyNode);
 
-        List<CAstNode> ifStmt =
-            CAstHelper.makeIfStmt(
-                CAstHelper.removeSingleNegation(test),
-                // include the nodes in the else branch as block
-                phrase1,
-                // it should be a block instead of array of AST nodes
-                phrase2,
-                true);
+        //        List<CAstNode> ifStmt =
+        //            CAstHelper.makeIfStmt(
+        //                CAstHelper.removeSingleNegation(test),
+        //                // include the nodes in the else branch as block
+        //                phrase1,
+        //                // it should be a block instead of array of AST nodes
+        //                phrase2,
+        //                true);
 
         List<CAstNode> loopBody = new ArrayList<>();
 
-        if (CAstHelper.isConditionalPhrase(phrase2.getChild(0))) {
-          loopBody.addAll(ifStmt);
-        } else {
-          loopBody.add(
-              ast.makeNode(CAstNode.IF_STMT, CAstHelper.removeSingleNegation(test), phrase1));
-          loopBody.addAll(phrase2.getChildren());
-        }
+        //        if (CAstHelper.isConditionalPhrase(phrase2.getChild(0))) {
+        //          loopBody.addAll(ifStmt);
+        //        } else {
+        loopBody.add(
+            ast.makeNode(CAstNode.IF_STMT, CAstHelper.removeSingleNegation(test), phrase1));
+        loopBody.addAll(phrase2.getChildren());
+        //        }
 
         afterNodes.clear(); // avoid duplication;
 
@@ -1893,7 +1894,7 @@ public abstract class ToSource {
                 // reuse LOOP type but add third child as a boolean to tell if it's a do while
                 // loop
                 ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
-      }
+      }*/
 
       ISSABasicBlock next =
           cfg.getBlockForInstruction(((SSAConditionalBranchInstruction) instruction).getTarget());
@@ -2067,12 +2068,8 @@ public abstract class ToSource {
                         && chunkInsts.equals(chunks.get(chunks.size() - 1))))) {
                   Pair<CAstNode, List<CAstNode>> stuff =
                       makeToCAst(chunkInsts).processChunk(decls, packages, currentLoops);
-                  if (chunkInsts.equals(chunks.get(0))
-                      || !CAstHelper.isConditionalPhrase(stuff.fst)) {
-                    // ignored the chunk with only conditional phrase
-                    elts.add(stuff.fst);
-                    decls.addAll(stuff.snd);
-                  }
+                  elts.add(stuff.fst);
+                  decls.addAll(stuff.snd);
                 }
               }
             }
@@ -2681,6 +2678,14 @@ public abstract class ToSource {
           SSACFG.BasicBlock branchBB =
               (BasicBlock) cfg.getBlockForInstruction(instruction.iIndex());
 
+          String thenPhrase = null;
+          String elsePhrase = null;
+          SSAInstruction inst = du.getDef(instruction.getUse(0));
+          if (inst instanceof SSAUnspecifiedConditionalExprInstruction) {
+            thenPhrase = ((SSAUnspecifiedConditionalExprInstruction<?>) inst).getThenPhrase();
+            elsePhrase = ((SSAUnspecifiedConditionalExprInstruction<?>) inst).getElsePhrase();
+          }
+
           CAstNode v1 = visit(instruction.getUse(0));
           CAstNode v2 = visit(instruction.getUse(1));
 
@@ -2817,6 +2822,16 @@ public abstract class ToSource {
                 notTakenBlock.add(setJumpTrue);
               }
             }
+          }
+
+          if (thenPhrase != null && thenPhrase.length() > 0) {
+            if (CAstHelper.isLeadingNegation(test))
+              notTakenBlock.add(0, ast.makeConstant(thenPhrase));
+            else takenBlock.add(0, ast.makeConstant(thenPhrase));
+          }
+          if (elsePhrase != null && elsePhrase.length() > 0) {
+            if (CAstHelper.isLeadingNegation(test)) takenBlock.add(0, ast.makeConstant(elsePhrase));
+            else notTakenBlock.add(0, ast.makeConstant(elsePhrase));
           }
 
           CAstNode notTakenStmt =
