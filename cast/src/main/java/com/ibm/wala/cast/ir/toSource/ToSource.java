@@ -1866,23 +1866,27 @@ public abstract class ToSource {
               // loop
               ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
 
-      /*if (CAstHelper.isLeadingNegation(test)
-          && CAstHelper.isConditionalStatement(CAstHelper.removeSingleNegation(test))) {
+      if (CAstHelper.isLeadingNegation(test)
+          && CAstHelper.isConditionalStatement(CAstHelper.removeSingleNegation(test))
+          && ((thenPhrase != null && thenPhrase.length() > 0)
+              || (elsePhrase != null && elsePhrase.length() > 0))) {
         // force to while true loop for conditional statements
         loopType = LoopType.WHILETRUE;
 
-        CAstNode phrase1 =
-            afterNodes.size() < 1
-                ? ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK))
-                : (afterNodes.size() == 1
-                    ? afterNodes.get(0)
-                    : ast.makeNode(
-                        CAstNode.BLOCK_STMT, afterNodes.toArray(new CAstNode[afterNodes.size()])));
+        List<CAstNode> phrase1 = new ArrayList<>();
+        if (afterNodes.size() < 1) {
+          phrase1.add(ast.makeNode(CAstNode.BREAK));
+        } else phrase1.addAll(afterNodes);
+        if (thenPhrase != null && thenPhrase.length() > 0) {
+          phrase1.add(0, ast.makeConstant(thenPhrase));
+        }
 
-        CAstNode phrase2 =
-            bodyNode.getKind() == CAstNode.BLOCK_STMT
-                ? bodyNode
-                : ast.makeNode(CAstNode.BLOCK_STMT, bodyNode);
+        List<CAstNode> phrase2 = new ArrayList<>();
+        if (bodyNode.getKind() == CAstNode.BLOCK_STMT) {
+          phrase2.addAll(bodyNode.getChildren());
+        } else {
+          phrase2.add(bodyNode);
+        }
 
         //        List<CAstNode> ifStmt =
         //            CAstHelper.makeIfStmt(
@@ -1899,8 +1903,11 @@ public abstract class ToSource {
         //          loopBody.addAll(ifStmt);
         //        } else {
         loopBody.add(
-            ast.makeNode(CAstNode.IF_STMT, CAstHelper.removeSingleNegation(test), phrase1));
-        loopBody.addAll(phrase2.getChildren());
+            ast.makeNode(
+                CAstNode.IF_STMT,
+                CAstHelper.removeSingleNegation(test),
+                ast.makeNode(CAstNode.BLOCK_STMT, phrase1)));
+        loopBody.addAll(phrase2);
         //        }
 
         afterNodes.clear(); // avoid duplication;
@@ -1913,7 +1920,7 @@ public abstract class ToSource {
                 // reuse LOOP type but add third child as a boolean to tell if it's a do while
                 // loop
                 ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
-      }*/
+      }
 
       ISSABasicBlock next =
           cfg.getBlockForInstruction(((SSAConditionalBranchInstruction) instruction).getTarget());
