@@ -1593,6 +1593,7 @@ public abstract class ToSource {
               .findFirst()
               .get();
 
+      // grab phrase name from instruction if applicable
       String thenPhrase = null;
       String elsePhrase = null;
       SSAInstruction inst = du.getDef(instruction.getUse(0));
@@ -1749,6 +1750,7 @@ public abstract class ToSource {
             }
           } else afterNodes.add(ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK)));
 
+          // if a if-stmt will be created, try to restore conditional statement's phrases
           List<CAstNode> condSuccessorChildren = new ArrayList<>();
           condSuccessorChildren.addAll(condSuccessor.getChildren());
           if (thenPhrase != null && thenPhrase.length() > 0) {
@@ -1866,6 +1868,8 @@ public abstract class ToSource {
               // loop
               ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
 
+      // for the case where conditional statement will become test of a loop, force it to be a
+      // whiletrue loop
       if (CAstHelper.isLeadingNegation(test)
           && CAstHelper.isConditionalStatement(CAstHelper.removeSingleNegation(test))
           && ((thenPhrase != null && thenPhrase.length() > 0)
@@ -1873,6 +1877,7 @@ public abstract class ToSource {
         // force to while true loop for conditional statements
         loopType = LoopType.WHILETRUE;
 
+        // restore phrase names
         List<CAstNode> phrase1 = new ArrayList<>();
         if (afterNodes.size() < 1) {
           phrase1.add(ast.makeNode(CAstNode.BREAK));
@@ -1888,27 +1893,14 @@ public abstract class ToSource {
           phrase2.add(bodyNode);
         }
 
-        //        List<CAstNode> ifStmt =
-        //            CAstHelper.makeIfStmt(
-        //                CAstHelper.removeSingleNegation(test),
-        //                // include the nodes in the else branch as block
-        //                phrase1,
-        //                // it should be a block instead of array of AST nodes
-        //                phrase2,
-        //                true);
-
         List<CAstNode> loopBody = new ArrayList<>();
 
-        //        if (CAstHelper.isConditionalPhrase(phrase2.getChild(0))) {
-        //          loopBody.addAll(ifStmt);
-        //        } else {
         loopBody.add(
             ast.makeNode(
                 CAstNode.IF_STMT,
                 CAstHelper.removeSingleNegation(test),
                 ast.makeNode(CAstNode.BLOCK_STMT, phrase1)));
         loopBody.addAll(phrase2);
-        //        }
 
         afterNodes.clear(); // avoid duplication;
 
@@ -1919,7 +1911,7 @@ public abstract class ToSource {
                 ast.makeNode(CAstNode.BLOCK_STMT, loopBody),
                 // reuse LOOP type but add third child as a boolean to tell if it's a do while
                 // loop
-                ast.makeConstant(LoopType.DOWHILE.equals(loopType)));
+                ast.makeConstant(false));
       }
 
       ISSABasicBlock next =
@@ -2704,6 +2696,7 @@ public abstract class ToSource {
           SSACFG.BasicBlock branchBB =
               (BasicBlock) cfg.getBlockForInstruction(instruction.iIndex());
 
+          // grab phrase names from instruction if applicable
           String thenPhrase = null;
           String elsePhrase = null;
           SSAInstruction inst = du.getDef(instruction.getUse(0));
@@ -2850,6 +2843,7 @@ public abstract class ToSource {
             }
           }
 
+          // restore phrase names if applicable
           if (thenPhrase != null && thenPhrase.length() > 0) {
             if (CAstHelper.isLeadingNegation(test))
               notTakenBlock.add(0, ast.makeConstant(thenPhrase));
