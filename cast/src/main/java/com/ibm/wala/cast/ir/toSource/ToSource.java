@@ -1593,6 +1593,14 @@ public abstract class ToSource {
               .findFirst()
               .get();
 
+      String thenPhrase = null;
+      String elsePhrase = null;
+      SSAInstruction inst = du.getDef(instruction.getUse(0));
+      if (inst instanceof SSAUnspecifiedConditionalExprInstruction) {
+        thenPhrase = ((SSAUnspecifiedConditionalExprInstruction<?>) inst).getThenPhrase();
+        elsePhrase = ((SSAUnspecifiedConditionalExprInstruction<?>) inst).getElsePhrase();
+      }
+
       // find out test
       CAstNode test;
       if (condChunkWithoutConditional.size() > 0) {
@@ -1741,6 +1749,17 @@ public abstract class ToSource {
             }
           } else afterNodes.add(ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK)));
 
+          List<CAstNode> condSuccessorChildren = new ArrayList<>();
+          condSuccessorChildren.addAll(condSuccessor.getChildren());
+          if (thenPhrase != null && thenPhrase.length() > 0) {
+            if (CAstHelper.isLeadingNegation(test)) afterNodes.add(0, ast.makeConstant(thenPhrase));
+            else condSuccessorChildren.add(0, ast.makeConstant(thenPhrase));
+          }
+          if (elsePhrase != null && elsePhrase.length() > 0) {
+            if (CAstHelper.isLeadingNegation(test))
+              condSuccessorChildren.add(0, ast.makeConstant(elsePhrase));
+            else afterNodes.add(0, ast.makeConstant(elsePhrase));
+          }
           List<CAstNode> ifStmt =
               CAstHelper.makeIfStmt(
                   ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, test),
@@ -1753,7 +1772,7 @@ public abstract class ToSource {
                               CAstNode.BLOCK_STMT,
                               afterNodes.toArray(new CAstNode[afterNodes.size()]))),
                   // it should be a block instead of array of AST nodes
-                  condSuccessor,
+                  ast.makeNode(CAstNode.BLOCK_STMT, condSuccessorChildren),
                   true);
           nodesBeforeControl.addAll(ifStmt);
           bodyNode =
