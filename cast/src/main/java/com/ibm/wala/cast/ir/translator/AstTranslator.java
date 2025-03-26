@@ -1076,7 +1076,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       MapUtil.findOrCreateSet(delayedEdges, dst).add(Pair.make(src, exception));
     }
 
-    void makeEntryBlock(PreBasicBlock bb) {
+    public void makeEntryBlock(PreBasicBlock bb) {
       entryBlock = bb;
       bb.makeEntryBlock();
     }
@@ -1292,7 +1292,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public String toString() {
       StringBuilder sb = new StringBuilder(super.toString());
       for (PreBasicBlock b : blocks) {
-        if (b.firstIndex > 0) {
+        if (b.firstIndex >= 0) {
           sb.append('\n').append(b);
           for (int i = 0; i < b.instructions.size(); i++) {
             sb.append('\n').append(b.instructions.get(i));
