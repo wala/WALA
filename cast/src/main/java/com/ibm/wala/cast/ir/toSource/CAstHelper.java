@@ -27,6 +27,7 @@ public class CAstHelper {
         "SUBTRACT",
         "START",
         "READ",
+        "RETURN",
         "WRITE",
         "REWRITE",
         "DELETE",
@@ -88,7 +89,7 @@ public class CAstHelper {
     return result;
   }
 
-  private static boolean isConditionalStatement(CAstNode test) {
+  public static boolean isConditionalStatement(CAstNode test) {
     if (CAstNode.PRIMITIVE == test.getKind()) {
       String testStr = test.getChild(0).getValue().toString().toUpperCase();
       for (int i = 0; i < supportedStatements.length; i++) {
@@ -150,12 +151,12 @@ public class CAstHelper {
     return Pair.make(count, tmp);
   }
 
-  private static CAstNode removeSingleNegation(CAstNode n) {
+  public static CAstNode removeSingleNegation(CAstNode n) {
     assert isLeadingNegation(n) : "Expected node with leading negation " + n;
     return n.getChild(1);
   }
 
-  private static boolean isLeadingNegation(CAstNode n) {
+  public static boolean isLeadingNegation(CAstNode n) {
     return n.getKind() == CAstNode.UNARY_EXPR
         && n.getChildCount() > 1
         && n.getChild(0) == CAstOperator.OP_NOT;
