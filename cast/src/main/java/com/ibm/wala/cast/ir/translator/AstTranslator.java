@@ -1311,7 +1311,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * data structure for the final CFG for a method, based on the information in an {@link
    * IncipientCFG}
    */
-  protected static final class AstCFG extends AbstractCFG<SSAInstruction, PreBasicBlock> {
+  public static final class AstCFG extends AbstractCFG<SSAInstruction, PreBasicBlock> {
     private SSAInstruction[] instructions;
 
     private final int[] instructionToBlockMap;
