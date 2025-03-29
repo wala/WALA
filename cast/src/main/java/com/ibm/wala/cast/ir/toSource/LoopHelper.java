@@ -379,6 +379,11 @@ public class LoopHelper {
       }
     } else {
       if (isAssignment(chunk)) {
+        // if it is assignment, for perf-with-goto-6-6.cbl, it should be in outer loop but not in
+        // inner loop
+        // this is a temp solution as we can't tell other clue to make it happen
+        if (containsInNestedLoop(loop, loops, currentBB)) return true;
+
         // if it is loop control, assignment should be ignored
         // except the last assignment for for-loop
         if (chunk.size() == 1
