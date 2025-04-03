@@ -8,3 +8,5 @@ bin/
 /.gradle/
 /.vscode/settings.json
 build/
+.idea/
+**/*.iml
