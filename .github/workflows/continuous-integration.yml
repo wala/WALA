@@ -73,7 +73,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      JDK_VERSION: 23
+      JDK_VERSION: 24
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
