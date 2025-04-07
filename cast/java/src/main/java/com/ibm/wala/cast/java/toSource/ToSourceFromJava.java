@@ -42,6 +42,9 @@ public class ToSourceFromJava extends ToSource {
   @Override
   protected String nameToJava(String name, boolean isType) {
     if (isType) {
+      if (name.matches("^[0-9].*$")) {
+        name = "_" + name;
+      }
       return name.replace('$', '.');
     } else {
       return name;
