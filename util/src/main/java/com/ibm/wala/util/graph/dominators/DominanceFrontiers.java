@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.graph.dominators;
 
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -45,7 +46,8 @@ public class DominanceFrontiers<T> {
   public Iterator<T> getDominanceFrontier(T n) {
     Set<T> frontier = DF.get(n);
     if (frontier == null) {
-      throw new IllegalArgumentException("no dominance frontier for node " + n);
+//      throw new IllegalArgumentException("no dominance frontier for node " + n);
+      return EmptyIterator.instance();
     }
     return frontier.iterator();
   }
