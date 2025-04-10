@@ -67,25 +67,32 @@ public class CAstHelper {
       thenBranch = temp;
     }
 
-    if (inLoop && endingWithBreak(thenBranch) && !isConditionalStatement(newTest)) {
-      // move elseBranch after the if statement
-      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
-      if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
-        result.addAll(elseBranch.getChildren());
-      } else result.add(elseBranch);
-    } else if (inLoop && endingWithBreak(elseBranch) && !isConditionalStatement(newTest)) {
-      // Negation the test
-      if (isLeadingNegation(newTest)) {
-        newTest = stableRemoveLeadingNegation(newTest);
+    if (isConditionalStatement(newTest)) {
+      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
+    } else {
+      if ((inLoop && endingWithBreak(thenBranch)) || endingWithTermination(thenBranch)) {
+        // move elseBranch after the if statement
+        result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
+        if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
+          result.addAll(elseBranch.getChildren());
+        } else result.add(elseBranch);
+      } else if ((inLoop && endingWithBreak(elseBranch)) || endingWithTermination(elseBranch)) {
+        // Negation the test
+        if (isLeadingNegation(newTest)) {
+          newTest = stableRemoveLeadingNegation(newTest);
+        } else {
+          newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
+        }
+        // move thenBranch after the if statement
+        result.add(ast.makeNode(CAstNode.IF_STMT, newTest, elseBranch));
+        if (thenBranch.getKind() == CAstNode.BLOCK_STMT) {
+          result.addAll(thenBranch.getChildren());
+        } else result.add(thenBranch);
       } else {
-        newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
+        result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
       }
-      // move thenBranch after the if statement
-      result.add(ast.makeNode(CAstNode.IF_STMT, newTest, elseBranch));
-      if (thenBranch.getKind() == CAstNode.BLOCK_STMT) {
-        result.addAll(thenBranch.getChildren());
-      } else result.add(thenBranch);
-    } else result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
+    }
+
     return result;
   }
 
@@ -102,11 +109,28 @@ public class CAstHelper {
   }
 
   public static boolean endingWithBreak(CAstNode block) {
-    if (block.getKind() == CAstNode.BREAK) return true;
+    if (isBreak(block)) return true;
     else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
       if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
     }
     return false;
+  }
+
+  private static boolean isBreak(CAstNode node) {
+    return node.getKind() == CAstNode.BREAK;
+  }
+
+  public static boolean endingWithTermination(CAstNode block) {
+    if (isTermination(block)) return true;
+    else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
+      if (endingWithTermination(block.getChild(block.getChildCount() - 1))) return true;
+    }
+    return false;
+  }
+
+  private static boolean isTermination(CAstNode node) {
+    // TODO: non-local exit should be considered includes THROW
+    return node.getKind() == CAstNode.RETURN;
   }
 
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch) {
