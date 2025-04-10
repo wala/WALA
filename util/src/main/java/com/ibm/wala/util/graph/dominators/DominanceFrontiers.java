@@ -46,7 +46,7 @@ public class DominanceFrontiers<T> {
   public Iterator<T> getDominanceFrontier(T n) {
     Set<T> frontier = DF.get(n);
     if (frontier == null) {
-//      throw new IllegalArgumentException("no dominance frontier for node " + n);
+      //      throw new IllegalArgumentException("no dominance frontier for node " + n);
       return EmptyIterator.instance();
     }
     return frontier.iterator();

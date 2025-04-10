@@ -44,13 +44,13 @@ public class LoopHelper {
       int totalBreakers = breakers.size();
       SSAInstruction ii = null;
       for (ISSABasicBlock bb : breakers) {
-          ISSABasicBlock bbb = loop.getLoopExitrByBreaker(bb);
-          if (!bbb.isEntryBlock() && !bbb.isExitBlock()) {       
-            ii = bbb.getLastInstruction();
-            if (ii instanceof SSAGotoInstruction && ((SSAGotoInstruction) ii).getTarget() == -1) {
-              totalBreakers--;
-            }
+        ISSABasicBlock bbb = loop.getLoopExitrByBreaker(bb);
+        if (!bbb.isEntryBlock() && !bbb.isExitBlock()) {
+          ii = bbb.getLastInstruction();
+          if (ii instanceof SSAGotoInstruction && ((SSAGotoInstruction) ii).getTarget() == -1) {
+            totalBreakers--;
           }
+        }
       }
       if (totalBreakers == 1) // other breakers ended with termination
       return true;

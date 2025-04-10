@@ -2753,8 +2753,10 @@ public abstract class ToSource {
                 if (DEBUG)
                   System.err.println(
                       "notTakenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
-                boolean useReturn = cfg.getNormalSuccessors(notTaken).contains(cfg.exit()) && cfg.getNormalSuccessors(notTaken).size() == 1;
-                notTakenBlock.add(ast.makeNode(useReturn? CAstNode.RETURN: CAstNode.BREAK));
+                boolean useReturn =
+                    cfg.getNormalSuccessors(notTaken).contains(cfg.exit())
+                        && cfg.getNormalSuccessors(notTaken).size() == 1;
+                notTakenBlock.add(ast.makeNode(useReturn ? CAstNode.RETURN : CAstNode.BREAK));
               }
 
               CAstHelper.generateInnerLoopJumpToHeaderOrTailTrue(

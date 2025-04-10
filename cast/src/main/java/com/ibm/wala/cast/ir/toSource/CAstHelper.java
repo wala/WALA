@@ -67,13 +67,15 @@ public class CAstHelper {
       thenBranch = temp;
     }
 
-    if (inLoop && endingWithBreak(thenBranch) && !isConditionalStatement(newTest)) {
+    if (inLoop && endingWithBreakOrTermination(thenBranch) && !isConditionalStatement(newTest)) {
       // move elseBranch after the if statement
       result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
       if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
         result.addAll(elseBranch.getChildren());
       } else result.add(elseBranch);
-    } else if (inLoop && endingWithBreak(elseBranch) && !isConditionalStatement(newTest)) {
+    } else if (inLoop
+        && endingWithBreakOrTermination(elseBranch)
+        && !isConditionalStatement(newTest)) {
       // Negation the test
       if (isLeadingNegation(newTest)) {
         newTest = stableRemoveLeadingNegation(newTest);
@@ -101,12 +103,17 @@ public class CAstHelper {
     return false;
   }
 
-  public static boolean endingWithBreak(CAstNode block) {
-    if (block.getKind() == CAstNode.BREAK) return true;
+  private static boolean endingWithBreakOrTermination(CAstNode block) {
+    if (isBreakOrTermination(block)) return true;
     else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
-      if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
+      if (endingWithBreakOrTermination(block.getChild(block.getChildCount() - 1))) return true;
     }
     return false;
+  }
+
+  private static boolean isBreakOrTermination(CAstNode node) {
+    // TODO: non-local exit should be considered includes THROW
+    return node.getKind() == CAstNode.BREAK || node.getKind() == CAstNode.RETURN;
   }
 
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch) {
