@@ -225,7 +225,8 @@ public class ToSourceFromJava extends ToSource {
                                 (String) i.getChild(1).getValue());
                         if (!seen.contains(key)) {
                           seen.add(key);
-                          all.println("import " + key.fst + "." + nameToJava(key.snd, true) + ";");
+                          String importStr = "import " + key.fst + "." + nameToJava(key.snd, true);
+                          all.println(importStr + (importStr.endsWith(";")? "" : ";"));
                         }
                       },
                       2,
