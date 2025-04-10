@@ -108,7 +108,7 @@ public class CAstHelper {
     return false;
   }
 
-  private static boolean endingWithBreak(CAstNode block) {
+  public static boolean endingWithBreak(CAstNode block) {
     if (isBreak(block)) return true;
     else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
       if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
@@ -120,7 +120,7 @@ public class CAstHelper {
     return node.getKind() == CAstNode.BREAK;
   }
 
-  private static boolean endingWithTermination(CAstNode block) {
+  public static boolean endingWithTermination(CAstNode block) {
     if (isTermination(block)) return true;
     else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
       if (endingWithTermination(block.getChild(block.getChildCount() - 1))) return true;

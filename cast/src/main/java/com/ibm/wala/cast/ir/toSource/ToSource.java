@@ -2740,9 +2740,9 @@ public abstract class ToSource {
               && loop.getLoopBreakers().contains(branchBB)
               && !loop.getLoopHeader().equals(branchBB)) {
             if (loop.getLoopExits().contains(notTaken)) {
-              if (notTakenBlock.get(notTakenBlock.size() - 1).getKind() == CAstNode.BLOCK_STMT
-                  && notTakenBlock.get(notTakenBlock.size() - 1).getChild(0).getKind()
-                      == CAstNode.BREAK) {
+              if (CAstHelper.endingWithBreak(notTakenBlock.get(notTakenBlock.size() - 1))
+                  || CAstHelper.endingWithTermination(
+                      notTakenBlock.get(notTakenBlock.size() - 1))) {
                 if (DEBUG)
                   System.err.println(
                       " notTakenBlock is end with break, no need to add break"); // TODO: need it
@@ -2771,9 +2771,8 @@ public abstract class ToSource {
                   CT_LOOP_BREAK_VAR_NAME,
                   DEBUG);
             } else {
-              if (takenBlock.get(takenBlock.size() - 1).getKind() == CAstNode.BLOCK_STMT
-                  && takenBlock.get(takenBlock.size() - 1).getChild(0).getKind()
-                      == CAstNode.BREAK) {
+              if (CAstHelper.endingWithBreak(takenBlock.get(takenBlock.size() - 1))
+                  || CAstHelper.endingWithTermination(takenBlock.get(takenBlock.size() - 1))) {
                 if (DEBUG)
                   System.err.println(
                       " takenBlock is end with break, no need to add break"); // TODO: need it for
@@ -2783,7 +2782,10 @@ public abstract class ToSource {
                 if (DEBUG)
                   System.err.println(
                       "takenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
-                takenBlock.add(ast.makeNode(CAstNode.BREAK));
+                boolean useReturn =
+                    cfg.getNormalSuccessors(taken).contains(cfg.exit())
+                        && cfg.getNormalSuccessors(taken).size() == 1;
+                takenBlock.add(ast.makeNode(useReturn ? CAstNode.RETURN : CAstNode.BREAK));
               }
 
               CAstHelper.generateInnerLoopJumpToHeaderOrTailTrue(
