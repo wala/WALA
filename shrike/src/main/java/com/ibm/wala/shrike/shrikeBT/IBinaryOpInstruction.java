@@ -26,6 +26,7 @@ public interface IBinaryOpInstruction extends IInstruction {
     REM,
     AND,
     OR,
+    POW,
     XOR;
 
     @Override

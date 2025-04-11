@@ -93,4 +93,10 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
           com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
         });
   }
+  //
+  //  @Test
+  //  public void testFunctions2()
+  //      throws IllegalArgumentException, IOException, CancelException, WalaException {
+  //    JSCallGraphBuilderUtil.makeScriptCG("tests", "functions2.js");
+  //  }
 }

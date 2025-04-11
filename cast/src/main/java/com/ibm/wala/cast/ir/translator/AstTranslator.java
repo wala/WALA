@@ -3306,6 +3306,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_BIT_AND) return BinaryOpInstruction.Operator.AND;
     else if (op == CAstOperator.OP_BIT_OR) return BinaryOpInstruction.Operator.OR;
     else if (op == CAstOperator.OP_BIT_XOR) return BinaryOpInstruction.Operator.XOR;
+    else if (op == CAstOperator.OP_POW) return BinaryOpInstruction.Operator.POW;
     else if (op == CAstOperator.OP_CONCAT) return CAstBinaryOp.CONCAT;
     else if (op == CAstOperator.OP_EQ) return CAstBinaryOp.EQ;
     else if (op == CAstOperator.OP_STRICT_EQ) return CAstBinaryOp.STRICT_EQ;

@@ -1,11 +1,10 @@
-
 function trivial(one, two) {
   var local = two + 7;
   if (local > 5)
     return one;
   else {
     return  function inc(i) { return i + 1; } ( two );
-  }	
+  }
 }
 
 function silly(one, two) {
