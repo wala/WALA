@@ -130,7 +130,7 @@ public class CAstHelper {
 
   private static boolean isTermination(CAstNode node) {
     // TODO: non-local exit should be considered includes THROW
-    return node.getKind() == CAstNode.RETURN;
+    return node.getKind() == CAstNode.RETURN || node.getKind() == CAstNode.THROW;
   }
 
   public static CAstNode makeIfStmt(CAstNode test, CAstNode thenBranch) {
