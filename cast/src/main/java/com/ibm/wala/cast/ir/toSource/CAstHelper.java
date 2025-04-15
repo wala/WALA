@@ -70,13 +70,15 @@ public class CAstHelper {
     if (isConditionalStatement(newTest)) {
       result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
     } else {
-      if ((inLoop && endingWithBreak(thenBranch)) || endingWithTermination(thenBranch)) {
+      if (((inLoop && endingWithBreak(thenBranch)) || endingWithTermination(thenBranch))
+          && !((inLoop && endingWithBreak(elseBranch)) || endingWithTermination(elseBranch))) {
         // move elseBranch after the if statement
         result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
         if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
           result.addAll(elseBranch.getChildren());
         } else result.add(elseBranch);
-      } else if ((inLoop && endingWithBreak(elseBranch)) || endingWithTermination(elseBranch)) {
+      } else if (((inLoop && endingWithBreak(elseBranch)) || endingWithTermination(elseBranch))
+          && !((inLoop && endingWithBreak(thenBranch)) || endingWithTermination(thenBranch))) {
         // Negation the test
         if (isLeadingNegation(newTest)) {
           newTest = stableRemoveLeadingNegation(newTest);
@@ -120,10 +122,17 @@ public class CAstHelper {
     return node.getKind() == CAstNode.BREAK;
   }
 
-  public static boolean endingWithTermination(CAstNode block) {
-    if (isTermination(block)) return true;
-    else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
-      if (endingWithTermination(block.getChild(block.getChildCount() - 1))) return true;
+  public static boolean endingWithTermination(CAstNode node) {
+    if (isTermination(node)) return true;
+    else if (node.getKind() == CAstNode.BLOCK_STMT && node.getChildCount() > 0) {
+      CAstNode tailNode = node.getChild(node.getChildCount() - 1);
+      // TODO: temp solution to ignore the ending GOTO
+      if (tailNode.getKind() == CAstNode.BLOCK_STMT
+          && tailNode.getChildCount() == 1
+          && tailNode.getChild(0).getKind() == CAstNode.GOTO) {
+        if (node.getChildCount() > 1) tailNode = node.getChild(node.getChildCount() - 2);
+      }
+      if (endingWithTermination(tailNode)) return true;
     }
     return false;
   }
