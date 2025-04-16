@@ -1728,8 +1728,8 @@ public abstract class ToSource {
           loopType = LoopType.WHILE;
         } else {
           if (afterNodes.size() > 0) {
-            if (afterNodes.get(afterNodes.size() - 1).getKind() == CAstNode.BLOCK_STMT
-                && afterNodes.get(afterNodes.size() - 1).getChild(0).getKind() == CAstNode.BREAK) {
+            if (CAstHelper.endingWithBreak(afterNodes.get(afterNodes.size() - 1))
+                || CAstHelper.endingWithTermination(afterNodes.get(afterNodes.size() - 1))) {
               if (DEBUG)
                 System.err.println(
                     "afterNodes is end with break, no need to add break"); // TODO: need it for a

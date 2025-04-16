@@ -1091,6 +1091,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       checkForRealizedExitEdges(bb);
     }
 
+    public void resetExitBlock() {
+      // when there are changes in blocks then exit block has to be reset
+      blocks.stream().filter(bb -> bb.isExitBlock()).findAny().ifPresent(bb -> makeExitBlock(bb));
+    }
+
     public void setCurrentBlockAsHandler() {
       currentBlock.makeHandlerBlock();
     }
