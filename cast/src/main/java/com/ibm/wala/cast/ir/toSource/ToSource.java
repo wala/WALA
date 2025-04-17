@@ -2371,8 +2371,9 @@ public abstract class ToSource {
 
           if (loop != null
               && loop.getLoopHeader().equals(cfg.getNormalSuccessors(bb).iterator().next())
-              && !loop.isLastBlock(bb)) {
+              && LoopHelper.needsContinue(loop, bb, cfg)) {
             // if there are more than one loop part, only last one should not generate CONTINUE
+            // but sometimes the last block might be generated in the middle of the loop
             node = ast.makeNode(CAstNode.CONTINUE);
           } else if (loop != null && loop.getLoopExits().containsAll(cfg.getNormalSuccessors(bb))) {
             node = ast.makeNode(CAstNode.BLOCK_STMT, ast.makeNode(CAstNode.BREAK));
@@ -2855,8 +2856,9 @@ public abstract class ToSource {
             else takenBlock.add(0, ast.makeConstant(thenPhrase));
           }
           if (elsePhrase != null && elsePhrase.length() > 0) {
-            if (CAstHelper.isLeadingNegation(test)) takenBlock.add(0, ast.makeConstant(elsePhrase));
-            else notTakenBlock.add(0, ast.makeConstant(elsePhrase));
+            if (CAstHelper.isLeadingNegation(test)) {
+              if (takenBlock != null) takenBlock.add(0, ast.makeConstant(elsePhrase));
+            } else notTakenBlock.add(0, ast.makeConstant(elsePhrase));
           }
 
           CAstNode notTakenStmt =
