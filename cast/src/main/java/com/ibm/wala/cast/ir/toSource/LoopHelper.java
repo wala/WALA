@@ -711,4 +711,22 @@ public class LoopHelper {
     }
     return result;
   }
+
+  public static boolean needsContinue(
+      Loop loop, ISSABasicBlock bb, PrunedCFG<SSAInstruction, ISSABasicBlock> cfg) {
+    Set<ISSABasicBlock> lastBlocks = loop.getLastBlockPerPart();
+    if (lastBlocks.contains(bb)) {
+      // if there's only one loop part and this is the last block then no need to create continue
+      if (lastBlocks.size() == 1) return false;
+      else {
+        // if there are more than one loop part, only last one should not generate CONTINUE
+        // the last one should be determined by its predecessor
+        // TODO: now we check predecessor is loop breaker or not
+        // but maybe we should check whose predecessor is the last one
+        return !cfg.getNormalPredecessors(bb).stream()
+            .anyMatch(preBB -> loop.getLoopBreakers().contains(preBB));
+      }
+    }
+    return true;
+  }
 }
