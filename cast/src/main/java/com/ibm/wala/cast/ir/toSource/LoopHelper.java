@@ -47,8 +47,11 @@ public class LoopHelper {
         ISSABasicBlock bbb = loop.getLoopExitrByBreaker(bb);
         if (!bbb.isEntryBlock() && !bbb.isExitBlock()) {
           ii = bbb.getLastInstruction();
-          if (ii instanceof SSAGotoInstruction && ((SSAGotoInstruction) ii).getTarget() == -1) {
-            totalBreakers--;
+          if (ii instanceof SSAGotoInstruction) {
+            // for the case of termination or go to the end of loop
+            if (((SSAGotoInstruction) ii).getTarget() == -1
+                || ((SSAGotoInstruction) ii).getTarget()
+                    > loop.getLastBlock().getLastInstructionIndex()) totalBreakers--;
           }
         }
       }
