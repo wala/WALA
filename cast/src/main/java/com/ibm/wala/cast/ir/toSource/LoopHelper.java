@@ -55,6 +55,7 @@ public class LoopHelper {
           }
         }
       }
+      // TODO: might need to check if there are two back edges
       if (totalBreakers == 1) // other breakers ended with termination
       return true;
       return false;
