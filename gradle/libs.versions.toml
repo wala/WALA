@@ -23,7 +23,7 @@ gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
 gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gson = "com.google.code.gson:gson:2.11.0"
-guava = "com.google.guava:guava:33.4.5-jre"
+guava = "com.google.guava:guava:33.4.8-jre"
 hamcrest = "org.hamcrest:hamcrest:2.2"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
