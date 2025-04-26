@@ -446,7 +446,7 @@ public abstract class JavaIRTests extends IRTests {
         Arguments.of("p", "NonPrimaryTopLevel", emptyList, true, null));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "java17IRTestName={0}, assertReachable={2}, exclusionsFile={3}")
   @MethodSource("javaIRTestsParameters")
   public void runJavaIRTests(
       String java17IRTestName, List<IRAssertion> ca, boolean assertReachable, String exclusionsFile)
