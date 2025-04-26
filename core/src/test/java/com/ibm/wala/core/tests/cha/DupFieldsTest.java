@@ -54,11 +54,11 @@ public class DupFieldsTest extends WalaTestCase {
     IField f =
         cha.resolveField(
             FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Int));
-    assertEquals(f.getFieldTypeReference(), TypeReference.Int);
+    assertEquals(TypeReference.Int, f.getFieldTypeReference());
     f =
         cha.resolveField(
             FieldReference.findOrCreate(
                 ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Boolean));
-    assertEquals(f.getFieldTypeReference(), TypeReference.Boolean);
+    assertEquals(TypeReference.Boolean, f.getFieldTypeReference());
   }
 }

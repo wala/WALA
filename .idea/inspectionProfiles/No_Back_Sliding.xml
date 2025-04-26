@@ -393,6 +393,7 @@
       </option>
     </inspection_tool>
     <inspection_tool class="MismatchedStringBuilderQueryUpdate" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="MisorderedAssertEqualsArguments" enabled="true" level="ERROR" enabled_by_default="true" editorAttributes="ERRORS_ATTRIBUTES" />
     <inspection_tool class="MissingDeprecatedAnnotation" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="MissingJavadoc" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="PACKAGE_SETTINGS">
