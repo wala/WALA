@@ -27,7 +27,7 @@ jobs:
           - os: ubuntu-latest
             java: 21
           - os: ubuntu-latest
-            java: 23
+            java: 24
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,7 +37,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'temurin'
+          distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Build and test using Gradle with ECJ
@@ -73,7 +73,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      JDK_VERSION: 23
+      JDK_VERSION: 24
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
