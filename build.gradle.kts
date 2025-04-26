@@ -63,9 +63,9 @@ val eclipseVersion: EclipseRelease by extra {
 //  Javadoc documentation
 //
 
-val aggregatedJavadocClasspath: Configuration by configurations.creating { isCanBeConsumed = false }
+val aggregatedJavadocClasspath by configurations.registering { isCanBeConsumed = false }
 
-val aggregatedJavadocSource: Configuration by configurations.creating { isCanBeConsumed = false }
+val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   subprojects {
@@ -84,7 +84,7 @@ tasks.register<Javadoc>("aggregatedJavadocs") {
   setDestinationDir(layout.buildDirectory.dir("docs/javadoc").get().asFile)
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
-  classpath = aggregatedJavadocClasspath
+  classpath = aggregatedJavadocClasspath.get()
   source(aggregatedJavadocSource)
 }
 

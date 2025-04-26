@@ -22,9 +22,9 @@ val testJar by
       from(compileTestJava)
     }
 
-val testJarConfig: Configuration by configurations.creating { isCanBeResolved = false }
+val testJarConfig by configurations.registering { isCanBeResolved = false }
 
-val testJavaSourceDirectory: Configuration by configurations.creating { isCanBeResolved = false }
+val testJavaSourceDirectory by configurations.registering { isCanBeResolved = false }
 
 artifacts {
   add(testJarConfig.name, testJar)
