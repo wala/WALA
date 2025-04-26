@@ -28,10 +28,9 @@ dependencies {
 val createPackageList by
     tasks.registering(CreatePackageList::class) { sourceSet(sourceSets.main.get()) }
 
-val packageListDirectory: Configuration by configurations.creating { isCanBeResolved = false }
+val packageListDirectory by configurations.registering { isCanBeResolved = false }
 
-val javadocDestinationDirectory: Configuration by
-    configurations.creating { isCanBeResolved = false }
+val javadocDestinationDirectory by configurations.registering { isCanBeResolved = false }
 
 tasks.named<Test>("test") { maxHeapSize = "800M" }
 
@@ -59,7 +58,7 @@ val unpackAjaxslt by
 
 val processTestResources by tasks.existing(Copy::class) { from(unpackAjaxslt) { into("ajaxslt") } }
 
-val testResources: Configuration by configurations.creating { isCanBeResolved = false }
+val testResources by configurations.registering { isCanBeResolved = false }
 
 artifacts {
   add(javadocDestinationDirectory.name, tasks.javadoc)

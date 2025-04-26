@@ -1,6 +1,6 @@
 plugins { id("com.ibm.wala.gradle.java") }
 
-val extraTestResources: Configuration by configurations.creating { isCanBeConsumed = false }
+val extraTestResources by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   api(projects.cast.js)

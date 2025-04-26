@@ -13,8 +13,8 @@ plugins {
   id("com.ibm.wala.gradle.subproject")
 }
 
-val coreResources: Configuration by
-    configurations.creating {
+val coreResources by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
       attributes {
@@ -22,8 +22,8 @@ val coreResources: Configuration by
       }
     }
 
-val smokeMainExtraPathElements: Configuration by
-    configurations.creating {
+val smokeMainExtraPathElements by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
       attributes {
@@ -31,8 +31,8 @@ val smokeMainExtraPathElements: Configuration by
       }
     }
 
-fun createXlatorConfig(isOptimized: Boolean): Configuration =
-    configurations.create(
+fun createXlatorConfig(isOptimized: Boolean): NamedDomainObjectProvider<Configuration> =
+    configurations.register(
         "xlatorTest${if (isOptimized) "Release" else "Debug"}SharedLibraryConfig") {
           isCanBeConsumed = false
           isTransitive = false
@@ -64,6 +64,7 @@ application {
       val libxlatorTest =
           (if (isOptimized) xlatorTestReleaseSharedLibraryConfig
               else xlatorTestDebugSharedLibraryConfig)
+              .get()
               .singleFile
       addRpath(libxlatorTest)
       addCastLibrary(this@whenElementFinalized)
@@ -86,7 +87,7 @@ application {
               pathElements.addAll(files("../build/classes/java/test", libxlatorTest.parent))
 
               // "primordial.txt" resource loaded during test
-              pathElements.add(coreResources.singleFile)
+              pathElements.add(coreResources.get().singleFile)
               inputs.files(coreResources)
 
               // additional supporting Java class files
