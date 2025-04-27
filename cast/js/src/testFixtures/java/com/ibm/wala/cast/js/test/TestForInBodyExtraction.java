@@ -11,7 +11,7 @@
 
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ClosureExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ForInBodyExtractionPolicy;
@@ -70,7 +70,7 @@ public abstract class TestForInBodyExtraction {
       expected = new CAstDumper().dump(parseJS(tmp, ast));
       expected = eraseGeneratedNames(expected);
 
-      assertEquals(expected, actual, () -> "Comparison Failure in " + testName + '!');
+      assertThat(actual).withFailMessage("Comparison Failure in %s!", testName).isEqualTo(expected);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

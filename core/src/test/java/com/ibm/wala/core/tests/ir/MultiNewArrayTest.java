@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -54,19 +53,19 @@ public class MultiNewArrayTest extends WalaTestCase {
         cha.lookupClass(
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
-    assertNotNull(klass);
+    assertThat(klass).isNotNull();
     IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
-    assertNotNull(m);
+    assertThat(m).isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     IR ir = cache.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());
-    assertNotNull(ir);
+    assertThat(ir).isNotNull();
     SSAInstruction[] instructions = ir.getInstructions();
     for (SSAInstruction instr : instructions) {
       if (instr instanceof SSANewInstruction) {
         System.err.println(instr.toString(ir.getSymbolTable()));
-        assertEquals(2, instr.getNumberOfUses());
-        assertEquals(3, ir.getSymbolTable().getIntValue(instr.getUse(0)));
-        assertEquals(4, ir.getSymbolTable().getIntValue(instr.getUse(1)));
+        assertThat(instr.getNumberOfUses()).isEqualTo(2);
+        assertThat(ir.getSymbolTable().getIntValue(instr.getUse(0))).isEqualTo(3);
+        assertThat(ir.getSymbolTable().getIntValue(instr.getUse(1))).isEqualTo(4);
       }
     }
   }

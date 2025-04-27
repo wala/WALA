@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -50,7 +50,7 @@ public class PathFinderTest {
       System.err.println(path);
       count++;
     }
-    assertEquals(expectedCount, count);
+    assertThat(count).isEqualTo(expectedCount);
   }
 
   private static final String edges1 = "ABBCBDCECFDGDHEIFIGJHJJKIKKL";

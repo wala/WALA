@@ -47,6 +47,7 @@ dependencies {
   javadocClasspath(projects.cast.js)
   testFixturesApi(projects.core)
   testFixturesImplementation(projects.util)
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   xlatorTestSharedLibrary(projects.cast.xlatorTest)
 }

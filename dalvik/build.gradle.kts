@@ -93,10 +93,12 @@ dependencies {
   sampleCupSources(libs.java.cup.map { "$it:sources" })
 
   testImplementation(libs.android.tools)
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(projects.dalvik)
   testImplementation(testFixtures(projects.core))
+  testImplementation(testFixtures(projects.util))
 
   // directory containing "android.jar", which various tests want to find as a resource
   testRuntimeOnly(

@@ -11,7 +11,8 @@
 
 package com.ibm.wala.examples.analysis.dataflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static com.ibm.wala.util.intset.IntSetConditions.size;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -96,7 +97,7 @@ public class InitializerTest {
             int next = intIterator.next();
             System.out.println(reachingDefs.getDomain().getMappedObject(next));
           }
-          assertEquals(3, solution.size());
+          assertThat(solution).has(size(3));
         }
       }
     }

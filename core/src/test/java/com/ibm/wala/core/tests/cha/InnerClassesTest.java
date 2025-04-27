@@ -10,8 +10,9 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.classLoader.ShrikeClassCondition.innerClass;
+import static com.ibm.wala.classLoader.ShrikeClassCondition.staticInnerClass;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -25,7 +26,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -70,37 +70,35 @@ public class InnerClassesTest extends WalaTestCase {
   }
 
   @Test
-  public void test1() throws InvalidClassFileException {
+  public void test1() {
     TypeReference t =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName("Linner/TestStaticInner"));
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass) klass;
-    assertFalse(s.isInnerClass());
+    assertThat(s).isNot(innerClass);
   }
 
   @Test
-  public void test2() throws InvalidClassFileException {
+  public void test2() {
     TypeReference t =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName("Linner/TestStaticInner$A"));
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass) klass;
-    assertTrue(s.isInnerClass());
-    assertTrue(s.isStaticInnerClass());
+    assertThat(s).is(innerClass).is(staticInnerClass);
   }
 
   @Test
-  public void test3() throws InvalidClassFileException {
+  public void test3() {
     TypeReference t =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName("Linner/TestInner$A"));
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass) klass;
-    assertTrue(s.isInnerClass());
-    assertFalse(s.isStaticInnerClass());
+    assertThat(s).is(innerClass).isNot(staticInnerClass);
   }
 }

@@ -12,6 +12,7 @@ walaEclipseMavenCentral {
 }
 
 dependencies {
+  testImplementation(libs.assertj.core)
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.wst.jsdt.core)
   testImplementation(libs.junit.jupiter.api)

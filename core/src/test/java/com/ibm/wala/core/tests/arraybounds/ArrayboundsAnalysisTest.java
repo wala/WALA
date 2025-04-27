@@ -1,7 +1,7 @@
 package com.ibm.wala.core.tests.arraybounds;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
+import static com.ibm.wala.core.tests.arraybounds.EqualTo.equalTo;
+import static org.assertj.core.api.Assertions.not;
 
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis;
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis.UnnecessaryCheck;
@@ -24,10 +24,9 @@ import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import org.assertj.core.api.HamcrestCondition;
+import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -110,8 +109,7 @@ public class ArrayboundsAnalysisTest {
       final SoftAssertions softly,
       IClass iClass,
       int expectedNumberOfArrayAccesses,
-      Matcher<UnnecessaryCheck> matcher) {
-    final var condition = new HamcrestCondition<>(matcher);
+      Condition<UnnecessaryCheck> condition) {
     int numberOfArrayAccesses = 0;
     for (IMethod method : iClass.getAllMethods()) {
       if (method.getDeclaringClass().equals(iClass)) {

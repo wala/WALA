@@ -8,7 +8,7 @@
 // *     IBM Corporation - initial API and implementation
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.ir.DeterministicIRTest;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -36,11 +36,12 @@ public class LibraryVersionTest extends WalaTestCase {
             new FileProvider().getFile("J2SEClassHierarchyExclusions.txt"),
             MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
-    assertTrue(
-        scope.isJava18Libraries()
-            || scope.isJava17Libraries()
-            || scope.isJava16Libraries()
-            || scope.isJava15Libraries()
-            || scope.isJava14Libraries());
+    assertThat(scope)
+        .satisfiesAnyOf(
+            AnalysisScope::isJava18Libraries,
+            AnalysisScope::isJava17Libraries,
+            AnalysisScope::isJava16Libraries,
+            AnalysisScope::isJava15Libraries,
+            AnalysisScope::isJava14Libraries);
   }
 }

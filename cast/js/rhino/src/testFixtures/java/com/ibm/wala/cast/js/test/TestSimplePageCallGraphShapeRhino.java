@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
@@ -42,15 +42,15 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 
   @Test
   public void testJSParseError() {
-    assertThrows(
-        WalaException.class,
-        () -> {
-          URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
-          JSCFABuilder B =
-              JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
-          B.makeCallGraph(B.getOptions());
-          com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
-        });
+    assertThatThrownBy(
+            () -> {
+              URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
+              JSCFABuilder B =
+                  JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
+              B.makeCallGraph(B.getOptions());
+              com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+            })
+        .isInstanceOf(WalaException.class);
   }
 
   @Override

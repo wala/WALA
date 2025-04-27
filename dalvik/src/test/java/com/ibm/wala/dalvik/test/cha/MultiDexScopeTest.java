@@ -1,8 +1,8 @@
 package com.ibm.wala.dalvik.test.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.ibm.wala.classLoader.IClass;
@@ -106,8 +106,7 @@ public class MultiDexScopeTest {
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, testAPK);
     cha2 = ClassHierarchyFactory.make(scope2);
 
-    assertEquals(
-        Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
+    assertThat(getNumberOfAppClasses(cha)).isEqualTo(getNumberOfAppClasses(cha2));
   }
 
   public AnalysisScope manuallyInitScope() throws IOException {
@@ -149,9 +148,7 @@ public class MultiDexScopeTest {
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, multidexApk);
     cha2 = ClassHierarchyFactory.make(scope2);
 
-    assertEquals(Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(5));
-    assertEquals(
-        Integer.valueOf(getNumberOfAppClasses(cha)), Integer.valueOf(getNumberOfAppClasses(cha2)));
+    assertThat(getNumberOfAppClasses(cha)).isEqualTo(getNumberOfAppClasses(cha2)).isEqualTo(5);
   }
 
   private static void extractDexFiles(String apkFileName, File outDir) throws IOException {
@@ -204,13 +201,13 @@ public class MultiDexScopeTest {
 
   public static void findEdge(CallGraph cg, MethodReference callerRef, MethodReference calleeRef) {
     Set<CGNode> callerNodes = cg.getNodes(callerRef);
-    assertFalse(callerNodes.isEmpty());
+    assertThat(callerNodes).isNotEmpty();
     CGNode callerNode = callerNodes.iterator().next();
 
     Set<CGNode> calleeNodes = cg.getNodes(calleeRef);
-    assertFalse(calleeNodes.isEmpty());
+    assertThat(calleeNodes).isNotEmpty();
     CGNode calleeNode = calleeNodes.iterator().next();
-    assertTrue(cg.hasEdge(callerNode, calleeNode));
+    assertThatObject(cg).has(edge(callerNode, calleeNode));
   }
 
   private static void extractFile(ZipInputStream zipIn, String outFileName) throws IOException {

@@ -1,7 +1,6 @@
 package com.ibm.wala.core.tests.jdk11.stringConcat;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -36,24 +35,26 @@ public class JDK11StringConcatTest extends WalaTestCase {
     TypeReference tm =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LstringConcat/StringConcat");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
-    assertTrue(cg.getNodes(mm).iterator().hasNext(), "expect main node");
+    assertThat(cg.getNodes(mm).iterator()).withFailMessage("expect main node").hasNext();
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // should be from main to testConcat()
     TypeReference t1s =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LstringConcat/StringConcat");
     MethodReference t1m = MethodReference.findOrCreate(t1s, "testConcat", "()Ljava/lang/String;");
-    assertTrue(cg.getNodes(t1m).iterator().hasNext(), "expect testConcat node");
+    assertThat(cg.getNodes(t1m).iterator()).withFailMessage("expect testConcat node").hasNext();
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to testConcat()
-    assertTrue(
-        cg.getPossibleSites(mnode, t1node).hasNext(),
-        "should have call site from main to StringConcat.testConcat()");
+    assertThat(cg.getPossibleSites(mnode, t1node))
+        .withFailMessage("should have call site from main to StringConcat.testConcat()")
+        .hasNext();
 
     // For now, we will see no call edges from the testConcat method, as we have not added
     // support for invokedynamic-based string concatenation yet
     // TODO add support and change this assertion
-    assertFalse(cg.getSuccNodes(t1node).hasNext(), "did not expect call nodes from testConcat");
+    assertThat(cg.getSuccNodes(t1node))
+        .withFailMessage("did not expect call nodes from testConcat")
+        .isExhausted();
   }
 }

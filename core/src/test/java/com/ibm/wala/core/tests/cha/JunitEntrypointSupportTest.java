@@ -1,8 +1,6 @@
 package com.ibm.wala.core.tests.cha;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasToString;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -27,16 +25,12 @@ public class JunitEntrypointSupportTest {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     List<Entrypoint> entrypoints =
         Iterator2Collection.toList(JUnitEntryPoints.make(cha).iterator());
-    assertThat(
-        entrypoints,
-        contains(
-            hasToString(
-                "< Application, Ljunit/JunitTests$A, test2()V >([<Application,Ljunit/JunitTests$A>])"),
-            hasToString(
-                "< Application, Ljunit/JunitTests$A, <init>()V >([<Application,Ljunit/JunitTests$A>])"),
-            hasToString(
-                "< Application, Ljunit/JunitTests, test1()V >([<Application,Ljunit/JunitTests>])"),
-            hasToString(
-                "< Application, Ljunit/JunitTests, <init>()V >([<Application,Ljunit/JunitTests>])")));
+    assertThat(entrypoints)
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder(
+            "< Application, Ljunit/JunitTests$A, test2()V >([<Application,Ljunit/JunitTests$A>])",
+            "< Application, Ljunit/JunitTests$A, <init>()V >([<Application,Ljunit/JunitTests$A>])",
+            "< Application, Ljunit/JunitTests, test1()V >([<Application,Ljunit/JunitTests>])",
+            "< Application, Ljunit/JunitTests, <init>()V >([<Application,Ljunit/JunitTests>])");
   }
 }

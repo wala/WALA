@@ -21,6 +21,9 @@ dependencies {
   testFixturesApi(projects.core)
   testFixturesApi(projects.util)
   testFixturesApi(testFixtures(projects.cast))
+  testFixturesImplementation(libs.assertj.core)
+  testFixturesImplementation(testFixtures(projects.util))
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.core))
 }

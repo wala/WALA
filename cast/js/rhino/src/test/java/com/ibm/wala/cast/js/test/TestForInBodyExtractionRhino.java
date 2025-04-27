@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cast.js.test;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.translator.RhinoToAstTranslator;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -28,7 +30,7 @@ public class TestForInBodyExtractionRhino extends TestForInBodyExtraction {
       entity = translator.translateToCAst();
     } catch (Error e) {
       e.printStackTrace();
-      assert false;
+      fail("Translation failed");
     }
     return entity;
   }

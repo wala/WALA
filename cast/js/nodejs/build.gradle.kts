@@ -13,6 +13,7 @@ dependencies {
   implementation(libs.json)
   implementation(projects.cast)
   implementation(projects.cast.js.rhino)
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
 }
 

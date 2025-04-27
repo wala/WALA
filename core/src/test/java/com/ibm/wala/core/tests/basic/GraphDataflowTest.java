@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
@@ -60,7 +60,7 @@ public class GraphDataflowTest extends WalaTestCase {
       System.err.println("Uh oh.");
       System.err.println(expectedStringNodeEdge());
     }
-    assertEquals(expectedStringNodeEdge(), result);
+    assertThat(result).isEqualTo(expectedStringNodeEdge());
   }
 
   @Test
@@ -68,7 +68,7 @@ public class GraphDataflowTest extends WalaTestCase {
     Graph<String> G = buildGraph();
     String result = solveNodeOnly(G);
     System.err.println(result);
-    assertEquals(expectedStringNodeOnly(), result);
+    assertThat(result).isEqualTo(expectedStringNodeOnly());
   }
 
   /**
