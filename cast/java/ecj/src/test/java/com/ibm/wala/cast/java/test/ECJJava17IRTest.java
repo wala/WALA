@@ -175,7 +175,7 @@ public class ECJJava17IRTest extends IRTests {
         Arguments.of("UnderscoresInNumericLiterals", emptyList));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "java17IRTestName={0}")
   @MethodSource("java17IRTestNames")
   public void runJava17IRTests(String java17IRTestName, List<IRAssertion> ca)
       throws IllegalArgumentException, CancelException, IOException {

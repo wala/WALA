@@ -863,7 +863,7 @@ public class PrimitivesTest extends WalaTestCase {
     int SIZE = 10000;
     IntegerUnionFind uf = new IntegerUnionFind(SIZE);
     int count = countEquivalenceClasses(uf);
-    assertEquals(count, SIZE, "Got count " + count);
+    assertEquals(SIZE, count, "Got count " + count);
 
     uf.union(3, 7);
     assertEquals(uf.find(3), uf.find(7));

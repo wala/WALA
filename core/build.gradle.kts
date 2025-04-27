@@ -229,7 +229,7 @@ val downloadJavaCup by
 //  collect "JLex.jar"
 //
 
-val collectJLexFrom: Configuration by configurations.creating { isCanBeConsumed = false }
+val collectJLexFrom by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   collectJLexFrom(
@@ -239,7 +239,7 @@ dependencies {
 val collectJLex by
     tasks.registering(Jar::class) {
       inputs.files(collectJLexFrom)
-      from(zipTree(collectJLexFrom.singleFile))
+      from({ zipTree(collectJLexFrom.get().singleFile) })
       include("JLex/")
       archiveFileName = "JLex.jar"
       destinationDirectory = layout.buildDirectory.dir(name)
@@ -312,7 +312,7 @@ val collectTestData by
       destinationDirectory = layout.buildDirectory.dir(name)
     }
 
-val collectTestDataJar: Configuration by configurations.creating { isCanBeResolved = false }
+val collectTestDataJar by configurations.registering { isCanBeResolved = false }
 
 artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirectory })
 
@@ -370,7 +370,7 @@ tasks.named<Test>("test") {
   outputs.file(layout.buildDirectory.file("report"))
 }
 
-val testResources: Configuration by configurations.creating { isCanBeResolved = false }
+val testResources by configurations.registering { isCanBeResolved = false }
 
 artifacts.add(testResources.name, sourceSets.test.map { it.resources.srcDirs.single() })
 
@@ -383,11 +383,11 @@ val testJar by
       from(tasks.named("compileTestJava"))
     }
 
-val testJarConfig: Configuration by configurations.creating { isCanBeResolved = false }
+val testJarConfig by configurations.registering { isCanBeResolved = false }
 
 artifacts.add(testJarConfig.name, testJar)
 
-val dalvikTestResources: Configuration by configurations.creating { isCanBeResolved = false }
+val dalvikTestResources by configurations.registering { isCanBeResolved = false }
 
 listOf(
         collectJLex,
