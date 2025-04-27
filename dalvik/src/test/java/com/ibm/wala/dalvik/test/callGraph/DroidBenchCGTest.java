@@ -11,7 +11,7 @@
 package com.ibm.wala.dalvik.test.callGraph;
 
 import static com.ibm.wala.dalvik.test.util.Util.walaProperties;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -121,12 +121,8 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
             ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
     // System.err.println(x.fst);
     Set<IMethod> bad = assertUserCodeReachable(x.fst, uncalled);
-    assertion(bad + " should be empty", bad.isEmpty());
+    assertThat(bad).withFailMessage(() -> bad + " should be empty").isEmpty();
     System.err.println("...success testing " + apkFile);
-  }
-
-  protected void assertion(String string, boolean empty) {
-    assertTrue(empty, string);
   }
 
   private static final Set<String> skipTests = HashSetFactory.make();

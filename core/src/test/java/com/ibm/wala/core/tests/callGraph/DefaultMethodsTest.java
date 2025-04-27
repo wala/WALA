@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -31,6 +31,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /** Check properties of a call to clone() in RTA */
@@ -56,45 +57,51 @@ public class DefaultMethodsTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "LdefaultMethods/DefaultMethods");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
-    assertTrue(cg.getNodes(mm).iterator().hasNext(), "expect main node");
+    assertThat(cg.getNodes(mm).iterator()).withFailMessage("expect main node").hasNext();
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // Find node corresponding to Interface1.silly
     TypeReference t1s =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LdefaultMethods/Interface1");
     MethodReference t1m = MethodReference.findOrCreate(t1s, "silly", "()I");
-    assertTrue(cg.getNodes(t1m).iterator().hasNext(), "expect Interface1.silly node");
+    assertThat(cg.getNodes(t1m).iterator())
+        .withFailMessage("expect Interface1.silly node")
+        .hasNext();
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Interface1.silly
-    assertTrue(
-        cg.getPossibleSites(mnode, t1node).hasNext(),
-        "should have call site from main to Interface1.silly");
+    assertThat(cg.getPossibleSites(mnode, t1node))
+        .withFailMessage("should have call site from main to Interface1.silly")
+        .hasNext();
 
     // Find node corresponding to Interface2.silly
     TypeReference t2s =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LdefaultMethods/Interface2");
     MethodReference t2m = MethodReference.findOrCreate(t2s, "silly", "()I");
-    assertTrue(cg.getNodes(t2m).iterator().hasNext(), "expect Interface2.silly node");
+    assertThat(cg.getNodes(t2m).iterator())
+        .withFailMessage("expect Interface2.silly node")
+        .hasNext();
     CGNode t2node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Interface2.silly
-    assertTrue(
-        cg.getPossibleSites(mnode, t2node).hasNext(),
-        "should have call site from main to Interface2.silly");
+    assertThat(cg.getPossibleSites(mnode, t2node))
+        .withFailMessage("should have call site from main to Interface2.silly")
+        .hasNext();
 
     // Find node corresponding to Test.silly
     TypeReference tts =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "LdefaultMethods/DefaultMethods$Test3");
     MethodReference ttm = MethodReference.findOrCreate(tts, "silly", "()I");
-    assertTrue(cg.getNodes(ttm).iterator().hasNext(), "expect Interface1.silly node");
+    assertThat(cg.getNodes(ttm).iterator())
+        .withFailMessage("expect Interface1.silly node")
+        .hasNext();
     CGNode ttnode = cg.getNodes(ttm).iterator().next();
 
     // Check call from main to Test3.silly
-    assertTrue(
-        cg.getPossibleSites(mnode, ttnode).hasNext(),
-        "should have call site from main to Test3.silly");
+    assertThat(cg.getPossibleSites(mnode, ttnode))
+        .withFailMessage("should have call site from main to Test3.silly")
+        .hasNext();
 
     // Check that IClass.getAllMethods() returns default methods #219.
     TypeReference test1Type =
@@ -104,8 +111,8 @@ public class DefaultMethodsTest extends WalaTestCase {
 
     Collection<? extends IMethod> allMethods = test1Class.getAllMethods();
     IMethod defaultMethod = test1Class.getMethod(t1m.getSelector());
-    assertTrue(
-        allMethods.contains(defaultMethod),
-        "Expecting default methods to show up in IClass.allMethods()");
+    Assertions.<IMethod>assertThatCollection(allMethods)
+        .withFailMessage("Expecting default methods to show up in IClass.allMethods()")
+        .contains(defaultMethod);
   }
 }

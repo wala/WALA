@@ -11,8 +11,7 @@
 
 package com.ibm.wala.core.tests.shrike;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -88,8 +87,9 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         args.add("--patch-calls");
       }
       OfflineDynamicCallGraph.main(args.toArray(new String[0]));
-      assertTrue(
-          Files.exists(instrumentedJarLocation), "expected to create " + instrumentedJarLocation);
+      assertThat(instrumentedJarLocation)
+          .withFailMessage(() -> "expected to create " + instrumentedJarLocation)
+          .exists();
       instrumentedJarBuilt = true;
     }
   }
@@ -140,7 +140,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     Process x = Runtime.getRuntime().exec(commandLine, null, new File("build"));
     x.waitFor();
 
-    assertTrue(Files.exists(cgLocation), "expected to create call graph");
+    assertThat(cgLocation).withFailMessage("expected to create call graph").exists();
   }
 
   protected interface EdgesTest {
@@ -164,12 +164,12 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         staticCG,
         (staticCG1, caller, calleeRef) -> {
           Set<CGNode> nodes = staticCG1.getNodes(calleeRef);
-          assertEquals(1, nodes.size(), "expected one node for " + calleeRef);
+          assertThat(nodes).withFailMessage(() -> "expected one node for " + calleeRef).hasSize(1);
           CGNode callee = nodes.iterator().next();
 
-          assertTrue(
-              staticCG1.getPossibleSites(caller, callee).hasNext(),
-              "no edge for " + caller + " --> " + callee);
+          assertThat(staticCG1.getPossibleSites(caller, callee))
+              .withFailMessage("no edge for %s --> %s", caller, callee)
+              .hasNext();
           Pair<CGNode, CGNode> x = Pair.make(caller, callee);
           edges.add(x);
         },
@@ -193,7 +193,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         },
         filter);
 
-    assertTrue(notFound.isEmpty(), "could not find " + notFound);
+    assertThat(notFound).withFailMessage(() -> "could not find " + notFound).isEmpty();
   }
 
   protected void check(CallGraph staticCG, EdgesTest test, Predicate<MethodReference> filter)
@@ -233,7 +233,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           if (!filter.test(callerRef)) {
             continue loop;
           }
-          assertEquals(1, nodes.size(), callerRef::toString);
+          assertThat(nodes).withFailMessage(callerRef::toString).hasSize(1);
           caller = nodes.iterator().next();
         }
 
@@ -247,6 +247,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       }
     }
 
-    assertTrue(lines > 0, "more than one edge");
+    assertThat(lines).withFailMessage("more than one edge").isPositive();
   }
 }

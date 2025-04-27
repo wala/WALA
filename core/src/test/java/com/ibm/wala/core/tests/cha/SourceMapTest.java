@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClass;
@@ -43,10 +43,10 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
-    assertNotNull(klass, "failed to load " + t);
+    assertThat(klass).withFailMessage(() -> "failed to load " + t).isNotNull();
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
-    assertNotNull(sourceFile);
+    assertThat(sourceFile).isNotNull();
   }
 
   @Test
@@ -60,12 +60,12 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(scope.getPrimordialLoader(), CLASS_IN_PRIMORDIAL_JAR);
     IClass klass = cha.lookupClass(t);
-    assertNotNull(klass);
+    assertThat(klass).isNotNull();
     String sourceFile = klass.getSourceFileName();
-    assertNotNull(sourceFile);
+    assertThat(sourceFile).isNotNull();
     System.err.println("Source file: " + sourceFile);
     Module container = ((BytecodeClass<?>) klass).getContainer();
-    assertNotNull(container);
+    assertThat(container).isNotNull();
     System.err.println("container: " + container);
   }
 }

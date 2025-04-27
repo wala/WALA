@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -68,7 +68,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     CGNode node = findDoNothingNode(cg);
     PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     OrdinalSet<InstanceKey> ptsTo = pa.getPointsToSet(pk);
-    assertEquals(1, ptsTo.size());
+    assertThat(ptsTo).hasSize(1);
   }
 
   private static final CGNode findDoNothingNode(CallGraph cg) {

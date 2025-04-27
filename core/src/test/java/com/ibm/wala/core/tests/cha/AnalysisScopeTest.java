@@ -1,11 +1,6 @@
 package com.ibm.wala.core.tests.cha;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
 public class AnalysisScopeTest {
@@ -47,11 +44,12 @@ public class AnalysisScopeTest {
     scope.addInputStreamForJarToScope(
         ClassLoaderReference.Application, new FileInputStream(bcelJarPath.toString()));
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertNotNull(
-        cha.lookupClass(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")),
-        "couldn't find expected class");
+    assertThat(
+            cha.lookupClass(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")))
+        .withFailMessage("couldn't find expected class")
+        .isNotNull();
   }
 
   @Test
@@ -60,15 +58,18 @@ public class AnalysisScopeTest {
         AnalysisScopeReader.instance.readJavaScope(
             "primordial-base.txt", null, AnalysisScopeTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertNotNull(
-        cha.lookupClass(
-            TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/util/ArrayList")),
-        "couldn't find expected class");
-    assertNull(
-        cha.lookupClass(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")),
-        "found unexpected class");
+    assertThat(
+            cha.lookupClass(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Ljava/util/ArrayList")))
+        .withFailMessage("couldn't find expected class")
+        .isNotNull();
+    assertThat(
+            cha.lookupClass(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")))
+        .withFailMessage("found unexpected class")
+        .isNull();
   }
 
   @Test
@@ -81,22 +82,23 @@ public class AnalysisScopeTest {
     Gson gson = new Gson();
     Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
     LinkedHashMap<String, Object> map = gson.fromJson(scope.toJson(), type);
-    assertEquals(
-        List.of("java\\/awt\\/.*", "javax\\/swing\\/.*", "sun\\/awt\\/.*", "sun\\/swing\\/.*"),
-        map.get("Exclusions"));
+    assertThat(map.get("Exclusions"))
+        .isEqualTo(
+            List.of("java\\/awt\\/.*", "javax\\/swing\\/.*", "sun\\/awt\\/.*", "sun\\/swing\\/.*"));
 
     @SuppressWarnings("unchecked")
     Map<String, List<String>> loaders = (Map<String, List<String>>) map.get("Loaders");
     Set<String> loaderKeys =
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
-    assertEquals(loaders.keySet(), loaderKeys);
-    assertEquals(2, loaders.get("Primordial").size());
-    assertThat(loaders.get("Primordial"), hasItem("Nested Jar File:primordial.jar.model"));
-    assertEquals(1, loaders.get("Application").size());
-    assertThat(
-        loaders.get("Application").get(0), containsString("com.ibm.wala.core.testdata_1.0.0.jar"));
-    assertEquals(0, loaders.get("Extension").size());
-    assertEquals(0, loaders.get("Synthetic").size());
+    assertThat(loaderKeys).isEqualTo(loaders.keySet());
+    assertThat(loaders.get("Primordial"))
+        .hasSize(2)
+        .contains("Nested Jar File:primordial.jar.model");
+    assertThat(loaders.get("Application"))
+        .singleElement(InstanceOfAssertFactories.STRING)
+        .contains("com.ibm.wala.core.testdata_1.0.0.jar");
+    assertThat(loaders.get("Extension")).isEmpty();
+    assertThat(loaders.get("Synthetic")).isEmpty();
   }
 
   @Test
@@ -113,20 +115,18 @@ public class AnalysisScopeTest {
     Gson gson = new Gson();
     Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
     LinkedHashMap<String, Object> map = gson.fromJson(scope.toJson(), type);
-    assertEquals(List.of(), map.get("Exclusions"));
+    assertThat(map.get("Exclusions")).isEqualTo(List.of());
 
     @SuppressWarnings("unchecked")
     Map<String, List<String>> loaders = (Map<String, List<String>>) map.get("Loaders");
     Set<String> loaderKeys =
         new HashSet<>(List.of("Primordial", "Extension", "Application", "Synthetic"));
-    assertEquals(loaders.keySet(), loaderKeys);
-    assertEquals(stdlibs.length, loaders.get("Primordial").size());
-    assertEquals(stdlibs.length, loaders.get("Application").size());
-    for (int i = 0; i < stdlibs.length; i++) {
-      assertThat(loaders.get("Primordial"), hasItem("JarFileModule:" + stdlibs[i]));
-      assertThat(loaders.get("Application"), hasItem("JarFileModule:" + stdlibs[i]));
-    }
-    assertEquals(0, loaders.get("Extension").size());
-    assertEquals(0, loaders.get("Synthetic").size());
+    assertThat(loaderKeys).isEqualTo(loaders.keySet());
+    final var expectedStdLibs =
+        Arrays.stream(stdlibs).map(stdlib -> "JarFileModule:" + stdlib).collect(Collectors.toSet());
+    assertThat(loaders.get("Primordial")).containsExactlyInAnyOrderElementsOf(expectedStdLibs);
+    assertThat(loaders.get("Application")).containsExactlyInAnyOrderElementsOf(expectedStdLibs);
+    assertThat(loaders.get("Extension")).isEmpty();
+    assertThat(loaders.get("Synthetic")).isEmpty();
   }
 }

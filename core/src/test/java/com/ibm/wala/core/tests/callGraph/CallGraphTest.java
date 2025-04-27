@@ -10,10 +10,8 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -146,11 +144,15 @@ public class CallGraphTest extends WalaTestCase {
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
     String ws = Warnings.asString();
-    assertTrue(ws.contains("cornerCases/Abstract1"), "failed to report a warning about Abstract1");
+    assertThat(ws)
+        .withFailMessage("failed to report a warning about Abstract1")
+        .contains("cornerCases/Abstract1");
 
     // we do not expect a warning about class Abstract2, which has a concrete
     // subclasses
-    assertFalse(ws.contains("cornerCases/Abstract2"), "reported a warning about Abstract2");
+    assertThat(ws)
+        .withFailMessage("reported a warning about Abstract2")
+        .doesNotContain("cornerCases/Abstract2");
   }
 
   @Test
@@ -185,11 +187,11 @@ public class CallGraphTest extends WalaTestCase {
         break;
       }
     }
-    assertTrue(foundDoNothing);
+    assertThat(foundDoNothing).isTrue();
     options.setHandleStaticInit(false);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     for (CGNode n : cg) {
-      assertFalse(n.toString().contains("doNothing"));
+      assertThat(n).asString().doesNotContain("doNothing");
     }
   }
 
@@ -210,7 +212,7 @@ public class CallGraphTest extends WalaTestCase {
         foundSortForward = true;
       }
     }
-    assertTrue(foundSortForward, "expected for sortForward");
+    assertThat(foundSortForward).withFailMessage("expected for sortForward").isTrue();
   }
 
   @Test
@@ -238,7 +240,7 @@ public class CallGraphTest extends WalaTestCase {
             break;
           }
         }
-        assertTrue(foundToCharArray);
+        assertThat(foundToCharArray).isTrue();
         break;
       }
     }
@@ -338,7 +340,7 @@ public class CallGraphTest extends WalaTestCase {
     CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
     PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", pa.getHeapModel());
     OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
-    assertEquals(1, pointsToSet.size());
+    assertThat(pointsToSet).hasSize(1);
   }
 
   @Test
@@ -355,15 +357,14 @@ public class CallGraphTest extends WalaTestCase {
         Util.makeZeroOneContainerCFABuilder(options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
-    assertTrue(
-        StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(
-                    cg.getSuccNodes(mainMethod), Spliterator.ORDERED),
-                false)
-            .filter(succ -> succ.getMethod().getName().toString().equals("valueOf"))
-            .findFirst()
-            .isPresent(),
-        "did not find call to valueOf");
+    assertThat(
+            StreamSupport.stream(
+                    Spliterators.spliteratorUnknownSize(
+                        cg.getSuccNodes(mainMethod), Spliterator.ORDERED),
+                    false)
+                .filter(succ -> succ.getMethod().getName().toString().equals("valueOf")))
+        .withFailMessage("did not find call to valueOf")
+        .isNotEmpty();
   }
 
   /** Testing that there is no crash during iteration of points to sets */
