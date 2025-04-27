@@ -42,8 +42,8 @@ public class RtJar {
     return null;
   }
 
+  @SuppressWarnings("resource")
   public static void main(String[] args) {
-    @SuppressWarnings("resource")
     JarFile rt =
         getRtJar(
             new MapIterator<>(
