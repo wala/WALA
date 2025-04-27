@@ -10,8 +10,8 @@ walaEclipseMavenCentral {
 }
 
 dependencies {
+  testImplementation(libs.assertj.core)
   testImplementation(libs.eclipse.osgi)
-  testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.osgi.framework)
   testImplementation(projects.cast.java)
   testImplementation(projects.core)

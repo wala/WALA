@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.ipa.lexical.LexicalModRef;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -42,33 +41,30 @@ public abstract class TestLexicalModRef {
           .contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner>")) {
         // function "inner" reads exactly x and z
         OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
-        assertEquals(2, readVars.size());
-        assertEquals(
-            "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]",
-            readVars.toString());
+        assertThat(readVars).hasSize(2);
+        assertThat(readVars)
+            .hasToString(
+                "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]");
         // writes x and z as well
         OrdinalSet<Pair<CGNode, String>> writtenVars = writeResult.get(n);
-        assertEquals(2, writtenVars.size());
-        assertEquals(
-            "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]",
-            writtenVars.toString());
+        assertThat(writtenVars).hasSize(2);
+        assertThat(writtenVars)
+            .hasToString(
+                "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]");
       }
       if (n.toString()
           .contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner2>")) {
         // function "inner3" reads exactly innerName, inner3, and x and z via callees
         OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
-        assertEquals(4, readVars.size());
+        assertThat(readVars).hasSize(4);
         for (Pair<CGNode, String> rv : readVars) {
-          assertTrue(
-              "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x]"
-                      .equals(rv.toString())
-                  || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3]"
-                      .equals(rv.toString())
-                  || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName]"
-                      .equals(rv.toString())
-                  || "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]"
-                      .equals(rv.toString()),
-              rv::toString);
+          assertThat(rv)
+              .asString()
+              .isIn(
+                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x]",
+                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3]",
+                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName]",
+                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]");
         }
       }
     }

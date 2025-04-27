@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -53,9 +53,12 @@ public class LibModelsTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(ClassLoaderReference.Application, libModelsTestClass);
     MethodReference m = MethodReference.findOrCreate(t, "reachable1", "()V");
-    assertTrue(cg.getNodes(m).iterator().hasNext(), "expect reachable1 from addShutdownHook");
+    assertThat(cg.getNodes(m).iterator())
+        .withFailMessage("expect reachable1 from addShutdownHook")
+        .hasNext();
     MethodReference m2 = MethodReference.findOrCreate(t, "reachable2", "()V");
-    assertTrue(
-        cg.getNodes(m2).iterator().hasNext(), "expect reachable2 from uncaught exception handler");
+    assertThat(cg.getNodes(m2).iterator())
+        .withFailMessage("expect reachable2 from uncaught exception handler")
+        .hasNext();
   }
 }
