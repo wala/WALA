@@ -31,48 +31,55 @@ import java.util.stream.Collectors;
 /** The helper class for some methods of loop */
 public class LoopHelper {
 
-  private static boolean checkLoopBreakers(Loop loop, Map<ISSABasicBlock, List<Loop>> jumpToTop) {
-    // this method is created to help identify if the loop is a candidate of for loop
-    if (loop.getLoopBreakers().size() < 2) return true;
-
-    // if there are more than one loop breakers, check if one of them will jump to top or return to
-    // parent header and the other is the last one of the parent loop
-    Set<ISSABasicBlock> breakers = loop.getLoopBreakers();
-    Optional<ISSABasicBlock> key =
-        breakers.stream().filter(bb -> jumpToTop.containsKey(bb)).findFirst();
-    if (!key.isPresent()) { // if cannot find it then it might not be a for loop
-      int totalBreakers = breakers.size();
-      SSAInstruction ii = null;
-      for (ISSABasicBlock bb : breakers) {
-        ISSABasicBlock bbb = loop.getLoopExitrByBreaker(bb);
-        if (!bbb.isEntryBlock() && !bbb.isExitBlock()) {
-          ii = bbb.getLastInstruction();
-          if (ii instanceof SSAGotoInstruction && ((SSAGotoInstruction) ii).getTarget() == -1) {
-            totalBreakers--;
-          }
-        }
-      }
-      if (totalBreakers == 1) // other breakers ended with termination
-      return true;
-      return false;
-    }
-
-    // check if the other loop exit is the last block of the parent loop
-    return breakers.stream()
-        .filter(bb -> !bb.equals(key.get()))
-        .allMatch(
-            bb ->
-                !jumpToTop.get(key.get()).isEmpty()
-                    && jumpToTop
-                        .get(key.get())
-                        .get(jumpToTop.get(key.get()).size() - 1)
-                        .isLastBlock(loop.getLoopExitrByBreaker(bb)));
-  }
+  //  private static boolean checkLoopBreakers(Loop loop, Map<ISSABasicBlock, List<Loop>> jumpToTop)
+  // {
+  //    // this method is created to help identify if the loop is a candidate of for loop
+  //    if (loop.getLoopBreakers().size() < 2) return true;
+  //
+  //    // if there are more than one loop breakers, check if one of them will jump to top or
+  // return to
+  //    // parent header and the other is the last one of the parent loop
+  //    Set<ISSABasicBlock> breakers = loop.getLoopBreakers();
+  //    Optional<ISSABasicBlock> key =
+  //        breakers.stream().filter(bb -> jumpToTop.containsKey(bb)).findFirst();
+  //    if (!key.isPresent()) { // if cannot find it then it might not be a for loop
+  //      int totalBreakers = breakers.size();
+  //      SSAInstruction ii = null;
+  //      for (ISSABasicBlock bb : breakers) {
+  //        ISSABasicBlock bbb = loop.getLoopExitrByBreaker(bb);
+  //        if (!bbb.isEntryBlock() && !bbb.isExitBlock()) {
+  //          ii = bbb.getLastInstruction();
+  //          if (ii instanceof SSAGotoInstruction) {
+  //            // for the case of termination or go to the end of loop
+  //            if (((SSAGotoInstruction) ii).getTarget() == -1
+  //                || ((SSAGotoInstruction) ii).getTarget()
+  //                    > loop.getLastBlock().getLastInstructionIndex()) totalBreakers--;
+  //          }
+  //        }
+  //      }
+  //      // TODO: might need to check if there are two back edges
+  //      if (totalBreakers == 1) // other breakers ended with termination
+  //      return true;
+  //      return false;
+  //    }
+  //
+  //    // check if the other loop exit is the last block of the parent loop
+  //    return breakers.stream()
+  //        .filter(bb -> !bb.equals(key.get()))
+  //        .allMatch(
+  //            bb ->
+  //                !jumpToTop.get(key.get()).isEmpty()
+  //                    && jumpToTop
+  //                        .get(key.get())
+  //                        .get(jumpToTop.get(key.get()).size() - 1)
+  //                        .isLastBlock(loop.getLoopExitrByBreaker(bb)));
+  //  }
 
   private static boolean isForLoop(
-      SymbolTable ST, Loop loop, Map<ISSABasicBlock, List<Loop>> jumpToTop) {
+      SymbolTable ST, Loop loop /*, Map<ISSABasicBlock, List<Loop>> jumpToTop*/) {
     boolean isForLoop = false;
-    if (loop.getLoopHeader().equals(loop.getLoopControl()) && checkLoopBreakers(loop, jumpToTop)) {
+    if (loop.getLoopHeader()
+        .equals(loop.getLoopControl()) /* && checkLoopBreakers(loop, jumpToTop)*/) {
       // A for-loop is targeting for PERFORM n TIMES and PERFORM VARYING for now
       // The loopHeader and loopControl are the same
       // The loopHeader should contains 3 or more than 3 instructions (based on current samples)
@@ -236,14 +243,11 @@ public class LoopHelper {
    * @return The loop type
    */
   public static LoopType getLoopType(
-      PrunedCFG<SSAInstruction, ISSABasicBlock> cfg,
-      SymbolTable ST,
-      Loop loop,
-      Map<ISSABasicBlock, List<Loop>> jumpToTop) {
+      PrunedCFG<SSAInstruction, ISSABasicBlock> cfg, SymbolTable ST, Loop loop) {
     if (loop.getLoopHeader().equals(loop.getLoopControl())) {
       // check if it's for loop
       // For now a for-loop refers PERFORM n TIMES
-      if (isForLoop(ST, loop, jumpToTop)) return LoopType.FOR;
+      if (isForLoop(ST, loop)) return LoopType.FOR;
 
       // usually for loop will be detected as while loop too, so that check for-loop first
       if (isWhileLoop(cfg, loop)) return LoopType.WHILE;
@@ -353,8 +357,7 @@ public class LoopHelper {
       SymbolTable ST,
       List<SSAInstruction> chunk,
       Map<ISSABasicBlock, Loop> loops,
-      List<Loop> skipLoop,
-      Map<ISSABasicBlock, List<Loop>> jumpToTop) {
+      List<Loop> skipLoop) {
     // Find out the first instruction in the chunk
     Optional<SSAInstruction> first = chunk.stream().filter(inst -> inst.iIndex() > 0).findFirst();
 
@@ -392,7 +395,7 @@ public class LoopHelper {
         // except the last assignment for for-loop
         if (chunk.size() == 1
             && chunk.get(0) instanceof AssignInstruction
-            && LoopType.FOR.equals(getLoopType(cfg, ST, loop, jumpToTop))) {
+            && LoopType.FOR.equals(getLoopType(cfg, ST, loop))) {
           int def = ((AssignInstruction) chunk.get(0)).getDef();
           List<SSAInstruction> controlInsts =
               IteratorUtil.streamify(currentBB.iterator()).collect(Collectors.toList());
@@ -471,13 +474,12 @@ public class LoopHelper {
       PrunedCFG<SSAInstruction, ISSABasicBlock> cfg,
       SymbolTable ST,
       SSAInstruction inst,
-      Map<ISSABasicBlock, Loop> loops,
-      Map<ISSABasicBlock, List<Loop>> jumpToTop) {
+      Map<ISSABasicBlock, Loop> loops) {
     if ((inst instanceof SSAConditionalBranchInstruction)) {
       Loop loop = getLoopByInstruction(cfg, inst, loops);
       return loop != null
           && loop.getLoopControl().equals(cfg.getBlockForInstruction(inst.iIndex()))
-          && LoopType.WHILE.equals(getLoopType(cfg, ST, loop, jumpToTop));
+          && LoopType.WHILE.equals(getLoopType(cfg, ST, loop));
     }
     return false;
   }

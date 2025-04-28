@@ -1282,9 +1282,7 @@ public abstract class ToSource {
                               // otherwise return null then the instructions will be
                               // translated
                               // into several lines and might be placed in different places
-                              LoopHelper.shouldMergeTest(cfg, ST, inst, loops, jumpToTop)
-                                  ? inst
-                                  : null);
+                              LoopHelper.shouldMergeTest(cfg, ST, inst, loops) ? inst : null);
                       if (insts.isEmpty()) {
                         insts.add(inst);
                         chunks.insert(new ArrayList<>(insts));
@@ -1581,7 +1579,7 @@ public abstract class ToSource {
       createLoop(cfg, chunks, currentLoops, decls, elts, true);
 
       // find out the initial loop type
-      LoopType loopType = LoopHelper.getLoopType(cfg, ST, currentLoop, jumpToTop);
+      LoopType loopType = LoopHelper.getLoopType(cfg, ST, currentLoop);
 
       List<SSAInstruction> condChunkWithoutConditional =
           condChunk.stream()
@@ -2065,8 +2063,7 @@ public abstract class ToSource {
           chunkInsts -> {
             // Ignore goto chunks for now
             if (!LoopHelper.gotoChunk(chunkInsts)) {
-              if (LoopHelper.shouldMoveAsLoopBody(
-                  cfg, ST, chunkInsts, loops, currentLoops, jumpToTop)) {
+              if (LoopHelper.shouldMoveAsLoopBody(cfg, ST, chunkInsts, loops, currentLoops)) {
                 // move to loop chunks
                 loopChunks.add(chunkInsts);
               } else {

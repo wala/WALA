@@ -8,10 +8,12 @@ import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAGotoInstruction;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** The helper class for some methods of loop */
 public class CAstHelper {
@@ -91,11 +93,108 @@ public class CAstHelper {
           result.addAll(thenBranch.getChildren());
         } else result.add(thenBranch);
       } else {
-        result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
+        // move common ending after the IF
+        List<CAstNode> thenBranchList =
+            removeGOToAtTail(
+                (thenBranch.getChildCount() == 1
+                        && thenBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
+                    ? thenBranch.getChild(0).getChildren()
+                    : thenBranch.getChildren());
+        List<CAstNode> elseBranchList =
+            removeGOToAtTail(
+                (elseBranch.getChildCount() == 1
+                        && elseBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
+                    ? elseBranch.getChild(0).getChildren()
+                    : elseBranch.getChildren());
+        Set<CAstNode> commonTail = gatherCommonTail(thenBranchList, elseBranchList);
+        if (commonTail.isEmpty()) {
+          result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
+        } else {
+          if (thenBranchList.size() > 0) {
+            if (elseBranchList.size() > 0) {
+              result.add(
+                  ast.makeNode(
+                      CAstNode.IF_STMT,
+                      newTest,
+                      ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList),
+                      ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+            } else {
+              result.add(
+                  ast.makeNode(
+                      CAstNode.IF_STMT,
+                      newTest,
+                      ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
+            }
+          } else {
+            // Negation the test
+            if (isLeadingNegation(newTest)) {
+              newTest = stableRemoveLeadingNegation(newTest);
+            } else {
+              newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
+            }
+
+            result.add(
+                ast.makeNode(
+                    CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+          }
+          if (commonTail.size() > 0) {
+            result.addAll(commonTail);
+          }
+        }
       }
     }
 
     return result;
+  }
+
+  private static List<CAstNode> removeGOToAtTail(List<CAstNode> originalList) {
+    // remove GOTO as the last one in the list
+    List<CAstNode> result = new ArrayList<>();
+
+    for (int i = originalList.size() - 1; i >= 0; i--) {
+      // ignore GOTO in BLOCK
+      if (originalList.get(i).getKind() == CAstNode.BLOCK_STMT
+          && originalList.get(i).getChildCount() == 1
+          && originalList.get(i).getChild(0).getKind() == CAstNode.GOTO) continue;
+      // ignore GOTO or EMPTY
+      if (originalList.get(i).getKind() == CAstNode.GOTO
+          || originalList.get(i).getKind() == CAstNode.EMPTY) continue;
+      if (i == originalList.size() - 1
+          && originalList.get(i).getKind() == CAstNode.BLOCK_STMT
+          && originalList.get(i).getChildCount() > 0) {
+        // ignore GOTO in nested block
+        List<CAstNode> oldResult = result;
+        result = new ArrayList<>();
+        result.addAll(removeGOToAtTail(originalList.get(i).getChildren()));
+        result.addAll(oldResult);
+      } else result.add(0, originalList.get(i));
+    }
+    return result;
+  }
+
+  private static String trimCAstNodeString(String originalStr) {
+    if (originalStr == null || originalStr.indexOf(":") < 0) return originalStr;
+    return originalStr.substring(originalStr.indexOf(":") + 1);
+  }
+
+  private static Set<CAstNode> gatherCommonTail(List<CAstNode> first, List<CAstNode> second) {
+    Map<CAstNode, CAstNode> result = HashMapFactory.make();
+    String firstStr = null;
+    String secondStr = null;
+    for (int i = first.size() - 1, j = second.size() - 1; i >= 0 && j >= 0; ) {
+      firstStr = trimCAstNodeString(first.get(i).toString());
+      secondStr = trimCAstNodeString(second.get(j).toString());
+
+      if (firstStr.equals(secondStr)) {
+        result.put(first.get(i), second.get(j));
+        i--;
+        j--;
+      }
+      break;
+    }
+    first.removeAll(result.keySet());
+    second.removeAll(result.values());
+    return result.keySet();
   }
 
   public static boolean isConditionalStatement(CAstNode test) {
