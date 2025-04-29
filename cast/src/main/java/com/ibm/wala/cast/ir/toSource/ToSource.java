@@ -2769,7 +2769,10 @@ public abstract class ToSource {
                   CT_LOOP_BREAK_VAR_NAME,
                   DEBUG);
             } else {
-              if (CAstHelper.endingWithBreak(takenBlock.get(takenBlock.size() - 1))
+              if (takenBlock == null) {
+                takenBlock = new ArrayList<>();
+                takenBlock.add(ast.makeNode(CAstNode.BREAK));
+              } else if (CAstHelper.endingWithBreak(takenBlock.get(takenBlock.size() - 1))
                   || CAstHelper.endingWithTermination(takenBlock.get(takenBlock.size() - 1))) {
                 if (DEBUG)
                   System.err.println(
@@ -2780,6 +2783,7 @@ public abstract class ToSource {
                 if (DEBUG)
                   System.err.println(
                       "takenBlock is having nodes and not end with break, need to add break"); // TODO: need it for a while to see when to add break
+
                 boolean useReturn =
                     cfg.getNormalSuccessors(taken).contains(cfg.exit())
                         && cfg.getNormalSuccessors(taken).size() == 1;
