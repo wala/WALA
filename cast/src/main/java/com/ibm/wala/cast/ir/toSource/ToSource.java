@@ -2738,9 +2738,16 @@ public abstract class ToSource {
               && loop.getLoopBreakers().contains(branchBB)
               && !loop.getLoopHeader().equals(branchBB)) {
             if (loop.getLoopExits().contains(notTaken)) {
-              if (CAstHelper.endingWithBreak(notTakenBlock.get(notTakenBlock.size() - 1))
-                  || CAstHelper.endingWithTermination(
-                      notTakenBlock.get(notTakenBlock.size() - 1))) {
+              CAstNode lastNode = notTakenBlock.get(notTakenBlock.size() - 1);
+              if (notTakenBlock.size() > 1
+                  && lastNode.getKind() == CAstNode.BLOCK_STMT
+                  && lastNode.getChildCount() == 1
+                  && lastNode.getChild(0).getKind() == CAstNode.GOTO) {
+                // when there are two goto instruction, the second from last will be the break
+                lastNode = notTakenBlock.get(notTakenBlock.size() - 2);
+              }
+              if (CAstHelper.endingWithBreak(lastNode)
+                  || CAstHelper.endingWithTermination(lastNode)) {
                 if (DEBUG)
                   System.err.println(
                       " notTakenBlock is end with break, no need to add break"); // TODO: need it
