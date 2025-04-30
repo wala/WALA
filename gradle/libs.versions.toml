@@ -37,8 +37,8 @@ junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
 junit-platform-engine = { module = "org.junit.platform:junit-platform-engine" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine" }
-nullaway = "com.uber.nullaway:nullaway:0.12.6"
-nullaway-annotations = "com.uber.nullaway:nullaway-annotations:0.12.6"
+nullaway = "com.uber.nullaway:nullaway:0.12.7"
+nullaway-annotations = "com.uber.nullaway:nullaway-annotations:0.12.7"
 osgi-framework = "org.osgi:org.osgi.framework:1.8.0"
 rhino = "org.mozilla:rhino:1.7.15"
 slf4j-api = "org.slf4j:slf4j-api:2.0.13"
