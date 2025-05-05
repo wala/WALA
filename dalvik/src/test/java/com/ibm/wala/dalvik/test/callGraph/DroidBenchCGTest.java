@@ -140,7 +140,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     skipTests.add("Button2.apk");
   }
 
-  public static Stream<Named<TestParameters>> generateData(
+  protected static Stream<Named<TestParameters>> generateData(
       final URI[] androidLibs, final File androidJavaJar, final String filter) {
 
     return generateData(getDroidBenchRoot(), androidLibs, androidJavaJar, filter);
@@ -158,7 +158,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return f;
   }
 
-  public static Stream<Named<TestParameters>> generateData(
+  protected static Stream<Named<TestParameters>> generateData(
       String droidBenchRoot,
       final URI[] androidLibs,
       final File androidJavaJar,
