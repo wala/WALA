@@ -1,5 +1,7 @@
 *.iml
+/aws.xml
 /compiler.xml
+/GitLink.xml
 /gradle.xml
 /jarRepositories.xml
 /kotlinc.xml
@@ -11,4 +13,3 @@
 /uiDesigner.xml
 /usage.statistics.xml
 /workspace.xml
-/GitLink.xml

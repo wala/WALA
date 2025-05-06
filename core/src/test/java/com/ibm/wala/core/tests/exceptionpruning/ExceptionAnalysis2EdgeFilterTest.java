@@ -1,7 +1,6 @@
 package com.ibm.wala.core.tests.exceptionpruning;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis;
 import com.ibm.wala.analysis.exceptionanalysis.ExceptionAnalysis2EdgeFilter;
@@ -178,29 +177,31 @@ public class ExceptionAnalysis2EdgeFilterTest {
       }
     }
 
-    assertEquals(0, deletedNormal, "Number of normal edges deleted wrong:");
+    assertThat(deletedNormal).withFailMessage("Number of normal edges deleted wrong:").isEqualTo(0);
     for (Map.Entry<String, Integer> entry : deletedExceptional.entrySet()) {
       final String key = entry.getKey();
       final int value = entry.getValue();
       String text = "Number of exceptional edges deleted wrong for " + key + ":";
+      final int expected;
       switch (key) {
         case "testTryCatchMultipleExceptions":
-          assertEquals(12, value, text);
+          expected = 12;
           break;
         case "testTryCatchOwnException":
         case "testTryCatchImplicitException":
-          assertEquals(5, value, text);
+          expected = 5;
           break;
         case "testTryCatchSuper":
-          assertEquals(3, value, text);
+          expected = 3;
           break;
         case "main":
-          assertEquals(4, value, text);
+          expected = 4;
           break;
         default:
-          assertEquals(0, value, text);
+          expected = 0;
           break;
       }
+      assertThat(value).withFailMessage(() -> text).isEqualTo(expected);
     }
   }
 
@@ -213,8 +214,10 @@ public class ExceptionAnalysis2EdgeFilterTest {
         || !filter.getFilter(node).alwaysThrowsException(block.getLastInstruction())) {
       specialCaseThrowFiltered(cfg, normalSucc);
     } else {
-      assertTrue(block.getLastInstruction().isPEI());
-      assertTrue(filter.getFilter(node).alwaysThrowsException(block.getLastInstruction()));
+      assertThat(block.getLastInstruction()).matches(SSAInstruction::isPEI);
+      assertThat(filter.getFilter(node))
+          .matches(
+              exceptionFilter -> exceptionFilter.alwaysThrowsException(block.getLastInstruction()));
     }
   }
 
@@ -229,7 +232,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock normalSucc) {
     ISSABasicBlock next = normalSucc;
     while (!(next.getLastInstruction() instanceof SSAThrowInstruction)) {
-      assertTrue(cfg.getNormalSuccessors(next).iterator().hasNext());
+      assertThat(cfg.getNormalSuccessors(next).iterator()).hasNext();
       next = cfg.getNormalSuccessors(next).iterator().next();
     }
   }
@@ -239,11 +242,11 @@ public class ExceptionAnalysis2EdgeFilterTest {
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> filtered) {
     for (ISSABasicBlock block : filtered) {
       for (ISSABasicBlock normalSucc : filtered.getNormalSuccessors(block)) {
-        assertTrue(original.getNormalSuccessors(block).contains(normalSucc));
+        assertThat(original.getNormalSuccessors(block)).contains(normalSucc);
       }
 
       for (ISSABasicBlock exceptionalSucc : filtered.getExceptionalSuccessors(block)) {
-        assertTrue(original.getExceptionalSuccessors(block).contains(exceptionalSucc));
+        assertThat(original.getExceptionalSuccessors(block)).contains(exceptionalSucc);
       }
     }
   }

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -84,13 +84,13 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
 
   @Test
   public void testParseError() {
-    assertThrows(
-        WalaException.class,
-        () -> {
-          PropagationCallGraphBuilder B =
-              JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");
-          B.makeCallGraph(B.getOptions());
-          com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
-        });
+    assertThatThrownBy(
+            () -> {
+              PropagationCallGraphBuilder B =
+                  JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");
+              B.makeCallGraph(B.getOptions());
+              com.ibm.wala.cast.util.Util.checkForFrontEndErrors(B.getClassHierarchy());
+            })
+        .isInstanceOf(WalaException.class);
   }
 }

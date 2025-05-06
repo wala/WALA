@@ -11,10 +11,7 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -264,8 +261,10 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
-    assertInstanceOf(ShrikeClass.class, classUnderTest, classUnderTest + " must be BytecodeClass");
+    assertThat(classUnderTest).withFailMessage(() -> typeUnderTest + " not found").isNotNull();
+    assertThat(classUnderTest)
+        .withFailMessage(() -> classUnderTest + " must be BytecodeClass")
+        .isInstanceOf(ShrikeClass.class);
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations =
@@ -285,24 +284,25 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodUnderTest, methodRefUnderTest.toString() + " not found");
-    assertInstanceOf(
-        ShrikeCTMethod.class, methodUnderTest, methodUnderTest + " must be ShrikeCTMethod");
+    assertThat(methodUnderTest)
+        .withFailMessage(() -> methodRefUnderTest + " not found")
+        .isNotNull();
+    assertThat(methodUnderTest)
+        .withFailMessage(() -> methodUnderTest + " must be ShrikeCTMethod")
+        .isInstanceOf(ShrikeCTMethod.class);
     ShrikeCTMethod bcMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(true));
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(true));
-    assertThat(
-        runtimeInvisibleAnnotations,
-        containsInAnyOrder(expectedRuntimeInvisibleAnnotations.toArray(new TypeAnnotation[0])));
+    assertThat(runtimeInvisibleAnnotations)
+        .contains(expectedRuntimeInvisibleAnnotations.toArray(new TypeAnnotation[0]));
 
     Collection<TypeAnnotation> runtimeVisibleAnnotations = HashSetFactory.make();
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(false));
     runtimeVisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtMethodInfo(false));
-    assertThat(
-        runtimeVisibleAnnotations,
-        containsInAnyOrder(expectedRuntimeVisibleAnnotations.toArray(new TypeAnnotation[0])));
+    assertThat(runtimeVisibleAnnotations)
+        .contains(expectedRuntimeVisibleAnnotations.toArray(new TypeAnnotation[0]));
   }
 
   private void testFieldAnnotations(
@@ -310,8 +310,10 @@ public class TypeAnnotationTest extends WalaTestCase {
       TypeReference typeUnderTest,
       Collection<TypeAnnotation> expectedAnnotations) {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
-    assertInstanceOf(ShrikeClass.class, classUnderTest, classUnderTest + " must be BytecodeClass");
+    assertThat(classUnderTest).withFailMessage(() -> typeUnderTest + " not found").isNotNull();
+    assertThat(classUnderTest)
+        .withFailMessage(() -> classUnderTest + " must be BytecodeClass")
+        .isInstanceOf(ShrikeClass.class);
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     final Atom fieldName = Atom.findOrCreateUnicodeAtom(fieldNameStr);

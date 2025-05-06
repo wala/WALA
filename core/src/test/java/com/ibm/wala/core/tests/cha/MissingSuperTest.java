@@ -10,10 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -53,22 +50,25 @@ public class MissingSuperTest extends WalaTestCase {
 
     // without phantom classes, won't be able to resolve
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertNull(cha.lookupClass(ref), "lookup should not work");
+    assertThat(cha.lookupClass(ref)).withFailMessage("lookup should not work").isNull();
 
     // with makeWithRoot lookup should succeed and
     // unresolvable super class "Super" should be replaced by hierarchy root
     cha = ClassHierarchyFactory.makeWithRoot(scope);
     IClass klass = cha.lookupClass(ref);
-    assertNotNull(klass, "expected class MissingSuper to load");
-    assertEquals(cha.getRootClass(), klass.getSuperclass());
+    assertThat(klass)
+        .withFailMessage("expected class MissingSuper to load")
+        .isNotNull()
+        .extracting(IClass::getSuperclass)
+        .isEqualTo(cha.getRootClass());
 
     // with phantom classes, lookup and IR construction should work
     cha = ClassHierarchyFactory.makeWithPhantom(scope);
     klass = cha.lookupClass(ref);
-    assertNotNull(klass, "expected class MissingSuper to load");
+    assertThat(klass).withFailMessage("expected class MissingSuper to load").isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
-    assertEquals(2, declaredMethods.size(), declaredMethods::toString);
+    assertThat(declaredMethods).as(declaredMethods::toString).hasSize(2);
     for (IMethod m : declaredMethods) {
       // should succeed
       cache.getIR(m);
@@ -78,10 +78,10 @@ public class MissingSuperTest extends WalaTestCase {
     for (IClass klass2 : cha) {
       if (klass2 instanceof PhantomClass
           && klass2.getReference().getClassLoader().equals(ClassLoaderReference.Application)) {
-        assertEquals("Lmissingsuper/Super", klass2.getReference().getName().toString());
+        assertThat(klass2.getReference().getName()).hasToString("Lmissingsuper/Super");
         found = true;
       }
     }
-    assertTrue(found);
+    assertThat(found).isTrue();
   }
 }

@@ -1,6 +1,8 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="No Back-Sliding" />
+    <inspection_tool class="15e14404-68cd-373a-8ad8-9b7c2bd01d5f" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="4b5a6264-b1b8-3815-be40-9c0079b31521" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AccessStaticViaInstance" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AnonymousHasLambdaAlternative" enabled="true" level="ERROR" enabled_by_default="true">
@@ -509,6 +511,52 @@
     <inspection_tool class="ReturnFromFinallyBlockJS" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Eclipse Build Artifacts" level="WARNING" enabled="false" />
       <scope name="JavaScript Test Subjects" level="WARNING" enabled="false" />
+    </inspection_tool>
+    <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <replaceConfiguration name="Convert JUnit 5 assertion to AssertJ" text="org.junit.jupiter.api.Assertions.assertTrue($fact$, $message$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThat($fact$).withFailMessage($message$).isTrue()">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="message" within="" contains="" />
+        <constraint name="fact" within="" contains="" />
+        <variableDefinition name="fact" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Convert JUnit 5 assertion to AssertJ" text="org.junit.jupiter.api.Assertions.assertFalse($antifact$, $message$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThat($antifact$).withFailMessage($message$).isFalse()">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="message" within="" contains="" />
+        <constraint name="antifact" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Convert JUnit 5 assertion to AssertJ" text="org.junit.jupiter.api.Assertions.assertEquals($expected$, $actual$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThat($actual$).isEqualTo($expected$)">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="expected" within="" contains="" />
+        <constraint name="actual" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Convert JUnit 5 assertion to AssertJ" text="org.junit.jupiter.api.Assertions.assertThrows($class$, $lambda$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThatThrownBy($lambda$).isInstanceOf($class$)">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="class" within="" contains="" />
+        <constraint name="lambda" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Improve use of AssertJ" text="$assertion$.withFailMessage($left$ + $right$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="$assertion$.withFailMessage(() -&gt; $left$ + $right$)">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="assertion" within="" contains="" />
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Improve use of AssertJ" text="org.assertj.core.api.Assertions.assertThat($actual$.toString()).withFailMessage($message$).isEqualTo($expected$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThat($actual$).withFailMessage($message$).hasToString($expected$)">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="message" within="" contains="" />
+        <constraint name="actual" within="" contains="" />
+        <constraint name="expected" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Improve use of AssertJ" text="org.assertj.core.api.Assertions.assertThat($actual$.equals($expected$)).withFailMessage($message$).isTrue()" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThat($actual$).withFailMessage($message$).isEqualTo($expected$)">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="message" within="" contains="" />
+        <constraint name="actual" within="" contains="" />
+        <constraint name="expected" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Improve use of AssertJ" text="org.assertj.core.api.Assertions.assertThat($actual$.isPresent()).withFailMessage($message$).isTrue()" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="true" shortenFQN="true" useStaticImport="true" replacement="org.assertj.core.api.Assertions.assertThat($actual$).withFailMessage($message$).isPresent()">
+        <constraint name="__context__" within="" contains="" />
+        <constraint name="message" within="" contains="" />
+        <constraint name="actual" within="" contains="" />
+      </replaceConfiguration>
     </inspection_tool>
     <inspection_tool class="SameParameterValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SameReturnValue" enabled="false" level="WARNING" enabled_by_default="false" />

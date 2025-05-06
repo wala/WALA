@@ -1,8 +1,6 @@
 package com.ibm.wala.types.generics;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -21,28 +19,29 @@ public class TypeSignatureTest {
 
   @Test
   void basicTypeArguments() {
-    assertThat(
-        TypeSignature.parseForTypeSignatures("<Ljava/lang/String;ILjava/lang/Object;>"),
-        arrayContaining(is("Ljava/lang/String;"), is("I"), is("Ljava/lang/Object;")));
+    assertThat(TypeSignature.parseForTypeSignatures("<Ljava/lang/String;ILjava/lang/Object;>"))
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder("Ljava/lang/String;", "I", "Ljava/lang/Object;");
   }
 
   @Test
   void multiDimArray() {
-    assertThat(
-        TypeSignature.parseForTypeSignatures("<[[Ljava/lang/String;[[[J>"),
-        arrayContaining(is("[[Ljava/lang/String;"), is("[[[J")));
+    assertThat(TypeSignature.parseForTypeSignatures("<[[Ljava/lang/String;[[[J>"))
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder("[[Ljava/lang/String;", "[[[J");
   }
 
   @Test
   void wildcards() {
-    assertThat(
-        TypeSignature.parseForTypeSignatures("<B*J>"), arrayContaining(is("B"), is("*"), is("J")));
-    assertThat(
-        TypeSignature.parseForTypeSignatures("<+Ljava/lang/Object;>"),
-        arrayContaining(is("+Ljava/lang/Object;")));
-    assertThat(
-        TypeSignature.parseForTypeSignatures("<-Ljava/lang/Double;BB>"),
-        arrayContaining(is("-Ljava/lang/Double;"), is("B"), is("B")));
+    assertThat(TypeSignature.parseForTypeSignatures("<B*J>"))
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder("B", "*", "J");
+    assertThat(TypeSignature.parseForTypeSignatures("<+Ljava/lang/Object;>"))
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder("+Ljava/lang/Object;");
+    assertThat(TypeSignature.parseForTypeSignatures("<-Ljava/lang/Double;BB>"))
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder("-Ljava/lang/Double;", "B", "B");
   }
 
   @Test

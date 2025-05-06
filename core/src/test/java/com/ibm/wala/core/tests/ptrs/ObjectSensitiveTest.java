@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -71,7 +70,7 @@ public class ObjectSensitiveTest {
         new LocalPointerKey(doNothing, doNothing.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pa.getPointsToSet(localPointerKey);
 
-    assertEquals(pts.size(), expectedSize);
+    assertThat(expectedSize).isEqualTo(pts.size());
   }
 
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> initCallGraph(
@@ -99,10 +98,10 @@ public class ObjectSensitiveTest {
     MethodReference mr =
         MethodReference.findOrCreate(mainClassTr, "doNothing", "(Ljava/lang/Object;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    assertEquals(1, nodes.size());
+    assertThat(nodes).hasSize(1);
 
     Optional<CGNode> firstMatched = nodes.stream().findFirst();
-    assertTrue(firstMatched.isPresent());
+    assertThat(firstMatched).isPresent();
     return firstMatched.get();
   }
 }

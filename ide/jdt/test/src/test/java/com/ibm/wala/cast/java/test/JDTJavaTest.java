@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;

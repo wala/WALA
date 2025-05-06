@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.core.tests.typeInference;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
-import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -101,9 +99,9 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("foo"),
             new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    assertNotNull(method, "method not found");
+    assertThat(method).withFailMessage("method not found").isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
@@ -121,14 +119,14 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("bar"),
             new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
-    assertNotNull(method, "method not found");
+    assertThat(method).withFailMessage("method not found").isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
-    assertNotNull(ti.getType(2), "null type abstraction for parameter");
+    assertThat(ti.getType(2)).withFailMessage("null type abstraction for parameter").isNotNull();
   }
 
   @Test
@@ -139,16 +137,19 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("inferInt"),
             new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    assertNotNull(method, "method not found");
+    assertThat(method).withFailMessage("method not found").isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
     TypeAbstraction type = ti.getType(7);
-    assertNotNull(type, "null type abstraction");
-    assertEquals("int", type.toString(), "inferred wrong type");
+    assertThat(type)
+        .withFailMessage("null type abstraction")
+        .isNotNull()
+        .withFailMessage("inferred wrong type")
+        .hasToString("int");
   }
 
   @Test
@@ -159,22 +160,18 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("useCast"),
             new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));
-    assertNotNull(method, "method not found");
+    assertThat(method).withFailMessage("method not found").isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, false);
     TypeAbstraction type = ti.getType(4);
-    assertNotNull(type, "null type abstraction");
-    assertTrue(
-        type instanceof ConeType
-            && ((ConeType) type)
-                .getTypeReference()
-                .getName()
-                .toString()
-                .equals("Ljava/lang/String"),
-        "inferred wrong type " + type);
+    assertThat(type).withFailMessage("null type abstraction").isNotNull();
+    assertThatObject(type)
+        .withFailMessage(() -> "inferred wrong type " + type)
+        .extracting(coneType -> coneType.getTypeReference().getName())
+        .hasToString("Ljava/lang/String");
   }
 }

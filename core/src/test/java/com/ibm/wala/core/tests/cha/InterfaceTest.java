@@ -10,9 +10,12 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.ipa.cha.IClassHierarchyConditions.implementsInterface;
+import static com.ibm.wala.ipa.cha.IClassHierarchyConditions.isAssignableFrom;
+import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.Assertions.not;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -80,13 +83,16 @@ public class InterfaceTest extends WalaTestCase {
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
 
-    assertNotNull(prep_stmt, "did not find PreparedStatement");
-    assertNotNull(stmt, "did not find Statement");
+    assertThat(prep_stmt).withFailMessage("did not find PreparedStatement").isNotNull();
+    assertThat(stmt).withFailMessage("did not find Statement").isNotNull();
 
-    assertTrue(cha.implementsInterface(prep_stmt, stmt));
-    assertFalse(cha.implementsInterface(stmt, prep_stmt));
-    assertTrue(cha.isAssignableFrom(stmt, prep_stmt));
-    assertFalse(cha.isAssignableFrom(prep_stmt, stmt));
+    assertThatObject(cha)
+        .has(
+            allOf(
+                implementsInterface(prep_stmt, stmt),
+                not(implementsInterface(stmt, prep_stmt)),
+                isAssignableFrom(stmt, prep_stmt),
+                not(isAssignableFrom(prep_stmt, stmt))));
   }
 
   /** check that arrays implement Cloneable and Serializable */
@@ -99,9 +105,12 @@ public class InterfaceTest extends WalaTestCase {
     IClass cloneableClass = cha.lookupClass(TypeReference.JavaLangCloneable);
     IClass serializableClass = cha.lookupClass(TypeReference.JavaIoSerializable);
 
-    assertTrue(cha.implementsInterface(objArrayClass, cloneableClass));
-    assertTrue(cha.implementsInterface(objArrayClass, serializableClass));
-    assertTrue(cha.implementsInterface(stringArrayClass, cloneableClass));
-    assertTrue(cha.implementsInterface(stringArrayClass, serializableClass));
+    assertThatObject(cha)
+        .has(
+            allOf(
+                implementsInterface(objArrayClass, cloneableClass),
+                implementsInterface(objArrayClass, serializableClass),
+                implementsInterface(stringArrayClass, cloneableClass),
+                implementsInterface(stringArrayClass, serializableClass)));
   }
 }

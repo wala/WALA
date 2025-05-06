@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -62,11 +61,11 @@ public class SyntheticTest extends WalaTestCase {
     TypeReference tB =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo$B");
     MethodReference barB = MethodReference.findOrCreate(tB, "bar", "()V");
-    assertEquals(1, cg.getNodes(barA).size());
-    assertEquals(1, cg.getNodes(barB).size());
+    assertThat(cg.getNodes(barA)).hasSize(1);
+    assertThat(cg.getNodes(barB)).hasSize(1);
 
     CGNode root = cg.getFakeRootNode();
     IR ir = root.getIR();
-    assertTrue(ir.iteratePhis().hasNext());
+    assertThat(ir.iteratePhis()).hasNext();
   }
 }

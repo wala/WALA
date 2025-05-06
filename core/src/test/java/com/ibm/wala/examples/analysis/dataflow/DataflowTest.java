@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.examples.analysis.dataflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -121,8 +121,7 @@ public class DataflowTest extends WalaTestCase {
     for (IExplodedBasicBlock ebb : ecfg) {
       if (ebb.getNumber() == 4) {
         IntSet out = solver.getOut(ebb).getValue();
-        assertEquals(1, out.size());
-        assertTrue(out.contains(1));
+        assertThat(out).toCollection().containsExactly(1);
       }
     }
   }
@@ -141,9 +140,7 @@ public class DataflowTest extends WalaTestCase {
     for (IExplodedBasicBlock ebb : ecfg) {
       if (ebb.getNumber() == 10) {
         IntSet out = solver.getOut(ebb).getValue();
-        assertEquals(2, out.size());
-        assertTrue(out.contains(0));
-        assertTrue(out.contains(2));
+        assertThat(out).toCollection().containsExactly(0, 2);
       }
     }
   }
@@ -181,7 +178,7 @@ public class DataflowTest extends WalaTestCase {
               applicationDefs.add(def);
             }
           }
-          assertEquals(2, applicationDefs.size());
+          assertThat(applicationDefs).hasSize(2);
         }
       }
     }
@@ -221,7 +218,7 @@ public class DataflowTest extends WalaTestCase {
               applicationDefs.add(def);
             }
           }
-          assertEquals(1, applicationDefs.size());
+          assertThat(applicationDefs).hasSize(1);
         }
       }
     }

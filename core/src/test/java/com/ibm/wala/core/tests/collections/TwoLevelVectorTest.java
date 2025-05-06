@@ -18,8 +18,7 @@
  */
 package com.ibm.wala.core.tests.collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.TwoLevelVector;
@@ -44,7 +43,7 @@ public final class TwoLevelVectorTest extends WalaTestCase {
     final TwoLevelVector<Integer> tlVector = new TwoLevelVector<>();
     Iterator<Integer> ignored = tlVector.iterator();
     tlVector.set(2147483647, 56);
-    assertNotNull(tlVector.iterator());
-    assertEquals(Integer.valueOf(56), tlVector.get(2147483647));
+    assertThat(tlVector.iterator()).isNotNull();
+    assertThat(tlVector.get(2147483647)).isEqualTo(56);
   }
 }

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.ptrs;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -70,11 +70,11 @@ public class ZeroLengthArrayTest {
             Everywhere.EVERYWHERE);
     OrdinalSet<InstanceKey> pointsToSet =
         pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
-    assertEquals(1, pointsToSet.size());
+    assertThat(pointsToSet).hasSize(1);
     InstanceKey arrayKey = pointsToSet.iterator().next();
     OrdinalSet<InstanceKey> arrayContents =
         pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
     System.err.println(arrayContents);
-    assertEquals(0, arrayContents.size());
+    assertThat(arrayContents).isEmpty();
   }
 }
