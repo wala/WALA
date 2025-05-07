@@ -1784,7 +1784,7 @@ public abstract class ToSource {
           afterNodes.clear(); // avoid duplication;
         }
       } else if (LoopType.FOR.equals(loopType)) {
-        assert (condSuccessor.getChildCount() > 1);
+        assert (condSuccessor.getChildCount() >= 1);
 
         List<CAstNode> forConditions = new ArrayList<>();
         // Find out the assignment that should be moved into for() statement
