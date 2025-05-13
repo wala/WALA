@@ -157,37 +157,36 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
   public class JdtLambdaType implements JavaType {
 
-	private final ITypeBinding parent;
-	private String name;
-	
-	public JdtLambdaType(String name, ITypeBinding parent) {
-		this.parent = parent;
-		this.name = name;
-	}
-	
-	@Override
-	public Collection<CAstQualifier> getQualifiers() {
-		return Collections.emptySet();
-	}
+    private final ITypeBinding parent;
+    private String name;
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    public JdtLambdaType(String name, ITypeBinding parent) {
+      this.parent = parent;
+      this.name = name;
+    }
 
-	@Override
-	public Collection<CAstType> getSupertypes() {
-		return Arrays.asList(
-				getCAstTypeFor(fAst.resolveWellKnownType("java.lang.Object")), 
-				getCAstTypeFor(parent));
-	}
+    @Override
+    public Collection<CAstQualifier> getQualifiers() {
+      return Collections.emptySet();
+    }
 
-	@Override
-	public boolean isInterface() {
-		return false;
-	}
-	  
+    @Override
+    public String getName() {
+      return name;
+    }
+
+    @Override
+    public Collection<CAstType> getSupertypes() {
+      return Arrays.asList(
+          getCAstTypeFor(fAst.resolveWellKnownType("java.lang.Object")), getCAstTypeFor(parent));
+    }
+
+    @Override
+    public boolean isInterface() {
+      return false;
+    }
   }
+
   public final class JdtJavaType implements JavaType {
     private final ITypeBinding fType;
 
@@ -205,7 +204,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
     @Override
     public String getName() {
-    	assert fIdentityMapper.getTypeRef(fType) != null;
+      assert fIdentityMapper.getTypeRef(fType) != null;
       return fIdentityMapper.getTypeRef(fType).getName().toString();
     }
 

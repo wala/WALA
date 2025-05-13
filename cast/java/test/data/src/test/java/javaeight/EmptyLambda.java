@@ -8,8 +8,8 @@ public class EmptyLambda {
         new EmptyLambda().doit();
     }
 
-    String doit() {
+    int doit() {
         Function<String,String> x = i -> i + "y";
-        return x.apply("x");
+        return x.apply("x").length();
     }
 }

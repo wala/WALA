@@ -175,12 +175,14 @@ public class JDT2CAstUtils {
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     if (binName.contains("$")) {
-    	String dollarSignNumber = binName.substring(binName.indexOf('$'));
-        return "<anonymous subclass of " + ct.getSuperclass().getBinaryName() + '>' + dollarSignNumber;
+      String dollarSignNumber = binName.substring(binName.indexOf('$'));
+      return "<anonymous subclass of "
+          + ct.getSuperclass().getBinaryName()
+          + '>'
+          + dollarSignNumber;
     } else {
-    	return "<lambda subclass of " + ct.getBinaryName() + '>';
+      return "<lambda subclass of " + ct.getBinaryName() + '>';
     }
-    
   }
 
   /**

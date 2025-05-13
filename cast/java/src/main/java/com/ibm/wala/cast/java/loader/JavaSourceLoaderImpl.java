@@ -653,10 +653,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   public IClass defineType(CAstEntity type, String typeName, CAstEntity owner) {
-    if(type.getName().contains("lambda subclass")) {
+    if (type.getName().contains("lambda subclass")) {
       typeName = type.getName();
     }
-    
+
     Collection<TypeName> superTypeNames = new ArrayList<>();
     for (CAstType superType : type.getType().getSupertypes()) {
       superTypeNames.add(toWALATypeName(superType));
