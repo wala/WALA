@@ -179,6 +179,10 @@ public class Loop {
     return nestedLoops.contains(loop);
   }
 
+  public boolean isNestedLoopHeader(ISSABasicBlock block) {
+    return nestedLoops.stream().anyMatch(ll -> ll.getLoopHeader().equals(block));
+  }
+
   public ISSABasicBlock getLoopBreakerByExit(ISSABasicBlock exit) {
     return loopBreakers.stream()
         .filter(pair -> exit.equals(pair.snd))
