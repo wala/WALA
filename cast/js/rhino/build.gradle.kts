@@ -5,7 +5,7 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val extraTestResources: Configuration by configurations.creating { isCanBeConsumed = false }
+val extraTestResources by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   extraTestResources(project(mapOf("path" to ":cast:js", "configuration" to "testResources")))

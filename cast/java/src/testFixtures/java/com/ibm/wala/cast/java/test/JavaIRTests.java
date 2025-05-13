@@ -107,7 +107,7 @@ public abstract class JavaIRTests extends IRTests {
 
             final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
 
-            assertEquals(interfaces.size(), 1, "Expected one single interface.");
+            assertEquals(1, interfaces.size(), "Expected one single interface.");
 
             assertTrue(
                 interfaces.contains(
@@ -171,10 +171,10 @@ public abstract class JavaIRTests extends IRTests {
                 s instanceof SSAGetInstruction && ((SSAGetInstruction) s).isStatic(),
                 "Did not find a getstatic instruction.");
             final FieldReference field = ((SSAGetInstruction) s).getDeclaredField();
-            assertEquals(field.getName().toString(), "value", "Expected a getstatic for 'value'.");
+            assertEquals("value", field.getName().toString(), "Expected a getstatic for 'value'.");
             assertEquals(
-                field.getDeclaringClass().getName().toString(),
                 "LFooQ",
+                field.getDeclaringClass().getName().toString(),
                 "Expected a getstatic for 'value'.");
           });
 
@@ -218,8 +218,8 @@ public abstract class JavaIRTests extends IRTests {
                 SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
 
                 assertEquals(
-                    node.getIR().getLocalNames(i, as.getArrayRef())[0],
                     "y",
+                    node.getIR().getLocalNames(i, as.getArrayRef())[0],
                     "Expected an array store to 'y'.");
 
                 final Integer valueOfArrayIndex =
@@ -262,7 +262,7 @@ public abstract class JavaIRTests extends IRTests {
                 }
               }
 
-              assertEquals(count, 4, "Unexpected number of array instructions in 'foo'.");
+              assertEquals(4, count, "Unexpected number of array instructions in 'foo'.");
             }
 
             private boolean isArrayInstruction(SSAInstruction s) {
@@ -446,7 +446,7 @@ public abstract class JavaIRTests extends IRTests {
         Arguments.of("p", "NonPrimaryTopLevel", emptyList, true, null));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "java17IRTestName={0}, assertReachable={2}, exclusionsFile={3}")
   @MethodSource("javaIRTestsParameters")
   public void runJavaIRTests(
       String java17IRTestName, List<IRAssertion> ca, boolean assertReachable, String exclusionsFile)

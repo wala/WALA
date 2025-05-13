@@ -21,24 +21,24 @@ walaEclipseMavenCentral {
   testImplementation("org.eclipse.jface")
 }
 
-val coreTestDataJar: Configuration by
-    configurations.creating {
+val coreTestDataJar by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
     }
 
-val coreTestResources: Configuration by configurations.creating { isCanBeConsumed = false }
+val coreTestResources by configurations.registering { isCanBeConsumed = false }
 
-val coreMainSource: Configuration by
-    configurations.creating {
+val coreMainSource by
+    configurations.registering {
       isCanBeConsumed = false
       attributes {
         attribute(VERIFICATION_TYPE_ATTRIBUTE, objects.named(VerificationType::class, MAIN_SOURCES))
       }
     }
 
-val ifdsExplorerExampleClasspath: Configuration by
-    configurations.creating {
+val ifdsExplorerExampleClasspath by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
     }
@@ -92,7 +92,7 @@ tasks.named<Copy>("processTestResources") {
 tasks.register<JavaExec>("runIFDSExplorerExample") {
   group = "Execution"
   description = "Run the IFDSExplorerExample driver"
-  classpath = ifdsExplorerExampleClasspath
+  classpath(ifdsExplorerExampleClasspath)
   mainClass = "com.ibm.wala.examples.drivers.IFDSExplorerExample"
   if (System.getProperty("os.name").startsWith("Mac OS X")) {
     jvmArgs = listOf("-XstartOnFirstThread")
