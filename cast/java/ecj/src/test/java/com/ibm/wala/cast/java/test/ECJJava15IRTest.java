@@ -1,12 +1,10 @@
 package com.ibm.wala.cast.java.test;
 
+import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import com.ibm.wala.util.CancelException;
 
 public class ECJJava15IRTest extends ECJIRTests {
 

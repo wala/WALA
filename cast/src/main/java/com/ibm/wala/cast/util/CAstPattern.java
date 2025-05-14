@@ -382,8 +382,9 @@ public class CAstPattern {
   public static Collection<Segments> findAll(final CAstPattern p, final CAstEntity e) {
     return findAll(p, e, e.getAST());
   }
-  
-  public static Collection<Segments> findAll(final CAstPattern p, final CAstEntity e, CAstNode ast) {
+
+  public static Collection<Segments> findAll(
+      final CAstPattern p, final CAstEntity e, CAstNode ast) {
     return p.new Matcher()
         .findAll(
             new Context() {

@@ -6,11 +6,9 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import java.io.IOException;
-
-import org.junit.jupiter.api.Test;
-
 import com.ibm.wala.util.CancelException;
+import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
 public class ECJJava8IRTest extends ECJIRTests {
 
