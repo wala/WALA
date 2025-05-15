@@ -144,15 +144,11 @@ public class CallGraphTest extends WalaTestCase {
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
     String ws = Warnings.asString();
-    assertThat(ws)
-        .withFailMessage("failed to report a warning about Abstract1")
-        .contains("cornerCases/Abstract1");
+    assertThat(ws).contains("cornerCases/Abstract1");
 
     // we do not expect a warning about class Abstract2, which has a concrete
     // subclasses
-    assertThat(ws)
-        .withFailMessage("reported a warning about Abstract2")
-        .doesNotContain("cornerCases/Abstract2");
+    assertThat(ws).doesNotContain("cornerCases/Abstract2");
   }
 
   @Test
@@ -212,7 +208,7 @@ public class CallGraphTest extends WalaTestCase {
         foundSortForward = true;
       }
     }
-    assertThat(foundSortForward).withFailMessage("expected for sortForward").isTrue();
+    assertThat(foundSortForward).isTrue();
   }
 
   @Test
@@ -363,7 +359,6 @@ public class CallGraphTest extends WalaTestCase {
                         cg.getSuccNodes(mainMethod), Spliterator.ORDERED),
                     false)
                 .filter(succ -> succ.getMethod().getName().toString().equals("valueOf")))
-        .withFailMessage("did not find call to valueOf")
         .isNotEmpty();
   }
 

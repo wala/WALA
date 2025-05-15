@@ -69,44 +69,24 @@ public class ExtensionGraphTest {
   @Test
   public void testAugment() {
     NumberedGraph<String> base = makeBaseGraph();
-    assertThat(IteratorUtil.count(new SCCIterator<>(base)))
-        .withFailMessage("base has 8 SCCs")
-        .isEqualTo(8);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
 
     NumberedGraph<String> x = new ExtensionGraph<>(base);
     augmentA(x);
-    assertThat(IteratorUtil.count(new SCCIterator<>(x)))
-        .withFailMessage("base+A has 5 SCCs")
-        .isEqualTo(5);
-    assertThat(IteratorUtil.count(new SCCIterator<>(base)))
-        .withFailMessage("base has 8 SCCs")
-        .isEqualTo(8);
+    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
 
     NumberedGraph<String> y = new ExtensionGraph<>(x);
     augmentB(y);
-    assertThat(IteratorUtil.count(new SCCIterator<>(y)))
-        .withFailMessage("base+A+B has 7 SCCs")
-        .isEqualTo(7);
-    assertThat(IteratorUtil.count(new SCCIterator<>(x)))
-        .withFailMessage("base+A has 5 SCCs")
-        .isEqualTo(5);
-    assertThat(IteratorUtil.count(new SCCIterator<>(base)))
-        .withFailMessage("base has 8 SCCs")
-        .isEqualTo(8);
+    assertThat(IteratorUtil.count(new SCCIterator<>(y))).isEqualTo(7);
+    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
 
     NumberedGraph<String> z = new ExtensionGraph<>(y);
     augmentC(z);
-    assertThat(IteratorUtil.count(new SCCIterator<>(z)))
-        .withFailMessage("base+A+B+C has 3 SCCs")
-        .isEqualTo(3);
-    assertThat(IteratorUtil.count(new SCCIterator<>(y)))
-        .withFailMessage("base+A+B has 7 SCCs")
-        .isEqualTo(7);
-    assertThat(IteratorUtil.count(new SCCIterator<>(x)))
-        .withFailMessage("base+A has 5 SCCs")
-        .isEqualTo(5);
-    assertThat(IteratorUtil.count(new SCCIterator<>(base)))
-        .withFailMessage("base has 8 SCCs")
-        .isEqualTo(8);
+    assertThat(IteratorUtil.count(new SCCIterator<>(z))).isEqualTo(3);
+    assertThat(IteratorUtil.count(new SCCIterator<>(y))).isEqualTo(7);
+    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
   }
 }

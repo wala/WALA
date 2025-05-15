@@ -177,11 +177,10 @@ public class ExceptionAnalysis2EdgeFilterTest {
       }
     }
 
-    assertThat(deletedNormal).withFailMessage("Number of normal edges deleted wrong:").isEqualTo(0);
+    assertThat(deletedNormal).isEqualTo(0);
     for (Map.Entry<String, Integer> entry : deletedExceptional.entrySet()) {
       final String key = entry.getKey();
       final int value = entry.getValue();
-      String text = "Number of exceptional edges deleted wrong for " + key + ":";
       final int expected;
       switch (key) {
         case "testTryCatchMultipleExceptions":
@@ -201,7 +200,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
           expected = 0;
           break;
       }
-      assertThat(value).withFailMessage(() -> text).isEqualTo(expected);
+      assertThat(value).isEqualTo(expected);
     }
   }
 

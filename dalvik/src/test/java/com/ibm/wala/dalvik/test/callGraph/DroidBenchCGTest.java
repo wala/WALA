@@ -120,8 +120,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
             new NullProgressMonitor(),
             ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
     // System.err.println(x.fst);
-    Set<IMethod> bad = assertUserCodeReachable(x.fst, uncalled);
-    assertThat(bad).withFailMessage(() -> bad + " should be empty").isEmpty();
+    assertThat(assertUserCodeReachable(x.fst, uncalled)).isEmpty();
     System.err.println("...success testing " + apkFile);
   }
 

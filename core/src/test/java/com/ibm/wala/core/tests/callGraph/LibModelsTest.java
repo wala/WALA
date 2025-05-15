@@ -53,12 +53,8 @@ public class LibModelsTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(ClassLoaderReference.Application, libModelsTestClass);
     MethodReference m = MethodReference.findOrCreate(t, "reachable1", "()V");
-    assertThat(cg.getNodes(m).iterator())
-        .withFailMessage("expect reachable1 from addShutdownHook")
-        .hasNext();
+    assertThat(cg.getNodes(m).iterator()).hasNext();
     MethodReference m2 = MethodReference.findOrCreate(t, "reachable2", "()V");
-    assertThat(cg.getNodes(m2).iterator())
-        .withFailMessage("expect reachable2 from uncaught exception handler")
-        .hasNext();
+    assertThat(cg.getNodes(m2).iterator()).hasNext();
   }
 }

@@ -83,8 +83,8 @@ public class InterfaceTest extends WalaTestCase {
     IClass prep_stmt = cha.lookupClass(prep_stmt_type);
     IClass stmt = cha.lookupClass(stmt_type);
 
-    assertThat(prep_stmt).withFailMessage("did not find PreparedStatement").isNotNull();
-    assertThat(stmt).withFailMessage("did not find Statement").isNotNull();
+    assertThat(prep_stmt).isNotNull();
+    assertThat(stmt).isNotNull();
 
     assertThatObject(cha)
         .has(

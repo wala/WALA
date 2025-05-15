@@ -50,7 +50,7 @@ public abstract class AbstractJSProjectScopeTest {
     IJavaScriptProject p =
         JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     System.err.println(p);
-    assertThat(p).withFailMessage("cannot find project").isNotNull();
+    assertThat(p).isNotNull();
   }
 
   @Test
@@ -64,10 +64,8 @@ public abstract class AbstractJSProjectScopeTest {
                 new CAstAnalysisScope(
                     JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
-    assertThat(s).withFailMessage("cannot make scope").isNotNull();
-    assertThat(s.getModules(JavaScriptTypes.jsLoader))
-        .withFailMessage("cannot find files")
-        .isNotEmpty();
+    assertThat(s).isNotNull();
+    assertThat(s.getModules(JavaScriptTypes.jsLoader)).isNotEmpty();
   }
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p)
@@ -83,8 +81,8 @@ public abstract class AbstractJSProjectScopeTest {
 
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
-    assertThat(info.calls).withFailMessage("cannot find any function calls").isNotEmpty();
-    assertThat(info.cg.getNumberOfNodes()).withFailMessage("cannot find any cg nodes").isPositive();
+    assertThat(info.calls).isNotEmpty();
+    assertThat(info.cg.getNumberOfNodes()).isPositive();
   }
 
   @Test

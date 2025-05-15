@@ -43,7 +43,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
 
     IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cg, cg.getFakeRootNode());
 
-    assertThat(backEdges.iterator()).withFailMessage("NList should have cycles").hasNext();
+    assertThat(backEdges.iterator()).hasNext();
 
     Map<CGNode, Set<CGNode>> cgBackEdges = HashMapFactory.make();
     for (IntPair p : backEdges) {
@@ -57,8 +57,6 @@ public class AcyclicCallGraphTest extends WalaTestCase {
     PrunedCallGraph pcg =
         new PrunedCallGraph(cg, Iterator2Collection.toSet(cg.iterator()), cgBackEdges);
 
-    assertThat(Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator())
-        .withFailMessage("cycles should be gone")
-        .isExhausted();
+    assertThat(Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator()).isExhausted();
   }
 }

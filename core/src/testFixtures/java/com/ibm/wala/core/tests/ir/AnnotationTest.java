@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.ir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IBytecodeMethod;
@@ -152,11 +153,8 @@ public abstract class AnnotationTest extends WalaTestCase {
       Collection<Annotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertThat(classUnderTest).withFailMessage(() -> typeUnderTest + " not found").isNotNull();
-    assertThat(classUnderTest)
-        .withFailMessage(() -> classUnderTest + " must be BytecodeClass")
-        .isInstanceOf(BytecodeClass.class);
-    BytecodeClass<?> bcClassUnderTest = (BytecodeClass<?>) classUnderTest;
+    BytecodeClass<?> bcClassUnderTest =
+        assertThat(classUnderTest).asInstanceOf(type(BytecodeClass.class)).actual();
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
     Collection<Annotation> runtimeVisibleAnnotations = bcClassUnderTest.getAnnotations(false);
@@ -174,7 +172,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotatedClass3");
     IClass klass = cha.lookupClass(typeRef);
-    assertThat(klass).withFailMessage(() -> typeRef + " must exist").isNotNull();
+    assertThat(klass).isNotNull();
     BytecodeClass<?> shrikeClass = (BytecodeClass<?>) klass;
     Collection<Annotation> classAnnotations = shrikeClass.getAnnotations(false);
     assertThat(classAnnotations)
@@ -185,14 +183,8 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make("foo()V"));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertThat(methodUnderTest)
-        .withFailMessage(() -> methodRefUnderTest + " not found")
-        .isNotNull();
-    assertThat(methodUnderTest)
-        .withFailMessage(() -> methodUnderTest + " must be IBytecodeMethod")
-        .isInstanceOf(IBytecodeMethod.class);
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
-        (IBytecodeMethod<IInstruction>) methodUnderTest;
+        assertThat(methodUnderTest).asInstanceOf(type(IBytecodeMethod.class)).actual();
 
     Collection<Annotation> runtimeVisibleAnnotations = bcMethodUnderTest.getAnnotations(false);
     assertThat(runtimeVisibleAnnotations).hasSize(1);
@@ -228,7 +220,7 @@ public abstract class AnnotationTest extends WalaTestCase {
             typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int);
 
     IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
-    assertThat(fieldUnderTest).withFailMessage(() -> fieldRefUnderTest + " not found").isNotNull();
+    assertThat(fieldUnderTest).isNotNull();
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
     Collection<Annotation> expectedAnnotations = HashSetFactory.make();
@@ -298,13 +290,8 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertThat(methodUnderTest)
-        .withFailMessage(() -> methodRefUnderTest + " not found")
-        .isNotNull();
-    assertThat(methodUnderTest)
-        .withFailMessage(() -> methodUnderTest + " must be bytecode method")
-        .isInstanceOf(IBytecodeMethod.class);
-    IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
+    IBytecodeMethod<?> IBytecodeMethodUnderTest =
+        assertThat(methodUnderTest).asInstanceOf(type(IBytecodeMethod.class)).actual();
 
     Collection<Annotation>[] parameterAnnotations =
         IBytecodeMethodUnderTest.getParameterAnnotations();
@@ -320,7 +307,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         }
       }
 
-      assertThat(a).withFailMessage("%s must be %s", e, a).isEqualTo(e);
+      assertThat(a).isEqualTo(e);
     }
   }
 }

@@ -35,26 +35,22 @@ public class JDK11StringConcatTest extends WalaTestCase {
     TypeReference tm =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LstringConcat/StringConcat");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
-    assertThat(cg.getNodes(mm).iterator()).withFailMessage("expect main node").hasNext();
+    assertThat(cg.getNodes(mm).iterator()).hasNext();
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // should be from main to testConcat()
     TypeReference t1s =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LstringConcat/StringConcat");
     MethodReference t1m = MethodReference.findOrCreate(t1s, "testConcat", "()Ljava/lang/String;");
-    assertThat(cg.getNodes(t1m).iterator()).withFailMessage("expect testConcat node").hasNext();
+    assertThat(cg.getNodes(t1m).iterator()).hasNext();
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to testConcat()
-    assertThat(cg.getPossibleSites(mnode, t1node))
-        .withFailMessage("should have call site from main to StringConcat.testConcat()")
-        .hasNext();
+    assertThat(cg.getPossibleSites(mnode, t1node)).hasNext();
 
     // For now, we will see no call edges from the testConcat method, as we have not added
     // support for invokedynamic-based string concatenation yet
     // TODO add support and change this assertion
-    assertThat(cg.getSuccNodes(t1node))
-        .withFailMessage("did not expect call nodes from testConcat")
-        .isExhausted();
+    assertThat(cg.getSuccNodes(t1node)).isExhausted();
   }
 }

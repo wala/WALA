@@ -44,26 +44,20 @@ public class NestmatesTest extends WalaTestCase {
     TypeReference tm =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/TestNestmates");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
-    assertThat(cg.getNodes(mm).iterator()).withFailMessage("expect main node").hasNext();
+    assertThat(cg.getNodes(mm).iterator()).hasNext();
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // should be from main to Triple()
     TypeReference t1s =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lnestmates/Outer$Inner");
     MethodReference t1m = MethodReference.findOrCreate(t1s, "triple", "()I");
-    assertThat(cg.getNodes(t1m).iterator())
-        .withFailMessage("expect Outer.Inner.triple node")
-        .hasNext();
+    assertThat(cg.getNodes(t1m).iterator()).hasNext();
     CGNode t1node = cg.getNodes(t1m).iterator().next();
 
     // Check call from main to Triple()
-    assertThat(cg.getPossibleSites(mnode, t1node))
-        .withFailMessage("should have call site from main to TestNestmates.triple()")
-        .hasNext();
+    assertThat(cg.getPossibleSites(mnode, t1node)).hasNext();
 
     // check that triple() does not call an accessor method
-    assertThat(cg.getSuccNodes(t1node))
-        .withFailMessage("there should not be a call from triple() to an accessor method")
-        .isExhausted();
+    assertThat(cg.getSuccNodes(t1node)).isExhausted();
   }
 }
