@@ -7,6 +7,7 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 
 plugins {
   eclipse
+  jacoco
   `java-library`
   `java-test-fixtures`
   `maven-publish`
@@ -17,6 +18,8 @@ plugins {
   id("com.ibm.wala.gradle.subproject")
   id("net.ltgt.errorprone")
 }
+
+jacoco { toolVersion = "0.8.13" }
 
 repositories {
   mavenCentral()
@@ -170,4 +173,16 @@ spotless {
 // Google Java Format versions 1.25.0 and higher require Java 17
 tasks.named("spotlessJava") {
   onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
+}
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+  dependsOn(tasks.named("test"))
+  // point at each module’s compiled classes & sources:
+  val main by project.the<SourceSetContainer>().getting
+  sourceDirectories.setFrom(main.allSource.srcDirs)
+  classDirectories.setFrom(main.output)
+  reports {
+    html.required.set(true)
+    xml.required.set(true)
+  }
 }
