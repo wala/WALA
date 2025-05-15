@@ -94,4 +94,15 @@ public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys
     }
     return result;
   }
+
+  @Override
+  protected boolean checkCaller(Pair<String, String> name, CGNode callerOfConstructor) {
+    return callerOfConstructor
+        .getMethod()
+        .getReference()
+        .getDeclaringClass()
+        .getName()
+        .toString()
+        .equals(name.snd);
+  }
 }

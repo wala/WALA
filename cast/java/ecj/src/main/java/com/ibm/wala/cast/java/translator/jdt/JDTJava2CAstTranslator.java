@@ -588,7 +588,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         JDT2CAstUtils.mapModifiersToQualifiers(modifiers, isInterface, isAnnotation);
 
     if (n instanceof LambdaExpression) {
-      return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n), namePos) {
+      return new ClassEntity(
+          typeBinding, "L" + name, quals, memberEntities, makePosition(n), namePos) {
         CAstType lt = fTypeDict.new JdtLambdaType(name, typeBinding);
 
         @Override

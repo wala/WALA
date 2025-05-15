@@ -36,6 +36,9 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
@@ -51,6 +54,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -388,7 +392,7 @@ public abstract class IRTests {
 
     // If we've gotten this far, IR has been produced.
     if (dump) {
-      dumpIR(callGraph, sources, assertReachable);
+      dumpIR(callGraph, builder, sources, assertReachable);
     }
 
     // Now check any assertions as to source mapping
@@ -399,7 +403,11 @@ public abstract class IRTests {
     return Pair.make(callGraph, builder);
   }
 
-  protected static void dumpIR(CallGraph cg, Collection<String> sources, boolean assertReachable) {
+  protected static void dumpIR(
+      CallGraph cg,
+      CallGraphBuilder<? super InstanceKey> builder,
+      Collection<String> sources,
+      boolean assertReachable) {
     Set<String> sourcePaths = HashSetFactory.make();
     for (String src : sources) {
       sourcePaths.add(src.substring(src.lastIndexOf(File.separator) + 1));
@@ -422,14 +430,26 @@ public abstract class IRTests {
             if (m instanceof AstMethod) {
               String fn = ((AstClass) m.getDeclaringClass()).getSourcePosition().getURL().getFile();
               if (sourcePaths.contains(fn.substring(fn.lastIndexOf(File.separator) + 1))) {
-                System.err.println(("Method " + m.getReference() + " not reachable?"));
+                System.err.println("Method " + m.getReference() + " not reachable?");
                 unreachable.add(m);
               }
             }
             continue;
           }
           CGNode node = nodeIter.next();
-          System.err.println(node.getIR());
+          IR ir = node.getIR();
+          System.err.println(ir);
+          if (builder instanceof SSAPropagationCallGraphBuilder) {
+            PointerAnalysis<InstanceKey> pa =
+                ((SSAPropagationCallGraphBuilder) builder).getPointerAnalysis();
+            PointerKeyFactory f = ((SSAPropagationCallGraphBuilder) builder).getPointerKeyFactory();
+            for (int vn = 1; vn <= ir.getSymbolTable().getMaxValueNumber(); vn++) {
+              OrdinalSet<InstanceKey> ps = pa.getPointsToSet(f.getPointerKeyForLocal(node, vn));
+              if (!ps.isEmpty()) {
+                System.err.println("vn " + vn + " = " + ps);
+              }
+            }
+          }
         }
       }
     }

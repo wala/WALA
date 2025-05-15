@@ -172,7 +172,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
     @Override
     public String getName() {
-      return name;
+      return "L" + name;
     }
 
     @Override
