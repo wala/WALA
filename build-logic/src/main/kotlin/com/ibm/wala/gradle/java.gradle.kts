@@ -175,4 +175,3 @@ tasks.named("spotlessJava") {
   onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
 }
 
-// TODO follow this example instead: https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_code_coverage_distribution.html

@@ -5,20 +5,6 @@ plugins {
   id("jacoco-report-aggregation")
 }
 
-repositories {
-  mavenCentral()
-}
-
-//dependencies {
-//  // Aggregate coverage from all Java/Kotlin subprojects
-////  subprojects
-////    .filter { it.plugins.hasPlugin("jacoco") }
-////    .forEach { implementation(project(it.path)) }
-//  implementation(projects.core)
-//}
-
-// In the specific subproject's build.gradle.kts
-
 dependencies {
   implementation(projects.cast.java)
   implementation(projects.cast.java.ecj)
