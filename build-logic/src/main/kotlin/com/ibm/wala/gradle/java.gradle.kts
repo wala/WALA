@@ -176,14 +176,3 @@ tasks.named("spotlessJava") {
 }
 
 // TODO follow this example instead: https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_code_coverage_distribution.html
-tasks.named<JacocoReport>("jacocoTestReport") {
-  dependsOn(tasks.named("test"))
-  // point at each module’s compiled classes & sources:
-  val main by project.the<SourceSetContainer>().getting
-  sourceDirectories.setFrom(main.allSource.srcDirs)
-  classDirectories.setFrom(main.output)
-  reports {
-    html.required.set(true)
-    xml.required.set(true)
-  }
-}
