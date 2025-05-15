@@ -175,6 +175,7 @@ tasks.named("spotlessJava") {
   onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
 }
 
+// TODO follow this example instead: https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_code_coverage_distribution.html
 tasks.named<JacocoReport>("jacocoTestReport") {
   dependsOn(tasks.named("test"))
   // point at each module’s compiled classes & sources:
