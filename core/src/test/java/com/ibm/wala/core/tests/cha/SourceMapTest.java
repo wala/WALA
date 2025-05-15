@@ -43,7 +43,7 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
-    assertThat(klass).withFailMessage(() -> "failed to load " + t).isNotNull();
+    assertThat(klass).isNotNull();
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
     assertThat(sourceFile).isNotNull();

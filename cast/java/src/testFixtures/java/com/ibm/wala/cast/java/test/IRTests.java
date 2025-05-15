@@ -431,9 +431,7 @@ public abstract class IRTests {
     }
 
     if (assertReachable) {
-      assertThat(unreachable)
-          .withFailMessage(() -> "unreachable methods: " + unreachable)
-          .isEmpty();
+      assertThat(unreachable).isEmpty();
     }
   }
 
@@ -490,12 +488,12 @@ public abstract class IRTests {
         }
       }
     }
-    assertThat(foundLib).withFailMessage(() -> "couldn't find library file from " + libs).isTrue();
+    assertThat(foundLib).isTrue();
 
     for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
       File f = new File(srcFilePath);
-      assertThat(f).withFailMessage(() -> "couldn't find " + srcFilePath).exists();
+      assertThat(f).exists();
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {

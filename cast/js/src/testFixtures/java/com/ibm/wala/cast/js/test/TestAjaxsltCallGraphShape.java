@@ -27,7 +27,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testAjaxslt() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    assertThat(url).withFailMessage("cannot find resource \"ajaxslt/test/xslt.html\"").isNotNull();
+    assertThat(url).isNotNull();
     // need to turn off call/apply handling for this to scale; alternatively use 1-CFA
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, CGBuilderType.ZERO_ONE_CFA_NO_CALL_APPLY);
 
@@ -39,7 +39,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testAjaxpath() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
-    assertThat(url).withFailMessage("cannot find resource \"ajaxslt/test/xpath.html\"").isNotNull();
+    assertThat(url).isNotNull();
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);
   }

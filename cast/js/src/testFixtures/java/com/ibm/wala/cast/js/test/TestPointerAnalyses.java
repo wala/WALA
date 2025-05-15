@@ -266,20 +266,14 @@ public abstract class TestPointerAnalyses {
         Set<Pair<CGNode, NewSiteReference>> propPtrs =
             map(propCG, ptrs(propNodes, i, propCG, propPA));
 
-        final var slot = i;
-        assertThat(isGlobal(propNodes, i, propPA))
-            .withFailMessage(
-                () -> "analysis should agree on global object for " + slot + " of " + ir)
-            .isEqualTo(isGlobal(fbNodes, i, fbPA));
+        assertThat(isGlobal(propNodes, i, propPA)).isEqualTo(isGlobal(fbNodes, i, fbPA));
 
         if (!fbPtrs.isEmpty() || !propPtrs.isEmpty()) {
           System.err.println(
               "checking local " + i + " of " + function + ": " + fbPtrs + " vs " + propPtrs);
         }
 
-        assertThat(test)
-            .withFailMessage("%s should intersect  %s for %d of %s", fbPtrs, propPtrs, slot, ir)
-            .matches(t -> t.test(Pair.make(fbPtrs, propPtrs)));
+        assertThat(test).matches(t -> t.test(Pair.make(fbPtrs, propPtrs)));
       }
 
       SymbolTable symtab = ir.getSymbolTable();
@@ -303,17 +297,13 @@ public abstract class TestPointerAnalyses {
                               o.getConcreteType(),
                               Atom.findOrCreateUnicodeAtom(p),
                               JavaScriptTypes.Root));
-              assertThatObject(hg)
-                  .withFailMessage("object %s should have field %s", o, propKey)
-                  .has(edge(o, propKey));
+              assertThatObject(hg).has(edge(o, propKey));
 
               int val = ((AstPropertyWrite) inst).getValue();
               PointerKey valKey = fbPA.getHeapModel().getPointerKeyForLocal(node, val);
               OrdinalSet<ObjectVertex> valPtrs = fbPA.getPointsToSet(valKey);
               for (ObjectVertex v : valPtrs) {
-                assertThatObject(hg)
-                    .withFailMessage("field %s should point to object %s(%s)", propKey, valKey, v)
-                    .has(edge(propKey, v));
+                assertThatObject(hg).has(edge(propKey, v));
               }
             }
 
@@ -331,10 +321,7 @@ public abstract class TestPointerAnalyses {
                           null,
                           Atom.findOrCreateUnicodeAtom(propName),
                           JavaScriptTypes.Root));
-          final var propertyName = propName;
-          assertThatObject(hg)
-              .withFailMessage("global %s should exist", propertyName)
-              .has(edge(GlobalVertex.instance(), propKey));
+          assertThatObject(hg).has(edge(GlobalVertex.instance(), propKey));
 
           System.err.println("heap graph models instruction " + inst);
         } else if (inst instanceof JavaScriptInvoke) {
@@ -347,14 +334,6 @@ public abstract class TestPointerAnalyses {
           assertThat(
                   (fbPrototypes.isEmpty() && propPrototypes.isEmpty())
                       || !Collections.disjoint(fbPrototypes, propPrototypes))
-              .withFailMessage(
-                  () ->
-                      "should have prototype overlap for "
-                          + fbPrototypes
-                          + " and "
-                          + propPrototypes
-                          + " at "
-                          + inst)
               .isTrue();
         }
       }

@@ -99,9 +99,9 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("foo"),
             new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    assertThat(method).withFailMessage("method not found").isNotNull();
+    assertThat(method).isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
+    assertThat(imethod).isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
@@ -119,14 +119,14 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("bar"),
             new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
-    assertThat(method).withFailMessage("method not found").isNotNull();
+    assertThat(method).isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
+    assertThat(imethod).isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
-    assertThat(ti.getType(2)).withFailMessage("null type abstraction for parameter").isNotNull();
+    assertThat(ti.getType(2)).isNotNull();
   }
 
   @Test
@@ -137,19 +137,15 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("inferInt"),
             new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    assertThat(method).withFailMessage("method not found").isNotNull();
+    assertThat(method).isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
+    assertThat(imethod).isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
     TypeAbstraction type = ti.getType(7);
-    assertThat(type)
-        .withFailMessage("null type abstraction")
-        .isNotNull()
-        .withFailMessage("inferred wrong type")
-        .hasToString("int");
+    assertThat(type).hasToString("int");
   }
 
   @Test
@@ -160,17 +156,16 @@ public class TypeInferenceTest extends WalaTestCase {
             "LtypeInference/TI",
             Atom.findOrCreateUnicodeAtom("useCast"),
             new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));
-    assertThat(method).withFailMessage("method not found").isNotNull();
+    assertThat(method).isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
+    assertThat(imethod).isNotNull();
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, false);
     TypeAbstraction type = ti.getType(4);
-    assertThat(type).withFailMessage("null type abstraction").isNotNull();
+    assertThat(type).isNotNull();
     assertThatObject(type)
-        .withFailMessage(() -> "inferred wrong type " + type)
         .extracting(coneType -> coneType.getTypeReference().getName())
         .hasToString("Ljava/lang/String");
   }

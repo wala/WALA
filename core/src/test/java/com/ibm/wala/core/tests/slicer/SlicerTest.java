@@ -829,8 +829,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     SlicerUtil.dumpSlice(slice);
-    assertThat(countAllocations(slice, false)).withFailMessage(slice::toString).isEqualTo(0);
-    assertThat(countPutfields(slice)).withFailMessage(slice::toString).isEqualTo(1);
+    assertThat(countAllocations(slice, false)).isEqualTo(0);
+    assertThat(countPutfields(slice)).isEqualTo(1);
   }
 
   /**
@@ -888,8 +888,8 @@ public class SlicerTest {
         Slicer.computeBackwardSlice(
             s, pcg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     SlicerUtil.dumpSlice(slice);
-    assertThat(countAllocations(slice, false)).withFailMessage(slice::toString).isEqualTo(1);
-    assertThat(countPutfields(slice)).withFailMessage(slice::toString).isEqualTo(1);
+    assertThat(countAllocations(slice, false)).isEqualTo(1);
+    assertThat(countPutfields(slice)).isEqualTo(1);
   }
 
   @Test
@@ -916,13 +916,9 @@ public class SlicerTest {
     Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    assertThat(countAllocations(slice, true))
-        .withFailMessage("wrong number of allocations")
-        .isEqualTo(1);
-    assertThat(countThrows(slice, true)).withFailMessage("wrong number of throws").isEqualTo(1);
-    assertThat(countGetfields(slice, true))
-        .withFailMessage("wrong number of getfields")
-        .isEqualTo(1);
+    assertThat(countAllocations(slice, true)).isEqualTo(1);
+    assertThat(countThrows(slice, true)).isEqualTo(1);
+    assertThat(countGetfields(slice, true)).isEqualTo(1);
   }
 
   @Test
@@ -1077,7 +1073,6 @@ public class SlicerTest {
         slice.stream().filter(s -> s.getNode().equals(main)).collect(Collectors.toList());
     // check that we are tracking the size field in a HeapReturnCaller statement for the add() call
     assertThat(inMain)
-        .withFailMessage("couldn't find HeapReturnCaller for size field")
         .filteredOn(
             st -> {
               if (st instanceof HeapReturnCaller) {

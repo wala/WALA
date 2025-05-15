@@ -261,10 +261,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertThat(classUnderTest).withFailMessage(() -> typeUnderTest + " not found").isNotNull();
-    assertThat(classUnderTest)
-        .withFailMessage(() -> classUnderTest + " must be BytecodeClass")
-        .isInstanceOf(ShrikeClass.class);
+    assertThat(classUnderTest).isNotNull();
+    assertThat(classUnderTest).isInstanceOf(ShrikeClass.class);
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations =
@@ -284,12 +282,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertThat(methodUnderTest)
-        .withFailMessage(() -> methodRefUnderTest + " not found")
-        .isNotNull();
-    assertThat(methodUnderTest)
-        .withFailMessage(() -> methodUnderTest + " must be ShrikeCTMethod")
-        .isInstanceOf(ShrikeCTMethod.class);
+    assertThat(methodUnderTest).isNotNull();
+    assertThat(methodUnderTest).isInstanceOf(ShrikeCTMethod.class);
     ShrikeCTMethod bcMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
@@ -310,10 +304,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       TypeReference typeUnderTest,
       Collection<TypeAnnotation> expectedAnnotations) {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertThat(classUnderTest).withFailMessage(() -> typeUnderTest + " not found").isNotNull();
-    assertThat(classUnderTest)
-        .withFailMessage(() -> classUnderTest + " must be BytecodeClass")
-        .isInstanceOf(ShrikeClass.class);
+    assertThat(classUnderTest).isNotNull();
+    assertThat(classUnderTest).isInstanceOf(ShrikeClass.class);
     ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
 
     final Atom fieldName = Atom.findOrCreateUnicodeAtom(fieldNameStr);

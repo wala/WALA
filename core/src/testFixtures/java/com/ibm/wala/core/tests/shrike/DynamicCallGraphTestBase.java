@@ -87,9 +87,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         args.add("--patch-calls");
       }
       OfflineDynamicCallGraph.main(args.toArray(new String[0]));
-      assertThat(instrumentedJarLocation)
-          .withFailMessage(() -> "expected to create " + instrumentedJarLocation)
-          .exists();
+      assertThat(instrumentedJarLocation).exists();
       instrumentedJarBuilt = true;
     }
   }
@@ -140,7 +138,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     Process x = Runtime.getRuntime().exec(commandLine, null, new File("build"));
     x.waitFor();
 
-    assertThat(cgLocation).withFailMessage("expected to create call graph").exists();
+    assertThat(cgLocation).exists();
   }
 
   protected interface EdgesTest {
@@ -164,12 +162,9 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         staticCG,
         (staticCG1, caller, calleeRef) -> {
           Set<CGNode> nodes = staticCG1.getNodes(calleeRef);
-          assertThat(nodes).withFailMessage(() -> "expected one node for " + calleeRef).hasSize(1);
-          CGNode callee = nodes.iterator().next();
+          CGNode callee = assertThat(nodes).singleElement().actual();
 
-          assertThat(staticCG1.getPossibleSites(caller, callee))
-              .withFailMessage("no edge for %s --> %s", caller, callee)
-              .hasNext();
+          assertThat(staticCG1.getPossibleSites(caller, callee)).hasNext();
           Pair<CGNode, CGNode> x = Pair.make(caller, callee);
           edges.add(x);
         },
@@ -193,7 +188,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         },
         filter);
 
-    assertThat(notFound).withFailMessage(() -> "could not find " + notFound).isEmpty();
+    assertThat(notFound).isEmpty();
   }
 
   protected void check(CallGraph staticCG, EdgesTest test, Predicate<MethodReference> filter)
@@ -233,8 +228,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           if (!filter.test(callerRef)) {
             continue loop;
           }
-          assertThat(nodes).withFailMessage(callerRef::toString).hasSize(1);
-          caller = nodes.iterator().next();
+          caller = assertThat(nodes).singleElement().actual();
         }
 
         String calleeClass = edge.nextToken();
@@ -247,6 +241,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       }
     }
 
-    assertThat(lines).withFailMessage("more than one edge").isPositive();
+    assertThat(lines).isPositive();
   }
 }

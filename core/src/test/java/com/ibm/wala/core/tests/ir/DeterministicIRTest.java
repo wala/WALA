@@ -59,9 +59,9 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private IR doMethod(MethodReference method) {
     IAnalysisCacheView cache = makeAnalysisCache();
-    assertThat(method).withFailMessage("method not found").isNotNull();
+    assertThat(method).isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertThat(imethod).withFailMessage("imethod not found").isNotNull();
+    assertThat(imethod).isNotNull();
     IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.clear();
 

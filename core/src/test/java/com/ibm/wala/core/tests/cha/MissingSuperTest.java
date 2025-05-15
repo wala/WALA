@@ -50,22 +50,18 @@ public class MissingSuperTest extends WalaTestCase {
 
     // without phantom classes, won't be able to resolve
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertThat(cha.lookupClass(ref)).withFailMessage("lookup should not work").isNull();
+    assertThat(cha.lookupClass(ref)).isNull();
 
     // with makeWithRoot lookup should succeed and
     // unresolvable super class "Super" should be replaced by hierarchy root
     cha = ClassHierarchyFactory.makeWithRoot(scope);
     IClass klass = cha.lookupClass(ref);
-    assertThat(klass)
-        .withFailMessage("expected class MissingSuper to load")
-        .isNotNull()
-        .extracting(IClass::getSuperclass)
-        .isEqualTo(cha.getRootClass());
+    assertThat(klass).isNotNull().extracting(IClass::getSuperclass).isEqualTo(cha.getRootClass());
 
     // with phantom classes, lookup and IR construction should work
     cha = ClassHierarchyFactory.makeWithPhantom(scope);
     klass = cha.lookupClass(ref);
-    assertThat(klass).withFailMessage("expected class MissingSuper to load").isNotNull();
+    assertThat(klass).isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
     assertThat(declaredMethods).as(declaredMethods::toString).hasSize(2);

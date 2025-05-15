@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Supplier;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.BeforeAll;
@@ -124,16 +123,10 @@ public class ExceptionAnalysisTest {
 
   private void checkCaughtExceptions(
       final SoftAssertions softly, CGNode node, IntraproceduralExceptionAnalysis analysis) {
-    Supplier<String> text =
-        () ->
-            String.format(
-                "Number of caught exceptions did not match in %s. The follwoing exceptions were caught: ",
-                node.getMethod().getName());
     Iterator<CallSiteReference> it = node.iterateCallSites();
     while (it.hasNext()) {
       Set<TypeReference> caught = analysis.getCaughtExceptions(it.next());
-      final var caughtTypesAssertion =
-          softly.assertThat(caught).withFailMessage(() -> text.get() + caught);
+      final var caughtTypesAssertion = softly.assertThat(caught);
       if (node.getMethod().getName().toString().matches("testTryCatch.*")) {
         if (node.getMethod().getName().toString().equals("testTryCatchMultipleExceptions")) {
           caughtTypesAssertion.hasSize(2);
@@ -151,18 +144,13 @@ public class ExceptionAnalysisTest {
   private void checkThrownExceptions(
       final SoftAssertions softly, CGNode node, IntraproceduralExceptionAnalysis analysis) {
     Set<TypeReference> exceptions = analysis.getExceptions();
-    Supplier<String> failMessage =
-        () ->
-            String.format(
-                "Number of thrown exceptions did not match in %s. The follwoing exceptions were thrown: %s",
-                node.getMethod().getName(), exceptions);
 
     if (node.getMethod().getName().toString().matches("invokeSingle.*")
         && !node.getMethod().getName().toString().equals("invokeSingleRecursive2Helper")
         && !node.getMethod().getName().toString().equals("invokeSinglePassThrough")) {
-      softly.assertThat(exceptions).withFailMessage(failMessage).hasSize(1);
+      softly.assertThat(exceptions).hasSize(1);
     } else {
-      softly.assertThat(exceptions).withFailMessage(failMessage).isEmpty();
+      softly.assertThat(exceptions).isEmpty();
     }
   }
 
@@ -179,12 +167,7 @@ public class ExceptionAnalysisTest {
           .toString()
           .equals("TestPruning")) {
         Set<TypeReference> exceptions = analysis.getCGNodeExceptions(node);
-        Supplier<String> text =
-            () ->
-                String.format(
-                    "Number of thrown exceptions did not match in %s. The follwoing exceptions were thrown: %s",
-                    node.getMethod().getName(), exceptions);
-        final var exceptionsAssertion = softly.assertThat(exceptions).withFailMessage(text);
+        final var exceptionsAssertion = softly.assertThat(exceptions);
         if (node.getMethod().getName().toString().matches("invokeSingle.*")) {
           exceptionsAssertion.hasSize(1);
         } else if (node.getMethod().getName().toString().matches("testTryCatch.*")) {
@@ -194,13 +177,7 @@ public class ExceptionAnalysisTest {
         } else if (node.getMethod().getName().toString().equals("main")) {
           exceptionsAssertion.isEmpty();
         } else {
-          softly
-              .assertThat(node.getMethod().getName())
-              .asString()
-              .withFailMessage(
-                  "Found method, i didn't know the expected number of exceptions for: %s",
-                  node.getMethod().getName())
-              .isIn("main", "<init>");
+          softly.assertThat(node.getMethod().getName()).asString().isIn("main", "<init>");
         }
 
         analysis.getCGNodeExceptions(node);

@@ -89,22 +89,14 @@ public class CHACallGraphTest {
     Consumer<String> checkCalledFromFiveSites =
         (klassName) -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
-          assertThat(nodes)
-              .withFailMessage("expected %s.target() to be reachable", klassName)
-              .hasSize(1);
+          assertThat(nodes).hasSize(1);
           CGNode node = nodes.iterator().next();
           List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
-          assertThat(predNodes)
-              .withFailMessage(
-                  () -> "expected " + klassName + ".target() to be invoked from one calling method")
-              .hasSize(1);
+          assertThat(predNodes).hasSize(1);
           CGNode pred = predNodes.get(0);
           List<CallSiteReference> sites =
               Iterator2Collection.toList(cg.getPossibleSites(pred, node));
-          assertThat(sites)
-              .withFailMessage(
-                  () -> "expected " + klassName + ".target() to be invoked from five call sites")
-              .hasSize(5);
+          assertThat(sites).hasSize(5);
         };
 
     checkCalledFromFiveSites.accept("C1");
@@ -131,21 +123,11 @@ public class CHACallGraphTest {
                     ClassLoaderReference.Application, "Llambda/MethodRefs$" + klass),
                 Atom.findOrCreateUnicodeAtom("target"),
                 Descriptor.findOrCreateUTF8("()V"));
-    assertThat(cg.getNodes(getTargetRef.apply("C1")))
-        .withFailMessage(() -> "expected C1.target() to be reachable")
-        .hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C2")))
-        .withFailMessage(() -> "expected C2.target() to be reachable")
-        .hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C3")))
-        .withFailMessage(() -> "expected C3.target() to be reachable")
-        .hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C4")))
-        .withFailMessage(() -> "expected C4.target() to be reachable")
-        .hasSize(1);
-    assertThat(cg.getNodes(getTargetRef.apply("C5")))
-        .withFailMessage(() -> "expected C5.target() to be reachable")
-        .hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C1"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C2"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C3"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C4"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C5"))).hasSize(1);
   }
 
   public static CallGraph testCHA(
@@ -173,13 +155,8 @@ public class CHACallGraphTest {
               succNum -> {
                 CGNode succNode = CG.getNode(succNum);
                 IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
-                assertThat(predNodeNumbers)
-                    .withFailMessage(
-                        () -> "no predecessors for " + succNode + " which is called by " + node)
-                    .isNotNull();
-                assertThat(predNodeNumbers)
-                    .withFailMessage("missing predecessor %s for %s", node, succNode)
-                    .is(contains(nodeNum));
+                assertThat(predNodeNumbers).isNotNull();
+                assertThat(predNodeNumbers).is(contains(nodeNum));
               });
     }
     return CG;

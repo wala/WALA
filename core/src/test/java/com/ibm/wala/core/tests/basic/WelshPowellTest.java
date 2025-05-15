@@ -31,17 +31,13 @@ public class WelshPowellTest {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(succ))) {
           continue;
         }
-        assertThat(colors.get(n).intValue())
-            .withFailMessage("%s and succ: %s have same color: %d", n, succ, colors.get(n))
-            .isNotEqualTo(colors.get(succ).intValue());
+        assertThat(colors.get(n).intValue()).isNotEqualTo(colors.get(succ).intValue());
       }
       for (T pred : Iterator2Iterable.make(G.getPredNodes(n))) {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(pred))) {
           continue;
         }
-        assertThat(colors.get(n).intValue())
-            .withFailMessage("%s and pred: %s have same color:%d", n, pred, colors.get(n))
-            .isNotEqualTo(colors.get(pred).intValue());
+        assertThat(colors.get(n).intValue()).isNotEqualTo(colors.get(pred).intValue());
       }
     }
   }

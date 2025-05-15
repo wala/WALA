@@ -48,7 +48,6 @@ public class AnalysisScopeTest {
             cha.lookupClass(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Lorg/apache/bcel/verifier/Verifier")))
-        .withFailMessage("couldn't find expected class")
         .isNotNull();
   }
 
@@ -62,13 +61,11 @@ public class AnalysisScopeTest {
             cha.lookupClass(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Ljava/util/ArrayList")))
-        .withFailMessage("couldn't find expected class")
         .isNotNull();
     assertThat(
             cha.lookupClass(
                 TypeReference.findOrCreate(
                     ClassLoaderReference.Application, "Ljava/awt/AlphaComposite")))
-        .withFailMessage("found unexpected class")
         .isNull();
   }
 

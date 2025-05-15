@@ -850,26 +850,20 @@ public class PrimitivesTest extends WalaTestCase {
     int SIZE = 10000;
     final IntegerUnionFind uf1 = new IntegerUnionFind(SIZE);
     final var count1 = countEquivalenceClasses(uf1);
-    assertThat(count1).withFailMessage(() -> "Got count " + count1).isEqualTo(SIZE);
+    assertThat(count1).isEqualTo(SIZE);
 
     uf1.union(3, 7);
-    assertThat(uf1.find(3))
-        .isEqualTo(uf1.find(7))
-        .withFailMessage(() -> "Got uf1.find(3)=" + uf1.find(3))
-        .isIn(3, 7);
+    assertThat(uf1.find(3)).isEqualTo(uf1.find(7)).isIn(3, 7);
 
     uf1.union(7, SIZE - 1);
     final var found = uf1.find(3);
-    assertThat(found)
-        .withFailMessage(() -> "Got uf1.find(3)=" + found)
-        .isEqualTo(uf1.find(SIZE - 1))
-        .isIn(3, 7, SIZE - 1);
+    assertThat(found).isEqualTo(uf1.find(SIZE - 1)).isIn(3, 7, SIZE - 1);
 
     for (int i = 0; i < SIZE - 1; i++) {
       uf1.union(i, i + 1);
     }
     final var count2 = countEquivalenceClasses(uf1);
-    assertThat(count2).withFailMessage(() -> "Got count " + count2).isEqualTo(1);
+    assertThat(count2).isEqualTo(1);
 
     final var uf2 = new IntegerUnionFind(SIZE);
     for (int i = 0; i < SIZE; i++) {
@@ -880,7 +874,7 @@ public class PrimitivesTest extends WalaTestCase {
       }
     }
     final var count3 = countEquivalenceClasses(uf2);
-    assertThat(count3).withFailMessage(() -> "Got count " + count3).isEqualTo(2);
+    assertThat(count3).isEqualTo(2);
   }
 
   private static int countEquivalenceClasses(IntegerUnionFind uf) {
@@ -926,7 +920,7 @@ public class PrimitivesTest extends WalaTestCase {
     // a reasonable size?
     bv.set(55);
 
-    assertThat(bv.max()).withFailMessage(() -> "bv.max() is " + bv.max()).isEqualTo(55);
+    assertThat(bv.max()).isEqualTo(55);
     assertThat(bv).matches(v -> v.get(55)).matches(v -> v.get(55));
 
     bv.set(59);
@@ -944,7 +938,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     bv.set(77);
 
-    assertThat(bv.max()).withFailMessage(() -> "bv.max() is " + bv.max()).isEqualTo(77);
+    assertThat(bv.max()).isEqualTo(77);
     {
       boolean[] gets = new boolean[] {false, true, true, true};
       int[] bits = new int[] {0, 55, 59, 77};
@@ -955,7 +949,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     bv.set(3);
-    assertThat(bv.max()).withFailMessage(() -> "bv.max() is " + bv.max()).isEqualTo(77);
+    assertThat(bv.max()).isEqualTo(77);
     {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 3, 55, 59, 77};
@@ -997,12 +991,12 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(100);
     v1.set(101);
     v1.set(102);
-    assertThat(v1.max()).withFailMessage(() -> "v1.max() is " + v1.max()).isEqualTo(102);
+    assertThat(v1.max()).isEqualTo(102);
 
     v2.set(200);
     v2.set(201);
     v2.set(202);
-    assertThat(v2.max()).withFailMessage(() -> "v2.max() is " + v2.max()).isEqualTo(202);
+    assertThat(v2.max()).isEqualTo(202);
 
     assertThat(v1).has(emptyIntersectionWith(v2));
     assertThat(v2).has(emptyIntersectionWith(v1));
@@ -1010,13 +1004,9 @@ public class PrimitivesTest extends WalaTestCase {
     v1.or(v2);
 
     System.err.println("v1 = " + v1 + ", v2 = " + v2);
-    assertThat(v1)
-        .withFailMessage("v1 = %s, v2 = %s", v1, v2)
-        .doesNotHave(emptyIntersectionWith(v2));
-    assertThat(v2)
-        .withFailMessage("v1 = %s, v2 = %s", v1, v2)
-        .doesNotHave(emptyIntersectionWith(v1));
-    assertThat(v1.max()).withFailMessage(() -> "v1.max() is " + v1.max()).isEqualTo(202);
+    assertThat(v1).doesNotHave(emptyIntersectionWith(v2));
+    assertThat(v2).doesNotHave(emptyIntersectionWith(v1));
+    assertThat(v1.max()).isEqualTo(202);
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
@@ -1036,16 +1026,16 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(103);
     v1.set(104);
     v1.set(105);
-    assertThat(v1.max()).withFailMessage(() -> "v1.max() is " + v1.max()).isEqualTo(105);
+    assertThat(v1.max()).isEqualTo(105);
 
     v2.set(103);
     v2.set(104);
     v2.set(200);
     v2.set(201);
-    assertThat(v2.max()).withFailMessage(() -> "v2.max() is " + v2.max()).isEqualTo(201);
+    assertThat(v2.max()).isEqualTo(201);
 
     v1.and(v2);
-    assertThat(v1.max()).withFailMessage(() -> "v1.max() is " + v1.max()).isEqualTo(104);
+    assertThat(v1.max()).isEqualTo(104);
 
     {
       boolean[] gets = new boolean[] {false, true, true};
@@ -1060,7 +1050,7 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(101);
     v1.set(102);
     v1.set(105);
-    assertThat(v1.max()).withFailMessage(() -> "v1.max() is " + v1.max()).isEqualTo(105);
+    assertThat(v1.max()).isEqualTo(105);
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};

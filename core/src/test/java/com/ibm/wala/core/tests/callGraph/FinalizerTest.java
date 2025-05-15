@@ -51,12 +51,10 @@ public class FinalizerTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lfinalizers/Finalizers");
     MethodReference m = MethodReference.findOrCreate(t, "finalize", "()V");
-    assertThat(cg.getNodes(m).iterator()).withFailMessage("expect finalizer node").hasNext();
+    assertThat(cg.getNodes(m).iterator()).hasNext();
     CGNode node = cg.getNodes(m).iterator().next();
 
     // Check it's reachable from root
-    assertThat(cg.getPossibleSites(cg.getFakeRootNode(), node))
-        .withFailMessage("should have call site from root")
-        .hasNext();
+    assertThat(cg.getPossibleSites(cg.getFakeRootNode(), node)).hasNext();
   }
 }

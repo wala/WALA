@@ -73,19 +73,13 @@ public class TestCAstPattern {
         final String nm = entry.getKey();
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
-          assertThat(s.getSingle(nm))
-              .withFailMessage(
-                  "for name %s: expected %s but got %s", nm, entry.getValue(), s.getSingle(nm))
-              .isEqualTo(entry.getValue());
+          assertThat(s.getSingle(nm)).isEqualTo(entry.getValue());
 
         } else {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
-          assertThat(s.getMultiple(nm))
-              .withFailMessage(
-                  "for name %s: expected %s but got %s", nm, entry.getValue(), s.getMultiple(nm))
-              .isEqualTo(entry.getValue());
+          assertThat(s.getMultiple(nm)).isEqualTo(entry.getValue());
         }
       }
     }
