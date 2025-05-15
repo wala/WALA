@@ -11,7 +11,7 @@
 
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ClosureExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.ForInBodyExtractionPolicy;
@@ -32,10 +32,6 @@ public abstract class TestForInBodyExtraction {
 
   @TempDir private File tmpDir;
 
-  public void testRewriter(String in, String out) {
-    testRewriter(null, in, out);
-  }
-
   /* The translation to CAst introduces temporary names based on certain characteristics of the translation
    * process. This sometimes makes it impossible to precisely match up the results of first translating to
    * CAst and then transforming, and first transforming the JavaScript and then translating to CAst.
@@ -52,7 +48,7 @@ public abstract class TestForInBodyExtraction {
     return str;
   }
 
-  public void testRewriter(String testName, String in, String out) {
+  public void testRewriter(String in, String out) {
     String expected;
     String actual;
     try {
@@ -70,7 +66,7 @@ public abstract class TestForInBodyExtraction {
       expected = new CAstDumper().dump(parseJS(tmp, ast));
       expected = eraseGeneratedNames(expected);
 
-      assertEquals(expected, actual, () -> "Comparison Failure in " + testName + '!');
+      assertThat(actual).isEqualTo(expected);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

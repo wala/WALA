@@ -10,9 +10,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -60,9 +59,9 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private IR doMethod(MethodReference method) {
     IAnalysisCacheView cache = makeAnalysisCache();
-    assertNotNull(method, "method not found");
+    assertThat(method).isNotNull();
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).isNotNull();
     IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.clear();
 
@@ -87,7 +86,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
       fail("unsound CFG for ir2");
     }
 
-    assertEquals(ir1.toString(), ir2.toString());
+    assertThat(ir1).hasToString(ir2.toString());
     return ir1;
   }
 
@@ -95,7 +94,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
   private static void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
-      assertNotNull(iterator.next());
+      assertThat(iterator.next()).isNotNull();
     }
   }
 

@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -32,17 +31,13 @@ public class WelshPowellTest {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(succ))) {
           continue;
         }
-        assertTrue(
-            colors.get(n).intValue() != colors.get(succ).intValue(),
-            n + " and succ: " + succ + " have same color: " + colors.get(n));
+        assertThat(colors.get(n).intValue()).isNotEqualTo(colors.get(succ).intValue());
       }
       for (T pred : Iterator2Iterable.make(G.getPredNodes(n))) {
         if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(pred))) {
           continue;
         }
-        assertTrue(
-            colors.get(n).intValue() != colors.get(pred).intValue(),
-            n + " and pred: " + pred + " have same color:" + colors.get(n));
+        assertThat(colors.get(n).intValue()).isNotEqualTo(colors.get(pred).intValue());
       }
     }
   }
@@ -94,7 +89,7 @@ public class WelshPowellTest {
     ColoredVertices<TypedNode<Integer>> colors = new WelshPowell<TypedNode<Integer>>().color(G);
     System.err.println(colors.getColors());
     assertColoring(G, colors.getColors(), true);
-    assertTrue(colors.getNumColors() <= 4);
+    assertThat(colors.getNumColors()).isLessThanOrEqualTo(4);
   }
 
   @Test
@@ -116,6 +111,6 @@ public class WelshPowellTest {
     ColoredVertices<TypedNode<String>> colors = new WelshPowell<TypedNode<String>>().color(G);
     System.err.println(colors.getColors());
     assertColoring(G, colors.getColors(), true);
-    assertEquals(3, colors.getNumColors());
+    assertThat(colors.getNumColors()).isEqualTo(3);
   }
 }

@@ -10,10 +10,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -107,7 +105,7 @@ public class LocalNamesTest extends WalaTestCase {
           TypeReference.findOrCreateClass(
               scope.getApplicationLoader(), "cornerCases", "AliasNames");
       IClass klass = cha.lookupClass(t);
-      assertNotNull(klass);
+      assertThat(klass).isNotNull();
       IMethod m =
           klass.getMethod(
               new Selector(
@@ -150,28 +148,32 @@ public class LocalNamesTest extends WalaTestCase {
             "LcornerCases/Locals",
             Atom.findOrCreateUnicodeAtom("foo"),
             new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
-    assertNotNull(mref, "method not found");
+    assertThat(mref).isNotNull();
     IMethod imethod = cha.resolveMethod(mref);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setPiNodePolicy(save);
 
-    // v1 should be the parameter "a" at pc 0
-    String[] names = ir.getLocalNames(0, 1);
-    assertNotNull(names, "failed local name resolution for v1@0");
-    assertEquals(1, names.length, "incorrect number of local names for v1@0: " + names.length);
-    assertEquals("a", names[0], "incorrect local name resolution for v1@0: " + names[0]);
+    {
+      // v1 should be the parameter "a" at pc 0
+      final String[] names = ir.getLocalNames(0, 1);
+      assertThat(names).isNotNull();
+      assertThat(names.length).isEqualTo(1);
+      assertThat(names[0]).isEqualTo("a");
+    }
 
     // v2 is a compiler-induced temporary
-    assertNull(ir.getLocalNames(2, 2), "didn't expect name for v2 at pc 2");
+    assertThat(ir.getLocalNames(2, 2)).isNull();
 
-    // at pc 5, v1 should represent the locals "a" and "b"
-    names = ir.getLocalNames(5, 1);
-    assertNotNull(names, "failed local name resolution for v1@5");
-    assertEquals(2, names.length, "incorrect number of local names for v1@5: " + names.length);
-    assertEquals("a", names[0], "incorrect local name resolution #0 for v1@5: " + names[0]);
-    assertEquals("b", names[1], "incorrect local name resolution #1 for v1@5: " + names[1]);
+    {
+      // at pc 5, v1 should represent the locals "a" and "b"
+      final String[] names = ir.getLocalNames(5, 1);
+      assertThat(names).isNotNull();
+      assertThat(names.length).isEqualTo(2);
+      assertThat(names[0]).isEqualTo("a");
+      assertThat(names[1]).isEqualTo("b");
+    }
   }
 
   @Test
@@ -184,27 +186,31 @@ public class LocalNamesTest extends WalaTestCase {
             "LcornerCases/Locals",
             Atom.findOrCreateUnicodeAtom("foo"),
             new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
-    assertNotNull(mref, "method not found");
+    assertThat(mref).isNotNull();
     IMethod imethod = cha.resolveMethod(mref);
-    assertNotNull(imethod, "imethod not found");
+    assertThat(imethod).isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl(options.getSSAOptions());
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setPiNodePolicy(save);
 
-    // v1 should be the parameter "a" at pc 0
-    String[] names = ir.getLocalNames(0, 1);
-    assertNotNull(names, "failed local name resolution for v1@0");
-    assertEquals(1, names.length, "incorrect number of local names for v1@0: " + names.length);
-    assertEquals("a", names[0], "incorrect local name resolution for v1@0: " + names[0]);
+    {
+      // v1 should be the parameter "a" at pc 0
+      final String[] names = ir.getLocalNames(0, 1);
+      assertThat(names).isNotNull();
+      assertThat(names.length).isEqualTo(1);
+      assertThat(names[0]).isEqualTo("a");
 
-    // v2 is a compiler-induced temporary
-    assertNull(ir.getLocalNames(2, 2), "didn't expect name for v2 at pc 2");
+      // v2 is a compiler-induced temporary
+      assertThat(ir.getLocalNames(2, 2)).isNull();
+    }
 
-    // at pc 5, v1 should represent the locals "a" and "b"
-    names = ir.getLocalNames(5, 1);
-    assertNotNull(names, "failed local name resolution for v1@5");
-    assertEquals(2, names.length, "incorrect number of local names for v1@5: " + names.length);
-    assertEquals("a", names[0], "incorrect local name resolution #0 for v1@5: " + names[0]);
-    assertEquals("b", names[1], "incorrect local name resolution #1 for v1@5: " + names[1]);
+    {
+      // at pc 5, v1 should represent the locals "a" and "b"
+      final String[] names = ir.getLocalNames(5, 1);
+      assertThat(names).isNotNull();
+      assertThat(names.length).isEqualTo(2);
+      assertThat(names[0]).isEqualTo("a");
+      assertThat(names[1]).isEqualTo("b");
+    }
   }
 }

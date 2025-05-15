@@ -14,7 +14,7 @@ import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeHierarchy;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeLoaders;
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory;
 import static com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil.makeScriptScope;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -175,7 +175,7 @@ public class TestRhinoSourceMap {
                   + fun.getDeclaringClass().getName()
                   + " at "
                   + fun.getSourcePosition());
-          assertEquals(sources.get(fun.getDeclaringClass().getName().toString()), sb.toString());
+          assertThat(sb).hasToString(sources.get(fun.getDeclaringClass().getName().toString()));
         }
       }
     }

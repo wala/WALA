@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static com.ibm.wala.util.intset.IntSetConditions.contains;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -65,7 +65,7 @@ public class CHACallGraphTest {
     CGNode mainMethod = CallGraphSearchUtil.findMainMethod(cg);
     for (CallSiteReference site : Iterator2Iterable.make(mainMethod.iterateCallSites())) {
       if (site.isInterface() && site.getDeclaredTarget().getName().toString().equals("target")) {
-        assertEquals(2, cg.getNumberOfTargets(mainMethod, site));
+        assertThat(cg.getNumberOfTargets(mainMethod, site)).isEqualTo(2);
       }
     }
   }
@@ -89,20 +89,14 @@ public class CHACallGraphTest {
     Consumer<String> checkCalledFromFiveSites =
         (klassName) -> {
           Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
-          assertEquals(1, nodes.size(), "expected " + klassName + ".target() to be reachable");
+          assertThat(nodes).hasSize(1);
           CGNode node = nodes.iterator().next();
           List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
-          assertEquals(
-              1,
-              predNodes.size(),
-              "expected " + klassName + ".target() to be invoked from one calling method");
+          assertThat(predNodes).hasSize(1);
           CGNode pred = predNodes.get(0);
           List<CallSiteReference> sites =
               Iterator2Collection.toList(cg.getPossibleSites(pred, node));
-          assertEquals(
-              5,
-              sites.size(),
-              "expected " + klassName + ".target() to be invoked from five call sites");
+          assertThat(sites).hasSize(5);
         };
 
     checkCalledFromFiveSites.accept("C1");
@@ -129,16 +123,11 @@ public class CHACallGraphTest {
                     ClassLoaderReference.Application, "Llambda/MethodRefs$" + klass),
                 Atom.findOrCreateUnicodeAtom("target"),
                 Descriptor.findOrCreateUTF8("()V"));
-    assertEquals(
-        1, cg.getNodes(getTargetRef.apply("C1")).size(), "expected C1.target() to be reachable");
-    assertEquals(
-        1, cg.getNodes(getTargetRef.apply("C2")).size(), "expected C2.target() to be reachable");
-    assertEquals(
-        1, cg.getNodes(getTargetRef.apply("C3")).size(), "expected C3.target() to be reachable");
-    assertEquals(
-        1, cg.getNodes(getTargetRef.apply("C4")).size(), "expected C4.target() to be reachable");
-    assertEquals(
-        1, cg.getNodes(getTargetRef.apply("C5")).size(), "expected C5.target() to be reachable");
+    assertThat(cg.getNodes(getTargetRef.apply("C1"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C2"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C3"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C4"))).hasSize(1);
+    assertThat(cg.getNodes(getTargetRef.apply("C5"))).hasSize(1);
   }
 
   public static CallGraph testCHA(
@@ -166,12 +155,8 @@ public class CHACallGraphTest {
               succNum -> {
                 CGNode succNode = CG.getNode(succNum);
                 IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
-                assertNotNull(
-                    predNodeNumbers,
-                    "no predecessors for " + succNode + " which is called by " + node);
-                assertTrue(
-                    predNodeNumbers.contains(nodeNum),
-                    "missing predecessor " + node + " for " + succNode);
+                assertThat(predNodeNumbers).isNotNull();
+                assertThat(predNodeNumbers).is(contains(nodeNum));
               });
     }
     return CG;
