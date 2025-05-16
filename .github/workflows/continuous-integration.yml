@@ -68,7 +68,7 @@ jobs:
       - name: Aggregate coverage
         id: jacoco_report
         run: ./gradlew testCodeCoverageReport
-        if: matrix.coverage == 'true' && github.repository == 'wala/WALA'
+        if: matrix.coverage == true && github.repository == 'wala/WALA'
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
