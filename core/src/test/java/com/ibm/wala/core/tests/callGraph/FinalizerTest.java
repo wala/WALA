@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -51,12 +51,10 @@ public class FinalizerTest extends WalaTestCase {
     TypeReference t =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lfinalizers/Finalizers");
     MethodReference m = MethodReference.findOrCreate(t, "finalize", "()V");
-    assertTrue(cg.getNodes(m).iterator().hasNext(), "expect finalizer node");
+    assertThat(cg.getNodes(m).iterator()).hasNext();
     CGNode node = cg.getNodes(m).iterator().next();
 
     // Check it's reachable from root
-    assertTrue(
-        cg.getPossibleSites(cg.getFakeRootNode(), node).hasNext(),
-        "should have call site from root");
+    assertThat(cg.getPossibleSites(cg.getFakeRootNode(), node)).hasNext();
   }
 }

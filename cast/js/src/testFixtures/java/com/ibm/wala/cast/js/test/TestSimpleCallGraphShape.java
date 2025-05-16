@@ -10,7 +10,9 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assetEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -490,12 +492,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph cg = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_call.js");
     for (CGNode n : cg) {
       if (n.getMethod().getName().toString().equals("call4")) {
-        assertEquals(2, cg.getSuccNodeCount(n));
+        assertThat(cg.getSuccNodeCount(n)).isEqualTo(2);
         // ugh
         List<CGNode> succs = Iterator2Collection.toList(cg.getSuccNodes(n));
-        assertEquals(
-            "[Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere, Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere]",
-            succs.toString());
+        assertThat(succs)
+            .hasToString(
+                "[Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere, Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere]");
       }
     }
   }
@@ -921,14 +923,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
     B.getOptions().setTraceStringConstants(true);
     IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 10000, false);
-    assertThrows(
-        CallGraphBuilderCancelException.class,
-        () -> {
-          monitor.beginTask("build CG", 1);
-          CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
-          monitor.done();
-          CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
-        });
+    assertThatThrownBy(
+            () -> {
+              monitor.beginTask("build CG", 1);
+              CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
+              monitor.done();
+              CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+            })
+        .isInstanceOf(CallGraphBuilderCancelException.class);
   }
   */
 

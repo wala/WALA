@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -77,6 +77,6 @@ public class CPATest extends WalaTestCase {
 
     System.err.println(cg);
 
-    assertEquals(2, idNodes.size());
+    assertThat(idNodes).hasSize(2);
   }
 }

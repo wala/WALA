@@ -1,7 +1,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -44,7 +43,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
 
     IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cg, cg.getFakeRootNode());
 
-    assertTrue(backEdges.iterator().hasNext(), "NList should have cycles");
+    assertThat(backEdges.iterator()).hasNext();
 
     Map<CGNode, Set<CGNode>> cgBackEdges = HashMapFactory.make();
     for (IntPair p : backEdges) {
@@ -58,8 +57,6 @@ public class AcyclicCallGraphTest extends WalaTestCase {
     PrunedCallGraph pcg =
         new PrunedCallGraph(cg, Iterator2Collection.toSet(cg.iterator()), cgBackEdges);
 
-    assertFalse(
-        Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator().hasNext(),
-        "cycles should be gone");
+    assertThat(Acyclic.computeBackEdges(pcg, pcg.getFakeRootNode()).iterator()).isExhausted();
   }
 }
