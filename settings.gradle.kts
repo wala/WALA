@@ -25,6 +25,7 @@ include(
     "cast:js:html:nu_validator",
     "cast:js:nodejs",
     "cast:js:rhino",
+    "code-coverage-report",
     "core",
     "dalvik",
     "ide",
