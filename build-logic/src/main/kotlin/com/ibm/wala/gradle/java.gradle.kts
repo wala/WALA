@@ -174,4 +174,3 @@ spotless {
 tasks.named("spotlessJava") {
   onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
 }
-
