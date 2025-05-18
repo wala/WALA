@@ -91,8 +91,6 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertThat(iClass).isNotNull();
-
             assertThat(iClass).matches(IClass::isInterface);
           },
           cg -> {
