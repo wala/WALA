@@ -12,6 +12,7 @@
 package com.ibm.wala.core.tests.ir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -261,9 +262,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertThat(classUnderTest).isNotNull();
-    assertThat(classUnderTest).isInstanceOf(ShrikeClass.class);
-    ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
+    ShrikeClass bcClassUnderTest =
+        assertThat(classUnderTest).asInstanceOf(type(ShrikeClass.class)).actual();
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations =
         bcClassUnderTest.getTypeAnnotations(true);
@@ -282,9 +282,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertThat(methodUnderTest).isNotNull();
-    assertThat(methodUnderTest).isInstanceOf(ShrikeCTMethod.class);
-    ShrikeCTMethod bcMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
+    ShrikeCTMethod bcMethodUnderTest =
+        assertThat(methodUnderTest).asInstanceOf(type(ShrikeCTMethod.class)).actual();
 
     Collection<TypeAnnotation> runtimeInvisibleAnnotations = HashSetFactory.make();
     runtimeInvisibleAnnotations.addAll(bcMethodUnderTest.getTypeAnnotationsAtCode(true));
@@ -304,9 +303,8 @@ public class TypeAnnotationTest extends WalaTestCase {
       TypeReference typeUnderTest,
       Collection<TypeAnnotation> expectedAnnotations) {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertThat(classUnderTest).isNotNull();
-    assertThat(classUnderTest).isInstanceOf(ShrikeClass.class);
-    ShrikeClass bcClassUnderTest = (ShrikeClass) classUnderTest;
+    ShrikeClass bcClassUnderTest =
+        assertThat(classUnderTest).asInstanceOf(type(ShrikeClass.class)).actual();
 
     final Atom fieldName = Atom.findOrCreateUnicodeAtom(fieldNameStr);
     FieldImpl field = (FieldImpl) bcClassUnderTest.getField(fieldName);
