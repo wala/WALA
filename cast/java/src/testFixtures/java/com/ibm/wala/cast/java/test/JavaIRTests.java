@@ -16,6 +16,7 @@ package com.ibm.wala.cast.java.test;
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
@@ -151,8 +152,8 @@ public abstract class JavaIRTests extends IRTests {
             SSAInstruction s = node.getIR().getInstructions()[2];
             assertThat(s)
                 .as("Did not find new array instruction.")
-                .isInstanceOf(SSANewInstruction.class);
-            assertThat(((SSANewInstruction) s).getNewSite().getDeclaredType())
+                .asInstanceOf(type(SSANewInstruction.class))
+                .extracting(sni -> sni.getNewSite().getDeclaredType())
                 .matches(TypeReference::isArrayType);
           });
 
@@ -166,10 +167,12 @@ public abstract class JavaIRTests extends IRTests {
             CGNode node = cg.getNodes(mref).iterator().next();
             SSAInstruction s = node.getIR().getInstructions()[4];
 
-            assertThat(s)
-                .isInstanceOfSatisfying(
-                    SSAGetInstruction.class, SSAFieldAccessInstruction::isStatic);
-            final FieldReference field = ((SSAGetInstruction) s).getDeclaredField();
+            final FieldReference field =
+                assertThat(s)
+                    .asInstanceOf(type(SSAGetInstruction.class))
+                    .matches(SSAFieldAccessInstruction::isStatic)
+                    .actual()
+                    .getDeclaredField();
             assertThat(field.getName()).hasToString("value");
             assertThat(field.getDeclaringClass().getName()).hasToString("LFooQ");
           });
@@ -208,11 +211,12 @@ public abstract class JavaIRTests extends IRTests {
             {
               final SymbolTable symbolTable = node.getIR().getSymbolTable();
               for (int i = 4; i <= 7; i++) {
-                assertThat(instructions[i])
-                    .as("Expected only array stores.")
-                    .isInstanceOf(SSAArrayStoreInstruction.class);
 
-                SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
+                SSAArrayStoreInstruction as =
+                    assertThat(Arrays.stream(instructions))
+                        .element(i)
+                        .asInstanceOf(type(SSAArrayStoreInstruction.class))
+                        .actual();
 
                 assertThat(node.getIR().getLocalNames(i, as.getArrayRef())[0])
                     .as("Expected an array store to 'y'.")

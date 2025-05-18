@@ -3,6 +3,7 @@ package com.ibm.wala.core.tests.shrike;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.offset;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
@@ -196,10 +197,9 @@ public class FloatingPointsTest extends WalaTestCase {
     IInstruction instruction = instructions[index];
 
     // Check that the instruction type has not been changed
-    assertThat(instruction).isInstanceOf(ConstantInstruction.class);
-
     // The type type should be the same as well
-    ConstantInstruction instruction2 = (ConstantInstruction) instruction;
+    ConstantInstruction instruction2 =
+        assertThat(instruction).asInstanceOf(type(ConstantInstruction.class)).actual();
     assertThat(type).matches(t -> t.contentEquals(instruction2.getType()));
 
     return instruction2.getValue();
