@@ -155,25 +155,14 @@ public class LocalNamesTest extends WalaTestCase {
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setPiNodePolicy(save);
 
-    {
-      // v1 should be the parameter "a" at pc 0
-      final String[] names = ir.getLocalNames(0, 1);
-      assertThat(names).isNotNull();
-      assertThat(names.length).isEqualTo(1);
-      assertThat(names[0]).isEqualTo("a");
-    }
+    // v1 should be the parameter "a" at pc 0
+    assertThat(ir.getLocalNames(0, 1)).containsExactly("a");
 
     // v2 is a compiler-induced temporary
     assertThat(ir.getLocalNames(2, 2)).isNull();
 
-    {
-      // at pc 5, v1 should represent the locals "a" and "b"
-      final String[] names = ir.getLocalNames(5, 1);
-      assertThat(names).isNotNull();
-      assertThat(names.length).isEqualTo(2);
-      assertThat(names[0]).isEqualTo("a");
-      assertThat(names[1]).isEqualTo("b");
-    }
+    // at pc 5, v1 should represent the locals "a" and "b"
+    assertThat(ir.getLocalNames(5, 1)).containsExactly("a", "b");
   }
 
   @Test
@@ -193,24 +182,13 @@ public class LocalNamesTest extends WalaTestCase {
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setPiNodePolicy(save);
 
-    {
-      // v1 should be the parameter "a" at pc 0
-      final String[] names = ir.getLocalNames(0, 1);
-      assertThat(names).isNotNull();
-      assertThat(names.length).isEqualTo(1);
-      assertThat(names[0]).isEqualTo("a");
+    // v1 should be the parameter "a" at pc 0
+    assertThat(ir.getLocalNames(0, 1)).containsExactly("a");
 
-      // v2 is a compiler-induced temporary
-      assertThat(ir.getLocalNames(2, 2)).isNull();
-    }
+    // v2 is a compiler-induced temporary
+    assertThat(ir.getLocalNames(2, 2)).isNull();
 
-    {
-      // at pc 5, v1 should represent the locals "a" and "b"
-      final String[] names = ir.getLocalNames(5, 1);
-      assertThat(names).isNotNull();
-      assertThat(names.length).isEqualTo(2);
-      assertThat(names[0]).isEqualTo("a");
-      assertThat(names[1]).isEqualTo("b");
-    }
+    // at pc 5, v1 should represent the locals "a" and "b"
+    assertThat(ir.getLocalNames(5, 1)).containsExactly("a", "b");
   }
 }
