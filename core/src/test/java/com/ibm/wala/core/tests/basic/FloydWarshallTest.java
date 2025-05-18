@@ -172,14 +172,7 @@ public class FloydWarshallTest extends WalaTestCase {
 
   @Test
   public void TestPathLengths() {
-    int[][] result = FloydWarshall.shortestPathLengths(G);
-    assertThat(shortestPaths.length).isEqualTo(result.length);
-    for (int i = 0; i < result.length; i++) {
-      assertThat(shortestPaths[i].length).isEqualTo(result[i].length);
-      for (int j = 0; j < result[i].length; j++) {
-        assertThat(shortestPaths[i][j]).isEqualTo(result[i][j]);
-      }
-    }
+    assertThat(FloydWarshall.shortestPathLengths(G)).isDeepEqualTo(shortestPaths);
   }
 
   @Test
