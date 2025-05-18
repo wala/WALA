@@ -509,7 +509,7 @@ public abstract class JavaIRTests extends IRTests {
         "LInnerClassA,",
       };
 
-      assertThat(methodSigs.length).isEqualTo(ikConcreteTypeStrings.length);
+      assertThat(methodSigs).hasSameSizeAs(ikConcreteTypeStrings);
       for (int i = 0; i < methodSigs.length; i++) {
         if (n.getMethod().getSignature().equals(methodSigs[i])) {
           // find enclosing instruction
