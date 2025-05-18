@@ -623,8 +623,7 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    assertThat(I).isNotNull();
-    assertThat(I2).isEqualTo(I);
+    assertThat(I).isNotNull().isEqualTo(I2);
 
     I = M.get(Integer.valueOf(4));
     assertThat(I).isNull();
@@ -649,8 +648,7 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    assertThat(I).isNotNull();
-    assertThat(I2).isEqualTo(I);
+    assertThat(I).isNotNull().isEqualTo(I2);
 
     I = M.get(Integer.valueOf(4));
     assertThat(I).isNull();
@@ -664,8 +662,7 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I5, I5);
     M.put(I6, I6);
     I = M.get(Integer.valueOf(4));
-    assertThat(I).isNotNull();
-    assertThat(I4).isEqualTo(I);
+    assertThat(I).isNotNull().isEqualTo(I4);
 
     I = M.get(Integer.valueOf(7));
     assertThat(I).isNull();
