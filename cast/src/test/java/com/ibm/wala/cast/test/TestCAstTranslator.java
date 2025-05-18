@@ -226,8 +226,8 @@ public abstract class TestCAstTranslator {
         URL url = getClass().getClassLoader().getResource(args[i]);
         fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, args[i]);
       }
-      assertThat(fileNames[i]).isNotNull();
     }
+    assertThat(fileNames).doesNotContainNull();
 
     ClassHierarchy cha = runTranslator(fileNames);
     dump(cha);

@@ -155,7 +155,6 @@ public class CHACallGraphTest {
               succNum -> {
                 CGNode succNode = CG.getNode(succNum);
                 IntSet predNodeNumbers = CG.getPredNodeNumbers(succNode);
-                assertThat(predNodeNumbers).isNotNull();
                 assertThat(predNodeNumbers).is(contains(nodeNum));
               });
     }

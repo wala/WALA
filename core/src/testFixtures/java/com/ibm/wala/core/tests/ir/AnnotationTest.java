@@ -295,7 +295,7 @@ public abstract class AnnotationTest extends WalaTestCase {
 
     Collection<Annotation>[] parameterAnnotations =
         IBytecodeMethodUnderTest.getParameterAnnotations();
-    assertThat(parameterAnnotations.length).isEqualTo(expected.length);
+    assertThat(parameterAnnotations).hasSameSizeAs(expected);
     for (int i = 0; i < expected.length; i++) {
       Set<String> e = HashSetFactory.make();
       e.addAll(Arrays.asList(expected[i]));
