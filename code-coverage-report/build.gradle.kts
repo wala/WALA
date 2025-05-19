@@ -6,5 +6,5 @@ plugins {
 }
 
 dependencies {
-  rootProject.allprojects { plugins.withId("jacoco") { jacocoAggregation(this@subprojects) } }
+  rootProject.allprojects { plugins.withId("jacoco") { jacocoAggregation(this@allprojects) } }
 }
