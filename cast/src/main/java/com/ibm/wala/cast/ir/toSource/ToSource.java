@@ -1554,6 +1554,26 @@ public abstract class ToSource {
       return ast.makeNode(CAstNode.BLOCK_STMT, decls.toArray(new CAstNode[decls.size()]));
     }
 
+    public Pair<CAstNode, List<CAstNode>> toFlexibleLoopCAst(
+        List<List<SSAInstruction>> chunks,
+        List<CAstNode> decls,
+        List<Loop> currentLoops,
+        List<CAstNode> elts) {
+      // this is used for the case when loop control can not be found
+      currentLoops.get(0).setHasLoopControl(false);
+
+      Pair<CAstNode, List<CAstNode>> stuff =
+          makeToCAst(chunks.get(0)).processChunk(decls, packages, currentLoops);
+      elts.add(stuff.fst);
+      decls.addAll(stuff.snd);
+
+      CAstNode bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, stuff.fst.getChildren());
+
+      CAstNode loopNode =
+          ast.makeNode(CAstNode.LOOP, ast.makeConstant(true), bodyNode, ast.makeConstant(false));
+      return Pair.make(ast.makeNode(CAstNode.BLOCK_STMT, loopNode), decls);
+    }
+
     public Pair<CAstNode, List<CAstNode>> toLoopCAst(
         List<List<SSAInstruction>> chunks,
         List<CAstNode> decls,
@@ -1575,7 +1595,9 @@ public abstract class ToSource {
                           && LoopHelper.isLoopControl(cfg, chunk, currentLoop))
               .findFirst()
               .orElse(null);
-      assert condChunk != null;
+      if (condChunk == null) {
+        return toFlexibleLoopCAst(chunks, decls, currentLoops, elts);
+      }
 
       // create nodes before loop control
       createLoop(cfg, chunks, currentLoops, decls, elts, true);
@@ -2675,7 +2697,10 @@ public abstract class ToSource {
                 }
                 break test;
               } else if (castOp == CAstOperator.OP_EQ) {
-                if (loop != null && loop.getLoopControl().equals(branchBB)) {
+                // in the case when loop control can not be found, need to negate the test
+                if (loop != null
+                    && loop.isHasLoopControl()
+                    && branchBB.equals(loop.getLoopControl())) {
                   test = v1;
                 } else {
                   test = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, v1);
