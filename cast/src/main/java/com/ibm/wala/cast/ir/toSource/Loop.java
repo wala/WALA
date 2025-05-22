@@ -34,6 +34,8 @@ public class Loop {
    */
   private Set<Pair<ISSABasicBlock, ISSABasicBlock>> loopBreakers;
 
+  private boolean hasLoopControl = true;
+
   public Loop(ISSABasicBlock header) {
     assert (header != null);
     this.loopHeader = header;
@@ -219,5 +221,13 @@ public class Loop {
   public Set<Pair<ISSABasicBlock, ISSABasicBlock>> getLoopBreakersExits() {
     assert (loopBreakers != null);
     return loopBreakers;
+  }
+
+  public boolean isHasLoopControl() {
+    return hasLoopControl;
+  }
+
+  public void setHasLoopControl(boolean hasLoopControl) {
+    this.hasLoopControl = hasLoopControl;
   }
 }
