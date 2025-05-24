@@ -8,12 +8,11 @@ import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAGotoInstruction;
-import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /** The helper class for some methods of loop */
 public class CAstHelper {
@@ -106,7 +105,7 @@ public class CAstHelper {
                         && elseBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
                     ? elseBranch.getChild(0).getChildren()
                     : elseBranch.getChildren());
-        Set<CAstNode> commonTail = gatherCommonTail(thenBranchList, elseBranchList);
+        List<CAstNode> commonTail = gatherCommonTail(thenBranchList, elseBranchList);
         if (commonTail.isEmpty()) {
           result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
         } else {
@@ -180,8 +179,9 @@ public class CAstHelper {
     return originalStr.substring(originalStr.indexOf(":") + 1);
   }
 
-  private static Set<CAstNode> gatherCommonTail(List<CAstNode> first, List<CAstNode> second) {
-    Map<CAstNode, CAstNode> result = HashMapFactory.make();
+  private static List<CAstNode> gatherCommonTail(List<CAstNode> first, List<CAstNode> second) {
+    List<CAstNode> commonInFirst = new ArrayList<>();
+    List<CAstNode> commonInSecond = new ArrayList<>();
     String firstStr = null;
     String secondStr = null;
     for (int i = first.size() - 1, j = second.size() - 1; i >= 0 && j >= 0; ) {
@@ -189,15 +189,16 @@ public class CAstHelper {
       secondStr = trimCAstNodeString(second.get(j).toString());
 
       if (firstStr.equals(secondStr)) {
-        result.put(first.get(i), second.get(j));
+        commonInFirst.add(first.get(i));
+        commonInSecond.add(second.get(j));
         i--;
         j--;
-      }
-      break;
+      } else break;
     }
-    first.removeAll(result.keySet());
-    second.removeAll(result.values());
-    return result.keySet();
+    Collections.reverse(commonInFirst);
+    first.removeAll(commonInFirst);
+    second.removeAll(commonInSecond);
+    return commonInFirst;
   }
 
   public static boolean isConditionalStatement(CAstNode test) {
