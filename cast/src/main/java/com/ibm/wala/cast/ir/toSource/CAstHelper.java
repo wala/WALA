@@ -71,74 +71,96 @@ public class CAstHelper {
     if (isConditionalStatement(newTest)) {
       result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
     } else {
-      if (((inLoop && endingWithBreak(thenBranch)) || endingWithTermination(thenBranch))
-          && !((inLoop && endingWithBreak(elseBranch)) || endingWithTermination(elseBranch))) {
-        // move elseBranch after the if statement
-        result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch));
-        if (elseBranch.getKind() == CAstNode.BLOCK_STMT) {
-          result.addAll(elseBranch.getChildren());
-        } else result.add(elseBranch);
-      } else if (((inLoop && endingWithBreak(elseBranch)) || endingWithTermination(elseBranch))
-          && !((inLoop && endingWithBreak(thenBranch)) || endingWithTermination(thenBranch))) {
-        // Negation the test
+      // find common ending for both if branches
+      List<CAstNode> thenBranchList =
+          removeGOToAtTail(
+              (thenBranch.getChildCount() == 1
+                      && thenBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
+                  ? thenBranch.getChild(0).getChildren()
+                  : thenBranch.getChildren());
+      List<CAstNode> elseBranchList =
+          removeGOToAtTail(
+              (elseBranch.getChildCount() == 1
+                      && elseBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
+                  ? elseBranch.getChild(0).getChildren()
+                  : elseBranch.getChildren());
+      List<CAstNode> commonTail = gatherCommonTail(thenBranchList, elseBranchList);
+      if (commonTail.size() > 0) {
+        // if there are common tail, no need to check break or termination
+        if (thenBranchList.size() > 0) {
+          if (elseBranchList.size() > 0) {
+            result.add(
+                ast.makeNode(
+                    CAstNode.IF_STMT,
+                    newTest,
+                    ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList),
+                    ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+          } else {
+            result.add(
+                ast.makeNode(
+                    CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
+          }
+        } else {
+          // Negation the test
+          if (isLeadingNegation(newTest)) {
+            newTest = stableRemoveLeadingNegation(newTest);
+          } else {
+            newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
+          }
+
+          result.add(
+              ast.makeNode(
+                  CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+        }
+        result.addAll(commonTail);
+      } else if (thenBranchList.size() > 0
+          && ((inLoop && endingWithBreakOrContinue(thenBranchList.get(thenBranchList.size() - 1)))
+              || endingWithTermination(thenBranchList.get(thenBranchList.size() - 1)))) {
+        // if then branch is ended with break/continue/termination, then move else after the if
+        result.add(
+            ast.makeNode(
+                CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
+        result.addAll(elseBranchList);
+      } else if (elseBranchList.size() > 0
+          && ((inLoop && endingWithBreakOrContinue(elseBranchList.get(elseBranchList.size() - 1)))
+              || endingWithTermination(elseBranchList.get(elseBranchList.size() - 1)))) {
+        // Negation the test if else branch is ended with break/continue/termination
         if (isLeadingNegation(newTest)) {
           newTest = stableRemoveLeadingNegation(newTest);
         } else {
           newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
         }
         // move thenBranch after the if statement
-        result.add(ast.makeNode(CAstNode.IF_STMT, newTest, elseBranch));
-        if (thenBranch.getKind() == CAstNode.BLOCK_STMT) {
-          result.addAll(thenBranch.getChildren());
-        } else result.add(thenBranch);
+        result.add(
+            ast.makeNode(
+                CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+        result.addAll(thenBranchList);
       } else {
-        // move common ending after the IF
-        List<CAstNode> thenBranchList =
-            removeGOToAtTail(
-                (thenBranch.getChildCount() == 1
-                        && thenBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
-                    ? thenBranch.getChild(0).getChildren()
-                    : thenBranch.getChildren());
-        List<CAstNode> elseBranchList =
-            removeGOToAtTail(
-                (elseBranch.getChildCount() == 1
-                        && elseBranch.getChild(0).getKind() == CAstNode.BLOCK_STMT)
-                    ? elseBranch.getChild(0).getChildren()
-                    : elseBranch.getChildren());
-        List<CAstNode> commonTail = gatherCommonTail(thenBranchList, elseBranchList);
-        if (commonTail.isEmpty()) {
-          result.add(ast.makeNode(CAstNode.IF_STMT, newTest, thenBranch, elseBranch));
-        } else {
-          if (thenBranchList.size() > 0) {
-            if (elseBranchList.size() > 0) {
-              result.add(
-                  ast.makeNode(
-                      CAstNode.IF_STMT,
-                      newTest,
-                      ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList),
-                      ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
-            } else {
-              result.add(
-                  ast.makeNode(
-                      CAstNode.IF_STMT,
-                      newTest,
-                      ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
-            }
-          } else {
-            // Negation the test
-            if (isLeadingNegation(newTest)) {
-              newTest = stableRemoveLeadingNegation(newTest);
-            } else {
-              newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
-            }
-
+        // or create a normal if
+        if (thenBranchList.size() > 0) {
+          if (elseBranchList.size() > 0) {
             result.add(
                 ast.makeNode(
-                    CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+                    CAstNode.IF_STMT,
+                    newTest,
+                    ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList),
+                    ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+          } else {
+            result.add(
+                ast.makeNode(
+                    CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
           }
-          if (commonTail.size() > 0) {
-            result.addAll(commonTail);
+        } else {
+          // Negation the test
+          if (isLeadingNegation(newTest)) {
+            newTest = stableRemoveLeadingNegation(newTest);
+          } else {
+            newTest = ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, newTest);
           }
+
+          result.add(
+              ast.makeNode(
+                  CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
         }
       }
     }
@@ -147,6 +169,11 @@ public class CAstHelper {
   }
 
   private static List<CAstNode> removeGOToAtTail(List<CAstNode> originalList) {
+    // remove block wrapper if any
+    if (originalList.size() == 1 && originalList.get(0).getKind() == CAstNode.BLOCK_STMT) {
+      return removeGOToAtTail(originalList.get(0).getChildren());
+    }
+
     // remove GOTO as the last one in the list
     // GOTO with a label should be kept in the list
     List<CAstNode> result = new ArrayList<>();
@@ -171,7 +198,9 @@ public class CAstHelper {
         result.addAll(oldResult);
       } else result.add(0, originalList.get(i));
     }
-    return result;
+    return result.size() == 1 && result.get(0).getKind() == CAstNode.BLOCK_STMT
+        ? result.get(0).getChildren()
+        : result;
   }
 
   private static String trimCAstNodeString(String originalStr) {
@@ -213,16 +242,16 @@ public class CAstHelper {
     return false;
   }
 
-  public static boolean endingWithBreak(CAstNode block) {
-    if (isBreak(block)) return true;
+  public static boolean endingWithBreakOrContinue(CAstNode block) {
+    if (isBreakOrContinue(block)) return true;
     else if (block.getKind() == CAstNode.BLOCK_STMT && block.getChildCount() > 0) {
-      if (endingWithBreak(block.getChild(block.getChildCount() - 1))) return true;
+      if (endingWithBreakOrContinue(block.getChild(block.getChildCount() - 1))) return true;
     }
     return false;
   }
 
-  private static boolean isBreak(CAstNode node) {
-    return node.getKind() == CAstNode.BREAK;
+  private static boolean isBreakOrContinue(CAstNode node) {
+    return node.getKind() == CAstNode.BREAK || node.getKind() == CAstNode.CONTINUE;
   }
 
   public static boolean endingWithTermination(CAstNode node) {

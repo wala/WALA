@@ -1567,10 +1567,8 @@ public abstract class ToSource {
       elts.add(stuff.fst);
       decls.addAll(stuff.snd);
 
-      CAstNode bodyNode = ast.makeNode(CAstNode.BLOCK_STMT, stuff.fst.getChildren());
-
       CAstNode loopNode =
-          ast.makeNode(CAstNode.LOOP, ast.makeConstant(true), bodyNode, ast.makeConstant(false));
+          ast.makeNode(CAstNode.LOOP, ast.makeConstant(true), stuff.fst, ast.makeConstant(false));
       return Pair.make(ast.makeNode(CAstNode.BLOCK_STMT, loopNode), decls);
     }
 
@@ -1750,7 +1748,7 @@ public abstract class ToSource {
           loopType = LoopType.WHILE;
         } else {
           if (afterNodes.size() > 0) {
-            if (CAstHelper.endingWithBreak(afterNodes.get(afterNodes.size() - 1))
+            if (CAstHelper.endingWithBreakOrContinue(afterNodes.get(afterNodes.size() - 1))
                 || CAstHelper.endingWithTermination(afterNodes.get(afterNodes.size() - 1))) {
               if (DEBUG)
                 System.err.println(
@@ -2774,7 +2772,7 @@ public abstract class ToSource {
                 // when there are two goto instruction, the second from last will be the break
                 lastNode = notTakenBlock.get(notTakenBlock.size() - 2);
               }
-              if (CAstHelper.endingWithBreak(lastNode)
+              if (CAstHelper.endingWithBreakOrContinue(lastNode)
                   || CAstHelper.endingWithTermination(lastNode)) {
                 if (DEBUG)
                   System.err.println(
@@ -2807,7 +2805,7 @@ public abstract class ToSource {
               if (takenBlock == null) {
                 takenBlock = new ArrayList<>();
                 takenBlock.add(ast.makeNode(CAstNode.BREAK));
-              } else if (CAstHelper.endingWithBreak(takenBlock.get(takenBlock.size() - 1))
+              } else if (CAstHelper.endingWithBreakOrContinue(takenBlock.get(takenBlock.size() - 1))
                   || CAstHelper.endingWithTermination(takenBlock.get(takenBlock.size() - 1))) {
                 if (DEBUG)
                   System.err.println(
