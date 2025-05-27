@@ -261,7 +261,8 @@ public class PaPanel extends JSplitPane {
   }
 
   /** Utility method for mutable mapping. map[index] U= o */
-  protected static <T> void mapUsingMutableMapping(MutableMapping<@Nullable List<T>> map, int index, T o) {
+  protected static <T> void mapUsingMutableMapping(
+      MutableMapping<@Nullable List<T>> map, int index, T o) {
     List<T> set;
     if (index <= map.getMaximumIndex()) {
       set = map.getMappedObject(index);
