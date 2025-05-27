@@ -56,6 +56,7 @@ dependencies {
     because("public class Entrypoint implements interface BytecodeConstraints")
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
+  api(libs.jspecify)
   testFixturesApi(libs.assertj.core)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.shrike)
