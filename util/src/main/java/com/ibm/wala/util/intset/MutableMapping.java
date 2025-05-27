@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.intset;
 
-import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import com.ibm.wala.util.collections.HashMapFactory;
