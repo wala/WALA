@@ -191,18 +191,24 @@ public class CAstHelper {
     // remove GOTO as the last one in the list
     // GOTO with a label should be kept in the list
     List<CAstNode> result = new ArrayList<>();
-
+    int lastIndex = originalList.size() - 1;
     for (int i = originalList.size() - 1; i >= 0; i--) {
       // ignore GOTO in BLOCK
       if (originalList.get(i).getKind() == CAstNode.BLOCK_STMT
           && originalList.get(i).getChildCount() == 1
           && originalList.get(i).getChild(0).getKind() == CAstNode.GOTO
-          && originalList.get(i).getChild(0).getChildCount() == 0) continue;
+          && originalList.get(i).getChild(0).getChildCount() == 0) {
+        lastIndex--;
+        continue;
+      }
       // ignore GOTO or EMPTY
       if ((originalList.get(i).getKind() == CAstNode.GOTO
               && originalList.get(i).getChildCount() == 0)
-          || originalList.get(i).getKind() == CAstNode.EMPTY) continue;
-      if (i == originalList.size() - 1
+          || originalList.get(i).getKind() == CAstNode.EMPTY) {
+        lastIndex--;
+        continue;
+      }
+      if (i == lastIndex
           && originalList.get(i).getKind() == CAstNode.BLOCK_STMT
           && originalList.get(i).getChildCount() > 0) {
         // ignore GOTO in nested block
