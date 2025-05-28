@@ -120,15 +120,24 @@ public class CAstHelper {
                   CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
         }
         result.addAll(commonTail);
-      } else if (shouldOnlyUseOneBranch(thenBranchList, inLoop)
-          && !shouldOnlyUseOneBranch(elseBranchList, inLoop)) {
+      } else if (thenBranchList.size() > 0
+          && endingWithTermination(thenBranchList.get(thenBranchList.size() - 1))
+          && elseBranchList.size() > 0
+          && endingWithTermination(elseBranchList.get(elseBranchList.size() - 1))) {
+        // this is the special case where we want to keep if and else
+        result.add(
+            ast.makeNode(
+                CAstNode.IF_STMT,
+                newTest,
+                ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList),
+                ast.makeNode(CAstNode.BLOCK_STMT, elseBranchList)));
+      } else if (shouldOnlyUseOneBranch(thenBranchList, inLoop)) {
         // if then branch is ended with break/continue/termination, then move else after the if
         result.add(
             ast.makeNode(
                 CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
         result.addAll(elseBranchList);
-      } else if (shouldOnlyUseOneBranch(elseBranchList, inLoop)
-          && !shouldOnlyUseOneBranch(thenBranchList, inLoop)) {
+      } else if (shouldOnlyUseOneBranch(elseBranchList, inLoop)) {
         // Negation the test if else branch is ended with break/continue/termination
         if (isLeadingNegation(newTest)) {
           newTest = stableRemoveLeadingNegation(newTest);
