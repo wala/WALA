@@ -1562,13 +1562,19 @@ public abstract class ToSource {
       // this is used for the case when loop control can not be found
       currentLoops.get(0).setHasLoopControl(false);
 
-      Pair<CAstNode, List<CAstNode>> stuff =
-          makeToCAst(chunks.get(0)).processChunk(decls, packages, currentLoops);
-      elts.add(stuff.fst);
-      decls.addAll(stuff.snd);
+      for (int i = 0; i < chunks.size(); i++) {
+        Pair<CAstNode, List<CAstNode>> stuff =
+            makeToCAst(chunks.get(i)).processChunk(decls, packages, currentLoops);
+        elts.add(stuff.fst);
+        decls.addAll(stuff.snd);
+      }
 
       CAstNode loopNode =
-          ast.makeNode(CAstNode.LOOP, ast.makeConstant(true), stuff.fst, ast.makeConstant(false));
+          ast.makeNode(
+              CAstNode.LOOP,
+              ast.makeConstant(true),
+              elts.size() == 1 ? elts.get(0) : ast.makeNode(CAstNode.BLOCK_STMT, elts),
+              ast.makeConstant(false));
       return Pair.make(ast.makeNode(CAstNode.BLOCK_STMT, loopNode), decls);
     }
 
