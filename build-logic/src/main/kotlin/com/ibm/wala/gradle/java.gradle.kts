@@ -3,9 +3,11 @@ package com.ibm.wala.gradle
 // Build configuration for subprojects that include Java source code.
 
 import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.jvm.toolchain.JvmVendorSpec
 
 plugins {
   eclipse
+  jacoco
   `java-library`
   `java-test-fixtures`
   `maven-publish`
@@ -17,6 +19,8 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
+jacoco { toolVersion = "0.8.13" }
+
 repositories {
   mavenCentral()
   // to get r8
@@ -25,6 +29,9 @@ repositories {
 
 java.toolchain.languageVersion =
     JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
+// We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
+// Temurin does not include jmod files as of their JDK 24 builds.
+java.toolchain.vendor = JvmVendorSpec.AZUL
 
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
@@ -49,13 +56,11 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
-  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(23) }
+  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(24) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
   options.release = 11
   options.errorprone {
     // don't run warning-level checks by default as they add too much noise to build output
-    // NOTE: until https://github.com/google/error-prone/pull/3462 makes it to a release,
-    // we need to customize the level of at least one specific check to make this flag work
     disableAllWarnings = true
     // warning-level checks upgraded to error, since we've fixed all the warnings
     error("UnnecessaryParentheses")
@@ -163,4 +168,9 @@ spotless {
             .get()
             .toString())
   }
+}
+
+// Google Java Format versions 1.25.0 and higher require Java 17
+tasks.named("spotlessJava") {
+  onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
 }

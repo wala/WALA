@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.cast.js.nodejs.test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.nodejs.NodejsCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -37,9 +36,11 @@ public class NodejsRequireTargetSelectorResolveTest {
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     String cgString = CG.toString();
 
-    assertTrue(cgString.contains("Lmod/nodejsModule/moduleSource/exec>"));
-    assertTrue(cgString.contains("Lmod/nodejsModule/moduleSource/SomeClass/hello>"));
-    assertFalse(cgString.contains("?"));
+    assertThat(cgString)
+        .contains(
+            "Lmod/nodejsModule/moduleSource/exec>",
+            "Lmod/nodejsModule/moduleSource/SomeClass/hello>");
+    assertThat(cgString).doesNotContain("?");
   }
 
   @Test
@@ -54,9 +55,9 @@ public class NodejsRequireTargetSelectorResolveTest {
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     String cgString = CG.toString();
 
-    assertTrue(cgString.contains("Llib1/nodejsModule/moduleSource/lib1>"));
-    assertTrue(cgString.contains("Llib2/nodejsModule/moduleSource/lib2>"));
-    assertFalse(cgString.contains("?"));
+    assertThat(cgString)
+        .contains("Llib1/nodejsModule/moduleSource/lib1>", "Llib2/nodejsModule/moduleSource/lib2>");
+    assertThat(cgString).doesNotContain("?");
   }
 
   @Test
@@ -71,9 +72,9 @@ public class NodejsRequireTargetSelectorResolveTest {
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     String cgString = CG.toString();
 
-    assertTrue(cgString.contains("Llib1/nodejsModule/moduleSource/lib1>"));
-    assertTrue(cgString.contains("Llib2/nodejsModule/moduleSource/lib2>"));
-    assertFalse(cgString.contains("?"));
+    assertThat(cgString)
+        .contains("Llib1/nodejsModule/moduleSource/lib1>", "Llib2/nodejsModule/moduleSource/lib2>");
+    assertThat(cgString).doesNotContain("?");
   }
 
   @Test
@@ -88,10 +89,9 @@ public class NodejsRequireTargetSelectorResolveTest {
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     String cgString = CG.toString();
 
-    assertTrue(
-        cgString.contains(
-            "Lnode_modules_lib_node_modules_sublib_sublib/nodejsModule/moduleSource"));
-    assertFalse(cgString.contains("?"));
+    assertThat(cgString)
+        .contains("Lnode_modules_lib_node_modules_sublib_sublib/nodejsModule/moduleSource");
+    assertThat(cgString).doesNotContain("?");
   }
 
   @Test
@@ -106,8 +106,10 @@ public class NodejsRequireTargetSelectorResolveTest {
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     String cgString = CG.toString();
 
-    assertTrue(cgString.contains("Lutil/nodejsModule/moduleSource/util"));
-    assertTrue(cgString.contains("Lhttps/nodejsModule/moduleSource/https"));
-    assertTrue(cgString.contains("Lhttp/nodejsModule/moduleSource/http"));
+    assertThat(cgString)
+        .contains(
+            "Lutil/nodejsModule/moduleSource/util",
+            "Lhttps/nodejsModule/moduleSource/https",
+            "Lhttp/nodejsModule/moduleSource/http");
   }
 }

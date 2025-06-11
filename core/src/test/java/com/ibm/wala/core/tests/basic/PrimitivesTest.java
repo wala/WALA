@@ -10,12 +10,18 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.intset.BitVectorBaseConditions.emptyIntersectionWith;
+import static com.ibm.wala.util.intset.BitVectorBaseConditions.sameBitsAs;
+import static com.ibm.wala.util.intset.BitVectorBaseConditions.subsetOf;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static com.ibm.wala.util.intset.IntSetConditions.sameValueAs;
+import static com.ibm.wala.util.intset.IntSetConditions.size;
+import static com.ibm.wala.util.intset.IntSetConditions.subsetOf;
+import static com.ibm.wala.util.intset.IntSetUtil.diff;
+import static com.ibm.wala.util.intset.LongSetAssert.assertThat;
+import static com.ibm.wala.util.intset.LongSetConditions.sameValueAs;
+import static com.ibm.wala.util.intset.LongSetConditions.subsetOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
@@ -87,7 +93,7 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(IntSetUtil.diff(v, z, factory)); // { 17 }
     System.err.println(IntSetUtil.diff(z, v, factory)); // { }
 
-    // assertTrue(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z)));
+    // assertThat(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z))).isTrue();
     MutableIntSet temp1 = factory.makeCopy(x);
     MutableIntSet temp2 = factory.makeCopy(x);
     MutableIntSet tempY = factory.makeCopy(y);
@@ -96,15 +102,15 @@ public class PrimitivesTest extends WalaTestCase {
     temp1.intersectWith(tempY);
     temp2.intersectWith(y);
     temp2.addAll(z);
-    assertTrue(temp1.sameValue(temp2));
+    assertThat(temp1).is(sameValueAs(temp2));
 
-    // assertTrue(x.union(z).diff(z).equals(x));
-    assertTrue(w.isEmpty());
-    assertTrue(IntSetUtil.diff(x, x, factory).isEmpty());
-    assertTrue(IntSetUtil.diff(z, v, factory).isEmpty());
-    assertTrue(IntSetUtil.diff(v, z, factory).sameValue(SparseIntSet.singleton(17)));
-    assertTrue(IntSetUtil.diff(z, v, factory).isEmpty());
-    assertTrue(z.isSubset(v));
+    // assertThat(x.union(z).diff(z).equals(x)).isTrue();
+    assertThat(w).isEmpty();
+    assertThat(diff(x, x, factory)).isEmpty();
+    assertThat(diff(z, v, factory)).isEmpty();
+    assertThat(diff(v, z, factory)).is(sameValueAs(SparseIntSet.singleton(17)));
+    assertThat(diff(z, v, factory)).isEmpty();
+    assertThat(z).is(subsetOf(v));
     temp = factory.make();
     temp.add(4);
     System.err.println(temp); // { 4 }
@@ -113,7 +119,7 @@ public class PrimitivesTest extends WalaTestCase {
     temp.add(2);
     System.err.println(temp); // { 2 4 7 }
     System.err.println(x); // { 2 4 7 }
-    assertTrue(temp.sameValue(x));
+    assertThat(temp).is(sameValueAs(x));
 
     MutableIntSet a =
         factory.parse(
@@ -121,71 +127,62 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
     IntSet i = a.intersection(temp);
-    assertTrue(i.sameValue(SparseIntSet.singleton(7)));
+    assertThat(i).is(sameValueAs(SparseIntSet.singleton(7)));
     a.add(100);
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
 
     MutableIntSet b =
         factory.parse(
             "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
-    assertTrue(a.sameValue(b));
-    assertTrue(a.isSubset(b));
+    assertThat(a).is(sameValueAs(b)).is(subsetOf(b));
 
     IntSet f = IntSetUtil.diff(b, factory.parse("{7,8,9}"), factory);
     System.err.println(f);
-    assertFalse(f.contains(7));
-    assertFalse(f.contains(8));
-    assertFalse(f.contains(9));
-    assertFalse(f.sameValue(b));
-    assertTrue(f.isSubset(b));
+    assertThat(f).toCollection().doesNotContain(7, 8, 9);
+    assertThat(f).isNot(sameValueAs(b)).is(subsetOf(b));
 
     IntSet tmp =
         factory.parse(
             "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
     f = IntSetUtil.diff(b, tmp, factory);
     System.err.println(f);
-    assertFalse(f.sameValue(b));
-    assertTrue(f.isSubset(b));
-    assertFalse(f.contains(51));
-    assertFalse(f.contains(53));
-    assertFalse(f.contains(55));
-    assertFalse(f.contains(57));
-    assertFalse(f.contains(59));
-    assertTrue(f.contains(100));
+    assertThat(f)
+        .isNot(sameValueAs(b))
+        .is(subsetOf(b))
+        .toCollection()
+        .doesNotContainAnyElementsOf(List.of(51, 53, 55, 57, 59))
+        .contains(100);
 
     tmp =
         factory.parse(
             "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
     f = IntSetUtil.diff(b, tmp, factory);
     System.err.println(f);
-    assertFalse(f.sameValue(b));
-    assertTrue(f.isSubset(b));
-    assertFalse(f.contains(51));
-    assertFalse(f.contains(53));
-    assertFalse(f.contains(55));
-    assertFalse(f.contains(57));
-    assertFalse(f.contains(59));
-    assertFalse(f.contains(100));
+    assertThat(f)
+        .isNot(sameValueAs(b))
+        .is(subsetOf(b))
+        .toCollection()
+        .doesNotContain(51, 53, 55, 57, 59, 100);
 
     b = factory.makeCopy(a);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
     b.remove(1);
     b.add(0);
-    assertFalse(a.sameValue(b));
+    assertThat(a).isNot(sameValueAs(b));
 
     a = factory.parse("{1}");
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     b.remove(0);
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     a.remove(1);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
     IntSet ignored = a.intersection(temp);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
 
     temp2 = factory.make();
-    assertTrue(temp2.sameValue(a));
+    assertThat(temp2).is(sameValueAs(a));
 
     a =
         factory.parse(
@@ -199,62 +196,62 @@ public class PrimitivesTest extends WalaTestCase {
         factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     MutableIntSet e = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34}");
 
-    assertTrue(e.isSubset(d));
+    assertThat(e).is(subsetOf(d));
     e.addAll(d);
-    assertTrue(e.isSubset(d));
+    assertThat(e).is(subsetOf(d));
     e.remove(12);
-    assertTrue(e.isSubset(d));
+    assertThat(e).is(subsetOf(d));
     e.add(105);
-    assertFalse(e.isSubset(d));
+    assertThat(e).isNot(subsetOf(d));
 
-    assertFalse(b.isSubset(a));
+    assertThat(b).isNot(subsetOf(a));
 
     b.add(53);
-    assertFalse(b.isSubset(a));
+    assertThat(b).isNot(subsetOf(a));
 
     a.add(52);
     a.remove(52);
-    assertFalse(b.isSubset(a));
+    assertThat(b).isNot(subsetOf(a));
 
     c.add(55);
-    assertFalse(c.isSubset(b));
+    assertThat(c).isNot(subsetOf(b));
 
     d.add(53);
-    assertTrue(d.isSubset(b));
+    assertThat(d).is(subsetOf(b));
 
     d = factory.make();
     d.copySet(c);
-    assertFalse(d.isSubset(b));
+    assertThat(d).isNot(subsetOf(b));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     b = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48}");
-    assertFalse(a.sameValue(b));
+    assertThat(a).isNot(sameValueAs(b));
     b.add(50);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
     a.add(11);
     b.add(11);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20,50}");
     b = factory.parse("{24,26,28,30,32,34,36,38,40,42,44,46,48}");
     c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     a.addAll(b);
     a.add(22);
-    assertTrue(a.sameValue(c));
+    assertThat(a).is(sameValueAs(c));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20,50}");
     b = factory.parse("{24,26,28,30,32,34,36,38,40,42,44,46,48}");
     c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     b.addAll(factory.parse("{22}"));
     a.addAll(b);
-    assertTrue(a.sameValue(c));
+    assertThat(a).is(sameValueAs(c));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20}");
     b = factory.parse("{22,24,26,28,30,32,34,36,38,40,42,44,46,48}");
     c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     c.remove(22);
     a.addAll(b);
-    assertFalse(a.sameValue(c));
+    assertThat(a).isNot(sameValueAs(c));
 
     a =
         factory.parse(
@@ -262,38 +259,37 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
     i = a.intersection(temp);
-    assertTrue(i.sameValue(SparseIntSet.singleton(7)));
+    assertThat(i).is(sameValueAs(SparseIntSet.singleton(7)));
     a.add(100);
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
 
     b =
         factory.parse(
             "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
-    assertTrue(a.sameValue(b));
-    assertTrue(a.isSubset(b));
+    assertThat(a).is(sameValueAs(b)).is(subsetOf(b));
 
     b = factory.makeCopy(a);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
     b.remove(1);
     b.add(0);
-    assertFalse(a.sameValue(b));
+    assertThat(a).isNot(sameValueAs(b));
 
     a.clear();
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
 
     a = factory.parse("{1}");
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     b.remove(0);
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     a.remove(1);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
     ignored = a.intersection(temp);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
 
     temp2 = factory.make();
-    assertTrue(temp2.sameValue(a));
+    assertThat(temp2).is(sameValueAs(a));
 
     for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
@@ -310,10 +306,10 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     temp2.clear();
-    assertTrue(temp2.isEmpty());
+    assertThat(temp2).isEmpty();
 
     temp2 = factory.make();
-    assertTrue(temp2.sameValue(a));
+    assertThat(temp2).is(sameValueAs(a));
 
     for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
@@ -328,7 +324,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     temp2.clear();
-    assertTrue(temp2.isEmpty());
+    assertThat(temp2).isEmpty();
   }
 
   /** Test the MutableSharedBitVectorIntSet implementation */
@@ -385,7 +381,7 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(LongSetUtil.diff(v, z, factory)); // { 17 }
     System.err.println(LongSetUtil.diff(z, v, factory)); // { }
 
-    // assertTrue(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z)));
+    // assertThat(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z))).isTrue();
     MutableLongSet temp1 = factory.makeCopy(x);
     MutableLongSet temp2 = factory.makeCopy(x);
     MutableLongSet tempY = factory.makeCopy(y);
@@ -394,15 +390,15 @@ public class PrimitivesTest extends WalaTestCase {
     temp1.intersectWith(tempY);
     temp2.intersectWith(y);
     temp2.addAll(z);
-    assertTrue(temp1.sameValue(temp2));
+    assertThat(temp1).is(sameValueAs(temp2));
 
-    // assertTrue(x.union(z).diff(z).equals(x));
-    assertTrue(w.isEmpty());
-    assertTrue(LongSetUtil.diff(x, x, factory).isEmpty());
-    assertTrue(LongSetUtil.diff(z, v, factory).isEmpty());
-    assertTrue(LongSetUtil.diff(v, z, factory).sameValue(SparseLongSet.singleton(17)));
-    assertTrue(LongSetUtil.diff(z, v, factory).isEmpty());
-    assertTrue(z.isSubset(v));
+    // assertThat(x.union(z).diff(z).equals(x)).isTrue();
+    assertThat(w).isEmpty();
+    assertThat(LongSetUtil.diff(x, x, factory)).isEmpty();
+    assertThat(LongSetUtil.diff(z, v, factory)).isEmpty();
+    assertThat(LongSetUtil.diff(v, z, factory)).is(sameValueAs(SparseLongSet.singleton(17)));
+    assertThat(LongSetUtil.diff(z, v, factory)).isEmpty();
+    assertThat(z).is(subsetOf(v));
     temp = factory.make();
     temp.add(4);
     System.err.println(temp); // { 4 }
@@ -411,7 +407,7 @@ public class PrimitivesTest extends WalaTestCase {
     temp.add(2);
     System.err.println(temp); // { 2 4 7 }
     System.err.println(x); // { 2 4 7 }
-    assertTrue(temp.sameValue(x));
+    assertThat(temp).is(sameValueAs(x));
 
     MutableLongSet a =
         factory.parse(
@@ -419,71 +415,62 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
     LongSet i = a.intersection(temp);
-    assertTrue(i.sameValue(SparseLongSet.singleton(7)));
+    assertThat(i).is(sameValueAs(SparseLongSet.singleton(7)));
     a.add(100);
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
 
     MutableLongSet b =
         factory.parse(
             "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
-    assertTrue(a.sameValue(b));
-    assertTrue(a.isSubset(b));
+    assertThat(a).is(sameValueAs(b)).is(subsetOf(b));
 
     LongSet f = LongSetUtil.diff(b, factory.parse("{7,8,9}"), factory);
     System.err.println(f);
-    assertFalse(f.contains(7));
-    assertFalse(f.contains(8));
-    assertFalse(f.contains(9));
-    assertFalse(f.sameValue(b));
-    assertTrue(f.isSubset(b));
+    assertThat(f).toCollection().doesNotContain(7L, 8L, 9L);
+    assertThat(f).isNot(sameValueAs(b)).is(subsetOf(b));
 
     LongSet tmp =
         factory.parse(
             "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
     f = LongSetUtil.diff(b, tmp, factory);
     System.err.println(f);
-    assertFalse(f.sameValue(b));
-    assertTrue(f.isSubset(b));
-    assertFalse(f.contains(51));
-    assertFalse(f.contains(53));
-    assertFalse(f.contains(55));
-    assertFalse(f.contains(57));
-    assertFalse(f.contains(59));
-    assertTrue(f.contains(100));
+    assertThat(f)
+        .isNot(sameValueAs(b))
+        .is(subsetOf(b))
+        .toCollection()
+        .doesNotContain(51L, 53L, 55L, 57L, 59L)
+        .contains(100L);
 
     tmp =
         factory.parse(
             "{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
     f = LongSetUtil.diff(b, tmp, factory);
     System.err.println(f);
-    assertFalse(f.sameValue(b));
-    assertTrue(f.isSubset(b));
-    assertFalse(f.contains(51));
-    assertFalse(f.contains(53));
-    assertFalse(f.contains(55));
-    assertFalse(f.contains(57));
-    assertFalse(f.contains(59));
-    assertFalse(f.contains(100));
+    assertThat(f)
+        .isNot(sameValueAs(b))
+        .is(subsetOf(b))
+        .toCollection()
+        .doesNotContain(51L, 53L, 55L, 57L, 59L, 100L);
 
     b = factory.makeCopy(a);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
     b.remove(1);
     b.add(0);
-    assertFalse(a.sameValue(b));
+    assertThat(a).isNot(sameValueAs(b));
 
     a = factory.parse("{1}");
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     b.remove(0);
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     a.remove(1);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
     LongSet ignored = a.intersection(temp);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
 
     temp2 = factory.make();
-    assertTrue(temp2.sameValue(a));
+    assertThat(temp2).is(sameValueAs(a));
 
     a =
         factory.parse(
@@ -497,62 +484,62 @@ public class PrimitivesTest extends WalaTestCase {
         factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     MutableLongSet e = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34}");
 
-    assertTrue(e.isSubset(d));
+    assertThat(e).is(subsetOf(d));
     e.addAll(d);
-    assertTrue(e.isSubset(d));
+    assertThat(e).is(subsetOf(d));
     e.remove(12);
-    assertTrue(e.isSubset(d));
+    assertThat(e).is(subsetOf(d));
     e.add(105);
-    assertFalse(e.isSubset(d));
+    assertThat(e).isNot(subsetOf(d));
 
-    assertFalse(b.isSubset(a));
+    assertThat(b).isNot(subsetOf(a));
 
     b.add(53);
-    assertFalse(b.isSubset(a));
+    assertThat(b).isNot(subsetOf(a));
 
     a.add(52);
     a.remove(52);
-    assertFalse(b.isSubset(a));
+    assertThat(b).isNot(subsetOf(a));
 
     c.add(55);
-    assertFalse(c.isSubset(b));
+    assertThat(c).isNot(subsetOf(b));
 
     d.add(53);
-    assertTrue(d.isSubset(b));
+    assertThat(d).is(subsetOf(b));
 
     d = factory.make();
     d.copySet(c);
-    assertFalse(d.isSubset(b));
+    assertThat(d).isNot(subsetOf(b));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     b = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48}");
-    assertFalse(a.sameValue(b));
+    assertThat(a).isNot(sameValueAs(b));
     b.add(50);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
     a.add(11);
     b.add(11);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20,50}");
     b = factory.parse("{24,26,28,30,32,34,36,38,40,42,44,46,48}");
     c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     a.addAll(b);
     a.add(22);
-    assertTrue(a.sameValue(c));
+    assertThat(a).is(sameValueAs(c));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20,50}");
     b = factory.parse("{24,26,28,30,32,34,36,38,40,42,44,46,48}");
     c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     b.addAll(factory.parse("{22}"));
     a.addAll(b);
-    assertTrue(a.sameValue(c));
+    assertThat(a).is(sameValueAs(c));
 
     a = factory.parse("{2,4,6,8,10,12,14,16,18,20}");
     b = factory.parse("{22,24,26,28,30,32,34,36,38,40,42,44,46,48}");
     c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
     c.remove(22);
     a.addAll(b);
-    assertFalse(a.sameValue(c));
+    assertThat(a).isNot(sameValueAs(c));
 
     a =
         factory.parse(
@@ -560,35 +547,34 @@ public class PrimitivesTest extends WalaTestCase {
     System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
     i = a.intersection(temp);
-    assertTrue(i.sameValue(SparseLongSet.singleton(7)));
+    assertThat(i).is(sameValueAs(SparseLongSet.singleton(7)));
     a.add(100);
-    assertTrue(a.sameValue(a));
+    assertThat(a).is(sameValueAs(a));
 
     b =
         factory.parse(
             "{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
-    assertTrue(a.sameValue(b));
-    assertTrue(a.isSubset(b));
+    assertThat(a).is(sameValueAs(b)).is(subsetOf(b));
 
     b = factory.makeCopy(a);
-    assertTrue(a.sameValue(b));
+    assertThat(a).is(sameValueAs(b));
     b.remove(1);
     b.add(0);
-    assertFalse(a.sameValue(b));
+    assertThat(a).isNot(sameValueAs(b));
 
     a = factory.parse("{1}");
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     b.remove(0);
-    assertFalse(a.isSubset(b));
+    assertThat(a).isNot(subsetOf(b));
     a.remove(1);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
     ignored = a.intersection(temp);
-    assertTrue(a.isEmpty());
+    assertThat(a).isEmpty();
 
     temp2 = factory.make();
-    assertTrue(temp2.sameValue(a));
+    assertThat(temp2).is(sameValueAs(a));
 
     for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
@@ -605,7 +591,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     temp2 = factory.make();
-    assertTrue(temp2.sameValue(a));
+    assertThat(temp2).is(sameValueAs(a));
 
     for (int idx = 500; idx < 550; ) {
       for (int xx = 0; xx < 50; xx++, idx++) {
@@ -637,16 +623,15 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    assertNotNull(I);
-    assertEquals(I, I2);
+    assertThat(I).isNotNull().isEqualTo(I2);
 
     I = M.get(Integer.valueOf(4));
-    assertNull(I);
+    assertThat(I).isNull();
 
     I = M.put(Integer.valueOf(2), Integer.valueOf(3));
-    assertEquals(I, I2);
+    assertThat(I2).isEqualTo(I);
     I = M.get(I2);
-    assertEquals(I, I3);
+    assertThat(I3).isEqualTo(I);
   }
 
   @Test
@@ -663,31 +648,29 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    assertNotNull(I);
-    assertEquals(I, I2);
+    assertThat(I).isNotNull().isEqualTo(I2);
 
     I = M.get(Integer.valueOf(4));
-    assertNull(I);
+    assertThat(I).isNull();
 
     I = M.put(Integer.valueOf(2), Integer.valueOf(3));
-    assertEquals(I, I2);
+    assertThat(I2).isEqualTo(I);
     I = M.get(I2);
-    assertEquals(I, I3);
+    assertThat(I3).isEqualTo(I);
 
     M.put(I4, I4);
     M.put(I5, I5);
     M.put(I6, I6);
     I = M.get(Integer.valueOf(4));
-    assertNotNull(I);
-    assertEquals(I, I4);
+    assertThat(I).isNotNull().isEqualTo(I4);
 
     I = M.get(Integer.valueOf(7));
-    assertNull(I);
+    assertThat(I).isNull();
 
     I = M.put(Integer.valueOf(2), Integer.valueOf(6));
-    assertEquals(I, I3);
+    assertThat(I3).isEqualTo(I);
     I = M.get(I2);
-    assertEquals(I, I6);
+    assertThat(I6).isEqualTo(I);
   }
 
   @Test
@@ -700,9 +683,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     // path should be 8, 6, 4, 2, 0
     System.err.println("Path is " + p);
-    for (int i = 0; i < p.size(); i++) {
-      assertEquals((int) p.get(i), new int[] {8, 6, 4, 2, 0}[i]);
-    }
+    assertThat(p).containsExactly(8, 6, 4, 2, 0);
   }
 
   @Test
@@ -711,31 +692,31 @@ public class PrimitivesTest extends WalaTestCase {
 
     BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<>(G, G.getNode(0), 0);
     Collection<Integer> c = Iterator2Collection.toSet(bfs);
-    assertEquals(1, c.size());
+    assertThat(c).hasSize(1);
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 1);
     c = Iterator2Collection.toSet(bfs);
-    assertEquals(3, c.size());
+    assertThat(c).hasSize(3);
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 2);
     c = Iterator2Collection.toSet(bfs);
-    assertEquals(5, c.size());
+    assertThat(c).hasSize(5);
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 3);
     c = Iterator2Collection.toSet(bfs);
-    assertEquals(7, c.size());
+    assertThat(c).hasSize(7);
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 4);
     c = Iterator2Collection.toSet(bfs);
-    assertEquals(9, c.size());
+    assertThat(c).hasSize(9);
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 5);
     c = Iterator2Collection.toSet(bfs);
-    assertEquals(10, c.size());
+    assertThat(c).hasSize(10);
 
     bfs = new BoundedBFSIterator<>(G, G.getNode(0), 500);
     c = Iterator2Collection.toSet(bfs);
-    assertEquals(10, c.size());
+    assertThat(c).hasSize(10);
   }
 
   private static NumberedGraph<Integer> makeBFSTestGraph() {
@@ -789,9 +770,8 @@ public class PrimitivesTest extends WalaTestCase {
     Dominators<Object> D = Dominators.make(G, nodes[10]);
 
     // Assert.assertions
-    int i = 0;
-    Object[] desired4 = new Object[] {nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]};
-    for (Object d4 : Iterator2Iterable.make(D.dominators(nodes[4]))) assertSame(d4, desired4[i++]);
+    assertThat(Iterator2Iterable.make(D.dominators(nodes[4])))
+        .containsExactly(nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]);
 
     int j = 0;
     Object[] desired5 = new Object[] {nodes[8]};
@@ -801,11 +781,11 @@ public class PrimitivesTest extends WalaTestCase {
       if (!ok) {
         System.err.println("O4: " + o4);
         System.err.println("desired " + d);
-        assertEquals(o4, d);
+        assertThat(d).isEqualTo(o4);
       }
     }
 
-    assertEquals(5, D.dominatorTree().getSuccNodeCount(nodes[10]));
+    assertThat(D.dominatorTree().getSuccNodeCount(nodes[10])).isEqualTo(5);
   }
 
   @Test
@@ -825,72 +805,69 @@ public class PrimitivesTest extends WalaTestCase {
       System.err.println(intPair);
       count++;
     }
-    assertEquals(5, count);
+    assertThat(count).isEqualTo(5);
 
     IntSet x = R.getRelated(3);
-    assertEquals(4, x.size());
+    assertThat(x).has(size(4));
 
     x = R.getRelated(5);
-    assertEquals(1, x.size());
+    assertThat(x).has(size(1));
 
     R.remove(5, 1);
     x = R.getRelated(5);
-    assertNull(x);
+    assertThat(x).isNull();
 
     R.add(2, 1);
     R.add(2, 2);
     R.remove(2, 1);
     x = R.getRelated(2);
-    assertEquals(1, x.size());
+    assertThat(x).has(size(1));
 
     R.removeAll(3);
     x = R.getRelated(3);
-    assertNull(x);
+    assertThat(x).isNull();
 
     x = R.getRelated(0);
-    assertNull(x);
+    assertThat(x).isNull();
 
     for (int i = 0; i < 100; i++) {
       R.add(1, i);
     }
-    assertEquals(100, R.getRelated(1).size());
+    assertThat(R.getRelated(1)).has(size(100));
     R.remove(1, 1);
-    assertEquals(99, R.getRelated(1).size());
+    assertThat(R.getRelated(1)).has(size(99));
   }
 
   @Test
   public void testUnionFind() {
     int SIZE = 10000;
-    IntegerUnionFind uf = new IntegerUnionFind(SIZE);
-    int count = countEquivalenceClasses(uf);
-    assertEquals(count, SIZE, "Got count " + count);
+    final IntegerUnionFind uf1 = new IntegerUnionFind(SIZE);
+    final var count1 = countEquivalenceClasses(uf1);
+    assertThat(count1).isEqualTo(SIZE);
 
-    uf.union(3, 7);
-    assertEquals(uf.find(3), uf.find(7));
-    assertTrue(uf.find(3) == 3 || uf.find(3) == 7, "Got uf.find(3)=" + uf.find(3));
+    uf1.union(3, 7);
+    assertThat(uf1.find(3)).isEqualTo(uf1.find(7)).isIn(3, 7);
 
-    uf.union(7, SIZE - 1);
-    assertEquals(uf.find(3), uf.find(SIZE - 1));
-    assertTrue(
-        uf.find(3) == 3 || uf.find(3) == 7 || uf.find(3) == SIZE - 1,
-        "Got uf.find(3)=" + uf.find(3));
+    uf1.union(7, SIZE - 1);
+    final var found = uf1.find(3);
+    assertThat(found).isEqualTo(uf1.find(SIZE - 1)).isIn(3, 7, SIZE - 1);
 
     for (int i = 0; i < SIZE - 1; i++) {
-      uf.union(i, i + 1);
+      uf1.union(i, i + 1);
     }
-    count = countEquivalenceClasses(uf);
-    assertEquals(1, count, "Got count " + count);
+    final var count2 = countEquivalenceClasses(uf1);
+    assertThat(count2).isEqualTo(1);
 
-    uf = new IntegerUnionFind(SIZE);
+    final var uf2 = new IntegerUnionFind(SIZE);
     for (int i = 0; i < SIZE; i++) {
       if ((i % 2) == 0) {
-        uf.union(i, 0);
+        uf2.union(i, 0);
       } else {
-        uf.union(i, 1);
+        uf2.union(i, 1);
       }
     }
-    count = countEquivalenceClasses(uf);
-    assertEquals(2, count, "Got count " + count);
+    final var count3 = countEquivalenceClasses(uf2);
+    assertThat(count3).isEqualTo(2);
   }
 
   private static int countEquivalenceClasses(IntegerUnionFind uf) {
@@ -936,43 +913,42 @@ public class PrimitivesTest extends WalaTestCase {
     // a reasonable size?
     bv.set(55);
 
-    assertEquals(55, bv.max(), "bv.max() is " + bv.max());
-    assertTrue(bv.get(55));
+    assertThat(bv.max()).isEqualTo(55);
+    assertThat(bv).matches(v -> v.get(55)).matches(v -> v.get(55));
 
     bv.set(59);
-    assertEquals(59, bv.max());
-    assertTrue(bv.get(55));
-    assertTrue(bv.get(59));
+    assertThat(bv.max()).isEqualTo(59);
+    assertThat(bv).matches(v -> v.get(55)).matches(v -> v.get(59));
 
     {
       boolean[] gets = new boolean[] {false, true, true};
       int[] bits = new int[] {0, 55, 59};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(bv.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(bv.get(i));
       }
     }
 
     bv.set(77);
 
-    assertEquals(77, bv.max(), "bv.max() is " + bv.max());
+    assertThat(bv.max()).isEqualTo(77);
     {
       boolean[] gets = new boolean[] {false, true, true, true};
       int[] bits = new int[] {0, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(bv.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(bv.get(i));
       }
     }
 
     bv.set(3);
-    assertEquals(77, bv.max(), "bv.max() is " + bv.max());
+    assertThat(bv.max()).isEqualTo(77);
     {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 3, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(bv.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(bv.get(i));
       }
     }
 
@@ -1008,29 +984,29 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(100);
     v1.set(101);
     v1.set(102);
-    assertEquals(102, v1.max(), "v1.max() is " + v1.max());
+    assertThat(v1.max()).isEqualTo(102);
 
     v2.set(200);
     v2.set(201);
     v2.set(202);
-    assertEquals(202, v2.max(), "v2.max() is " + v2.max());
+    assertThat(v2.max()).isEqualTo(202);
 
-    assertTrue(v1.intersectionEmpty(v2));
-    assertTrue(v2.intersectionEmpty(v1));
+    assertThat(v1).has(emptyIntersectionWith(v2));
+    assertThat(v2).has(emptyIntersectionWith(v1));
 
     v1.or(v2);
 
     System.err.println("v1 = " + v1 + ", v2 = " + v2);
-    assertFalse(v1.intersectionEmpty(v2), "v1 = " + v1 + ", v2 = " + v2);
-    assertFalse(v2.intersectionEmpty(v1), "v1 = " + v1 + ", v2 = " + v2);
-    assertEquals(202, v1.max(), "v1.max() is " + v1.max());
+    assertThat(v1).doesNotHave(emptyIntersectionWith(v2));
+    assertThat(v2).doesNotHave(emptyIntersectionWith(v1));
+    assertThat(v1.max()).isEqualTo(202);
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
       int[] bits = new int[] {0, 100, 101, 102, 200, 201, 202};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(v1.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(v1.get(i));
       }
     }
 
@@ -1043,23 +1019,23 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(103);
     v1.set(104);
     v1.set(105);
-    assertEquals(105, v1.max(), "v1.max() is " + v1.max());
+    assertThat(v1.max()).isEqualTo(105);
 
     v2.set(103);
     v2.set(104);
     v2.set(200);
     v2.set(201);
-    assertEquals(201, v2.max(), "v2.max() is " + v2.max());
+    assertThat(v2.max()).isEqualTo(201);
 
     v1.and(v2);
-    assertEquals(104, v1.max(), "v1.max() is " + v1.max());
+    assertThat(v1.max()).isEqualTo(104);
 
     {
       boolean[] gets = new boolean[] {false, true, true};
       int[] bits = new int[] {0, 103, 104};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(v1.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(v1.get(i));
       }
     }
 
@@ -1067,14 +1043,14 @@ public class PrimitivesTest extends WalaTestCase {
     v1.set(101);
     v1.set(102);
     v1.set(105);
-    assertEquals(105, v1.max(), "v1.max() is " + v1.max());
+    assertThat(v1.max()).isEqualTo(105);
 
     {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
       int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(v1.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(v1.get(i));
       }
     }
 
@@ -1086,8 +1062,8 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
       int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(v1.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(v1.get(i));
       }
     }
 
@@ -1101,8 +1077,8 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 100, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(v1.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(v1.get(i));
       }
     }
 
@@ -1128,8 +1104,8 @@ public class PrimitivesTest extends WalaTestCase {
       boolean[] gets = new boolean[] {false, true, true, true, true};
       int[] bits = new int[] {0, 35, 103, 105, 206};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
-        assertEquals(i, bits[j]);
-        assertEquals(v1.get(i), gets[j]);
+        assertThat(bits[j]).isEqualTo(i);
+        assertThat(gets[j]).isEqualTo(v1.get(i));
       }
     }
 
@@ -1138,16 +1114,16 @@ public class PrimitivesTest extends WalaTestCase {
     v2.set(105);
 
     System.err.println("v1 = " + v1 + ", v2 = " + v2);
-    assertTrue(v1.isSubset(v2));
+    assertThat(v1).is(subsetOf(v2));
 
     v2.clearAll();
     v2.set(111);
     v2.or(v1);
-    assertTrue(v1.isSubset(v2));
+    assertThat(v1).is(subsetOf(v2));
 
     v2.and(v1);
 
-    assertTrue(v1.sameBits(v2));
+    assertThat(v1).has(sameBitsAs(v2));
 
     v1.clearAll();
   }
@@ -1345,14 +1321,13 @@ public class PrimitivesTest extends WalaTestCase {
 
     v1.andNot(v2);
     System.err.println(v1);
-    assertTrue(v1.intersectionEmpty(v2));
+    assertThat(v1).has(emptyIntersectionWith(v2));
 
     v1 = makeBigTestOffsetVector();
     v1.and(v2);
     System.err.println(v1);
-    assertTrue(v1.sameBits(v2));
-    assertTrue(v1.isSubset(v2));
-    assertTrue(v2.isSubset(v1));
+    assertThat(v1).has(sameBitsAs(v2)).is(subsetOf(v2));
+    assertThat(v2).is(subsetOf(v1));
   }
 
   @Test

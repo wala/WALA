@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.jdk11.privateInterfaceMethods;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -31,6 +31,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class PrivateInterfaceMethodsTest extends WalaTestCase {
@@ -55,7 +57,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
             ClassLoaderReference.Application,
             "LprivateInterfaceMethods/testArrayReturn/TestArrayReturn");
     MethodReference mm = MethodReference.findOrCreate(tm, "main", "([Ljava/lang/String;)V");
-    assertTrue(cg.getNodes(mm).iterator().hasNext(), "expect main node");
+    assertThat(cg.getNodes(mm).iterator()).hasNext();
     CGNode mnode = cg.getNodes(mm).iterator().next();
 
     // should be from main to RetT
@@ -64,13 +66,11 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
             ClassLoaderReference.Application,
             "LprivateInterfaceMethods/testArrayReturn/ReturnArray");
     MethodReference t2m = MethodReference.findOrCreate(t2s, "RetT", "(Ljava/lang/Object;)V");
-    assertTrue(cg.getNodes(t2m).iterator().hasNext(), "expect RetT node");
+    assertThat(cg.getNodes(t2m).iterator()).hasNext();
     CGNode t2node = cg.getNodes(t2m).iterator().next();
 
     // Check call from main to RetT(string)
-    assertTrue(
-        cg.getPossibleSites(mnode, t2node).hasNext(),
-        "should have call site from main to TestArrayRetur.retT");
+    assertThat(cg.getPossibleSites(mnode, t2node)).hasNext();
 
     // Find node corresponding to getT() called by retT() from main
     TypeReference t3s =
@@ -80,13 +80,11 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     MethodReference t3m =
         MethodReference.findOrCreate(t3s, "GetT", "(Ljava/lang/Object;)Ljava/lang/Object;");
 
-    assertTrue(cg.getNodes(t3m).iterator().hasNext(), "expect ReturnArray.GetT() node");
+    assertThat(cg.getNodes(t3m).iterator()).hasNext();
     CGNode t3node = cg.getNodes(t3m).iterator().next();
 
     // Check call from RetT to GetT
-    assertTrue(
-        cg.getPossibleSites(t2node, t3node).hasNext(),
-        "should have call site from RetT to ReturnArray.GetT()");
+    assertThat(cg.getPossibleSites(t2node, t3node)).hasNext();
 
     // check that Iclass.getAllMethods() returns both the default RetT and private GetT
     TypeReference test1Type =
@@ -99,11 +97,7 @@ public class PrivateInterfaceMethodsTest extends WalaTestCase {
     IMethod defaultMethod = test1Class.getMethod(t2m.getSelector());
     IMethod privateMethod = test1Class.getMethod(t3m.getSelector());
 
-    assertTrue(
-        allMethods.contains(defaultMethod),
-        "Expecting default methods to show up in IClass.allMethods()");
-    assertTrue(
-        allMethods.contains(privateMethod),
-        "Expecting private methods to show up in IClass.allMethods()");
+    Assertions.<IMethod>assertThatCollection(allMethods)
+        .containsAll(List.of(defaultMethod, privateMethod));
   }
 }

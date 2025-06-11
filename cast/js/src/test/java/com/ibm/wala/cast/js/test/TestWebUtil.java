@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
@@ -26,18 +26,18 @@ public class TestWebUtil extends WalaTestCase {
   @Test
   public void testAjaxslt() throws Error {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    assertNotNull(url);
+    assertThat(url).isNotNull();
     Set<MappedSourceModule> mod =
         WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory).fst;
-    assertNotNull(mod);
+    assertThat(mod).isNotNull();
   }
 
   @Test
   public void testAjaxpath() throws Error {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
-    assertNotNull(url);
+    assertThat(url).isNotNull();
     Set<MappedSourceModule> mod =
         WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory).fst;
-    assertNotNull(mod);
+    assertThat(mod).isNotNull();
   }
 }

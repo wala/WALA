@@ -20,18 +20,12 @@ public abstract class JLexTest extends IRTests {
     super(null);
   }
 
-  @Override
   protected String singleJavaInputForTest() {
     return "JLex";
   }
 
   @Test
   public void testJLex() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, new String[] {"LJLex/Main"}, emptyList, false, null);
-  }
-
-  @Override
-  protected String singleJavaPkgInputForTest(String pkgName) {
-    return "";
+    runTest(singleTestSrc("JLex"), rtJar, new String[] {"LJLex/Main"}, emptyList, false, null);
   }
 }

@@ -72,9 +72,7 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
-      StringBuilder result = new StringBuilder("[".repeat(dim));
-      result.append(baseType);
-      return result.toString();
+      return "[".repeat(dim) + baseType;
     } else {
       if (primitiveClassNames.get(dString) != null) {
         return primitiveClassNames.get(dString);
@@ -102,9 +100,7 @@ public class StringStuff {
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalDescriptorTypeString(baseType);
-      StringBuilder result = new StringBuilder("[".repeat(dim));
-      result.append(baseType);
-      return result.toString();
+      return "[".repeat(dim) + baseType;
     } else {
       if (primitiveClassNames.get(dString) != null) {
         return primitiveClassNames.get(dString);

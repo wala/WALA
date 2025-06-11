@@ -34,7 +34,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class ECJJava17IRTest extends IRTests {
 
@@ -61,7 +64,7 @@ public class ECJJava17IRTest extends IRTests {
     return engine;
   }
 
-  private final IRAssertion checkBinaryLiterals =
+  private static final IRAssertion checkBinaryLiterals =
       new IRAssertion() {
         private final TypeReference testClass =
             TypeReference.findOrCreate(
@@ -107,18 +110,7 @@ public class ECJJava17IRTest extends IRTests {
         }
       };
 
-  @Test
-  public void testBinaryLiterals() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        Collections.singletonList(checkBinaryLiterals),
-        true,
-        null);
-  }
-
-  private final IRAssertion checkCatchMultipleExceptionTypes =
+  private static final IRAssertion checkCatchMultipleExceptionTypes =
       new IRAssertion() {
 
         private final TypeReference testClass =
@@ -161,18 +153,6 @@ public class ECJJava17IRTest extends IRTests {
         }
       };
 
-  @Test
-  public void testCatchMultipleExceptionTypes()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        Collections.singletonList(checkCatchMultipleExceptionTypes),
-        true,
-        null);
-  }
-
   private static final List<IRAssertion> SiSAssertions =
       Collections.singletonList(
           new InstructionOperandAssertion(
@@ -183,49 +163,27 @@ public class ECJJava17IRTest extends IRTests {
               1,
               new int[] {9, 58, 9, 67}));
 
-  @Test
-  public void testStringsInSwitch() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        SiSAssertions,
-        true,
-        null);
+  static Stream<Arguments> java17IRTestNames() {
+    return Stream.of(
+        Arguments.of("BinaryLiterals", Collections.singletonList(checkBinaryLiterals)),
+        Arguments.of(
+            "CatchMultipleExceptionTypes",
+            Collections.singletonList(checkCatchMultipleExceptionTypes)),
+        Arguments.of("StringsInSwitch", SiSAssertions),
+        Arguments.of("TypeInferenceforGenericInstanceCreation", emptyList),
+        Arguments.of("TryWithResourcesStatement", emptyList),
+        Arguments.of("UnderscoresInNumericLiterals", emptyList));
   }
 
-  @Test
-  public void testTryWithResourcesStatement()
+  @ParameterizedTest(name = "java17IRTestName={0}")
+  @MethodSource("java17IRTestNames")
+  public void runJava17IRTests(String java17IRTestName, List<IRAssertion> ca)
       throws IllegalArgumentException, CancelException, IOException {
     runTest(
-        singlePkgTestSrc("javaonepointseven"),
+        singlePkgTestSrc("javaonepointseven", java17IRTestName),
         rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testTypeInferenceforGenericInstanceCreation()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testUnderscoresInNumericLiterals()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
+        simplePkgTestEntryPoint("javaonepointseven", java17IRTestName),
+        ca,
         true,
         null);
   }

@@ -13,9 +13,8 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -50,7 +49,6 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -211,7 +209,7 @@ public abstract class IRTests {
         }
       }
 
-      assert found;
+      assertThat(found).isTrue();
     }
   }
 
@@ -234,9 +232,7 @@ public abstract class IRTests {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
       for (CGNode cgNode : cg.getNodes(mref)) {
-        assertTrue(
-            this.check(cgNode.getMethod(), cgNode.getIR()),
-            "failed for " + this.variableName + " in " + cgNode + "\n" + cgNode.getIR());
+        assertThat(check(cgNode.getMethod(), cgNode.getIR())).isTrue();
       }
     }
 
@@ -315,7 +311,7 @@ public abstract class IRTests {
           }
         }
 
-        assertFalse(false, "cannot find " + at + " in " + cls);
+        fail("cannot find %s in %s", at, cls);
       }
 
       annot:
@@ -333,49 +329,39 @@ public abstract class IRTests {
               }
             }
 
-            assertFalse(false, "cannot find " + at);
+            fail("cannot find " + at);
           }
         }
       }
     }
   }
 
-  protected Collection<String> singleTestSrc() {
-    return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
+  protected Collection<String> singleTestSrc(String testName) {
+    return Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
   }
 
-  protected Collection<String> singleTestSrc(final String folder) {
+  protected Collection<String> singlePkgTestSrc(String pkgName, String testName) {
     return Collections.singletonList(
-        getTestSrcPath() + File.separator + folder + File.separator + singleJavaInputForTest());
+        getTestSrcPath() + File.separator + pkgName + File.separator + testName + ".java");
   }
 
-  protected Collection<String> singlePkgTestSrc(String pkgName) {
-    return Collections.singletonList(
-        getTestSrcPath() + File.separator + singleJavaPkgInputForTest(pkgName));
+  protected String[] simpleTestEntryPoint(String testName) {
+    return new String[] {'L' + testName};
   }
 
-  protected String getTestName() {
-    StackTraceElement stack[] = new Throwable().getStackTrace();
-    for (int i = 0; i <= stack.length; i++) {
-      if (stack[i].getMethodName().startsWith("test")) {
-        return stack[i].getMethodName();
-      }
-    }
-
-    throw new Error("test method not found");
-  }
-
-  protected String[] simpleTestEntryPoint() {
-    return new String[] {'L' + getTestName().substring(4)};
-  }
-
-  protected String[] simplePkgTestEntryPoint(String pkgName) {
-    return new String[] {"L" + pkgName + "/" + getTestName().substring(4)};
+  protected String[] simplePkgTestEntryPoint(String pkgName, String testName) {
+    return new String[] {"L" + pkgName + "/" + testName};
   }
 
   protected abstract AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?>
       getAnalysisEngine(
           String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
+
+  public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(String testName)
+      throws CancelException, IOException {
+    return runTest(
+        singleTestSrc(testName), rtJar, simpleTestEntryPoint(testName), emptyList, true, null);
+  }
 
   public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
       Collection<String> sources,
@@ -445,7 +431,7 @@ public abstract class IRTests {
     }
 
     if (assertReachable) {
-      assertTrue(unreachable.isEmpty(), "unreachable methods: " + unreachable);
+      assertThat(unreachable).isEmpty();
     }
   }
 
@@ -484,7 +470,7 @@ public abstract class IRTests {
         return loader.getReference();
       }
     }
-    Assertions.UNREACHABLE();
+    fail("This code should be unreachable");
     return null;
   }
 
@@ -502,12 +488,12 @@ public abstract class IRTests {
         }
       }
     }
-    assert foundLib : "couldn't find library file from " + libs;
+    assertThat(foundLib).isTrue();
 
     for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
       File f = new File(srcFilePath);
-      assertTrue(f.exists(), "couldn't find " + srcFilePath);
+      assertThat(f).exists();
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {
@@ -524,15 +510,11 @@ public abstract class IRTests {
     return testSrcPath;
   }
 
-  protected String singleJavaInputForTest() {
-    return getTestName().substring(4) + ".java";
+  protected static String singleInputForTest(String testName) {
+    return testName;
   }
 
-  protected String singleInputForTest() {
-    return getTestName().substring(4);
-  }
-
-  protected String singleJavaPkgInputForTest(String pkgName) {
-    return pkgName + File.separator + getTestName().substring(4) + ".java";
+  protected String singleJavaPkgInputForTest(String pkgName, String testName) {
+    return pkgName + File.separator + testName + ".java";
   }
 }

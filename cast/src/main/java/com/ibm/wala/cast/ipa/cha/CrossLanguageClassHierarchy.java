@@ -276,5 +276,11 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   public Set<TypeReference> getUnresolvedClasses() {
     return HashSetFactory.make();
   }
+
   /* END Custom change: unresolved classes */
+
+  @Override
+  public void clearCaches() {
+    hierarchies.values().forEach(IClassHierarchy::clearCaches);
+  }
 }

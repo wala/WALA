@@ -41,6 +41,7 @@ public abstract class SyncDuplicatorTests extends IRTests {
 
   @Test
   public void testMonitor2() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+    runTest(
+        singleTestSrc("Monitor2"), rtJar, simpleTestEntryPoint("Monitor2"), emptyList, true, null);
   }
 }

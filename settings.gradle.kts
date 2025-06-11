@@ -2,7 +2,7 @@ buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra
 
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "3.44.0"
-  id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+  id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
@@ -25,6 +25,7 @@ include(
     "cast:js:html:nu_validator",
     "cast:js:nodejs",
     "cast:js:rhino",
+    "code-coverage-report",
     "core",
     "dalvik",
     "ide",

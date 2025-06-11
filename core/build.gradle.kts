@@ -56,6 +56,8 @@ dependencies {
     because("public class Entrypoint implements interface BytecodeConstraints")
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
+  api(libs.jspecify)
+  testFixturesApi(libs.assertj.core)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.shrike)
   testFixturesImplementation(libs.ant)
@@ -64,8 +66,8 @@ dependencies {
   testFixturesImplementation(projects.util)
   implementation(libs.gson)
   testImplementation(libs.assertj.core)
-  testImplementation(libs.hamcrest)
   testImplementation(libs.junit.jupiter.api)
+  testImplementation(testFixtures(projects.util))
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
   // add the testSubjects source files to enable SourceMapTest to pass
   testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
@@ -229,7 +231,7 @@ val downloadJavaCup by
 //  collect "JLex.jar"
 //
 
-val collectJLexFrom: Configuration by configurations.creating { isCanBeConsumed = false }
+val collectJLexFrom by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   collectJLexFrom(
@@ -239,7 +241,7 @@ dependencies {
 val collectJLex by
     tasks.registering(Jar::class) {
       inputs.files(collectJLexFrom)
-      from(zipTree(collectJLexFrom.singleFile))
+      from({ zipTree(collectJLexFrom.get().singleFile) })
       include("JLex/")
       archiveFileName = "JLex.jar"
       destinationDirectory = layout.buildDirectory.dir(name)
@@ -312,7 +314,7 @@ val collectTestData by
       destinationDirectory = layout.buildDirectory.dir(name)
     }
 
-val collectTestDataJar: Configuration by configurations.creating { isCanBeResolved = false }
+val collectTestDataJar by configurations.registering { isCanBeResolved = false }
 
 artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirectory })
 
@@ -370,7 +372,7 @@ tasks.named<Test>("test") {
   outputs.file(layout.buildDirectory.file("report"))
 }
 
-val testResources: Configuration by configurations.creating { isCanBeResolved = false }
+val testResources by configurations.registering { isCanBeResolved = false }
 
 artifacts.add(testResources.name, sourceSets.test.map { it.resources.srcDirs.single() })
 
@@ -383,11 +385,11 @@ val testJar by
       from(tasks.named("compileTestJava"))
     }
 
-val testJarConfig: Configuration by configurations.creating { isCanBeResolved = false }
+val testJarConfig by configurations.registering { isCanBeResolved = false }
 
 artifacts.add(testJarConfig.name, testJar)
 
-val dalvikTestResources: Configuration by configurations.creating { isCanBeResolved = false }
+val dalvikTestResources by configurations.registering { isCanBeResolved = false }
 
 listOf(
         collectJLex,

@@ -154,12 +154,12 @@ public class ReuseParameters {
   private static int ssaFor(IMethod inCallTo, int paramNo) {
     assert (paramNo >= 0);
     assert (paramNo < inCallTo.getNumberOfParameters());
-
-    if (inCallTo.isStatic()) {
-      return paramNo + 1;
-    } else {
-      return paramNo + 1; // TODO 2 or 1?
-    }
+    return paramNo + 1;
+    //    if (inCallTo.isStatic()) {
+    //      return paramNo + 1;
+    //    } else {
+    //      return paramNo + 1; // TODO 2 or 1?
+    //    }
   }
 
   /**

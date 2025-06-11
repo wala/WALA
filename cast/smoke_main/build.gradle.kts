@@ -10,12 +10,11 @@ import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 
 plugins {
   `cpp-application`
-  id("com.ibm.wala.gradle.cast.native")
   id("com.ibm.wala.gradle.subproject")
 }
 
-val coreResources: Configuration by
-    configurations.creating {
+val coreResources by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
       attributes {
@@ -23,8 +22,8 @@ val coreResources: Configuration by
       }
     }
 
-val smokeMainExtraPathElements: Configuration by
-    configurations.creating {
+val smokeMainExtraPathElements by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
       attributes {
@@ -32,8 +31,8 @@ val smokeMainExtraPathElements: Configuration by
       }
     }
 
-fun createXlatorConfig(isOptimized: Boolean): Configuration =
-    configurations.create(
+fun createXlatorConfig(isOptimized: Boolean): NamedDomainObjectProvider<Configuration> =
+    configurations.register(
         "xlatorTest${if (isOptimized) "Release" else "Debug"}SharedLibraryConfig") {
           isCanBeConsumed = false
           isTransitive = false
@@ -65,6 +64,7 @@ application {
       val libxlatorTest =
           (if (isOptimized) xlatorTestReleaseSharedLibraryConfig
               else xlatorTestDebugSharedLibraryConfig)
+              .get()
               .singleFile
       addRpath(libxlatorTest)
       addCastLibrary(this@whenElementFinalized)
@@ -72,7 +72,6 @@ application {
       if (isDebuggable && !isOptimized) {
         val checkSmokeMain by
             tasks.registering(Exec::class) {
-              notCompatibleWithConfigurationCache("https://github.com/gradle/gradle/issues/13485")
 
               // main executable to run for test
               inputs.file(linkedFile)
@@ -88,7 +87,7 @@ application {
               pathElements.addAll(files("../build/classes/java/test", libxlatorTest.parent))
 
               // "primordial.txt" resource loaded during test
-              pathElements.add(coreResources.singleFile)
+              pathElements.add(coreResources.get().singleFile)
               inputs.files(coreResources)
 
               // additional supporting Java class files

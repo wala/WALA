@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.cast.js.nodejs.test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.nodejs.NodejsCallGraphBuilderUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -34,9 +33,8 @@ public class NodejsRequireJsonTest {
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     String cgString = CG.toString();
 
-    assertTrue(cgString.contains("Lempty/jsonModule>"));
-    assertTrue(cgString.contains("Lnested/jsonModule>"));
-    assertTrue(cgString.contains("Lpackage/jsonModule>"));
-    assertFalse(cgString.contains("?"));
+    assertThat(cgString)
+        .contains("Lempty/jsonModule>", "Lnested/jsonModule>", "Lpackage/jsonModule>");
+    assertThat(cgString).doesNotContain("?");
   }
 }

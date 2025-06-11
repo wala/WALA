@@ -22,6 +22,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -119,9 +120,9 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
     private final Object[] allKeys;
 
     private int mapIt(int i, Object[] allVars, Map<Object, V> varMap) {
-      for (Object key : varMap.keySet()) {
-        allKeys[i] = key;
-        allVars[i++] = varMap.get(key);
+      for (Entry<Object, V> entry : varMap.entrySet()) {
+        allKeys[i] = entry.getKey();
+        allVars[i++] = entry.getValue();
       }
 
       return i;

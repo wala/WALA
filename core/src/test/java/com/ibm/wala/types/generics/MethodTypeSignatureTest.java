@@ -1,8 +1,6 @@
 package com.ibm.wala.types.generics;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +10,20 @@ class MethodTypeSignatureTest {
   /** Unit test for {@link MethodTypeSignature#getArguments()}. */
   @Test
   void getArguments() {
-    assertThat(
-        MethodTypeSignature.make("(I)V").getArguments(),
-        arrayContaining(is(TypeSignature.make("I"))));
+    assertThat(MethodTypeSignature.make("(I)V").getArguments()).contains(TypeSignature.make("I"));
+  }
+
+  @Test
+  void getVoidReturn() {
+    assertThat(MethodTypeSignature.make("(I)V").getReturnType()).isEqualTo(TypeSignature.make("V"));
+  }
+
+  @Test
+  void arrayArgumentType() {
+    assertThat(MethodTypeSignature.make("([I)V").getArguments()).contains(TypeSignature.make("[I"));
+    assertThat(MethodTypeSignature.make("([J[DB)V").getArguments())
+        .contains(TypeSignature.make("[J"), TypeSignature.make("[D"), TypeSignature.make("B"));
+    assertThat(MethodTypeSignature.make("([Ljava/lang/String;B)V").getArguments())
+        .contains(TypeSignature.make("[Ljava/lang/String;"), TypeSignature.make("B"));
   }
 }

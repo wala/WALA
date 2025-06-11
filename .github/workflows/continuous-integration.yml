@@ -15,19 +15,26 @@ jobs:
         include:
           - os: macos-latest
             java: 11
+            coverage: false
           # Apple Silicon M1 CPU according to <https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories>
           - os: macos-14
             java: 11
+            coverage: false
           - os: ubuntu-latest
             java: 11
+            coverage: false
           - os: windows-latest
             java: 11
+            coverage: false
           - os: ubuntu-latest
             java: 17
+            coverage: true
           - os: ubuntu-latest
             java: 21
+            coverage: false
           - os: ubuntu-latest
-            java: 23
+            java: 24
+            coverage: false
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,7 +44,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'temurin'
+          distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Build and test using Gradle with ECJ
@@ -58,6 +65,16 @@ jobs:
         with:
           name: Test results for JDK ${{ matrix.java }} on ${{ matrix.os }}
           path: '**/build/test-results/test/TEST-*.xml'
+      - name: Aggregate coverage
+        id: jacoco_report
+        run: ./gradlew testCodeCoverageReport
+        if: matrix.coverage && github.repository == 'wala/WALA'
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./code-coverage-report/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          token: ${{ secrets.WALA_MAIN_CODECOV_TOKEN }}
+        if: steps.jacoco_report.outcome == 'success'
   upload_event_file:
     name: Upload event file
     runs-on: ubuntu-latest
@@ -73,7 +90,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      JDK_VERSION: 23
+      JDK_VERSION: 24
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4

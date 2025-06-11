@@ -212,7 +212,6 @@ public class TabulationSolver<T, P, F> {
   }
 
   /** See POPL 95 paper for this algorithm, Figure 3 */
-  @SuppressWarnings("unused")
   private void forwardTabulateSLRPs() throws CancelException {
     assert curPathEdge == null : "curPathEdge should not be non-null here";
     if (worklist == null) {
@@ -292,7 +291,6 @@ public class TabulationSolver<T, P, F> {
   }
 
   /** Handle lines [33-37] of the algorithm */
-  @SuppressWarnings("unused")
   private void processNormal(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process normal: " + edge);
@@ -322,7 +320,6 @@ public class TabulationSolver<T, P, F> {
    * <p>Note that we've changed the way we record summary edges. Summary edges are now associated
    * with a callee (s_p,exit), where the original algorithm used a call, return pair in the caller.
    */
-  @SuppressWarnings("unused")
   protected void processExit(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process exit: " + edge);
@@ -364,7 +361,6 @@ public class TabulationSolver<T, P, F> {
    * @param c a call site of edge.s_p
    * @param D4 set of d1 s.t. {@literal <c, d1> -> <edge.s_p, edge.d2>} was recorded as call flow
    */
-  @SuppressWarnings("unused")
   private void propagateToReturnSites(final PathEdge<T> edge, final T c, final IntSet D4) {
     P proc = supergraph.getProcOf(c);
     final T[] entries = supergraph.getEntriesForProcedure(proc);
@@ -444,7 +440,6 @@ public class TabulationSolver<T, P, F> {
    * @param D5 facts to propagate to return site
    * @param edge the path edge ending at the exit site of the callee
    */
-  @SuppressWarnings("unused")
   private void propToReturnSite(
       final T c,
       final T[] entries,
@@ -502,7 +497,6 @@ public class TabulationSolver<T, P, F> {
   /**
    * Handle lines [14 - 19] of the algorithm, propagating information into and across a call site.
    */
-  @SuppressWarnings("unused")
   protected void processCall(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process call: " + edge);
@@ -579,7 +573,6 @@ public class TabulationSolver<T, P, F> {
    *     return sites for this callee.
    * @param calleeEntry the entry node of the callee in question
    */
-  @SuppressWarnings("unused")
   protected void processParticularCallee(
       final PathEdge<T> edge,
       final int callNodeNum,
@@ -696,7 +689,6 @@ public class TabulationSolver<T, P, F> {
   /**
    * @return f(call_d, exit_d);
    */
-  @SuppressWarnings("unused")
   protected IntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("got binary flow function " + f);
@@ -708,7 +700,6 @@ public class TabulationSolver<T, P, F> {
   /**
    * @return f(d1)
    */
-  @SuppressWarnings("unused")
   protected IntSet computeFlow(int d1, IUnaryFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("got flow function " + f);
@@ -751,7 +742,6 @@ public class TabulationSolver<T, P, F> {
    * @param n reached block
    * @param j dataflow fact reached
    */
-  @SuppressWarnings("unused")
   protected boolean propagate(T s_p, int i, T n, int j) {
     int number = supergraph.getLocalBlockNumber(n);
     if (number < 0) {
@@ -811,7 +801,6 @@ public class TabulationSolver<T, P, F> {
     }
   }
 
-  @SuppressWarnings("unused")
   protected void addToWorkList(T s_p, int i, T n, int j) {
     if (worklist == null) {
       worklist = makeWorklist();

@@ -6,11 +6,11 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val coreTestJar: Configuration by configurations.creating { isCanBeConsumed = false }
+val coreTestJar by configurations.registering { isCanBeConsumed = false }
 
-val extraTestResources: Configuration by configurations.creating { isCanBeConsumed = false }
+val extraTestResources by configurations.registering { isCanBeConsumed = false }
 
-val sampleCupSources: Configuration by configurations.creating { isCanBeConsumed = false }
+val sampleCupSources by configurations.registering { isCanBeConsumed = false }
 
 val isWindows: Boolean by rootProject.extra
 
@@ -93,10 +93,12 @@ dependencies {
   sampleCupSources(libs.java.cup.map { "$it:sources" })
 
   testImplementation(libs.android.tools)
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(projects.dalvik)
   testImplementation(testFixtures(projects.core))
+  testImplementation(testFixtures(projects.util))
 
   // directory containing "android.jar", which various tests want to find as a resource
   testRuntimeOnly(
@@ -183,7 +185,7 @@ tasks.named<Copy>("processTestResources") {
   from(downloadSampleLex)
   from(extractSampleCup)
   from(extraTestResources)
-  from(zipTree(coreTestJar.singleFile))
+  from({ zipTree(coreTestJar.get().singleFile) })
 }
 
 if (isWindows) tasks.named<Test>("test") { exclude("**/droidbench/**") }

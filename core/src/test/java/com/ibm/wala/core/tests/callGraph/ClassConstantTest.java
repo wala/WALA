@@ -10,9 +10,9 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -50,7 +50,7 @@ public class ClassConstantTest extends WalaTestCase {
     TypeReference mainClassRef =
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TestConstants.CLASSCONSTANT_MAIN);
-    assertNotNull(cha.lookupClass(mainClassRef));
+    assertThat(cha.lookupClass(mainClassRef)).isNotNull();
 
     // make call graph
     Iterable<Entrypoint> entrypoints =
@@ -64,7 +64,7 @@ public class ClassConstantTest extends WalaTestCase {
     MethodReference mainMethodRef =
         MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
     Set<CGNode> mainMethodNodes = cg.getNodes(mainMethodRef);
-    assertFalse(mainMethodNodes.isEmpty());
+    assertThat(mainMethodNodes).isNotEmpty();
     CGNode mainMethodNode = mainMethodNodes.iterator().next();
     // Trace.println("main IR:");
     // Trace.println(mainMethodNode.getIR());
@@ -74,9 +74,9 @@ public class ClassConstantTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");
     MethodReference hashCodeRef = MethodReference.findOrCreate(classRef, "hashCode", "()I");
     Set<CGNode> hashCodeNodes = cg.getNodes(hashCodeRef);
-    assertFalse(hashCodeNodes.isEmpty());
+    assertThat(hashCodeNodes).isNotEmpty();
 
     // make sure call to hashCode from main
-    assertTrue(cg.hasEdge(mainMethodNode, hashCodeNodes.iterator().next()));
+    assertThatObject(cg).has(edge(mainMethodNode, hashCodeNodes.iterator().next()));
   }
 }

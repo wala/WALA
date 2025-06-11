@@ -12,7 +12,7 @@ walaEclipseMavenCentral {
   )
 }
 
-val runSourceDirectory: Configuration by configurations.creating { isCanBeConsumed = false }
+val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   implementation(libs.eclipse.ecj)
@@ -25,6 +25,7 @@ dependencies {
       project(
           mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory")))
   testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.junit.jupiter.params)
   testImplementation(testFixtures(projects.cast.java))
 }
 
@@ -35,7 +36,10 @@ val run by
       // this is for testing purposes
       args =
           listOf(
-              "-sourceDir", runSourceDirectory.files.single().toString(), "-mainClass", "LArray1")
+              "-sourceDir",
+              runSourceDirectory.get().files.single().toString(),
+              "-mainClass",
+              "LArray1")
 
       // log output to file, although we don"t validate it
       val outFile = project.layout.buildDirectory.file("SourceDirCallGraph.log")

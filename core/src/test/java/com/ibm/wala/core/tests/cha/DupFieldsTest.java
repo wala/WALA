@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -50,15 +49,15 @@ public class DupFieldsTest extends WalaTestCase {
     } catch (IllegalStateException e) {
       threwException = true;
     }
-    assertTrue(threwException);
+    assertThat(threwException).isTrue();
     IField f =
         cha.resolveField(
             FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Int));
-    assertEquals(f.getFieldTypeReference(), TypeReference.Int);
+    assertThat(f.getFieldTypeReference()).isEqualTo(TypeReference.Int);
     f =
         cha.resolveField(
             FieldReference.findOrCreate(
                 ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Boolean));
-    assertEquals(f.getFieldTypeReference(), TypeReference.Boolean);
+    assertThat(f.getFieldTypeReference()).isEqualTo(TypeReference.Boolean);
   }
 }

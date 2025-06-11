@@ -17,6 +17,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.ExecOperations
+import org.gradle.work.InputChanges
 
 /**
  * Compiles some Java {@link SourceSet} using ECJ, but otherwise imitating the standard {@link
@@ -63,7 +64,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
   }
 
   @TaskAction
-  fun compile() {
+  protected override fun compile(inputs: InputChanges) {
     val testArgs = options.allCompilerArgs
     val argFile = createTempFile(prefix = "kotlinTemp", suffix = ".tmp")
     val writer = java.io.PrintWriter(argFile)
@@ -78,7 +79,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
       args("@" + argFile)
     }
   }
-
+  
   fun setSourceSet(sourceSet: SourceSet) {
     // Imitate most of the behavior of the standard compilation task for the given sourceSet.
     val standardCompileTaskName = sourceSet.getCompileTaskName("java")

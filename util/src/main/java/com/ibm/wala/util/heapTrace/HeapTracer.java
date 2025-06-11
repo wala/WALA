@@ -150,7 +150,7 @@ public class HeapTracer {
   }
 
   /**
-   * @return set of strings that are names of directories that contain "bin"
+   * @return duplicate-free array of strings that are names of directories that contain "bin"
    */
   private static Object[] extractBinDirectories(String classpath) {
     StringTokenizer t = new StringTokenizer(classpath, ";");

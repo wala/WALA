@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.rhino.test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
