@@ -79,7 +79,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
       args("@" + argFile)
     }
   }
-  
+
   fun setSourceSet(sourceSet: SourceSet) {
     // Imitate most of the behavior of the standard compilation task for the given sourceSet.
     val standardCompileTaskName = sourceSet.getCompileTaskName("java")
