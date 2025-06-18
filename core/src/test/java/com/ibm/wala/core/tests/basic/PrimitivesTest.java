@@ -623,8 +623,7 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    assertThat(I).isNotNull();
-    assertThat(I2).isEqualTo(I);
+    assertThat(I).isNotNull().isEqualTo(I2);
 
     I = M.get(Integer.valueOf(4));
     assertThat(I).isNull();
@@ -649,8 +648,7 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I3, I3);
 
     Integer I = M.get(Integer.valueOf(2));
-    assertThat(I).isNotNull();
-    assertThat(I2).isEqualTo(I);
+    assertThat(I).isNotNull().isEqualTo(I2);
 
     I = M.get(Integer.valueOf(4));
     assertThat(I).isNull();
@@ -664,8 +662,7 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I5, I5);
     M.put(I6, I6);
     I = M.get(Integer.valueOf(4));
-    assertThat(I).isNotNull();
-    assertThat(I4).isEqualTo(I);
+    assertThat(I).isNotNull().isEqualTo(I4);
 
     I = M.get(Integer.valueOf(7));
     assertThat(I).isNull();
@@ -686,9 +683,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     // path should be 8, 6, 4, 2, 0
     System.err.println("Path is " + p);
-    for (int i = 0; i < p.size(); i++) {
-      assertThat(new int[] {8, 6, 4, 2, 0}[i]).isEqualTo((int) p.get(i));
-    }
+    assertThat(p).containsExactly(8, 6, 4, 2, 0);
   }
 
   @Test
@@ -775,10 +770,8 @@ public class PrimitivesTest extends WalaTestCase {
     Dominators<Object> D = Dominators.make(G, nodes[10]);
 
     // Assert.assertions
-    int i = 0;
-    Object[] desired4 = new Object[] {nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]};
-    for (Object d4 : Iterator2Iterable.make(D.dominators(nodes[4])))
-      assertThat(desired4[i++]).isSameAs(d4);
+    assertThat(Iterator2Iterable.make(D.dominators(nodes[4])))
+        .containsExactly(nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]);
 
     int j = 0;
     Object[] desired5 = new Object[] {nodes[8]};

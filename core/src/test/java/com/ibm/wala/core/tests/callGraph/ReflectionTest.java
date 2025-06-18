@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.callGraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -750,8 +751,10 @@ public class ReflectionTest extends WalaTestCase {
 
     for (InstanceKey mappedObject : pts) {
       // the type corresponding to the 0th parameter should be Helper
-      assertThat(mappedObject).isInstanceOf(ConstantKey.class);
-      assertThat(helperClass).isEqualTo(((ConstantKey<?>) mappedObject).getValue());
+      assertThat(mappedObject)
+          .asInstanceOf(type(ConstantKey.class))
+          .extracting(ConstantKey::getValue)
+          .isEqualTo(helperClass);
     }
   }
 

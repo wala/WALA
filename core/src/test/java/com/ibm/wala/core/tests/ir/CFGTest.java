@@ -117,8 +117,8 @@ public abstract class CFGTest extends WalaTestCase {
     for (int i = 0; i < irBefore.getInstructions().length; i++) {
       System.out.println(irBefore.getInstructions()[i]);
       System.out.println(irAfter.getInstructions()[i]);
-      assertThat(irAfter.getInstructions()[i]).isEqualTo(irBefore.getInstructions()[i]);
     }
+    assertThat(irAfter.getInstructions()).containsExactly(irBefore.getInstructions());
   }
 
   @Test

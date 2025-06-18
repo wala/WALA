@@ -7,6 +7,7 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 
 plugins {
   eclipse
+  jacoco
   `java-library`
   `java-test-fixtures`
   `maven-publish`
@@ -17,6 +18,8 @@ plugins {
   id("com.ibm.wala.gradle.subproject")
   id("net.ltgt.errorprone")
 }
+
+jacoco { toolVersion = "0.8.13" }
 
 repositories {
   mavenCentral()

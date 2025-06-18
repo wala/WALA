@@ -40,6 +40,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Panel for showing the Pointer Analysis results. Shows the heap graph on the left, and the ir
@@ -260,7 +261,8 @@ public class PaPanel extends JSplitPane {
   }
 
   /** Utility method for mutable mapping. map[index] U= o */
-  protected static <T> void mapUsingMutableMapping(MutableMapping<List<T>> map, int index, T o) {
+  protected static <T> void mapUsingMutableMapping(
+      MutableMapping<@Nullable List<T>> map, int index, T o) {
     List<T> set;
     if (index <= map.getMaximumIndex()) {
       set = map.getMappedObject(index);

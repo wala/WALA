@@ -56,7 +56,7 @@ public class MissingSuperTest extends WalaTestCase {
     // unresolvable super class "Super" should be replaced by hierarchy root
     cha = ClassHierarchyFactory.makeWithRoot(scope);
     IClass klass = cha.lookupClass(ref);
-    assertThat(klass).isNotNull().extracting(IClass::getSuperclass).isEqualTo(cha.getRootClass());
+    assertThat(klass).extracting(IClass::getSuperclass).isEqualTo(cha.getRootClass());
 
     // with phantom classes, lookup and IR construction should work
     cha = ClassHierarchyFactory.makeWithPhantom(scope);
