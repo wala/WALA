@@ -37,13 +37,6 @@ repositories {
 val osName: String by extra(System.getProperty("os.name"))
 val isWindows by extra(osName.startsWith("Windows "))
 
-JavaVersion.current().let {
-  if (!it.isJava11Compatible) {
-    logger.error(
-        "Gradle is running on a Java $it JVM, which is not compatible with Java 11. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable.")
-  }
-}
-
 ////////////////////////////////////////////////////////////////////////
 //
 //  common Java setup shared by multiple projects
