@@ -1,4 +1,5 @@
 plugins {
+  alias(libs.plugins.dependency.analysis)
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
 }
@@ -16,7 +17,6 @@ walaEclipseMavenCentral {
   )
   implementation(
       "org.eclipse.jdt.core",
-      "org.eclipse.swt",
       "org.eclipse.ui.workbench",
   )
 }
@@ -37,6 +37,12 @@ configurations.all {
 }
 
 dependencyAnalysis.issues {
+  onDuplicateClassWarnings {
+    exclude(
+        "org.osgi.framework.Bundle",
+        "org.osgi.framework.BundleContext",
+    )
+  }
   onIncorrectConfiguration { exclude("org.eclipse.pde:org.eclipse.pde.core") }
   onUsedTransitiveDependencies {
     exclude(
