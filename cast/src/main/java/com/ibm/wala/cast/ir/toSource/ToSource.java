@@ -744,7 +744,8 @@ public abstract class ToSource {
       } else {
         for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
           if (mergePhis.find(i) == root_vn) {
-            // since some exprs are created as unspecified, thus sometimes there'll be 0 use
+            // since some exprs are created as unspecified, sometimes there'll be 0 uses which is
+            // not true
             // in this case, need to check def as well
             String localName = null;
             for (Iterator<SSAInstruction> uses = du.getUses(i); uses.hasNext(); ) {
@@ -757,7 +758,7 @@ public abstract class ToSource {
               }
             }
 
-            if (localName == null) {
+            if (du.getNumberOfUses(i) == 0) {
               // try to find local name by def
               SSAInstruction uv = du.getDef(i);
               if (uv != null && uv.iIndex() >= 0) {
