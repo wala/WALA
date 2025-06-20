@@ -233,6 +233,10 @@ tasks.withType<DependencyUpdatesTask>().configureEach {
             // We only want stable releases, which have versions like `2.11.0`.
             "commons-io" -> "\\d+\\.\\d+"
 
+            // AssertJ milestone releases have versions with milestone numbers like `4.0.0-M1`. We
+            // only want stable releases, which have versions like `4.0.0`.
+            "org.assertj" -> ".*-M\\d+"
+
             // JUnit milestone releases have versions with milestone numbers like `5.11.0-M2`. We
             // only want stable releases, which have versions like `5.10.2`.
             "org.junit",
