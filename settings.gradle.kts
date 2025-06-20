@@ -2,7 +2,7 @@ buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra
 
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.3.0"
-  id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+  id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
