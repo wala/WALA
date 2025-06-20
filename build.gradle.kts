@@ -10,6 +10,7 @@ import com.appmattus.markdown.rules.config.HeaderStyle
 import com.appmattus.markdown.rules.config.UnorderedListStyle
 import com.diffplug.gradle.pde.EclipseRelease
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.gradle.api.JavaVersion.VERSION_17
 
 buildscript { dependencies.classpath(libs.commons.io) }
 
@@ -38,9 +39,9 @@ val osName: String by extra(System.getProperty("os.name"))
 val isWindows by extra(osName.startsWith("Windows "))
 
 JavaVersion.current().let {
-  if (!it.isJava11Compatible) {
+  if (!it.isCompatibleWith(VERSION_17)) {
     logger.error(
-        "Gradle is running on a Java $it JVM, which is not compatible with Java 11. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable.")
+        "Gradle is running on a Java $it JVM, which is not compatible with Java 17. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable.")
   }
 }
 
