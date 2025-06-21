@@ -2,9 +2,12 @@ import com.ibm.wala.gradle.VerifiedDownload
 import java.net.URI
 import net.ltgt.gradle.errorprone.errorprone
 
-plugins { id("com.ibm.wala.gradle.java") }
+plugins {
+  id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.test-subjects")
+}
 
-val compileTestJava by
+val compileTestSubjectsJava by
     tasks.existing(JavaCompile::class) {
       options.run {
         // No need to run Error Prone on our analysis test inputs
@@ -19,16 +22,18 @@ val testJar by
     tasks.registering(Jar::class) {
       group = "build"
       archiveClassifier = "test"
-      from(compileTestJava)
+      from(compileTestSubjectsJava)
     }
 
 val testJarConfig by configurations.registering { isCanBeResolved = false }
 
 val testJavaSourceDirectory by configurations.registering { isCanBeResolved = false }
 
+val testSubjects by sourceSets.existing
+
 artifacts {
   add(testJarConfig.name, testJar)
-  add(testJavaSourceDirectory.name, sourceSets.test.map { it.java.srcDirs.first() })
+  add(testJavaSourceDirectory.name, testSubjects.map { it.java.srcDirs.first() })
 }
 
 // exclude since various tests make assertions based on
@@ -50,10 +55,7 @@ val downloadJLex by
       dest = layout.buildDirectory.dir(name).map { it.file("JLex/Main.java") }
     }
 
-sourceSets.test
-    .get()
-    .java
-    .srcDir(downloadJLex.map { it.inputs.properties["downloadedSourceDir"]!! })
+testSubjects { java.srcDir(downloadJLex.map { it.inputs.properties["downloadedSourceDir"]!! }) }
 
 ////////////////////////////////////////////////////////////////////////
 //
