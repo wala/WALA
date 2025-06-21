@@ -4,7 +4,7 @@ eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 google-java-format = "1.25.0"
 ktfmt = "0.44"
-spotless = "6.25.0"
+spotless = "7.0.4"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"
