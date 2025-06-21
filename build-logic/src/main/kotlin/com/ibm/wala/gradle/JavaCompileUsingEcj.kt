@@ -55,7 +55,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
             "-properties",
             jdtPrefs.toString(),
             "-classpath",
-            this@JavaCompileUsingEcj.classpath.joinToString(":"),
+            this@JavaCompileUsingEcj.classpath.joinToString(File.pathSeparator),
             "-d",
             destinationDirectory.get().toString())
       }
@@ -65,10 +65,18 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
 
   @TaskAction
   protected override fun compile(inputs: InputChanges) {
+    val testArgs = options.allCompilerArgs
+    val argFile = createTempFile(prefix = "kotlinTemp", suffix = ".tmp")
+    val writer = java.io.PrintWriter(argFile)
+    for (testArg in testArgs) {
+      writer.print(testArg + " ")
+    }
+    writer.close()
+
     execOperations.javaexec {
       classpath(ecjJar.absolutePath)
       executable(javaLauncherPath.get())
-      args(options.allCompilerArgs)
+      args("@" + argFile)
     }
   }
 
