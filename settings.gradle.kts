@@ -1,7 +1,7 @@
-buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:2.43.1") } }
+buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:3.1.2") } }
 
 plugins {
-  id("com.diffplug.configuration-cache-for-platform-specific-build") version "3.44.0"
+  id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.3.0"
   id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
 }
 
