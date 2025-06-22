@@ -2,7 +2,6 @@ import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.VerifiedDownload
 import java.net.URI
-import net.ltgt.gradle.errorprone.errorprone
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
@@ -10,6 +9,7 @@ import org.gradle.plugins.ide.eclipse.model.Classpath
 plugins {
   id("com.ibm.wala.gradle.java")
   id("com.ibm.wala.gradle.publishing")
+  id("com.ibm.wala.gradle.test-subjects")
 }
 
 eclipse {
@@ -24,14 +24,9 @@ eclipse {
   }
 }
 
-sourceSets.create("testSubjects")
+val compileTestSubjectsJava by tasks.existing
 
-val compileTestSubjectsJava by tasks.existing(JavaCompile::class)
-
-val ecjCompileJavaTestSubjects: TaskProvider<JavaCompileUsingEcj> =
-    JavaCompileUsingEcj.withSourceSet(project, sourceSets["testSubjects"])
-
-ecjCompileJavaTestSubjects.configure {
+tasks.named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
   options.compilerArgumentProviders.add {
     listOf(
         "-warn:none",
@@ -42,13 +37,6 @@ ecjCompileJavaTestSubjects.configure {
         "-err:-unusedThrown",
     )
   }
-}
-
-tasks.named("check") { dependsOn(ecjCompileJavaTestSubjects) }
-
-compileTestSubjectsJava.configure {
-  // No need to run Error Prone on our analysis test inputs
-  options.errorprone.isEnabled = false
 }
 
 dependencies {
