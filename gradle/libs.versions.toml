@@ -4,7 +4,7 @@ eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 google-java-format = "1.25.0"
 ktfmt = "0.44"
-spotless = "6.25.0"
+spotless = "7.0.4"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"
@@ -13,7 +13,7 @@ assertj-core = "org.assertj:assertj-core:3.27.3"
 commons-cli = "commons-cli:commons-cli:1.9.0"
 commons-io = "commons-io:commons-io:2.19.0"
 dexlib2 = "org.smali:dexlib2:2.5.2"
-eclipse-ecj = "org.eclipse.jdt:ecj:3.37.0"
+eclipse-ecj = "org.eclipse.jdt:ecj:3.42.0"
 eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.23.100"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
