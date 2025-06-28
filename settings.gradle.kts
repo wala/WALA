@@ -30,7 +30,6 @@ include(
     "dalvik",
     "ide",
     "ide:jdt",
-    "ide:jdt:test",
     "ide:jsdt",
     "ide:jsdt:tests",
     "ide:tests",
