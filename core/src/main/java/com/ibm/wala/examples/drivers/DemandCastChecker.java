@@ -30,7 +30,7 @@
  * PROVIDED HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE,
  * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.driver;
+package com.ibm.wala.examples.drivers;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -73,7 +73,6 @@ import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
@@ -96,8 +95,7 @@ public class DemandCastChecker {
   // maximum number of casts to check
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
-  public static void main(String[] args)
-      throws IllegalArgumentException, CancelException, IOException {
+  public static void main(String[] args) throws IllegalArgumentException, IOException {
     try {
       Properties p = new Properties();
       p.putAll(WalaProperties.loadProperties());
@@ -112,7 +110,7 @@ public class DemandCastChecker {
   }
 
   public static void runTestCase(String mainClass, String scopeFile, String benchName)
-      throws IllegalArgumentException, CancelException, IOException {
+      throws IllegalArgumentException, IOException {
     System.err.println("=====BENCHMARK " + benchName + "=====");
     System.err.println("analyzing " + benchName);
     DemandRefinementPointsTo dmp = null;
@@ -129,7 +127,7 @@ public class DemandCastChecker {
 
   private static DemandRefinementPointsTo makeDemandPointerAnalysis(
       String scopeFile, String mainClass, String benchName)
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+      throws ClassHierarchyException, IllegalArgumentException, IOException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, getExclusions(benchName));
     // build a type hierarchy
@@ -165,8 +163,7 @@ public class DemandCastChecker {
 
   /** builds a call graph, and sets the corresponding heap model for analysis */
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(
-      ClassHierarchy cha, AnalysisOptions options)
-      throws IllegalArgumentException, CancelException {
+      ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException {
     CallGraph retCG = null;
     PointerAnalysis<InstanceKey> retPA = null;
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
