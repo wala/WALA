@@ -179,6 +179,12 @@ val extractBcel by
 val downloadJavaCup =
     adHocDownload(uri("https://www2.cs.tum.edu/projects/cup"), "java-cup", "jar", "11a")
 
+val copyJavaCup by
+    tasks.registering(Sync::class) {
+      from(downloadJavaCup)
+      into(layout.buildDirectory.dir(name))
+    }
+
 ////////////////////////////////////////////////////////////////////////
 //
 //  collect "JLex.jar"
@@ -220,11 +226,13 @@ val downloadOcamlJava =
 // causes Gradle's native tar support to fail.
 val unpackOcamlJava by
     tasks.registering(Exec::class) {
-      commandLine(
-          "tar",
-          "xzf",
-          downloadOcamlJava.singleFile,
-          "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
+      executable = "tar"
+      argumentProviders.add {
+        listOf(
+            "xzf",
+            downloadOcamlJava.singleFile.path,
+            "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
+      }
       val outputDir = project.layout.buildDirectory.dir(name)
       workingDir(outputDir)
       outputs.dir(outputDir)
@@ -303,7 +311,7 @@ tasks.named<Copy>("processTestResources") {
       buildKawaTestJar,
       collectJLex,
       collectTestData,
-      downloadJavaCup,
+      copyJavaCup,
       extractBcel,
       extractKawa,
   )
@@ -353,7 +361,7 @@ val dalvikTestResources by configurations.registering { isCanBeResolved = false 
 listOf(
         collectJLex,
         collectTestDataAForDalvik,
-        downloadJavaCup.singleFile,
+        copyJavaCup,
         extractBcel,
     )
     .forEach { artifacts.add(dalvikTestResources.name, it) }

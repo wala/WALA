@@ -1,8 +1,8 @@
 package com.ibm.wala.gradle
 
-import java.io.File
 import javax.inject.Inject
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
@@ -26,10 +26,8 @@ import org.gradle.work.InputChanges
 @CacheableTask
 abstract class JavaCompileUsingEcj : JavaCompile() {
 
-  /** ECJ compiler, resolved to a JAR archive. */
-  @CompileClasspath
-  @InputFile
-  val ecjJar: File = project.configurations.named("ecj").get().singleFile
+  /** ECJ compiler, typically consisting of a single JAR file. */
+  @CompileClasspath val ecjJar: Provider<Configuration> = project.configurations.named("ecj")
 
   @InputFile
   @PathSensitive(PathSensitivity.NONE)
@@ -66,7 +64,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
   @TaskAction
   protected override fun compile(inputs: InputChanges) {
     execOperations.javaexec {
-      classpath(ecjJar.absolutePath)
+      classpath(ecjJar)
       executable(javaLauncherPath.get())
       args(options.allCompilerArgs)
     }
