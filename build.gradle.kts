@@ -3,13 +3,9 @@
 //  plugin configuration must precede everything else
 //
 
-import com.appmattus.markdown.rules.ConsistentHeaderStyleRule
-import com.appmattus.markdown.rules.ConsistentUlStyleRule
-import com.appmattus.markdown.rules.LowerCaseFilenameRule
-import com.appmattus.markdown.rules.config.HeaderStyle
-import com.appmattus.markdown.rules.config.UnorderedListStyle
 import com.diffplug.gradle.pde.EclipseRelease
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.github.gradle.node.npm.task.NpxTask
 import org.gradle.api.JavaVersion.VERSION_17
 
 buildscript { dependencies.classpath(libs.commons.io) }
@@ -19,7 +15,7 @@ plugins {
   java
   alias(libs.plugins.dependency.analysis)
   alias(libs.plugins.file.lister)
-  alias(libs.plugins.markdown)
+  alias(libs.plugins.node)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)
@@ -109,19 +105,19 @@ shellcheck {
 }
 
 // Markdown
-markdownlint {
-  rules {
-    +ConsistentHeaderStyleRule(HeaderStyle.Consistent)
-    +ConsistentUlStyleRule(UnorderedListStyle.Consistent)
-    +LowerCaseFilenameRule { excludes = listOf(".*/README-Gradle.md") }
-  }
-}
+val lintMarkdown by
+    tasks.registering(NpxTask::class) {
+      group = "verification"
+      command = "markdownlint-cli2"
+      val markdownFiles = fileTree(".") { include("*.md") }
+      inputs.files(markdownFiles)
+      inputs.file(".markdownlint-cli2.yaml")
+      args = markdownFiles.map { it.path }
+      outputs.file(layout.buildDirectory.file("$name.stamp"))
+      doLast { outputs.files.singleFile.createNewFile() }
+    }
 
-tasks.named("markdownlint") {
-  notCompatibleWithConfigurationCache("https://github.com/appmattus/markdown-lint/issues/39")
-}
-
-tasks.named("check") { dependsOn("buildHealth", "markdownlint") }
+tasks.named("check") { dependsOn("buildHealth", lintMarkdown) }
 
 tasks.named("shellcheck") { group = "verification" }
 
