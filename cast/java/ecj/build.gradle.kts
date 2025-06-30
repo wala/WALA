@@ -33,13 +33,11 @@ application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
 val run by
     tasks.existing(JavaExec::class) {
+      val runSourceDirectoryPath = runSourceDirectory.map { it.files.single().toString() }
       // this is for testing purposes
-      args =
-          listOf(
-              "-sourceDir",
-              runSourceDirectory.get().files.single().toString(),
-              "-mainClass",
-              "LArray1")
+      argumentProviders.add {
+        listOf("-sourceDir", runSourceDirectoryPath.get(), "-mainClass", "LArray1")
+      }
 
       // log output to file, although we don"t validate it
       val outFile = project.layout.buildDirectory.file("SourceDirCallGraph.log")

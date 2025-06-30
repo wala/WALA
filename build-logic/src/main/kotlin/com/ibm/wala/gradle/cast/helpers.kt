@@ -79,11 +79,13 @@ fun AbstractLinkTask.addJvmLibrary(binary: CppBinary) {
       })
 }
 
-fun AbstractLinkTask.addRpath(library: File) {
+fun AbstractLinkTask.addRpath(library: Provider<File>) {
   if (!(project.rootProject.extra["isWindows"] as Boolean)) {
-    linkerArgs.add("-Wl,-rpath,${library.parent}")
+    linkerArgs.add(project.provider { "-Wl,-rpath,${library.get().parent}" })
   }
 }
+
+fun AbstractLinkTask.addRpath(library: File) = addRpath(project.provider { library })
 
 val AbstractLinkTask.nativeLibraryOutput: File
   get() =
