@@ -42,7 +42,7 @@ val run by
               "LArray1")
 
       // log output to file, although we don"t validate it
-      val outFile = project.layout.buildDirectory.file("SourceDirCallGraph.log")
+      val outFile = layout.buildDirectory.file("SourceDirCallGraph.log")
       outputs.file(outFile)
       doFirst {
         outFile.get().asFile.outputStream().let {

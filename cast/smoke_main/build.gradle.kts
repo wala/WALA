@@ -98,7 +98,7 @@ application {
               argumentProviders.add { listOf(pathElements.get().joinToString(":")) }
 
               // log output to file, although we don"t validate it
-              val outFile = project.layout.buildDirectory.file("${name}.log")
+              val outFile = layout.buildDirectory.file("${name}.log")
               outputs.file(outFile)
               doFirst {
                 outFile.get().asFile.outputStream().let {
