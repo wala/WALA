@@ -109,7 +109,7 @@ val kawaChess =
 val unpackKawaChess by
     tasks.registering {
       inputs.files(kawaChess)
-      outputs.dir(project.layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
+      outputs.dir(layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
 
       objects.newInstance<ExtractServices>().run {
         doLast {
@@ -130,7 +130,7 @@ val compileKawaSchemeChessMain by
 val buildChessJar by
     tasks.registering(Jar::class) {
       from(compileKawaSchemeChessMain)
-      destinationDirectory = project.layout.buildDirectory.dir(name)
+      destinationDirectory = layout.buildDirectory.dir(name)
       archiveFileName = "kawachess.jar"
       archiveVersion = null as String?
     }
@@ -148,7 +148,7 @@ val compileKawaSchemeTest by
 val buildKawaTestJar by
     tasks.registering(Jar::class) {
       from(compileKawaSchemeTest)
-      destinationDirectory = project.layout.buildDirectory.dir(name)
+      destinationDirectory = layout.buildDirectory.dir(name)
       archiveFileName = "kawatest.jar"
       archiveVersion = null as String?
     }
@@ -233,7 +233,7 @@ val unpackOcamlJava by
             downloadOcamlJava.singleFile.path,
             "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
       }
-      val outputDir = project.layout.buildDirectory.dir(name)
+      val outputDir = layout.buildDirectory.dir(name)
       workingDir(outputDir)
       outputs.dir(outputDir)
     }
@@ -241,7 +241,7 @@ val unpackOcamlJava by
 val prepareGenerateHelloHashJar by
     tasks.registering(Sync::class) {
       from("ocaml/hello_hash.ml")
-      val outputDir = project.layout.buildDirectory.dir(name)
+      val outputDir = layout.buildDirectory.dir(name)
       into(outputDir)
       extra["copiedOcamlSource"] = file("${outputDir.get()}/${source.singleFile.name}")
     }
