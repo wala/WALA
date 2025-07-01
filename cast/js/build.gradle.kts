@@ -52,7 +52,7 @@ val unpackAjaxslt by
           relativePath = RelativePath(!isDirectory, *newSegments)
         }
       }
-      into(project.layout.buildDirectory.dir(name))
+      into(layout.buildDirectory.dir(name))
     }
 
 val processTestResources by tasks.existing(Copy::class) { from(unpackAjaxslt) { into("ajaxslt") } }
