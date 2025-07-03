@@ -3,7 +3,6 @@
 //  plugin configuration must precede everything else
 //
 
-import com.diffplug.gradle.pde.EclipseRelease
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.npm.task.NpxTask
 import org.gradle.api.JavaVersion.VERSION_17
@@ -49,11 +48,6 @@ JavaVersion.current().let {
 group = name
 
 version = property("VERSION_NAME") as String
-
-// version of Eclipse JARs to use for Eclipse-integrated WALA components.
-val eclipseVersion: EclipseRelease by extra {
-  EclipseRelease.official(libs.versions.eclipse.asProvider().get())
-}
 
 ///////////////////////////////////////////////////////////////////////
 //

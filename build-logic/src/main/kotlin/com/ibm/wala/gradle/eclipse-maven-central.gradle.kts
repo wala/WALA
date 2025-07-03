@@ -2,7 +2,7 @@ package com.ibm.wala.gradle
 
 import com.diffplug.gradle.eclipse.MavenCentralExtension.ReleaseConfigurer
 import com.diffplug.gradle.eclipse.MavenCentralPlugin
-import com.diffplug.gradle.pde.EclipseRelease
+import com.diffplug.gradle.pde.EclipseRelease.official
 
 plugins {
   id("com.diffplug.eclipse.mavencentral")
@@ -27,7 +27,8 @@ java.toolchain.languageVersion = the<EclipseCompatibleJavaExtension>().languageV
  * [MavenCentralExtension](https://javadoc.io/doc/com.diffplug.gradle/goomph/latest/com/diffplug/gradle/eclipse/MavenCentralExtension.html)
  * offers a few overloaded `release` methods to allow selecting the Eclipse release to configure.
  * However, WALA does not need that flexibility. Instead, this extension always configures the
- * Eclipse release identified by the `eclipseVersion` extra property on the root project.
+ * Eclipse release identified by the `eclipse` version in the global `libs.versions.toml` version
+ * catalog.
  *
  * ### Default Configuration
  *
@@ -52,26 +53,18 @@ open class WalaMavenCentralReleaseConfigurerExtension @Inject constructor(projec
   /**
    * Internal [ReleaseConfigurer] instance to which all dependency-declaring methods apply.
    *
-   * This instance always operates on the Eclipse release identified by the `eclipseVersion` extra
-   * property on the root project. The instance is created lazily in case the root project itself
-   * loads this extension before setting that property.
+   * This instance always operates on the Eclipse release identified by the `eclipse` version in the
+   * global `libs.versions.toml` version catalog.
    */
-  private val configurer by lazy {
-    project.run {
-      eclipseMavenCentral.ReleaseConfigurer(rootProject.extra["eclipseVersion"] as EclipseRelease)
-    }
-  }
-
-  /**
-   * Delegates to [configurer] to apply default WALA configuration.
-   *
-   * @see ReleaseConfigurer.constrainTransitivesToThisRelease
-   * @see ReleaseConfigurer.useNativesForRunningPlatform
-   */
-  internal fun defaults() =
-      configurer.run {
-        constrainTransitivesToThisRelease()
-        useNativesForRunningPlatform()
+  private val configurer =
+      project.run {
+        eclipseMavenCentral
+            .ReleaseConfigurer(
+                official(versionCatalogs.named("libs").findVersion("eclipse").get().toString()))
+            .apply {
+              constrainTransitivesToThisRelease()
+              useNativesForRunningPlatform()
+            }
       }
 
   /**
@@ -120,5 +113,3 @@ open class WalaMavenCentralReleaseConfigurerExtension @Inject constructor(projec
 apply<MavenCentralPlugin>()
 
 extensions.create<WalaMavenCentralReleaseConfigurerExtension>("walaEclipseMavenCentral")
-
-afterEvaluate { configure(WalaMavenCentralReleaseConfigurerExtension::defaults) }
