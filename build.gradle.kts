@@ -217,7 +217,7 @@ tasks.register("checkInspectionResults") {
 //  Check for updated dependencies
 //
 
-tasks.withType<DependencyUpdatesTask>().configureEach {
+tasks.withType<DependencyUpdatesTask> {
   gradleReleaseChannel = "current"
   rejectVersionIf {
     candidate.run {
