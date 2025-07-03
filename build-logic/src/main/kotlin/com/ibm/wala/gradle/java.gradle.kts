@@ -56,7 +56,7 @@ dependencies {
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
   javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(24) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
@@ -125,7 +125,7 @@ val ecjCompileTaskProviders =
 
 tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   options.run {
     encoding = "UTF-8"
     compilerArgs.add("-Werror")
@@ -133,7 +133,7 @@ tasks.withType<JavaCompile>().configureEach {
   }
 }
 
-tasks.withType<JavaCompileUsingEcj>().configureEach {
+tasks.withType<JavaCompileUsingEcj> {
 
   // Allow skipping all ECJ compilation tasks by setting a project property.
   val skipJavaUsingEcjTasks = project.hasProperty("skipJavaUsingEcjTasks")
