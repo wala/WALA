@@ -41,7 +41,7 @@ configurations {
   named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
-fun findLibrary(alias: String) = rootProject.versionCatalogs.named("libs").findLibrary(alias).get()
+fun findLibrary(alias: String) = versionCatalogs.named("libs").findLibrary(alias).get()
 
 dependencies {
   "ecj"(findLibrary("eclipse-ecj"))
@@ -164,11 +164,7 @@ if (gradle.parent != null) {
 spotless {
   java {
     googleJavaFormat(
-        rootProject.versionCatalogs
-            .named("libs")
-            .findVersion("google-java-format")
-            .get()
-            .toString())
+        versionCatalogs.named("libs").findVersion("google-java-format").get().toString())
   }
 }
 
