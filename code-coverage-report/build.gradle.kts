@@ -7,5 +7,5 @@ plugins {
 
 (rootProject.subprojects - project).forEach {
   evaluationDependsOn(it.path)
-  it.plugins.withId("jacoco") { dependencies.jacocoAggregation(it) }
+  it.pluginManager.withPlugin("jacoco") { dependencies.jacocoAggregation(it) }
 }
