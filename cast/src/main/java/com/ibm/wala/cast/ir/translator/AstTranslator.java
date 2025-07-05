@@ -1264,6 +1264,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       currentPosition = save;
     }
 
+    public int addInstructionWithPosition(SSAInstruction n, Position p) {
+      currentPosition = p;
+      return addInstruction(n);
+    }
+
     public int addInstruction(SSAInstruction n) {
       deadBlocks.remove(currentBlock);
 
