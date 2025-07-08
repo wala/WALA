@@ -16,12 +16,16 @@ import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
+import com.ibm.wala.core.util.ProgressMaster;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
@@ -913,7 +917,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
   }
 
-  /*
   @Tag("slow")
   @Test
   public void testManyStrings() throws IllegalArgumentException, IOException, WalaException {
@@ -930,7 +933,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
             })
         .isInstanceOf(CallGraphBuilderCancelException.class);
   }
-  */
 
   @Test
   public void testTutorialExample()
