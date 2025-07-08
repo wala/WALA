@@ -29,6 +29,9 @@ import org.gradle.nativeplatform.tasks.LinkSharedLibrary
  * instances, which have no configuration-avoiding `configure` method. Instead, the best we can do
  * is to [get][Provider.get] the provided [Task], then configure it using [Task.configure].
  *
+ * See also
+ * [an existing request to improve these APIs](https://github.com/gradle/gradle-native/issues/683).
+ *
  * @param action The configuration action to be applied to the task.
  */
 fun <T : Task> Provider<T>.configure(action: T.() -> Unit) {
