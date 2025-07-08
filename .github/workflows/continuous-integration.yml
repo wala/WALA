@@ -14,17 +14,14 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            java: 11
+            java: 17
             coverage: false
           # Apple Silicon M1 CPU according to <https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories>
           - os: macos-14
-            java: 11
-            coverage: false
-          - os: ubuntu-latest
-            java: 11
+            java: 17
             coverage: false
           - os: windows-latest
-            java: 11
+            java: 17
             coverage: false
           - os: ubuntu-latest
             java: 17
@@ -105,4 +102,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
         run: ./generate-latest-docs.sh ${{ env.JDK_VERSION }}
-

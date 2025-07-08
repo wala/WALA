@@ -5,6 +5,7 @@ plugins {
   id("jacoco-report-aggregation")
 }
 
-dependencies {
-  rootProject.allprojects { plugins.withId("jacoco") { jacocoAggregation(this@allprojects) } }
+(rootProject.subprojects - project).forEach {
+  evaluationDependsOn(it.path)
+  it.pluginManager.withPlugin("jacoco") { dependencies.jacocoAggregation(it) }
 }

@@ -78,7 +78,7 @@ public abstract class IRTests {
 
   protected static String javaHomePath;
 
-  private String testSrcPath = Paths.get("src", "test", "java").toString();
+  private String testSrcPath = Paths.get("src", "testSubjects", "java").toString();
 
   public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 

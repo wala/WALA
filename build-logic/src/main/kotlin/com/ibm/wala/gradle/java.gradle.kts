@@ -27,11 +27,12 @@ repositories {
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-java.toolchain.languageVersion =
-    JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
-// We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
-// Temurin does not include jmod files as of their JDK 24 builds.
-java.toolchain.vendor = JvmVendorSpec.AZUL
+java.toolchain {
+  languageVersion = JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
+  // We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
+  // Temurin does not include jmod files as of their JDK 24 builds.
+  vendor = JvmVendorSpec.AZUL
+}
 
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
@@ -40,7 +41,7 @@ configurations {
   named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
-fun findLibrary(alias: String) = rootProject.versionCatalogs.named("libs").findLibrary(alias).get()
+fun findLibrary(alias: String) = versionCatalogs.named("libs").findLibrary(alias).get()
 
 dependencies {
   "ecj"(findLibrary("eclipse-ecj"))
@@ -51,10 +52,11 @@ dependencies {
 
   testImplementation(platform(findLibrary("junit-bom")))
   testRuntimeOnly(findLibrary("junit-jupiter-engine"))
+  testRuntimeOnly(findLibrary("junit-platform-launcher"))
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
   javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(24) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
@@ -123,7 +125,7 @@ val ecjCompileTaskProviders =
 
 tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   options.run {
     encoding = "UTF-8"
     compilerArgs.add("-Werror")
@@ -131,7 +133,7 @@ tasks.withType<JavaCompile>().configureEach {
   }
 }
 
-tasks.withType<JavaCompileUsingEcj>().configureEach {
+tasks.withType<JavaCompileUsingEcj> {
 
   // Allow skipping all ECJ compilation tasks by setting a project property.
   val skipJavaUsingEcjTasks = project.hasProperty("skipJavaUsingEcjTasks")
@@ -162,11 +164,7 @@ if (gradle.parent != null) {
 spotless {
   java {
     googleJavaFormat(
-        rootProject.versionCatalogs
-            .named("libs")
-            .findVersion("google-java-format")
-            .get()
-            .toString())
+        versionCatalogs.named("libs").findVersion("google-java-format").get().toString())
   }
 }
 

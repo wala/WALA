@@ -1,56 +1,56 @@
 [versions]
+com-uber-nullaway = "0.12.7"
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 google-java-format = "1.25.0"
 ktfmt = "0.44"
-spotless = "6.25.0"
+spotless = "7.0.4"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"
-ant = "org.apache.ant:ant:1.10.14"
+ant = "org.apache.ant:ant:1.10.15"
 assertj-core = "org.assertj:assertj-core:3.27.3"
-commons-cli = "commons-cli:commons-cli:1.8.0"
-commons-io = "commons-io:commons-io:2.16.1"
+commons-cli = "commons-cli:commons-cli:1.9.0"
+commons-io = "commons-io:commons-io:2.19.0"
 dexlib2 = "org.smali:dexlib2:2.5.2"
-eclipse-ecj = "org.eclipse.jdt:ecj:3.37.0"
-eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.19.0"
+eclipse-ecj = "org.eclipse.jdt:ecj:3.42.0"
+eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.23.100"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 errorprone-core = "com.google.errorprone:error_prone_core:2.38.0"
-gradle-download-task = "de.undercouch:gradle-download-task:5.6.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.2.0"
-gradle-goomph-plugin = "com.diffplug.gradle:goomph:3.44.0"
-gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.29.0"
+gradle-goomph-plugin = "com.diffplug.gradle:goomph:4.3.0"
+gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.32.0"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
-gson = "com.google.code.gson:gson:2.11.0"
+gson = "com.google.code.gson:gson:2.13.1"
 guava = "com.google.guava:guava:33.4.8-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
 javax-annotation-api = "javax.annotation:javax.annotation-api:1.3.2"
 jericho-html = "net.htmlparser.jericho:jericho-html:3.2"
-json = "org.json:json:20240303"
+json = "org.json:json:20250517"
 jspecify = "org.jspecify:jspecify:1.0.0"
-junit-bom = "org.junit:junit-bom:5.10.2"
+junit-bom = "org.junit:junit-bom:5.13.1"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params" }
 junit-platform-engine = { module = "org.junit.platform:junit-platform-engine" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine" }
-nullaway = "com.uber.nullaway:nullaway:0.12.7"
-nullaway-annotations = "com.uber.nullaway:nullaway-annotations:0.12.7"
-osgi-framework = "org.osgi:org.osgi.framework:1.8.0"
-rhino = "org.mozilla:rhino:1.7.15"
-slf4j-api = "org.slf4j:slf4j-api:2.0.13"
+nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "com-uber-nullaway" }
+nullaway-annotations = { module = "com.uber.nullaway:nullaway-annotations", version.ref = "com-uber-nullaway" }
+osgi-framework = "org.osgi:org.osgi.framework:1.10.0"
+rhino = "org.mozilla:rhino:1.8.0"
+slf4j-api = "org.slf4j:slf4j-api:2.0.17"
 w3c-css-sac = "org.eclipse.birt.runtime:org.w3c.css.sac:1.3.1.v200903091627"
 
 [plugins]
-dependency-analysis = "com.autonomousapps.dependency-analysis:1.32.0"
+dependency-analysis = "com.autonomousapps.dependency-analysis:2.18.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 google-java-format = "com.github.sherter.google-java-format:0.9"
-markdown = "com.appmattus.markdown:0.6.0"
+node = "com.github.node-gradle.node:7.1.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.0"
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-task-tree = "com.dorongold.task-tree:3.0.0"
-version-catalog-update = "nl.littlerobots.version-catalog-update:0.8.4"
-versions = "com.github.ben-manes.versions:0.51.0"
+task-tree = "com.dorongold.task-tree:4.0.1"
+version-catalog-update = "nl.littlerobots.version-catalog-update:1.0.0"
+versions = "com.github.ben-manes.versions:0.52.0"

@@ -15,7 +15,7 @@ tasks.named<Javadoc>("javadoc") {
   source(javadocSource)
 }
 
-tasks.withType<Javadoc>().configureEach {
+tasks.withType<Javadoc> {
   with(options as StandardJavadocDocletOptions) {
     addBooleanOption("Xdoclint:all,-missing", true)
     encoding = "UTF-8"

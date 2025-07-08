@@ -3,13 +3,9 @@
 //  plugin configuration must precede everything else
 //
 
-import com.appmattus.markdown.rules.ConsistentHeaderStyleRule
-import com.appmattus.markdown.rules.ConsistentUlStyleRule
-import com.appmattus.markdown.rules.LowerCaseFilenameRule
-import com.appmattus.markdown.rules.config.HeaderStyle
-import com.appmattus.markdown.rules.config.UnorderedListStyle
-import com.diffplug.gradle.pde.EclipseRelease
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import com.github.gradle.node.npm.task.NpxTask
+import org.gradle.api.JavaVersion.VERSION_17
 
 buildscript { dependencies.classpath(libs.commons.io) }
 
@@ -18,7 +14,7 @@ plugins {
   java
   alias(libs.plugins.dependency.analysis)
   alias(libs.plugins.file.lister)
-  alias(libs.plugins.markdown)
+  alias(libs.plugins.node)
   alias(libs.plugins.shellcheck)
   alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)
@@ -38,9 +34,9 @@ val osName: String by extra(System.getProperty("os.name"))
 val isWindows by extra(osName.startsWith("Windows "))
 
 JavaVersion.current().let {
-  if (!it.isJava11Compatible) {
+  if (!it.isCompatibleWith(VERSION_17)) {
     logger.error(
-        "Gradle is running on a Java $it JVM, which is not compatible with Java 11. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable.")
+        "Gradle is running on a Java $it JVM, which is not compatible with Java 17. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable.")
   }
 }
 
@@ -52,11 +48,6 @@ JavaVersion.current().let {
 group = name
 
 version = property("VERSION_NAME") as String
-
-// version of Eclipse JARs to use for Eclipse-integrated WALA components.
-val eclipseVersion: EclipseRelease by extra {
-  EclipseRelease.official(libs.versions.eclipse.asProvider().get())
-}
 
 ///////////////////////////////////////////////////////////////////////
 //
@@ -81,7 +72,7 @@ dependencies {
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
-  setDestinationDir(layout.buildDirectory.dir("docs/javadoc").get().asFile)
+  destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
   classpath = aggregatedJavadocClasspath.get()
@@ -108,19 +99,19 @@ shellcheck {
 }
 
 // Markdown
-markdownlint {
-  rules {
-    +ConsistentHeaderStyleRule(HeaderStyle.Consistent)
-    +ConsistentUlStyleRule(UnorderedListStyle.Consistent)
-    +LowerCaseFilenameRule { excludes = listOf(".*/README-Gradle.md") }
-  }
-}
+val lintMarkdown by
+    tasks.registering(NpxTask::class) {
+      group = "verification"
+      command = "markdownlint-cli2"
+      val markdownFiles = fileTree(".") { include("*.md") }
+      inputs.files(markdownFiles)
+      inputs.file(".markdownlint-cli2.yaml")
+      args = markdownFiles.map { it.path }
+      outputs.file(layout.buildDirectory.file("$name.stamp"))
+      doLast { outputs.files.singleFile.createNewFile() }
+    }
 
-tasks.named("markdownlint") {
-  notCompatibleWithConfigurationCache("https://github.com/appmattus/markdown-lint/issues/39")
-}
-
-tasks.named("check") { dependsOn("buildHealth", "markdownlint") }
+tasks.named("check") { dependsOn("buildHealth", lintMarkdown) }
 
 tasks.named("shellcheck") { group = "verification" }
 
@@ -220,7 +211,7 @@ tasks.register("checkInspectionResults") {
 //  Check for updated dependencies
 //
 
-tasks.withType<DependencyUpdatesTask>().configureEach {
+tasks.withType<DependencyUpdatesTask> {
   gradleReleaseChannel = "current"
   rejectVersionIf {
     candidate.run {
@@ -232,6 +223,10 @@ tasks.withType<DependencyUpdatesTask>().configureEach {
             // Apache Commons IO snapshot releases have timestamped versions like `20030203.000550`.
             // We only want stable releases, which have versions like `2.11.0`.
             "commons-io" -> "\\d+\\.\\d+"
+
+            // AssertJ milestone releases have versions with milestone numbers like `4.0.0-M1`. We
+            // only want stable releases, which have versions like `4.0.0`.
+            "org.assertj" -> ".*-M\\d+"
 
             // JUnit milestone releases have versions with milestone numbers like `5.11.0-M2`. We
             // only want stable releases, which have versions like `5.10.2`.
