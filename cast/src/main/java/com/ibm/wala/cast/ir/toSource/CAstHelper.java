@@ -36,7 +36,8 @@ public class CAstHelper {
         "STRING",
         "XML",
         "JSON",
-        "CALL"
+        "CALL",
+        "SEARCH"
       };
 
   private static boolean shouldOnlyUseOneBranch(List<CAstNode> branchList, boolean inLoop) {
