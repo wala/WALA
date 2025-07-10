@@ -12,7 +12,6 @@ import org.gradle.kotlin.dsl.closureOf
 import org.gradle.language.cpp.CppBinary
 import org.gradle.nativeplatform.OperatingSystemFamily
 import org.gradle.nativeplatform.tasks.AbstractLinkTask
-import org.gradle.nativeplatform.tasks.LinkSharedLibrary
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -35,16 +34,6 @@ import org.gradle.nativeplatform.tasks.LinkSharedLibrary
  */
 fun <T : Task> Provider<T>.configure(action: T.() -> Unit) {
   get().configure(closureOf(action))
-}
-
-fun AbstractLinkTask.addCastLibrary(binary: CppBinary) {
-  configure(
-      closureOf<AbstractLinkTask> {
-        project.project(":cast:cast").tasks.named(name, LinkSharedLibrary::class.java) {
-          this@addCastLibrary.addRpath(nativeLibraryOutput)
-        }
-        addJvmLibrary(binary)
-      })
 }
 
 private fun File.findJvmLibrary(extension: String, subdirs: List<String>) =
@@ -77,17 +66,26 @@ fun AbstractLinkTask.addJvmLibrary(binary: CppBinary) {
             .get()
             .includes(project.files(jniIncludeDir, "$jniIncludeDir/$osIncludeSubdir"))
         add((binary.linkLibraries as Configuration).name, project.files(libJVM))
-        addRpath(libJVM)
       })
 }
 
-fun AbstractLinkTask.addRpath(library: Provider<File>) {
-  if (!targetPlatform.get().operatingSystem.isWindows) {
-    linkerArgs.add(project.provider { "-Wl,-rpath,${library.get().parent}" })
+/**
+ * Adds runtime search paths (rpaths) for all library dependencies of the link task.
+ *
+ * This extension method configures the underlying [AbstractLinkTask] to add linker arguments that
+ * specify runtime search paths for all libraries that the task links against. This ensures that the
+ * runtime loader can find these libraries when the resulting binary is executed.
+ *
+ * The method only adds rpaths on non-Windows platforms, as the rpath concept is not applicable to
+ * Windows.
+ */
+fun Provider<out AbstractLinkTask>.addRpaths() {
+  configure {
+    if (!targetPlatform.get().operatingSystem.isWindows) {
+      linkerArgs.addAll(project.provider { libs.map { "-Wl,-rpath,${it.parentFile}" } })
+    }
   }
 }
-
-fun AbstractLinkTask.addRpath(library: File) = addRpath(project.provider { library })
 
 val AbstractLinkTask.nativeLibraryOutput: File
   get() =
