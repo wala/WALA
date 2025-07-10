@@ -1,5 +1,5 @@
-import com.ibm.wala.gradle.cast.addCastLibrary
-import com.ibm.wala.gradle.cast.addRpath
+import com.ibm.wala.gradle.cast.addJvmLibrary
+import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
 import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
@@ -59,13 +59,13 @@ application {
 
   binaries.whenElementFinalized {
     this as CppExecutable
+    linkTask.addRpaths()
     linkTask.configure {
       val libxlatorTestConfig =
           if (isOptimized) xlatorTestReleaseSharedLibraryConfig
           else xlatorTestDebugSharedLibraryConfig
       val libxlatorTest = libxlatorTestConfig.map { it.singleFile }
-      addRpath(libxlatorTest)
-      addCastLibrary(this@whenElementFinalized)
+      addJvmLibrary(this@whenElementFinalized)
 
       if (isDebuggable && !isOptimized) {
         val checkSmokeMain by
