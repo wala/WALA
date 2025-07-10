@@ -1,9 +1,9 @@
 package com.ibm.wala.gradle.cast
 
 import java.io.File
+import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.TaskInstantiationException
 import org.gradle.api.tasks.TaskProvider
@@ -39,34 +39,29 @@ fun <T : Task> Provider<T>.configure(action: T.() -> Unit) {
 private fun File.findJvmLibrary(extension: String, subdirs: List<String>) =
     subdirs.map { resolve("$it/libjvm.$extension") }.find { it.exists() }!!
 
-fun AbstractLinkTask.addJvmLibrary(binary: CppBinary) {
-  project.dependencies(
-      closureOf<DependencyHandler> {
-        val currentJavaHome = Jvm.current().javaHome
-        val family = binary.targetMachine.operatingSystemFamily
+fun CppBinary.addJvmLibrary(project: Project) {
+  val currentJavaHome = Jvm.current().javaHome
+  val family = targetMachine.operatingSystemFamily
 
-        val (osIncludeSubdir, libJVM) =
-            when (family.name) {
-              OperatingSystemFamily.LINUX ->
-                  "linux" to
-                      currentJavaHome.findJvmLibrary(
-                          "so", listOf("jre/lib/amd64/server", "lib/amd64/server", "lib/server"))
-              OperatingSystemFamily.MACOS ->
-                  "darwin" to
-                      currentJavaHome.findJvmLibrary(
-                          "dylib", listOf("jre/lib/server", "lib/server"))
-              OperatingSystemFamily.WINDOWS -> "win32" to currentJavaHome.resolve("lib/jvm.lib")
-              else ->
-                  throw TaskInstantiationException(
-                      "unrecognized operating system family \"$family\"")
-            }
+  val (osIncludeSubdir, libJVM) =
+      when (family.name) {
+        OperatingSystemFamily.LINUX ->
+            "linux" to
+                currentJavaHome.findJvmLibrary(
+                    "so", listOf("jre/lib/amd64/server", "lib/amd64/server", "lib/server"))
+        OperatingSystemFamily.MACOS ->
+            "darwin" to
+                currentJavaHome.findJvmLibrary("dylib", listOf("jre/lib/server", "lib/server"))
+        OperatingSystemFamily.WINDOWS -> "win32" to currentJavaHome.resolve("lib/jvm.lib")
+        else -> throw TaskInstantiationException("unrecognized operating system family \"$family\"")
+      }
 
-        val jniIncludeDir = "$currentJavaHome/include"
-        binary.compileTask
-            .get()
-            .includes(project.files(jniIncludeDir, "$jniIncludeDir/$osIncludeSubdir"))
-        add((binary.linkLibraries as Configuration).name, project.files(libJVM))
-      })
+  compileTask.configure {
+    val jniIncludeDir = "$currentJavaHome/include"
+    includes(project.files(jniIncludeDir, "$jniIncludeDir/$osIncludeSubdir"))
+  }
+
+  project.dependencies.add((linkLibraries as Configuration).name, project.files(libJVM))
 }
 
 /**

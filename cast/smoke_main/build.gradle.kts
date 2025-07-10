@@ -59,13 +59,15 @@ application {
 
   binaries.whenElementFinalized {
     this as CppExecutable
+
+    addJvmLibrary(project)
+
     linkTask.addRpaths()
     linkTask.configure {
       val libxlatorTestConfig =
           if (isOptimized) xlatorTestReleaseSharedLibraryConfig
           else xlatorTestDebugSharedLibraryConfig
       val libxlatorTest = libxlatorTestConfig.map { it.singleFile }
-      addJvmLibrary(this@whenElementFinalized)
 
       if (isDebuggable && !isOptimized) {
         val checkSmokeMain by
