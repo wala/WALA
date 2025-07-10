@@ -2,6 +2,7 @@ import com.ibm.wala.gradle.adHocDownload
 
 plugins {
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.operating-system")
   id("com.ibm.wala.gradle.publishing")
 }
 
@@ -11,7 +12,7 @@ val extraTestResources by configurations.registering { isCanBeConsumed = false }
 
 val sampleCupSources by configurations.registering { isCanBeConsumed = false }
 
-val isWindows: Boolean by rootProject.extra
+val isWindows: Boolean by extra
 
 val platformsVersion by extra("android-28")
 
@@ -123,7 +124,7 @@ val unpackDroidBench by
     }
 
 val downloadAndroidSdk = run {
-  val osName: String by rootProject.extra
+  val osName: String by extra
   val sdkOs =
       when {
         "Linux".toRegex().containsMatchIn(osName) -> "linux"
