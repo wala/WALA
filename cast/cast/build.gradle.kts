@@ -13,12 +13,13 @@ library {
     compileTask.configure { macros["BUILD_CAST_DLL"] = "1" }
 
     this as CppSharedLibrary
+    addJvmLibrary(project)
+
     linkTask.addRpaths()
     linkTask.configure {
       if (targetMachine.operatingSystemFamily.isMacOs) {
         linkerArgs.add("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
       }
-      addJvmLibrary(this@whenElementFinalized)
     }
   }
 }

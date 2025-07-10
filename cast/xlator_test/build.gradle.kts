@@ -19,7 +19,7 @@ library {
 
   binaries.whenElementFinalized {
     this as CppSharedLibrary
+    addJvmLibrary(project)
     linkTask.addRpaths()
-    linkTask.get().addJvmLibrary(this)
   }
 }
