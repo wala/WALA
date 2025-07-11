@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 @Tag("requires-Internet")
 public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
 
-  @Disabled("seems to break with http issues")
   @Test
   public void testBunnyHunt() throws IOException, WalaException, Error, CancelException {
     URL url = getUrl("http://www.themaninblue.com/experiment/BunnyHunt/");
