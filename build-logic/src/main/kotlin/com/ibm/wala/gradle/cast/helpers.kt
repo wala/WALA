@@ -9,7 +9,6 @@ import org.gradle.api.tasks.TaskInstantiationException
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.internal.jvm.Jvm
 import org.gradle.kotlin.dsl.closureOf
-import org.gradle.kotlin.dsl.extra
 import org.gradle.language.cpp.CppBinary
 import org.gradle.nativeplatform.OperatingSystemFamily
 import org.gradle.nativeplatform.tasks.AbstractLinkTask
@@ -83,7 +82,7 @@ fun AbstractLinkTask.addJvmLibrary(binary: CppBinary) {
 }
 
 fun AbstractLinkTask.addRpath(library: Provider<File>) {
-  if (!(project.rootProject.extra["isWindows"] as Boolean)) {
+  if (!targetPlatform.get().operatingSystem.isWindows) {
     linkerArgs.add(project.provider { "-Wl,-rpath,${library.get().parent}" })
   }
 }

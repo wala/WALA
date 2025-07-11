@@ -30,9 +30,6 @@ repositories {
   mavenCentral()
 }
 
-val osName: String by extra(System.getProperty("os.name"))
-val isWindows by extra(osName.startsWith("Windows "))
-
 JavaVersion.current().let {
   if (!it.isCompatibleWith(VERSION_17)) {
     logger.error(

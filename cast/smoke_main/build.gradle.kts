@@ -108,7 +108,7 @@ application {
               }
             }
 
-        if (!(rootProject.extra["isWindows"] as Boolean)) {
+        if (!targetPlatform.get().operatingSystem.isWindows) {
           // Known to be broken on Windows, but not intentionally so.  Please fix if you
           // know how!  <https://github.com/wala/WALA/issues/608>
           tasks.named("check").configure { dependsOn(checkSmokeMain) }
