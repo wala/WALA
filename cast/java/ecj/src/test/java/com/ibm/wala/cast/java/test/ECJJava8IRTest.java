@@ -52,4 +52,16 @@ public class ECJJava8IRTest extends ECJIRTests {
         true,
         null);
   }
+
+  @Test
+  public void testParamsAndCapture() throws IllegalArgumentException, CancelException, IOException {
+    dump = true;
+    runTest(
+        singlePkgTestSrc(packageName, "ParamsAndCapture"),
+        rtJar,
+        simplePkgTestEntryPoint(packageName, "ParamsAndCapture"),
+        emptyList,
+        true,
+        null);
+  }
 }
