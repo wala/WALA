@@ -43,7 +43,6 @@ public class ECJJava8IRTest extends ECJIRTests {
 
   @Test
   public void testLexicalLambda() throws IllegalArgumentException, CancelException, IOException {
-    dump = true;
     runTest(
         singlePkgTestSrc(packageName, "LexicalLambda"),
         rtJar,
