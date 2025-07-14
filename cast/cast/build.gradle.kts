@@ -1,7 +1,6 @@
 import com.ibm.wala.gradle.cast.addJvmLibrary
 import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
-import com.ibm.wala.gradle.cast.nativeLibraryOutput
 
 plugins {
   `cpp-library`
@@ -18,7 +17,7 @@ library {
     linkTask.addRpaths()
     linkTask.configure {
       if (targetMachine.operatingSystemFamily.isMacOs) {
-        linkerArgs.add("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
+        linkerArgs.add(provider { "-Wl,-install_name,@rpath/${linkedFile.get().asFile.name}" })
       }
     }
   }

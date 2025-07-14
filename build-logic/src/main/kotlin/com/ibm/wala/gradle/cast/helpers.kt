@@ -81,9 +81,3 @@ fun Provider<out AbstractLinkTask>.addRpaths() {
     }
   }
 }
-
-val AbstractLinkTask.nativeLibraryOutput: File
-  get() =
-      // On all supported platforms, the link task's first two outputs are a directory and a library
-      // in that directory. On Windows, the link task also has a third output file: a DLL.
-      outputs.files.elementAt(1)
