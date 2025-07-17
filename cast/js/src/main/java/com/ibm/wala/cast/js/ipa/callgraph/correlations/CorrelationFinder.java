@@ -260,7 +260,6 @@ public class CorrelationFinder {
         scripts = WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory).fst;
       } catch (Error e) {
         e.printStackTrace();
-        assert false : e.warning;
       }
     }
     Map<IMethod, CorrelationSummary> summaries = findCorrelatedAccesses(scripts);
