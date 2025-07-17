@@ -68,8 +68,10 @@ public final class Position {
    *     is 4194303. The maximum column number is 1023.
    */
   Position(int line, int column) throws InvalidPositionException {
-    if (line < 0 || line >= 4194304) // 4194304 = 2^32 >>> LINE_SHIFT
-    throw new InvalidPositionException(InvalidPositionException.Cause.LINE_NUMBER_OUT_OF_RANGE);
+    if (line < 0 || line >= 4194304) {
+      // 4194304 = 2^32 >>> LINE_SHIFT
+      throw new InvalidPositionException(InvalidPositionException.Cause.LINE_NUMBER_OUT_OF_RANGE);
+    }
     if (column < 0 || column > COLUMN_MASK)
       throw new InvalidPositionException(InvalidPositionException.Cause.COLUMN_NUMBER_OUT_OF_RANGE);
     if (line == 0 && column != 0)
