@@ -617,8 +617,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test
   public void testThinSlice() throws CancelException, IOException {
     String testName = "MiniaturSliceBug";
-    List<String> sources =
-        Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
+    Collection<String> sources = singleTestSrc(testName);
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
 
