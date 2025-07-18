@@ -94,7 +94,7 @@ mavenPublishing {
 publishing {
   repositories.maven {
     name = "fakeRemote"
-    setUrl(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
+    setUrl(rootDir.resolve("build/maven-fake-remote-repository"))
   }
 
   publications.named<MavenPublication>("maven") {
