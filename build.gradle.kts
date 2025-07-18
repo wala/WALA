@@ -3,9 +3,9 @@
 //  plugin configuration must precede everything else
 //
 
-import com.diffplug.gradle.pde.EclipseRelease
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.npm.task.NpxTask
+import com.ibm.wala.gradle.forEachJavaProject
 import org.gradle.api.JavaVersion.VERSION_17
 
 buildscript { dependencies.classpath(libs.commons.io) }
@@ -31,9 +31,6 @@ repositories {
   mavenCentral()
 }
 
-val osName: String by extra(System.getProperty("os.name"))
-val isWindows by extra(osName.startsWith("Windows "))
-
 JavaVersion.current().let {
   if (!it.isCompatibleWith(VERSION_17)) {
     logger.error(
@@ -50,11 +47,6 @@ group = name
 
 version = property("VERSION_NAME") as String
 
-// version of Eclipse JARs to use for Eclipse-integrated WALA components.
-val eclipseVersion: EclipseRelease by extra {
-  EclipseRelease.official(libs.versions.eclipse.asProvider().get())
-}
-
 ///////////////////////////////////////////////////////////////////////
 //
 //  Javadoc documentation
@@ -65,20 +57,18 @@ val aggregatedJavadocClasspath by configurations.registering { isCanBeConsumed =
 val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
-  subprojects {
-    pluginManager.withPlugin("java-base") {
-      aggregatedJavadocClasspath(
-          project(mapOf("path" to path, "configuration" to "javadocClasspath")))
+  forEachJavaProject {
+    aggregatedJavadocClasspath(
+        project(mapOf("path" to it.path, "configuration" to "javadocClasspath")))
 
-      aggregatedJavadocSource(project(mapOf("path" to path, "configuration" to "javadocSource")))
-    }
+    aggregatedJavadocSource(project(mapOf("path" to it.path, "configuration" to "javadocSource")))
   }
 }
 
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
-  setDestinationDir(layout.buildDirectory.dir("docs/javadoc").get().asFile)
+  destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
   classpath = aggregatedJavadocClasspath.get()
@@ -217,7 +207,7 @@ tasks.register("checkInspectionResults") {
 //  Check for updated dependencies
 //
 
-tasks.withType<DependencyUpdatesTask>().configureEach {
+tasks.withType<DependencyUpdatesTask> {
   gradleReleaseChannel = "current"
   rejectVersionIf {
     candidate.run {

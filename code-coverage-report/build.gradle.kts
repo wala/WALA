@@ -1,3 +1,5 @@
+import com.ibm.wala.gradle.forEachJavaProject
+
 plugins {
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
@@ -5,6 +7,4 @@ plugins {
   id("jacoco-report-aggregation")
 }
 
-dependencies {
-  rootProject.allprojects { plugins.withId("jacoco") { jacocoAggregation(this@allprojects) } }
-}
+forEachJavaProject(dependencies::jacocoAggregation)

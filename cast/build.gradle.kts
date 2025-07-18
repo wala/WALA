@@ -4,6 +4,7 @@ import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 
 plugins {
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.operating-system")
   id("com.ibm.wala.gradle.publishing")
 }
 
@@ -77,7 +78,7 @@ tasks.named<Test>("test") {
   val xlatorTestSharedLibraryDir = xlatorTestSharedLibrary.map { it.singleFile.parent }
   doFirst { systemProperty("java.library.path", xlatorTestSharedLibraryDir.get()) }
 
-  if (rootProject.extra["isWindows"] as Boolean) {
+  if (project.extra["isWindows"] as Boolean) {
 
     // Windows has nothing akin to RPATH for embedding DLL search paths in other DLLs or
     // executables.  Instead, we need to ensure that any required DLLs are in the standard
