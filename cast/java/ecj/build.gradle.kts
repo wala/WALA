@@ -14,10 +14,6 @@ walaEclipseMavenCentral {
 
 val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
 
-sourceSets["test"]
-    .resources
-    .srcDir(project(":cast:java:test:data").projectDir.resolve("src/testSubjects/java"))
-
 dependencies {
   implementation(libs.eclipse.ecj)
   implementation(projects.cast)
@@ -58,3 +54,7 @@ val run by
 tasks.named("check") { dependsOn(run) }
 
 tasks.named<Test>("test") { maxHeapSize = "1200M" }
+
+tasks.named<Copy>("processTestResources") {
+  from(project(":cast:java:test:data").projectDir.resolve("src/testSubjects/java"))
+}
