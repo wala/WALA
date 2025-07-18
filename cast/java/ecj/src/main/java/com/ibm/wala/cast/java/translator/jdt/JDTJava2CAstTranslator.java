@@ -987,8 +987,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
      * */
 
     IMethodBinding fm = typeBinding.getFunctionalInterfaceMethod();
-    ITypeBinding ct = (fm==null? n.resolveTypeBinding(): fm.getDeclaringClass());
-    
+    ITypeBinding ct = (fm == null ? n.resolveTypeBinding() : fm.getDeclaringClass());
+
     CAstEntity lambdaClass =
         createClassDeclaration(
             n,
@@ -1027,10 +1027,11 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                   return castTypes.stream()
                       .skip(1)
                       .map(
-                          x -> fm==null || fm.getName().equals("apply")?
-                              fTypeDict.getCAstTypeFor(
-                                  ast.resolveWellKnownType("java.lang.Object")):
-                                	  x)
+                          x ->
+                              fm == null || fm.getName().equals("apply")
+                                  ? fTypeDict.getCAstTypeFor(
+                                      ast.resolveWellKnownType("java.lang.Object"))
+                                  : x)
                       .collect(Collectors.toList());
                 }
 
@@ -1047,7 +1048,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
           @Override
           public String getName() {
-            return fm!=null? fm.getName(): "apply";
+            return fm != null ? fm.getName() : "apply";
           }
         };
 
