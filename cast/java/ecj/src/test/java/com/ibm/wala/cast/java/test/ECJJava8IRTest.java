@@ -31,6 +31,17 @@ public class ECJJava8IRTest extends ECJIRTests {
   }
 
   @Test
+  public void testCondExprLambda() throws IllegalArgumentException, CancelException, IOException {
+    runTest(
+        singlePkgTestSrc(packageName, "CondExprLambda"),
+        rtJar,
+        simplePkgTestEntryPoint(packageName, "CondExprLambda"),
+        emptyList,
+        true,
+        null);
+  }
+
+  @Test
   public void testObjectLambda() throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc(packageName, "ObjectLambda"),
@@ -53,7 +64,8 @@ public class ECJJava8IRTest extends ECJIRTests {
   }
 
   @Test
-  public void testLexicalLocalLambda() throws IllegalArgumentException, CancelException, IOException {
+  public void testLexicalLocalLambda()
+      throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc(packageName, "LexicalLocalLambda"),
         rtJar,
