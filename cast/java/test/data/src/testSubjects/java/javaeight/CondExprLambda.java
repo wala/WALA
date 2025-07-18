@@ -9,7 +9,7 @@ public class CondExprLambda {
     }
 
     int doit() {
-        Function<String,String> x = i -> i + "y";
+      Function<String,String> x = i -> "z".equals(i)? i: i + "y";
         return x.apply("x").length();
     }
 }
