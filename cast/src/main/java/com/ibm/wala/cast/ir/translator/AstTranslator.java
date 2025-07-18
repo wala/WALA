@@ -3507,9 +3507,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       WalkContext context,
       WalkContext codeContext,
       CAstVisitor<WalkContext> visitor) {
-    if (n.getAST() == null) // presumably abstract
-    declareFunction(n, context);
-    else {
+    if (n.getAST() == null) {
+      // presumably abstract
+      declareFunction(n, context);
+    } else {
       declareFunction(n, context);
       initFunctionEntity(n, codeContext);
     }
@@ -3522,8 +3523,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       WalkContext context,
       WalkContext codeContext,
       CAstVisitor<WalkContext> visitor) {
-    if (n.getAST() != null) // non-abstract
-    closeFunctionEntity(n, context, codeContext);
+    if (n.getAST() != null) {
+      // non-abstract
+      closeFunctionEntity(n, context, codeContext);
+    }
   }
 
   @Override

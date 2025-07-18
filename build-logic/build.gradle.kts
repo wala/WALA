@@ -28,5 +28,5 @@ spotless {
 
   kotlinGradle { ktfmt(ktfmtVersion) }
 
-  findProperty("spotless.ratchet.from")?.let { ratchetFrom(it as String) }
+  providers.gradleProperty("spotless.ratchet.from").orNull?.let(::ratchetFrom)
 }

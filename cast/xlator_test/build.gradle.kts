@@ -1,4 +1,5 @@
-import com.ibm.wala.gradle.cast.addCastLibrary
+import com.ibm.wala.gradle.cast.addJvmLibrary
+import com.ibm.wala.gradle.cast.addRpaths
 
 plugins {
   `cpp-library`
@@ -18,6 +19,7 @@ library {
 
   binaries.whenElementFinalized {
     this as CppSharedLibrary
-    linkTask.get().addCastLibrary(this)
+    addJvmLibrary(project)
+    linkTask.addRpaths()
   }
 }

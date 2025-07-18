@@ -97,5 +97,5 @@ tasks.register<JavaExec>("runIFDSExplorerExample") {
   if (System.getProperty("os.name").startsWith("Mac OS X")) {
     jvmArgs = listOf("-XstartOnFirstThread")
   }
-  project.findProperty("args")?.let { args((it as String).split("\\s+".toRegex())) }
+  providers.gradleProperty("args").orNull?.let { args(it.split("\\s+".toRegex())) }
 }
