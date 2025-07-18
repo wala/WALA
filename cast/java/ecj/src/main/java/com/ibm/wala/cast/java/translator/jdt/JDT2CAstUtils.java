@@ -175,9 +175,10 @@ public class JDT2CAstUtils {
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     if (binName.contains("$")) {
+      ITypeBinding sup = ct.isInterface()? ct: ct.getSuperclass();
       String dollarSignNumber = binName.substring(binName.indexOf('$'));
       return "<anonymous subclass of "
-          + ct.getSuperclass().getBinaryName()
+          + sup.getBinaryName()
           + '>'
           + dollarSignNumber;
     } else {

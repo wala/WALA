@@ -16,6 +16,7 @@ package com.ibm.wala.cast.java.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstClass;
@@ -388,6 +389,7 @@ public abstract class IRTests {
 
     // If we've gotten this far, IR has been produced.
     if (dump) {
+      CAstCallGraphUtil.AVOID_DUMP.set(false);
       dumpIR(callGraph, builder, sources, assertReachable);
     }
 

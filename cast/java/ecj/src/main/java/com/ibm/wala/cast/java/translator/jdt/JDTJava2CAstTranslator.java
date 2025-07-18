@@ -986,13 +986,16 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
      * to be implemented.
      * */
 
+    IMethodBinding fm = typeBinding.getFunctionalInterfaceMethod();
+    ITypeBinding ct = (fm==null? n.resolveTypeBinding(): fm.getDeclaringClass());
+    
     CAstEntity lambdaClass =
         createClassDeclaration(
             n,
             Collections.emptyList(),
             null,
-            typeBinding,
-            JDT2CAstUtils.anonTypeName(typeBinding),
+            ct,
+            JDT2CAstUtils.anonTypeName(ct),
             0 /* no modifiers */,
             false,
             false,
@@ -1005,7 +1008,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstEntity e =
         new ProcedureEntity(
             mdast,
-            n.resolveTypeBinding().getErasure(),
+            ct,
             Collections.emptyMap(),
             context,
             Collections.emptySet(),
@@ -1024,9 +1027,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                   return castTypes.stream()
                       .skip(1)
                       .map(
-                          x ->
+                          x -> fm==null || fm.getName().equals("apply")?
                               fTypeDict.getCAstTypeFor(
-                                  ast.resolveWellKnownType("java.lang.Object")))
+                                  ast.resolveWellKnownType("java.lang.Object")):
+                                	  x)
                       .collect(Collectors.toList());
                 }
 
@@ -1043,7 +1047,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
           @Override
           public String getName() {
-            return "apply";
+            return fm!=null? fm.getName(): "apply";
           }
         };
 
@@ -1355,7 +1359,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public String toString() {
-      return fDecl == null ? "<clinit>" : fDecl.toString();
+      return fDecl == null ? getName() : fDecl.toString();
     }
 
     @Override

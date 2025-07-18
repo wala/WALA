@@ -43,6 +43,10 @@ public class ParamsAndCapture {
   }
 
   public static void main(String[] args) {
+    new ParamsAndCapture().doit(args);
+  }
+    
+  public void doit(String[] args) {
     A x = new C4(), y = new C5();
     Params p =
         (p1, p2, p3) -> {
