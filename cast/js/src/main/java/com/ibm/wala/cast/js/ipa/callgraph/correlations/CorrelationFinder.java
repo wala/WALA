@@ -184,8 +184,10 @@ public class CorrelationFinder {
         indexName = null;
         break;
       }
-      if (!candidateName.contains(" ")) // ignore internal names
-      indexName = candidateName;
+      if (!candidateName.contains(" ")) {
+        // ignore internal names
+        indexName = candidateName;
+      }
     }
     return indexName;
   }

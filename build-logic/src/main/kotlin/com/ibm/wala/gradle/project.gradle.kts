@@ -41,7 +41,7 @@ tasks.register<DependencyReportTask>("allDeps") {}
 //
 
 spotless {
-  findProperty("spotless.ratchet.from")?.let { ratchetFrom(it as String) }
+  providers.gradleProperty("spotless.ratchet.from").orNull?.let(::ratchetFrom)
 
   kotlinGradle { ktfmt(versionCatalogs.named("libs").findVersion("ktfmt").get().toString()) }
 }

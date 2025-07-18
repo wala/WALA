@@ -98,7 +98,7 @@ tasks.named<Test>("test") {
   include("**/Test*.class")
   exclude("**/*AndroidLibs*.class")
 
-  val trial = project.findProperty("trial")
+  val trial = providers.gradleProperty("trial").orNull
   if (trial != null) {
     outputs.upToDateWhen { false }
     afterTest(
@@ -116,7 +116,7 @@ tasks.named<Test>("test") {
   }
 }
 
-if (hasProperty("excludeSlowTests")) {
+if (providers.gradleProperty("excludeSlowTests").isPresent) {
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
 
@@ -136,7 +136,7 @@ tasks.withType<JavaCompile> {
 tasks.withType<JavaCompileUsingEcj> {
 
   // Allow skipping all ECJ compilation tasks by setting a project property.
-  val skipJavaUsingEcjTasks = project.hasProperty("skipJavaUsingEcjTasks")
+  val skipJavaUsingEcjTasks = providers.gradleProperty("skipJavaUsingEcjTasks").isPresent
   onlyIf { !skipJavaUsingEcjTasks }
 
   // ECJ warning / error levels are set via a configuration file, not this argument
