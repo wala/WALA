@@ -51,7 +51,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -73,8 +74,6 @@ public abstract class IRTests {
   protected final String projectName;
 
   protected static String javaHomePath;
-
-  private String testSrcPath = Paths.get("src", "testSubjects", "java").toString();
 
   public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 
@@ -336,13 +335,33 @@ public abstract class IRTests {
     }
   }
 
+  private Collection<String> singleTestResource(String resourceName) {
+
+    // Try to find the test file using the current classpath
+    URL resourceUrl = getClass().getClassLoader().getResource(resourceName);
+    if (resourceUrl == null) {
+      throw new RuntimeException("Resource not found on classpath: " + resourceName);
+    }
+
+    // Convert the URL to a file path
+    final File resourceFile;
+    try {
+      resourceFile = new File(resourceUrl.toURI());
+    } catch (final URISyntaxException problem) {
+      throw new RuntimeException(
+          "Error converting resource URL to file path: " + resourceUrl, problem);
+    }
+
+    // Return the found resource's file path to the caller as a one-item collection
+    return Collections.singletonList(resourceFile.getAbsolutePath());
+  }
+
   protected Collection<String> singleTestSrc(String testName) {
-    return Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
+    return singleTestResource(testName + ".java");
   }
 
   protected Collection<String> singlePkgTestSrc(String pkgName, String testName) {
-    return Collections.singletonList(
-        getTestSrcPath() + File.separator + pkgName + File.separator + testName + ".java");
+    return singleTestResource(singleJavaPkgInputForTest(pkgName, testName));
   }
 
   protected String[] simpleTestEntryPoint(String testName) {
@@ -500,14 +519,6 @@ public abstract class IRTests {
         engine.addSourceModule(new SourceFileModule(f, srcFileName, null));
       }
     }
-  }
-
-  protected void setTestSrcPath(String testSrcPath) {
-    this.testSrcPath = testSrcPath;
-  }
-
-  protected String getTestSrcPath() {
-    return testSrcPath;
   }
 
   protected static String singleInputForTest(String testName) {
