@@ -49,10 +49,6 @@ public abstract class AbstractJavaAnalysisAction
   /** The current {@link ISelection} highlighted in the Eclipse workspace */
   private ISelection currentSelection;
 
-  public AbstractJavaAnalysisAction() {
-    super();
-  }
-
   @Override
   public void setActivePart(IAction action, IWorkbenchPart targetPart) {}
 

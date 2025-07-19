@@ -47,14 +47,12 @@ public abstract class Launcher {
   private final Logger logger;
 
   protected Launcher(Logger logger) {
-    super();
     this.captureOutput = false;
     this.captureErr = false;
     this.logger = logger;
   }
 
   protected Launcher(boolean captureOutput, boolean captureErr, Logger logger) {
-    super();
     this.captureOutput = captureOutput;
     this.captureErr = captureErr;
     this.logger = logger;

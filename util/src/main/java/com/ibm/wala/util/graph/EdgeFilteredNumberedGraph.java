@@ -33,7 +33,6 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
    * @param ignoreEdges relation specifying which edges should be filtered out
    */
   public EdgeFilteredNumberedGraph(NumberedGraph<T> delegate, IBinaryNaturalRelation ignoreEdges) {
-    super();
     this.delegate = delegate;
     this.ignoreEdges = ignoreEdges;
     this.edges = new Edges();

@@ -21,7 +21,6 @@ public abstract class Signature {
   private final String s;
 
   public Signature(final String s) {
-    super();
     if (s == null) {
       throw new IllegalArgumentException("s cannot be null");
     }

@@ -272,7 +272,6 @@ public abstract class IRTests {
       private final String annotationTypeName;
 
       public ClassAnnotation(String className, String annotationTypeName) {
-        super();
         this.className = className;
         this.annotationTypeName = annotationTypeName;
       }
@@ -283,7 +282,6 @@ public abstract class IRTests {
       private final String annotationTypeName;
 
       public MethodAnnotation(String methodSig, String annotationTypeName) {
-        super();
         this.methodSig = methodSig;
         this.annotationTypeName = annotationTypeName;
       }

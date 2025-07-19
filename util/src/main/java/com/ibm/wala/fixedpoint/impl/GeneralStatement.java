@@ -77,7 +77,6 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    */
   @NullUnmarked
   public GeneralStatement(T lhs, AbstractOperator<T> operator) {
-    super();
     if (operator == null) {
       throw new IllegalArgumentException("null operator");
     }
@@ -96,7 +95,6 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @param op2 the second operand on the rhs
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2) {
-    super();
     if (operator == null) {
       throw new IllegalArgumentException("null operator");
     }
@@ -118,7 +116,6 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @param op3 the third operand on the rhs
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
-    super();
     if (operator == null) {
       throw new IllegalArgumentException("null operator");
     }
@@ -140,7 +137,6 @@ public abstract class GeneralStatement<T extends IVariable<T>>
    * @throws IllegalArgumentException if rhs is null
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T[] rhs) {
-    super();
     if (operator == null) {
       throw new IllegalArgumentException("null operator");
     }
