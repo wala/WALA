@@ -24,6 +24,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class ECJTestComments extends IRTests {
 
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
-      final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+      final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
         new ECJJavaSourceAnalysisEngine() {
           @Override
