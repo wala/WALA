@@ -14,7 +14,7 @@ import com.ibm.wala.util.WalaException;
 
 /** An exception that means something went wrong when constructing a {@link ClassHierarchy}. */
 public class ClassHierarchyException extends WalaException {
-  public static final long serialVersionUID = 381093189198391L;
+  private static final long serialVersionUID = 381093189198391L;
 
   public ClassHierarchyException(String string) {
     super(string);
