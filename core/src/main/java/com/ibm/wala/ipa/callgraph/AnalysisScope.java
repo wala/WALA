@@ -319,7 +319,7 @@ public class AnalysisScope {
   }
 
   public int getNumberOfLoaders() {
-    return loadersByName.values().size();
+    return loadersByName.size();
   }
 
   public SetOfClasses getExclusions() {
