@@ -18,7 +18,6 @@ public class FilteredException {
   }
 
   public FilteredException(TypeReference exception, boolean isSubclassFiltered) {
-    super();
     this.exception = exception;
     this.isSubclassFiltered = isSubclassFiltered;
   }

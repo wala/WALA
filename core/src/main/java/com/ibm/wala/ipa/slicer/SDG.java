@@ -129,7 +129,6 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       ControlDependenceOptions cOptions,
       HeapExclusions heapExclude)
       throws IllegalArgumentException {
-    super();
     if (dOptions == null) {
       throw new IllegalArgumentException("dOptions must not be null");
     }

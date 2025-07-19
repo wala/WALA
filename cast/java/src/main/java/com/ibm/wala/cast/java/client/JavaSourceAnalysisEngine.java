@@ -54,10 +54,6 @@ public abstract class JavaSourceAnalysisEngine
   /** Modules which are system or library code TODO: what about extension loader? */
   private final Set<Module> systemEntries = HashSetFactory.make();
 
-  public JavaSourceAnalysisEngine() {
-    super();
-  }
-
   /**
    * Adds the given source module to the source loader's module list. Clients should/may call this
    * method if they don't supply an IJavaProject to the constructor.

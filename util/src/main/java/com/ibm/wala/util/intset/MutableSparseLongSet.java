@@ -45,7 +45,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   private MutableSparseLongSet(LongSet set) {
-    super();
     copySet(set);
   }
 
@@ -59,9 +58,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     size = 0;
   }
 
-  public MutableSparseLongSet() {
-    super();
-  }
+  public MutableSparseLongSet() {}
 
   /** */
   @NullUnmarked

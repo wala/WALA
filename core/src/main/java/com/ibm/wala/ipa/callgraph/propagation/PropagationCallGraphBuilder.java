@@ -1353,9 +1353,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   }
 
   protected class InverseFilterOperator extends FilterOperator {
-    public InverseFilterOperator() {
-      super();
-    }
 
     @Override
     public String toString() {

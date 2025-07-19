@@ -162,7 +162,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
     public StatementVisitor(
         HeapModel heapModel, IFlowGraph g, IClassHierarchy cha, CallGraph cg, CGNode node) {
-      super();
       this.heapModel = heapModel;
       this.g = g;
       this.cha = cha;
