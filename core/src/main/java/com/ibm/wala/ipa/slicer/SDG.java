@@ -755,10 +755,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
                   }
                 }
               }
-              return Collections.emptySet();
-            } else {
-              return Collections.emptySet();
             }
+            return Collections.emptySet();
           }
         case HEAP_PARAM_CALLER:
           if (dOptions.equals(DataDependenceOptions.NONE)) {
