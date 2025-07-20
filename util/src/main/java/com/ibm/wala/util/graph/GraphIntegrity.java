@@ -179,9 +179,7 @@ public class GraphIntegrity {
 
     private static final long serialVersionUID = 1503478788521696930L;
 
-    public UnsoundGraphException() {
-      super();
-    }
+    public UnsoundGraphException() {}
 
     public UnsoundGraphException(String s) {
       super(s);

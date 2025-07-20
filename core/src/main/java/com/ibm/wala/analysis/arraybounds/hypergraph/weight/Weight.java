@@ -27,7 +27,6 @@ public class Weight {
   }
 
   public Weight(Type type, int number) {
-    super();
     this.type = type;
     this.number = number;
   }

@@ -36,7 +36,6 @@ public abstract class Statement {
   private final CGNode node;
 
   public Statement(final CGNode node) {
-    super();
     if (node == null) {
       throw new IllegalArgumentException("null node");
     }

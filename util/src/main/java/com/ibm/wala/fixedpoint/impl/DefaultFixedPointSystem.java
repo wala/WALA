@@ -53,7 +53,6 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
    *     tune graph representation
    */
   public DefaultFixedPointSystem(int expectedOut) {
-    super();
     graph = new SparseNumberedGraph<>(expectedOut);
   }
 

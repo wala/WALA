@@ -32,7 +32,6 @@ public class AnalysisCache implements IAnalysisCacheView {
   private final SSAOptions ssaOptions;
 
   public AnalysisCache(IRFactory<IMethod> irFactory, SSAOptions ssaOptions, SSACache cache) {
-    super();
     this.ssaOptions = ssaOptions;
     this.irFactory = irFactory;
     this.ssaCache = cache;

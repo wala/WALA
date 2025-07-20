@@ -33,7 +33,6 @@ public class CallGraphStats {
     private final int bytecodeBytes;
 
     private CGStats(int nodes, int edges, int methods, int bytecodeBytes) {
-      super();
       nNodes = nodes;
       nEdges = edges;
       nMethods = methods;

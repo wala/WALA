@@ -31,7 +31,6 @@ public abstract class SyntheticClass implements IClass {
    * @param T type reference describing this class
    */
   public SyntheticClass(TypeReference T, IClassHierarchy cha) {
-    super();
     this.T = T;
     this.cha = cha;
   }

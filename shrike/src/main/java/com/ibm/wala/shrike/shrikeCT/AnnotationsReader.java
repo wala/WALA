@@ -117,7 +117,6 @@ public class AnnotationsReader extends AttributeReader {
     public final String enumVal;
 
     public EnumElementValue(String enumType, String enumVal) {
-      super();
       this.enumType = enumType;
       this.enumVal = enumVal;
     }
@@ -135,7 +134,6 @@ public class AnnotationsReader extends AttributeReader {
     public final ElementValue[] vals;
 
     public ArrayElementValue(ElementValue[] vals) {
-      super();
       this.vals = vals;
     }
 
@@ -262,7 +260,6 @@ public class AnnotationsReader extends AttributeReader {
     public final Map<String, ElementValue> elementValues;
 
     public AnnotationAttribute(String type, Map<String, ElementValue> elementValues) {
-      super();
       this.type = type;
       this.elementValues = elementValues;
     }
