@@ -1,8 +1,6 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0">
     <option name="myName" value="No Back-Sliding" />
-    <inspection_tool class="15e14404-68cd-373a-8ad8-9b7c2bd01d5f" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="4b5a6264-b1b8-3815-be40-9c0079b31521" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AccessStaticViaInstance" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AnonymousHasLambdaAlternative" enabled="true" level="ERROR" enabled_by_default="true">
