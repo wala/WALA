@@ -422,10 +422,9 @@ public abstract class IRTests {
   protected static void dumpIR(
       CallGraph cg,
       CallGraphBuilder<? super InstanceKey> builder,
-      Collection<String> sources,
+      Collection<Path> sources,
       boolean assertReachable) {
-    Set<String> sourcePaths = HashSetFactory.make();
-     Set<Path> sourcePaths = HashSetFactory.make();
+    Set<Path> sourcePaths = HashSetFactory.make();
     for (Path src : sources) {
       sourcePaths.add(src.getFileName());
     }
