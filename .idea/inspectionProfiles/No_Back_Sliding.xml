@@ -625,6 +625,7 @@
       <scope name="Eclipse Build Artifacts" level="WARNING" enabled="false" />
       <scope name="JavaScript Test Subjects" level="WARNING" enabled="false" />
     </inspection_tool>
+    <inspection_tool class="ThrowablePrintStackTrace" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ThrowablePrintedToSystemOut" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="TrivialConditionalJS" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Eclipse Build Artifacts" level="WARNING" enabled="false" />
