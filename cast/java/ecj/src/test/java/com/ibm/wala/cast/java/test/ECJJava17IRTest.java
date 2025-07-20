@@ -20,6 +20,8 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +37,22 @@ public class ECJJava17IRTest extends ECJIRTests {
   public ECJJava17IRTest() {
     super(null);
     dump = true;
+  }
+
+  @Override
+  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
+      final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
+    JavaSourceAnalysisEngine engine =
+        new ECJJavaSourceAnalysisEngine() {
+          @Override
+          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
+            return Util.makeMainEntrypoints(
+                JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
+          }
+        };
+    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    populateScope(engine, sources, libs);
+    return engine;
   }
 
   private static final IRAssertion checkBinaryLiterals =

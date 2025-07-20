@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -340,32 +341,31 @@ public abstract class IRTests {
     }
   }
 
-  private Collection<String> singleTestResource(String resourceName) {
-
+  private Collection<Path> singleTestResource(String resourceName) {
     // Try to find the test file using the current classpath
-    URL resourceUrl = getClass().getClassLoader().getResource(resourceName);
+    final URL resourceUrl = getClass().getClassLoader().getResource(resourceName);
     if (resourceUrl == null) {
       throw new RuntimeException("Resource not found on classpath: " + resourceName);
     }
 
     // Convert the URL to a file path
-    final File resourceFile;
+    final Path resourceFilePath;
     try {
-      resourceFile = new File(resourceUrl.toURI());
+      resourceFilePath = Path.of(resourceUrl.toURI());
     } catch (final URISyntaxException problem) {
       throw new RuntimeException(
           "Error converting resource URL to file path: " + resourceUrl, problem);
     }
 
     // Return the found resource's file path to the caller as a one-item collection
-    return Collections.singletonList(resourceFile.getAbsolutePath());
+    return Collections.singletonList(resourceFilePath);
   }
 
-  protected Collection<String> singleTestSrc(String testName) {
+  protected Collection<Path> singleTestSrc(String testName) {
     return singleTestResource(testName + ".java");
   }
 
-  protected Collection<String> singlePkgTestSrc(String pkgName, String testName) {
+  protected Collection<Path> singlePkgTestSrc(String pkgName, String testName) {
     return singleTestResource(singleJavaPkgInputForTest(pkgName, testName));
   }
 
@@ -378,8 +378,7 @@ public abstract class IRTests {
   }
 
   protected abstract AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?>
-      getAnalysisEngine(
-          String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
+      getAnalysisEngine(String[] mainClassDescriptors, Collection<Path> sources, List<String> libs);
 
   public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(String testName)
       throws CancelException, IOException {
@@ -388,7 +387,7 @@ public abstract class IRTests {
   }
 
   public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(
-      Collection<String> sources,
+      Collection<Path> sources,
       List<String> libs,
       String[] mainClassDescriptors,
       List<? extends IRAssertion> ca,
@@ -426,8 +425,9 @@ public abstract class IRTests {
       Collection<String> sources,
       boolean assertReachable) {
     Set<String> sourcePaths = HashSetFactory.make();
-    for (String src : sources) {
-      sourcePaths.add(src.substring(src.lastIndexOf(File.separator) + 1));
+     Set<Path> sourcePaths = HashSetFactory.make();
+    for (Path src : sources) {
+      sourcePaths.add(src.getFileName());
     }
 
     Set<IMethod> unreachable = HashSetFactory.make();
@@ -445,9 +445,16 @@ public abstract class IRTests {
           Iterator<CGNode> nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
             if (m instanceof AstMethod) {
-              String fn = ((AstClass) m.getDeclaringClass()).getSourcePosition().getURL().getFile();
-              if (sourcePaths.contains(fn.substring(fn.lastIndexOf(File.separator) + 1))) {
-                System.err.println("Method " + m.getReference() + " not reachable?");
+              final Path fn;
+              try {
+                fn =
+                    Path.of(
+                        ((AstClass) m.getDeclaringClass()).getSourcePosition().getURL().toURI());
+              } catch (URISyntaxException problem) {
+                throw new RuntimeException(problem);
+              }
+              if (sourcePaths.contains(fn.getFileName())) {
+                System.err.println(("Method " + m.getReference() + " not reachable?"));
                 unreachable.add(m);
               }
             }
@@ -516,7 +523,7 @@ public abstract class IRTests {
   }
 
   public static void populateScope(
-      JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) {
+      JavaSourceAnalysisEngine engine, Collection<Path> sources, List<String> libs) {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);
@@ -531,14 +538,14 @@ public abstract class IRTests {
     }
     assertThat(foundLib).isTrue();
 
-    for (String srcFilePath : sources) {
-      String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
-      File f = new File(srcFilePath);
+    for (Path srcFilePath : sources) {
+      Path srcFileName = srcFilePath.getFileName();
+      File f = srcFilePath.toFile();
       assertThat(f).exists();
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {
-        engine.addSourceModule(new SourceFileModule(f, srcFileName, null));
+        engine.addSourceModule(new SourceFileModule(f, srcFileName.toString(), null));
       }
     }
   }

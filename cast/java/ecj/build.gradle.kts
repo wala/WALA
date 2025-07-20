@@ -14,10 +14,6 @@ walaEclipseMavenCentral {
 
 val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
 
-sourceSets["test"]
-    .resources
-    .srcDir(project(":cast:java:test:data").projectDir.resolve("src/testSubjects/java"))
-
 dependencies {
   implementation(libs.eclipse.ecj)
   implementation(projects.cast)
@@ -37,15 +33,17 @@ application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
 val run by
     tasks.existing(JavaExec::class) {
-      val runSourceDirectoryPath = runSourceDirectory.map { it.files.single().toString() }
+      val runSourceDirectoryPath = runSourceDirectory.map { it.files.single() }
+      inputs.dir(runSourceDirectoryPath)
       // this is for testing purposes
       argumentProviders.add {
-        listOf("-sourceDir", runSourceDirectoryPath.get(), "-mainClass", "LArray1")
+        listOf("-sourceDir", runSourceDirectoryPath.get().toString(), "-mainClass", "LArray1")
       }
 
       // log output to file, although we don"t validate it
       val outFile = layout.buildDirectory.file("SourceDirCallGraph.log")
       outputs.file(outFile)
+      outputs.cacheIf { true }
       doFirst {
         outFile.get().asFile.outputStream().let {
           standardOutput = it
@@ -58,3 +56,7 @@ val run by
 tasks.named("check") { dependsOn(run) }
 
 tasks.named<Test>("test") { maxHeapSize = "1200M" }
+
+tasks.named<Copy>("processTestResources") {
+  from(project(":cast:java:test:data").projectDir.resolve("src/testSubjects/java"))
+}
