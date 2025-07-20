@@ -726,7 +726,6 @@ public class AndroidManifestXMLReader {
     private int unimportantDepth = 0;
 
     public SAXHandler() {
-      super();
       parserStack.push(Tag.ROOT);
     }
 

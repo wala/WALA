@@ -49,7 +49,6 @@ public class SyntheticMethod implements IMethod {
 
   public SyntheticMethod(
       MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
-    super();
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
@@ -62,7 +61,6 @@ public class SyntheticMethod implements IMethod {
 
   public SyntheticMethod(
       IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
-    super();
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }

@@ -42,7 +42,6 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
 
   /** */
   public ParanoidHashSet() {
-    super();
     hcFreq = HashMapFactory.make();
   }
 

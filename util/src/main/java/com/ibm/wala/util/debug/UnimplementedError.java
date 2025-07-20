@@ -15,9 +15,7 @@ package com.ibm.wala.util.debug;
 public class UnimplementedError extends Error {
   private static final long serialVersionUID = 20981098918191L;
 
-  public UnimplementedError() {
-    super();
-  }
+  public UnimplementedError() {}
 
   public UnimplementedError(String s) {
     super(s);

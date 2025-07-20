@@ -129,7 +129,6 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       ControlDependenceOptions cOptions,
       HeapExclusions heapExclude)
       throws IllegalArgumentException {
-    super();
     if (dOptions == null) {
       throw new IllegalArgumentException("dOptions must not be null");
     }
@@ -756,10 +755,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
                   }
                 }
               }
-              return Collections.emptySet();
-            } else {
-              return Collections.emptySet();
             }
+            return Collections.emptySet();
           }
         case HEAP_PARAM_CALLER:
           if (dOptions.equals(DataDependenceOptions.NONE)) {

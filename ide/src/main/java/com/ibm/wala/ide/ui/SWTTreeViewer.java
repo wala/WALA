@@ -44,10 +44,6 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
   protected final List<IAction> popUpActions = new ArrayList<>();
 
-  public SWTTreeViewer() {
-    super();
-  }
-
   public Graph<T> getGraphInput() {
     return graphInput;
   }
