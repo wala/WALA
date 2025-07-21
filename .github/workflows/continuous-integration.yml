@@ -1,11 +1,12 @@
 name: Continuous integration
 on:
+  merge_group:
   pull_request:
   push:
     branches-ignore:
       - 'dependabot/**'
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 jobs:
   build_gradle:
