@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.cha;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -43,13 +44,8 @@ public class DupFieldsTest extends WalaTestCase {
     TypeReference ref =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LDupFieldName");
     IClass klass = cha.lookupClass(ref);
-    boolean threwException = false;
-    try {
-      klass.getField(Atom.findOrCreateUnicodeAtom("a"));
-    } catch (IllegalStateException e) {
-      threwException = true;
-    }
-    assertThat(threwException).isTrue();
+    assertThatThrownBy(() -> klass.getField(Atom.findOrCreateUnicodeAtom("a")))
+        .isInstanceOf(IllegalStateException.class);
     IField f =
         cha.resolveField(
             FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Int));
