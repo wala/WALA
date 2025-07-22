@@ -1518,7 +1518,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         T position,
         Set<CAstAnnotation> annotations,
         T namePos) {
-      super();
       this.type = type;
       this.quals = quals;
       this.name = name;

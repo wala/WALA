@@ -62,7 +62,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
   public ExplicitCallGraph(
       IMethod fakeRootMethod, AnalysisOptions options, IAnalysisCacheView cache) {
-    super();
     if (options == null) {
       throw new IllegalArgumentException("null options");
     }

@@ -158,7 +158,6 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       ModRef<T> modRef,
       boolean ignoreAllocHeapDefs) {
 
-    super();
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }

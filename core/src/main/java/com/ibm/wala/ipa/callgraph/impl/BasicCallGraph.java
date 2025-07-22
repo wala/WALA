@@ -77,10 +77,6 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
    */
   protected final Map<MethodReference, Set<CGNode>> mr2Nodes = HashMapFactory.make();
 
-  public BasicCallGraph() {
-    super();
-  }
-
   public void init() throws CancelException {
     fakeRoot = makeFakeRootNode();
     Key k = new Key(fakeRoot.getMethod(), fakeRoot.getContext());

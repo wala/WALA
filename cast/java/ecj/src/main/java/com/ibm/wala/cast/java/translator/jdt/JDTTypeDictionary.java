@@ -115,7 +115,6 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     private final CAstType fEltCAstType;
 
     private JdtJavaArrayType(ITypeBinding arrayType) {
-      super();
       fEltJdtType = arrayType.getComponentType();
       fEltCAstType = getCAstTypeFor(fEltJdtType);
     }
@@ -198,7 +197,6 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     }
 
     public JdtJavaType(ITypeBinding type) {
-      super();
       fType = type;
     }
 

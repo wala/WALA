@@ -135,7 +135,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   public SimpleDemandPointerFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap fam, IClassHierarchy cha) {
-    super();
     if (cg == null) {
       throw new IllegalArgumentException("null cg");
     }

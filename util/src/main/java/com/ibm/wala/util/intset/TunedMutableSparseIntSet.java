@@ -26,7 +26,6 @@ public class TunedMutableSparseIntSet extends MutableSparseIntSet {
 
   public TunedMutableSparseIntSet(int initialSize, float expansion)
       throws IllegalArgumentException {
-    super();
     if (initialSize <= 0) {
       throw new IllegalArgumentException("invalid initial size " + initialSize);
     }

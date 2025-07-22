@@ -12,7 +12,6 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     private @Nullable T first;
 
     public PrependItterator(Iterator<T> original, @Nullable T first) {
-      super();
       this.original = original;
       this.first = first;
     }
