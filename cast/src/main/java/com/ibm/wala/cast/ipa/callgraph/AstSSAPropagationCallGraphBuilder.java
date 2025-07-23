@@ -875,7 +875,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp);
     }
 
-    private void newFieldOperation(
+    protected void newFieldOperation(
         CGNode opNode,
         final int objVn,
         final int fieldsVn,
