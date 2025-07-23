@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DevelocitySettings">
+    <option name="enableAutoInjection" value="true" />
+    <option name="develocityGradlePluginVersion" value="4.1" />
+  </component>
+</project>
