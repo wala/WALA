@@ -770,7 +770,8 @@ public class PrimitivesTest extends WalaTestCase {
     Dominators<Object> D = Dominators.make(G, nodes[10]);
 
     // Assert.assertions
-    assertThat(Iterator2Iterable.make(D.dominators(nodes[4])))
+    assertThat(D.dominators(nodes[4]))
+        .toIterable()
         .containsExactly(nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]);
 
     int j = 0;
