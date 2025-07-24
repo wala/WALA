@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.function.Supplier;
 import org.jspecify.annotations.Nullable;
 
 /** Converts an {@link Iterator} to an {@link Iterable}. */
@@ -29,5 +30,9 @@ public class Iterator2Iterable<T> implements Iterable<T> {
   @Override
   public @Nullable Iterator<T> iterator() {
     return iter;
+  }
+
+  public static <T> Iterable<T> of(Supplier<Iterator<T>> iteratorFactory) {
+    return iteratorFactory::get;
   }
 }

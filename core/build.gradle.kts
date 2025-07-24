@@ -61,6 +61,9 @@ dependencies {
   // to allow writing test subject classes that use JUnit annotations
   "testSubjectsImplementation"(libs.junit.jupiter.api)
   "testSubjectsImplementation"(platform(libs.junit.bom))
+
+  implementation("org.openjdk.jmh:jmh-core:1.37")
+  annotationProcessor("org.openjdk.jmh:jmh-generator-annprocess:1.37")
 }
 
 // Injected services used by several tasks that extract selected files from downloads.
