@@ -6,6 +6,7 @@ plugins {
   `java-test-fixtures`
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.xml-apis-ext")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
@@ -65,10 +66,6 @@ configurations.all {
         .using(module(libs.eclipse.osgi.get().toString()))
         .because(
             "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both")
-    substitute(module("xml-apis:xml-apis-ext"))
-        .using(module(libs.w3c.css.sac.get().toString()))
-        .because(
-            "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
   }
 }
 
