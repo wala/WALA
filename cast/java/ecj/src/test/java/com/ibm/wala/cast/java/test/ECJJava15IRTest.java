@@ -22,7 +22,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class ECJJava15IRTest extends IRTests {
 
   public ECJJava15IRTest() {
-    super(null);
     dump = true;
   }
 
