@@ -120,7 +120,7 @@ public class Util {
         F, new FileProvider().getResource("com.ibm.wala.core.testdata_1.0.0a.jar"));
     File androidDex = convertJarToDex(F.getAbsolutePath());
     AnalysisScope dalvikScope =
-        DalvikCallGraphTestBase.makeDalvikScope(null, null, androidDex.getAbsolutePath());
+        DalvikCallGraphTestBase.makeDalvikScope(null, null, androidDex.toPath().toAbsolutePath());
     return ClassHierarchyFactory.make(dalvikScope);
   }
 }
