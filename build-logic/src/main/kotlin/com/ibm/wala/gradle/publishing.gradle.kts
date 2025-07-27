@@ -1,7 +1,5 @@
 package com.ibm.wala.gradle
 
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
   `java-test-fixtures`
   signing
@@ -23,7 +21,7 @@ val testFixturesJavadocJar by
 
 mavenPublishing {
   configureBasedOnAppliedPlugins()
-  publishToMavenCentral(SonatypeHost.DEFAULT)
+  publishToMavenCentral()
   signAllPublications()
 
   pom {
