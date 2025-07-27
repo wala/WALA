@@ -130,7 +130,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(
       URI[] androidLibs,
       File androidAPIJar,
-      String apkFileName,
+      final Path apkFileName,
       IProgressMonitor monitor,
       ReflectionOptions policy)
       throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
@@ -160,10 +160,10 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public static AnalysisScope makeDalvikScope(
-      URI[] androidLibs, File androidAPIJar, String dexFileName) throws IOException {
+      URI[] androidLibs, File androidAPIJar, final Path dexFileName) throws IOException {
     if (androidLibs != null) {
       return AndroidAnalysisScope.setUpAndroidAnalysisScope(
-          new File(dexFileName).toURI(),
+          dexFileName.toUri(),
           CallGraphTestUtil.REGRESSION_EXCLUSIONS,
           CallGraphTestUtil.class.getClassLoader(),
           androidLibs);
@@ -171,7 +171,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
     } else {
       AnalysisScope scope =
           AndroidAnalysisScope.setUpAndroidAnalysisScope(
-              new File(dexFileName).toURI(),
+              dexFileName.toUri(),
               CallGraphTestUtil.REGRESSION_EXCLUSIONS,
               CallGraphTestUtil.class.getClassLoader());
 
@@ -185,7 +185,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(
-      URI[] androidLibs, File androidAPIJar, String mainClassName, String dexFileName)
+      URI[] androidLibs, File androidAPIJar, String mainClassName, final Path dexFileName)
       throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, dexFileName);
 

@@ -89,7 +89,7 @@ public class APKCallGraphDriver {
                 DalvikCallGraphTestBase.makeAPKCallGraph(
                     null,
                     Util.androidJavaLib(),
-                    apk1.getAbsolutePath(),
+                    apk1.toPath().toAbsolutePath(),
                     pm,
                     ReflectionOptions.NONE);
             System.err.println("Analyzed " + apk1 + " in " + (System.currentTimeMillis() - time));
