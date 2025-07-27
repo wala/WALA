@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.dependency.analysis)
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.xml-apis-ext")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
@@ -25,15 +26,6 @@ dependencies {
   api(libs.osgi.framework)
   api(projects.core)
   api(projects.util)
-}
-
-configurations.all {
-  resolutionStrategy.dependencySubstitution {
-    substitute(module("xml-apis:xml-apis-ext"))
-        .using(module(libs.w3c.css.sac.get().toString()))
-        .because(
-            "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
-  }
 }
 
 dependencyAnalysis.issues {

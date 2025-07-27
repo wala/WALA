@@ -60,7 +60,6 @@ public abstract class NullaryStatement<T extends IVariable<T>>
    * @param lhs the lattice cell set by this equation
    */
   protected NullaryStatement(T lhs) {
-    super();
     this.lhs = lhs;
   }
 

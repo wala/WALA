@@ -96,7 +96,6 @@ public abstract class UnaryStatement<T extends IVariable<T>>
    * @param rhs the first operand on the rhs
    */
   protected UnaryStatement(T lhs, T rhs) {
-    super();
     this.lhs = lhs;
     this.rhs = rhs;
   }

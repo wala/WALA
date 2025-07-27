@@ -38,7 +38,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   private static final int TRAP_SIZE = 1000;
 
   protected MutableSparseIntSet(@Nullable IntSet set) {
-    super();
     copySet(set);
   }
 
@@ -55,9 +54,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  protected MutableSparseIntSet() {
-    super();
-  }
+  protected MutableSparseIntSet() {}
 
   @Override
   public void clear() {

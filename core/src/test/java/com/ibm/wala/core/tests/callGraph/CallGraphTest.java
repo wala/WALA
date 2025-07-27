@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.callGraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.InstanceOfAssertFactories.iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -176,14 +177,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    boolean foundDoNothing = false;
-    for (CGNode n : cg) {
-      if (n.toString().contains("doNothing")) {
-        foundDoNothing = true;
-        break;
-      }
-    }
-    assertThat(foundDoNothing).isTrue();
+    assertThat(cg).anyMatch(n -> n.toString().contains("doNothing"), "name contains \"doNothing\"");
     options.setHandleStaticInit(false);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     for (CGNode n : cg) {
@@ -202,13 +196,8 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Llambda/SortingExample");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    boolean foundSortForward = false;
-    for (CGNode n : cg) {
-      if (n.toString().contains("sortForward")) {
-        foundSortForward = true;
-      }
-    }
-    assertThat(foundSortForward).isTrue();
+    assertThat(cg)
+        .anyMatch(n -> n.toString().contains("sortForward"), "name contains \"sortForward\"");
   }
 
   @Test
@@ -225,21 +214,18 @@ public class CallGraphTest extends WalaTestCase {
     SSAPropagationCallGraphBuilder builder =
         Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options);
-    for (CGNode n : cg) {
-      if (n.toString()
-          .equals(
-              "Node: < Application, LstaticInit/TestSystemProperties, main([Ljava/lang/String;)V > Context: Everywhere")) {
-        boolean foundToCharArray = false;
-        for (CGNode callee : Iterator2Iterable.make(cg.getSuccNodes(n))) {
-          if (callee.getMethod().getName().toString().equals("toCharArray")) {
-            foundToCharArray = true;
-            break;
-          }
-        }
-        assertThat(foundToCharArray).isTrue();
-        break;
-      }
-    }
+    assertThat(cg)
+        .filteredOn(
+            n ->
+                n.toString()
+                    .equals(
+                        "Node: < Application, LstaticInit/TestSystemProperties, main([Ljava/lang/String;)V > Context: Everywhere"))
+        .first()
+        .extracting(cg::getSuccNodes, iterator(CGNode.class))
+        .toIterable()
+        .anyMatch(
+            callee -> callee.getMethod().getName().toString().equals("toCharArray"),
+            "called method name is \"toCharArray\"");
   }
 
   @Test

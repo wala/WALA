@@ -5,6 +5,7 @@
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.npm.task.NpxTask
+import com.ibm.wala.gradle.forEachJavaProject
 import org.gradle.api.JavaVersion.VERSION_17
 
 buildscript { dependencies.classpath(libs.commons.io) }
@@ -56,13 +57,11 @@ val aggregatedJavadocClasspath by configurations.registering { isCanBeConsumed =
 val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
-  subprojects {
-    pluginManager.withPlugin("java-base") {
-      aggregatedJavadocClasspath(
-          project(mapOf("path" to path, "configuration" to "javadocClasspath")))
+  forEachJavaProject {
+    aggregatedJavadocClasspath(
+        project(mapOf("path" to it.path, "configuration" to "javadocClasspath")))
 
-      aggregatedJavadocSource(project(mapOf("path" to path, "configuration" to "javadocSource")))
-    }
+    aggregatedJavadocSource(project(mapOf("path" to it.path, "configuration" to "javadocSource")))
   }
 }
 

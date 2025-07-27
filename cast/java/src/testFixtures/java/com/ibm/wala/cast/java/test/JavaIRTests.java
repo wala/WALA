@@ -59,6 +59,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -617,8 +618,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test
   public void testThinSlice() throws CancelException, IOException {
     String testName = "MiniaturSliceBug";
-    List<String> sources =
-        Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
+    Collection<Path> sources = singleTestSrc(testName);
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
 
