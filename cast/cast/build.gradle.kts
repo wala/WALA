@@ -15,7 +15,7 @@ library {
     addJvmLibrary(project)
 
     linkTask.addRpaths()
-    linkTask.configure {
+    (linkTask as Provider<out LinkSharedLibrary>).configure {
       if (targetMachine.operatingSystemFamily.isMacOs) {
         linkerArgs.add(provider { "-Wl,-install_name,@rpath/${linkedFile.get().asFile.name}" })
       }

@@ -63,7 +63,7 @@ application {
     addJvmLibrary(project)
 
     linkTask.addRpaths()
-    linkTask.configure {
+    (linkTask as Provider<out LinkExecutable>).configure {
       val libxlatorTestConfig =
           if (isOptimized) xlatorTestReleaseSharedLibraryConfig
           else xlatorTestDebugSharedLibraryConfig
