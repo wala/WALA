@@ -2958,6 +2958,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private CAstNode getSwitchCaseConstant(SwitchCase n, WalkContext context) {
     // TODO: enums
+    @SuppressWarnings("deprecation")
     Expression expr = n.getExpression();
     Object constant =
         (expr == null)

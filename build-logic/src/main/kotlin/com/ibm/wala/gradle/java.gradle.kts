@@ -60,30 +60,33 @@ tasks.withType<JavaCompile> {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
   javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(24) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
-  options.release = 11
-  options.errorprone {
-    // don't run warning-level checks by default as they add too much noise to build output
-    disableAllWarnings = true
-    // warning-level checks upgraded to error, since we've fixed all the warnings
-    error("UnnecessaryParentheses")
-    error("UnusedVariable")
-    error("JdkObsolete")
-    error("AnnotationPosition")
-    error("AssertEqualsArgumentOrderChecker")
-    error("ArgumentSelectionDefectChecker")
-    // checks we do not intend to try to fix in the near-term:
-    // Just too many of these; proper Javadoc would be a great long-term goal
-    disable("MissingSummary")
-    // WALA has many optimizations involving using == to check reference equality.  They
-    // may be unnecessary on modern JITs, but fixing these issues requires subtle changes
-    // that could introduce bugs
-    disable("ReferenceEquality")
-    // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-    // check name to the one you want to patch, and also disable -Werror below
-    //    		errorproneArgs.addAll(
-    //    				"-XepPatchChecks:UnnecessaryParentheses",
-    //    				"-XepPatchLocation:IN_PLACE"
-    //    		)
+  options.run {
+    isDeprecation = true
+    release = 11
+    errorprone {
+      // don't run warning-level checks by default as they add too much noise to build output
+      disableAllWarnings = true
+      // warning-level checks upgraded to error, since we've fixed all the warnings
+      error("UnnecessaryParentheses")
+      error("UnusedVariable")
+      error("JdkObsolete")
+      error("AnnotationPosition")
+      error("AssertEqualsArgumentOrderChecker")
+      error("ArgumentSelectionDefectChecker")
+      // checks we do not intend to try to fix in the near-term:
+      // Just too many of these; proper Javadoc would be a great long-term goal
+      disable("MissingSummary")
+      // WALA has many optimizations involving using == to check reference equality.  They
+      // may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+      // that could introduce bugs
+      disable("ReferenceEquality")
+      // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+      // check name to the one you want to patch, and also disable -Werror below
+      //    		errorproneArgs.addAll(
+      //    				"-XepPatchChecks:UnnecessaryParentheses",
+      //    				"-XepPatchLocation:IN_PLACE"
+      //    		)
+    }
   }
 }
 

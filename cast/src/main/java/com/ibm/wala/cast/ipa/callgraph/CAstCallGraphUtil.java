@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
+import com.ibm.wala.cast.util.BOMInputStreamFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
@@ -34,8 +35,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import org.apache.commons.io.ByteOrderMark;
-import org.apache.commons.io.input.BOMInputStream;
 
 public class CAstCallGraphUtil {
 
@@ -61,16 +60,9 @@ public class CAstCallGraphUtil {
     return new SourceFileModule(scriptFile, scriptName, null) {
       @Override
       public InputStream getInputStream() {
-        BOMInputStream bs =
-            new BOMInputStream(
-                super.getInputStream(),
-                false,
-                ByteOrderMark.UTF_8,
-                ByteOrderMark.UTF_16LE,
-                ByteOrderMark.UTF_16BE,
-                ByteOrderMark.UTF_32LE,
-                ByteOrderMark.UTF_32BE);
         try {
+          @SuppressWarnings("resource")
+          final var bs = BOMInputStreamFactory.make(super.getInputStream());
           if (bs.hasBOM()) {
             System.err.println("removing BOM " + bs.getBOM());
           }
