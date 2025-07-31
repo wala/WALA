@@ -55,7 +55,7 @@ public class FloatingPointsTest extends WalaTestCase {
 
     // To be able to reuse all classes from shrike save them in a list
     classInstrumenters = new ArrayList<>();
-    ClassInstrumenter ci = null;
+    ClassInstrumenter ci;
     while ((ci = instrumenter.nextClass()) != null) {
       classInstrumenters.add(ci);
     }
@@ -175,7 +175,7 @@ public class FloatingPointsTest extends WalaTestCase {
     try {
       // To be able to reuse all classes from shrike save them in a new list
       classInstrumenters = new ArrayList<>();
-      ClassInstrumenter ci = null;
+      ClassInstrumenter ci;
       while ((ci = instrumenter.nextClass()) != null) {
         classInstrumenters.add(ci);
       }
