@@ -183,7 +183,7 @@ public class StringTable extends Table<String> implements Cloneable {
 
   @Override
   public Object clone() throws CloneNotSupportedException {
-    StringTable result = new StringTable(this);
+    StringTable result = (StringTable) super.clone();
     for (int i = 0; i < getNumberOfRows(); i++) {
       result.addRow(row2Map(i));
     }
