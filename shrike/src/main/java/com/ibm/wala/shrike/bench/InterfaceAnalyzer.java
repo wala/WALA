@@ -91,11 +91,7 @@ public class InterfaceAnalyzer {
   }
 
   private static void doType(int flags, String type, String containerType, int mUID) {
-    TypeStats t = typeStats.get(type);
-    if (t == null) {
-      t = new TypeStats();
-      typeStats.put(type, t);
-    }
+    TypeStats t = typeStats.computeIfAbsent(type, k -> new TypeStats());
     t.totalOccurrences++;
     if (t.lastMUID != mUID) {
       t.methodOccurrences++;
