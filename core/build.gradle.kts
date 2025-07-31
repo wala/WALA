@@ -25,16 +25,20 @@ eclipse {
 
 val compileTestSubjectsJava by tasks.existing
 
-tasks.named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
-  options.compilerArgumentProviders.add {
-    listOf(
-        "-warn:none",
-        "-err:-serial",
-        "-err:-unchecked",
-        "-err:-unusedLocal",
-        "-err:-unusedParam",
-        "-err:-unusedThrown",
-    )
+tasks {
+  named<JavaCompile>("compileTestSubjectsJava") { options.isDeprecation = false }
+
+  named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
+    options.compilerArgumentProviders.add {
+      listOf(
+          "-warn:none",
+          "-err:-serial",
+          "-err:-unchecked",
+          "-err:-unusedLocal",
+          "-err:-unusedParam",
+          "-err:-unusedThrown",
+      )
+    }
   }
 }
 
