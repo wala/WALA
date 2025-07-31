@@ -15,10 +15,6 @@ import org.junit.jupiter.api.Test;
 
 public abstract class Issue666Test extends IRTests {
 
-  public Issue666Test(String projectName) {
-    super(projectName);
-  }
-
   @Test
   public void testPeekErrorCase() throws CancelException, IOException {
     Pair<CallGraph, ?> result =

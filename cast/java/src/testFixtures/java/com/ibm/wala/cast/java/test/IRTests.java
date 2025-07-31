@@ -68,14 +68,6 @@ public abstract class IRTests {
 
   protected boolean dump = true;
 
-  protected IRTests(String projectName) {
-    this.projectName = projectName;
-  }
-
-  protected final String projectName;
-
-  protected static String javaHomePath;
-
   public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();

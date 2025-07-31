@@ -25,10 +25,6 @@ import org.junit.jupiter.api.Test;
 
 public abstract class SyncDuplicatorTests extends IRTests {
 
-  public SyncDuplicatorTests() {
-    super(null);
-  }
-
   protected static final CallSiteReference testMethod =
       CallSiteReference.make(
           0,
