@@ -177,10 +177,7 @@ public class JdtUtil {
     if (projectName == null) {
       throw new IllegalArgumentException("null projectName");
     }
-    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IJavaModel javaModel = JavaCore.create(workspaceRoot);
-    IJavaProject javaProject = javaModel.getJavaProject(projectName);
-    return javaProject;
+    return getNamedProject(projectName);
   }
 
   /** compute the java projects in the active workspace */
