@@ -52,7 +52,9 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -66,20 +68,20 @@ public class DataflowTest extends WalaTestCase {
 
   // more aggressive exclusions to avoid library blowup
   // in interprocedural tests
-  private static final String EXCLUSIONS =
-      "java\\/awt\\/.*\n"
-          + "javax\\/swing\\/.*\n"
-          + "sun\\/awt\\/.*\n"
-          + "sun\\/swing\\/.*\n"
-          + "com\\/sun\\/.*\n"
-          + "sun\\/.*\n"
-          + "org\\/netbeans\\/.*\n"
-          + "org\\/openide\\/.*\n"
-          + "com\\/ibm\\/crypto\\/.*\n"
-          + "com\\/ibm\\/security\\/.*\n"
-          + "org\\/apache\\/xerces\\/.*\n"
-          + "java\\/security\\/.*\n"
-          + "";
+  private static final String[] EXCLUSIONS = {
+    "com/ibm/crypto",
+    "com/ibm/security",
+    "com/sun",
+    "java/awt",
+    "java/security",
+    "javax/swing",
+    "org/apache/xerces",
+    "org/netbeans",
+    "org/openide",
+    "sun",
+    "sun/awt",
+    "sun/swing",
+  };
 
   @BeforeAll
   public static void beforeClass() throws Exception {
@@ -88,7 +90,13 @@ public class DataflowTest extends WalaTestCase {
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA, null, DataflowTest.class.getClassLoader());
 
-    scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
+    scope.setExclusions(
+        new FileOfClasses(
+            new ByteArrayInputStream(
+                Arrays.stream(EXCLUSIONS)
+                    .map(exclusion -> (exclusion + "/.*\n").replace("/", "\\/"))
+                    .collect(Collectors.joining())
+                    .getBytes("UTF-8"))));
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
