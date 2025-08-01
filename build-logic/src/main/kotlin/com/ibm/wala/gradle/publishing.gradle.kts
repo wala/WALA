@@ -11,7 +11,7 @@ val isSnapshot = "SNAPSHOT" in version as String
 val java: JavaPluginExtension by extensions
 
 val testFixturesJavadoc by
-    tasks.existing(Javadoc::class) { setDestinationDir(java.docsDir.get().dir(name).asFile) }
+    tasks.existing(Javadoc::class) { destinationDir = java.docsDir.get().dir(name).asFile }
 
 val testFixturesJavadocJar by
     tasks.registering(Jar::class) {
