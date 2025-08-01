@@ -376,8 +376,7 @@ public class JdtUtil {
     }
   }
 
-  public static final String[] parseForParameterTypes(String selector)
-      throws IllegalArgumentException {
+  public static String[] parseForParameterTypes(String selector) throws IllegalArgumentException {
 
     try {
       if (selector == null) {

@@ -125,7 +125,7 @@ public class FileUtil {
    * Create a {@link FileOutputStream} corresponding to a particular file name. Delete the existing
    * file if one exists.
    */
-  public static final FileOutputStream createFile(String fileName) throws IOException {
+  public static FileOutputStream createFile(String fileName) throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("null file");
     }

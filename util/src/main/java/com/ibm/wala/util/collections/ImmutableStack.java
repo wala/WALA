@@ -75,7 +75,7 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   @SuppressWarnings("unchecked")
-  public static final <T> ImmutableStack<T> emptyStack() {
+  public static <T> ImmutableStack<T> emptyStack() {
     return (ImmutableStack<T>) EMPTY;
   }
 

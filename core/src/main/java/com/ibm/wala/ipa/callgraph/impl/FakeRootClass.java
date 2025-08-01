@@ -35,7 +35,7 @@ import java.util.Set;
 
 /** A synthetic class for the fake root method. */
 public class FakeRootClass extends SyntheticClass {
-  public static final TypeReference fakeRootClass(ClassLoaderReference clr) {
+  public static TypeReference fakeRootClass(ClassLoaderReference clr) {
     return TypeReference.findOrCreate(clr, TypeName.string2TypeName("Lcom/ibm/wala/FakeRootClass"));
   }
 
