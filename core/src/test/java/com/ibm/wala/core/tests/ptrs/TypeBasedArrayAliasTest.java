@@ -72,7 +72,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     assertThat(pa).has(mayAliased(pk1, pk2));
   }
 
-  private static final CGNode findNode(CallGraph cg, String methodName) {
+  private static CGNode findNode(CallGraph cg, String methodName) {
     for (CGNode n : cg) {
       if (n.getMethod().getName().toString().equals(methodName)) {
         return n;
