@@ -66,11 +66,6 @@ public class AstLexicalWrite extends AstLexicalAccess {
   }
 
   @Override
-  public int getNumberOfDefs() {
-    return 0;
-  }
-
-  @Override
   public int getDef(int i) {
     throw new UnsupportedOperationException();
   }

@@ -606,10 +606,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             @Override
             public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site) {
               return new SSANewInstruction(iindex, result, site) {
-                @Override
-                public boolean isPEI() {
-                  return true;
-                }
 
                 @Override
                 public Collection<TypeReference> getExceptionTypes() {
@@ -676,10 +672,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             @Override
             public SSAThrowInstruction ThrowInstruction(int iindex, int exception) {
               return new SSAThrowInstruction(iindex, exception) {
-                @Override
-                public boolean isPEI() {
-                  return true;
-                }
 
                 @Override
                 public Collection<TypeReference> getExceptionTypes() {

@@ -136,11 +136,6 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
-
   public int populationCount() {
     if (V == null) {
       return 0;

@@ -27,7 +27,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -279,10 +278,5 @@ public class FakeRootClass extends SyntheticClass {
   @Override
   public boolean isPrivate() {
     return false;
-  }
-
-  @Override
-  public Reader getSource() {
-    return null;
   }
 }

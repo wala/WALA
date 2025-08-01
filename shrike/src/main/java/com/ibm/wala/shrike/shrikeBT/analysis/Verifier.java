@@ -13,9 +13,7 @@ package com.ibm.wala.shrike.shrikeBT.analysis;
 import com.ibm.wala.shrike.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrike.shrikeBT.Constants;
-import com.ibm.wala.shrike.shrikeBT.DupInstruction;
 import com.ibm.wala.shrike.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrike.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrike.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
@@ -36,7 +34,6 @@ import com.ibm.wala.shrike.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrike.shrikeBT.MethodData;
 import com.ibm.wala.shrike.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrike.shrikeBT.NewInstruction;
-import com.ibm.wala.shrike.shrikeBT.PopInstruction;
 import com.ibm.wala.shrike.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrike.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrike.shrikeBT.ThrowInstruction;
@@ -125,9 +122,6 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitGoto(GotoInstruction instruction) {}
-
-    @Override
     public void visitLocalLoad(ILoadInstruction instruction) {
       String t = curLocals[instruction.getVarIndex()];
       if (t == null) {
@@ -168,12 +162,6 @@ public final class Verifier extends Analyzer {
       checkStackSubtype(1, Constants.TYPE_int);
       checkArrayStackSubtype(2, instruction.getType());
     }
-
-    @Override
-    public void visitPop(PopInstruction instruction) {}
-
-    @Override
-    public void visitDup(DupInstruction instruction) {}
 
     @Override
     public void visitBinaryOp(IBinaryOpInstruction instruction) {
