@@ -66,11 +66,6 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     return 3;
   }
 
-  @Override
-  public int getNumberOfDefs() {
-    return 0;
-  }
-
   public int getValue() {
     return value;
   }

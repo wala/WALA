@@ -474,6 +474,9 @@
     <inspection_tool class="RedundantArrayCreation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantBackticksAroundRawStringLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RedundantCast" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RedundantMethodOverride" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="RedundantOperationOnEmptyContainer" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
     </inspection_tool>

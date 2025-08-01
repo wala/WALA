@@ -4528,31 +4528,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   @Override
-  protected boolean visitArrayRefAssign(
-      CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
-  }
-
-  @Override
   protected void leaveArrayRefAssign(
       CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
     int rval = c.getValue(v);
     c.setValue(n, rval);
     arrayOpHandler.doArrayWrite(context, c.getValue(n.getChild(0)), n, gatherArrayDims(c, n), rval);
-  }
-
-  @Override
-  protected boolean visitArrayRefAssignOp(
-      CAstNode n,
-      CAstNode v,
-      CAstNode a,
-      boolean pre,
-      WalkContext c,
-      CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
   }
 
   @Override
@@ -4573,31 +4554,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   @Override
-  protected boolean visitObjectRefAssign(
-      CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
-  }
-
-  @Override
   protected void leaveObjectRefAssign(
       CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
     int rval = c.getValue(v);
     c.setValue(n, rval);
     doFieldWrite(context, c.getValue(n.getChild(0)), n.getChild(1), n, rval);
-  }
-
-  @Override
-  protected boolean visitObjectRefAssignOp(
-      CAstNode n,
-      CAstNode v,
-      CAstNode a,
-      boolean pre,
-      WalkContext c,
-      CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
   }
 
   @Override
@@ -4617,28 +4579,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   @Override
-  protected boolean visitBlockExprAssign(
-      CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
-  }
-
-  @Override
   protected void leaveBlockExprAssign(
       CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
     c.setValue(n, c.getValue(n.getChild(n.getChildCount() - 1)));
-  }
-
-  @Override
-  protected boolean visitBlockExprAssignOp(
-      CAstNode n,
-      CAstNode v,
-      CAstNode a,
-      boolean pre,
-      WalkContext c,
-      CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
   }
 
   @Override
@@ -4651,13 +4594,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       CAstVisitor<WalkContext> visitor) {
     /* empty */
     c.setValue(n, c.getValue(n.getChild(n.getChildCount() - 1)));
-  }
-
-  @Override
-  protected boolean visitVarAssign(
-      CAstNode n, CAstNode v, CAstNode a, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
   }
 
   /** assign rval to nm as appropriate, depending on the scope of ls */
@@ -4680,18 +4616,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Symbol ls = context.currentScope().lookup(nm);
     c.setValue(n, rval);
     assignValue(n, context, ls, nm, rval);
-  }
-
-  @Override
-  protected boolean visitVarAssignOp(
-      CAstNode n,
-      CAstNode v,
-      CAstNode a,
-      boolean pre,
-      WalkContext c,
-      CAstVisitor<WalkContext> visitor) {
-    /* empty */
-    return false;
   }
 
   @Override
