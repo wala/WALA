@@ -10,17 +10,24 @@
  */
 package com.ibm.wala.util.config;
 
-import java.io.Serializable;
 import java.util.Set;
 
 /**
  * Logically, a set of {@link Class}.
  *
  * <p>TODO: why does this not extend {@link Set}? Is there a good reason anymore?
+ *
+ * @deprecated Use {@link StringFilter} instead.
  */
-public abstract class SetOfClasses implements Serializable {
+@Deprecated(since = "1.6.12", forRemoval = true)
+public abstract class SetOfClasses implements StringFilter {
 
   private static final long serialVersionUID = -3048222852073799533L;
+
+  @Override
+  public boolean test(String klassName) {
+    return contains(klassName);
+  }
 
   public abstract boolean contains(String klassName);
 

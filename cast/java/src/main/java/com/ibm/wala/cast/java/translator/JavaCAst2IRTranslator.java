@@ -38,7 +38,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,13 +47,13 @@ import java.util.Map;
 public class JavaCAst2IRTranslator extends AstTranslator {
   private final CAstEntity fSourceEntity;
   private final ModuleEntry module;
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   public JavaCAst2IRTranslator(
       ModuleEntry module,
       CAstEntity sourceFileEntity,
       JavaSourceLoaderImpl loader,
-      SetOfClasses exclusions) {
+      StringFilter exclusions) {
     super(loader);
     fSourceEntity = sourceFileEntity;
     this.module = module;
@@ -306,7 +306,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeName ownerName = makeType(topEntity.getType()).getName();
     IClass owner = loader.lookupClass(ownerName);
 
-    assert owner != null || exclusions.contains(ownerName.toString())
+    assert owner != null || exclusions.test(ownerName.toString())
         : ownerName + " not found in " + loader;
 
     if (owner != null) {
@@ -323,7 +323,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
     IClass owner = loader.lookupClass(makeType(owningType).getName());
 
-    assert owner != null || exclusions.contains(owningType.getName())
+    assert owner != null || exclusions.test(owningType.getName())
         : makeType(owningType).getName().toString() + " not found in " + loader;
 
     if (owner != null && N.getQualifiers().contains(CAstQualifier.ABSTRACT)) {
@@ -349,7 +349,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeName typeName = makeType(owningType).getName();
     IClass owner = loader.lookupClass(typeName);
 
-    assert owner != null || exclusions.contains(owningType.getName())
+    assert owner != null || exclusions.test(owningType.getName())
         : typeName.toString() + " not found in " + loader;
 
     if (owner != null) {
@@ -428,7 +428,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     CAstEntity parentType = getEnclosingType(type);
     // ((JavaSourceLoaderImpl)loader).defineType(type,
     // composeEntityName(wc,type), parentType);
-    if (exclusions != null && exclusions.contains(type.getType().getName().substring(1))) {
+    if (exclusions != null && exclusions.test(type.getType().getName().substring(1))) {
       return false;
     } else {
       return ((JavaSourceLoaderImpl) loader).defineType(type, type.getType().getName(), parentType)

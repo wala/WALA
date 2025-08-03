@@ -7,6 +7,7 @@ plugins {
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 dependencies {
+  api(libs.jetbrains.annotations)
   api(libs.jspecify)
   javadocClasspath(projects.core)
   testFixturesApi(libs.assertj.core)

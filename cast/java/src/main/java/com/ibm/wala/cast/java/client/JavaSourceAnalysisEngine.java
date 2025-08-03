@@ -33,8 +33,8 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -101,7 +101,7 @@ public abstract class JavaSourceAnalysisEngine
           new File(getExclusionsFile()).exists()
               ? new FileInputStream(getExclusionsFile())
               : FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile())) {
-        scope.setExclusions(new FileOfClasses(is));
+        scope.setExclusions(new PatternsFilter(is));
       }
     }
 
@@ -117,7 +117,7 @@ public abstract class JavaSourceAnalysisEngine
     return new JavaSourceAnalysisScope();
   }
 
-  protected abstract ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions);
+  protected abstract ClassLoaderFactory getClassLoaderFactory(StringFilter exclusions);
 
   @Override
   public IClassHierarchy buildClassHierarchy() {

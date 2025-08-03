@@ -49,7 +49,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
@@ -90,7 +90,7 @@ public class EclipseJavaScriptAnalysisEngine
   }
 
   @Override
-  protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
+  protected ClassLoaderFactory makeClassLoaderFactory(StringFilter exclusions) {
     return JSCallGraphUtil.makeLoaders();
   }
 
