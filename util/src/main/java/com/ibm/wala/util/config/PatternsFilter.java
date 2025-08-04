@@ -61,7 +61,7 @@ public class PatternsFilter implements StringFilter {
   }
 
   /**
-   * Creates a {@code SetOfClassPatterns} with the given regular expressions, one per {@link Stream}
+   * Creates a {@code PatternsFilter} with the given regular expressions, one per {@link Stream}
    * element.
    *
    * <p>Any element that starts with {@code "#"} is discarded as a comment.
@@ -76,7 +76,7 @@ public class PatternsFilter implements StringFilter {
   }
 
   /**
-   * Creates a {@code SetOfClassPatterns} with the given regular expressions, one per line.
+   * Creates a {@code PatternsFilter} with the given regular expressions, one per line.
    *
    * <p>Any line that starts with {@code "#"} is discarded as a comment.
    *
@@ -90,8 +90,8 @@ public class PatternsFilter implements StringFilter {
   }
 
   /**
-   * Creates a {@code SetOfClassPatterns} with the given regular expressions, one per line in the
-   * named file.
+   * Creates a {@code PatternsFilter} with the given regular expressions, one per line in the named
+   * file.
    *
    * <p>Any line that starts with {@code "#"} is discarded as a comment.
    *
@@ -116,8 +116,8 @@ public class PatternsFilter implements StringFilter {
   }
 
   /**
-   * Creates a {@code SetOfClassPatterns} with the given regular expressions, one per line in the
-   * given file.
+   * Creates a {@code PatternsFilter} with the given regular expressions, one per line in the given
+   * file.
    *
    * <p>Any line that starts with {@code "#"} is discarded as a comment.
    *
@@ -171,7 +171,7 @@ public class PatternsFilter implements StringFilter {
   }
 
   /**
-   * Prepares to build a {@code SetOfClassPatterns}.
+   * Prepares to build a {@code PatternsFilter}.
    *
    * @return a {@link Builder} that can collect regular expressions and create a new {@code
    *     SetOfClassPatterns}
