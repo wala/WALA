@@ -86,7 +86,7 @@ public class SlicerTest {
                   CallGraphTestUtil.REGRESSION_EXCLUSIONS, SlicerTest.class.getClassLoader())) {
         builder.addAll(is);
         // we also need to exclude java.security to avoid blowup during slicing
-        builder.add("java\\/security\\/.*");
+        builder.add("java/security/.*");
         return builder.build();
       }
     } catch (IOException e) {
