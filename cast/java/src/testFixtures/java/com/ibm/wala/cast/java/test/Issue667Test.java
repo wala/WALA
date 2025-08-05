@@ -17,10 +17,6 @@ import org.junit.jupiter.api.Test;
 
 public abstract class Issue667Test extends IRTests {
 
-  public Issue667Test(String projectName) {
-    super(projectName);
-  }
-
   @Test
   public void testDominanceFrontierCase() throws CancelException, IOException {
     Pair<CallGraph, ?> result =

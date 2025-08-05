@@ -22,10 +22,6 @@ import java.util.List;
 
 public class ECJJavaIRTest extends JavaIRTests {
 
-  public ECJJavaIRTest() {
-    super(null);
-  }
-
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
