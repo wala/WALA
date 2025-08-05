@@ -39,7 +39,7 @@ import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.IOException;
 import java.util.Collection;
@@ -171,7 +171,7 @@ public abstract class AbstractAnalysisEngine<
     return cha;
   }
 
-  protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
+  protected ClassLoaderFactory makeClassLoaderFactory(StringFilter exclusions) {
     return new ClassLoaderFactoryImpl(exclusions);
   }
 

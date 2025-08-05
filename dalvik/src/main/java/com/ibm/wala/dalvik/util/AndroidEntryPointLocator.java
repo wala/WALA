@@ -57,7 +57,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.SetOfClasses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -432,12 +431,12 @@ public final class AndroidEntryPointLocator {
   }
 
   private static boolean isExcluded(final IClass cls) {
-    final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
+    final var set = cls.getClassHierarchy().getScope().getExclusions();
     if (set == null) {
       return false; // exclusions null ==> no exclusions ==> no class is excluded
     } else {
       final String clsName = cls.getReference().getName().toString().substring(1);
-      return set.contains(clsName);
+      return set.test(clsName);
     }
   }
 

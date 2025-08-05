@@ -47,7 +47,7 @@ import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
 import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.util.HashMap;
@@ -114,7 +114,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
 
   protected boolean dump;
   protected JDTSourceLoaderImpl sourceLoader;
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader) {
     this(scope, sourceLoader, false);

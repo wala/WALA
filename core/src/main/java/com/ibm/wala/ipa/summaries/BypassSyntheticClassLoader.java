@@ -21,7 +21,7 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
@@ -73,7 +73,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    * @param cha governing class hierarchy
    */
   public BypassSyntheticClassLoader(
-      ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) {
+      ClassLoaderReference me, IClassLoader parent, StringFilter exclusions, IClassHierarchy cha) {
     if (cha == null) {
       throw new IllegalArgumentException("null cha");
     }

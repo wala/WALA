@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    * Set of classes that class loaders should ignore; classloaders should pretend these classes
    * don't exit.
    */
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   /** A Mapping from ClassLoaderReference to IClassLoader */
   private final HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
@@ -36,7 +36,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   /**
    * @param exclusions A set of classes that class loaders should pretend don't exist.
    */
-  public ClassLoaderFactoryImpl(SetOfClasses exclusions) {
+  public ClassLoaderFactoryImpl(StringFilter exclusions) {
     this.exclusions = exclusions;
   }
 
@@ -97,7 +97,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
                 new Class[] {
                   ClassLoaderReference.class,
                   IClassLoader.class,
-                  SetOfClasses.class,
+                  StringFilter.class,
                   IClassHierarchy.class
                 });
         cl =
@@ -112,7 +112,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
                     ClassLoaderReference.class,
                     ArrayClassLoader.class,
                     IClassLoader.class,
-                    SetOfClasses.class,
+                    StringFilter.class,
                     IClassHierarchy.class
                   });
           cl =
@@ -157,7 +157,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   /**
    * @return the set of classes that will be ignored.
    */
-  public SetOfClasses getExclusions() {
+  public StringFilter getExclusions() {
     return exclusions;
   }
 }
