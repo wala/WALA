@@ -1,18 +1,18 @@
-import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URI
+import com.ibm.wala.gradle.adHocDownload
 
 plugins {
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.operating-system")
   id("com.ibm.wala.gradle.publishing")
 }
 
-val coreTestJar: Configuration by configurations.creating { isCanBeConsumed = false }
+val coreTestJar by configurations.registering { isCanBeConsumed = false }
 
-val extraTestResources: Configuration by configurations.creating { isCanBeConsumed = false }
+val extraTestResources by configurations.registering { isCanBeConsumed = false }
 
-val sampleCupSources: Configuration by configurations.creating { isCanBeConsumed = false }
+val sampleCupSources by configurations.registering { isCanBeConsumed = false }
 
-val isWindows: Boolean by rootProject.extra
+val isWindows: Boolean by extra
 
 val platformsVersion by extra("android-28")
 
@@ -22,7 +22,7 @@ interface InstallAndroidSdkServices {
 
 val installAndroidSdk by
     tasks.registering(Sync::class) {
-      from(downloadAndroidSdk.map { zipTree(it.dest) })
+      from(zipTree { downloadAndroidSdk.singleFile })
       into(layout.buildDirectory.dir(name))
 
       // When the task is actually executing (i.e.,in the `doLast` code below), the Gradle
@@ -93,28 +93,28 @@ dependencies {
   sampleCupSources(libs.java.cup.map { "$it:sources" })
 
   testImplementation(libs.android.tools)
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(projects.dalvik)
   testImplementation(testFixtures(projects.core))
+  testImplementation(testFixtures(projects.util))
 
   // directory containing "android.jar", which various tests want to find as a resource
   testRuntimeOnly(
       files(installAndroidSdk.map { "${it.outputs.files.singleFile}/platforms/$platformsVersion" }))
 }
 
-val downloadDroidBench by
-    tasks.registering(VerifiedDownload::class) {
-      src =
-          URI(
-              "https://codeload.github.com/secure-software-engineering/DroidBench/zip/DroidBench_2.0")
-      dest = project.layout.buildDirectory.file("DroidBench_2.0.zip")
-      checksum = "16726a48329835140e14f18470a1b4a3"
-    }
+val downloadDroidBench =
+    adHocDownload(
+        uri("https://github.com/secure-software-engineering/DroidBench/archive/refs/tags"),
+        "DroidBench_2.0",
+        "zip")
 
 val unpackDroidBench by
     tasks.registering(Sync::class) {
-      from(downloadDroidBench.map { zipTree(it.dest) }) {
+      from(zipTree { downloadDroidBench.singleFile }) {
+        include("*/apk/**")
         eachFile {
           relativePath = RelativePath(!isDirectory, *relativePath.segments.drop(1).toTypedArray())
         }
@@ -124,30 +124,21 @@ val unpackDroidBench by
       includeEmptyDirs = false
     }
 
-val downloadAndroidSdk by
-    tasks.registering(VerifiedDownload::class) {
-      val osName: String by rootProject.extra
-      data class Details(
-          val sdkOs: String,
-          val checksum: String,
-      )
-      (when {
-            "Linux".toRegex().containsMatchIn(osName) ->
-                Details("linux", "124f2d5115eee365df6cf3228ffbca6fc3911d16f8025bebd5b1c6e2fcfa7faf")
-            "Mac OS X".toRegex().containsMatchIn(osName) ->
-                Details("mac", "6929a1957f3e71008adfade0cebd08ebea9b9f506aa77f1849c7bdc3418df7cf")
-            "Windows.*".toRegex().containsMatchIn(osName) ->
-                Details("win", "f9e6f91743bcb1cc6905648ca751bc33975b0dd11b50d691c2085d025514278c")
-            else -> throw GradleException("unrecognized operating system name \"$osName\"")
-          })
-          .run {
-            val archive = "commandlinetools-$sdkOs-7583922_latest.zip"
-            src = URI("https://dl.google.com/android/repository/$archive")
-            dest = project.layout.buildDirectory.file(archive)
-            this@registering.checksum = checksum
-            algorithm = "SHA-256"
-          }
-    }
+val downloadAndroidSdk = run {
+  val osName: String by extra
+  val sdkOs =
+      when {
+        "Linux".toRegex().containsMatchIn(osName) -> "linux"
+        "Mac OS X".toRegex().containsMatchIn(osName) -> "mac"
+        "Windows.*".toRegex().containsMatchIn(osName) -> "win"
+        else -> throw GradleException("unrecognized operating system name \"$osName\"")
+      }
+  adHocDownload(
+      uri("https://dl.google.com/android/repository"),
+      "commandlinetools-$sdkOs",
+      "zip",
+      "7583922_latest")
+}
 
 interface ExtractSampleCupServices {
   @get:Inject val archive: ArchiveOperations
@@ -171,19 +162,16 @@ val extractSampleCup by
       }
     }
 
-val downloadSampleLex by
-    tasks.registering(VerifiedDownload::class) {
-      src = URI("https://www.cs.princeton.edu/~appel/modern/java/JLex/current/sample.lex")
-      dest = layout.buildDirectory.file("$name/sample.lex")
-      checksum = "ae887758b2657981d023a72a165da830"
-    }
+val downloadSampleLex =
+    adHocDownload(
+        uri("https://www.cs.princeton.edu/~appel/modern/java/JLex/current"), "sample", "lex")
 
 tasks.named<Copy>("processTestResources") {
   dependsOn(coreTestJar)
-  from(downloadSampleLex)
+  from(downloadSampleLex) { eachFile { name = "sample.lex" } }
   from(extractSampleCup)
   from(extraTestResources)
-  from(zipTree(coreTestJar.singleFile))
+  from({ zipTree(coreTestJar.get().singleFile) })
 }
 
 if (isWindows) tasks.named<Test>("test") { exclude("**/droidbench/**") }

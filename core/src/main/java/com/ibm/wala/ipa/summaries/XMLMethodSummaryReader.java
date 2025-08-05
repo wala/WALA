@@ -179,7 +179,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   private static final String V_TRUE = "true";
 
   public XMLMethodSummaryReader(InputStream xmlFile, AnalysisScope scope) {
-    super();
     if (xmlFile == null) {
       throw new IllegalArgumentException("null xmlFile");
     }

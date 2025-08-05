@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.util.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.graph.NodeManagerConditions.node;
+import static org.assertj.core.api.Assertions.allOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.impl.BasicGraph;
 import org.junit.jupiter.api.Test;
 
@@ -29,9 +29,8 @@ public class BasicGraphTest {
     graph.addNode(root);
     graph.addNode(leaf);
     graph.addEdge(root, leaf);
-    assertTrue(graph.containsNode(root));
-    assertTrue(graph.containsNode(leaf));
-    assertThat(Iterator2Collection.toList(graph.getPredNodes(leaf)), contains(root));
-    assertThat(Iterator2Collection.toList(graph.getSuccNodes(root)), contains(leaf));
+    assertThatObject(graph).has(allOf(node(root), node(leaf)));
+    assertThat(graph.getPredNodes(leaf)).toIterable().contains(root);
+    assertThat(graph.getSuccNodes(root)).toIterable().contains(leaf);
   }
 }

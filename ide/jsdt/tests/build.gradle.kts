@@ -12,6 +12,7 @@ walaEclipseMavenCentral {
 }
 
 dependencies {
+  testImplementation(libs.assertj.core)
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.wst.jsdt.core)
   testImplementation(libs.junit.jupiter.api)
@@ -28,4 +29,5 @@ dependencies {
 tasks.named<Test>("test") {
   // https://github.com/liblit/WALA/issues/5
   exclude("**/JSProjectScopeTest.class")
+  failOnNoDiscoveredTests = false
 }

@@ -1,8 +1,8 @@
 package com.ibm.wala.gradle
 
-import java.io.File
 import javax.inject.Inject
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
@@ -17,6 +17,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.ExecOperations
+import org.gradle.work.InputChanges
 
 /**
  * Compiles some Java {@link SourceSet} using ECJ, but otherwise imitating the standard {@link
@@ -25,10 +26,8 @@ import org.gradle.process.ExecOperations
 @CacheableTask
 abstract class JavaCompileUsingEcj : JavaCompile() {
 
-  /** ECJ compiler, resolved to a JAR archive. */
-  @CompileClasspath
-  @InputFile
-  val ecjJar: File = project.configurations.named("ecj").get().singleFile
+  /** ECJ compiler, typically consisting of a single JAR file. */
+  @CompileClasspath val ecjJar: Provider<Configuration> = project.configurations.named("ecj")
 
   @InputFile
   @PathSensitive(PathSensitivity.NONE)
@@ -51,6 +50,10 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
     options.compilerArgumentProviders.run {
       add {
         listOf(
+            "-source",
+            sourceCompatibility,
+            "-target",
+            targetCompatibility,
             "-properties",
             jdtPrefs.toString(),
             "-classpath",
@@ -63,9 +66,9 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
   }
 
   @TaskAction
-  fun compile() {
+  protected override fun compile(inputs: InputChanges) {
     execOperations.javaexec {
-      classpath(ecjJar.absolutePath)
+      classpath(ecjJar)
       executable(javaLauncherPath.get())
       args(options.allCompilerArgs)
     }

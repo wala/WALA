@@ -32,6 +32,8 @@ import net.htmlparser.jericho.Source;
 public class JerichoHtmlParser implements IHtmlParser {
   static Set<Warning> warnings = HashSetFactory.make();
 
+  private static volatile Logger sourceLogger = null;
+
   static {
     class CAstLoggerProvider implements LoggerProvider {
       @Override
@@ -89,6 +91,20 @@ public class JerichoHtmlParser implements IHtmlParser {
         }
 
         return new CAstLogger();
+      }
+
+      @Override
+      public Logger getSourceLogger() {
+        /*
+         * This method is thread-safe due to the use of the `volatile` keyword for the
+         * `sourceLogger` field. In the worst case scenario where multiple threads check
+         * `sourceLogger` simultaneously, extra loggers might be created. However, only one will be
+         * assigned to the static field; the others will be discarded.
+         */
+        if (sourceLogger == null) {
+          sourceLogger = getLogger(getClass().getPackageName());
+        }
+        return sourceLogger;
       }
     }
 

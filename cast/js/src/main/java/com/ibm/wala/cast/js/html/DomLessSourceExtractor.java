@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.html;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.util.BOMInputStreamFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,7 +32,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
-import org.apache.commons.io.ByteOrderMark;
 import org.apache.commons.io.input.BOMInputStream;
 
 /** extracts JavaScript source code from HTML, with no model of the actual DOM data structure */
@@ -246,15 +246,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       URL scriptSrc = new URL(entrypointUrl, urlAsString);
       BOMInputStream bs;
       try {
-        bs =
-            new BOMInputStream(
-                scriptSrc.openConnection().getInputStream(),
-                false,
-                ByteOrderMark.UTF_8,
-                ByteOrderMark.UTF_16LE,
-                ByteOrderMark.UTF_16BE,
-                ByteOrderMark.UTF_32LE,
-                ByteOrderMark.UTF_32BE);
+        @SuppressWarnings("resource")
+        final var origin = scriptSrc.openConnection().getInputStream();
+        bs = BOMInputStreamFactory.make(origin);
         if (bs.hasBOM()) {
           System.err.println("removing BOM " + bs.getBOM());
         }

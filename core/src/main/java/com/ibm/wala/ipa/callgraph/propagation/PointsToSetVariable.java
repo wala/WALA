@@ -47,7 +47,6 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   private PointerKey pointerKey;
 
   public PointsToSetVariable(PointerKey key) {
-    super();
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }

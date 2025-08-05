@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
-import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
@@ -26,7 +26,8 @@ import org.jspecify.annotations.Nullable;
  * A bit set mapping based on an object array. This is not terribly efficient, but is useful for
  * prototyping.
  */
-public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
+public class MutableMapping<T extends @Nullable Object>
+    implements OrdinalSetMapping<T>, Serializable {
 
   private static final long serialVersionUID = 4011751404163534418L;
 
@@ -70,7 +71,10 @@ public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
   @SuppressWarnings("unchecked")
   public T getMappedObject(int n) {
     try {
-      return (T) castToNonNull(array[n]);
+      // should only return null when T is @Nullable but we can't express that in the
+      // NullAway type system.  Work around using uncheckedNull().
+      T result = (T) array[n];
+      return result == null ? uncheckedNull() : result;
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("n out of range " + n, e);
     }

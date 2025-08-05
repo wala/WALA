@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * method.
  */
 public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
-  public static final long serialVersionUID = 8737376661L;
+  private static final long serialVersionUID = 8737376661L;
 
   /** An iterator of child nodes for each node being searched */
   private Iterator<T>[] pendingChildren;

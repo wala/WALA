@@ -10,8 +10,9 @@
  */
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
@@ -25,7 +26,6 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -172,29 +172,18 @@ public class FloydWarshallTest extends WalaTestCase {
 
   @Test
   public void TestPathLengths() {
-    int[][] result = FloydWarshall.shortestPathLengths(G);
-    assertEquals(result.length, shortestPaths.length);
-    for (int i = 0; i < result.length; i++) {
-      assertEquals(result[i].length, shortestPaths[i].length);
-      for (int j = 0; j < result[i].length; j++) {
-        assertEquals(result[i][j], shortestPaths[i][j]);
-      }
-    }
+    assertThat(FloydWarshall.shortestPathLengths(G)).isDeepEqualTo(shortestPaths);
   }
 
   @Test
   public void TestShortestPath() {
     GetPath<Node> result = FloydWarshall.allPairsShortestPath(G);
-    assertEquals(
-        result.getPath(G.getNode(1), G.getNode(3)), Collections.singletonList(G.getNode(2)));
-    assertEquals(
-        result.getPath(G.getNode(5), G.getNode(8)), Collections.singletonList(G.getNode(7)));
-    assertEquals(
-        result.getPath(G.getNode(1), G.getNode(7)),
-        Arrays.asList(G.getNode(2), G.getNode(3), G.getNode(5)));
-    assertEquals(
-        result.getPath(G.getNode(1), G.getNode(6)),
-        Arrays.asList(G.getNode(2), G.getNode(3), G.getNode(4)));
+    assertThat(singletonList(G.getNode(2))).isEqualTo(result.getPath(G.getNode(1), G.getNode(3)));
+    assertThat(singletonList(G.getNode(7))).isEqualTo(result.getPath(G.getNode(5), G.getNode(8)));
+    assertThat(asList(G.getNode(2), G.getNode(3), G.getNode(5)))
+        .isEqualTo(result.getPath(G.getNode(1), G.getNode(7)));
+    assertThat(asList(G.getNode(2), G.getNode(3), G.getNode(4)))
+        .isEqualTo(result.getPath(G.getNode(1), G.getNode(6)));
   }
 
   @Test
@@ -204,9 +193,9 @@ public class FloydWarshallTest extends WalaTestCase {
     Set<List<Node>> expectedPaths = expectedPaths(G);
     Set<List<Node>> resultPaths = result.getPaths(G.getNode(1), G.getNode(8));
 
-    assertEquals(resultPaths.size(), expectedPaths.size());
+    assertThat(expectedPaths).hasSameSizeAs(resultPaths);
     for (List<Node> rp : resultPaths) {
-      assertTrue(expectedPaths.contains(rp));
+      assertThat(expectedPaths).contains(rp);
     }
   }
 

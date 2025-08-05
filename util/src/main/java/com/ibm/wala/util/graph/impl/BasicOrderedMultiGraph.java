@@ -42,22 +42,14 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   @Override
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
-    SimpleVector<T> s = successorEdges.get(src);
-    if (s == null) {
-      s = new SimpleVector<>();
-      successorEdges.put(src, s);
-    }
+    SimpleVector<T> s = successorEdges.computeIfAbsent(src, k -> new SimpleVector<>());
     s.set(s.getMaxIndex() + 1, dst);
   }
 
   @Override
   public void addEdge(int i, T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
-    SimpleVector<T> s = successorEdges.get(src);
-    if (s == null) {
-      s = new SimpleVector<>();
-      successorEdges.put(src, s);
-    }
+    SimpleVector<T> s = successorEdges.computeIfAbsent(src, k -> new SimpleVector<>());
     s.set(i, dst);
   }
 

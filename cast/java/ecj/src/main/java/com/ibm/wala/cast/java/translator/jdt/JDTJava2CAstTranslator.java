@@ -899,11 +899,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     CAstNode mdast;
 
     if (n.isConstructor()) mdast = createConstructorBody(n, classBinding, context, inits);
-    else if ((n.getModifiers() & Modifier.ABSTRACT) != 0) // abstract
-    mdast = null;
-    else if (n.getBody() == null || n.getBody().statements().isEmpty()) // empty
-    mdast = makeNode(context, fFactory, n, CAstNode.RETURN);
-    else mdast = visitNode(n.getBody(), context);
+    else if ((n.getModifiers() & Modifier.ABSTRACT) != 0) {
+      // abstract
+      mdast = null;
+    } else if (n.getBody() == null || n.getBody().statements().isEmpty()) {
+      // empty
+      mdast = makeNode(context, fFactory, n, CAstNode.RETURN);
+    } else mdast = visitNode(n.getBody(), context);
     // Polyglot comment: Presumably the MethodContext's parent is a ClassContext,
     // and he has the list of initializers. Hopefully the following
     // will glue that stuff in the right place in any constructor body.
@@ -1334,7 +1336,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         T position,
         Set<CAstAnnotation> annotations,
         T namePos) {
-      super();
       this.type = type;
       this.quals = quals;
       this.name = name;
@@ -1482,9 +1483,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     String t = type.getBinaryName();
     if (init == null) {
-      if (JDT2CAstUtils.isLongOrLess(type)) // doesn't include boolean
-      initNode = fFactory.makeConstant(0);
-      else if (t.equals("D") || t.equals("F")) initNode = fFactory.makeConstant(0.0);
+      if (JDT2CAstUtils.isLongOrLess(type)) {
+        // doesn't include boolean
+        initNode = fFactory.makeConstant(0);
+      } else if (t.equals("D") || t.equals("F")) initNode = fFactory.makeConstant(0.0);
       else initNode = fFactory.makeConstant(null);
     } else initNode = visitNode(init, context);
 
@@ -2956,6 +2958,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private CAstNode getSwitchCaseConstant(SwitchCase n, WalkContext context) {
     // TODO: enums
+    @SuppressWarnings("deprecation")
     Expression expr = n.getExpression();
     Object constant =
         (expr == null)

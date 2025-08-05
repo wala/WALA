@@ -177,10 +177,7 @@ public class JdtUtil {
     if (projectName == null) {
       throw new IllegalArgumentException("null projectName");
     }
-    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IJavaModel javaModel = JavaCore.create(workspaceRoot);
-    IJavaProject javaProject = javaModel.getJavaProject(projectName);
-    return javaProject;
+    return getNamedProject(projectName);
   }
 
   /** compute the java projects in the active workspace */
@@ -379,8 +376,7 @@ public class JdtUtil {
     }
   }
 
-  public static final String[] parseForParameterTypes(String selector)
-      throws IllegalArgumentException {
+  public static String[] parseForParameterTypes(String selector) throws IllegalArgumentException {
 
     try {
       if (selector == null) {
@@ -610,6 +606,7 @@ public class JdtUtil {
   }
 
   public static ASTNode getAST(IFile javaSourceFile) {
+    @SuppressWarnings("deprecation")
     ASTParser parser = ASTParser.newParser(AST.JLS3);
     parser.setSource(JavaCore.createCompilationUnitFrom(javaSourceFile));
     parser.setProject(JavaCore.create(javaSourceFile.getProject()));

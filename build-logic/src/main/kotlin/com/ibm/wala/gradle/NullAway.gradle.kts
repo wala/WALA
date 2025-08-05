@@ -9,11 +9,11 @@ plugins {
 }
 
 dependencies {
-  annotationProcessor(rootProject.versionCatalogs.named("libs").findLibrary("nullaway").get())
-  compileOnly(rootProject.versionCatalogs.named("libs").findLibrary("nullaway-annotations").get())
+  annotationProcessor(versionCatalogs.named("libs").findLibrary("nullaway").get())
+  compileOnly(versionCatalogs.named("libs").findLibrary("nullaway-annotations").get())
 }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   options.errorprone {
     if (!name.contains("test", true)) {
       error("NullAway")

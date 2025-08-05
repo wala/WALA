@@ -10,8 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -84,7 +83,7 @@ public class GetTargetsTest extends WalaTestCase {
     for (IMethod method : c) {
       System.err.println(method);
     }
-    assertEquals(1, c.size());
+    assertThat(c).hasSize(1);
   }
 
   /** test that calls to &lt;init&gt; methods are treated specially */
@@ -96,7 +95,7 @@ public class GetTargetsTest extends WalaTestCase {
     for (IMethod method : c) {
       System.err.println(method);
     }
-    assertEquals(1, c.size());
+    assertThat(c).hasSize(1);
   }
 
   @Test
@@ -106,6 +105,6 @@ public class GetTargetsTest extends WalaTestCase {
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, "LmethodLookup/MethodLookupStuff$B"));
     IMethod m = testKlass.getMethod(Selector.make("<init>(I)V"));
-    assertNull(m);
+    assertThat(m).isNull();
   }
 }

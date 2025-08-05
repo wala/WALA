@@ -1,6 +1,5 @@
 import com.ibm.wala.gradle.CreatePackageList
-import com.ibm.wala.gradle.VerifiedDownload
-import java.net.URI
+import com.ibm.wala.gradle.adHocDownload
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -21,6 +20,9 @@ dependencies {
   testFixturesApi(projects.core)
   testFixturesApi(projects.util)
   testFixturesApi(testFixtures(projects.cast))
+  testFixturesImplementation(libs.assertj.core)
+  testFixturesImplementation(testFixtures(projects.util))
+  testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.core))
 }
@@ -28,38 +30,34 @@ dependencies {
 val createPackageList by
     tasks.registering(CreatePackageList::class) { sourceSet(sourceSets.main.get()) }
 
-val packageListDirectory: Configuration by configurations.creating { isCanBeResolved = false }
+val packageListDirectory by configurations.registering { isCanBeResolved = false }
 
-val javadocDestinationDirectory: Configuration by
-    configurations.creating { isCanBeResolved = false }
+val javadocDestinationDirectory by configurations.registering { isCanBeResolved = false }
 
 tasks.named<Test>("test") { maxHeapSize = "800M" }
 
-val downloadAjaxslt by
-    tasks.registering(VerifiedDownload::class) {
-      val version = "0.8.1"
-      val versionedArchive = "ajaxslt-${version}.tar.gz"
-      src =
-          URI(
-              "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt/$versionedArchive")
-      dest = project.layout.buildDirectory.file(versionedArchive)
-      checksum = "c995abe3310a401bb4db7f28a6409756"
-    }
+val downloadAjaxslt =
+    adHocDownload(
+        uri(
+            "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt"),
+        "ajaxslt",
+        "tar.gz",
+        "0.8.1")
 
 val unpackAjaxslt by
     tasks.registering(Sync::class) {
-      from(downloadAjaxslt.map { tarTree(it.dest) }) {
+      from(tarTree { downloadAjaxslt.singleFile }) {
         eachFile {
           val newSegments = relativePath.segments.drop(1).toTypedArray()
           relativePath = RelativePath(!isDirectory, *newSegments)
         }
       }
-      into(project.layout.buildDirectory.dir(name))
+      into(layout.buildDirectory.dir(name))
     }
 
 val processTestResources by tasks.existing(Copy::class) { from(unpackAjaxslt) { into("ajaxslt") } }
 
-val testResources: Configuration by configurations.creating { isCanBeResolved = false }
+val testResources by configurations.registering { isCanBeResolved = false }
 
 artifacts {
   add(javadocDestinationDirectory.name, tasks.javadoc)

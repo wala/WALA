@@ -10,11 +10,9 @@
  */
 package com.ibm.wala.cast.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static com.ibm.wala.util.collections.Pair.make;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -175,57 +173,42 @@ public abstract class TestCAstTranslator {
     for (Object name : cha) {
       IClass cls = (IClass) name;
       clsCount++;
-      assertTrue(
-          classes.contains(cls.getName().toString()), "found class " + cls.getName().toString());
+      assertThat(classes).contains(cls.getName().toString());
 
       if (cls.getSuperclass() == null) {
-        assertNull(supers.get(cls.getName().toString()), cls.getName() + " has no superclass");
+        assertThat(supers.get(cls.getName().toString())).isNull();
       } else {
-        assertEquals(
-            "super of " + cls.getName() + " is " + cls.getSuperclass().getName(),
-            supers.get(cls.getName().toString()),
-            () -> cls.getSuperclass().getName().toString());
+        assertThat(supers.get(cls.getName().toString()))
+            .isEqualTo(cls.getSuperclass().getName().toString());
       }
 
       for (Object name2 : cls.getDeclaredInstanceFields()) {
         IField fld = (IField) name2;
-        assertTrue(
-            instanceFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())),
-            cls.getName() + " has field " + fld.getName());
+        assertThat(instanceFields)
+            .contains(Pair.make(cls.getName().toString(), fld.getName().toString()));
       }
 
       for (Object name2 : cls.getDeclaredStaticFields()) {
         IField fld = (IField) name2;
-        assertTrue(
-            staticFields.contains(Pair.make(cls.getName().toString(), fld.getName().toString())),
-            cls.getName() + " has static field " + fld.getName());
+        assertThat(staticFields).contains(make(cls.getName().toString(), fld.getName().toString()));
       }
 
       for (Object name2 : cls.getDeclaredMethods()) {
         IMethod mth = (IMethod) name2;
         Integer np = mth.getNumberOfParameters();
-        Pair<String, String> key = Pair.make(cls.getName().toString(), mth.getName().toString());
+        Pair<String, Object> key = Pair.make(cls.getName().toString(), mth.getName().toString());
 
         if (mth.isStatic()) {
-          assertTrue(
-              staticMethods.containsKey(key),
-              cls.getName() + " has static method " + mth.getName());
-          assertEquals(
-              staticMethods.get(key),
-              np,
-              cls.getName() + "::" + mth.getName() + " has " + np + " parameters");
+          assertThat(staticMethods).containsKey(key);
+          assertThat(np).isEqualTo(staticMethods.get(key));
         } else {
-          assertTrue(
-              instanceMethods.containsKey(key), cls.getName() + " has method " + mth.getName());
-          assertEquals(
-              instanceMethods.get(key),
-              np,
-              cls.getName() + "::" + mth.getName() + " has " + np + " parameters");
+          assertThat(instanceMethods).containsKey(key);
+          assertThat(np).isEqualTo(instanceMethods.get(key));
         }
       }
     }
 
-    assertEquals(Float.parseFloat("want " + classes.size() + " classes"), clsCount, classes.size());
+    assertThat(classes).hasSize(clsCount);
   }
 
   protected void testInternal(String[] args, TranslatorAssertions assertions) throws Exception {
@@ -243,8 +226,8 @@ public abstract class TestCAstTranslator {
         URL url = getClass().getClassLoader().getResource(args[i]);
         fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, args[i]);
       }
-      assertNotNull(fileNames[i], args[i]);
     }
+    assertThat(fileNames).doesNotContainNull();
 
     ClassHierarchy cha = runTranslator(fileNames);
     dump(cha);
@@ -259,6 +242,7 @@ public abstract class TestCAstTranslator {
     try {
       testInternal(new String[] {arg}, assertions);
     } catch (Exception e) {
+      //noinspection CallToPrintStackTrace
       e.printStackTrace();
       fail(e.toString());
     }

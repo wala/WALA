@@ -13,7 +13,6 @@ package com.ibm.wala.types.generics;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * UNDER CONSTRUCTION.
@@ -81,13 +80,21 @@ public abstract class TypeSignature extends Signature {
   public abstract boolean isBaseType();
 
   /**
-   * @param typeSigs TypeSignature*
-   * @return tokenize it
+   * Split a string of consecutive type signatures (TypeSignature*) into its top-level type
+   * signatures. The string should start with either {@code (} or {@code <} and have a respective
+   * matching {@code )} or {@code >}.
+   *
+   * @param typeSigs a string of consecutive type signatures
+   * @return an array of top-level type signatures
    */
-  static String[] parseForTypeSignatures(String typeSigs) throws IllegalArgumentException {
+  public static String[] parseForTypeSignatures(String typeSigs) throws IllegalArgumentException {
     ArrayList<String> sigs = new ArrayList<>(10);
+    char start = typeSigs.charAt(0);
+    if (start != '(' && start != '<') {
+      throw new IllegalArgumentException(
+          "illegal start of TypeSignature " + typeSigs + ", must be '(' or '<'");
+    }
     if (typeSigs.length() < 2) {
-      // TODO: check this?
       throw new IllegalArgumentException("illegal string of TypeSignature " + typeSigs);
     }
 
@@ -124,40 +131,33 @@ public abstract class TypeSignature extends Signature {
         case TypeReference.ClassTypeCode:
           {
             int off = i - 1;
-            int depth = 0;
-            while (typeSigs.charAt(i++) != ';' || depth > 0) {
-              if (typeSigs.charAt(i - 1) == '<') {
-                depth++;
-              }
-              if (typeSigs.charAt(i - 1) == '>') {
-                depth--;
-              }
-            }
+            i = getEndIndexOfClassType(typeSigs, i);
             sigs.add(typeSigs.substring(off, i));
             continue;
           }
         case TypeReference.ArrayTypeCode:
           {
+            int arrayStart = i - 1;
+            while (typeSigs.charAt(i) == TypeReference.ArrayTypeCode) {
+              i++;
+            }
             switch (typeSigs.charAt(i)) {
               case TypeReference.BooleanTypeCode:
               case TypeReference.ByteTypeCode:
+              case TypeReference.ShortTypeCode:
               case TypeReference.IntTypeCode:
-                sigs.add(typeSigs.substring(i - 1, i + 1));
+              case TypeReference.LongTypeCode:
+              case TypeReference.FloatTypeCode:
+              case TypeReference.DoubleTypeCode:
+              case TypeReference.CharTypeCode:
+                sigs.add(typeSigs.substring(arrayStart, i + 1));
+                i++;
                 break;
               case 'T':
               case TypeReference.ClassTypeCode:
-                int off = i - 1;
-                i++;
-                int depth = 0;
-                while (typeSigs.charAt(i++) != ';' || depth > 0) {
-                  if (typeSigs.charAt(i - 1) == '<') {
-                    depth++;
-                  }
-                  if (typeSigs.charAt(i - 1) == '>') {
-                    depth--;
-                  }
-                }
-                sigs.add(typeSigs.substring(off, i));
+                i++; // to skip 'L' or 'T'
+                i = getEndIndexOfClassType(typeSigs, i);
+                sigs.add(typeSigs.substring(arrayStart, i));
                 break;
               default:
                 Assertions.UNREACHABLE("BANG " + typeSigs.charAt(i));
@@ -172,20 +172,35 @@ public abstract class TypeSignature extends Signature {
             sigs.add(typeSigs.substring(off, i));
             continue;
           }
+        case (byte) '*': // unbounded wildcard
+          sigs.add("*");
+          break;
+        case (byte) '-': // bounded wildcard
+        case (byte) '+': // bounded wildcard
+          int boundedStart = i - 1;
+          i++; // to skip 'L'
+          i = getEndIndexOfClassType(typeSigs, i);
+          sigs.add(typeSigs.substring(boundedStart, i));
+          break;
         case (byte) ')': // end of parameter list
-          int size = sigs.size();
-          if (size == 0) {
-            return null;
-          }
-          Iterator<String> it = sigs.iterator();
-          String[] result = new String[size];
-          for (int j = 0; j < size; j++) {
-            result[j] = it.next();
-          }
-          return result;
+        case (byte) '>': // end of type argument list
+          return sigs.toArray(new String[sigs.size()]);
         default:
-          assert false : "bad type signature list " + typeSigs;
+          throw new IllegalArgumentException("bad type signature list " + typeSigs);
       }
     }
+  }
+
+  private static int getEndIndexOfClassType(String typeSigs, int i) {
+    int depth = 0;
+    while (typeSigs.charAt(i++) != ';' || depth > 0) {
+      if (typeSigs.charAt(i - 1) == '<') {
+        depth++;
+      }
+      if (typeSigs.charAt(i - 1) == '>') {
+        depth--;
+      }
+    }
+    return i;
   }
 }

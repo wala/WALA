@@ -4,17 +4,27 @@ import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.MapIterator;
+import com.ibm.wala.util.nullability.NullabilityUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.jar.JarFile;
-import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
+/** Utility class to find the file holding the classes for the core Java standard library. */
 public class RtJar {
 
-  @NullUnmarked
-  public static JarFile getRtJar(Iterator<JarFile> x) {
+  private RtJar() {}
+
+  /**
+   * Returns the file holding the classes for the core Java standard library from the provided jar
+   * files. The file may be a jar file or a jmod file.
+   *
+   * @param x an iterator over jar files
+   * @return the file holding the classes for the core Java standard library, or null if not found
+   */
+  public static @Nullable JarFile getRtJar(Iterator<JarFile> x) {
     while (x.hasNext()) {
       JarFile JF = x.next();
       switch (Paths.get(JF.getName()).getFileName().toString()) {
@@ -32,8 +42,8 @@ public class RtJar {
     return null;
   }
 
+  @SuppressWarnings("resource")
   public static void main(String[] args) {
-    @SuppressWarnings("resource")
     JarFile rt =
         getRtJar(
             new MapIterator<>(
@@ -49,6 +59,6 @@ public class RtJar {
                   }
                 }));
 
-    System.err.println(rt.getName());
+    System.err.println(NullabilityUtil.castToNonNull(rt).getName());
   }
 }

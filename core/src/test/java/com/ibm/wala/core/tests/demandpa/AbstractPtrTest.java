@@ -37,7 +37,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -164,7 +164,7 @@ public abstract class AbstractPtrTest {
     if (debug) {
       System.err.println("flows-to for " + mainClass + ": " + flowsTo);
     }
-    assertEquals(size, flowsTo.size());
+    assertThat(flowsTo).hasSize(size);
   }
 
   private Collection<PointerKey> getFlowsToSetToTest(String mainClass)
@@ -205,7 +205,7 @@ public abstract class AbstractPtrTest {
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
-    assertEquals(expectedSize, pointsTo.size());
+    assertThat(pointsTo).hasSize(expectedSize);
   }
 
   private Collection<InstanceKey> getPointsToSetToTest(String mainClass)

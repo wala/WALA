@@ -1,9 +1,9 @@
 package com.ibm.wala.core.tests.shrike;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.offset;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
@@ -55,7 +55,7 @@ public class FloatingPointsTest extends WalaTestCase {
 
     // To be able to reuse all classes from shrike save them in a list
     classInstrumenters = new ArrayList<>();
-    ClassInstrumenter ci = null;
+    ClassInstrumenter ci;
     while ((ci = instrumenter.nextClass()) != null) {
       classInstrumenters.add(ci);
     }
@@ -103,7 +103,7 @@ public class FloatingPointsTest extends WalaTestCase {
         (double) getConstantInstructionValue(signature, index, Constants.TYPE_double);
 
     // And finally (and most important) compare the value
-    assertEquals(newValue, readValue, 0d);
+    assertThat(newValue).isEqualTo(readValue, offset(0d));
   }
 
   @Test
@@ -147,7 +147,7 @@ public class FloatingPointsTest extends WalaTestCase {
     float readValue = (float) getConstantInstructionValue(signature, index, Constants.TYPE_float);
 
     // And finally (and most important) compare the value
-    assertEquals(newValue, readValue, 0d);
+    assertThat(readValue).isEqualTo(newValue, offset(0f));
   }
 
   private void write() throws IllegalStateException, IOException, InvalidClassFileException {
@@ -175,7 +175,7 @@ public class FloatingPointsTest extends WalaTestCase {
     try {
       // To be able to reuse all classes from shrike save them in a new list
       classInstrumenters = new ArrayList<>();
-      ClassInstrumenter ci = null;
+      ClassInstrumenter ci;
       while ((ci = instrumenter.nextClass()) != null) {
         classInstrumenters.add(ci);
       }
@@ -197,11 +197,10 @@ public class FloatingPointsTest extends WalaTestCase {
     IInstruction instruction = instructions[index];
 
     // Check that the instruction type has not been changed
-    assertInstanceOf(ConstantInstruction.class, instruction);
-
     // The type type should be the same as well
-    ConstantInstruction instruction2 = (ConstantInstruction) instruction;
-    assertTrue(type.contentEquals(instruction2.getType()));
+    ConstantInstruction instruction2 =
+        assertThat(instruction).asInstanceOf(type(ConstantInstruction.class)).actual();
+    assertThat(type).matches(t -> t.contentEquals(instruction2.getType()));
 
     return instruction2.getValue();
   }

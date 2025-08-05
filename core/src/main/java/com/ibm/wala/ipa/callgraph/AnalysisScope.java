@@ -132,7 +132,6 @@ public class AnalysisScope {
   private final Map<Atom, Language> languages;
 
   protected AnalysisScope(Collection<? extends Language> languages) {
-    super();
     this.languages = new HashMap<>();
     for (Language l : languages) {
       this.languages.put(l.getName(), l);
@@ -320,7 +319,7 @@ public class AnalysisScope {
   }
 
   public int getNumberOfLoaders() {
-    return loadersByName.values().size();
+    return loadersByName.size();
   }
 
   public SetOfClasses getExclusions() {

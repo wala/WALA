@@ -6,6 +6,7 @@ plugins {
   `java-test-fixtures`
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.xml-apis-ext")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
@@ -21,24 +22,24 @@ walaEclipseMavenCentral {
   testImplementation("org.eclipse.jface")
 }
 
-val coreTestDataJar: Configuration by
-    configurations.creating {
+val coreTestDataJar by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
     }
 
-val coreTestResources: Configuration by configurations.creating { isCanBeConsumed = false }
+val coreTestResources by configurations.registering { isCanBeConsumed = false }
 
-val coreMainSource: Configuration by
-    configurations.creating {
+val coreMainSource by
+    configurations.registering {
       isCanBeConsumed = false
       attributes {
         attribute(VERIFICATION_TYPE_ATTRIBUTE, objects.named(VerificationType::class, MAIN_SOURCES))
       }
     }
 
-val ifdsExplorerExampleClasspath: Configuration by
-    configurations.creating {
+val ifdsExplorerExampleClasspath by
+    configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
     }
@@ -65,10 +66,6 @@ configurations.all {
         .using(module(libs.eclipse.osgi.get().toString()))
         .because(
             "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both")
-    substitute(module("xml-apis:xml-apis-ext"))
-        .using(module(libs.w3c.css.sac.get().toString()))
-        .because(
-            "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
   }
 }
 
@@ -92,10 +89,10 @@ tasks.named<Copy>("processTestResources") {
 tasks.register<JavaExec>("runIFDSExplorerExample") {
   group = "Execution"
   description = "Run the IFDSExplorerExample driver"
-  classpath = ifdsExplorerExampleClasspath
+  classpath(ifdsExplorerExampleClasspath)
   mainClass = "com.ibm.wala.examples.drivers.IFDSExplorerExample"
   if (System.getProperty("os.name").startsWith("Mac OS X")) {
     jvmArgs = listOf("-XstartOnFirstThread")
   }
-  project.findProperty("args")?.let { args((it as String).split("\\s+".toRegex())) }
+  providers.gradleProperty("args").orNull?.let { args(it.split("\\s+".toRegex())) }
 }

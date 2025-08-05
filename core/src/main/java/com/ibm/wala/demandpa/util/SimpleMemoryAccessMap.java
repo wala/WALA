@@ -226,7 +226,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     final CGNode node;
 
     public MemoryAccessVisitor(ClassLoaderReference loader, CGNode node) {
-      super();
       this.loader = loader;
       this.node = node;
     }

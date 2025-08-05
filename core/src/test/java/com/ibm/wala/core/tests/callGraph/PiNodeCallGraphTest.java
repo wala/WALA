@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -129,7 +129,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
             .iterator()
             .next();
     int actualLocalCastCallees = cg.getSuccNodeCount(localCastNode);
-    assertEquals(numLocalCastCallees, actualLocalCastCallees);
+    assertThat(actualLocalCastCallees).isEqualTo(numLocalCastCallees);
   }
 
   @Test
