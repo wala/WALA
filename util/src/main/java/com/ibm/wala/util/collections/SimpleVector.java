@@ -59,9 +59,7 @@ public class SimpleVector<T> implements IVector<T> {
     }
     maxIndex = Math.max(maxIndex, x);
     if (value == null) {
-      if (x >= store.length) {
-        return;
-      } else {
+      if (x < store.length) {
         store[x] = null;
       }
     } else {

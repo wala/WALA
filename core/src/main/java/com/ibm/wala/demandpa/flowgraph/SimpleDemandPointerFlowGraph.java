@@ -796,9 +796,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
-      if (instruction.returnsPrimitiveType() || instruction.returnsVoid()) {
-        return;
-      } else {
+      if (!instruction.returnsPrimitiveType() && !instruction.returnsVoid()) {
         // just make a node for the def'd value
         PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getResult());
         addNode(def);

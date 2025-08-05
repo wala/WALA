@@ -32,7 +32,6 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
       if (other.V != null) {
         V = IntSetUtil.getDefaultIntSetFactory().makeCopy(other.V);
       }
-      return;
     } else {
       if (other.V != null) {
         V.copySet(other.V);

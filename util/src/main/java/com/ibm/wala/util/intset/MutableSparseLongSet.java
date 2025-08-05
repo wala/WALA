@@ -245,7 +245,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     // now compact cr to 'just enough'
     size = ci;
     elements = cr;
-    return;
   }
 
   /**
