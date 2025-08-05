@@ -81,8 +81,7 @@ public class AnalysisScopeTest {
     Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
     LinkedHashMap<String, Object> map = gson.fromJson(scope.toJson(), type);
     assertThat(map.get("Exclusions"))
-        .isEqualTo(
-            List.of("java\\/awt\\/.*", "javax\\/swing\\/.*", "sun\\/awt\\/.*", "sun\\/swing\\/.*"));
+        .isEqualTo(List.of("java/awt/.*", "javax/swing/.*", "sun/awt/.*", "sun/swing/.*"));
 
     @SuppressWarnings("unchecked")
     Map<String, List<String>> loaders = (Map<String, List<String>>) map.get("Loaders");
