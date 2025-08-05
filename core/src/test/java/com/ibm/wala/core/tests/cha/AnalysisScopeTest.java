@@ -14,6 +14,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -108,7 +109,7 @@ public class AnalysisScopeTest {
       scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
       scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
     }
-    scope.setExclusions(null);
+    scope.setExclusions((StringFilter) null);
     Gson gson = new Gson();
     Type type = new TypeToken<LinkedHashMap<String, Object>>() {}.getType();
     LinkedHashMap<String, Object> map = gson.fromJson(scope.toJson(), type);
