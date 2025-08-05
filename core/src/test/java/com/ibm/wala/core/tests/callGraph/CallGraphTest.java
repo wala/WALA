@@ -476,7 +476,6 @@ public class CallGraphTest extends WalaTestCase {
 
     // test ICFG
     checkICFG(cg);
-    return;
     // /////////////
     // // 1-CFA ///
     // /////////////

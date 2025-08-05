@@ -483,7 +483,6 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
 
     if ((nEvaluated - evaluationsAtLastOrdering) > maxEvalBetweenTopo) {
       orderStatementsInternal();
-      return;
     }
   }
 
