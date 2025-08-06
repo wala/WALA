@@ -302,7 +302,9 @@ public class AnalysisScope {
     return loaderImplByRef.get(ref);
   }
 
-  public void setLoaderImpl(ClassLoaderReference ref, String implClass) {
+  public void setLoaderImpl(
+      ClassLoaderReference ref,
+      @org.intellij.lang.annotations.Language("jvm-class-name") String implClass) {
     if (ref == null) {
       throw new IllegalArgumentException("null ref");
     }

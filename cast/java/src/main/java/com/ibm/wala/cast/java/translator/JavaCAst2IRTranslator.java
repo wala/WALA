@@ -43,6 +43,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import org.intellij.lang.annotations.Language;
 
 public class JavaCAst2IRTranslator extends AstTranslator {
   private final CAstEntity fSourceEntity;
@@ -543,7 +544,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
-  private static CAstType getType(final String name) {
+  private static CAstType getType(@Language("jvm-class-name") final String name) {
     return new CAstType.Class() {
 
       @Override

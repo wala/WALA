@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import org.intellij.lang.annotations.Language;
 import org.jspecify.annotations.Nullable;
 
 /** Simple utilities for accessing files. */
@@ -38,7 +39,8 @@ public class FileUtil {
    * @param recurse recurse to subdirectories?
    * @throws IllegalArgumentException if dir is null
    */
-  public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
+  public static Collection<File> listFiles(
+      String dir, @Language("RegExp") String regex, boolean recurse) {
     if (dir == null) {
       throw new IllegalArgumentException("dir is null");
     }
