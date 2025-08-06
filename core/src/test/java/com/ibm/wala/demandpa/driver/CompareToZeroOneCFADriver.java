@@ -230,11 +230,9 @@ public class CompareToZeroOneCFADriver {
     SSAPropagationCallGraphBuilder builder =
         Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
-    DemandRefinementPointsTo fullDemandPointsTo =
-        DemandRefinementPointsTo.makeWithDefaultFlowGraph(
-            cg, builder, fam, cha, options, new DummyStateMachine.Factory<>());
     // fullDemandPointsTo.setOnTheFly(true);
     // fullDemandPointsTo.setRefineFields(true);
-    return fullDemandPointsTo;
+    return DemandRefinementPointsTo.makeWithDefaultFlowGraph(
+        cg, builder, fam, cha, options, new DummyStateMachine.Factory<>());
   }
 }

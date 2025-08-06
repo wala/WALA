@@ -38,20 +38,17 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
 
   @Override
   public boolean isPublic() {
-    boolean result = ((modifiers & Constants.ACC_PUBLIC) != 0);
-    return result;
+    return ((modifiers & Constants.ACC_PUBLIC) != 0);
   }
 
   @Override
   public boolean isPrivate() {
-    boolean result = ((modifiers & Constants.ACC_PRIVATE) != 0);
-    return result;
+    return ((modifiers & Constants.ACC_PRIVATE) != 0);
   }
 
   @Override
   public boolean isInterface() {
-    boolean result = ((modifiers & Constants.ACC_INTERFACE) != 0);
-    return result;
+    return ((modifiers & Constants.ACC_INTERFACE) != 0);
   }
 
   /**
@@ -59,8 +56,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
    */
   @Override
   public boolean isAbstract() {
-    boolean result = ((modifiers & Constants.ACC_ABSTRACT) != 0);
-    return result;
+    return ((modifiers & Constants.ACC_ABSTRACT) != 0);
   }
 
   /**
@@ -68,8 +64,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
    */
   @Override
   public boolean isSynthetic() {
-    boolean result = ((modifiers & Constants.ACC_SYNTHETIC) != 0);
-    return result;
+    return ((modifiers & Constants.ACC_SYNTHETIC) != 0);
   }
 
   /**

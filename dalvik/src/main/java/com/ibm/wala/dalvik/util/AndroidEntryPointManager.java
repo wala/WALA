@@ -396,17 +396,15 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         logger.error("guessPackage() called when no entrypoints had been set");
         return null;
       }
-      final String first =
-          ENTRIES
-              .get(0)
-              .getMethod()
-              .getReference()
-              .getDeclaringClass()
-              .getName()
-              .getPackage()
-              .toString();
       // TODO: Iterate all?
-      return first;
+      return ENTRIES
+          .get(0)
+          .getMethod()
+          .getReference()
+          .getDeclaringClass()
+          .getName()
+          .getPackage()
+          .toString();
     }
   }
 

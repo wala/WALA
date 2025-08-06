@@ -45,8 +45,7 @@ import com.ibm.wala.util.collections.ImmutableStack;
 public class CallStack extends ImmutableStack<CallerSiteContext> implements State {
 
   public static CallStack emptyCallStack() {
-    CallStack ret = new CallStack(new CallerSiteContext[0]);
-    return ret;
+    return new CallStack(new CallerSiteContext[0]);
   }
 
   protected CallStack(CallerSiteContext[] entries) {
@@ -65,13 +64,11 @@ public class CallStack extends ImmutableStack<CallerSiteContext> implements Stat
 
   @Override
   public CallStack pop() {
-    final CallStack ret = (CallStack) super.pop();
-    return ret;
+    return (CallStack) super.pop();
   }
 
   @Override
   public CallStack push(CallerSiteContext entry) {
-    final CallStack ret = (CallStack) super.push(entry);
-    return ret;
+    return (CallStack) super.push(entry);
   }
 }

@@ -125,8 +125,7 @@ public class HTMLCGBuilder {
     // assume it's a URL
     try {
       File f = new FileProvider().getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
-      URL url = f.toURI().toURL();
-      return url;
+      return f.toURI().toURL();
     } catch (FileNotFoundException fnfe) {
       return new URI(src).toURL();
     }

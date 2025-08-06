@@ -139,7 +139,6 @@ public class MethodNamePattern {
     String className = methodRef.getDeclaringClass().getName().toUnicodeString();
     String methodName = methodRef.getName().toUnicodeString();
     String descriptor = methodRef.getDescriptor().toUnicodeString();
-    MethodNamePattern pattern = new MethodNamePattern(className, methodName, descriptor);
-    return pattern;
+    return new MethodNamePattern(className, methodName, descriptor);
   }
 }

@@ -35,6 +35,7 @@ public class StackMapTableReader extends AttributeReader {
     for (int i = 0; i < entries; i++) {
       int frameType = (0x000000ff & cr.getByte(ptr++));
       if (frameType < 64) {
+        @SuppressWarnings("UnnecessaryLocalVariable")
         int offset = frameType;
         frames.add(new StackMapFrame(frameType, offset, new StackMapType[0], new StackMapType[0]));
       } else if (frameType < 128) {

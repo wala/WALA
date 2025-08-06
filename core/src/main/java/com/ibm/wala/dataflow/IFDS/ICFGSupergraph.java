@@ -56,8 +56,7 @@ public class ICFGSupergraph
   }
 
   public static ICFGSupergraph make(CallGraph cg) {
-    ICFGSupergraph w = new ICFGSupergraph(ExplodedInterproceduralCFG.make(cg));
-    return w;
+    return new ICFGSupergraph(ExplodedInterproceduralCFG.make(cg));
   }
 
   @Override

@@ -520,8 +520,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
   private static OrdinalSetMapping<Statement> createStatementDomain(
       Collection<Statement> statements) {
     Statement[] arr = new Statement[statements.size()];
-    OrdinalSetMapping<Statement> domain = new ObjectArrayMapping<>(statements.toArray(arr));
-    return domain;
+    return new ObjectArrayMapping<>(statements.toArray(arr));
   }
 
   /** Reaching def flow functions */

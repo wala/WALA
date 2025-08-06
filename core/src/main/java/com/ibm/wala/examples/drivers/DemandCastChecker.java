@@ -217,9 +217,8 @@ public class DemandCastChecker {
       IR ir = node.getIR();
       if (ir == null) continue;
       SSAInstruction[] instrs = ir.getInstructions();
-      for (SSAInstruction instr : instrs) {
+      for (SSAInstruction instruction : instrs) {
         if ((long) numSafe + numMightFail > MAX_CASTS) break outer;
-        SSAInstruction instruction = instr;
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
           final TypeReference[] declaredResultTypes = castInstr.getDeclaredResultTypes();

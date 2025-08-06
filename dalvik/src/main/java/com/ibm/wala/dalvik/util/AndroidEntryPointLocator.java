@@ -278,10 +278,8 @@ public final class AndroidEntryPointLocator {
       compo = AndroidComponent.from(method, cha);
       if (compo == AndroidComponent.UNKNOWN) {}
     }
-    final AndroidEntryPoint ep =
-        new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
 
-    return ep;
+    return new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
   }
 
   /**

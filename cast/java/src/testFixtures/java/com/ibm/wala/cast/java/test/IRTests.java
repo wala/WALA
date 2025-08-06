@@ -473,8 +473,7 @@ public abstract class IRTests {
       String loaderName, String typeStr, IClassHierarchy cha) {
     ClassLoaderReference clr = findLoader(loaderName, cha);
     TypeName typeName = TypeName.string2TypeName('L' + typeStr);
-    TypeReference typeRef = TypeReference.findOrCreate(clr, typeName);
-    return typeRef;
+    return TypeReference.findOrCreate(clr, typeName);
   }
 
   private static ClassLoaderReference findLoader(String loaderName, IClassHierarchy cha) {

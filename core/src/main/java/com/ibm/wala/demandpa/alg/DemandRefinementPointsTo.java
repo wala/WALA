@@ -272,10 +272,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       System.err.println("answering query for " + pk);
     }
     startNewQuery();
-    Pair<PointsToResult, Collection<InstanceKeyAndState>> p =
-        outerRefinementLoop(
-            new PointerKeyAndState(queriedPk, stateMachine.getStartState()), ikeyPred);
-    return p;
+    return outerRefinementLoop(
+        new PointerKeyAndState(queriedPk, stateMachine.getStartState()), ikeyPred);
   }
 
   /**
@@ -287,10 +285,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     if (p2SetWithStates == null) {
       throw new IllegalArgumentException("p2SetWithStates == null");
     }
-    Collection<T> finalP2Set =
-        Iterator2Collection.toSet(
-            new MapIterator<WithState<T>, T>(p2SetWithStates.iterator(), WithState::getWrapped));
-    return finalP2Set;
+    return Iterator2Collection.toSet(
+        new MapIterator<WithState<T>, T>(p2SetWithStates.iterator(), WithState::getWrapped));
   }
 
   /**

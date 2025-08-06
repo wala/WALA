@@ -36,8 +36,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
       for (Integer I : T) {
         copy[i++] = I;
       }
-      MutableSparseIntSet result = new MutableSparseIntSet(copy);
-      return result;
+      return new MutableSparseIntSet(copy);
     }
   }
 
