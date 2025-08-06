@@ -48,6 +48,8 @@ dependencies {
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
   api(libs.jspecify)
+  compileOnly(libs.jetbrains.annotations)
+  testCompileOnly(libs.jetbrains.annotations)
   testFixturesApi(libs.assertj.core)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.shrike)

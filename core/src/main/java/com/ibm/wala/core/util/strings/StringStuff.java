@@ -62,7 +62,8 @@ public class StringStuff {
    *
    * @throws IllegalArgumentException if dString is null
    */
-  public static String deployment2CanonicalTypeString(String dString) {
+  public static String deployment2CanonicalTypeString(
+      @org.intellij.lang.annotations.Language("jvm-class-name") String dString) {
     if (dString == null) {
       throw new IllegalArgumentException("dString is null");
     }
