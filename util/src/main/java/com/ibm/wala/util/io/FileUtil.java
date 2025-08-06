@@ -138,9 +138,7 @@ public class FileUtil {
         throw new IOException("failed to create " + f.getParentFile());
       }
     }
-    if (f.exists()) {
-      f.delete();
-    }
+    Files.deleteIfExists(f.toPath());
     boolean result = f.createNewFile();
     if (!result) {
       throw new IOException("failed to create " + f);
