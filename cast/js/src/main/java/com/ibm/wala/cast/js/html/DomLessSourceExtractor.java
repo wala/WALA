@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -354,9 +355,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     } else {
       outputFile = new File(fileName);
     }
-    if (outputFile.exists()) {
-      outputFile.delete();
-    }
+    Files.deleteIfExists(outputFile.toPath());
     if (delete) {
       outputFile.deleteOnExit();
     }
