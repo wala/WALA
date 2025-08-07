@@ -268,12 +268,9 @@ public class Analyzer {
     if (from < 0) {
       throw new IllegalArgumentException("from < 0");
     }
-    while (true) {
-      // stop if we've already visited this instruction or if we've gone outside
-      // the mask
-      if (reachable.get(from) || (mask != null && !mask.get(from))) {
-        return;
-      }
+
+    // stop if we've already visited this instruction or if we've gone outside the mask
+    for (; !reachable.get(from) && (mask == null || mask.get(from)); ++from) {
 
       reachable.set(from);
 
@@ -290,12 +287,9 @@ public class Analyzer {
         }
       }
 
-      if (instr.isFallThrough()) {
-        ++from;
-        continue;
+      if (!instr.isFallThrough()) {
+        break;
       }
-
-      break;
     }
   }
 
@@ -319,12 +313,9 @@ public class Analyzer {
   }
 
   private void getReachingRecursive(int to, BitSet reaching, BitSet mask) {
-    while (true) {
-      // stop if we've already visited this instruction or if we've gone outside
-      // the mask
-      if (reaching.get(to) || (mask != null && !mask.get(to))) {
-        return;
-      }
+
+    // stop if we've already visited this instruction or if we've gone outside the mask
+    while (!reaching.get(to) && (mask == null || mask.get(to))) {
 
       reaching.set(to);
 
@@ -333,12 +324,9 @@ public class Analyzer {
         getReachingRecursive(target, reaching, mask);
       }
 
-      if (to > 0 && instructions[to - 1].isFallThrough()) {
-        --to;
-        continue;
+      if (to <= 0 || !instructions[--to].isFallThrough()) {
+        break;
       }
-
-      break;
     }
   }
 
