@@ -283,6 +283,7 @@ public class ExternalModel extends AndroidModel {
           CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
       final SSAValue exception =
           new SSAValue(nextLocal++, TypeReference.JavaLangException, this.mRef, "exception");
+      //noinspection UnusedAssignment
       outIntent = new SSAValue(nextLocal++, inIntent);
       final List<SSAValue> params = new ArrayList<>(3);
       params.add(inIntent);

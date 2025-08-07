@@ -206,7 +206,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         IMethod trampoline = lambdaSummaryClass.getDeclaredMethods().iterator().next();
         CGNode callee = getNode(trampoline, Everywhere.EVERYWHERE);
         if (callee == null) {
-          callee = findOrCreateNode(trampoline, Everywhere.EVERYWHERE);
+          findOrCreateNode(trampoline, Everywhere.EVERYWHERE);
         }
       }
     }
