@@ -14,8 +14,9 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -258,12 +259,12 @@ public abstract class Launcher {
   }
 
   /** Drain some data from the input stream, and print said data to p. Do not block. */
-  private static void drainAndPrint(BufferedInputStream s, PrintStream p) {
+  private static void drainAndPrint(InputStream s, OutputStream p) {
     try {
       while (s.available() > 0) {
         byte[] data = new byte[s.available()];
-        s.read(data);
-        p.print(new String(data, StandardCharsets.UTF_8));
+        final var actuallyRead = s.read(data);
+        p.write(data, 0, actuallyRead);
       }
     } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)

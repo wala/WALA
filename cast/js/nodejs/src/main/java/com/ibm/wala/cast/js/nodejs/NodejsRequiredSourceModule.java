@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.nodejs;
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.Streams;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -116,7 +115,7 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
   private static String loadWrapperSource(String filename) throws IOException {
     try (final InputStream url =
         NodejsRequiredSourceModule.class.getClassLoader().getResourceAsStream(filename)) {
-      return new String(Streams.inputStream2ByteArray(url));
+      return new String(url.readAllBytes());
     }
   }
 
