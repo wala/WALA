@@ -250,7 +250,7 @@ public class DexDotUtil extends DotUtil {
   }
 
   private static String cleanUpString(String s) {
-    if (!s.isEmpty() && s.startsWith("Node: ")) {
+    if (s.startsWith("Node: ")) {
       String[] nodeString = s.split(",");
       if (nodeString.length >= 3) {
         String className = nodeString[1];

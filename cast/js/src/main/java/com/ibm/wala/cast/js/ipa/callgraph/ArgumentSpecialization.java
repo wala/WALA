@@ -215,7 +215,7 @@ public class ArgumentSpecialization {
                   } else {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$arg" + arg));
                   }
-                } else if (x instanceof String && "length".equals(x)) {
+                } else if ("length".equals(x)) {
                   return Ast.makeConstant(v.getValue());
                 }
               }
