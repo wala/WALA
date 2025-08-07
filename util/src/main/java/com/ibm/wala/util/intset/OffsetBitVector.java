@@ -30,7 +30,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
     int[] oldbits = bits;
     bits = new int[subscript(newCapacity) + 1];
-    System.arraycopy(oldbits, 0, bits, 0 - wordDiff, oldbits.length);
+    System.arraycopy(oldbits, 0, bits, -wordDiff, oldbits.length);
     offset = newOffset;
   }
 

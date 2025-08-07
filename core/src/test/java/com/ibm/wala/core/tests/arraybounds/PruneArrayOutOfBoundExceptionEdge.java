@@ -76,6 +76,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * The number of Basic Blocks, which have an exception edge, that should be removed. (#[array
    * access] + #[other])
    */
+  @SuppressWarnings("PointlessArithmeticExpression")
   private static final int NOT_DETECTABLE_EXPECTED_COUNT = 0 + 3;
 
   private static final String NOT_IN_BOUND_TESTDATA = "Larraybounds/NotInBound";
@@ -84,6 +85,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * The number of Basic Blocks, which have an exception edge, that should be removed. (#[array
    * access] + #[other])
    */
+  @SuppressWarnings("PointlessArithmeticExpression")
   private static final int NOT_IN_BOUND_EXPECTED_COUNT = 0 + 1;
 
   private static IRFactory<IMethod> irFactory;
