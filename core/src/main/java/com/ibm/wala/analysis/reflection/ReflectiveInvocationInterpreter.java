@@ -243,6 +243,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
 
     // emit the dispatch and return instructions
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
+      //noinspection UnusedAssignment
       m.addInstruction(
           null,
           insts.InvokeInstruction(
@@ -258,6 +259,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     } else {
       Dispatch d = target.isStatic() ? Dispatch.STATIC : Dispatch.VIRTUAL;
       if (target.getReturnType().equals(TypeReference.Void)) {
+        //noinspection UnusedAssignment
         m.addInstruction(
             null,
             insts.InvokeInstruction(
@@ -268,7 +270,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
                 null),
             false);
       } else {
+        //noinspection UnusedAssignment
         result = nextLocal++;
+        //noinspection UnusedAssignment
         m.addInstruction(
             null,
             insts.InvokeInstruction(

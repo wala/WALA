@@ -46,6 +46,7 @@ public class Topological {
       Iterator<T> rev = ReverseIterator.reverse(finishTime);
       // the following statement helps out the GC; note that finishTime holds
       // on to a large array
+      //noinspection UnusedAssignment
       finishTime = null;
       Graph<T> G_T = GraphInverter.invert(graph);
       return DFS.iterateFinishTime(G_T, rev);

@@ -111,6 +111,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
   private static SSAInstruction[] makeStatements(Context context) {
     ArrayList<SSAInstruction> statements = new ArrayList<>();
     int nextLocal = 2;
+    @SuppressWarnings("UnusedAssignment")
     int retValue = nextLocal++;
     TypeReference tr = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getTypeReference();
     SSAInstructionFactory insts =

@@ -195,10 +195,10 @@ public class EntryPoints {
       BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
       // read the output from the command
-      String s;
-      while ((s = stdInput.readLine()) != null) {}
+      while (stdInput.readLine() != null) {}
 
       // read any errors from the attempted command
+      String s;
       while ((s = stdError.readLine()) != null) {
         System.err.println(s);
       }

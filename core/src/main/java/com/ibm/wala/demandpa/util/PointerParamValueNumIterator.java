@@ -84,7 +84,7 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
         break;
       }
     }
-    paramInd = ++i;
+    paramInd = i + 1;
   }
 
   @Override

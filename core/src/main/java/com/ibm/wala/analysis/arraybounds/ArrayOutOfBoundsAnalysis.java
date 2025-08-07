@@ -87,7 +87,6 @@ public class ArrayOutOfBoundsAnalysis {
     for (final SSAArrayReferenceInstruction instruction : builder.getArrayReferenceInstructions()) {
       this.boundsCheckUnnecessary.put(instruction, UnnecessaryCheck.NONE);
     }
-    builder = null;
   }
 
   /** compute lower bound */

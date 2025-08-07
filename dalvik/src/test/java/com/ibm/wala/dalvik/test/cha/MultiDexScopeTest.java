@@ -53,7 +53,7 @@ public class MultiDexScopeTest {
   private static void addAPKtoScope(
       ClassLoaderReference loader, AnalysisScope scope, final Path fileName) {
     final var apkFile = fileName.toFile();
-    MultiDexContainer<? extends DexBackedDexFile> multiDex = null;
+    final MultiDexContainer<? extends DexBackedDexFile> multiDex;
     try {
       multiDex = DexFileFactory.loadDexContainer(apkFile, Opcodes.forApi(24));
     } catch (IOException e) {

@@ -167,7 +167,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
               lambda.getField(LambdaSummaryClass.getCaptureFieldName(i)).getReference()));
     }
     // return the anonymous class instance
-    summary.addStatement(insts.ReturnInstruction(index++, v, false));
+    summary.addStatement(insts.ReturnInstruction(index, v, false));
     return summary;
   }
 }
