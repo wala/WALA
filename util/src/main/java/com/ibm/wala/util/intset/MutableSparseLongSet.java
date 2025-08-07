@@ -192,13 +192,11 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
     // some simple optimizations
     if (size == 1) {
-      if (that.contains(elements[0])) {
-        return;
-      } else {
+      if (!that.contains(elements[0])) {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
     if (that.size == 1) {
       if (contains(that.elements[0])) {
@@ -207,12 +205,11 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
         }
         size = 1;
         elements[0] = that.elements[0];
-        return;
       } else {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
 
     long[] ar = this.elements;
