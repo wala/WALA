@@ -192,8 +192,10 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       String dir, String name, CGBuilderType builderType, ClassLoader loader)
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, builderType, loader);
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     // dumpCG(b.getPointerAnalysis(), CG);
-    return b.makeCallGraph(b.getOptions());
+    return CG;
   }
 
   public static CallGraph makeScriptCG(
@@ -205,8 +207,10 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
             : null;
     PropagationCallGraphBuilder b =
         makeCGBuilder(makeLoaders(preprocessor), scripts, builderType, irFactory);
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     // dumpCG(b.getPointerAnalysis(), CG);
-    return b.makeCallGraph(b.getOptions());
+    return CG;
   }
 
   public static JSCFABuilder makeHTMLCGBuilder(URL url, Supplier<JSSourceExtractor> fExtractor)
