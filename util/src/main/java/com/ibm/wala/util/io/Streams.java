@@ -15,12 +15,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /** utilities for IO streams */
+@Deprecated(since = "1.6.12", forRemoval = true)
 public class Streams {
 
   /**
    * @return byte[] holding the contents of the stream
    * @throws IllegalArgumentException if in == null
+   * @deprecated use {@link InputStream#readAllBytes()} instead.
    */
+  @Deprecated(since = "1.6.12", forRemoval = true)
   public static byte[] inputStream2ByteArray(InputStream in)
       throws IllegalArgumentException, IOException {
     if (in == null) {
