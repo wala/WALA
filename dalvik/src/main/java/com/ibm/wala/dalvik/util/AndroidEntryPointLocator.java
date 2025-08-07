@@ -189,7 +189,7 @@ public final class AndroidEntryPointLocator {
           for (final AndroidComponent compo : AndroidComponent.values()) {
             if (compo == AndroidComponent.UNKNOWN) continue;
             if (compo.toReference() == null) {
-              logger.error("Null-Reference for " + compo);
+              logger.error("Null-Reference for {}", compo);
             } else {
               bases.add(compo.toReference());
             }
