@@ -242,7 +242,6 @@ public class ParameterAccessor {
 
       this.disp = disp;
       this.descriptorOffset = descriptorOffset;
-      super.isAssigned();
     }
 
     /** The position of the parameter in the methods Desciptor starting with 1. */

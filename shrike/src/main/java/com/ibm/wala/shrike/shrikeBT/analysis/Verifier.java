@@ -256,8 +256,6 @@ public final class Verifier extends Analyzer {
       for (int i = 0; i < instruction.getArrayBoundsCount(); i++) {
         checkStackSubtype(i, Constants.TYPE_int);
       }
-      // make sure constant is dereferenced
-      instruction.getType();
     }
 
     @Override
