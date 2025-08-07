@@ -212,8 +212,7 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     private static ConstLong[] preallocate() {
-      ConstLong[] r = {new ConstLong(OP_lconst_0, 0), new ConstLong(OP_lconst_1, 1)};
-      return r;
+      return new ConstLong[] {new ConstLong(OP_lconst_0, 0), new ConstLong(OP_lconst_1, 1)};
     }
 
     static ConstLong makeInternal(long v) {
@@ -284,12 +283,11 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     private static ConstFloat[] preallocate() {
-      ConstFloat[] r = {
+      return new ConstFloat[] {
         new ConstFloat(OP_fconst_0, 0),
         new ConstFloat(OP_fconst_1, 1),
         new ConstFloat(OP_fconst_2, 2)
       };
-      return r;
     }
 
     static ConstFloat makeInternal(float v) {
@@ -360,7 +358,8 @@ public abstract class ConstantInstruction extends Instruction {
     }
 
     private static ConstDouble[] preallocate() {
-      ConstDouble[] r = {new ConstDouble(OP_dconst_0, 0), new ConstDouble(OP_dconst_1, 1)};
+      ConstDouble[] r;
+      r = new ConstDouble[] {new ConstDouble(OP_dconst_0, 0), new ConstDouble(OP_dconst_1, 1)};
       return r;
     }
 

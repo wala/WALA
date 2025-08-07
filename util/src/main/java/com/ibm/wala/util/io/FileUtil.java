@@ -158,8 +158,7 @@ public class FileUtil {
         out.write(b, 0, n);
         n = s.read(b);
       }
-      byte[] bb = out.toByteArray();
-      return bb;
+      return out.toByteArray();
     }
   }
 

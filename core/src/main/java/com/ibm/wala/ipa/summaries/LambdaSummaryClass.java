@@ -402,8 +402,7 @@ public class LambdaSummaryClass extends SyntheticClass {
       throw new RuntimeException(e);
     }
 
-    SummarizedMethod method = new SummarizedMethod(ref, summary, LambdaSummaryClass.this);
-    return method;
+    return new SummarizedMethod(ref, summary, this);
   }
 
   private static Dispatch getDispatchForMethodHandleKind(int kind) {

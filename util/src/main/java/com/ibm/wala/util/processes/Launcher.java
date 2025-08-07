@@ -94,8 +94,7 @@ public abstract class Launcher {
       logger.info("spawning process " + cmd);
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
-    Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
-    return p;
+    return Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
   }
 
   /**
@@ -111,8 +110,7 @@ public abstract class Launcher {
       logger.info("spawning process " + Arrays.toString(cmd));
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
-    Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
-    return p;
+    return Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
   }
 
   private static String[] buildEnv(Map<String, String> ev) {

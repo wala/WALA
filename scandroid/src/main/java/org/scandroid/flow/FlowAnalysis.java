@@ -191,14 +191,13 @@ public class FlowAnalysis {
             );
 
     try {
-      TabulationResult<BasicBlockInContext<E>, CGNode, DomainElement> flowResult = solver.solve();
       //        	if (options.ifdsExplorer()) {
       //        		for (int i = 1; i < domain.getSize(); i++) {
       //
       //        		}
       //        		GraphUtil.exploreIFDS(flowResult);
       //        	}
-      return flowResult;
+      return solver.solve();
     } catch (CancelException e) {
       throw new CancelRuntimeException(e);
     }

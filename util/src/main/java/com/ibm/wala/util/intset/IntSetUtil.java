@@ -143,9 +143,7 @@ public class IntSetUtil {
     if (A instanceof SparseIntSet && B instanceof SparseIntSet) {
       return SparseIntSet.diff((SparseIntSet) A, (SparseIntSet) B);
     } else if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
-      IntSet d =
-          SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
-      return d;
+      return SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
     } else {
       return defaultSlowDiff(A, B, factory);
     }

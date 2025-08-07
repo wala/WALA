@@ -131,9 +131,7 @@ public abstract class TestCAstTranslator {
 
     AnalysisScope scope = CAstCallGraphUtil.makeScope(fileNames, loaders, getLanguage());
 
-    ClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, getLanguage());
-
-    return cha;
+    return ClassHierarchyFactory.make(scope, loaders, getLanguage());
   }
 
   protected void dump(ClassHierarchy cha) {

@@ -106,13 +106,11 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
   }
 
   private static Set<CGNode> getNodes(CallGraph CG, String cls, String method, String descr) {
-    Set<CGNode> nodes =
-        CG.getNodes(
-            MethodReference.findOrCreate(
-                TypeReference.find(ClassLoaderReference.Application, cls),
-                Atom.findOrCreateUnicodeAtom(method),
-                Descriptor.findOrCreateUTF8(descr)));
-    return nodes;
+    return CG.getNodes(
+        MethodReference.findOrCreate(
+            TypeReference.find(ClassLoaderReference.Application, cls),
+            Atom.findOrCreateUnicodeAtom(method),
+            Descriptor.findOrCreateUTF8(descr)));
   }
 
   /** Maximum number of outer fixed point iterations to use when building the Kawa call graph. */

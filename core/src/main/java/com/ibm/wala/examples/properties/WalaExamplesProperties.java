@@ -27,11 +27,8 @@ public final class WalaExamplesProperties {
   public static Properties loadProperties() {
 
     try {
-      Properties result =
-          WalaProperties.loadPropertiesFromFile(
-              WalaExamplesProperties.class.getClassLoader(), PROPERTY_FILENAME);
-
-      return result;
+      return WalaProperties.loadPropertiesFromFile(
+          WalaExamplesProperties.class.getClassLoader(), PROPERTY_FILENAME);
     } catch (Exception e) {
       e.printStackTrace();
       throw new IllegalStateException("Unable to set up wala examples properties ", e);

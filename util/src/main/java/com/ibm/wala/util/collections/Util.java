@@ -299,8 +299,7 @@ public class Util {
       throw new IllegalArgumentException("typeStr == null");
     }
     int dollarIndex = typeStr.indexOf('$');
-    String topLevelTypeStr = dollarIndex == -1 ? typeStr : typeStr.substring(0, dollarIndex);
-    return topLevelTypeStr;
+    return dollarIndex == -1 ? typeStr : typeStr.substring(0, dollarIndex);
   }
 
   public static <T> void addIfNotNull(T val, Collection<T> vals) {
@@ -318,8 +317,7 @@ public class Util {
     long totalMemory = Runtime.getRuntime().totalMemory();
     gc();
     long freeMemory = Runtime.getRuntime().freeMemory();
-    long usedMemory = totalMemory - freeMemory;
-    return usedMemory;
+    return totalMemory - freeMemory;
   }
 
   private static void gc() {

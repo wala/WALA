@@ -49,8 +49,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
       V = IntSetUtil.getDefaultIntSetFactory().makeCopy(B);
       return !B.isEmpty();
     } else {
-      boolean result = V.addAll(B);
-      return result;
+      return V.addAll(B);
     }
   }
 
@@ -65,8 +64,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
       return (V != null);
     } else {
       if (other.V != null) {
-        boolean result = addAll(other.V);
-        return result;
+        return addAll(other.V);
       } else {
         return false;
       }
@@ -155,8 +153,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
       return (V != null);
     } else {
       if (other.V != null) {
-        boolean result = addAllInIntersection(other.V, filter);
-        return result;
+        return addAllInIntersection(other.V, filter);
       } else {
         return false;
       }
@@ -172,8 +169,7 @@ public abstract class IntSetVariable<T extends IntSetVariable<T>> extends Abstra
       }
       return (V != null);
     } else {
-      boolean result = V.addAllInIntersection(other, filter);
-      return result;
+      return V.addAllInIntersection(other, filter);
     }
   }
 

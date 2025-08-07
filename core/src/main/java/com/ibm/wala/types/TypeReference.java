@@ -501,9 +501,8 @@ public final class TypeReference implements Serializable {
     }
 
     Key key = new Key(cl, typeName);
-    TypeReference val = dictionary.get(key);
 
-    return val;
+    return dictionary.get(key);
   }
 
   public static TypeReference findOrCreateArrayOf(TypeReference t) {

@@ -107,8 +107,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
         }
         for (Map.Entry<T, Set<T>> entry : forwardEdges.entrySet()) {
           for (T t : entry.getValue()) {
-            Object n = t;
-            backwardEdges.get(n).add(entry.getKey());
+            backwardEdges.get(t).add(entry.getKey());
           }
         }
       }

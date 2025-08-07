@@ -319,8 +319,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
     boolean needSeparator = false;
     buffer.append('{');
     // int limit = length();
-    int limit = this.nbits;
-    for (int i = 0; i < limit; i++) {
+    for (int i = 0; i < this.nbits; i++) {
       if (get(i)) {
         if (needSeparator) {
           buffer.append(", ");

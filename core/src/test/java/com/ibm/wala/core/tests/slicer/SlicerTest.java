@@ -143,10 +143,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> computeBackwardSlice =
+    Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    Collection<Statement> slice = computeBackwardSlice;
     SlicerUtil.dumpSlice(slice);
 
     int i = 0;
@@ -182,10 +181,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> computeBackwardSlice =
+    Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    Collection<Statement> slice = computeBackwardSlice;
     SlicerUtil.dumpSlice(slice);
 
     assertThat(SlicerUtil.countNormals(slice)).as(slice::toString).isEqualTo(9);

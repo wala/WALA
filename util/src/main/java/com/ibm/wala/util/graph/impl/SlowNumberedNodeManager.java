@@ -36,8 +36,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     if (number < 0) {
       throw new IllegalArgumentException("number must be >= 0");
     }
-    T result = map.getMappedObject(number);
-    return result;
+    return map.getMappedObject(number);
   }
 
   @Override

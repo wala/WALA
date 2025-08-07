@@ -90,9 +90,7 @@ public class MiniModel extends AndroidModel {
 
   @Override
   public Descriptor getDescriptor() throws CancelException {
-    final Descriptor descr = super.getDescriptor();
-
-    return descr;
+    return super.getDescriptor();
   }
 
   public MiniModel(

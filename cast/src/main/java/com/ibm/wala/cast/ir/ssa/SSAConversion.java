@@ -619,8 +619,7 @@ public class SSAConversion extends AbstractSSAConversion {
   protected int getNextNewValueNumber() {
     while (symtab.isConstant(nextSSAValue) || skip(nextSSAValue)) ++nextSSAValue;
     symtab.ensureSymbol(nextSSAValue);
-    int v = nextSSAValue++;
-    return v;
+    return nextSSAValue++;
   }
 
   @Override

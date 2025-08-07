@@ -397,8 +397,7 @@ public class AndroidModelParameterManager {
    * @return SSA-Variable
    */
   public int getUnmanaged() {
-    int ret = nextLocal++;
-    return ret;
+    return nextLocal++;
   }
 
   /**

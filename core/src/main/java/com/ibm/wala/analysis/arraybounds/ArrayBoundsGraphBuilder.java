@@ -80,7 +80,6 @@ public class ArrayBoundsGraphBuilder {
   private void addConstructionLength() {
 
     for (final Integer array : this.lowerBoundGraph.getArrayLength().keySet()) {
-      final Integer tmp = array;
 
       final SSAInstruction instruction = this.defUse.getDef(array);
       if (instruction != null) {
@@ -92,11 +91,11 @@ public class ArrayBoundsGraphBuilder {
                 if (instruction.getNumberOfUses() == 1) {
                   final int constructionLength = instruction.getUse(0);
                   Integer arraysNode =
-                      ArrayBoundsGraphBuilder.this.lowerBoundGraph.getArrayLength().get(tmp);
+                      ArrayBoundsGraphBuilder.this.lowerBoundGraph.getArrayLength().get(array);
                   ArrayBoundsGraphBuilder.this.lowerBoundGraph.addEdge(
                       arraysNode, constructionLength);
                   arraysNode =
-                      ArrayBoundsGraphBuilder.this.upperBoundGraph.getArrayLength().get(tmp);
+                      ArrayBoundsGraphBuilder.this.upperBoundGraph.getArrayLength().get(array);
                   ArrayBoundsGraphBuilder.this.upperBoundGraph.addEdge(
                       arraysNode, constructionLength);
 
