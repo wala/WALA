@@ -195,7 +195,7 @@ public abstract class SSAInstruction {
   @Override
   public final boolean equals(Object obj) {
     if (this == obj) return true;
-    if (obj != null && obj instanceof SSAInstruction)
+    if (obj instanceof SSAInstruction)
       return this.instructionIndex == ((SSAInstruction) obj).instructionIndex;
     else return false;
   }

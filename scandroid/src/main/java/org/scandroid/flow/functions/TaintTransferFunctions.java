@@ -307,7 +307,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
   public IFlowFunction getReturnFlowFunction(
       BasicBlockInContext<E> call, BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
     final SSAInstruction inst = call.getLastInstruction();
-    if (null == inst || !(inst instanceof SSAInvokeInstruction)) {
+    if (!(inst instanceof SSAInvokeInstruction)) {
       // if we don't have an invoke, just punt and hope the necessary
       // information is already in global elements
 

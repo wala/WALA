@@ -333,7 +333,7 @@ public class OutflowAnalysis {
         while (it.hasNext()) {
           BasicBlockInContext<IExplodedBasicBlock> realBlock = it.next();
           final SSAInstruction inst = realBlock.getLastInstruction();
-          if (null != inst && inst instanceof SSAReturnInstruction) {
+          if (inst instanceof SSAReturnInstruction) {
             PointerKey pk = new LocalPointerKey(node, inst.getUse(0));
             for (InstanceKey ik : pa.getPointsToSet(pk)) {
               for (DomainElement ikElement :

@@ -58,8 +58,7 @@ public class InstanceKeyElement extends CodeElement {
 
   @Override
   public boolean equals(Object other) {
-    if (other != null && other instanceof InstanceKeyElement)
-      return ((InstanceKeyElement) other).ik.equals(this.ik);
+    if (other instanceof InstanceKeyElement) return ((InstanceKeyElement) other).ik.equals(this.ik);
     return false;
   }
 

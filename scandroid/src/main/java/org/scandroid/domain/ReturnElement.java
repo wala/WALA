@@ -51,7 +51,7 @@ public class ReturnElement extends CodeElement {
 
   @Override
   public boolean equals(Object other) {
-    return other != null && other instanceof ReturnElement;
+    return other instanceof ReturnElement;
   }
 
   @Override

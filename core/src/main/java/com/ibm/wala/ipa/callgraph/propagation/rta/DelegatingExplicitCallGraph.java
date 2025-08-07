@@ -77,7 +77,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public Set<CGNode> getPossibleTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
-      if (result != null && result instanceof CallSite) {
+      if (result instanceof CallSite) {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
@@ -90,7 +90,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public IntSet getPossibleTargetNumbers(CallSiteReference site) {
       Object t = targets.get(site.getProgramCounter());
-      if (t != null && t instanceof CallSite) {
+      if (t instanceof CallSite) {
         CallSite p = (CallSite) t;
         DelegatingCGNode n = (DelegatingCGNode) p.getNode();
         CallSiteReference s = p.getSite();
@@ -122,7 +122,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public int getNumberOfTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
-      if (result != null && result instanceof CallSite) {
+      if (result instanceof CallSite) {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
