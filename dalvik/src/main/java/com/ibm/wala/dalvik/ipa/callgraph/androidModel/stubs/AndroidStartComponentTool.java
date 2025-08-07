@@ -328,7 +328,7 @@ public class AndroidStartComponentTool {
 
       return androidContext;
     } else {
-      logger.debug("Can not handle the callers android-context of " + caller);
+      logger.debug("Can not handle the callers android-context of {}", caller);
       return null;
     }
   }
