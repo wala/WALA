@@ -181,7 +181,7 @@ public class FlatInstantiator implements IInstantiator {
           new SpecializedInstantiator(
               body, instructionFactory, pm, cha, scope, analysisScope, this);
       if (SpecializedInstantiator.understands(T)) {
-        return sInst.createInstance(T, asManaged, key, seen, currentDepth);
+        return sInst.createInstance(T, asManaged, key, currentDepth);
       }
     }
 

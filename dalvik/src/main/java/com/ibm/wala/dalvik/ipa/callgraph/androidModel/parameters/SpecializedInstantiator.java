@@ -109,19 +109,11 @@ public class SpecializedInstantiator extends FlatInstantiator {
       final boolean asManaged,
       VariableKey key,
       Set<? extends SSAValue> seen) {
-    return createInstance(T, asManaged, key, seen, 0);
+    return createInstance(T, asManaged, key, 0);
   }
 
   /* package private */ SSAValue createInstance(
-      final TypeReference T,
-      final boolean asManaged,
-      VariableKey key,
-      Set<? extends SSAValue> seen,
-      int currentDepth) {
-    if (seen == null) {
-
-      seen = new HashSet<>();
-    }
+      final TypeReference T, final boolean asManaged, VariableKey key, int currentDepth) {
 
     if (currentDepth > this.maxDepth) {
       final SSAValue instance = this.pm.getUnmanaged(T, key);
@@ -276,7 +268,6 @@ public class SpecializedInstantiator extends FlatInstantiator {
 
   /** Satisfy the interface. */
   @Override
-  @SuppressWarnings("unchecked")
   public int createInstance(TypeReference type, Object... instantiatorArgs) {
     // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey
     // key, Set<SSAValue> seen) {
@@ -316,11 +307,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     }
 
     return createInstance(
-            type,
-            (Boolean) instantiatorArgs[0],
-            (VariableKey) instantiatorArgs[1],
-            (Set<? extends SSAValue>) instantiatorArgs[2],
-            currentDepth)
+            type, (Boolean) instantiatorArgs[0], (VariableKey) instantiatorArgs[1], currentDepth)
         .getNumber();
   }
 }
