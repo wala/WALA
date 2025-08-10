@@ -272,7 +272,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    */
   @Override
   public boolean equals(Object obj) {
-    if ((obj != null) && (obj instanceof FixedSizeBitVector)) {
+    if (obj instanceof FixedSizeBitVector) {
       if (this == obj) { // should help alias analysis
         return true;
       }

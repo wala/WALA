@@ -661,7 +661,7 @@ public final class TypeReference implements Serializable {
 
     @Override
     public final boolean equals(Object other) {
-      assert other != null && other instanceof Key;
+      assert other instanceof Key;
       Key that = (Key) other;
       return (name.equals(that.name) && classloader.equals(that.classloader));
     }
