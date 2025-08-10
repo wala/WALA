@@ -640,7 +640,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
 
           if (ret == old) { // Yes, ==
             // This is an evil hack(tm). I should fix the Intent-Table!
-            logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
+            logger.warn("Malformend Intent-Table, staying with {} for {}", ret, intent);
             return ret;
           }
         }
