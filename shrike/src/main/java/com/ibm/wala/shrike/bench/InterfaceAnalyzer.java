@@ -44,7 +44,7 @@ public class InterfaceAnalyzer {
 
     try (final Writer w = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
-      args = instrumenter.parseStandardArgs(args);
+      instrumenter.parseStandardArgs(args);
 
       instrumenter.beginTraversal();
       ClassInstrumenter ci;

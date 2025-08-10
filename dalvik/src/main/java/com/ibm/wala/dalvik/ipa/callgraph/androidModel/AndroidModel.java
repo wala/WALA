@@ -354,15 +354,11 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       // this.mRef, toolInfo.getFlags(),
       //                    /* caller */ null, tsif, modelAcc, this.paramManager, this.body, /* self
       // */ null, toolInfo, /* callerNd */ null);
-      final SSAValue application;
       {
         final SSAValue tmpApp = modelAcc.firstExtends(AndroidTypes.ApplicationName, this.cha);
-        if (tmpApp != null) {
-          application = tmpApp;
-        } else {
+        if (tmpApp == null) {
           // Generate a real one?
-
-          application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
+          final var application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
           this.body.addConstant(application.getNumber(), new ConstantValue(null));
           application.setAssigned();
         }
