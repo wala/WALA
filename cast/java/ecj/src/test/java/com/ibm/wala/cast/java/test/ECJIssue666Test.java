@@ -22,10 +22,6 @@ import java.util.List;
 
 public class ECJIssue666Test extends Issue666Test {
 
-  public ECJIssue666Test() {
-    super(null);
-  }
-
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {

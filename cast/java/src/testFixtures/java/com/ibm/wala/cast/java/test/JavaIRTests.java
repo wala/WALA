@@ -75,14 +75,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public abstract class JavaIRTests extends IRTests {
 
-  public JavaIRTests(String projectName) {
-    super(projectName);
-  }
-
-  public JavaIRTests() {
-    this(null);
-  }
-
   static List<? extends IRAssertion> callAssertionForInterfaceTest1 =
       Arrays.asList(
           cg -> {
