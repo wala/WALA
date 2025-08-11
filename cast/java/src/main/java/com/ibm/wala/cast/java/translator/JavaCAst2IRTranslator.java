@@ -250,7 +250,6 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     assert name.getKind() == CAstNode.CONSTANT;
     CallSiteReference dummySiteRef = (CallSiteReference) name.getValue();
     int instNumber = context.cfg().getCurrentInstruction();
-    int pc = instNumber;
     boolean isStatic = (receiver == -1);
     int[] realArgs = isStatic ? arguments : new int[arguments.length + 1];
 
@@ -274,7 +273,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
     CallSiteReference realSiteRef =
         CallSiteReference.make(
-            pc, dummySiteRef.getDeclaredTarget(), dummySiteRef.getInvocationCode());
+            instNumber, dummySiteRef.getDeclaredTarget(), dummySiteRef.getInvocationCode());
 
     if (realSiteRef.getDeclaredTarget().getReturnType().equals(TypeReference.Void))
       context

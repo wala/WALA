@@ -226,9 +226,7 @@ public class Analyzer {
       return topType;
     }
 
-    String x = ClassHierarchy.findCommonSupertype(hierarchy, patchType(t1), patchType(t2));
-
-    return x;
+    return ClassHierarchy.findCommonSupertype(hierarchy, patchType(t1), patchType(t2));
   }
 
   public final BitSet getBasicBlockStarts() {

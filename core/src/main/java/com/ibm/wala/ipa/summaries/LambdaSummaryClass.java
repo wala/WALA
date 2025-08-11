@@ -373,6 +373,7 @@ public class LambdaSummaryClass extends SyntheticClass {
       }
 
       if (lambdaBodyCallee.getReturnType().equals(TypeReference.Void)) {
+        //noinspection UnusedAssignment
         summary.addStatement(
             insts.InvokeInstruction(
                 inst++,
@@ -382,10 +383,12 @@ public class LambdaSummaryClass extends SyntheticClass {
                 null));
         if (isNew) {
           // trampoline needs to return the new object
+          //noinspection UnusedAssignment
           summary.addStatement(insts.ReturnInstruction(inst++, newValNum, false));
         }
       } else {
         int ret = curValNum++;
+        //noinspection UnusedAssignment
         summary.addStatement(
             insts.InvokeInstruction(
                 inst++,
@@ -394,6 +397,7 @@ public class LambdaSummaryClass extends SyntheticClass {
                 curValNum++,
                 CallSiteReference.make(inst, lambdaBodyCallee, code),
                 null));
+        //noinspection UnusedAssignment
         summary.addStatement(
             insts.ReturnInstruction(
                 inst++, ret, lambdaBodyCallee.getReturnType().isPrimitiveType()));
@@ -402,8 +406,7 @@ public class LambdaSummaryClass extends SyntheticClass {
       throw new RuntimeException(e);
     }
 
-    SummarizedMethod method = new SummarizedMethod(ref, summary, LambdaSummaryClass.this);
-    return method;
+    return new SummarizedMethod(ref, summary, this);
   }
 
   private static Dispatch getDispatchForMethodHandleKind(int kind) {

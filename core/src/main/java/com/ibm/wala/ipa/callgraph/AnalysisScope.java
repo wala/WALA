@@ -529,8 +529,6 @@ public class AnalysisScope {
       ldrImplLines.add(ldrImplDescrLine);
     }
 
-    ShallowAnalysisScope shallowScope =
-        new ShallowAnalysisScope(getExclusions(), moduleLines, ldrImplLines);
-    return shallowScope;
+    return new ShallowAnalysisScope(getExclusions(), moduleLines, ldrImplLines);
   }
 }

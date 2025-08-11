@@ -110,9 +110,8 @@ public class GraphIntegrity {
       n1 = G.getNumberOfNodes();
       n2 = 0;
       for (T t : G) {
-        Object n = t;
         if (DEBUG_LEVEL > 1) {
-          System.err.println(("n2 loop: " + n));
+          System.err.println(("n2 loop: " + t));
         }
         n2++;
       }

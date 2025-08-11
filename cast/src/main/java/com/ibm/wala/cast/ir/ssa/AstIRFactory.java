@@ -158,15 +158,12 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
     SSAInstruction[] instrs = oldInstrs.clone();
 
-    IR newIR =
-        new AstIR(
-            (AstMethod) method,
-            instrs,
-            ((AstMethod) method).symbolTable().copy(),
-            new SSACFG(method, oldCfg, instrs),
-            options);
-
-    return newIR;
+    return new AstIR(
+        (AstMethod) method,
+        instrs,
+        ((AstMethod) method).symbolTable().copy(),
+        new SSACFG(method, oldCfg, instrs),
+        options);
   }
 
   public static IRFactory<IMethod> makeDefaultFactory() {

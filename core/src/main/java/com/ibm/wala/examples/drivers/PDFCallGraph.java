@@ -157,9 +157,7 @@ public class PDFCallGraph {
 
     System.err.println(CallGraphStats.getStats(cg));
 
-    Graph<CGNode> g = pruneForAppLoader(cg);
-
-    return g;
+    return pruneForAppLoader(cg);
   }
 
   public static Graph<CGNode> pruneForAppLoader(CallGraph g) {

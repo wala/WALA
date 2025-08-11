@@ -584,8 +584,7 @@ public class ClassLoaderImpl implements IClassLoader {
       }
     }
     // delegating failed. Try our own namespace.
-    IClass result = loadedClasses.get(className);
-    return result;
+    return loadedClasses.get(className);
   }
 
   /** Method getParent. */

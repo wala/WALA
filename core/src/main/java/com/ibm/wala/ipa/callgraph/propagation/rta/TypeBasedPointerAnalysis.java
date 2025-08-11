@@ -133,8 +133,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
         c.add(klass);
       }
     }
-    OrdinalSet<InstanceKey> result = toOrdinalInstanceKeySet(c);
-    return result;
+    return toOrdinalInstanceKeySet(c);
   }
 
   private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection<IClass> c) {

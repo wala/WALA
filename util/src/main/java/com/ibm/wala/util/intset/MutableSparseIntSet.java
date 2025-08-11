@@ -210,11 +210,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   @NullUnmarked
-  public void intersectWith(SparseIntSet set) {
-    if (set == null) {
+  public void intersectWith(SparseIntSet that) {
+    if (that == null) {
       throw new IllegalArgumentException("null set");
     }
-    SparseIntSet that = set;
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {
@@ -330,8 +329,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
     // common-case optimization
     if (that.size == 1) {
-      boolean result = add(that.elements[0]);
-      return result;
+      return add(that.elements[0]);
     }
 
     int[] br = that.elements;

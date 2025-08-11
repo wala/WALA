@@ -35,7 +35,6 @@ public class Streams {
       in.read(data);
       b.write(data);
     }
-    byte[] data = b.toByteArray();
-    return data;
+    return b.toByteArray();
   }
 }

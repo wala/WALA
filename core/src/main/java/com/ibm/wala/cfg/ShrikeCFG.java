@@ -417,8 +417,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
         Assertions.UNREACHABLE();
         handlers = null;
       }
-      ExceptionHandler[] hs = handlers[getLastInstructionIndex()];
-      return hs;
+      return handlers[getLastInstructionIndex()];
     }
 
     private void addNormalEdgeTo(BasicBlock b) {

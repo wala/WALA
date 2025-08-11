@@ -44,8 +44,7 @@ public class Util {
   public static String getJavaJar(AnalysisScope javaScope) throws IOException {
     Module javaJar = javaScope.getModules(javaScope.getApplicationLoader()).iterator().next();
     if (javaJar instanceof JarFileModule) {
-      String javaJarPath = ((JarFileModule) javaJar).getAbsolutePath();
-      return javaJarPath;
+      return ((JarFileModule) javaJar).getAbsolutePath();
     } else {
       assert javaJar instanceof NestedJarFileModule : javaJar;
       File F = File.createTempFile("android", ".jar");

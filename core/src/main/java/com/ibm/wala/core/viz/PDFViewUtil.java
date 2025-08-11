@@ -86,8 +86,7 @@ public class PDFViewUtil {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) issaBasicBlock;
       labelMap.put(bb, getNodeLabel(ir, bb));
     }
-    NodeDecorator<ISSABasicBlock> labels = labelMap::get;
-    return labels;
+    return labelMap::get;
   }
 
   /**

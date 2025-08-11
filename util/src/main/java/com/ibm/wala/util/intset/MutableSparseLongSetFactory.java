@@ -37,8 +37,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
       for (Long I : T) {
         copy[i++] = I;
       }
-      MutableSparseLongSet result = new MutableSparseLongSet(copy);
-      return result;
+      return new MutableSparseLongSet(copy);
     }
   }
 

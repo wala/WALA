@@ -60,17 +60,15 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
 
   protected ZeroXInstanceKeys makeInstanceKeys(
       IClassHierarchy cha, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
-    ZeroXInstanceKeys zik =
-        new ZeroXInstanceKeys(
-            options,
-            cha,
-            contextInterpreter,
-            ZeroXInstanceKeys.ALLOCATIONS
-                | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
-                | ZeroXInstanceKeys.SMUSH_STRINGS
-                | ZeroXInstanceKeys.SMUSH_MANY
-                | ZeroXInstanceKeys.SMUSH_THROWABLES);
-    return zik;
+    return new ZeroXInstanceKeys(
+        options,
+        cha,
+        contextInterpreter,
+        ZeroXInstanceKeys.ALLOCATIONS
+            | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+            | ZeroXInstanceKeys.SMUSH_STRINGS
+            | ZeroXInstanceKeys.SMUSH_MANY
+            | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
   /**

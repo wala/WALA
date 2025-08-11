@@ -268,7 +268,6 @@ public class XMLSummaryWriter {
     } else {
       typeSigs.append(returnType.getName().toUnicodeString()).append(';');
     }
-    String descriptor = typeSigs.toString();
-    return descriptor;
+    return typeSigs.toString();
   }
 }
