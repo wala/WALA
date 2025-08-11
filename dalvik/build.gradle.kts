@@ -114,6 +114,7 @@ val downloadDroidBench =
 val unpackDroidBench by
     tasks.registering(Sync::class) {
       from(zipTree { downloadDroidBench.singleFile }) {
+        include("*/apk/**")
         eachFile {
           relativePath = RelativePath(!isDirectory, *relativePath.segments.drop(1).toTypedArray())
         }

@@ -469,6 +469,7 @@ public final class ClassInstrumenter {
       codeAttributes[codeAttrIndex++] = locals;
     }
     if (stacks != null) {
+      //noinspection UnusedAssignment
       codeAttributes[codeAttrIndex++] = stacks;
     }
     code.setAttributes(codeAttributes);

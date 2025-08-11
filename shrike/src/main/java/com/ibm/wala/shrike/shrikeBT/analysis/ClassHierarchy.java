@@ -41,8 +41,7 @@ public final class ClassHierarchy {
     }
 
     int r = NO;
-    for (String iface2 : ifaces) {
-      String iface = iface2;
+    for (String iface : ifaces) {
       if (visited.add(iface)) {
         if (iface.equals(t2)) {
           return YES;
@@ -114,12 +113,11 @@ public final class ClassHierarchy {
 
     int r = NO;
     for (String subtype : subtypes) {
-      String subt = subtype;
-      if (visited.add(subt)) {
-        if (subt.equals(t2)) {
+      if (visited.add(subtype)) {
+        if (subtype.equals(t2)) {
           return YES;
         } else {
-          int v = checkSubtypesContain(hierarchy, subt, t2, visited);
+          int v = checkSubtypesContain(hierarchy, subtype, t2, visited);
           switch (v) {
             case YES:
               return YES;

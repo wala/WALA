@@ -126,8 +126,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
       } else {
         // TODO: Go interactive and ask user?
         final Iterator<AndroidComponent> it = possibleTargets.iterator();
-        final AndroidComponent targetComponent = it.next();
-        return targetComponent;
+        return it.next();
       }
     }
   }

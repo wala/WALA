@@ -873,20 +873,18 @@ public class Util {
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder result =
-        new nObjBuilder(
-            n,
-            cha,
-            options,
-            cache,
-            appSelector,
-            appInterpreter,
-            ZeroXInstanceKeys.ALLOCATIONS
-                | ZeroXInstanceKeys.SMUSH_MANY
-                | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
-                | ZeroXInstanceKeys.SMUSH_STRINGS
-                | ZeroXInstanceKeys.SMUSH_THROWABLES);
-    return result;
+    return new nObjBuilder(
+        n,
+        cha,
+        options,
+        cache,
+        appSelector,
+        appInterpreter,
+        ZeroXInstanceKeys.ALLOCATIONS
+            | ZeroXInstanceKeys.SMUSH_MANY
+            | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+            | ZeroXInstanceKeys.SMUSH_STRINGS
+            | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
   /**
@@ -920,10 +918,8 @@ public class Util {
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder result =
-        new nObjBuilder(
-            n, cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
-    return result;
+    return new nObjBuilder(
+        n, cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
   }
 
   /**

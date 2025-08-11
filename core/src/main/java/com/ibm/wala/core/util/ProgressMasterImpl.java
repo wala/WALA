@@ -191,7 +191,6 @@ class ProgressMasterImpl implements IProgressMonitor {
 
         timedOut = true;
       } catch (InterruptedException e) {
-        return;
       }
     }
 

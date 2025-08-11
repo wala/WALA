@@ -5,6 +5,7 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
+      - 'gh-readonly-queue/**'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true

@@ -19,10 +19,10 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.viz.DotUtil;
 import com.ibm.wala.util.viz.NodeDecorator;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.Collection;
 
 public class DexDotUtil extends DotUtil {
@@ -95,56 +95,18 @@ public class DexDotUtil extends DotUtil {
       dotExe, outputTypeCmdLineParam(), "-o", outputFile, "-v", dotFile.getAbsolutePath()
     };
 
-    BufferedInputStream output = null;
-    BufferedInputStream error = null;
     try {
-      Process p = Runtime.getRuntime().exec(cmdarray);
-      output = new BufferedInputStream(p.getInputStream());
-      error = new BufferedInputStream(p.getErrorStream());
-      boolean repeat = true;
-      while (repeat) {
-        try {
-          Thread.sleep(500);
-        } catch (InterruptedException e1) {
-          e1.printStackTrace();
-          // just ignore and continue
-        }
-        if (output.available() > 0) {
-          byte[] data = new byte[output.available()];
-          output.read(data);
-        }
-        if (error.available() > 0) {
-          byte[] data = new byte[error.available()];
-          error.read(data);
-        }
-        try {
-          p.exitValue();
-          // if we get here, the process has terminated
-          repeat = false;
-
-        } catch (IllegalThreadStateException e) {
-          // this means the process has not yet terminated.
-          repeat = true;
-        }
-      }
+      new ProcessBuilder(cmdarray)
+          .redirectOutput(Redirect.DISCARD)
+          .redirectError(Redirect.DISCARD)
+          .start()
+          .waitFor();
+    } catch (InterruptedException e1) {
+      e1.printStackTrace();
+      // just ignore and continue
     } catch (IOException e) {
       e.printStackTrace();
       throw new WalaException("IOException in " + DotUtil.class);
-    } finally {
-      if (output != null) {
-        try {
-          output.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-      if (error != null) {
-        try {
-          error.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
     }
   }
 
@@ -288,7 +250,7 @@ public class DexDotUtil extends DotUtil {
   }
 
   private static String cleanUpString(String s) {
-    if (!s.isEmpty() && s.startsWith("Node: ")) {
+    if (s.startsWith("Node: ")) {
       String[] nodeString = s.split(",");
       if (nodeString.length >= 3) {
         String className = nodeString[1];

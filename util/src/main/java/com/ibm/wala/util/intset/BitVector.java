@@ -362,7 +362,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public boolean equals(Object obj) {
-    if ((obj != null) && (obj instanceof BitVector)) {
+    if (obj instanceof BitVector) {
       if (this == obj) { // should help alias analysis
         return true;
       }

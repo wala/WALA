@@ -51,7 +51,6 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
     if (V == null) {
       V = new MutableSharedBitVectorIntSet(new BitVectorIntSet(B));
-      return;
     } else {
       V.addAll(new BitVectorIntSet(B));
     }
@@ -134,11 +133,6 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     if (V != null) {
       V.remove(i);
     }
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
   }
 
   public int populationCount() {

@@ -59,7 +59,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   protected JSCallGraph runBoundedTest(
       String script, Object[][] assertions, BuilderType builderType, int bound)
       throws WalaException, Error, CancelException {
-    JSCallGraph cg = null;
+    final JSCallGraph cg;
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory());
     IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
     List<Module> scripts = new ArrayList<>();

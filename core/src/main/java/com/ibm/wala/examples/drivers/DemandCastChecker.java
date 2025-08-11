@@ -113,9 +113,8 @@ public class DemandCastChecker {
       throws IllegalArgumentException, IOException {
     System.err.println("=====BENCHMARK " + benchName + "=====");
     System.err.println("analyzing " + benchName);
-    DemandRefinementPointsTo dmp = null;
     try {
-      dmp = makeDemandPointerAnalysis(scopeFile, mainClass, benchName);
+      final var dmp = makeDemandPointerAnalysis(scopeFile, mainClass, benchName);
       findFailingCasts(dmp.getBaseCallGraph(), dmp);
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
@@ -164,8 +163,8 @@ public class DemandCastChecker {
   /** builds a call graph, and sets the corresponding heap model for analysis */
   private static Pair<CallGraph, PointerAnalysis<InstanceKey>> buildCallGraph(
       ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException {
-    CallGraph retCG = null;
-    PointerAnalysis<InstanceKey> retPA = null;
+    CallGraph retCG;
+    PointerAnalysis<InstanceKey> retPA;
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
@@ -217,9 +216,8 @@ public class DemandCastChecker {
       IR ir = node.getIR();
       if (ir == null) continue;
       SSAInstruction[] instrs = ir.getInstructions();
-      for (SSAInstruction instr : instrs) {
+      for (SSAInstruction instruction : instrs) {
         if ((long) numSafe + numMightFail > MAX_CASTS) break outer;
-        SSAInstruction instruction = instr;
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
           final TypeReference[] declaredResultTypes = castInstr.getDeclaredResultTypes();

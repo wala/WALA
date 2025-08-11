@@ -187,8 +187,7 @@ public class TabulationSolver<T, P, F> {
     try {
       initialize();
       forwardTabulateSLRPs();
-      Result r = new Result();
-      return r;
+      return new Result();
     } catch (CancelException | CancelRuntimeException e) {
       // store a partially-tabulated result in the thrown exception.
       Result r = new Result();
@@ -693,8 +692,7 @@ public class TabulationSolver<T, P, F> {
     if (DEBUG_LEVEL > 0) {
       System.err.println("got binary flow function " + f);
     }
-    IntSet result = f.getTargets(call_d, exit_d);
-    return result;
+    return f.getTargets(call_d, exit_d);
   }
 
   /**
@@ -792,8 +790,7 @@ public class TabulationSolver<T, P, F> {
         if ((size == 0) || ((size == 1) && preExistFacts.contains(j))) {
           return j;
         } else {
-          int result = alpha.merge(preExistFacts, j);
-          return result;
+          return alpha.merge(preExistFacts, j);
         }
       }
     } else {

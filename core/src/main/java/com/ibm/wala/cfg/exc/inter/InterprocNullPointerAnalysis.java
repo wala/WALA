@@ -277,9 +277,8 @@ public final class InterprocNullPointerAnalysis {
       final PartialCallGraph partialCG1 = PartialCallGraph.make(fullCG, partialRoots, nodes);
 
       // delete the nodes not reachable by root (consider the different implementations of "make")
-      final PartialCallGraph partialCG2 = PartialCallGraph.make(partialCG1, partialRoots);
 
-      return partialCG2;
+      return PartialCallGraph.make(partialCG1, partialRoots);
     }
   }
 }

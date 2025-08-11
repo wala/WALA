@@ -143,8 +143,7 @@ public class MapUtil {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    WeakHashMap<K, V> result = M.computeIfAbsent(key, k -> new WeakHashMap<>(2));
-    return result;
+    return M.computeIfAbsent(key, k -> new WeakHashMap<>(2));
   }
 
   /**

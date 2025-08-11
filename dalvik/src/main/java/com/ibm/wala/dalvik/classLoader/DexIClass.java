@@ -249,11 +249,6 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     }
   }
 
-  @Override
-  public int hashCode() {
-    return hashCode;
-  }
-
   Collection<Annotation> getAnnotations(Set<String> types) {
     Set<Annotation> result = HashSetFactory.make();
     for (org.jf.dexlib2.iface.Annotation a : classDef.getAnnotations()) {

@@ -68,8 +68,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
-    INodeWithNumberedEdges en = N;
-    IntSet pred = en.getPredNumbers();
+    IntSet pred = N.getPredNumbers();
     Iterator<T> empty = EmptyIterator.instance();
     return (pred == null) ? empty : (Iterator<T>) new IntSetNodeIterator(pred.intIterator());
   }
@@ -79,8 +78,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (node == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
-    INodeWithNumberedEdges en = node;
-    IntSet pred = en.getPredNumbers();
+    IntSet pred = node.getPredNumbers();
     return (pred == null) ? new SparseIntSet() : pred;
   }
 
@@ -92,8 +90,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
-    INodeWithNumberedEdges en = N;
-    IntSet s = en.getPredNumbers();
+    IntSet s = N.getPredNumbers();
     if (s == null) {
       return 0;
     } else {
@@ -109,8 +106,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
-    INodeWithNumberedEdges en = N;
-    IntSet succ = en.getSuccNumbers();
+    IntSet succ = N.getSuccNumbers();
     Iterator<T> empty = EmptyIterator.instance();
     return (succ == null) ? empty : (Iterator<T>) new IntSetNodeIterator(succ.intIterator());
   }
@@ -123,8 +119,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
-    INodeWithNumberedEdges en = N;
-    IntSet s = en.getSuccNumbers();
+    IntSet s = N.getSuccNumbers();
     return s == null ? 0 : s.size();
   }
 
@@ -153,8 +148,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    INodeWithNumberedEdges n = node;
-    n.removeAllIncidentEdges();
+    node.removeAllIncidentEdges();
   }
 
   /**
@@ -165,8 +159,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }
-    INodeWithNumberedEdges n = node;
-    n.removeIncomingEdges();
+    node.removeIncomingEdges();
   }
 
   /**
@@ -177,8 +170,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }
-    INodeWithNumberedEdges n = node;
-    n.removeOutgoingEdges();
+    node.removeOutgoingEdges();
   }
 
   @Override
@@ -194,8 +186,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }
-    INodeWithNumberedEdges en = node;
-    IntSet succ = en.getSuccNumbers();
+    IntSet succ = node.getSuccNumbers();
     return (succ == null) ? new SparseIntSet() : succ;
   }
 }

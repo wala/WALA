@@ -354,15 +354,11 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       // this.mRef, toolInfo.getFlags(),
       //                    /* caller */ null, tsif, modelAcc, this.paramManager, this.body, /* self
       // */ null, toolInfo, /* callerNd */ null);
-      final SSAValue application;
       {
         final SSAValue tmpApp = modelAcc.firstExtends(AndroidTypes.ApplicationName, this.cha);
-        if (tmpApp != null) {
-          application = tmpApp;
-        } else {
+        if (tmpApp == null) {
           // Generate a real one?
-
-          application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
+          final var application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
           this.body.addConstant(application.getNumber(), new ConstantValue(null));
           application.setAssigned();
         }
@@ -810,9 +806,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
                       + asMethod);
             }
             redirect.setLocalNames(pm.makeLocalNames());
-            SummarizedMethod override =
-                new SummarizedMethodWithNames(mRef, redirect, declaringClass);
-            return override;
+            return new SummarizedMethodWithNames(mRef, redirect, declaringClass);
           } else if (this instanceof ExternalModel) {
             final SSAValue trash = pm.getUnmanaged(AndroidTypes.Intent, "trash");
             invokation =
@@ -889,13 +883,12 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       }
       // TODO: Throw into an other loader
       redirect.setLocalNames(pm.makeLocalNames());
-      SummarizedMethod override = new SummarizedMethodWithNames(mRef, redirect, declaringClass);
 
       // assert(asMethod.getReturnType().equals(TypeReference.Void)) : "getMethodAs does not support
       // return values. Requested: " +
       //    asMethod.getReturnType().toString();                  // TODO: Implement
 
-      return override;
+      return new SummarizedMethodWithNames(mRef, redirect, declaringClass);
 
     } catch (Exception e) {
       e.printStackTrace();

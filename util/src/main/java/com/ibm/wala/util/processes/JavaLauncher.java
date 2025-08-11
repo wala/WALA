@@ -151,9 +151,11 @@ public class JavaLauncher extends Launcher {
    * @return the string that identifies the java executable file
    */
   public static String defaultJavaExe() {
-    String java =
-        System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
-    return java;
+    return System.getProperty("java.home")
+        + File.separatorChar
+        + "bin"
+        + File.separatorChar
+        + "java";
   }
 
   /** Launch the java process. */

@@ -164,8 +164,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
           IllegalArgumentException,
           InvocationTargetException,
           NoSuchFieldException {
-    ClassLoader classLoader = cl.getClassLoader();
-    ClassLoader bootstrapCL = classLoader;
+    ClassLoader bootstrapCL = cl.getClassLoader();
 
     Class<?> bootstrapClass =
         Class.forName(getBootstrap().methodClass().replace('/', '.'), false, bootstrapCL);
@@ -187,7 +186,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     // new Lookup object
     args[0] = lutrusted;
     args[1] = getMethodName();
-    args[2] = makeMethodType(classLoader, getMethodSignature());
+    args[2] = makeMethodType(bootstrapCL, getMethodSignature());
     for (int i = 3; i < bt.parameterCount(); i++) {
       args[i] = getBootstrap().callArgument(bootstrapCL, i - 3);
     }
@@ -208,8 +207,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     for (int i = 0; i < paramTypes.length; i++) {
       paramClasses[i] = Class.forName(Util.makeClass(paramTypes[i]), false, classLoader);
     }
-    MethodType mt = MethodType.methodType(returnClass, paramClasses);
-    return mt;
+    return MethodType.methodType(returnClass, paramClasses);
   }
 
   static InvokeDynamicInstruction make(ConstantPoolReader cp, int index, int mode) {

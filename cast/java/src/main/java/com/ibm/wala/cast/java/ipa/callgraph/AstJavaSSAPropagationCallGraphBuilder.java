@@ -22,7 +22,6 @@ import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -183,9 +182,8 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
             new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-                IntSetVariable<?> tv = rhs;
-                if (tv.getValue() != null) {
-                  tv.getValue()
+                if (rhs.getValue() != null) {
+                  rhs.getValue()
                       .foreach(
                           ptr -> {
                             InstanceKey iKey = system.getInstanceKey(ptr);

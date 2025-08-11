@@ -21,7 +21,6 @@ import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstClass;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -60,6 +59,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.jar.JarFile;
@@ -182,26 +182,22 @@ public abstract class IRTests {
     public void check(CallGraph cg) {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
-      boolean found = false;
-      for (CGNode cgNode : cg.getNodes(mref)) {
-        assert cgNode.getMethod() instanceof AstMethod;
-        DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
-        for (SSAInstruction inst : cgNode.getIR().getInstructions()) {
-          if (findInstruction.test(inst)) {
-            Position pos = dbg.getOperandPosition(inst.iIndex(), operand);
-            if (pos != null) {
-              if (pos.getFirstLine() == position[0]
-                  && pos.getFirstCol() == position[1]
-                  && pos.getLastLine() == position[2]
-                  && pos.getLastCol() == position[3]) {
-                found = true;
-              }
-            }
-          }
-        }
-      }
-
-      assertThat(found).isTrue();
+      assertThat(cg.getNodes(mref))
+          .allMatch(cgNode -> cgNode.getMethod() instanceof AstMethod)
+          .anySatisfy(
+              cgNode -> {
+                DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
+                assertThat(cgNode.getIR().getInstructions())
+                    .filteredOn(findInstruction)
+                    .extracting(inst -> dbg.getOperandPosition(inst.iIndex(), operand))
+                    .filteredOn(Objects::nonNull)
+                    .anyMatch(
+                        pos ->
+                            pos.getFirstLine() == position[0]
+                                && pos.getFirstCol() == position[1]
+                                && pos.getLastLine() == position[2]
+                                && pos.getLastCol() == position[3]);
+              });
     }
   }
 
@@ -220,12 +216,8 @@ public abstract class IRTests {
 
     @Override
     public void check(CallGraph cg) {
-
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
-
-      for (CGNode cgNode : cg.getNodes(mref)) {
-        assertThat(check(cgNode.getMethod(), cgNode.getIR())).isTrue();
-      }
+      assertThat(cg.getNodes(mref)).allMatch(cgNode -> check(cgNode.getMethod(), cgNode.getIR()));
     }
 
     boolean check(IMethod m, IR ir) {
@@ -473,8 +465,7 @@ public abstract class IRTests {
       String loaderName, String typeStr, IClassHierarchy cha) {
     ClassLoaderReference clr = findLoader(loaderName, cha);
     TypeName typeName = TypeName.string2TypeName('L' + typeStr);
-    TypeReference typeRef = TypeReference.findOrCreate(clr, typeName);
-    return typeRef;
+    return TypeReference.findOrCreate(clr, typeName);
   }
 
   private static ClassLoaderReference findLoader(String loaderName, IClassHierarchy cha) {
@@ -491,19 +482,12 @@ public abstract class IRTests {
 
   public static void populateScope(
       JavaSourceAnalysisEngine engine, Collection<Path> sources, List<String> libs) {
-    boolean foundLib = false;
-    for (String lib : libs) {
-      File libFile = new File(lib);
-      if (libFile.exists()) {
-        foundLib = true;
-        try {
-          engine.addSystemModule(new JarFileModule(new JarFile(libFile, false)));
-        } catch (IOException e) {
-          fail(e.getMessage());
-        }
-      }
-    }
-    assertThat(foundLib).isTrue();
+    assertThat(libs)
+        .map(File::new)
+        .filteredOn(File::exists)
+        .isNotEmpty()
+        .allSatisfy(
+            libFile -> engine.addSystemModule(new JarFileModule(new JarFile(libFile, false))));
 
     for (Path srcFilePath : sources) {
       Path srcFileName = srcFilePath.getFileName();

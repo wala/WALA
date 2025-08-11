@@ -103,8 +103,7 @@ public class ViewIRAction<P> extends Action {
       throw new UnsupportedOperationException(
           "did not expect selection of size " + selection.size());
     }
-    CGNode first = (CGNode) selection.getFirstElement();
-    return first;
+    return (CGNode) selection.getFirstElement();
   }
 
   protected SWTTreeViewer<P> getViewer() {
