@@ -270,7 +270,7 @@ public class Analyzer {
     }
 
     // stop if we've already visited this instruction or if we've gone outside the mask
-    for (; !reachable.get(from) && (mask == null || mask.get(from)); ++from) {
+    while (!reachable.get(from) && (mask == null || mask.get(from))) {
 
       reachable.set(from);
 
@@ -290,6 +290,8 @@ public class Analyzer {
       if (!instr.isFallThrough()) {
         break;
       }
+
+      ++from;
     }
   }
 
