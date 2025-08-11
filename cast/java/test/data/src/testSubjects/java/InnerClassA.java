@@ -10,7 +10,7 @@
  */
 // other stranger test cases
 //
-// combininations of: 
+// combinations of:
 //		o.new() form
 //      function calls
 //      getting enclosings from one AND multiple levels up

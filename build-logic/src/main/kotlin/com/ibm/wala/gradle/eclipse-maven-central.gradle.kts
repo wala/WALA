@@ -10,7 +10,7 @@ plugins {
   id("com.ibm.wala.gradle.java")
 }
 
-// This subproject uses one or more Eclipse dependencies. Eensure that it is using an
+// This subproject uses one or more Eclipse dependencies. Ensure that it is using an
 // Eclipse-compatible Java toolchain. That toolchain might be newer than the Java toolchain that
 // WALA uses elsewhere.
 java.toolchain.languageVersion = the<EclipseCompatibleJavaExtension>().languageVersion

@@ -42,7 +42,7 @@ open class CreatePackageList : DefaultTask() {
 
   @TaskAction
   fun create() =
-      // relative subbdirs as dot-delimited qualified Java package names, one per line
+      // relative subdirs as dot-delimited qualified Java package names, one per line
       packageListDirectory.get().file("package-list").asFile.printWriter().use { out ->
         getSourceFileSubdirectories().forEach { out.println(it.replace(File.separator, ".")) }
       }
