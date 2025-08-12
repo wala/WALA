@@ -10,6 +10,7 @@ import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.kotlin.dsl.assign
 
 /** Specialized task for Kawa compilation into jar archive. */
 @CacheableTask
@@ -23,7 +24,7 @@ abstract class CompileKawaScheme : JavaExec() {
 
   init {
     classpath(project.tasks.named("extractKawa"))
-    mainClass.set("kawa.repl")
+    mainClass = "kawa.repl"
 
     args("-d", outputDir.get().asFile)
 
