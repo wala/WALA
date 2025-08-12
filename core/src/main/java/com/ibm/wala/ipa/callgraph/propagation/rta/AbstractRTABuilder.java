@@ -370,9 +370,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   protected ContextSelector makeContextSelector(ContextSelector appContextSelector) {
     ContextSelector def = new DefaultContextSelector(options, cha);
-    ContextSelector contextSelector =
-        appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
-    return contextSelector;
+    return appContextSelector == null
+        ? def
+        : new DelegatingContextSelector(appContextSelector, def);
   }
 
   protected SSAContextInterpreter makeContextInterpreter(
@@ -384,11 +384,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
             ReflectionContextInterpreter.createReflectionContextInterpreter(
                 cha, getOptions(), getAnalysisCache()),
             defI);
-    SSAContextInterpreter contextInterpreter =
-        appContextInterpreter == null
-            ? defI
-            : new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
-    return contextInterpreter;
+    return appContextInterpreter == null
+        ? defI
+        : new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
   }
 
   @Override

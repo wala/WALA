@@ -73,8 +73,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
       } else {
         if (s.size() == BAD_HC) {
           for (T t : s) {
-            Object o = t;
-            System.err.println(o + " " + o.hashCode());
+            System.err.println(t + " " + t.hashCode());
           }
           assert false : "bad hc " + arg0.getClass() + ' ' + arg0;
         } else {

@@ -16,10 +16,6 @@ import org.junit.jupiter.api.Test;
 
 public abstract class JLexTest extends IRTests {
 
-  public JLexTest() {
-    super(null);
-  }
-
   protected String singleJavaInputForTest() {
     return "JLex";
   }

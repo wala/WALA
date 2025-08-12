@@ -13,38 +13,4 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.ssa.SSAInstruction;
 
 public abstract class AstAbstractInstructionVisitor extends SSAInstruction.Visitor
-    implements AstInstructionVisitor {
-
-  @Override
-  public void visitPropertyRead(AstPropertyRead instruction) {}
-
-  @Override
-  public void visitPropertyWrite(AstPropertyWrite instruction) {}
-
-  @Override
-  public void visitAstLexicalRead(AstLexicalRead instruction) {}
-
-  @Override
-  public void visitAstLexicalWrite(AstLexicalWrite instruction) {}
-
-  @Override
-  public void visitAstGlobalRead(AstGlobalRead instruction) {}
-
-  @Override
-  public void visitAstGlobalWrite(AstGlobalWrite instruction) {}
-
-  @Override
-  public void visitAssert(AstAssertInstruction instruction) {}
-
-  @Override
-  public void visitEachElementGet(EachElementGetInstruction inst) {}
-
-  @Override
-  public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
-
-  @Override
-  public void visitIsDefined(AstIsDefinedInstruction inst) {}
-
-  @Override
-  public void visitEcho(AstEchoInstruction inst) {}
-}
+    implements AstInstructionVisitor {}

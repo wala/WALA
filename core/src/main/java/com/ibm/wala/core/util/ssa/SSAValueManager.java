@@ -272,7 +272,6 @@ public class SSAValueManager {
         //        }
       }
       assert didPhi;
-      return;
     } else {
       throw new IllegalStateException("This should not be reached!");
     }

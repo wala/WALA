@@ -644,8 +644,7 @@ public final class MethodEditor {
           adjustedHandlers = new IdentityHashMap<>();
         }
 
-        for (ExceptionHandler element : hs) {
-          ExceptionHandler h = element;
+        for (ExceptionHandler h : hs) {
           if (!adjustedHandlers.containsKey(h)) {
             adjustedHandlers.put(h, null);
             h.handler = labelDefs[h.handler]; // breaks invariant of ExceptionHandler: immutable!

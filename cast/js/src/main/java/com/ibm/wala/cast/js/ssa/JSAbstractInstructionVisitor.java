@@ -11,20 +11,12 @@
 package com.ibm.wala.cast.js.ssa;
 
 import com.ibm.wala.cast.ir.ssa.AstAbstractInstructionVisitor;
-import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
-import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 
 public class JSAbstractInstructionVisitor extends AstAbstractInstructionVisitor
     implements JSInstructionVisitor {
 
   @Override
   public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {}
-
-  @Override
-  public void visitPropertyRead(AstPropertyRead instruction) {}
-
-  @Override
-  public void visitPropertyWrite(AstPropertyWrite instruction) {}
 
   @Override
   public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {}

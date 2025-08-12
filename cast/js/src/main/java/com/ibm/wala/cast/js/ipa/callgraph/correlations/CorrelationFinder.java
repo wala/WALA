@@ -265,8 +265,7 @@ public class CorrelationFinder {
         assert false : e.warning;
       }
     }
-    Map<IMethod, CorrelationSummary> summaries = findCorrelatedAccesses(scripts);
-    return summaries;
+    return findCorrelatedAccesses(scripts);
   }
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(
@@ -308,8 +307,7 @@ public class CorrelationFinder {
     // first try interpreting as local file name, if that doesn't work just assume it's a URL
     try {
       File f = new FileProvider().getFileFromClassLoader(src, this.getClass().getClassLoader());
-      URL url = f.toURI().toURL();
-      return url;
+      return f.toURI().toURL();
     } catch (FileNotFoundException fnfe) {
       return new URL(src);
     }

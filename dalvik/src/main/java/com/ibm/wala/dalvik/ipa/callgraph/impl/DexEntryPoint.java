@@ -76,7 +76,6 @@ public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyD
   /* END Custom change */
   @Override
   protected TypeReference[] makeParameterTypes(IMethod method, int i) {
-    TypeReference[] trA = new TypeReference[] {method.getParameterType(i)};
-    return trA;
+    return new TypeReference[] {method.getParameterType(i)};
   }
 }

@@ -45,7 +45,6 @@ public class ECJJava17IRTest extends ECJIRTests {
   private static final String packageName = "javaonepointseven";
 
   public ECJJava17IRTest() {
-    super(null);
     dump = true;
   }
 

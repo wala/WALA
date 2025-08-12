@@ -134,8 +134,7 @@ public final class MethodOptimizer {
 
     for (int i = 0; i < instructions.length; i++) {
       int[] targets = instructions[i].getBranchTargets();
-      for (int target2 : targets) {
-        int target = target2;
+      for (int target : targets) {
         backEdges[target][backEdgeCount[target]] = i;
         backEdgeCount[target]++;
       }

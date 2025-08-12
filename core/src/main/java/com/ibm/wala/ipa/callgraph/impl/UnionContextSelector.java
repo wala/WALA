@@ -59,8 +59,7 @@ public class UnionContextSelector implements ContextSelector {
     } else if (ctxB == null) {
       return ctxA;
     } else {
-      final Context ctxU = new DelegatingContext(ctxA, ctxB);
-      return ctxU;
+      return new DelegatingContext(ctxA, ctxB);
     }
   }
 

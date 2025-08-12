@@ -292,7 +292,7 @@ public class StackMapTableWriter extends Element {
 
   @Override
   public int copyInto(byte[] buf, int offset) {
-    System.arraycopy(data, 0, buf, offset + 0, data.length);
+    System.arraycopy(data, 0, buf, offset, data.length);
     return data.length + offset;
   }
 }

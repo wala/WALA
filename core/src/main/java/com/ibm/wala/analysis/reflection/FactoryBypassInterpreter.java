@@ -113,8 +113,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     // }
     // }
 
-    Set<TypeReference> types = map.get(context);
-    return types;
+    return map.get(context);
   }
 
   /**

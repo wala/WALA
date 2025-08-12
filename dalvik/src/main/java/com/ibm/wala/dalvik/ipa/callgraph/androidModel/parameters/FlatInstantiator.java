@@ -126,7 +126,7 @@ public class FlatInstantiator implements IInstantiator {
 
   private boolean isExcluded(IClass cls) {
     if (this.analysisScope.getExclusions() != null
-        && this.analysisScope.getExclusions().contains(cls.getName().toString())) { // XXX FUUUUU
+        && this.analysisScope.getExclusions().test(cls.getName().toString())) { // XXX FUUUUU
       logger.info("Hit exclusions with {}", cls);
       return true;
     } else {
@@ -181,7 +181,7 @@ public class FlatInstantiator implements IInstantiator {
           new SpecializedInstantiator(
               body, instructionFactory, pm, cha, scope, analysisScope, this);
       if (SpecializedInstantiator.understands(T)) {
-        return sInst.createInstance(T, asManaged, key, seen, currentDepth);
+        return sInst.createInstance(T, asManaged, key, currentDepth);
       }
     }
 

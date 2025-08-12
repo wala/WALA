@@ -106,7 +106,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
   protected int enterMULTIPLE_TIMES_IN_LOOP(int PC) {
     logger.info("PC {} is the jump target of START_OF_LOOP", PC);
     this.outerLoopPC = PC;
-    PC = body.getNextProgramCounter();
+    body.getNextProgramCounter();
     paramManager.scopeDown(true);
 
     // Top-Half of Phi-Handling
@@ -125,8 +125,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
     body.reserveProgramCounters(outerPhisNeeded.size());
     // Actual Phis will be placed by the bottom-half handler...
 
-    PC = body.getNextProgramCounter(); // Needed if no calls
-    return PC;
+    return body.getNextProgramCounter(); // Needed if no calls
   }
 
   /**

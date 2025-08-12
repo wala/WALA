@@ -74,8 +74,7 @@ public final class ConditionalBranchInstruction extends Instruction
 
   @Override
   public int[] getBranchTargets() {
-    int[] r = {label};
-    return r;
+    return new int[] {label};
   }
 
   @Override

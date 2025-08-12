@@ -281,9 +281,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param context a visitor-specific context
    */
   protected void postProcessEntity(
-      CAstEntity n, C context, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
-    return;
-  }
+      CAstEntity n, C context, @SuppressWarnings("unused") CAstVisitor<C> visitor) {}
 
   /**
    * Visit any entity. Override only this to change behavior for all entities.
@@ -304,9 +302,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param context a visitor-specific context
    */
   public void leaveEntity(
-      CAstEntity n, C context, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
-    return;
-  }
+      CAstEntity n, C context, @SuppressWarnings("unused") CAstVisitor<C> visitor) {}
 
   /**
    * Visit a File entity.
@@ -1147,9 +1143,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param c a visitor-specific context
    */
   protected void postProcessNode(
-      CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
-    return;
-  }
+      CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {}
 
   /**
    * Visit any node. Override only this to change behavior for all nodes.
@@ -1168,9 +1162,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param n the node to process
    * @param c a visitor-specific context
    */
-  public void leaveNode(CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {
-    return;
-  }
+  public void leaveNode(CAstNode n, C c, @SuppressWarnings("unused") CAstVisitor<C> visitor) {}
 
   /**
    * Visit a FunctionExpr node.

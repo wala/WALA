@@ -127,13 +127,12 @@ public class AndroidPreFlightChecks {
    * @return if check passed TODO: this doesn't check anything yet
    */
   public boolean checkOverridesInPlace() {
-    boolean pass = true;
 
     // TODO: Check StartComponentMethodTargetSelector
     // TODO: Check IntentContextInterpreter
     // TODO: Check IntentContextSelector
 
-    return pass;
+    return true;
   }
 
   /**

@@ -55,8 +55,7 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
   private static MethodReference genSyntheticMethodRef(IClass receiver) {
     Atom atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_APPLY_METHOD_PREFIX);
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
-    MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
-    return ref;
+    return MethodReference.findOrCreate(receiver.getReference(), atom, desc);
   }
 
   @Override

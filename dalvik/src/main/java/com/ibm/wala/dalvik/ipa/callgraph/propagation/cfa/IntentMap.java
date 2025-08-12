@@ -179,8 +179,7 @@ import java.util.Map;
       return intent;
     } else {
 
-      final Intent intent = create(key, action);
-      return intent;
+      return create(key, action);
     }
   }
 

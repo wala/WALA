@@ -178,7 +178,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(a).isNot(subsetOf(b));
     a.remove(1);
     assertThat(a).isEmpty();
-    IntSet ignored = a.intersection(temp);
+    a.intersection(temp);
     assertThat(a).isEmpty();
 
     temp2 = factory.make();
@@ -285,7 +285,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(a).isNot(subsetOf(b));
     a.remove(1);
     assertThat(a).isEmpty();
-    ignored = a.intersection(temp);
+    a.intersection(temp);
     assertThat(a).isEmpty();
 
     temp2 = factory.make();
@@ -466,7 +466,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(a).isNot(subsetOf(b));
     a.remove(1);
     assertThat(a).isEmpty();
-    LongSet ignored = a.intersection(temp);
+    a.intersection(temp);
     assertThat(a).isEmpty();
 
     temp2 = factory.make();
@@ -570,7 +570,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(a).isNot(subsetOf(b));
     a.remove(1);
     assertThat(a).isEmpty();
-    ignored = a.intersection(temp);
+    a.intersection(temp);
     assertThat(a).isEmpty();
 
     temp2 = factory.make();
@@ -770,7 +770,8 @@ public class PrimitivesTest extends WalaTestCase {
     Dominators<Object> D = Dominators.make(G, nodes[10]);
 
     // Assert.assertions
-    assertThat(Iterator2Iterable.make(D.dominators(nodes[4])))
+    assertThat(D.dominators(nodes[4]))
+        .toIterable()
         .containsExactly(nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]);
 
     int j = 0;

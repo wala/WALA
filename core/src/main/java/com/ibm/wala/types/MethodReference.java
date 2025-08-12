@@ -222,12 +222,10 @@ public final class MethodReference extends MemberReference {
   @Override
   public String getSignature() {
     // TODO: check that we're not calling this often.
-    String s =
-        getDeclaringClass().getName().toString().substring(1).replace('/', '.')
-            + '.'
-            + getName()
-            + getDescriptor();
-    return s;
+    return getDeclaringClass().getName().toString().substring(1).replace('/', '.')
+        + '.'
+        + getName()
+        + getDescriptor();
   }
 
   /**

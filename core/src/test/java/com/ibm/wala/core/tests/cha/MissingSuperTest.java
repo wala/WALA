@@ -11,6 +11,8 @@
 package com.ibm.wala.core.tests.cha;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.InstanceOfAssertFactories.iterable;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -28,7 +30,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 public class MissingSuperTest extends WalaTestCase {
@@ -61,23 +62,23 @@ public class MissingSuperTest extends WalaTestCase {
     // with phantom classes, lookup and IR construction should work
     cha = ClassHierarchyFactory.makeWithPhantom(scope);
     klass = cha.lookupClass(ref);
-    assertThat(klass).isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl();
-    Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
-    assertThat(declaredMethods).as(declaredMethods::toString).hasSize(2);
-    for (IMethod m : declaredMethods) {
-      // should succeed
-      cache.getIR(m);
-    }
+    assertThat(klass)
+        .extracting(IClass::getDeclaredMethods, iterable(IMethod.class))
+        .hasSize(2)
+        .allSatisfy(m -> assertThatCode(() -> cache.getIR(m)).doesNotThrowAnyException());
+
     // there should be one PhantomClass in the Application class loader
-    boolean found = false;
-    for (IClass klass2 : cha) {
-      if (klass2 instanceof PhantomClass
-          && klass2.getReference().getClassLoader().equals(ClassLoaderReference.Application)) {
-        assertThat(klass2.getReference().getName()).hasToString("Lmissingsuper/Super");
-        found = true;
-      }
-    }
-    assertThat(found).isTrue();
+    assertThat(cha)
+        .filteredOn(
+            klass2 ->
+                klass2 instanceof PhantomClass
+                    && klass2
+                        .getReference()
+                        .getClassLoader()
+                        .equals(ClassLoaderReference.Application))
+        .first()
+        .extracting(klass2 -> klass2.getReference().getName())
+        .hasToString("Lmissingsuper/Super");
   }
 }
