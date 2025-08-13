@@ -16,10 +16,6 @@ import java.util.List;
 
 abstract class ECJIRTests extends IRTests {
 
-  protected ECJIRTests(String projectName) {
-    super(projectName);
-  }
-
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
