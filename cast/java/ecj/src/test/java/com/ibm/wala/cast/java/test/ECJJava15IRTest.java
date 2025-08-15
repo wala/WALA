@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class ECJJava15IRTest extends IRTests {
+public class ECJJava15IRTest extends ECJIRTests {
 
   public ECJJava15IRTest() {
     dump = true;
