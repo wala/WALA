@@ -162,7 +162,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-// TOTEST:
+// TO TEST:
 // "1/0" surrounded by catch ArithmeticException & RunTimeException (TryCatchContext.getCatchTypes"
 // another subtype of ArithmeticException surrounded by catch ArithmeticException
 // binary ops with all kinds of type conversions
@@ -172,7 +172,7 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 // pointer in field accesses, etc.
 // implicit constructors
 
-// FIXME 1.4: thing about / ask agout TAGALONG (JDT stuff tagging along in memory cos we keep it).
+// FIXME 1.4: think about / ask about TAGALONG (JDT stuff tagging along in memory cos we keep it).
 // FIXME 1.4: find LEFTOUT and find out why polyglot has extra code / infrastructure, if it's used
 // and what for, etc.
 
