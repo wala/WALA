@@ -958,12 +958,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       castNames.add(tmpName);
     }
 
-    // pass in memberEntities to the context, later visit(New) etc. may add classes
-    final Map<CAstNode, CAstEntity> memberEntities = HashMapFactory.make();
     final MethodContext context =
-        new MethodContext(oldContext, memberEntities); // LEFTOUT: in polyglot there is a
-    // class context in between method and
-    // root
+        new MethodContext(oldContext, Collections.emptyMap()); 
 
     CAstNode mdast = fFactory.makeNode(CAstNode.RETURN, visitNode(n.getBody(), context));
 
@@ -981,12 +977,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                   : fFactory.makeNode(CAstNode.BLOCK_STMT, context.getNameDecls()),
               mdast);
     }
-
-    /* TODO:
-     * createClassDeclaration creates a Function type when instantiating
-     * the lambda subclass. This is not correct, so a new type will have
-     * to be implemented.
-     * */
 
     IMethodBinding fm = typeBinding.getFunctionalInterfaceMethod();
     ITypeBinding ct = (fm == null ? n.resolveTypeBinding() : fm.getDeclaringClass());
@@ -1436,7 +1426,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       if (fDecl == null) {
         return null;
       } else {
-        // TODO Auto-generated method stub
         SingleVariableDeclaration p = (SingleVariableDeclaration) fDecl.parameters().get(arg);
         return makePosition(p);
       }
@@ -4081,13 +4070,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     return null;
   }
 
-  //  private CAstNode visit(LambdaExpression n, WalkContext context) {
-  //	ITypeBinding typeBinding = n.resolveTypeBinding();
-  //	List<?> parameters = n.parameters();
-  //	ASTNode body = n.getBody();
-  //	return null;
-  //  }
-
   private void visitNodeOrNodes(ASTNode n, WalkContext context, Collection<CAstNode> coll) {
     if (n instanceof VariableDeclarationStatement)
       coll.addAll(visit((VariableDeclarationStatement) n, context));
@@ -4523,7 +4505,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     enumQuals.add(CAstQualifier.FINAL);
   }
 
-  /** Only clled from createClassDeclaration. */
+  /** Only called from createClassDeclaration. */
   private CAstEntity visit(EnumConstantDeclaration decl) {
     return new FieldEntity(
         decl.getName().getIdentifier(),
