@@ -105,10 +105,8 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return result;
   }
 
-  protected void process(CallGraph cg, PointerAnalysis<InstanceKey> ptrs) {
-	  
-  }
-  
+  protected void process(CallGraph cg, PointerAnalysis<InstanceKey> ptrs) {}
+
   protected void runTest(final TestParameters testParameters) throws Exception {
 
     final var androidLibs = testParameters.getAndroidLibs();
