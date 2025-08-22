@@ -958,8 +958,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       castNames.add(tmpName);
     }
 
-    final MethodContext context =
-        new MethodContext(oldContext, Collections.emptyMap()); 
+    final MethodContext context = new MethodContext(oldContext, Collections.emptyMap());
 
     CAstNode mdast = fFactory.makeNode(CAstNode.RETURN, visitNode(n.getBody(), context));
 
