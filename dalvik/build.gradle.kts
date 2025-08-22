@@ -84,6 +84,8 @@ dependencies {
   api(projects.shrike)
   api(projects.util)
 
+  compileOnly(libs.jetbrains.annotations)
+
   coreTestJar(project("path" to ":core", "configuration" to "testJarConfig"))
   extraTestResources(project("path" to ":core", "configuration" to "dalvikTestResources"))
 

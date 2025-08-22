@@ -68,6 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -336,7 +337,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * @throws IllegalArgumentException if the package has already been set and the value of the
    *     packages differ. Or if the given package is null.
    */
-  public void setPackage(String pack) {
+  public void setPackage(@Language("jvm-class-name") String pack) {
     if (pack == null) {
       throw new IllegalArgumentException("Setting the package to null is disallowed.");
     }
