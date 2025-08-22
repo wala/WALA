@@ -85,7 +85,6 @@ public class BlockSearch {
         } else if (candidate != current) {
           return null;
         }
-        continue;
       } else {
         Iterator<ISSABasicBlock> predNodes = cfg.getPredNodes(current);
         while (predNodes.hasNext()) {

@@ -1673,9 +1673,6 @@ public class ParameterAccessor {
         warn("No type was equal. We can't ask isAssignable since we have no cha!");
         assigned.add(null);
       } // of (cha != null)
-      continue forEachParameter;
-
-      // Assertions.UNREACHABLE(); // Well it's unreachable
     } // of final Parameter param : calleeParams
 
     if (assigned.size() != calleeParams.size()) {
