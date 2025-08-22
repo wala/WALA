@@ -175,17 +175,17 @@ public class JDT2CAstUtils {
   }
 
   private static Map<ITypeBinding, Integer> ids = new IdentityHashMap<>();
-  
+
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     int n;
     if (ids.containsKey(ct)) {
-    	n = ids.get(ct);
+      n = ids.get(ct);
     } else {
-    	n = ids.size();
-    	ids.put(ct,  n);
+      n = ids.size();
+      ids.put(ct, n);
     }
-    
+
     if (binName.contains("$")) {
       ITypeBinding sup = ct.isInterface() ? ct : ct.getSuperclass();
       String dollarSignNumber = binName.substring(binName.indexOf('$'));
