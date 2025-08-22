@@ -46,11 +46,10 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
   private final InstanceKeyFactory basic;
 
   /**
-   * 
    * @param name the variable name and creator pair
-   * @param callerOfConstructor the purported caller of the constructor 
-   * @return whether this is a real constructor call or an artifact of function pointers
-   * (always true for lexical scoping in Java)
+   * @param callerOfConstructor the purported caller of the constructor
+   * @return whether this is a real constructor call or an artifact of function pointers (always
+   *     true for lexical scoping in Java)
    */
   protected abstract boolean checkCaller(Pair<String, String> name, CGNode callerOfConstructor);
 
