@@ -64,8 +64,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       AnalysisOptions options,
       SSAContextInterpreter contextInterpreter,
       int instancePolicy) {
-    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, instancePolicy);
-    return zik;
+    return new ZeroXInstanceKeys(options, cha, contextInterpreter, instancePolicy);
   }
 
   /**

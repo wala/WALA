@@ -6,7 +6,7 @@ package com.ibm.wala.classLoader;
  */
 public class NoSuperclassFoundException extends RuntimeException {
 
-  static final long serialVersionUID = 333L;
+  private static final long serialVersionUID = 333L;
 
   public NoSuperclassFoundException(String message) {
     super(message);

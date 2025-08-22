@@ -21,7 +21,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.classLoader.ModuleEntry;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.PrintWriter;
 
 public class Java2IRTranslator {
@@ -29,18 +29,18 @@ public class Java2IRTranslator {
 
   protected final JavaSourceLoaderImpl fLoader;
 
-  protected final SetOfClasses exclusions;
+  protected final StringFilter exclusions;
 
   CAstRewriterFactory<?, ?> castRewriterFactory;
 
-  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader, SetOfClasses exclusions) {
+  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader, StringFilter exclusions) {
     this(srcLoader, null, exclusions);
   }
 
   public Java2IRTranslator(
       JavaSourceLoaderImpl srcLoader,
       CAstRewriterFactory<?, ?> castRewriterFactory,
-      SetOfClasses exclusions) {
+      StringFilter exclusions) {
     this(srcLoader, castRewriterFactory, false, exclusions);
   }
 
@@ -48,7 +48,7 @@ public class Java2IRTranslator {
       JavaSourceLoaderImpl srcLoader,
       CAstRewriterFactory<?, ?> castRewriterFactory,
       boolean debug,
-      SetOfClasses exclusions) {
+      StringFilter exclusions) {
     DEBUG = debug;
     fLoader = srcLoader;
     this.castRewriterFactory = castRewriterFactory;

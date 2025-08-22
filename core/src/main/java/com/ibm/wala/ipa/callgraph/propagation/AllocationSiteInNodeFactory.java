@@ -96,9 +96,7 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
       }
     }
 
-    InstanceKey key = new NormalAllocationInNode(nodeToUse, allocation, type);
-
-    return key;
+    return new NormalAllocationInNode(nodeToUse, allocation, type);
   }
 
   @Override
@@ -109,9 +107,8 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     if (type == null) {
       return null;
     }
-    InstanceKey key = new MultiNewArrayInNode(node, allocation, type, dim);
 
-    return key;
+    return new MultiNewArrayInNode(node, allocation, type, dim);
   }
 
   @Override

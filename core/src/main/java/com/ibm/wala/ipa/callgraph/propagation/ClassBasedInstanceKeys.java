@@ -61,9 +61,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
       return null;
     }
 
-    ConcreteTypeKey key = new ConcreteTypeKey(type);
-
-    return key;
+    return new ConcreteTypeKey(type);
   }
 
   /**
@@ -102,9 +100,8 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     if (type == null) {
       return null;
     }
-    ConcreteTypeKey key = new ConcreteTypeKey(type);
 
-    return key;
+    return new ConcreteTypeKey(type);
   }
 
   @Override

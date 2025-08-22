@@ -134,6 +134,7 @@ public class BootstrapInstrumentor {
                     m.methodClass(),
                     m.methodName(),
                     ((InvokeDynamicInstruction) inst).getInvocationCode());
+            //noinspection UnusedAssignment
             insts[arg++] = ReturnInstruction.make("Ljava/lang/invoke/CallSite;");
 
             result.add(

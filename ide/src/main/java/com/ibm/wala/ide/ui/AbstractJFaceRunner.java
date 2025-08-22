@@ -23,10 +23,6 @@ public abstract class AbstractJFaceRunner {
 
   protected boolean blockInput = false;
 
-  protected AbstractJFaceRunner() {
-    super();
-  }
-
   public ApplicationWindow getApplicationWindow() {
     return applicationWindow;
   }

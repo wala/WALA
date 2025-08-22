@@ -60,11 +60,10 @@ import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.io.FileUtil;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -78,15 +77,17 @@ public class SlicerTest {
 
   private static AnalysisScope cachedScope;
 
-  private static String makeSlicerExclusions() {
+  private static StringFilter makeSlicerExclusions() {
     try {
+      final var builder = PatternsFilter.builder();
       try (InputStream is =
           new FileProvider()
               .getInputStreamFromClassLoader(
                   CallGraphTestUtil.REGRESSION_EXCLUSIONS, SlicerTest.class.getClassLoader())) {
-        String exclusions = new String(FileUtil.readBytes(is), "UTF-8");
+        builder.addAll(is);
         // we also need to exclude java.security to avoid blowup during slicing
-        return exclusions + "java\\/security\\/.*\n";
+        builder.add("java/security/.*");
+        return builder.build();
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -98,8 +99,7 @@ public class SlicerTest {
       cachedScope =
           AnalysisScopeReader.instance.readJavaScope(
               TestConstants.WALA_TESTDATA, null, SlicerTest.class.getClassLoader());
-      cachedScope.setExclusions(
-          new FileOfClasses(new ByteArrayInputStream(makeSlicerExclusions().getBytes("UTF-8"))));
+      cachedScope.setExclusions(makeSlicerExclusions());
     }
     return cachedScope;
   }
@@ -143,10 +143,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> computeBackwardSlice =
+    Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    Collection<Statement> slice = computeBackwardSlice;
     SlicerUtil.dumpSlice(slice);
 
     int i = 0;
@@ -182,10 +181,9 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
     // compute a data slice
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> computeBackwardSlice =
+    Collection<Statement> slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
-    Collection<Statement> slice = computeBackwardSlice;
     SlicerUtil.dumpSlice(slice);
 
     assertThat(SlicerUtil.countNormals(slice)).as(slice::toString).isEqualTo(9);

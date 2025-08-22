@@ -16,11 +16,15 @@ import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 
 public class FileProviderTest {
 
-  private void checkFile(String actual, String expected, String expectedPatternOnWindows) {
+  private void checkFile(
+      String actual,
+      @Language("RegExp") String expected,
+      @Language("RegExp") String expectedPatternOnWindows) {
     if (PlatformUtil.onWindows()) {
       assertThat(actual).matches(expectedPatternOnWindows);
     } else {

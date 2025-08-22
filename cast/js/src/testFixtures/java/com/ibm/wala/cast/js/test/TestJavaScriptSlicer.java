@@ -85,8 +85,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
         new SDG<>(CG, B.getPointerAnalysis(), new JavaScriptModRef<>(), data, ctrl);
 
     final Collection<Statement> ss = findTargetStatement(CG);
-    Collection<Statement> result = Slicer.computeBackwardSlice(sdg, ss);
-    return result;
+    return Slicer.computeBackwardSlice(sdg, ss);
   }
 
   private Collection<Statement> findTargetStatement(CallGraph CG) {

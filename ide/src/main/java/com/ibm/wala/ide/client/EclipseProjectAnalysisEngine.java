@@ -19,7 +19,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -63,7 +63,7 @@ public abstract class EclipseProjectAnalysisEngine<P, I extends InstanceKey>
             new File(getExclusionsFile()).exists()
                 ? new FileInputStream(getExclusionsFile())
                 : FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile())) {
-          scope.setExclusions(new FileOfClasses(is));
+          scope.setExclusions(new PatternsFilter(is));
         }
       }
     } catch (CoreException e) {

@@ -17,7 +17,7 @@ import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.FileInputStream;
@@ -68,7 +68,7 @@ public class AndroidAnalysisScope {
                 : FileProvider.class
                     .getClassLoader()
                     .getResourceAsStream(exclusionsFile.getName())) {
-          scope.setExclusions(new FileOfClasses(fs));
+          scope.setExclusions(new PatternsFilter(fs));
         }
       }
 

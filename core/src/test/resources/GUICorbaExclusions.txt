@@ -1,5 +1,5 @@
-java\/awt\/.*
-javax\/swing\/.*
-sun\/awt\/.*
-sun\/swing\/.*
-com\/sun\/corba\/.*
+java/awt/.*
+javax/swing/.*
+sun/awt/.*
+sun/swing/.*
+com/sun/corba/.*

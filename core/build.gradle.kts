@@ -25,16 +25,20 @@ eclipse {
 
 val compileTestSubjectsJava by tasks.existing
 
-tasks.named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
-  options.compilerArgumentProviders.add {
-    listOf(
-        "-warn:none",
-        "-err:-serial",
-        "-err:-unchecked",
-        "-err:-unusedLocal",
-        "-err:-unusedParam",
-        "-err:-unusedThrown",
-    )
+tasks {
+  named<JavaCompile>("compileTestSubjectsJava") { options.isDeprecation = false }
+
+  named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
+    options.compilerArgumentProviders.add {
+      listOf(
+          "-warn:none",
+          "-err:-serial",
+          "-err:-unchecked",
+          "-err:-unusedLocal",
+          "-err:-unusedParam",
+          "-err:-unusedThrown",
+      )
+    }
   }
 }
 
@@ -44,6 +48,8 @@ dependencies {
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
   api(libs.jspecify)
+  compileOnly(libs.jetbrains.annotations)
+  testCompileOnly(libs.jetbrains.annotations)
   testFixturesApi(libs.assertj.core)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.shrike)
@@ -74,7 +80,7 @@ interface ExtractServices {
 //  download and extract kawa 3.0 "kawa.jar"
 //
 
-val kawa = adHocDownload(uri("https://ftp.gnu.org/pub/gnu/kawa"), "kawa", "zip", "3.0")
+val kawa = adHocDownload(uri("https://ftpmirror.gnu.org/gnu/kawa"), "kawa", "zip", "3.0")
 
 val extractKawa by
     tasks.registering {

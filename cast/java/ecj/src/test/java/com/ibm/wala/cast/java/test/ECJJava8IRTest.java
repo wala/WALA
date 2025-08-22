@@ -15,7 +15,6 @@ public class ECJJava8IRTest extends ECJIRTests {
   private static final String packageName = "javaeight";
 
   public ECJJava8IRTest() {
-    super(null);
     dump = true;
   }
 

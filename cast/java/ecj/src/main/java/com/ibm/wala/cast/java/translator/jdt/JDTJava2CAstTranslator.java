@@ -1486,9 +1486,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       Expression init = f.getInitializer();
       CAstNode rhsNode = visitNode(init, context);
-      CAstNode assNode = makeNode(context, fFactory, f, CAstNode.ASSIGN, lhsNode, rhsNode);
-
-      return assNode; // their naming, not mine
+      return makeNode(context, fFactory, f, CAstNode.ASSIGN, lhsNode, rhsNode);
 
     } else if (node instanceof EnumConstantDeclaration) {
       return createEnumConstantDeclarationInit((EnumConstantDeclaration) node, context);
@@ -1518,7 +1516,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         T position,
         Set<CAstAnnotation> annotations,
         T namePos) {
-      super();
       this.type = type;
       this.quals = quals;
       this.name = name;
@@ -2250,7 +2247,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ITypeBinding fromtype =
         JDT2CAstUtils.getTypesVariablesBase(
             field.resolveFieldBinding().getVariableDeclaration().getType(), ast);
-    CAstNode castedObref = obref2; // createCast(left, obref2, fromtype, realtype, context);
 
     // put it all together
     // CAST(LOCAL SCOPE(BLOCK EXPR(DECL STMT(temp,
@@ -2278,7 +2274,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                         realtype,
                         left.getStartPosition(),
                         left.getLength(),
-                        castedObref,
+                        obref2,
                         right,
                         context))));
 
@@ -2656,9 +2652,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       WalkContext context) {
     CAstNode rightNode = visitNode(right, context);
 
-    int start = leftStartPosition;
     int end = right.getStartPosition() + right.getLength();
-    T pos = makePosition(start, end);
+    T pos = makePosition(leftStartPosition, end);
     T leftPos = makePosition(leftStartPosition, leftStartPosition + leftLength);
     T rightPos =
         makePosition(right.getStartPosition(), right.getStartPosition() + right.getLength());
@@ -3141,6 +3136,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private CAstNode getSwitchCaseConstant(SwitchCase n, WalkContext context) {
     // TODO: enums
+    @SuppressWarnings("deprecation")
     Expression expr = n.getExpression();
     Object constant =
         (expr == null)
@@ -4431,11 +4427,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // Why do we seemingly catch a RuntimeException in every method? this won't catch the
       // RuntimeException above where
       // it is supposed to be caught?
-      Collection<Pair<ITypeBinding, Object>> result =
-          Collections.singleton(
-              Pair.<ITypeBinding, Object>make(
-                  fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
-      return result;
+      return Collections.singleton(
+          Pair.<ITypeBinding, Object>make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
     @Override
@@ -4572,9 +4565,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
               node.getAnonymousClassDeclaration(),
               context);
 
-      CAstNode assNode = makeNode(context, fFactory, node, CAstNode.ASSIGN, lhsNode, rhsNode);
-
-      return assNode; // their naming, not mine
+      return makeNode(context, fFactory, node, CAstNode.ASSIGN, lhsNode, rhsNode);
     } else {
 
       // String[] x = (new Direction[] {

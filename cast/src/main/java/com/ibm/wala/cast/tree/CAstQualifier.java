@@ -62,7 +62,6 @@ public class CAstQualifier {
   private final long fBit;
 
   public CAstQualifier(String name) {
-    super();
     fBit = 1L << sNextBitNum++;
     fName = name;
     sQualifiers.add(this);

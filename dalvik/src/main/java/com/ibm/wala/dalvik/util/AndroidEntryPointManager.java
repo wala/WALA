@@ -396,17 +396,15 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         logger.error("guessPackage() called when no entrypoints had been set");
         return null;
       }
-      final String first =
-          ENTRIES
-              .get(0)
-              .getMethod()
-              .getReference()
-              .getDeclaringClass()
-              .getName()
-              .getPackage()
-              .toString();
       // TODO: Iterate all?
-      return first;
+      return ENTRIES
+          .get(0)
+          .getMethod()
+          .getReference()
+          .getDeclaringClass()
+          .getName()
+          .getPackage()
+          .toString();
     }
   }
 
@@ -642,7 +640,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
 
           if (ret == old) { // Yes, ==
             // This is an evil hack(tm). I should fix the Intent-Table!
-            logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
+            logger.warn("Malformend Intent-Table, staying with {} for {}", ret, intent);
             return ret;
           }
         }

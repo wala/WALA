@@ -75,7 +75,7 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   @SuppressWarnings("unchecked")
-  public static final <T> ImmutableStack<T> emptyStack() {
+  public static <T> ImmutableStack<T> emptyStack() {
     return (ImmutableStack<T>) EMPTY;
   }
 
@@ -92,7 +92,7 @@ public class ImmutableStack<T> implements Iterable<T> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o != null && o instanceof ImmutableStack) {
+    if (o instanceof ImmutableStack) {
       ImmutableStack other = (ImmutableStack) o;
       return Arrays.equals(entries, other.entries);
     }

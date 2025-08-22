@@ -202,9 +202,8 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       throw new UnsupportedOperationException(
           "did not expect selection of size " + selection.size());
     }
-    P first = (P) selection.getFirstElement();
 
-    return first;
+    return (P) selection.getFirstElement();
   }
 
   protected SWTTreeViewer<P> getViewer() {

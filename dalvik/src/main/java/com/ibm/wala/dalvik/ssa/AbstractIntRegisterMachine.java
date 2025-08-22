@@ -125,11 +125,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
           public UnaryOperator<MachineState> getNodeTransferFunction(final BasicBlock node) {
             return new UnaryOperator<>() {
               @Override
-              public byte evaluate(MachineState lhs, MachineState rhs) {
-
-                MachineState exit = lhs;
-                MachineState entry = rhs;
-
+              public byte evaluate(MachineState exit, MachineState entry) {
                 MachineState newExit = flow.flow(entry, node);
                 if (newExit.stateEquals(exit)) {
                   return NOT_CHANGED;
@@ -161,11 +157,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
               final BasicBlock from, final BasicBlock to) {
             return new UnaryOperator<>() {
               @Override
-              public byte evaluate(MachineState lhs, MachineState rhs) {
-
-                MachineState exit = lhs;
-                MachineState entry = rhs;
-
+              public byte evaluate(MachineState exit, MachineState entry) {
                 MachineState newExit = flow.flow(entry, from, to);
                 if (newExit.stateEquals(exit)) {
                   return NOT_CHANGED;
@@ -217,9 +209,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
           protected MachineState makeEdgeVariable(BasicBlock from, BasicBlock to) {
             assert from != null;
             assert to != null;
-            MachineState result = new MachineState(from);
-
-            return result;
+            return new MachineState(from);
           }
 
           @Override
@@ -363,12 +353,9 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
    */
   private static boolean meetForCatchBlock(
       IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
-
-    boolean changed = meetLocals(lhs, rhs, bb, meeter);
-
     //      int meet = meeter.meetStackAtCatchBlock(bb);
     //      boolean changed = meetLocals(lhs, rhs, bb, meeter);
-    return changed;
+    return meetLocals(lhs, rhs, bb, meeter);
   }
 
   //  /**

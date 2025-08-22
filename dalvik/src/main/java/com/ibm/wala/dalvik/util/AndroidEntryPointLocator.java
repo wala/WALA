@@ -57,7 +57,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.SetOfClasses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -190,7 +189,7 @@ public final class AndroidEntryPointLocator {
           for (final AndroidComponent compo : AndroidComponent.values()) {
             if (compo == AndroidComponent.UNKNOWN) continue;
             if (compo.toReference() == null) {
-              logger.error("Null-Reference for " + compo);
+              logger.error("Null-Reference for {}", compo);
             } else {
               bases.add(compo.toReference());
             }
@@ -279,10 +278,8 @@ public final class AndroidEntryPointLocator {
       compo = AndroidComponent.from(method, cha);
       if (compo == AndroidComponent.UNKNOWN) {}
     }
-    final AndroidEntryPoint ep =
-        new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
 
-    return ep;
+    return new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
   }
 
   /**
@@ -432,12 +429,12 @@ public final class AndroidEntryPointLocator {
   }
 
   private static boolean isExcluded(final IClass cls) {
-    final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
+    final var set = cls.getClassHierarchy().getScope().getExclusions();
     if (set == null) {
       return false; // exclusions null ==> no exclusions ==> no class is excluded
     } else {
       final String clsName = cls.getReference().getName().toString().substring(1);
-      return set.contains(clsName);
+      return set.test(clsName);
     }
   }
 

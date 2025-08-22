@@ -31,10 +31,6 @@ import org.junit.jupiter.api.Test;
 
 public class ECJTestComments extends IRTests {
 
-  public ECJTestComments() {
-    super(null);
-  }
-
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {

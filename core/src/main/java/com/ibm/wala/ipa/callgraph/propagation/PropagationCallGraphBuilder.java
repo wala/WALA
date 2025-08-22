@@ -249,10 +249,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     try {
       solver.solve(monitor);
     } catch (CancelException | CancelRuntimeException e) {
-      CallGraphBuilderCancelException c =
-          CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
-              e, callGraph, system.extractPointerAnalysis(this));
-      throw c;
+      throw CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
+          e, callGraph, system.extractPointerAnalysis(this));
     }
 
     return callGraph;
@@ -953,7 +951,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     }
 
     @Override
-    public byte evaluate(PointsToSetVariable rhs) {
+    public byte evaluate(PointsToSetVariable ref) {
       if (DEBUG_GET) {
         String S =
             "EVAL GetField "
@@ -961,14 +959,13 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
                 + ' '
                 + getFixedSet().getPointerKey()
                 + ' '
-                + rhs.getPointerKey()
+                + ref.getPointerKey()
                 + getFixedSet()
                 + ' '
-                + rhs;
+                + ref;
         System.err.println(S);
       }
 
-      PointsToSetVariable ref = rhs;
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
@@ -1185,8 +1182,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     /** Simply add the instance to each relevant points-to set. */
     @Override
-    public byte evaluate(PointsToSetVariable dummyLHS, PointsToSetVariable var) {
-      PointsToSetVariable ref = var;
+    public byte evaluate(PointsToSetVariable dummyLHS, PointsToSetVariable ref) {
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
@@ -1251,8 +1247,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     /** Simply add the instance to each relevant points-to set. */
     @Override
-    public byte evaluate(PointsToSetVariable dummyLHS, PointsToSetVariable var) {
-      PointsToSetVariable arrayref = var;
+    public byte evaluate(PointsToSetVariable dummyLHS, PointsToSetVariable arrayref) {
       if (arrayref.size() == 0) {
         return NOT_CHANGED;
       }
@@ -1353,9 +1348,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   }
 
   protected class InverseFilterOperator extends FilterOperator {
-    public InverseFilterOperator() {
-      super();
-    }
 
     @Override
     public String toString() {

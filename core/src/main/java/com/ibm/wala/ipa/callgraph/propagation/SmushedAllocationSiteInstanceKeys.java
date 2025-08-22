@@ -60,9 +60,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
       }
     }
 
-    InstanceKey key = new SmushedAllocationSiteInNode(node, type);
-
-    return key;
+    return new SmushedAllocationSiteInNode(node, type);
   }
 
   @Override
@@ -73,9 +71,8 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
     if (type == null) {
       return null;
     }
-    InstanceKey key = new MultiNewArrayInNode(node, allocation, type, dim);
 
-    return key;
+    return new MultiNewArrayInNode(node, allocation, type, dim);
   }
 
   @Override

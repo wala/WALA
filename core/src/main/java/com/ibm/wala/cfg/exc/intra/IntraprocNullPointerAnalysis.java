@@ -155,9 +155,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         }
         final NegativeGraphFilter<T> filter = new NegativeGraphFilter<>(deleted);
 
-        final PrunedCFG<SSAInstruction, T> newCfg = PrunedCFG.make(cfg, filter);
-
-        pruned = newCfg;
+        pruned = PrunedCFG.make(cfg, filter);
       }
     }
   }
@@ -168,9 +166,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       nCFGbuilder.work(bb);
     }
 
-    Graph<T> deleted = nCFGbuilder.getNegativeCFG();
-
-    return deleted;
+    return nCFGbuilder.getNegativeCFG();
   }
 
   ControlFlowGraph<SSAInstruction, T> getPrunedCFG() {

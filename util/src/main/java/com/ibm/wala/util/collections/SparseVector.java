@@ -161,9 +161,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
 
   public void remove(int x) {
     int index = indices.getIndex(x);
-    if (index == -1) {
-      return;
-    } else {
+    if (index != -1) {
       System.arraycopy(data, index + 1, data, index, size() - index - 1);
       indices.remove(x);
     }

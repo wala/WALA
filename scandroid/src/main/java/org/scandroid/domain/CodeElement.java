@@ -57,7 +57,6 @@ public abstract class CodeElement {
   public static Set<CodeElement> valueElements(int valueNumber) {
     // System.out.println("ValueNumber: " + valueNumber + ", Node: " +
     // node.getMethod().getSignature());
-    Set<CodeElement> elements = Collections.singleton(new LocalElement(valueNumber));
     //        PointerKey pk = new LocalPointerKey(node, valueNumber);
     //        OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
     //        if(m != null) {
@@ -65,7 +64,7 @@ public abstract class CodeElement {
     //                elements.add(new InstanceKeyElement(keyIter.next()));
     //            }
     //        }
-    return elements;
+    return Collections.singleton(new LocalElement(valueNumber));
   }
 
   @Override
