@@ -1501,7 +1501,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     public CAstNode visitRegExpLiteral(RegExpLiteral node, WalkContext arg) {
       CAstNode flagsNode = Ast.makeConstant(node.getFlags());
       CAstNode valNode = Ast.makeConstant(node.getValue());
-      return handleNew(arg, "RegExp", Arrays.asList(new CAstNode[] {flagsNode, valNode}));
+      return handleNew(arg, "RegExp", Arrays.asList(flagsNode, valNode));
     }
 
     @Override
