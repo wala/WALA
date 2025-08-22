@@ -104,6 +104,10 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return result;
   }
 
+  protected void process(CallGraph cg, PointerAnalysis<InstanceKey> ptrs) {
+	  
+  }
+  
   protected void runTest(final TestParameters testParameters) throws Exception {
 
     final var androidLibs = testParameters.getAndroidLibs();
@@ -122,6 +126,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     // System.err.println(x.fst);
     assertThat(assertUserCodeReachable(x.fst, uncalled)).isEmpty();
     System.err.println("...success testing " + apkFile);
+    process(x.fst, x.snd);
   }
 
   private static final Set<String> skipTests = HashSetFactory.make();
