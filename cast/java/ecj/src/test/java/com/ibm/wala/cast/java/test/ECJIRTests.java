@@ -14,6 +14,12 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ *  This class is a base class for IR tests for ECJ.  It extends the base @IRTests rather 
+ * than @JavaIRTests because @JavaIRTests includes a bunch of particular unit tests, and the 
+ * ECJ subclasses of this test introduce their own tests and hence need a base class that 
+ * does not have its own tests and implements @getAnalysisEngine.
+ */
 abstract class ECJIRTests extends IRTests {
 
   @Override
