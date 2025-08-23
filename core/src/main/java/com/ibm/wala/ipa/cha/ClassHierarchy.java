@@ -1151,7 +1151,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public int getNumberOfClasses() {
-    return map.keySet().size();
+    return map.size();
   }
 
   @Override
