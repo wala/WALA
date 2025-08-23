@@ -415,7 +415,7 @@ public class Util {
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
 
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, cha.getScope(), Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
     return new BasicRTABuilder(cha, options, cache, null, null);
   }
