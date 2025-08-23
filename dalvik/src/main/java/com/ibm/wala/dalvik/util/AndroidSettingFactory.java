@@ -56,7 +56,7 @@ import org.intellij.lang.annotations.Language;
  */
 public class AndroidSettingFactory {
   /**
-   * Add an Intent that is _shure_ to be handled internally _only_.
+   * Add an Intent that is _sure_ to be handled internally _only_.
    *
    * <p>If there was an additional external handling of this intent it will be ignored!
    */

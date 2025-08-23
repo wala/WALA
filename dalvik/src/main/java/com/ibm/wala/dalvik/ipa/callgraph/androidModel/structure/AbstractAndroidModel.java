@@ -356,7 +356,7 @@ public abstract class AbstractAndroidModel {
    * @throws IllegalArgumentException if you didn't use sections in ascending order, pc is negative
    */
   public int enter(ExecutionOrder section, int PC) {
-    section = section.getSection(); // Just to be shure
+    section = section.getSection(); // Just to be sure
 
     if ((this.currentSection != null) && (this.currentSection.compareTo(section) >= 0)) {
       if (this.currentSection.compareTo(section) == 0) {
