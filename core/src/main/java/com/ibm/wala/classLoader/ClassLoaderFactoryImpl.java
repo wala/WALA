@@ -94,12 +94,10 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
         Class<?> impl = Class.forName(implClass);
         Constructor<?> ctor =
             impl.getDeclaredConstructor(
-                new Class[] {
-                  ClassLoaderReference.class,
-                  IClassLoader.class,
-                  StringFilter.class,
-                  IClassHierarchy.class
-                });
+                ClassLoaderReference.class,
+                IClassLoader.class,
+                StringFilter.class,
+                IClassHierarchy.class);
         cl =
             (IClassLoader)
                 ctor.newInstance(new Object[] {classLoaderReference, parent, exclusions, cha});
@@ -108,13 +106,11 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
           Class<?> impl = Class.forName(implClass);
           Constructor<?> ctor =
               impl.getDeclaredConstructor(
-                  new Class[] {
-                    ClassLoaderReference.class,
-                    ArrayClassLoader.class,
-                    IClassLoader.class,
-                    StringFilter.class,
-                    IClassHierarchy.class
-                  });
+                  ClassLoaderReference.class,
+                  ArrayClassLoader.class,
+                  IClassLoader.class,
+                  StringFilter.class,
+                  IClassHierarchy.class);
           cl =
               (IClassLoader)
                   ctor.newInstance(
