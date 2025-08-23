@@ -67,8 +67,7 @@ public final class TypeName implements Serializable {
         dim |= PrimitiveMask;
       }
     }
-    TypeNameKey t = new TypeNameKey(packageName, className, dim);
-    return findOrCreate(t);
+    return findOrCreate(packageName, className, dim);
   }
 
   public static TypeName findOrCreate(ImmutableByteArray name) throws IllegalArgumentException {

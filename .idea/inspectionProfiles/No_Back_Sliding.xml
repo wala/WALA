@@ -364,6 +364,9 @@
       <option name="IGNORE_POINT_TO_ITSELF" value="false" />
       <option name="myAdditionalJavadocTags" value="" />
     </inspection_tool>
+    <inspection_tool class="JavaExistingMethodCanBeUsed" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WEAK WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="JavaReflectionInvocation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavaReflectionMemberAccess" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavadocDeclaration" enabled="true" level="WEAK WARNING" enabled_by_default="true" />

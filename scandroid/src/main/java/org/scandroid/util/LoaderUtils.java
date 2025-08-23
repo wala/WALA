@@ -56,17 +56,13 @@ public class LoaderUtils {
   public static boolean fromLoader(CGNode node, ClassLoaderReference clr) {
     IClass declClass = node.getMethod().getDeclaringClass();
 
-    ClassLoaderReference nodeClRef = declClass.getClassLoader().getReference();
-
-    return nodeClRef.equals(clr);
+    return fromLoader(declClass, clr);
   }
 
   public static boolean fromLoader(IMethod method, ClassLoaderReference clr) {
     IClass declClass = method.getDeclaringClass();
 
-    ClassLoaderReference nodeClRef = declClass.getClassLoader().getReference();
-
-    return nodeClRef.equals(clr);
+    return fromLoader(declClass, clr);
   }
 
   public static boolean fromLoader(IClass declClass, ClassLoaderReference clr) {
