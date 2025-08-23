@@ -94,9 +94,4 @@ public class JarFileEntry implements ModuleEntry {
   public boolean isSourceFile() {
     return FileSuffixes.isSourceFile(getName());
   }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
 }

@@ -97,11 +97,6 @@ public final class Descriptor {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
-
-  @Override
   public int hashCode() {
     return key.hashCode();
   }

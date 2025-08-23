@@ -58,11 +58,6 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
-
-  @Override
   public int hashCode() {
     return 12;
   }
