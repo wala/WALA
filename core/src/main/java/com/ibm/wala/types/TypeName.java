@@ -41,12 +41,7 @@ public final class TypeName implements Serializable {
   private static final Map<TypeNameKey, TypeName> map = HashMapFactory.make();
 
   private static synchronized TypeName findOrCreate(TypeNameKey t) {
-    TypeName result = map.get(t);
-    if (result == null) {
-      result = new TypeName(t);
-      map.put(t, result);
-    }
-    return result;
+    return map.computeIfAbsent(t, TypeName::new);
   }
 
   /** The key object holds all the information about a type name */

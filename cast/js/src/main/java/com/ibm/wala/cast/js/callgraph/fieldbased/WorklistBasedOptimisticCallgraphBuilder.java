@@ -82,12 +82,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    MutableIntSet mis = M.get(v);
-    if (mis == null) {
-      mis = new MutableSharedBitVectorIntSet();
-      M.put(v, mis);
-    }
-    return mis;
+    return M.computeIfAbsent(v, k -> new MutableSharedBitVectorIntSet());
   }
 
   @Override
