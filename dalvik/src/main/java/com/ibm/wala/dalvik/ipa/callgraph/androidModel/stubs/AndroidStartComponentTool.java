@@ -355,7 +355,7 @@ public class AndroidStartComponentTool {
       assert (intentSender != null) : "Unable to look up the IntentSender-Object";
       assert (intentSender.getNumber() == 2)
           : "The IntentSender-Object was not located at SSA-Number 2. This may be entirely "
-              + "ok! I left this assertion to ashure the ParameterAccessor does its job right.";
+              + "ok! I left this assertion to assure the ParameterAccessor does its job right.";
 
       // retrieve the IBinder: IIntentSender.asBinder()
       final SSAValue iIntentSender = pm.getUnmanaged(AndroidTypes.IIntentSender, "iIntentSender");

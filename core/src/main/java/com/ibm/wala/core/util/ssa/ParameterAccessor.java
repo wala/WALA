@@ -1348,7 +1348,7 @@ public class ParameterAccessor {
    * Generate the params-param for an InvokeIstruction w/o type checking.
    *
    * @param self the this-pointer to use
-   * @param args the rest of the arguments. Be shure it does not start with a this pointer. This is
+   * @param args the rest of the arguments. Be sure it does not start with a this pointer. This is
    *     _not_ checked so you can use a this-pointer as an argument. However a warning is issued.
    * @throws IllegalArgumentException if the value of self is to small in the current method
    */
