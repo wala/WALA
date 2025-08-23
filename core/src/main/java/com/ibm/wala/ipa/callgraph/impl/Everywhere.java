@@ -37,9 +37,4 @@ public class Everywhere implements Context {
   public int hashCode() {
     return 9851;
   }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
 }
