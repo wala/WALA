@@ -198,7 +198,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         new BufferedReader(
             new InputStreamReader(new GZIPInputStream(Files.newInputStream(cgLocation))))) {
       String line;
-      loop:
       while ((line = dynamicEdgesFile.readLine()) != null) {
         if (line.startsWith("call to") || line.startsWith("return from")) {
           continue;
@@ -214,11 +213,11 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         } else if ("clinit".equals(callerClass)) {
           caller = staticCG.getFakeWorldClinitNode();
         } else if ("callbacks".equals(callerClass)) {
-          continue loop;
+          continue;
         } else {
           String callerMethod = edge.nextToken();
           if (callerMethod.startsWith("lambda$")) {
-            continue loop;
+            continue;
           }
           MethodReference callerRef =
               MethodReference.findOrCreate(
@@ -226,7 +225,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
                   Selector.make(callerMethod));
           Set<CGNode> nodes = staticCG.getNodes(callerRef);
           if (!filter.test(callerRef)) {
-            continue loop;
+            continue;
           }
           caller = assertThat(nodes).singleElement().actual();
         }
@@ -235,7 +234,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         String calleeMethod = edge.nextToken();
         MethodReference callee = callee(calleeClass, calleeMethod);
         if (!filter.test(callee)) {
-          continue loop;
+          continue;
         }
         test.edgesTest(staticCG, caller, callee);
       }
