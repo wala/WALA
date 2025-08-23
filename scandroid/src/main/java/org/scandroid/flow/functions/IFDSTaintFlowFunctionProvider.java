@@ -475,7 +475,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   public IUnaryFlowFunction getNormalFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
     assert src.getNode().equals(dest.getNode());
-    // System.out.println("getNormalFlowFuntion");
+    // System.out.println("getNormalFlowFunction");
     // System.out.println("\tSrc " + src.getLastInstruction());
     // System.out.println("\tDest " + dest.getLastInstruction());
     return new DefUse(dest);

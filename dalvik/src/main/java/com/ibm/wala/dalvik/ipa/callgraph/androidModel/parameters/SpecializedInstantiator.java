@@ -69,7 +69,7 @@ import java.util.Set;
  * Instantiates certain android-types differently.
  *
  * <p>For example instantiating an android.content.Context would pull in all Android-components in
- * scope resulting in a massivly overapproximated model.
+ * scope resulting in a massively overapproximated model.
  *
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
@@ -164,7 +164,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
   public SSAValue createContext(final TypeReference T, VariableKey key) {
     final List<SSAValue> appComponents = new ArrayList<>();
     {
-      // TODO: Can we create a tighter conterxt?
+      // TODO: Can we create a tighter context?
       // TODO: Force an Application-Context?
 
       if (AndroidEntryPointManager.MANAGER.doFlatComponents()) {

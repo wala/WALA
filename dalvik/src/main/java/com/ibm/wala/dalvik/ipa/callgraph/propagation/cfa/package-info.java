@@ -45,7 +45,7 @@
  * constructor.
  *
  * <p>When a startComponent-function is encountered this information is used to redirect the call to
- * an AndroidModel (optionally syntethized at this point). For this to happen a wrapper is
+ * an AndroidModel (optionally synthesized at this point). For this to happen a wrapper is
  * synthesized using AndroidModels getMethodAs- Function.
  *
  * <p>If the target could not be determined definitely all components of the application matching

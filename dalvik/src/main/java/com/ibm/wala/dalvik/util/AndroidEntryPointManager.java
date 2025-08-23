@@ -130,7 +130,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   private boolean flatComponents = false;
 
   /**
-   * Controlls the initialization of Components.
+   * Controls the initialization of Components.
    *
    * <p>See {@link #setDoFlatComponents(boolean)}.
    */
@@ -139,7 +139,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   }
 
   /**
-   * Controlls the initialization of Components.
+   * Controls the initialization of Components.
    *
    * <p>If flatComponents is active an Instance of each Component of the application is generated in
    * the AndroidModelClass. Whenever the model requires a new instance of a component this
@@ -176,7 +176,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   /**
    * Controls the instantiation of variables in the model.
    *
-   * <p>Controlls on which occasions a new instance to a given type shall be generated and when to
+   * <p>Controls on which occasions a new instance to a given type shall be generated and when to
    * reuse an existing instance.
    *
    * <p>This also changes the parameters to the later model.
@@ -331,7 +331,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * <p>Setting the package of the application is completely optional. However if you do it it helps
    * determining whether an Intent has an internal target.
    *
-   * <p>If a AndroidManifest.xml is read this getts set automaticly.
+   * <p>If a AndroidManifest.xml is read this getts set automatically.
    *
    * @param pack The package of the analyzed application
    * @throws IllegalArgumentException if the package has already been set and the value of the
@@ -704,7 +704,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * Controll modification of an Intents target after construction.
    *
    * <p>After an Intent has been constructed its target may be changed using functions like
-   * setAction or setComponent. This setting controlls the behavior of the model on occurrence of
+   * setAction or setComponent. This setting controls the behavior of the model on occurrence of
    * such a function:
    *
    * <p>If set to false the Intent will be marked as unresolvable.
