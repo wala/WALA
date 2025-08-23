@@ -251,7 +251,7 @@ public enum AndroidComponent {
     IClass type = method.getDeclaringClass();
 
     if (type == null) {
-      throw new IllegalStateException("Unable to retreive the declaring class of " + method);
+      throw new IllegalStateException("Unable to retrieve the declaring class of " + method);
     }
 
     for (AndroidComponent test : AndroidComponent.values()) {

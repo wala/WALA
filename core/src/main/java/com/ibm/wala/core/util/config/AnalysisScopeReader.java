@@ -96,7 +96,7 @@ public class AnalysisScopeReader {
         InputStream inFromJar = javaLoader.getResourceAsStream(scopeFileName);
         if (inFromJar == null) {
           throw new IllegalArgumentException(
-              "Unable to retreive " + scopeFileName + " from the jar using " + javaLoader);
+              "Unable to retrieve " + scopeFileName + " from the jar using " + javaLoader);
         }
         r = new BufferedReader(new InputStreamReader(inFromJar));
       }
