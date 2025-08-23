@@ -123,11 +123,6 @@ public class ParameterAccessor {
     }
 
     @Override
-    public boolean equals(Object o) {
-      return super.equals(o);
-    }
-
-    @Override
     public int hashCode() {
       return this.type.hashCode();
     }

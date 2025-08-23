@@ -61,7 +61,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContextPair;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.intset.IntSet;
 
 public class UriPrefixContextSelector extends DefaultContextSelector {
 
@@ -141,10 +140,5 @@ public class UriPrefixContextSelector extends DefaultContextSelector {
       // "+caller.getContext());
     }
     return super.getCalleeTarget(caller, site, callee, receivers);
-  }
-
-  @Override
-  public IntSet getRelevantParameters(CGNode node, CallSiteReference call) {
-    return super.getRelevantParameters(node, call);
   }
 }
