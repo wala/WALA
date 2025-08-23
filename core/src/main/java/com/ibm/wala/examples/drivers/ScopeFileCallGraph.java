@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+import org.intellij.lang.annotations.Language;
 
 /**
  * Driver that constructs a call graph for an application specified via a scope file. Useful for
@@ -60,6 +61,7 @@ public class ScopeFileCallGraph {
     long start = System.currentTimeMillis();
     Properties p = CommandLine.parse(args);
     String scopeFile = p.getProperty("scopeFile");
+    @Language("jvm-class-name")
     String entryClass = p.getProperty("entryClass");
     String mainClass = p.getProperty("mainClass");
     String dump = p.getProperty("dump");
@@ -101,7 +103,7 @@ public class ScopeFileCallGraph {
   }
 
   private static Iterable<Entrypoint> makePublicEntrypoints(
-      IClassHierarchy cha, String entryClass) {
+      IClassHierarchy cha, @Language("jvm-class-name") String entryClass) {
     Collection<Entrypoint> result = new ArrayList<>();
     IClass klass =
         cha.lookupClass(
