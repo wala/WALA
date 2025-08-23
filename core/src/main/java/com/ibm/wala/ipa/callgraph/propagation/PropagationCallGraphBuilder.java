@@ -834,11 +834,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     }
 
     @Override
-    public boolean equals(Object o) {
-      return super.equals(o);
-    }
-
-    @Override
     protected boolean isLoadOperator() {
       return true;
     }
@@ -920,11 +915,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     @Override
     public boolean isComplex() {
       return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return super.equals(o);
     }
 
     @Override
