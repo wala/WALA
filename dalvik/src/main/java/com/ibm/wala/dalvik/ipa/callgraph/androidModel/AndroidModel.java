@@ -799,7 +799,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());
             if (declaringClass == null) {
               throw new IllegalStateException(
-                  "Unable to retreive te IClass of "
+                  "Unable to retrieve te IClass of "
                       + asMethod.getDeclaringClass()
                       + " from "
                       + "Method "
@@ -875,7 +875,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());
       if (declaringClass == null) {
         throw new IllegalStateException(
-            "Unable to retreive te IClass of "
+            "Unable to retrieve te IClass of "
                 + asMethod.getDeclaringClass()
                 + " from "
                 + "Method "

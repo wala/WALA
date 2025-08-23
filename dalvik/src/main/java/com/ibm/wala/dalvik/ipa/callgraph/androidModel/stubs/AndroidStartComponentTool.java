@@ -357,7 +357,7 @@ public class AndroidStartComponentTool {
           : "The IntentSender-Object was not located at SSA-Number 2. This may be entirely "
               + "ok! I left this assertion to ashure the ParameterAccessor does its job right.";
 
-      // retreive the IBinder: IIntentSender.asBinder()
+      // retrieve the IBinder: IIntentSender.asBinder()
       final SSAValue iIntentSender = pm.getUnmanaged(AndroidTypes.IIntentSender, "iIntentSender");
       { // call IIntentSender IntentSender.getTarget()
         final int callPC = redirect.getNextProgramCounter();
