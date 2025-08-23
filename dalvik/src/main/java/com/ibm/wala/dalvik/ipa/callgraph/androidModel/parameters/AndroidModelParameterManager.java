@@ -199,8 +199,6 @@ public class AndroidModelParameterManager {
           //                    param.setBy = setBy;
 
           return;
-        } else {
-          continue;
         }
       }
       throw new IllegalStateException(
@@ -423,7 +421,7 @@ public class AndroidModelParameterManager {
           assert param.type.equals(type) : "Inequal types";
           if (param.setInScope > currentScope) {
 
-            continue;
+            // do nothing
           } else if (param.setInScope == currentScope) {
 
             return param.ssa;

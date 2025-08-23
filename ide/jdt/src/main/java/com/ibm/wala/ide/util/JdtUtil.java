@@ -446,8 +446,6 @@ public class JdtUtil {
               if (c == ')') {
                 return toArray(sigs);
               }
-
-              continue;
             }
         }
       }
