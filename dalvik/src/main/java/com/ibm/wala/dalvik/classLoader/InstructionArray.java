@@ -56,8 +56,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Collection of Instruction wich allow to get an instruction from its table index id or from its
- * bytecode index. It's not allowed to remove an element.
+ * Collection of {@code Instruction} which allows getting an instruction from its table index id or
+ * from its bytecode index. Removing an element is not allowed.
  */
 public class InstructionArray implements Collection<Instruction> {
   List<Instruction> instructions;
