@@ -861,9 +861,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     it = new FilterIterator<T>(it, dispatchFilter);
 
     Function<T, BasicBlockInContext<T>> toContext =
-        object -> {
-          return new BasicBlockInContext<>(node, object);
-        };
+        object -> new BasicBlockInContext<>(node, object);
     MapIterator<T, BasicBlockInContext<T>> m = new MapIterator<>(it, toContext);
     return new FilterIterator<>(m, isCall);
   }
