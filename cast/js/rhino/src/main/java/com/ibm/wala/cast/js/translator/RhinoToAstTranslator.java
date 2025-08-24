@@ -600,7 +600,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     }
   }
 
-  protected CAstNode noteSourcePosition(WalkContext context, CAstNode n, AstNode p) {
+  private CAstNode noteSourcePosition(WalkContext context, CAstNode n, AstNode p) {
     if (p.getLineno() != -1 && context.pos().getPosition(n) == null) {
       pushSourcePosition(context, n, makePosition(p));
     }
