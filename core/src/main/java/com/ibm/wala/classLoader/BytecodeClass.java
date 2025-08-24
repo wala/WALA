@@ -309,7 +309,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     if (instanceFields == null) {
       return Collections.emptySet();
     } else {
-      return Collections.unmodifiableList(Arrays.asList(instanceFields));
+      return List.of(instanceFields);
     }
   }
 
