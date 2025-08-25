@@ -950,9 +950,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     List<CAstType> castTypes = new ArrayList<>();
     List<String> castNames = new ArrayList<>();
 
-    for (Object obj : parameters) {
-      VariableDeclarationFragment tmp = (VariableDeclarationFragment) obj;
-      CAstType td = fTypeDict.getCAstTypeFor(tmp.resolveBinding().getType());
+    IMethodBinding fm = typeBinding.getFunctionalInterfaceMethod();
+    assert fm != null : typeBinding;
+    ITypeBinding ct = fm.getDeclaringClass();
+
+    for (int i = 0; i < parameters.size(); i++) {
+      VariableDeclarationFragment tmp = (VariableDeclarationFragment) parameters.get(i);
+      CAstType td = fTypeDict.getCAstTypeFor(fm.getParameterTypes()[i].getErasure());
       castTypes.add(td);
       String tmpName = tmp.getName().getIdentifier();
       castNames.add(tmpName);
@@ -961,10 +965,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     final MethodContext context = new MethodContext(oldContext, Collections.emptyMap());
 
     CAstNode mdast = fFactory.makeNode(CAstNode.RETURN, visitNode(n.getBody(), context));
-
-    // Polyglot comment: Presumably the MethodContext's parent is a ClassContext,
-    // and he has the list of initializers. Hopefully the following
-    // will glue that stuff in the right place in any constructor body.
 
     if (context.getNameDecls() != null && !context.getNameDecls().isEmpty()) {
       // new first statement will be a block declaring all names.
@@ -976,9 +976,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                   : fFactory.makeNode(CAstNode.BLOCK_STMT, context.getNameDecls()),
               mdast);
     }
-
-    IMethodBinding fm = typeBinding.getFunctionalInterfaceMethod();
-    ITypeBinding ct = (fm == null ? n.resolveTypeBinding() : fm.getDeclaringClass());
 
     CAstEntity lambdaClass =
         createClassDeclaration(
@@ -1017,12 +1014,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                 public List<CAstType> getArgumentTypes() {
                   return castTypes.stream()
                       .skip(1)
-                      .map(
-                          x ->
-                              fm == null || fm.getName().equals("apply")
-                                  ? fTypeDict.getCAstTypeFor(
-                                      ast.resolveWellKnownType("java.lang.Object"))
-                                  : x)
                       .collect(Collectors.toList());
                 }
 

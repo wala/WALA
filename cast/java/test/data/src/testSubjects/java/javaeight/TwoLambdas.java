@@ -3,7 +3,7 @@ package javaeight;
 import java.util.function.Function;
 
 /* Class hook to test lambda functionality */
-public class ObjectLambda {
+public class TwoLambdas {
   static class Obj {
     private int x;
 
@@ -18,14 +18,20 @@ public class ObjectLambda {
     public int getX() {
       return x;
     }
+
+    public int getXP1() {
+      return x+1;
+    }
     
   }
+
     public static void main(String[] args) {
-        new ObjectLambda().doit();
+        new TwoLambdas().doit();
     }
 
     int doit() {
-        Function<String,Obj> x = i -> new Obj(Integer.valueOf(i));
-        return x.apply("1").getX();
+      Function<String,Obj> x = i -> new Obj(Integer.valueOf(i));
+      Function<String,Obj> y = i -> new Obj(Integer.valueOf(i)+1);
+        return x.apply("1").getX() +  y.apply("1").getXP1(); 
     }
 }
