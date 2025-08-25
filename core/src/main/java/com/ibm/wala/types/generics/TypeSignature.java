@@ -184,7 +184,7 @@ public abstract class TypeSignature extends Signature {
           break;
         case (byte) ')': // end of parameter list
         case (byte) '>': // end of type argument list
-          return sigs.toArray(new String[sigs.size()]);
+          return sigs.toArray(new String[0]);
         default:
           throw new IllegalArgumentException("bad type signature list " + typeSigs);
       }

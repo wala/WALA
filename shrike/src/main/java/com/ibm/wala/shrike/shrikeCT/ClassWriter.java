@@ -672,7 +672,7 @@ public class ClassWriter implements ClassConstants {
         throw new IllegalArgumentException("Type constant pool index out of range: " + name);
       }
       if (attributes == null) {
-        throw new IllegalArgumentException("Atrtributes are null");
+        throw new IllegalArgumentException("Attributes are null");
       }
       if (attributes.length > 0xFFFF) {
         throw new IllegalArgumentException("Too many attributes: " + attributes.length);
@@ -750,7 +750,7 @@ public class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Add an atttribute to the class.
+   * Add an attribute to the class.
    *
    * @param attribute the attribute in raw form
    */

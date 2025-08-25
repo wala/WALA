@@ -326,6 +326,7 @@ public class AnnotationsReader extends AttributeReader {
                 cr.getCP().getCPUtf8(nextShort), cr.getCP().getCPUtf8(cr.getUShort(offset + 3))),
             5);
       case '[': // array
+        @SuppressWarnings("UnnecessaryLocalVariable")
         int numValues = nextShort;
         int numArrayBytes = 3; // start with 3 for the tag and num_values bytes
         ElementValue[] vals = new ElementValue[numValues];

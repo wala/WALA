@@ -87,8 +87,8 @@ final class IntraprocAnalysisState
         final Object[] values = new Object[numberOfSSAVars];
 
         for (int j = 0; j < numberOfSSAVars; j++) {
-          final boolean isContant = sym.isConstant(j);
-          values[j] = (isContant ? sym.getConstantValue(j) : null);
+          final boolean isConstant = sym.isConstant(j);
+          values[j] = (isConstant ? sym.getConstantValue(j) : null);
         }
 
         this.valuesOfSsaVars.put(block, values);

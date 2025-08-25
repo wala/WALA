@@ -82,7 +82,7 @@ class JavaLangClassContextSelector implements ContextSelector {
   }
 
   /**
-   * This object may understand a dispatch to Class.getContructor when the receiver is a type
+   * This object may understand a dispatch to Class.getConstructor when the receiver is a type
    * constant.
    */
   private static boolean mayUnderstand(IMethod targetMethod, InstanceKey instance) {

@@ -113,8 +113,7 @@ public abstract class AbstractJavaAnalysisAction
       e.printStackTrace();
       assert false;
     }
-    AnalysisScope scope = mergeProjectPaths(projectPaths);
-    return scope;
+    return mergeProjectPaths(projectPaths);
   }
 
   /** compute the java projects represented by the current selection */

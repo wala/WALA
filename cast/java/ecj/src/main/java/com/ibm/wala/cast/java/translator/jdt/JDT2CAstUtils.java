@@ -149,12 +149,12 @@ public class JDT2CAstUtils {
 
   public static ITypeBinding promoteTypes(ITypeBinding t1, ITypeBinding t2, AST ast) {
     // JLS 5.6.2
-    ITypeBinding doble = ast.resolveWellKnownType("double");
-    if (t1.equals(doble) || t2.equals(doble)) return doble;
-    ITypeBinding flotando = ast.resolveWellKnownType("float");
-    if (t1.equals(flotando) || t2.equals(flotando)) return flotando;
-    ITypeBinding largo = ast.resolveWellKnownType("long");
-    if (t1.equals(largo) || t2.equals(largo)) return largo;
+    ITypeBinding doubleBinding = ast.resolveWellKnownType("double");
+    if (t1.equals(doubleBinding) || t2.equals(doubleBinding)) return doubleBinding;
+    ITypeBinding floatBinding = ast.resolveWellKnownType("float");
+    if (t1.equals(floatBinding) || t2.equals(floatBinding)) return floatBinding;
+    ITypeBinding longBinding = ast.resolveWellKnownType("long");
+    if (t1.equals(longBinding) || t2.equals(longBinding)) return longBinding;
     return ast.resolveWellKnownType("int");
   }
 
@@ -218,13 +218,13 @@ public class JDT2CAstUtils {
   private static void getMethodInClassOrSuperclass(
       IMethodBinding met,
       ITypeBinding klass,
-      boolean superclassonly,
+      boolean superclassOnly,
       HashMap<ITypeBinding, IMethodBinding> overridden) {
-    if (!superclassonly) {
-      for (IMethodBinding ourmet : klass.getDeclaredMethods())
-        if (met.overrides(ourmet)) {
+    if (!superclassOnly) {
+      for (IMethodBinding ourMet : klass.getDeclaredMethods())
+        if (met.overrides(ourMet)) {
           overridden.put(
-              ourmet.getMethodDeclaration().getReturnType(), ourmet.getMethodDeclaration());
+              ourMet.getMethodDeclaration().getReturnType(), ourMet.getMethodDeclaration());
           break; // there can only be one per class so don't bother looking for more
         }
     }

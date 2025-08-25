@@ -177,8 +177,6 @@ public class DFSPathFinder<T> extends ArrayList<T> {
         setPendingChildren(nextRoot, getConnected(nextRoot));
       }
     }
-
-    return;
   }
 
   /**

@@ -31,9 +31,7 @@ public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> 
 
   @Override
   public boolean hasNormalEdge(ISSABasicBlock src, ISSABasicBlock dst) {
-    boolean originalEdge =
-        node.getIR().getControlFlowGraph().getNormalSuccessors(src).contains(dst);
-    boolean result = originalEdge;
+    boolean result = node.getIR().getControlFlowGraph().getNormalSuccessors(src).contains(dst);
     SSAInstruction instruction = IntraproceduralExceptionAnalysis.getThrowingInstruction(src);
     if (instruction != null) {
       if (analysis.getFilter().getFilter(node).alwaysThrowsException(instruction)) {
@@ -45,9 +43,7 @@ public class ExceptionAnalysis2EdgeFilter implements EdgeFilter<ISSABasicBlock> 
 
   @Override
   public boolean hasExceptionalEdge(ISSABasicBlock src, ISSABasicBlock dst) {
-    boolean originalEdge =
-        node.getIR().getControlFlowGraph().getExceptionalSuccessors(src).contains(dst);
-    boolean result = originalEdge;
+    boolean result = node.getIR().getControlFlowGraph().getExceptionalSuccessors(src).contains(dst);
 
     if (dst.isCatchBlock()) {
       if (!analysis.catchesException(node, src, dst)) {

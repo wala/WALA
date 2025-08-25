@@ -43,12 +43,7 @@ public final class Descriptor {
       parameters = null;
     }
     Key k = new Key(returnType, parameters);
-    Descriptor result = map.get(k);
-    if (result == null) {
-      result = new Descriptor(k);
-      map.put(k, result);
-    }
-    return result;
+    return map.computeIfAbsent(k, Descriptor::new);
   }
 
   /**
@@ -60,12 +55,7 @@ public final class Descriptor {
     TypeName returnType = StringStuff.parseForReturnTypeName(l, b);
     TypeName[] parameters = StringStuff.parseForParameterNames(l, b);
     Key k = new Key(returnType, parameters);
-    Descriptor result = map.get(k);
-    if (result == null) {
-      result = new Descriptor(k);
-      map.put(k, result);
-    }
-    return result;
+    return map.computeIfAbsent(k, Descriptor::new);
   }
 
   public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
@@ -94,11 +84,6 @@ public final class Descriptor {
    */
   private Descriptor(Key key) {
     this.key = key;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
   }
 
   @Override

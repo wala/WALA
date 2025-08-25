@@ -57,7 +57,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.SetOfClasses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -164,7 +163,7 @@ public final class AndroidEntryPointLocator {
           if (cls.getName().toString().contains("MainActivity")) {
             System.err.println("got here: " + m);
           }
-          // If there is a Method signature in the possible entry points use thatone
+          // If there is a Method signature in the possible entry points use that one
           for (AndroidPossibleEntryPoint e : possibleEntryPoints) {
             if (e.name.equals(m.getName().toString())) {
               if (this.flags.contains(LocatorFlags.WITH_ANDROID)) {
@@ -190,7 +189,7 @@ public final class AndroidEntryPointLocator {
           for (final AndroidComponent compo : AndroidComponent.values()) {
             if (compo == AndroidComponent.UNKNOWN) continue;
             if (compo.toReference() == null) {
-              logger.error("Null-Reference for " + compo);
+              logger.error("Null-Reference for {}", compo);
             } else {
               bases.add(compo.toReference());
             }
@@ -279,14 +278,12 @@ public final class AndroidEntryPointLocator {
       compo = AndroidComponent.from(method, cha);
       if (compo == AndroidComponent.UNKNOWN) {}
     }
-    final AndroidEntryPoint ep =
-        new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
 
-    return ep;
+    return new AndroidEntryPoint(selectPositionForHeuristic(), method, cha, compo);
   }
 
   /**
-   * Select all methods that override or implement any method from the andoidPackage.
+   * Select all methods that override or implement any method from the androidPackage.
    *
    * <p>Like heuristicScan but with an other restriction: instead of methods overriding methods in
    * base select methods whose super-class starts with "Landroid".
@@ -323,7 +320,7 @@ public final class AndroidEntryPointLocator {
           androidClass = androidClass.getSuperclass();
         }
         if (!isAndroidClass) {
-          logger.trace("Heuristic: Skipping non andoid {}", appClass.getName().toString());
+          logger.trace("Heuristic: Skipping non android {}", appClass.getName().toString());
           continue; // continue appClass;
         }
       }
@@ -432,12 +429,12 @@ public final class AndroidEntryPointLocator {
   }
 
   private static boolean isExcluded(final IClass cls) {
-    final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
+    final var set = cls.getClassHierarchy().getScope().getExclusions();
     if (set == null) {
       return false; // exclusions null ==> no exclusions ==> no class is excluded
     } else {
       final String clsName = cls.getReference().getName().toString().substring(1);
-      return set.contains(clsName);
+      return set.test(clsName);
     }
   }
 

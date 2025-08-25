@@ -54,7 +54,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
   public static final int DEFAULT_PERIODIC_MAINTENANCE_INTERVAL = 100000;
 
   /**
-   * A tuning parameter; how may new IStatementDefinitionss must be added before doing a new
+   * A tuning parameter; how may new IStatementDefinitions must be added before doing a new
    * topological sort? TODO: Tune this empirically.
    */
   private int minSizeForTopSort = 0;
@@ -483,7 +483,6 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
 
     if ((nEvaluated - evaluationsAtLastOrdering) > maxEvalBetweenTopo) {
       orderStatementsInternal();
-      return;
     }
   }
 

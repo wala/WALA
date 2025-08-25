@@ -315,7 +315,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     return getClassHierarchy().getRootClass();
   }
 
-  /** This class does not impement any interfaces. */
+  /** This class does not implement any interfaces. */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     return Collections.emptySet();

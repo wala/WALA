@@ -68,14 +68,6 @@ public abstract class IRTests {
 
   protected boolean dump = true;
 
-  protected IRTests(String projectName) {
-    this.projectName = projectName;
-  }
-
-  protected final String projectName;
-
-  protected static String javaHomePath;
-
   public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
@@ -473,8 +465,7 @@ public abstract class IRTests {
       String loaderName, String typeStr, IClassHierarchy cha) {
     ClassLoaderReference clr = findLoader(loaderName, cha);
     TypeName typeName = TypeName.string2TypeName('L' + typeStr);
-    TypeReference typeRef = TypeReference.findOrCreate(clr, typeName);
-    return typeRef;
+    return TypeReference.findOrCreate(clr, typeName);
   }
 
   private static ClassLoaderReference findLoader(String loaderName, IClassHierarchy cha) {

@@ -61,8 +61,7 @@ public class JdtUtil {
       if (p == null) {
         throw new IllegalArgumentException("javaElt has null path");
       }
-      String filePath = p.toString();
-      return filePath;
+      return p.toString();
     } catch (Exception e) {
       throw new IllegalArgumentException("malformed javaElt: " + javaElt, e);
     }
@@ -77,8 +76,7 @@ public class JdtUtil {
 
       // TODO: handle default package?
       if (pkgDecl != null && pkgDecl.length > 0) {
-        String packageName = pkgDecl[0].getElementName();
-        return packageName;
+        return pkgDecl[0].getElementName();
       }
     } catch (JavaModelException e) {
 
@@ -93,16 +91,14 @@ public class JdtUtil {
     ICompilationUnit cu = (ICompilationUnit) type.getParent();
     String packageName = getPackageName(cu);
     String className = type.getElementName();
-    String fullyQName = packageName + '.' + className;
-    return fullyQName;
+    return packageName + '.' + className;
   }
 
   public static String getClassName(IType type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
-    String className = type.getElementName();
-    return className;
+    return type.getElementName();
   }
 
   /**
@@ -143,8 +139,7 @@ public class JdtUtil {
     if (javaElt == null) {
       throw new IllegalArgumentException("javaElt is null");
     }
-    IJavaProject javaProject = javaElt.getJavaProject();
-    return javaProject;
+    return javaElt.getJavaProject();
   }
 
   public static String getProjectName(IJavaProject javaProject) {
@@ -161,8 +156,7 @@ public class JdtUtil {
    *     Signature} for details.
    */
   public static String getHumanReadableType(String typeSignature) {
-    String simpleName = Signature.getSignatureSimpleName(typeSignature);
-    return simpleName;
+    return Signature.getSignatureSimpleName(typeSignature);
   }
 
   public static IJavaProject getJavaProject(IFile appJar) {
@@ -452,8 +446,6 @@ public class JdtUtil {
               if (c == ')') {
                 return toArray(sigs);
               }
-
-              continue;
             }
         }
       }
@@ -594,15 +586,13 @@ public class JdtUtil {
     for (String projectName : projectNames) {
       projects[i++] = getJavaProject(projectName);
     }
-    StructuredSelection selection = new StructuredSelection(projects);
-    return selection;
+    return new StructuredSelection(projects);
   }
 
   public static IJavaProject getNamedProject(String projectName) {
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IJavaModel javaModel = JavaCore.create(workspaceRoot);
-    IJavaProject helloWorldProject = javaModel.getJavaProject(projectName);
-    return helloWorldProject;
+    return javaModel.getJavaProject(projectName);
   }
 
   public static ASTNode getAST(IFile javaSourceFile) {

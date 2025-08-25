@@ -76,16 +76,12 @@ public class CAstCallGraphUtil {
 
   public static AnalysisScope makeScope(
       String[] files, SingleClassLoaderFactory loaders, Language language) {
-    CAstAnalysisScope result =
-        new CAstAnalysisScope(files, loaders, Collections.singleton(language));
-    return result;
+    return new CAstAnalysisScope(files, loaders, Collections.singleton(language));
   }
 
   public static AnalysisScope makeScope(
       Module[] files, SingleClassLoaderFactory loaders, Language language) {
-    CAstAnalysisScope result =
-        new CAstAnalysisScope(files, loaders, Collections.singleton(language));
-    return result;
+    return new CAstAnalysisScope(files, loaders, Collections.singleton(language));
   }
 
   public static IAnalysisCacheView makeCache(IRFactory<IMethod> factory) {

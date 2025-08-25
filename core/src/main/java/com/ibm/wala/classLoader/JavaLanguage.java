@@ -459,39 +459,30 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   private static final Collection<TypeReference> arrayAccessExceptions =
       Collections.unmodifiableCollection(
           Arrays.asList(
-              new TypeReference[] {
-                TypeReference.JavaLangNullPointerException,
-                TypeReference.JavaLangArrayIndexOutOfBoundsException
-              }));
+              TypeReference.JavaLangNullPointerException,
+              TypeReference.JavaLangArrayIndexOutOfBoundsException));
 
   private static final Collection<TypeReference> aaStoreExceptions =
       Collections.unmodifiableCollection(
           Arrays.asList(
-              new TypeReference[] {
-                TypeReference.JavaLangNullPointerException,
-                TypeReference.JavaLangArrayIndexOutOfBoundsException,
-                TypeReference.JavaLangArrayStoreException
-              }));
+              TypeReference.JavaLangNullPointerException,
+              TypeReference.JavaLangArrayIndexOutOfBoundsException,
+              TypeReference.JavaLangArrayStoreException));
 
   private static final Collection<TypeReference> newScalarExceptions =
       Collections.unmodifiableCollection(
           Arrays.asList(
-              new TypeReference[] {
-                TypeReference.JavaLangExceptionInInitializerError,
-                TypeReference.JavaLangOutOfMemoryError
-              }));
+              TypeReference.JavaLangExceptionInInitializerError,
+              TypeReference.JavaLangOutOfMemoryError));
 
   private static final Collection<TypeReference> newArrayExceptions =
       Collections.unmodifiableCollection(
           Arrays.asList(
-              new TypeReference[] {
-                TypeReference.JavaLangOutOfMemoryError,
-                TypeReference.JavaLangNegativeArraySizeException
-              }));
+              TypeReference.JavaLangOutOfMemoryError,
+              TypeReference.JavaLangNegativeArraySizeException));
 
   private static final Collection<TypeReference> newSafeArrayExceptions =
-      Collections.unmodifiableCollection(
-          Arrays.asList(new TypeReference[] {TypeReference.JavaLangOutOfMemoryError}));
+      Collections.singleton(TypeReference.JavaLangOutOfMemoryError);
 
   private static final Collection<TypeReference> exceptionInInitializerError =
       Collections.singleton(TypeReference.JavaLangExceptionInInitializerError);

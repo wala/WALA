@@ -89,13 +89,8 @@ public class StaticFieldSinkPoint implements ISinkPoint {
 
     for (DomainElement de :
         domain.getPossibleElements(new StaticFieldElement(field.getReference()))) {
-      if (de.taintSource instanceof StaticFieldFlow<?>) {
-        StaticFieldFlow<IExplodedBasicBlock> source =
-            (StaticFieldFlow<IExplodedBasicBlock>) de.taintSource;
-        if (source.getField().equals(field)) {
-          continue;
-        }
-      } else if (flowResult.getResult(block).contains(domain.getMappedIndex(de))) {
+      if (!(de.taintSource instanceof StaticFieldFlow<?>)
+          && flowResult.getResult(block).contains(domain.getMappedIndex(de))) {
         sources.add(de.taintSource);
       }
     }

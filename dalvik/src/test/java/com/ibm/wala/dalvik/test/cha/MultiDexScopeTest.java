@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,7 +53,7 @@ public class MultiDexScopeTest {
   private static void addAPKtoScope(
       ClassLoaderReference loader, AnalysisScope scope, final Path fileName) {
     final var apkFile = fileName.toFile();
-    MultiDexContainer<? extends DexBackedDexFile> multiDex = null;
+    final MultiDexContainer<? extends DexBackedDexFile> multiDex;
     try {
       multiDex = DexFileFactory.loadDexContainer(apkFile, Opcodes.forApi(24));
     } catch (IOException e) {
@@ -126,11 +127,11 @@ public class MultiDexScopeTest {
 
       File dex1 = new File(dexTmpDir + File.separator + "classes.dex");
       scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(dex1));
-      dex1.delete();
+      Files.delete(dex1.toPath());
 
       File dex2 = new File(dexTmpDir + File.separator + "classes2.dex");
       scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(dex2));
-      dex2.delete();
+      Files.delete(dex2.toPath());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

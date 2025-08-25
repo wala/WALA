@@ -476,7 +476,6 @@ public class CallGraphTest extends WalaTestCase {
 
     // test ICFG
     checkICFG(cg);
-    return;
     // /////////////
     // // 1-CFA ///
     // /////////////
@@ -597,9 +596,8 @@ public class CallGraphTest extends WalaTestCase {
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
        */
       @Override
-      public Iterator<MethodReference> getPredNodes(MethodReference N) {
+      public Iterator<MethodReference> getPredNodes(MethodReference methodReference) {
         Set<MethodReference> pred = HashSetFactory.make(10);
-        MethodReference methodReference = N;
         for (CGNode cgNode : cg.getNodes(methodReference))
           for (CGNode p : Iterator2Iterable.make(cg.getPredNodes(cgNode)))
             pred.add(p.getMethod().getReference());
@@ -619,9 +617,8 @@ public class CallGraphTest extends WalaTestCase {
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
        */
       @Override
-      public Iterator<MethodReference> getSuccNodes(MethodReference N) {
+      public Iterator<MethodReference> getSuccNodes(MethodReference methodReference) {
         Set<MethodReference> succ = HashSetFactory.make(10);
-        MethodReference methodReference = N;
         for (CGNode node : cg.getNodes(methodReference))
           for (CGNode p : Iterator2Iterable.make(cg.getSuccNodes(node)))
             succ.add(p.getMethod().getReference());

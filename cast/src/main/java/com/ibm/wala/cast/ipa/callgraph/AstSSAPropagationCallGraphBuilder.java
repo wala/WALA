@@ -478,10 +478,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-                final IntSetVariable<?> objects = rhs;
-                if (objects.getValue() != null) {
-                  objects
-                      .getValue()
+                if (rhs.getValue() != null) {
+                  rhs.getValue()
                       .foreach(
                           optr -> {
                             InstanceKey object = system.getInstanceKey(optr);
@@ -534,10 +532,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-                final IntSetVariable<?> objects = rhs;
-                if (objects.getValue() != null) {
-                  objects
-                      .getValue()
+                if (rhs.getValue() != null) {
+                  rhs.getValue()
                       .foreach(
                           optr -> {
                             InstanceKey object = system.getInstanceKey(optr);
@@ -1013,10 +1009,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           new UnaryOperator<>() {
             @Override
             public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-              final IntSetVariable<?> objects = rhs;
-              if (objects.getValue() != null) {
-                objects
-                    .getValue()
+              if (rhs.getValue() != null) {
+                rhs.getValue()
                     .foreach(
                         optr -> {
                           InstanceKey object = system.getInstanceKey(optr);
@@ -1084,10 +1078,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           new UnaryOperator<>() {
             @Override
             public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-              final IntSetVariable<?> fields = rhs;
-              if (fields.getValue() != null) {
-                fields
-                    .getValue()
+              if (rhs.getValue() != null) {
+                rhs.getValue()
                     .foreach(
                         fptr -> {
                           InstanceKey field = system.getInstanceKey(fptr);

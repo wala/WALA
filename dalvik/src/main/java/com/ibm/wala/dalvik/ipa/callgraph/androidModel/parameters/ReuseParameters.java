@@ -195,7 +195,7 @@ public class ReuseParameters {
     final MethodReference inCall;
     /*final*/ String withName;
 
-    if ((inCallTo != null) && (inCallTo != ALL_TARGETS)) {
+    if (inCallTo != ALL_TARGETS) {
       final int bcIndex = 0; // The PC to get the variable name from
       final int localNumber = ssaFor(inCallTo, firstOf(param, inCallTo));
       try {

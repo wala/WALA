@@ -100,7 +100,6 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
             }
             sbuaMap.put(k, sbua); // map k to sbua in some global map
           }
-          continue;
         }
       }
     }

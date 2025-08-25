@@ -125,9 +125,7 @@ public class MultiModalIntVector implements IntVector {
     handleMorph(x, value);
     if (value == defaultValue) {
       int length = getStoreLength();
-      if (x >= length) {
-        return;
-      } else {
+      if (x < length) {
         add(value, x);
       }
     } else {

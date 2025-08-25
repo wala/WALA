@@ -162,7 +162,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-// TOTEST:
+// TO TEST:
 // "1/0" surrounded by catch ArithmeticException & RunTimeException (TryCatchContext.getCatchTypes"
 // another subtype of ArithmeticException surrounded by catch ArithmeticException
 // binary ops with all kinds of type conversions
@@ -172,7 +172,7 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 // pointer in field accesses, etc.
 // implicit constructors
 
-// FIXME 1.4: thing about / ask agout TAGALONG (JDT stuff tagging along in memory cos we keep it).
+// FIXME 1.4: think about / ask about TAGALONG (JDT stuff tagging along in memory cos we keep it).
 // FIXME 1.4: find LEFTOUT and find out why polyglot has extra code / infrastructure, if it's used
 // and what for, etc.
 
@@ -1304,9 +1304,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       Expression init = f.getInitializer();
       CAstNode rhsNode = visitNode(init, context);
-      CAstNode assNode = makeNode(context, fFactory, f, CAstNode.ASSIGN, lhsNode, rhsNode);
-
-      return assNode; // their naming, not mine
+      return makeNode(context, fFactory, f, CAstNode.ASSIGN, lhsNode, rhsNode);
 
     } else if (node instanceof EnumConstantDeclaration) {
       return createEnumConstantDeclarationInit((EnumConstantDeclaration) node, context);
@@ -2067,7 +2065,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ITypeBinding fromtype =
         JDT2CAstUtils.getTypesVariablesBase(
             field.resolveFieldBinding().getVariableDeclaration().getType(), ast);
-    CAstNode castedObref = obref2; // createCast(left, obref2, fromtype, realtype, context);
 
     // put it all together
     // CAST(LOCAL SCOPE(BLOCK EXPR(DECL STMT(temp,
@@ -2095,7 +2092,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                         realtype,
                         left.getStartPosition(),
                         left.getLength(),
-                        castedObref,
+                        obref2,
                         right,
                         context))));
 
@@ -2473,9 +2470,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       WalkContext context) {
     CAstNode rightNode = visitNode(right, context);
 
-    int start = leftStartPosition;
     int end = right.getStartPosition() + right.getLength();
-    T pos = makePosition(start, end);
+    T pos = makePosition(leftStartPosition, end);
     T leftPos = makePosition(leftStartPosition, leftStartPosition + leftLength);
     T rightPos =
         makePosition(right.getStartPosition(), right.getStartPosition() + right.getLength());
@@ -4141,7 +4137,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
           // _might_ get caught
         } else if (catchType.isSubTypeCompatible(label)) {
           catchNodes.add(p);
-          continue;
         }
       }
       catchNodes.addAll(parent.getCatchTargets(label));
@@ -4240,11 +4235,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // Why do we seemingly catch a RuntimeException in every method? this won't catch the
       // RuntimeException above where
       // it is supposed to be caught?
-      Collection<Pair<ITypeBinding, Object>> result =
-          Collections.singleton(
-              Pair.<ITypeBinding, Object>make(
-                  fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
-      return result;
+      return Collections.singleton(
+          Pair.<ITypeBinding, Object>make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
     @Override
@@ -4381,9 +4373,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
               node.getAnonymousClassDeclaration(),
               context);
 
-      CAstNode assNode = makeNode(context, fFactory, node, CAstNode.ASSIGN, lhsNode, rhsNode);
-
-      return assNode; // their naming, not mine
+      return makeNode(context, fFactory, node, CAstNode.ASSIGN, lhsNode, rhsNode);
     } else {
 
       // String[] x = (new Direction[] {

@@ -112,8 +112,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
 
     @SuppressWarnings("unused")
     @Override
-    public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-      PointsToSetVariable receivers = rhs;
+    public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable receivers) {
 
       // compute the set of pointers that were not previously handled
       IntSet value = receivers.getValue();

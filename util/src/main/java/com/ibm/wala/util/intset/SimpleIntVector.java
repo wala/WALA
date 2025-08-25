@@ -75,9 +75,7 @@ public class SimpleIntVector implements IntVector, Serializable {
     }
     maxIndex = Math.max(maxIndex, x);
     if (value == defaultValue) {
-      if (x >= store.length) {
-        return;
-      } else {
+      if (x < store.length) {
         store[x] = value;
       }
     } else {

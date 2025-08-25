@@ -62,13 +62,15 @@ public class StringStuff {
    *
    * @throws IllegalArgumentException if dString is null
    */
-  public static String deployment2CanonicalTypeString(String dString) {
+  public static String deployment2CanonicalTypeString(
+      @org.intellij.lang.annotations.Language("jvm-class-name") String dString) {
     if (dString == null) {
       throw new IllegalArgumentException("dString is null");
     }
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
+      @org.intellij.lang.annotations.Language("jvm-class-name")
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
@@ -473,7 +475,7 @@ public class StringStuff {
       }
       return new ImmutableByteArray(b.b, i, length - (i - start));
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid element desciptor: " + b, e);
+      throw new IllegalArgumentException("invalid element descriptor: " + b, e);
     }
   }
 
@@ -533,6 +535,7 @@ public class StringStuff {
     if (methodSig.lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("ill-formed sig " + methodSig);
     }
+    @org.intellij.lang.annotations.Language("jvm-class-name")
     String type = methodSig.substring(0, methodSig.lastIndexOf('.'));
     type = deployment2CanonicalTypeString(type);
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, type);

@@ -35,7 +35,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.RtJar;
 import java.io.File;
@@ -55,8 +55,6 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Base class that represents a set of files to analyze.
@@ -120,7 +118,7 @@ public class AnalysisScope {
   }
 
   /** A set of classes to exclude from the analysis entirely. */
-  private SetOfClasses exclusions;
+  private StringFilter exclusions;
 
   public final LinkedHashMap<Atom, ClassLoaderReference> loadersByName = new LinkedHashMap<>();
 
@@ -304,7 +302,9 @@ public class AnalysisScope {
     return loaderImplByRef.get(ref);
   }
 
-  public void setLoaderImpl(ClassLoaderReference ref, String implClass) {
+  public void setLoaderImpl(
+      ClassLoaderReference ref,
+      @org.intellij.lang.annotations.Language("jvm-class-name") String implClass) {
     if (ref == null) {
       throw new IllegalArgumentException("null ref");
     }
@@ -322,11 +322,20 @@ public class AnalysisScope {
     return loadersByName.size();
   }
 
-  public SetOfClasses getExclusions() {
+  public StringFilter getExclusions() {
     return exclusions;
   }
 
-  public void setExclusions(SetOfClasses classes) {
+  /**
+   * @deprecated Use {@link #setExclusions(StringFilter)}} instead.
+   */
+  @Deprecated(since = "1.6.12", forRemoval = true)
+  public void setExclusions(
+      @SuppressWarnings("removal") com.ibm.wala.util.config.SetOfClasses classes) {
+    exclusions = classes;
+  }
+
+  public void setExclusions(StringFilter classes) {
     exclusions = classes;
   }
 
@@ -367,14 +376,7 @@ public class AnalysisScope {
     }
     res.put("Loaders", loaders);
     final var exclusions = getExclusions();
-    res.put(
-        "Exclusions",
-        exclusions == null
-            ? List.of()
-            : Pattern.compile("\\|")
-                .splitAsStream(exclusions.toString())
-                .map(exclusion -> exclusion.replace("(", "").replace(")", ""))
-                .collect(Collectors.toList()));
+    res.put("Exclusions", exclusions == null ? List.of() : exclusions.toJson());
     Gson gson = new Gson();
     return gson.toJson(res);
   }
@@ -527,8 +529,6 @@ public class AnalysisScope {
       ldrImplLines.add(ldrImplDescrLine);
     }
 
-    ShallowAnalysisScope shallowScope =
-        new ShallowAnalysisScope(getExclusions(), moduleLines, ldrImplLines);
-    return shallowScope;
+    return new ShallowAnalysisScope(getExclusions(), moduleLines, ldrImplLines);
   }
 }
