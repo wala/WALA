@@ -64,9 +64,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    */
   public static PartialCallGraph make(CallGraph cg, Collection<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(cg, partialRoots);
-    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, nodes::contains);
-
-    return new PartialCallGraph(cg, partialRoots, partialGraph);
+    return make(cg, partialRoots, nodes);
   }
 
   @Override

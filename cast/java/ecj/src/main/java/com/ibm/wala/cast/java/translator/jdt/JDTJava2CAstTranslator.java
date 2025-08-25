@@ -4305,7 +4305,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
           // _might_ get caught
         } else if (catchType.isSubTypeCompatible(label)) {
           catchNodes.add(p);
-          continue;
         }
       }
       catchNodes.addAll(parent.getCatchTargets(label));

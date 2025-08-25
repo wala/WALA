@@ -199,8 +199,6 @@ public class AndroidModelParameterManager {
           //                    param.setBy = setBy;
 
           return;
-        } else {
-          continue;
         }
       }
       throw new IllegalStateException(
@@ -390,7 +388,7 @@ public class AndroidModelParameterManager {
   }
 
   /**
-   * Retreive a SSA-Value that is not under management.
+   * Retrieve a SSA-Value that is not under management.
    *
    * <p>Use instead of 'nextLocal++', else SSA-Values will clash!
    *
@@ -401,7 +399,7 @@ public class AndroidModelParameterManager {
   }
 
   /**
-   * Retreive the SSA-Number that is valid for a type in the current scope.
+   * Retrieve the SSA-Number that is valid for a type in the current scope.
    *
    * <p>Either that number origins from an allocation or a PhiInstruction (to be).
    *
@@ -423,7 +421,7 @@ public class AndroidModelParameterManager {
           assert param.type.equals(type) : "Inequal types";
           if (param.setInScope > currentScope) {
 
-            continue;
+            // do nothing
           } else if (param.setInScope == currentScope) {
 
             return param.ssa;
@@ -450,7 +448,7 @@ public class AndroidModelParameterManager {
   }
 
   /**
-   * Retreive the SSA-Number that is valid for a type in the super-ordinate scope.
+   * Retrieve the SSA-Number that is valid for a type in the super-ordinate scope.
    *
    * <p>Either that number origins from an allocation or a PhiInstruction (to be).
    *

@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
+import org.intellij.lang.annotations.Language;
 
 /** Reads {@link AnalysisScope} from a text file. */
 public class AnalysisScopeReader {
@@ -95,7 +96,7 @@ public class AnalysisScopeReader {
         InputStream inFromJar = javaLoader.getResourceAsStream(scopeFileName);
         if (inFromJar == null) {
           throw new IllegalArgumentException(
-              "Unable to retreive " + scopeFileName + " from the jar using " + javaLoader);
+              "Unable to retrieve " + scopeFileName + " from the jar using " + javaLoader);
         }
         r = new BufferedReader(new InputStreamReader(inFromJar));
       }
@@ -184,6 +185,7 @@ public class AnalysisScopeReader {
 
     String language = toks.nextToken();
     String entryType = toks.nextToken();
+    @Language("jvm-class-name")
     String entryPathname = toks.nextToken();
     FileProvider fp = new FileProvider();
     if ("classFile".equals(entryType)) {

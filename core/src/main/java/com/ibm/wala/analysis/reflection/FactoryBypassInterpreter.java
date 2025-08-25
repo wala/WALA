@@ -587,11 +587,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     @Override
-    public String toString() {
-      return super.toString();
-    }
-
-    @Override
     public SSAInstruction[] getStatements() {
       SSAInstruction[] result = new SSAInstruction[allInstructions.size()];
       int i = 0;

@@ -317,12 +317,7 @@ public class PDFSlice {
    * @throws UnsupportedOperationException if command-line is malformed.
    */
   static void validateCommandLine(Properties p) {
-    if (p.get("appJar") == null) {
-      throw new UnsupportedOperationException("expected command-line to include -appJar");
-    }
-    if (p.get("mainClass") == null) {
-      throw new UnsupportedOperationException("expected command-line to include -mainClass");
-    }
+    PDFSDG.validateCommandLine(p);
     if (p.get("srcCallee") == null) {
       throw new UnsupportedOperationException("expected command-line to include -srcCallee");
     }
