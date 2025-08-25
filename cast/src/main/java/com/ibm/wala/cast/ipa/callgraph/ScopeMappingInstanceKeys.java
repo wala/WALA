@@ -51,7 +51,7 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
    * @return whether this is a real constructor call or an artifact of function pointers (always
    *     true for lexical scoping in Java)
    */
-  protected abstract boolean checkCaller(Pair<String, String> name, CGNode callerOfConstructor);
+  protected abstract boolean isTrueConstructorCall(Pair<String, String> name, CGNode callerOfConstructor);
 
   /**
    * An {@link InstanceKey} carrying information about which {@link CGNode}s represent lexical
@@ -91,7 +91,7 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
           : "no callers for constructor";
       Iterator<CGNode> result = EmptyIterator.instance();
       for (CGNode callerOfConstructor : constructorCallers) {
-        if (checkCaller(name, callerOfConstructor)) {
+        if (isTrueConstructorCall(name, callerOfConstructor)) {
           result =
               new CompoundIterator<>(result, new NonNullSingletonIterator<>(callerOfConstructor));
         } else {

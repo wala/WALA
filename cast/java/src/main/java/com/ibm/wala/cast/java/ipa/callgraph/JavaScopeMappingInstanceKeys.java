@@ -36,7 +36,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
   }
 
   @Override
-  protected boolean checkCaller(Pair<String, String> name, CGNode callerOfConstructor) {
+  protected boolean isTrueConstructorCall(Pair<String, String> name, CGNode callerOfConstructor) {
     return true;
   }
 

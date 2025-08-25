@@ -96,7 +96,7 @@ public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys
   }
 
   @Override
-  protected boolean checkCaller(Pair<String, String> name, CGNode callerOfConstructor) {
+  protected boolean isTrueConstructorCall(Pair<String, String> name, CGNode callerOfConstructor) {
     return callerOfConstructor
         .getMethod()
         .getReference()
