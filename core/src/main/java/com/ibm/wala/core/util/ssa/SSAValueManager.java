@@ -186,8 +186,6 @@ public class SSAValueManager {
           param.setBy = setBy;
 
           return;
-        } else {
-          continue;
         }
       }
       { // DEBUG
@@ -399,7 +397,6 @@ public class SSAValueManager {
           // assert (param.value.getType().equals(type)) : "Unequal types";
           if (param.setInScope > currentScope) {
             debug("SSA Value {} is out of scope {}", param, currentScope);
-            continue;
           } else if (param.setInScope == currentScope) {
             debug("Returning SSA Value {} is {}", param.value, param.status);
             return param.value;

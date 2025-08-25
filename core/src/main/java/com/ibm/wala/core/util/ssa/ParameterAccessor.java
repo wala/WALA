@@ -123,11 +123,6 @@ public class ParameterAccessor {
     }
 
     @Override
-    public boolean equals(Object o) {
-      return super.equals(o);
-    }
-
-    @Override
     public int hashCode() {
       return this.type.hashCode();
     }
@@ -1353,7 +1348,7 @@ public class ParameterAccessor {
    * Generate the params-param for an InvokeIstruction w/o type checking.
    *
    * @param self the this-pointer to use
-   * @param args the rest of the arguments. Be shure it does not start with a this pointer. This is
+   * @param args the rest of the arguments. Be sure it does not start with a this pointer. This is
    *     _not_ checked so you can use a this-pointer as an argument. However a warning is issued.
    * @throws IllegalArgumentException if the value of self is to small in the current method
    */
@@ -1673,9 +1668,6 @@ public class ParameterAccessor {
         warn("No type was equal. We can't ask isAssignable since we have no cha!");
         assigned.add(null);
       } // of (cha != null)
-      continue forEachParameter;
-
-      // Assertions.UNREACHABLE(); // Well it's unreachable
     } // of final Parameter param : calleeParams
 
     if (assigned.size() != calleeParams.size()) {

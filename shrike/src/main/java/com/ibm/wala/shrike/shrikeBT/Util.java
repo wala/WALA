@@ -189,12 +189,7 @@ public final class Util {
       throw new IllegalArgumentException("c is null");
     }
     String name = c.getName();
-    String alias = typeAliases.get(name);
-    if (alias != null) {
-      return alias;
-    } else {
-      return makeType(name);
-    }
+    return makeTypeAll(name);
   }
 
   /**

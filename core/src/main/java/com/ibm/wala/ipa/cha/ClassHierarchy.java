@@ -785,11 +785,6 @@ public class ClassHierarchy implements IClassHierarchy {
     public int hashCode() {
       return klass.hashCode() * 929;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj;
-    }
   }
 
   @Override
@@ -1151,7 +1146,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public int getNumberOfClasses() {
-    return map.keySet().size();
+    return map.size();
   }
 
   @Override

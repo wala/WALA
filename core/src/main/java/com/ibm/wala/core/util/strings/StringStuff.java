@@ -70,6 +70,7 @@ public class StringStuff {
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
+      @org.intellij.lang.annotations.Language("jvm-class-name")
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
@@ -534,6 +535,7 @@ public class StringStuff {
     if (methodSig.lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("ill-formed sig " + methodSig);
     }
+    @org.intellij.lang.annotations.Language("jvm-class-name")
     String type = methodSig.substring(0, methodSig.lastIndexOf('.'));
     type = deployment2CanonicalTypeString(type);
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, type);
