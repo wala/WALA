@@ -165,7 +165,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     Map<IProject, Map<ICompilationUnit, EclipseSourceFileModule>> projectsFiles = new HashMap<>();
     for (ModuleEntry m : modules) {
       assert m instanceof EclipseSourceFileModule
-          : "Expecing EclipseSourceFileModule, not " + m.getClass();
+          : "Expecting EclipseSourceFileModule, not " + m.getClass();
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
       if (!projectsFiles.containsKey(proj)) {

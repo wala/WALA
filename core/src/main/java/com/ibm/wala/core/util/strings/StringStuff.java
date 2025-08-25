@@ -475,7 +475,7 @@ public class StringStuff {
       }
       return new ImmutableByteArray(b.b, i, length - (i - start));
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid element desciptor: " + b, e);
+      throw new IllegalArgumentException("invalid element descriptor: " + b, e);
     }
   }
 

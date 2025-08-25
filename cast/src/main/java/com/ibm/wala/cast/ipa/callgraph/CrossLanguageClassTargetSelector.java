@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * A ClassTargetSelector implementation that delegates to one of several child selectors based on
  * the language of the type being allocated. This selector uses the language associated with the
- * TypeReference of the allocated type to delagate t =o the appropriate language-specific selector.
+ * TypeReference of the allocated type to delegate t =o the appropriate language-specific selector.
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */

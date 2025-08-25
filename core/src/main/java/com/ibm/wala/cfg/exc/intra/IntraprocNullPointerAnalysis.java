@@ -135,7 +135,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       if (ir == null || ir.isEmptyIR()) {
         pruned = cfg;
       } else {
-        final List<T> catched = searchNodesWithPathToCatchAll(cfg);
+        final List<T> caught = searchNodesWithPathToCatchAll(cfg);
         final NullPointerFrameWork<T> problem = new NullPointerFrameWork<>(cfg, ir);
 
         solver = new NullPointerSolver<>(problem, maxVarNum, cfg.entry(), ir, initialState);
@@ -144,7 +144,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
 
         final Graph<T> deleted = createDeletedGraph();
 
-        for (final T ch : catched) {
+        for (final T ch : caught) {
           deleted.addNode(ch);
           deleted.addNode(cfg.exit());
           deleted.addEdge(ch, cfg.exit());

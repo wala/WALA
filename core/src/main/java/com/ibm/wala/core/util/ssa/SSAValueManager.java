@@ -447,7 +447,7 @@ public class SSAValueManager {
   /**
    * Returns all "free" and "allocated" variables and the invalid ones in a sub-scope.
    *
-   * <p>This is a suggestion which variables to considder as parameter to a Phi-Function.
+   * <p>This is a suggestion which variables to consider as parameter to a Phi-Function.
    *
    * @throws IllegalArgumentException if type was not seen before or is null
    */

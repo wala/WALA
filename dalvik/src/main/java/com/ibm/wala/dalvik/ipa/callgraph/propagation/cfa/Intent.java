@@ -336,8 +336,8 @@ public class Intent implements Cloneable, ContextItem, Comparable<Intent> {
     }
 
     // TODO: Make this static or so
-    final Atom andoidIntentAction = Atom.findOrCreateAsciiAtom("Landroid/intent/action");
-    return intent.action.startsWith(andoidIntentAction);
+    final Atom androidIntentAction = Atom.findOrCreateAsciiAtom("Landroid/intent/action");
+    return intent.action.startsWith(androidIntentAction);
   }
 
   /**
