@@ -16,6 +16,7 @@ package com.ibm.wala.cast.java.test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstClass;
@@ -34,6 +35,9 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
@@ -48,6 +52,7 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -384,7 +389,8 @@ public abstract class IRTests {
 
     // If we've gotten this far, IR has been produced.
     if (dump) {
-      dumpIR(callGraph, sources, assertReachable);
+      CAstCallGraphUtil.AVOID_DUMP.set(false);
+      dumpIR(callGraph, builder, sources, assertReachable);
     }
 
     // Now check any assertions as to source mapping
@@ -395,7 +401,11 @@ public abstract class IRTests {
     return Pair.make(callGraph, builder);
   }
 
-  protected static void dumpIR(CallGraph cg, Collection<Path> sources, boolean assertReachable) {
+  protected static void dumpIR(
+      CallGraph cg,
+      CallGraphBuilder<? super InstanceKey> builder,
+      Collection<Path> sources,
+      boolean assertReachable) {
     Set<Path> sourcePaths = HashSetFactory.make();
     for (Path src : sources) {
       sourcePaths.add(src.getFileName());
@@ -432,7 +442,19 @@ public abstract class IRTests {
             continue;
           }
           CGNode node = nodeIter.next();
-          System.err.println(node.getIR());
+          IR ir = node.getIR();
+          System.err.println(ir);
+          if (builder instanceof SSAPropagationCallGraphBuilder) {
+            PointerAnalysis<InstanceKey> pa =
+                ((SSAPropagationCallGraphBuilder) builder).getPointerAnalysis();
+            PointerKeyFactory f = ((SSAPropagationCallGraphBuilder) builder).getPointerKeyFactory();
+            for (int vn = 1; vn <= ir.getSymbolTable().getMaxValueNumber(); vn++) {
+              OrdinalSet<InstanceKey> ps = pa.getPointsToSet(f.getPointerKeyForLocal(node, vn));
+              if (!ps.isEmpty()) {
+                System.err.println("vn " + vn + " = " + ps);
+              }
+            }
+          }
         }
       }
     }

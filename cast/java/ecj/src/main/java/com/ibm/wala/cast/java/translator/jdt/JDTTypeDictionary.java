@@ -46,6 +46,7 @@ import com.ibm.wala.cast.tree.impl.CAstTypeDictionaryImpl;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -153,6 +154,38 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
     }
   }
 
+  public class JdtLambdaType implements JavaType {
+
+    private final ITypeBinding parent;
+    private String name;
+
+    public JdtLambdaType(String name, ITypeBinding parent) {
+      this.parent = parent;
+      this.name = name;
+    }
+
+    @Override
+    public Collection<CAstQualifier> getQualifiers() {
+      return Collections.emptySet();
+    }
+
+    @Override
+    public String getName() {
+      return "L" + name;
+    }
+
+    @Override
+    public Collection<CAstType> getSupertypes() {
+      return Arrays.asList(
+          getCAstTypeFor(fAst.resolveWellKnownType("java.lang.Object")), getCAstTypeFor(parent));
+    }
+
+    @Override
+    public boolean isInterface() {
+      return false;
+    }
+  }
+
   public final class JdtJavaType implements JavaType {
     private final ITypeBinding fType;
 
@@ -169,6 +202,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
     @Override
     public String getName() {
+      assert fIdentityMapper.getTypeRef(fType) != null;
       return fIdentityMapper.getTypeRef(fType).getName().toString();
     }
 
