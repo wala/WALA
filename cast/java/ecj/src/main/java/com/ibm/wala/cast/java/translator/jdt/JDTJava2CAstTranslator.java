@@ -1127,14 +1127,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       @Override
       public String getName() {
-        Assertions.UNREACHABLE("CAstType.FunctionImpl#getName() called???");
-        return "?";
+    	  throw new UnsupportedOperationException("CAstType.FunctionImpl#getName() called???");
       }
 
       @Override
       public Collection<CAstType> getSupertypes() {
-        Assertions.UNREACHABLE("CAstType.FunctionImpl#getSupertypes() called???");
-        return null;
+    	  throw new UnsupportedOperationException("CAstType.FunctionImpl#getSupertypes() called???");
       }
 
       @Override
