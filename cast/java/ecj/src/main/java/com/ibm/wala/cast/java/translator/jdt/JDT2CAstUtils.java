@@ -179,11 +179,14 @@ public class JDT2CAstUtils {
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     int n;
-    if (ids.containsKey(ct)) {
-      n = ids.get(ct);
-    } else {
-      n = ids.size();
-      ids.put(ct, n);
+    // synchronize defensively just in case this code ever runs in multiple threads
+    synchronized (ids) {
+      if (ids.containsKey(ct)) {
+        n = ids.get(ct);
+      } else {
+        n = ids.size();
+        ids.put(ct, n);
+      }
     }
 
     if (binName.contains("$")) {
