@@ -154,7 +154,7 @@ public class AndroidModelParameterManager {
   // }
 
   /*
-  public void readDescriptior(Descriptor forMethod) {
+  public void readDescriptor(Descriptor forMethod) {
       for (int i=0; i < forMethod.getParameters().length; ++i) {
           setAllocation(forMethod.getParameters()[i], i + 1);
       }
@@ -232,7 +232,7 @@ public class AndroidModelParameterManager {
    * Register a Phi-Instruction _after_ added to the model.
    *
    * @param type the type the Phi-Instruction sets
-   * @param ssaValue the number the SSA-Instruction assignes to
+   * @param ssaValue the number the SSA-Instruction assigns to
    * @param setBy the Phi-Instruction itself - may be null
    * @throws IllegalArgumentException if you assign to a number requested using {@link
    *     #getFree(TypeReference)} but types mismach.
@@ -316,7 +316,7 @@ public class AndroidModelParameterManager {
    * Returns and registers a free SSA-Number to a Type.
    *
    * <p>You have to set the type using a Phi-Instruction. Also you don't have to add that
-   * instruction immediatly it is required that it is added before the Model gets finished.
+   * instruction immediately it is required that it is added before the Model gets finished.
    *
    * <p>You can request the List of unmet Phi-Instructions by using XXX
    *

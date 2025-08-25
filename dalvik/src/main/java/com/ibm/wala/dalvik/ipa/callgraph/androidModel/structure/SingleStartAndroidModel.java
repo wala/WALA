@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Builds an Android Model incorporating a single loop.
  *
- * <p>This class models a single run of an Andoird-Component: E.g. The view of an Activity gets
+ * <p>This class models a single run of an Android-Component: E.g. The view of an Activity gets
  * shown only once.
  *
  * <p>The incorporated loop is wrapped around user-interaction methods. These are in the section

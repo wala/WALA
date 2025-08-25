@@ -103,7 +103,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   }
 
   static UnaryOperator<NullPointerState> identityFunction() {
-    return IndentityFunction.INSTANCE;
+    return IdentityFunction.INSTANCE;
   }
 
   static UnaryOperator<NullPointerState> phisFunction(
@@ -300,7 +300,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
     /**
      * Creates an operator that merges the states of the given variables fromVars into the state of
-     * the phi varaiable varNum
+     * the phi variable varNum
      *
      * @param varNum Variable number of a phi value
      * @param fromVars Array of variable numbers the phi value refers to.
@@ -481,11 +481,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     }
   }
 
-  private static class IndentityFunction extends UnaryOperator<NullPointerState> {
+  private static class IdentityFunction extends UnaryOperator<NullPointerState> {
 
-    private static final IndentityFunction INSTANCE = new IndentityFunction();
+    private static final IdentityFunction INSTANCE = new IdentityFunction();
 
-    private IndentityFunction() {}
+    private IdentityFunction() {}
 
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
@@ -505,7 +505,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public boolean equals(Object o) {
-      return o instanceof IndentityFunction;
+      return o instanceof IdentityFunction;
     }
 
     /* (non-Javadoc)

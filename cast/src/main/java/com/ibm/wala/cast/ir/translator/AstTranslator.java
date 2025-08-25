@@ -851,7 +851,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       /**
        * When adding an edge from source to target, it is possible that certain exception-handling
-       * code needs to be executed before the control is actually transfered to target. This method
+       * code needs to be executed before the control is actually transferred to target. This method
        * determines if this is the case, and if so, it generates the exception handler blocks and
        * adds an appropriate edge to the target. It returns the basic block that should be the
        * target of the edge from source (target itself if there is no exception-handling code, the

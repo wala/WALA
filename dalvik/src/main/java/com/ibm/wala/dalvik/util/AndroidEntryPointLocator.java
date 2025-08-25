@@ -163,7 +163,7 @@ public final class AndroidEntryPointLocator {
           if (cls.getName().toString().contains("MainActivity")) {
             System.err.println("got here: " + m);
           }
-          // If there is a Method signature in the possible entry points use thatone
+          // If there is a Method signature in the possible entry points use that one
           for (AndroidPossibleEntryPoint e : possibleEntryPoints) {
             if (e.name.equals(m.getName().toString())) {
               if (this.flags.contains(LocatorFlags.WITH_ANDROID)) {
@@ -283,7 +283,7 @@ public final class AndroidEntryPointLocator {
   }
 
   /**
-   * Select all methods that override or implement any method from the andoidPackage.
+   * Select all methods that override or implement any method from the androidPackage.
    *
    * <p>Like heuristicScan but with an other restriction: instead of methods overriding methods in
    * base select methods whose super-class starts with "Landroid".
@@ -320,7 +320,7 @@ public final class AndroidEntryPointLocator {
           androidClass = androidClass.getSuperclass();
         }
         if (!isAndroidClass) {
-          logger.trace("Heuristic: Skipping non andoid {}", appClass.getName().toString());
+          logger.trace("Heuristic: Skipping non android {}", appClass.getName().toString());
           continue; // continue appClass;
         }
       }

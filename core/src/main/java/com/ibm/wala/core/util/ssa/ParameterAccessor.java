@@ -239,7 +239,7 @@ public class ParameterAccessor {
       this.descriptorOffset = descriptorOffset;
     }
 
-    /** The position of the parameter in the methods Desciptor starting with 1. */
+    /** The position of the parameter in the methods Descriptor starting with 1. */
     public int getNumberInDescriptor() { // TODO: Verify all descriptorOffset stuff!
       // if (this.descriptorOffset < 0) {
       //    return this.number;
@@ -1491,7 +1491,7 @@ public class ParameterAccessor {
    * <p>The List of Parameters is generated based on the overrides, than parameters in 'this' are
    * searched, finally we'll fall back to defaults. A "perfect match" is searched.
    *
-   * <p>If a parameter was not assigned yet these three sources are considdered again but
+   * <p>If a parameter was not assigned yet these three sources are considered again but
    * cha.isAssignableFrom is used.
    *
    * <p>If the parameter was still not found a value of 'null' is used.

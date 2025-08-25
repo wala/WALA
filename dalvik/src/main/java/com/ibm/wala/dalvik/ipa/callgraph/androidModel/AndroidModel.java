@@ -863,7 +863,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
           final SSAValue exception = pm.getException();
           final List<SSAValue> params = new ArrayList<>();
           params.add(self);
-          params.add(outRequestCode); // Was an agument to start...
+          params.add(outRequestCode); // Was an argument to start...
           params.add(mResultCode);
           params.add(mResultData);
           final SSAInstruction invokation =

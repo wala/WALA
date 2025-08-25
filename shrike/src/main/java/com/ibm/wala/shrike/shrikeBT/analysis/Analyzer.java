@@ -489,7 +489,7 @@ public class Analyzer {
     }
 
     /**
-     * @return the types of the local variabls at the instruction.
+     * @return the types of the local variables at the instruction.
      */
     public String[] getLocals() {
       return locals;
