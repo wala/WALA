@@ -73,10 +73,9 @@ public class ECJJava8IRTest extends ECJIRTests {
         true,
         null);
   }
-  @Test
 
-  public void testVoidLambda()
-      throws IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testVoidLambda() throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc(packageName, "VoidLambda"),
         rtJar,
@@ -87,8 +86,7 @@ public class ECJJava8IRTest extends ECJIRTests {
   }
 
   @Test
-  public void testTwoLambdas()
-      throws IllegalArgumentException, CancelException, IOException {
+  public void testTwoLambdas() throws IllegalArgumentException, CancelException, IOException {
     runTest(
         singlePkgTestSrc(packageName, "TwoLambdas"),
         rtJar,

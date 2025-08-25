@@ -1012,9 +1012,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
                 @Override
                 public List<CAstType> getArgumentTypes() {
-                  return castTypes.stream()
-                      .skip(1)
-                      .collect(Collectors.toList());
+                  return castTypes.stream().skip(1).collect(Collectors.toList());
                 }
 
                 @Override
@@ -1030,7 +1028,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
           @Override
           public String getName() {
-            return fm != null ? fm.getName() : "apply";
+            return fm.getName();
           }
         };
 
