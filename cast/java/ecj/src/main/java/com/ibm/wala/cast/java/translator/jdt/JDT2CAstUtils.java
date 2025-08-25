@@ -43,7 +43,9 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -172,10 +174,25 @@ public class JDT2CAstUtils {
     return null;
   }
 
+  private static Map<ITypeBinding, Integer> ids = new IdentityHashMap<>();
+
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
-    String dollarSignNumber = binName.substring(binName.indexOf('$'));
-    return "<anonymous subclass of " + ct.getSuperclass().getBinaryName() + '>' + dollarSignNumber;
+    int n;
+    if (ids.containsKey(ct)) {
+      n = ids.get(ct);
+    } else {
+      n = ids.size();
+      ids.put(ct, n);
+    }
+
+    if (binName.contains("$")) {
+      ITypeBinding sup = ct.isInterface() ? ct : ct.getSuperclass();
+      String dollarSignNumber = binName.substring(binName.indexOf('$'));
+      return "<anonymous subclass " + n + " of " + sup.getBinaryName() + '>' + dollarSignNumber;
+    } else {
+      return "<lambda subclass " + n + " of " + ct.getBinaryName() + '>';
+    }
   }
 
   /**
