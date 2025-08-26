@@ -64,6 +64,9 @@ class ReflectiveInvocationSelector implements ContextSelector {
     @SuppressWarnings("unchecked")
     ConstantKey<IMethod> receiverConstantKey = (ConstantKey<IMethod>) receiver[0];
     IMethod m = receiverConstantKey.getValue();
+    if (m.isAbstract()) {
+      return null;
+    }
     boolean isStatic = m.isStatic();
     boolean isConstructor = isConstructorConstant(receiver[0]);
 
