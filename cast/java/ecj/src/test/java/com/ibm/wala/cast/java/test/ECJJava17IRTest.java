@@ -142,7 +142,7 @@ public class ECJJava17IRTest extends ECJIRTests {
             "CatchMultipleExceptionTypes",
             Collections.singletonList(checkCatchMultipleExceptionTypes)),
         Arguments.of("StringsInSwitch", SiSAssertions),
-        Arguments.of("TypeInferenceforGenericInstanceCreation", emptyList),
+        Arguments.of("TypeInferenceForGenericInstanceCreation", emptyList),
         Arguments.of("TryWithResourcesStatement", emptyList),
         Arguments.of("UnderscoresInNumericLiterals", emptyList));
   }
