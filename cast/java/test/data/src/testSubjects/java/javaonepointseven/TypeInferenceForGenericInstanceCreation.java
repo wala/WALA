@@ -8,7 +8,7 @@ import java.util.List;
  * @see
  *     <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/language/type-inference-generic-instance-creation.html">Java 7 docs</a>
  */
-public class TypeInferenceforGenericInstanceCreation {
+public class TypeInferenceForGenericInstanceCreation {
   class MyClass<X> {
     X a;
     <T> MyClass(T t) {
@@ -28,6 +28,6 @@ public class TypeInferenceforGenericInstanceCreation {
   }
   
   public static void main(String[] args) {
-	  new TypeInferenceforGenericInstanceCreation().test();
+	  new TypeInferenceForGenericInstanceCreation().test();
   }
 }
