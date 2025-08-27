@@ -8,18 +8,8 @@ package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope.SOURCE;
 
-import com.ibm.wala.cast.java.client.ECJJavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -30,8 +20,6 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -46,22 +34,6 @@ public class ECJJava17IRTest extends ECJIRTests {
 
   public ECJJava17IRTest() {
     dump = true;
-  }
-
-  @Override
-  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
-      final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
-    JavaSourceAnalysisEngine engine =
-        new ECJJavaSourceAnalysisEngine() {
-          @Override
-          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
-            return Util.makeMainEntrypoints(
-                JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
-          }
-        };
-    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    populateScope(engine, sources, libs);
-    return engine;
   }
 
   private static final IRAssertion checkBinaryLiterals =
