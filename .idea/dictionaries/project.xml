@@ -1,38 +1,165 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>aaload</w>
+      <w>aastore</w>
+      <w>acmpeq</w>
+      <w>acmpne</w>
+      <w>aconst</w>
+      <w>aload</w>
+      <w>anewarray</w>
+      <w>annotationbody</w>
+      <w>areturn</w>
+      <w>arraylength</w>
+      <w>athrow</w>
+      <w>autoinsert</w>
       <w>avik</w>
       <w>badforin</w>
+      <w>baload</w>
+      <w>bastore</w>
+      <w>bipush</w>
+      <w>caload</w>
+      <w>castore</w>
+      <w>catchblock</w>
+      <w>checkcast</w>
+      <w>classbody</w>
+      <w>classpathentry</w>
       <w>clinit</w>
+      <w>codetemplates</w>
+      <w>constructorbody</w>
+      <w>constructorcomment</w>
       <w>creswick</w>
+      <w>daload</w>
+      <w>dastore</w>
+      <w>dcmpg</w>
+      <w>dcmpl</w>
+      <w>dconst</w>
+      <w>ddiv</w>
+      <w>delegatecomment</w>
+      <w>dmul</w>
+      <w>dreturn</w>
+      <w>dtrans</w>
+      <w>elts</w>
+      <w>enumbody</w>
+      <w>explicitconstructorcall</w>
+      <w>faload</w>
+      <w>fastore</w>
+      <w>fcmpg</w>
+      <w>fcmpl</w>
+      <w>fconst</w>
+      <w>fieldcomment</w>
+      <w>filecomment</w>
+      <w>fneg</w>
       <w>foltzer</w>
       <w>foojay</w>
       <w>forin</w>
+      <w>freturn</w>
+      <w>getfield</w>
+      <w>getstatic</w>
+      <w>getterbody</w>
+      <w>gettercomment</w>
+      <w>gradleclasspathcontainer</w>
+      <w>gradleprojectbuilder</w>
+      <w>gradleprojectnature</w>
+      <w>iaload</w>
+      <w>iastore</w>
+      <w>icmpeq</w>
+      <w>icmpge</w>
+      <w>icmpgt</w>
+      <w>icmple</w>
+      <w>icmplt</w>
+      <w>icmpne</w>
+      <w>iconst</w>
+      <w>ifeq</w>
+      <w>ifge</w>
+      <w>ifgt</w>
+      <w>ifle</w>
+      <w>iflt</w>
+      <w>ifne</w>
+      <w>ifnonnull</w>
+      <w>ifnull</w>
+      <w>iinc</w>
       <w>iindex</w>
+      <w>impdep</w>
+      <w>ineg</w>
       <w>instrs</w>
       <w>insts</w>
+      <w>interfacebody</w>
+      <w>invokeinterface</w>
+      <w>invokenonvirtual</w>
+      <w>invokespecial</w>
+      <w>invokestatic</w>
+      <w>invokevirtual</w>
+      <w>irem</w>
+      <w>ireturn</w>
+      <w>ishl</w>
+      <w>ishr</w>
+      <w>istore</w>
+      <w>iushr</w>
+      <w>javabuilder</w>
+      <w>javanature</w>
+      <w>javaonepointseven</w>
       <w>juliandolby</w>
       <w>killdall</w>
       <w>ktfmt</w>
+      <w>ladd</w>
+      <w>laload</w>
       <w>landroid</w>
       <w>lannotations</w>
+      <w>lastore</w>
+      <w>launchconfig</w>
+      <w>lcfg</w>
+      <w>lcmp</w>
+      <w>lconst</w>
       <w>ldemandpa</w>
       <w>libjvm</w>
       <w>liblit</w>
       <w>ljava</w>
+      <w>lload</w>
+      <w>lmul</w>
+      <w>lneg</w>
       <w>lockfiles</w>
+      <w>lookupswitch</w>
       <w>lorg</w>
       <w>lreflection</w>
+      <w>lrem</w>
+      <w>lreturn</w>
+      <w>lshl</w>
+      <w>lshr</w>
       <w>lslice</w>
+      <w>lstore</w>
+      <w>lsub</w>
+      <w>lushr</w>
       <w>lval</w>
+      <w>lxor</w>
+      <w>methodbody</w>
+      <w>methodcomment</w>
+      <w>monitorenter</w>
+      <w>monitorexit</w>
       <w>msridhar</w>
+      <w>multianewarray</w>
+      <w>newarray</w>
+      <w>newtype</w>
+      <w>orsc</w>
+      <w>overridecomment</w>
+      <w>preallocated</w>
+      <w>putfield</w>
       <w>putstatic</w>
       <w>rval</w>
+      <w>saload</w>
+      <w>sastore</w>
+      <w>setterbody</w>
+      <w>settercomment</w>
+      <w>sipush</w>
       <w>sjfink</w>
       <w>sridharan</w>
+      <w>switchstatements</w>
       <w>symtab</w>
+      <w>tableswitch</w>
+      <w>typecomment</w>
       <w>werror</w>
       <w>xdoclint</w>
+      <w>xxxunusedxxx</w>
     </words>
   </dictionary>
 </component>
