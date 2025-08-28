@@ -10,12 +10,12 @@
  */
 package annotations;
 
-@RuntimeInvisableAnnotation
-@RuntimeVisableAnnotation
-@DefaultVisableAnnotation
+@RuntimeInvisibleAnnotation
+@RuntimeVisibleAnnotation
+@DefaultVisibleAnnotation
 public class AnnotatedClass1 {
 
-  @RuntimeVisableAnnotationForMethod
-  @RuntimeInvisableAnnotationForMethod
+  @RuntimeVisibleAnnotationForMethod
+  @RuntimeInvisibleAnnotationForMethod
   public void m1() {}
 }
