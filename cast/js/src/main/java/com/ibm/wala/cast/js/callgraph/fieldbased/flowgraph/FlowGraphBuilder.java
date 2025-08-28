@@ -343,20 +343,21 @@ public class FlowGraphBuilder {
     }
 
     @Override
-    public void visitJavaScriptInvoke(JavaScriptInvoke invk) {
+    public void visitJavaScriptInvoke(JavaScriptInvoke invoke) {
       flowgraph.addEdge(
-          factory.makeUnknownVertex(), factory.makeVarVertex(func, invk.getException()));
+          factory.makeUnknownVertex(), factory.makeVarVertex(func, invoke.getException()));
 
       // check whether this invoke corresponds to a function expression/declaration
       // flow callee variable into callee vertex
-      if (invk.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
+      if (invoke.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
 
         flowgraph.addEdge(
-            factory.makeVarVertex(func, invk.getFunction()), factory.makeCallVertex(func, invk));
+            factory.makeVarVertex(func, invoke.getFunction()),
+            factory.makeCallVertex(func, invoke));
 
-        if (isFunctionConstructorInvoke(invk)) {
+        if (isFunctionConstructorInvoke(invoke)) {
           // second parameter is function name
-          String fn_name = symtab.getStringValue(invk.getUse(1));
+          String fn_name = symtab.getStringValue(invoke.getUse(1));
 
           // find the function being defined here
           IClass klass =
@@ -368,7 +369,9 @@ public class FlowGraphBuilder {
                     + " at "
                     + ((AstMethod) ir.getMethod())
                         .getSourcePosition(
-                            ir.getCallInstructionIndices(invk.getCallSite()).intIterator().next()));
+                            ir.getCallInstructionIndices(invoke.getCallSite())
+                                .intIterator()
+                                .next()));
             return;
           }
 
@@ -384,53 +387,54 @@ public class FlowGraphBuilder {
                 factory.makeParamVertex(fnVertex, i), factory.makeVarVertex(fnVertex, i + 1));
 
           // flow function into result variable
-          flowgraph.addEdge(fnVertex, factory.makeVarVertex(func, invk.getDef()));
+          flowgraph.addEdge(fnVertex, factory.makeVarVertex(func, invoke.getDef()));
 
         } else if (supportFullPointerAnalysis) {
 
           CreationSiteVertex cs =
-              factory.makeCreationSiteVertex(method, invk.iIndex(), JavaScriptTypes.Object);
+              factory.makeCreationSiteVertex(method, invoke.iIndex(), JavaScriptTypes.Object);
 
           // flow creation site into result of new call
-          flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef()));
+          flowgraph.addEdge(cs, factory.makeVarVertex(func, invoke.getDef()));
 
           // also passed as 'this' to constructor
-          if (invk.getNumberOfPositionalParameters() > 1) {
-            flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getUse(0)));
+          if (invoke.getNumberOfPositionalParameters() > 1) {
+            flowgraph.addEdge(cs, factory.makeVarVertex(func, invoke.getUse(0)));
           }
         }
 
       } else {
         // check whether it is a method call
-        if (invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
+        if (invoke.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
           // we only handle method calls with constant names
-          if (symtab.isConstant(invk.getFunction())) {
+          if (symtab.isConstant(invoke.getFunction())) {
             String pn =
                 JSCallGraphUtil.simulateToStringForPropertyNames(
-                    symtab.getConstantValue(invk.getFunction()));
+                    symtab.getConstantValue(invoke.getFunction()));
             // flow callee property into callee vertex
-            flowgraph.addEdge(factory.makePropVertex(pn), factory.makeCallVertex(func, invk));
+            flowgraph.addEdge(factory.makePropVertex(pn), factory.makeCallVertex(func, invoke));
           }
         } else {
           // this case is simpler: just flow callee variable into callee vertex
           flowgraph.addEdge(
-              factory.makeVarVertex(func, invk.getFunction()), factory.makeCallVertex(func, invk));
+              factory.makeVarVertex(func, invoke.getFunction()),
+              factory.makeCallVertex(func, invoke));
         }
       }
-      handleLexicalDef(invk.getDef());
+      handleLexicalDef(invoke.getDef());
     }
 
     @Override
-    public void visitNew(SSANewInstruction invk) {
+    public void visitNew(SSANewInstruction invoke) {
       if (supportFullPointerAnalysis) {
         // special case for supporting full pointer analysis
         // some core objects in the prologue (and the arguments array objects) get created with
         // 'new'
         CreationSiteVertex cs =
-            factory.makeCreationSiteVertex(method, invk.iIndex(), invk.getConcreteType());
+            factory.makeCreationSiteVertex(method, invoke.iIndex(), invoke.getConcreteType());
 
         // flow creation site into result of new call
-        flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef()));
+        flowgraph.addEdge(cs, factory.makeVarVertex(func, invoke.getDef()));
       }
     }
   }

@@ -38,29 +38,29 @@ public class JSMethodInstructionVisitor extends JSAbstractInstructionVisitor {
   }
 
   /**
-   * Determine whether {@code invk} corresponds to a function declaration or function expression.
+   * Determine whether {@code invoke} corresponds to a function declaration or function expression.
    *
    * <p>TODO: A bit hackish. Is there a more principled way to do this?
    */
-  protected boolean isFunctionConstructorInvoke(JavaScriptInvoke invk) {
+  protected boolean isFunctionConstructorInvoke(JavaScriptInvoke invoke) {
     /*
      * Function objects are allocated by explicit constructor invocations like this:
      *
      *   v8 = global:global Function
      *   v4 = construct v8@2 v6:#L<fullFunctionName> exception:<nd>
      */
-    if (invk.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
-      int fn = invk.getFunction();
+    if (invoke.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
+      int fn = invoke.getFunction();
       SSAInstruction fndef = du.getDef(fn);
       if (fndef instanceof AstGlobalRead) {
         AstGlobalRead agr = (AstGlobalRead) fndef;
         if (agr.getGlobalName().equals("global Function")) {
-          if (invk.getNumberOfPositionalParameters() != 2) {
+          if (invoke.getNumberOfPositionalParameters() != 2) {
             return false;
           }
           // this may be a genuine use of "new Function()", not a declaration/expression
-          if (!symtab.isStringConstant(invk.getUse(1))
-              || symtab.getStringValue(invk.getUse(1)).isEmpty()) {
+          if (!symtab.isStringConstant(invoke.getUse(1))
+              || symtab.getStringValue(invoke.getUse(1)).isEmpty()) {
             return false;
           }
           return true;
