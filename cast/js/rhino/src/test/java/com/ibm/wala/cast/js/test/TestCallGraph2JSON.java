@@ -32,7 +32,7 @@ public class TestCallGraph2JSON {
 
   @Test
   public void testBasic() throws WalaException, CancelException {
-    String script = "tests/fieldbased/simple.js";
+    String script = "tests/field-based/simple.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(true);
     Map<String, Map<String, String[]>> parsedJSONCG = getParsedJSONCG(cg, cg2JSON);
@@ -52,7 +52,7 @@ public class TestCallGraph2JSON {
 
   @Test
   public void testNative() throws WalaException, CancelException {
-    String script = "tests/fieldbased/native_call.js";
+    String script = "tests/field-based/native_call.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
@@ -62,7 +62,7 @@ public class TestCallGraph2JSON {
 
   @Test
   public void testReflectiveCalls() throws WalaException, CancelException {
-    String script = "tests/fieldbased/reflective_calls.js";
+    String script = "tests/field-based/reflective_calls.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false, true);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
@@ -82,7 +82,7 @@ public class TestCallGraph2JSON {
 
   @Test
   public void testNativeCallback() throws WalaException, CancelException {
-    String script = "tests/fieldbased/native_callback.js";
+    String script = "tests/field-based/native_callback.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);

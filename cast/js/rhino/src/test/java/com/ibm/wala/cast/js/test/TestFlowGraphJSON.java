@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestFlowGraphJSON {
 
-  private static final String SCRIPT = "tests/fieldbased/flowgraph_constraints.js";
+  private static final String SCRIPT = "tests/field-based/flowgraph_constraints.js";
 
   private Map<String, String[]> parsedJSON;
 
