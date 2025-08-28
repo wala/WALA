@@ -204,8 +204,8 @@ public abstract class FieldBasedCallGraphBuilder {
     CGNode fakeRootNode = cg.findOrCreateNode(fakeRootMethod, Everywhere.EVERYWHERE);
     for (Entrypoint ep : eps) {
       CGNode nd = cg.findOrCreateNode(ep.getMethod(), Everywhere.EVERYWHERE);
-      SSAAbstractInvokeInstruction invk = ep.addCall(fakeRootMethod);
-      fakeRootNode.addTarget(invk.getCallSite(), nd);
+      SSAAbstractInvokeInstruction invoke = ep.addCall(fakeRootMethod);
+      fakeRootNode.addTarget(invoke.getCallSite(), nd);
     }
     // register the fake root as the "true" entrypoint
     cg.registerEntrypoint(fakeRootNode);
@@ -376,12 +376,12 @@ public abstract class FieldBasedCallGraphBuilder {
             && ((JSAnalysisOptions) options).handleCallApply()
             && (fullName.equals("Lprologue.js/Function_prototype_call")
                 || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
-          JavaScriptInvoke invk = callVertex.getInstruction();
+          JavaScriptInvoke invoke = callVertex.getInstruction();
           VarVertex reflectiveCalleeVertex =
-              factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+              factory.makeVarVertex(callVertex.getCaller(), invoke.getUse(1));
           flowgraph.addEdge(
               reflectiveCalleeVertex,
-              factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+              factory.makeReflectiveCallVertex(callVertex.getCaller(), invoke));
         }
       }
     }

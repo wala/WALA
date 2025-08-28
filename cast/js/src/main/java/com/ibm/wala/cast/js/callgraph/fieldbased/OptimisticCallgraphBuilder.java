@@ -100,28 +100,31 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
   // add flow corresponding to a new call edge
   private static void addEdge(FlowGraph flowgraph, CallVertex c, FuncVertex callee) {
     VertexFactory factory = flowgraph.getVertexFactory();
-    JavaScriptInvoke invk = c.getInstruction();
+    JavaScriptInvoke invoke = c.getInstruction();
     FuncVertex caller = c.getCaller();
 
     int offset = 0;
-    if (invk.getDeclaredTarget()
+    if (invoke
+        .getDeclaredTarget()
         .getSelector()
         .equals(JavaScriptMethods.ctorReference.getSelector())) {
       offset = 1;
     }
 
-    for (int i = 0; i < invk.getNumberOfPositionalParameters(); ++i) {
-      // only flow receiver into 'this' if invk is, in fact, a method call
+    for (int i = 0; i < invoke.getNumberOfPositionalParameters(); ++i) {
+      // only flow receiver into 'this' if invoke is, in fact, a method call
       flowgraph.addEdge(
-          factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
-      // if(i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
+          factory.makeVarVertex(caller, invoke.getUse(i)), factory.makeArgVertex(callee));
+      // if(i != 1 ||
+      // !invoke.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
       flowgraph.addEdge(
-          factory.makeVarVertex(caller, invk.getUse(i)),
+          factory.makeVarVertex(caller, invoke.getUse(i)),
           factory.makeParamVertex(callee, i + offset));
     }
 
     // flow from return vertex to result vertex
-    flowgraph.addEdge(factory.makeRetVertex(callee), factory.makeVarVertex(caller, invk.getDef()));
+    flowgraph.addEdge(
+        factory.makeRetVertex(callee), factory.makeVarVertex(caller, invoke.getDef()));
   }
 
   // add data flow corresponding to a reflective invocation via Function.prototype.call
@@ -131,21 +134,21 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
       FlowGraph flowgraph, CallVertex c, IProgressMonitor monitor) throws CancelException {
     VertexFactory factory = flowgraph.getVertexFactory();
     FuncVertex caller = c.getCaller();
-    JavaScriptInvoke invk = c.getInstruction();
+    JavaScriptInvoke invoke = c.getInstruction();
 
-    VarVertex receiverVertex = factory.makeVarVertex(caller, invk.getUse(1));
+    VarVertex receiverVertex = factory.makeVarVertex(caller, invoke.getUse(1));
     OrdinalSet<FuncVertex> realCallees = flowgraph.getReachingSet(receiverVertex, monitor);
     System.err.println("callees " + realCallees + " for " + caller);
     for (FuncVertex realCallee : realCallees) {
       // flow from arguments to parameters
-      for (int i = 2; i < invk.getNumberOfPositionalParameters(); ++i)
+      for (int i = 2; i < invoke.getNumberOfPositionalParameters(); ++i)
         flowgraph.addEdge(
-            factory.makeVarVertex(caller, invk.getUse(i)),
+            factory.makeVarVertex(caller, invoke.getUse(i)),
             factory.makeParamVertex(realCallee, i - 1));
 
       // flow from return vertex to result vertex
       flowgraph.addEdge(
-          factory.makeRetVertex(realCallee), factory.makeVarVertex(caller, invk.getDef()));
+          factory.makeRetVertex(realCallee), factory.makeVarVertex(caller, invoke.getDef()));
     }
   }
 }
