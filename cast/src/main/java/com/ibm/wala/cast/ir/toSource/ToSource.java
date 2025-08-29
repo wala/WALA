@@ -3472,7 +3472,11 @@ public abstract class ToSource {
           visit(n.getChild(i), c, visitor);
         }
       } else {
-        if (n.getChild(2).getKind() != CAstNode.THIS) {
+        if (n.getChild(2).getKind() == CAstNode.CAST) {
+          out.print("(");
+          visit(n.getChild(2), c, this);
+          out.print(").");
+        } else if (n.getChild(2).getKind() != CAstNode.THIS) {
           visit(n.getChild(2), c, this);
           out.print(".");
         }
@@ -3559,8 +3563,26 @@ public abstract class ToSource {
         // otherwise keep what's been done already, that's while(){};
         out.print("while (");
         cv.visit(n.getChild(0), c, visitor);
-        out.println(")");
-        cv.visit(n.getChild(1), c, cv);
+
+        try (ByteArrayOutputStream eb = new ByteArrayOutputStream()) {
+          try (PrintWriter ebw = new PrintWriter(eb)) {
+
+            ToJavaVisitor cbody = makeToJavaVisitor(ir, ebw, indent + 1, varTypes);
+            cbody.visit(n.getChild(1), c, cbody);
+
+            ebw.flush();
+            String bodyText = eb.toString();
+            if (bodyText.trim().isEmpty()) {
+              out.println(");");
+            } else {
+              out.println(")");
+              out.print(bodyText);
+            }
+          }
+        } catch (IOException e) {
+          assert false : e;
+        }
+
         return true;
       }
     }
@@ -3802,6 +3824,16 @@ public abstract class ToSource {
       } else {
         return super.visitNew(n, c, visitor);
       }
+    }
+
+    @Override
+    protected boolean visitThrow(
+        CAstNode n, CodeGenerationContext c, CAstVisitor<CodeGenerationContext> visitor) {
+      indent();
+      out.print("throw new RuntimeException(String.valueOf(");
+      visitor.visit(n.getChild(0), c, visitor);
+      out.println("));");
+      return true;
     }
   }
 
