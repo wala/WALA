@@ -88,6 +88,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
@@ -930,7 +931,8 @@ public abstract class ToSource {
                         part.setAllBlocks(allBlocks);
                         part.setLoopHeader(
                             allBlocks.stream()
-                                .min(Comparator.comparing(ISSABasicBlock::getNumber))
+                                .sorted(makeSorter(cfgNoBack, allBlocks))
+                                .findFirst()
                                 .get());
 
                         if (DEBUG) System.err.println("loop: " + allBlocks);
@@ -966,11 +968,7 @@ public abstract class ToSource {
                                                   Collections.singleton(n))
                                               .contains(p);
                                     })
-                                .sorted(
-                                    (a, b) -> {
-                                      return a.getFirstInstructionIndex()
-                                          - b.getFirstInstructionIndex();
-                                    })
+                                .sorted(makeSorter(cfgNoBack, allBlocks))
                                 .collect(Collectors.toSet()));
 
                         breakers.forEach(
@@ -986,7 +984,8 @@ public abstract class ToSource {
                         // Pick the first one - the one with smallest number
                         part.setLoopControl(
                             breakers.stream()
-                                .min(Comparator.comparing(ISSABasicBlock::getNumber))
+                                .sorted(makeSorter(cfgNoBack, breakers))
+                                .findFirst()
                                 .get());
 
                         assert loops.containsKey(part.getLoopHeader());
@@ -1143,7 +1142,7 @@ public abstract class ToSource {
               es -> {
                 List<SSAInstruction> regionInsts = new ArrayList<>();
                 es.getValue().stream()
-                    .sorted((a, b) -> a.getLastInstructionIndex() - b.getLastInstructionIndex())
+                    .sorted(makeSorter(cfgNoBack, es.getValue()))
                     .forEach(
                         bb -> {
                           bb.iterator()
@@ -1375,6 +1374,14 @@ public abstract class ToSource {
       }
 
       initChildren();
+    }
+
+    private Comparator<? super ISSABasicBlock> makeSorter(
+        Graph<ISSABasicBlock> cfg, Set<ISSABasicBlock> value) {
+      Graph<ISSABasicBlock> s = GraphSlicer.project(cfg, x -> value.contains(x));
+      List<ISSABasicBlock> l =
+          Iterator2Collection.toList(Topological.makeTopologicalIter(s).iterator());
+      return (a, b) -> l.indexOf(a) - l.indexOf(b);
     }
 
     private void initChildren() {
