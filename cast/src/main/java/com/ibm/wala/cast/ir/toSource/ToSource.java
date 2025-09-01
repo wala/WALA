@@ -3598,6 +3598,11 @@ public abstract class ToSource {
     protected boolean visitIfStmt(
         CAstNode n, CodeGenerationContext c, CAstVisitor<CodeGenerationContext> visitor) {
 
+      if (java.lang.Boolean.TRUE.equals(n.getChild(0).getValue())) {
+        visitor.visit(n.getChild(1), c, visitor);
+        return true;
+      }
+
       String thenJavaText = "";
       String elseJavaText = "";
 
