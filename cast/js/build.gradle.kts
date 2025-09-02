@@ -39,10 +39,12 @@ tasks.named<Test>("test") { maxHeapSize = "800M" }
 val downloadAjaxslt =
     adHocDownload(
         uri(
-            "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt"),
+            "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/ajaxslt"
+        ),
         "ajaxslt",
         "tar.gz",
-        "0.8.1")
+        "0.8.1",
+    )
 
 val unpackAjaxslt by
     tasks.registering(Sync::class) {

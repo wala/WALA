@@ -67,7 +67,8 @@ val installAndroidSdk by
                   commandLine(
                       shell,
                       shellFlags,
-                      "$yes | $destinationDir/cmdline-tools/bin/sdkmanager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard")
+                      "$yes | $destinationDir/cmdline-tools/bin/sdkmanager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard",
+                  )
                 }
           }
         }
@@ -104,14 +105,16 @@ dependencies {
 
   // directory containing "android.jar", which various tests want to find as a resource
   testRuntimeOnly(
-      files(installAndroidSdk.map { "${it.outputs.files.singleFile}/platforms/$platformsVersion" }))
+      files(installAndroidSdk.map { "${it.outputs.files.singleFile}/platforms/$platformsVersion" })
+  )
 }
 
 val downloadDroidBench =
     adHocDownload(
         uri("https://github.com/secure-software-engineering/DroidBench/archive/refs/tags"),
         "DroidBench_2.0",
-        "zip")
+        "zip",
+    )
 
 val unpackDroidBench by
     tasks.registering(Sync::class) {
@@ -139,7 +142,8 @@ val downloadAndroidSdk = run {
       uri("https://dl.google.com/android/repository"),
       "commandlinetools-$sdkOs",
       "zip",
-      "7583922_latest")
+      "7583922_latest",
+  )
 }
 
 interface ExtractSampleCupServices {
@@ -166,7 +170,10 @@ val extractSampleCup by
 
 val downloadSampleLex =
     adHocDownload(
-        uri("https://www.cs.princeton.edu/~appel/modern/java/JLex/current"), "sample", "lex")
+        uri("https://www.cs.princeton.edu/~appel/modern/java/JLex/current"),
+        "sample",
+        "lex",
+    )
 
 tasks.named<Copy>("processTestResources") {
   dependsOn(coreTestJar)
@@ -187,5 +194,6 @@ tasks.named<Test>("test") {
           "parser.java",
           "report",
           "sym.java",
-      ))
+      )
+  )
 }

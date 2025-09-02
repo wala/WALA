@@ -5,7 +5,7 @@ eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 #noinspection UnusedVersionCatalogEntry
 google-java-format = "1.28.0"
-ktfmt = "0.44"
+ktfmt = "0.58"
 spotless = "7.2.1"
 
 [libraries]

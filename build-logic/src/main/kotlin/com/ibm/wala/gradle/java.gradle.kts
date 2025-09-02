@@ -111,9 +111,11 @@ tasks.named<Test>("test") {
               it.appendText("trial,className,name,resultType,startTime,endTime\n")
             }
             it.appendText(
-                "$trial,${descriptor.className},${descriptor.name},${result.resultType},${result.startTime},${result.endTime}\n")
+                "$trial,${descriptor.className},${descriptor.name},${result.resultType},${result.startTime},${result.endTime}\n"
+            )
           }
-        }))
+        })
+    )
   } else {
     maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
   }
@@ -167,7 +169,8 @@ if (gradle.parent != null) {
 spotless {
   java {
     googleJavaFormat(
-        versionCatalogs.named("libs").findVersion("google-java-format").get().toString())
+        versionCatalogs.named("libs").findVersion("google-java-format").get().toString()
+    )
   }
 }
 

@@ -20,12 +20,12 @@ private const val MINIMUM_ECLIPSE_COMPATIBLE_JAVA_VERSION = 17
 /**
  * A Gradle [Project] extension providing details about Eclipse-compatible Java toolchains.
  *
- * @constructor Creates an extension instance that will be attached to the given [project].
  * @property project The project to which this extension instance is attached.
  * @property languageVersion A Java language version that is compatible with WALA's Eclipse
  *   dependencies.
  * @property launcher Provides a Java JVM launcher (i.e., `java` command) that is compatible with
  *   WALA's Eclipse dependencies.
+ * @constructor Creates an extension instance that will be attached to the given [project].
  */
 open class EclipseCompatibleJavaExtension @Inject constructor(private val project: Project) {
 

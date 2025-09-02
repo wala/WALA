@@ -60,7 +60,8 @@ open class WalaMavenCentralReleaseConfigurerExtension @Inject constructor(projec
       project.run {
         eclipseMavenCentral
             .ReleaseConfigurer(
-                official(versionCatalogs.named("libs").findVersion("eclipse").get().toString()))
+                official(versionCatalogs.named("libs").findVersion("eclipse").get().toString())
+            )
             .apply {
               constrainTransitivesToThisRelease()
               useNativesForRunningPlatform()

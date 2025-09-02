@@ -57,5 +57,7 @@ fun Project.adHocDownload(
           name = name,
           version = version,
           classifier = classifier,
-          ext = ext))
+          ext = ext,
+      )
+  )
 }
