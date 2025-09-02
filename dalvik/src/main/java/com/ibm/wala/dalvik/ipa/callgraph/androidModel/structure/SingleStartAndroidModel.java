@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Builds an Android Model incorporating a single loop.
  *
- * <p>This class models a single run of an Andoird-Component: E.g. The view of an Activity gets
+ * <p>This class models a single run of an Android-Component: E.g. The view of an Activity gets
  * shown only once.
  *
  * <p>The incorporated loop is wrapped around user-interaction methods. These are in the section
@@ -106,7 +106,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
   protected int enterMULTIPLE_TIMES_IN_LOOP(int PC) {
     logger.info("PC {} is the jump target of START_OF_LOOP", PC);
     this.outerLoopPC = PC;
-    PC = body.getNextProgramCounter();
+    body.getNextProgramCounter();
     paramManager.scopeDown(true);
 
     // Top-Half of Phi-Handling
@@ -125,8 +125,7 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
     body.reserveProgramCounters(outerPhisNeeded.size());
     // Actual Phis will be placed by the bottom-half handler...
 
-    PC = body.getNextProgramCounter(); // Needed if no calls
-    return PC;
+    return body.getNextProgramCounter(); // Needed if no calls
   }
 
   /**

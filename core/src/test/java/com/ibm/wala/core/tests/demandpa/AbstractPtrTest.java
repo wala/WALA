@@ -37,7 +37,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -164,7 +164,7 @@ public abstract class AbstractPtrTest {
     if (debug) {
       System.err.println("flows-to for " + mainClass + ": " + flowsTo);
     }
-    assertEquals(size, flowsTo.size());
+    assertThat(flowsTo).hasSize(size);
   }
 
   private Collection<PointerKey> getFlowsToSetToTest(String mainClass)
@@ -175,8 +175,7 @@ public abstract class AbstractPtrTest {
     // query it
     CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
     InstanceKey keyToQuery = getFlowsToInstanceKey(mainMethod, dmp.getHeapModel());
-    Collection<PointerKey> flowsTo = dmp.getFlowsTo(keyToQuery).snd;
-    return flowsTo;
+    return dmp.getFlowsTo(keyToQuery).snd;
   }
 
   /** returns the instance key corresponding to the single allocation site of type FlowsToType */
@@ -205,7 +204,7 @@ public abstract class AbstractPtrTest {
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
-    assertEquals(expectedSize, pointsTo.size());
+    assertThat(pointsTo).hasSize(expectedSize);
   }
 
   private Collection<InstanceKey> getPointsToSetToTest(String mainClass)
@@ -215,8 +214,7 @@ public abstract class AbstractPtrTest {
     // find the testThisVar call, and check the parameter's points-to set
     CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
     PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", dmp.getHeapModel());
-    Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
-    return pointsTo;
+    return dmp.getPointsTo(keyToQuery);
   }
 
   protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass)

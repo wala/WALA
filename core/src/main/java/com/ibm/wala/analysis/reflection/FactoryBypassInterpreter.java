@@ -113,8 +113,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     // }
     // }
 
-    Set<TypeReference> types = map.get(context);
-    return types;
+    return map.get(context);
   }
 
   /**
@@ -585,11 +584,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     @Override
     public int hashCode() { // TODO: change this to avoid non-determinism!
       return System.identityHashCode(this);
-    }
-
-    @Override
-    public String toString() {
-      return super.toString();
     }
 
     @Override

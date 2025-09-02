@@ -26,7 +26,6 @@ public class MemoryAccess {
   private final int instructionIndex;
 
   public MemoryAccess(int index, CGNode node) {
-    super();
     instructionIndex = index;
     this.node = node;
   }

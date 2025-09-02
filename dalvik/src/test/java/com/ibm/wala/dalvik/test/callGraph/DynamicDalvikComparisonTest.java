@@ -47,7 +47,7 @@ public abstract class DynamicDalvikComparisonTest extends DalvikCallGraphTestBas
     String javaJarPath = getJavaJar(javaScope);
     File androidDex = convertJarToDex(javaJarPath);
     Pair<CallGraph, PointerAnalysis<InstanceKey>> android =
-        makeDalvikCallGraph(androidLibs, null, mainClass, androidDex.getAbsolutePath());
+        makeDalvikCallGraph(androidLibs, null, mainClass, androidDex.toPath().toAbsolutePath());
 
     dynamicCG(new File(javaJarPath), mainClass, args);
 

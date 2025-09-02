@@ -69,8 +69,7 @@ public class Goto extends Instruction {
   @Override
   public int[] getBranchTargets() {
     if (label == null) {
-      int[] l = {method.getInstructionIndex(pc + destination)};
-      this.label = l;
+      this.label = new int[] {method.getInstructionIndex(pc + destination)};
     }
     return label;
   }

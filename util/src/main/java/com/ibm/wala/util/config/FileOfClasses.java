@@ -15,11 +15,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
 
-/** An object which represents a set of classes read from a text file. */
+/**
+ * An object which represents a set of classes read from a text file.
+ *
+ * @deprecated Use {@link PatternsFilter} instead.
+ */
+@Deprecated(since = "1.6.12", forRemoval = true)
+@SuppressWarnings("removal")
 public class FileOfClasses extends SetOfClasses {
 
   /* Serial version */
@@ -100,5 +107,10 @@ public class FileOfClasses extends SetOfClasses {
   @Override
   public @Nullable String toString() {
     return this.regex;
+  }
+
+  @Override
+  public String toJson() {
+    return Objects.requireNonNull(this.regex);
   }
 }

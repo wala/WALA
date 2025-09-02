@@ -56,8 +56,8 @@ public class PDFCallGraph {
 
   public static String findJarFiles(String[] directories) {
     Collection<String> result = HashSetFactory.make();
-    for (String directorie : directories) {
-      for (File f : FileUtil.listFiles(directorie, ".*\\.jar", true)) {
+    for (String directory : directories) {
+      for (File f : FileUtil.listFiles(directory, ".*\\.jar", true)) {
         result.add(f.getAbsolutePath());
       }
     }
@@ -157,9 +157,7 @@ public class PDFCallGraph {
 
     System.err.println(CallGraphStats.getStats(cg));
 
-    Graph<CGNode> g = pruneForAppLoader(cg);
-
-    return g;
+    return pruneForAppLoader(cg);
   }
 
   public static Graph<CGNode> pruneForAppLoader(CallGraph g) {

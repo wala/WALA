@@ -47,7 +47,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
-import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
 
 /**
@@ -86,13 +85,6 @@ public class MiniModel extends AndroidModel {
       return true;
     }
     return false;
-  }
-
-  @Override
-  public Descriptor getDescriptor() throws CancelException {
-    final Descriptor descr = super.getDescriptor();
-
-    return descr;
   }
 
   public MiniModel(

@@ -45,8 +45,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
-    INodeWithNumber n = N;
-    return n.getGraphNodeId();
+    return N.getGraphNodeId();
   }
 
   @Override
@@ -138,11 +137,10 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }
-    INodeWithNumber N = n;
-    int number = N.getGraphNodeId();
+    int number = n.getGraphNodeId();
     if (number == -1) {
       maxNumber++;
-      N.setGraphNodeId(maxNumber);
+      n.setGraphNodeId(maxNumber);
       number = maxNumber;
     } else {
       if (number > maxNumber) {
@@ -150,10 +148,10 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
       }
     }
     ensureCapacity(number);
-    if (nodes[number] != null && nodes[number] != N) {
-      Assertions.UNREACHABLE("number: " + number + " N: " + N + " nodes[number]: " + nodes[number]);
+    if (nodes[number] != null && nodes[number] != n) {
+      Assertions.UNREACHABLE("number: " + number + " N: " + n + " nodes[number]: " + nodes[number]);
     }
-    nodes[number] = N;
+    nodes[number] = n;
     numberOfNodes++;
   }
 
@@ -172,8 +170,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }
-    INodeWithNumber N = n;
-    int number = N.getGraphNodeId();
+    int number = n.getGraphNodeId();
     if (number == -1) {
       throw new IllegalArgumentException("Cannot remove node, not in graph");
     }
@@ -204,8 +201,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }
-    INodeWithNumber N = n;
-    int number = N.getGraphNodeId();
+    int number = n.getGraphNodeId();
     if (number == -1) {
       return false;
     }
@@ -217,7 +213,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
               + " : "
               + n);
     }
-    if (nodes[number] != N) {
+    if (nodes[number] != n) {
       throw new IllegalArgumentException(
           "node already has a graph node id, but is not registered there in this graph\n"
               + "this graph implementation is fragile and won't support this kind of test\n"

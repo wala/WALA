@@ -30,11 +30,9 @@ private const val MINIMUM_ECLIPSE_COMPATIBLE_JAVA_VERSION = 17
 open class EclipseCompatibleJavaExtension @Inject constructor(private val project: Project) {
 
   val languageVersion: JavaLanguageVersion by lazy {
-    project.run {
-      val projectVersion = the<JavaPluginExtension>().toolchain.languageVersion.get()
-      val minimumVersion = JavaLanguageVersion.of(MINIMUM_ECLIPSE_COMPATIBLE_JAVA_VERSION)
-      if (projectVersion.canCompileOrRun(minimumVersion)) projectVersion else minimumVersion
-    }
+    val projectVersion = project.the<JavaPluginExtension>().toolchain.languageVersion.get()
+    val minimumVersion = JavaLanguageVersion.of(MINIMUM_ECLIPSE_COMPATIBLE_JAVA_VERSION)
+    if (projectVersion.canCompileOrRun(minimumVersion)) projectVersion else minimumVersion
   }
 
   val launcher: Provider<JavaLauncher> by lazy {

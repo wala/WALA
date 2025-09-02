@@ -18,10 +18,11 @@ dependencies {
   testFixturesApi(projects.cast.js)
   testFixturesApi(projects.util)
   testFixturesApi(testFixtures(projects.cast.js))
+  testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(projects.cast)
   testFixturesImplementation(projects.core)
+  testImplementation(libs.assertj.core)
   testImplementation(libs.gson)
-  testImplementation(libs.hamcrest)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.cast.js))
 }
@@ -36,7 +37,7 @@ tasks.named<Test>("test") {
     events("passed", "skipped", "failed")
   }
 
-  if (project.hasProperty("excludeRequiresInternetTests") ||
+  if (providers.gradleProperty("excludeRequiresInternetTests").isPresent ||
       gradle.startParameter.isOffline ||
       environment["CI"] == "true") {
     useJUnitPlatform { excludeTags("requires-Internet") }

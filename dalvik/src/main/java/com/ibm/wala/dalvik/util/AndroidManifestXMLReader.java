@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -627,7 +628,7 @@ public class AndroidManifestXMLReader {
       */
 
       if (!names.isEmpty()) {
-        for (String name : names) {
+        for (@Language("jvm-class-name") String name : names) {
           if (urls.isEmpty()) urls.add(null);
           for (String url : urls) {
             logger.info("New Intent ({}, {})", name, url);
@@ -701,6 +702,7 @@ public class AndroidManifestXMLReader {
         pack = null;
       }
 
+      @Language("jvm-class-name")
       final String name;
       if (self == Tag.ALIAS) {
         name = (String) attributesHistory.get(Attr.TARGET).peek(); // TODO: Verify type!
@@ -726,7 +728,6 @@ public class AndroidManifestXMLReader {
     private int unimportantDepth = 0;
 
     public SAXHandler() {
-      super();
       parserStack.push(Tag.ROOT);
     }
 

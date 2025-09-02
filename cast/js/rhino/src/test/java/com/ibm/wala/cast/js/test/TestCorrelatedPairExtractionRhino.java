@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cast.js.test;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -35,7 +37,7 @@ public class TestCorrelatedPairExtractionRhino extends TestCorrelatedPairExtract
       entity = translator.translateToCAst();
     } catch (Error e) {
       e.printStackTrace();
-      assert false;
+      fail("Translation failed");
     }
     return entity;
   }

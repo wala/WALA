@@ -8,8 +8,9 @@ eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 dependencies {
   api(libs.jspecify)
+  compileOnly(libs.jetbrains.annotations)
   javadocClasspath(projects.core)
-  testImplementation(libs.hamcrest)
+  testFixturesApi(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
 }
 

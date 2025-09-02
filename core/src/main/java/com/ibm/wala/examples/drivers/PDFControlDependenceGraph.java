@@ -149,16 +149,6 @@ public class PDFControlDependenceGraph {
    * @throws UnsupportedOperationException if command-line is malformed.
    */
   static void validateCommandLine(String[] args) {
-    if (args.length != 4) {
-      throw new UnsupportedOperationException("must have at exactly 4 command-line arguments");
-    }
-    if (!args[0].equals("-appJar")) {
-      throw new UnsupportedOperationException(
-          "invalid command-line, args[0] should be -appJar, but is " + args[0]);
-    }
-    if (!args[2].equals("-sig")) {
-      throw new UnsupportedOperationException(
-          "invalid command-line, args[2] should be -sig, but is " + args[0]);
-    }
+    PDFWalaIR.validateCommandLine(args);
   }
 }

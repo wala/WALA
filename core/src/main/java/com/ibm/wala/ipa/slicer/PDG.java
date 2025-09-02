@@ -51,7 +51,7 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.GraphUtil;
@@ -62,9 +62,9 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -158,7 +158,6 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       ModRef<T> modRef,
       boolean ignoreAllocHeapDefs) {
 
-    super();
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -607,10 +606,10 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  private static class SingletonSet extends SetOfClasses implements Serializable {
+  private static class SingletonSet implements StringFilter {
 
     /* Serial version */
-    private static final long serialVersionUID = -3256390509887654324L;
+    private static final long serialVersionUID = -672435219867965584L;
 
     private final TypeReference t;
 
@@ -619,39 +618,39 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
 
     @Override
-    public void add(String klass) {
-      Assertions.UNREACHABLE();
+    public boolean test(String klassName) {
+      return t.getName().toString().substring(1).equals(klassName);
     }
 
     @Override
-    public boolean contains(String klassName) {
-      return t.getName().toString().substring(1).equals(klassName);
+    public String toJson() {
+      return t.getName().toString().substring(1);
     }
   }
 
-  private static class SetComplement extends SetOfClasses implements Serializable {
+  private static class SetComplement implements StringFilter {
 
     /* Serial version */
-    private static final long serialVersionUID = -3256390509887654323L;
+    private static final long serialVersionUID = -7873800088647368431L;
 
-    private final SetOfClasses set;
+    private final StringFilter set;
 
-    SetComplement(SetOfClasses set) {
+    SetComplement(StringFilter set) {
       this.set = set;
     }
 
-    static SetComplement complement(SetOfClasses set) {
+    static SetComplement complement(StringFilter set) {
       return new SetComplement(set);
     }
 
     @Override
-    public void add(String klass) {
-      Assertions.UNREACHABLE();
+    public boolean test(String klassName) {
+      return !set.test(klassName);
     }
 
     @Override
-    public boolean contains(String klassName) {
-      return !set.contains(klassName);
+    public Map<String, Object> toJson() {
+      return Collections.singletonMap("not", set.toJson());
     }
   }
 

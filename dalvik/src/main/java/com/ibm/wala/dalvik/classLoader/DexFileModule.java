@@ -88,11 +88,7 @@ public class DexFileModule implements Module {
     }
   }
 
-  private static File tf(JarFile f) throws IOException {
-    String name = f.getName();
-    if (name.indexOf('/') >= 0) {
-      name = name.substring(name.lastIndexOf('/') + 1);
-    }
+  private static File tf() throws IOException {
     File tf = Files.createTempFile("name", "_classes.dex").toFile();
     tf.deleteOnExit();
     System.err.println("using " + tf);
@@ -100,7 +96,7 @@ public class DexFileModule implements Module {
   }
 
   private DexFileModule(JarFile f) throws IllegalArgumentException, IOException {
-    this(TemporaryFile.streamToFile(tf(f), f.getInputStream(f.getEntry("classes.dex"))));
+    this(TemporaryFile.streamToFile(tf(), f.getInputStream(f.getEntry("classes.dex"))));
   }
 
   private DexFileModule(File f) throws IllegalArgumentException {

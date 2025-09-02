@@ -215,7 +215,7 @@ public class ArgumentSpecialization {
                   } else {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$arg" + arg));
                   }
-                } else if (x instanceof String && "length".equals(x)) {
+                } else if ("length".equals(x)) {
                   return Ast.makeConstant(v.getValue());
                 }
               }
@@ -261,8 +261,7 @@ public class ArgumentSpecialization {
               if (result == null) {
                 final List<CAstNode> children =
                     copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
-                CAstNode copy = Ast.makeNode(root.getKind(), children);
-                result = copy;
+                result = Ast.makeNode(root.getKind(), children);
               }
 
               nodeMap.put(Pair.make(root, context.key()), result);

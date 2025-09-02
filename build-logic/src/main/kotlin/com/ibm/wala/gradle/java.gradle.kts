@@ -7,6 +7,7 @@ import org.gradle.jvm.toolchain.JvmVendorSpec
 
 plugins {
   eclipse
+  jacoco
   `java-library`
   `java-test-fixtures`
   `maven-publish`
@@ -18,17 +19,20 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
+jacoco { toolVersion = "0.8.13" }
+
 repositories {
   mavenCentral()
   // to get r8
   maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
 }
 
-java.toolchain.languageVersion =
-    JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
-// We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
-// Temurin does not include jmod files as of their JDK 24 builds.
-java.toolchain.vendor = JvmVendorSpec.AZUL
+java.toolchain {
+  languageVersion = JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
+  // We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
+  // Temurin does not include jmod files as of their JDK 24 builds.
+  vendor = JvmVendorSpec.AZUL
+}
 
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
@@ -37,7 +41,7 @@ configurations {
   named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
-fun findLibrary(alias: String) = rootProject.versionCatalogs.named("libs").findLibrary(alias).get()
+fun findLibrary(alias: String) = versionCatalogs.named("libs").findLibrary(alias).get()
 
 dependencies {
   "ecj"(findLibrary("eclipse-ecj"))
@@ -48,37 +52,41 @@ dependencies {
 
   testImplementation(platform(findLibrary("junit-bom")))
   testRuntimeOnly(findLibrary("junit-jupiter-engine"))
+  testRuntimeOnly(findLibrary("junit-platform-launcher"))
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
   javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(24) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
-  options.release = 11
-  options.errorprone {
-    // don't run warning-level checks by default as they add too much noise to build output
-    disableAllWarnings = true
-    // warning-level checks upgraded to error, since we've fixed all the warnings
-    error("UnnecessaryParentheses")
-    error("UnusedVariable")
-    error("JdkObsolete")
-    error("AnnotationPosition")
-    error("AssertEqualsArgumentOrderChecker")
-    error("ArgumentSelectionDefectChecker")
-    // checks we do not intend to try to fix in the near-term:
-    // Just too many of these; proper Javadoc would be a great long-term goal
-    disable("MissingSummary")
-    // WALA has many optimizations involving using == to check reference equality.  They
-    // may be unnecessary on modern JITs, but fixing these issues requires subtle changes
-    // that could introduce bugs
-    disable("ReferenceEquality")
-    // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
-    // check name to the one you want to patch, and also disable -Werror below
-    //    		errorproneArgs.addAll(
-    //    				"-XepPatchChecks:UnnecessaryParentheses",
-    //    				"-XepPatchLocation:IN_PLACE"
-    //    		)
+  options.run {
+    isDeprecation = true
+    release = 11
+    errorprone {
+      // don't run warning-level checks by default as they add too much noise to build output
+      disableAllWarnings = true
+      // warning-level checks upgraded to error, since we've fixed all the warnings
+      error("UnnecessaryParentheses")
+      error("UnusedVariable")
+      error("JdkObsolete")
+      error("AnnotationPosition")
+      error("AssertEqualsArgumentOrderChecker")
+      error("ArgumentSelectionDefectChecker")
+      // checks we do not intend to try to fix in the near-term:
+      // Just too many of these; proper Javadoc would be a great long-term goal
+      disable("MissingSummary")
+      // WALA has many optimizations involving using == to check reference equality.  They
+      // may be unnecessary on modern JITs, but fixing these issues requires subtle changes
+      // that could introduce bugs
+      disable("ReferenceEquality")
+      // Example for running Error Prone's auto-patcher.  To run, uncomment and change the
+      // check name to the one you want to patch, and also disable -Werror below
+      //    		errorproneArgs.addAll(
+      //    				"-XepPatchChecks:UnnecessaryParentheses",
+      //    				"-XepPatchLocation:IN_PLACE"
+      //    		)
+    }
   }
 }
 
@@ -93,7 +101,7 @@ tasks.named<Test>("test") {
   include("**/Test*.class")
   exclude("**/*AndroidLibs*.class")
 
-  val trial = project.findProperty("trial")
+  val trial = providers.gradleProperty("trial").orNull
   if (trial != null) {
     outputs.upToDateWhen { false }
     afterTest(
@@ -111,7 +119,7 @@ tasks.named<Test>("test") {
   }
 }
 
-if (hasProperty("excludeSlowTests")) {
+if (providers.gradleProperty("excludeSlowTests").isPresent) {
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
 
@@ -120,7 +128,7 @@ val ecjCompileTaskProviders =
 
 tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
-tasks.withType<JavaCompile>().configureEach {
+tasks.withType<JavaCompile> {
   options.run {
     encoding = "UTF-8"
     compilerArgs.add("-Werror")
@@ -128,10 +136,10 @@ tasks.withType<JavaCompile>().configureEach {
   }
 }
 
-tasks.withType<JavaCompileUsingEcj>().configureEach {
+tasks.withType<JavaCompileUsingEcj> {
 
   // Allow skipping all ECJ compilation tasks by setting a project property.
-  val skipJavaUsingEcjTasks = project.hasProperty("skipJavaUsingEcjTasks")
+  val skipJavaUsingEcjTasks = providers.gradleProperty("skipJavaUsingEcjTasks").isPresent
   onlyIf { !skipJavaUsingEcjTasks }
 
   // ECJ warning / error levels are set via a configuration file, not this argument
@@ -159,11 +167,7 @@ if (gradle.parent != null) {
 spotless {
   java {
     googleJavaFormat(
-        rootProject.versionCatalogs
-            .named("libs")
-            .findVersion("google-java-format")
-            .get()
-            .toString())
+        versionCatalogs.named("libs").findVersion("google-java-format").get().toString())
   }
 }
 

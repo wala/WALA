@@ -328,7 +328,7 @@ public class AndroidStartComponentTool {
 
       return androidContext;
     } else {
-      logger.debug("Can not handle the callers android-context of " + caller);
+      logger.debug("Can not handle the callers android-context of {}", caller);
       return null;
     }
   }
@@ -355,9 +355,9 @@ public class AndroidStartComponentTool {
       assert (intentSender != null) : "Unable to look up the IntentSender-Object";
       assert (intentSender.getNumber() == 2)
           : "The IntentSender-Object was not located at SSA-Number 2. This may be entirely "
-              + "ok! I left this assertion to ashure the ParameterAccessor does its job right.";
+              + "ok! I left this assertion to assure the ParameterAccessor does its job right.";
 
-      // retreive the IBinder: IIntentSender.asBinder()
+      // retrieve the IBinder: IIntentSender.asBinder()
       final SSAValue iIntentSender = pm.getUnmanaged(AndroidTypes.IIntentSender, "iIntentSender");
       { // call IIntentSender IntentSender.getTarget()
         final int callPC = redirect.getNextProgramCounter();

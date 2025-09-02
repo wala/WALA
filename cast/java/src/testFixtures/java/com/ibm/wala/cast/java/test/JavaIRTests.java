@@ -14,12 +14,9 @@
 package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
@@ -47,6 +44,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAFieldAccessInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -61,12 +59,14 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -74,14 +74,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public abstract class JavaIRTests extends IRTests {
-
-  public JavaIRTests(String projectName) {
-    super(projectName);
-  }
-
-  public JavaIRTests() {
-    this(null);
-  }
 
   static List<? extends IRAssertion> callAssertionForInterfaceTest1 =
       Arrays.asList(
@@ -92,9 +84,7 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(iClass, "Could not find class " + typeStr);
-
-            assertTrue(iClass.isInterface(), "Expected IFoo to be an interface.");
+            assertThat(iClass).matches(IClass::isInterface);
           },
           cg -> {
             final String typeStr = "FooIT1";
@@ -103,18 +93,17 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(iClass, "Could not find class " + typeStr);
+            assertThat(iClass).isNotNull();
 
             final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
 
-            assertEquals(1, interfaces.size(), "Expected one single interface.");
+            assertThat(interfaces).hasSize(1);
 
-            assertTrue(
-                interfaces.contains(
+            Assertions.<IClass>assertThatCollection(interfaces)
+                .contains(
                     cg.getClassHierarchy()
                         .lookupClass(
-                            findOrCreateTypeReference("Source", "IFoo", cg.getClassHierarchy()))),
-                "Expected Foo to implement IFoo");
+                            findOrCreateTypeReference("Source", "IFoo", cg.getClassHierarchy())));
           });
 
   static List<? extends IRAssertion> callAssertionForInheritance1 =
@@ -126,22 +115,21 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass derivedClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(derivedClass, "Could not find class " + typeStr);
+            assertThat(derivedClass).isNotNull();
 
             final TypeReference baseType =
                 findOrCreateTypeReference("Source", "Base", cg.getClassHierarchy());
             final IClass baseClass = cg.getClassHierarchy().lookupClass(baseType);
 
-            assertEquals(
-                derivedClass.getSuperclass(),
-                baseClass,
-                "Expected 'Base' to be the superclass of 'Derived'");
+            assertThat(derivedClass.getSuperclass())
+                .as("Expected 'Base' to be the superclass of 'Derived'")
+                .isEqualTo(baseClass);
 
             Collection<IClass> subclasses = cg.getClassHierarchy().computeSubClasses(baseType);
 
-            assertTrue(
-                subclasses.contains(derivedClass) && subclasses.contains(baseClass),
-                "Expected subclasses of 'Base' to be 'Base' and 'Derived'.");
+            assertThat(subclasses)
+                .as("Expected subclasses of 'Base' to be 'Base' and 'Derived'.")
+                .contains(derivedClass, baseClass);
           });
 
   static List<? extends IRAssertion> callAssertionForArrayLiteral1 =
@@ -153,8 +141,11 @@ public abstract class JavaIRTests extends IRTests {
 
             CGNode node = cg.getNodes(mref).iterator().next();
             SSAInstruction s = node.getIR().getInstructions()[2];
-            assertInstanceOf(SSANewInstruction.class, s, "Did not find new array instruction.");
-            assertTrue(((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType(), "");
+            assertThat(s)
+                .as("Did not find new array instruction.")
+                .asInstanceOf(type(SSANewInstruction.class))
+                .extracting(sni -> sni.getNewSite().getDeclaredType())
+                .matches(TypeReference::isArrayType);
           });
 
   static List<? extends IRAssertion> callAssertionForQualifiedStatic =
@@ -167,15 +158,14 @@ public abstract class JavaIRTests extends IRTests {
             CGNode node = cg.getNodes(mref).iterator().next();
             SSAInstruction s = node.getIR().getInstructions()[4];
 
-            assertTrue(
-                s instanceof SSAGetInstruction && ((SSAGetInstruction) s).isStatic(),
-                "Did not find a getstatic instruction.");
-            final FieldReference field = ((SSAGetInstruction) s).getDeclaredField();
-            assertEquals("value", field.getName().toString(), "Expected a getstatic for 'value'.");
-            assertEquals(
-                "LFooQ",
-                field.getDeclaringClass().getName().toString(),
-                "Expected a getstatic for 'value'.");
+            final FieldReference field =
+                assertThat(s)
+                    .asInstanceOf(type(SSAGetInstruction.class))
+                    .matches(SSAFieldAccessInstruction::isStatic)
+                    .actual()
+                    .getDeclaredField();
+            assertThat(field.getName()).hasToString("value");
+            assertThat(field.getDeclaringClass().getName()).hasToString("LFooQ");
           });
 
   static List<? extends IRAssertion> callAssertionForArrayLiteral2 =
@@ -192,8 +182,8 @@ public abstract class JavaIRTests extends IRTests {
             {
               SSAInstruction s1 = instructions[2];
               if (s1 instanceof SSANewInstruction) {
-                assertTrue(
-                    ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType(), "");
+                assertThat(((SSANewInstruction) s1).getNewSite().getDeclaredType())
+                    .matches(TypeReference::isArrayType);
               } else {
                 fail("Expected 3rd to be a new array instruction.");
               }
@@ -202,8 +192,8 @@ public abstract class JavaIRTests extends IRTests {
             {
               SSAInstruction s2 = instructions[3];
               if (s2 instanceof SSANewInstruction) {
-                assertTrue(
-                    ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType(), "");
+                assertThat(((SSANewInstruction) s2).getNewSite().getDeclaredType())
+                    .matches(TypeReference::isArrayType);
               } else {
                 fail("Expected 4th to be a new array instruction.");
               }
@@ -212,29 +202,29 @@ public abstract class JavaIRTests extends IRTests {
             {
               final SymbolTable symbolTable = node.getIR().getSymbolTable();
               for (int i = 4; i <= 7; i++) {
-                assertInstanceOf(
-                    SSAArrayStoreInstruction.class, instructions[i], "Expected only array stores.");
 
-                SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
+                SSAArrayStoreInstruction as =
+                    assertThat(Arrays.stream(instructions))
+                        .element(i)
+                        .asInstanceOf(type(SSAArrayStoreInstruction.class))
+                        .actual();
 
-                assertEquals(
-                    "y",
-                    node.getIR().getLocalNames(i, as.getArrayRef())[0],
-                    "Expected an array store to 'y'.");
+                assertThat(node.getIR().getLocalNames(i, as.getArrayRef())[0])
+                    .as("Expected an array store to 'y'.")
+                    .isEqualTo("y");
 
                 final Integer valueOfArrayIndex =
                     ((Integer) symbolTable.getConstantValue(as.getIndex()));
                 final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
 
-                assertEquals(
-                    valueAssigned.intValue(),
-                    valueOfArrayIndex + 1,
-                    "Expected an array store to 'y' with value " + (valueOfArrayIndex + 1));
+                assertThat(valueAssigned.intValue())
+                    .as("Expected an array store to 'y' with value " + (valueOfArrayIndex + 1))
+                    .isEqualTo(valueOfArrayIndex + 1);
               }
             }
           });
 
-  static List<EdgeAssertions> edgeAssertionses =
+  static List<EdgeAssertions> edgeAssertions =
       Arrays.asList(
           EdgeAssertions.make(
               "Source#InheritedField#main#([Ljava/lang/String;)V", "Source#B#foo#()V"),
@@ -262,7 +252,9 @@ public abstract class JavaIRTests extends IRTests {
                 }
               }
 
-              assertEquals(4, count, "Unexpected number of array instructions in 'foo'.");
+              assertThat(count)
+                  .as("Unexpected number of array instructions in 'foo'.")
+                  .isEqualTo(4);
             }
 
             private boolean isArrayInstruction(SSAInstruction s) {
@@ -292,10 +284,10 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(iClass, "Could not find class " + typeStr);
+            assertThat(iClass).isNotNull();
 
             /*
-            assertEquals("Expected two classes.", iClass.getClassLoader().getNumberOfClasses(), 2);
+            assertThat(iClass.getClassLoader().getNumberOfClasses()).isEqualTo(2);
 
             for (IClass cls : Iterator2Iterable.make(iClass.getClassLoader().iterateAllClasses())) {
               assertTrue("Expected class to be either " + typeStr + " or " + "Bar", cls.getName().getClassName().toString()
@@ -313,7 +305,7 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(iClass, "Could not find class " + typeStr);
+            assertThat(iClass).isNotNull();
 
             // todo: this fails: assertNotNull("Expected to be enclosed in
             // 'StaticNesting'.",
@@ -335,14 +327,14 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(iClass, "Could not find class " + typeStr);
+            assertThat(iClass).isNotNull();
 
-            assertEquals(
-                ((JavaClass) iClass).getEnclosingClass(),
-                cg.getClassHierarchy()
-                    .lookupClass(
-                        findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())),
-                "Expected to be enclosed in 'InnerClass'.");
+            assertThat(((JavaClass) iClass).getEnclosingClass())
+                .as("Expected to be enclosed in 'InnerClass'.")
+                .isEqualTo(
+                    cg.getClassHierarchy()
+                        .lookupClass(
+                            findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
           });
 
   static List<? extends IRAssertion> callAssertionForLocalClass =
@@ -360,24 +352,23 @@ public abstract class JavaIRTests extends IRTests {
 
             // Observe the descriptor for a class local to a method.
             final IClass mainFooClass = cg.getClassHierarchy().lookupClass(mainFooType);
-            assertNotNull(mainFooClass, "Could not find class " + mainFooType);
+            assertThat(mainFooClass).isNotNull();
 
             final TypeReference methodFooType =
                 findOrCreateTypeReference(
                     "Source", typeStr + "/method()V/" + localClassStr, cg.getClassHierarchy());
 
             final IClass methodFooClass = cg.getClassHierarchy().lookupClass(methodFooType);
-            assertNotNull(methodFooClass, "Could not find class " + methodFooType);
+            assertThat(methodFooClass).isNotNull();
 
             final IClass localClass =
                 cg.getClassHierarchy()
                     .lookupClass(
                         findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy()));
 
-            assertSame(
-                ((JavaClass) methodFooClass).getEnclosingClass(),
-                localClass,
-                "'Foo' is enclosed in 'Local'");
+            assertThat(((JavaClass) methodFooClass).getEnclosingClass())
+                .as("'Foo' is enclosed in 'Local'")
+                .isSameAs(localClass);
             // todo: is this failing because 'main' is static?
             // assertSame("'Foo' is enclosed in 'Local'",
             // ((JavaSourceLoaderImpl.JavaClass)mainFooClass).getEnclosingClass(),
@@ -392,7 +383,7 @@ public abstract class JavaIRTests extends IRTests {
                 findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
             final IClass iClass = cg.getClassHierarchy().lookupClass(type);
-            assertNotNull(iClass, "Could not find class " + typeStr);
+            assertThat(iClass).isNotNull();
 
             // todo what to check?? could not find anything in the APIs for
             // anonymous
@@ -419,7 +410,7 @@ public abstract class JavaIRTests extends IRTests {
         Arguments.of("Exception2", emptyList, true, null),
         Arguments.of("Finally1", emptyList, true, null),
         Arguments.of("Inheritance1", callAssertionForInheritance1, true, null),
-        Arguments.of("InheritedField", edgeAssertionses, true, null),
+        Arguments.of("InheritedField", edgeAssertions, true, null),
         Arguments.of("InnerClass", callAssertionForInnerClass, true, null),
         Arguments.of("InterfaceTest1", callAssertionForInterfaceTest1, true, null),
         Arguments.of("LexicalAccessOfMethodVariablesFromAnonymousClass", emptyList, true, null),
@@ -513,7 +504,7 @@ public abstract class JavaIRTests extends IRTests {
         "LInnerClassA,",
       };
 
-      assertEquals(methodSigs.length, ikConcreteTypeStrings.length, "Buggy test");
+      assertThat(methodSigs).hasSameSizeAs(ikConcreteTypeStrings);
       for (int i = 0; i < methodSigs.length; i++) {
         if (n.getMethod().getSignature().equals(methodSigs[i])) {
           // find enclosing instruction
@@ -526,16 +517,16 @@ public abstract class JavaIRTests extends IRTests {
               // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
 
               final String allIks = allIksBuilder.toString();
-              assertEquals(
-                  allIks,
-                  ikConcreteTypeStrings[i],
-                  "assertion failed: expecting ik "
-                      + ikConcreteTypeStrings[i]
-                      + " in method "
-                      + methodSigs[i]
-                      + ", got "
-                      + allIks
-                      + "\n");
+              assertThat(allIks)
+                  .as(
+                      "assertion failed: expecting ik "
+                          + ikConcreteTypeStrings[i]
+                          + " in method "
+                          + methodSigs[i]
+                          + ", got "
+                          + allIks
+                          + "\n")
+                  .isEqualTo(ikConcreteTypeStrings[i]);
 
               break;
             }
@@ -565,10 +556,9 @@ public abstract class JavaIRTests extends IRTests {
               allIksBuilder.append(ik.getConcreteType().getName()).append(',');
             }
             final String allIks = allIksBuilder.toString();
-            assertEquals(
-                "LSub,",
-                allIks,
-                "assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n");
+            assertThat(allIks)
+                .as("assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n")
+                .isEqualTo("LSub,");
 
             break;
           }
@@ -604,8 +594,8 @@ public abstract class JavaIRTests extends IRTests {
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
     dumpSlice(slice);
-    assertEquals(0, SlicerUtil.countAllocations(slice, false));
-    assertEquals(1, SlicerUtil.countPutfields(slice));
+    assertThat(SlicerUtil.countAllocations(slice, false)).isEqualTo(0);
+    assertThat(SlicerUtil.countPutfields(slice)).isEqualTo(1);
 
     // test slice from main
     sliceRootRef = getSliceRootReference("MiniaturSliceBug", "main", "([Ljava/lang/String;)V");
@@ -613,15 +603,14 @@ public abstract class JavaIRTests extends IRTests {
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
     // SlicerUtil.dumpSlice(slice);
-    assertEquals(2, SlicerUtil.countAllocations(slice, false));
-    assertEquals(2, SlicerUtil.countPutfields(slice));
+    assertThat(SlicerUtil.countAllocations(slice, false)).isEqualTo(2);
+    assertThat(SlicerUtil.countPutfields(slice)).isEqualTo(2);
   }
 
   @Test
   public void testThinSlice() throws CancelException, IOException {
     String testName = "MiniaturSliceBug";
-    List<String> sources =
-        Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
+    Collection<Path> sources = singleTestSrc(testName);
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
 

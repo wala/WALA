@@ -187,7 +187,7 @@ public abstract class AbstractAndroidModel {
     }
     if (order.compareTo(lastQueriedMethod) < 0) {
       throw new IllegalArgumentException(
-          "This method is meant to be called on AndoidEntrypoints in ascending order");
+          "This method is meant to be called on AndroidEntrypoints in ascending order");
     }
     if ((currentSection.compareTo(lastQueriedMethod.getSection()) != 0)
         && (order.getSection().compareTo(lastQueriedMethod.getSection()) == 0)) {
@@ -356,11 +356,11 @@ public abstract class AbstractAndroidModel {
    * @throws IllegalArgumentException if you didn't use sections in ascending order, pc is negative
    */
   public int enter(ExecutionOrder section, int PC) {
-    section = section.getSection(); // Just to be shure
+    section = section.getSection(); // Just to be sure
 
     if ((this.currentSection != null) && (this.currentSection.compareTo(section) >= 0)) {
       if (this.currentSection.compareTo(section) == 0) {
-        logger.error("You entered {} twice! Ignoring second atempt.", section);
+        logger.error("You entered {} twice! Ignoring second attempt.", section);
       } else {
         throw new IllegalArgumentException(
             "Sections must be in ascending order! When trying to "

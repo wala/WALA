@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -25,7 +25,7 @@ public class ShallowAnalysisScope implements Serializable {
   /* Serial version */
   private static final long serialVersionUID = -3256390509887654321L;
 
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   // example for a line: "Primordial,Java,jarFile,primordial.jar.model"
   private final List<String> moduleLinesList;
@@ -36,7 +36,7 @@ public class ShallowAnalysisScope implements Serializable {
   private final List<String> ldrImplLinesList;
 
   public ShallowAnalysisScope(
-      SetOfClasses exclusions, List<String> moduleLinesList, List<String> ldrImplLinesList) {
+      StringFilter exclusions, List<String> moduleLinesList, List<String> ldrImplLinesList) {
     if (moduleLinesList == null) {
       throw new IllegalArgumentException("null moduleLinesList");
     }

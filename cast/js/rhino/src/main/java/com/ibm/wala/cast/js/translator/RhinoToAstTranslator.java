@@ -980,7 +980,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
             : var.getClass() + " " + var;
         if (var instanceof Name) {
-          name = ((Name) var).getString();
+          name = var.getString();
         } else {
           VariableDeclaration decl;
           if (var instanceof LetNode) {
@@ -1049,7 +1049,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
             : var.getClass() + " " + var + " " + var.getLineno() + ":" + var.getPosition();
         if (var instanceof Name) {
-          name = ((Name) var).getString();
+          name = var.getString();
         } else {
           VariableDeclaration decl;
           if (var instanceof LetNode) {
@@ -1224,7 +1224,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           ObjectProperty prop = (ObjectProperty) fn;
           AstNode label = prop.getLeft();
           if (label instanceof Name) {
-            return ((Name) label).getString();
+            return label.getString();
           }
         }
       }
@@ -1475,7 +1475,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         AstNode label = prop.getLeft();
         args.add(
             (label instanceof Name)
-                ? Ast.makeConstant(((Name) prop.getLeft()).getString())
+                ? Ast.makeConstant(prop.getLeft().getString())
                 : visit(label, context));
         args.add(visit(prop, context));
       }
@@ -1505,7 +1505,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     public CAstNode visitRegExpLiteral(RegExpLiteral node, WalkContext arg) {
       CAstNode flagsNode = Ast.makeConstant(node.getFlags());
       CAstNode valNode = Ast.makeConstant(node.getValue());
-      return handleNew(arg, "RegExp", Arrays.asList(new CAstNode[] {flagsNode, valNode}));
+      return handleNew(arg, "RegExp", Arrays.asList(flagsNode, valNode));
     }
 
     @Override

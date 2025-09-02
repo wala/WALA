@@ -52,11 +52,6 @@ public interface CAstControlFlowMap {
         public int hashCode() {
           return getKind() * toString().hashCode();
         }
-
-        @Override
-        public boolean equals(Object o) {
-          return o == this;
-        }
       };
 
   /**

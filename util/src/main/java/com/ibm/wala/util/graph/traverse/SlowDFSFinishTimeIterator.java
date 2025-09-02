@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * to define the graph, but this behavior can be changed by overriding the getConnected method.
  */
 public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
-  public static final long serialVersionUID = 3903190104743762628L;
+  private static final long serialVersionUID = 3903190104743762628L;
 
   /** An iterator of child nodes for each node being searched */
   private final Map<T, Iterator<T>> pendingChildren = HashMapFactory.make(25);

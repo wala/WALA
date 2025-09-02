@@ -82,12 +82,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    MutableIntSet mis = M.get(v);
-    if (mis == null) {
-      mis = new MutableSharedBitVectorIntSet();
-      M.put(v, mis);
-    }
-    return mis;
+    return M.computeIfAbsent(v, k -> new MutableSharedBitVectorIntSet());
   }
 
   @Override
@@ -209,20 +204,20 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
         if (handleCallApply
             && (fullName.equals("Lprologue.js/Function_prototype_call")
                 || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
-          JavaScriptInvoke invk = callVertex.getInstruction();
+          JavaScriptInvoke invoke = callVertex.getInstruction();
           VarVertex reflectiveCalleeVertex =
-              factory.makeVarVertex(callVertex.getCaller(), invk.getUse(1));
+              factory.makeVarVertex(callVertex.getCaller(), invoke.getUse(1));
           flowgraph.addEdge(
               reflectiveCalleeVertex,
-              factory.makeReflectiveCallVertex(callVertex.getCaller(), invk));
+              factory.makeReflectiveCallVertex(callVertex.getCaller(), invoke));
           // we only add dataflow edges for Function.prototype.call
           boolean isCall = fullName.equals("Lprologue.js/Function_prototype_call");
-          reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invk, isCall));
+          reflectiveCalleeVertices.put(reflectiveCalleeVertex, Pair.make(invoke, isCall));
           IntIterator reflectiveCalleeMapped =
               findOrCreateMutableIntSet(reachingFunctions, reflectiveCalleeVertex).intIterator();
           while (reflectiveCalleeMapped.hasNext()) {
             FuncVertex fw = mapping.getMappedObject(reflectiveCalleeMapped.next());
-            addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invk, fw, worklist, isCall);
+            addReflectiveCallEdge(flowgraph, reflectiveCalleeVertex, invoke, fw, worklist, isCall);
           }
         }
       }
@@ -236,10 +231,10 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       Set<Vertex> worklist) {
     for (Map.Entry<Vertex, Set<FuncVertex>> entry : pendingReflectiveCallWorklist.entrySet()) {
       final Vertex v = entry.getKey();
-      Pair<JavaScriptInvoke, Boolean> invkAndIsCall = reflectiveCalleeVertices.get(v);
+      Pair<JavaScriptInvoke, Boolean> invokeAndIsCall = reflectiveCalleeVertices.get(v);
       for (FuncVertex fv : entry.getValue()) {
         addReflectiveCallEdge(
-            flowgraph, (VarVertex) v, invkAndIsCall.fst, fv, worklist, invkAndIsCall.snd);
+            flowgraph, (VarVertex) v, invokeAndIsCall.fst, fv, worklist, invokeAndIsCall.snd);
       }
     }
   }
@@ -249,23 +244,24 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       FlowGraph flowgraph, CallVertex c, FuncVertex callee, Set<Vertex> worklist) {
     VertexFactory factory = flowgraph.getVertexFactory();
     FuncVertex caller = c.getCaller();
-    JavaScriptInvoke invk = c.getInstruction();
+    JavaScriptInvoke invoke = c.getInstruction();
 
     int offset = 0;
-    if (invk.getDeclaredTarget()
+    if (invoke
+        .getDeclaredTarget()
         .getSelector()
         .equals(JavaScriptMethods.ctorReference.getSelector())) {
       offset = 1;
     }
 
-    for (int i = 0; i < invk.getNumberOfPositionalParameters(); ++i) {
-      // only flow receiver into 'this' if invk is, in fact, a method call
+    for (int i = 0; i < invoke.getNumberOfPositionalParameters(); ++i) {
+      // only flow receiver into 'this' if invoke is, in fact, a method call
       flowgraph.addEdge(
-          factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
-      if (i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
+          factory.makeVarVertex(caller, invoke.getUse(i)), factory.makeArgVertex(callee));
+      if (i != 1 || !invoke.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
         addFlowEdge(
             flowgraph,
-            factory.makeVarVertex(caller, invk.getUse(i)),
+            factory.makeVarVertex(caller, invoke.getUse(i)),
             factory.makeParamVertex(callee, i + offset),
             worklist);
     }
@@ -274,7 +270,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     addFlowEdge(
         flowgraph,
         factory.makeRetVertex(callee),
-        factory.makeVarVertex(caller, invk.getDef()),
+        factory.makeVarVertex(caller, invoke.getDef()),
         worklist);
   }
 
@@ -289,7 +285,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
   private void addReflectiveCallEdge(
       FlowGraph flowgraph,
       VarVertex reflectiveCallee,
-      JavaScriptInvoke invk,
+      JavaScriptInvoke invoke,
       FuncVertex realCallee,
       Set<Vertex> worklist,
       boolean isFunctionPrototypeCall) {
@@ -298,10 +294,10 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 
     if (isFunctionPrototypeCall) {
       // flow from arguments to parameters
-      for (int i = 2; i < invk.getNumberOfPositionalParameters(); ++i) {
+      for (int i = 2; i < invoke.getNumberOfPositionalParameters(); ++i) {
         addFlowEdge(
             flowgraph,
-            factory.makeVarVertex(caller, invk.getUse(i)),
+            factory.makeVarVertex(caller, invoke.getUse(i)),
             factory.makeParamVertex(realCallee, i - 1),
             worklist);
       }
@@ -311,7 +307,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     addFlowEdge(
         flowgraph,
         factory.makeRetVertex(realCallee),
-        factory.makeVarVertex(caller, invk.getDef()),
+        factory.makeVarVertex(caller, invoke.getDef()),
         worklist);
   }
 }

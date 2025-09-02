@@ -75,8 +75,7 @@ public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyi
 
     } else {
       List<CAstNode> children = copyChildrenArrayAndTargets(root, cfg, context, nodeMap);
-      CAstNode copy = Ast.makeNode(root.getKind(), children);
-      result = copy;
+      result = Ast.makeNode(root.getKind(), children);
     }
 
     nodeMap.put(Pair.make(root, context.key()), result);

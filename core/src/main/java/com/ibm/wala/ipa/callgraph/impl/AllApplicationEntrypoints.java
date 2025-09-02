@@ -25,7 +25,7 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
   private static final boolean DEBUG = false;
 
   /**
-   * @param scope governing analyais scope
+   * @param scope governing analysis scope
    * @param cha governing class hierarchy
    * @throws IllegalArgumentException if cha is null
    */

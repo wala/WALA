@@ -1,11 +1,13 @@
 name: Continuous integration
 on:
+  merge_group:
   pull_request:
   push:
     branches-ignore:
       - 'dependabot/**'
+      - 'gh-readonly-queue/**'
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 jobs:
   build_gradle:
@@ -14,20 +16,24 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            java: 11
+            java: 17
+            coverage: false
           # Apple Silicon M1 CPU according to <https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories>
           - os: macos-14
-            java: 11
-          - os: ubuntu-latest
-            java: 11
+            java: 17
+            coverage: false
           - os: windows-latest
-            java: 11
+            java: 17
+            coverage: false
           - os: ubuntu-latest
             java: 17
+            coverage: true
           - os: ubuntu-latest
             java: 21
+            coverage: false
           - os: ubuntu-latest
             java: 24
+            coverage: false
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -58,6 +64,16 @@ jobs:
         with:
           name: Test results for JDK ${{ matrix.java }} on ${{ matrix.os }}
           path: '**/build/test-results/test/TEST-*.xml'
+      - name: Aggregate coverage
+        id: jacoco_report
+        run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
+        if: matrix.coverage && github.repository == 'wala/WALA'
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./code-coverage-report/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+          token: ${{ secrets.WALA_MAIN_CODECOV_TOKEN }}
+        if: steps.jacoco_report.outcome == 'success'
   upload_event_file:
     name: Upload event file
     runs-on: ubuntu-latest
@@ -88,4 +104,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
         run: ./generate-latest-docs.sh ${{ env.JDK_VERSION }}
-

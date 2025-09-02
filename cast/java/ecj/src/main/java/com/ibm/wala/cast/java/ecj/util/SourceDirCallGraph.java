@@ -120,8 +120,6 @@ public class SourceDirCallGraph {
   }
 
   protected Iterable<Entrypoint> getEntrypoints(String mainClass, IClassHierarchy cha) {
-    Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
-    return entrypoints;
+    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] {mainClass});
   }
 }

@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.cast.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -66,32 +64,22 @@ public class TestCAstPattern {
     System.err.println(("testing with input " + CAstPrinter.print(n)));
 
     if (names == null) {
-      assertFalse(p.match(n, null));
+      assertThat(p).doesNotMatch(pattern -> pattern.match(n, null));
     } else {
       Segments s = CAstPattern.match(p, n);
-      assertNotNull(s);
+      assertThat(s).isNotNull();
       for (Map.Entry<String, Object> entry : names.entrySet()) {
         Object o = entry.getValue();
         final String nm = entry.getKey();
         if (o instanceof CAstNode) {
           System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
-          assertEquals(
-              entry.getValue(),
-              s.getSingle(nm),
-              "for name " + nm + ": expected " + entry.getValue() + " but got " + s.getSingle(nm));
+          assertThat(s.getSingle(nm)).isEqualTo(entry.getValue());
+
         } else {
           for (CAstNode node : s.getMultiple(nm)) {
             System.err.println(("found " + CAstPrinter.print(node) + " for " + nm));
           }
-          assertEquals(
-              entry.getValue(),
-              s.getMultiple(nm),
-              "for name "
-                  + nm
-                  + ": expected "
-                  + entry.getValue()
-                  + " but got "
-                  + s.getMultiple(nm));
+          assertThat(s.getMultiple(nm)).isEqualTo(entry.getValue());
         }
       }
     }

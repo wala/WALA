@@ -29,8 +29,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
     if (src == null) {
       throw new IllegalArgumentException("src is null");
     }
-    Statement s = src;
-    switch (s.getKind()) {
+    switch (src.getKind()) {
       case NORMAL_RET_CALLER:
       case PARAM_CALLER:
       case EXC_RET_CALLER:
@@ -55,7 +54,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
           return ReachabilityFunctions.KILL_FLOW;
         }
       default:
-        Assertions.UNREACHABLE(s.getKind().toString());
+        Assertions.UNREACHABLE(src.getKind().toString());
         return null;
     }
   }

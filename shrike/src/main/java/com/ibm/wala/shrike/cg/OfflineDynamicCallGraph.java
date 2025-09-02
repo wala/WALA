@@ -36,8 +36,8 @@ import com.ibm.wala.shrike.shrikeCT.ConstantPoolParser;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -110,7 +110,7 @@ public class OfflineDynamicCallGraph {
 
   private static Class<?> runtime = Runtime.class;
 
-  private static SetOfClasses filter;
+  private static StringFilter filter;
 
   private static final ClassHierarchyStore cha = new ClassHierarchyStore();
 
@@ -125,7 +125,7 @@ public class OfflineDynamicCallGraph {
           runtime = Class.forName(args[i + 1]);
         } else if ("--exclusions".equals(args[i])) {
           try (FileInputStream input = new FileInputStream(args[i + 1])) {
-            filter = new FileOfClasses(input);
+            filter = new PatternsFilter(input);
           }
         } else if ("--dont-patch-exits".equals(args[i])) {
           patchExits = false;
@@ -146,7 +146,7 @@ public class OfflineDynamicCallGraph {
       }
 
       instrumenter = new OfflineInstrumenter();
-      args = instrumenter.parseStandardArgs(args);
+      instrumenter.parseStandardArgs(args);
 
       instrumenter.setPassUnmodifiedClasses(true);
 
@@ -172,7 +172,7 @@ public class OfflineDynamicCallGraph {
   static ClassWriter doClass(final ClassInstrumenter ci, Writer w)
       throws InvalidClassFileException, IOException, FailureException {
     final String className = ci.getReader().getName();
-    if (filter != null && filter.contains(className)) {
+    if (filter != null && filter.test(className)) {
       return null;
     }
 
@@ -190,7 +190,7 @@ public class OfflineDynamicCallGraph {
 
       // d could be null, e.g., if the method is abstract or native
       if (d != null) {
-        if (filter != null && filter.contains(className + '.' + ci.getReader().getMethodName(m))) {
+        if (filter != null && filter.test(className + '.' + ci.getReader().getMethodName(m))) {
           return null;
         }
 

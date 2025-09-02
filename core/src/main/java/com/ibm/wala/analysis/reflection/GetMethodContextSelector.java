@@ -134,8 +134,7 @@ public class GetMethodContextSelector implements ContextSelector {
    */
   protected static ConstantKey<String> makeConstantKey(IClassHierarchy cha, String str) {
     IClass cls = cha.lookupClass(TypeReference.JavaLangString);
-    ConstantKey<String> ck = new ConstantKey<>(str, cls);
-    return ck;
+    return new ConstantKey<>(str, cls);
   }
 
   private static final Collection<MethodReference> UNDERSTOOD_METHOD_REFS = HashSetFactory.make();

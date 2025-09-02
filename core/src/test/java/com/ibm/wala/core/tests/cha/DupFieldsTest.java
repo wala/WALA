@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -44,21 +44,16 @@ public class DupFieldsTest extends WalaTestCase {
     TypeReference ref =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LDupFieldName");
     IClass klass = cha.lookupClass(ref);
-    boolean threwException = false;
-    try {
-      klass.getField(Atom.findOrCreateUnicodeAtom("a"));
-    } catch (IllegalStateException e) {
-      threwException = true;
-    }
-    assertTrue(threwException);
+    assertThatThrownBy(() -> klass.getField(Atom.findOrCreateUnicodeAtom("a")))
+        .isInstanceOf(IllegalStateException.class);
     IField f =
         cha.resolveField(
             FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Int));
-    assertEquals(TypeReference.Int, f.getFieldTypeReference());
+    assertThat(f.getFieldTypeReference()).isEqualTo(TypeReference.Int);
     f =
         cha.resolveField(
             FieldReference.findOrCreate(
                 ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Boolean));
-    assertEquals(TypeReference.Boolean, f.getFieldTypeReference());
+    assertThat(f.getFieldTypeReference()).isEqualTo(TypeReference.Boolean);
   }
 }

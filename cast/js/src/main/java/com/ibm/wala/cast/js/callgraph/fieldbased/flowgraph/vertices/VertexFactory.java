@@ -43,20 +43,20 @@ public class VertexFactory {
   private final Map<Pair<IMethod, Integer>, CreationSiteVertex> creationSites =
       HashMapFactory.make();
 
-  public CallVertex makeCallVertex(FuncVertex func, JavaScriptInvoke invk) {
-    CallSiteReference site = invk.getCallSite();
+  public CallVertex makeCallVertex(FuncVertex func, JavaScriptInvoke invoke) {
+    CallSiteReference site = invoke.getCallSite();
     Pair<FuncVertex, CallSiteReference> key = Pair.make(func, site);
     CallVertex value = callVertexCache.get(key);
-    if (value == null) callVertexCache.put(key, value = new CallVertex(func, site, invk));
+    if (value == null) callVertexCache.put(key, value = new CallVertex(func, site, invoke));
     return value;
   }
 
-  public ReflectiveCallVertex makeReflectiveCallVertex(FuncVertex func, JavaScriptInvoke invk) {
-    CallSiteReference site = invk.getCallSite();
+  public ReflectiveCallVertex makeReflectiveCallVertex(FuncVertex func, JavaScriptInvoke invoke) {
+    CallSiteReference site = invoke.getCallSite();
     Pair<FuncVertex, CallSiteReference> key = Pair.make(func, site);
     ReflectiveCallVertex value = reflectiveCallVertexCache.get(key);
     if (value == null) {
-      reflectiveCallVertexCache.put(key, value = new ReflectiveCallVertex(func, site, invk));
+      reflectiveCallVertexCache.put(key, value = new ReflectiveCallVertex(func, site, invoke));
     }
     return value;
   }

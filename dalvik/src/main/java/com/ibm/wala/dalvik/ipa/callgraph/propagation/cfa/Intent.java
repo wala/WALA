@@ -70,7 +70,7 @@ import com.ibm.wala.types.TypeName;
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  * @since 2013-10-12
  */
-public class Intent implements ContextItem, Comparable<Intent> {
+public class Intent implements Cloneable, ContextItem, Comparable<Intent> {
   /** Key into the Context that represents the Intent. */
   public static final ContextKey INTENT_KEY = new ContextKey() {};
 
@@ -159,12 +159,13 @@ public class Intent implements ContextItem, Comparable<Intent> {
 
   @Override
   public Intent clone() {
-    final Intent clone = new Intent();
-    clone.action = this.action; // OK here?
-    clone.uri = this.uri;
-    clone.type = this.type;
-    clone.explicit = this.explicit;
-    clone.targetCompontent = this.targetCompontent;
+    final Intent clone;
+    try {
+      clone = (Intent) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new RuntimeException(e);
+    }
+    clone.immutable = false;
     return clone;
   }
 
@@ -335,8 +336,8 @@ public class Intent implements ContextItem, Comparable<Intent> {
     }
 
     // TODO: Make this static or so
-    final Atom andoidIntentAction = Atom.findOrCreateAsciiAtom("Landroid/intent/action");
-    return intent.action.startsWith(andoidIntentAction);
+    final Atom androidIntentAction = Atom.findOrCreateAsciiAtom("Landroid/intent/action");
+    return intent.action.startsWith(androidIntentAction);
   }
 
   /**

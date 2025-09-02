@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -78,7 +77,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public Set<CGNode> getPossibleTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
-      if (result != null && result instanceof CallSite) {
+      if (result instanceof CallSite) {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
@@ -91,7 +90,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public IntSet getPossibleTargetNumbers(CallSiteReference site) {
       Object t = targets.get(site.getProgramCounter());
-      if (t != null && t instanceof CallSite) {
+      if (t instanceof CallSite) {
         CallSite p = (CallSite) t;
         DelegatingCGNode n = (DelegatingCGNode) p.getNode();
         CallSiteReference s = p.getSite();
@@ -123,7 +122,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     @Override
     public int getNumberOfTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
-      if (result != null && result instanceof CallSite) {
+      if (result instanceof CallSite) {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
@@ -158,21 +157,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       // edges when NOT delegating.
       // see getPredNodeNumbers() below which recovers.
       super.addEdge(src, dst);
-    }
-
-    @Override
-    public void removeAllIncidentEdges(CGNode node) {
-      Assertions.UNREACHABLE();
-    }
-
-    @Override
-    public void removeIncomingEdges(CGNode node) {
-      Assertions.UNREACHABLE();
-    }
-
-    @Override
-    public void removeOutgoingEdges(CGNode node) {
-      Assertions.UNREACHABLE();
     }
 
     @Override

@@ -12,7 +12,7 @@ package annotations;
 
 public class ParameterAnnotations1 {
 
-  public static void foo(@RuntimeVisableAnnotation String s) {}
+  public static void foo(@RuntimeVisibleAnnotation String s) {}
 
   public static void bar(
       @AnnotationWithParams(
@@ -25,9 +25,9 @@ public class ParameterAnnotations1 {
           Integer i) {}
 
   public static void foo2(
-      @RuntimeVisableAnnotation String s, @RuntimeInvisableAnnotation Integer i) {}
+      @RuntimeVisibleAnnotation String s, @RuntimeInvisibleAnnotation Integer i) {}
 
-  public void foo3(@RuntimeVisableAnnotation String s, @RuntimeInvisableAnnotation Integer i) {}
+  public void foo3(@RuntimeVisibleAnnotation String s, @RuntimeInvisibleAnnotation Integer i) {}
 
-  public void foo4(@RuntimeInvisableAnnotation @RuntimeVisableAnnotation String s, Integer i) {}
+  public void foo4(@RuntimeInvisibleAnnotation @RuntimeVisibleAnnotation String s, Integer i) {}
 }

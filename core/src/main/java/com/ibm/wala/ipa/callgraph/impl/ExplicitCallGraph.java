@@ -62,7 +62,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
   public ExplicitCallGraph(
       IMethod fakeRootMethod, AnalysisOptions options, IAnalysisCacheView cache) {
-    super();
     if (options == null) {
       throw new IllegalArgumentException("null options");
     }
@@ -141,8 +140,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
       if (result == null) {
         return Collections.emptySet();
       } else if (result instanceof CGNode) {
-        Set<CGNode> s = Collections.singleton((CGNode) result);
-        return s;
+        return Collections.singleton((CGNode) result);
       } else {
         IntSet s = (IntSet) result;
         HashSet<CGNode> h = HashSetFactory.make(s.size());

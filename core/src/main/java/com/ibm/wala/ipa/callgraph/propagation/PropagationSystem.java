@@ -449,8 +449,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
     assert !klass.getReference().equals(TypeReference.JavaLangObject);
 
-    IClass T = klass;
-    registerInstanceWithAllSuperclasses(index, T);
+    registerInstanceWithAllSuperclasses(index, klass);
     registerInstanceWithAllInterfaces(klass, index);
 
     if (klass.isArrayClass()) {

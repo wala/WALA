@@ -349,7 +349,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
         elts.add(new FieldElement(ik, field.getReference()));
         final IClass fieldClass = analysisContext.getClassHierarchy().lookupClass(fieldTypeRef);
         if (fieldTypeRef.isPrimitiveType() || fieldClass == null) {
-          continue;
+          // do nothing
         } else if (fieldTypeRef.isArrayType()) {
           PointerKey pk = pa.getHeapModel().getPointerKeyForInstanceField(ik, field);
           final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);

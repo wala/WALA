@@ -1,9 +1,6 @@
 package com.ibm.wala.cast.js.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,11 +15,9 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.hamcrest.core.IsIterableContaining;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,72 +32,64 @@ public class TestCallGraph2JSON {
 
   @Test
   public void testBasic() throws WalaException, CancelException {
-    String script = "tests/fieldbased/simple.js";
+    String script = "tests/field-based/simple.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(true);
     Map<String, Map<String, String[]>> parsedJSONCG = getParsedJSONCG(cg, cg2JSON);
     Set<String> methods = parsedJSONCG.keySet();
-    assertEquals(3, methods.size());
+    assertThat(methods).hasSize(3);
     for (Entry<String, Map<String, String[]>> entry : parsedJSONCG.entrySet()) {
       if (entry.getKey().startsWith("simple.js@3")) {
         Map<String, String[]> callSites = entry.getValue();
-        assertThat(
-            Arrays.asList(getTargetsStartingWith(callSites, "simple.js@4")),
-            hasItemStartingWith("simple.js@7"));
+        assertThat(getTargetsStartingWith(callSites, "simple.js@4"))
+            .anyMatch(s -> s.startsWith("simple.js@7"));
       }
     }
     Map<String, String[]> flattened = flattenParsedCG(parsedJSONCG);
-    assertEquals(5, flattened.keySet().size());
-    flattened.values().stream().forEach(callees -> assertEquals(1, callees.length));
+    assertThat(flattened.keySet()).hasSize(5);
+    flattened.values().forEach(callees -> assertThat(callees).hasSize(1));
   }
 
   @Test
   public void testNative() throws WalaException, CancelException {
-    String script = "tests/fieldbased/native_call.js";
+    String script = "tests/field-based/native_call.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
-    assertArrayEquals(
-        new String[] {"Array_prototype_pop (Native)"},
-        getTargetsStartingWith(parsed, "native_call.js@2"));
+    assertThat(getTargetsStartingWith(parsed, "native_call.js@2"))
+        .isEqualTo(new String[] {"Array_prototype_pop (Native)"});
   }
 
   @Test
   public void testReflectiveCalls() throws WalaException, CancelException {
-    String script = "tests/fieldbased/reflective_calls.js";
+    String script = "tests/field-based/reflective_calls.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false, true);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
+    assertThat(getTargetsStartingWith(parsed, "reflective_calls.js@10"))
+        .anyMatch(s -> s.startsWith("Function_prototype_call (Native) [reflective_calls.js@10"));
+    assertThat(getTargetsStartingWith(parsed, "reflective_calls.js@11"))
+        .anyMatch(s -> s.startsWith("Function_prototype_apply (Native) [reflective_calls.js@11"));
     assertThat(
-        Arrays.asList(getTargetsStartingWith(parsed, "reflective_calls.js@10")),
-        hasItemStartingWith("Function_prototype_call (Native) [reflective_calls.js@10"));
-    assertThat(
-        Arrays.asList(getTargetsStartingWith(parsed, "reflective_calls.js@11")),
-        hasItemStartingWith("Function_prototype_apply (Native) [reflective_calls.js@11"));
-    assertThat(
-        Arrays.asList(
             getTargetsStartingWith(
-                parsed, "Function_prototype_call (Native) [reflective_calls.js@10")),
-        hasItemStartingWith("reflective_calls.js@1"));
+                parsed, "Function_prototype_call (Native) [reflective_calls.js@10"))
+        .anyMatch(s -> s.startsWith("reflective_calls.js@1"));
     assertThat(
-        Arrays.asList(
             getTargetsStartingWith(
-                parsed, "Function_prototype_apply (Native) [reflective_calls.js@11")),
-        hasItemStartingWith("reflective_calls.js@5"));
+                parsed, "Function_prototype_apply (Native) [reflective_calls.js@11"))
+        .anyMatch(s -> s.startsWith("reflective_calls.js@5"));
   }
 
   @Test
   public void testNativeCallback() throws WalaException, CancelException {
-    String script = "tests/fieldbased/native_callback.js";
+    String script = "tests/field-based/native_callback.js";
     CallGraph cg = buildCallGraph(script);
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
-    assertArrayEquals(
-        new String[] {"Array_prototype_map (Native)"},
-        getTargetsStartingWith(parsed, "native_callback.js@2"));
-    assertThat(
-        Arrays.asList(getTargetsStartingWith(parsed, "Function_prototype_call (Native)")),
-        hasItemStartingWith("native_callback.js@3"));
+    assertThat(getTargetsStartingWith(parsed, "native_callback.js@2"))
+        .isEqualTo(new String[] {"Array_prototype_map (Native)"});
+    assertThat(getTargetsStartingWith(parsed, "Function_prototype_call (Native)"))
+        .anyMatch(s -> s.startsWith("native_callback.js@3"));
   }
 
   /**
@@ -149,13 +136,5 @@ public class TestCallGraph2JSON {
       }
     }
     throw new RuntimeException(prefix + " not a key prefix");
-  }
-
-  /**
-   * We need this method since column offsets can differ across platforms, so we can't do an exact
-   * position match
-   */
-  private static IsIterableContaining<String> hasItemStartingWith(String prefix) {
-    return new IsIterableContaining<>(startsWith(prefix));
   }
 }
