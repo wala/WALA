@@ -88,6 +88,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
@@ -930,7 +931,8 @@ public abstract class ToSource {
                         part.setAllBlocks(allBlocks);
                         part.setLoopHeader(
                             allBlocks.stream()
-                                .min(Comparator.comparing(ISSABasicBlock::getNumber))
+                                .sorted(makeSorter(cfgNoBack, allBlocks))
+                                .findFirst()
                                 .get());
 
                         if (DEBUG) System.err.println("loop: " + allBlocks);
@@ -966,11 +968,7 @@ public abstract class ToSource {
                                                   Collections.singleton(n))
                                               .contains(p);
                                     })
-                                .sorted(
-                                    (a, b) -> {
-                                      return a.getFirstInstructionIndex()
-                                          - b.getFirstInstructionIndex();
-                                    })
+                                .sorted(makeSorter(cfgNoBack, allBlocks))
                                 .collect(Collectors.toSet()));
 
                         breakers.forEach(
@@ -986,7 +984,8 @@ public abstract class ToSource {
                         // Pick the first one - the one with smallest number
                         part.setLoopControl(
                             breakers.stream()
-                                .min(Comparator.comparing(ISSABasicBlock::getNumber))
+                                .sorted(makeSorter(cfgNoBack, breakers))
+                                .findFirst()
                                 .get());
 
                         assert loops.containsKey(part.getLoopHeader());
@@ -1143,7 +1142,7 @@ public abstract class ToSource {
               es -> {
                 List<SSAInstruction> regionInsts = new ArrayList<>();
                 es.getValue().stream()
-                    .sorted((a, b) -> a.getLastInstructionIndex() - b.getLastInstructionIndex())
+                    .sorted(makeSorter(cfgNoBack, es.getValue()))
                     .forEach(
                         bb -> {
                           bb.iterator()
@@ -1375,6 +1374,14 @@ public abstract class ToSource {
       }
 
       initChildren();
+    }
+
+    private Comparator<? super ISSABasicBlock> makeSorter(
+        Graph<ISSABasicBlock> cfg, Set<ISSABasicBlock> value) {
+      Graph<ISSABasicBlock> s = GraphSlicer.project(cfg, x -> value.contains(x));
+      List<ISSABasicBlock> l =
+          Iterator2Collection.toList(Topological.makeTopologicalIter(s).iterator());
+      return (a, b) -> l.indexOf(a) - l.indexOf(b);
     }
 
     private void initChildren() {
@@ -3472,7 +3479,11 @@ public abstract class ToSource {
           visit(n.getChild(i), c, visitor);
         }
       } else {
-        if (n.getChild(2).getKind() != CAstNode.THIS) {
+        if (n.getChild(2).getKind() == CAstNode.CAST) {
+          out.print("(");
+          visit(n.getChild(2), c, this);
+          out.print(").");
+        } else if (n.getChild(2).getKind() != CAstNode.THIS) {
           visit(n.getChild(2), c, this);
           out.print(".");
         }
@@ -3559,8 +3570,26 @@ public abstract class ToSource {
         // otherwise keep what's been done already, that's while(){};
         out.print("while (");
         cv.visit(n.getChild(0), c, visitor);
-        out.println(")");
-        cv.visit(n.getChild(1), c, cv);
+
+        try (ByteArrayOutputStream eb = new ByteArrayOutputStream()) {
+          try (PrintWriter ebw = new PrintWriter(eb)) {
+
+            ToJavaVisitor cbody = makeToJavaVisitor(ir, ebw, indent + 1, varTypes);
+            cbody.visit(n.getChild(1), c, cbody);
+
+            ebw.flush();
+            String bodyText = eb.toString();
+            if (bodyText.trim().isEmpty()) {
+              out.println(");");
+            } else {
+              out.println(")");
+              out.print(bodyText);
+            }
+          }
+        } catch (IOException e) {
+          assert false : e;
+        }
+
         return true;
       }
     }
@@ -3568,6 +3597,11 @@ public abstract class ToSource {
     @Override
     protected boolean visitIfStmt(
         CAstNode n, CodeGenerationContext c, CAstVisitor<CodeGenerationContext> visitor) {
+
+      if (java.lang.Boolean.TRUE.equals(n.getChild(0).getValue())) {
+        visitor.visit(n.getChild(1), c, visitor);
+        return true;
+      }
 
       String thenJavaText = "";
       String elseJavaText = "";
@@ -3802,6 +3836,16 @@ public abstract class ToSource {
       } else {
         return super.visitNew(n, c, visitor);
       }
+    }
+
+    @Override
+    protected boolean visitThrow(
+        CAstNode n, CodeGenerationContext c, CAstVisitor<CodeGenerationContext> visitor) {
+      indent();
+      out.print("throw new RuntimeException(String.valueOf(");
+      visitor.visit(n.getChild(0), c, visitor);
+      out.println("));");
+      return true;
     }
   }
 
