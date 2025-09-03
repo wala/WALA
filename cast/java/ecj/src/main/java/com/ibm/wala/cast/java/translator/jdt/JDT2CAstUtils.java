@@ -174,7 +174,7 @@ public class JDT2CAstUtils {
     return null;
   }
 
-  private static Map<ITypeBinding, Integer> ids = new IdentityHashMap<>();
+  private static final Map<ITypeBinding, Integer> ids = new IdentityHashMap<>();
 
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();

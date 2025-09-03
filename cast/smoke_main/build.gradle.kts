@@ -33,14 +33,15 @@ val smokeMainExtraPathElements by
 
 fun createXlatorConfig(isOptimized: Boolean): NamedDomainObjectProvider<Configuration> =
     configurations.register(
-        "xlatorTest${if (isOptimized) "Release" else "Debug"}SharedLibraryConfig") {
-          isCanBeConsumed = false
-          isTransitive = false
-          attributes {
-            attribute(OPTIMIZED_ATTRIBUTE, isOptimized)
-            attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
-          }
-        }
+        "xlatorTest${if (isOptimized) "Release" else "Debug"}SharedLibraryConfig"
+    ) {
+      isCanBeConsumed = false
+      isTransitive = false
+      attributes {
+        attribute(OPTIMIZED_ATTRIBUTE, isOptimized)
+        attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+      }
+    }
 
 val xlatorTestDebugSharedLibraryConfig = createXlatorConfig(false)
 
@@ -80,13 +81,15 @@ application {
                     val toString by lazy { linkedFile.get().asFile.toString() }
 
                     override fun toString() = toString
-                  })
+                  }
+              )
 
               // xlator Java bytecode + implementation of native methods
               inputs.files(libxlatorTestConfig)
               val pathElements = project.objects.listProperty<File>()
               pathElements.addAll(
-                  files("../build/classes/java/test", libxlatorTest.map { it.parent }))
+                  files("../build/classes/java/test", libxlatorTest.map { it.parent })
+              )
 
               // "primordial.txt" resource loaded during test
               pathElements.add(coreResources.map { it.singleFile })

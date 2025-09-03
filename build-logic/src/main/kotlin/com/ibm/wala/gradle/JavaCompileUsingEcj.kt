@@ -14,6 +14,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.ExecOperations
@@ -59,7 +60,8 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
             "-classpath",
             this@JavaCompileUsingEcj.classpath.joinToString(":"),
             "-d",
-            destinationDirectory.get().toString())
+            destinationDirectory.get().toString(),
+        )
       }
       add { source.files.map { it.toString() } }
     }
@@ -83,15 +85,17 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
 
     // However, put generated class files in a different build directory to avoid conflict.
     val destinationSubdir = "ecjClasses/${sourceSet.java.name}/${sourceSet.name}"
-    destinationDirectory.set(project.layout.buildDirectory.dir(destinationSubdir))
+    destinationDirectory = project.layout.buildDirectory.dir(destinationSubdir)
   }
 
   companion object {
     @JvmStatic
     fun withSourceSet(project: Project, sourceSet: SourceSet): TaskProvider<JavaCompileUsingEcj> =
         project.tasks.register(
-            sourceSet.getCompileTaskName("javaUsingEcj"), JavaCompileUsingEcj::class.java) {
-              setSourceSet(sourceSet)
-            }
+            sourceSet.getCompileTaskName("javaUsingEcj"),
+            JavaCompileUsingEcj::class.java,
+        ) {
+          setSourceSet(sourceSet)
+        }
   }
 }

@@ -31,12 +31,12 @@ public class CallVertex extends Vertex {
   private final CallSiteReference site;
 
   // the call instruction itself
-  private final JavaScriptInvoke invk;
+  private final JavaScriptInvoke invoke;
 
-  CallVertex(FuncVertex func, CallSiteReference site, JavaScriptInvoke invk) {
+  CallVertex(FuncVertex func, CallSiteReference site, JavaScriptInvoke invoke) {
     this.func = func;
     this.site = site;
-    this.invk = invk;
+    this.invoke = invoke;
   }
 
   public FuncVertex getCaller() {
@@ -48,7 +48,7 @@ public class CallVertex extends Vertex {
   }
 
   public JavaScriptInvoke getInstruction() {
-    return invk;
+    return invoke;
   }
 
   /** Does this call vertex correspond to a {@code new} instruction? */

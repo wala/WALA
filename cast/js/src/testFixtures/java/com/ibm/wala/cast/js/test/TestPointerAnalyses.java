@@ -427,8 +427,9 @@ public abstract class TestPointerAnalyses {
   }
 
   @Test
-  public void testWindowOnload() throws WalaException, CancelException {
-    testPageUserCodeEquivalent(getClass().getClassLoader().getResource("pages/windowonload.html"));
+  public void testWindowOnLoad() throws WalaException, CancelException {
+    testPageUserCodeEquivalent(
+        getClass().getClassLoader().getResource("pages/window_on_load.html"));
   }
 
   @Test

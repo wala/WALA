@@ -41,10 +41,12 @@ dependencies {
   api(projects.util)
   implementation(libs.commons.io)
   castJsJavadocDestinationDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory")))
+      project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
+  )
   castCastSharedLibrary(projects.cast.cast)
   castJsPackageListDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory")))
+      project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory"))
+  )
   javadocClasspath(projects.cast.js)
   testFixturesApi(projects.core)
   testFixturesImplementation(projects.util)
@@ -57,7 +59,8 @@ val castHeaderDirectory by configurations.registering { isCanBeResolved = false 
 
 artifacts.add(
     castHeaderDirectory.name,
-    tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory })
+    tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory },
+)
 
 tasks.named<Javadoc>("javadoc") {
   inputs.files(castJsPackageListDirectory)
@@ -69,7 +72,9 @@ tasks.named<Javadoc>("javadoc") {
 
   doFirst {
     (options as StandardJavadocDocletOptions).linksOffline(
-        extdocURL.get().toString(), packagelistLoc.get().toString())
+        extdocURL.get().toString(),
+        packagelistLoc.get().toString(),
+    )
   }
 }
 

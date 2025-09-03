@@ -27,7 +27,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testBound0Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
-        "tests/fieldbased/bounded.js", assertionsForBound0JS, BuilderType.OPTIMISTIC_WORKLIST, 0);
+        "tests/field-based/bounded.js", assertionsForBound0JS, BuilderType.OPTIMISTIC_WORKLIST, 0);
   }
 
   private static final Object[][] assertionsForBound1JS =
@@ -40,7 +40,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testBound1Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
-        "tests/fieldbased/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
+        "tests/field-based/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
   }
 
   private static final Object[][] assertionsForBound2JS =
@@ -53,6 +53,6 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testBound2Worklist() throws WalaException, Error, CancelException {
     runBoundedTest(
-        "tests/fieldbased/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
+        "tests/field-based/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
   }
 }

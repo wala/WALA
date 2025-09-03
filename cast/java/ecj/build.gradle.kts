@@ -22,8 +22,8 @@ dependencies {
   implementation(projects.shrike)
   implementation(projects.util)
   runSourceDirectory(
-      project(
-          mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory")))
+      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory"))
+  )
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
   testImplementation(testFixtures(projects.cast.java))

@@ -48,7 +48,9 @@ fun CppBinary.addJvmLibrary(project: Project) {
         OperatingSystemFamily.LINUX ->
             "linux" to
                 currentJavaHome.findJvmLibrary(
-                    "so", listOf("jre/lib/amd64/server", "lib/amd64/server", "lib/server"))
+                    "so",
+                    listOf("jre/lib/amd64/server", "lib/amd64/server", "lib/server"),
+                )
         OperatingSystemFamily.MACOS ->
             "darwin" to
                 currentJavaHome.findJvmLibrary("dylib", listOf("jre/lib/server", "lib/server"))

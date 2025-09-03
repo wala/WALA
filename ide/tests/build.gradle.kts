@@ -50,7 +50,8 @@ dependencies {
   coreTestResources(project(mapOf("path" to ":core", "configuration" to "testResources")))
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
   ifdsExplorerExampleClasspath(
-      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar")))
+      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar"))
+  )
   testFixturesImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.junit.jupiter.api)
@@ -65,7 +66,8 @@ configurations.all {
     substitute(module("org.eclipse.platform:org.eclipse.osgi.services"))
         .using(module(libs.eclipse.osgi.get().toString()))
         .because(
-            "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both")
+            "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both"
+        )
   }
 }
 

@@ -1306,7 +1306,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
           }
         }
       } else if (parameterNames != null) {
-        fParameterNames = parameterNames.toArray(new String[parameterNames.size()]);
+        fParameterNames = parameterNames.toArray(new String[0]);
         fParameterTypes = parameterTypes;
       } else {
         fParameterNames = new String[0];

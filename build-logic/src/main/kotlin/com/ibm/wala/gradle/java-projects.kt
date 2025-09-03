@@ -28,7 +28,8 @@ val Project.isJavaProject
         ":cast:java:test",
         ":cast:js:html",
         ":cast:smoke_main",
-        ":cast:xlator_test", -> false
+        ":cast:xlator_test",
+        -> false
         else -> true
       }
 
