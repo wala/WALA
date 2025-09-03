@@ -59,7 +59,8 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
             "-classpath",
             this@JavaCompileUsingEcj.classpath.joinToString(":"),
             "-d",
-            destinationDirectory.get().toString())
+            destinationDirectory.get().toString(),
+        )
       }
       add { source.files.map { it.toString() } }
     }
@@ -90,8 +91,10 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
     @JvmStatic
     fun withSourceSet(project: Project, sourceSet: SourceSet): TaskProvider<JavaCompileUsingEcj> =
         project.tasks.register(
-            sourceSet.getCompileTaskName("javaUsingEcj"), JavaCompileUsingEcj::class.java) {
-              setSourceSet(sourceSet)
-            }
+            sourceSet.getCompileTaskName("javaUsingEcj"),
+            JavaCompileUsingEcj::class.java,
+        ) {
+          setSourceSet(sourceSet)
+        }
   }
 }

@@ -47,7 +47,10 @@ spotless { java { targetExclude("**/*") } }
 
 val jLex =
     adHocDownload(
-        uri("https://www.cs.princeton.edu/~appel/modern/java/JLex/current"), "Main", "java")
+        uri("https://www.cs.princeton.edu/~appel/modern/java/JLex/current"),
+        "Main",
+        "java",
+    )
 
 val downloadJLex by
     tasks.registering(Sync::class) {

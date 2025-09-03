@@ -110,7 +110,10 @@ val kawaChessCommitHash = "f1d2dcc707a1ef19dc159e2eaee5aecc8a41d7a8"
 
 val kawaChess =
     adHocDownload(
-        uri("https://github.com/ttu-fpclub/kawa-chess/archive"), kawaChessCommitHash, "zip")
+        uri("https://github.com/ttu-fpclub/kawa-chess/archive"),
+        kawaChessCommitHash,
+        "zip",
+    )
 
 val unpackKawaChess by
     tasks.registering {
@@ -130,7 +133,8 @@ val unpackKawaChess by
 val compileKawaSchemeChessMain by
     tasks.registering(CompileKawaScheme::class) {
       schemeFile.fileProvider(
-          unpackKawaChess.map { file("${it.outputs.files.singleFile}/main.scm") })
+          unpackKawaChess.map { file("${it.outputs.files.singleFile}/main.scm") }
+      )
     }
 
 val buildChessJar by
@@ -166,7 +170,11 @@ val buildKawaTestJar by
 
 val downloadBcel =
     adHocDownload(
-        uri("https://archive.apache.org/dist/jakarta/bcel/binaries"), "bcel", "tar.gz", "5.2")
+        uri("https://archive.apache.org/dist/jakarta/bcel/binaries"),
+        "bcel",
+        "tar.gz",
+        "5.2",
+    )
 
 val extractBcel by
     tasks.registering(Sync::class) {
@@ -200,7 +208,8 @@ val collectJLexFrom by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   collectJLexFrom(
-      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJarConfig")))
+      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJarConfig"))
+  )
 }
 
 val collectJLex by
@@ -225,7 +234,8 @@ val downloadOcamlJava =
         "ocamljava",
         "tar.gz",
         ocamlJavaVersion,
-        "bin")
+        "bin",
+    )
 
 // Ideally this would be a `Sync` task using `from(tarTree { downloadOcamlJava.singleFile })`.
 // However, this specific tar archive contains a member with a leading slash, and that apparently
@@ -237,7 +247,8 @@ val unpackOcamlJava by
         listOf(
             "xzf",
             downloadOcamlJava.singleFile.path,
-            "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
+            "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar",
+        )
       }
       val outputDir = layout.buildDirectory.dir(name)
       workingDir(outputDir)

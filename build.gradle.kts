@@ -34,7 +34,8 @@ repositories {
 JavaVersion.current().let {
   if (!it.isCompatibleWith(VERSION_17)) {
     logger.error(
-        "Gradle is running on a Java $it JVM, which is not compatible with Java 17. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable.")
+        "Gradle is running on a Java $it JVM, which is not compatible with Java 17. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable."
+    )
   }
 }
 
@@ -59,7 +60,8 @@ val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = fa
 dependencies {
   forEachJavaProject {
     aggregatedJavadocClasspath(
-        project(mapOf("path" to it.path, "configuration" to "javadocClasspath")))
+        project(mapOf("path" to it.path, "configuration" to "javadocClasspath"))
+    )
 
     aggregatedJavadocSource(project(mapOf("path" to it.path, "configuration" to "javadocSource")))
   }
@@ -193,7 +195,8 @@ tasks.register("checkInspectionResults") {
     }
     if (failed) {
       throw GradleException(
-          "One or more IntelliJ IDEA inspections failed.  See logged problems above, or \"${inputs.files.singleFile}\" for full details.  WEAK WARNINGs are allowed, but all ERRORs and WARNINGs must be corrected.")
+          "One or more IntelliJ IDEA inspections failed.  See logged problems above, or \"${inputs.files.singleFile}\" for full details.  WEAK WARNINGs are allowed, but all ERRORs and WARNINGs must be corrected."
+      )
     }
   }
 
