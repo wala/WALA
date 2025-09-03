@@ -35,7 +35,7 @@ public final class Descriptor {
    * @param returnType the return type
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
+  public static synchronized Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
     if (returnType == null) {
       throw new IllegalArgumentException("null returnType");
     }
@@ -50,7 +50,7 @@ public final class Descriptor {
    * @param b a byte array holding the string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(Language l, ImmutableByteArray b)
+  public static synchronized Descriptor findOrCreate(Language l, ImmutableByteArray b)
       throws IllegalArgumentException {
     TypeName returnType = StringStuff.parseForReturnTypeName(l, b);
     TypeName[] parameters = StringStuff.parseForParameterNames(l, b);

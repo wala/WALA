@@ -165,7 +165,7 @@ public class SourceBuffer {
               lines.add(currentLine);
             }
           } else {
-            if (p.getLastLine() == line) {
+            if (p.getLastLine() == line && p.getLastCol() >= 0) {
               lines.add(currentLine.substring(0, p.getLastCol()));
               endColumn = p.getLastCol();
               endLine = line;
