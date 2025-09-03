@@ -7,6 +7,7 @@ import org.gradle.api.provider.Provider
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JavaLauncher
 import org.gradle.jvm.toolchain.JavaToolchainService
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.the
 
 /**
@@ -37,7 +38,7 @@ open class EclipseCompatibleJavaExtension @Inject constructor(private val projec
 
   val launcher: Provider<JavaLauncher> by lazy {
     project.the<JavaToolchainService>().launcherFor {
-      languageVersion.set(this@EclipseCompatibleJavaExtension.languageVersion)
+      languageVersion = this@EclipseCompatibleJavaExtension.languageVersion
     }
   }
 }
