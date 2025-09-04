@@ -1,5 +1,6 @@
 package com.ibm.wala.gradle
 
+import java.io.File;
 import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
