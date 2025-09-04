@@ -66,17 +66,18 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
   @TaskAction
   protected override fun compile(inputs: InputChanges) {
     val testArgs = options.allCompilerArgs
-    val argFile = createTempFile(prefix = "kotlinTemp", suffix = ".tmp")
-    val writer = java.io.PrintWriter(argFile)
-    for (testArg in testArgs) {
-      writer.print(testArg + " ")
+    val f = kotlin.io.path.createTempFile("kotlinTemp", "tmp")
+    f.toFile().deleteOnExit()
+    f.toFile().printWriter().use { writer ->
+      for (testArg in testArgs) {
+        writer.print(testArg + " ")
+      }
     }
-    writer.close()
 
     execOperations.javaexec {
       classpath(ecjJar.absolutePath)
       executable(javaLauncherPath.get())
-      args("@" + argFile)
+      args("@" + f)
     }
   }
 
