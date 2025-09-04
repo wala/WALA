@@ -721,37 +721,39 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
      */
     private void addUpwardFunargConstraints(
         PointerKey lhs, String name, String definer, CGNode definingNode) {
-      discoveredUpwardFunargs.add(lhs);
+      if (definingNode.getIR() instanceof AstIRFactory.AstIR) {
+        discoveredUpwardFunargs.add(lhs);
 
-      LexicalInformation LI = ((AstIRFactory.AstIR) definingNode.getIR()).lexicalInfo();
-      Pair<String, String>[] names = LI.getExposedNames();
-      for (int i = 0; i < names.length; i++) {
-        if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
-          int vn = LI.getExitExposedUses()[i];
-          if (vn > 0) {
-            IRView ir = getBuilder().getCFAContextInterpreter().getIRView(definingNode);
-            DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode);
-            SymbolTable st = ir.getSymbolTable();
+        LexicalInformation LI = ((AstIRFactory.AstIR) definingNode.getIR()).lexicalInfo();
+        Pair<String, String>[] names = LI.getExposedNames();
+        for (int i = 0; i < names.length; i++) {
+          if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
+            int vn = LI.getExitExposedUses()[i];
+            if (vn > 0) {
+              IRView ir = getBuilder().getCFAContextInterpreter().getIRView(definingNode);
+              DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode);
+              SymbolTable st = ir.getSymbolTable();
 
-            PointerKey rhs = getBuilder().getPointerKeyForLocal(definingNode, vn);
+              PointerKey rhs = getBuilder().getPointerKeyForLocal(definingNode, vn);
 
-            if (contentsAreInvariant(st, du, vn)) {
-              system.recordImplicitPointsToSet(rhs);
-              final InstanceKey[] objs = getInvariantContents(st, du, definingNode, vn);
-              for (InstanceKey obj : objs) {
-                system.findOrCreateIndexForInstanceKey(obj);
-                system.newConstraint(lhs, obj);
+              if (contentsAreInvariant(st, du, vn)) {
+                system.recordImplicitPointsToSet(rhs);
+                final InstanceKey[] objs = getInvariantContents(st, du, definingNode, vn);
+                for (InstanceKey obj : objs) {
+                  system.findOrCreateIndexForInstanceKey(obj);
+                  system.newConstraint(lhs, obj);
+                }
+              } else {
+                system.newConstraint(lhs, assignOperator, rhs);
               }
-            } else {
-              system.newConstraint(lhs, assignOperator, rhs);
             }
+
+            return;
           }
-
-          return;
         }
-      }
 
-      Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE();
+      }
     }
 
     /**
@@ -817,7 +819,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp);
     }
 
-    private void newFieldOperation(
+    protected void newFieldOperation(
         CGNode opNode,
         final int objVn,
         final int fieldsVn,

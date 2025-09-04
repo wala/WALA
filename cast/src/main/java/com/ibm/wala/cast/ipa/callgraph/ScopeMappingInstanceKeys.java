@@ -23,10 +23,12 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s as necessary to
@@ -87,6 +89,10 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
     /** get the CGNode representing the lexical parent of {@link #creator} with name definer */
     public Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
+      return getFunargNodes(name, HashSetFactory.make());
+    }
+
+    public Iterator<CGNode> getFunargNodes(Pair<String, String> name, Set<InstanceKey> history) {
       Collection<CGNode> constructorCallers = getConstructorCallers(this, name);
       assert constructorCallers != null && !constructorCallers.isEmpty()
           : "no callers for constructor";
@@ -98,10 +104,11 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         } else {
           PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
           for (InstanceKey funcPtr : builder.getPointerAnalysis().getPointsToSet(funcKey)) {
-            if (funcPtr != this && funcPtr instanceof ScopeMappingInstanceKey) {
+            if (!history.contains(funcPtr) && funcPtr instanceof ScopeMappingInstanceKey) {
+              history.add(funcPtr);
               result =
                   new CompoundIterator<>(
-                      result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name));
+                      result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name, history));
             }
           }
         }
