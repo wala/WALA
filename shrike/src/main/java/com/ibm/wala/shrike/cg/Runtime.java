@@ -11,8 +11,8 @@
 
 package com.ibm.wala.shrike.cg;
 
-import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class Runtime {
           System.getProperty("policyClass", "com.ibm.wala.shrike.cg.Runtime$DefaultPolicy"));
 
   private PrintWriter output;
-  private SetOfClasses filter;
+  private StringFilter filter;
   private Policy handleCallback;
   private final ThreadLocal<String> currentSite = new ThreadLocal<>();
 
@@ -66,7 +66,7 @@ public class Runtime {
 
   private Runtime(String fileName, String filterFileName, String policyClassName) {
     try (final FileInputStream in = new FileInputStream(filterFileName)) {
-      filter = new FileOfClasses(in);
+      filter = new PatternsFilter(in);
     } catch (Exception e) {
       filter = null;
     }
@@ -125,7 +125,7 @@ public class Runtime {
 
   public static void execution(String klass, String method, Object receiver) {
     runtime.currentSite.remove();
-    if (runtime.filter == null || !runtime.filter.contains(bashToDescriptor(klass))) {
+    if (runtime.filter == null || !runtime.filter.test(bashToDescriptor(klass))) {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
 

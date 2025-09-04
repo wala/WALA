@@ -2,7 +2,7 @@
 <HTML>
   <HEAD><TITLE>Login</TITLE></HEAD>
   <SCRIPT>
-function signon() {
+function sign_on() {
   var form = document.forms[0];
   var elts = form.operation;
   for (var elt in elts) {
@@ -13,8 +13,8 @@ function signon() {
 }
   </SCRIPT>
   <BODY>
-    <FORM ID="theform" METHOD = "post" NAME = "login"
-ACTION="javascript: signon();">
+    <FORM ID="the_form" METHOD = "post" NAME = "login"
+ACTION="javascript: sign_on();">
       User Name: <INPUT TYPE = "text" NAME = "user"/><BR>
       Password: <INPUT TYPE = "password" NAME = "pw"/><BR>
       <INPUT TYPE="radio" NAME="operation" VALUE="query"/>Query
@@ -23,5 +23,3 @@ ACTION="javascript: signon();">
     </FORM>
   </BODY>
 </HTML>
-
-

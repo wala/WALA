@@ -759,8 +759,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       for (Map.Entry<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> entry :
           implicitUnaryMap.entrySet()) {
         count++;
-        Map.Entry<?, IBinaryNaturalRelation> e = entry;
-        IBinaryNaturalRelation R = e.getValue();
+        IBinaryNaturalRelation R = entry.getValue();
         System.err.println(("entry " + count));
         R.performVerboseAction();
         HeapTracer.Result result = HeapTracer.traceHeap(Collections.singleton(R), false);
@@ -840,7 +839,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -&gt; v2 iff there exists an Assingnment or
+   * A graph of just the variables in the system. v1 -&gt; v2 iff there exists an Assignment or
    * Filter equation e s.t. e uses v1 and e defs v2.
    */
   public Graph<PointsToSetVariable> getFilterAssignmentGraph() {

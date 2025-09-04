@@ -249,14 +249,14 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
   }
 
-  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisable)
+  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisible)
       throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     r.initClassAttributeIterator(attrs);
 
     return AnnotationsReader.getReaderForAnnotation(
-        runtimeInvisable
+        runtimeInvisible
             ? AnnotationType.RuntimeInvisibleAnnotations
             : AnnotationType.RuntimeVisibleAnnotations,
         attrs);
@@ -451,8 +451,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
           String outer = r.getOuterClass(s);
           if (outer != null) {
             int modifiers = r.getAccessFlags(s);
-            boolean result = ((modifiers & Constants.ACC_STATIC) != 0);
-            return result;
+            return ((modifiers & Constants.ACC_STATIC) != 0);
           }
         }
       }

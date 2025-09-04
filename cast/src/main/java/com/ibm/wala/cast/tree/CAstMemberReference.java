@@ -33,11 +33,6 @@ public interface CAstMemberReference extends CAstReference {
         public int hashCode() {
           return toString().hashCode();
         }
-
-        @Override
-        public boolean equals(Object o) {
-          return o == this;
-        }
       };
 
   String member();

@@ -139,11 +139,6 @@ public class SSAValue {
     }
 
     @Override
-    public int hashCode() {
-      return this.type.hashCode() * ((this.name == null) ? 1 : this.name.hashCode());
-    }
-
-    @Override
     public String toString() {
       return "<WaklyNamedKey type=\"" + this.type + "\" name=\"" + this.name + "\" />";
     }

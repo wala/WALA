@@ -33,9 +33,10 @@ import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction.Dispatch;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -53,7 +54,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
 
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
-      final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+      final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
         new ECJJavaSourceAnalysisEngine() {
           @Override
@@ -63,7 +64,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
           }
 
           @Override
-          protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions) {
+          protected ClassLoaderFactory getClassLoaderFactory(StringFilter exclusions) {
             return new ECJClassLoaderFactory(exclusions) {
               @Override
               protected ECJSourceLoaderImpl makeSourceLoader(

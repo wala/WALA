@@ -150,11 +150,9 @@ public class SourceBuffer {
           currentLine = reader.readLine();
 
           if (currentLine == null) {
-            offset = p.getLastOffset();
             break;
-          } else {
-            offset += currentLine.length() + 1;
           }
+          offset += currentLine.length() + 1;
           line++;
           if (p.getLastOffset() >= 0) {
             if (offset > p.getLastOffset()) {
@@ -167,7 +165,7 @@ public class SourceBuffer {
               lines.add(currentLine);
             }
           } else {
-            if (p.getLastLine() == line) {
+            if (p.getLastLine() == line && p.getLastCol() >= 0) {
               lines.add(currentLine.substring(0, p.getLastCol()));
               endColumn = p.getLastCol();
               endLine = line;

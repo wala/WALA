@@ -139,10 +139,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
           return domoType;
         }
         if (domoType == null
-            && getClassHierarchy()
-                .getScope()
-                .getExclusions()
-                .contains(name.toString().substring(1))) {
+            && getClassHierarchy().getScope().getExclusions().test(name.toString().substring(1))) {
           excludedSupertype = true;
         }
       }
@@ -179,10 +176,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
           result.add(domoType);
         }
         if (domoType == null
-            && !getClassHierarchy()
-                .getScope()
-                .getExclusions()
-                .contains(name.toString().substring(1))) {
+            && !getClassHierarchy().getScope().getExclusions().test(name.toString().substring(1))) {
           assert false : "Failed to find non-excluded interface: " + name;
         }
       }
@@ -653,6 +647,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   public IClass defineType(CAstEntity type, String typeName, CAstEntity owner) {
+    if (type.getName().contains("lambda subclass")) {
+      typeName = type.getName();
+    }
+
     Collection<TypeName> superTypeNames = new ArrayList<>();
     for (CAstType superType : type.getType().getSupertypes()) {
       superTypeNames.add(toWALATypeName(superType));

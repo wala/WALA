@@ -59,6 +59,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -73,14 +74,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public abstract class JavaIRTests extends IRTests {
-
-  public JavaIRTests(String projectName) {
-    super(projectName);
-  }
-
-  public JavaIRTests() {
-    this(null);
-  }
 
   static List<? extends IRAssertion> callAssertionForInterfaceTest1 =
       Arrays.asList(
@@ -231,7 +224,7 @@ public abstract class JavaIRTests extends IRTests {
             }
           });
 
-  static List<EdgeAssertions> edgeAssertionses =
+  static List<EdgeAssertions> edgeAssertions =
       Arrays.asList(
           EdgeAssertions.make(
               "Source#InheritedField#main#([Ljava/lang/String;)V", "Source#B#foo#()V"),
@@ -417,7 +410,7 @@ public abstract class JavaIRTests extends IRTests {
         Arguments.of("Exception2", emptyList, true, null),
         Arguments.of("Finally1", emptyList, true, null),
         Arguments.of("Inheritance1", callAssertionForInheritance1, true, null),
-        Arguments.of("InheritedField", edgeAssertionses, true, null),
+        Arguments.of("InheritedField", edgeAssertions, true, null),
         Arguments.of("InnerClass", callAssertionForInnerClass, true, null),
         Arguments.of("InterfaceTest1", callAssertionForInterfaceTest1, true, null),
         Arguments.of("LexicalAccessOfMethodVariablesFromAnonymousClass", emptyList, true, null),
@@ -617,8 +610,7 @@ public abstract class JavaIRTests extends IRTests {
   @Test
   public void testThinSlice() throws CancelException, IOException {
     String testName = "MiniaturSliceBug";
-    List<String> sources =
-        Collections.singletonList(getTestSrcPath() + File.separator + testName + ".java");
+    Collection<Path> sources = singleTestSrc(testName);
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);
 

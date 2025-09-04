@@ -117,7 +117,6 @@ public class AnnotationsReader extends AttributeReader {
     public final String enumVal;
 
     public EnumElementValue(String enumType, String enumVal) {
-      super();
       this.enumType = enumType;
       this.enumVal = enumVal;
     }
@@ -135,7 +134,6 @@ public class AnnotationsReader extends AttributeReader {
     public final ElementValue[] vals;
 
     public ArrayElementValue(ElementValue[] vals) {
-      super();
       this.vals = vals;
     }
 
@@ -262,7 +260,6 @@ public class AnnotationsReader extends AttributeReader {
     public final Map<String, ElementValue> elementValues;
 
     public AnnotationAttribute(String type, Map<String, ElementValue> elementValues) {
-      super();
       this.type = type;
       this.elementValues = elementValues;
     }
@@ -329,6 +326,7 @@ public class AnnotationsReader extends AttributeReader {
                 cr.getCP().getCPUtf8(nextShort), cr.getCP().getCPUtf8(cr.getUShort(offset + 3))),
             5);
       case '[': // array
+        @SuppressWarnings("UnnecessaryLocalVariable")
         int numValues = nextShort;
         int numArrayBytes = 3; // start with 3 for the tag and num_values bytes
         ElementValue[] vals = new ElementValue[numValues];

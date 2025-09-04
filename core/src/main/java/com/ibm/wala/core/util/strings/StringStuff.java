@@ -62,13 +62,15 @@ public class StringStuff {
    *
    * @throws IllegalArgumentException if dString is null
    */
-  public static String deployment2CanonicalTypeString(String dString) {
+  public static String deployment2CanonicalTypeString(
+      @org.intellij.lang.annotations.Language("jvm-class-name") String dString) {
     if (dString == null) {
       throw new IllegalArgumentException("dString is null");
     }
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
+      @org.intellij.lang.annotations.Language("jvm-class-name")
       String baseType = dString.substring(0, arrayIndex);
       int dim = (dString.length() - arrayIndex) / 2;
       baseType = deployment2CanonicalTypeString(baseType);
@@ -110,11 +112,11 @@ public class StringStuff {
     }
   }
 
-  public static final TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
+  public static TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
     return parseForReturnTypeName(Language.JAVA, ImmutableByteArray.make(desc));
   }
 
-  public static final TypeName parseForReturnTypeName(Language l, String desc)
+  public static TypeName parseForReturnTypeName(Language l, String desc)
       throws IllegalArgumentException {
     return parseForReturnTypeName(l, ImmutableByteArray.make(desc));
   }
@@ -127,7 +129,7 @@ public class StringStuff {
    * @return type description
    * @throws IllegalArgumentException if b is null
    */
-  public static final TypeName parseForReturnTypeName(Language l, ImmutableByteArray b)
+  public static TypeName parseForReturnTypeName(Language l, ImmutableByteArray b)
       throws IllegalArgumentException {
 
     if (b == null) {
@@ -183,12 +185,12 @@ public class StringStuff {
     }
   }
 
-  public static final TypeName[] parseForParameterNames(String descriptor)
+  public static TypeName[] parseForParameterNames(String descriptor)
       throws IllegalArgumentException {
     return parseForParameterNames(Language.JAVA, ImmutableByteArray.make(descriptor));
   }
 
-  public static final TypeName[] parseForParameterNames(Language l, String descriptor)
+  public static TypeName[] parseForParameterNames(Language l, String descriptor)
       throws IllegalArgumentException {
     return parseForParameterNames(l, ImmutableByteArray.make(descriptor));
   }
@@ -199,7 +201,7 @@ public class StringStuff {
    * @return parameter descriptions, or null if there are no parameters
    * @throws IllegalArgumentException if b is null
    */
-  public static final TypeName[] parseForParameterNames(Language l, ImmutableByteArray b)
+  public static TypeName[] parseForParameterNames(Language l, ImmutableByteArray b)
       throws IllegalArgumentException {
 
     if (b == null) {
@@ -473,7 +475,7 @@ public class StringStuff {
       }
       return new ImmutableByteArray(b.b, i, length - (i - start));
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid element desciptor: " + b, e);
+      throw new IllegalArgumentException("invalid element descriptor: " + b, e);
     }
   }
 
@@ -533,6 +535,7 @@ public class StringStuff {
     if (methodSig.lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("ill-formed sig " + methodSig);
     }
+    @org.intellij.lang.annotations.Language("jvm-class-name")
     String type = methodSig.substring(0, methodSig.lastIndexOf('.'));
     type = deployment2CanonicalTypeString(type);
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, type);

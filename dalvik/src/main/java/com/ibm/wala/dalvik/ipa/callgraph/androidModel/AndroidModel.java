@@ -354,15 +354,11 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       // this.mRef, toolInfo.getFlags(),
       //                    /* caller */ null, tsif, modelAcc, this.paramManager, this.body, /* self
       // */ null, toolInfo, /* callerNd */ null);
-      final SSAValue application;
       {
         final SSAValue tmpApp = modelAcc.firstExtends(AndroidTypes.ApplicationName, this.cha);
-        if (tmpApp != null) {
-          application = tmpApp;
-        } else {
+        if (tmpApp == null) {
           // Generate a real one?
-
-          application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
+          final var application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
           this.body.addConstant(application.getNumber(), new ConstantValue(null));
           application.setAssigned();
         }
@@ -803,16 +799,14 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());
             if (declaringClass == null) {
               throw new IllegalStateException(
-                  "Unable to retreive te IClass of "
+                  "Unable to retrieve te IClass of "
                       + asMethod.getDeclaringClass()
                       + " from "
                       + "Method "
                       + asMethod);
             }
             redirect.setLocalNames(pm.makeLocalNames());
-            SummarizedMethod override =
-                new SummarizedMethodWithNames(mRef, redirect, declaringClass);
-            return override;
+            return new SummarizedMethodWithNames(mRef, redirect, declaringClass);
           } else if (this instanceof ExternalModel) {
             final SSAValue trash = pm.getUnmanaged(AndroidTypes.Intent, "trash");
             invokation =
@@ -869,7 +863,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
           final SSAValue exception = pm.getException();
           final List<SSAValue> params = new ArrayList<>();
           params.add(self);
-          params.add(outRequestCode); // Was an agument to start...
+          params.add(outRequestCode); // Was an argument to start...
           params.add(mResultCode);
           params.add(mResultData);
           final SSAInstruction invokation =
@@ -881,7 +875,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());
       if (declaringClass == null) {
         throw new IllegalStateException(
-            "Unable to retreive te IClass of "
+            "Unable to retrieve te IClass of "
                 + asMethod.getDeclaringClass()
                 + " from "
                 + "Method "
@@ -889,13 +883,12 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
       }
       // TODO: Throw into an other loader
       redirect.setLocalNames(pm.makeLocalNames());
-      SummarizedMethod override = new SummarizedMethodWithNames(mRef, redirect, declaringClass);
 
       // assert(asMethod.getReturnType().equals(TypeReference.Void)) : "getMethodAs does not support
       // return values. Requested: " +
       //    asMethod.getReturnType().toString();                  // TODO: Implement
 
-      return override;
+      return new SummarizedMethodWithNames(mRef, redirect, declaringClass);
 
     } catch (Exception e) {
       e.printStackTrace();

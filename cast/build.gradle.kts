@@ -4,6 +4,7 @@ import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 
 plugins {
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.operating-system")
   id("com.ibm.wala.gradle.publishing")
 }
 
@@ -40,10 +41,12 @@ dependencies {
   api(projects.util)
   implementation(libs.commons.io)
   castJsJavadocDestinationDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory")))
+      project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
+  )
   castCastSharedLibrary(projects.cast.cast)
   castJsPackageListDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory")))
+      project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory"))
+  )
   javadocClasspath(projects.cast.js)
   testFixturesApi(projects.core)
   testFixturesImplementation(projects.util)
@@ -56,24 +59,31 @@ val castHeaderDirectory by configurations.registering { isCanBeResolved = false 
 
 artifacts.add(
     castHeaderDirectory.name,
-    tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory })
+    tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory },
+)
 
 tasks.named<Javadoc>("javadoc") {
   inputs.files(castJsPackageListDirectory)
 
-  val extdocURL = castJsJavadocDestinationDirectory.get().singleFile
-  val packagelistLoc = castJsPackageListDirectory.get().singleFile
+  val extdocURL = castJsJavadocDestinationDirectory.map { it.singleFile }
+  val packagelistLoc = castJsPackageListDirectory.map { it.singleFile }
   inputs.property("extdocURL", extdocURL)
   inputs.property("packagelistLoc", packagelistLoc)
-  (options as StandardJavadocDocletOptions).linksOffline(
-      extdocURL.toString(), packagelistLoc.toString())
+
+  doFirst {
+    (options as StandardJavadocDocletOptions).linksOffline(
+        extdocURL.get().toString(),
+        packagelistLoc.get().toString(),
+    )
+  }
 }
 
 tasks.named<Test>("test") {
   inputs.files(xlatorTestSharedLibrary)
-  systemProperty("java.library.path", xlatorTestSharedLibrary.get().singleFile.parent)
+  val xlatorTestSharedLibraryDir = xlatorTestSharedLibrary.map { it.singleFile.parent }
+  doFirst { systemProperty("java.library.path", xlatorTestSharedLibraryDir.get()) }
 
-  if (rootProject.extra["isWindows"] as Boolean) {
+  if (project.extra["isWindows"] as Boolean) {
 
     // Windows has nothing akin to RPATH for embedding DLL search paths in other DLLs or
     // executables.  Instead, we need to ensure that any required DLLs are in the standard
@@ -85,7 +95,7 @@ tasks.named<Test>("test") {
 
     inputs.files(castCastSharedLibrary)
     val pathEntry = environment.entries.find { it.key.equals("path", true) }!!
-    environment(
-        pathEntry.key, "${pathEntry.value};${castCastSharedLibrary.get().singleFile.parent}")
+    val castCastSharedLibraryDir = castCastSharedLibrary.map { it.singleFile.parent }
+    doFirst { environment(pathEntry.key, "${pathEntry.value};${castCastSharedLibraryDir.get()}") }
   }
 }

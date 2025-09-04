@@ -27,9 +27,7 @@ import org.jspecify.annotations.Nullable;
 public class StringTable extends Table<String> implements Cloneable {
 
   /** create an empty table */
-  public StringTable() {
-    super();
-  }
+  public StringTable() {}
 
   /** create an empty table with the same column headings as t */
   public StringTable(StringTable t) {
@@ -185,7 +183,7 @@ public class StringTable extends Table<String> implements Cloneable {
 
   @Override
   public Object clone() throws CloneNotSupportedException {
-    StringTable result = new StringTable(this);
+    StringTable result = (StringTable) super.clone();
     for (int i = 0; i < getNumberOfRows(); i++) {
       result.addRow(row2Map(i));
     }

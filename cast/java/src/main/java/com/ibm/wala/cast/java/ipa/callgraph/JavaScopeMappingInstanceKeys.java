@@ -35,6 +35,11 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
     super(builder, basic);
   }
 
+  @Override
+  protected boolean isTrueConstructorCall(Pair<String, String> name, CGNode callerOfConstructor) {
+    return true;
+  }
+
   protected LexicalParent[] getParents(InstanceKey base) {
     IClass cls = base.getConcreteType();
     if (isPossiblyLexicalClass(cls)) {

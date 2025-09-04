@@ -30,7 +30,7 @@ public class IteratorUtil {
     return false;
   }
 
-  public static final <T> int count(Iterator<T> it) throws IllegalArgumentException {
+  public static <T> int count(Iterator<T> it) throws IllegalArgumentException {
     if (it == null) {
       throw new IllegalArgumentException("it == null");
     }

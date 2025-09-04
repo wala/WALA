@@ -49,6 +49,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -415,7 +416,7 @@ public class Util {
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
 
     addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, cha.getScope(), Util.class.getClassLoader(), cha);
+    addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
 
     return new BasicRTABuilder(cha, options, cache, null, null);
   }
@@ -873,20 +874,18 @@ public class Util {
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder result =
-        new nObjBuilder(
-            n,
-            cha,
-            options,
-            cache,
-            appSelector,
-            appInterpreter,
-            ZeroXInstanceKeys.ALLOCATIONS
-                | ZeroXInstanceKeys.SMUSH_MANY
-                | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
-                | ZeroXInstanceKeys.SMUSH_STRINGS
-                | ZeroXInstanceKeys.SMUSH_THROWABLES);
-    return result;
+    return new nObjBuilder(
+        n,
+        cha,
+        options,
+        cache,
+        appSelector,
+        appInterpreter,
+        ZeroXInstanceKeys.ALLOCATIONS
+            | ZeroXInstanceKeys.SMUSH_MANY
+            | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+            | ZeroXInstanceKeys.SMUSH_STRINGS
+            | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
   /**
@@ -920,10 +919,8 @@ public class Util {
     addDefaultBypassLogic(options, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
-    SSAPropagationCallGraphBuilder result =
-        new nObjBuilder(
-            n, cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
-    return result;
+    return new nObjBuilder(
+        n, cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
   }
 
   /**
@@ -1025,22 +1022,29 @@ public class Util {
 
   public static void addDefaultBypassLogic(
       AnalysisOptions options, ClassLoader cl, IClassHierarchy cha) {
+
     if (nativeSpec == null) return;
-    if (cl.getResourceAsStream(nativeSpec) != null) {
-      addBypassLogic(options, cl, nativeSpec, cha);
-    } else {
-      // try to load from filesystem
-      try (final BufferedInputStream bIn =
-          new BufferedInputStream(new FileInputStream(nativeSpec))) {
-        XMLMethodSummaryReader reader = new XMLMethodSummaryReader(bIn, cha.getScope());
-        addBypassLogic(options, cl, reader, cha);
-      } catch (FileNotFoundException e) {
-        System.err.println("Could not load natives xml file from: " + nativeSpec);
-        e.printStackTrace();
-      } catch (IOException e) {
-        System.err.println("Could not close natives xml file " + nativeSpec);
-        e.printStackTrace();
+
+    try (var resourceAsStream = cl.getResourceAsStream(nativeSpec)) {
+      if (resourceAsStream != null) {
+        addBypassLogic(options, cl, nativeSpec, cha);
+        return;
       }
+    } catch (final IOException problem) {
+      System.err.println("Could not close natives xml resource stream " + nativeSpec);
+      throw new UncheckedIOException(problem);
+    }
+
+    // try to load from filesystem
+    try (final BufferedInputStream bIn = new BufferedInputStream(new FileInputStream(nativeSpec))) {
+      XMLMethodSummaryReader reader = new XMLMethodSummaryReader(bIn, cha.getScope());
+      addBypassLogic(options, cl, reader, cha);
+    } catch (FileNotFoundException e) {
+      System.err.println("Could not load natives xml file from: " + nativeSpec);
+      e.printStackTrace();
+    } catch (IOException e) {
+      System.err.println("Could not close natives xml file " + nativeSpec);
+      e.printStackTrace();
     }
   }
 }

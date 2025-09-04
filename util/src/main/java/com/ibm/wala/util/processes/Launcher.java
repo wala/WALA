@@ -14,8 +14,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -47,14 +47,12 @@ public abstract class Launcher {
   private final Logger logger;
 
   protected Launcher(Logger logger) {
-    super();
     this.captureOutput = false;
     this.captureErr = false;
     this.logger = logger;
   }
 
   protected Launcher(boolean captureOutput, boolean captureErr, Logger logger) {
-    super();
     this.captureOutput = captureOutput;
     this.captureErr = captureErr;
     this.logger = logger;
@@ -95,8 +93,7 @@ public abstract class Launcher {
       logger.info("spawning process " + cmd);
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
-    Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
-    return p;
+    return Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
   }
 
   /**
@@ -112,8 +109,7 @@ public abstract class Launcher {
       logger.info("spawning process " + Arrays.toString(cmd));
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
-    Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
-    return p;
+    return Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
   }
 
   private static String[] buildEnv(Map<String, String> ev) {
@@ -262,12 +258,12 @@ public abstract class Launcher {
   }
 
   /** Drain some data from the input stream, and print said data to p. Do not block. */
-  private static void drainAndPrint(BufferedInputStream s, PrintStream p) {
+  private static void drainAndPrint(InputStream s, OutputStream p) {
     try {
       while (s.available() > 0) {
         byte[] data = new byte[s.available()];
-        s.read(data);
-        p.print(new String(data, StandardCharsets.UTF_8));
+        final var actuallyRead = s.read(data);
+        p.write(data, 0, actuallyRead);
       }
     } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)
@@ -276,22 +272,13 @@ public abstract class Launcher {
   }
 
   /** Drain all data from the input stream, and print said data to p. Block if necessary. */
-  private static void blockingDrainAndPrint(BufferedInputStream s, PrintStream p) {
-    ByteArrayOutputStream b = new ByteArrayOutputStream();
+  private static void blockingDrainAndPrint(InputStream s, OutputStream p) {
     try {
-      // gather all the data from the stream.
-      int next = s.read();
-      while (next != -1) {
-        b.write(next);
-        next = s.read();
-      }
+      s.transferTo(p);
     } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)
       // so, just print the data and then leave
     }
-
-    // print the data.
-    p.print(b);
   }
 
   /** Drain some data from the input stream, and append said data to b. Do not block. */

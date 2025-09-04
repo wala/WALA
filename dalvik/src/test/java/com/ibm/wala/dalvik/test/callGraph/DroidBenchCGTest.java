@@ -30,6 +30,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.FileUtil;
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
@@ -104,6 +105,10 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return result;
   }
 
+  protected void process(
+      @SuppressWarnings("unused") CallGraph cg,
+      @SuppressWarnings("unused") PointerAnalysis<InstanceKey> ptrs) {}
+
   protected void runTest(final TestParameters testParameters) throws Exception {
 
     final var androidLibs = testParameters.getAndroidLibs();
@@ -122,6 +127,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     // System.err.println(x.fst);
     assertThat(assertUserCodeReachable(x.fst, uncalled)).isEmpty();
     System.err.println("...success testing " + apkFile);
+    process(x.fst, x.snd);
   }
 
   private static final Set<String> skipTests = HashSetFactory.make();
@@ -141,25 +147,19 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return generateData(getDroidBenchRoot(), androidLibs, androidJavaJar, filter);
   }
 
-  public static String getDroidBenchRoot() {
-    String f = walaProperties.getProperty("droidbench.root");
-    if (f == null || !new File(f).exists()) {
-      f = "build/DroidBench";
-    }
-
-    System.err.println("Use " + f + " as droid bench root");
-    assert new File(f).exists() : "Use " + f + " as droid bench root";
-    assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
-    return f;
+  public static Path getDroidBenchRoot() {
+    final var path = Path.of(walaProperties.getProperty("droidbench.root", "build/DroidBench"));
+    assertThat(path.resolve("apk")).isDirectory();
+    return path;
   }
 
   protected static Stream<Named<TestParameters>> generateData(
-      String droidBenchRoot,
+      final Path droidBenchRoot,
       final URI[] androidLibs,
       final File androidJavaJar,
       final String filter) {
     final Stream.Builder<Named<TestParameters>> testParameters = Stream.builder();
-    final var apkRoot = new File(droidBenchRoot + "/apk/");
+    final var apkRoot = droidBenchRoot.resolve("apk");
     FileUtil.recurseFiles(
         f -> {
           Set<MethodReference> uncalled = uncalledFunctions.get(f.getName());
@@ -168,14 +168,15 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
           }
           testParameters.add(
               Named.of(
-                  apkRoot.toPath().relativize(f.toPath()).toString(),
-                  new TestParameters(androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled)));
+                  apkRoot.relativize(f.toPath()).toString(),
+                  new TestParameters(
+                      androidLibs, androidJavaJar, f.toPath().toAbsolutePath(), uncalled)));
         },
         t ->
             (filter == null || t.getAbsolutePath().contains(filter))
                 && t.getName().endsWith("apk")
                 && !skipTests.contains(t.getName()),
-        apkRoot);
+        apkRoot.toFile());
     return testParameters.build().sorted(Comparator.comparing(Named::getName));
   }
 
@@ -183,11 +184,11 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
     private final URI[] androidLibs;
     private final File androidJavaJar;
-    private final String apkFile;
+    private final Path apkFile;
     private final Set<MethodReference> uncalled;
 
     public TestParameters(
-        URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {
+        URI[] androidLibs, File androidJavaJar, final Path apkFile, Set<MethodReference> uncalled) {
       this.androidLibs = androidLibs;
       this.androidJavaJar = androidJavaJar;
       this.apkFile = apkFile;
@@ -202,7 +203,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
       return androidJavaJar;
     }
 
-    public String getApkFile() {
+    public Path getApkFile() {
       return apkFile;
     }
 

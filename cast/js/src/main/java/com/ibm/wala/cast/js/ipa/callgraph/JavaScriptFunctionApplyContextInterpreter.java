@@ -117,6 +117,7 @@ public class JavaScriptFunctionApplyContextInterpreter
 
     // function being invoked is in v2
     int resultVal = curValNum++;
+    @SuppressWarnings("UnusedAssignment")
     int excVal = curValNum++;
     S.addStatement(
         insts.Invoke(S.getNumberOfStatements(), 2, resultVal, paramsToPassToInvoked, excVal, cs));

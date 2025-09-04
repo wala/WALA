@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
   }
 
   @Override
-  protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
+  protected ClassLoaderFactory makeClassLoaderFactory(StringFilter exclusions) {
     return new WebPageLoaderFactory(new CAstRhinoTranslatorFactory());
   }
 

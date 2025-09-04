@@ -47,6 +47,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import org.intellij.lang.annotations.Language;
 
 /**
  * Android Components like Activity, Service, ...
@@ -216,7 +217,7 @@ public enum AndroidComponent {
    *
    * @return The Element if found or AndroidComponent.UNKNOWN if not
    */
-  public static AndroidComponent explicit(String type) {
+  public static AndroidComponent explicit(@Language("jvm-class-name") String type) {
     if (!(type.startsWith("L") || type.contains("/"))) {
       type = StringStuff.deployment2CanonicalTypeString(type);
     }
@@ -250,7 +251,7 @@ public enum AndroidComponent {
     IClass type = method.getDeclaringClass();
 
     if (type == null) {
-      throw new IllegalStateException("Unable to retreive the declaring class of " + method);
+      throw new IllegalStateException("Unable to retrieve the declaring class of " + method);
     }
 
     for (AndroidComponent test : AndroidComponent.values()) {

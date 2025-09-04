@@ -1,8 +1,8 @@
 package com.ibm.wala.gradle
 
-import java.io.File
 import javax.inject.Inject
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
@@ -14,6 +14,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.ExecOperations
@@ -26,10 +27,8 @@ import org.gradle.work.InputChanges
 @CacheableTask
 abstract class JavaCompileUsingEcj : JavaCompile() {
 
-  /** ECJ compiler, resolved to a JAR archive. */
-  @CompileClasspath
-  @InputFile
-  val ecjJar: File = project.configurations.named("ecj").get().singleFile
+  /** ECJ compiler, typically consisting of a single JAR file. */
+  @CompileClasspath val ecjJar: Provider<Configuration> = project.configurations.named("ecj")
 
   @InputFile
   @PathSensitive(PathSensitivity.NONE)
@@ -52,12 +51,17 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
     options.compilerArgumentProviders.run {
       add {
         listOf(
+            "-source",
+            sourceCompatibility,
+            "-target",
+            targetCompatibility,
             "-properties",
             jdtPrefs.toString(),
             "-classpath",
             this@JavaCompileUsingEcj.classpath.joinToString(File.pathSeparator),
             "-d",
-            destinationDirectory.get().toString())
+            destinationDirectory.get().toString(),
+        )
       }
       add { source.files.map { it.toString() } }
     }
@@ -75,7 +79,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
     }
 
     execOperations.javaexec {
-      classpath(ecjJar.absolutePath)
+      classpath(ecjJar)
       executable(javaLauncherPath.get())
       args("@" + f)
     }
@@ -90,15 +94,17 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
 
     // However, put generated class files in a different build directory to avoid conflict.
     val destinationSubdir = "ecjClasses/${sourceSet.java.name}/${sourceSet.name}"
-    destinationDirectory.set(project.layout.buildDirectory.dir(destinationSubdir))
+    destinationDirectory = project.layout.buildDirectory.dir(destinationSubdir)
   }
 
   companion object {
     @JvmStatic
     fun withSourceSet(project: Project, sourceSet: SourceSet): TaskProvider<JavaCompileUsingEcj> =
         project.tasks.register(
-            sourceSet.getCompileTaskName("javaUsingEcj"), JavaCompileUsingEcj::class.java) {
-              setSourceSet(sourceSet)
-            }
+            sourceSet.getCompileTaskName("javaUsingEcj"),
+            JavaCompileUsingEcj::class.java,
+        ) {
+          setSourceSet(sourceSet)
+        }
   }
 }

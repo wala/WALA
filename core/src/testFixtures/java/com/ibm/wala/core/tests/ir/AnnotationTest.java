@@ -101,17 +101,17 @@ public abstract class AnnotationTest extends WalaTestCase {
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/DefaultVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/DefaultVisibleAnnotation")));
 
     Collection<Annotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
     expectedRuntimeVisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
 
     testClassAnnotations(
         typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
@@ -127,21 +127,21 @@ public abstract class AnnotationTest extends WalaTestCase {
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation2")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation2")));
 
     Collection<Annotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
     expectedRuntimeVisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
     expectedRuntimeVisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation2")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation2")));
 
     testClassAnnotations(
         typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
@@ -227,12 +227,12 @@ public abstract class AnnotationTest extends WalaTestCase {
     expectedAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
     if (!checkRuntimeRetentionOnly) {
       expectedAnnotations.add(
           Annotation.make(
               TypeReference.findOrCreate(
-                  ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+                  ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
     }
     assertEqualCollections(expectedAnnotations, annots);
   }
@@ -247,7 +247,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     checkParameterAnnots(
         typeRef,
         "foo(Ljava/lang/String;)V",
-        new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"});
+        new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"});
     checkParameterAnnots(
         typeRef,
         "bar(Ljava/lang/Integer;)V",
@@ -257,29 +257,29 @@ public abstract class AnnotationTest extends WalaTestCase {
     checkParameterAnnots(
         typeRef,
         "foo2(Ljava/lang/String;Ljava/lang/Integer;)V",
-        new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"},
+        new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"},
         checkRuntimeRetentionOnly
             ? new String[] {}
             : new String[] {
-              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"
+              "Annotation type <Application,Lannotations/RuntimeInvisibleAnnotation>"
             });
     checkParameterAnnots(
         typeRef,
         "foo3(Ljava/lang/String;Ljava/lang/Integer;)V",
-        new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"},
+        new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"},
         checkRuntimeRetentionOnly
             ? new String[] {}
             : new String[] {
-              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"
+              "Annotation type <Application,Lannotations/RuntimeInvisibleAnnotation>"
             });
     checkParameterAnnots(
         typeRef,
         "foo4(Ljava/lang/String;Ljava/lang/Integer;)V",
         checkRuntimeRetentionOnly
-            ? new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"}
+            ? new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"}
             : new String[] {
-              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>",
-              "Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"
+              "Annotation type <Application,Lannotations/RuntimeInvisibleAnnotation>",
+              "Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"
             },
         new String[0]);
   }

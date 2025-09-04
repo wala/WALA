@@ -45,7 +45,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   private MutableSparseLongSet(LongSet set) {
-    super();
     copySet(set);
   }
 
@@ -59,9 +58,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     size = 0;
   }
 
-  public MutableSparseLongSet() {
-    super();
-  }
+  public MutableSparseLongSet() {}
 
   /** */
   @NullUnmarked
@@ -178,11 +175,10 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   @NullUnmarked
-  public void intersectWith(SparseLongSet set) {
-    if (set == null) {
+  public void intersectWith(SparseLongSet that) {
+    if (that == null) {
       throw new IllegalArgumentException("null set");
     }
-    SparseLongSet that = set;
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {
@@ -195,13 +191,11 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
     // some simple optimizations
     if (size == 1) {
-      if (that.contains(elements[0])) {
-        return;
-      } else {
+      if (!that.contains(elements[0])) {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
     if (that.size == 1) {
       if (contains(that.elements[0])) {
@@ -210,12 +204,11 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
         }
         size = 1;
         elements[0] = that.elements[0];
-        return;
       } else {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
 
     long[] ar = this.elements;
@@ -248,7 +241,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     // now compact cr to 'just enough'
     size = ci;
     elements = cr;
-    return;
   }
 
   /**
@@ -287,8 +279,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
     // common-case optimization
     if (that.size == 1) {
-      boolean result = add(that.elements[0]);
-      return result;
+      return add(that.elements[0]);
     }
 
     long[] br = that.elements;

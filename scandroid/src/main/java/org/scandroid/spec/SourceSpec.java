@@ -48,7 +48,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import org.scandroid.domain.CodeElement;
@@ -61,9 +60,7 @@ public abstract class SourceSpec implements ISourceSpec {
   protected int[] argNums; // null = all arguments, empty = no arguments?
 
   public static int[] getNewArgNums(int n) {
-    int[] newArgNums = new int[n];
-    Arrays.setAll(newArgNums, i -> i + 1);
-    return newArgNums;
+    return SinkSpec.getNewArgNums(n);
   }
 
   public MethodNamePattern getNamePattern() {

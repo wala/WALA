@@ -35,6 +35,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -49,9 +51,9 @@ import org.junit.jupiter.api.Test;
 public class MultiDexScopeTest {
 
   private static void addAPKtoScope(
-      ClassLoaderReference loader, AnalysisScope scope, String fileName) {
-    File apkFile = new File(fileName);
-    MultiDexContainer<? extends DexBackedDexFile> multiDex = null;
+      ClassLoaderReference loader, AnalysisScope scope, final Path fileName) {
+    final var apkFile = fileName.toFile();
+    final MultiDexContainer<? extends DexBackedDexFile> multiDex;
     try {
       multiDex = DexFileFactory.loadDexContainer(apkFile, Opcodes.forApi(24));
     } catch (IOException e) {
@@ -68,15 +70,15 @@ public class MultiDexScopeTest {
     }
   }
 
-  private static AnalysisScope setUpTestScope(String apkName, String exclusions, ClassLoader loader)
-      throws IOException {
+  private static AnalysisScope setUpTestScope(
+      final Path apkPath, String exclusions, ClassLoader loader) throws IOException {
     AnalysisScope scope;
     scope =
         AnalysisScopeReader.instance.readJavaScope("primordial.txt", new File(exclusions), loader);
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-    addAPKtoScope(ClassLoaderReference.Application, scope, apkName);
+    addAPKtoScope(ClassLoaderReference.Application, scope, apkPath);
     return scope;
   }
 
@@ -98,7 +100,7 @@ public class MultiDexScopeTest {
 
     AnalysisScope scope, scope2;
     ClassHierarchy cha, cha2;
-    String testAPK = DroidBenchCGTest.getDroidBenchRoot() + "/apk/Aliasing/Merge1.apk";
+    final var testAPK = DroidBenchCGTest.getDroidBenchRoot().resolve("apk/Aliasing/Merge1.apk");
 
     scope = setUpTestScope(testAPK, "", MultiDexScopeTest.class.getClassLoader());
     cha = ClassHierarchyFactory.make(scope);
@@ -125,11 +127,11 @@ public class MultiDexScopeTest {
 
       File dex1 = new File(dexTmpDir + File.separator + "classes.dex");
       scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(dex1));
-      dex1.delete();
+      Files.delete(dex1.toPath());
 
       File dex2 = new File(dexTmpDir + File.separator + "classes2.dex");
       scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(dex2));
-      dex2.delete();
+      Files.delete(dex2.toPath());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -140,7 +142,7 @@ public class MultiDexScopeTest {
   public void testMultiDex() throws ClassHierarchyException, IOException {
     AnalysisScope scope, scope2;
     ClassHierarchy cha, cha2;
-    String multidexApk = "src/test/resources/multidex-test.apk";
+    final var multidexApk = Path.of("src/test/resources/multidex-test.apk");
 
     scope = manuallyInitScope();
     cha = ClassHierarchyFactory.make(scope);

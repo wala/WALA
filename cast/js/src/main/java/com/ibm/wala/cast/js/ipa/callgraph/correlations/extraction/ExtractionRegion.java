@@ -28,7 +28,6 @@ public class ExtractionRegion {
   private final List<String> locals;
 
   public ExtractionRegion(int start, int end, List<String> parameters, List<String> locals) {
-    super();
     this.start = start;
     this.end = end;
     this.parameters = parameters;

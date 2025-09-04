@@ -283,7 +283,7 @@ public class AndroidSpecs implements ISpecs {
     ignoreMethods.add("wait");
 
     // add default entrypoints from AndroidSpecs.entrypointSpecs
-    // Currently adds methods even if they exist in the ignnoreMethods
+    // Currently adds methods even if they exist in the ignoreMethods
     // set.
     List<MethodNamePattern> moreEntryPointSpecs = new ArrayList<>(Arrays.asList(defaultCallbacks));
 

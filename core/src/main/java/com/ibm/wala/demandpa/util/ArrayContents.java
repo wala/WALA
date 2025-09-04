@@ -59,7 +59,7 @@ public class ArrayContents implements IField {
 
   private static final ArrayContents theContents = new ArrayContents();
 
-  public static final ArrayContents v() {
+  public static ArrayContents v() {
     return theContents;
   }
 

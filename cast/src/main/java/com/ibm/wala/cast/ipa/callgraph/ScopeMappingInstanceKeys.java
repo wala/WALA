@@ -23,10 +23,12 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s as necessary to
@@ -44,6 +46,15 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
   protected final PropagationCallGraphBuilder builder;
 
   private final InstanceKeyFactory basic;
+
+  /**
+   * @param name the variable name and creator pair
+   * @param callerOfConstructor the purported caller of the constructor
+   * @return whether this is a real constructor call or an artifact of function pointers (always
+   *     true for lexical scoping in Java)
+   */
+  protected abstract boolean isTrueConstructorCall(
+      Pair<String, String> name, CGNode callerOfConstructor);
 
   /**
    * An {@link InstanceKey} carrying information about which {@link CGNode}s represent lexical
@@ -78,27 +89,26 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
     /** get the CGNode representing the lexical parent of {@link #creator} with name definer */
     public Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
+      return getFunargNodes(name, HashSetFactory.make());
+    }
+
+    public Iterator<CGNode> getFunargNodes(Pair<String, String> name, Set<InstanceKey> history) {
       Collection<CGNode> constructorCallers = getConstructorCallers(this, name);
       assert constructorCallers != null && !constructorCallers.isEmpty()
           : "no callers for constructor";
       Iterator<CGNode> result = EmptyIterator.instance();
       for (CGNode callerOfConstructor : constructorCallers) {
-        if (callerOfConstructor
-            .getMethod()
-            .getReference()
-            .getDeclaringClass()
-            .getName()
-            .toString()
-            .equals(name.snd)) {
+        if (isTrueConstructorCall(name, callerOfConstructor)) {
           result =
               new CompoundIterator<>(result, new NonNullSingletonIterator<>(callerOfConstructor));
         } else {
           PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
           for (InstanceKey funcPtr : builder.getPointerAnalysis().getPointsToSet(funcKey)) {
-            if (funcPtr != this && funcPtr instanceof ScopeMappingInstanceKey) {
+            if (!history.contains(funcPtr) && funcPtr instanceof ScopeMappingInstanceKey) {
+              history.add(funcPtr);
               result =
                   new CompoundIterator<>(
-                      result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name));
+                      result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name, history));
             }
           }
         }

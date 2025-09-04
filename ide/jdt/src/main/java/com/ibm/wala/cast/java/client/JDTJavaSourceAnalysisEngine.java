@@ -55,7 +55,7 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -78,7 +78,7 @@ public class JDTJavaSourceAnalysisEngine
   }
 
   @Override
-  protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
+  protected ClassLoaderFactory makeClassLoaderFactory(StringFilter exclusions) {
     return new JDTClassLoaderFactory(exclusions, dump);
   }
 

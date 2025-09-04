@@ -111,7 +111,7 @@ public class Instantiator implements IInstantiator {
 
   private boolean isExcluded(IClass cls) {
     if (this.analysisScope.getExclusions() != null
-        && this.analysisScope.getExclusions().contains(cls.getName().toString())) { // XXX FUUUUU
+        && this.analysisScope.getExclusions().test(cls.getName().toString())) { // XXX FUUUUU
       logger.info("Hit exclusions with {}", cls);
       return true;
     } else {

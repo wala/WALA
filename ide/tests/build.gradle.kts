@@ -6,6 +6,7 @@ plugins {
   `java-test-fixtures`
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.xml-apis-ext")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
@@ -49,7 +50,8 @@ dependencies {
   coreTestResources(project(mapOf("path" to ":core", "configuration" to "testResources")))
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
   ifdsExplorerExampleClasspath(
-      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar")))
+      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar"))
+  )
   testFixturesImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.junit.jupiter.api)
@@ -64,11 +66,8 @@ configurations.all {
     substitute(module("org.eclipse.platform:org.eclipse.osgi.services"))
         .using(module(libs.eclipse.osgi.get().toString()))
         .because(
-            "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both")
-    substitute(module("xml-apis:xml-apis-ext"))
-        .using(module(libs.w3c.css.sac.get().toString()))
-        .because(
-            "both provide several of the same classes, but org.w3c.css.sac includes everything we need from both")
+            "both provide several of the same classes, but org.eclipse.osgi includes everything we need from both"
+        )
   }
 }
 
@@ -97,5 +96,5 @@ tasks.register<JavaExec>("runIFDSExplorerExample") {
   if (System.getProperty("os.name").startsWith("Mac OS X")) {
     jvmArgs = listOf("-XstartOnFirstThread")
   }
-  project.findProperty("args")?.let { args((it as String).split("\\s+".toRegex())) }
+  providers.gradleProperty("args").orNull?.let { args(it.split("\\s+".toRegex())) }
 }

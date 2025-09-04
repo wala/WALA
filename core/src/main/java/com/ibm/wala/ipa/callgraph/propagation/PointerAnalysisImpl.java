@@ -571,7 +571,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    */
   @Override
   public Iterable<PointerKey> getPointerKeys() {
-    return Iterator2Iterable.make(pointsToMap.iterateKeys());
+    return pointsToMap::iterateKeys;
   }
 
   @Override

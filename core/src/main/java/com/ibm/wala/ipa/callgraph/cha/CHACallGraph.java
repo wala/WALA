@@ -112,7 +112,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   }
 
   /**
-   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * NOTE: after calling this constructor, {@link #init(Iterable)} must be invoked to complete
    * initialization
    */
   public CHACallGraph(IClassHierarchy cha) {
@@ -120,7 +120,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   }
 
   /**
-   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * NOTE: after calling this constructor, {@link #init(Iterable)} must be invoked to complete
    * initialization
    */
   public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
@@ -206,7 +206,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         IMethod trampoline = lambdaSummaryClass.getDeclaredMethods().iterator().next();
         CGNode callee = getNode(trampoline, Everywhere.EVERYWHERE);
         if (callee == null) {
-          callee = findOrCreateNode(trampoline, Everywhere.EVERYWHERE);
+          findOrCreateNode(trampoline, Everywhere.EVERYWHERE);
         }
       }
     }

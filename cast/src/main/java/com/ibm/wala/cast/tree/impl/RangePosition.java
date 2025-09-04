@@ -25,7 +25,6 @@ public class RangePosition extends AbstractSourcePosition {
   private final int endOffset;
 
   public RangePosition(URL url, int startLine, int endLine, int startOffset, int endOffset) {
-    super();
     this.url = url;
     this.startLine = startLine;
     this.endLine = endLine;

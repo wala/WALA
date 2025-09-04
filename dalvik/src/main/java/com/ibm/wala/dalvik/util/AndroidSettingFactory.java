@@ -43,6 +43,7 @@ package com.ibm.wala.dalvik.util;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
+import org.intellij.lang.annotations.Language;
 
 /**
  * Generate a Settings-Object from a String-Representation.
@@ -55,7 +56,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
  */
 public class AndroidSettingFactory {
   /**
-   * Add an Intent that is _shure_ to be handled internally _only_.
+   * Add an Intent that is _sure_ to be handled internally _only_.
    *
    * <p>If there was an additional external handling of this intent it will be ignored!
    */
@@ -213,7 +214,7 @@ public class AndroidSettingFactory {
    * @throws IllegalArgumentException If name was null or starts with a dot and pack is null TODO:
    *     Check Target-Types
    */
-  public static Intent intent(String pack, String name, String uri) {
+  public static Intent intent(String pack, @Language("jvm-class-name") String name, String uri) {
     if ((name == null) || name.isEmpty()) {
       throw new IllegalArgumentException("name may not be null or empty");
     }
@@ -271,7 +272,7 @@ public class AndroidSettingFactory {
   //
   //  Short-Hand functions follow...
   //
-  public static Intent intent(String fullyQualifiedAction, String uri) {
+  public static Intent intent(@Language("jvm-class-name") String fullyQualifiedAction, String uri) {
     if (fullyQualifiedAction.startsWith(".")) {
       String pack = AndroidEntryPointManager.MANAGER.getPackage();
       if (pack != null) {
@@ -288,7 +289,7 @@ public class AndroidSettingFactory {
     }
   }
 
-  public static Intent intent(String fullyQualifiedAction) {
+  public static Intent intent(@Language("jvm-class-name") String fullyQualifiedAction) {
     if (fullyQualifiedAction.startsWith(".")) {
       throw new IllegalArgumentException(
           "The action "

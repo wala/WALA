@@ -19,30 +19,30 @@ import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 public abstract class ConstantPoolReader {
   /**
    * Retrieve the JVM constant pool item type (a Constants.CONSTANT_xxx value). This method should
-   * be overriden by a toolkit-specific subclass.
+   * be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
   public abstract int getConstantPoolItemType(int index);
 
   /**
-   * Retrieve the value of a CONSTANT_Integer constant pool item. This method should be overriden by
-   * a toolkit-specific subclass.
+   * Retrieve the value of a CONSTANT_Integer constant pool item. This method should be overridden
+   * by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
   public abstract int getConstantPoolInteger(int index);
 
   /**
-   * Retrieve the value of a CONSTANT_Float constant pool item. This method should be overriden by a
-   * toolkit-specific subclass.
+   * Retrieve the value of a CONSTANT_Float constant pool item. This method should be overridden by
+   * a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
   public abstract float getConstantPoolFloat(int index);
 
   /**
-   * Retrieve the value of a CONSTANT_Long constant pool item. This method should be overriden by a
+   * Retrieve the value of a CONSTANT_Long constant pool item. This method should be overridden by a
    * toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
@@ -50,7 +50,7 @@ public abstract class ConstantPoolReader {
   public abstract long getConstantPoolLong(int index);
 
   /**
-   * Retrieve the value of a CONSTANT_Double constant pool item. This method should be overriden by
+   * Retrieve the value of a CONSTANT_Double constant pool item. This method should be overridden by
    * a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
@@ -58,7 +58,7 @@ public abstract class ConstantPoolReader {
   public abstract double getConstantPoolDouble(int index);
 
   /**
-   * Retrieve the value of a CONSTANT_String constant pool item. This method should be overriden by
+   * Retrieve the value of a CONSTANT_String constant pool item. This method should be overridden by
    * a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
@@ -66,8 +66,8 @@ public abstract class ConstantPoolReader {
   public abstract String getConstantPoolString(int index);
 
   /**
-   * Retrieve the value of a CONSTANT_MethodType constant pool item. This method should be overriden
-   * by a toolkit-specific subclass.
+   * Retrieve the value of a CONSTANT_MethodType constant pool item. This method should be
+   * overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
@@ -75,7 +75,7 @@ public abstract class ConstantPoolReader {
 
   /**
    * Retrieve the value of a CONSTANT_Class constant pool item in JVM internal class format (e.g.,
-   * java/lang/Object). This method should be overriden by a toolkit-specific subclass.
+   * java/lang/Object). This method should be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
@@ -84,7 +84,7 @@ public abstract class ConstantPoolReader {
   /**
    * Retrieve the class part of a CONSTANT_FieldRef, CONSTANT_MethodRef, or
    * CONSTANT_InterfaceMethodRef constant pool item, in JVM internal class format (e.g.,
-   * java/lang/Object). This method should be overriden by a toolkit-specific subclass.
+   * java/lang/Object). This method should be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
@@ -92,7 +92,7 @@ public abstract class ConstantPoolReader {
 
   /**
    * Retrieve the name part of a CONSTANT_FieldRef, CONSTANT_MethodRef, or
-   * CONSTANT_InterfaceMethodRef constant pool item, This method should be overriden by a
+   * CONSTANT_InterfaceMethodRef constant pool item, This method should be overridden by a
    * toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
@@ -102,7 +102,7 @@ public abstract class ConstantPoolReader {
   /**
    * Retrieve the type part of a CONSTANT_FieldRef, CONSTANT_MethodRef, or
    * CONSTANT_InterfaceMethodRef constant pool item, in JVM internal type format (e.g.,
-   * Ljava/lang/Object;). This method should be overriden by a toolkit-specific subclass.
+   * Ljava/lang/Object;). This method should be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
@@ -111,7 +111,7 @@ public abstract class ConstantPoolReader {
   /**
    * Retrieve the class part of the CONSTANT_FieldRef, CONSTANT_MethodRef, or
    * CONSTANT_InterfaceMethodRef constant pool item pointed to by a CONSTANT_MethodHandle entry.
-   * This method should be overriden by a toolkit-specific subclass.
+   * This method should be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
@@ -120,7 +120,7 @@ public abstract class ConstantPoolReader {
   /**
    * Retrieve the name part of the CONSTANT_FieldRef, CONSTANT_MethodRef, or
    * CONSTANT_InterfaceMethodRef constant pool item pointed to by a CONSTANT_MethodHandle entry.
-   * This method should be overriden by a toolkit-specific subclass.
+   * This method should be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */
@@ -129,7 +129,7 @@ public abstract class ConstantPoolReader {
   /**
    * Retrieve the type part of the CONSTANT_FieldRef, CONSTANT_MethodRef, or
    * CONSTANT_InterfaceMethodRef constant pool item pointed to by a CONSTANT_MethodHandle entry.
-   * This method should be overriden by a toolkit-specific subclass.
+   * This method should be overridden by a toolkit-specific subclass.
    *
    * @param index the constant pool item to examine
    */

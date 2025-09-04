@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static com.ibm.wala.util.config.SetOfClassesAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
@@ -35,6 +35,6 @@ public class ExclusionsTest {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application,
             StringStuff.deployment2CanonicalTypeString("java.awt.Button"));
-    assertThat(scope.getExclusions()).contains(buttonRef.getName().toString().substring(1));
+    assertThat(scope.getExclusions()).accepts(buttonRef.getName().toString().substring(1));
   }
 }
