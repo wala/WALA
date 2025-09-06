@@ -1,6 +1,5 @@
 package com.ibm.wala.gradle
 
-import java.io.File
 import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -59,7 +58,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
             "-properties",
             jdtPrefs.toString(),
             "-classpath",
-            this@JavaCompileUsingEcj.classpath.joinToString(File.pathSeparator),
+            classpath.asPath,
             "-d",
             destinationDirectory.get().toString(),
         )
@@ -70,19 +69,16 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
 
   @TaskAction
   protected override fun compile(inputs: InputChanges) {
-    val testArgs = options.allCompilerArgs
-    val f = kotlin.io.path.createTempFile("kotlinTemp", "tmp")
-    f.toFile().deleteOnExit()
-    f.toFile().printWriter().use { writer ->
-      for (testArg in testArgs) {
-        writer.print(testArg + " ")
-      }
-    }
+
+    val argumentsFile =
+        temporaryDir.resolve("arguments.txt").apply {
+          writeText(options.allCompilerArgs.joinToString("") { "\"$it\"\n" })
+        }
 
     execOperations.javaexec {
       classpath(ecjJar)
       executable(javaLauncherPath.get())
-      args("@" + f)
+      args("@$argumentsFile")
     }
   }
 
