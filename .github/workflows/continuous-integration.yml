@@ -63,7 +63,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Test results for JDK ${{ matrix.java }} on ${{ matrix.os }}
-          path: '**/build/test-results/test/TEST-*.xml'
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/
       - name: Aggregate coverage
         id: jacoco_report
         run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
