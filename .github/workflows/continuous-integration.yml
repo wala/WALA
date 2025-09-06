@@ -52,7 +52,7 @@ jobs:
         # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
         if: runner.os == 'Linux'
       - name: Build and test using Gradle but without ECJ
-        run: ./gradlew aggregatedJavadocs javadoc build -PskipJavaUsingEcjTasks --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
+        run: ./gradlew aggregatedJavadocs javadoc build --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         if: runner.os != 'Linux'
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh

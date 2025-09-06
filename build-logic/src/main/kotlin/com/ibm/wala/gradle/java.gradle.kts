@@ -139,11 +139,6 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<JavaCompileUsingEcj> {
-
-  // Allow skipping all ECJ compilation tasks by setting a project property.
-  val skipJavaUsingEcjTasks = providers.gradleProperty("skipJavaUsingEcjTasks").isPresent
-  onlyIf { !skipJavaUsingEcjTasks }
-
   // ECJ warning / error levels are set via a configuration file, not this argument
   options.compilerArgs.remove("-Werror")
 }
