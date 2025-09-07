@@ -46,14 +46,13 @@ jobs:
           distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-      - name: Build and test using Gradle with ECJ
-        # use xvfb-gradle.sh to avoid headless test failures on Linux
-        run: ./xvfb-gradle.sh aggregatedJavadocs build publishAllPublicationsToFakeRemoteRepository shellcheck --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
-        # testing ECJ compilation on any one OS is sufficient; we choose Linux arbitrarily
+      - name: Choose extra Linux-only Gradle tasks
+        run: echo OS_SPECIFIC_GRADLE_TASKS='publishAllPublicationsToFakeRemoteRepository shellcheck' >> $GITHUB_ENV
         if: runner.os == 'Linux'
-      - name: Build and test using Gradle but without ECJ
-        run: ./gradlew aggregatedJavadocs javadoc build --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
-        if: runner.os != 'Linux'
+      - name: Build and test using Gradle
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: ./gradlew --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}" aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }}
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
         # not running in Borne or POSIX shell on Windows
