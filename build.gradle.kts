@@ -46,7 +46,7 @@ JavaVersion.current().let {
 
 group = name
 
-version = "1.6.8-SNAPSHOT"
+version = "1.6.12-SNAPSHOT"
 
 ///////////////////////////////////////////////////////////////////////
 //
