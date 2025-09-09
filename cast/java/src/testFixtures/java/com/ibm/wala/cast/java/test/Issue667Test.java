@@ -17,14 +17,16 @@ import org.junit.jupiter.api.Test;
 
 public abstract class Issue667Test extends IRTests {
 
-  public Issue667Test(String projectName) {
-    super(projectName);
-  }
-
   @Test
   public void testDominanceFrontierCase() throws CancelException, IOException {
     Pair<CallGraph, ?> result =
-        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+        runTest(
+            singleTestSrc("DominanceFrontierCase"),
+            rtJar,
+            simpleTestEntryPoint("DominanceFrontierCase"),
+            emptyList,
+            true,
+            null);
 
     MethodReference cm =
         MethodReference.findOrCreate(

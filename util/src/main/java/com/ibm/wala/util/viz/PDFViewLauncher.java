@@ -30,10 +30,6 @@ public class PDFViewLauncher {
   /** Path to ghostview executable */
   protected @Nullable String gvExe = null;
 
-  public PDFViewLauncher() {
-    super();
-  }
-
   public @Nullable String getPDFFile() {
     return pdffile;
   }

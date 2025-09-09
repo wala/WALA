@@ -49,10 +49,6 @@ public abstract class AbstractJavaAnalysisAction
   /** The current {@link ISelection} highlighted in the Eclipse workspace */
   private ISelection currentSelection;
 
-  public AbstractJavaAnalysisAction() {
-    super();
-  }
-
   @Override
   public void setActivePart(IAction action, IWorkbenchPart targetPart) {}
 
@@ -117,8 +113,7 @@ public abstract class AbstractJavaAnalysisAction
       e.printStackTrace();
       assert false;
     }
-    AnalysisScope scope = mergeProjectPaths(projectPaths);
-    return scope;
+    return mergeProjectPaths(projectPaths);
   }
 
   /** compute the java projects represented by the current selection */

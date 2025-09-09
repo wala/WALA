@@ -20,7 +20,7 @@ import java.util.Map;
  * use System.identityHashCode()
  */
 public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
-  public static final long serialVersionUID = 909018793791787198L;
+  private static final long serialVersionUID = 909018793791787198L;
 
   /**
    * @throws NullPointerException if t is null

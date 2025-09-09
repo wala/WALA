@@ -16,12 +16,12 @@ public class ReflectiveCallVertex extends Vertex {
   private final CallSiteReference site;
 
   // the call instruction itself
-  private final JavaScriptInvoke invk;
+  private final JavaScriptInvoke invoke;
 
-  public ReflectiveCallVertex(FuncVertex caller, CallSiteReference site, JavaScriptInvoke invk) {
+  public ReflectiveCallVertex(FuncVertex caller, CallSiteReference site, JavaScriptInvoke invoke) {
     this.caller = caller;
     this.site = site;
-    this.invk = invk;
+    this.invoke = invoke;
   }
 
   public FuncVertex getCaller() {
@@ -33,7 +33,7 @@ public class ReflectiveCallVertex extends Vertex {
   }
 
   public JavaScriptInvoke getInstruction() {
-    return invk;
+    return invoke;
   }
 
   @Override

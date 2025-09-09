@@ -155,16 +155,11 @@ public class AstJavaTypeInference extends AstTypeInference {
 
       if (meet == null) {
         return super.evaluate(lhs, rhs);
+      } else if (lhs.getType().equals(meet)) {
+        return NOT_CHANGED;
       } else {
-        TypeVariable L = lhs;
-        TypeAbstraction lhsType = L.getType();
-
-        if (lhsType.equals(meet)) {
-          return NOT_CHANGED;
-        } else {
-          L.setType(meet);
-          return CHANGED;
-        }
+        lhs.setType(meet);
+        return CHANGED;
       }
     }
 

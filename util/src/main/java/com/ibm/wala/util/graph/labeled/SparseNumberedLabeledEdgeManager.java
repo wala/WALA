@@ -182,7 +182,6 @@ public class SparseNumberedLabeledEdgeManager<T, U>
 
   public SparseNumberedLabeledEdgeManager(
       final NumberedNodeManager<T> nodeManager, U defaultLabel) {
-    super();
     this.defaultLabel = defaultLabel;
     this.nodeManager = nodeManager;
     if (nodeManager == null) {
@@ -191,7 +190,6 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   }
 
   public SparseNumberedLabeledEdgeManager(final NumberedNodeManager<T> nodeManager) {
-    super();
     this.defaultLabel = null;
     this.nodeManager = nodeManager;
     if (nodeManager == null) {

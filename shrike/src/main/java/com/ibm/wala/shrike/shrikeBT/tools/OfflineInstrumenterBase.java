@@ -419,6 +419,7 @@ public abstract class OfflineInstrumenterBase {
         throw new IllegalStateException("Output file was not set");
       }
 
+      @SuppressWarnings("resource")
       final FileOutputStream out = new FileOutputStream(outputFile);
       outputJar = new JarOutputStream(out);
     }

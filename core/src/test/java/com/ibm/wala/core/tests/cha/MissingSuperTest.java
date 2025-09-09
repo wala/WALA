@@ -10,10 +10,9 @@
  */
 package com.ibm.wala.core.tests.cha;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.InstanceOfAssertFactories.iterable;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -31,7 +30,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import java.util.Collection;
 import org.junit.jupiter.api.Test;
 
 public class MissingSuperTest extends WalaTestCase {
@@ -53,35 +51,34 @@ public class MissingSuperTest extends WalaTestCase {
 
     // without phantom classes, won't be able to resolve
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    assertNull(cha.lookupClass(ref), "lookup should not work");
+    assertThat(cha.lookupClass(ref)).isNull();
 
     // with makeWithRoot lookup should succeed and
     // unresolvable super class "Super" should be replaced by hierarchy root
     cha = ClassHierarchyFactory.makeWithRoot(scope);
     IClass klass = cha.lookupClass(ref);
-    assertNotNull(klass, "expected class MissingSuper to load");
-    assertEquals(cha.getRootClass(), klass.getSuperclass());
+    assertThat(klass).extracting(IClass::getSuperclass).isEqualTo(cha.getRootClass());
 
     // with phantom classes, lookup and IR construction should work
     cha = ClassHierarchyFactory.makeWithPhantom(scope);
     klass = cha.lookupClass(ref);
-    assertNotNull(klass, "expected class MissingSuper to load");
     IAnalysisCacheView cache = new AnalysisCacheImpl();
-    Collection<? extends IMethod> declaredMethods = klass.getDeclaredMethods();
-    assertEquals(2, declaredMethods.size(), declaredMethods::toString);
-    for (IMethod m : declaredMethods) {
-      // should succeed
-      cache.getIR(m);
-    }
+    assertThat(klass)
+        .extracting(IClass::getDeclaredMethods, iterable(IMethod.class))
+        .hasSize(2)
+        .allSatisfy(m -> assertThatCode(() -> cache.getIR(m)).doesNotThrowAnyException());
+
     // there should be one PhantomClass in the Application class loader
-    boolean found = false;
-    for (IClass klass2 : cha) {
-      if (klass2 instanceof PhantomClass
-          && klass2.getReference().getClassLoader().equals(ClassLoaderReference.Application)) {
-        assertEquals("Lmissingsuper/Super", klass2.getReference().getName().toString());
-        found = true;
-      }
-    }
-    assertTrue(found);
+    assertThat(cha)
+        .filteredOn(
+            klass2 ->
+                klass2 instanceof PhantomClass
+                    && klass2
+                        .getReference()
+                        .getClassLoader()
+                        .equals(ClassLoaderReference.Application))
+        .first()
+        .extracting(klass2 -> klass2.getReference().getName())
+        .hasToString("Lmissingsuper/Super");
   }
 }

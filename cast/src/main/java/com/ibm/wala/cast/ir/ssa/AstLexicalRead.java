@@ -66,11 +66,6 @@ public class AstLexicalRead extends AstLexicalAccess {
   }
 
   @Override
-  public int getNumberOfUses() {
-    return 0;
-  }
-
-  @Override
   public int getUse(int i) {
     throw new UnsupportedOperationException();
   }

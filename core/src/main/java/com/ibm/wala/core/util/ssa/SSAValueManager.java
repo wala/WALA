@@ -186,8 +186,6 @@ public class SSAValueManager {
           param.setBy = setBy;
 
           return;
-        } else {
-          continue;
         }
       }
       { // DEBUG
@@ -262,16 +260,16 @@ public class SSAValueManager {
             info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
             param.status = ValueStatus.FREE_CLOSED;
           }
-        } else if (param.setInScope < currentScope) {
-          // param.status = ValueStatus.INVALIDATED;
-        } else {
-          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
-          // error("MISSING PHI for "
-          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
         }
+        //        else if (param.setInScope < currentScope) {
+        //          // param.status = ValueStatus.INVALIDATED;
+        //        } else {
+        //          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
+        //          // error("MISSING PHI for "
+        //          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
+        //        }
       }
       assert didPhi;
-      return;
     } else {
       throw new IllegalStateException("This should not be reached!");
     }
@@ -399,7 +397,6 @@ public class SSAValueManager {
           // assert (param.value.getType().equals(type)) : "Unequal types";
           if (param.setInScope > currentScope) {
             debug("SSA Value {} is out of scope {}", param, currentScope);
-            continue;
           } else if (param.setInScope == currentScope) {
             debug("Returning SSA Value {} is {}", param.value, param.status);
             return param.value;
@@ -450,7 +447,7 @@ public class SSAValueManager {
   /**
    * Returns all "free" and "allocated" variables and the invalid ones in a sub-scope.
    *
-   * <p>This is a suggestion which variables to considder as parameter to a Phi-Function.
+   * <p>This is a suggestion which variables to consider as parameter to a Phi-Function.
    *
    * @throws IllegalArgumentException if type was not seen before or is null
    */

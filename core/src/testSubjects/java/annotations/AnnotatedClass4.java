@@ -13,5 +13,5 @@ package annotations;
 /** class with annotated fields */
 public class AnnotatedClass4 {
 
-  @RuntimeInvisableAnnotation @RuntimeVisableAnnotation public static int foo;
+  @RuntimeInvisibleAnnotation @RuntimeVisibleAnnotation public static int foo;
 }

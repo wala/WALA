@@ -24,12 +24,10 @@ public abstract class DefaultFixedPointSolver<T extends IVariable<T>>
    *     tune graph representation
    */
   public DefaultFixedPointSolver(int expectedOut) {
-    super();
     graph = new DefaultFixedPointSystem<>(expectedOut);
   }
 
   public DefaultFixedPointSolver() {
-    super();
     graph = new DefaultFixedPointSystem<>();
   }
 

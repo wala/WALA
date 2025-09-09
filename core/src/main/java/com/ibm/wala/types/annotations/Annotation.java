@@ -81,8 +81,7 @@ public class Annotation {
       AnnotationsReader r, ClassLoaderReference clRef) throws InvalidClassFileException {
     if (r != null) {
       AnnotationAttribute[] allAnnotations = r.getAllAnnotations();
-      Collection<Annotation> result = convertToAnnotations(clRef, allAnnotations);
-      return result;
+      return convertToAnnotations(clRef, allAnnotations);
     } else {
       return Collections.emptySet();
     }

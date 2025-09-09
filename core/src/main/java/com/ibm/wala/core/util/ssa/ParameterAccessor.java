@@ -123,11 +123,6 @@ public class ParameterAccessor {
     }
 
     @Override
-    public boolean equals(Object o) {
-      return super.equals(o);
-    }
-
-    @Override
     public int hashCode() {
       return this.type.hashCode();
     }
@@ -242,10 +237,9 @@ public class ParameterAccessor {
 
       this.disp = disp;
       this.descriptorOffset = descriptorOffset;
-      super.isAssigned();
     }
 
-    /** The position of the parameter in the methods Desciptor starting with 1. */
+    /** The position of the parameter in the methods Descriptor starting with 1. */
     public int getNumberInDescriptor() { // TODO: Verify all descriptorOffset stuff!
       // if (this.descriptorOffset < 0) {
       //    return this.number;
@@ -1354,7 +1348,7 @@ public class ParameterAccessor {
    * Generate the params-param for an InvokeIstruction w/o type checking.
    *
    * @param self the this-pointer to use
-   * @param args the rest of the arguments. Be shure it does not start with a this pointer. This is
+   * @param args the rest of the arguments. Be sure it does not start with a this pointer. This is
    *     _not_ checked so you can use a this-pointer as an argument. However a warning is issued.
    * @throws IllegalArgumentException if the value of self is to small in the current method
    */
@@ -1497,7 +1491,7 @@ public class ParameterAccessor {
    * <p>The List of Parameters is generated based on the overrides, than parameters in 'this' are
    * searched, finally we'll fall back to defaults. A "perfect match" is searched.
    *
-   * <p>If a parameter was not assigned yet these three sources are considdered again but
+   * <p>If a parameter was not assigned yet these three sources are considered again but
    * cha.isAssignableFrom is used.
    *
    * <p>If the parameter was still not found a value of 'null' is used.
@@ -1674,9 +1668,6 @@ public class ParameterAccessor {
         warn("No type was equal. We can't ask isAssignable since we have no cha!");
         assigned.add(null);
       } // of (cha != null)
-      continue forEachParameter;
-
-      // Assertions.UNREACHABLE(); // Well it's unreachable
     } // of final Parameter param : calleeParams
 
     if (assigned.size() != calleeParams.size()) {

@@ -236,8 +236,7 @@ public class StringBuilderUseAnalysis {
     final HashSet<ISSABasicBlock> blocksSeen = new HashSet<>();
     final ArrayList<Integer> concatenatedInstanceKeys = new ArrayList<>();
 
-    ISSABasicBlock bPrev = bbs[0];
-    ISSABasicBlock bNext = blockOrdering.get(bPrev);
+    ISSABasicBlock bNext = blockOrdering.get(bbs[0]);
     while (bNext != null) {
       // detect loops
       if (blocksSeen.contains(bNext)) {
@@ -271,7 +270,6 @@ public class StringBuilderUseAnalysis {
             mapping.getMappedIndex(k), concatenatedInstanceKeys);
       }
 
-      bPrev = bNext;
       bNext = blockOrdering.get(bNext);
     }
 

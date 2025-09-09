@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
-import com.ibm.wala.qual.Initializer;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
+import com.uber.nullaway.annotations.Initializer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCallGraphShapeRhino {
@@ -30,6 +31,14 @@ public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCall
     verifyGraphAssertions(CG, null);
   }
 
+  @Disabled("Jericho parser is unable to parse this test's HTML input")
+  @Override
+  @Test
+  public void testPage2() throws IllegalArgumentException, CancelException, WalaException {
+    super.testPage2();
+  }
+
+  @Disabled("Jericho parser is unable to parse this test's HTML input")
   @Test
   public void testParseError() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/garbage.html");

@@ -536,16 +536,16 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   @Override
-  protected boolean visitInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    WalkContext context = c;
+  protected boolean visitInstanceOf(
+      CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.currentScope().allocateTempValue();
     context.setValue(n, result);
     return false;
   }
 
   @Override
-  protected void leaveInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    WalkContext context = c;
+  protected void leaveInstanceOf(
+      CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.getValue(n);
 
     visit(n.getChild(0), context, visitor);

@@ -236,7 +236,7 @@ public abstract class Dominators<T> {
 
     DFSDiscoverTimeIterator<T> dfs =
         new SlowDFSDiscoverTimeIterator<>(G, root) {
-          public static final long serialVersionUID = 88831771771711L;
+          private static final long serialVersionUID = 88831771771711L;
 
           @Override
           protected void visitEdge(T from, T to) {

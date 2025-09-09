@@ -100,7 +100,6 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
 
   public LoadFileTargetSelector(
       MethodTargetSelector base, JSSSAPropagationCallGraphBuilder builder) {
-    super();
     this.base = base;
     this.builder = builder;
   }

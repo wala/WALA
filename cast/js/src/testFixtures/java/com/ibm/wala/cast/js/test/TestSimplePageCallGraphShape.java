@@ -278,10 +278,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
         new Object[] {"apollo-example.html", new String[] {"apollo-example.html/__WINDOW_MAIN__"}},
         new Object[] {
           "apollo-example.html/__WINDOW_MAIN__",
-          new String[] {"apollo-example.html/__WINDOW_MAIN__/signon"}
+          new String[] {"apollo-example.html/__WINDOW_MAIN__/sign_on"}
         },
         new Object[] {
-          "apollo-example.html/__WINDOW_MAIN__/signon",
+          "apollo-example.html/__WINDOW_MAIN__/sign_on",
           new String[] {"preamble.js/DOMWindow/window_open"}
         }
       };
@@ -332,48 +332,48 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     JSCallGraphBuilderUtil.makeHTMLCG(url);
   }
 
-  private static final Object[][] assertionsForWindowx =
+  private static final Object[][] assertionsForWindowX =
       new Object[][] {
-        new Object[] {ROOT, new String[] {"windowx.html"}},
-        new Object[] {"windowx.html", new String[] {"windowx.html/__WINDOW_MAIN__"}},
+        new Object[] {ROOT, new String[] {"window_x.html"}},
+        new Object[] {"window_x.html", new String[] {"window_x.html/__WINDOW_MAIN__"}},
         new Object[] {
-          "windowx.html/__WINDOW_MAIN__",
-          new String[] {"windowx.html/__WINDOW_MAIN__/_f2", "windowx.html/__WINDOW_MAIN__/_f4"}
+          "window_x.html/__WINDOW_MAIN__",
+          new String[] {"window_x.html/__WINDOW_MAIN__/_f2", "window_x.html/__WINDOW_MAIN__/_f4"}
         },
         new Object[] {
-          "windowx.html/__WINDOW_MAIN__/_f2", new String[] {"windowx.html/__WINDOW_MAIN__/_f1"}
+          "window_x.html/__WINDOW_MAIN__/_f2", new String[] {"window_x.html/__WINDOW_MAIN__/_f1"}
         },
         new Object[] {
-          "windowx.html/__WINDOW_MAIN__/_f4", new String[] {"windowx.html/__WINDOW_MAIN__/_f3"}
+          "window_x.html/__WINDOW_MAIN__/_f4", new String[] {"window_x.html/__WINDOW_MAIN__/_f3"}
         }
       };
 
   @Test
-  public void testWindowx() throws IllegalArgumentException, CancelException, WalaException {
-    URL url = getClass().getClassLoader().getResource("pages/windowx.html");
+  public void testWindowX() throws IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/window_x.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
-    verifyGraphAssertions(CG, assertionsForWindowx);
+    verifyGraphAssertions(CG, assertionsForWindowX);
   }
 
-  private static final Object[][] assertionsForWindowOnload =
+  private static final Object[][] assertionsForWindowOnLoad =
       new Object[][] {
-        new Object[] {ROOT, new String[] {"windowonload.html"}},
-        new Object[] {"windowonload.html", new String[] {"windowonload.html/__WINDOW_MAIN__"}},
+        new Object[] {ROOT, new String[] {"window_on_load.html"}},
+        new Object[] {"window_on_load.html", new String[] {"window_on_load.html/__WINDOW_MAIN__"}},
         new Object[] {
-          "windowonload.html/__WINDOW_MAIN__",
-          new String[] {"windowonload.html/__WINDOW_MAIN__/onload_handler"}
+          "window_on_load.html/__WINDOW_MAIN__",
+          new String[] {"window_on_load.html/__WINDOW_MAIN__/onload_handler"}
         },
       };
 
   @Test
-  public void testWindowOnload() throws IllegalArgumentException, CancelException, WalaException {
-    URL url = getClass().getClassLoader().getResource("pages/windowonload.html");
+  public void testWindowOnLoad() throws IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/window_on_load.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);
-    verifyGraphAssertions(CG, assertionsForWindowOnload);
+    verifyGraphAssertions(CG, assertionsForWindowOnLoad);
   }
 
   public static final Object[][] assertionsForSkeleton =

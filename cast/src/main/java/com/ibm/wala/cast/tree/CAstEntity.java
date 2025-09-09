@@ -57,7 +57,7 @@ public interface CAstEntity {
    */
   int MACRO_ENTITY = 7;
 
-  /** This entity represents a global varible */
+  /** This entity represents a global variable */
   int GLOBAL_ENTITY = 8;
 
   /**

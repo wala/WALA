@@ -12,9 +12,10 @@ package com.ibm.wala.util.intset;
 
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /** An object that implements a bijection between whole numbers and objects. */
-public interface OrdinalSetMapping<T> extends Iterable<T> {
+public interface OrdinalSetMapping<T extends @Nullable Object> extends Iterable<T> {
   /**
    * @return the object numbered n.
    */

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.modref.JavaScriptModRef;
@@ -46,7 +46,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    assertEquals(0, SlicerUtil.countConditionals(result));
+    assertThat(SlicerUtil.countConditionals(result)).isEqualTo(0);
   }
 
   @Test
@@ -59,7 +59,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    assertEquals(2, SlicerUtil.countConditionals(result));
+    assertThat(SlicerUtil.countConditionals(result)).isEqualTo(2);
   }
 
   @Test
@@ -72,7 +72,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
       System.err.println(r);
     }
 
-    assertEquals(1, SlicerUtil.countConditionals(result));
+    assertThat(SlicerUtil.countConditionals(result)).isEqualTo(1);
   }
 
   private Collection<Statement> slice(
@@ -85,8 +85,7 @@ public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
         new SDG<>(CG, B.getPointerAnalysis(), new JavaScriptModRef<>(), data, ctrl);
 
     final Collection<Statement> ss = findTargetStatement(CG);
-    Collection<Statement> result = Slicer.computeBackwardSlice(sdg, ss);
-    return result;
+    return Slicer.computeBackwardSlice(sdg, ss);
   }
 
   private Collection<Statement> findTargetStatement(CallGraph CG) {

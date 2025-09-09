@@ -11,7 +11,7 @@
 
 package com.ibm.wala.core.tests.basic;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -69,24 +69,24 @@ public class ExtensionGraphTest {
   @Test
   public void testAugment() {
     NumberedGraph<String> base = makeBaseGraph();
-    assertEquals(8, IteratorUtil.count(new SCCIterator<>(base)), "base has 8 SCCs");
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
 
     NumberedGraph<String> x = new ExtensionGraph<>(base);
     augmentA(x);
-    assertEquals(5, IteratorUtil.count(new SCCIterator<>(x)), "base+A has 5 SCCs");
-    assertEquals(8, IteratorUtil.count(new SCCIterator<>(base)), "base has 8 SCCs");
+    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
 
     NumberedGraph<String> y = new ExtensionGraph<>(x);
     augmentB(y);
-    assertEquals(7, IteratorUtil.count(new SCCIterator<>(y)), "base+A+B has 7 SCCs");
-    assertEquals(5, IteratorUtil.count(new SCCIterator<>(x)), "base+A has 5 SCCs");
-    assertEquals(8, IteratorUtil.count(new SCCIterator<>(base)), "base has 8 SCCs");
+    assertThat(IteratorUtil.count(new SCCIterator<>(y))).isEqualTo(7);
+    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
 
     NumberedGraph<String> z = new ExtensionGraph<>(y);
     augmentC(z);
-    assertEquals(3, IteratorUtil.count(new SCCIterator<>(z)), "base+A+B+C has 3 SCCs");
-    assertEquals(7, IteratorUtil.count(new SCCIterator<>(y)), "base+A+B has 7 SCCs");
-    assertEquals(5, IteratorUtil.count(new SCCIterator<>(x)), "base+A has 5 SCCs");
-    assertEquals(8, IteratorUtil.count(new SCCIterator<>(base)), "base has 8 SCCs");
+    assertThat(IteratorUtil.count(new SCCIterator<>(z))).isEqualTo(3);
+    assertThat(IteratorUtil.count(new SCCIterator<>(y))).isEqualTo(7);
+    assertThat(IteratorUtil.count(new SCCIterator<>(x))).isEqualTo(5);
+    assertThat(IteratorUtil.count(new SCCIterator<>(base))).isEqualTo(8);
   }
 }

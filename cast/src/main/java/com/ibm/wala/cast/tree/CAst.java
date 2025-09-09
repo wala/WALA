@@ -82,6 +82,6 @@ public interface CAst {
   /** Make an arbitrary object constant node. */
   CAstNode makeConstant(Object value);
 
-  /** Make a new identifier, unqiue to this CAst instance. */
+  /** Make a new identifier, unique to this CAst instance. */
   String makeUnique();
 }

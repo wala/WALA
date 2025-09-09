@@ -2,12 +2,12 @@
 #define EXCEPTIONS_H
 
 /**
- *  The combination of the macroes and the Exceptions class declared 
+ *  The combination of the macros and the Exceptions class declared
  * in this file is used to provide a (shaky) veneer of exception handling
  * to JNI code.
  *
  *  The idea is that a C function called from JNI will be enclosed with
- * TRY/CATCH macroes, and the CPP_EXP_NAME variable defined will be passed
+ * TRY/CATCH macros, and the CPP_EXP_NAME variable defined will be passed
  * to callees who might want to throw an exception.  The callees will use
  * the THROW macro to throw exceptions.  When a THROW is executed, control
  * is transferred to the CATCH, and a RuntimeException is thrown to the

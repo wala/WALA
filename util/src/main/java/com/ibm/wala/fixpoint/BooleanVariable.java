@@ -64,9 +64,4 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
   public void set(boolean b) {
     B = b;
   }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
 }

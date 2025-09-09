@@ -13,7 +13,7 @@ package com.ibm.wala.util.intset;
 import java.util.Arrays;
 
 public final class FixedSizeBitVector implements Cloneable, java.io.Serializable {
-  public static final long serialVersionUID = 33181877746462822L;
+  private static final long serialVersionUID = 33181877746462822L;
 
   private static final int LOG_BITS_PER_UNIT = 5;
 
@@ -272,7 +272,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    */
   @Override
   public boolean equals(Object obj) {
-    if ((obj != null) && (obj instanceof FixedSizeBitVector)) {
+    if (obj instanceof FixedSizeBitVector) {
       if (this == obj) { // should help alias analysis
         return true;
       }
@@ -319,8 +319,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
     boolean needSeparator = false;
     buffer.append('{');
     // int limit = length();
-    int limit = this.nbits;
-    for (int i = 0; i < limit; i++) {
+    for (int i = 0; i < this.nbits; i++) {
       if (get(i)) {
         if (needSeparator) {
           buffer.append(", ");

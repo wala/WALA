@@ -12,7 +12,7 @@ walaEclipseMavenCentral {
   )
 }
 
-val runSourceDirectory: Configuration by configurations.creating { isCanBeConsumed = false }
+val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   implementation(libs.eclipse.ecj)
@@ -22,9 +22,10 @@ dependencies {
   implementation(projects.shrike)
   implementation(projects.util)
   runSourceDirectory(
-      project(
-          mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory")))
+      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory"))
+  )
   testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.junit.jupiter.params)
   testImplementation(testFixtures(projects.cast.java))
 }
 
@@ -32,14 +33,17 @@ application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
 val run by
     tasks.existing(JavaExec::class) {
+      val runSourceDirectoryPath = runSourceDirectory.map { it.files.single() }
+      inputs.dir(runSourceDirectoryPath)
       // this is for testing purposes
-      args =
-          listOf(
-              "-sourceDir", runSourceDirectory.files.single().toString(), "-mainClass", "LArray1")
+      argumentProviders.add {
+        listOf("-sourceDir", runSourceDirectoryPath.get().toString(), "-mainClass", "LArray1")
+      }
 
       // log output to file, although we don"t validate it
-      val outFile = project.layout.buildDirectory.file("SourceDirCallGraph.log")
+      val outFile = layout.buildDirectory.file("SourceDirCallGraph.log")
       outputs.file(outFile)
+      outputs.cacheIf { true }
       doFirst {
         outFile.get().asFile.outputStream().let {
           standardOutput = it
@@ -48,11 +52,11 @@ val run by
       }
     }
 
-tasks.named<Test>("test") {
-  maxHeapSize = "1200M"
+// ensure the command-line driver for running ECJ works
+tasks.named("check") { dependsOn(run) }
 
-  workingDir(project(":cast:java:test:data").projectDir)
+tasks.named<Test>("test") { maxHeapSize = "1200M" }
 
-  // ensure the command-line driver for running ECJ works
-  dependsOn(run)
+tasks.named<Copy>("processTestResources") {
+  from(project(":cast:java:test:data").projectDir.resolve("src/testSubjects/java"))
 }

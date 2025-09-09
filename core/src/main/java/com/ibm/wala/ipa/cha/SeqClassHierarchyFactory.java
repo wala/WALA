@@ -104,15 +104,6 @@ public class SeqClassHierarchyFactory {
   public static ClassHierarchy make(
       AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
       throws ClassHierarchyException {
-    if (factory == null) {
-      throw new IllegalArgumentException("null factory");
-    }
-    return new ClassHierarchy(
-        scope,
-        factory,
-        language,
-        monitor,
-        new ConcurrentHashMap<>(),
-        ClassHierarchy.MissingSuperClassHandling.NONE);
+    return ClassHierarchyFactory.make(scope, factory, language, monitor);
   }
 }

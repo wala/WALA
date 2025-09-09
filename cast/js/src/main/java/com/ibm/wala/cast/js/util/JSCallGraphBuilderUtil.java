@@ -143,14 +143,12 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   public static Module[] makeSourceModules(String dir, String name, ClassLoader loader)
       throws IOException {
     URL script = getURLforFile(dir, name, loader);
-    Module[] modules =
-        new Module[] {
-          (script.openConnection() instanceof JarURLConnection)
-              ? new SourceURLModule(script)
-              : makeSourceModule(script, dir, name),
-          getPrologueFile("prologue.js")
-        };
-    return modules;
+    return new Module[] {
+      (script.openConnection() instanceof JarURLConnection)
+          ? new SourceURLModule(script)
+          : makeSourceModule(script, dir, name),
+      getPrologueFile("prologue.js")
+    };
   }
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, ClassLoader loader)
@@ -194,6 +192,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       String dir, String name, CGBuilderType builderType, ClassLoader loader)
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, builderType, loader);
+    @SuppressWarnings("UnnecessaryLocalVariable")
     CallGraph CG = b.makeCallGraph(b.getOptions());
     // dumpCG(b.getPointerAnalysis(), CG);
     return CG;
@@ -208,6 +207,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
             : null;
     PropagationCallGraphBuilder b =
         makeCGBuilder(makeLoaders(preprocessor), scripts, builderType, irFactory);
+    @SuppressWarnings("UnnecessaryLocalVariable")
     CallGraph CG = b.makeCallGraph(b.getOptions());
     // dumpCG(b.getPointerAnalysis(), CG);
     return CG;
@@ -279,8 +279,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       ((CAstAbstractLoader) loaders.getTheLoader()).addMessages(dummy, e.warning);
     }
 
-    SourceModule[] scriptsArray = scripts.toArray(new SourceModule[0]);
-    return scriptsArray;
+    return scripts.toArray(new SourceModule[0]);
   }
 
   public static CallGraph makeHTMLCG(URL url, Supplier<JSSourceExtractor> fExtractor)
@@ -295,8 +294,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       URL url, CGBuilderType builderType, Supplier<JSSourceExtractor> fExtractor)
       throws IllegalArgumentException, CancelException, WalaException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url, builderType, fExtractor);
-    CallGraph CG = b.makeCallGraph(b.getOptions());
-    return CG;
+    return b.makeCallGraph(b.getOptions());
   }
 
   public static JSCFABuilder makeCGBuilder(

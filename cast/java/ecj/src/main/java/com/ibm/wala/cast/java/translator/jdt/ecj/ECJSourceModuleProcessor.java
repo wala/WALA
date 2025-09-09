@@ -54,7 +54,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
@@ -148,7 +148,7 @@ public class ECJSourceModuleProcessor implements CAstGenerator {
   protected ClassLoaderReference sourceLoaderRef;
   private final String[] sources;
   private final String[] libs;
-  protected final SetOfClasses exclusions;
+  protected final StringFilter exclusions;
 
   public ECJSourceModuleProcessor(AnalysisScope scope, ClassLoaderReference sourceLoader) {
     this(scope, sourceLoader, false);

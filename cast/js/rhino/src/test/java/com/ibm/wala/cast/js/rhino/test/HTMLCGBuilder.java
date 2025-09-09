@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.js.rhino.test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
@@ -125,8 +125,7 @@ public class HTMLCGBuilder {
     // assume it's a URL
     try {
       File f = new FileProvider().getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
-      URL url = f.toURI().toURL();
-      return url;
+      return f.toURI().toURL();
     } catch (FileNotFoundException fnfe) {
       return new URI(src).toURL();
     }

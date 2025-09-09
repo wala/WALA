@@ -25,7 +25,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,7 +52,7 @@ public class ClassLoaderImpl implements IClassLoader {
   private static final boolean OPTIMIZE_JAR_FILE_IO = true;
 
   /** classes to ignore */
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   /** Identity for this class loader */
   private final ClassLoaderReference loader;
@@ -82,7 +82,7 @@ public class ClassLoaderImpl implements IClassLoader {
       ClassLoaderReference loader,
       ArrayClassLoader arrayClassLoader,
       IClassLoader parent,
-      SetOfClasses exclusions,
+      StringFilter exclusions,
       IClassHierarchy cha) {
 
     if (loader == null) {
@@ -230,7 +230,7 @@ public class ClassLoaderImpl implements IClassLoader {
         System.err.println("Consider " + className);
       }
 
-      if (exclusions != null && exclusions.contains(className)) {
+      if (exclusions != null && exclusions.test(className)) {
         if (DEBUG_LEVEL > 0) {
           System.err.println("Excluding " + className);
         }
@@ -586,8 +586,7 @@ public class ClassLoaderImpl implements IClassLoader {
       }
     }
     // delegating failed. Try our own namespace.
-    IClass result = loadedClasses.get(className);
-    return result;
+    return loadedClasses.get(className);
   }
 
   /** Method getParent. */

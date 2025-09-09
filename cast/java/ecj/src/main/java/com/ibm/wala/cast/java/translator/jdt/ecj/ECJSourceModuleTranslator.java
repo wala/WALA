@@ -52,7 +52,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
@@ -175,7 +175,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   protected ECJSourceLoaderImpl sourceLoader;
   private final String[] sources;
   private final String[] libs;
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   public ECJSourceModuleTranslator(AnalysisScope scope, ECJSourceLoaderImpl sourceLoader) {
     this(scope, sourceLoader, false);

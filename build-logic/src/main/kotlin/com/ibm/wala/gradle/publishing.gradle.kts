@@ -1,7 +1,5 @@
 package com.ibm.wala.gradle
 
-import com.vanniktech.maven.publish.SonatypeHost
-
 plugins {
   `java-test-fixtures`
   signing
@@ -13,7 +11,7 @@ val isSnapshot = "SNAPSHOT" in version as String
 val java: JavaPluginExtension by extensions
 
 val testFixturesJavadoc by
-    tasks.existing(Javadoc::class) { setDestinationDir(java.docsDir.get().dir(name).asFile) }
+    tasks.existing(Javadoc::class) { destinationDir = java.docsDir.get().dir(name).asFile }
 
 val testFixturesJavadocJar by
     tasks.registering(Jar::class) {
@@ -23,7 +21,7 @@ val testFixturesJavadocJar by
 
 mavenPublishing {
   configureBasedOnAppliedPlugins()
-  publishToMavenCentral(SonatypeHost.DEFAULT)
+  publishToMavenCentral()
   signAllPublications()
 
   pom {
@@ -92,24 +90,9 @@ mavenPublishing {
 }
 
 publishing {
-  repositories {
-    maven {
-      name = "fakeRemote"
-      url = uri(rootProject.layout.buildDirectory.dir("maven-fake-remote-repository"))
-    }
-
-    maven {
-      name = "artifactory"
-      if (isSnapshot) {
-        url = uri(property("mavenSnapshotUrl") as String)
-      } else {
-        url = uri(property("mavenReleaseUrl") as String)
-      }
-      credentials {
-        username = property("mavenUsername") as String
-        password = property("mavenPassword") as String
-      }
-    }
+  repositories.maven {
+    name = "fakeRemote"
+    setUrl(rootDir.resolve("build/maven-fake-remote-repository"))
   }
 
   publications.named<MavenPublication>("maven") {

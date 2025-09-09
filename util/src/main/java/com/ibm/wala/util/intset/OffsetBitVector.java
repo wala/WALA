@@ -30,7 +30,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
     int[] oldbits = bits;
     bits = new int[subscript(newCapacity) + 1];
-    System.arraycopy(oldbits, 0, bits, 0 - wordDiff, oldbits.length);
+    System.arraycopy(oldbits, 0, bits, -wordDiff, oldbits.length);
     offset = newOffset;
   }
 
@@ -216,7 +216,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public boolean equals(Object obj) {
-    if ((obj != null) && (obj instanceof OffsetBitVector)) {
+    if (obj instanceof OffsetBitVector) {
       if (this == obj) { // should help alias analysis
         return true;
       }

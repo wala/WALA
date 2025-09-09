@@ -10,10 +10,8 @@
  */
 package com.ibm.wala.core.tests.ir;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IBytecodeMethod;
@@ -89,12 +87,8 @@ public abstract class AnnotationTest extends WalaTestCase {
       actual = Collections.emptySet();
     }
 
-    if (expected.size() != actual.size()) {
-      fail("expected=" + expected + " actual=" + actual);
-    }
-    for (T a : expected) {
-      assertTrue(actual.contains(a), "missing " + a.toString());
-    }
+    assertThat(actual).hasSameSizeAs(expected);
+    assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
   }
 
   @Test
@@ -107,17 +101,17 @@ public abstract class AnnotationTest extends WalaTestCase {
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/DefaultVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/DefaultVisibleAnnotation")));
 
     Collection<Annotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
     expectedRuntimeVisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
 
     testClassAnnotations(
         typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
@@ -133,21 +127,21 @@ public abstract class AnnotationTest extends WalaTestCase {
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
     expectedRuntimeInvisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation2")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation2")));
 
     Collection<Annotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
     expectedRuntimeVisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
     expectedRuntimeVisibleAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation2")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation2")));
 
     testClassAnnotations(
         typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
@@ -159,9 +153,8 @@ public abstract class AnnotationTest extends WalaTestCase {
       Collection<Annotation> expectedRuntimeVisibleAnnotations)
       throws InvalidClassFileException {
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(classUnderTest, typeUnderTest.toString() + " not found");
-    assertTrue(classUnderTest instanceof BytecodeClass, classUnderTest + " must be BytecodeClass");
-    BytecodeClass<?> bcClassUnderTest = (BytecodeClass<?>) classUnderTest;
+    BytecodeClass<?> bcClassUnderTest =
+        assertThat(classUnderTest).asInstanceOf(type(BytecodeClass.class)).actual();
 
     Collection<Annotation> runtimeInvisibleAnnotations = bcClassUnderTest.getAnnotations(true);
     Collection<Annotation> runtimeVisibleAnnotations = bcClassUnderTest.getAnnotations(false);
@@ -179,31 +172,28 @@ public abstract class AnnotationTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotatedClass3");
     IClass klass = cha.lookupClass(typeRef);
-    assertNotNull(klass, typeRef + " must exist");
+    assertThat(klass).isNotNull();
     BytecodeClass<?> shrikeClass = (BytecodeClass<?>) klass;
     Collection<Annotation> classAnnotations = shrikeClass.getAnnotations(false);
-    assertEquals(
-        "[Annotation type <Application,Lannotations/AnnotationWithParams> {strParam=classStrParam}]",
-        classAnnotations.toString());
+    assertThat(classAnnotations)
+        .hasToString(
+            "[Annotation type <Application,Lannotations/AnnotationWithParams> {strParam=classStrParam}]");
 
     MethodReference methodRefUnderTest =
         MethodReference.findOrCreate(typeRef, Selector.make("foo()V"));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodUnderTest, methodRefUnderTest + " not found");
-    assertTrue(
-        methodUnderTest instanceof IBytecodeMethod, methodUnderTest + " must be IBytecodeMethod");
     IBytecodeMethod<IInstruction> bcMethodUnderTest =
-        (IBytecodeMethod<IInstruction>) methodUnderTest;
+        assertThat(methodUnderTest).asInstanceOf(type(IBytecodeMethod.class)).actual();
 
     Collection<Annotation> runtimeVisibleAnnotations = bcMethodUnderTest.getAnnotations(false);
-    assertEquals(1, runtimeVisibleAnnotations.size());
+    assertThat(runtimeVisibleAnnotations).hasSize(1);
 
     Annotation x = runtimeVisibleAnnotations.iterator().next();
-    assertEquals(
-        TypeReference.findOrCreate(
-            ClassLoaderReference.Application, "Lannotations/AnnotationWithParams"),
-        x.getType());
+    assertThat(x.getType())
+        .isEqualTo(
+            TypeReference.findOrCreate(
+                ClassLoaderReference.Application, "Lannotations/AnnotationWithParams"));
     for (Pair<String, String> n :
         new Pair[] {
           Pair.make("enumParam", "EnumElementValue [type=Lannotations/AnnotationEnum;, val=VAL1]"),
@@ -215,7 +205,7 @@ public abstract class AnnotationTest extends WalaTestCase {
           Pair.make("intParam", "25"),
           Pair.make("klassParam", "Ljava/lang/Integer;")
         }) {
-      assertEquals(n.snd, x.getNamedArguments().get(n.fst).toString());
+      assertThat(x.getNamedArguments().get(n.fst)).hasToString(n.snd);
     }
   }
 
@@ -230,19 +220,19 @@ public abstract class AnnotationTest extends WalaTestCase {
             typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int);
 
     IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
-    assertNotNull(fieldUnderTest, fieldRefUnderTest + " not found");
+    assertThat(fieldUnderTest).isNotNull();
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
     Collection<Annotation> expectedAnnotations = HashSetFactory.make();
     expectedAnnotations.add(
         Annotation.make(
             TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisableAnnotation")));
+                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
     if (!checkRuntimeRetentionOnly) {
       expectedAnnotations.add(
           Annotation.make(
               TypeReference.findOrCreate(
-                  ClassLoaderReference.Application, "Lannotations/RuntimeInvisableAnnotation")));
+                  ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
     }
     assertEqualCollections(expectedAnnotations, annots);
   }
@@ -257,7 +247,7 @@ public abstract class AnnotationTest extends WalaTestCase {
     checkParameterAnnots(
         typeRef,
         "foo(Ljava/lang/String;)V",
-        new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"});
+        new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"});
     checkParameterAnnots(
         typeRef,
         "bar(Ljava/lang/Integer;)V",
@@ -267,29 +257,29 @@ public abstract class AnnotationTest extends WalaTestCase {
     checkParameterAnnots(
         typeRef,
         "foo2(Ljava/lang/String;Ljava/lang/Integer;)V",
-        new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"},
+        new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"},
         checkRuntimeRetentionOnly
             ? new String[] {}
             : new String[] {
-              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"
+              "Annotation type <Application,Lannotations/RuntimeInvisibleAnnotation>"
             });
     checkParameterAnnots(
         typeRef,
         "foo3(Ljava/lang/String;Ljava/lang/Integer;)V",
-        new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"},
+        new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"},
         checkRuntimeRetentionOnly
             ? new String[] {}
             : new String[] {
-              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>"
+              "Annotation type <Application,Lannotations/RuntimeInvisibleAnnotation>"
             });
     checkParameterAnnots(
         typeRef,
         "foo4(Ljava/lang/String;Ljava/lang/Integer;)V",
         checkRuntimeRetentionOnly
-            ? new String[] {"Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"}
+            ? new String[] {"Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"}
             : new String[] {
-              "Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>",
-              "Annotation type <Application,Lannotations/RuntimeVisableAnnotation>"
+              "Annotation type <Application,Lannotations/RuntimeInvisibleAnnotation>",
+              "Annotation type <Application,Lannotations/RuntimeVisibleAnnotation>"
             },
         new String[0]);
   }
@@ -300,14 +290,12 @@ public abstract class AnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(typeRef, Selector.make(selector));
 
     IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
-    assertNotNull(methodUnderTest, methodRefUnderTest + " not found");
-    assertTrue(
-        methodUnderTest instanceof IBytecodeMethod, methodUnderTest + " must be bytecode method");
-    IBytecodeMethod<?> IBytecodeMethodUnderTest = (IBytecodeMethod<?>) methodUnderTest;
+    IBytecodeMethod<?> IBytecodeMethodUnderTest =
+        assertThat(methodUnderTest).asInstanceOf(type(IBytecodeMethod.class)).actual();
 
     Collection<Annotation>[] parameterAnnotations =
         IBytecodeMethodUnderTest.getParameterAnnotations();
-    assertEquals(expected.length, parameterAnnotations.length);
+    assertThat(parameterAnnotations).hasSameSizeAs(expected);
     for (int i = 0; i < expected.length; i++) {
       Set<String> e = HashSetFactory.make();
       e.addAll(Arrays.asList(expected[i]));
@@ -319,7 +307,7 @@ public abstract class AnnotationTest extends WalaTestCase {
         }
       }
 
-      assertEquals(e, a, e + " must be " + a);
+      assertThat(a).isEqualTo(e);
     }
   }
 }

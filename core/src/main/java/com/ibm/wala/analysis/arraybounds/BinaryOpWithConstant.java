@@ -53,7 +53,6 @@ public class BinaryOpWithConstant {
   private final Integer assigned;
 
   private BinaryOpWithConstant(IOperator op, Integer other, Integer value, Integer assigned) {
-    super();
     this.op = op;
     this.other = other;
     this.value = value;

@@ -46,11 +46,6 @@ public class AstGlobalWrite extends SSAPutInstruction {
   }
 
   @Override
-  public boolean isFallThrough() {
-    return true;
-  }
-
-  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

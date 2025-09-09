@@ -54,9 +54,7 @@ public class GraphSlicer {
       }
     }
 
-    Set<T> result = DFS.getReachableNodes(GraphInverter.invert(g), roots);
-
-    return result;
+    return DFS.getReachableNodes(GraphInverter.invert(g), roots);
   }
 
   /** Prune a graph to only the nodes accepted by the {@link Predicate} p */
@@ -154,31 +152,29 @@ public class GraphSlicer {
             return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
           }
         };
-    AbstractGraph<T> output =
-        new AbstractGraph<>() {
 
-          @SuppressWarnings({"unchecked", "rawtypes"})
-          @Override
-          protected String nodeString(T n, boolean forEdge) {
-            if (g instanceof AbstractGraph) {
-              return ((AbstractGraph) g).nodeString(n, forEdge);
-            } else {
-              return super.nodeString(n, forEdge);
-            }
-          }
+    return new AbstractGraph<>() {
 
-          @Override
-          protected NodeManager<T> getNodeManager() {
-            return n;
-          }
+      @SuppressWarnings({"unchecked", "rawtypes"})
+      @Override
+      protected String nodeString(T n1, boolean forEdge) {
+        if (g instanceof AbstractGraph) {
+          return ((AbstractGraph) g).nodeString(n1, forEdge);
+        } else {
+          return super.nodeString(n1, forEdge);
+        }
+      }
 
-          @Override
-          protected EdgeManager<T> getEdgeManager() {
-            return e;
-          }
-        };
+      @Override
+      protected NodeManager<T> getNodeManager() {
+        return n;
+      }
 
-    return output;
+      @Override
+      protected EdgeManager<T> getEdgeManager() {
+        return e;
+      }
+    };
   }
 
   public static <E> AbstractGraph<E> project(final Graph<E> G, final Predicate<E> fmember) {

@@ -1,12 +1,12 @@
-import com.ibm.wala.gradle.cast.addCastLibrary
+import com.ibm.wala.gradle.cast.addJvmLibrary
+import com.ibm.wala.gradle.cast.addRpaths
 
 plugins {
   `cpp-library`
-  id("com.ibm.wala.gradle.cast.native")
   id("com.ibm.wala.gradle.subproject")
 }
 
-val castHeaderDirectory: Configuration by configurations.creating { isCanBeConsumed = false }
+val castHeaderDirectory by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   castHeaderDirectory(project(mapOf("path" to ":cast", "configuration" to "castHeaderDirectory")))
@@ -19,6 +19,7 @@ library {
 
   binaries.whenElementFinalized {
     this as CppSharedLibrary
-    linkTask.get().addCastLibrary(this)
+    addJvmLibrary(project)
+    linkTask.addRpaths()
   }
 }

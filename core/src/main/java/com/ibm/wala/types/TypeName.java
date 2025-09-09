@@ -41,12 +41,7 @@ public final class TypeName implements Serializable {
   private static final Map<TypeNameKey, TypeName> map = HashMapFactory.make();
 
   private static synchronized TypeName findOrCreate(TypeNameKey t) {
-    TypeName result = map.get(t);
-    if (result == null) {
-      result = new TypeName(t);
-      map.put(t, result);
-    }
-    return result;
+    return map.computeIfAbsent(t, TypeName::new);
   }
 
   /** The key object holds all the information about a type name */
@@ -67,8 +62,7 @@ public final class TypeName implements Serializable {
         dim |= PrimitiveMask;
       }
     }
-    TypeNameKey t = new TypeNameKey(packageName, className, dim);
-    return findOrCreate(t);
+    return findOrCreate(packageName, className, dim);
   }
 
   public static TypeName findOrCreate(ImmutableByteArray name) throws IllegalArgumentException {
@@ -102,11 +96,6 @@ public final class TypeName implements Serializable {
   /** This should be the only constructor */
   private TypeName(TypeNameKey key) {
     this.key = key;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
   }
 
   @Override

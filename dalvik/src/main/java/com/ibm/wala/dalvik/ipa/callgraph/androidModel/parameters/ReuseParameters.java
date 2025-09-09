@@ -154,12 +154,12 @@ public class ReuseParameters {
   private static int ssaFor(IMethod inCallTo, int paramNo) {
     assert (paramNo >= 0);
     assert (paramNo < inCallTo.getNumberOfParameters());
-
-    if (inCallTo.isStatic()) {
-      return paramNo + 1;
-    } else {
-      return paramNo + 1; // TODO 2 or 1?
-    }
+    return paramNo + 1;
+    //    if (inCallTo.isStatic()) {
+    //      return paramNo + 1;
+    //    } else {
+    //      return paramNo + 1; // TODO 2 or 1?
+    //    }
   }
 
   /**
@@ -195,7 +195,7 @@ public class ReuseParameters {
     final MethodReference inCall;
     /*final*/ String withName;
 
-    if ((inCallTo != null) && (inCallTo != ALL_TARGETS)) {
+    if (inCallTo != ALL_TARGETS) {
       final int bcIndex = 0; // The PC to get the variable name from
       final int localNumber = ssaFor(inCallTo, firstOf(param, inCallTo));
       try {

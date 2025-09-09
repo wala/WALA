@@ -36,8 +36,7 @@ public class CallGraphTestUtil {
 
   public static AnalysisOptions makeAnalysisOptions(
       AnalysisScope scope, Iterable<Entrypoint> entrypoints) {
-    AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
-    return options;
+    return new AnalysisOptions(scope, entrypoints);
   }
 
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
@@ -54,10 +53,8 @@ public class CallGraphTestUtil {
 
   public static AnalysisScope makeJ2SEAnalysisScope(
       String scopeFile, String exclusionsFile, ClassLoader myClassLoader) throws IOException {
-    AnalysisScope scope =
-        Java9AnalysisScopeReader.instance.readJavaScope(
-            scopeFile, new FileProvider().getFile(exclusionsFile), myClassLoader);
-    return scope;
+    return Java9AnalysisScopeReader.instance.readJavaScope(
+        scopeFile, new FileProvider().getFile(exclusionsFile), myClassLoader);
   }
 
   public static CallGraph buildRTA(

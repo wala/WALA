@@ -24,19 +24,16 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class ECJTestComments extends IRTests {
 
-  public ECJTestComments() {
-    super(null);
-  }
-
   @Override
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
-      final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+      final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
         new ECJJavaSourceAnalysisEngine() {
           @Override
@@ -59,8 +56,7 @@ public class ECJTestComments extends IRTests {
 
   @Test
   public void testComments() throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result =
-        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result = runTest("Comments");
     for (CGNode node : result.fst.getNodes(testMethod)) {
       if (node.getMethod() instanceof AstMethod) {
         AstMethod m = (AstMethod) node.getMethod();

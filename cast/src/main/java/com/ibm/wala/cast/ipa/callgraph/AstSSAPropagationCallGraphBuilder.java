@@ -14,19 +14,16 @@ import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
-import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.AstPropertyRead;
 import com.ibm.wala.cast.ir.ssa.AstPropertyWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -212,41 +209,11 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       @Override
-      public void visitPropertyRead(AstPropertyRead instruction) {}
-
-      @Override
-      public void visitPropertyWrite(AstPropertyWrite instruction) {}
-
-      @Override
-      public void visitAstLexicalRead(AstLexicalRead instruction) {}
-
-      @Override
-      public void visitAstLexicalWrite(AstLexicalWrite instruction) {}
-
-      @Override
       public void visitAstGlobalRead(AstGlobalRead instruction) {
         pointsToSet =
             analysis.computeImplicitPointsToSetAtGet(
                 node, instruction.getDeclaredField(), -1, true);
       }
-
-      @Override
-      public void visitAstGlobalWrite(AstGlobalWrite instruction) {}
-
-      @Override
-      public void visitAssert(AstAssertInstruction instruction) {}
-
-      @Override
-      public void visitEachElementGet(EachElementGetInstruction inst) {}
-
-      @Override
-      public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
-
-      @Override
-      public void visitIsDefined(AstIsDefinedInstruction inst) {}
-
-      @Override
-      public void visitEcho(AstEchoInstruction inst) {}
     }
   }
 
@@ -307,15 +274,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     public void visitEachElementGet(EachElementGetInstruction inst) {
       bingo = true;
     }
-
-    @Override
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
-
-    @Override
-    public void visitIsDefined(AstIsDefinedInstruction inst) {}
-
-    @Override
-    public void visitEcho(AstEchoInstruction inst) {}
   }
 
   @Override
@@ -520,10 +478,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-                final IntSetVariable<?> objects = rhs;
-                if (objects.getValue() != null) {
-                  objects
-                      .getValue()
+                if (rhs.getValue() != null) {
+                  rhs.getValue()
                       .foreach(
                           optr -> {
                             InstanceKey object = system.getInstanceKey(optr);
@@ -558,12 +514,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     @Override
-    public void visitAssert(AstAssertInstruction instruction) {}
-
-    @Override
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {}
-
-    @Override
     public void visitEachElementGet(EachElementGetInstruction inst) {
       int lval = inst.getDef(0);
       final PointerKey lk = getPointerKeyForLocal(lval);
@@ -582,10 +532,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             new UnaryOperator<>() {
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-                final IntSetVariable<?> objects = rhs;
-                if (objects.getValue() != null) {
-                  objects
-                      .getValue()
+                if (rhs.getValue() != null) {
+                  rhs.getValue()
                       .foreach(
                           optr -> {
                             InstanceKey object = system.getInstanceKey(optr);
@@ -616,12 +564,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             rk);
       }
     }
-
-    @Override
-    public void visitIsDefined(AstIsDefinedInstruction inst) {}
-
-    @Override
-    public void visitEcho(AstEchoInstruction inst) {}
 
     // /////////////////////////////////////////////////////////////////////////
     //
@@ -779,37 +721,39 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
      */
     private void addUpwardFunargConstraints(
         PointerKey lhs, String name, String definer, CGNode definingNode) {
-      discoveredUpwardFunargs.add(lhs);
+      if (definingNode.getIR() instanceof AstIRFactory.AstIR) {
+        discoveredUpwardFunargs.add(lhs);
 
-      LexicalInformation LI = ((AstIRFactory.AstIR) definingNode.getIR()).lexicalInfo();
-      Pair<String, String>[] names = LI.getExposedNames();
-      for (int i = 0; i < names.length; i++) {
-        if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
-          int vn = LI.getExitExposedUses()[i];
-          if (vn > 0) {
-            IRView ir = getBuilder().getCFAContextInterpreter().getIRView(definingNode);
-            DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode);
-            SymbolTable st = ir.getSymbolTable();
+        LexicalInformation LI = ((AstIRFactory.AstIR) definingNode.getIR()).lexicalInfo();
+        Pair<String, String>[] names = LI.getExposedNames();
+        for (int i = 0; i < names.length; i++) {
+          if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
+            int vn = LI.getExitExposedUses()[i];
+            if (vn > 0) {
+              IRView ir = getBuilder().getCFAContextInterpreter().getIRView(definingNode);
+              DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode);
+              SymbolTable st = ir.getSymbolTable();
 
-            PointerKey rhs = getBuilder().getPointerKeyForLocal(definingNode, vn);
+              PointerKey rhs = getBuilder().getPointerKeyForLocal(definingNode, vn);
 
-            if (contentsAreInvariant(st, du, vn)) {
-              system.recordImplicitPointsToSet(rhs);
-              final InstanceKey[] objs = getInvariantContents(st, du, definingNode, vn);
-              for (InstanceKey obj : objs) {
-                system.findOrCreateIndexForInstanceKey(obj);
-                system.newConstraint(lhs, obj);
+              if (contentsAreInvariant(st, du, vn)) {
+                system.recordImplicitPointsToSet(rhs);
+                final InstanceKey[] objs = getInvariantContents(st, du, definingNode, vn);
+                for (InstanceKey obj : objs) {
+                  system.findOrCreateIndexForInstanceKey(obj);
+                  system.newConstraint(lhs, obj);
+                }
+              } else {
+                system.newConstraint(lhs, assignOperator, rhs);
               }
-            } else {
-              system.newConstraint(lhs, assignOperator, rhs);
             }
+
+            return;
           }
-
-          return;
         }
-      }
 
-      Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE();
+      }
     }
 
     /**
@@ -875,7 +819,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp);
     }
 
-    private void newFieldOperation(
+    protected void newFieldOperation(
         CGNode opNode,
         final int objVn,
         final int fieldsVn,
@@ -1067,10 +1011,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           new UnaryOperator<>() {
             @Override
             public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-              final IntSetVariable<?> objects = rhs;
-              if (objects.getValue() != null) {
-                objects
-                    .getValue()
+              if (rhs.getValue() != null) {
+                rhs.getValue()
                     .foreach(
                         optr -> {
                           InstanceKey object = system.getInstanceKey(optr);
@@ -1138,10 +1080,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           new UnaryOperator<>() {
             @Override
             public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-              final IntSetVariable<?> fields = rhs;
-              if (fields.getValue() != null) {
-                fields
-                    .getValue()
+              if (rhs.getValue() != null) {
+                rhs.getValue()
                     .foreach(
                         fptr -> {
                           InstanceKey field = system.getInstanceKey(fptr);

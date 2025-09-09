@@ -71,7 +71,7 @@ public final class ConcreteTypeKey implements InstanceKey {
   /**
    * @param pei a PEI instruction
    * @param cha governing class hierarchy
-   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
+   * @return an array of ConcreteTypeKeys that represent the exceptions the PEI may throw.
    * @throws IllegalArgumentException if pei is null
    */
   public static InstanceKey[] getInstanceKeysForPEI(SSAInstruction pei, IClassHierarchy cha) {

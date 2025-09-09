@@ -126,6 +126,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
 
   /** We're immutable so there's no need to clone any Instruction object. */
   @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   public final Object clone() {
     return this;
   }

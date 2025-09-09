@@ -47,7 +47,7 @@ import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
 import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.util.HashMap;
@@ -114,7 +114,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
 
   protected boolean dump;
   protected JDTSourceLoaderImpl sourceLoader;
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader) {
     this(scope, sourceLoader, false);
@@ -165,7 +165,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     Map<IProject, Map<ICompilationUnit, EclipseSourceFileModule>> projectsFiles = new HashMap<>();
     for (ModuleEntry m : modules) {
       assert m instanceof EclipseSourceFileModule
-          : "Expecing EclipseSourceFileModule, not " + m.getClass();
+          : "Expecting EclipseSourceFileModule, not " + m.getClass();
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
       if (!projectsFiles.containsKey(proj)) {
@@ -174,6 +174,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }
 
+    @SuppressWarnings("deprecation")
     final ASTParser parser = ASTParser.newParser(AST.JLS8);
 
     for (final Map.Entry<IProject, Map<ICompilationUnit, EclipseSourceFileModule>> proj :

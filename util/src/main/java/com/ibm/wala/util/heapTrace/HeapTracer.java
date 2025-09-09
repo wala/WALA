@@ -150,7 +150,7 @@ public class HeapTracer {
   }
 
   /**
-   * @return set of strings that are names of directories that contain "bin"
+   * @return duplicate-free array of strings that are names of directories that contain "bin"
    */
   private static Object[] extractBinDirectories(String classpath) {
     StringTokenizer t = new StringTokenizer(classpath, ";");
@@ -667,10 +667,9 @@ public class HeapTracer {
       TreeSet<Field> sortedDemo = new TreeSet<>(new SizeComparator());
       sortedDemo.addAll(roots.keySet());
       for (Field field : sortedDemo) {
-        Object root = field;
-        Demographics d = roots.get(root);
+        Demographics d = roots.get(field);
         if (d.getTotalSize() > 10000) {
-          result.append(" root: ").append(root).append('\n');
+          result.append(" root: ").append(field).append('\n');
           result.append(d);
         }
       }

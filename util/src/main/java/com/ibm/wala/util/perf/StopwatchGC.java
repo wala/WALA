@@ -20,7 +20,6 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
   private long endMemory;
 
   public StopwatchGC(String name) {
-    super();
     this.name = name;
   }
 

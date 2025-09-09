@@ -1,2 +1,2 @@
-sun\/.*
-java\/.*
+sun/.*
+java/.*

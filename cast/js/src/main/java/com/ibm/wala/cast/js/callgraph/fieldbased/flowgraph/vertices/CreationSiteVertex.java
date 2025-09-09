@@ -17,7 +17,6 @@ public class CreationSiteVertex extends Vertex implements ObjectVertex {
   private final TypeReference createdType;
 
   public CreationSiteVertex(IMethod node, int instructionIndex, TypeReference createdType) {
-    super();
     this.node = node;
     this.instructionIndex = instructionIndex;
     this.createdType = createdType;

@@ -34,7 +34,6 @@ public class RangeFileMapping implements FileMapping {
     }
 
     public Range(int rangeStart, int rangeEnd, int rangeStartingLine, int rangeEndingLine) {
-      super();
       this.rangeStart = rangeStart;
       this.rangeEnd = rangeEnd;
       this.rangeStartingLine = rangeStartingLine;

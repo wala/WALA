@@ -25,9 +25,12 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
+import com.ibm.wala.ipa.summaries.LambdaSummaryClass;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.ComposedIterator;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -59,6 +62,10 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    * loader. This means callbacks from library to application will be ignored.
    */
   private final boolean applicationOnly;
+
+  /** To handle lambdas. We pass a selector that always returns null as the base selector. */
+  private final LambdaMethodTargetSelector lambdaMethodTargetSelector =
+      new LambdaMethodTargetSelector((caller, site, receiver) -> null);
 
   private boolean isInitialized = false;
 
@@ -105,7 +112,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   }
 
   /**
-   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * NOTE: after calling this constructor, {@link #init(Iterable)} must be invoked to complete
    * initialization
    */
   public CHACallGraph(IClassHierarchy cha) {
@@ -113,7 +120,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   }
 
   /**
-   * NOTE: after calling this contructor, {@link #init(Iterable)} must be invoked to complete
+   * NOTE: after calling this constructor, {@link #init(Iterable)} must be invoked to complete
    * initialization
    */
   public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
@@ -138,6 +145,25 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     }
     newNodes.push(root);
     closure();
+    // classes simulating lambdas may have been added to the CHA via the previous closure() call.
+    // to update call targets to include lambdas, we clear all call target caches, iterate through
+    // all call sites, and re-compute the targets.
+    // TODO optimize if needed
+    targetCache.clear();
+    cha.clearCaches();
+    for (CGNode n : this) {
+      for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
+        for (IMethod target : Iterator2Iterable.make(getOrUpdatePossibleTargets(n, site))) {
+          if (isRelevantMethod(target)) {
+            CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+            if (callee == null) {
+              throw new RuntimeException("should have already created CGNode for " + target);
+            }
+            edgeManager.addEdge(n, callee);
+          }
+        }
+      }
+    }
     isInitialized = true;
   }
 
@@ -146,10 +172,44 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return cha;
   }
 
+  /**
+   * Cache of possible targets for call sites.
+   *
+   * <p>In the future, this cache could be keyed on ({@link com.ibm.wala.types.MethodReference},
+   * {@code isDispatch}) pairs to save space and possibly time, where {@code isDispatch} indicates
+   * whether the call site is a virtual dispatch.
+   */
   private final Map<CallSiteReference, Set<IMethod>> targetCache = HashMapFactory.make();
 
-  private Iterator<IMethod> getPossibleTargets(CallSiteReference site) {
-    Set<IMethod> result = targetCache.get(site);
+  /**
+   * Gets the possible targets of a call site, caching the result if it has not been computed.
+   *
+   * @param site the call site
+   * @return an iterator of possible targets
+   */
+  private Iterator<IMethod> getOrUpdatePossibleTargets(CGNode caller, CallSiteReference site)
+      throws CancelException {
+    Set<IMethod> result = null;
+    if (isCallToLambdaMetafactoryMethod(site)) {
+      IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
+      if (calleeTarget != null) {
+        // It's for a lambda.  The result method is a synthetic method that allocates an object of
+        // the synthetic class generate for the lambda.
+        result = Collections.singleton(calleeTarget);
+        // we eagerly create a CGNode for the "trampoline" method that invokes the body of the
+        // lambda itself.  This way, the new node gets added to the worklist, so we process all
+        // methods reachable from the lambda body immediately and don't need to do an outer fixed
+        // point.  This does not do any wasted work assuming the call graph has at least one
+        // invocation of the lambda.
+        LambdaSummaryClass lambdaSummaryClass =
+            lambdaMethodTargetSelector.getLambdaSummaryClass(caller, site);
+        IMethod trampoline = lambdaSummaryClass.getDeclaredMethods().iterator().next();
+        CGNode callee = getNode(trampoline, Everywhere.EVERYWHERE);
+        if (callee == null) {
+          findOrCreateNode(trampoline, Everywhere.EVERYWHERE);
+        }
+      }
+    }
     if (result == null) {
       if (site.isDispatch()) {
         result = cha.getPossibleTargets(site.getDeclaredTarget());
@@ -158,10 +218,36 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         if (m != null) {
           result = Collections.singleton(m);
         } else {
-          result = Collections.emptySet();
+          IMethod fakeWorldClinitMethod = getFakeWorldClinitNode().getMethod();
+          if (site.getDeclaredTarget().equals(fakeWorldClinitMethod.getReference())) {
+            result = Collections.singleton(fakeWorldClinitMethod);
+          } else {
+            result = Collections.emptySet();
+          }
         }
       }
       targetCache.put(site, result);
+    }
+    return result.iterator();
+  }
+
+  /**
+   * Gets the possible targets of a call site from the cache.
+   *
+   * @param site the call site
+   * @return an iterator of possible targets
+   */
+  private Iterator<IMethod> getPossibleTargetsFromCache(CGNode caller, CallSiteReference site) {
+    if (isCallToLambdaMetafactoryMethod(site)) {
+      IMethod calleeTarget = lambdaMethodTargetSelector.getCalleeTarget(caller, site, null);
+      if (calleeTarget != null) {
+        // it's for a lambda
+        return Collections.singleton(calleeTarget).iterator();
+      }
+    }
+    Set<IMethod> result = targetCache.get(site);
+    if (result == null) {
+      return Collections.emptyIterator();
     }
     return result.iterator();
   }
@@ -170,7 +256,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
         new MapIterator<>(
-            new FilterIterator<>(getPossibleTargets(site), this::isRelevantMethod),
+            new FilterIterator<>(getPossibleTargetsFromCache(node, site), this::isRelevantMethod),
             object -> {
               try {
                 return findOrCreateNode(object, Everywhere.EVERYWHERE);
@@ -183,7 +269,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   @Override
   public int getNumberOfTargets(CGNode node, CallSiteReference site) {
-    return IteratorUtil.count(getPossibleTargets(site));
+    return IteratorUtil.count(getPossibleTargetsFromCache(node, site));
   }
 
   @Override
@@ -259,9 +345,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     while (!newNodes.isEmpty()) {
       CGNode n = newNodes.pop();
       for (CallSiteReference site : Iterator2Iterable.make(n.iterateCallSites())) {
-        Iterator<IMethod> methods = getPossibleTargets(site);
-        while (methods.hasNext()) {
-          IMethod target = methods.next();
+        for (IMethod target : Iterator2Iterable.make(getOrUpdatePossibleTargets(n, site))) {
           if (isRelevantMethod(target)) {
             CGNode callee = getNode(target, Everywhere.EVERYWHERE);
             if (callee == null) {
@@ -275,6 +359,13 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         }
       }
     }
+  }
+
+  private boolean isCallToLambdaMetafactoryMethod(CallSiteReference site) {
+    return site.getDeclaredTarget()
+        .getDeclaringClass()
+        .getName()
+        .equals(TypeReference.LambdaMetaFactory.getName());
   }
 
   private boolean isRelevantMethod(IMethod target) {

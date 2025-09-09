@@ -53,7 +53,6 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
    *     tune graph representation
    */
   public DefaultFixedPointSystem(int expectedOut) {
-    super();
     graph = new SparseNumberedGraph<>(expectedOut);
   }
 
@@ -119,8 +118,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
       graph.addNode(lhs);
       graph.addEdge(s, lhs);
     }
-    for (IVariable<?> v : rhs) {
-      IVariable<?> variable = v;
+    for (IVariable<?> variable : rhs) {
       if (variable != null) {
         variables.add(variable);
         graph.addNode(variable);
