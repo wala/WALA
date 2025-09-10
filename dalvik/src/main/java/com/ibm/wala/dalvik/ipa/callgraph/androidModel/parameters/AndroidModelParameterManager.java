@@ -154,7 +154,7 @@ public class AndroidModelParameterManager {
   // }
 
   /*
-  public void readDescriptior(Descriptor forMethod) {
+  public void readDescriptor(Descriptor forMethod) {
       for (int i=0; i < forMethod.getParameters().length; ++i) {
           setAllocation(forMethod.getParameters()[i], i + 1);
       }
@@ -199,8 +199,6 @@ public class AndroidModelParameterManager {
           //                    param.setBy = setBy;
 
           return;
-        } else {
-          continue;
         }
       }
       throw new IllegalStateException(
@@ -219,7 +217,6 @@ public class AndroidModelParameterManager {
       aParam.add(param);
 
       seenTypes.put(type, aParam);
-      return;
     }
   }
 
@@ -235,7 +232,7 @@ public class AndroidModelParameterManager {
    * Register a Phi-Instruction _after_ added to the model.
    *
    * @param type the type the Phi-Instruction sets
-   * @param ssaValue the number the SSA-Instruction assignes to
+   * @param ssaValue the number the SSA-Instruction assigns to
    * @param setBy the Phi-Instruction itself - may be null
    * @throws IllegalArgumentException if you assign to a number requested using {@link
    *     #getFree(TypeReference)} but types mismach.
@@ -288,13 +285,14 @@ public class AndroidModelParameterManager {
 
             param.status = ValueStatus.FREE_CLOSED;
           }
-        } else if (param.setInScope < currentScope) {
-          // param.status = ValueStatus.INVALIDATED;
-        } else {
-          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
-          // logger.error("MISSING PHI for "
-          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
         }
+        //        else if (param.setInScope < currentScope) {
+        //            // param.status = ValueStatus.INVALIDATED;
+        //        } else {
+        //          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
+        //          // logger.error("MISSING PHI for "
+        //          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
+        //        }
       }
       assert didPhi;
     } else {
@@ -318,7 +316,7 @@ public class AndroidModelParameterManager {
    * Returns and registers a free SSA-Number to a Type.
    *
    * <p>You have to set the type using a Phi-Instruction. Also you don't have to add that
-   * instruction immediatly it is required that it is added before the Model gets finished.
+   * instruction immediately it is required that it is added before the Model gets finished.
    *
    * <p>You can request the List of unmet Phi-Instructions by using XXX
    *
@@ -390,19 +388,18 @@ public class AndroidModelParameterManager {
   }
 
   /**
-   * Retreive a SSA-Value that is not under management.
+   * Retrieve a SSA-Value that is not under management.
    *
    * <p>Use instead of 'nextLocal++', else SSA-Values will clash!
    *
    * @return SSA-Variable
    */
   public int getUnmanaged() {
-    int ret = nextLocal++;
-    return ret;
+    return nextLocal++;
   }
 
   /**
-   * Retreive the SSA-Number that is valid for a type in the current scope.
+   * Retrieve the SSA-Number that is valid for a type in the current scope.
    *
    * <p>Either that number origins from an allocation or a PhiInstruction (to be).
    *
@@ -424,7 +421,7 @@ public class AndroidModelParameterManager {
           assert param.type.equals(type) : "Inequal types";
           if (param.setInScope > currentScope) {
 
-            continue;
+            // do nothing
           } else if (param.setInScope == currentScope) {
 
             return param.ssa;
@@ -451,7 +448,7 @@ public class AndroidModelParameterManager {
   }
 
   /**
-   * Retreive the SSA-Number that is valid for a type in the super-ordinate scope.
+   * Retrieve the SSA-Number that is valid for a type in the super-ordinate scope.
    *
    * <p>Either that number origins from an allocation or a PhiInstruction (to be).
    *

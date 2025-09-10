@@ -10,8 +10,8 @@
  */
 package com.ibm.wala.examples.analysis.dataflow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -47,12 +47,13 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -66,20 +67,20 @@ public class DataflowTest extends WalaTestCase {
 
   // more aggressive exclusions to avoid library blowup
   // in interprocedural tests
-  private static final String EXCLUSIONS =
-      "java\\/awt\\/.*\n"
-          + "javax\\/swing\\/.*\n"
-          + "sun\\/awt\\/.*\n"
-          + "sun\\/swing\\/.*\n"
-          + "com\\/sun\\/.*\n"
-          + "sun\\/.*\n"
-          + "org\\/netbeans\\/.*\n"
-          + "org\\/openide\\/.*\n"
-          + "com\\/ibm\\/crypto\\/.*\n"
-          + "com\\/ibm\\/security\\/.*\n"
-          + "org\\/apache\\/xerces\\/.*\n"
-          + "java\\/security\\/.*\n"
-          + "";
+  private static final String[] EXCLUSIONS = {
+    "com/ibm/crypto",
+    "com/ibm/security",
+    "com/sun",
+    "java/awt",
+    "java/security",
+    "javax/swing",
+    "org/apache/xerces",
+    "org/netbeans",
+    "org/openide",
+    "sun",
+    "sun/awt",
+    "sun/swing",
+  };
 
   @BeforeAll
   public static void beforeClass() throws Exception {
@@ -88,7 +89,12 @@ public class DataflowTest extends WalaTestCase {
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA, null, DataflowTest.class.getClassLoader());
 
-    scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
+    // Each element of `EXCLUSIONS` is the qualified name of a package, but with `/` instead of `.`
+    // as the delimiter between names.  Here we turn each of those into a regular expression with
+    // a trailing `/.*` to match anything in or under the named package.
+    scope.setExclusions(
+        new PatternsFilter(
+            Arrays.stream(EXCLUSIONS).map(exclusion -> Pattern.quote(exclusion) + "/.*")));
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
@@ -121,8 +127,7 @@ public class DataflowTest extends WalaTestCase {
     for (IExplodedBasicBlock ebb : ecfg) {
       if (ebb.getNumber() == 4) {
         IntSet out = solver.getOut(ebb).getValue();
-        assertEquals(1, out.size());
-        assertTrue(out.contains(1));
+        assertThat(out).toCollection().containsExactly(1);
       }
     }
   }
@@ -141,9 +146,7 @@ public class DataflowTest extends WalaTestCase {
     for (IExplodedBasicBlock ebb : ecfg) {
       if (ebb.getNumber() == 10) {
         IntSet out = solver.getOut(ebb).getValue();
-        assertEquals(2, out.size());
-        assertTrue(out.contains(0));
-        assertTrue(out.contains(2));
+        assertThat(out).toCollection().containsExactly(0, 2);
       }
     }
   }
@@ -181,7 +184,7 @@ public class DataflowTest extends WalaTestCase {
               applicationDefs.add(def);
             }
           }
-          assertEquals(2, applicationDefs.size());
+          assertThat(applicationDefs).hasSize(2);
         }
       }
     }
@@ -221,7 +224,7 @@ public class DataflowTest extends WalaTestCase {
               applicationDefs.add(def);
             }
           }
-          assertEquals(1, applicationDefs.size());
+          assertThat(applicationDefs).hasSize(1);
         }
       }
     }

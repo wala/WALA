@@ -67,8 +67,10 @@ public class IKFlow<E extends ISSABasicBlock> extends FlowType<E> {
     IKFlow<E> other = (IKFlow<E>) obj;
     if (ik == null) {
       if (other.ik != null) return false;
-    } else if (!ik.equals(other.ik)) // TODO InstanceKey may not supply equals()
-    return false;
+    } else if (!ik.equals(other.ik)) {
+      // TODO InstanceKey may not supply equals()
+      return false;
+    }
     return true;
   }
 

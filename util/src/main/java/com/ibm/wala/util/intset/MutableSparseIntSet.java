@@ -38,7 +38,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   private static final int TRAP_SIZE = 1000;
 
   protected MutableSparseIntSet(@Nullable IntSet set) {
-    super();
     copySet(set);
   }
 
@@ -55,9 +54,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  protected MutableSparseIntSet() {
-    super();
-  }
+  protected MutableSparseIntSet() {}
 
   @Override
   public void clear() {
@@ -213,11 +210,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   @NullUnmarked
-  public void intersectWith(SparseIntSet set) {
-    if (set == null) {
+  public void intersectWith(SparseIntSet that) {
+    if (that == null) {
       throw new IllegalArgumentException("null set");
     }
-    SparseIntSet that = set;
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {
@@ -283,7 +279,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     // now compact cr to 'just enough'
     size = ci;
     elements = cr;
-    return;
   }
 
   /**
@@ -334,8 +329,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
     // common-case optimization
     if (that.size == 1) {
-      boolean result = add(that.elements[0]);
-      return result;
+      return add(that.elements[0]);
     }
 
     int[] br = that.elements;

@@ -163,7 +163,6 @@ public abstract class Branch extends Instruction {
   @Override
   public int[] getBranchTargets() {
     this.label = method.getInstructionIndex(pc + offset);
-    int[] r = {label};
-    return r;
+    return new int[] {label};
   }
 }

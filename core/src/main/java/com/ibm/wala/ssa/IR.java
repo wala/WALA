@@ -570,8 +570,7 @@ public abstract class IR implements IRView {
 
   /** Return the instruction index corresponding to an allocation site */
   public int getNewInstructionIndex(NewSiteReference site) {
-    Integer i = newSiteMapping.get(site);
-    return i;
+    return newSiteMapping.get(site);
   }
 
   /**

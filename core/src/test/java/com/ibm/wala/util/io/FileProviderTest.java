@@ -10,18 +10,27 @@
  */
 package com.ibm.wala.util.io;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 
 public class FileProviderTest {
+
+  private void checkFile(
+      String actual,
+      @Language("RegExp") String expected,
+      @Language("RegExp") String expectedPatternOnWindows) {
+    if (PlatformUtil.onWindows()) {
+      assertThat(actual).matches(expectedPatternOnWindows);
+    } else {
+      assertThat(actual).isEqualTo(expected);
+    }
+  }
 
   @Test
   public void testValidFile() throws MalformedURLException {
@@ -31,7 +40,7 @@ public class FileProviderTest {
     // exercise:
     String actual = new FileProvider().filePathFromURL(url);
     // verify:
-    assertEquals(expected, actual);
+    assertThat(actual).isEqualTo(expected);
   }
 
   @Test
@@ -41,11 +50,7 @@ public class FileProviderTest {
     // exercise:
     String actual = new FileProvider().filePathFromURL(url);
     // verify:
-    assertThat(
-        actual,
-        PlatformUtil.onWindows()
-            ? matchesPattern("\\A/[A-Z]:/\\[Eclipse]/File.jar\\z")
-            : equalTo("/[Eclipse]/File.jar"));
+    checkFile(actual, "/[Eclipse]/File.jar", "\\A/[A-Z]:/\\[Eclipse]/File.jar\\z");
   }
 
   @Test
@@ -55,10 +60,6 @@ public class FileProviderTest {
     // exercise:
     String actual = new FileProvider().filePathFromURL(url);
     // verify:
-    assertThat(
-        actual,
-        PlatformUtil.onWindows()
-            ? matchesPattern("\\A/[A-Z]:/With Space/File\\.jar\\z")
-            : equalTo("/With Space/File.jar"));
+    checkFile(actual, "/With Space/File.jar", "\\A/[A-Z]:/With Space/File\\.jar\\z");
   }
 }

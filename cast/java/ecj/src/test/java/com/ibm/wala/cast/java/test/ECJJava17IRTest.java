@@ -8,18 +8,8 @@ package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope.SOURCE;
 
-import com.ibm.wala.cast.java.client.ECJJavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -30,38 +20,23 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-public class ECJJava17IRTest extends IRTests {
+public class ECJJava17IRTest extends ECJIRTests {
 
   private static final String packageName = "javaonepointseven";
 
   public ECJJava17IRTest() {
-    super(null);
     dump = true;
   }
 
-  @Override
-  protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
-      final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    JavaSourceAnalysisEngine engine =
-        new ECJJavaSourceAnalysisEngine() {
-          @Override
-          protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
-            return Util.makeMainEntrypoints(
-                JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
-          }
-        };
-    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    populateScope(engine, sources, libs);
-    return engine;
-  }
-
-  private final IRAssertion checkBinaryLiterals =
+  private static final IRAssertion checkBinaryLiterals =
       new IRAssertion() {
         private final TypeReference testClass =
             TypeReference.findOrCreate(
@@ -107,18 +82,7 @@ public class ECJJava17IRTest extends IRTests {
         }
       };
 
-  @Test
-  public void testBinaryLiterals() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        Collections.singletonList(checkBinaryLiterals),
-        true,
-        null);
-  }
-
-  private final IRAssertion checkCatchMultipleExceptionTypes =
+  private static final IRAssertion checkCatchMultipleExceptionTypes =
       new IRAssertion() {
 
         private final TypeReference testClass =
@@ -161,18 +125,6 @@ public class ECJJava17IRTest extends IRTests {
         }
       };
 
-  @Test
-  public void testCatchMultipleExceptionTypes()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        Collections.singletonList(checkCatchMultipleExceptionTypes),
-        true,
-        null);
-  }
-
   private static final List<IRAssertion> SiSAssertions =
       Collections.singletonList(
           new InstructionOperandAssertion(
@@ -183,49 +135,27 @@ public class ECJJava17IRTest extends IRTests {
               1,
               new int[] {9, 58, 9, 67}));
 
-  @Test
-  public void testStringsInSwitch() throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        SiSAssertions,
-        true,
-        null);
+  static Stream<Arguments> java17IRTestNames() {
+    return Stream.of(
+        Arguments.of("BinaryLiterals", Collections.singletonList(checkBinaryLiterals)),
+        Arguments.of(
+            "CatchMultipleExceptionTypes",
+            Collections.singletonList(checkCatchMultipleExceptionTypes)),
+        Arguments.of("StringsInSwitch", SiSAssertions),
+        Arguments.of("TypeInferenceForGenericInstanceCreation", emptyList),
+        Arguments.of("TryWithResourcesStatement", emptyList),
+        Arguments.of("UnderscoresInNumericLiterals", emptyList));
   }
 
-  @Test
-  public void testTryWithResourcesStatement()
+  @ParameterizedTest(name = "java17IRTestName={0}")
+  @MethodSource("java17IRTestNames")
+  public void runJava17IRTests(String java17IRTestName, List<IRAssertion> ca)
       throws IllegalArgumentException, CancelException, IOException {
     runTest(
-        singlePkgTestSrc("javaonepointseven"),
+        singlePkgTestSrc("javaonepointseven", java17IRTestName),
         rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testTypeInferenceforGenericInstanceCreation()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
-        true,
-        null);
-  }
-
-  @Test
-  public void testUnderscoresInNumericLiterals()
-      throws IllegalArgumentException, CancelException, IOException {
-    runTest(
-        singlePkgTestSrc("javaonepointseven"),
-        rtJar,
-        simplePkgTestEntryPoint("javaonepointseven"),
-        emptyList,
+        simplePkgTestEntryPoint("javaonepointseven", java17IRTestName),
+        ca,
         true,
         null);
   }

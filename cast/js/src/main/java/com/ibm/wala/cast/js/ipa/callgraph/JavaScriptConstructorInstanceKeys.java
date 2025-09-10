@@ -23,7 +23,6 @@ public class JavaScriptConstructorInstanceKeys implements InstanceKeyFactory {
   private final InstanceKeyFactory base;
 
   public JavaScriptConstructorInstanceKeys(InstanceKeyFactory base) {
-    super();
     this.base = base;
   }
 

@@ -1,9 +1,6 @@
 package com.ibm.wala.cast.js.test;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 public class TestFlowGraphJSON {
 
-  private static final String SCRIPT = "tests/fieldbased/flowgraph_constraints.js";
+  private static final String SCRIPT = "tests/field-based/flowgraph_constraints.js";
 
   private Map<String, String[]> parsedJSON;
 
@@ -35,51 +32,49 @@ public class TestFlowGraphJSON {
 
   @Test
   public void testNamedIIFE() {
-    assertArrayEquals(
-        new String[] {
-          "Var(flowgraph_constraints.js@2, [f1])", "Var(flowgraph_constraints.js@1, %ssa_val 28)"
-        },
-        parsedJSON.get("Func(flowgraph_constraints.js@2)"));
+    assertThat(parsedJSON.get("Func(flowgraph_constraints.js@2)"))
+        .isEqualTo(
+            new String[] {
+              "Var(flowgraph_constraints.js@2, [f1])",
+              "Var(flowgraph_constraints.js@1, %ssa_val 28)"
+            });
   }
 
   @Test
   public void testParamAndReturn() {
-    assertArrayEquals(
-        new String[] {"Var(flowgraph_constraints.js@8, [p])"},
-        parsedJSON.get("Param(Func(flowgraph_constraints.js@8), 2)"));
-    assertArrayEquals(
-        new String[] {"Ret(Func(flowgraph_constraints.js@8))"},
-        parsedJSON.get("Var(flowgraph_constraints.js@8, [p])"));
-    assertThat(
-        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@12, [x])")),
-        containsInAnyOrder(
-            "Param(Func(flowgraph_constraints.js@8), 2)",
-            "Args(Func(flowgraph_constraints.js@8))"));
-    assertThat(
-        Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@17, [x])")),
-        containsInAnyOrder(
-            "Param(Func(flowgraph_constraints.js@8), 2)",
-            "Args(Func(flowgraph_constraints.js@8))"));
-    assertThat(
-        Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))")),
-        containsInAnyOrder(
-            "Var(flowgraph_constraints.js@17, [y])", "Var(flowgraph_constraints.js@12, [y])"));
+    assertThat(parsedJSON.get("Param(Func(flowgraph_constraints.js@8), 2)"))
+        .isEqualTo(new String[] {"Var(flowgraph_constraints.js@8, [p])"});
+
+    assertThat(parsedJSON.get("Var(flowgraph_constraints.js@8, [p])"))
+        .isEqualTo(new String[] {"Ret(Func(flowgraph_constraints.js@8))"});
+
+    assertThat(Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@12, [x])")))
+        .containsExactlyInAnyOrder(
+            "Param(Func(flowgraph_constraints.js@8), 2)", "Args(Func(flowgraph_constraints.js@8))");
+
+    assertThat(Arrays.asList(parsedJSON.get("Var(flowgraph_constraints.js@17, [x])")))
+        .containsExactlyInAnyOrder(
+            "Param(Func(flowgraph_constraints.js@8), 2)", "Args(Func(flowgraph_constraints.js@8))");
+
+    assertThat(Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@8))")))
+        .containsExactlyInAnyOrder(
+            "Var(flowgraph_constraints.js@17, [y])", "Var(flowgraph_constraints.js@12, [y])");
   }
 
   @Test
   public void testCallAndApply() {
     assertThat(
-        Arrays.asList(
-            parsedJSON.get("Var(flowgraph_constraints.js@29, [nested, x, $$destructure$rcvr7])")),
-        hasItems(
+            Arrays.asList(
+                parsedJSON.get(
+                    "Var(flowgraph_constraints.js@29, [nested, x, $$destructure$rcvr7])")))
+        .contains(
             "ReflectiveCallee(flowgraph_constraints.js@33)",
             "ReflectiveCallee(flowgraph_constraints.js@32)",
-            "Param(Func(flowgraph_constraints.js@30), 2)"));
-    assertThat(
-        Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@30))")),
-        containsInAnyOrder(
-            "Var(flowgraph_constraints.js@29, [res1])",
-            "Var(flowgraph_constraints.js@29, [res2])"));
+            "Param(Func(flowgraph_constraints.js@30), 2)");
+
+    assertThat(Arrays.asList(parsedJSON.get("Ret(Func(flowgraph_constraints.js@30))")))
+        .containsExactlyInAnyOrder(
+            "Var(flowgraph_constraints.js@29, [res1])", "Var(flowgraph_constraints.js@29, [res2])");
   }
 
   private static Map<String, String[]> getParsedFlowGraphJSON(String script)

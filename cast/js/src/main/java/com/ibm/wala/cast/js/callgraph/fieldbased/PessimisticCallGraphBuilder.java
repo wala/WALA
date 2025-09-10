@@ -89,13 +89,13 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
     }
 
     @Override
-    public void visitJavaScriptInvoke(JavaScriptInvoke invk) {
+    public void visitJavaScriptInvoke(JavaScriptInvoke invoke) {
       // check whether this instruction corresponds to a function expression/declaration
-      if (isFunctionConstructorInvoke(invk)) {
-        int defn = invk.getDef();
+      if (isFunctionConstructorInvoke(invoke)) {
+        int defn = invoke.getDef();
 
         // the name of the function
-        String fnName = symtab.getStringValue(invk.getUse(1));
+        String fnName = symtab.getStringValue(invoke.getUse(1));
         IClass fnClass =
             cha.lookupClass(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, fnName));
         if (fnClass == null) {
@@ -111,12 +111,12 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 
           // check whether this is a local call
           if (use instanceof JavaScriptInvoke && ((JavaScriptInvoke) use).getFunction() == defn) {
-            JavaScriptInvoke use_invk = (JavaScriptInvoke) use;
+            JavaScriptInvoke use_invoke = (JavaScriptInvoke) use;
 
             // yes, so add edges from arguments to parameters...
-            for (int i = 2; i < use_invk.getNumberOfPositionalParameters(); ++i)
+            for (int i = 2; i < use_invoke.getNumberOfPositionalParameters(); ++i)
               flowgraph.addEdge(
-                  factory.makeVarVertex(caller, use_invk.getUse(i)),
+                  factory.makeVarVertex(caller, use_invoke.getUse(i)),
                   factory.makeParamVertex(callee, i));
 
             // ...and from return to result
@@ -133,16 +133,16 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
         }
       } else {
         // this is a genuine function call; find out where the function came from
-        SSAInstruction def = du.getDef(invk.getFunction());
+        SSAInstruction def = du.getDef(invoke.getFunction());
 
         // if it's not a local call, add flows from/to unknown
         if (!(def instanceof JavaScriptInvoke)
             || !isFunctionConstructorInvoke((JavaScriptInvoke) def)) {
-          for (int i = 1; i < invk.getNumberOfPositionalParameters(); ++i)
+          for (int i = 1; i < invoke.getNumberOfPositionalParameters(); ++i)
             flowgraph.addEdge(
-                factory.makeVarVertex(caller, invk.getUse(i)), factory.makeUnknownVertex());
+                factory.makeVarVertex(caller, invoke.getUse(i)), factory.makeUnknownVertex());
           flowgraph.addEdge(
-              factory.makeUnknownVertex(), factory.makeVarVertex(caller, invk.getDef()));
+              factory.makeUnknownVertex(), factory.makeVarVertex(caller, invoke.getDef()));
         }
       }
     }

@@ -214,8 +214,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
 
   protected SSAInstruction getLastInstructionForBlock(T pb, SSAInstruction[] instrs) {
     int index = pb.getLastInstructionIndex();
-    SSAInstruction inst = instrs[index];
-    return inst;
+    return instrs[index];
   }
 
   /**
@@ -862,10 +861,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     it = new FilterIterator<T>(it, dispatchFilter);
 
     Function<T, BasicBlockInContext<T>> toContext =
-        object -> {
-          T b = object;
-          return new BasicBlockInContext<>(node, b);
-        };
+        object -> new BasicBlockInContext<>(node, object);
     MapIterator<T, BasicBlockInContext<T>> m = new MapIterator<>(it, toContext);
     return new FilterIterator<>(m, isCall);
   }

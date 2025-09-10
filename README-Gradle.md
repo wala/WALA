@@ -26,6 +26,12 @@ if they are not already
 or
 [custom-configured](https://docs.gradle.org/current/userguide/toolchains.html#sec:custom_loc).
 
+Gradle itself requires a Java 17 JVM or newer when building and testing WALA.
+For advice on changing Gradle’s JVM, visit Gradle’s [Configuring the Build
+Environment](https://docs.gradle.org/current/userguide/build_environment.html)
+documentation and look for discussion of the `org.gradle.java.home` Gradle
+property or the `JAVA_HOME` environment variable.
+
 ### Eclipse
 
 #### One-Time Eclipse Configuration

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
@@ -100,7 +100,7 @@ public class TunedRefinementTest extends AbstractPtrTest {
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
-    assertEquals(1, pointsTo.size());
+    assertThat(pointsTo).hasSize(1);
   }
 
   @Test

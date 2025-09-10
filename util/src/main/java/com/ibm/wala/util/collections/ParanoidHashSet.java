@@ -23,7 +23,7 @@ import java.util.Set;
  * indicated a bad hash function)
  */
 public class ParanoidHashSet<T> extends LinkedHashSet<T> {
-  public static final long serialVersionUID = 30919839181133333L;
+  private static final long serialVersionUID = 30919839181133333L;
 
   /** A mapping from Integer (hashcode) -&gt; Set of objects */
   private final Map<Integer, Set<T>> hcFreq;
@@ -42,7 +42,6 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
 
   /** */
   public ParanoidHashSet() {
-    super();
     hcFreq = HashMapFactory.make();
   }
 
@@ -74,8 +73,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
       } else {
         if (s.size() == BAD_HC) {
           for (T t : s) {
-            Object o = t;
-            System.err.println(o + " " + o.hashCode());
+            System.err.println(t + " " + t.hashCode());
           }
           assert false : "bad hc " + arg0.getClass() + ' ' + arg0;
         } else {

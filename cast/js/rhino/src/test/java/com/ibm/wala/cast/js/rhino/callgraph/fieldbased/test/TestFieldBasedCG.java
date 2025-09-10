@@ -29,17 +29,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testSimpleJSPessimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC);
+    runTest("tests/field-based/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC);
   }
 
   @Test
   public void testSimpleJSOptimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC);
+    runTest("tests/field-based/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC);
   }
 
   @Test
   public void testSimpleJSWorklist() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/field-based/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   private static final Object[][] assertionsForOneShot =
@@ -51,17 +51,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testOneshotPessimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC);
+    runTest("tests/field-based/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC);
   }
 
   @Test
   public void testOneshotOptimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC);
+    runTest("tests/field-based/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC);
   }
 
   @Test
   public void testOneshotWorklist() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/field-based/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   private static final Object[][] assertionsForCallbacks =
@@ -74,13 +74,13 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testCallbacksOptimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC);
+    runTest("tests/field-based/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC);
   }
 
   @Test
   public void testCallbacksWorklist() throws WalaException, Error, CancelException {
     runTest(
-        "tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
+        "tests/field-based/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   private static final Object[][] assertionsForLexical =
@@ -88,17 +88,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testLexicalPessimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC);
+    runTest("tests/field-based/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC);
   }
 
   @Test
   public void testLexicalOptimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC);
+    runTest("tests/field-based/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC);
   }
 
   @Test
   public void testLexicalWorklist() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/field-based/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   private static final Object[][] assertionsForReflectiveCall =
@@ -116,7 +116,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testReflectiveCallOptimistic() throws WalaException, Error, CancelException {
     runTest(
-        "tests/fieldbased/reflective_calls.js",
+        "tests/field-based/reflective_calls.js",
         assertionsForReflectiveCall,
         BuilderType.OPTIMISTIC);
   }
@@ -124,7 +124,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testReflectiveCallWorklist() throws WalaException, Error, CancelException {
     runTest(
-        "tests/fieldbased/reflective_calls.js",
+        "tests/field-based/reflective_calls.js",
         assertionsForReflectiveCall,
         BuilderType.OPTIMISTIC_WORKLIST);
   }
@@ -137,12 +137,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testNewOptimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC);
+    runTest("tests/field-based/new.js", assertionsForNew, BuilderType.OPTIMISTIC);
   }
 
   @Test
   public void testNewWorklist() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest("tests/field-based/new.js", assertionsForNew, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   private static final Object[][] assertionsForCallbacks2 =
@@ -153,18 +153,21 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Test
   public void testCallbacks2Optimistic() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC);
+    runTest("tests/field-based/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC);
   }
 
   @Test
   public void testCallbacks2Worklist() throws WalaException, Error, CancelException {
     runTest(
-        "tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC_WORKLIST);
+        "tests/field-based/callbacks2.js",
+        assertionsForCallbacks2,
+        BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   @Test
   public void testNewFnEmptyNoCrash() throws WalaException, Error, CancelException {
-    runTest("tests/fieldbased/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
+    runTest(
+        "tests/field-based/new_fn_empty.js", new Object[][] {}, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
   private static final Object[][] assertionsForRecursiveLexWrite =
@@ -219,7 +222,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   @Test
   public void testBadNewFunctionCall() throws WalaException, CancelException {
     runTest(
-        "tests/fieldbased/bad_new_function_call.js",
+        "tests/field-based/bad_new_function_call.js",
         new Object[][] {},
         BuilderType.OPTIMISTIC_WORKLIST);
   }

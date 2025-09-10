@@ -25,10 +25,6 @@ import org.junit.jupiter.api.Test;
 
 public abstract class SyncDuplicatorTests extends IRTests {
 
-  public SyncDuplicatorTests() {
-    super(null);
-  }
-
   protected static final CallSiteReference testMethod =
       CallSiteReference.make(
           0,
@@ -41,6 +37,7 @@ public abstract class SyncDuplicatorTests extends IRTests {
 
   @Test
   public void testMonitor2() throws IllegalArgumentException, CancelException, IOException {
-    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true, null);
+    runTest(
+        singleTestSrc("Monitor2"), rtJar, simpleTestEntryPoint("Monitor2"), emptyList, true, null);
   }
 }

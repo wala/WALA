@@ -19,7 +19,6 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
   private final int valueNumber;
 
   public LocalPointerKey(CGNode node, int valueNumber) {
-    super();
     this.node = node;
     this.valueNumber = valueNumber;
     if (valueNumber <= 0) {

@@ -109,7 +109,7 @@ public class CorrelationFinder {
 
         // try to determine what "index" is called at the source level
         String indexName = getSourceLevelName(ir, ii, index);
-        if (indexName == null) continue instrs;
+        if (indexName == null) continue;
 
         // check that "index" is not accessed in an inner function
         LexicalInformation lexicalInfo = astMethod.lexicalInfo();
@@ -121,7 +121,7 @@ public class CorrelationFinder {
         }
 
         // if "index" is a numeric variable, it is not worth extracting
-        if (IGNORE_NUMERIC_INDICES && mustBeNumeric(ir, du, index)) continue instrs;
+        if (IGNORE_NUMERIC_INDICES && mustBeNumeric(ir, du, index)) continue;
 
         // set of SSA variables into which the value read by 'get' may flow
         MutableIntSet reached = new BitVectorIntSet();
@@ -184,8 +184,10 @@ public class CorrelationFinder {
         indexName = null;
         break;
       }
-      if (!candidateName.contains(" ")) // ignore internal names
-      indexName = candidateName;
+      if (!candidateName.contains(" ")) {
+        // ignore internal names
+        indexName = candidateName;
+      }
     }
     return indexName;
   }
@@ -263,8 +265,7 @@ public class CorrelationFinder {
         assert false : e.warning;
       }
     }
-    Map<IMethod, CorrelationSummary> summaries = findCorrelatedAccesses(scripts);
-    return summaries;
+    return findCorrelatedAccesses(scripts);
   }
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(
@@ -306,8 +307,7 @@ public class CorrelationFinder {
     // first try interpreting as local file name, if that doesn't work just assume it's a URL
     try {
       File f = new FileProvider().getFileFromClassLoader(src, this.getClass().getClassLoader());
-      URL url = f.toURI().toURL();
-      return url;
+      return f.toURI().toURL();
     } catch (FileNotFoundException fnfe) {
       return new URL(src);
     }

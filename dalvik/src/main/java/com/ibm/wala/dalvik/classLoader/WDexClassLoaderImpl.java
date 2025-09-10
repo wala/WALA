@@ -59,7 +59,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -70,7 +70,7 @@ import java.util.Set;
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
   private final IClassLoader lParent;
 
-  private final SetOfClasses exclusions;
+  private final StringFilter exclusions;
 
   // Commented out until IBM fixes ClassLoaderFactoryImpl "protected IClassLoader
   // makeNewClassLoader"
@@ -87,7 +87,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
   public WDexClassLoaderImpl(
       ClassLoaderReference loader,
       IClassLoader parent,
-      SetOfClasses exclusions,
+      StringFilter exclusions,
       IClassHierarchy cha) {
     super(loader, cha.getScope().getArrayClassLoader(), parent, exclusions, cha);
     lParent = parent;
@@ -159,7 +159,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
           if (iClass.getReference().getName().equals(tName)) {
 
             // className is a descriptor, so strip the 'L'
-            if (exclusions != null && exclusions.contains(className.substring(1))) {
+            if (exclusions != null && exclusions.test(className.substring(1))) {
               if (DEBUG_LEVEL > 0) {
                 System.err.println("Excluding " + className);
               }
@@ -178,7 +178,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
   /**
    * @return the IClassHierarchy of this classLoader.
    */
-  public IClassHierarchy getClassHierarcy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

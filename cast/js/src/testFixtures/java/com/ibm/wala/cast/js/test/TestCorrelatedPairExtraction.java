@@ -11,8 +11,7 @@
 
 package com.ibm.wala.cast.js.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationSummary;
@@ -37,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 public abstract class TestCorrelatedPairExtraction {
-  // set to "true" to use JUnit's assertEquals to check whether a test case passed;
+  // set to "true" to use `equals` to check whether a test case passed;
   // if it is set to "false", expected and actual output are instead written to files expected.dump
   // and actual.dump
   // this is useful if the outputs are too big/too different for Eclipse's diff view to handle
@@ -67,7 +66,7 @@ public abstract class TestCorrelatedPairExtraction {
             public ExtractionPolicy createPolicy(CAstEntity entity) {
               CorrelatedPairExtractionPolicy policy =
                   CorrelatedPairExtractionPolicy.make(entity, summaries);
-              assertNotNull(policy);
+              assertThat(policy).isNotNull();
               return policy;
             }
           };
@@ -83,7 +82,7 @@ public abstract class TestCorrelatedPairExtraction {
       FileUtil.writeFile(new File("build/actual.dump"), actual);
 
       if (ASSERT_EQUALS) {
-        assertEquals(expected, actual, testName);
+        assertThat(actual).as(testName).isEqualTo(expected);
       }
 
     } catch (IOException | ClassHierarchyException e) {

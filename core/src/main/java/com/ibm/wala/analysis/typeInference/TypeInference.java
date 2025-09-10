@@ -245,7 +245,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
      */
     @Override
     public String toString() {
-      return "delared type := " + type;
+      return "declared type := " + type;
     }
 
     public static boolean isNullary() {

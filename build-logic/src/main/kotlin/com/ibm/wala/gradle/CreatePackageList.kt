@@ -28,7 +28,8 @@ open class CreatePackageList : DefaultTask() {
     // gather source subdirs relative to each source root
     sourceFileSubdirectories =
         sourceSet.java.srcDirTrees
-            .map { sourceDirectoryTree ->
+            .asSequence()
+            .flatMap { sourceDirectoryTree ->
               val sourceRoot = sourceDirectoryTree.dir.toPath()
               project.files(sourceDirectoryTree).map { source ->
                 val javaSourceFilePath = source.toPath()
@@ -36,13 +37,12 @@ open class CreatePackageList : DefaultTask() {
                 sourceRoot.relativize(parentPath)
               }
             }
-            .flatten()
             .toSortedSet()
   }
 
   @TaskAction
   fun create() =
-      // relative subbdirs as dot-delimited qualified Java package names, one per line
+      // relative subdirs as dot-delimited qualified Java package names, one per line
       packageListDirectory.get().file("package-list").asFile.printWriter().use { out ->
         getSourceFileSubdirectories().forEach { out.println(it.replace(File.separator, ".")) }
       }

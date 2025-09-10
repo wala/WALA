@@ -1,10 +1,9 @@
 import com.ibm.wala.gradle.cast.addJvmLibrary
+import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
-import com.ibm.wala.gradle.cast.nativeLibraryOutput
 
 plugins {
   `cpp-library`
-  id("com.ibm.wala.gradle.cast.native")
   id("com.ibm.wala.gradle.subproject")
 }
 
@@ -13,11 +12,13 @@ library {
     compileTask.configure { macros["BUILD_CAST_DLL"] = "1" }
 
     this as CppSharedLibrary
-    linkTask.configure {
+    addJvmLibrary(project)
+
+    linkTask.addRpaths()
+    (linkTask as Provider<out LinkSharedLibrary>).configure {
       if (targetMachine.operatingSystemFamily.isMacOs) {
-        linkerArgs.add("-Wl,-install_name,@rpath/${nativeLibraryOutput.name}")
+        linkerArgs.add(provider { "-Wl,-install_name,@rpath/${linkedFile.get().asFile.name}" })
       }
-      addJvmLibrary(this@whenElementFinalized)
     }
   }
 }

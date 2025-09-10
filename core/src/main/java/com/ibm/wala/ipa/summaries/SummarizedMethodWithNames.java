@@ -177,16 +177,14 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
   @Override
   public IR makeIR(Context context, SSAOptions options) {
     final SSAInstruction instrs[] = getStatements(options);
-    final IR ir =
-        new SyntheticIRWithNames(
-            this,
-            Everywhere.EVERYWHERE,
-            makeControlFlowGraph(instrs),
-            instrs,
-            options,
-            summary.getConstants(),
-            localNames);
 
-    return ir;
+    return new SyntheticIRWithNames(
+        this,
+        Everywhere.EVERYWHERE,
+        makeControlFlowGraph(instrs),
+        instrs,
+        options,
+        summary.getConstants(),
+        localNames);
   }
 }

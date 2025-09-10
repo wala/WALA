@@ -11,6 +11,7 @@
 package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.AbstractStatement;
+import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 
 /** Represents a single step, restricted to a nullary operator. */
@@ -23,7 +24,8 @@ public abstract class NullaryStatement<T extends IVariable<T>>
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    *
-   * @return true if the lhs value changed. false otherwise
+   * @return a constant defined by {@link FixedPointConstants} that reflects whether the lhs value
+   *     changed
    */
   @Override
   public byte evaluate() {
@@ -58,7 +60,6 @@ public abstract class NullaryStatement<T extends IVariable<T>>
    * @param lhs the lattice cell set by this equation
    */
   protected NullaryStatement(T lhs) {
-    super();
     this.lhs = lhs;
   }
 

@@ -91,7 +91,7 @@ public class IntentStarters {
   public static class StartInfo {
     private final Set<IntentType> targetAccuracy;
 
-    /** used to dispatch to the correct MiniModel if intent-target could not be retreived */
+    /** used to dispatch to the correct MiniModel if intent-target could not be retrieved */
     private final Set<AndroidComponent> componentType;
 
     /** relevant for the IntentContextSelector */

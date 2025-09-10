@@ -11,17 +11,17 @@
 package com.ibm.wala.util.graph.traverse;
 
 import com.ibm.wala.util.graph.Graph;
+import com.uber.nullaway.annotations.Initializer;
 import java.util.Iterator;
-import org.jspecify.annotations.NullUnmarked;
-import org.jspecify.annotations.Nullable;
 
 abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T> {
 
   private static final long serialVersionUID = -5673397879499010863L;
 
   /** the graph being searched */
-  private @Nullable Graph<T> G;
+  private Graph<T> G;
 
+  @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
@@ -30,7 +30,6 @@ abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T
     super.init(nodes);
   }
 
-  @NullUnmarked
   @Override
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);

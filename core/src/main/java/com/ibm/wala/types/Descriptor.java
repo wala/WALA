@@ -35,7 +35,7 @@ public final class Descriptor {
    * @param returnType the return type
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
+  public static synchronized Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
     if (returnType == null) {
       throw new IllegalArgumentException("null returnType");
     }
@@ -43,29 +43,19 @@ public final class Descriptor {
       parameters = null;
     }
     Key k = new Key(returnType, parameters);
-    Descriptor result = map.get(k);
-    if (result == null) {
-      result = new Descriptor(k);
-      map.put(k, result);
-    }
-    return result;
+    return map.computeIfAbsent(k, Descriptor::new);
   }
 
   /**
    * @param b a byte array holding the string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(Language l, ImmutableByteArray b)
+  public static synchronized Descriptor findOrCreate(Language l, ImmutableByteArray b)
       throws IllegalArgumentException {
     TypeName returnType = StringStuff.parseForReturnTypeName(l, b);
     TypeName[] parameters = StringStuff.parseForParameterNames(l, b);
     Key k = new Key(returnType, parameters);
-    Descriptor result = map.get(k);
-    if (result == null) {
-      result = new Descriptor(k);
-      map.put(k, result);
-    }
-    return result;
+    return map.computeIfAbsent(k, Descriptor::new);
   }
 
   public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
@@ -94,11 +84,6 @@ public final class Descriptor {
    */
   private Descriptor(Key key) {
     this.key = key;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
   }
 
   @Override

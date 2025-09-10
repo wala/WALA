@@ -118,7 +118,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
   private void computeEdges() {
     for (BasicBlock b : this) {
       if (b.equals(exit())) {
-        continue;
+        // do nothing
       } else if (b.equals(entry())) {
         BasicBlock bb0 = getBlockForInstruction(0);
         assert bb0 != null;
@@ -551,8 +551,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     private ExceptionHandler[] getExceptionHandlers() {
       ExceptionHandler[][] handlers;
       handlers = dexMethod.getHandlers();
-      ExceptionHandler[] hs = handlers[getLastInstructionIndex()];
-      return hs;
+      return handlers[getLastInstructionIndex()];
     }
 
     private void addNormalEdgeTo(BasicBlock b) {

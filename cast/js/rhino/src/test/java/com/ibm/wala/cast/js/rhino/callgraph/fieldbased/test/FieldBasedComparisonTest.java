@@ -1,6 +1,6 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.test.ExtractingToPredictableFileNames;
@@ -21,13 +21,13 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
   @Test
   public void testSkeletonPessimistic() {
-    assertThrows(
-        AssertionError.class,
-        () ->
-            test(
-                "pages/skeleton.html",
-                TestSimplePageCallGraphShape.assertionsForSkeleton,
-                BuilderType.PESSIMISTIC));
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(
+            () ->
+                test(
+                    "pages/skeleton.html",
+                    TestSimplePageCallGraphShape.assertionsForSkeleton,
+                    BuilderType.PESSIMISTIC));
   }
 
   @Test
@@ -48,13 +48,13 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
   @Test
   public void testSkeleton2Pessimistic() {
-    assertThrows(
-        AssertionError.class,
-        () ->
-            test(
-                "pages/skeleton2.html",
-                TestSimplePageCallGraphShape.assertionsForSkeleton2,
-                BuilderType.PESSIMISTIC));
+    assertThatExceptionOfType(AssertionError.class)
+        .isThrownBy(
+            () ->
+                test(
+                    "pages/skeleton2.html",
+                    TestSimplePageCallGraphShape.assertionsForSkeleton2,
+                    BuilderType.PESSIMISTIC));
   }
 
   @Test

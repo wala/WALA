@@ -252,37 +252,31 @@ public class AndroidEntryPoint extends DexEntryPoint {
      * prefer the static members.
      */
     public ExecutionOrder(String label) {
-      if (label.equals("AT_FIRST")) {
-        this.value = ExecutionOrder.AT_FIRST.getOrderValue();
-        return;
-      }
-      if (label.equals("BEFORE_LOOP")) {
-        this.value = ExecutionOrder.BEFORE_LOOP.getOrderValue();
-        return;
-      }
-      if (label.equals("START_OF_LOOP")) {
-        this.value = ExecutionOrder.START_OF_LOOP.getOrderValue();
-        return;
-      }
-      if (label.equals("MIDDLE_OF_LOOP")) {
-        this.value = ExecutionOrder.MIDDLE_OF_LOOP.getOrderValue();
-        return;
-      }
-      if (label.equals("MULTIPLE_TIMES_IN_LOOP")) {
-        this.value = ExecutionOrder.MULTIPLE_TIMES_IN_LOOP.getOrderValue();
-        return;
-      }
-      if (label.equals("END_OF_LOOP")) {
-        this.value = ExecutionOrder.END_OF_LOOP.getOrderValue();
-        return;
-      }
-      if (label.equals("AFTER_LOOP")) {
-        this.value = ExecutionOrder.AFTER_LOOP.getOrderValue();
-        return;
-      }
-      if (label.equals("AT_LAST")) {
-        this.value = ExecutionOrder.AT_LAST.getOrderValue();
-        return;
+      switch (label) {
+        case "AT_FIRST":
+          this.value = ExecutionOrder.AT_FIRST.getOrderValue();
+          return;
+        case "BEFORE_LOOP":
+          this.value = ExecutionOrder.BEFORE_LOOP.getOrderValue();
+          return;
+        case "START_OF_LOOP":
+          this.value = ExecutionOrder.START_OF_LOOP.getOrderValue();
+          return;
+        case "MIDDLE_OF_LOOP":
+          this.value = ExecutionOrder.MIDDLE_OF_LOOP.getOrderValue();
+          return;
+        case "MULTIPLE_TIMES_IN_LOOP":
+          this.value = ExecutionOrder.MULTIPLE_TIMES_IN_LOOP.getOrderValue();
+          return;
+        case "END_OF_LOOP":
+          this.value = ExecutionOrder.END_OF_LOOP.getOrderValue();
+          return;
+        case "AFTER_LOOP":
+          this.value = ExecutionOrder.AFTER_LOOP.getOrderValue();
+          return;
+        case "AT_LAST":
+          this.value = ExecutionOrder.AT_LAST.getOrderValue();
+          return;
       }
       throw new IllegalArgumentException(
           "ExecutionOrder was constructed from an illegal label: " + label);

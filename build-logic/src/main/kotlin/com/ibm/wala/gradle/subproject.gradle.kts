@@ -5,23 +5,9 @@ package com.ibm.wala.gradle
 plugins {
   idea
   id("com.ibm.wala.gradle.project")
-  id("de.undercouch.download")
 }
 
 version = rootProject.version
-
-////////////////////////////////////////////////////////////////////////
-//
-//  Extra downloads pre-fetcher
-//
-
-tasks.register("downloads") {
-  dependsOn(
-      tasks.withType<VerifiedDownload>().matching {
-        // not used in typical builds
-        it.name != "downloadOcamlJava"
-      })
-}
 
 ////////////////////////////////////////////////////////////////////////
 //

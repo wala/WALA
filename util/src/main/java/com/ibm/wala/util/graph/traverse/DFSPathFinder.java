@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  * be changed by overriding the getConnected method.
  */
 public class DFSPathFinder<T> extends ArrayList<T> {
-  public static final long serialVersionUID = 9939900773328288L;
+  private static final long serialVersionUID = 9939900773328288L;
 
   /** The graph to search */
   protected final Graph<T> G;
@@ -177,8 +177,6 @@ public class DFSPathFinder<T> extends ArrayList<T> {
         setPendingChildren(nextRoot, getConnected(nextRoot));
       }
     }
-
-    return;
   }
 
   /**

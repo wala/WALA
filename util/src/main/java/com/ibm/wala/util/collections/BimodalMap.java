@@ -116,7 +116,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
         backingStore = new SmallMap<>();
       }
       backingStore.putAll(t);
-      return;
     } else {
       if (backingStore instanceof SmallMap) {
         if (t.size() > cutOff) {
@@ -128,7 +127,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
           if (backingStore.size() > cutOff) {
             transferBackingStore();
           }
-          return;
         }
       } else {
         backingStore.putAll(t);

@@ -42,7 +42,7 @@ public class IntraproceduralExceptionAnalysis {
   private Set<TypeReference> possiblyCaughtExceptions;
   private PointerAnalysis<InstanceKey> pointerAnalysis;
   private CGNode node;
-  private ClassHierarchy classHierachy;
+  private ClassHierarchy classHierarchy;
   private ExceptionFilter<SSAInstruction> filter;
   private IR ir;
   private boolean dummy = false;
@@ -85,7 +85,7 @@ public class IntraproceduralExceptionAnalysis {
       PointerAnalysis<InstanceKey> pointerAnalysis,
       CGNode node) {
     this.pointerAnalysis = pointerAnalysis;
-    this.classHierachy = cha;
+    this.classHierarchy = cha;
     this.filter = filter;
     this.ir = ir;
     this.node = node;
@@ -126,8 +126,8 @@ public class IntraproceduralExceptionAnalysis {
     Set<TypeReference> subClasses = new LinkedHashSet<>();
     for (TypeReference caught : possiblyCaughtExceptions) {
       // ignore exception types that cannot be resolved
-      if (this.classHierachy.lookupClass(caught) != null) {
-        for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
+      if (this.classHierarchy.lookupClass(caught) != null) {
+        for (IClass iclass : this.classHierarchy.computeSubClasses(caught)) {
           subClasses.add(iclass.getReference());
         }
       }
@@ -156,7 +156,7 @@ public class IntraproceduralExceptionAnalysis {
       Collection<FilteredException> filters = filter.filteredExceptions(throwingInstruction);
       for (FilteredException filter : filters) {
         if (filter.isSubclassFiltered()) {
-          for (IClass iclass : this.classHierachy.computeSubClasses(filter.getException())) {
+          for (IClass iclass : this.classHierarchy.computeSubClasses(filter.getException())) {
             filtered.add(iclass.getReference());
           }
         } else {
@@ -253,8 +253,8 @@ public class IntraproceduralExceptionAnalysis {
     Set<TypeReference> subClasses = new LinkedHashSet<>();
     for (TypeReference caught : result) {
       // ignore exception types that cannot be resolved
-      if (this.classHierachy.lookupClass(caught) != null) {
-        for (IClass iclass : this.classHierachy.computeSubClasses(caught)) {
+      if (this.classHierarchy.lookupClass(caught) != null) {
+        for (IClass iclass : this.classHierarchy.computeSubClasses(caught)) {
           subClasses.add(iclass.getReference());
         }
       }

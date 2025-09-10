@@ -44,7 +44,7 @@ public class InterfaceAnalyzer {
 
     try (final Writer w = new BufferedWriter(new OutputStreamWriter(System.out))) {
 
-      args = instrumenter.parseStandardArgs(args);
+      instrumenter.parseStandardArgs(args);
 
       instrumenter.beginTraversal();
       ClassInstrumenter ci;
@@ -91,11 +91,7 @@ public class InterfaceAnalyzer {
   }
 
   private static void doType(int flags, String type, String containerType, int mUID) {
-    TypeStats t = typeStats.get(type);
-    if (t == null) {
-      t = new TypeStats();
-      typeStats.put(type, t);
-    }
+    TypeStats t = typeStats.computeIfAbsent(type, k -> new TypeStats());
     t.totalOccurrences++;
     if (t.lastMUID != mUID) {
       t.methodOccurrences++;

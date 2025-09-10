@@ -362,8 +362,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
       // possibly ignored in the exclusions file or just not included in the scope
       if (staticClass == null) return null;
 
-      IField staticField = staticClass.getField(declaredField.getName());
-      return staticField;
+      return staticClass.getField(declaredField.getName());
     }
 
     private void addTargets(CodeElement d1, MutableIntSet set, FlowType<E> taintType) {
@@ -476,7 +475,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   public IUnaryFlowFunction getNormalFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
     assert src.getNode().equals(dest.getNode());
-    // System.out.println("getNormalFlowFuntion");
+    // System.out.println("getNormalFlowFunction");
     // System.out.println("\tSrc " + src.getLastInstruction());
     // System.out.println("\tDest " + dest.getLastInstruction());
     return new DefUse(dest);

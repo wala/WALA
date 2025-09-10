@@ -8,12 +8,12 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 
 public class ECJClassLoaderFactory extends ClassLoaderFactoryImpl {
 
-  public ECJClassLoaderFactory(SetOfClasses exclusions) {
+  public ECJClassLoaderFactory(StringFilter exclusions) {
     super(exclusions);
   }
 

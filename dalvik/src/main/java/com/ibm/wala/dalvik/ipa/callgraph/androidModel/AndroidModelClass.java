@@ -309,28 +309,13 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     return false;
   }
 
-  @Override
-  public boolean isInterface() {
-    return false;
-  }
-
-  @Override
-  public boolean isAbstract() {
-    return false;
-  }
-
-  @Override
-  public boolean isArrayClass() {
-    return false;
-  }
-
   /** This is a subclass of the root class. */
   @Override
   public IClass getSuperclass() throws UnsupportedOperationException {
     return getClassHierarchy().getRootClass();
   }
 
-  /** This class does not impement any interfaces. */
+  /** This class does not implement any interfaces. */
   @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     return Collections.emptySet();

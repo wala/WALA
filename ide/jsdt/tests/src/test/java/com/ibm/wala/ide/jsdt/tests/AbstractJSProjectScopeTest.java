@@ -10,9 +10,7 @@
  */
 package com.ibm.wala.ide.jsdt.tests;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine;
@@ -52,7 +50,7 @@ public abstract class AbstractJSProjectScopeTest {
     IJavaScriptProject p =
         JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     System.err.println(p);
-    assertNotNull(p, "cannot find project");
+    assertThat(p).isNotNull();
   }
 
   @Test
@@ -66,8 +64,8 @@ public abstract class AbstractJSProjectScopeTest {
                 new CAstAnalysisScope(
                     JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
-    assertNotNull(s, "cannot make scope");
-    assertFalse(s.getModules(JavaScriptTypes.jsLoader).isEmpty(), "cannot find files");
+    assertThat(s).isNotNull();
+    assertThat(s.getModules(JavaScriptTypes.jsLoader)).isNotEmpty();
   }
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p)
@@ -83,8 +81,8 @@ public abstract class AbstractJSProjectScopeTest {
 
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
-    assertFalse(info.calls.isEmpty(), "cannot find any function calls");
-    assertTrue(info.cg.getNumberOfNodes() > 0, "cannot find any cg nodes");
+    assertThat(info.calls).isNotEmpty();
+    assertThat(info.cg.getNumberOfNodes()).isPositive();
   }
 
   @Test
@@ -96,7 +94,7 @@ public abstract class AbstractJSProjectScopeTest {
     e.buildAnalysisScope();
     IClassHierarchy cha = e.getClassHierarchy();
     // System.err.println(cha);
-    assertNotNull(cha);
+    assertThat(cha).isNotNull();
   }
 
   protected EclipseJavaScriptAnalysisEngine makeAnalysisEngine(IJavaScriptProject p) {

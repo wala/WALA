@@ -43,7 +43,9 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -149,12 +151,12 @@ public class JDT2CAstUtils {
 
   public static ITypeBinding promoteTypes(ITypeBinding t1, ITypeBinding t2, AST ast) {
     // JLS 5.6.2
-    ITypeBinding doble = ast.resolveWellKnownType("double");
-    if (t1.equals(doble) || t2.equals(doble)) return doble;
-    ITypeBinding flotando = ast.resolveWellKnownType("float");
-    if (t1.equals(flotando) || t2.equals(flotando)) return flotando;
-    ITypeBinding largo = ast.resolveWellKnownType("long");
-    if (t1.equals(largo) || t2.equals(largo)) return largo;
+    ITypeBinding doubleBinding = ast.resolveWellKnownType("double");
+    if (t1.equals(doubleBinding) || t2.equals(doubleBinding)) return doubleBinding;
+    ITypeBinding floatBinding = ast.resolveWellKnownType("float");
+    if (t1.equals(floatBinding) || t2.equals(floatBinding)) return floatBinding;
+    ITypeBinding longBinding = ast.resolveWellKnownType("long");
+    if (t1.equals(longBinding) || t2.equals(longBinding)) return longBinding;
     return ast.resolveWellKnownType("int");
   }
 
@@ -172,10 +174,28 @@ public class JDT2CAstUtils {
     return null;
   }
 
+  private static final Map<ITypeBinding, Integer> ids = new IdentityHashMap<>();
+
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
-    String dollarSignNumber = binName.substring(binName.indexOf('$'));
-    return "<anonymous subclass of " + ct.getSuperclass().getBinaryName() + '>' + dollarSignNumber;
+    int n;
+    // synchronize defensively just in case this code ever runs in multiple threads
+    synchronized (ids) {
+      if (ids.containsKey(ct)) {
+        n = ids.get(ct);
+      } else {
+        n = ids.size();
+        ids.put(ct, n);
+      }
+    }
+
+    if (binName.contains("$")) {
+      ITypeBinding sup = ct.isInterface() ? ct : ct.getSuperclass();
+      String dollarSignNumber = binName.substring(binName.indexOf('$'));
+      return "<anonymous subclass " + n + " of " + sup.getBinaryName() + '>' + dollarSignNumber;
+    } else {
+      return "<lambda subclass " + n + " of " + ct.getBinaryName() + '>';
+    }
   }
 
   /**
@@ -218,13 +238,13 @@ public class JDT2CAstUtils {
   private static void getMethodInClassOrSuperclass(
       IMethodBinding met,
       ITypeBinding klass,
-      boolean superclassonly,
+      boolean superclassOnly,
       HashMap<ITypeBinding, IMethodBinding> overridden) {
-    if (!superclassonly) {
-      for (IMethodBinding ourmet : klass.getDeclaredMethods())
-        if (met.overrides(ourmet)) {
+    if (!superclassOnly) {
+      for (IMethodBinding ourMet : klass.getDeclaredMethods())
+        if (met.overrides(ourMet)) {
           overridden.put(
-              ourmet.getMethodDeclaration().getReturnType(), ourmet.getMethodDeclaration());
+              ourMet.getMethodDeclaration().getReturnType(), ourMet.getMethodDeclaration());
           break; // there can only be one per class so don't bother looking for more
         }
     }

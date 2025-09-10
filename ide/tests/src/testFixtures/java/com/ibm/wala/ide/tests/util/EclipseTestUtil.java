@@ -128,8 +128,7 @@ public class EclipseTestUtil {
     assert url != null : bundle.toString() + " path " + path.toString();
     try {
       URL fileURL = FileLocator.toFileURL(url);
-      File file = new File(fileURL.getPath());
-      return file;
+      return new File(fileURL.getPath());
     } catch (IOException e) {
       reportException(e);
     }

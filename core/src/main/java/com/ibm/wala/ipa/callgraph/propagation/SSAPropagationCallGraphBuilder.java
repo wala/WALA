@@ -572,8 +572,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     protected IntSet getParamObjects(int paramIndex, @SuppressWarnings("unused") int rhsi) {
       int paramVn = call.getUse(paramIndex);
       PointerKey var = getPointerKeyForLocal(caller, paramVn);
-      IntSet s = system.findOrCreatePointsToSet(var).getValue();
-      return s;
+      return system.findOrCreatePointsToSet(var).getValue();
     }
   }
 

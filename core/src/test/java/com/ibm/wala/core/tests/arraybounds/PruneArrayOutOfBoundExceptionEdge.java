@@ -1,9 +1,7 @@
 package com.ibm.wala.core.tests.arraybounds;
 
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.everyItem;
-import static org.hamcrest.CoreMatchers.hasItem;
+import static com.ibm.wala.core.tests.arraybounds.EqualTo.equalTo;
+import static org.assertj.core.api.Assertions.anyOf;
 
 import com.ibm.wala.analysis.arraybounds.ArrayOutOfBoundsAnalysis;
 import com.ibm.wala.analysis.nullpointer.IntraproceduralNullPointerAnalysis;
@@ -33,10 +31,9 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.LinkedHashSet;
-import org.assertj.core.api.HamcrestCondition;
+import org.assertj.core.api.Condition;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -79,6 +76,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * The number of Basic Blocks, which have an exception edge, that should be removed. (#[array
    * access] + #[other])
    */
+  @SuppressWarnings("PointlessArithmeticExpression")
   private static final int NOT_DETECTABLE_EXPECTED_COUNT = 0 + 3;
 
   private static final String NOT_IN_BOUND_TESTDATA = "Larraybounds/NotInBound";
@@ -87,6 +85,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * The number of Basic Blocks, which have an exception edge, that should be removed. (#[array
    * access] + #[other])
    */
+  @SuppressWarnings("PointlessArithmeticExpression")
   private static final int NOT_IN_BOUND_EXPECTED_COUNT = 0 + 1;
 
   private static IRFactory<IMethod> irFactory;
@@ -217,15 +216,14 @@ public class PruneArrayOutOfBoundExceptionEdge {
         SSAInstruction lastInstruction = block.getLastInstruction();
         lastInstruction.getExceptionTypes();
 
-        final Matcher<TypeReference> isJLNPE = equalTo(TypeReference.JavaLangNullPointerException);
-        final Matcher<TypeReference> isJLAIOOBE =
+        final Condition<TypeReference> isJLNPE =
+            equalTo(TypeReference.JavaLangNullPointerException);
+        final Condition<TypeReference> isJLAIOOBE =
             equalTo(TypeReference.JavaLangArrayIndexOutOfBoundsException);
 
-        final Matcher<Iterable<? super TypeReference>> hasJLNPE = hasItem(isJLNPE);
-        final Matcher<Iterable<? super TypeReference>> hasJLAIOOBE = hasItem(isJLAIOOBE);
-        final Matcher<Iterable<? super TypeReference>> matcher1 = anyOf(hasJLNPE, hasJLAIOOBE);
+        final Condition<TypeReference> itemMatcher = anyOf(isJLNPE, isJLAIOOBE);
         softly
-            .<Iterable<TypeReference>>assertThat(lastInstruction.getExceptionTypes())
+            .assertThat(lastInstruction.getExceptionTypes())
             .as(
                 () ->
                     "Edge deleted but cause instruction can't throw NullPointerException"
@@ -233,11 +231,10 @@ public class PruneArrayOutOfBoundExceptionEdge {
                         + identifyer
                         + ":"
                         + method.getLineNumber(lastInstruction.iIndex()))
-            .satisfies(new HamcrestCondition<>(matcher1));
+            .areAtLeastOne(itemMatcher);
 
-        final Matcher<TypeReference> itemMatcher = anyOf(isJLNPE, isJLAIOOBE);
         softly
-            .<Iterable<TypeReference>>assertThat(lastInstruction.getExceptionTypes())
+            .assertThat(lastInstruction.getExceptionTypes())
             .as(
                 () ->
                     "Edge deleted but cause instruction throws other exceptions as NullPointerException"
@@ -245,7 +242,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
                         + identifyer
                         + ":"
                         + method.getLineNumber(lastInstruction.iIndex()))
-            .satisfies(new HamcrestCondition<>(everyItem(itemMatcher)));
+            .are(itemMatcher);
 
       } else {
         softly.fail(

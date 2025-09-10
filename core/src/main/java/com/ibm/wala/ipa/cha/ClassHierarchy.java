@@ -105,6 +105,11 @@ public class ClassHierarchy implements IClassHierarchy {
   /** A mapping from IClass -&gt; Selector -&gt; Set of IMethod */
   private final HashMap<IClass, Object> targetCache = HashMapFactory.make();
 
+  @Override
+  public void clearCaches() {
+    targetCache.clear();
+  }
+
   /** Governing analysis scope */
   private final AnalysisScope scope;
 
@@ -728,7 +733,7 @@ public class ClassHierarchy implements IClassHierarchy {
     N.right = nextNumber++;
   }
 
-  /** internal representation of a node in the class hiearachy, representing one java class. */
+  /** internal representation of a node in the class hierarchy, representing one java class. */
   static final class Node {
 
     private final IClass klass;
@@ -779,11 +784,6 @@ public class ClassHierarchy implements IClassHierarchy {
     @Override
     public int hashCode() {
       return klass.hashCode() * 929;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      return this == obj;
     }
   }
 
@@ -1146,7 +1146,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public int getNumberOfClasses() {
-    return map.keySet().size();
+    return map.size();
   }
 
   @Override
