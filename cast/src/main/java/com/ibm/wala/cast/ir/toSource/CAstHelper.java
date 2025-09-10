@@ -36,9 +36,10 @@ public class CAstHelper {
         "STRING",
         "XML",
         "JSON",
-        "CALL",
-        "SEARCH"
+        "CALL"
       };
+
+  public static final String SEARCH_STMT = "SEARCH ";
 
   private static boolean shouldOnlyUseOneBranch(List<CAstNode> branchList, boolean inLoop) {
     // if the branch is ended with break/continue/termination, then move else after the if
@@ -253,9 +254,18 @@ public class CAstHelper {
 
   public static boolean isConditionalStatement(CAstNode test) {
     if (CAstNode.PRIMITIVE == test.getKind()) {
+      // for normal conditional statement, check the first child
       String testStr = test.getChild(0).getValue().toString().toUpperCase();
       for (int i = 0; i < supportedStatements.length; i++) {
         if (testStr.startsWith(supportedStatements[i] + " ")) {
+          return true;
+        }
+      }
+
+      // for search, check the second child
+      if (test.getChildCount() > 1) {
+        testStr = test.getChild(1).getValue().toString().toUpperCase();
+        if (testStr.startsWith(SEARCH_STMT)) {
           return true;
         }
       }
