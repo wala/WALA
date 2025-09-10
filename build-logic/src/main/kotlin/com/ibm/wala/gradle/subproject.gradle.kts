@@ -7,6 +7,8 @@ plugins {
   id("com.ibm.wala.gradle.project")
 }
 
+version = rootProject.version
+
 ////////////////////////////////////////////////////////////////////////
 //
 //  IntelliJ IDEA IDE integration
