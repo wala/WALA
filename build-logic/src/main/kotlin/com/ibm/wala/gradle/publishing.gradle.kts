@@ -98,14 +98,19 @@ publishing {
 
     maven {
       name = "artifactory"
-      if (isSnapshot) {
-        url = uri(property("mavenSnapshotUrl") as String)
+      if (project.hasProperty("mavenSnapshotUrl") || project.hasProperty("mavenReleaseUrl")) {
+        if (isSnapshot) {
+          url = uri(property("mavenSnapshotUrl") as String)
+        } else {
+          url = uri(property("mavenReleaseUrl") as String)
+        }
+        credentials {
+          username = property("mavenUsername") as String
+          password = property("mavenPassword") as String
+        }
       } else {
-        url = uri(property("mavenReleaseUrl") as String)
-      }
-      credentials {
-        username = property("mavenUsername") as String
-        password = property("mavenPassword") as String
+        // Do nothing or use a default
+        println("mavenSnapshotUrl or mavenReleaseUrl not defined, skipping snapshot publishing")
       }
     }
   }
