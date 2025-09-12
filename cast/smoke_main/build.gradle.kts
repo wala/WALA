@@ -86,21 +86,19 @@ application {
 
               // xlator Java bytecode + implementation of native methods
               inputs.files(libxlatorTestConfig)
-              val pathElements = project.objects.listProperty<File>()
-              pathElements.addAll(
+              val pathElements =
                   files("../build/classes/java/test", libxlatorTest.map { it.parent })
-              )
 
               // "primordial.txt" resource loaded during test
-              pathElements.add(coreResources.map { it.singleFile })
               inputs.files(coreResources)
+              pathElements.from(coreResources)
 
               // additional supporting Java class files
               inputs.files(smokeMainExtraPathElements)
-              pathElements.addAll(smokeMainExtraPathElements)
+              pathElements.from(smokeMainExtraPathElements)
 
               // all combined as a colon-delimited path list
-              argumentProviders.add { listOf(pathElements.get().joinToString(":")) }
+              argumentProviders.add { listOf(pathElements.asPath) }
 
               // log output to file, although we don"t validate it
               val outFile = layout.buildDirectory.file("${name}.log")
