@@ -37,7 +37,7 @@ fun <T : Task> Provider<T>.configure(action: T.() -> Unit) {
 }
 
 private fun File.findJvmLibrary(extension: String, subdirs: List<String>) =
-    subdirs.map { resolve("$it/libjvm.$extension") }.find { it.exists() }!!
+    subdirs.map { resolve("$it/libjvm.$extension") }.find(File::exists)!!
 
 fun CppBinary.addJvmLibrary(project: Project) {
   val currentJavaHome = Jvm.current().javaHome

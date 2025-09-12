@@ -40,7 +40,7 @@ val Project.isJavaProject
  *   [isJavaProject] property)
  */
 val Project.allJavaProjects
-  get() = rootProject.subprojects.filter { it.isJavaProject }
+  get() = rootProject.subprojects.filter(Project::isJavaProject)
 
 /**
  * Performs the given [action] for each of [rootProject][the root project]'s Java subprojects.

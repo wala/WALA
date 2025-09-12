@@ -1,5 +1,6 @@
 package com.ibm.wala.gradle
 
+import java.io.File
 import javax.inject.Inject
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -63,7 +64,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
             destinationDirectory.get().toString(),
         )
       }
-      add { source.files.map { it.toString() } }
+      add { source.files.map(File::toString) }
     }
   }
 
