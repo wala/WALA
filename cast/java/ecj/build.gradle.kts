@@ -1,3 +1,5 @@
+import com.ibm.wala.gradle.logToFile
+
 plugins {
   application
   id("com.ibm.wala.gradle.eclipse-maven-central")
@@ -41,15 +43,8 @@ val run by
       }
 
       // log output to file, although we don"t validate it
-      val outFile = layout.buildDirectory.file("SourceDirCallGraph.log")
-      outputs.file(outFile)
+      logToFile(name)
       outputs.cacheIf { true }
-      doFirst {
-        outFile.get().asFile.outputStream().let {
-          standardOutput = it
-          errorOutput = it
-        }
-      }
     }
 
 // ensure the command-line driver for running ECJ works

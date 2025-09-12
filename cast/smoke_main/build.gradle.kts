@@ -1,6 +1,7 @@
 import com.ibm.wala.gradle.cast.addJvmLibrary
 import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
+import com.ibm.wala.gradle.logToFile
 import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
@@ -103,14 +104,7 @@ application {
               argumentProviders.add { listOf(pathElements.get().joinToString(":")) }
 
               // log output to file, although we don"t validate it
-              val outFile = layout.buildDirectory.file("${name}.log")
-              outputs.file(outFile)
-              doFirst {
-                outFile.get().asFile.outputStream().let {
-                  standardOutput = it
-                  errorOutput = it
-                }
-              }
+              logToFile(name)
             }
 
         if (!targetPlatform.get().operatingSystem.isWindows) {
