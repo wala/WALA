@@ -22,7 +22,7 @@ open class CreatePackageList : DefaultTask() {
   private var sourceFileSubdirectories: SortedSet<Path>? = null
 
   /** Serializable representation of subdirs suitable for cache indexing. */
-  @Input fun getSourceFileSubdirectories() = sourceFileSubdirectories!!.map { it.toString() }
+  @Input fun getSourceFileSubdirectories() = sourceFileSubdirectories!!.map(Path::toString)
 
   fun sourceSet(sourceSet: SourceSet) {
     // gather source subdirs relative to each source root
