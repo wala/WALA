@@ -32,7 +32,7 @@ jobs:
             java: 21
             coverage: false
           - os: ubuntu-latest
-            java: 24
+            java: 25
             coverage: false
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -90,7 +90,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      JDK_VERSION: 24
+      JDK_VERSION: 25
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
@@ -98,7 +98,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JDK_VERSION }}
-          distribution: 'temurin'
+          distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: 'Generate latest docs'
