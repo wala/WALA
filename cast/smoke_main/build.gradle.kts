@@ -2,6 +2,7 @@ import com.ibm.wala.gradle.cast.addJvmLibrary
 import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
 import com.ibm.wala.gradle.logToFile
+import com.ibm.wala.gradle.valueToString
 import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
@@ -77,13 +78,7 @@ application {
 
               // main executable to run for test
               inputs.file(linkedFile)
-              executable(
-                  object {
-                    val toString by lazy { linkedFile.get().asFile.toString() }
-
-                    override fun toString() = toString
-                  }
-              )
+              executable(linkedFile.valueToString)
 
               // xlator Java bytecode + implementation of native methods
               inputs.files(libxlatorTestConfig)
