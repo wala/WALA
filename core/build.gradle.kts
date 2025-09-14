@@ -229,7 +229,7 @@ val collectJLex by
 //  generate "hello_hash.jar"
 //
 
-val ocamlJavaVersion = "2.0-alpha1"
+val ocamlJavaVersion = "2.0-alpha3"
 
 val downloadOcamlJava =
     adHocDownload(
