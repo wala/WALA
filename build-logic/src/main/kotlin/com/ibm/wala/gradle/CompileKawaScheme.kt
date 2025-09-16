@@ -23,7 +23,9 @@ abstract class CompileKawaScheme : JavaExec() {
   @get:OutputDirectory val outputDir: Provider<Directory> = project.layout.buildDirectory.dir(name)
 
   init {
-    classpath(project.tasks.named("extractKawa"))
+    classpath(
+        project.tasks.named("extractKawa").map { it.outputs.files.singleFile.resolve("kawa.jar") }
+    )
     mainClass = "kawa.repl"
 
     logging.captureStandardError(LogLevel.INFO)
