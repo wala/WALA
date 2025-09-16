@@ -22,7 +22,7 @@ interface InstallAndroidSdkServices {
 
 val installAndroidSdk by
     tasks.registering(Sync::class) {
-      from(zipTree { downloadAndroidSdk.singleFile })
+      from({ zipTree(downloadAndroidSdk.singleFile) })
       into(layout.buildDirectory.dir(name))
 
       // When the task is actually executing (i.e.,in the `doLast` code below), the Gradle
@@ -118,7 +118,7 @@ val downloadDroidBench =
 
 val unpackDroidBench by
     tasks.registering(Sync::class) {
-      from(zipTree { downloadDroidBench.singleFile }) {
+      from({ zipTree(downloadDroidBench.singleFile) }) {
         include("*/apk/**")
         eachFile {
           relativePath = RelativePath(!isDirectory, *relativePath.segments.drop(1).toTypedArray())

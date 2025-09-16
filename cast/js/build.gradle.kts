@@ -48,7 +48,7 @@ val downloadAjaxslt =
 
 val unpackAjaxslt by
     tasks.registering(Sync::class) {
-      from(tarTree { downloadAjaxslt.singleFile }) {
+      from({ tarTree(downloadAjaxslt.singleFile) }) {
         eachFile {
           val newSegments = relativePath.segments.drop(1).toTypedArray()
           relativePath = RelativePath(!isDirectory, *newSegments)
