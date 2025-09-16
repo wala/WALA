@@ -32,7 +32,7 @@ jobs:
             java: 21
             coverage: false
           - os: ubuntu-latest
-            java: 25-ea
+            java: 25
             coverage: false
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -42,23 +42,17 @@ jobs:
       - name: 'Set up JDK ${{ matrix.java }}'
         uses: actions/setup-java@v5
         with:
-          java-version: |
-            ${{ matrix.java }}
-            25-ea
+          java-version: ${{ matrix.java }}
           distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Choose extra Linux-only Gradle tasks
         run: echo OS_SPECIFIC_GRADLE_TASKS='publishAllPublicationsToFakeRemoteRepository shellcheck' >> $GITHUB_ENV
         if: runner.os == 'Linux'
-      - name: Set normalized JDK version
-        run: echo "JDK_VERSION=${MATRIX_JAVA%-ea}" >> $GITHUB_ENV
-        env:
-          MATRIX_JAVA: ${{ matrix.java }}
       - name: Build and test using Gradle
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: ./gradlew --no-configuration-cache -Pcom.ibm.wala.jdk-version=$JDK_VERSION aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }}
+          run: ./gradlew --no-configuration-cache "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}" aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }}
       - name: Check for Git cleanliness after build and test
         run: ./check-git-cleanliness.sh
         # not running in Borne or POSIX shell on Windows
@@ -73,7 +67,7 @@ jobs:
             **/build/test-results/
       - name: Aggregate coverage
         id: jacoco_report
-        run: ./gradlew testCodeCoverageReport -Pcom.ibm.wala.jdk-version=$JDK_VERSION
+        run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         if: matrix.coverage && github.repository == 'wala/WALA'
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
