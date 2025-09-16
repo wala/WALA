@@ -1,12 +1,15 @@
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
+import com.ibm.wala.gradle.valueToString
+import kotlin.io.resolve
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
 
 plugins {
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.operating-system")
   id("com.ibm.wala.gradle.publishing")
   id("com.ibm.wala.gradle.test-subjects")
 }
@@ -242,12 +245,12 @@ val downloadOcamlJava =
 // causes Gradle's native tar support to fail.
 val unpackOcamlJava by
     tasks.registering(Exec::class) {
+      inputs.files(downloadOcamlJava)
       executable = "tar"
       argumentProviders.add {
         listOf(
             "xzf",
-            downloadOcamlJava.singleFile.path,
-            "ocamljava-$ocamlJavaVersion/lib/ocamljava.jar",
+            inputs.files.singleFile.path,
         )
       }
       val outputDir = layout.buildDirectory.dir(name)
@@ -255,33 +258,54 @@ val unpackOcamlJava by
       outputs.dir(outputDir)
     }
 
-val prepareGenerateHelloHashJar by
-    tasks.registering(Sync::class) {
-      from("ocaml/hello_hash.ml")
-      val outputDir = layout.buildDirectory.dir(name)
-      into(outputDir)
-      extra["copiedOcamlSource"] = file("${outputDir.get()}/${source.singleFile.name}")
-    }
-
 val generateHelloHashJar by
-    tasks.registering(JavaExec::class) {
-      val ocamlSource = prepareGenerateHelloHashJar.map { it.extra["copiedOcamlSource"] as File }
+    tasks.registering(Exec::class) {
+
+      // haven't been able to get `ocamljava.bat` to work on Windows yet
+      val isWindows = project.extra["isWindows"] as Boolean
+      onlyIf { !isWindows }
+
+      // OCaml source file to compile to Java bytecode
+      val ocamlSource = file("ocaml/hello_hash.ml")
       inputs.file(ocamlSource)
 
-      val jarTarget = layout.projectDirectory.file("ocaml/hello_hash.jar")
+      // generated JAR archive that will contain compiled OCaml code
+      val jarTarget = layout.buildDirectory.file("hello_hash.jar")
       outputs.file(jarTarget)
       outputs.cacheIf { true }
+      argumentProviders.add { listOf("-o", jarTarget.get().toString()) }
 
-      val ocamlJavaJar =
-          unpackOcamlJava.map {
-            file("${it.workingDir}/ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
+      // unpacked OCaml-Java distribution
+      inputs.files(unpackOcamlJava)
+
+      // `ocamljava` script to compile OCaml to Java bytecode
+      executable(
+          unpackOcamlJava
+              .map {
+                it.workingDir.resolve(
+                    "ocamljava-$ocamlJavaVersion/bin/ocamljava${if (isWindows) ".bat" else ""}"
+                )
+              }
+              .valueToString
+      )
+
+      // use same JVM that is being used to run Gradle itself
+      environment("JAVA_HOME", providers.systemProperty("java.home").valueToString)
+
+      objects.newInstance<ExtractServices>().run {
+
+        // avoid polluting source directory with `hello_hash.{cmi,cmj,jo}` files
+        doFirst {
+          fileSystem.copy {
+            from(ocamlSource)
+            into(temporaryDir)
           }
-      inputs.file(ocamlJavaJar)
-      classpath(ocamlJavaJar)
+        }
+        argumentProviders.add { listOf(temporaryDir.resolve(ocamlSource.name).toString()) }
 
-      mainClass = "ocaml.compilers.ocamljavaMain"
-      args("-o", jarTarget)
-      argumentProviders.add { listOf(ocamlSource.get().toString()) }
+        // validate generated JAR: `ocamljava` always "succeeds", even if something went wrong
+        doLast { check(!archive.zipTree(jarTarget).isEmpty) }
+      }
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -331,13 +355,8 @@ tasks.named<Copy>("processTestResources") {
       copyJavaCup,
       extractBcel,
       extractKawa,
+      generateHelloHashJar,
   )
-
-  // If "ocaml/hello_hash.jar" exists, then treat it as up-to-date and ready to use.  But if it is
-  // missing, then use the generateHelloHashJar task to rebuild it.  The latter will entail
-  // downloading OCaml-Java if we haven"t already: something we prefer to avoid.
-  val helloHashJar = generateHelloHashJar.get().outputs.files.singleFile
-  from(if (helloHashJar.exists()) helloHashJar else generateHelloHashJar)
 }
 
 tasks.named<Test>("test") {
