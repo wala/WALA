@@ -26,10 +26,9 @@ abstract class CompileKawaScheme : JavaExec() {
     classpath(project.tasks.named("extractKawa"))
     mainClass = "kawa.repl"
 
-    args("-d", outputDir.get().asFile)
-
     logging.captureStandardError(LogLevel.INFO)
-    args("--main", "-C")
-    argumentProviders.add { listOf(schemeFile.get().toString()) }
+    argumentProviders.add {
+      listOf("-d", outputDir.get().toString(), "--main", "-C", schemeFile.get().toString())
+    }
   }
 }
