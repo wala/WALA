@@ -146,26 +146,12 @@ val downloadAndroidSdk = run {
   )
 }
 
-interface ExtractSampleCupServices {
-  @get:Inject val archive: ArchiveOperations
-  @get:Inject val fileSystem: FileSystemOperations
-}
-
 val extractSampleCup by
-    tasks.registering {
-      inputs.files(sampleCupSources)
-      outputs.file(layout.buildDirectory.file("$name/sample.cup"))
-
-      objects.newInstance<ExtractSampleCupServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.zipTree(inputs.files.singleFile))
-            include("parser.cup")
-            rename { outputs.files.singleFile.name }
-            into(outputs.files.singleFile.parent)
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from({ zipTree(sampleCupSources.get().singleFile) })
+      into(layout.buildDirectory.file(name))
+      include("parser.cup")
+      rename { "sample.cup" }
     }
 
 val downloadSampleLex =
