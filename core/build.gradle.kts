@@ -181,7 +181,7 @@ val downloadBcel =
 
 val extractBcel by
     tasks.registering(Sync::class) {
-      from(tarTree { downloadBcel.singleFile })
+      from({ tarTree(downloadBcel.singleFile) })
       include("**/*.jar")
       into(layout.buildDirectory.map { "$it/$name" })
       eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
@@ -240,7 +240,7 @@ val downloadOcamlJava =
         "bin",
     )
 
-// Ideally this would be a `Sync` task using `from(tarTree { downloadOcamlJava.singleFile })`.
+// Ideally this would be a `Sync` task using `from({ tarTree(downloadOcamlJava.singleFile) })`.
 // However, this specific tar archive contains a member with a leading slash, and that apparently
 // causes Gradle's native tar support to fail.
 val unpackOcamlJava by
