@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.jar.JarFile;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
@@ -50,6 +52,9 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
   }
 
   @Test
+  @DisabledOnOs(
+      value = OS.WINDOWS,
+      disabledReason = "haven't been able to get `ocamljava.bat` to work on Windows yet")
   public void testOcamlHelloHash()
       throws ClassHierarchyException,
           IllegalArgumentException,
