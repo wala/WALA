@@ -1,6 +1,7 @@
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
+import com.ibm.wala.gradle.dropTopDirectory
 import com.ibm.wala.gradle.valueToString
 import kotlin.io.resolve
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -119,25 +120,15 @@ val kawaChess =
     )
 
 val unpackKawaChess by
-    tasks.registering {
-      inputs.files(kawaChess)
-      outputs.dir(layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
-
-      objects.newInstance<ExtractServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.zipTree(inputs.files.singleFile))
-            into(outputs.files.singleFile.parent)
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from({ zipTree(kawaChess.singleFile) })
+      into(layout.buildDirectory.dir(name))
+      dropTopDirectory()
     }
 
 val compileKawaSchemeChessMain by
     tasks.registering(CompileKawaScheme::class) {
-      schemeFile.fileProvider(
-          unpackKawaChess.map { file("${it.outputs.files.singleFile}/main.scm") }
-      )
+      schemeFile = unpackKawaChess.map { it.destinationDir.resolve("main.scm") }
     }
 
 val buildChessJar by
