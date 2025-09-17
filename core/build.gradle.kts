@@ -1,6 +1,7 @@
 import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
+import com.ibm.wala.gradle.dropTopDirectory
 import com.ibm.wala.gradle.valueToString
 import kotlin.io.resolve
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -72,8 +73,8 @@ dependencies {
   "testSubjectsImplementation"(platform(libs.junit.bom))
 }
 
-// Injected services used by several tasks that extract selected files from downloads.
-interface ExtractServices {
+// Injected services used by `generateHelloHash` task.
+interface GenerateHelloHashServices {
   @get:Inject val archive: ArchiveOperations
   @get:Inject val fileSystem: FileSystemOperations
 }
@@ -86,22 +87,12 @@ interface ExtractServices {
 val kawa = adHocDownload(uri("https://ftpmirror.gnu.org/gnu/kawa"), "kawa", "zip", "3.0")
 
 val extractKawa by
-    tasks.registering {
-      inputs.files(kawa)
-      outputs.file(layout.buildDirectory.file("$name/kawa.jar"))
-
-      objects.newInstance<ExtractServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.zipTree(inputs.files.singleFile)) {
-              include("kawa-*/lib/${outputs.files.singleFile.name}")
-              eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
-            }
-            into(outputs.files.singleFile.parent)
-            includeEmptyDirs = false
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from({ zipTree(kawa.singleFile) })
+      into(layout.buildDirectory.dir(name))
+      include("*/lib/kawa.jar")
+      eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+      includeEmptyDirs = false
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -119,25 +110,15 @@ val kawaChess =
     )
 
 val unpackKawaChess by
-    tasks.registering {
-      inputs.files(kawaChess)
-      outputs.dir(layout.buildDirectory.file("kawa-chess-$kawaChessCommitHash"))
-
-      objects.newInstance<ExtractServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.zipTree(inputs.files.singleFile))
-            into(outputs.files.singleFile.parent)
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from({ zipTree(kawaChess.singleFile) })
+      into(layout.buildDirectory.dir(name))
+      dropTopDirectory()
     }
 
 val compileKawaSchemeChessMain by
     tasks.registering(CompileKawaScheme::class) {
-      schemeFile.fileProvider(
-          unpackKawaChess.map { file("${it.outputs.files.singleFile}/main.scm") }
-      )
+      schemeFile = unpackKawaChess.map { it.destinationDir.resolve("main.scm") }
     }
 
 val buildChessJar by
@@ -181,7 +162,7 @@ val downloadBcel =
 
 val extractBcel by
     tasks.registering(Sync::class) {
-      from(tarTree { downloadBcel.singleFile })
+      from({ tarTree(downloadBcel.singleFile) })
       include("**/*.jar")
       into(layout.buildDirectory.map { "$it/$name" })
       eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
@@ -229,7 +210,7 @@ val collectJLex by
 //  generate "hello_hash.jar"
 //
 
-val ocamlJavaVersion = "2.0-alpha1"
+val ocamlJavaVersion = "2.0-alpha3"
 
 val downloadOcamlJava =
     adHocDownload(
@@ -240,7 +221,7 @@ val downloadOcamlJava =
         "bin",
     )
 
-// Ideally this would be a `Sync` task using `from(tarTree { downloadOcamlJava.singleFile })`.
+// Ideally this would be a `Sync` task using `from({ tarTree(downloadOcamlJava.singleFile) })`.
 // However, this specific tar archive contains a member with a leading slash, and that apparently
 // causes Gradle's native tar support to fail.
 val unpackOcamlJava by
@@ -292,7 +273,7 @@ val generateHelloHashJar by
       // use same JVM that is being used to run Gradle itself
       environment("JAVA_HOME", providers.systemProperty("java.home").valueToString)
 
-      objects.newInstance<ExtractServices>().run {
+      objects.newInstance<GenerateHelloHashServices>().run {
 
         // avoid polluting source directory with `hello_hash.{cmi,cmj,jo}` files
         doFirst {

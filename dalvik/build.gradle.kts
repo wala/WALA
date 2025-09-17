@@ -1,4 +1,5 @@
 import com.ibm.wala.gradle.adHocDownload
+import com.ibm.wala.gradle.dropTopDirectory
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -22,7 +23,7 @@ interface InstallAndroidSdkServices {
 
 val installAndroidSdk by
     tasks.registering(Sync::class) {
-      from(zipTree { downloadAndroidSdk.singleFile })
+      from({ zipTree(downloadAndroidSdk.singleFile) })
       into(layout.buildDirectory.dir(name))
 
       // When the task is actually executing (i.e.,in the `doLast` code below), the Gradle
@@ -118,15 +119,9 @@ val downloadDroidBench =
 
 val unpackDroidBench by
     tasks.registering(Sync::class) {
-      from(zipTree { downloadDroidBench.singleFile }) {
-        include("*/apk/**")
-        eachFile {
-          relativePath = RelativePath(!isDirectory, *relativePath.segments.drop(1).toTypedArray())
-        }
-      }
-
+      from({ zipTree(downloadDroidBench.singleFile) }) { include("*/apk/**") }
       into(layout.buildDirectory.dir("DroidBench"))
-      includeEmptyDirs = false
+      dropTopDirectory()
     }
 
 val downloadAndroidSdk = run {
@@ -146,26 +141,12 @@ val downloadAndroidSdk = run {
   )
 }
 
-interface ExtractSampleCupServices {
-  @get:Inject val archive: ArchiveOperations
-  @get:Inject val fileSystem: FileSystemOperations
-}
-
 val extractSampleCup by
-    tasks.registering {
-      inputs.files(sampleCupSources)
-      outputs.file(layout.buildDirectory.file("$name/sample.cup"))
-
-      objects.newInstance<ExtractSampleCupServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.zipTree(inputs.files.singleFile))
-            include("parser.cup")
-            rename { outputs.files.singleFile.name }
-            into(outputs.files.singleFile.parent)
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from({ zipTree(sampleCupSources.get().singleFile) })
+      into(layout.buildDirectory.file(name))
+      include("parser.cup")
+      rename { "sample.cup" }
     }
 
 val downloadSampleLex =

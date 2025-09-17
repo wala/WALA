@@ -23,13 +23,14 @@ abstract class CompileKawaScheme : JavaExec() {
   @get:OutputDirectory val outputDir: Provider<Directory> = project.layout.buildDirectory.dir(name)
 
   init {
-    classpath(project.tasks.named("extractKawa"))
+    classpath(
+        project.tasks.named("extractKawa").map { it.outputs.files.singleFile.resolve("kawa.jar") }
+    )
     mainClass = "kawa.repl"
 
-    args("-d", outputDir.get().asFile)
-
     logging.captureStandardError(LogLevel.INFO)
-    args("--main", "-C")
-    argumentProviders.add { listOf(schemeFile.get().toString()) }
+    argumentProviders.add {
+      listOf("-d", outputDir.get().toString(), "--main", "-C", schemeFile.get().toString())
+    }
   }
 }

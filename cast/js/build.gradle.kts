@@ -1,5 +1,6 @@
 import com.ibm.wala.gradle.CreatePackageList
 import com.ibm.wala.gradle.adHocDownload
+import com.ibm.wala.gradle.dropTopDirectory
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -48,13 +49,9 @@ val downloadAjaxslt =
 
 val unpackAjaxslt by
     tasks.registering(Sync::class) {
-      from(tarTree { downloadAjaxslt.singleFile }) {
-        eachFile {
-          val newSegments = relativePath.segments.drop(1).toTypedArray()
-          relativePath = RelativePath(!isDirectory, *newSegments)
-        }
-      }
+      from({ tarTree(downloadAjaxslt.singleFile) })
       into(layout.buildDirectory.dir(name))
+      dropTopDirectory()
     }
 
 val processTestResources by tasks.existing(Copy::class) { from(unpackAjaxslt) { into("ajaxslt") } }
