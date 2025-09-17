@@ -35,7 +35,7 @@ application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
 val run by
     tasks.existing(JavaExec::class) {
-      val runSourceDirectoryPath = runSourceDirectory.map { it.files.single() }
+      val runSourceDirectoryPath = runSourceDirectory.map { it.singleFile }
       inputs.dir(runSourceDirectoryPath)
       // this is for testing purposes
       argumentProviders.add {
