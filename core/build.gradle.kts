@@ -73,8 +73,8 @@ dependencies {
   "testSubjectsImplementation"(platform(libs.junit.bom))
 }
 
-// Injected services used by several tasks that extract selected files from downloads.
-interface ExtractServices {
+// Injected services used by `generateHelloHash` task.
+interface GenerateHelloHashServices {
   @get:Inject val archive: ArchiveOperations
   @get:Inject val fileSystem: FileSystemOperations
 }
@@ -87,22 +87,12 @@ interface ExtractServices {
 val kawa = adHocDownload(uri("https://ftpmirror.gnu.org/gnu/kawa"), "kawa", "zip", "3.0")
 
 val extractKawa by
-    tasks.registering {
-      inputs.files(kawa)
-      outputs.file(layout.buildDirectory.file("$name/kawa.jar"))
-
-      objects.newInstance<ExtractServices>().run {
-        doLast {
-          fileSystem.copy {
-            from(archive.zipTree(inputs.files.singleFile)) {
-              include("kawa-*/lib/${outputs.files.singleFile.name}")
-              eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
-            }
-            into(outputs.files.singleFile.parent)
-            includeEmptyDirs = false
-          }
-        }
-      }
+    tasks.registering(Sync::class) {
+      from({ zipTree(kawa.singleFile) })
+      into(layout.buildDirectory.dir(name))
+      include("*/lib/kawa.jar")
+      eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
+      includeEmptyDirs = false
     }
 
 ////////////////////////////////////////////////////////////////////////
@@ -283,7 +273,7 @@ val generateHelloHashJar by
       // use same JVM that is being used to run Gradle itself
       environment("JAVA_HOME", providers.systemProperty("java.home").valueToString)
 
-      objects.newInstance<ExtractServices>().run {
+      objects.newInstance<GenerateHelloHashServices>().run {
 
         // avoid polluting source directory with `hello_hash.{cmi,cmj,jo}` files
         doFirst {
