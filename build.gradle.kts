@@ -105,7 +105,10 @@ val lintMarkdown by
       inputs.files(markdownFiles)
       inputs.file(".markdownlint-cli2.yaml")
       args = markdownFiles.map { it.path }
-      outputs.file(layout.buildDirectory.file("$name.stamp"))
+      outputs.run {
+        file(layout.buildDirectory.file("$name.stamp"))
+        cacheIf { true }
+      }
       doLast { outputs.files.singleFile.createNewFile() }
     }
 
