@@ -103,11 +103,6 @@ dependencies {
   testImplementation(projects.dalvik)
   testImplementation(testFixtures(projects.core))
   testImplementation(testFixtures(projects.util))
-
-  // directory containing "android.jar", which various tests want to find as a resource
-  testRuntimeOnly(
-      files(installAndroidSdk.map { "${it.outputs.files.singleFile}/platforms/$platformsVersion" })
-  )
 }
 
 val downloadDroidBench =
@@ -162,6 +157,11 @@ tasks.named<Copy>("processTestResources") {
   from(extractSampleCup)
   from(extraTestResources)
   from({ zipTree(coreTestJar.get().singleFile) })
+  from(
+      installAndroidSdk.map {
+        "${it.outputs.files.singleFile}/platforms/$platformsVersion/android.jar"
+      }
+  )
 }
 
 if (isWindows) tasks.named<Test>("test") { exclude("**/droidbench/**") }
