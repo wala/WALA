@@ -59,7 +59,7 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
             "-properties",
             jdtPrefs.toString(),
             "-classpath",
-            classpath.asPath,
+            classpath.filter(File::exists).asPath,
             "-d",
             destinationDirectory.get().toString(),
         )
