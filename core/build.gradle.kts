@@ -213,6 +213,7 @@ val collectJLex by
 
 val ocamlJavaVersion = "2.0-alpha3"
 
+@Suppress("HttpUrlsUsage")
 val downloadOcamlJava =
     adHocDownload(
         uri("http://www.ocamljava.org/files/distrib"),
