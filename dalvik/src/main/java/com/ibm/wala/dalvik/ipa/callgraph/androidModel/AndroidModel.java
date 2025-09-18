@@ -509,13 +509,13 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
 
         final int callPC = body.getNextProgramCounter();
         final CallSiteReference site = ep.makeSite(callPC);
-        final SSAAbstractInvokeInstruction invokation;
+        final SSAAbstractInvokeInstruction invocation;
         final SSAValue exception =
             paramManager.getException(); // will hold the exception object of ep
 
         if (ep.getMethod().getReturnType().equals(TypeReference.Void)) {
-          invokation = tsif.InvokeInstruction(callPC, params, exception, site);
-          this.body.addStatement(invokation);
+          invocation = tsif.InvokeInstruction(callPC, params, exception, site);
+          this.body.addStatement(invocation);
         } else {
           //  Check if we have to mix in the return value of this ep using a Phi
           final TypeReference returnType = ep.getMethod().getReturnType();
@@ -529,9 +529,9 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             this.paramManager.invalidate(returnKey);
             final SSAValue returnValue = paramManager.getUnallocated(returnType, returnKey);
 
-            invokation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site);
-            this.body.addStatement(invokation);
-            this.paramManager.setAllocation(returnValue, invokation);
+            invocation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site);
+            this.body.addStatement(invocation);
+            this.paramManager.setAllocation(returnValue, invocation);
 
             // ... and Phi things together ...
             this.paramManager.invalidate(returnKey);
@@ -547,8 +547,8 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             // Just throw away the return value
             final SSAValue returnValue =
                 paramManager.getUnmanaged(returnType, new SSAValue.UniqueKey());
-            invokation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site);
-            this.body.addStatement(invokation);
+            invocation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site);
+            this.body.addStatement(invocation);
           }
         }
       }
@@ -773,21 +773,21 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
         final CallSiteReference site =
             CallSiteReference.make(
                 callPC, this.model.getReference(), IInvokeInstruction.Dispatch.STATIC);
-        final SSAAbstractInvokeInstruction invokation;
+        final SSAAbstractInvokeInstruction invocation;
         final SSAValue exception = pm.getException();
 
         if (this.model.getReference().getReturnType().equals(TypeReference.Void)) {
-          invokation =
+          invocation =
               instructionFactory.InvokeInstruction(callPC, redirectParams, exception, site);
         } else {
           // it's startExternal or SystemService
           if (this instanceof SystemServiceModel) {
             final SSAValue svc = pm.getUnmanaged(TypeReference.JavaLangObject, "systemService");
-            invokation =
+            invocation =
                 instructionFactory.InvokeInstruction(callPC, svc, redirectParams, exception, site);
 
             // SHORTCUT:
-            redirect.addStatement(invokation);
+            redirect.addStatement(invocation);
             if (instructionFactory.isAssignableFrom(
                 svc.getType(), svc.getValidIn().getReturnType())) {
               final int returnPC = redirect.getNextProgramCounter();
@@ -809,14 +809,14 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             return new SummarizedMethodWithNames(mRef, redirect, declaringClass);
           } else if (this instanceof ExternalModel) {
             final SSAValue trash = pm.getUnmanaged(AndroidTypes.Intent, "trash");
-            invokation =
+            invocation =
                 instructionFactory.InvokeInstruction(
                     callPC, trash, redirectParams, exception, site);
           } else {
             throw new UnsupportedOperationException("Can't handle a " + this.model.getClass());
           }
         }
-        redirect.addStatement(invokation);
+        redirect.addStatement(invocation);
       }
 
       // Optionally call onActivityResult
@@ -866,9 +866,9 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
           params.add(outRequestCode); // Was an argument to start...
           params.add(mResultCode);
           params.add(mResultData);
-          final SSAInstruction invokation =
+          final SSAInstruction invocation =
               instructionFactory.InvokeInstruction(callPC, params, exception, site);
-          redirect.addStatement(invokation);
+          redirect.addStatement(invocation);
         } // */
       }
 
@@ -1000,9 +1000,9 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
           CallSiteReference.make(callPC, model.getReference(), IInvokeInstruction.Dispatch.STATIC);
       final SSAValue exception = pm.getException();
 
-      final SSAAbstractInvokeInstruction invokation =
+      final SSAAbstractInvokeInstruction invocation =
           instructionFactory.InvokeInstruction(callPC, params, exception, site);
-      encap.addStatement(invokation);
+      encap.addStatement(invocation);
     }
 
     encap.setLocalNames(pm.makeLocalNames());

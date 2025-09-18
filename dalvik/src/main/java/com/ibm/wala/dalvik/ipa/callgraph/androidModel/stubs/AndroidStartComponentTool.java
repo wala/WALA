@@ -246,9 +246,9 @@ public class AndroidStartComponentTool {
           CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
       final SSAValue exception = pm.getException();
       params.set(0, activity);
-      final SSAInstruction invokation =
+      final SSAInstruction invocation =
           instructionFactory.InvokeInstruction(callPC, params, exception, site);
-      redirect.addStatement(invokation);
+      redirect.addStatement(invocation);
     }
   }
 
@@ -368,9 +368,9 @@ public class AndroidStartComponentTool {
         final SSAValue exception = pm.getException();
         final List<SSAValue> params = new ArrayList<>(1);
         params.add(intentSender);
-        final SSAInstruction invokation =
+        final SSAInstruction invocation =
             instructionFactory.InvokeInstruction(callPC, iIntentSender, params, exception, site);
-        redirect.addStatement(invokation);
+        redirect.addStatement(invocation);
       }
 
       { // call IBinder IIntentSender.asBinder()
@@ -382,9 +382,9 @@ public class AndroidStartComponentTool {
         final SSAValue exception = pm.getException();
         final List<SSAValue> params = new ArrayList<>(1);
         params.add(iIntentSender);
-        final SSAInstruction invokation =
+        final SSAInstruction invocation =
             instructionFactory.InvokeInstruction(callPC, iBinder, params, exception, site);
-        redirect.addStatement(invokation);
+        redirect.addStatement(invocation);
       }
 
       return iBinder;
@@ -424,9 +424,9 @@ public class AndroidStartComponentTool {
         final SSAValue exception = pm.getException();
         final List<SSAValue> params = new ArrayList<>(1);
         params.add(mMainThread);
-        final SSAInstruction invokation =
+        final SSAInstruction invocation =
             instructionFactory.InvokeInstruction(callPC, iBinder, params, exception, site);
-        redirect.addStatement(invokation);
+        redirect.addStatement(invocation);
       } // */
 
       return iBinder;
@@ -500,9 +500,9 @@ public class AndroidStartComponentTool {
       final List<SSAValue> params = new ArrayList<>(1);
       params.add(activity);
       params.add(intent);
-      final SSAInstruction invokation =
+      final SSAInstruction invocation =
           instructionFactory.InvokeInstruction(callPC, params, exception, site);
-      redirect.addStatement(invokation);
+      redirect.addStatement(invocation);
     }
   }
 
