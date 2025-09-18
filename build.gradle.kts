@@ -197,6 +197,7 @@ tasks.register("checkInspectionResults") {
       }
     }
     if (failed) {
+      @Suppress("SpellCheckingInspection")
       throw GradleException(
           "One or more IntelliJ IDEA inspections failed.  See logged problems above, or \"${inputs.files.singleFile}\" for full details.  WEAK WARNINGs are allowed, but all ERRORs and WARNINGs must be corrected."
       )

@@ -11,6 +11,7 @@
       <w>annotationbody</w>
       <w>areturn</w>
       <w>arraylength</w>
+      <w>arrayref</w>
       <w>athrow</w>
       <w>autoinsert</w>
       <w>avik</w>
@@ -35,8 +36,11 @@
       <w>dcmpl</w>
       <w>dconst</w>
       <w>ddiv</w>
+      <w>def'fed</w>
       <w>delegatecomment</w>
+      <w>diffplug</w>
       <w>dmul</w>
+      <w>doubble</w>
       <w>dreturn</w>
       <w>dtrans</w>
       <w>elts</w>
@@ -49,6 +53,7 @@
       <w>fconst</w>
       <w>fieldcomment</w>
       <w>filecomment</w>
+      <w>floatt</w>
       <w>fneg</w>
       <w>foltzer</w>
       <w>foojay</w>
@@ -58,6 +63,7 @@
       <w>getstatic</w>
       <w>getterbody</w>
       <w>gettercomment</w>
+      <w>ghostview</w>
       <w>gradleclasspathcontainer</w>
       <w>gradleprojectbuilder</w>
       <w>gradleprojectnature</w>
@@ -70,6 +76,7 @@
       <w>icmplt</w>
       <w>icmpne</w>
       <w>iconst</w>
+      <w>ifds</w>
       <w>ifeq</w>
       <w>ifge</w>
       <w>ifgt</w>
@@ -81,15 +88,20 @@
       <w>iinc</w>
       <w>iindex</w>
       <w>impdep</w>
+      <w>imple</w>
       <w>ineg</w>
       <w>instrs</w>
+      <w>instrumenter</w>
+      <w>instrumenters</w>
       <w>insts</w>
       <w>interfacebody</w>
+      <w>interproc</w>
       <w>invokeinterface</w>
       <w>invokenonvirtual</w>
       <w>invokespecial</w>
       <w>invokestatic</w>
       <w>invokevirtual</w>
+      <w>ipcfg</w>
       <w>irem</w>
       <w>ireturn</w>
       <w>ishl</w>
@@ -99,7 +111,9 @@
       <w>javabuilder</w>
       <w>javanature</w>
       <w>javaonepointseven</w>
+      <w>jmod</w>
       <w>juliandolby</w>
+      <w>keeprunning</w>
       <w>killdall</w>
       <w>ktfmt</w>
       <w>ladd</w>
@@ -121,6 +135,7 @@
       <w>lockfiles</w>
       <w>lookupswitch</w>
       <w>lorg</w>
+      <w>lprologue</w>
       <w>lreflection</w>
       <w>lrem</w>
       <w>lreturn</w>
@@ -129,33 +144,45 @@
       <w>lslice</w>
       <w>lstore</w>
       <w>lsub</w>
+      <w>ltests</w>
       <w>lushr</w>
       <w>lval</w>
       <w>lxor</w>
+      <w>markdownlint</w>
       <w>methodbody</w>
       <w>methodcomment</w>
+      <w>mname</w>
       <w>monitorenter</w>
       <w>monitorexit</w>
+      <w>mref</w>
       <w>msridhar</w>
       <w>multianewarray</w>
       <w>newarray</w>
       <w>newtype</w>
+      <w>nonnullbydefault</w>
+      <w>nullanalysis</w>
       <w>orsc</w>
       <w>overridecomment</w>
+      <w>peis</w>
       <w>preallocated</w>
       <w>putfield</w>
       <w>putstatic</w>
       <w>rval</w>
+      <w>rvals</w>
       <w>saload</w>
       <w>sastore</w>
+      <w>scandroid</w>
       <w>setterbody</w>
       <w>settercomment</w>
       <w>sipush</w>
       <w>sjfink</w>
       <w>sridharan</w>
+      <w>succs</w>
       <w>switchstatements</w>
       <w>symtab</w>
       <w>tableswitch</w>
+      <w>temurin</w>
+      <w>testname</w>
       <w>typecomment</w>
       <w>werror</w>
       <w>xdoclint</w>
