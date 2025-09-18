@@ -1,7 +1,11 @@
+import java.io.ByteArrayOutputStream
+import org.gradle.kotlin.dsl.support.serviceOf
+
 buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:3.1.2") } }
 
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.3.0"
+  id("com.gradle.develocity") version "4.2"
   id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
@@ -37,3 +41,22 @@ include(
     "shrike",
     "util",
 )
+
+develocity.buildScan {
+  val isBuildScan = startParameter.isBuildScan
+  publishing.onlyIf { isBuildScan }
+
+  if (isBuildScan) {
+    val execOps = serviceOf<ExecOperations>()
+    background {
+      val outputStream = ByteArrayOutputStream()
+      outputStream.use {
+        execOps.exec {
+          commandLine("git", "describe", "--abbrev=0", "--always", "--dirty", "--match=")
+          standardOutput = it
+        }
+      }
+      value("Git Commit ID", outputStream.toString().trim())
+    }
+  }
+}
