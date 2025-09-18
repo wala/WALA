@@ -166,7 +166,7 @@ public class CAstHelper {
                 ast.makeNode(
                     CAstNode.IF_STMT, newTest, ast.makeNode(CAstNode.BLOCK_STMT, thenBranchList)));
           }
-        } else {
+        } else if (elseBranchList.size() > 0) {
           // Negation the test
           if (isLeadingNegation(newTest)) {
             newTest = stableRemoveLeadingNegation(newTest);
