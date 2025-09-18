@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Eclipse Preferences" pattern="file:.settings/*.prefs||file:*/.settings/*.prefs" />
+</component>
