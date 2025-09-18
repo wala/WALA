@@ -2,6 +2,7 @@ import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
+import com.ibm.wala.gradle.useCurrentJavaHome
 import com.ibm.wala.gradle.valueToString
 import kotlin.io.resolve
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -212,6 +213,7 @@ val collectJLex by
 
 val ocamlJavaVersion = "2.0-alpha3"
 
+@Suppress("HttpUrlsUsage")
 val downloadOcamlJava =
     adHocDownload(
         uri("http://www.ocamljava.org/files/distrib"),
@@ -271,7 +273,7 @@ val generateHelloHashJar by
       )
 
       // use same JVM that is being used to run Gradle itself
-      environment("JAVA_HOME", providers.systemProperty("java.home").valueToString)
+      useCurrentJavaHome()
 
       objects.newInstance<GenerateHelloHashServices>().run {
 

@@ -1,5 +1,7 @@
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
+import com.ibm.wala.gradle.useCurrentJavaHome
+import com.ibm.wala.gradle.valueToString
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -17,65 +19,59 @@ val isWindows: Boolean by extra
 
 val platformsVersion by extra("android-28")
 
-interface InstallAndroidSdkServices {
-  @get:Inject val exec: ExecOperations
-}
-
-val installAndroidSdk by
+val unpackAndroidSdkInstaller by
     tasks.registering(Sync::class) {
       from({ zipTree(downloadAndroidSdk.singleFile) })
       into(layout.buildDirectory.dir(name))
+    }
 
-      // When the task is actually executing (i.e.,in the `doLast` code below), the Gradle
-      // configuration cache forbids us from accessing the current project. Instead, we use the
-      // current project here, at task *configuration* time, to grab some values that we will later
-      // use at task *execution* time.
-      val isWindows = isWindows
-      val javaLauncher = javaToolchains.launcherFor(java.toolchain)
-      val platformsVersion = platformsVersion
+val installAndroidSdk by
+    tasks.registering(Exec::class) {
+      inputs.files(unpackAndroidSdkInstaller)
+      val sdkManager =
+          unpackAndroidSdkInstaller
+              .map { it.destinationDir.resolve("cmdline-tools/bin/sdkmanager") }
+              .valueToString
 
-      objects.newInstance<InstallAndroidSdkServices>().run {
-        doLast {
-          exec.exec {
-
-            // Running the Android SDK manager requires that `$JAVA_HOME` be set.
-            environment("JAVA_HOME", javaLauncher.get().metadata.installationPath)
-
-            data class Details(
-                val shell: String,
-                val shellFlags: String,
-                val yes: String,
-                val semicolon: String,
-                val discard: String,
-            )
-            (if (isWindows)
-                    Details(
-                        "PowerShell",
-                        "-Command",
-                        "echo y",
-                        "`;",
-                        "\$null",
-                    )
-                else
-                    Details(
-                        "sh",
-                        "-ceu",
-                        "yes 2>/dev/null",
-                        "\\;",
-                        "/dev/null",
-                    ))
-                .run {
-                  commandLine(
-                      shell,
-                      shellFlags,
-                      "$yes | $destinationDir/cmdline-tools/bin/sdkmanager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard",
-                  )
-                }
-          }
-        }
+      val destinationDir = layout.buildDirectory.dir(name).valueToString
+      outputs.run {
+        dir(destinationDir)
+        cacheIf { true }
       }
 
-      outputs.cacheIf { true }
+      // Running the Android SDK manager requires that `$JAVA_HOME` be set.
+      useCurrentJavaHome()
+
+      data class Details(
+          val shell: String,
+          val shellFlags: String,
+          val yes: String,
+          val semicolon: String,
+          val discard: String,
+      )
+      (if (isWindows)
+              Details(
+                  "PowerShell",
+                  "-Command",
+                  "echo y",
+                  "`;",
+                  "\$null",
+              )
+          else
+              Details(
+                  "sh",
+                  "-ceu",
+                  "yes 2>/dev/null",
+                  "\\;",
+                  "/dev/null",
+              ))
+          .run {
+            commandLine(
+                shell,
+                shellFlags,
+                "$yes | $sdkManager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard",
+            )
+          }
     }
 
 eclipse { synchronizationTasks(installAndroidSdk) }
@@ -103,11 +99,6 @@ dependencies {
   testImplementation(projects.dalvik)
   testImplementation(testFixtures(projects.core))
   testImplementation(testFixtures(projects.util))
-
-  // directory containing "android.jar", which various tests want to find as a resource
-  testRuntimeOnly(
-      files(installAndroidSdk.map { "${it.outputs.files.singleFile}/platforms/$platformsVersion" })
-  )
 }
 
 val downloadDroidBench =
@@ -162,6 +153,11 @@ tasks.named<Copy>("processTestResources") {
   from(extractSampleCup)
   from(extraTestResources)
   from({ zipTree(coreTestJar.get().singleFile) })
+  from(
+      installAndroidSdk.map {
+        "${it.outputs.files.singleFile}/platforms/$platformsVersion/android.jar"
+      }
+  )
 }
 
 if (isWindows) tasks.named<Test>("test") { exclude("**/droidbench/**") }

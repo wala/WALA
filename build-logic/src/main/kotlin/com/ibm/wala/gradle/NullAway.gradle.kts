@@ -13,7 +13,7 @@ dependencies {
   compileOnly(versionCatalogs.named("libs").findLibrary("nullaway-annotations").get())
 }
 
-tasks.withType<JavaCompile> {
+tasks.withType<JavaCompile>().configureEach {
   options.errorprone {
     if (!name.contains("test", true)) {
       error("NullAway")

@@ -56,7 +56,7 @@ dependencies {
   testRuntimeOnly(findLibrary("junit-vintage-engine"))
 }
 
-tasks.withType<JavaCompile> {
+tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
   javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(25) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
@@ -130,7 +130,7 @@ val ecjCompileTaskProviders =
 
 tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
 
-tasks.withType<JavaCompile> {
+tasks.withType<JavaCompile>().configureEach {
   options.run {
     encoding = "UTF-8"
     compilerArgs.add("-Werror")
@@ -138,7 +138,7 @@ tasks.withType<JavaCompile> {
   }
 }
 
-tasks.withType<JavaCompileUsingEcj> {
+tasks.withType<JavaCompileUsingEcj>().configureEach {
   // ECJ warning / error levels are set via a configuration file, not this argument
   options.compilerArgs.remove("-Werror")
 }
