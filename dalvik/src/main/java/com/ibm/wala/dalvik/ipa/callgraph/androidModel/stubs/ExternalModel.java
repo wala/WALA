@@ -227,9 +227,9 @@ public class ExternalModel extends AndroidModel {
       outBundle = new SSAValue(nextLocal++, inBundle);
       final List<SSAValue> params = new ArrayList<>(1);
       params.add(inIntent);
-      final SSAInstruction invokation =
+      final SSAInstruction invocation =
           instructionFactory.InvokeInstruction(callPC, outBundle, params, exception, site);
-      this.body.addStatement(invokation);
+      this.body.addStatement(invocation);
     }
 
     /*{ // Read from the bundle returned by the Intent extras           // TODO Defunct
@@ -246,9 +246,9 @@ public class ExternalModel extends AndroidModel {
         outBundle = new SSAValue(nextLocal++, outBundle);
         final List<SSAValue> params = new ArrayList<SSAValue>(1);
         params.add(myBundle);
-        final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, outBundle,
+        final SSAInstruction invocation = instructionFactory.InvokeInstruction(callPC, outBundle,
                 params, exception, site);
-        this.body.addStatement(invokation);
+        this.body.addStatement(invocation);
     }
 
     { // Read from the bundle given as argument
@@ -263,9 +263,9 @@ public class ExternalModel extends AndroidModel {
         outBundle = new SSAValue(nextLocal++, outBundle);
         final List<SSAValue> params = new ArrayList<SSAValue>(1);
         params.add(inBundle);
-        final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, outBundle,
+        final SSAInstruction invocation = instructionFactory.InvokeInstruction(callPC, outBundle,
                 params, exception, site);
-        this.body.addStatement(invokation);
+        this.body.addStatement(invocation);
     }*/
 
     { // Call Intent.putExtra(String name, int value) do add some new info
@@ -289,9 +289,9 @@ public class ExternalModel extends AndroidModel {
       params.add(inIntent);
       params.add(outName);
       params.add(outValue);
-      final SSAInstruction invokation =
+      final SSAInstruction invocation =
           instructionFactory.InvokeInstruction(callPC, outIntent, params, exception, site);
-      this.body.addStatement(invokation);
+      this.body.addStatement(invocation);
     }
 
     { // Add return statement on intent

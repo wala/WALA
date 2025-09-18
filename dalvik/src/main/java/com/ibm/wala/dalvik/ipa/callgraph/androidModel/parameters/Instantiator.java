@@ -593,8 +593,8 @@ public class Instantiator implements IInstantiator {
       final SSAInstruction firstInstruction = this.cache.getIR(method).iterateAllInstructions().next();
       logger.debug("First instruction of ctor is: " + firstInstruction);
       if (firstInstruction instanceof SSAAbstractInvokeInstruction) {
-          final SSAAbstractInvokeInstruction invokation = (SSAAbstractInvokeInstruction) firstInstruction;
-          return invokation.isSpecial(); // Always?
+          final SSAAbstractInvokeInstruction invocation = (SSAAbstractInvokeInstruction) firstInstruction;
+          return invocation.isSpecial(); // Always?
       }
 
       return false;

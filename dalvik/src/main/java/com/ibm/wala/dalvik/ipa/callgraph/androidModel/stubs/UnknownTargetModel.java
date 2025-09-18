@@ -267,9 +267,9 @@ public class UnknownTargetModel extends AndroidModel {
       final int pc = this.body.getNextProgramCounter();
       final CallSiteReference site =
           CallSiteReference.make(pc, mini.getReference(), IInvokeInstruction.Dispatch.STATIC);
-      final SSAInstruction invokation =
+      final SSAInstruction invocation =
           instructionFactory.InvokeInstruction(pc, params, excpetion, site);
-      this.body.addStatement(invokation);
+      this.body.addStatement(invocation);
     }
 
     final SSAValue extRet;
@@ -285,9 +285,9 @@ public class UnknownTargetModel extends AndroidModel {
       final int pc = this.body.getNextProgramCounter();
       final CallSiteReference site =
           CallSiteReference.make(pc, external.getReference(), IInvokeInstruction.Dispatch.STATIC);
-      final SSAInstruction invokation =
+      final SSAInstruction invocation =
           instructionFactory.InvokeInstruction(pc, extRet, params, excpetion, site);
-      this.body.addStatement(invokation);
+      this.body.addStatement(invocation);
     }
     // TODO: Do somethig with extRet?
 
@@ -319,9 +319,9 @@ public class UnknownTargetModel extends AndroidModel {
                       IInvokeInstruction.Dispatch.STATIC);
               final int exception = nextLocal++;
               assert (exception > 0);
-              final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC,
+              final SSAInstruction invocation = instructionFactory.InvokeInstruction(callPC,
                       internalAcc.forInvokeStatic(args), exception, site);
-              this.body.addStatement(invokation);
+              this.body.addStatement(invocation);
           }
       }
 
@@ -337,9 +337,9 @@ public class UnknownTargetModel extends AndroidModel {
               final CallSiteReference site = CallSiteReference.make(callPC, externalMethod.getReference(),
                       IInvokeInstruction.Dispatch.STATIC);
               final int exception = nextLocal++;
-              final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, externalReturnIntent,
+              final SSAInstruction invocation = instructionFactory.InvokeInstruction(callPC, externalReturnIntent,
                       externalAcc.forInvokeStatic(args), exception, site);
-              this.body.addStatement(invokation);
+              this.body.addStatement(invocation);
           }
       }
 
