@@ -19,10 +19,16 @@ import org.gradle.process.BaseExecSpec
 fun <T> T.logToFile(baseName: String) where T : Task, T : BaseExecSpec =
     project.layout.buildDirectory.file("$baseName.log").also { logFile ->
       outputs.file(logFile)
+
       doFirst {
         logFile.get().asFile.outputStream().let {
           standardOutput = it
           errorOutput = it
         }
       }
+
+      // Try to close the `FileOutputStream` promptly when the task is finished. If the task fails,
+      // then `doLast` will not run, so the stream will remain open until the garbage collector
+      // reclaims it.
+      doLast { standardOutput.close() }
     }
