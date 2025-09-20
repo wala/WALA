@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -565,7 +566,7 @@ public class JavaScriptConstructorFunctions {
                 @Override
                 public URL getURL() {
                   try {
-                    return new URL("file://" + fileName);
+                    return URI.create("file://" + fileName).toURL();
                   } catch (MalformedURLException e) {
                     assert false;
                     return null;

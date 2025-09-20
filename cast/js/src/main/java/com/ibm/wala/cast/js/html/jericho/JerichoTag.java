@@ -19,6 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import net.htmlparser.jericho.Attribute;
@@ -79,7 +80,7 @@ public class JerichoTag implements ITag {
       @Override
       public URL getURL() {
         try {
-          return new URL("file://" + sourceFile);
+          return URI.create("file://" + sourceFile).toURL();
         } catch (MalformedURLException e) {
           return null;
         }

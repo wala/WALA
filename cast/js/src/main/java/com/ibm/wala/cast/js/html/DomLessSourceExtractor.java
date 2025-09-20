@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -109,7 +110,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
         URL url = entrypointUrl;
         try {
-          url = new URL(entrypointUrl, "#" + scriptNodeCounter);
+          url = URI.create(entrypointUrl.toString() + '#' + scriptNodeCounter).toURL();
         } catch (MalformedURLException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -167,7 +168,11 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         Entry<String, Pair<String, Position>> a, String funcName, ITag tag) {
       URL url = entrypointUrl;
       try {
-        url = new URL(entrypointUrl, "#" + tag.getElementPosition().getFirstOffset());
+        url =
+            java.net
+                .URI
+                .create(entrypointUrl.toString() + '#' + tag.getElementPosition().getFirstOffset())
+                .toURL();
       } catch (MalformedURLException e) {
         // TODO Auto-generated catch block
         if (DEBUG) {
@@ -244,7 +249,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
     private void getScriptFromUrl(String urlAsString, ITag scriptTag)
         throws IOException, MalformedURLException {
-      URL scriptSrc = new URL(entrypointUrl, urlAsString);
+      URL scriptSrc = UrlManipulator.relativeToAbsoluteUrl(urlAsString, entrypointUrl);
       BOMInputStream bs;
       try {
         @SuppressWarnings("resource")
@@ -366,7 +371,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     //    DomLessSourceExtractor domLessScopeGenerator = new DomLessSourceExtractor();
     JSSourceExtractor domLessScopeGenerator = new DefaultSourceExtractor();
     JSSourceExtractor.DELETE_UPON_EXIT = false;
-    URL entrypointUrl = new URL(args[0]);
+    URL entrypointUrl = URI.create(args[0]).toURL();
     IHtmlParser htmlParser = new JerichoHtmlParser();
     IUrlResolver urlResolver = new IdentityUrlResolver();
     @SuppressWarnings("resource")

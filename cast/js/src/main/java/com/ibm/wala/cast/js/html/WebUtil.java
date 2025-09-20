@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class WebUtil {
   public static void main(String[] args) throws MalformedURLException, Error {
     System.err.println(
         extractScriptFromHTML(
-            new URL(args[0]),
+            URI.create(args[0]).toURL(),
             Boolean.parseBoolean(args[1])
                 ? DefaultSourceExtractor.factory
                 : DomLessSourceExtractor.factory));

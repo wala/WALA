@@ -15,7 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +38,7 @@ public class FileProviderTest {
   @Test
   public void testValidFile() throws MalformedURLException {
     // setup:
-    URL url = new URL("file:///c:/my/File.jar");
+    URL url = URI.create("file:///c:/my/File.jar").toURL();
     String expected = "/c:/my/File.jar";
     // exercise:
     String actual = new FileProvider().filePathFromURL(url);
@@ -46,7 +49,11 @@ public class FileProviderTest {
   @Test
   public void testURLWithInvalidURIChars() throws MalformedURLException {
     // setup:
-    URL url = new URL("file:///[Eclipse]/File.jar");
+    URL url =
+        URI.create(
+                String.format(
+                    "file:///%s/File.jar", URLEncoder.encode("[Eclipse]", StandardCharsets.UTF_8)))
+            .toURL();
     // exercise:
     String actual = new FileProvider().filePathFromURL(url);
     // verify:
@@ -56,7 +63,7 @@ public class FileProviderTest {
   @Test
   public void testURLWithSpace() throws MalformedURLException {
     // setup:
-    URL url = new URL("file:///With%20Space/File.jar");
+    URL url = URI.create("file:///With%20Space/File.jar").toURL();
     // exercise:
     String actual = new FileProvider().filePathFromURL(url);
     // verify:

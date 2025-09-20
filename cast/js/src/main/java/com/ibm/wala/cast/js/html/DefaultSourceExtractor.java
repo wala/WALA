@@ -15,6 +15,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -58,7 +59,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
             writeEntrypoint(
                 "           " + v.substring(11),
                 e.getValue().snd,
-                new URL(tag.getElementPosition().getURL().toString() + '#' + a),
+                URI.create(tag.getElementPosition().getURL().toString() + '#' + a).toURL(),
                 true);
           } catch (MalformedURLException ex) {
             writeEntrypoint(v.substring(11), e.getValue().snd, entrypointUrl, false);
