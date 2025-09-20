@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import com.ibm.wala.cast.js.html.UrlManipulator;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
@@ -74,7 +75,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
           try {
             JavaScriptLoader cl =
                 (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
-            URL url = new URL(builder.getBaseURL(), str);
+            URL url = UrlManipulator.relativeToAbsoluteUrl(str, builder.getBaseURL());
             if (!loadedFiles.contains(url.toString())) {
               // try to open the input stream for the URL.  if it fails, we'll get an IOException
               // and fall through to default case

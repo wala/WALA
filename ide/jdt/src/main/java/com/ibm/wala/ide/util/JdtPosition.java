@@ -16,6 +16,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import org.eclipse.core.resources.IFile;
 
@@ -68,7 +69,7 @@ public final class JdtPosition implements Position {
   @Override
   public URL getURL() {
     try {
-      return new URL("file:" + path);
+      return URI.create("file:" + path).toURL();
     } catch (MalformedURLException e) {
       Assertions.UNREACHABLE(e.toString());
       return null;

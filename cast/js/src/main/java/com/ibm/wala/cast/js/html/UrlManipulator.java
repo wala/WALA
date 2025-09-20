@@ -11,6 +11,8 @@
 package com.ibm.wala.cast.js.html;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class UrlManipulator {
@@ -23,49 +25,54 @@ public class UrlManipulator {
       throws MalformedURLException {
     urlFound = urlFound.replace("\\", "/").toLowerCase();
 
-    URL absoluteUrl;
-    if (!isAbsoluteUrl(urlFound)) {
-      if (urlFound.startsWith("//")) {
-        // create URL taking only the protocol from the context
-        String origHostAndPath = urlFound.substring(2); // removing "//"
-        String host;
-        String path;
-        int indexOf = origHostAndPath.indexOf('/');
-        if (indexOf > 0) {
-          host = origHostAndPath.substring(0, indexOf);
-          path = origHostAndPath.substring(indexOf);
+    URI absoluteUri;
+    if (!isAbsoluteUrl(urlFound))
+      try {
+        if (urlFound.startsWith("//")) {
+          // create URL taking only the protocol from the context
+          String origHostAndPath = urlFound.substring(2); // removing "//"
+          String host;
+          String path;
+          int indexOf = origHostAndPath.indexOf('/');
+          if (indexOf > 0) {
+            host = origHostAndPath.substring(0, indexOf);
+            path = origHostAndPath.substring(indexOf);
+          } else {
+            host = origHostAndPath;
+            path = "";
+          }
+          absoluteUri = new URI(context.getProtocol(), host, path, null);
+        } else if (urlFound.startsWith("/")) {
+          // create URL taking the protocol and the host from the context
+          absoluteUri = new URI(context.getProtocol(), context.getHost(), urlFound, null);
         } else {
-          host = origHostAndPath;
-          path = "";
-        }
-        absoluteUrl = new URL(context.getProtocol(), host, path);
-      } else if (urlFound.startsWith("/")) {
-        // create URL taking the protocol and the host from the context
-        absoluteUrl = new URL(context.getProtocol(), context.getHost(), urlFound);
-      } else {
-        // "concat" URL to context
-        int backDir = 0; // removing directories due to "../"
-        while (urlFound.startsWith("../")) {
-          urlFound = urlFound.substring(3);
-          backDir++;
-        }
-        StringBuilder contextPath = new StringBuilder();
-        String path = context.getPath().replace("\\", "/");
-        boolean isContextDirectory = path.endsWith("/");
-        String[] split = path.split("/");
-        // we are also removing last element in case of a directory
-        int rightTrimFromPath = (isContextDirectory ? 0 : 1) + backDir;
+          // "concat" URL to context
+          int backDir = 0; // removing directories due to "../"
+          while (urlFound.startsWith("../")) {
+            urlFound = urlFound.substring(3);
+            backDir++;
+          }
+          StringBuilder contextPath = new StringBuilder();
+          String path = context.getPath().replace("\\", "/");
+          boolean isContextDirectory = path.endsWith("/");
+          String[] split = path.split("/");
+          // we are also removing last element in case of a directory
+          int rightTrimFromPath = (isContextDirectory ? 0 : 1) + backDir;
 
-        for (int i = 0; i < split.length - rightTrimFromPath; i++) {
-          contextPath.append(split[i]);
-          contextPath.append('/');
+          for (int i = 0; i < split.length - rightTrimFromPath; i++) {
+            contextPath.append(split[i]);
+            contextPath.append('/');
+          }
+          absoluteUri =
+              new URI(context.getProtocol(), context.getHost(), contextPath + urlFound, null);
         }
-        absoluteUrl = new URL(context.getProtocol(), context.getHost(), contextPath + urlFound);
+      } catch (URISyntaxException problem) {
+        throw new IllegalArgumentException(problem);
       }
-    } else {
-      absoluteUrl = new URL(urlFound);
+    else {
+      absoluteUri = URI.create(urlFound);
     }
-    return absoluteUrl;
+    return absoluteUri.toURL();
   }
 
   private static boolean isAbsoluteUrl(String orig) {

@@ -57,6 +57,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -309,7 +310,7 @@ public class CorrelationFinder {
       File f = new FileProvider().getFileFromClassLoader(src, this.getClass().getClassLoader());
       return f.toURI().toURL();
     } catch (FileNotFoundException fnfe) {
-      return new URL(src);
+      return URI.create(src).toURL();
     }
   }
 }

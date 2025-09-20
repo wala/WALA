@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
       final String url,
       final String file)
       throws MalformedURLException {
-    setPosition(n, fl, fc, ll, lc, new URL(url), new URL(file));
+    setPosition(n, fl, fc, ll, lc, URI.create(url).toURL(), URI.create(file).toURL());
   }
 
   public void setPosition(
@@ -114,7 +115,7 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
 
   public void setPosition(CAstNode n, int lineNumber, String url, String file)
       throws MalformedURLException {
-    setPosition(n, lineNumber, new URL(url), new URL(file));
+    setPosition(n, lineNumber, URI.create(url).toURL(), URI.create(file).toURL());
   }
 
   public void setPosition(CAstNode n, int lineNumber, URL url, URL file) {

@@ -99,7 +99,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
         @Override
         public URL getURL() {
           try {
-            return new URL("file://" + fullPath);
+            return new File(fullPath).toURI().toURL();
           } catch (MalformedURLException e) {
             assert false : fullPath;
             return null;
