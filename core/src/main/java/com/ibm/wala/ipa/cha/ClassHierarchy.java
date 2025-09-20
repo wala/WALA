@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ipa.cha;
 
+import com.google.gson.Gson;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -24,6 +25,7 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.core.util.ref.CacheReference;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.core.util.strings.Atom;
+import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -709,6 +711,56 @@ public class ClassHierarchy implements IClassHierarchy {
     for (Node child : Iterator2Iterable.make(n.getChildren())) {
       recursiveStringify(child, buffer);
     }
+  }
+
+  /**
+   * Converts ClassHierarchy to a JSON String, mapping each class name to a list of subclass names
+   */
+  public String toJson() {
+    // Initialize the map to store the <class, subclass> pairs
+    HashMap<String, Set<String>> classNameToSubclassNames = new HashMap<>();
+
+    // Start the recursive function from the root node
+    helperToJson(root, classNameToSubclassNames);
+
+    // Use Gson to convert the map to a JSON string
+    Gson gson = new Gson();
+    return gson.toJson(classNameToSubclassNames);
+  }
+
+  /** helper function to toJson that performs recursion to go through all of the DAG */
+  private void helperToJson(Node n, HashMap<String, Set<String>> hash) {
+    String key = nodeToString(n);
+
+    // If the node is already processed, return to avoid infinite recursion
+    if (hash.containsKey(key)) {
+      return;
+    }
+
+    // Initialize a set to store the names of the subclasses
+    Set<String> subclassNames = new HashSet<>();
+
+    // Process all children of the current node
+    if (n.children.size() > 0) {
+      Iterator<Node> children = n.getChildren();
+      while (children.hasNext()) {
+        Node temp = children.next();
+        helperToJson(temp, hash);
+
+        String childKey = nodeToString(temp);
+        subclassNames.add(childKey);
+      }
+    }
+
+    // Put the current node and its subclasses in the map
+    hash.put(key, subclassNames);
+  }
+
+  /**
+   * Removed unnecessary part of Node by turning it into a String (Made for toJson and helperToJson)
+   */
+  private String nodeToString(Node n) {
+    return StringStuff.jvmToBinaryName(n.getJavaClass().getName().toString());
   }
 
   /**
