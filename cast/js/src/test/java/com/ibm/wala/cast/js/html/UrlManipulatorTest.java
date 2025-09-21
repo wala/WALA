@@ -111,7 +111,7 @@ public class UrlManipulatorTest {
     check(
         "https://example.com/dir/subdir/",
         "../../subdir2/resource/../../file",
-        "https://example.com/subdir2/resource/../../file");
+        "https://example.com/file");
   }
 
   @Test

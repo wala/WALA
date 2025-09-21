@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.html;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -25,57 +24,10 @@ public class UrlManipulator {
       throws MalformedURLException {
     urlFound = urlFound.replace("\\", "/").toLowerCase();
 
-    URI absoluteUri;
-    if (!isAbsoluteUrl(urlFound))
-      try {
-        if (urlFound.startsWith("//")) {
-          // create URL taking only the protocol from the context
-          String origHostAndPath = urlFound.substring(2); // removing "//"
-          String host;
-          String path;
-          int indexOf = origHostAndPath.indexOf('/');
-          if (indexOf > 0) {
-            host = origHostAndPath.substring(0, indexOf);
-            path = origHostAndPath.substring(indexOf);
-          } else {
-            host = origHostAndPath;
-            path = "";
-          }
-          absoluteUri = new URI(context.getProtocol(), host, path, null);
-        } else if (urlFound.startsWith("/")) {
-          // create URL taking the protocol and the host from the context
-          absoluteUri = new URI(context.getProtocol(), context.getHost(), urlFound, null);
-        } else {
-          // "concat" URL to context
-          int backDir = 0; // removing directories due to "../"
-          while (urlFound.startsWith("../")) {
-            urlFound = urlFound.substring(3);
-            backDir++;
-          }
-          StringBuilder contextPath = new StringBuilder();
-          String path = context.getPath().replace("\\", "/");
-          boolean isContextDirectory = path.endsWith("/");
-          String[] split = path.split("/");
-          // we are also removing last element in case of a directory
-          int rightTrimFromPath = (isContextDirectory ? 0 : 1) + backDir;
-
-          for (int i = 0; i < split.length - rightTrimFromPath; i++) {
-            contextPath.append(split[i]);
-            contextPath.append('/');
-          }
-          absoluteUri =
-              new URI(context.getProtocol(), context.getHost(), contextPath + urlFound, null);
-        }
-      } catch (URISyntaxException problem) {
-        throw new IllegalArgumentException(problem);
-      }
-    else {
-      absoluteUri = URI.create(urlFound);
+    try {
+      return context.toURI().resolve(urlFound).toURL();
+    } catch (final URISyntaxException problem) {
+      throw new IllegalArgumentException(problem);
     }
-    return absoluteUri.toURL();
-  }
-
-  private static boolean isAbsoluteUrl(String orig) {
-    return orig.startsWith("http");
   }
 }
