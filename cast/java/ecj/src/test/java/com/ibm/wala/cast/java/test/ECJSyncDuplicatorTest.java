@@ -34,8 +34,8 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.StringFilter;
+import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
@@ -91,7 +91,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
                           public Position makePosition(int start, int end) {
                             try {
                               return new RangePosition(
-                                  new URL("file://" + fullPath),
+                                  new File(fullPath).toURI().toURL(),
                                   this.cu.getLineNumber(start),
                                   start,
                                   end);
