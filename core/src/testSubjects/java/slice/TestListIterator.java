@@ -33,7 +33,7 @@ public class TestListIterator {
 
     @Override
     public Iterator<E> iterator() {
-      return new Iterator<E>() {
+      return new Iterator<>() {
         private int index = 0;
 
         @Override
