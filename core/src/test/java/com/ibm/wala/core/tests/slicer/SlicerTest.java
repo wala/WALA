@@ -19,11 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.core.util.ProgressMaster;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.strings.Atom;
-import com.ibm.wala.dataflow.IFDS.TabulationCancelException;
 import com.ibm.wala.examples.drivers.PDFSlice;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -62,7 +60,6 @@ import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.graph.GraphIntegrity;
@@ -1043,7 +1040,6 @@ public class SlicerTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void testListIterator()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
@@ -1064,19 +1060,13 @@ public class SlicerTest {
     NormalReturnCaller nrc = new NormalReturnCaller(main, getCall.getInstructionIndex());
 
     final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice;
-    try {
-      slice =
-          Slicer.computeBackwardSlice(
-              nrc,
-              cg,
-              pointerAnalysis,
-              DataDependenceOptions.FULL,
-              ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION,
-              ProgressMaster.make(new NullProgressMonitor(), 5000, false));
-    } catch (TabulationCancelException e) {
-      slice = (Collection<Statement>) e.getResult().getSupergraphNodesReached();
-    }
+    Collection<Statement> slice =
+        Slicer.computeBackwardSlice(
+            nrc,
+            cg,
+            pointerAnalysis,
+            DataDependenceOptions.FULL,
+            ControlDependenceOptions.NO_INTERPROC_NO_EXCEPTION);
     List<Statement> inMain =
         slice.stream().filter(s -> s.getNode().equals(main)).collect(Collectors.toList());
     // check that we are tracking the size field in a HeapReturnCaller statement for the add() call

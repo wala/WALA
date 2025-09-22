@@ -186,25 +186,6 @@ public class Slicer {
 
   /**
    * @param s a statement of interest
-   * @return the backward slice of s.
-   */
-  public static <U extends InstanceKey> Collection<Statement> computeBackwardSlice(
-      Statement s,
-      CallGraph cg,
-      PointerAnalysis<U> pa,
-      DataDependenceOptions dOptions,
-      ControlDependenceOptions cOptions,
-      IProgressMonitor monitor)
-      throws IllegalArgumentException, CancelException {
-    return computeSlice(
-        new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions),
-        Collections.singleton(s),
-        true,
-        monitor);
-  }
-
-  /**
-   * @param s a statement of interest
    * @return the forward slice of s.
    */
   public static <U extends InstanceKey> Collection<Statement> computeForwardSlice(
@@ -245,15 +226,6 @@ public class Slicer {
       throw new IllegalArgumentException("sdg cannot be null");
     }
     return new Slicer().slice(sdg, ss, backward);
-  }
-
-  protected static Collection<Statement> computeSlice(
-      SDG<?> sdg, Collection<Statement> ss, boolean backward, IProgressMonitor monitor)
-      throws CancelException {
-    if (sdg == null) {
-      throw new IllegalArgumentException("sdg cannot be null");
-    }
-    return new Slicer().slice(sdg, ss, backward, monitor);
   }
 
   /**
