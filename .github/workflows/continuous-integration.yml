@@ -32,7 +32,7 @@ jobs:
             java: 21
             coverage: false
           - os: ubuntu-latest
-            java: 24
+            java: 25
             coverage: false
       fail-fast: false
     runs-on: ${{ matrix.os }}
@@ -40,9 +40,14 @@ jobs:
       - name: Check out WALA sources
         uses: actions/checkout@v4
       - name: 'Set up JDK ${{ matrix.java }}'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          java-version: ${{ matrix.java }}
+          # Always install JDK 25 since we compile with that and Foojay has trouble pulling
+          # the right toolchain on Linux.
+          # See https://github.com/gradle/foojay-toolchains/issues/5
+          java-version: |
+            25
+            ${{ matrix.java }}
           distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -90,15 +95,15 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      JDK_VERSION: 24
+      JDK_VERSION: 25
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
       - name: 'Set up JDK'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ env.JDK_VERSION }}
-          distribution: 'temurin'
+          distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: 'Generate latest docs'

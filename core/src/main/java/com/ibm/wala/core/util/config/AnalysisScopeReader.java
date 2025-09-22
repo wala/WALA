@@ -33,6 +33,7 @@ import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import org.intellij.lang.annotations.Language;
+import org.jspecify.annotations.Nullable;
 
 /** Reads {@link AnalysisScope} from a text file. */
 public class AnalysisScopeReader {
@@ -66,13 +67,17 @@ public class AnalysisScopeReader {
    * @return the analysis scope
    */
   public AnalysisScope readJavaScope(
-      String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
+      String scopeFileName, @Nullable File exclusionsFile, ClassLoader javaLoader)
+      throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
     return read(scope, scopeFileName, exclusionsFile, javaLoader);
   }
 
   public AnalysisScope read(
-      AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader)
+      AnalysisScope scope,
+      String scopeFileName,
+      @Nullable File exclusionsFile,
+      ClassLoader javaLoader)
       throws IOException {
     BufferedReader r = null;
     try {
