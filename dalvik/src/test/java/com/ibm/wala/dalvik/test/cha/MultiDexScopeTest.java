@@ -115,7 +115,7 @@ public class MultiDexScopeTest {
     String multidexApk = "src/test/resources/multidex-test.apk";
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
-            "primordial.txt", new File(""), MultiDexScopeTest.class.getClassLoader());
+            "primordial.txt", null, MultiDexScopeTest.class.getClassLoader());
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
