@@ -70,11 +70,10 @@ public class MultiDexScopeTest {
     }
   }
 
-  private static AnalysisScope setUpTestScope(
-      final Path apkPath, String exclusions, ClassLoader loader) throws IOException {
+  private static AnalysisScope setUpTestScope(final Path apkPath, ClassLoader loader)
+      throws IOException {
     AnalysisScope scope;
-    scope =
-        AnalysisScopeReader.instance.readJavaScope("primordial.txt", new File(exclusions), loader);
+    scope = AnalysisScopeReader.instance.readJavaScope("primordial.txt", null, loader);
     scope.setLoaderImpl(
         ClassLoaderReference.Application, "com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
@@ -102,7 +101,7 @@ public class MultiDexScopeTest {
     ClassHierarchy cha, cha2;
     final var testAPK = DroidBenchCGTest.getDroidBenchRoot().resolve("apk/Aliasing/Merge1.apk");
 
-    scope = setUpTestScope(testAPK, "", MultiDexScopeTest.class.getClassLoader());
+    scope = setUpTestScope(testAPK, MultiDexScopeTest.class.getClassLoader());
     cha = ClassHierarchyFactory.make(scope);
 
     scope2 = DalvikCallGraphTestBase.makeDalvikScope(null, null, testAPK);
