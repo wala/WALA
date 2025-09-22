@@ -1043,6 +1043,7 @@ public class SlicerTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testListIterator()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
