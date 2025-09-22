@@ -213,6 +213,7 @@ public class TabulationSolver<T, P, F> {
   /** See POPL 95 paper for this algorithm, Figure 3 */
   private void forwardTabulateSLRPs() throws CancelException {
     assert curPathEdge == null : "curPathEdge should not be non-null here";
+    progressMonitor.beginTask("Tabulation", IProgressMonitor.UNKNOWN);
     if (worklist == null) {
       worklist = makeWorklist();
     }
