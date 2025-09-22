@@ -3,7 +3,6 @@ package com.ibm.wala.gradle
 import java.net.URI
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.kotlin.dsl.create
 
 /**
  * Creates a configuration for downloading an artifact from a specified URI.
@@ -52,12 +51,9 @@ fun Project.adHocDownload(
   }
 
   return configurations.detachedConfiguration(
-      dependencies.create(
-          group = uri.authority,
-          name = name,
-          version = version,
-          classifier = classifier,
-          ext = ext,
-      )
+      dependencies.create("${uri.authority}:$name${version.segment}${classifier.segment}@$ext")
   )
 }
+
+private val String?.segment
+  get() = this?.let { ":$it" } ?: ""
