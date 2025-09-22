@@ -38,6 +38,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A precise interprocedural tabulation solver.
@@ -133,7 +134,7 @@ public class TabulationSolver<T, P, F> {
   private ITabulationWorklist<T> worklist;
 
   /** A progress monitor. can be null. */
-  protected final IProgressMonitor progressMonitor;
+  protected final @Nullable IProgressMonitor progressMonitor;
 
   /**
    * the path edge currently being processed in the main loop of {@link #forwardTabulateSLRPs()};
@@ -213,7 +214,9 @@ public class TabulationSolver<T, P, F> {
   /** See POPL 95 paper for this algorithm, Figure 3 */
   private void forwardTabulateSLRPs() throws CancelException {
     assert curPathEdge == null : "curPathEdge should not be non-null here";
-    progressMonitor.beginTask("Tabulation", IProgressMonitor.UNKNOWN);
+    if (progressMonitor != null) {
+      progressMonitor.beginTask("Tabulation", IProgressMonitor.UNKNOWN);
+    }
     if (worklist == null) {
       worklist = makeWorklist();
     }
