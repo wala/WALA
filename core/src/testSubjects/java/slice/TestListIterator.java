@@ -4,6 +4,9 @@ import java.util.Iterator;
 
 public class TestListIterator {
 
+  // we include our own simple List and ArrayList implementations to avoid dependencies on
+  // java.util, where the implementation changes across versions and can cause scalability issues
+  // during slicing
   interface List<E> extends Iterable<E> {
     void add(E e);
   }
