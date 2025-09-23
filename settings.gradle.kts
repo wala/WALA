@@ -1,13 +1,17 @@
 import java.io.ByteArrayOutputStream
 import org.gradle.kotlin.dsl.support.serviceOf
 
+pluginManagement {
+  plugins.id("org.gradle.toolchains.foojay-resolver-convention") version
+      settings.rootDir.resolve("foojay-resolver-convention-version.txt").readText().trim()
+}
+
 buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:3.1.2") } }
 
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.3.0"
   id("com.gradle.develocity") version "4.2"
-  id("org.gradle.toolchains.foojay-resolver-convention") version
-      File("foojay-resolver-convention-version.txt").readText().trim()
+  id("org.gradle.toolchains.foojay-resolver-convention")
 }
 
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
