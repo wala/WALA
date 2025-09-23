@@ -1,7 +1,12 @@
-plugins {
-  id("org.gradle.toolchains.foojay-resolver-convention") version
-      File("foojay-resolver-convention-version.txt").readText().trim()
+pluginManagement {
+  plugins.id("org.gradle.toolchains.foojay-resolver-convention") version
+      settings.rootDir.parentFile
+          .resolve("foojay-resolver-convention-version.txt")
+          .readText()
+          .trim()
 }
+
+plugins { id("org.gradle.toolchains.foojay-resolver-convention") }
 
 rootProject.name = "build-logic"
 
