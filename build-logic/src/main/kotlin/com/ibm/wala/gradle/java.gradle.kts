@@ -41,19 +41,17 @@ configurations {
   named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
 }
 
-fun findLibrary(alias: String) = versionCatalogs.named("libs").findLibrary(alias).get()
-
 dependencies {
-  "ecj"(findLibrary("eclipse-ecj"))
-  "errorprone"(findLibrary("errorprone-core"))
+  "ecj"(catalogLibrary("eclipse-ecj"))
+  "errorprone"(catalogLibrary("errorprone-core"))
   "javadocSource"(sourceSets.main.get().allJava)
 
-  testFixturesImplementation(platform(findLibrary("junit-bom")))
+  testFixturesImplementation(platform(catalogLibrary("junit-bom")))
 
-  testImplementation(platform(findLibrary("junit-bom")))
-  testRuntimeOnly(findLibrary("junit-jupiter-engine"))
-  testRuntimeOnly(findLibrary("junit-platform-launcher"))
-  testRuntimeOnly(findLibrary("junit-vintage-engine"))
+  testImplementation(platform(catalogLibrary("junit-bom")))
+  testRuntimeOnly(catalogLibrary("junit-jupiter-engine"))
+  testRuntimeOnly(catalogLibrary("junit-platform-launcher"))
+  testRuntimeOnly(catalogLibrary("junit-vintage-engine"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -161,13 +159,7 @@ if (gradle.parent != null) {
   }
 }
 
-spotless {
-  java {
-    googleJavaFormat(
-        versionCatalogs.named("libs").findVersion("google-java-format").get().toString()
-    )
-  }
-}
+spotless { java { googleJavaFormat(catalogVersion("google-java-format")) } }
 
 // Google Java Format versions 1.25.0 and higher require Java 17
 tasks.named("spotlessJava") {

@@ -9,8 +9,8 @@ plugins {
 }
 
 dependencies {
-  annotationProcessor(versionCatalogs.named("libs").findLibrary("nullaway").get())
-  compileOnly(versionCatalogs.named("libs").findLibrary("nullaway-annotations").get())
+  annotationProcessor(catalogLibrary("nullaway"))
+  compileOnly(catalogLibrary("nullaway-annotations"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
