@@ -58,14 +58,10 @@ open class WalaMavenCentralReleaseConfigurerExtension @Inject constructor(projec
    */
   private val configurer =
       project.run {
-        eclipseMavenCentral
-            .ReleaseConfigurer(
-                official(versionCatalogs.named("libs").findVersion("eclipse").get().toString())
-            )
-            .apply {
-              constrainTransitivesToThisRelease()
-              useNativesForRunningPlatform()
-            }
+        eclipseMavenCentral.ReleaseConfigurer(official(catalogVersion("eclipse"))).apply {
+          constrainTransitivesToThisRelease()
+          useNativesForRunningPlatform()
+        }
       }
 
   /**

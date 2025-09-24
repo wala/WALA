@@ -11,5 +11,5 @@ configurations.all {
   // `org.apache.xmlgraphics:batik-css:1.17`, which depends on `xml-apis:xml-apis-ext:1.3.04`, which
   // is available from Maven Central.  So force that version of `xml-apis-ext` to be used instead of
   // the missing one.
-  resolutionStrategy.force(versionCatalogs.named("libs").findLibrary("xml-apis-ext").get())
+  resolutionStrategy.force(catalogLibrary("xml-apis-ext"))
 }
