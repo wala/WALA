@@ -27,10 +27,10 @@ private fun <T> Project.requireAlias(
     finder: VersionCatalog.(String) -> Optional<T>,
     alias: String,
     kind: String,
-) =
+): T =
     the<VersionCatalogsExtension>().named("libs").finder(alias).orElseThrow {
       NoSuchElementException("No $kind with alias `$alias` found in `libs` version catalog")
-    }!!
+    }
 
 /**
  * Looks up a library dependency by alias from the `libs` version catalog.
