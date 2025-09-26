@@ -16,7 +16,7 @@ repositories.mavenCentral()
 
 // this task resolves dependencies in all sub-projects, making it easy to
 // generate lockfiles
-tasks.register<DependencyReportTask>("allDeps") {}
+tasks.register<DependencyReportTask>("allDeps")
 
 ////////////////////////////////////////////////////////////////////////
 //
