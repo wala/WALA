@@ -7,12 +7,10 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-walaEclipseMavenCentral {
-  implementation(
-      "org.eclipse.equinox.common",
-      "org.eclipse.jdt.core",
-  )
-}
+walaEclipseMavenCentral.implementation(
+    "org.eclipse.equinox.common",
+    "org.eclipse.jdt.core",
+)
 
 val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
 

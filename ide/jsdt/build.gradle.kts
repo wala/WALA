@@ -4,15 +4,13 @@ plugins {
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }
 
-walaEclipseMavenCentral {
-  api(
-      "org.eclipse.core.resources",
-      "org.eclipse.core.runtime",
-      "org.eclipse.equinox.common",
-      "org.eclipse.osgi",
-      "org.eclipse.ui.workbench",
-  )
-}
+walaEclipseMavenCentral.api(
+    "org.eclipse.core.resources",
+    "org.eclipse.core.runtime",
+    "org.eclipse.equinox.common",
+    "org.eclipse.osgi",
+    "org.eclipse.ui.workbench",
+)
 
 dependencies {
   api(libs.eclipse.wst.jsdt.core)

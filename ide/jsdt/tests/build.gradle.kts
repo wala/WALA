@@ -4,12 +4,10 @@ plugins {
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
 }
 
-walaEclipseMavenCentral {
-  testImplementation(
-      "org.eclipse.core.runtime",
-      "org.eclipse.equinox.common",
-  )
-}
+walaEclipseMavenCentral.testImplementation(
+    "org.eclipse.core.runtime",
+    "org.eclipse.equinox.common",
+)
 
 dependencies {
   testImplementation(libs.assertj.core)

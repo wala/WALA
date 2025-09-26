@@ -19,7 +19,7 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
-jacoco { toolVersion = "0.8.13" }
+jacoco.toolVersion = "0.8.13"
 
 repositories {
   mavenCentral()
