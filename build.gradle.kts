@@ -26,10 +26,8 @@ plugins {
   id("com.ibm.wala.gradle.project")
 }
 
-repositories {
-  // to get the google-java-format jar and dependencies
-  mavenCentral()
-}
+// to get the google-java-format jar and dependencies
+repositories.mavenCentral()
 
 JavaVersion.current().let {
   if (!it.isCompatibleWith(VERSION_17)) {

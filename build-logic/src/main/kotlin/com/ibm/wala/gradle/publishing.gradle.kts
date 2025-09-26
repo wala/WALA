@@ -119,12 +119,10 @@ publishing {
   }
 }
 
-signing {
-  setRequired {
-    // Signatures are a hard requirement if publishing a non-snapshot to Maven Central.
-    !isSnapshot &&
-        gradle.taskGraph.allTasks.any {
-          it is PublishToMavenRepository && it.name.endsWith("ToMavenCentralRepository")
-        }
-  }
+signing.setRequired {
+  // Signatures are a hard requirement if publishing a non-snapshot to Maven Central.
+  !isSnapshot &&
+      gradle.taskGraph.allTasks.any {
+        it is PublishToMavenRepository && it.name.endsWith("ToMavenCentralRepository")
+      }
 }
