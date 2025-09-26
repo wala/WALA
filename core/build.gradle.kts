@@ -165,7 +165,7 @@ val extractBcel by
     tasks.registering(Sync::class) {
       from({ tarTree(downloadBcel.singleFile) })
       include("**/*.jar")
-      into(layout.buildDirectory.map { "$it/$name" })
+      into(layout.buildDirectory.dir(name))
       eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
       includeEmptyDirs = false
     }
