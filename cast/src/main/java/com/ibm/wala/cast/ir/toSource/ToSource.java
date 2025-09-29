@@ -3044,11 +3044,15 @@ public abstract class ToSource {
                   CAstNode.OBJECT_REF,
                   instruction.isStatic()
                       ? ast.makeConstant(
-                          instruction
-                              .getDeclaredField()
-                              .getDeclaringClass()
-                              .getName()
-                              .getClassName())
+                          Atom.findOrCreateUnicodeAtom(
+                              nameToJava(
+                                  instruction
+                                      .getDeclaredField()
+                                      .getDeclaringClass()
+                                      .getName()
+                                      .getClassName()
+                                      .toString(),
+                                  true)))
                       : visit(instruction.getRef()),
                   ast.makeConstant(instruction.getDeclaredField()));
           markPosition(node, instruction.iIndex());
@@ -3056,6 +3060,7 @@ public abstract class ToSource {
 
         @Override
         public void visitPut(SSAPutInstruction instruction) {
+          recordPackage(instruction.getDeclaredFieldType());
           if (instruction.isStatic()) {
             node =
                 ast.makeNode(
@@ -3065,11 +3070,15 @@ public abstract class ToSource {
                         ast.makeNode(
                             CAstNode.OBJECT_REF,
                             ast.makeConstant(
-                                instruction
-                                    .getDeclaredField()
-                                    .getDeclaringClass()
-                                    .getName()
-                                    .getClassName()),
+                                Atom.findOrCreateUnicodeAtom(
+                                    nameToJava(
+                                        instruction
+                                            .getDeclaredField()
+                                            .getDeclaringClass()
+                                            .getName()
+                                            .getClassName()
+                                            .toString(),
+                                        true))),
                             ast.makeConstant(instruction.getDeclaredField())),
                         visit(instruction.getVal())));
           } else {
@@ -3354,6 +3363,7 @@ public abstract class ToSource {
     protected boolean visitBlockStmt(
         CAstNode n, CodeGenerationContext c, CAstVisitor<CodeGenerationContext> visitor) {
       CodeGenerationContext cc = c.nonTopLevel();
+
       try (ByteArrayOutputStream b = new ByteArrayOutputStream()) {
         try (PrintWriter bw = new PrintWriter(b)) {
 
@@ -3668,6 +3678,8 @@ public abstract class ToSource {
 
         } else {
           ToJavaVisitor cif = makeToJavaVisitor(ir, out, indent + 1, varTypes);
+          indent();
+          out.println("boolean junkForSideEffects = ");
           cif.visit(n.getChild(0), c, cif);
           out.println(";");
         }

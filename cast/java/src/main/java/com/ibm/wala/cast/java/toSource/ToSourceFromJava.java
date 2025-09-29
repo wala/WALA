@@ -177,6 +177,19 @@ public class ToSourceFromJava extends ToSource {
                         + " "
                         + nameToJava(fr.getName().toString(), false)
                         + ";");
+                Pair<String, String> key =
+                    Pair.make(
+                        fr.getFieldTypeReference()
+                            .getName()
+                            .getPackage()
+                            .toString()
+                            .replace('/', '.'),
+                        fr.getFieldTypeReference().getName().getClassName().toString());
+                if (!seen.contains(key)) {
+                  seen.add(key);
+                  String importStr = "import " + key.fst + "." + nameToJava(key.snd, true);
+                  all.println(importStr + (importStr.endsWith(";") ? "" : ";"));
+                }
               }
               for (IField fr : cls.getDeclaredInstanceFields()) {
                 out.println(
