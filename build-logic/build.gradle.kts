@@ -16,7 +16,7 @@ dependencies {
   implementation(libs.gradle.spotless.plugin)
 }
 
-kotlin.jvmToolchain(11)
+kotlin.jvmToolchain(17)
 
 spotless {
   val ktfmtVersion = libs.versions.ktfmt.get()

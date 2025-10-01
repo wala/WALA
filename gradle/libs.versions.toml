@@ -6,7 +6,7 @@ eclipse-wst-jsdt = "1.0.201.v2010012803"
 #noinspection UnusedVersionCatalogEntry
 google-java-format = "1.28.0"
 ktfmt = "0.58"
-spotless = "7.2.1"
+spotless = "8.0.0"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"
