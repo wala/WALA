@@ -9,7 +9,7 @@ pluginManagement {
 buildscript { dependencies { classpath("com.diffplug.spotless:spotless-lib-extra:3.1.2") } }
 
 plugins {
-  id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.3.0"
+  id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.4.0"
   id("com.gradle.develocity") version "4.2"
   id("org.gradle.toolchains.foojay-resolver-convention")
 }
