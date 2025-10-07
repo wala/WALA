@@ -26,6 +26,9 @@ jobs:
             java: 17
             coverage: false
           - os: ubuntu-latest
+            java: 11
+            coverage: false
+          - os: ubuntu-latest
             java: 17
             coverage: true
           - os: ubuntu-latest
@@ -42,12 +45,13 @@ jobs:
       - name: 'Set up JDK ${{ matrix.java }}'
         uses: actions/setup-java@v5
         with:
-          # Always install JDK 25 since we compile with that and Foojay has trouble pulling
-          # the right toolchain on Linux.
-          # See https://github.com/gradle/foojay-toolchains/issues/5
+          # Install all the JDK versions we use in the matrix.  We do JDK 25 last to use that
+          # to run Gradle.
           java-version: |
+            11
+            17
+            21
             25
-            ${{ matrix.java }}
           distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
