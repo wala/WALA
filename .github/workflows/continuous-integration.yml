@@ -42,7 +42,7 @@ jobs:
     steps:
       - name: Check out WALA sources
         uses: actions/checkout@v4
-      - name: 'Set up JDK ${{ matrix.java }}'
+      - name: 'Set up JDKs'
         uses: actions/setup-java@v5
         with:
           # Install all the JDK versions we use in the matrix.  We do JDK 25 last to use that
