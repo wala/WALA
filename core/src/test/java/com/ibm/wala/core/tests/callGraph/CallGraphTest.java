@@ -177,7 +177,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstaticInit/TestStaticInit");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    assertThat(cg).anyMatch(n -> n.toString().contains("doNothing"), "name contains \"doNothing\"");
+    assertThat(cg).anySatisfy(n -> assertThat(n).asString().contains("doNothing"));
     options.setHandleStaticInit(false);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     for (CGNode n : cg) {
@@ -196,8 +196,7 @@ public class CallGraphTest extends WalaTestCase {
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Llambda/SortingExample");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    assertThat(cg)
-        .anyMatch(n -> n.toString().contains("sortForward"), "name contains \"sortForward\"");
+    assertThat(cg).anySatisfy(n -> assertThat(n).asString().contains("sortForward"));
   }
 
   @Test
@@ -223,9 +222,7 @@ public class CallGraphTest extends WalaTestCase {
         .first()
         .extracting(cg::getSuccNodes, iterator(CGNode.class))
         .toIterable()
-        .anyMatch(
-            callee -> callee.getMethod().getName().toString().equals("toCharArray"),
-            "called method name is \"toCharArray\"");
+        .anySatisfy(callee -> assertThat(callee.getMethod().getName()).hasToString("toCharArray"));
   }
 
   @Test

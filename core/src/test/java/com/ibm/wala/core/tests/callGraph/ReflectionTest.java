@@ -45,16 +45,16 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.assertj.core.api.IterableAssert;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
@@ -835,6 +835,14 @@ public class ReflectionTest extends WalaTestCase {
     assertThat(cgn).hasSize(1);
   }
 
+  private static @NotNull IterableAssert<CGNode> assertThatSuccNodes(CallGraph cg, IMethod method) {
+    return assertThat(cg.getSuccNodes(cg.getNode(method, Everywhere.EVERYWHERE))).toIterable();
+  }
+
+  private static void nodeNameContainsGetMessage(CGNode node) {
+    assertThat(node).asString().contains("getMessage");
+  }
+
   @Test
   public void testForNameThrownExceptions()
       throws WalaException, IllegalArgumentException, CancelException, IOException {
@@ -847,14 +855,10 @@ public class ReflectionTest extends WalaTestCase {
     options.setReflectionOptions(ReflectionOptions.NONE);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     IMethod mainMethod = entrypoints.iterator().next().getMethod();
-    List<CGNode> mainCallees =
-        Iterator2Collection.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
-    assertThat(mainCallees).anyMatch(n -> n.toString().contains("getMessage"));
+    assertThatSuccNodes(cg, mainMethod).anySatisfy(ReflectionTest::nodeNameContainsGetMessage);
     options.setReflectionOptions(ReflectionOptions.STRING_ONLY);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    mainCallees =
-        Iterator2Collection.toList(cg.getSuccNodes(cg.getNode(mainMethod, Everywhere.EVERYWHERE)));
     // getMessage() should _not_ be a callee with reflection handling enabled
-    assertThat(mainCallees).noneMatch(n -> n.toString().contains("getMessage"));
+    assertThatSuccNodes(cg, mainMethod).noneSatisfy(ReflectionTest::nodeNameContainsGetMessage);
   }
 }

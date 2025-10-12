@@ -188,7 +188,7 @@ public abstract class IRTests {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
       assertThat(cg.getNodes(mref))
-          .allMatch(cgNode -> cgNode.getMethod() instanceof AstMethod)
+          .allSatisfy(cgNode -> assertThat(cgNode.getMethod()).isInstanceOf(AstMethod.class))
           .anySatisfy(
               cgNode -> {
                 DebuggingInformation dbg = ((AstMethod) cgNode.getMethod()).debugInfo();
@@ -196,12 +196,14 @@ public abstract class IRTests {
                     .filteredOn(findInstruction)
                     .extracting(inst -> dbg.getOperandPosition(inst.iIndex(), operand))
                     .filteredOn(Objects::nonNull)
-                    .anyMatch(
+                    .anySatisfy(
                         pos ->
-                            pos.getFirstLine() == position[0]
-                                && pos.getFirstCol() == position[1]
-                                && pos.getLastLine() == position[2]
-                                && pos.getLastCol() == position[3]);
+                            assertThat(position)
+                                .containsExactly(
+                                    pos.getFirstLine(),
+                                    pos.getFirstCol(),
+                                    pos.getLastLine(),
+                                    pos.getLastCol()));
               });
     }
   }
@@ -222,7 +224,8 @@ public abstract class IRTests {
     @Override
     public void check(CallGraph cg) {
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
-      assertThat(cg.getNodes(mref)).allMatch(cgNode -> check(cgNode.getMethod(), cgNode.getIR()));
+      assertThat(cg.getNodes(mref))
+          .allSatisfy(cgNode -> assertThat(check(cgNode.getMethod(), cgNode.getIR())).isTrue());
     }
 
     boolean check(IMethod m, IR ir) {

@@ -45,6 +45,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,9 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
   private static CallGraph cg;
 
   private static IAnalysisCacheView cache;
+
+  private static final Condition<ExceptionPruningAnalysis<?, ?>> exceptions =
+      new Condition<>(ExceptionPruningAnalysis::hasExceptions, "has exceptions");
 
   @BeforeAll
   public static void beforeClass() throws Exception {
@@ -114,7 +118,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
 
-    assertThat(intraExplodedCFG).matches(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).has(exceptions);
   }
 
   @Test
@@ -133,7 +137,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
 
-    assertThat(intraExplodedCFG).matches(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).has(exceptions);
   }
 
   @Test
@@ -150,7 +154,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
-    assertThat(intraExplodedCFG).doesNotMatch(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).doesNotHave(exceptions);
   }
 
   @Test
@@ -168,7 +172,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
-    assertThat(intraExplodedCFG).doesNotMatch(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).doesNotHave(exceptions);
   }
 
   @Test
@@ -186,7 +190,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
 
-    assertThat(intraExplodedCFG).matches(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).has(exceptions);
   }
 
   @Test
@@ -205,7 +209,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
 
-    assertThat(intraExplodedCFG).matches(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).has(exceptions);
   }
 
   @Test
@@ -222,7 +226,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
-    assertThat(intraExplodedCFG).doesNotMatch(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).doesNotHave(exceptions);
   }
 
   @Test
@@ -240,7 +244,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
 
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
-    assertThat(intraExplodedCFG).doesNotMatch(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).doesNotHave(exceptions);
   }
 
   @Test
@@ -258,7 +262,7 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
 
-    assertThat(intraExplodedCFG).matches(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).has(exceptions);
   }
 
   @Test
@@ -277,6 +281,6 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
     ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intraExplodedCFG =
         interExplodedCFG.getResult(callNode);
 
-    assertThat(intraExplodedCFG).matches(ExceptionPruningAnalysis::hasExceptions);
+    assertThat(intraExplodedCFG).has(exceptions);
   }
 }
