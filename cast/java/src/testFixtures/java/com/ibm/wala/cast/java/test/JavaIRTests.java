@@ -392,10 +392,10 @@ public abstract class JavaIRTests extends IRTests {
   private static final List<IRAssertion> MLAssertions =
       Collections.singletonList(
           new InstructionOperandAssertion(
-              "Source#MiniatureList#main#([Ljava/lang/String;)V",
+              "Source#MiniaturList#main#([Ljava/lang/String;)V",
               t -> (t instanceof SSAAbstractInvokeInstruction) && t.toString().contains("cons"),
               1,
-              new int[] {53, 39, 53, 61}));
+              new int[] {53, 38, 53, 60}));
 
   static Stream<Arguments> javaIRTestsParameters() {
     return Stream.of(
@@ -415,7 +415,7 @@ public abstract class JavaIRTests extends IRTests {
         Arguments.of("InterfaceTest1", callAssertionForInterfaceTest1, true, null),
         Arguments.of("LexicalAccessOfMethodVariablesFromAnonymousClass", emptyList, true, null),
         Arguments.of("LocalClass", callAssertionForLocalClass, true, null),
-        Arguments.of("MiniatureList", MLAssertions, true, null),
+        Arguments.of("MiniaturList", MLAssertions, true, null),
         Arguments.of("Monitor", emptyList, true, null),
         Arguments.of("NullArrayInit", emptyList, true, null),
         Arguments.of("QualifiedStatic", callAssertionForQualifiedStatic, true, null),
@@ -579,9 +579,8 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test
-  public void testMiniatureSliceBug()
-      throws IllegalArgumentException, CancelException, IOException {
-    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x = runTest("MiniatureSliceBug");
+  public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException, IOException {
+    Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x = runTest("MiniaturSliceBug");
 
     PointerAnalysis<? extends InstanceKey> pa =
         ((PropagationCallGraphBuilder) x.snd).getPointerAnalysis();
@@ -589,7 +588,7 @@ public abstract class JavaIRTests extends IRTests {
 
     // test partial slice
     MethodReference sliceRootRef =
-        getSliceRootReference("MiniatureSliceBug", "validNonDispatchedCall", "(LIntWrapper;)V");
+        getSliceRootReference("MiniaturSliceBug", "validNonDispatchedCall", "(LIntWrapper;)V");
     Set<CGNode> roots = cg.getNodes(sliceRootRef);
     Pair<Collection<Statement>, SDG<? extends InstanceKey>> y =
         AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
@@ -599,7 +598,7 @@ public abstract class JavaIRTests extends IRTests {
     assertThat(SlicerUtil.countPutfields(slice)).isEqualTo(1);
 
     // test slice from main
-    sliceRootRef = getSliceRootReference("MiniatureSliceBug", "main", "([Ljava/lang/String;)V");
+    sliceRootRef = getSliceRootReference("MiniaturSliceBug", "main", "([Ljava/lang/String;)V");
     roots = cg.getNodes(sliceRootRef);
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
@@ -610,7 +609,7 @@ public abstract class JavaIRTests extends IRTests {
 
   @Test
   public void testThinSlice() throws CancelException, IOException {
-    String testName = "MiniatureSliceBug";
+    String testName = "MiniaturSliceBug";
     Collection<Path> sources = singleTestSrc(testName);
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> x =
         runTest(sources, rtJar, new String[] {'L' + testName}, emptyList, true, null);

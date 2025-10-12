@@ -8,15 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  */
-public class MiniatureList {
-	MiniatureList next;
+public class MiniaturList {
+	MiniaturList next;
 
 	int data;
 
-	public MiniatureList remove(int elt) {
-		MiniatureList xp = null;
-		MiniatureList head = this;
-		MiniatureList x = head;
+	public MiniaturList remove(int elt) {
+		MiniaturList xp = null;
+		MiniaturList head = this;
+		MiniaturList x = head;
 
 		while (x != null) {
 			if (x.data == elt) {
@@ -32,15 +32,15 @@ public class MiniatureList {
 		return head;
 	}
 
-	public static MiniatureList cons(int elt, MiniatureList l) {
-		MiniatureList ret = new MiniatureList();
+	public static MiniaturList cons(int elt, MiniaturList l) {
+		MiniaturList ret = new MiniaturList();
 		ret.data = elt;
 		ret.next = l;
 		return ret;
 	}
 
 	public boolean contains(int elt) {
-		MiniatureList head = this;
+		MiniaturList head = this;
 		while (head != null) {
 			if (head.data == elt)
 				return true;
@@ -50,8 +50,8 @@ public class MiniatureList {
 	}
 
 	public static void main(String[] args) {
-    MiniatureList l1 = cons(1, cons(2, cons(3, cons(2, null))));
-    MiniatureList l2 = cons(5, null);
+    MiniaturList l1 = cons(1, cons(2, cons(3, cons(2, null))));
+    MiniaturList l2 = cons(5, null);
 
 		l1 = l1.remove(2);
 		//assert 2 !in l1.*next.data

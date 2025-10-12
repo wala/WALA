@@ -37,7 +37,7 @@
  */
 package foo.bar.hello.world;
 
-public class MiniatureList2 {
+public class MiniaturList2 {
 
         public static void main(String[] args) {
         	int a;
@@ -46,3 +46,4 @@ public class MiniatureList2 {
             }
         }
 }
+
