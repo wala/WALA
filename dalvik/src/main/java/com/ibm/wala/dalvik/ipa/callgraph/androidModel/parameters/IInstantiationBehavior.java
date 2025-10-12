@@ -61,7 +61,8 @@ public abstract class IInstantiationBehavior implements Serializable {
   }
 
   /**
-   * Information on how the IInstanciationBehavior made its decision for {@link InstanceBehavior}
+   * Information on how the {@link IInstantiationBehavior} made its decision for {@link
+   * InstanceBehavior}
    */
   public enum Exactness {
     /** The decision was made based on a exact known mapping from the given data. */
@@ -125,7 +126,7 @@ public abstract class IInstantiationBehavior implements Serializable {
    * The Exactness depends on how the behavior to a type was determined.
    *
    * <p>Currently it has no effect on the model but it may come in handy if you want to cascade
-   * classes for determining the IInstanciationBehavior.
+   * classes for determining the {@code IInstantiationBehavior}.
    */
   public abstract Exactness getExactness(
       TypeName type, TypeName asParameterTo, MethodReference inCall, String withName);

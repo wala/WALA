@@ -50,8 +50,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test validity and precision of inter-procedural NullpointerException-Analysis {@link
- * IntraprocNullPointerAnalysis}
+ * Test validity and precision of inter-procedural {@link NullPointerException} analysis
+ *
+ * @see IntraprocNullPointerAnalysis
  */
 public class NullPointerExceptionInterTest extends WalaTestCase {
 

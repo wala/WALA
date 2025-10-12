@@ -523,18 +523,18 @@ public class ClassWriter implements ClassConstants {
   }
 
   /** Set the constant pool indices for the names of the implemented interfaces. */
-  public void setInterfaceNameIndices(int[] ifaces) {
-    if (ifaces != null) {
-      if (ifaces.length > 0xFFFF) {
-        throw new IllegalArgumentException("Too many interfaces implemented: " + ifaces.length);
+  public void setInterfaceNameIndices(int[] interfaces) {
+    if (interfaces != null) {
+      if (interfaces.length > 0xFFFF) {
+        throw new IllegalArgumentException("Too many interfaces implemented: " + interfaces.length);
       }
-      for (int c : ifaces) {
+      for (int c : interfaces) {
         if (c < 1 || c > 0xFFFF) {
           throw new IllegalArgumentException("Interface name index out of range: " + c);
         }
       }
     }
-    superInterfaces = ifaces;
+    superInterfaces = interfaces;
   }
 
   /** Set the name of the class. */
@@ -551,13 +551,13 @@ public class ClassWriter implements ClassConstants {
   }
 
   /** Set the names of the implemented interfaces. */
-  public void setInterfaceNames(String[] ifaces) {
-    if (ifaces == null) {
+  public void setInterfaceNames(String[] interfaces) {
+    if (interfaces == null) {
       setInterfaceNameIndices((int[]) null);
     } else {
-      int[] ifs = new int[ifaces.length];
-      for (int i = 0; i < ifaces.length; i++) {
-        ifs[i] = addCPClass(ifaces[i]);
+      int[] ifs = new int[interfaces.length];
+      for (int i = 0; i < interfaces.length; i++) {
+        ifs[i] = addCPClass(interfaces[i]);
       }
       setInterfaceNameIndices(ifs);
     }

@@ -316,9 +316,9 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       }
     }
 
-    // the CDG does not represent control dependences from the entry node.
+    // the CDG does not represent control dependencies from the entry node.
     // add these manually
-    // We add control dependences to all instructions in all basic blocks B that _must_ execute.
+    // We add control dependencies to all instructions in all basic blocks B that _must_ execute.
     // B is the set of blocks that dominate the exit basic block
     Statement methodEntry = new MethodEntryStatement(node);
     Dominators<ISSABasicBlock> dom = Dominators.make(controlFlowGraph, controlFlowGraph.entry());
@@ -340,7 +340,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
      * JTD: While phi nodes live in a particular basic block, they represent a meet of values from
      * multiple blocks. Hence, they are really like multiple statements that are control dependent
      * in the manner of the predecessor blocks. When the slicer is following both data and control
-     * dependences, it therefore seems right to add control dependence edges to represent how a phi
+     * dependencies, it therefore seems right to add control dependence edges to represent how a phi
      * node depends on predecessor blocks.
      */
     if (!dOptions.equals(DataDependenceOptions.NONE)) {
@@ -359,7 +359,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
               // in this case, there is more than one edge from the
               // predecessor block, hence the phi node actually
               // depends on the last instruction in the previous
-              // block, rather than having the same dependences as
+              // block, rather than having the same dependencies as
               // statements in that block.
               SSAInstruction pss = ir.getInstructions()[pb.getLastInstructionIndex()];
               assert pss != null;
@@ -392,9 +392,9 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   /**
    * Create all data dependence edges in this PDG.
    *
-   * <p>Scalar dependences are taken from SSA def-use information.
+   * <p>Scalar dependencies are taken from SSA def-use information.
    *
-   * <p>Heap dependences are computed by a reaching defs analysis.
+   * <p>Heap dependencies are computed by a reaching defs analysis.
    */
   private void createScalarDataDependenceEdges(
       IR ir, Map<SSAInstruction, Integer> instructionIndices) {

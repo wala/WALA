@@ -35,13 +35,13 @@ public final class ClassHierarchy {
 
   private static int checkSuperinterfacesContain(
       ClassHierarchyProvider hierarchy, String t1, String t2, HashSet<String> visited) {
-    String[] ifaces = hierarchy.getSuperInterfaces(t1);
-    if (ifaces == null) {
+    String[] interfaces = hierarchy.getSuperInterfaces(t1);
+    if (interfaces == null) {
       return MAYBE;
     }
 
     int r = NO;
-    for (String iface : ifaces) {
+    for (String iface : interfaces) {
       if (visited.add(iface)) {
         if (iface.equals(t2)) {
           return YES;
@@ -189,12 +189,12 @@ public final class ClassHierarchy {
 
   private static boolean insertSuperInterfaces(
       ClassHierarchyProvider hierarchy, String t, HashSet<String> supers) {
-    String[] ifaces = hierarchy.getSuperInterfaces(t);
-    if (ifaces == null) {
+    String[] interfaces = hierarchy.getSuperInterfaces(t);
+    if (interfaces == null) {
       return false;
     } else {
       boolean r = true;
-      for (String iface : ifaces) {
+      for (String iface : interfaces) {
         if (supers.add(iface)) {
           if (!insertSuperInterfaces(hierarchy, iface, supers)) {
             r = false;
@@ -247,12 +247,12 @@ public final class ClassHierarchy {
 
   private static boolean collectDominatingSuperInterfacesFromClass(
       ClassHierarchyProvider hierarchy, String t, HashSet<String> supers) {
-    String[] ifaces = hierarchy.getSuperInterfaces(t);
-    if (ifaces == null) {
+    String[] interfaces = hierarchy.getSuperInterfaces(t);
+    if (interfaces == null) {
       return false;
     } else {
       boolean r = true;
-      for (String iface : ifaces) {
+      for (String iface : interfaces) {
         if (supers.add(iface)) {
           if (!insertSuperInterfaces(hierarchy, iface, supers)) {
             r = false;

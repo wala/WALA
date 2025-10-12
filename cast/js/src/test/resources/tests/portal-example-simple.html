@@ -160,8 +160,8 @@ function createRow(num) {
 	alert(newElem.getAttribute("rowIndex"));
 	return newElem;
 }
-function insertRow(telement) {
-	var chld = getRow(telement);
+function insertRow(tElement) {
+	var chld = getRow(tElement);
 	var par = chld.parentNode;
 	var prev = prevRow(chld);
 
@@ -219,36 +219,36 @@ function incNumber(trow, inc) {
 	node.setAttribute("name","conf"+num);
 	node.setAttribute("title","Location "+num);
 }
-function prevRow(telement) {
-	if(!telement) {
+function prevRow(tElement) {
+	if(!tElement) {
 		return null;
 	}
-	var prev = telement.previousSibling;
+	var prev = tElement.previousSibling;
 
 	while(prev && prev.nodeName != "TR") {
 		prev = prev.previousSibling;
 	}
 	return prev;
 }
-function nextRow(telement) {
-	if(!telement) {
+function nextRow(tElement) {
+	if(!tElement) {
 		return null;
 	}
-	var next = telement.nextSibling;
+	var next = tElement.nextSibling;
 	while(next && next.nodeName != "TR") {
 		next = next.nextSibling;
 	}
 	return next;
 }
-function getRow(telement) {
-	var chld = telement.parentNode;
+function getRow(tElement) {
+	var chld = tElement.parentNode;
 	while(chld.nodeName != "TR") {
 		chld = chld.parentNode;
 	}
 	return chld;
 }
-function moveUp(telement) {
-	var trow = getRow(telement);
+function moveUp(tElement) {
+	var trow = getRow(tElement);
 	var prev = prevRow(prevRow(trow));
 	var par = trow.parentNode;
 	if(prevRow(prev)) {
@@ -262,8 +262,8 @@ function moveUp(telement) {
 		par.insertBefore(remove,next);
 	}
 }
-function moveDown(telement) {
-	var trow = getRow(telement);
+function moveDown(tElement) {
+	var trow = getRow(tElement);
 	var next = nextRow(nextRow(trow));
 	var par = trow.parentNode;
 	if(next) {
@@ -277,8 +277,8 @@ function moveDown(telement) {
 		par.insertBefore(remove,follo);
 	}
 }
-function deleteElem(telement) {
-	var tr = getRow(telement);
+function deleteElem(tElement) {
+	var tr = getRow(tElement);
 	follow = nextRow(tr);
 
 	var par = tr.parentNode;

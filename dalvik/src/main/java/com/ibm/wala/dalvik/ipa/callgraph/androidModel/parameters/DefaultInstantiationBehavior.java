@@ -186,8 +186,8 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
         BehaviorKey.mkPackage("Landroid/support/v4/view"),
         new BehviourValue(InstanceBehavior.REUSE, Exactness.EXACT, null));
     /*
-    behaviours.put(Atom.findOrCreateAsciiAtom("Landroid/database"), IInstanciationBehavior.InstanceBehavior.REUSE);
-    behaviours.put(Atom.findOrCreateAsciiAtom("Landroid/support/v4/app/FragmentActivity"), IInstanciationBehavior.InstanceBehavior.REUSE);
+    behaviours.put(Atom.findOrCreateAsciiAtom("Landroid/database"), IInstantiationBehavior.InstanceBehavior.REUSE);
+    behaviours.put(Atom.findOrCreateAsciiAtom("Landroid/support/v4/app/FragmentActivity"), IInstantiationBehavior.InstanceBehavior.REUSE);
     */
 
   }

@@ -207,7 +207,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.AT_FIRST, int)} instead.
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -223,7 +223,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.BEFORE_LOOP, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -239,7 +239,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.START_OF_LOOP, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -255,7 +255,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.MIDDLE_OF_LOOP, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -271,7 +271,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.MULTIPLE_TIMES_IN_LOOP, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -287,7 +287,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.END_OF_LOOP, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -303,7 +303,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.AFTER_LOOP, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -319,7 +319,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@code
    * enter(ExecutionOrder.AT_LAST, int)} instead
    *
-   * <p>Sideeffects: currentSection is updated, instructions are inserted into the body
+   * <p>Side effects: currentSection is updated, instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()
@@ -335,7 +335,7 @@ public abstract class AbstractAndroidModel {
    * <p>In most cases you don't want to invoke this function directly but to use {@link
    * #finish(int)} instead
    *
-   * <p>Sideeffects: instructions are inserted into the body
+   * <p>Side effects: instructions are inserted into the body
    *
    * @param PC Program Counter instructions shall be placed at. In most cases you'll simply pass
    *     body.getNextProgramCounter()

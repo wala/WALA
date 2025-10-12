@@ -68,7 +68,7 @@ public class CISlicer {
     }
     if (dOptions.equals(DataDependenceOptions.NO_BASE_PTRS)
         || dOptions.equals(DataDependenceOptions.FULL)) {
-      throw new IllegalArgumentException("Heap data dependences requested in CISlicer!");
+      throw new IllegalArgumentException("Heap data dependencies requested in CISlicer!");
     }
 
     SDG<InstanceKey> sdg = new SDG<>(cg, pa, modRef, dOptions, cOptions, null);

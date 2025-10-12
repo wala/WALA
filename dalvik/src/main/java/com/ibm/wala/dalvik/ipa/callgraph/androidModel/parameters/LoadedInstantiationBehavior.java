@@ -55,7 +55,7 @@ import java.util.Objects;
 /**
  * Behavior loaded from a file.
  *
- * <p>This class generates an empty mutable IInstantiationBehavior.
+ * <p>This class generates an empty mutable {@link IInstantiationBehavior}.
  *
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  * @since 2013-10-25

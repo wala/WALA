@@ -58,7 +58,7 @@ final class IntWrapper extends PrimitiveWrapper {
   }
 }
 
-public class MiniaturSliceBug {
+public class MiniatureSliceBug {
 
   public void validNonDispatchedCall(IntWrapper wrapper) { 
     wrapper.setIntValue(3);
@@ -67,7 +67,7 @@ public class MiniaturSliceBug {
   }
 
   public static void main(String[] args) {
-    (new MiniaturSliceBug()).validNonDispatchedCall(new IntWrapper(-1));
+    (new MiniatureSliceBug()).validNonDispatchedCall(new IntWrapper(-1));
   }
 
 }

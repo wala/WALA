@@ -3281,7 +3281,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // typical for loop:
     // { [inits]; while (cond) { [body]; [label continueTarget]; iters } [label breakTarget]
-    // BLOCK(BLOCK(init1,init2,...),LOOP(cond,BLOCK(bodyblock,continuetarget,BLOCK(iter1,iter2,...))),breaktarget
+    // BLOCK(BLOCK(init1,init2,...),LOOP(cond,BLOCK(bodyblock,continueTarget,BLOCK(iter1,iter2,...))),breakTarget
 
     // in our case:
     // the only init is "Iterator iter = iterable.iter()"
@@ -3289,8 +3289,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // bodyblock should be prepended with "[final] Type var = iter.next()" (put in the block that
     // body belongs to)
     // iter is null
-    // continuetarget and breaktarget are the same as in a regular for loop
-    // BLOCK(iterassign,LOOP(cond,BLOCK(paramassign,bodyblock,continuetarget)),breaktarget)
+    // continueTarget and breakTarget are the same as in a regular for loop
+    // BLOCK(iterassign,LOOP(cond,BLOCK(paramassign,bodyblock,continueTarget)),breakTarget)
 
     final String tmpName =
         "iter tmp"; // this is an illegal Java identifier, we will use this variable to hold the
@@ -3404,7 +3404,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     String loopLabel = context.getLabelMap().get(n);
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
-    // LOCAL_SCOPE(BLOCK(iterassign,LOOP(cond,BLOCK(BLOCK(paramassign,bodyblock),continuetarget,BLOCK())),breaktarget))
+    // LOCAL_SCOPE(BLOCK(iterassign,LOOP(cond,BLOCK(BLOCK(paramassign,bodyblock),continueTarget,BLOCK())),breakTarget))
     return makeNode(
         context,
         fFactory,
@@ -3456,9 +3456,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // }
     // }
     // simplest:
-    // LOCAL_SCOPE(BLOCK(arrayDecl,indexDecl,LOOP(cond,BLOCK(nextAssign,bodyblock,continuetarget,iter)),breaktarget))
+    // LOCAL_SCOPE(BLOCK(arrayDecl,indexDecl,LOOP(cond,BLOCK(nextAssign,bodyblock,continueTarget,iter)),breakTarget))
     // match up exactly:
-    // LOCAL_SCOPE(BLOCK(arrayDecl,LOCAL_SCOPE(BLOCK(BLOCK(indexDecl),LOOP(cond,BLOCK(LOCAL_SCOPE(BLOCK(nextAssign,bodyblock)),continuetarget,BLOCK(iter))),breaktarget))))
+    // LOCAL_SCOPE(BLOCK(arrayDecl,LOCAL_SCOPE(BLOCK(BLOCK(indexDecl),LOOP(cond,BLOCK(LOCAL_SCOPE(BLOCK(nextAssign,bodyblock)),continueTarget,BLOCK(iter))),breakTarget))))
 
     /*------ arrayDecl --------- String tmparray[] = doSomething() ------*/
     final String tmpArrayName = "for temp array"; // illegal java identifier
@@ -3561,7 +3561,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                     defaultValue)),
             tmpArrayAccessNode);
 
-    // LOCAL_SCOPE(BLOCK(arrayDecl,LOCAL_SCOPE(BLOCK(BLOCK(indexDecl),LOOP(cond,BLOCK(LOCAL_SCOPE(BLOCK(nextAssign,bodyblock)),continuetarget,BLOCK(iter))),breaktarget))))
+    // LOCAL_SCOPE(BLOCK(arrayDecl,LOCAL_SCOPE(BLOCK(BLOCK(indexDecl),LOOP(cond,BLOCK(LOCAL_SCOPE(BLOCK(nextAssign,bodyblock)),continueTarget,BLOCK(iter))),breakTarget))))
     // more complicated than it has to be, but it matches up exactly with the Java expansion above.
 
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());

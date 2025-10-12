@@ -79,7 +79,7 @@ function test_second_phase()
 	};
 
 	var thirdButton = document.createElement("button");
-	thirdButton.innerText = 'Test "Third Phase Competability"';
+	thirdButton.innerText = 'Test "Third Phase Compatibility"';
 	thirdButton.onclick = test_third_phase;
 	document.body.appendChild(thirdButton);
 }
@@ -132,7 +132,7 @@ var differentOrder = "/differnet_order_";
 function test_both_order2()
 {
 	differentOrder += "2";
-	test_both_order_button.innerText = 'Test "Different Order Competability 2"';
+	test_both_order_button.innerText = 'Test "Different Order Compatibility 2"';
 }
 
 </script>
@@ -182,14 +182,14 @@ function test_unique_dom_button2()
 <BR><BR><BR><HR><BR><BR><BR>
 
 	<BR><button onclick = "test_event_element()">Test "Event Element"</button>
-	<BR><button onclick = "test_isNaN()">Test "isNaN Competability"</button>
-	<BR><button onclick = "test_first_phase()">Test "First Phase Competability"</button>
-	<BR><button onclick = "test_second_phase()">Test "Second Phase Competability"</button>
-	<BR><button onclick = "test_n_phase()">Test "N Phase Competability"</button>
-	<BR><button id=test_both_order_button onclick = "test_both_order()">Test "Different Order Competability 1"</button>
+	<BR><button onclick = "test_isNaN()">Test "isNaN Compatibility"</button>
+	<BR><button onclick = "test_first_phase()">Test "First Phase Compatibility"</button>
+	<BR><button onclick = "test_second_phase()">Test "Second Phase Compatibility"</button>
+	<BR><button onclick = "test_n_phase()">Test "N Phase Compatibility"</button>
+	<BR><button id=test_both_order_button onclick = "test_both_order()">Test "Different Order Compatibility 1"</button>
 	<button onclick = "test_both_order2()">Change Different Order Location</button>
 	<BR><button onclick = "test_unique_dom_button2()">Change Next element onclick Method</button>
-	<button id=test_unique_dom_button onclick = "send_unique_dom_request()">Test "Unique Dom Competability"</button> 
+	<button id=test_unique_dom_button onclick = "send_unique_dom_request()">Test "Unique Dom Compatibility"</button>
 	<BR>
 
 </body>
