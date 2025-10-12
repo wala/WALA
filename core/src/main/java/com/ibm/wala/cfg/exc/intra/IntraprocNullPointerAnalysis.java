@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Intraprocedural dataflow analysis to detect impossible NullPointerExceptions.
+ * Intraprocedural dataflow analysis to detect impossible {@link NullPointerException}s.
  *
  * @author Juergen Graf &lt;graf@kit.edu&gt;
  */

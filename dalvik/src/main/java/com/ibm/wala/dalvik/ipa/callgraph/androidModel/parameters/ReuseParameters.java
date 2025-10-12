@@ -60,7 +60,7 @@ import java.util.List;
  * Helper for building the Descriptor of a model.
  *
  * <p>Parameters used in a model can be either marked as CREATE or REUSE. This information is
- * derived from the IInstantiationBehavior.
+ * derived from the {@link IInstantiationBehavior}.
  *
  * <p>This class only handles parameters marked as REUSE: These will be parameters to the function
  * representing the model itself. On all uses of a variable named REUSE the same Instance

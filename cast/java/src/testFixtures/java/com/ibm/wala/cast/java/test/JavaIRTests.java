@@ -263,7 +263,7 @@ public abstract class JavaIRTests extends IRTests {
             }
           });
 
-  static List<? extends IRAssertion> callAssertionForsimple1 =
+  static List<? extends IRAssertion> callAssertionForSimple1 =
       Arrays.asList(
           new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "prod", 24),
           new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "j", 23),
@@ -421,7 +421,7 @@ public abstract class JavaIRTests extends IRTests {
         Arguments.of("QualifiedStatic", callAssertionForQualifiedStatic, true, null),
         Arguments.of("Scoping1", emptyList, true, null),
         Arguments.of("Scoping2", emptyList, true, null),
-        Arguments.of("Simple1", callAssertionForsimple1, true, null),
+        Arguments.of("Simple1", callAssertionForSimple1, true, null),
         Arguments.of("StaticInitializers", emptyList, true, null),
         Arguments.of("StaticNesting", callAssertionForStaticNesting, true, null),
         Arguments.of("Switch1", emptyList, true, null),

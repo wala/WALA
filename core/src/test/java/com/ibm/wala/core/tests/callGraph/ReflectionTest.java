@@ -779,6 +779,7 @@ public class ReflectionTest extends WalaTestCase {
    *   <li>GetMethodContext$C#foo()
    * </ul>
    */
+  @SuppressWarnings("SpellCheckingInspection")
   @Test
   public void testGetMethodContext()
       throws WalaException, IllegalArgumentException, CancelException, IOException {

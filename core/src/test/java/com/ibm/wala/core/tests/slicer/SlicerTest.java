@@ -326,7 +326,7 @@ public class SlicerTest {
             ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     SlicerUtil.dumpSlice(slice);
     assertThat(SlicerUtil.countInvokes(slice)).isEqualTo(4);
-    // should only get 4 statements total when ignoring control dependences completely
+    // should only get 4 statements total when ignoring control dependencies completely
     slice =
         Slicer.computeBackwardSlice(
             s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.NONE);

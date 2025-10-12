@@ -163,7 +163,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    *
    * <p>See {@link #setInstantiationBehavior(IInstantiationBehavior)}.
    *
-   * @param cha Optional parameter given to the IInstantiationBehavior
+   * @param cha Optional parameter given to the {@link IInstantiationBehavior}
    * @return DefaultInstantiationBehavior if no other behavior has been set
    */
   public IInstantiationBehavior getInstantiationBehavior(IClassHierarchy cha) {
@@ -188,7 +188,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    *
    * @see com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior for more
    *     information
-   * @return the previous IInstantiationBehavior
+   * @return the previous {@link IInstantiationBehavior}
    */
   public IInstantiationBehavior setInstantiationBehavior(IInstantiationBehavior instantiation) {
     final IInstantiationBehavior prev = this.instantiation;

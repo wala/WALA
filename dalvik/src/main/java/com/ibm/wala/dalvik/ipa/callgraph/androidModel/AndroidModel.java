@@ -112,7 +112,7 @@ import java.util.Set;
  * AnalysisOptions.
  *
  * <p>Additionally care of how types are instantiated is taken. You can change this behavior by
- * setting the IInstanciationBehavior in the AnalysisOptions.
+ * setting the {@link IInstantiationBehavior} in the AnalysisOptions.
  *
  * <p>Smaller Models exist: * MiniModel calls all components of a specific type (for example all
  * Activities) * MicroModel calls a single specific component * ExternalModel doesn't call anything

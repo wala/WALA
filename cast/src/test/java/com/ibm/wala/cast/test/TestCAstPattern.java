@@ -277,7 +277,7 @@ public class TestCAstPattern {
 
   private final CAstPattern simpleAlternativePattern =
       CAstPattern.parse(
-          "<top>BINARY_EXPR(\"+\",<firstchild>|(VAR(\"suffix\")||VAR(\"prefix\"))|,*)");
+          "<top>BINARY_EXPR(\"+\",<first_child>|(VAR(\"suffix\")||VAR(\"prefix\"))|,*)");
 
   private final CAstNode simpleAlternativeAst;
 
@@ -295,7 +295,7 @@ public class TestCAstPattern {
                 Ast.makeConstant("+"),
                 Ast.makeNode(
                     NAME_ASSERTION_SINGLE,
-                    Ast.makeConstant("firstchild"),
+                    Ast.makeConstant("first_child"),
                     Ast.makeNode(CAstNode.VAR, Ast.makeConstant("prefix"))),
                 Ast.makeNode(CAstNode.VAR, Ast.makeConstant("suffix"))));
 
