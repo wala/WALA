@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.ir;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -28,7 +29,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.graph.GraphIntegrity;
-import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import java.io.IOException;
 import java.util.Iterator;
 import org.junit.jupiter.api.Test;
@@ -67,24 +67,14 @@ public abstract class DeterministicIRTest extends WalaTestCase {
 
     checkNotAllNull(ir1.getInstructions());
     checkNoneNull(ir1.iterateAllInstructions());
-    try {
-      GraphIntegrity.check(ir1.getControlFlowGraph());
-    } catch (UnsoundGraphException e) {
-      System.err.println(ir1);
-      e.printStackTrace();
-      fail("unsound CFG for ir1");
-    }
+    assertThatCode(() -> GraphIntegrity.check(ir1.getControlFlowGraph()))
+        .doesNotThrowAnyException();
 
     IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.clear();
 
-    try {
-      GraphIntegrity.check(ir2.getControlFlowGraph());
-    } catch (UnsoundGraphException e1) {
-      System.err.println(ir2);
-      e1.printStackTrace();
-      fail("unsound CFG for ir2");
-    }
+    assertThatCode(() -> GraphIntegrity.check(ir2.getControlFlowGraph()))
+        .doesNotThrowAnyException();
 
     assertThat(ir1).hasToString(ir2.toString());
     return ir1;

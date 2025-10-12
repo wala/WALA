@@ -13,8 +13,8 @@ package com.ibm.wala.core.tests.ir;
 import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
 import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatObject;
-import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
@@ -34,7 +34,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
-import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -71,14 +70,9 @@ public abstract class CFGTest extends WalaTestCase {
       IR ir = cache.getIR(m, Everywhere.EVERYWHERE);
 
       ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
-      try {
-        GraphIntegrity.check(cfg);
-      } catch (UnsoundGraphException e) {
-        //noinspection CallToPrintStackTrace
-        e.printStackTrace();
-        System.err.println(ir);
-        fail(" failed cfg integrity check for " + methodSig);
-      }
+      assertThatCode(() -> GraphIntegrity.check(cfg))
+          .describedAs("cfg integrity check for %s", methodSig)
+          .doesNotThrowAnyException();
     } catch (Exception e) {
       //noinspection CallToPrintStackTrace
       e.printStackTrace();

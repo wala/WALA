@@ -11,7 +11,7 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.InstanceOfAssertFactories.iterator;
 
 import com.ibm.wala.classLoader.IClass;
@@ -61,7 +61,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
-import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.HashSet;
@@ -418,23 +417,18 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // RTA /////
     // ///////////////
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, cache, cha);
-    try {
-      GraphIntegrity.check(cg);
-    } catch (UnsoundGraphException e1) {
-      e1.printStackTrace();
-      fail(e1.getMessage());
-    }
+    final CallGraph rta = CallGraphTestUtil.buildRTA(options, cache, cha);
+    assertThatCode(() -> GraphIntegrity.check(rta)).doesNotThrowAnyException();
 
-    Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(cg);
+    Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(rta);
     System.err.println("RTA methods reached: " + rtaMethods.size());
-    System.err.println(CallGraphStats.getStats(cg));
+    System.err.println(CallGraphStats.getStats(rta));
     System.err.println("RTA warnings:\n");
 
     // ///////////////
     // // 0-CFA /////
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, testPAToString);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, testPAToString);
 
     // FIXME: annoying special cases caused by clone2assign mean using
     // the rta graph for proper graph subset checking does not work.
@@ -485,12 +479,7 @@ public class CallGraphTest extends WalaTestCase {
   private static void checkICFG(CallGraph cg) {
     InterproceduralCFG icfg = new InterproceduralCFG(cg);
 
-    try {
-      GraphIntegrity.check(icfg);
-    } catch (UnsoundGraphException e) {
-      e.printStackTrace();
-      fail();
-    }
+    assertThatCode(() -> GraphIntegrity.check(icfg)).doesNotThrowAnyException();
 
     // perform a little icfg exercise
     @SuppressWarnings("unused")
@@ -509,11 +498,7 @@ public class CallGraphTest extends WalaTestCase {
    */
   private static Graph<MethodReference> checkCallGraph(
       CallGraph cg, Graph<MethodReference> superCG, String thisAlgorithm) {
-    try {
-      GraphIntegrity.check(cg);
-    } catch (UnsoundGraphException e1) {
-      fail(e1.getMessage());
-    }
+    assertThatCode(() -> GraphIntegrity.check(cg)).doesNotThrowAnyException();
     Set<MethodReference> callGraphMethods = CallGraphStats.collectMethods(cg);
     System.err.println(thisAlgorithm + " methods reached: " + callGraphMethods.size());
     System.err.println(CallGraphStats.getStats(cg));
