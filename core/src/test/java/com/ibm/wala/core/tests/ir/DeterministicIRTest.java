@@ -12,7 +12,6 @@ package com.ibm.wala.core.tests.ir;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
