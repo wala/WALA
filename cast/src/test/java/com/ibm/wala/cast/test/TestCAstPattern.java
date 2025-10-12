@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 public class TestCAstPattern {
@@ -64,7 +65,8 @@ public class TestCAstPattern {
     System.err.println(("testing with input " + CAstPrinter.print(n)));
 
     if (names == null) {
-      assertThat(p).doesNotMatch(pattern -> pattern.match(n, null));
+      assertThat(p)
+          .isNot(new Condition<>(pattern -> pattern.match(n, null), "pattern that matches %s", n));
     } else {
       Segments s = CAstPattern.match(p, n);
       assertThat(s).isNotNull();

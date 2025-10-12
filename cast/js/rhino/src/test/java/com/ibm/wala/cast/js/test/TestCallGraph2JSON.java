@@ -42,7 +42,7 @@ public class TestCallGraph2JSON {
       if (entry.getKey().startsWith("simple.js@3")) {
         Map<String, String[]> callSites = entry.getValue();
         assertThat(getTargetsStartingWith(callSites, "simple.js@4"))
-            .anyMatch(s -> s.startsWith("simple.js@7"));
+            .anySatisfy(s -> assertThat(s).startsWith("simple.js@7"));
       }
     }
     Map<String, String[]> flattened = flattenParsedCG(parsedJSONCG);
@@ -67,17 +67,23 @@ public class TestCallGraph2JSON {
     CallGraph2JSON cg2JSON = new CallGraph2JSON(false, true);
     Map<String, String[]> parsed = getFlattenedJSONCG(cg, cg2JSON);
     assertThat(getTargetsStartingWith(parsed, "reflective_calls.js@10"))
-        .anyMatch(s -> s.startsWith("Function_prototype_call (Native) [reflective_calls.js@10"));
+        .anySatisfy(
+            s ->
+                assertThat(s)
+                    .startsWith("Function_prototype_call (Native) [reflective_calls.js@10"));
     assertThat(getTargetsStartingWith(parsed, "reflective_calls.js@11"))
-        .anyMatch(s -> s.startsWith("Function_prototype_apply (Native) [reflective_calls.js@11"));
+        .anySatisfy(
+            s ->
+                assertThat(s)
+                    .startsWith("Function_prototype_apply (Native) [reflective_calls.js@11"));
     assertThat(
             getTargetsStartingWith(
                 parsed, "Function_prototype_call (Native) [reflective_calls.js@10"))
-        .anyMatch(s -> s.startsWith("reflective_calls.js@1"));
+        .anySatisfy(s -> assertThat(s).startsWith("reflective_calls.js@1"));
     assertThat(
             getTargetsStartingWith(
                 parsed, "Function_prototype_apply (Native) [reflective_calls.js@11"))
-        .anyMatch(s -> s.startsWith("reflective_calls.js@5"));
+        .anySatisfy(s -> assertThat(s).startsWith("reflective_calls.js@5"));
   }
 
   @Test
@@ -89,7 +95,7 @@ public class TestCallGraph2JSON {
     assertThat(getTargetsStartingWith(parsed, "native_callback.js@2"))
         .isEqualTo(new String[] {"Array_prototype_map (Native)"});
     assertThat(getTargetsStartingWith(parsed, "Function_prototype_call (Native)"))
-        .anyMatch(s -> s.startsWith("native_callback.js@3"));
+        .anySatisfy(s -> assertThat(s).startsWith("native_callback.js@3"));
   }
 
   /**
