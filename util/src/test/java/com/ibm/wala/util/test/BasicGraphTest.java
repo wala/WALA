@@ -10,10 +10,7 @@
  */
 package com.ibm.wala.util.test;
 
-import static com.ibm.wala.util.graph.NodeManagerConditions.node;
-import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatObject;
 
 import com.ibm.wala.util.graph.impl.BasicGraph;
 import org.junit.jupiter.api.Test;
@@ -29,8 +26,8 @@ public class BasicGraphTest {
     graph.addNode(root);
     graph.addNode(leaf);
     graph.addEdge(root, leaf);
-    assertThatObject(graph).has(allOf(node(root), node(leaf)));
-    assertThat(graph.getPredNodes(leaf)).toIterable().contains(root);
-    assertThat(graph.getSuccNodes(root)).toIterable().contains(leaf);
+    assertThat(graph).containsExactlyInAnyOrder(root, leaf);
+    assertThat(graph.getPredNodes(leaf)).toIterable().containsExactly(root);
+    assertThat(graph.getSuccNodes(root)).toIterable().containsExactly(leaf);
   }
 }
