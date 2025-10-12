@@ -11,7 +11,6 @@
 package com.ibm.wala.core.tests.cfg.exc.intra;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
@@ -810,12 +809,14 @@ public class NullPointerExceptionIntraTest extends WalaTestCase {
       ISSABasicBlock returnNode,
       ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> explodedCfg) {
     final IExplodedBasicBlock exit = explodedCfg.exit();
+    IExplodedBasicBlock match = null;
     for (IExplodedBasicBlock candidate : Iterator2Iterable.make(explodedCfg.getPredNodes(exit))) {
       if (candidate.getInstruction() == returnNode.getLastInstruction()) {
-        return candidate;
+        match = candidate;
+        break;
       }
     }
-    fail();
-    return null;
+    assertThat(match).as("expected a predecessor with the return instruction").isNotNull();
+    return match;
   }
 }

@@ -99,12 +99,9 @@ public abstract class DeterministicIRTest extends WalaTestCase {
   }
 
   private static void checkNotAllNull(SSAInstruction[] instructions) {
-    for (SSAInstruction instruction : instructions) {
-      if (instruction != null) {
-        return;
-      }
-    }
-    fail("no instructions generated");
+    assertThat(instructions)
+        .as("expected at least one non-null instruction")
+        .anySatisfy(inst -> assertThat(inst).isNotNull());
   }
 
   @Test
