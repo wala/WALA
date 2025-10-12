@@ -27,7 +27,6 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -774,17 +773,7 @@ public class PrimitivesTest extends WalaTestCase {
         .toIterable()
         .containsExactly(nodes[4], nodes[7], nodes[8], nodes[5], nodes[10]);
 
-    int j = 0;
-    Object[] desired5 = new Object[] {nodes[8]};
-    for (Object o4 : Iterator2Iterable.make(D.dominatorTree().getSuccNodes(nodes[5]))) {
-      Object d = desired5[j++];
-      boolean ok = o4.equals(d);
-      if (!ok) {
-        System.err.println("O4: " + o4);
-        System.err.println("desired " + d);
-        assertThat(d).isEqualTo(o4);
-      }
-    }
+    assertThat(D.dominatorTree().getSuccNodes(nodes[5])).toIterable().containsExactly(nodes[8]);
 
     assertThat(D.dominatorTree().getSuccNodeCount(nodes[10])).isEqualTo(5);
   }

@@ -164,30 +164,32 @@ public class DataflowTest extends WalaTestCase {
     ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(cg);
     ContextInsensitiveReachingDefs reachingDefs = new ContextInsensitiveReachingDefs(icfg, cha);
     BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = reachingDefs.analyze();
-    for (BasicBlockInContext<IExplodedBasicBlock> bb : icfg) {
-      if (bb.getNode().toString().contains("testInterproc")) {
-        IExplodedBasicBlock delegate = bb.getDelegate();
-        if (delegate.getNumber() == 4) {
-          IntSet solution = solver.getOut(bb).getValue();
-          IntIterator intIterator = solution.intIterator();
-          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
-          while (intIterator.hasNext()) {
-            int next = intIterator.next();
-            final Pair<CGNode, Integer> def = reachingDefs.getNodeAndInstrForNumber(next);
-            if (def.fst
-                .getMethod()
-                .getDeclaringClass()
-                .getClassLoader()
-                .getReference()
-                .equals(ClassLoaderReference.Application)) {
-              System.out.println(def);
-              applicationDefs.add(def);
-            }
-          }
-          assertThat(applicationDefs).hasSize(2);
-        }
-      }
-    }
+    assertThat(icfg)
+        .filteredOn(
+            bb ->
+                bb.getNode().toString().contains("testInterproc")
+                    && bb.getDelegate().getNumber() == 4)
+        .singleElement()
+        .satisfies(
+            bb -> {
+              IntSet solution = solver.getOut(bb).getValue();
+              IntIterator intIterator = solution.intIterator();
+              List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
+              while (intIterator.hasNext()) {
+                int next = intIterator.next();
+                final Pair<CGNode, Integer> def = reachingDefs.getNodeAndInstrForNumber(next);
+                if (def.fst
+                    .getMethod()
+                    .getDeclaringClass()
+                    .getClassLoader()
+                    .getReference()
+                    .equals(ClassLoaderReference.Application)) {
+                  System.out.println(def);
+                  applicationDefs.add(def);
+                }
+              }
+              assertThat(applicationDefs).hasSize(2);
+            });
   }
 
   @Test
@@ -204,29 +206,31 @@ public class DataflowTest extends WalaTestCase {
         result = reachingDefs.analyze();
     ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph =
         reachingDefs.getSupergraph();
-    for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {
-      if (bb.getNode().toString().contains("testInterproc")) {
-        IExplodedBasicBlock delegate = bb.getDelegate();
-        if (delegate.getNumber() == 4) {
-          IntSet solution = result.getResult(bb);
-          IntIterator intIterator = solution.intIterator();
-          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
-          while (intIterator.hasNext()) {
-            int next = intIterator.next();
-            final Pair<CGNode, Integer> def = reachingDefs.getDomain().getMappedObject(next);
-            if (def.fst
-                .getMethod()
-                .getDeclaringClass()
-                .getClassLoader()
-                .getReference()
-                .equals(ClassLoaderReference.Application)) {
-              System.out.println(def);
-              applicationDefs.add(def);
-            }
-          }
-          assertThat(applicationDefs).hasSize(1);
-        }
-      }
-    }
+    assertThat(supergraph)
+        .filteredOn(
+            bb ->
+                bb.getNode().toString().contains("testInterproc")
+                    && bb.getDelegate().getNumber() == 4)
+        .singleElement()
+        .satisfies(
+            bb -> {
+              IntSet solution = result.getResult(bb);
+              IntIterator intIterator = solution.intIterator();
+              List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
+              while (intIterator.hasNext()) {
+                int next = intIterator.next();
+                final Pair<CGNode, Integer> def = reachingDefs.getDomain().getMappedObject(next);
+                if (def.fst
+                    .getMethod()
+                    .getDeclaringClass()
+                    .getClassLoader()
+                    .getReference()
+                    .equals(ClassLoaderReference.Application)) {
+                  System.out.println(def);
+                  applicationDefs.add(def);
+                }
+              }
+              assertThat(applicationDefs).hasSize(1);
+            });
   }
 }
