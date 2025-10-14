@@ -51,7 +51,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Set;
 import org.assertj.core.api.IterableAssert;
 import org.jetbrains.annotations.NotNull;
@@ -738,12 +737,9 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr =
         MethodReference.findOrCreate(reflect24Tr, "doNothing", "(Ljava/lang/Class;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
-    assertThat(nodes).hasSize(1);
 
     // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
-    Optional<CGNode> firstMatched = nodes.stream().findFirst();
-    assertThat(firstMatched).isPresent();
-    CGNode cgNode = firstMatched.get();
+    CGNode cgNode = assertThat(nodes).singleElement().actual();
 
     LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
     OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
