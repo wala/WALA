@@ -114,10 +114,9 @@ public class HeapTracer {
    */
   private static String[] generateRootClassesFromWorkspace() {
     String classpath = System.getProperty("java.class.path");
-    Object[] binDirectories = extractBinDirectories(classpath);
+    String[] binDirectories = extractBinDirectories(classpath);
     HashSet<String> classFileNames = HashSetFactory.make();
-    for (Object binDirectorie : binDirectories) {
-      String dir = (String) binDirectorie;
+    for (String dir : binDirectories) {
       File fdir = new File(dir);
       classFileNames.addAll(findClassNames(dir, fdir));
     }
@@ -152,7 +151,7 @@ public class HeapTracer {
   /**
    * @return duplicate-free array of strings that are names of directories that contain "bin"
    */
-  private static Object[] extractBinDirectories(String classpath) {
+  private static String[] extractBinDirectories(String classpath) {
     StringTokenizer t = new StringTokenizer(classpath, ";");
     HashSet<String> result = HashSetFactory.make();
     while (t.hasMoreTokens()) {
@@ -161,7 +160,7 @@ public class HeapTracer {
         result.add(n);
       }
     }
-    return result.toArray();
+    return result.toArray(new String[0]);
   }
 
   /** Trace the heap and return the results */

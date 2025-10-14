@@ -186,9 +186,9 @@ public abstract class TestCallGraphShape {
   public void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
     Collection<CGNode> sources = getNodes(CG, sourceDescription);
     Collection<CGNode> dests = getNodes(CG, destDescription);
-    for (Object source : sources) {
+    for (CGNode source : sources) {
       for (Object dest : dests) {
-        for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes((CGNode) source))) {
+        for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(source))) {
           if (n.equals(dest)) {
             assert false : "Found a link from " + source + " to " + dest;
           }
