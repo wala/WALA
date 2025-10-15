@@ -35,38 +35,38 @@ public abstract class TestLexicalModRef {
     LexicalModRef lexAccesses = LexicalModRef.make(CG, b.getPointerAnalysis());
     Map<CGNode, OrdinalSet<Pair<CGNode, String>>> readResult = lexAccesses.computeLexicalRef();
     Map<CGNode, OrdinalSet<Pair<CGNode, String>>> writeResult = lexAccesses.computeLexicalMod();
-    for (Map.Entry<CGNode, OrdinalSet<Pair<CGNode, String>>> entry : readResult.entrySet()) {
-      final CGNode n = entry.getKey();
-      if (n.toString()
-          .contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner>")) {
-        // function "inner" reads exactly x and z
-        OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
-        assertThat(readVars).hasSize(2);
-        assertThat(readVars)
-            .hasToString(
-                "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]");
-        // writes x and z as well
-        OrdinalSet<Pair<CGNode, String>> writtenVars = writeResult.get(n);
-        assertThat(writtenVars).hasSize(2);
-        assertThat(writtenVars)
-            .hasToString(
-                "[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]");
-      }
-      if (n.toString()
-          .contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner2>")) {
-        // function "inner3" reads exactly innerName, inner3, and x and z via callees
-        OrdinalSet<Pair<CGNode, String>> readVars = entry.getValue();
-        assertThat(readVars).hasSize(4);
-        for (Pair<CGNode, String> rv : readVars) {
-          assertThat(rv)
-              .asString()
-              .isIn(
-                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x]",
-                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3]",
-                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName]",
-                  "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]");
-        }
-      }
-    }
+    assertThat(readResult)
+        .anySatisfy(
+            (n, readVars) -> {
+              assertThat(n)
+                  .asString()
+                  .startsWith("Node: <Code body of function Lsimple-lexical.js/outer/inner>");
+              // function "inner" reads exactly x and z
+              assertThat(readVars)
+                  .extracting(Object::toString)
+                  .containsExactly(
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
+              // writes x and z as well
+              assertThat(writeResult.get(n))
+                  .extracting(Object::toString)
+                  .containsExactlyInAnyOrder(
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
+            })
+        .anySatisfy(
+            (n, readVars) -> {
+              assertThat(n)
+                  .asString()
+                  .startsWith("Node: <Code body of function Lsimple-lexical.js/outer/inner2>");
+              // function "inner3" reads exactly innerName, inner3, and x and z via callees
+              assertThat(readVars)
+                  .extracting(Object::toString)
+                  .containsExactlyInAnyOrder(
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,x]",
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,inner3]",
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,innerName]",
+                      "[Node: <Code body of function Lsimple-lexical.js/outer> Context: Everywhere,z]");
+            });
   }
 }
