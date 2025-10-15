@@ -33,12 +33,9 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
@@ -88,15 +85,10 @@ public class CHACallGraphTest {
 
     Consumer<String> checkCalledFromFiveSites =
         (klassName) -> {
-          Set<CGNode> nodes = cg.getNodes(getTargetRef.apply(klassName));
-          assertThat(nodes).hasSize(1);
-          CGNode node = nodes.iterator().next();
-          List<CGNode> predNodes = Iterator2Collection.toList(cg.getPredNodes(node));
-          assertThat(predNodes).hasSize(1);
-          CGNode pred = predNodes.get(0);
-          List<CallSiteReference> sites =
-              Iterator2Collection.toList(cg.getPossibleSites(pred, node));
-          assertThat(sites).hasSize(5);
+          CGNode node =
+              assertThat(cg.getNodes(getTargetRef.apply(klassName))).singleElement().actual();
+          CGNode pred = assertThat(cg.getPredNodes(node)).toIterable().singleElement().actual();
+          assertThat(cg.getPossibleSites(pred, node)).toIterable().hasSize(5);
         };
 
     checkCalledFromFiveSites.accept("C1");
