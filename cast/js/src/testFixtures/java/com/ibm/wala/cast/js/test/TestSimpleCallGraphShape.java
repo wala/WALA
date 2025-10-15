@@ -28,9 +28,8 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import java.io.IOException;
-import java.util.List;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -493,16 +492,15 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testFunctionDotCall()
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     CallGraph cg = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_call.js");
-    for (CGNode n : cg) {
-      if (n.getMethod().getName().toString().equals("$$ call_4")) {
-        assertThat(cg.getSuccNodeCount(n)).isEqualTo(2);
-        // ugh
-        List<CGNode> succs = Iterator2Collection.toList(cg.getSuccNodes(n));
-        assertThat(succs)
-            .hasToString(
-                "[Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere, Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere]");
-      }
-    }
+    assertThat(cg)
+        .filteredOn(n -> n.getMethod().getName().toString().equals("$$ call_4"))
+        .singleElement()
+        .extracting(cg::getSuccNodes, InstanceOfAssertFactories.iterator(CGNode.class))
+        .toIterable()
+        .extracting(Object::toString)
+        .containsExactlyInAnyOrder(
+            "Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere",
+            "Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere");
   }
 
   private static final Object[][] assertionsForFunctionApply =
