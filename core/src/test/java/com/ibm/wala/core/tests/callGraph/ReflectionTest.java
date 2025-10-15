@@ -47,7 +47,6 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.intset.OrdinalSet;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -741,17 +740,13 @@ public class ReflectionTest extends WalaTestCase {
     // get the pts corresponding to the 0th parameter of the Reflect24#doNothing() method
     CGNode cgNode = assertThat(nodes).singleElement().actual();
 
+    // the type corresponding to the 0th parameter should be Helper
     LocalPointerKey localPointerKey = new LocalPointerKey(cgNode, cgNode.getIR().getParameter(0));
-    OrdinalSet<InstanceKey> pts = pointerAnalysis.getPointsToSet(localPointerKey);
-    assertThat(pts).hasSize(1);
-
-    for (InstanceKey mappedObject : pts) {
-      // the type corresponding to the 0th parameter should be Helper
-      assertThat(mappedObject)
-          .asInstanceOf(type(ConstantKey.class))
-          .extracting(ConstantKey::getValue)
-          .isEqualTo(helperClass);
-    }
+    assertThat(pointerAnalysis.getPointsToSet(localPointerKey))
+        .singleElement()
+        .asInstanceOf(type(ConstantKey.class))
+        .extracting(ConstantKey::getValue)
+        .isEqualTo(helperClass);
   }
 
   /**
