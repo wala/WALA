@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -58,7 +57,6 @@ import com.ibm.wala.util.intset.SemiSparseMutableIntSet;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
 import com.ibm.wala.util.intset.SparseIntSet;
 import com.ibm.wala.util.intset.SparseLongSet;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -685,37 +683,22 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(p).containsExactly(8, 6, 4, 2, 0);
   }
 
+  private static void checkBoundedIterator(
+      NumberedGraph<Integer> G, int nodeZero, int bound, int expected) {
+    assertThat(new BoundedBFSIterator<>(G, nodeZero, bound)).toIterable().hasSize(expected);
+  }
+
   @Test
   public void testBoundedBFS() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
-
-    BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<>(G, G.getNode(0), 0);
-    Collection<Integer> c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(1);
-
-    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 1);
-    c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(3);
-
-    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 2);
-    c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(5);
-
-    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 3);
-    c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(7);
-
-    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 4);
-    c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(9);
-
-    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 5);
-    c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(10);
-
-    bfs = new BoundedBFSIterator<>(G, G.getNode(0), 500);
-    c = Iterator2Collection.toSet(bfs);
-    assertThat(c).hasSize(10);
+    final int nodeZero = G.getNode(0);
+    checkBoundedIterator(G, nodeZero, 0, 1);
+    checkBoundedIterator(G, nodeZero, 1, 3);
+    checkBoundedIterator(G, nodeZero, 2, 5);
+    checkBoundedIterator(G, nodeZero, 3, 7);
+    checkBoundedIterator(G, nodeZero, 4, 9);
+    checkBoundedIterator(G, nodeZero, 5, 10);
+    checkBoundedIterator(G, nodeZero, 500, 10);
   }
 
   private static NumberedGraph<Integer> makeBFSTestGraph() {
