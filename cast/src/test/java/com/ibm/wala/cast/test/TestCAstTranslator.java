@@ -135,19 +135,15 @@ public abstract class TestCAstTranslator {
   }
 
   protected void dump(ClassHierarchy cha) {
-    for (Object name : cha) {
-      IClass cls = (IClass) name;
+    for (IClass cls : cha) {
       System.err.println(("class " + cls));
-      for (Object name2 : cls.getDeclaredInstanceFields()) {
-        IField fld = (IField) name2;
+      for (IField fld : cls.getDeclaredInstanceFields()) {
         System.err.println(("instance field " + fld));
       }
-      for (Object name2 : cls.getDeclaredStaticFields()) {
-        IField fld = (IField) name2;
+      for (IField fld : cls.getDeclaredStaticFields()) {
         System.err.println(("static field " + fld));
       }
-      for (Object name2 : cls.getDeclaredMethods()) {
-        IMethod mth = (IMethod) name2;
+      for (IMethod mth : cls.getDeclaredMethods()) {
         if (mth.isStatic()) System.err.print("static ");
         System.err.println(
             ("method " + mth + " with " + mth.getNumberOfParameters() + " parameters"));
@@ -168,8 +164,7 @@ public abstract class TestCAstTranslator {
     Map<Pair<String, Object>, Object> staticMethods = assertions.getStaticMethods();
 
     int clsCount = 0;
-    for (Object name : cha) {
-      IClass cls = (IClass) name;
+    for (IClass cls : cha) {
       clsCount++;
       assertThat(classes).contains(cls.getName().toString());
 
@@ -180,19 +175,16 @@ public abstract class TestCAstTranslator {
             .isEqualTo(cls.getSuperclass().getName().toString());
       }
 
-      for (Object name2 : cls.getDeclaredInstanceFields()) {
-        IField fld = (IField) name2;
+      for (IField fld : cls.getDeclaredInstanceFields()) {
         assertThat(instanceFields)
             .contains(Pair.make(cls.getName().toString(), fld.getName().toString()));
       }
 
-      for (Object name2 : cls.getDeclaredStaticFields()) {
-        IField fld = (IField) name2;
+      for (IField fld : cls.getDeclaredStaticFields()) {
         assertThat(staticFields).contains(make(cls.getName().toString(), fld.getName().toString()));
       }
 
-      for (Object name2 : cls.getDeclaredMethods()) {
-        IMethod mth = (IMethod) name2;
+      for (IMethod mth : cls.getDeclaredMethods()) {
         Integer np = mth.getNumberOfParameters();
         Pair<String, Object> key = Pair.make(cls.getName().toString(), mth.getName().toString());
 

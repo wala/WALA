@@ -301,8 +301,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         ++n;
       }
       assert n < controlFlowGraph.getPredNodeCount(sb);
-      for (SSAInstruction inst : Iterator2Iterable.make(sb.iteratePhis())) {
-        SSAPhiInstruction phi = (SSAPhiInstruction) inst;
+      for (SSAPhiInstruction phi : Iterator2Iterable.make(sb.iteratePhis())) {
         if (phi == null) {
           continue;
         }
