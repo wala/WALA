@@ -82,9 +82,7 @@ public abstract class DeterministicIRTest extends WalaTestCase {
   // The Tests ///////////////////////////////////////////////////////
 
   private static void checkNoneNull(Iterator<?> iterator) {
-    while (iterator.hasNext()) {
-      assertThat(iterator.next()).isNotNull();
-    }
+    assertThat(iterator).toIterable().doesNotContainNull();
   }
 
   private static void checkNotAllNull(SSAInstruction[] instructions) {

@@ -165,6 +165,10 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCacheImpl(), cha);
   }
 
+  private static void nameContainsDoNothing(CGNode actual) {
+    assertThat(actual).asString().contains("doNothing");
+  }
+
   @Test
   public void testStaticInit()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -174,14 +178,14 @@ public class CallGraphTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "LstaticInit/TestStaticInit");
+
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    assertThat(cg).anySatisfy(n -> assertThat(n).asString().contains("doNothing"));
+    assertThat(cg).anySatisfy(CallGraphTest::nameContainsDoNothing);
+
     options.setHandleStaticInit(false);
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
-    for (CGNode n : cg) {
-      assertThat(n).asString().doesNotContain("doNothing");
-    }
+    assertThat(cg).noneSatisfy(CallGraphTest::nameContainsDoNothing);
   }
 
   @Test
