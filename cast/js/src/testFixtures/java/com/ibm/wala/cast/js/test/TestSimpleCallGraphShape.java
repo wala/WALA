@@ -494,13 +494,13 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       throws IOException, IllegalArgumentException, CancelException, WalaException {
     CallGraph cg = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_call.js");
     for (CGNode n : cg) {
-      if (n.getMethod().getName().toString().equals("call4")) {
+      if (n.getMethod().getName().toString().equals("$$ call_4")) {
         assertThat(cg.getSuccNodeCount(n)).isEqualTo(2);
         // ugh
         List<CGNode> succs = Iterator2Collection.toList(cg.getSuccNodes(n));
         assertThat(succs)
             .hasToString(
-                "[Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere, Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere]");
+                "[Node: <Code body of function Lfunction_call.js/bar> Context: Everywhere, Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere]");
       }
     }
   }
