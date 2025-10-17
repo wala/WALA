@@ -17,12 +17,13 @@ import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
 
-  private static final Object[][] assertionsForSwineFlu = new Object[][] {};
+  private static final List<GraphAssertion> assertionsForSwineFlu = List.of();
 
   @Disabled("not terminating; Julian, take a look?")
   @Test

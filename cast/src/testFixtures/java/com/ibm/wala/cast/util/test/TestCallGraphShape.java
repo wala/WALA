@@ -20,16 +20,28 @@ import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.collections.Pair;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 public abstract class TestCallGraphShape {
 
-  public void verifyCFGAssertions(CallGraph CG, Object[][] assertionData) {
-    for (Object[] dat : assertionData) {
-      String function = (String) dat[0];
+  public static class CFGAssertion {
+    final String function;
+    final int[][] edges;
+
+    public CFGAssertion(final String function, final int[][] edges) {
+      this.function = function;
+      this.edges = edges;
+    }
+  }
+
+  public void verifyCFGAssertions(CallGraph CG, List<CFGAssertion> assertionData) {
+    for (final var dat : assertionData) {
+      final var function = dat.function;
       for (CGNode N : getNodes(CG, function)) {
-        int[][] edges = (int[][]) dat[1];
+        final var edges = dat.edges;
         SSACFG cfg = N.getIR().getControlFlowGraph();
         for (int i = 0; i < edges.length; i++) {
           SSACFG.BasicBlock bb = cfg.getNode(i);
@@ -42,9 +54,23 @@ public abstract class TestCallGraphShape {
     }
   }
 
-  public void verifySourceAssertions(CallGraph CG, Object[][] assertionData) {
-    for (Object[] dat : assertionData) {
-      String function = (String) dat[0];
+  public static class SourceAssertion {
+    String function;
+    String file;
+    int firstLine;
+    int lastLine;
+
+    public SourceAssertion(String function, String file, int firstLine, int lastLine) {
+      this.function = function;
+      this.file = file;
+      this.firstLine = firstLine;
+      this.lastLine = lastLine;
+    }
+  }
+
+  public void verifySourceAssertions(CallGraph CG, List<SourceAssertion> assertionData) {
+    for (final var dat : assertionData) {
+      final var function = dat.function;
       for (CGNode N : getNodes(CG, function)) {
         if (N.getMethod() instanceof AstMethod) {
           AstMethod M = (AstMethod) N.getMethod();
@@ -59,15 +85,15 @@ public abstract class TestCallGraphShape {
                 if (fileName.lastIndexOf('/') >= 0) {
                   fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
                 }
-                for (Object[] assertionDatum : assertionData) {
-                  String file = (String) assertionDatum[1];
+                for (final var assertionDatum : assertionData) {
+                  var file = assertionDatum.file;
                   if (file.indexOf('/') >= 0) {
                     file = file.substring(file.lastIndexOf('/') + 1);
                   }
                   if (file.equalsIgnoreCase(fileName)) {
-                    if (pos.getFirstLine() >= (Integer) assertionDatum[2]
+                    if (pos.getFirstLine() >= assertionDatum.firstLine
                         && (pos.getLastLine() != -1 ? pos.getLastLine() : pos.getFirstLine())
-                            <= (Integer) assertionDatum[3]) {
+                            <= assertionDatum.lastLine) {
                       continue insts;
                     }
                   }
@@ -97,11 +123,11 @@ public abstract class TestCallGraphShape {
     }
   }
 
-  public void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
-    for (Object[] element : assertionData) {
-      for (CGNode N : getNodes(CG, (String) element[0])) {
+  public void verifyNameAssertions(CallGraph CG, List<Pair<String, List<Name>>> assertionData) {
+    for (final var element : assertionData) {
+      for (final var N : getNodes(CG, element.fst)) {
         IR ir = N.getIR();
-        Name[] names = (Name[]) element[1];
+        final var names = element.snd;
         for (Name name : names) {
 
           System.err.println("looking for " + name.name + ", " + name.vn + " in " + N);
@@ -122,26 +148,36 @@ public abstract class TestCallGraphShape {
     }
   }
 
-  protected void verifyGraphAssertions(CallGraph CG, Object[][] assertionData) {
+  public static class GraphAssertion {
+    Object source;
+    String[] targets;
+
+    public GraphAssertion(Object source, String[] targets) {
+      this.source = source;
+      this.targets = targets;
+    }
+  }
+
+  protected void verifyGraphAssertions(CallGraph CG, List<GraphAssertion> assertionData) {
     // System.err.println(CG);
 
     if (assertionData == null) {
       return;
     }
 
-    for (Object[] assertionDatum : assertionData) {
+    for (final var assertionDatum : assertionData) {
 
       check_target:
-      for (int j = 0; j < ((String[]) assertionDatum[1]).length; j++) {
+      for (int j = 0; j < assertionDatum.targets.length; j++) {
         Iterator<CGNode> srcs =
-            (assertionDatum[0] instanceof String)
-                ? getNodes(CG, (String) assertionDatum[0]).iterator()
+            (assertionDatum.source instanceof String)
+                ? getNodes(CG, (String) assertionDatum.source).iterator()
                 : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
-        assert srcs.hasNext() : "cannot find " + assertionDatum[0];
+        assert srcs.hasNext() : "cannot find " + assertionDatum.source;
 
         boolean checkAbsence = false;
-        String targetName = ((String[]) assertionDatum[1])[j];
+        String targetName = assertionDatum.targets[j];
         if (targetName.startsWith("!")) {
           checkAbsence = true;
           targetName = targetName.substring(1);
@@ -162,7 +198,7 @@ public abstract class TestCallGraphShape {
                 if (cgNode.equals(dst)) {
                   if (checkAbsence) {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
-                    assert false : "found edge " + assertionDatum[0] + " ---> " + targetName;
+                    assert false : "found edge " + assertionDatum.source + " ---> " + targetName;
                   } else {
                     continue check_target;
                   }
@@ -172,8 +208,8 @@ public abstract class TestCallGraphShape {
           }
         }
 
-        System.err.println("cannot find edge " + assertionDatum[0] + " ---> " + targetName);
-        assert checkAbsence : "cannot find edge " + assertionDatum[0] + " ---> " + targetName;
+        System.err.println("cannot find edge " + assertionDatum.source + " ---> " + targetName);
+        assert checkAbsence : "cannot find edge " + assertionDatum.source + " ---> " + targetName;
       }
     }
   }

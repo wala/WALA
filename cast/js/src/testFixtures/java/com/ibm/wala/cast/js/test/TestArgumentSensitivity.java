@@ -28,17 +28,18 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
 
-  protected static final Object[][] assertionsForArgs =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"args.js"}},
-        new Object[] {"args.js", new String[] {"args.js/a"}},
-        new Object[] {"args.js/a", new String[] {"args.js/x"}},
-        new Object[] {"args.js/a", new String[] {"args.js/y", "args.js/z", "!args.js/wrong"}}
-      };
+  protected static final List<GraphAssertion> assertionsForArgs =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"args.js"}),
+          new GraphAssertion("args.js", new String[] {"args.js/a"}),
+          new GraphAssertion("args.js/a", new String[] {"args.js/x"}),
+          new GraphAssertion(
+              "args.js/a", new String[] {"args.js/y", "args.js/z", "!args.js/wrong"}));
 
   @Test
   public void testArgs()

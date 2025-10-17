@@ -21,6 +21,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -72,27 +73,27 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   }
   */
 
-  private static final Object[][] assertionsForBadForin =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"badforin.js"}},
-        new Object[] {
-          "badforin.js",
-          new String[] {
-            "badforin.js/testForIn",
-            "badforin.js/_check_obj_foo",
-            "badforin.js/_check_obj_bar",
-            "badforin.js/_check_copy_foo",
-            "badforin.js/_check_copy_bar"
-          }
-        },
-        new Object[] {
-          "badforin.js/testForIn", new String[] {"badforin.js/testForIn1", "badforin.js/testForIn2"}
-        },
-        new Object[] {"badforin.js/_check_obj_foo", new String[] {"badforin.js/testForIn1"}},
-        new Object[] {"badforin.js/_check_copy_foo", new String[] {"badforin.js/testForIn1"}},
-        new Object[] {"badforin.js/_check_obj_bar", new String[] {"badforin.js/testForIn2"}},
-        new Object[] {"badforin.js/_check_copy_bar", new String[] {"badforin.js/testForIn2"}}
-      };
+  private static final List<GraphAssertion> assertionsForBadForin =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"badforin.js"}),
+          new GraphAssertion(
+              "badforin.js",
+              new String[] {
+                "badforin.js/testForIn",
+                "badforin.js/_check_obj_foo",
+                "badforin.js/_check_obj_bar",
+                "badforin.js/_check_copy_foo",
+                "badforin.js/_check_copy_bar"
+              }),
+          new GraphAssertion(
+              "badforin.js/testForIn",
+              new String[] {"badforin.js/testForIn1", "badforin.js/testForIn2"}),
+          new GraphAssertion("badforin.js/_check_obj_foo", new String[] {"badforin.js/testForIn1"}),
+          new GraphAssertion(
+              "badforin.js/_check_copy_foo", new String[] {"badforin.js/testForIn1"}),
+          new GraphAssertion("badforin.js/_check_obj_bar", new String[] {"badforin.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin.js/_check_copy_bar", new String[] {"badforin.js/testForIn2"}));
 
   @Test
   public void testBadForInWithoutHack()
@@ -103,13 +104,16 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForBadForin);
   }
 
-  private static final Object[][] assertionsForBadForinHackPrecision =
-      new Object[][] {
-        new Object[] {"badforin.js/_check_obj_foo", new String[] {"!badforin.js/testForIn2"}},
-        new Object[] {"badforin.js/_check_copy_foo", new String[] {"!badforin.js/testForIn2"}},
-        new Object[] {"badforin.js/_check_obj_bar", new String[] {"!badforin.js/testForIn1"}},
-        new Object[] {"badforin.js/_check_copy_bar", new String[] {"!badforin.js/testForIn1"}}
-      };
+  private static final List<GraphAssertion> assertionsForBadForinHackPrecision =
+      List.of(
+          new GraphAssertion(
+              "badforin.js/_check_obj_foo", new String[] {"!badforin.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin.js/_check_copy_foo", new String[] {"!badforin.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin.js/_check_obj_bar", new String[] {"!badforin.js/testForIn1"}),
+          new GraphAssertion(
+              "badforin.js/_check_copy_bar", new String[] {"!badforin.js/testForIn1"}));
 
   @Test
   public void testBadForInWithHack()
@@ -122,28 +126,29 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForBadForinHackPrecision);
   }
 
-  private static final Object[][] assertionsForbadforin2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"badforin2.js"}},
-        new Object[] {
-          "badforin2.js",
-          new String[] {
-            "badforin2.js/testForIn",
-            "badforin2.js/_check_obj_foo",
-            "badforin2.js/_check_obj_bar",
-            "badforin2.js/_check_copy_foo",
-            "badforin2.js/_check_copy_bar"
-          }
-        },
-        new Object[] {
-          "badforin2.js/testForIn",
-          new String[] {"badforin2.js/testForIn1", "badforin2.js/testForIn2"}
-        },
-        new Object[] {"badforin2.js/_check_obj_foo", new String[] {"badforin2.js/testForIn1"}},
-        new Object[] {"badforin2.js/_check_copy_foo", new String[] {"badforin2.js/testForIn1"}},
-        new Object[] {"badforin2.js/_check_obj_bar", new String[] {"badforin2.js/testForIn2"}},
-        new Object[] {"badforin2.js/_check_copy_bar", new String[] {"badforin2.js/testForIn2"}}
-      };
+  private static final List<GraphAssertion> assertionsForbadforin2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"badforin2.js"}),
+          new GraphAssertion(
+              "badforin2.js",
+              new String[] {
+                "badforin2.js/testForIn",
+                "badforin2.js/_check_obj_foo",
+                "badforin2.js/_check_obj_bar",
+                "badforin2.js/_check_copy_foo",
+                "badforin2.js/_check_copy_bar"
+              }),
+          new GraphAssertion(
+              "badforin2.js/testForIn",
+              new String[] {"badforin2.js/testForIn1", "badforin2.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin2.js/_check_obj_foo", new String[] {"badforin2.js/testForIn1"}),
+          new GraphAssertion(
+              "badforin2.js/_check_copy_foo", new String[] {"badforin2.js/testForIn1"}),
+          new GraphAssertion(
+              "badforin2.js/_check_obj_bar", new String[] {"badforin2.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin2.js/_check_copy_bar", new String[] {"badforin2.js/testForIn2"}));
 
   @Test
   public void testbadforin2WithoutHack()
@@ -154,13 +159,16 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForbadforin2);
   }
 
-  private static final Object[][] assertionsForbadforin2HackPrecision =
-      new Object[][] {
-        new Object[] {"badforin2.js/_check_obj_foo", new String[] {"!badforin2.js/testForIn2"}},
-        new Object[] {"badforin2.js/_check_copy_foo", new String[] {"!badforin2.js/testForIn2"}},
-        new Object[] {"badforin2.js/_check_obj_bar", new String[] {"!badforin2.js/testForIn1"}},
-        new Object[] {"badforin2.js/_check_copy_bar", new String[] {"!badforin2.js/testForIn1"}}
-      };
+  private static final List<GraphAssertion> assertionsForbadforin2HackPrecision =
+      List.of(
+          new GraphAssertion(
+              "badforin2.js/_check_obj_foo", new String[] {"!badforin2.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin2.js/_check_copy_foo", new String[] {"!badforin2.js/testForIn2"}),
+          new GraphAssertion(
+              "badforin2.js/_check_obj_bar", new String[] {"!badforin2.js/testForIn1"}),
+          new GraphAssertion(
+              "badforin2.js/_check_copy_bar", new String[] {"!badforin2.js/testForIn1"}));
 
   @Test
   public void testbadforin2WithHack()

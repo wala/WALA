@@ -28,7 +28,9 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
+import java.util.List;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -36,12 +38,11 @@ import org.junit.jupiter.api.Test;
 
 public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
-  protected static final Object[][] assertionsForArgs =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"args.js"}},
-        new Object[] {"args.js", new String[] {"args.js/a"}},
-        new Object[] {"args.js/a", new String[] {"args.js/x", "args.js/y"}}
-      };
+  protected static final List<GraphAssertion> assertionsForArgs =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"args.js"}),
+          new GraphAssertion("args.js", new String[] {"args.js/a"}),
+          new GraphAssertion("args.js/a", new String[] {"args.js/x", "args.js/y"}));
 
   @Test
   public void testArgs()
@@ -50,29 +51,26 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForArgs);
   }
 
-  protected static final Object[][] assertionsForSimple =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"simple.js"}},
-        new Object[] {
-          "simple.js",
-          new String[] {
-            "simple.js/bad",
-            "simple.js/silly",
-            "simple.js/fib",
-            "simple.js/stranger",
-            "simple.js/trivial",
-            "simple.js/rubbish",
-            "simple.js/weirder"
-          }
-        },
-        new Object[] {"simple.js/trivial", new String[] {"simple.js/trivial/inc"}},
-        new Object[] {
-          "simple.js/rubbish",
-          new String[] {"simple.js/weirder", "simple.js/stranger", "simple.js/rubbish"}
-        },
-        new Object[] {"simple.js/fib", new String[] {"simple.js/fib"}},
-        new Object[] {"simple.js/weirder", new String[] {"prologue.js/Math_abs"}}
-      };
+  protected static final List<GraphAssertion> assertionsForSimple =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"simple.js"}),
+          new GraphAssertion(
+              "simple.js",
+              new String[] {
+                "simple.js/bad",
+                "simple.js/silly",
+                "simple.js/fib",
+                "simple.js/stranger",
+                "simple.js/trivial",
+                "simple.js/rubbish",
+                "simple.js/weirder"
+              }),
+          new GraphAssertion("simple.js/trivial", new String[] {"simple.js/trivial/inc"}),
+          new GraphAssertion(
+              "simple.js/rubbish",
+              new String[] {"simple.js/weirder", "simple.js/stranger", "simple.js/rubbish"}),
+          new GraphAssertion("simple.js/fib", new String[] {"simple.js/fib"}),
+          new GraphAssertion("simple.js/weirder", new String[] {"prologue.js/Math_abs"}));
 
   @Test
   public void testSimple()
@@ -81,21 +79,20 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForSimple);
   }
 
-  private static final Object[][] assertionsForObjects =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"objects.js"}},
-        new Object[] {
-          "objects.js",
-          new String[] {"objects.js/objects_are_fun", "objects.js/other", "objects.js/something"}
-        },
-        new Object[] {
-          "objects.js/other",
-          new String[] {"objects.js/something", "objects.js/objects_are_fun/nothing"}
-        },
-        new Object[] {
-          "objects.js/objects_are_fun", new String[] {"objects.js/other", "objects.js/whatever"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForObjects =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"objects.js"}),
+          new GraphAssertion(
+              "objects.js",
+              new String[] {
+                "objects.js/objects_are_fun", "objects.js/other", "objects.js/something"
+              }),
+          new GraphAssertion(
+              "objects.js/other",
+              new String[] {"objects.js/something", "objects.js/objects_are_fun/nothing"}),
+          new GraphAssertion(
+              "objects.js/objects_are_fun",
+              new String[] {"objects.js/other", "objects.js/whatever"}));
 
   @Test
   public void testObjects()
@@ -104,51 +101,41 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForObjects);
   }
 
-  private static final Object[][] cfgAssertionsForInherit =
-      new Object[][] {
-        new Object[] {
-          "ctor:inherit.js/objectMasquerading/Rectangle",
-          new int[][] {{1, 7}, {2}, {3, 7}, {4, 7}, {5, 6}, {7}, {7}}
-        },
-        new Object[] {
-          "ctor:inherit.js/sharedClassObject/Rectangle",
-          new int[][] {{1, 7}, {2}, {3, 7}, {4, 7}, {5, 6}, {7}, {7}}
-        }
-      };
+  private static final List<CFGAssertion> cfgAssertionsForInherit =
+      List.of(
+          new CFGAssertion(
+              "ctor:inherit.js/objectMasquerading/Rectangle",
+              new int[][] {{1, 7}, {2}, {3, 7}, {4, 7}, {5, 6}, {7}, {7}}),
+          new CFGAssertion(
+              "ctor:inherit.js/sharedClassObject/Rectangle",
+              new int[][] {{1, 7}, {2}, {3, 7}, {4, 7}, {5, 6}, {7}, {7}}));
 
-  private static final Object[][] assertionsForInherit =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"inherit.js"}},
-        new Object[] {
-          "inherit.js",
-          new String[] {
-            "inherit.js/objectMasquerading",
-            "inherit.js/objectMasquerading/Rectangle/area",
-            "inherit.js/Polygon/shape",
-            "inherit.js/sharedClassObject",
-            "inherit.js/sharedClassObject/Rectangle/area"
-          }
-        },
-        new Object[] {
-          "inherit.js/objectMasquerading",
-          new String[] {"ctor:inherit.js/objectMasquerading/Rectangle"}
-        },
-        new Object[] {
-          "ctor:inherit.js/objectMasquerading/Rectangle",
-          new String[] {"inherit.js/objectMasquerading/Rectangle"}
-        },
-        new Object[] {
-          "inherit.js/objectMasquerading/Rectangle", new String[] {"inherit.js/Polygon"}
-        },
-        new Object[] {
-          "inherit.js/sharedClassObject",
-          new String[] {"ctor:inherit.js/sharedClassObject/Rectangle"}
-        },
-        new Object[] {
-          "ctor:inherit.js/sharedClassObject/Rectangle",
-          new String[] {"inherit.js/sharedClassObject/Rectangle"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForInherit =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"inherit.js"}),
+          new GraphAssertion(
+              "inherit.js",
+              new String[] {
+                "inherit.js/objectMasquerading",
+                "inherit.js/objectMasquerading/Rectangle/area",
+                "inherit.js/Polygon/shape",
+                "inherit.js/sharedClassObject",
+                "inherit.js/sharedClassObject/Rectangle/area"
+              }),
+          new GraphAssertion(
+              "inherit.js/objectMasquerading",
+              new String[] {"ctor:inherit.js/objectMasquerading/Rectangle"}),
+          new GraphAssertion(
+              "ctor:inherit.js/objectMasquerading/Rectangle",
+              new String[] {"inherit.js/objectMasquerading/Rectangle"}),
+          new GraphAssertion(
+              "inherit.js/objectMasquerading/Rectangle", new String[] {"inherit.js/Polygon"}),
+          new GraphAssertion(
+              "inherit.js/sharedClassObject",
+              new String[] {"ctor:inherit.js/sharedClassObject/Rectangle"}),
+          new GraphAssertion(
+              "ctor:inherit.js/sharedClassObject/Rectangle",
+              new String[] {"inherit.js/sharedClassObject/Rectangle"}));
 
   @Test
   public void testInherit()
@@ -158,16 +145,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyCFGAssertions(CG, cfgAssertionsForInherit);
   }
 
-  private static final Object[][] assertionsForNewfn =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"newfn.js"}},
-        new Object[] {
-          "newfn.js",
-          new String[] {
-            "suffix:ctor$1/_fromctor", "suffix:ctor$2/_fromctor", "suffix:ctor$3/_fromctor"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForNewfn =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"newfn.js"}),
+          new GraphAssertion(
+              "newfn.js",
+              new String[] {
+                "suffix:ctor$1/_fromctor", "suffix:ctor$2/_fromctor", "suffix:ctor$3/_fromctor"
+              }));
 
   @Test
   public void testNewfn()
@@ -176,20 +161,18 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForNewfn);
   }
 
-  private static final Object[][] assertionsForControlflow =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"control-flow.js"}},
-        new Object[] {
-          "control-flow.js",
-          new String[] {
-            "control-flow.js/testSwitch",
-            "control-flow.js/testDoWhile",
-            "control-flow.js/testWhile",
-            "control-flow.js/testFor",
-            "control-flow.js/testReturn"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForControlflow =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"control-flow.js"}),
+          new GraphAssertion(
+              "control-flow.js",
+              new String[] {
+                "control-flow.js/testSwitch",
+                "control-flow.js/testDoWhile",
+                "control-flow.js/testWhile",
+                "control-flow.js/testFor",
+                "control-flow.js/testReturn"
+              }));
 
   @Test
   public void testControlflow()
@@ -198,21 +181,19 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForControlflow);
   }
 
-  private static final Object[][] assertionsForMoreControlflow =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"more-control-flow.js"}},
-        new Object[] {
-          "more-control-flow.js",
-          new String[] {
-            "more-control-flow.js/testSwitch",
-            "more-control-flow.js/testIfConvertedSwitch",
-            "more-control-flow.js/testDoWhile",
-            "more-control-flow.js/testWhile",
-            "more-control-flow.js/testFor",
-            "more-control-flow.js/testReturn"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForMoreControlflow =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"more-control-flow.js"}),
+          new GraphAssertion(
+              "more-control-flow.js",
+              new String[] {
+                "more-control-flow.js/testSwitch",
+                "more-control-flow.js/testIfConvertedSwitch",
+                "more-control-flow.js/testDoWhile",
+                "more-control-flow.js/testWhile",
+                "more-control-flow.js/testFor",
+                "more-control-flow.js/testReturn"
+              }));
 
   @Test
   public void testMoreControlflow()
@@ -221,14 +202,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForMoreControlflow);
   }
 
-  private static final Object[][] assertionsForForin =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"forin.js"}},
-        new Object[] {"forin.js", new String[] {"forin.js/testForIn"}},
-        new Object[] {
-          "forin.js/testForIn", new String[] {"forin.js/testForIn1", "forin.js/testForIn2"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForForin =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"forin.js"}),
+          new GraphAssertion("forin.js", new String[] {"forin.js/testForIn"}),
+          new GraphAssertion(
+              "forin.js/testForIn", new String[] {"forin.js/testForIn1", "forin.js/testForIn2"}));
 
   @Test
   public void testForin()
@@ -239,28 +218,24 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForForin);
   }
 
-  private static final Object[][] assertionsForSimpleLexical =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"simple-lexical.js"}},
-        new Object[] {"simple-lexical.js", new String[] {"simple-lexical.js/outer"}},
-        new Object[] {
-          "simple-lexical.js/outer",
-          new String[] {
-            "simple-lexical.js/outer/indirect",
-            "simple-lexical.js/outer/inner",
-            "simple-lexical.js/outer/inner2",
-            "simple-lexical.js/outer/inner3"
-          }
-        },
-        new Object[] {
-          "simple-lexical.js/outer/inner2",
-          new String[] {"simple-lexical.js/outer/inner", "simple-lexical.js/outer/inner3"}
-        },
-        new Object[] {
-          "simple-lexical.js/outer/indirect",
-          new String[] {"simple-lexical.js/outer/inner", "simple-lexical.js/outer/inner3"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForSimpleLexical =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"simple-lexical.js"}),
+          new GraphAssertion("simple-lexical.js", new String[] {"simple-lexical.js/outer"}),
+          new GraphAssertion(
+              "simple-lexical.js/outer",
+              new String[] {
+                "simple-lexical.js/outer/indirect",
+                "simple-lexical.js/outer/inner",
+                "simple-lexical.js/outer/inner2",
+                "simple-lexical.js/outer/inner3"
+              }),
+          new GraphAssertion(
+              "simple-lexical.js/outer/inner2",
+              new String[] {"simple-lexical.js/outer/inner", "simple-lexical.js/outer/inner3"}),
+          new GraphAssertion(
+              "simple-lexical.js/outer/indirect",
+              new String[] {"simple-lexical.js/outer/inner", "simple-lexical.js/outer/inner3"}));
 
   @Test
   public void testSimpleLexical()
@@ -276,12 +251,13 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "recursive_lexical.js");
   }
 
-  private static final Object[][] assertionsForLexicalMultiple =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"lexical_multiple_calls.js"}},
-        new Object[] {"suffix:lexical_multiple_calls.js", new String[] {"suffix:reachable1"}},
-        new Object[] {"suffix:lexical_multiple_calls.js", new String[] {"suffix:reachable2"}}
-      };
+  private static final List<GraphAssertion> assertionsForLexicalMultiple =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"lexical_multiple_calls.js"}),
+          new GraphAssertion(
+              "suffix:lexical_multiple_calls.js", new String[] {"suffix:reachable1"}),
+          new GraphAssertion(
+              "suffix:lexical_multiple_calls.js", new String[] {"suffix:reachable2"}));
 
   @Test
   public void testLexicalMultiple()
@@ -290,28 +266,25 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForLexicalMultiple);
   }
 
-  private static final Object[][] assertionsForTry =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"try.js"}},
-        new Object[] {
-          "try.js", new String[] {"try.js/tryCatch", "try.js/tryFinally", "try.js/tryCatchFinally"}
-        },
-        new Object[] {
-          "try.js/tryCatch", new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/two"}
-        },
-        new Object[] {
-          "try.js/tryFinally", new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/two"}
-        },
-        new Object[] {
-          "try.js/tryCatchFinally",
-          new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/three", "try.js/two"}
-        },
-        new Object[] {
-          "try.js/tryCatchTwice",
-          new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/three", "try.js/two"}
-        },
-        new Object[] {"try.js/testRet", new String[] {"try.js/three", "try.js/two"}}
-      };
+  private static final List<GraphAssertion> assertionsForTry =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"try.js"}),
+          new GraphAssertion(
+              "try.js",
+              new String[] {"try.js/tryCatch", "try.js/tryFinally", "try.js/tryCatchFinally"}),
+          new GraphAssertion(
+              "try.js/tryCatch",
+              new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/two"}),
+          new GraphAssertion(
+              "try.js/tryFinally",
+              new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/two"}),
+          new GraphAssertion(
+              "try.js/tryCatchFinally",
+              new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/three", "try.js/two"}),
+          new GraphAssertion(
+              "try.js/tryCatchTwice",
+              new String[] {"try.js/targetOne", "try.js/targetTwo", "try.js/three", "try.js/two"}),
+          new GraphAssertion("try.js/testRet", new String[] {"try.js/three", "try.js/two"}));
 
   @Test
   public void testTry()
@@ -325,11 +298,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForTry);
   }
 
-  private static final Object[][] assertionsForStringOp =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"string-op.js"}},
-        new Object[] {"string-op.js", new String[] {"string-op.js/getOp", "string-op.js/plusNum"}}
-      };
+  private static final List<GraphAssertion> assertionsForStringOp =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"string-op.js"}),
+          new GraphAssertion(
+              "string-op.js", new String[] {"string-op.js/getOp", "string-op.js/plusNum"}));
 
   @Test
   public void testStringOp()
@@ -341,16 +314,17 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForStringOp);
   }
 
-  private static final Object[][] assertionsForUpward =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"upward.js"}},
-        new Object[] {
-          "upward.js",
-          new String[] {
-            "upward.js/Obj/setit", "upward.js/Obj/getit", "upward.js/tester1", "upward.js/tester2"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForUpward =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"upward.js"}),
+          new GraphAssertion(
+              "upward.js",
+              new String[] {
+                "upward.js/Obj/setit",
+                "upward.js/Obj/getit",
+                "upward.js/tester1",
+                "upward.js/tester2"
+              }));
 
   @Test
   public void testUpward()
@@ -359,16 +333,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForUpward);
   }
 
-  private static final Object[][] assertionsForStringPrims =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"string-prims.js"}},
-        new Object[] {
-          "string-prims.js",
-          new String[] {
-            "prologue.js/String_prototype_split", "prologue.js/String_prototype_toUpperCase"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForStringPrims =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"string-prims.js"}),
+          new GraphAssertion(
+              "string-prims.js",
+              new String[] {
+                "prologue.js/String_prototype_split", "prologue.js/String_prototype_toUpperCase"
+              }));
 
   @Test
   public void testStringPrims()
@@ -381,13 +353,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForStringPrims);
   }
 
-  private static final Object[][] assertionsForNested =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"nested.js"}},
-        new Object[] {
-          "nested.js", new String[] {"nested.js/f", "nested.js/f/ff", "nested.js/f/ff/fff"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForNested =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"nested.js"}),
+          new GraphAssertion(
+              "nested.js", new String[] {"nested.js/f", "nested.js/f/ff", "nested.js/f/ff/fff"}));
 
   @Test
   public void testNested()
@@ -398,8 +368,8 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForNested);
   }
 
-  private static final Object[][] assertionsForInstanceof =
-      new Object[][] {new Object[] {ROOT, new String[] {"instanceof.js"}}};
+  private static final List<GraphAssertion> assertionsForInstanceof =
+      List.of(new GraphAssertion(ROOT, new String[] {"instanceof.js"}));
 
   @Test
   public void testInstanceof()
@@ -410,16 +380,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForInstanceof);
   }
 
-  /*
-   * private static final Object[][] assertionsForWith = new Object[][] { new
-   * Object[] { ROOT, new String[] { "with.js" } } };
-   *
-   * @Test public void testWith() throws IOException, IllegalArgumentException,
-   * CancelException { PropagationCallGraphBuilder B =
-   * Util.makeScriptCGBuilder("tests", "with.js"); CallGraph CG =
-   * B.makeCallGraph(B.getOptions()); verifyGraphAssertions(CG,
-   * assertionsForWith); }
-   */
+  /*List<GraphAssertion>*/
 
   @Test
   public void testCrash1()
@@ -442,13 +403,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, null);
   }
 
-  private static final Object[][] assertionsForMultivar =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"multivar.js"}},
-        new Object[] {
-          "multivar.js", new String[] {"multivar.js/a", "multivar.js/bf", "multivar.js/c"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForMultivar =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"multivar.js"}),
+          new GraphAssertion(
+              "multivar.js", new String[] {"multivar.js/a", "multivar.js/bf", "multivar.js/c"}));
 
   @Test
   public void testMultivar()
@@ -457,12 +416,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForMultivar);
   }
 
-  private static final Object[][] assertionsForPrototypeContamination =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"prototype_contamination_bug.js"}},
-        new Object[] {"suffix:test1", new String[] {"suffix:foo_of_A"}},
-        new Object[] {"suffix:test2", new String[] {"suffix:foo_of_B"}}
-      };
+  private static final List<GraphAssertion> assertionsForPrototypeContamination =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"prototype_contamination_bug.js"}),
+          new GraphAssertion("suffix:test1", new String[] {"suffix:foo_of_A"}),
+          new GraphAssertion("suffix:test2", new String[] {"suffix:foo_of_B"}));
 
   @Test
   public void testProtoypeContamination()
@@ -503,12 +461,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
             "Node: <Code body of function Lfunction_call.js/foo> Context: Everywhere");
   }
 
-  private static final Object[][] assertionsForFunctionApply =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"function_apply.js"}},
-        new Object[] {"suffix:function_apply.js", new String[] {"suffix:theOne"}},
-        new Object[] {"suffix:function_apply.js", new String[] {"suffix:theTwo"}}
-      };
+  private static final List<GraphAssertion> assertionsForFunctionApply =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"function_apply.js"}),
+          new GraphAssertion("suffix:function_apply.js", new String[] {"suffix:theOne"}),
+          new GraphAssertion("suffix:function_apply.js", new String[] {"suffix:theTwo"}));
 
   @Test
   public void testFunctionDotApply()
@@ -517,11 +474,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForFunctionApply);
   }
 
-  private static final Object[][] assertionsForFunctionApply2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"function_apply2.js"}},
-        new Object[] {"suffix:function_apply2.js", new String[] {"suffix:theThree"}}
-      };
+  private static final List<GraphAssertion> assertionsForFunctionApply2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"function_apply2.js"}),
+          new GraphAssertion("suffix:function_apply2.js", new String[] {"suffix:theThree"}));
 
   @Test
   public void testFunctionDotApply2()
@@ -530,11 +486,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForFunctionApply2);
   }
 
-  private static final Object[][] assertionsForFunctionApply3 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"function_apply3.js"}},
-        new Object[] {"suffix:apply", new String[] {"suffix:foo"}}
-      };
+  private static final List<GraphAssertion> assertionsForFunctionApply3 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"function_apply3.js"}),
+          new GraphAssertion("suffix:apply", new String[] {"suffix:foo"}));
 
   @Test
   public void testFunctionDotApply3()
@@ -543,11 +498,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForFunctionApply3);
   }
 
-  private static final Object[][] assertionsForWrap1 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"wrap1.js"}},
-        new Object[] {"suffix:wrap1.js", new String[] {"suffix:i_am_reachable"}}
-      };
+  private static final List<GraphAssertion> assertionsForWrap1 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"wrap1.js"}),
+          new GraphAssertion("suffix:wrap1.js", new String[] {"suffix:i_am_reachable"}));
 
   @Test
   public void testWrap1()
@@ -556,11 +510,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForWrap1);
   }
 
-  private static final Object[][] assertionsForWrap2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"wrap2.js"}},
-        new Object[] {"suffix:wrap2.js", new String[] {"suffix:i_am_reachable"}}
-      };
+  private static final List<GraphAssertion> assertionsForWrap2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"wrap2.js"}),
+          new GraphAssertion("suffix:wrap2.js", new String[] {"suffix:i_am_reachable"}));
 
   @Test
   public void testWrap2()
@@ -569,11 +522,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForWrap2);
   }
 
-  private static final Object[][] assertionsForWrap3 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"wrap3.js"}},
-        new Object[] {"suffix:wrap3.js", new String[] {"suffix:i_am_reachable"}}
-      };
+  private static final List<GraphAssertion> assertionsForWrap3 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"wrap3.js"}),
+          new GraphAssertion("suffix:wrap3.js", new String[] {"suffix:i_am_reachable"}));
 
   @Test
   public void testWrap3()
@@ -582,11 +534,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForWrap3);
   }
 
-  private static final Object[][] assertionsForComplexCall =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"complex_call.js"}},
-        new Object[] {"suffix:call.js", new String[] {"suffix:f3"}}
-      };
+  private static final List<GraphAssertion> assertionsForComplexCall =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"complex_call.js"}),
+          new GraphAssertion("suffix:call.js", new String[] {"suffix:f3"}));
 
   @Test
   public void testComplexCall()
@@ -596,11 +547,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForComplexCall);
   }
 
-  private static final Object[][] assertionsForGlobalObj =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"global_object.js"}},
-        new Object[] {"suffix:global_object.js", new String[] {"suffix:biz"}}
-      };
+  private static final List<GraphAssertion> assertionsForGlobalObj =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"global_object.js"}),
+          new GraphAssertion("suffix:global_object.js", new String[] {"suffix:biz"}));
 
   @Test
   public void testGlobalObjPassing()
@@ -609,11 +559,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForGlobalObj);
   }
 
-  private static final Object[][] assertionsForGlobalObj2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"global_object2.js"}},
-        new Object[] {"suffix:global_object2.js", new String[] {"suffix:foo"}}
-      };
+  private static final List<GraphAssertion> assertionsForGlobalObj2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"global_object2.js"}),
+          new GraphAssertion("suffix:global_object2.js", new String[] {"suffix:foo"}));
 
   @Test
   public void testGlobalObj2()
@@ -622,12 +571,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForGlobalObj2);
   }
 
-  private static final Object[][] assertionsForReturnThis =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"return_this.js"}},
-        new Object[] {"suffix:return_this.js", new String[] {"suffix:foo"}},
-        new Object[] {"suffix:return_this.js", new String[] {"suffix:bar"}}
-      };
+  private static final List<GraphAssertion> assertionsForReturnThis =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"return_this.js"}),
+          new GraphAssertion("suffix:return_this.js", new String[] {"suffix:foo"}),
+          new GraphAssertion("suffix:return_this.js", new String[] {"suffix:bar"}));
 
   @Test
   public void testReturnThis()
@@ -639,16 +587,15 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForReturnThis);
   }
 
-  private static final Object[][] assertionsForReturnThis2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"return_this2.js"}},
-        new Object[] {"suffix:return_this2.js", new String[] {"suffix:A"}},
-        new Object[] {"suffix:return_this2.js", new String[] {"suffix:foo"}},
-        new Object[] {"suffix:return_this2.js", new String[] {"suffix:test1"}},
-        new Object[] {"suffix:return_this2.js", new String[] {"suffix:test2"}},
-        new Object[] {"suffix:test1", new String[] {"suffix:bar1"}},
-        new Object[] {"suffix:test2", new String[] {"suffix:bar2"}}
-      };
+  private static final List<GraphAssertion> assertionsForReturnThis2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"return_this2.js"}),
+          new GraphAssertion("suffix:return_this2.js", new String[] {"suffix:A"}),
+          new GraphAssertion("suffix:return_this2.js", new String[] {"suffix:foo"}),
+          new GraphAssertion("suffix:return_this2.js", new String[] {"suffix:test1"}),
+          new GraphAssertion("suffix:return_this2.js", new String[] {"suffix:test2"}),
+          new GraphAssertion("suffix:test1", new String[] {"suffix:bar1"}),
+          new GraphAssertion("suffix:test2", new String[] {"suffix:bar2"}));
 
   // when using the ObjectSensitivityContextSelector, we additionally know that test1 does not call
   // bar2,
@@ -661,17 +608,15 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForReturnThis2);
   }
 
-  private static final Object[][] assertionsForArguments =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"arguments.js"}},
-        new Object[] {"suffix:arguments.js", new String[] {"suffix:f"}},
-        new Object[] {
-          "suffix:f",
-          new String[] {
-            "!suffix:g1", "!suffix:g2", "suffix:g3",
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForArguments =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"arguments.js"}),
+          new GraphAssertion("suffix:arguments.js", new String[] {"suffix:f"}),
+          new GraphAssertion(
+              "suffix:f",
+              new String[] {
+                "!suffix:g1", "!suffix:g2", "suffix:g3",
+              }));
 
   @Test
   public void testArguments()
@@ -680,13 +625,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForArguments);
   }
 
-  private static final Object[][] assertionsForFunctionIsAFunction =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"Function_is_a_function.js"}},
-        new Object[] {
-          "suffix:Function_is_a_function.js", new String[] {"suffix:Function_prototype_call"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForFunctionIsAFunction =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"Function_is_a_function.js"}),
+          new GraphAssertion(
+              "suffix:Function_is_a_function.js", new String[] {"suffix:Function_prototype_call"}));
 
   @Test
   public void testFunctionIsAFunction()
@@ -695,12 +638,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForFunctionIsAFunction);
   }
 
-  private static final Object[][] assertionsForLexicalBroken =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"lexical_broken.js"}},
-        new Object[] {"suffix:lexical_broken.js", new String[] {"suffix:f"}},
-        new Object[] {"suffix:f", new String[] {"suffix:g"}}
-      };
+  private static final List<GraphAssertion> assertionsForLexicalBroken =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"lexical_broken.js"}),
+          new GraphAssertion("suffix:lexical_broken.js", new String[] {"suffix:f"}),
+          new GraphAssertion("suffix:f", new String[] {"suffix:g"}));
 
   @Test
   public void testLexicalBroken()
@@ -715,11 +657,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_phi.js");
   }
 
-  private static final Object[][] assertionsForScopingOverwriteFunction =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"scoping_test.js"}},
-        new Object[] {"suffix:scoping_test.js", new String[] {"suffix:i_am_reachable"}}
-      };
+  private static final List<GraphAssertion> assertionsForScopingOverwriteFunction =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"scoping_test.js"}),
+          new GraphAssertion("suffix:scoping_test.js", new String[] {"suffix:i_am_reachable"}));
 
   @Test
   public void testScopingOverwriteFunction()
@@ -728,11 +669,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForScopingOverwriteFunction);
   }
 
-  private static final Object[][] assertionsForNestedParamAssign =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"nested_assign_to_param.js"}},
-        new Object[] {"suffix:nested_assign_to_param.js", new String[] {"suffix:i_am_reachable"}}
-      };
+  private static final List<GraphAssertion> assertionsForNestedParamAssign =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"nested_assign_to_param.js"}),
+          new GraphAssertion(
+              "suffix:nested_assign_to_param.js", new String[] {"suffix:i_am_reachable"}));
 
   @Test
   public void testNestedAssignToParam()
@@ -741,15 +682,13 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForNestedParamAssign);
   }
 
-  private static final Object[][] assertionsForDispatch =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"dispatch.js"}},
-        new Object[] {
-          "dispatch.js", new String[] {"dispatch.js/left_outer", "dispatch.js/right_outer"}
-        },
-        new Object[] {"dispatch.js/left_outer", new String[] {"dispatch.js/left_inner"}},
-        new Object[] {"dispatch.js/right_outer", new String[] {"dispatch.js/right_inner"}}
-      };
+  private static final List<GraphAssertion> assertionsForDispatch =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"dispatch.js"}),
+          new GraphAssertion(
+              "dispatch.js", new String[] {"dispatch.js/left_outer", "dispatch.js/right_outer"}),
+          new GraphAssertion("dispatch.js/left_outer", new String[] {"dispatch.js/left_inner"}),
+          new GraphAssertion("dispatch.js/right_outer", new String[] {"dispatch.js/right_inner"}));
 
   @Test
   public void testDispatch()
@@ -761,11 +700,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForDispatch);
   }
 
-  private static final Object[][] assertionsForDispatchSameTarget =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"dispatch_same_target.js"}},
-        new Object[] {"dispatch_same_target.js/f3", new String[] {"dispatch_same_target.js/f4"}}
-      };
+  private static final List<GraphAssertion> assertionsForDispatchSameTarget =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"dispatch_same_target.js"}),
+          new GraphAssertion(
+              "dispatch_same_target.js/f3", new String[] {"dispatch_same_target.js/f4"}));
 
   @Test
   public void testDispatchSameTarget()
@@ -777,14 +716,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForDispatchSameTarget);
   }
 
-  private static final Object[][] assertionsForForInPrototype =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"for_in_prototype.js"}},
-        new Object[] {
-          "for_in_prototype.js",
-          new String[] {"suffix:A", "suffix:reachable", "suffix:also_reachable"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForForInPrototype =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"for_in_prototype.js"}),
+          new GraphAssertion(
+              "for_in_prototype.js",
+              new String[] {"suffix:A", "suffix:reachable", "suffix:also_reachable"}));
 
   @Test
   public void testForInPrototype()
@@ -793,16 +730,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(cg, assertionsForForInPrototype);
   }
 
-  private static final Object[][] assertionsForArrayIndexConv =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"array_index_conv.js"}},
-        new Object[] {
-          "array_index_conv.js",
-          new String[] {
-            "suffix:reachable1", "suffix:reachable2", "suffix:reachable3", "suffix:reachable4"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForArrayIndexConv =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"array_index_conv.js"}),
+          new GraphAssertion(
+              "array_index_conv.js",
+              new String[] {
+                "suffix:reachable1", "suffix:reachable2", "suffix:reachable3", "suffix:reachable4"
+              }));
 
   @Test
   public void testArrayIndexConv()
@@ -813,15 +748,13 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(cg, assertionsForArrayIndexConv);
   }
 
-  private static final Object[][] assertionsForArrayIndexConv2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"array_index_conv2.js"}},
-        new Object[] {"array_index_conv2.js", new String[] {"suffix:invokeOnA"}},
-        new Object[] {
-          "suffix:invokeOnA",
-          new String[] {"suffix:reachable", "suffix:also_reachable", "suffix:reachable_too"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForArrayIndexConv2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"array_index_conv2.js"}),
+          new GraphAssertion("array_index_conv2.js", new String[] {"suffix:invokeOnA"}),
+          new GraphAssertion(
+              "suffix:invokeOnA",
+              new String[] {"suffix:reachable", "suffix:also_reachable", "suffix:reachable_too"}));
 
   @Test
   public void testArrayIndexConv2()
@@ -835,11 +768,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(cg, assertionsForArrayIndexConv2);
   }
 
-  private static final Object[][] assertionsForDateProperty =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"date-property.js"}},
-        new Object[] {"date-property.js", new String[] {"suffix:_fun"}}
-      };
+  private static final List<GraphAssertion> assertionsForDateProperty =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"date-property.js"}),
+          new GraphAssertion("date-property.js", new String[] {"suffix:_fun"}));
 
   @Test
   public void testDateAsProperty()
@@ -851,11 +783,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForDateProperty);
   }
 
-  private static final Object[][] assertionsForDeadCode =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"dead.js"}},
-        new Object[] {"dead.js", new String[] {"suffix:twoReturns"}}
-      };
+  private static final List<GraphAssertion> assertionsForDeadCode =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"dead.js"}),
+          new GraphAssertion("dead.js", new String[] {"suffix:twoReturns"}));
 
   @Test
   public void testDeadCode()
@@ -866,13 +797,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForDeadCode);
   }
 
-  private static final Object[][] assertionsForShadow =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"shadow_test.js"}},
-        new Object[] {"shadow_test.js", new String[] {"shadow_test.js/test"}},
-        new Object[] {"shadow_test.js/test", new String[] {"shadow_test.js/bad"}},
-        new Object[] {"shadow_test.js/test", new String[] {"shadow_test.js/global_bad"}}
-      };
+  private static final List<GraphAssertion> assertionsForShadow =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"shadow_test.js"}),
+          new GraphAssertion("shadow_test.js", new String[] {"shadow_test.js/test"}),
+          new GraphAssertion("shadow_test.js/test", new String[] {"shadow_test.js/bad"}),
+          new GraphAssertion("shadow_test.js/test", new String[] {"shadow_test.js/global_bad"}));
 
   @Test
   public void testShadow()
@@ -882,11 +812,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(cg, assertionsForShadow);
   }
 
-  private static final Object[][] assertionsForExtend =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"extend.js"}},
-        new Object[] {"extend.js", new String[] {"suffix:bar", "!suffix:foo"}}
-      };
+  private static final List<GraphAssertion> assertionsForExtend =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"extend.js"}),
+          new GraphAssertion("extend.js", new String[] {"suffix:bar", "!suffix:foo"}));
 
   @Test
   public void testExtend()
@@ -943,11 +872,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // verifyGraphAssertions(CG, assertionsForDateProperty);
   }
 
-  private static final Object[][] assertionsForLoops =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"loops.js"}},
-        new Object[] {"loops.js", new String[] {"loops.js/three", "loops.js/four"}}
-      };
+  private static final List<GraphAssertion> assertionsForLoops =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"loops.js"}),
+          new GraphAssertion("loops.js", new String[] {"loops.js/three", "loops.js/four"}));
 
   @Disabled("need to fix this.  bug from Sukyoung's group")
   @Test
@@ -960,20 +888,16 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForLoops);
   }
 
-  private static final Object[][] assertionsForPrimitiveStrings =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"primitive_strings.js"}},
-        new Object[] {
-          "primitive_strings.js",
-          new String[] {"primitive_strings.js/f1", "primitive_strings.js/f1"}
-        },
-        new Object[] {
-          "primitive_strings.js/f2", new String[] {"prologue.js/String_prototype_concat"}
-        },
-        new Object[] {
-          "primitive_strings.js/f1", new String[] {"prologue.js/String_prototype_concat"}
-        },
-      };
+  private static final List<GraphAssertion> assertionsForPrimitiveStrings =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"primitive_strings.js"}),
+          new GraphAssertion(
+              "primitive_strings.js",
+              new String[] {"primitive_strings.js/f1", "primitive_strings.js/f1"}),
+          new GraphAssertion(
+              "primitive_strings.js/f2", new String[] {"prologue.js/String_prototype_concat"}),
+          new GraphAssertion(
+              "primitive_strings.js/f1", new String[] {"prologue.js/String_prototype_concat"}));
 
   @Disabled("need to fix this.  bug from Sukyoung's group")
   @Test
@@ -986,13 +910,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForPrimitiveStrings);
   }
 
-  Object[][] renamingAssertions = {
-    {"rename-example.js/f", new Name[] {new Name(9, 7, "x"), new Name(9, 7, "y")}},
-    {
-      "rename-example.js/ff",
-      new Name[] {new Name(11, 10, "x"), new Name(11, 10, "y"), new Name(11, 10, "z")}
-    }
-  };
+  List<Pair<String, List<Name>>> renamingAssertions =
+      List.of(
+          Pair.make("rename-example.js/f", List.of(new Name(9, 7, "x"), new Name(9, 7, "y"))),
+          Pair.make(
+              "rename-example.js/ff",
+              List.of(new Name(11, 10, "x"), new Name(11, 10, "y"), new Name(11, 10, "z"))));
 
   @Test
   public void testRenaming()
@@ -1044,21 +967,19 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
   }
 
-  private static final Object[][] assertionsForComplexFinally =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"complex_finally.js"}},
-        new Object[] {"complex_finally.js", new String[] {"complex_finally.js/e"}},
-        new Object[] {
-          "complex_finally.js/e",
-          new String[] {
-            "complex_finally.js/base",
-            "complex_finally.js/bad",
-            "complex_finally.js/good",
-            "complex_finally.js/oo1",
-            "complex_finally.js/oo2",
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForComplexFinally =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"complex_finally.js"}),
+          new GraphAssertion("complex_finally.js", new String[] {"complex_finally.js/e"}),
+          new GraphAssertion(
+              "complex_finally.js/e",
+              new String[] {
+                "complex_finally.js/base",
+                "complex_finally.js/bad",
+                "complex_finally.js/good",
+                "complex_finally.js/oo1",
+                "complex_finally.js/oo2",
+              }));
 
   @Test
   public void testComplexFinally()

@@ -18,11 +18,12 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
-  private static final Object[][] assertionsForAjaxslt = new Object[][] {};
+  private static final List<GraphAssertion> assertionsForAjaxslt = List.of();
 
   @Test
   public void testAjaxslt() throws IllegalArgumentException, CancelException, WalaException {
@@ -34,7 +35,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForAjaxslt);
   }
 
-  private static final Object[][] assertionsForAjaxpath = new Object[][] {};
+  private static final List<GraphAssertion> assertionsForAjaxpath = List.of();
 
   @Test
   public void testAjaxpath() throws IllegalArgumentException, CancelException, WalaException {

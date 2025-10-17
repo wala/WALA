@@ -33,13 +33,15 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
   }
 
-  protected JSCallGraph runTest(String script, Object[][] assertions, BuilderType... builderTypes)
+  protected JSCallGraph runTest(
+      String script, List<GraphAssertion> assertions, BuilderType... builderTypes)
       throws WalaException, Error, CancelException {
     return runTest(
         TestFieldBasedCG.class.getClassLoader().getResource(script), assertions, builderTypes);
   }
 
-  protected JSCallGraph runTest(URL url, Object[][] assertions, BuilderType... builderTypes)
+  protected JSCallGraph runTest(
+      URL url, List<GraphAssertion> assertions, BuilderType... builderTypes)
       throws WalaException, Error, CancelException {
     JSCallGraph cg = null;
     for (BuilderType builderType : builderTypes) {
@@ -57,7 +59,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   }
 
   protected JSCallGraph runBoundedTest(
-      String script, Object[][] assertions, BuilderType builderType, int bound)
+      String script, List<GraphAssertion> assertions, BuilderType builderType, int bound)
       throws WalaException, Error, CancelException {
     final JSCallGraph cg;
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory());

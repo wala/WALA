@@ -8,11 +8,12 @@ import com.ibm.wala.cast.js.test.TestSimplePageCallGraphShape;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
-  private void test(String file, Object[][] assertions, BuilderType builderType)
+  private void test(String file, List<GraphAssertion> assertions, BuilderType builderType)
       throws WalaException, Error, CancelException {
     try (ExtractingToPredictableFileNames predictable = new ExtractingToPredictableFileNames()) {
       runTest(file, assertions, builderType);

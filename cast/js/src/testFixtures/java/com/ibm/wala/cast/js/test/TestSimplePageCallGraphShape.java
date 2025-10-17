@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,20 +39,18 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     predictable.close();
   }
 
-  private static final Object[][] assertionsForPage1 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page1.html"}},
-        new Object[] {"page1.html", new String[] {"page1.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page1.html/__WINDOW_MAIN__",
-          new String[] {
-            "prologue.js/String_prototype_substring",
-            "prologue.js/String_prototype_indexOf",
-            "preamble.js/DOMDocument/Document_prototype_write",
-            "prologue.js/encodeURI"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage1 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page1.html"}),
+          new GraphAssertion("page1.html", new String[] {"page1.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page1.html/__WINDOW_MAIN__",
+              new String[] {
+                "prologue.js/String_prototype_substring",
+                "prologue.js/String_prototype_indexOf",
+                "preamble.js/DOMDocument/Document_prototype_write",
+                "prologue.js/encodeURI"
+              }));
 
   @Test
   public void testPage1() throws IllegalArgumentException, CancelException, WalaException {
@@ -62,11 +61,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage1);
   }
 
-  private static final Object[][] assertionsForPage2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page2.html"}},
-        new Object[] {"page2.html", new String[] {"page2.html/__WINDOW_MAIN__"}}
-      };
+  private static final List<GraphAssertion> assertionsForPage2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page2.html"}),
+          new GraphAssertion("page2.html", new String[] {"page2.html/__WINDOW_MAIN__"}));
 
   @Test
   public void testPage2() throws IllegalArgumentException, CancelException, WalaException {
@@ -75,19 +73,17 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage2);
   }
 
-  private static final Object[][] assertionsForPage11 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page11.html"}},
-        new Object[] {"page11.html", new String[] {"page11.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page11.html/__WINDOW_MAIN__",
-          new String[] {
-            "preamble.js/DOMDocument/Document_prototype_createElement",
-            "preamble.js/DOMNode/Node_prototype_appendChild",
-            "preamble.js/DOMElement/Element_prototype_setAttribute"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage11 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page11.html"}),
+          new GraphAssertion("page11.html", new String[] {"page11.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page11.html/__WINDOW_MAIN__",
+              new String[] {
+                "preamble.js/DOMDocument/Document_prototype_createElement",
+                "preamble.js/DOMNode/Node_prototype_appendChild",
+                "preamble.js/DOMElement/Element_prototype_setAttribute"
+              }));
 
   @Test
   public void testCrawlPage11() throws IllegalArgumentException, CancelException, WalaException {
@@ -96,19 +92,17 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage11);
   }
 
-  private static final Object[][] assertionsForPage11b =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page11b.html"}},
-        new Object[] {"page11b.html", new String[] {"page11b.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page11b.html/__WINDOW_MAIN__",
-          new String[] {
-            "preamble.js/DOMDocument/Document_prototype_createElement",
-            "preamble.js/DOMNode/Node_prototype_appendChild",
-            "preamble.js/DOMElement/Element_prototype_setAttribute"
-          }
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage11b =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page11b.html"}),
+          new GraphAssertion("page11b.html", new String[] {"page11b.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page11b.html/__WINDOW_MAIN__",
+              new String[] {
+                "preamble.js/DOMDocument/Document_prototype_createElement",
+                "preamble.js/DOMNode/Node_prototype_appendChild",
+                "preamble.js/DOMElement/Element_prototype_setAttribute"
+              }));
 
   @Test
   public void testCrawlPage11b() throws IllegalArgumentException, CancelException, WalaException {
@@ -117,41 +111,34 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage11b);
   }
 
-  private static final Object[][] assertionsForPage12 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page12.html"}},
-        new Object[] {"page12.html", new String[] {"page12.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page12.html/__WINDOW_MAIN__",
-          new String[] {
-            "page12.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick"
-          }
-        },
-        new Object[] {
-          "page12.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick",
-          new String[] {"page12.html/__WINDOW_MAIN__/callXHR"}
-        },
-        new Object[] {
-          "page12.html/__WINDOW_MAIN__/callXHR",
-          new String[] {
-            "preamble.js/DOMDocument/Document_prototype_getElementById",
-            "preamble.js/XMLHttpRequest/xhr_open",
-            "preamble.js/XMLHttpRequest/xhr_send"
-          }
-        },
-        new Object[] {
-          "preamble.js/XMLHttpRequest/xhr_open",
-          new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}
-        },
-        new Object[] {
-          "preamble.js/XMLHttpRequest/xhr_send",
-          new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}
-        },
-        new Object[] {
-          "preamble.js/XMLHttpRequest/xhr_orsc_handler",
-          new String[] {"page12.html/__WINDOW_MAIN__/handler"}
-        },
-      };
+  private static final List<GraphAssertion> assertionsForPage12 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page12.html"}),
+          new GraphAssertion("page12.html", new String[] {"page12.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page12.html/__WINDOW_MAIN__",
+              new String[] {
+                "page12.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick"
+              }),
+          new GraphAssertion(
+              "page12.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick",
+              new String[] {"page12.html/__WINDOW_MAIN__/callXHR"}),
+          new GraphAssertion(
+              "page12.html/__WINDOW_MAIN__/callXHR",
+              new String[] {
+                "preamble.js/DOMDocument/Document_prototype_getElementById",
+                "preamble.js/XMLHttpRequest/xhr_open",
+                "preamble.js/XMLHttpRequest/xhr_send"
+              }),
+          new GraphAssertion(
+              "preamble.js/XMLHttpRequest/xhr_open",
+              new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}),
+          new GraphAssertion(
+              "preamble.js/XMLHttpRequest/xhr_send",
+              new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}),
+          new GraphAssertion(
+              "preamble.js/XMLHttpRequest/xhr_orsc_handler",
+              new String[] {"page12.html/__WINDOW_MAIN__/handler"}));
 
   @Test
   public void testCrawlPage12() throws IllegalArgumentException, CancelException, WalaException {
@@ -160,42 +147,35 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage12);
   }
 
-  private static final Object[][] assertionsForPage13 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page13.html"}},
-        new Object[] {"page13.html", new String[] {"page13.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page13.html/__WINDOW_MAIN__",
-          new String[] {
-            "page13.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick"
-          }
-        },
-        new Object[] {
-          "page13.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick",
-          new String[] {"page13.html/__WINDOW_MAIN__/callXHR"}
-        },
-        new Object[] {
-          "page13.html/__WINDOW_MAIN__/callXHR",
-          new String[] {
-            "preamble.js/DOMDocument/Document_prototype_getElementById",
-            "preamble.js/XMLHttpRequest/xhr_open",
-            "preamble.js/XMLHttpRequest/xhr_setRequestHeader",
-            "preamble.js/XMLHttpRequest/xhr_send"
-          }
-        },
-        new Object[] {
-          "preamble.js/XMLHttpRequest/xhr_open",
-          new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}
-        },
-        new Object[] {
-          "preamble.js/XMLHttpRequest/xhr_send",
-          new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}
-        },
-        new Object[] {
-          "preamble.js/XMLHttpRequest/xhr_orsc_handler",
-          new String[] {"page13.html/__WINDOW_MAIN__/handler"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage13 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page13.html"}),
+          new GraphAssertion("page13.html", new String[] {"page13.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page13.html/__WINDOW_MAIN__",
+              new String[] {
+                "page13.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick"
+              }),
+          new GraphAssertion(
+              "page13.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick",
+              new String[] {"page13.html/__WINDOW_MAIN__/callXHR"}),
+          new GraphAssertion(
+              "page13.html/__WINDOW_MAIN__/callXHR",
+              new String[] {
+                "preamble.js/DOMDocument/Document_prototype_getElementById",
+                "preamble.js/XMLHttpRequest/xhr_open",
+                "preamble.js/XMLHttpRequest/xhr_setRequestHeader",
+                "preamble.js/XMLHttpRequest/xhr_send"
+              }),
+          new GraphAssertion(
+              "preamble.js/XMLHttpRequest/xhr_open",
+              new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}),
+          new GraphAssertion(
+              "preamble.js/XMLHttpRequest/xhr_send",
+              new String[] {"preamble.js/XMLHttpRequest/xhr_orsc_handler"}),
+          new GraphAssertion(
+              "preamble.js/XMLHttpRequest/xhr_orsc_handler",
+              new String[] {"page13.html/__WINDOW_MAIN__/handler"}));
 
   @Test
   public void testCrawlPage13() throws IllegalArgumentException, CancelException, WalaException {
@@ -204,19 +184,16 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage13);
   }
 
-  private static final Object[][] assertionsForPage15 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page15.html"}},
-        new Object[] {"page15.html", new String[] {"page15.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page15.html/__WINDOW_MAIN__",
-          new String[] {"page15.html/__WINDOW_MAIN__/make_node0/make_node3/body_onload"}
-        },
-        new Object[] {
-          "page15.html/__WINDOW_MAIN__/make_node0/make_node3/body_onload",
-          new String[] {"page15.html/__WINDOW_MAIN__/changeUrls"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage15 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page15.html"}),
+          new GraphAssertion("page15.html", new String[] {"page15.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page15.html/__WINDOW_MAIN__",
+              new String[] {"page15.html/__WINDOW_MAIN__/make_node0/make_node3/body_onload"}),
+          new GraphAssertion(
+              "page15.html/__WINDOW_MAIN__/make_node0/make_node3/body_onload",
+              new String[] {"page15.html/__WINDOW_MAIN__/changeUrls"}));
 
   @Test
   public void testCrawlPage15() throws IllegalArgumentException, CancelException, WalaException {
@@ -225,19 +202,18 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage15);
   }
 
-  private static final Object[][] assertionsForPage16 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page16.html"}},
-        new Object[] {"page16.html", new String[] {"page16.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page16.html/__WINDOW_MAIN__",
-          new String[] {"page16.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/a_onclick"}
-        },
-        new Object[] {
-          "page16.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/a_onclick",
-          new String[] {"page16.html/__WINDOW_MAIN__/changeUrls"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage16 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page16.html"}),
+          new GraphAssertion("page16.html", new String[] {"page16.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page16.html/__WINDOW_MAIN__",
+              new String[] {
+                "page16.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/a_onclick"
+              }),
+          new GraphAssertion(
+              "page16.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/a_onclick",
+              new String[] {"page16.html/__WINDOW_MAIN__/changeUrls"}));
 
   @Test
   public void testCrawlPage16() throws IllegalArgumentException, CancelException, WalaException {
@@ -246,24 +222,21 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage16);
   }
 
-  private static final Object[][] assertionsForPage17 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page17.html"}},
-        new Object[] {"page17.html", new String[] {"page17.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "page17.html/__WINDOW_MAIN__", new String[] {"page17.html/__WINDOW_MAIN__/loadScript"}
-        },
-        new Object[] {
-          "preamble.js", new String[] {"page17.html/__WINDOW_MAIN__/loadScript/_page17_handler"}
-        },
-        new Object[] {
-          "page17.html/__WINDOW_MAIN__/loadScript/_page17_handler",
-          new String[] {"page17.html/__WINDOW_MAIN__/callFunction"}
-        },
-        new Object[] {
-          "page17.html/__WINDOW_MAIN__/callFunction", new String[] {"suffix:changeUrls"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForPage17 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page17.html"}),
+          new GraphAssertion("page17.html", new String[] {"page17.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "page17.html/__WINDOW_MAIN__",
+              new String[] {"page17.html/__WINDOW_MAIN__/loadScript"}),
+          new GraphAssertion(
+              "preamble.js",
+              new String[] {"page17.html/__WINDOW_MAIN__/loadScript/_page17_handler"}),
+          new GraphAssertion(
+              "page17.html/__WINDOW_MAIN__/loadScript/_page17_handler",
+              new String[] {"page17.html/__WINDOW_MAIN__/callFunction"}),
+          new GraphAssertion(
+              "page17.html/__WINDOW_MAIN__/callFunction", new String[] {"suffix:changeUrls"}));
 
   @Test
   public void testCrawlPage17() throws IllegalArgumentException, CancelException, WalaException {
@@ -272,19 +245,17 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage17);
   }
 
-  private static final Object[][] assertionsForApolloExample =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"apollo-example.html"}},
-        new Object[] {"apollo-example.html", new String[] {"apollo-example.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "apollo-example.html/__WINDOW_MAIN__",
-          new String[] {"apollo-example.html/__WINDOW_MAIN__/sign_on"}
-        },
-        new Object[] {
-          "apollo-example.html/__WINDOW_MAIN__/sign_on",
-          new String[] {"preamble.js/DOMWindow/window_open"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForApolloExample =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"apollo-example.html"}),
+          new GraphAssertion(
+              "apollo-example.html", new String[] {"apollo-example.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "apollo-example.html/__WINDOW_MAIN__",
+              new String[] {"apollo-example.html/__WINDOW_MAIN__/sign_on"}),
+          new GraphAssertion(
+              "apollo-example.html/__WINDOW_MAIN__/sign_on",
+              new String[] {"preamble.js/DOMWindow/window_open"}));
 
   @Test
   public void testApolloExample() throws IllegalArgumentException, CancelException, WalaException {
@@ -306,16 +277,15 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     JSCallGraphBuilderUtil.makeHTMLCG(url);
   }
 
-  private static final Object[][] sourceAssertionsForList =
-      new Object[][] {
-        new Object[] {"suffix:update_display", "list.html#2", 4, 13},
-        new Object[] {"suffix:update_with_item", "list.html#2", 9, 11},
-        new Object[] {"suffix:add_item", "list.html#2", 15, 20},
-        new Object[] {"suffix:collection", "pages/collection.js", 2, 14},
-        new Object[] {"suffix:collection_add", "pages/collection.js", 7, 13},
-        new Object[] {"suffix:forall_elt", "pages/collection.js", 9, 12},
-        new Object[] {"suffix:forall_base", "pages/collection.js", 4, 4}
-      };
+  private static final List<SourceAssertion> sourceAssertionsForList =
+      List.of(
+          new SourceAssertion("suffix:update_display", "list.html#2", 4, 13),
+          new SourceAssertion("suffix:update_with_item", "list.html#2", 9, 11),
+          new SourceAssertion("suffix:add_item", "list.html#2", 15, 20),
+          new SourceAssertion("suffix:collection", "pages/collection.js", 2, 14),
+          new SourceAssertion("suffix:collection_add", "pages/collection.js", 7, 13),
+          new SourceAssertion("suffix:forall_elt", "pages/collection.js", 9, 12),
+          new SourceAssertion("suffix:forall_base", "pages/collection.js", 4, 4));
 
   @Test
   public void testList() throws IllegalArgumentException, CancelException, WalaException {
@@ -332,21 +302,21 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     JSCallGraphBuilderUtil.makeHTMLCG(url);
   }
 
-  private static final Object[][] assertionsForWindowX =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"window_x.html"}},
-        new Object[] {"window_x.html", new String[] {"window_x.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "window_x.html/__WINDOW_MAIN__",
-          new String[] {"window_x.html/__WINDOW_MAIN__/_f2", "window_x.html/__WINDOW_MAIN__/_f4"}
-        },
-        new Object[] {
-          "window_x.html/__WINDOW_MAIN__/_f2", new String[] {"window_x.html/__WINDOW_MAIN__/_f1"}
-        },
-        new Object[] {
-          "window_x.html/__WINDOW_MAIN__/_f4", new String[] {"window_x.html/__WINDOW_MAIN__/_f3"}
-        }
-      };
+  private static final List<GraphAssertion> assertionsForWindowX =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"window_x.html"}),
+          new GraphAssertion("window_x.html", new String[] {"window_x.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "window_x.html/__WINDOW_MAIN__",
+              new String[] {
+                "window_x.html/__WINDOW_MAIN__/_f2", "window_x.html/__WINDOW_MAIN__/_f4"
+              }),
+          new GraphAssertion(
+              "window_x.html/__WINDOW_MAIN__/_f2",
+              new String[] {"window_x.html/__WINDOW_MAIN__/_f1"}),
+          new GraphAssertion(
+              "window_x.html/__WINDOW_MAIN__/_f4",
+              new String[] {"window_x.html/__WINDOW_MAIN__/_f3"}));
 
   @Test
   public void testWindowX() throws IllegalArgumentException, CancelException, WalaException {
@@ -357,15 +327,14 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForWindowX);
   }
 
-  private static final Object[][] assertionsForWindowOnLoad =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"window_on_load.html"}},
-        new Object[] {"window_on_load.html", new String[] {"window_on_load.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "window_on_load.html/__WINDOW_MAIN__",
-          new String[] {"window_on_load.html/__WINDOW_MAIN__/onload_handler"}
-        },
-      };
+  private static final List<GraphAssertion> assertionsForWindowOnLoad =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"window_on_load.html"}),
+          new GraphAssertion(
+              "window_on_load.html", new String[] {"window_on_load.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "window_on_load.html/__WINDOW_MAIN__",
+              new String[] {"window_on_load.html/__WINDOW_MAIN__/onload_handler"}));
 
   @Test
   public void testWindowOnLoad() throws IllegalArgumentException, CancelException, WalaException {
@@ -376,22 +345,19 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForWindowOnLoad);
   }
 
-  public static final Object[][] assertionsForSkeleton =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"skeleton.html"}},
-        new Object[] {"skeleton.html", new String[] {"skeleton.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "skeleton.html/__WINDOW_MAIN__", new String[] {"skeleton.html/__WINDOW_MAIN__/dollar"}
-        },
-        new Object[] {
-          "skeleton.html/__WINDOW_MAIN__/dollar",
-          new String[] {"skeleton.html/__WINDOW_MAIN__/bad_guy"}
-        },
-        new Object[] {
-          "skeleton.html/__WINDOW_MAIN__/bad_guy",
-          new String[] {"skeleton.html/__WINDOW_MAIN__/dollar"}
-        },
-      };
+  public static final List<GraphAssertion> assertionsForSkeleton =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"skeleton.html"}),
+          new GraphAssertion("skeleton.html", new String[] {"skeleton.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "skeleton.html/__WINDOW_MAIN__",
+              new String[] {"skeleton.html/__WINDOW_MAIN__/dollar"}),
+          new GraphAssertion(
+              "skeleton.html/__WINDOW_MAIN__/dollar",
+              new String[] {"skeleton.html/__WINDOW_MAIN__/bad_guy"}),
+          new GraphAssertion(
+              "skeleton.html/__WINDOW_MAIN__/bad_guy",
+              new String[] {"skeleton.html/__WINDOW_MAIN__/dollar"}));
 
   @Test
   public void testSkeleton() throws IllegalArgumentException, CancelException, WalaException {
@@ -400,30 +366,25 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForSkeleton);
   }
 
-  public static final Object[][] assertionsForSkeleton2 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"skeleton2.html"}},
-        new Object[] {"skeleton2.html", new String[] {"skeleton2.html/__WINDOW_MAIN__"}},
-        new Object[] {
-          "skeleton2.html/__WINDOW_MAIN__", new String[] {"skeleton2.html/__WINDOW_MAIN__/dollar"}
-        },
-        new Object[] {
-          "skeleton2.html/__WINDOW_MAIN__/dollar",
-          new String[] {"ctor:skeleton2.html/__WINDOW_MAIN__/dollar_init"}
-        },
-        new Object[] {
-          "ctor:skeleton2.html/__WINDOW_MAIN__/dollar_init",
-          new String[] {"skeleton2.html/__WINDOW_MAIN__/dollar_init"}
-        },
-        new Object[] {
-          "skeleton2.html/__WINDOW_MAIN__/dollar_init",
-          new String[] {"skeleton2.html/__WINDOW_MAIN__/bad_guy"}
-        },
-        new Object[] {
-          "skeleton2.html/__WINDOW_MAIN__/bad_guy",
-          new String[] {"skeleton2.html/__WINDOW_MAIN__/dollar"}
-        },
-      };
+  public static final List<GraphAssertion> assertionsForSkeleton2 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"skeleton2.html"}),
+          new GraphAssertion("skeleton2.html", new String[] {"skeleton2.html/__WINDOW_MAIN__"}),
+          new GraphAssertion(
+              "skeleton2.html/__WINDOW_MAIN__",
+              new String[] {"skeleton2.html/__WINDOW_MAIN__/dollar"}),
+          new GraphAssertion(
+              "skeleton2.html/__WINDOW_MAIN__/dollar",
+              new String[] {"ctor:skeleton2.html/__WINDOW_MAIN__/dollar_init"}),
+          new GraphAssertion(
+              "ctor:skeleton2.html/__WINDOW_MAIN__/dollar_init",
+              new String[] {"skeleton2.html/__WINDOW_MAIN__/dollar_init"}),
+          new GraphAssertion(
+              "skeleton2.html/__WINDOW_MAIN__/dollar_init",
+              new String[] {"skeleton2.html/__WINDOW_MAIN__/bad_guy"}),
+          new GraphAssertion(
+              "skeleton2.html/__WINDOW_MAIN__/bad_guy",
+              new String[] {"skeleton2.html/__WINDOW_MAIN__/dollar"}));
 
   @Test
   public void testSkeleton2() throws IllegalArgumentException, CancelException, WalaException {
