@@ -53,7 +53,7 @@ to import WALA into Eclipse.  Select and import the topmost level of
 your WALA source tree.  On the “Import Options” page of the import
 wizard, leave all settings at their defaults: the “Override workspace
 settings” option should be off, and the grayed-out “Gradle
-distribution” choice should be set to “Gradle wrapper”.  It is also
+distribution” choice should be set to “Gradle wrapper.” It is also
 recommended that you clear the "Gradle user home" dialog box in the
 **Gradle Preferences** (not the one in the import wizard) prior to
 importing ([one
