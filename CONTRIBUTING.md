@@ -66,10 +66,6 @@ DOs and DON'Ts
   `com.ibm.wala.util.collections.HashSetFactory.make()` respectively.
   Avoid use of `System.identityHashCode()` and finalizers.
 
-* DON'T write to `System.out` or `System.err`. Use the
-  `com.ibm.wala.util.debug.Trace` facility to write debugging and
-  trace messages.
-
 * DON'T submit PRs that alter licensing related files or headers. If
   you believe there's a problem with them, file an issue and we'll be
   happy to discuss it.
