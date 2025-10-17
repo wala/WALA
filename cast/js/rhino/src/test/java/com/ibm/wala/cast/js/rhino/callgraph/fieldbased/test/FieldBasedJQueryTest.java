@@ -7,6 +7,7 @@ import com.ibm.wala.util.WalaException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ public class FieldBasedJQueryTest extends AbstractFieldBasedTest {
       throws IOException, WalaException, Error, CancelException, URISyntaxException {
     runTest(
         new URI("http://code.jquery.com/jquery-1.8.2.js").toURL(),
-        new Object[][] {},
+        List.of(),
         BuilderType.OPTIMISTIC_WORKLIST);
   }
 }

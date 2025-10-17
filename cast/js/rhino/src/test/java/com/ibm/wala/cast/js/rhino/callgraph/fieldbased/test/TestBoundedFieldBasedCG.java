@@ -14,15 +14,16 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
-  private static final Object[][] assertionsForBound0JS =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-        new Object[] {"suffix:bounded.js", new String[] {"suffix:y", "!suffix:x", "suffix:call"}},
-        new Object[] {"suffix:call", new String[] {"!suffix:m"}}
-      };
+  private static final List<GraphAssertion> assertionsForBound0JS =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"suffix:bounded.js"}),
+          new GraphAssertion(
+              "suffix:bounded.js", new String[] {"suffix:y", "!suffix:x", "suffix:call"}),
+          new GraphAssertion("suffix:call", new String[] {"!suffix:m"}));
 
   @Test
   public void testBound0Worklist() throws WalaException, Error, CancelException {
@@ -30,12 +31,12 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
         "tests/field-based/bounded.js", assertionsForBound0JS, BuilderType.OPTIMISTIC_WORKLIST, 0);
   }
 
-  private static final Object[][] assertionsForBound1JS =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}},
-        new Object[] {"suffix:call", new String[] {"!suffix:m"}}
-      };
+  private static final List<GraphAssertion> assertionsForBound1JS =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"suffix:bounded.js"}),
+          new GraphAssertion(
+              "suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}),
+          new GraphAssertion("suffix:call", new String[] {"!suffix:m"}));
 
   @Test
   public void testBound1Worklist() throws WalaException, Error, CancelException {
@@ -43,12 +44,12 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
         "tests/field-based/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
   }
 
-  private static final Object[][] assertionsForBound2JS =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"suffix:bounded.js"}},
-        new Object[] {"suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}},
-        new Object[] {"suffix:call", new String[] {"suffix:m"}},
-      };
+  private static final List<GraphAssertion> assertionsForBound2JS =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"suffix:bounded.js"}),
+          new GraphAssertion(
+              "suffix:bounded.js", new String[] {"suffix:x", "suffix:y", "suffix:call"}),
+          new GraphAssertion("suffix:call", new String[] {"suffix:m"}));
 
   @Test
   public void testBound2Worklist() throws WalaException, Error, CancelException {

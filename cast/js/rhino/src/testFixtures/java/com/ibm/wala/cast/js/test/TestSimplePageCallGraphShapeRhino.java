@@ -22,16 +22,16 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
 
-  private static final Object[][] assertionsForPage3 =
-      new Object[][] {
-        new Object[] {ROOT, new String[] {"page3.html"}},
-        new Object[] {"page3.html", new String[] {"page3.html/__WINDOW_MAIN__"}}
-      };
+  private static final List<GraphAssertion> assertionsForPage3 =
+      List.of(
+          new GraphAssertion(ROOT, new String[] {"page3.html"}),
+          new GraphAssertion("page3.html", new String[] {"page3.html/__WINDOW_MAIN__"}));
 
   @Test
   public void testPage3() throws IllegalArgumentException, CancelException, WalaException {

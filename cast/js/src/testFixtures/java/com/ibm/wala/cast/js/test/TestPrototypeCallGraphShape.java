@@ -15,12 +15,13 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.net.URL;
+import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public abstract class TestPrototypeCallGraphShape extends TestJSCallGraphShape {
 
-  private static final Object[][] assertionsForPrototype = new Object[][] {};
+  private static final List<GraphAssertion> assertionsForPrototype = List.of();
 
   @Disabled("reminder that this no longer works with correlation tracking")
   @Test
