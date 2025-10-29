@@ -108,7 +108,9 @@ publishing {
       // <https://docs.gradle.org/current/userguide/java_testing.html#ex-disable-publishing-of-test-fixtures-variants>.
       val javaComponent = components["java"] as AdhocComponentWithVariants
       listOf("Api", "Runtime", "Sources").forEach {
-        javaComponent.withVariantsFromConfiguration(configurations["testFixtures${it}Elements"]) {
+        javaComponent.withVariantsFromConfiguration(
+            configurations.named<ConsumableConfiguration>("testFixtures${it}Elements")
+        ) {
           skip()
         }
       }
