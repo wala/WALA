@@ -1,5 +1,5 @@
 [versions]
-com-uber-nullaway = "0.12.10"
+com-uber-nullaway = "0.12.11"
 #noinspection UnusedVersionCatalogEntry
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
