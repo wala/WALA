@@ -1,5 +1,4 @@
-/** Math utilities */
 @NullMarked
-package com.ibm.wala.util.math;
+package com.ibm.wala.util.io;
 
 import org.jspecify.annotations.NullMarked;
