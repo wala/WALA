@@ -590,7 +590,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     if (n instanceof LambdaExpression) {
       return new ClassEntity(
           typeBinding, "L" + name, quals, memberEntities, makePosition(n), namePos) {
-        CAstType lt = fTypeDict.new JdtLambdaType(name, typeBinding);
+        final CAstType lt = fTypeDict.new JdtLambdaType(name, typeBinding);
 
         @Override
         public CAstType getType() {
