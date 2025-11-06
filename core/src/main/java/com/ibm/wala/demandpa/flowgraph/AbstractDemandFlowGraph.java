@@ -115,7 +115,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    */
   public Iterator<PointerKeyAndCallSite> getParamSuccs(LocalPointerKey pk) {
     // TODO cache this result
-    // TODO take some cgnode as parameter if we have calling context?
+    // TODO take some cgNode as parameter if we have calling context?
     CGNode cgNode = params.get(pk);
     if (cgNode == null) {
       return EmptyIterator.instance();

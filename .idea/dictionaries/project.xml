@@ -47,7 +47,10 @@
       <w>def'd</w>
       <w>def'fed</w>
       <w>delegatecomment</w>
+      <w>demandpa</w>
       <w>develocity</w>
+      <w>dexf</w>
+      <w>dexm</w>
       <w>diffplug</w>
       <w>dmul</w>
       <w>doubble</w>
@@ -55,6 +58,7 @@
       <w>dtrans</w>
       <w>ecspride</w>
       <w>elts</w>
+      <w>enclosings</w>
       <w>enumbody</w>
       <w>eork</w>
       <w>explicitconstructorcall</w>
@@ -76,6 +80,7 @@
       <w>getterbody</w>
       <w>gettercomment</w>
       <w>ghostview</w>
+      <w>goba</w>
       <w>gradleclasspathcontainer</w>
       <w>gradleprojectbuilder</w>
       <w>gradleprojectnature</w>
@@ -124,6 +129,7 @@
       <w>javabuilder</w>
       <w>javanature</w>
       <w>javaonepointseven</w>
+      <w>jlex</w>
       <w>jmod</w>
       <w>juergen</w>
       <w>juliandolby</w>
@@ -138,22 +144,27 @@
       <w>lastore</w>
       <w>launchconfig</w>
       <w>lcfg</w>
+      <w>lclass</w>
       <w>lcmp</w>
       <w>lconst</w>
       <w>lcorner</w>
       <w>ldataflow</w>
       <w>ldemandpa</w>
       <w>lfunction</w>
+      <w>lhello</w>
       <w>libjvm</w>
       <w>liblit</w>
       <w>ljava</w>
       <w>lload</w>
       <w>lmul</w>
+      <w>lmulti</w>
       <w>lneg</w>
+      <w>lobj</w>
       <w>lockfiles</w>
       <w>lookupswitch</w>
       <w>lorg</w>
       <w>lprologue</w>
+      <w>lrecurse</w>
       <w>lreflection</w>
       <w>lrem</w>
       <w>lreturn</w>
@@ -170,6 +181,7 @@
       <w>lxor</w>
       <w>markdownlint</w>
       <w>mavencentral</w>
+      <w>meeted</w>
       <w>methodbody</w>
       <w>methodcomment</w>
       <w>miniatur</w>
@@ -179,28 +191,41 @@
       <w>mref</w>
       <w>msridhar</w>
       <w>multianewarray</w>
+      <w>multivar</w>
+      <w>narf</w>
+      <w>nativedeps</w>
       <w>newarray</w>
       <w>newtype</w>
       <w>nonnullbydefault</w>
+      <w>nowarn</w>
       <w>nullanalysis</w>
+      <w>odexed</w>
       <w>orsc</w>
       <w>overridecomment</w>
       <w>peis</w>
+      <w>pfretzschner</w>
+      <w>popl</w>
       <w>preallocated</w>
       <w>pretransitive</w>
+      <w>projectdeps</w>
       <w>putfield</w>
       <w>putstatic</w>
+      <w>rcvr</w>
+      <w>resourcefilters</w>
       <w>rval</w>
       <w>rvals</w>
       <w>saload</w>
       <w>sastore</w>
       <w>scandroid</w>
+      <w>selibs</w>
       <w>setterbody</w>
       <w>settercomment</w>
       <w>sipush</w>
       <w>sjfink</w>
+      <w>smik</w>
       <w>sridharan</w>
       <w>succs</w>
+      <w>sukyoung's</w>
       <w>switchstatements</w>
       <w>symtab</w>
       <w>tableswitch</w>
@@ -209,6 +234,7 @@
       <w>typecomment</w>
       <w>werror</w>
       <w>xdoclint</w>
+      <w>xiangyu</w>
       <w>xxxunusedxxx</w>
     </words>
   </dictionary>

@@ -799,7 +799,7 @@ public class ReflectionTest extends WalaTestCase {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            cha, TestConstants.REFLECTGETMETHODCONTEXT_MAIN);
+            cha, TestConstants.REFLECT_GET_METHOD_CONTEXT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     Set<CGNode> cgn;

@@ -49,12 +49,12 @@ public class ClassConstantTest extends WalaTestCase {
     // make sure we have the test class
     TypeReference mainClassRef =
         TypeReference.findOrCreate(
-            ClassLoaderReference.Application, TestConstants.CLASSCONSTANT_MAIN);
+            ClassLoaderReference.Application, TestConstants.CLASS_CONSTANT_MAIN);
     assertThat(cha.lookupClass(mainClassRef)).isNotNull();
 
     // make call graph
     Iterable<Entrypoint> entrypoints =
-        Util.makeMainEntrypoints(cha, TestConstants.CLASSCONSTANT_MAIN);
+        Util.makeMainEntrypoints(cha, TestConstants.CLASS_CONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
     // System.out.println("\nCall graph:");
