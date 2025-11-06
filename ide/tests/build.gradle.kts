@@ -78,7 +78,7 @@ tasks.named<Test>("test") {
   }
 }
 
-// This is required for IFDSExplorereExample to work correctly
+// This is required for IFDSExplorerExample to work correctly
 tasks.named<Copy>("processTestResources") {
   from(coreTestDataJar)
   from(coreTestResources) { include("wala.testdata.txt") }

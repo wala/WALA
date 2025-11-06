@@ -28,7 +28,7 @@ public interface IBytecodeMethod<I> extends IMethod {
   int getBytecodeIndex(int i) throws InvalidClassFileException;
 
   /**
-   * @return the instuction index i in the getInstructions() array corresponding to the bytecode
+   * @return the instruction index i in the getInstructions() array corresponding to the bytecode
    *     index bcIndex
    */
   int getInstructionIndex(int bcIndex) throws InvalidClassFileException;

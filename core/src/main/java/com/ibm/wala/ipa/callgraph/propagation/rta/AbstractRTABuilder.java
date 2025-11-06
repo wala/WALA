@@ -117,7 +117,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   /**
    * Visit all instructions in a node, and add dataflow constraints induced by each statement
-   * relevat to RTA
+   * relevant to RTA
    */
   @Override
   protected boolean addConstraintsFromNode(CGNode node, IProgressMonitor monitor) {
