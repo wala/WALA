@@ -157,7 +157,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
   public class JdtLambdaType implements JavaType {
 
     private final ITypeBinding parent;
-    private String name;
+    private final String name;
 
     public JdtLambdaType(String name, ITypeBinding parent) {
       this.parent = parent;
