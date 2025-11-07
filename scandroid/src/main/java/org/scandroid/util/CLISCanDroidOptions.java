@@ -41,14 +41,16 @@ package org.scandroid.util;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.help.HelpFormatter;
 
 public class CLISCanDroidOptions implements ISCanDroidOptions {
   private static final String VERBOSE = "verbose";
@@ -88,7 +90,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
             .desc("logging level (default INFO) [OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL]")
             .hasArg()
             .argName("level")
-            .build());
+            .get());
     options.addOption("c", CALL_GRAPH, false, "create full call graph pdf");
     options.addOption(
         "p", PARTIAL_CALL_GRAPH, false, "create partial call graph pdf (Application only)");
@@ -117,7 +119,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
         Option.builder()
             .longOpt(TEST_CGB)
             .desc("Only load the call graph, exit status indicates success")
-            .build());
+            .get());
     options.addOption("y", CHECK_POLICY, false, "Check conformance with built-in policy");
 
     options.addOption(
@@ -126,7 +128,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
             .desc("include ALIB in scope of analysis")
             .hasArg()
             .argName("ALIB")
-            .build());
+            .get());
     options.addOption(
         Option.builder()
             .longOpt(REFLECTION)
@@ -134,7 +136,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
                 "FULL, NO_FLOW_TO_CASTS, NO_METHOD_INVOKE, NO_FLOW_TO_CASTS_NO_METHOD_INVOKE, ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE, NO_STRING_CONSTANTS, NONE (Default)")
             .hasArg()
             .argName("option")
-            .build());
+            .get());
   }
 
   public CLISCanDroidOptions(String[] args, boolean reqArgs) {
@@ -147,8 +149,12 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
     }
 
     if (hasOption("help")) {
-      HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp(USAGE, options);
+      HelpFormatter formatter = HelpFormatter.builder().get();
+      try {
+        formatter.printHelp(USAGE, null, options, null, false);
+      } catch (IOException problem) {
+        throw new UncheckedIOException(problem);
+      }
       System.exit(0);
     }
 
