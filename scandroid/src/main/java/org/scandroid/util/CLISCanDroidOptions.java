@@ -105,7 +105,7 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
     options.addOption("l", INCLUDE_LIBRARY, false, "analyze library in flow analysis");
     options.addOption("e", SEPARATE_ENTRIES, false, "analyze each entry point separately");
     options.addOption(
-        "i", IFDS_EXPLORER, false, "bring up a gui to analyze domainelements for flow analysis");
+        "i", IFDS_EXPLORER, false, "bring up a GUI to analyze domain elements for flow analysis");
     options.addOption(
         "m", MAIN_ENTRYPOINT, false, "look for main methods and add them as entrypoints");
     options.addOption("a", STDOUT_CALL_GRAPH, false, "output full call graph to stdout");
@@ -183,13 +183,13 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 
   private URI processClasspath(boolean reqArgs) {
     // getArgs() returns all args that are not recognized;
-    String[] myargs = line.getArgs();
-    if ((myargs.length != 1 || !(myargs[0].endsWith(".apk") || myargs[0].endsWith(".jar")))
+    String[] myArgs = line.getArgs();
+    if ((myArgs.length != 1 || !(myArgs[0].endsWith(".apk") || myArgs[0].endsWith(".jar")))
         && reqArgs) {
       System.err.println("Usage: " + USAGE);
       System.exit(0);
     }
-    return processURIArg(myargs[0]);
+    return processURIArg(myArgs[0]);
   }
 
   private String processFilename() {
