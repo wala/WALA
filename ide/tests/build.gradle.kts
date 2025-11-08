@@ -6,7 +6,6 @@ plugins {
   `java-test-fixtures`
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
-  id("com.ibm.wala.gradle.xml-apis-ext")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
