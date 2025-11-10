@@ -57,6 +57,7 @@ import java.util.TreeSet;
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
  */
+@SuppressWarnings("unused")
 public class TabulationSolver<T, P, F> {
 
   /**
