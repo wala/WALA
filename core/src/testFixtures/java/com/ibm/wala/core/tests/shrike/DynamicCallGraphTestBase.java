@@ -133,9 +133,9 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     Files.deleteIfExists(cgLocation);
 
     childJvm.init();
-    String commandLine = childJvm.getCommandLine().toString();
+    final var commandLine = childJvm.getCommandLine();
     System.err.println(commandLine);
-    Process x = Runtime.getRuntime().exec(commandLine, null, new File("build"));
+    Process x = Runtime.getRuntime().exec(commandLine.getCommandline(), null, new File("build"));
     x.waitFor();
 
     assertThat(cgLocation).exists();
