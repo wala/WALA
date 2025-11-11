@@ -106,7 +106,7 @@ node {
 val lintMarkdown by
     tasks.registering(NpxTask::class) {
       group = "verification"
-      command = "markdownlint-cli2"
+      command = "markdownlint-cli2@0.18.1"
       val markdownFiles = fileTree(".") { include("*.md") }
       inputs.files(markdownFiles)
       inputs.file(".markdownlint-cli2.yaml")
