@@ -282,7 +282,7 @@ public class Intent implements Cloneable, ContextItem, Comparable<Intent> {
    *     relying on the packet name!
    */
   private static boolean isInternal(
-      @SuppressWarnings("unused") Intent intent) { // XXX: This may loop forever!
+      @SuppressWarnings("UnusedVariable") Intent intent) { // XXX: This may loop forever!
     /*final Intent override = AndroidEntryPointManager.MANAGER.getIntent(intent);
 
     logger.warn("Intent.isInternal(Intent) is an unsafe fallback!");
