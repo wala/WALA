@@ -1,5 +1,7 @@
 package com.ibm.wala.cast.java.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.Language;
@@ -42,7 +44,7 @@ public abstract class Issue667Test extends IRTests {
               try {
                 ControlDependenceGraph<ISSABasicBlock> cdg =
                     new ControlDependenceGraph<>(n.getIR().getControlFlowGraph());
-                assert cdg != null;
+                assertThat(cdg).isNotNull();
               } catch (IllegalArgumentException e) {
                 System.err.println(n.getIR());
                 throw e;

@@ -7,6 +7,8 @@
 package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope.SOURCE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -74,7 +76,8 @@ public class ECJJava17IRTest extends ECJIRTests {
                               break check;
                             }
                           }
-                          assert false : "cannot find " + value + " in " + n;
+                          //noinspection ResultOfMethodCallIgnored
+                          fail("cannot find %s in %s", value, n);
                         }
                       }
                     });
@@ -119,7 +122,9 @@ public class ECJJava17IRTest extends ECJIRTests {
                                               foundTypes.add(
                                                   cg.getClassHierarchy().lookupClass(t)));
 
-                                  assert foundTypes.equals(expectedTypes) : n.getIR();
+                                  assertThat(foundTypes)
+                                      .as(() -> n.getIR().toString())
+                                      .isEqualTo(expectedTypes);
                                 }
                               }));
         }

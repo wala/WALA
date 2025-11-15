@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -55,7 +57,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   @Test
   public void testPage1() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page1.html");
-    assert url != null;
+    assertThat(url).isNotNull();
     System.err.println("url is " + url);
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage1);

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dalvik.test.callGraph;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Language;
@@ -142,7 +144,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
     List<? extends Entrypoint> es = new AndroidEntryPointLocator().getEntryPoints(cha);
 
-    assert !es.isEmpty();
+    assertThat(es).isNotEmpty();
 
     AnalysisOptions options = new AnalysisOptions(scope, es);
     options.setReflectionOptions(policy);
@@ -194,7 +196,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
     TypeReference mainClassRef =
         TypeReference.findOrCreate(ClassLoaderReference.Application, mainClassName);
     IClass mainClass = cha.lookupClass(mainClassRef);
-    assert mainClass != null;
+    assertThat(mainClass).isNotNull();
 
     System.err.println("building call graph for " + mainClass + ":" + mainClass.getClass());
 
@@ -211,7 +213,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 
     MethodReference mmr =
         MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
-    assert !callGraph.getNodes(mmr).isEmpty();
+    assertThat(callGraph.getNodes(mmr)).isNotEmpty();
 
     PointerAnalysis<InstanceKey> ptrAnalysis = cgb.getPointerAnalysis();
 

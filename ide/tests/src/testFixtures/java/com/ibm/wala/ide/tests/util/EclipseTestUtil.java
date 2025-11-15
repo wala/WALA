@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ide.tests.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -125,7 +127,7 @@ public class EclipseTestUtil {
     IPath path = new Path("src/test/resources").append(filename);
 
     URL url = FileLocator.find(bundle, path, null);
-    assert url != null : bundle.toString() + " path " + path.toString();
+    assertThat(url).as("%s path %s", bundle, path).isNotNull();
     try {
       URL fileURL = FileLocator.toFileURL(url);
       return new File(fileURL.getPath());

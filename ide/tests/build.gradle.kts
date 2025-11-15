@@ -51,6 +51,7 @@ dependencies {
   ifdsExplorerExampleClasspath(
       project(mapOf("path" to ":core", "configuration" to "collectTestDataJar"))
   )
+  testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.junit.jupiter.api)

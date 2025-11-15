@@ -1,5 +1,7 @@
 package com.ibm.wala.cast.java.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
@@ -26,7 +28,7 @@ public abstract class Issue666Test extends IRTests {
             true,
             null);
 
-    assert result != null;
+    assertThat(result).isNotNull();
 
     MethodReference cm =
         MethodReference.findOrCreate(
@@ -35,6 +37,6 @@ public abstract class Issue666Test extends IRTests {
             Atom.findOrCreateUnicodeAtom("start"),
             Descriptor.findOrCreateUTF8(Language.JAVA, "()V"));
 
-    assert cm != null;
+    assertThat(cm).isNotNull();
   }
 }

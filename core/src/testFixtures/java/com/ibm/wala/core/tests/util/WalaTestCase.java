@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.core.tests.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import com.ibm.wala.core.util.warnings.Warnings;
@@ -89,7 +90,7 @@ public abstract class WalaTestCase {
                       : foundString;
                 })
             .collect(Collectors.joining(File.pathSeparator));
-    assert !result.isEmpty() : "cannot find " + elt;
+    assertThat(result).as("cannot find %s", elt).isNotEmpty();
     return result;
   }
 }
