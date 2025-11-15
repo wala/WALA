@@ -101,6 +101,9 @@ shellcheck {
 node {
   download = true
   version = "24.10.0"
+
+  // workaround for <https://github.com/npm/cli/issues/8710>
+  npmVersion = "11.6.0"
 }
 
 val lintMarkdown by
