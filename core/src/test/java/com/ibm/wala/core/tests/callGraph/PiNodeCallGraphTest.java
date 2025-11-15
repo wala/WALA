@@ -107,18 +107,18 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     Set<CGNode> callerNodes = HashSetFactory.make();
     callerNodes.addAll(cg.getNodes(thisBinaryRef));
     callerNodes.addAll(cg.getNodes(thatBinaryRef));
-    assert callerNodes.size() == 2;
+    assertThat(callerNodes).hasSize(2);
 
     for (CGNode n : callerNodes) {
       for (CallSiteReference csRef : Iterator2Iterable.make(n.iterateCallSites())) {
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {
           numberOfCalls++;
-          assert cg.getNumberOfTargets(n, csRef) == desiredNumberOfTargets;
+          assertThat(cg.getNumberOfTargets(n, csRef)).isEqualTo(desiredNumberOfTargets);
         }
       }
     }
 
-    assert numberOfCalls == desiredNumberOfCalls;
+    assertThat(numberOfCalls).isEqualTo(desiredNumberOfCalls);
 
     CGNode localCastNode =
         cg.getNodes(

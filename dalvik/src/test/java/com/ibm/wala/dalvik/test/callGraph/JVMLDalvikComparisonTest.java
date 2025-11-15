@@ -12,6 +12,9 @@ package com.ibm.wala.dalvik.test.callGraph;
 
 import static com.ibm.wala.dalvik.test.util.Util.convertJarToDex;
 import static com.ibm.wala.dalvik.test.util.Util.getJavaJar;
+import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
@@ -116,12 +119,14 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     Set<MethodReference> javaMethods = applicationMethods(java.fst);
 
     Set<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst, false);
-    assert !checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges)
-        : "found extra edges in Java call graph";
+    assertThat(checkEdgeDiff(android, androidMethods, javaMethods, javaExtraEdges))
+        .as("found extra edges in Java call graph")
+        .isFalse();
 
     Set<Pair<CGNode, CGNode>> androidExtraEdges = edgeDiff(android.fst, java.fst, true);
-    assert !checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges)
-        : "found extra edges in Android call graph";
+    assertThat(checkEdgeDiff(java, javaMethods, androidMethods, androidExtraEdges))
+        .as("found extra edges in Android call graph")
+        .isFalse();
 
     checkSourceLines(java.fst, android.fst);
   }
@@ -148,7 +153,8 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
                     jlines.add(javaLine);
                     ajlines.add(javaLine);
                   } catch (InvalidClassFileException e) {
-                    assert false : e;
+                    //noinspection ResultOfMethodCallIgnored
+                    fail("Unexpected InvalidClassFileException while computing line numbers", e);
                   }
                 }
               }
@@ -166,15 +172,16 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
                   }
                 }
 
-                assert !alines.isEmpty() : "no debug info";
+                assertThat(alines).as("no debug info").isNotEmpty();
               }
             }
           }
         });
 
     IntSet both = ajlines.intersection(aalines);
-    assert both.size() >= .8 * ajlines.size()
-        : "inconsistent debug info: " + ajlines + " " + aalines;
+    assertThat((double) both.size())
+        .as("inconsistent debug info: %s %s", ajlines, aalines)
+        .isGreaterThanOrEqualTo(.8 * ajlines.size());
   }
 
   private static boolean checkEdgeDiff(
