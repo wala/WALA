@@ -75,6 +75,7 @@ application {
       if (isDebuggable && !isOptimized) {
         val checkSmokeMain by
             tasks.registering(Exec::class) {
+              group = "verification"
 
               // main executable to run for test
               inputs.file(linkedFile)
