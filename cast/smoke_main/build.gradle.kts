@@ -3,9 +3,9 @@ import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
 import com.ibm.wala.gradle.logToFile
 import com.ibm.wala.gradle.valueToString
-import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
+import org.gradle.api.attributes.Usage.JAVA_RUNTIME
 import org.gradle.api.attributes.Usage.NATIVE_RUNTIME
 import org.gradle.api.attributes.Usage.USAGE_ATTRIBUTE
 import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
@@ -27,10 +27,7 @@ val coreResources by
 val smokeMainExtraPathElements by
     configurations.registering {
       isCanBeConsumed = false
-      isTransitive = false
-      attributes {
-        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, CLASSES))
-      }
+      attributes.attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, JAVA_RUNTIME))
     }
 
 fun createXlatorConfig(isOptimized: Boolean): NamedDomainObjectProvider<Configuration> =
@@ -52,11 +49,8 @@ val xlatorTestReleaseSharedLibraryConfig = createXlatorConfig(true)
 application {
   dependencies {
     coreResources(projects.core)
-    smokeMainExtraPathElements(libs.assertj.core)
-    smokeMainExtraPathElements(projects.cast)
-    smokeMainExtraPathElements(projects.core)
-    smokeMainExtraPathElements(projects.util)
     implementation(projects.cast.cast)
+    smokeMainExtraPathElements(testFixtures(projects.cast))
     xlatorTestDebugSharedLibraryConfig(projects.cast.xlatorTest)
     xlatorTestReleaseSharedLibraryConfig(projects.cast.xlatorTest)
   }

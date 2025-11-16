@@ -48,6 +48,7 @@ dependencies {
       project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory"))
   )
   javadocClasspath(projects.cast.js)
+  testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.core)
   testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(projects.util)
@@ -61,7 +62,7 @@ val castHeaderDirectory by configurations.registering { isCanBeResolved = false 
 
 artifacts.add(
     castHeaderDirectory.name,
-    tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory },
+    tasks.named<JavaCompile>("compileTestFixturesJava").map { it.options.headerOutputDirectory },
 )
 
 tasks.named<Javadoc>("javadoc") {
