@@ -62,6 +62,7 @@
       <w>enumbody</w>
       <w>eork</w>
       <w>explicitconstructorcall</w>
+      <w>extdoc</w>
       <w>faload</w>
       <w>fastore</w>
       <w>fcmpg</w>
@@ -144,6 +145,7 @@
       <w>lastore</w>
       <w>launchconfig</w>
       <w>lcfg</w>
+      <w>lchess</w>
       <w>lclass</w>
       <w>lcmp</w>
       <w>lconst</w>
@@ -151,10 +153,13 @@
       <w>ldataflow</w>
       <w>ldemandpa</w>
       <w>lfunction</w>
+      <w>lgnu</w>
       <w>lhello</w>
       <w>libjvm</w>
       <w>liblit</w>
+      <w>limg</w>
       <w>ljava</w>
+      <w>lkawa</w>
       <w>lload</w>
       <w>lmul</w>
       <w>lmulti</w>
@@ -175,6 +180,7 @@
       <w>lstatic</w>
       <w>lstore</w>
       <w>lsub</w>
+      <w>ltest</w>
       <w>ltests</w>
       <w>lushr</w>
       <w>lval</w>
@@ -202,8 +208,10 @@
       <w>odexed</w>
       <w>orsc</w>
       <w>overridecomment</w>
+      <w>packagelist</w>
       <w>peis</w>
       <w>pfretzschner</w>
+      <w>plusish</w>
       <w>popl</w>
       <w>preallocated</w>
       <w>pretransitive</w>

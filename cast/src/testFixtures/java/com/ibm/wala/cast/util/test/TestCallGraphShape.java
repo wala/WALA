@@ -224,9 +224,9 @@ public abstract class TestCallGraphShape {
    */
   public void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
     Collection<CGNode> sources = getNodes(CG, sourceDescription);
-    Collection<CGNode> dests = getNodes(CG, destDescription);
+    Collection<CGNode> destinations = getNodes(CG, destDescription);
     for (CGNode source : sources) {
-      for (Object dest : dests) {
+      for (Object dest : destinations) {
         for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(source))) {
           if (n.equals(dest)) {
             //noinspection ResultOfMethodCallIgnored
