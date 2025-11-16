@@ -212,8 +212,8 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
                   return fail("should not cancel");
                 }
               });
-    } catch (CallGraphBuilderCancelException cgbe) {
-      cg = cgbe.getPartialCallGraph();
+    } catch (CallGraphBuilderCancelException problem) {
+      cg = problem.getPartialCallGraph();
     }
 
     return cg;
