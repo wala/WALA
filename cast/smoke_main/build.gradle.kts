@@ -52,6 +52,7 @@ val xlatorTestReleaseSharedLibraryConfig = createXlatorConfig(true)
 application {
   dependencies {
     coreResources(projects.core)
+    smokeMainExtraPathElements(libs.assertj.core)
     smokeMainExtraPathElements(projects.cast)
     smokeMainExtraPathElements(projects.core)
     smokeMainExtraPathElements(projects.util)

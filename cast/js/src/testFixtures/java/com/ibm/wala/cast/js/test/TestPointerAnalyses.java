@@ -116,11 +116,11 @@ public abstract class TestPointerAnalyses {
     }
 
     CGNode caller = preds.next();
-    assert !preds.hasNext() : n;
+    assertThat(preds).as(n::toString).isExhausted();
 
     Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, n);
     CallSiteReference site = sites.next();
-    assert !sites.hasNext();
+    assertThat(sites).isExhausted();
 
     return Pair.make(
         caller, new NewSiteReference(site.getProgramCounter(), ptr.snd.getDeclaredType()));

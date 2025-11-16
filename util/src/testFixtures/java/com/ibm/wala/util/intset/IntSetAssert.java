@@ -35,4 +35,12 @@ public class IntSetAssert extends AbstractObjectAssert<IntSetAssert, IntSet> {
     }
     return this;
   }
+
+  public IntSetAssert isNotEmpty() {
+    isNotNull();
+    if (actual.isEmpty()) {
+      failWithMessage("\nExpecting that actual `IntSet` is non-empty but is empty.");
+    }
+    return this;
+  }
 }
