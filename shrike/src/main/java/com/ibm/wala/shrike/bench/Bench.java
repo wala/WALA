@@ -48,7 +48,7 @@ import java.io.Writer;
  * Disassembled code is written to the file "report" under the current directory.
  */
 public class Bench {
-  private static final boolean disasm = true;
+  private static final boolean disassemble = true;
 
   private static final boolean verify = true;
 
@@ -68,10 +68,10 @@ public class Bench {
         args = instrumenter.parseStandardArgs(args);
         if (args.length > 0) {
           switch (args[0]) {
-            case "-doexit":
+            case "-do-exit":
               doExit = true;
               break;
-            case "-doexception":
+            case "-do-exception":
               doExit = true;
               doException = true;
               break;
@@ -115,7 +115,7 @@ public class Bench {
                 + ":\n");
         w.flush();
 
-        if (disasm) {
+        if (disassemble) {
           w.write("Initial ShrikeBT code:\n");
           new Disassembler(d).disassembleTo(w);
           w.flush();
@@ -230,7 +230,7 @@ public class Bench {
         // this updates the data d
         me.applyPatches();
 
-        if (disasm) {
+        if (disassemble) {
           w.write("Final ShrikeBT code:\n");
           new Disassembler(d).disassembleTo(w);
           w.flush();

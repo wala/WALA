@@ -45,6 +45,7 @@
       <w>dconst</w>
       <w>ddiv</w>
       <w>def'd</w>
+      <w>def'ed</w>
       <w>def'fed</w>
       <w>delegatecomment</w>
       <w>demandpa</w>
@@ -97,6 +98,7 @@
       <w>ifds</w>
       <w>ifeq</w>
       <w>ifge</w>
+      <w>ifgoto</w>
       <w>ifgt</w>
       <w>ifle</w>
       <w>iflt</w>
@@ -105,6 +107,7 @@
       <w>ifnull</w>
       <w>iinc</w>
       <w>iindex</w>
+      <w>imethod</w>
       <w>impdep</w>
       <w>imple</w>
       <w>ineg</w>
@@ -132,6 +135,7 @@
       <w>javaonepointseven</w>
       <w>jlex</w>
       <w>jmod</w>
+      <w>jsdelta</w>
       <w>juergen</w>
       <w>juliandolby</w>
       <w>juni</w>
@@ -142,6 +146,7 @@
       <w>laload</w>
       <w>landroid</w>
       <w>lannotations</w>
+      <w>larraybounds</w>
       <w>lastore</w>
       <w>launchconfig</w>
       <w>lcfg</w>
@@ -151,6 +156,7 @@
       <w>lconst</w>
       <w>lcorner</w>
       <w>ldataflow</w>
+      <w>ldefault</w>
       <w>ldemandpa</w>
       <w>lfunction</w>
       <w>lgnu</w>
@@ -168,6 +174,7 @@
       <w>lockfiles</w>
       <w>lookupswitch</w>
       <w>lorg</w>
+      <w>lprivate</w>
       <w>lprologue</w>
       <w>lrecurse</w>
       <w>lreflection</w>
@@ -182,6 +189,7 @@
       <w>lsub</w>
       <w>ltest</w>
       <w>ltests</w>
+      <w>ltype</w>
       <w>lushr</w>
       <w>lval</w>
       <w>lxor</w>
@@ -206,6 +214,7 @@
       <w>nowarn</w>
       <w>nullanalysis</w>
       <w>odexed</w>
+      <w>offsetted</w>
       <w>orsc</w>
       <w>overridecomment</w>
       <w>packagelist</w>
@@ -218,8 +227,11 @@
       <w>projectdeps</w>
       <w>putfield</w>
       <w>putstatic</w>
+      <w>rankdir</w>
       <w>rcvr</w>
       <w>resourcefilters</w>
+      <w>retf</w>
+      <w>rnal</w>
       <w>rval</w>
       <w>rvals</w>
       <w>saload</w>
@@ -232,6 +244,7 @@
       <w>sjfink</w>
       <w>smik</w>
       <w>sridharan</w>
+      <w>studienarbeit</w>
       <w>succs</w>
       <w>sukyoung's</w>
       <w>switchstatements</w>
@@ -240,6 +253,7 @@
       <w>temurin</w>
       <w>testname</w>
       <w>typecomment</w>
+      <w>ushr</w>
       <w>werror</w>
       <w>xdoclint</w>
       <w>xiangyu</w>

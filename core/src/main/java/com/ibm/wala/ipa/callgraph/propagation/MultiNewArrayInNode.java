@@ -16,7 +16,9 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-/** An {@link InstanceKey} which represents a multinewarray allocation site in a {@link CGNode}. */
+/**
+ * An {@link InstanceKey} which represents a multi-new-array allocation site in a {@link CGNode}.
+ */
 public final class MultiNewArrayInNode extends AllocationSiteInNode {
   private final int dim;
 

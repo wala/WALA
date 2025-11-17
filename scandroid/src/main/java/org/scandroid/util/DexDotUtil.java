@@ -150,9 +150,9 @@ public class DexDotUtil extends DotUtil {
       result.append("graph [concentrate = true];");
     }
 
-    String rankdir = getRankDir();
-    if (rankdir != null) {
-      result.append("rankdir=").append(rankdir).append(';');
+    String rankDir = getRankDir();
+    if (rankDir != null) {
+      result.append("rankdir=").append(rankDir).append(';');
     }
     String fontsizeStr = "fontsize=" + fontSize;
     String fontcolorStr = ",fontcolor=" + fontColor;

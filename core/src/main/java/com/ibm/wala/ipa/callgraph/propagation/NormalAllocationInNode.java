@@ -15,7 +15,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * An {@link InstanceKey} which represents a "normal" (not multinewarray) {@link NewSiteReference}
+ * An {@link InstanceKey} which represents a "normal" (not multi-new-array) {@link NewSiteReference}
  * in a {@link CGNode}.
  */
 public final class NormalAllocationInNode extends AllocationSiteInNode {

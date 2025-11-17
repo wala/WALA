@@ -151,7 +151,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
           new GraphAssertion(
               "newfn.js",
               new String[] {
-                "suffix:ctor$1/_fromctor", "suffix:ctor$2/_fromctor", "suffix:ctor$3/_fromctor"
+                "suffix:ctor$1/_from_ctor", "suffix:ctor$2/_from_ctor", "suffix:ctor$3/_from_ctor"
               }));
 
   @Test

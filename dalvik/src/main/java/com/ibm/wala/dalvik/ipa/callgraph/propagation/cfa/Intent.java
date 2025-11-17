@@ -225,7 +225,7 @@ public class Intent implements Cloneable, ContextItem, Comparable<Intent> {
 
   public Atom getAction() {
     if (this.action == null) {
-      assert !isExplicit() : "Beeing explicit implies having an action!";
+      assert !isExplicit() : "Being explicit implies having an action!";
       return UNBOUND;
     }
     return this.action;

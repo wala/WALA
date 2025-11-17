@@ -487,7 +487,7 @@ public class JavaScriptConstructorFunctions {
         for (int i = 1; i < callStmt.getNumberOfUses(); i++)
           if (!ST.isStringConstant(callStmt.getUse(i))) return makeFunctionConstructor(cls, cls);
 
-        final StringBuilder fun = new StringBuilder("function _fromctor (");
+        final StringBuilder fun = new StringBuilder("function _from_ctor (");
         for (int j = 1; j < callStmt.getNumberOfUses() - 1; j++) {
           if (j != 1) fun.append(',');
           fun.append(ST.getStringValue(callStmt.getUse(j)));
@@ -577,7 +577,7 @@ public class JavaScriptConstructorFunctions {
           Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, ME);
           IClass fcls = null;
           for (String nm : fnNames) {
-            if (nm.endsWith("_fromctor")) {
+            if (nm.endsWith("_from_ctor")) {
               fcls = cl.lookupClass(nm, cha);
             }
           }

@@ -237,7 +237,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * some memory. In this case some calls to the OS (like getting the Activity-manager or so) will
    * not be able to be resolved.
    *
-   * <p>It is to be noted that the generated information is far from beeing complete.
+   * <p>It is to be noted that the generated information is far from being complete.
    *
    * <p>The default is to insert the code.
    *

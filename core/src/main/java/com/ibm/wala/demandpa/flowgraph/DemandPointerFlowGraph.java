@@ -549,8 +549,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         InstanceKey ik =
             heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
         PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
-        // if (DEBUG_MULTINEWARRAY) {
-        // Trace.println("multinewarray constraint: ");
+        // if (DEBUG_MULTI_NEW_ARRAY) {
+        // Trace.println("multi-new-array constraint: ");
         // Trace.println(" pk: " + pk);
         // Trace.println(" ik: " + system.findOrCreateIndexForInstanceKey(ik)
         // + " concrete type " + ik.getConcreteType()

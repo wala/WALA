@@ -122,7 +122,7 @@ public class ArrayboundsAnalysisTest {
           }
         }
 
-        String identifyer =
+        String identifier =
             method.getDeclaringClass().getName().toString() + "#" + method.getName().toString();
 
         ArrayOutOfBoundsAnalysis analysis = new ArrayOutOfBoundsAnalysis(ir);
@@ -134,7 +134,7 @@ public class ArrayboundsAnalysisTest {
               .as(
                   () ->
                       "Unexpected necessity for bounds check in "
-                          + identifyer
+                          + identifier
                           + ":"
                           + method.getLineNumber(key.iIndex()))
               .satisfies(condition);

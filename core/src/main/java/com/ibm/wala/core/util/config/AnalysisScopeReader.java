@@ -253,7 +253,7 @@ public class AnalysisScopeReader {
    * running JVM.
    *
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IllegalStateException if there are problmes reading wala properties
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public AnalysisScope makePrimordialScope(File exclusionsFile) throws IOException {
     return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
@@ -265,7 +265,7 @@ public class AnalysisScopeReader {
    * module for the running JVM.
    *
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IllegalStateException if there are problmes reading wala properties
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public AnalysisScope makeBasePrimordialScope(File exclusionsFile) throws IOException {
     return readJavaScope("primordial-base.txt", exclusionsFile, MY_CLASSLOADER);
