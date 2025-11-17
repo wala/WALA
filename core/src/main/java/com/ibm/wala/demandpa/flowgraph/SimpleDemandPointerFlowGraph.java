@@ -1078,8 +1078,8 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // InstanceKey ik = getInstanceKeyForMultiNewArray(node,
       // instruction.getNewSite(), dim);
       // PointerKey pk = getPointerKeyForArrayContents(lastInstance);
-      // if (DEBUG_MULTINEWARRAY) {
-      // Trace.println("multinewarray constraint: ");
+      // if (DEBUG_MULTI_NEW_ARRAY) {
+      // Trace.println("multi-new-array constraint: ");
       // Trace.println(" pk: " + pk);
       // Trace.println(" ik: " + system.findOrCreateIndexForInstanceKey(ik) + "
       // concrete type " + ik.getConcreteType()

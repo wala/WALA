@@ -42,7 +42,7 @@ public class EclipseAnalysisScopeReader extends AnalysisScopeReader {
 
   /**
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IllegalStateException if there are problmes reading wala properties
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public AnalysisScope makePrimordialScopeFromPlugin(
       File exclusionsFile, @SuppressWarnings("unused") Plugin plugIn) throws IOException {

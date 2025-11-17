@@ -2145,7 +2145,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * Consider the case:
    *
    * <pre>
-   * String real_oneheyya = (((returnObjectWithSideEffects().y))+=&quot;hey&quot;)+&quot;ya&quot;
+   * String real_one_hey_ya = (((returnObjectWithSideEffects().y))+=&quot;hey&quot;)+&quot;ya&quot;
    * </pre>
    *
    * where field 'y' is parameterized to type string. then += is not defined for type 'object'. This
@@ -2156,12 +2156,14 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     Expression right = assign.getRightHandSide();
 
     // consider the case:
-    // String real_oneheyya = (((returnObjectWithSideEffects().y))+="hey")+"ya"; // this is going to
+    // String real_one_hey_ya = (((returnObjectWithSideEffects().y))+="hey")+"ya"; // this is going
+    // to
     // be a MAJOR pain...
     // where field 'y' is parameterized to type string. then += is not defined for type 'object'. we
     // want to transform
     // it kind of like this, except we have to define temp.
-    // String real_oneheyya = (String)((temp=cg2WithSideEffects()).y = (String)temp.y + "hey")+"ya";
+    // String real_one_hey_ya = (String)((temp=cg2WithSideEffects()).y = (String)temp.y +
+    // "hey")+"ya";
     // ----------------------------------------------------------------
     //
     // we are responsible for underlined portion

@@ -119,12 +119,12 @@ public class RefineFieldsPtrTest extends AbstractPtrTest {
   @Test
   public void testFlowsToFields()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_FIELDS, 5);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_FIELDS, 5);
   }
 
   @Test
   public void testFlowsToFieldsHarder()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_FIELDS_HARDER, 5);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_FIELDS_HARDER, 5);
   }
 }

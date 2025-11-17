@@ -101,7 +101,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     implements HeapModel {
   private static final boolean DEBUG = false;
 
-  private static final boolean DEBUG_MULTINEWARRAY = DEBUG | false;
+  private static final boolean DEBUG_MULTI_NEW_ARRAY = DEBUG | false;
 
   /** Should we periodically clear out soft reference caches in an attempt to help the GC? */
   public static final boolean PERIODIC_WIPE_SOFT_CACHES = true;
@@ -1269,8 +1269,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
           InstanceKey ik = getInstanceKeyForMultiNewArray(instruction.getNewSite(), dim);
           PointerKey pk = getPointerKeyForArrayContents(lastInstance);
-          if (DEBUG_MULTINEWARRAY) {
-            System.err.println("multinewarray constraint: ");
+          if (DEBUG_MULTI_NEW_ARRAY) {
+            System.err.println("multi-new-array constraint: ");
             System.err.println("   pk: " + pk);
             System.err.println(
                 "   ik: "
