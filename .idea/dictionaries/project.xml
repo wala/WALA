@@ -8,6 +8,7 @@
       <w>acmpeq</w>
       <w>acmpne</w>
       <w>aconst</w>
+      <w>actuals</w>
       <w>ajaxslt</w>
       <w>aload</w>
       <w>aluis</w>

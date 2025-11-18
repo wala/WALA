@@ -457,7 +457,7 @@ public class TypeAnnotation {
 
   public static class CatchTarget extends TypeAnnotationTarget {
     // TODO: as per LocalVarTarget, can we record a meaningful range in terms
-    // of IInstriction[] or SSAInstruction[] indices?!?! this is currently missing..
+    // of IInstruction[] or SSAInstruction[] indices?!?! this is currently missing..
     private final int catchIIndex;
     private final TypeReference catchType;
 

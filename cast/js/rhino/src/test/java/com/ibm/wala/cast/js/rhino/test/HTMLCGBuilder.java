@@ -126,7 +126,7 @@ public class HTMLCGBuilder {
     try {
       File f = new FileProvider().getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
       return f.toURI().toURL();
-    } catch (FileNotFoundException fnfe) {
+    } catch (FileNotFoundException problem) {
       return new URI(src).toURL();
     }
   }
