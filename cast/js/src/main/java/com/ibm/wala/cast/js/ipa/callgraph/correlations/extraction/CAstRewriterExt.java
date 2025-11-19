@@ -106,16 +106,14 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
   private final ArrayDeque<CAstEntity> entities = new ArrayDeque<>();
 
   public CAstNode addNode(CAstNode node, CAstControlFlowMap flow) {
-    Set<CAstNode> nodes = extra_nodes.get(flow);
-    if (nodes == null) extra_nodes.put(flow, nodes = HashSetFactory.make());
-    nodes.add(node);
+    extra_nodes.computeIfAbsent(flow, key -> HashSetFactory.make()).add(node);
     return node;
   }
 
   public CAstNode addFlow(CAstNode node, Object label, CAstNode target, CAstControlFlowMap flow) {
-    Set<Edge> edges = extra_flow.get(flow);
-    if (edges == null) extra_flow.put(flow, edges = HashSetFactory.make());
-    edges.add(new Edge(node, label, target));
+    extra_flow
+        .computeIfAbsent(flow, key -> HashSetFactory.make())
+        .add(new Edge(node, label, target));
     return node;
   }
 
