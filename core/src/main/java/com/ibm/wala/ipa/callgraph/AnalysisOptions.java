@@ -256,16 +256,16 @@ public class AnalysisOptions {
   }
 
   /**
-   * @return the mininum number of equations that the pointer analysis system must contain before
-   *     the solver will try to topologically sore
+   * @return the minimum number of equations that the pointer analysis system must contain before
+   *     the solver will try to topologically sort
    */
   public int getMinEquationsForTopSort() {
     return minEquationsForTopSort;
   }
 
   /**
-   * @param i the mininum number of equations that the pointer analysis system must contain before
-   *     the solver will try to topologically sore
+   * @param i the minimum number of equations that the pointer analysis system must contain before
+   *     the solver will try to topologically sort
    */
   public void setMinEquationsForTopSort(int i) {
     minEquationsForTopSort = i;

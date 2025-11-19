@@ -53,7 +53,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /** Some verbose progress output? */
   private static final boolean verbose = false;
 
-  private static int methodsParsed = 0;
+  private int methodsParsed = 0;
 
   /** A wrapper around the declaring class. */
   protected final IClass declaringClass;
@@ -140,7 +140,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   /**
    * Return the Shrike instruction index for a particular valid program counter (bytecode index), or
-   * -1 if the Shrike instriction index could not be determined.
+   * -1 if the Shrike instruction index could not be determined.
    *
    * <p>This ShrikeBTMethod must not be native.
    */
