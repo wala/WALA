@@ -212,7 +212,7 @@ public abstract class JavaIRTests extends IRTests {
                 final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
 
                 assertThat(valueAssigned.intValue())
-                    .as("Expected an array store to 'y' with value " + (valueOfArrayIndex + 1))
+                    .as("Expected an array store to 'y' with value %d", valueOfArrayIndex + 1)
                     .isEqualTo(valueOfArrayIndex + 1);
               }
             }
@@ -551,7 +551,7 @@ public abstract class JavaIRTests extends IRTests {
             }
             final String allIks = allIksBuilder.toString();
             assertThat(allIks)
-                .as("assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n")
+                .as("assertion failed: expecting ik \"LSub,\" in method, got \"%s\"\n", allIks)
                 .isEqualTo("LSub,");
 
             break;

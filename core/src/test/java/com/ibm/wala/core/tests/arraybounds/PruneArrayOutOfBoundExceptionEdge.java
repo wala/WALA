@@ -185,7 +185,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
      */
     softly
         .assertThat(numberOfDeletedExceptionEdges)
-        .as(() -> "Number of deleted edges is not as expected for " + iClass.getName().toString())
+        .as("Number of deleted edges is not as expected for %s", iClass.getName())
         .isEqualTo(expectedNumberOfArrayAccesses);
   }
 

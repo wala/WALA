@@ -81,7 +81,7 @@ public class HTMLCGBuilder {
     try {
       url = toUrl(src);
     } catch (MalformedURLException | URISyntaxException e1) {
-      fail("Could not find page to analyse: " + src);
+      fail("Could not find page to analyse: %s", src);
     }
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());
