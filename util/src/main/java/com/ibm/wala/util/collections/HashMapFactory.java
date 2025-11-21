@@ -45,7 +45,7 @@ public class HashMapFactory {
   /**
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
-  public static <K, V> HashMap<K, V> make(Map<K, V> t) {
+  public static <K, V> HashMap<K, V> make(Map<? extends K, ? extends V> t) {
     if (t == null) {
       throw new IllegalArgumentException("null t");
     }

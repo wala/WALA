@@ -25,7 +25,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   /**
    * @throws NullPointerException if t is null
    */
-  public ParanoidHashMap(Map<K, V> t) throws NullPointerException {
+  public ParanoidHashMap(Map<? extends K, ? extends V> t) throws NullPointerException {
     super(t.size());
     putAll(t);
   }
