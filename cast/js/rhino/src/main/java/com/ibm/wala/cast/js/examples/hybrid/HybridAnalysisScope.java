@@ -10,14 +10,8 @@ import java.util.Set;
 
 public class HybridAnalysisScope extends AnalysisScope {
 
-  private static final Set<Language> languages;
-
-  static {
-    languages = HashSetFactory.make();
-
-    languages.add(Language.JAVA);
-    languages.add(JavaScriptLoader.JS);
-  }
+  private static final Set<Language> languages =
+      HashSetFactory.of(Language.JAVA, JavaScriptLoader.JS);
 
   public HybridAnalysisScope() {
     super(languages);
