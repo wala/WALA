@@ -501,8 +501,7 @@ public abstract class IRTests {
         return loader.getReference();
       }
     }
-    fail("This code should be unreachable");
-    return null;
+    return fail("This code should be unreachable");
   }
 
   public static void populateScope(
