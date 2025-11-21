@@ -218,7 +218,7 @@ public class FloatingPointsTest extends WalaTestCase {
         }
       }
     }
-    return fail("No ConstantInstruction with type '" + type + "' found");
+    return fail("No ConstantInstruction with type '%s' found", type);
   }
 
   private MethodData getMethodData(String signature) throws InvalidClassFileException {

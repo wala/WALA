@@ -319,7 +319,7 @@ public abstract class IRTests {
               }
             }
 
-            fail("cannot find " + at);
+            fail("cannot find %s", at);
           }
         }
       }
