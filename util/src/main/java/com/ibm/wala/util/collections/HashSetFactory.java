@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -57,5 +58,15 @@ public class HashSetFactory {
     } else {
       return new LinkedHashSet<>(s);
     }
+  }
+
+  /**
+   * @return A {@link ParanoidHashSet} if {@link #DEBUG} is {@code true}, a {@link HashSet}
+   *     otherwise
+   * @see java.util.Set#of(Object[])
+   */
+  @SafeVarargs
+  public static <T, U extends T> HashSet<T> of(U... elements) {
+    return make(Arrays.asList(elements));
   }
 }

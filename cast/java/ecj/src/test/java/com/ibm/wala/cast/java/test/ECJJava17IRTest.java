@@ -97,15 +97,14 @@ public class ECJJava17IRTest extends ECJIRTests {
 
         @Override
         public void check(CallGraph cg) {
-          Set<IClass> expectedTypes = HashSetFactory.make();
-          expectedTypes.add(
-              cg.getClassHierarchy().lookupClass(TypeReference.JavaLangArithmeticException));
-          expectedTypes.add(
-              cg.getClassHierarchy()
-                  .lookupClass(
-                      TypeReference.findOrCreate(
-                          ClassLoaderReference.Primordial,
-                          "Ljava/lang/IndexOutOfBoundsException")));
+          final var expectedTypes =
+              HashSetFactory.of(
+                  cg.getClassHierarchy().lookupClass(TypeReference.JavaLangArithmeticException),
+                  cg.getClassHierarchy()
+                      .lookupClass(
+                          TypeReference.findOrCreate(
+                              ClassLoaderReference.Primordial,
+                              "Ljava/lang/IndexOutOfBoundsException")));
 
           cg.getNodes(testMethod)
               .forEach(
