@@ -10,7 +10,6 @@ import static com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope.SOURC
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -24,7 +23,6 @@ import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -114,16 +112,11 @@ public class ECJJava17IRTest extends ECJIRTests {
                           .forEach(
                               (bb) -> {
                                 if (bb.isCatchBlock()) {
-                                  Set<IClass> foundTypes = HashSetFactory.make();
-                                  bb.getCaughtExceptionTypes()
-                                      .forEachRemaining(
-                                          (t) ->
-                                              foundTypes.add(
-                                                  cg.getClassHierarchy().lookupClass(t)));
-
-                                  assertThat(foundTypes)
+                                  assertThat(bb.getCaughtExceptionTypes())
+                                      .toIterable()
+                                      .extracting(cg.getClassHierarchy()::lookupClass)
                                       .as(() -> n.getIR().toString())
-                                      .isEqualTo(expectedTypes);
+                                      .hasSameElementsAs(expectedTypes);
                                 }
                               }));
         }
