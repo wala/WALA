@@ -130,9 +130,10 @@ public class EclipseJavaScriptAnalysisEngine
 
   public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph(String scriptName)
       throws CancelException {
-    Set<Entrypoint> eps = HashSetFactory.make();
-    eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
-    eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
+    final var eps =
+        HashSetFactory.of(
+            JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName),
+            JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
     return getFieldBasedCallGraph(eps);
   }
 

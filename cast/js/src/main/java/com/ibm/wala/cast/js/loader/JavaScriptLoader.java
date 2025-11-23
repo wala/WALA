@@ -826,13 +826,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     this.preprocessor = preprocessor;
   }
 
-  private static final Set<CAstQualifier> functionQualifiers;
-
-  static {
-    functionQualifiers = HashSetFactory.make();
-    functionQualifiers.add(CAstQualifier.PUBLIC);
-    functionQualifiers.add(CAstQualifier.FINAL);
-  }
+  private static final Set<CAstQualifier> functionQualifiers =
+      HashSetFactory.of(CAstQualifier.PUBLIC, CAstQualifier.FINAL);
 
   public IClass makeCodeBodyType(
       String name,

@@ -111,11 +111,8 @@ public final class AndroidEntryPointLocator {
   private final Set<LocatorFlags> flags;
 
   private static Set<LocatorFlags> defaultFlags() {
-    Set<LocatorFlags> flags = HashSetFactory.make();
-    flags.add(LocatorFlags.INCLUDE_CALLBACKS);
-    flags.add(LocatorFlags.EP_HEURISTIC);
-    flags.add(LocatorFlags.CB_HEURISTIC);
-    return flags;
+    return HashSetFactory.of(
+        LocatorFlags.INCLUDE_CALLBACKS, LocatorFlags.EP_HEURISTIC, LocatorFlags.CB_HEURISTIC);
   }
 
   public AndroidEntryPointLocator() {
