@@ -73,10 +73,6 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     x = HashSetFactory.make();
     x.add(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;"));
     uncalledFunctions.put("VirtualDispatch2.apk", x);
-
-    x = HashSetFactory.make();
-    x.add(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;"));
-    uncalledFunctions.put("VirtualDispatch2.apk", x);
   }
 
   public static Set<IMethod> assertUserCodeReachable(CallGraph cg, Set<MethodReference> uncalled) {
