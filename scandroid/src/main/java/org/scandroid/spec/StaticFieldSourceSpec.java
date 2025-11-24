@@ -93,8 +93,8 @@ public class StaticFieldSourceSpec extends SourceSpec {
       PointerAnalysis<InstanceKey> pa,
       CallGraph cg) {
 
-    Set<CodeElement> valueElements = HashSetFactory.make();
-    valueElements.add(new StaticFieldElement(field.getReference()));
+    final Set<CodeElement> valueElements =
+        HashSetFactory.of(new StaticFieldElement(field.getReference()));
     FlowType<E> flow = new StaticFieldFlow<>(block, field, true);
 
     TypeReference typeRef = field.getFieldTypeReference();

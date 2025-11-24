@@ -270,14 +270,10 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
   }
 
   static Set<String> getTypes(boolean runtimeInvisible) {
-    Set<String> types = HashSetFactory.make();
-    types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.SYSTEM));
-    if (runtimeInvisible) {
-      types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.BUILD));
-    } else {
-      types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.RUNTIME));
-    }
-    return types;
+    return HashSetFactory.of(
+        AnnotationVisibility.getVisibility(AnnotationVisibility.SYSTEM),
+        AnnotationVisibility.getVisibility(
+            runtimeInvisible ? AnnotationVisibility.BUILD : AnnotationVisibility.RUNTIME));
   }
 
   List<Annotation> getAnnotations(Method m, Set<String> set) {

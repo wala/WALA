@@ -2809,8 +2809,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       this.topEntityScope = entityScope;
 
-      this.allEntityScopes = HashSetFactory.make();
-      this.allEntityScopes.add(entityScope);
+      this.allEntityScopes = HashSetFactory.of(entityScope);
 
       cfg = new IncipientCFG();
     }

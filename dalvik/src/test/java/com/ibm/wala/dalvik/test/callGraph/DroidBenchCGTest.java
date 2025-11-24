@@ -48,31 +48,34 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
   private static final Map<String, Set<MethodReference>> uncalledFunctions = HashMapFactory.make();
 
   static {
-    Set<MethodReference> x = HashSetFactory.make();
-    x.add(ref("Lde/ecspride/data/User", "setPwd", "(Lde/ecspride/data/Password;)V"));
-    x.add(ref("Lde/ecspride/data/Password", "setPassword", "(Ljava/lang/String;)V"));
-    uncalledFunctions.put("PrivateDataLeak1.apk", x);
+    uncalledFunctions.put(
+        "PrivateDataLeak1.apk",
+        HashSetFactory.of(
+            ref("Lde/ecspride/data/User", "setPwd", "(Lde/ecspride/data/Password;)V"),
+            ref("Lde/ecspride/data/Password", "setPassword", "(Ljava/lang/String;)V")));
 
-    x = HashSetFactory.make();
-    x.add(ref("Lde/ecspride/Datacontainer", "getSecret", "()Ljava/lang/String;"));
-    x.add(ref("Lde/ecspride/Datacontainer", "getDescription", "()Ljava/lang/String;"));
-    uncalledFunctions.put("FieldSensitivity1.apk", x);
+    uncalledFunctions.put(
+        "FieldSensitivity1.apk",
+        HashSetFactory.of(
+            ref("Lde/ecspride/Datacontainer", "getSecret", "()Ljava/lang/String;"),
+            ref("Lde/ecspride/Datacontainer", "getDescription", "()Ljava/lang/String;")));
 
-    x = HashSetFactory.make();
-    x.add(ref("Lde/ecspride/Datacontainer", "getSecret", "()Ljava/lang/String;"));
-    uncalledFunctions.put("FieldSensitivity2.apk", x);
+    uncalledFunctions.put(
+        "FieldSensitivity2.apk",
+        HashSetFactory.of(ref("Lde/ecspride/Datacontainer", "getSecret", "()Ljava/lang/String;")));
 
-    x = HashSetFactory.make();
-    x.add(ref("Lde/ecspride/Datacontainer", "getDescription", "()Ljava/lang/String;"));
-    uncalledFunctions.put("FieldSensitivity3.apk", x);
+    uncalledFunctions.put(
+        "FieldSensitivity3.apk",
+        HashSetFactory.of(
+            ref("Lde/ecspride/Datacontainer", "getDescription", "()Ljava/lang/String;")));
 
-    x = HashSetFactory.make();
-    x.add(ref("Lde/ecspride/ConcreteClass", "foo", "()Ljava/lang/String;"));
-    uncalledFunctions.put("Reflection1.apk", x);
+    uncalledFunctions.put(
+        "Reflection1.apk",
+        HashSetFactory.of(ref("Lde/ecspride/ConcreteClass", "foo", "()Ljava/lang/String;")));
 
-    x = HashSetFactory.make();
-    x.add(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;"));
-    uncalledFunctions.put("VirtualDispatch2.apk", x);
+    uncalledFunctions.put(
+        "VirtualDispatch2.apk",
+        HashSetFactory.of(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;")));
   }
 
   public static Set<IMethod> assertUserCodeReachable(CallGraph cg, Set<MethodReference> uncalled) {
