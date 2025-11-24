@@ -101,8 +101,9 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
         try {
           File workingDir = new File(receiver.getSourceFileName()).getParentFile();
           SourceModule sourceModule = resolve(rootDir, workingDir, target);
-          if (previouslyRequired.containsKey(sourceModule.getClassName())) {
-            return previouslyRequired.get(sourceModule.getClassName());
+          final var existingValue = previouslyRequired.get(target);
+          if (existingValue != null) {
+            return existingValue;
           }
 
           String className = 'L' + sourceModule.getClassName() + "/nodejsModule";

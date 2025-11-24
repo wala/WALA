@@ -120,9 +120,7 @@ class ExtractedFunction implements CAstEntity {
       for (ExtractionPos nested_loop : Iterator2Iterable.make(pos.getNestedLoops())) {
         CAstNode callsite = nested_loop.getCallSite();
         CAstEntity scoped_entity = nested_loop.getExtractedEntity();
-        Collection<CAstEntity> c = scopedEntities.get(callsite);
-        if (c == null) scopedEntities.put(callsite, c = HashSetFactory.make());
-        c.add(scoped_entity);
+        scopedEntities.computeIfAbsent(callsite, key -> HashSetFactory.make()).add(scoped_entity);
       }
     }
     return scopedEntities;
