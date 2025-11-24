@@ -109,9 +109,7 @@ public class TestCallGraph2JSON {
 
   private static Map<String, String[]> flattenParsedCG(Map<String, Map<String, String[]>> parsed) {
     Map<String, String[]> result = HashMapFactory.make();
-    for (Map<String, String[]> siteInfo : parsed.values()) {
-      result.putAll(siteInfo);
-    }
+    parsed.values().forEach(result::putAll);
     return result;
   }
 
