@@ -8,6 +8,8 @@ import org.gradle.api.attributes.LibraryElements.RESOURCES
 import org.gradle.api.attributes.Usage.JAVA_RUNTIME
 import org.gradle.api.attributes.Usage.NATIVE_RUNTIME
 import org.gradle.api.attributes.Usage.USAGE_ATTRIBUTE
+import org.gradle.api.attributes.java.TargetJvmEnvironment.STANDARD_JVM
+import org.gradle.api.attributes.java.TargetJvmEnvironment.TARGET_JVM_ENVIRONMENT_ATTRIBUTE
 import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
 
 plugins {
@@ -27,6 +29,10 @@ val coreResources by
 val smokeMainExtraPathElements by
     configurations.registering {
       isCanBeConsumed = false
+      attributes.attribute(
+          TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
+          objects.named(TargetJvmEnvironment::class, STANDARD_JVM),
+      )
       attributes.attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, JAVA_RUNTIME))
     }
 

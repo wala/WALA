@@ -40,6 +40,7 @@ dependencies {
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
+  implementation(libs.guava)
   castJsJavadocDestinationDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
   )
