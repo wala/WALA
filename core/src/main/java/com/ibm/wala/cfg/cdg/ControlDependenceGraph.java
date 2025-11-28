@@ -42,8 +42,8 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
   private final NumberedEdgeManager<T> edgeManager;
 
   /**
-   * If requested, this is a map from parentXchild Pairs representing edges in the CDG to the labels
-   * of the control flow edges that edge corresponds to. The labels are Boolean.True or
+   * If requested, this is a map from (parent, child) {@link Pair}s representing edges in the CDG to
+   * the labels of the control flow edges that edge corresponds to. The labels are Boolean.True or
    * Boolean.False for conditionals and an Integer for a switch label.
    */
   private Map<Pair<T, T>, Set<? extends Object>> edgeLabels;

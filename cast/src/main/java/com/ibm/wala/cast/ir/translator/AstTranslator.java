@@ -1193,10 +1193,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             if (src.getLastInstructionIndex() >= 0) {
               SSAInstruction inst = src.instructions.get(src.instructions.size() - 1);
               if (inst instanceof SSAGotoInstruction) {
-                Iterator<PreBasicBlock> blks = getSuccNodes(src);
+                Iterator<PreBasicBlock> blocks = getSuccNodes(src);
                 int succ = 0;
-                while (blks.hasNext()) {
-                  if (!blks.next().isHandlerBlock()) {
+                while (blocks.hasNext()) {
+                  if (!blocks.next().isHandlerBlock()) {
                     succ++;
                     assert succ <= 1;
                   }

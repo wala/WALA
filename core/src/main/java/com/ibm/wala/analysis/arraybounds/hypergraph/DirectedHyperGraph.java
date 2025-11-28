@@ -52,8 +52,8 @@ public class DirectedHyperGraph<T> {
   }
 
   /**
-   * The outdEdges of a node may not have been set on construction. Use this method to set them
-   * based on the edges of this HyperGraph.
+   * The outEdges of a node may not have been set on construction. Use this method to set them based
+   * on the edges of this HyperGraph.
    */
   public void updateNodeEdges() {
     for (final HyperNode<T> node : this.getNodes().values()) {

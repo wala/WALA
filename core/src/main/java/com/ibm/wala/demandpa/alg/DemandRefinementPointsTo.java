@@ -224,11 +224,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * The {@link RefinementPolicy} indicated that no more refinement was possible, <em>and</em> on
      * at least one refinement pass the budget was not exhausted
      */
-    NOMOREREFINE,
+    NO_MORE_REFINE,
     /**
      * The budget specified in the {@link RefinementPolicy} was exceeded on all refinement passes
      */
-    BUDGETEXCEEDED
+    BUDGET_EXCEEDED
   }
 
   /** re-initialize state for a new query */
@@ -383,14 +383,14 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     } else if (passNum == numPasses) {
       // we ran all the passes without succeeding and
       // without the refinement policy giving up
-      result = PointsToResult.BUDGETEXCEEDED;
+      result = PointsToResult.BUDGET_EXCEEDED;
     } else {
       if (lastP2Set != null) {
-        result = PointsToResult.NOMOREREFINE;
+        result = PointsToResult.NO_MORE_REFINE;
       } else {
         // we stopped before the maximum number of passes, but we never
-        // actually finished a pass, so we count this as BUDGETEXCEEDED
-        result = PointsToResult.BUDGETEXCEEDED;
+        // actually finished a pass, so we count this as BUDGET_EXCEEDED
+        result = PointsToResult.BUDGET_EXCEEDED;
       }
     }
     return Pair.make(result, lastP2Set);
@@ -492,9 +492,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     } else if (passNum == numPasses) {
       // we ran all the passes without succeeding and
       // without the refinement policy giving up
-      result = PointsToResult.BUDGETEXCEEDED;
+      result = PointsToResult.BUDGET_EXCEEDED;
     } else {
-      result = completedSomePass ? PointsToResult.NOMOREREFINE : PointsToResult.BUDGETEXCEEDED;
+      result = completedSomePass ? PointsToResult.NO_MORE_REFINE : PointsToResult.BUDGET_EXCEEDED;
     }
     if (MEASURE_MEMORY_USAGE) {
       System.err.println("memory " + lastQueryMemoryUse);
@@ -620,14 +620,14 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     } else if (passNum == numPasses) {
       // we ran all the passes without succeeding and
       // without the refinement policy giving up
-      result = PointsToResult.BUDGETEXCEEDED;
+      result = PointsToResult.BUDGET_EXCEEDED;
     } else {
       if (lastFlowsToSet != null) {
-        result = PointsToResult.NOMOREREFINE;
+        result = PointsToResult.NO_MORE_REFINE;
       } else {
         // we stopped before the maximum number of passes, but we never
-        // actually finished a pass, so we count this as BUDGETEXCEEDED
-        result = PointsToResult.BUDGETEXCEEDED;
+        // actually finished a pass, so we count this as BUDGET_EXCEEDED
+        result = PointsToResult.BUDGET_EXCEEDED;
       }
     }
     return Pair.make(result, lastFlowsToSet == null ? null : removeStates(lastFlowsToSet));
@@ -820,7 +820,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     private OrdinalSet<InstanceKeyAndState> makeOrdinalSet(IntSet intSet) {
-      // make a copy here, to avoid comodification during iteration
+      // make a copy here, to avoid concurrent modification during iteration
       // TODO remove the copying, do it only at necessary call sites
       return new OrdinalSet<>(intSetFactory.makeCopy(intSet), ikAndStates);
     }

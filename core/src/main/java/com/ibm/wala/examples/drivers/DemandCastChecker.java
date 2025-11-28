@@ -263,7 +263,7 @@ public class DemandCastChecker {
               System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
               numSafe++;
               break;
-            case NOMOREREFINE:
+            case NO_MORE_REFINE:
               if (queryResult.snd != null) {
                 System.err.println(
                     "MIGHT FAIL: no more refinement possible for "
@@ -277,7 +277,7 @@ public class DemandCastChecker {
               failing.add(Pair.make(node, castInstr));
               numMightFail++;
               break;
-            case BUDGETEXCEEDED:
+            case BUDGET_EXCEEDED:
               System.err.println(
                   "MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
               failing.add(Pair.make(node, castInstr));
