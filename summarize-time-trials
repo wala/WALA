@@ -1,50 +1,73 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+
+from argparse import ArgumentParser, FileType
 
 import numpy
 import pandas
 
 
 def main():
+
+    # process command-line options
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--csv",
+        help="CSV file with raw results from time trials (default: %(default)s)",
+        type=FileType(),
+        default="build/time-trials.csv",
+    )
+    raw_results_csv = parser.parse_args().csv
+
     # load results, then identify successful and skipped tests
-    frame = pandas.read_csv('build/time-trials.csv')
-    results = frame['resultType']
-    successes = results == 'SUCCESS'
-    skips = results == 'SKIPPED'
+    frame = pandas.read_csv(raw_results_csv)
+    results = frame["resultType"]
+    successes = results == "SUCCESS"
+    skips = results == "SKIPPED"
 
     # report failed tests, if any
     failures = frame[~(successes | skips)]
     if not failures.empty:
-        print('failed tests:')
+        print("failed tests:")
         print(failures)
         return
 
     # aggregate multiple trials of each individual test method
-    frame['elapsedTime'] = frame['endTime'] - frame['startTime']
-    grouped = frame[successes].groupby(['className', 'name'])['elapsedTime']
+    frame["elapsedTime"] = frame["endTime"] - frame["startTime"]
+    grouped = frame[successes].groupby(["className", "name"])["elapsedTime"]
 
     # print very wide tables in full; assume user can scroll horizontally
-    pandas.set_option('display.width', None)
-    pandas.set_option('display.max_colwidth', -1)
+    pandas.set_option("display.width", None)
+    pandas.set_option("display.max_colwidth", None)
 
     # summarize distribution of elapsed times, including fine-grained
     # percentiles at the upper (slowest) end
     times = grouped.mean()
     times.sort_values(inplace=True)
-    print('Overall distribution and percentiles of elapsed times:\n')
-    print(times.describe(percentiles=numpy.arange(.8, 1, .01)))
-    print('\n')
+    print("Overall distribution and percentiles of elapsed times:\n")
+    print(
+        times.describe(
+            percentiles=numpy.arange(0.8, 1, 0.01),
+        )
+    )
+    print("\n")
 
     # print slowest individual tests, showing only those in the 95% percentile
     # or higher (slower)
     ranked_times = pandas.DataFrame(times)
-    ranked_times['percentRank'] = times.rank(pct=True)
-    elapsed_times = ranked_times['elapsedTime']
-    ranked_times['fractionOfTotal'] = elapsed_times / elapsed_times.sum()
-    is_slow = ranked_times['percentRank'] >= .95
+    ranked_times["percentRank"] = times.rank(pct=True)
+    elapsed_times = ranked_times["elapsedTime"]
+    ranked_times["percentOfTotal"] = elapsed_times / elapsed_times.sum()
+    is_slow = ranked_times["percentRank"] >= 0.95
     slowest_tests = ranked_times[is_slow][::-1]
-    print('Slowest individual tests:')
-    print(slowest_tests.to_string(formatters={'percentRank': '{:.1%}'.format}))
+    print("Slowest individual tests:")
+    format_as_percent = "{:.1%}".format
+    print(
+        slowest_tests.to_string(
+            float_format=format_as_percent,
+            formatters={"elapsedTime": "{:,.0f}".format},
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
