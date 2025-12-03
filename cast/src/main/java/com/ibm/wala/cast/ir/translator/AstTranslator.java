@@ -866,8 +866,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (sourceContext == null) return target;
 
         WalkContext astContext = sourceContext.astContext;
-        UnwindState targetContext = null;
-        if (target != null) targetContext = unwindData.get(target);
+        UnwindState targetContext = target == null ? null : unwindData.get(target);
 
         // in unwind context, but catch in same (or inner) unwind context
         if (targetContext != null && targetContext.covers(sourceContext)) return target;
@@ -4615,14 +4614,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     String nm = (String) n.getChild(0).getValue();
     Symbol ls = context.currentScope().lookup(nm);
     TypeReference type = makeType(ls.type());
-    int temp;
-
-    if (context.currentScope().isGlobal(ls)) temp = doGlobalRead(n, context, nm, type);
-    else if (context.currentScope().isLexicallyScoped(ls)) {
-      temp = doLexicallyScopedRead(n, context, nm, type);
-    } else {
-      temp = doLocalRead(context, nm, type);
-    }
+    int temp =
+        context.currentScope().isGlobal(ls)
+            ? doGlobalRead(n, context, nm, type)
+            : context.currentScope().isLexicallyScoped(ls)
+                ? doLexicallyScopedRead(n, context, nm, type)
+                : doLocalRead(context, nm, type);
 
     if (!pre) {
       int ret = context.currentScope().allocateTempValue();
