@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 
 # use one parallel invocation to build everything quickly before sequential time trials
-./gradlew testClasses "$@"
+./gradlew assemble testClasses processTestResources "$@"
 
 gio trash build/time-trials.csv || :
 
