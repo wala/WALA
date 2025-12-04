@@ -110,7 +110,14 @@ public class MapUtil {
       throw new IllegalArgumentException("m is null");
     }
     Map<V, Set<K>> result = HashMapFactory.make(m.size());
-    m.forEach((key, values) -> values.forEach(value -> findOrCreateSet(result, value).add(key)));
+    for (Map.Entry<K, Set<V>> E : m.entrySet()) {
+      K key = E.getKey();
+      Set<V> values = E.getValue();
+      for (V v : values) {
+        Set<K> s = findOrCreateSet(result, v);
+        s.add(key);
+      }
+    }
     return result;
   }
 
@@ -126,14 +133,14 @@ public class MapUtil {
       throw new IllegalArgumentException("m is null");
     }
     Map<V, K> result = HashMapFactory.make(m.size());
-    m.forEach(
-        (key, value) ->
-            result.merge(
-                value,
-                key,
-                (oldValue, newValue) -> {
-                  throw new IllegalArgumentException("input map not one-to-one");
-                }));
+    for (Map.Entry<K, V> entry : m.entrySet()) {
+      K key = entry.getKey();
+      V val = entry.getValue();
+      if (result.containsKey(val)) {
+        throw new IllegalArgumentException("input map not one-to-one");
+      }
+      result.put(val, key);
+    }
     return result;
   }
 
@@ -141,8 +148,18 @@ public class MapUtil {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
+    Map<Set<K>, V> result = HashMapFactory.make();
     Map<V, Set<K>> valueToKeys = HashMapFactory.make();
-    m.forEach((key, value) -> findOrCreateSet(valueToKeys, value).add(key));
-    return invertOneToOneMap(valueToKeys);
+    for (Map.Entry<K, V> E : m.entrySet()) {
+      K key = E.getKey();
+      V value = E.getValue();
+      findOrCreateSet(valueToKeys, value).add(key);
+    }
+    for (Map.Entry<V, Set<K>> E : valueToKeys.entrySet()) {
+      V value = E.getKey();
+      Set<K> keys = E.getValue();
+      result.put(keys, value);
+    }
+    return result;
   }
 }
