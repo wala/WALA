@@ -14,6 +14,7 @@ dependencies {
   implementation(libs.gradle.goomph.plugin)
   implementation(libs.gradle.maven.publish.plugin)
   implementation(libs.gradle.spotless.plugin)
+  implementation(libs.jmh.plugin)
   implementation(libs.jgit)
 }
 
