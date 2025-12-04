@@ -75,7 +75,7 @@ public class InnerClassesTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName("Linner/TestStaticInner"));
     IClass klass = cha.lookupClass(t);
-    assert klass != null;
+    assertThat(klass).isNotNull();
     ShrikeClass s = (ShrikeClass) klass;
     assertThat(s).isNot(innerClass);
   }
@@ -86,7 +86,7 @@ public class InnerClassesTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName("Linner/TestStaticInner$A"));
     IClass klass = cha.lookupClass(t);
-    assert klass != null;
+    assertThat(klass).isNotNull();
     ShrikeClass s = (ShrikeClass) klass;
     assertThat(s).is(innerClass).is(staticInnerClass);
   }
@@ -97,7 +97,7 @@ public class InnerClassesTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName("Linner/TestInner$A"));
     IClass klass = cha.lookupClass(t);
-    assert klass != null;
+    assertThat(klass).isNotNull();
     ShrikeClass s = (ShrikeClass) klass;
     assertThat(s).is(innerClass).isNot(staticInnerClass);
   }

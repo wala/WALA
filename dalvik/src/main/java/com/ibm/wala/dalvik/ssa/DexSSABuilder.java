@@ -601,7 +601,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     val2,
                     !instruction.isFloat()));
         } catch (AssertionError e) {
-          System.err.println("When visiting Instuction " + instruction);
+          System.err.println("When visiting Instruction " + instruction);
           throw e;
         }
       }

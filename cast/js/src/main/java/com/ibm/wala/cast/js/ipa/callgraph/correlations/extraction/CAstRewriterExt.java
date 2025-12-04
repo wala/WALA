@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -25,6 +27,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -106,29 +109,25 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
   private final ArrayDeque<CAstEntity> entities = new ArrayDeque<>();
 
   public CAstNode addNode(CAstNode node, CAstControlFlowMap flow) {
-    Set<CAstNode> nodes = extra_nodes.get(flow);
-    if (nodes == null) extra_nodes.put(flow, nodes = HashSetFactory.make());
-    nodes.add(node);
+    extra_nodes.computeIfAbsent(flow, key -> HashSetFactory.make()).add(node);
     return node;
   }
 
   public CAstNode addFlow(CAstNode node, Object label, CAstNode target, CAstControlFlowMap flow) {
-    Set<Edge> edges = extra_flow.get(flow);
-    if (edges == null) extra_flow.put(flow, edges = HashSetFactory.make());
-    edges.add(new Edge(node, label, target));
+    extra_flow
+        .computeIfAbsent(flow, key -> HashSetFactory.make())
+        .add(new Edge(node, label, target));
     return node;
   }
 
   public void deleteFlow(CAstNode node, CAstEntity entity) {
     CAstControlFlowMap flow = entity.getControlFlow();
-    Set<CAstNode> tmp = flow_to_delete.get(flow);
-    if (tmp == null) flow_to_delete.put(flow, tmp = HashSetFactory.make());
-    tmp.add(node);
+    flow_to_delete.computeIfAbsent(flow, key -> HashSetFactory.make()).add(node);
   }
 
   protected boolean isFlowDeleted(CAstNode node, CAstEntity entity) {
     CAstControlFlowMap flow = entity.getControlFlow();
-    return flow_to_delete.containsKey(flow) && flow_to_delete.get(flow).contains(node);
+    return flow_to_delete.getOrDefault(flow, Collections.emptySet()).contains(node);
   }
 
   public CAstEntity getCurrentEntity() {
@@ -156,9 +155,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
           NodePos.inSubtree(e.anchor, nodeMap.get(Pair.make(root, null)))
               || NodePos.inSubtree(e.anchor, root);
       if (relevant) {
-        Collection<CAstEntity> c = map.get(e.anchor);
-        if (c == null) map.put(e.anchor, c = HashSetFactory.make());
-        c.add(e.me);
+        map.computeIfAbsent(e.anchor, key -> HashSetFactory.make()).add(e.me);
         es.remove();
       }
     }
@@ -186,38 +183,37 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
     Map<Pair<CAstNode, NoKey>, CAstNode> nodeMapCopy = HashMapFactory.make(nodeMap);
     // delete flow if necessary
     // TODO: this is bad; what if one of the deleted nodes occurs as a cflow target?
-    if (flow_to_delete.containsKey(orig)) {
-      for (CAstNode node : flow_to_delete.get(orig)) {
-        nodeMapCopy.remove(Pair.make(node, null));
-      }
-      // flow_to_delete.remove(orig);
+    for (CAstNode node : flow_to_delete.getOrDefault(orig, Collections.emptySet())) {
+      nodeMapCopy.remove(Pair.make(node, null));
     }
+    // flow_to_delete.remove(orig);
     CAstControlFlowRecorder flow =
         (CAstControlFlowRecorder) super.copyFlow(nodeMapCopy, orig, newSrc);
     // extend with local flow information
-    if (extra_nodes.containsKey(orig)) {
-      for (CAstNode nd : extra_nodes.get(orig)) flow.map(nd, nd);
+    for (CAstNode nd :
+        requireNonNullElseGet(extra_nodes.get(orig), Collections::<CAstNode>emptySet)) {
+      flow.map(nd, nd);
     }
-    if (extra_flow.containsKey(orig)) {
-      for (Edge e : extra_flow.get(orig)) {
-        CAstNode from = e.from;
-        Object label = e.label;
-        CAstNode to = e.to;
-        if (nodeMap.containsKey(Pair.make(from, null))) from = nodeMap.get(Pair.make(from, null));
-        if (nodeMap.containsKey(Pair.make(to, null))) to = nodeMap.get(Pair.make(to, null));
-        if (!flow.isMapped(from)) flow.map(from, from);
-        if (!flow.isMapped(to)) flow.map(to, to);
-        flow.add(from, to, label);
-      }
-      /*
-       * Here, we would like to say extra_flow.remove(orig) to get rid of the extra control flow
-       * information, but that would not be correct: a single old cfg may be carved up into several
-       * new ones, each of which needs to be extended with the appropriate extra flow from the old cfg.
-       *
-       * Unfortunately, we now end up extending _every_ new cfg with _all_ the extra flow from the old
-       * cfg, which doesn't sound right either.
-       */
+    for (Edge e : requireNonNullElseGet(extra_flow.get(orig), Collections::<Edge>emptySet)) {
+      CAstNode from = e.from;
+      Object label = e.label;
+      CAstNode to = e.to;
+      if (nodeMap.containsKey(Pair.make(from, null))) from = nodeMap.get(Pair.make(from, null));
+      if (nodeMap.containsKey(Pair.make(to, null))) to = nodeMap.get(Pair.make(to, null));
+      from = nodeMap.getOrDefault(Pair.make(from, null), from);
+      to = nodeMap.getOrDefault(Pair.make(to, null), to);
+      if (!flow.isMapped(from)) flow.map(from, from);
+      if (!flow.isMapped(to)) flow.map(to, to);
+      flow.add(from, to, label);
     }
+    /*
+     * Here, we would like to say extra_flow.remove(orig) to get rid of the extra control flow
+     * information, but that would not be correct: a single old cfg may be carved up into several
+     * new ones, each of which needs to be extended with the appropriate extra flow from the old cfg.
+     *
+     * Unfortunately, we now end up extending _every_ new cfg with _all_ the extra flow from the old
+     * cfg, which doesn't sound right either.
+     */
     return flow;
   }
 
@@ -227,8 +223,9 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
   public CAstEntity rewrite(CAstEntity root) {
     // avoid rewriting the same entity more than once
     // TODO: figure out why this happens in the first place
-    if (rewrite_cache.containsKey(root)) {
-      return rewrite_cache.get(root);
+    final var found = rewrite_cache.get(root);
+    if (found != null) {
+      return found;
     } else {
       entities.push(root);
       enterEntity(root);

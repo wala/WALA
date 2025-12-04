@@ -15,7 +15,6 @@ package com.ibm.wala.cast.java.test;
 
 import static com.ibm.wala.ipa.slicer.SlicerUtil.dumpSlice;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -178,26 +177,21 @@ public abstract class JavaIRTests extends IRTests {
             CGNode node = cg.getNodes(mref).iterator().next();
 
             final SSAInstruction[] instructions = node.getIR().getInstructions();
-            // test 1
-            {
-              SSAInstruction s1 = instructions[2];
-              if (s1 instanceof SSANewInstruction) {
-                assertThat(((SSANewInstruction) s1).getNewSite().getDeclaredType())
-                    .matches(TypeReference::isArrayType);
-              } else {
-                fail("Expected 3rd to be a new array instruction.");
-              }
-            }
-            // test 2
-            {
-              SSAInstruction s2 = instructions[3];
-              if (s2 instanceof SSANewInstruction) {
-                assertThat(((SSANewInstruction) s2).getNewSite().getDeclaredType())
-                    .matches(TypeReference::isArrayType);
-              } else {
-                fail("Expected 4th to be a new array instruction.");
-              }
-            }
+
+            // tests 1 and 2
+            assertThat(List.of(2, 3))
+                .allSatisfy(
+                    slot ->
+                        assertThat(instructions[slot])
+                            .as(
+                                () ->
+                                    String.format(
+                                        "Expected instruction %d to be a new array instruction.",
+                                        slot + 1))
+                            .asInstanceOf(type(SSANewInstruction.class))
+                            .extracting(sni -> sni.getNewSite().getDeclaredType())
+                            .matches(TypeReference::isArrayType));
+
             // test 3: the last 4 instructions are of the form y[i] = i+1;
             {
               final SymbolTable symbolTable = node.getIR().getSymbolTable();
@@ -218,7 +212,7 @@ public abstract class JavaIRTests extends IRTests {
                 final Integer valueAssigned = (Integer) symbolTable.getConstantValue(as.getValue());
 
                 assertThat(valueAssigned.intValue())
-                    .as("Expected an array store to 'y' with value " + (valueOfArrayIndex + 1))
+                    .as("Expected an array store to 'y' with value %d", valueOfArrayIndex + 1)
                     .isEqualTo(valueOfArrayIndex + 1);
               }
             }
@@ -557,7 +551,7 @@ public abstract class JavaIRTests extends IRTests {
             }
             final String allIks = allIksBuilder.toString();
             assertThat(allIks)
-                .as("assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n")
+                .as("assertion failed: expecting ik \"LSub,\" in method, got \"%s\"\n", allIks)
                 .isEqualTo("LSub,");
 
             break;
@@ -657,16 +651,16 @@ public abstract class JavaIRTests extends IRTests {
     TypeReference topType =
         TypeReference.findOrCreate(
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions"));
-    assert cha.lookupClass(topType) != null;
+    assertThat(cha.lookupClass(topType)).isNotNull();
 
     TypeReference inclType =
         TypeReference.findOrCreate(
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions$Included"));
-    assert cha.lookupClass(inclType) != null;
+    assertThat(cha.lookupClass(inclType)).isNotNull();
 
     TypeReference exclType =
         TypeReference.findOrCreate(
             JavaSourceAnalysisScope.SOURCE, TypeName.findOrCreate("LExclusions$Excluded"));
-    assert cha.lookupClass(exclType) == null;
+    assertThat(cha.lookupClass(exclType)).isNull();
   }
 }

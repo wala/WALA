@@ -65,10 +65,10 @@ import java.util.Map;
  * @since 2013-09-19
  *     <p>TODO:
  *     <ul>
- *       <li>Track if a variable has been refered to to be able to prune unused Phi-Instructions
+ *       <li>Track if a variable has been referred to to be able to prune unused Phi-Instructions
  *           later
  *       <li>Trim Memory consumption? The whole class should not be in * memory for long time so
- *           this might be not neccessary.
+ *           this might be not necessary.
  *     </ul>
  */
 public class AndroidModelParameterManager {
@@ -92,7 +92,7 @@ public class AndroidModelParameterManager {
     FREE_CLOSED
   }
 
-  // TODO: nextLocal may be 0 on getUnamanged!
+  // TODO: nextLocal may be 0 on getUnmanaged!
   /** The next variable not under management yet */
   private int nextLocal;
 
@@ -235,7 +235,7 @@ public class AndroidModelParameterManager {
    * @param ssaValue the number the SSA-Instruction assigns to
    * @param setBy the Phi-Instruction itself - may be null
    * @throws IllegalArgumentException if you assign to a number requested using {@link
-   *     #getFree(TypeReference)} but types mismach.
+   *     #getFree(TypeReference)} but types mismatch.
    * @throws IllegalStateException if you forgot to close some Phis
    */
   public void setPhi(TypeReference type, int ssaValue, SSAInstruction setBy) {
@@ -617,7 +617,7 @@ public class AndroidModelParameterManager {
    * Enter a subordinate scope.
    *
    * <p>Call this whenever a new code block starts i.e. when ever you would have to put a left
-   * curly-bracket in yout java code.
+   * curly-bracket in your java code.
    *
    * <p>This function influences the placement of Phi-Functions. Thus if you don't change values you
    * don't have to call it.
@@ -626,7 +626,7 @@ public class AndroidModelParameterManager {
    * @return The depth
    */
   public int scopeDown(boolean doesLoop) { // TODO: Rename scopeInto
-    // TODO: Delete Parameters if therw already was scopeNo
+    // TODO: Delete Parameters if there already was scopeNo
     currentScope++;
     return currentScope;
   }

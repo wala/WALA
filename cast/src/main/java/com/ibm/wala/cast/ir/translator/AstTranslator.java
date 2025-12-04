@@ -872,8 +872,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (sourceContext == null) return target;
 
         WalkContext astContext = sourceContext.astContext;
-        UnwindState targetContext = null;
-        if (target != null) targetContext = unwindData.get(target);
+        UnwindState targetContext = target == null ? null : unwindData.get(target);
 
         // in unwind context, but catch in same (or inner) unwind context
         if (targetContext != null && targetContext.covers(sourceContext)) return target;
@@ -1199,10 +1198,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             if (src.getLastInstructionIndex() >= 0) {
               SSAInstruction inst = src.instructions.get(src.instructions.size() - 1);
               if (inst instanceof SSAGotoInstruction) {
-                Iterator<PreBasicBlock> blks = getSuccNodes(src);
+                Iterator<PreBasicBlock> blocks = getSuccNodes(src);
                 int succ = 0;
-                while (blks.hasNext()) {
-                  if (!blks.next().isHandlerBlock()) {
+                while (blocks.hasNext()) {
+                  if (!blocks.next().isHandlerBlock()) {
                     succ++;
                     assert succ <= 1;
                   }
@@ -2815,8 +2814,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       this.topEntityScope = entityScope;
 
-      this.allEntityScopes = HashSetFactory.make();
-      this.allEntityScopes.add(entityScope);
+      this.allEntityScopes = HashSetFactory.of(entityScope);
 
       cfg = new IncipientCFG();
     }
@@ -4623,14 +4621,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     String nm = (String) n.getChild(0).getValue();
     Symbol ls = context.currentScope().lookup(nm);
     TypeReference type = makeType(ls.type());
-    int temp;
-
-    if (context.currentScope().isGlobal(ls)) temp = doGlobalRead(n, context, nm, type);
-    else if (context.currentScope().isLexicallyScoped(ls)) {
-      temp = doLexicallyScopedRead(n, context, nm, type);
-    } else {
-      temp = doLocalRead(context, nm, type);
-    }
+    int temp =
+        context.currentScope().isGlobal(ls)
+            ? doGlobalRead(n, context, nm, type)
+            : context.currentScope().isLexicallyScoped(ls)
+                ? doLexicallyScopedRead(n, context, nm, type)
+                : doLocalRead(context, nm, type);
 
     if (!pre) {
       int ret = context.currentScope().allocateTempValue();

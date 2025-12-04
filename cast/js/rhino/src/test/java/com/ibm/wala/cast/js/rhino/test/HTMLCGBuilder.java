@@ -81,7 +81,7 @@ public class HTMLCGBuilder {
     try {
       url = toUrl(src);
     } catch (MalformedURLException | URISyntaxException e1) {
-      fail("Could not find page to analyse: " + src);
+      fail("Could not find page to analyse: %s", src);
     }
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());
@@ -126,7 +126,7 @@ public class HTMLCGBuilder {
     try {
       File f = new FileProvider().getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
       return f.toURI().toURL();
-    } catch (FileNotFoundException fnfe) {
+    } catch (FileNotFoundException problem) {
       return new URI(src).toURL();
     }
   }

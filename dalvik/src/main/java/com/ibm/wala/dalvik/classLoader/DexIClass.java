@@ -87,7 +87,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 
   private IMethod[] methods = null;
 
-  // private int construcorId = -1;
+  // private int constructorId = -1;
 
   private int clinitId = -1;
 
@@ -270,14 +270,10 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
   }
 
   static Set<String> getTypes(boolean runtimeInvisible) {
-    Set<String> types = HashSetFactory.make();
-    types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.SYSTEM));
-    if (runtimeInvisible) {
-      types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.BUILD));
-    } else {
-      types.add(AnnotationVisibility.getVisibility(AnnotationVisibility.RUNTIME));
-    }
-    return types;
+    return HashSetFactory.of(
+        AnnotationVisibility.getVisibility(AnnotationVisibility.SYSTEM),
+        AnnotationVisibility.getVisibility(
+            runtimeInvisible ? AnnotationVisibility.BUILD : AnnotationVisibility.RUNTIME));
   }
 
   List<Annotation> getAnnotations(Method m, Set<String> set) {
@@ -338,9 +334,9 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         DexIMethod method = new DexIMethod(dMethod, this);
         methodsAL.add(method);
 
-        // Set construcorId
+        // Set constructorId
         // if ( (dMethod.accessFlags & CONSTRUCTOR.getValue()) != 0){
-        //    construcorId = i;
+        //    constructorId = i;
         // }
         // Set clinitId
         // if (methods[i].isClinit())
@@ -375,7 +371,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     if (methods == null) {
       computeDeclaredMethods();
     }
-    //      return construcorId!=-1?methods[construcorId]:null;
+    //      return constructorId!=-1?methods[constructorId]:null;
     return clinitId != -1 ? methods[clinitId] : null;
   }
 

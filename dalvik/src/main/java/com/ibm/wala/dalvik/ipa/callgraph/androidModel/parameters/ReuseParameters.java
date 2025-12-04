@@ -42,8 +42,8 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.util.ssa.ParameterAccessor.BasedOn;
-import com.ibm.wala.core.util.ssa.ParameterAccessor.ParamerterDisposition;
 import com.ibm.wala.core.util.ssa.ParameterAccessor.Parameter;
+import com.ibm.wala.core.util.ssa.ParameterAccessor.ParameterDisposition;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
@@ -85,7 +85,7 @@ public class ReuseParameters {
         final MethodReference mRef,
         final int descriptorOffset) {
       super(
-          number, name, type, ParamerterDisposition.PARAM, BasedOn.IMETHOD, mRef, descriptorOffset);
+          number, name, type, ParameterDisposition.PARAM, BasedOn.IMETHOD, mRef, descriptorOffset);
     }
   }
 

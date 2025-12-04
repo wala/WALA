@@ -1,5 +1,7 @@
 package com.ibm.wala.cast.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -149,13 +151,13 @@ public class TestConstantCollector {
   public void testSegmentsRoot1() {
     Collection<Segments> x =
         CAstPattern.findAll(AstConstantCollector.simpleValuePattern, fakeEntity(root1));
-    assert x.size() == 1;
+    assertThat(x).hasSize(1);
   }
 
   @Test
   public void testRoot1() {
     Map<String, Object> x = AstConstantCollector.collectConstants(fakeEntity(root1));
-    assert x.size() == 1;
+    assertThat(x).hasSize(1);
   }
 
   private final CAstNode root2 =
@@ -174,7 +176,7 @@ public class TestConstantCollector {
   public void testSegmentsRoot2() {
     Collection<Segments> x =
         CAstPattern.findAll(AstConstantCollector.simpleValuePattern, fakeEntity(root2));
-    assert x.size() == 2;
+    assertThat(x).hasSize(2);
   }
 
   private final CAstNode root3 =
@@ -198,7 +200,7 @@ public class TestConstantCollector {
     CAstEntity ce = fakeEntity(root3);
     CAstEntity nce = new AstConstantFolder().fold(ce);
     Collection<Segments> matches = CAstPattern.findAll(toCodePattern3, nce);
-    assert matches.size() == 1;
+    assertThat(matches).hasSize(1);
   }
 
   private final CAstNode root4 =
@@ -224,6 +226,6 @@ public class TestConstantCollector {
   @Test
   public void testRoot4() {
     Map<String, Object> x = AstConstantCollector.collectConstants(fakeEntity(root4));
-    assert x.size() == 1 : x;
+    assertThat(x).hasSize(1);
   }
 }

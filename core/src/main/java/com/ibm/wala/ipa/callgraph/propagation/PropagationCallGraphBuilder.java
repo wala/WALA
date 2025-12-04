@@ -213,8 +213,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     system.setTopologicalGrowthFactor(options.getTopologicalGrowthFactor());
     system.setMaxEvalBetweenTopo(options.getMaxEvalBetweenTopo());
 
-    discoveredNodes = HashSetFactory.make();
-    discoveredNodes.add(callGraph.getFakeRootNode());
+    discoveredNodes = HashSetFactory.of(callGraph.getFakeRootNode());
 
     // Set up the initially reachable methods and classes
     for (Entrypoint E : options.getEntrypoints()) {

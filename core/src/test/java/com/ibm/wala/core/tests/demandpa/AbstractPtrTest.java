@@ -38,6 +38,7 @@
 package com.ibm.wala.core.tests.demandpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
@@ -194,8 +195,7 @@ public abstract class AbstractPtrTest {
         return heapModel.getInstanceKeyForAllocation(mainMethod, n);
       }
     }
-    assert false : "could not find appropriate allocation";
-    return null;
+    return fail("could not find appropriate allocation");
   }
 
   protected void doPointsToSizeTest(String mainClass, int expectedSize)

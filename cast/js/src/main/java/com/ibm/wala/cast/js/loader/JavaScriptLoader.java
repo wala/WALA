@@ -832,13 +832,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     this.ssaOptions = ssaOptions;
   }
 
-  private static final Set<CAstQualifier> functionQualifiers;
-
-  static {
-    functionQualifiers = HashSetFactory.make();
-    functionQualifiers.add(CAstQualifier.PUBLIC);
-    functionQualifiers.add(CAstQualifier.FINAL);
-  }
+  private static final Set<CAstQualifier> functionQualifiers =
+      HashSetFactory.of(CAstQualifier.PUBLIC, CAstQualifier.FINAL);
 
   public IClass makeCodeBodyType(
       String name,
@@ -989,13 +984,13 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     return JS.instructionFactory();
   }
 
+  private static String prologueFileName = "prologue.js";
+
   /**
    * JavaScript files with code to model various aspects of the language semantics. See
    * com.ibm.wala.cast.js/dat/prologue.js.
    */
-  public static final Set<String> bootstrapFileNames;
-
-  private static String prologueFileName = "prologue.js";
+  public static final Set<String> bootstrapFileNames = HashSetFactory.of(prologueFileName);
 
   public static void resetPrologueFile() {
     prologueFileName = "prologue.js";
@@ -1007,11 +1002,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   public static void addBootstrapFile(String fileName) {
     bootstrapFileNames.add(fileName);
-  }
-
-  static {
-    bootstrapFileNames = HashSetFactory.make();
-    bootstrapFileNames.add(prologueFileName);
   }
 
   @Override

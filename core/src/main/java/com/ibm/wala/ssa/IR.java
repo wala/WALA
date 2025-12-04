@@ -527,7 +527,7 @@ public abstract class IR implements IRView {
   /**
    * Return the invoke instructions corresponding to a call site
    *
-   * <p>Note that Shrike may inline JSRS. This can lead to multiple copies of a single bytecode
+   * <p>Note that Shrike may inline JSRs. This can lead to multiple copies of a single bytecode
    * instruction in a particular IR. So we may have more than one instruction index for a particular
    * call site from bytecode.
    */
@@ -551,7 +551,7 @@ public abstract class IR implements IRView {
   /**
    * Return the instruction indices corresponding to a call site.
    *
-   * <p>Note that Shrike may inline JSRS. This can lead to multiple copies of a single bytecode
+   * <p>Note that Shrike may inline JSRs. This can lead to multiple copies of a single bytecode
    * instruction in a particular IR. So we may have more than one instruction index for a particular
    * call site from bytecode.
    */

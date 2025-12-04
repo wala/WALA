@@ -700,10 +700,10 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         if (DEBUG) {
           System.err.println("The " + i + "th instrction is null! Mathod: " + getMethod());
           if (i > 0) {
-            System.err.println("  Instuction before is: " + instructions[i - 1]);
+            System.err.println("  Instruction before is: " + instructions[i - 1]);
           }
           if (i < instructions.length - 1) {
-            System.err.println("  Instuction after is: " + instructions[i + 1]);
+            System.err.println("  Instruction after is: " + instructions[i + 1]);
           }
         }
         continue;

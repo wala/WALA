@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.ArgumentSpecialization;
+import com.ibm.wala.cast.js.ipa.callgraph.ArgumentSpecialization.ArgumentSpecializationContextInterpreter;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -65,8 +66,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
             cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);
     builder.setContextSelector(
         new ArgumentSpecialization.ArgumentCountContextSelector(builder.getContextSelector()));
-    builder.setContextInterpreter(
-        new ArgumentSpecialization.ArgumentSpecializationContextIntepreter(options, cache));
+    builder.setContextInterpreter(new ArgumentSpecializationContextInterpreter(options, cache));
     CallGraph CG = builder.makeCallGraph(options);
 
     CAstCallGraphUtil.dumpCG(builder.getCFAContextInterpreter(), builder.getPointerAnalysis(), CG);

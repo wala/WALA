@@ -97,21 +97,20 @@ public abstract class AnnotationTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotatedClass1");
 
-    Collection<Annotation> expectedRuntimeInvisibleAnnotations = HashSetFactory.make();
-    expectedRuntimeInvisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
-    expectedRuntimeInvisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/DefaultVisibleAnnotation")));
+    final var expectedRuntimeInvisibleAnnotations =
+        HashSetFactory.of(
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")),
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/DefaultVisibleAnnotation")));
 
-    Collection<Annotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
-    expectedRuntimeVisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
+    final var expectedRuntimeVisibleAnnotations =
+        HashSetFactory.of(
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
 
     testClassAnnotations(
         typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
@@ -123,25 +122,23 @@ public abstract class AnnotationTest extends WalaTestCase {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, "Lannotations/AnnotatedClass2");
 
-    Collection<Annotation> expectedRuntimeInvisibleAnnotations = HashSetFactory.make();
-    expectedRuntimeInvisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")));
-    expectedRuntimeInvisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation2")));
+    final var expectedRuntimeInvisibleAnnotations =
+        HashSetFactory.of(
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation")),
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeInvisibleAnnotation2")));
 
-    Collection<Annotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
-    expectedRuntimeVisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
-    expectedRuntimeVisibleAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation2")));
+    final var expectedRuntimeVisibleAnnotations =
+        HashSetFactory.of(
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")),
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation2")));
 
     testClassAnnotations(
         typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
@@ -223,11 +220,11 @@ public abstract class AnnotationTest extends WalaTestCase {
     assertThat(fieldUnderTest).isNotNull();
 
     Collection<Annotation> annots = fieldUnderTest.getAnnotations();
-    Collection<Annotation> expectedAnnotations = HashSetFactory.make();
-    expectedAnnotations.add(
-        Annotation.make(
-            TypeReference.findOrCreate(
-                ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
+    final var expectedAnnotations =
+        HashSetFactory.of(
+            Annotation.make(
+                TypeReference.findOrCreate(
+                    ClassLoaderReference.Application, "Lannotations/RuntimeVisibleAnnotation")));
     if (!checkRuntimeRetentionOnly) {
       expectedAnnotations.add(
           Annotation.make(

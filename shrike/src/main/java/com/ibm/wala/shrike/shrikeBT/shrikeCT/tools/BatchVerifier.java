@@ -41,7 +41,7 @@ import java.io.PrintWriter;
  * Disassembled code is written to the file "report" under the current directory.
  */
 public class BatchVerifier {
-  private static boolean disasm = false;
+  private static boolean disassemble = false;
 
   private static final ClassHierarchyStore store = new ClassHierarchyStore();
 
@@ -53,7 +53,7 @@ public class BatchVerifier {
 
     for (String arg : args) {
       if (arg.equals("-d")) {
-        disasm = true;
+        disassemble = true;
         break;
       }
     }
@@ -117,7 +117,7 @@ public class BatchVerifier {
                   cr.getMethodName(i),
                   cr.getMethodType(i));
 
-          if (disasm) {
+          if (disassemble) {
             w.write("ShrikeBT code:\n");
             new Disassembler(md).disassembleTo(w);
             w.flush();

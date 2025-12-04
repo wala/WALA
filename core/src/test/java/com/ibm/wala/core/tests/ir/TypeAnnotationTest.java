@@ -61,19 +61,20 @@ public class TypeAnnotationTest extends WalaTestCase {
     TypeReference typeUnderTest =
         TypeReference.findOrCreate(ClassLoaderReference.Application, typeAnnotatedClass1);
 
-    Collection<TypeAnnotation> expectedRuntimeInvisibleAnnotations = HashSetFactory.make();
-    expectedRuntimeInvisibleAnnotations.add(
-        TypeAnnotation.make(
-            Annotation.make(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
-            // TODO: currently, annotations will reference class loaders from which they were
-            // loaded, even if the type
-            // comes from, e.g., primordial (e.g.: Application instead of Primordial).
-            // See {@link TypeAnnotation#fromString(ClassLoaderReference, String)}
-            new TypeAnnotation.SuperTypeTarget(
-                TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Object")),
-            TargetType.CLASS_EXTENDS));
+    final var expectedRuntimeInvisibleAnnotations =
+        HashSetFactory.of(
+            TypeAnnotation.make(
+                Annotation.make(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
+                // TODO: currently, annotations will reference class loaders from which they were
+                // loaded, even if the type
+                // comes from, e.g., primordial (e.g.: Application instead of Primordial).
+                // See {@link TypeAnnotation#fromString(ClassLoaderReference, String)}
+                new TypeAnnotation.SuperTypeTarget(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, "Ljava/lang/Object")),
+                TargetType.CLASS_EXTENDS));
 
     Collection<TypeAnnotation> expectedRuntimeVisibleAnnotations = HashSetFactory.make();
 
@@ -108,23 +109,20 @@ public class TypeAnnotationTest extends WalaTestCase {
         MethodReference.findOrCreate(
             typeUnderTest, Selector.make("foo(ILjava/lang/Object;)Ljava/lang/Integer;"));
 
-    Collection<TypeAnnotation> expectedRuntimeInvisibleAnnotations = HashSetFactory.make();
-
-    expectedRuntimeInvisibleAnnotations.add(
-        TypeAnnotation.make(
-            Annotation.make(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
-            new TypeAnnotation.LocalVarTarget(3, "x"),
-            TargetType.LOCAL_VARIABLE));
-
-    expectedRuntimeInvisibleAnnotations.add(
-        TypeAnnotation.make(
-            Annotation.make(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
-            new TypeAnnotation.LocalVarTarget(4, "y"),
-            TargetType.LOCAL_VARIABLE));
+    final var expectedRuntimeInvisibleAnnotations =
+        HashSetFactory.of(
+            TypeAnnotation.make(
+                Annotation.make(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
+                new TypeAnnotation.LocalVarTarget(3, "x"),
+                TargetType.LOCAL_VARIABLE),
+            TypeAnnotation.make(
+                Annotation.make(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
+                new TypeAnnotation.LocalVarTarget(4, "y"),
+                TargetType.LOCAL_VARIABLE));
 
     // TODO: comment wrt. ClassLoaderReference in testClassAnnotations5() also applies here
     final TypeReference runtimeExceptionRef =
@@ -184,15 +182,15 @@ public class TypeAnnotationTest extends WalaTestCase {
     TypeReference typeUnderTest =
         TypeReference.findOrCreate(ClassLoaderReference.Application, typeAnnotatedClass1);
 
-    Collection<TypeAnnotation> expectedAnnotations = HashSetFactory.make();
-    expectedAnnotations.add(
-        TypeAnnotation.make(
-            Annotation.make(
-                TypeReference.findOrCreate(
-                    ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
-            TypeAnnotationsReader.TYPEPATH_EMPTY,
-            new TypeAnnotation.EmptyTarget(),
-            TargetType.FIELD));
+    final var expectedAnnotations =
+        HashSetFactory.of(
+            TypeAnnotation.make(
+                Annotation.make(
+                    TypeReference.findOrCreate(
+                        ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
+                TypeAnnotationsReader.TYPEPATH_EMPTY,
+                new TypeAnnotation.EmptyTarget(),
+                TargetType.FIELD));
 
     final List<Pair<TypePathKind, Integer>> path = new ArrayList<>();
     path.add(Pair.make(TypeAnnotationsReader.TypePathKind.TYPE_ARGUMENT, 0));

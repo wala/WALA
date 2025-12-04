@@ -71,8 +71,8 @@ import java.util.Set;
  * <p>Accessing parameters of these functions by their numbers only is error prone and leads to
  * confusion. This class tries to leverage parameter-access.
  *
- * <p>You can use this class using now numbers at all. However if you choose to use numbers this
- * class has yet another numbering convention (jupeee): 1 is the first parameter appearing in the
+ * <p>You can use this class using no numbers at all. However if you choose to use numbers this
+ * class has yet another numbering convention (yippee): 1 is the first parameter appearing in the
  * Selector, no matter if the Method has an implicit this. It is not zero as Java initializes new
  * integer-arrays with zero.
  *
@@ -103,7 +103,7 @@ public class ParameterAccessor {
    *
    * <p>Extending this enum should not introduce any problems in ParameterAccessor.
    */
-  public enum ParamerterDisposition {
+  public enum ParameterDisposition {
     /** Parameter is an implicit this-pointer */
     THIS,
     /** Parameter is a regular parameter occurring in the Descriptor */
@@ -151,7 +151,7 @@ public class ParameterAccessor {
    */
   public static class Parameter extends SSAValue {
     /** Implicit this or regular parameter? */
-    private final ParamerterDisposition disp;
+    private final ParameterDisposition disp;
 
     /** Add to number to get position in descriptor */
     private final int descriptorOffset;
@@ -171,7 +171,7 @@ public class ParameterAccessor {
         final int number,
         final String name,
         final TypeReference type,
-        final ParamerterDisposition disp,
+        final ParameterDisposition disp,
         final BasedOn basedOn,
         final MethodReference mRef,
         final int descriptorOffset) {
@@ -185,7 +185,7 @@ public class ParameterAccessor {
       }
       if (disp == null) {
         throw new IllegalArgumentException(
-            "ParamerterDisposition (disp) of a Parameter may not be null");
+            "ParameterDisposition (disp) of a Parameter may not be null");
       }
       // If type was null the call to super failed
       if ((number < 1) && (basedOn == BasedOn.METHOD_REFERENCE)) {
@@ -200,7 +200,7 @@ public class ParameterAccessor {
                 + "Value-Number given is "
                 + number);
       }
-      if ((disp == ParamerterDisposition.PARAM)
+      if ((disp == ParameterDisposition.PARAM)
           && (number + descriptorOffset > mRef.getNumberOfParameters())) {
         throw new IllegalArgumentException(
             "The SSA-Value "
@@ -214,7 +214,7 @@ public class ParameterAccessor {
                 + '\n'
                 + mRef.getSignature());
       }
-      if ((disp == ParamerterDisposition.THIS)
+      if ((disp == ParameterDisposition.THIS)
           && (basedOn == BasedOn.METHOD_REFERENCE)
           && (number != 1)) {
         throw new IllegalArgumentException(
@@ -222,7 +222,7 @@ public class ParameterAccessor {
                 + "The SSA-Value given is "
                 + number);
       }
-      if ((disp == ParamerterDisposition.THIS) && (basedOn == BasedOn.IMETHOD) && (number != 0)) {
+      if ((disp == ParameterDisposition.THIS) && (basedOn == BasedOn.IMETHOD) && (number != 0)) {
         throw new IllegalArgumentException(
             "The implicit this-pointer of an IMethod is located at SSA-Value 0. "
                 + "The SSA-Value given is "
@@ -248,7 +248,7 @@ public class ParameterAccessor {
       // }
     }
 
-    public ParamerterDisposition getDisposition() {
+    public ParameterDisposition getDisposition() {
       return this.disp;
     }
 
@@ -337,13 +337,13 @@ public class ParameterAccessor {
     }
   }
 
-  /** The Constructor used to create this ParameterAceesor */
+  /** The Constructor used to create this ParameterAccessor */
   private final BasedOn base;
 
-  /** The Method associated to this ParameterAceesor if constructed using a mRef */
+  /** The Method associated to this ParameterAccessor if constructed using a mRef */
   private final MethodReference mRef;
 
-  /** The Method associated to this ParameterAceesor if constructed using an IMethod */
+  /** The Method associated to this ParameterAccessor if constructed using an IMethod */
   private final IMethod method;
 
   /** The Value-Number for the implicit this-pointer or -1 if there is none */
@@ -360,7 +360,7 @@ public class ParameterAccessor {
   /**
    * Reads the parameters of a MethodReference CAUTION:.
    *
-   * <p>Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
+   * <p>Do _not_ use ParameterAccessor(IMethod.getReference()), but ParameterAccessor(IMethod)!
    *
    * <p>Using this Constructor influences the SSA-Values returned later. The cha is needed to
    * determine whether mRef is static. If this is already known one should prefer the faster {@link
@@ -465,7 +465,7 @@ public class ParameterAccessor {
   /**
    * Reads the parameters of a MethodReference CAUTION:.
    *
-   * <p>Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
+   * <p>Do _not_ use ParameterAccessor(IMethod.getReference()), but ParameterAccessor(IMethod)!
    *
    * <p>This constructor is faster than {@link #ParameterAccessor(MethodReference,
    * IClassHierarchy)}.
@@ -547,7 +547,7 @@ public class ParameterAccessor {
             newNo,
             null,
             this.method.getParameterType(no),
-            ParamerterDisposition.PARAM,
+            ParameterDisposition.PARAM,
             this.base,
             this.method.getReference(),
             this.descriptorOffset);
@@ -556,7 +556,7 @@ public class ParameterAccessor {
             newNo,
             null,
             this.mRef.getParameterType(no - 1),
-            ParamerterDisposition.PARAM,
+            ParameterDisposition.PARAM,
             this.base,
             this.mRef,
             this.descriptorOffset);
@@ -573,10 +573,10 @@ public class ParameterAccessor {
    * <p>Number 1 is the first parameter in the methods Selector. No matter if the function has an
    * implicit this pointer.
    *
-   * <p>If the Function has an implicit this-pointer you can acess it using getThisNo().
+   * <p>If the Function has an implicit this-pointer you can access it using getThisNo().
    *
    * @param no the number in the Selector
-   * @return the offseted number for accessing the parameter
+   * @return the offsetted number for accessing the parameter
    * @throws IllegalArgumentException if the parameter is zero
    * @throws ArrayIndexOutOfBoundsException if no is not within bounds [1 to numberOfParameters]
    */
@@ -591,7 +591,7 @@ public class ParameterAccessor {
               + no
               + ") was not within bounds (1 to "
               + this.numberOfParameters
-              + ") when acessing a parameter of "
+              + ") when accessing a parameter of "
               + this);
     }
 
@@ -656,7 +656,7 @@ public class ParameterAccessor {
                       i + 1,
                       null,
                       this.method.getParameterType(i),
-                      ParamerterDisposition.PARAM,
+                      ParameterDisposition.PARAM,
                       this.base,
                       this.method.getReference(),
                       this.descriptorOffset));
@@ -672,7 +672,7 @@ public class ParameterAccessor {
                       i + firstInSelector,
                       null,
                       this.mRef.getParameterType(i),
-                      ParamerterDisposition.PARAM,
+                      ParameterDisposition.PARAM,
                       this.base,
                       this.mRef,
                       this.descriptorOffset));
@@ -736,14 +736,14 @@ public class ParameterAccessor {
                     + this.method.getParameterType(self));
           }
         } catch (ClassLookupException e) {
-          // Cant't test assume all fitts
+          // Can't test assume all fits
         }
 
         return new Parameter(
             self,
             "self",
             asType,
-            ParamerterDisposition.THIS,
+            ParameterDisposition.THIS,
             this.base,
             this.method.getReference(),
             this.descriptorOffset);
@@ -753,7 +753,7 @@ public class ParameterAccessor {
             self,
             "self",
             asType,
-            ParamerterDisposition.THIS,
+            ParameterDisposition.THIS,
             this.base,
             this.mRef,
             this.descriptorOffset);
@@ -803,7 +803,7 @@ public class ParameterAccessor {
             ssa,
             "retVal",
             getReturnType(),
-            ParamerterDisposition.RETURN,
+            ParameterDisposition.RETURN,
             this.base,
             this.method.getReference(),
             this.descriptorOffset);
@@ -812,7 +812,7 @@ public class ParameterAccessor {
             ssa,
             "retVal",
             getReturnType(),
-            ParamerterDisposition.RETURN,
+            ParameterDisposition.RETURN,
             this.base,
             this.mRef,
             this.descriptorOffset);
@@ -851,7 +851,7 @@ public class ParameterAccessor {
   }
 
   /**
-   * The SSA-Value to acces the parameter appearing first in the Descriptor with.
+   * The SSA-Value to access the parameter appearing first in the Descriptor with.
    *
    * @throws IllegalArgumentException if the method has no parameters in its Descriptor.
    */
@@ -1004,7 +1004,7 @@ public class ParameterAccessor {
     }
 
     final List<Parameter> all = all();
-    final List<Parameter> allExctends = new ArrayList<>();
+    final List<Parameter> allExtends = new ArrayList<>();
     IClass searchType = null;
     final IClassLoader[] allLoaders = cha.getLoaders();
 
@@ -1031,7 +1031,7 @@ public class ParameterAccessor {
 
       if (candClass != null) { // TODO: Extra function
         if (cha.isSubclassOf(candClass, searchType)) {
-          allExctends.add(cand);
+          allExtends.add(cand);
         }
       } else {
         for (final IClassLoader loader : cha.getLoaders()) {
@@ -1039,7 +1039,7 @@ public class ParameterAccessor {
           if (c != null) {
             info("Using alternative for from: {}", cand);
             if (cha.isSubclassOf(c, searchType)) {
-              allExctends.add(cand);
+              allExtends.add(cand);
             }
           }
         }
@@ -1049,7 +1049,7 @@ public class ParameterAccessor {
       }
     }
 
-    return allExctends;
+    return allExtends;
   }
 
   /**
@@ -1074,12 +1074,12 @@ public class ParameterAccessor {
 
     final IClass searchType = cha.lookupClass(tRef);
     final List<Parameter> all = all();
-    final List<Parameter> allExctends = new ArrayList<>();
+    final List<Parameter> allExtends = new ArrayList<>();
 
     if (searchType == null) {
       throw new IllegalStateException("Could not find the IClass of " + tRef);
     } else {
-      debug("Reteived {} as {}", tRef, searchType);
+      debug("Retrieved {} as {}", tRef, searchType);
     }
 
     for (final Parameter cand : all) {
@@ -1087,7 +1087,7 @@ public class ParameterAccessor {
 
       if (candClass != null) {
         if (cha.isSubclassOf(candClass, searchType)) {
-          allExctends.add(cand);
+          allExtends.add(cand);
         }
       } else {
         // TODO: That's true for base-type too
@@ -1095,13 +1095,13 @@ public class ParameterAccessor {
       }
     }
 
-    return allExctends;
+    return allExtends;
   }
 
   /**
    * First parameter in the selector that is a subclass of tName (slow).
    *
-   * <p>TypeNames have to be lloked up first, do prefer the variant with the TypeReference if one is
+   * <p>TypeNames have to be looked up first, do prefer the variant with the TypeReference if one is
    * available.
    *
    * @return first parameter found or null if there is none
@@ -1126,7 +1126,7 @@ public class ParameterAccessor {
     // ****
     // Implementation starts here
 
-    { // Reteive a reference of the type
+    { // Retrieve a reference of the type
       for (final IClassLoader loader : allLoaders) {
         searchType = loader.lookupClass(tName);
         if (searchType != null) {
@@ -1138,7 +1138,7 @@ public class ParameterAccessor {
     if (searchType == null) {
       throw new IllegalStateException("Could not find " + tName + " in any loader!");
     } else {
-      debug("Reteived {} as {}", tName, searchType);
+      debug("Retrieved {} as {}", tName, searchType);
     }
 
     for (final Parameter cand : all) {
@@ -1194,7 +1194,7 @@ public class ParameterAccessor {
     if (searchType == null) {
       throw new IllegalStateException("Could not find the IClass of " + tRef);
     } else {
-      debug("Reteived {} as {}", tRef, searchType);
+      debug("Retrieved {} as {}", tRef, searchType);
     }
 
     for (final Parameter cand : all) {
@@ -1223,7 +1223,7 @@ public class ParameterAccessor {
   }
 
   /**
-   * Generate the params-param for an InvokeIstruction w/o type checking.
+   * Generate the params-param for an InvokeInstruction w/o type checking.
    *
    * @param args list to build the arguments from - without implicit this
    */
@@ -1238,7 +1238,7 @@ public class ParameterAccessor {
     }
 
     if ((args.get(1) instanceof Parameter)
-        && (((Parameter) args.get(1)).getDisposition() == ParamerterDisposition.THIS)) {
+        && (((Parameter) args.get(1)).getDisposition() == ParameterDisposition.THIS)) {
       warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
     }
 
@@ -1251,7 +1251,7 @@ public class ParameterAccessor {
   }
 
   /**
-   * Generate the params-param for an InvokeIstruction with type checking.
+   * Generate the params-param for an InvokeInstruction with type checking.
    *
    * @param args list to build the arguments from - without implicit this
    * @param target the method to be called - for type checking only
@@ -1296,7 +1296,7 @@ public class ParameterAccessor {
     }
 
     if ((args.get(1) instanceof Parameter)
-        && (((Parameter) args.get(1)).getDisposition() == ParamerterDisposition.THIS)) {
+        && (((Parameter) args.get(1)).getDisposition() == ParameterDisposition.THIS)) {
       warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
     }
 
@@ -1345,7 +1345,7 @@ public class ParameterAccessor {
   }
 
   /**
-   * Generate the params-param for an InvokeIstruction w/o type checking.
+   * Generate the params-param for an InvokeInstruction w/o type checking.
    *
    * @param self the this-pointer to use
    * @param args the rest of the arguments. Be sure it does not start with a this pointer. This is
@@ -1366,7 +1366,7 @@ public class ParameterAccessor {
     int[] params = new int[args.size() + 1];
     if ((params.length > 1)
         && (args.get(1) instanceof Parameter)
-        && (((Parameter) args.get(1)).getDisposition() == ParamerterDisposition.THIS)) {
+        && (((Parameter) args.get(1)).getDisposition() == ParameterDisposition.THIS)) {
       warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
     }
 
@@ -1383,7 +1383,7 @@ public class ParameterAccessor {
   }
 
   /**
-   * Generate the params-param for an InvokeIstruction with type checking.
+   * Generate the params-param for an InvokeInstruction with type checking.
    *
    * @param self the this-pointer to use
    * @param args list to build the arguments from - without implicit this
@@ -1433,7 +1433,7 @@ public class ParameterAccessor {
     int[] params = new int[args.size() + 1];
     if ((params.length > 1)
         && (args.get(1) instanceof Parameter)
-        && (((Parameter) args.get(1)).getDisposition() == ParamerterDisposition.THIS)) {
+        && (((Parameter) args.get(1)).getDisposition() == ParameterDisposition.THIS)) {
       warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
     }
 
@@ -1485,7 +1485,7 @@ public class ParameterAccessor {
   /**
    * Connects though parameters from the calling function (overridable) - CAUTION:.
    *
-   * <p>This functions makes is decisions based on Type-Referes only so if a TypeReference occurs
+   * <p>This functions makes is decisions based on TypeReferences only so if a TypeReference occurs
    * multiple times in the caller or callee it may make surprising connections.
    *
    * <p>The List of Parameters is generated based on the overrides, than parameters in 'this' are
@@ -1544,7 +1544,7 @@ public class ParameterAccessor {
         for (final SSAValue cand : overrides) {
           if (cand.getType().getName().equals(paramType.getName())) { // XXX: What about the loader?
             assigned.add(cand);
-            debug("\t\tAsigning: {} from the overrides (eq)", cand);
+            debug("\t\tAssigning: {} from the overrides (eq)", cand);
             continue forEachParameter;
           } else {
             debug("\t\tSkipping: {} of the overrides (eq)", cand);
@@ -1556,7 +1556,7 @@ public class ParameterAccessor {
         for (final Parameter cand : thisParams) {
           if (cand.getType().getName().equals(paramType.getName())) {
             assigned.add(cand);
-            debug("\t\tAsigning: {} from callers params (eq)", cand);
+            debug("\t\tAssigning: {} from callers params (eq)", cand);
             continue forEachParameter;
           } else {
             debug("\t\tSkipping: {} of the callers params (eq)", cand);
@@ -1568,7 +1568,7 @@ public class ParameterAccessor {
         for (final SSAValue cand : defaults) {
           if (cand.getType().getName().equals(paramType.getName())) {
             assigned.add(cand);
-            debug("\t\tAsigning: {} from the defaults (eq)", cand);
+            debug("\t\tAssigning: {} from the defaults (eq)", cand);
             continue forEachParameter;
           }
         }
@@ -1583,7 +1583,7 @@ public class ParameterAccessor {
             for (final SSAValue cand : overrides) {
               if (isAssignable(cand, param, cha)) {
                 assigned.add(cand);
-                debug("\t\tAsigning: {} from the overrides (ass)", cand);
+                debug("\t\tAssigning: {} from the overrides (ass)", cand);
                 continue forEachParameter;
               }
             }
@@ -1596,7 +1596,7 @@ public class ParameterAccessor {
             try {
               if (isAssignable(cand, param, cha)) {
                 assigned.add(cand);
-                debug("\t\tAsigning: {} from the callrs params (ass)", cand);
+                debug("\t\tAssigning: {} from the caller's params (ass)", cand);
                 continue forEachParameter;
               }
             } catch (ClassLookupException e) {
@@ -1608,7 +1608,7 @@ public class ParameterAccessor {
           for (final SSAValue cand : defaults) {
             if (isAssignable(cand, param, cha)) {
               assigned.add(cand);
-              debug("\t\tAsigning: {} from the defaults (ass)", cand);
+              debug("\t\tAssigning: {} from the defaults (ass)", cand);
               continue forEachParameter;
             }
           }
@@ -1627,7 +1627,7 @@ public class ParameterAccessor {
           final int inst = instantiator.createInstance(param.getType(), instantiatorArgs);
           if (inst < 0) {
             warn(
-                "No type was assignable and the instantiator returned an invalidone! Using null for {}",
+                "No type was assignable and the instantiator returned an invalid one! Using null for {}",
                 param);
             assigned.add(null);
           } else {
@@ -1638,7 +1638,7 @@ public class ParameterAccessor {
                       inst,
                       "craftedForCall",
                       param.getType(),
-                      ParamerterDisposition.NEW,
+                      ParameterDisposition.NEW,
                       this.base,
                       this.method.getReference(),
                       this.descriptorOffset);
@@ -1648,7 +1648,7 @@ public class ParameterAccessor {
                       inst,
                       "craftedForCall",
                       param.getType(),
-                      ParamerterDisposition.NEW,
+                      ParameterDisposition.NEW,
                       this.base,
                       this.mRef,
                       this.descriptorOffset);

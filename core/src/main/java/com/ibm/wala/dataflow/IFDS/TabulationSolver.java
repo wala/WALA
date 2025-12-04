@@ -57,6 +57,7 @@ import java.util.TreeSet;
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
  */
+@SuppressWarnings("unused")
 public class TabulationSolver<T, P, F> {
 
   /**
@@ -456,7 +457,7 @@ public class TabulationSolver<T, P, F> {
             // summary edge
             // with respect to one s_profOf(c), we have to propagate
             // for each
-            // potential entry node s_p /in s_procof(c)
+            // potential entry node s_p /in s_procOf(c)
             for (final T s_p : entries) {
               if (DEBUG_LEVEL > 1) {
                 System.err.println(" do entry " + s_p);
@@ -481,7 +482,7 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * @param d2 note that s_p must be an entry for procof(n)
+   * @param d2 note that s_p must be an entry for procOf(n)
    * @return set of d1 s.t. {@literal <s_p, d1> -> <n, d2>} is a path edge, or null if none found
    */
   protected IntSet getInversePathEdges(T s_p, T n, int d2) {

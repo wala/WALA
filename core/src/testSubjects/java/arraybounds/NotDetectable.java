@@ -125,7 +125,7 @@ public class NotDetectable {
    * The analysis can not detect, that forward is false every other iteration. So there is a
    * positive and a negative loop. The positive loop is bound by the loop condition, while the
    * negative loop is unbound, so index might be smaller than zero. This should result in the lower
-   * bound check beeing necessary.
+   * bound check being necessary.
    *
    * @return sum of all elements in arr
    */

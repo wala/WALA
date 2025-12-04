@@ -342,28 +342,28 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   }
 
   private CAstNode makeCall(
-      CAstNode fun, CAstNode thisptr, List<CAstNode> args, WalkContext context) {
-    return makeCall(fun, thisptr, args, context, STANDARD_CALL_FN_NAME);
+      CAstNode fun, CAstNode thisPointer, List<CAstNode> args, WalkContext context) {
+    return makeCall(fun, thisPointer, args, context, STANDARD_CALL_FN_NAME);
   }
 
-  private CAstNode makeCtorCall(CAstNode thisptr, List<CAstNode> args, WalkContext context) {
-    return makeCall(thisptr, null, args, context, CTOR_CALL_FN_NAME);
+  private CAstNode makeCtorCall(CAstNode thisPointer, List<CAstNode> args, WalkContext context) {
+    return makeCall(thisPointer, null, args, context, CTOR_CALL_FN_NAME);
   }
 
   private CAstNode makeCall(
-      CAstNode fun, CAstNode thisptr, List<CAstNode> args, WalkContext context, String callee) {
+      CAstNode fun, CAstNode thisPointer, List<CAstNode> args, WalkContext context, String callee) {
     int children = (args == null) ? 0 : args.size();
 
     // children of CAst CALL node are the expression that evaluates to the
     // function, followed by a name (either STANDARD_CALL_FN_NAME or
     // CTOR_CALL_FN_NAME), followed by the actual
     // parameters
-    int nargs = (thisptr == null) ? children + 2 : children + 3;
+    int nargs = (thisPointer == null) ? children + 2 : children + 3;
     List<CAstNode> arguments = new ArrayList<>(nargs);
     arguments.add(fun);
     // assert callee.equals(STANDARD_CALL_FN_NAME) || callee.equals(CTOR_CALL_FN_NAME);
     arguments.add(Ast.makeConstant(callee));
-    if (thisptr != null) arguments.add(thisptr);
+    if (thisPointer != null) arguments.add(thisPointer);
     if (args != null) {
       arguments.addAll(args);
     }

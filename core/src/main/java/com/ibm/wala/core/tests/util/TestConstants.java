@@ -14,7 +14,7 @@ public interface TestConstants {
 
   String WALA_TESTDATA = "wala.testdata.txt";
 
-  String CLASSCONSTANT_MAIN = "LclassConstant/ClassConstant";
+  String CLASS_CONSTANT_MAIN = "LclassConstant/ClassConstant";
 
   String PI_TEST_MAIN = "Lpi/PiNodeCallGraphTestCase";
 
@@ -90,7 +90,7 @@ public interface TestConstants {
 
   String REFLECT24_MAIN = "Lreflection/Reflect24";
 
-  String REFLECTGETMETHODCONTEXT_MAIN = "Lreflection/GetMethodContext";
+  String REFLECT_GET_METHOD_CONTEXT_MAIN = "Lreflection/GetMethodContext";
 
   String SLICE1_MAIN = "Lslice/Slice1";
 
@@ -108,43 +108,43 @@ public interface TestConstants {
 
   String SLICE9_MAIN = "Lslice/Slice9";
 
-  String SLICE_TESTCD1 = "Lslice/TestCD1";
+  String SLICE_TEST_CD1 = "Lslice/TestCD1";
 
-  String SLICE_TESTCD2 = "Lslice/TestCD2";
+  String SLICE_TEST_CD2 = "Lslice/TestCD2";
 
-  String SLICE_TESTCD3 = "Lslice/TestCD3";
+  String SLICE_TEST_CD3 = "Lslice/TestCD3";
 
-  String SLICE_TESTCD4 = "Lslice/TestCD4";
+  String SLICE_TEST_CD4 = "Lslice/TestCD4";
 
-  String SLICE_TESTCD5 = "Lslice/TestCD5";
+  String SLICE_TEST_CD5 = "Lslice/TestCD5";
 
-  String SLICE_TESTCD6 = "Lslice/TestCD6";
+  String SLICE_TEST_CD6 = "Lslice/TestCD6";
 
-  String SLICE_TESTID = "Lslice/TestId";
+  String SLICE_TEST_ID = "Lslice/TestId";
 
-  String SLICE_TESTARRAYS = "Lslice/TestArrays";
+  String SLICE_TEST_ARRAYS = "Lslice/TestArrays";
 
-  String SLICE_TESTFIELDS = "Lslice/TestFields";
+  String SLICE_TEST_FIELDS = "Lslice/TestFields";
 
-  String SLICE_TESTGLOBAL = "Lslice/TestGlobal";
+  String SLICE_TEST_GLOBAL = "Lslice/TestGlobal";
 
-  String SLICE_TESTMULTITARGET = "Lslice/TestMultiTarget";
+  String SLICE_TEST_MULTITARGET = "Lslice/TestMultiTarget";
 
-  String SLICE_TESTRECURSION = "Lslice/TestRecursion";
+  String SLICE_TEST_RECURSION = "Lslice/TestRecursion";
 
   String SLICE_TEST_PRIM_GETTER_SETTER = "Lslice/TestPrimGetterSetter";
 
   String SLICE_TEST_PRIM_GETTER_SETTER2 = "Lslice/TestPrimGetterSetter2";
 
-  String SLICE_TESTTHIN1 = "Lslice/TestThin1";
+  String SLICE_TEST_THIN1 = "Lslice/TestThin1";
 
-  String SLICE_TESTTHROWCATCH = "Lslice/TestThrowCatch";
+  String SLICE_TEST_THROW_CATCH = "Lslice/TestThrowCatch";
 
-  String SLICE_TESTMESSAGEFORMAT = "Lslice/TestMessageFormat";
+  String SLICE_TEST_MESSAGE_FORMAT = "Lslice/TestMessageFormat";
 
-  String SLICE_TESTINETADDR = "Lslice/TestInetAddr";
+  String SLICE_TEST_INET_ADDR = "Lslice/TestInetAddr";
 
-  String SLICE_JUSTTHROW = "Lslice/JustThrow";
+  String SLICE_JUST_THROW = "Lslice/JustThrow";
 
   String OBJECT_SENSITIVE_TEST1 = "LobjSensitive/TestObjSensitive1";
 

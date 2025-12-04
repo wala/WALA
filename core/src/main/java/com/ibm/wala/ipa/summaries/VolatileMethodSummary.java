@@ -65,7 +65,7 @@ import java.util.Map;
  *
  * <p>You can get an ordinary MethodSummary using the {@link #getMethodSummary()}-Method.
  *
- * <p>It extends the MethodSummarys capabilities by the functions: * {@link #getStatementAt(int)} *
+ * <p>It extends the MethodSummaries capabilities by the functions: * {@link #getStatementAt(int)} *
  * {@link #reserveProgramCounters(int)} * {@link #allowReserved(boolean)}
  *
  * @see com.ibm.wala.ssa.SSAInstructionFactory
@@ -412,7 +412,7 @@ public class VolatileMethodSummary {
   }
 
   /**
-   * Adds posion to the function.
+   * Adds poison to the function.
    *
    * <p>This call gets passed directly to the internal MethodSummary.
    */
@@ -487,7 +487,7 @@ public class VolatileMethodSummary {
   public TypeReference getParameterType(int i) {
     if (i <= 0) {
       throw new IllegalArgumentException(
-          "The parater number may not be zero or negative! " + i + " given");
+          "The parameter number may not be zero or negative! " + i + " given");
     }
     if (i >= this.summary.getNumberOfParameters()) {
       throw new ArrayIndexOutOfBoundsException("No such parameter index: " + i);

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.examples.analysis;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -176,7 +178,7 @@ public class SimpleThreadEscapeAnalysis
     // ...and the class hierarchy
     //
     IClassHierarchy cha = buildClassHierarchy();
-    assert cha != null : "failed to create class hierarchy";
+    assertThat(cha).as("failed to create class hierarchy").isNotNull();
     setClassHierarchy(cha);
 
     //

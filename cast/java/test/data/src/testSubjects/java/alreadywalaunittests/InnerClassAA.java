@@ -39,7 +39,7 @@ package alreadywalaunittests;
 
 //other stranger test cases
 //
-// combininations of: 
+// combinations of:
 //		o.new() form
 //      function calls
 //      getting enclosings from one AND multiple levels up
@@ -95,10 +95,10 @@ public class InnerClassAA {
 			System.out.println(abab.getABA_X()); // 9
 			
 			AB.ABA.ABAA abaa = absuba.new ABAA();
-			int myaba_x = abaa.getABA_X();
-			int mya_x = abaa.getA_X();
-			System.out.println(myaba_x); // 7
-			System.out.println(mya_x); // 5
+			int my_aba_x = abaa.getABA_X();
+			int my_a_x = abaa.getA_X();
+			System.out.println(my_aba_x); // 7
+			System.out.println(my_a_x); // 5
 			
 			
 			doMoreWithABSubA(absuba);
@@ -108,17 +108,17 @@ public class InnerClassAA {
 			System.out.println(absuba.getA_X()); // 5
 			
 			AB.ABSubA.ABSubAA absubaa = absuba.new ABSubAA();
-			int myaba_x2 = absubaa.getABA_X();
-			int mya_x2 = absubaa.getA_X();
-			System.out.println(myaba_x2); // 7
-			System.out.println(mya_x2); // 5
+			int my_aba_x2 = absubaa.getABA_X();
+			int my_a_x2 = absubaa.getA_X();
+			System.out.println(my_aba_x2); // 7
+			System.out.println(my_a_x2); // 5
 			// TODO Auto-generated method stub
 
 			AB.ABA.ABAA abaa = absubaa.makeABAA();
-			int myaba_x3 = abaa.getABA_X();
-			int mya_x3 = abaa.getA_X();
-			System.out.println(myaba_x3); // 7
-			System.out.println(mya_x3); // 5
+			int my_aba_x3 = abaa.getABA_X();
+			int my_a_x3 = abaa.getA_X();
+			System.out.println(my_aba_x3); // 7
+			System.out.println(my_a_x3); // 5
 
 		}
 	}

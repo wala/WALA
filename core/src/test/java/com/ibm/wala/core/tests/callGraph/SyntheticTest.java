@@ -48,7 +48,7 @@ public class SyntheticTest extends WalaTestCase {
         TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo");
     MethodReference mref = MethodReference.findOrCreate(t, "foo", "(LmultiTypes/Foo$A;)V");
     IMethod m = cha.resolveMethod(mref);
-    assert m != null;
+    assertThat(m).isNotNull();
     SubtypesEntrypoint e = new SubtypesEntrypoint(m, cha);
     AnalysisOptions options =
         CallGraphTestUtil.makeAnalysisOptions(scope, Collections.<Entrypoint>singleton(e));

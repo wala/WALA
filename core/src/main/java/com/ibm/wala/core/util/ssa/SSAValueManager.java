@@ -84,7 +84,7 @@ public class SSAValueManager {
     FREE_CLOSED
   }
 
-  // TODO: nextLocal may be 0 on getUnamanged!
+  // TODO: nextLocal may be 0 on getUnmanaged!
   /** The next variable not under management yet */
   private int nextLocal;
 
@@ -681,8 +681,8 @@ public class SSAValueManager {
     final Map<VariableKey, Integer> suffix = new HashMap<>();
     int currentSuffix = 0;
 
-    for (final List<Managed<? extends SSAValue>> manageds : seenTypes.values()) {
-      for (final Managed<? extends SSAValue> managed : manageds) {
+    for (final List<Managed<? extends SSAValue>> managedValues : seenTypes.values()) {
+      for (final Managed<? extends SSAValue> managed : managedValues) {
         final SSAValue val = managed.value;
         final String name = val.getVariableName();
         if (name != null) {

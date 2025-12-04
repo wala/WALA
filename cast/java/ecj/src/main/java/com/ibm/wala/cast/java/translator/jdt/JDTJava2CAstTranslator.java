@@ -590,7 +590,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     if (n instanceof LambdaExpression) {
       return new ClassEntity(
           typeBinding, "L" + name, quals, memberEntities, makePosition(n), namePos) {
-        CAstType lt = fTypeDict.new JdtLambdaType(name, typeBinding);
+        final CAstType lt = fTypeDict.new JdtLambdaType(name, typeBinding);
 
         @Override
         public CAstType getType() {
@@ -2145,7 +2145,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
    * Consider the case:
    *
    * <pre>
-   * String real_oneheyya = (((returnObjectWithSideEffects().y))+=&quot;hey&quot;)+&quot;ya&quot;
+   * String real_one_hey_ya = (((returnObjectWithSideEffects().y))+=&quot;hey&quot;)+&quot;ya&quot;
    * </pre>
    *
    * where field 'y' is parameterized to type string. then += is not defined for type 'object'. This
@@ -2156,12 +2156,14 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     Expression right = assign.getRightHandSide();
 
     // consider the case:
-    // String real_oneheyya = (((returnObjectWithSideEffects().y))+="hey")+"ya"; // this is going to
+    // String real_one_hey_ya = (((returnObjectWithSideEffects().y))+="hey")+"ya"; // this is going
+    // to
     // be a MAJOR pain...
     // where field 'y' is parameterized to type string. then += is not defined for type 'object'. we
     // want to transform
     // it kind of like this, except we have to define temp.
-    // String real_oneheyya = (String)((temp=cg2WithSideEffects()).y = (String)temp.y + "hey")+"ya";
+    // String real_one_hey_ya = (String)((temp=cg2WithSideEffects()).y = (String)temp.y +
+    // "hey")+"ya";
     // ----------------------------------------------------------------
     //
     // we are responsible for underlined portion
@@ -3449,9 +3451,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // for ( String x: doSomething() ) { ... }
     // ********* AFTER:
     // {
-    // String tmparray[] = doSomething();
-    // for ( int tmpindex = 0; i < tmparray.length; tmpindex++ ) {
-    // String x = tmparray[tmpindex];
+    // String tmpArray[] = doSomething();
+    // for ( int tmpIndex = 0; i < tmpArray.length; tmpIndex++ ) {
+    // String x = tmpArray[tmpIndex];
     // ...
     // }
     // }
@@ -3460,7 +3462,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // match up exactly:
     // LOCAL_SCOPE(BLOCK(arrayDecl,LOCAL_SCOPE(BLOCK(BLOCK(indexDecl),LOOP(cond,BLOCK(LOCAL_SCOPE(BLOCK(nextAssign,bodyblock)),continueTarget,BLOCK(iter))),breakTarget))))
 
-    /*------ arrayDecl --------- String tmparray[] = doSomething() ------*/
+    /*------ arrayDecl --------- String tmpArray[] = doSomething() ------*/
     final String tmpArrayName = "for temp array"; // illegal java identifier
     CAstNode exprNode = visitNode(n.getExpression(), context);
     CAstNode arrayDeclNode =
@@ -3476,7 +3478,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                     true)),
             exprNode);
 
-    /*------ indexDecl --------- int tmpindex = 0 ------*/
+    /*------ indexDecl --------- int tmpIndex = 0 ------*/
     final String tmpIndexName = "for temp index";
     CAstNode indexDeclNode =
         makeNode(
@@ -3489,7 +3491,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                     tmpIndexName, fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")), true)),
             fFactory.makeConstant(Integer.valueOf(0)));
 
-    /*------ cond ------------- tmpindex < tmparray.length ------*/
+    /*------ cond ------------- tmpIndex < tmpArray.length ------*/
     CAstNode tmpArrayLengthNode =
         makeNode(
             context,
@@ -3520,7 +3522,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                 fFactory.makeConstant(JavaPrimitiveType.INT)),
             tmpArrayLengthNode);
 
-    /*------ tmpIndexInc -------- tmpindex++ ------*/
+    /*------ tmpIndexInc -------- tmpIndex++ ------*/
     CAstNode tmpArrayIncNode =
         makeNode(
             context,
@@ -3531,7 +3533,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
             fFactory.makeConstant(1),
             CAstOperator.OP_ADD);
 
-    /*------ tmpArrayAccess ----- String x = tmparray[tmpindex] ------*/
+    /*------ tmpArrayAccess ----- String x = tmpArray[tmpIndex] ------*/
     CAstNode tmpArrayAccessNode =
         makeNode(
             context,

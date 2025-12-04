@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
@@ -38,9 +40,9 @@ import java.util.Set;
 public class CAstControlFlowRecorder implements CAstControlFlowMap {
   private final CAstSourcePositionMap src;
 
-  private final Map<CAstNode, Object> CAstToNode = new LinkedHashMap<>();
+  private final BiMap<CAstNode, Object> CAstToNode = HashBiMap.create();
 
-  private final Map<Object, CAstNode> nodeToCAst = new LinkedHashMap<>();
+  private final BiMap<Object, CAstNode> nodeToCAst = CAstToNode.inverse();
 
   private final Map<Key, Object> table = new LinkedHashMap<>();
 
@@ -172,7 +174,6 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
         : node + " already mapped:\n" + this;
     assert !CAstToNode.containsKey(ast) || CAstToNode.get(ast) == node
         : ast + " already mapped:\n" + this;
-    nodeToCAst.put(node, ast);
     cachedMappedNodes = null;
     CAstToNode.put(ast, node);
   }

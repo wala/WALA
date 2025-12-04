@@ -392,7 +392,8 @@ public class AndroidStartComponentTool {
     } else if (this.callerContext == AndroidTypes.AndroidContextType.ACTIVITY) {
 
       // The IBinder is Activity.mMainThread.getApplicationThread()   // TODO: Verify
-      final SSAValue mMainThread = pm.getUnmanaged(AndroidTypes.ActivityThread, "callersMainThred");
+      final SSAValue mMainThread =
+          pm.getUnmanaged(AndroidTypes.ActivityThread, "callersMainThread");
       { // Fetch mMainthred
         final int instPC = redirect.getNextProgramCounter();
         final FieldReference mMainThreadRef =

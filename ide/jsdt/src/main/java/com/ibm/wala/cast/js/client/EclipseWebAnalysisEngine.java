@@ -12,7 +12,6 @@ import com.ibm.wala.ide.jsdt.Activator;
 import com.ibm.wala.ide.util.EclipseWebProjectPath;
 import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CancelException;
@@ -62,9 +61,10 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
   @Override
   public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph(String scriptName)
       throws CancelException {
-    Set<Entrypoint> eps = HashSetFactory.make();
-    eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
-    eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
+    final var eps =
+        HashSetFactory.of(
+            JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName),
+            JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
 
     for (Pair<String, Plugin> model : models) {
       eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make('L' + model.fst));

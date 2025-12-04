@@ -34,7 +34,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   /**
    * @throws NullPointerException if s is null
    */
-  public ParanoidHashSet(Collection<T> s) throws NullPointerException {
+  public ParanoidHashSet(Collection<? extends T> s) throws NullPointerException {
     super(s.size());
     hcFreq = HashMapFactory.make(s.size());
     this.addAll(s);

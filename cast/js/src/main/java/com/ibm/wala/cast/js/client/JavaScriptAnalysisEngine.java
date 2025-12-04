@@ -43,10 +43,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.SeqClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Collections;
-import java.util.Set;
 import java.util.jar.JarFile;
 
 public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
@@ -142,11 +140,6 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
     @Override
     protected CallGraphBuilder<ObjectVertex> getCallGraphBuilder(
         final IClassHierarchy cha, AnalysisOptions options, final IAnalysisCacheView cache) {
-      Set<Entrypoint> roots = HashSetFactory.make();
-      for (Entrypoint e : options.getEntrypoints()) {
-        roots.add(e);
-      }
-
       if (builderType.equals(BuilderType.OPTIMISTIC)) {
         ((JSAnalysisOptions) options).setHandleCallApply(false);
       }

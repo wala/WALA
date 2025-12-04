@@ -95,7 +95,7 @@ public class AppModelMethod {
 
   // Maps a Type to variable name
   private final Map<TypeReference, Integer> typeToID = new HashMap<>();
-  // innerclass dependencies
+  // inner class dependencies
   private final Map<TypeReference, LinkedList<TypeReference>> icDependencies = new HashMap<>();
   // all callbacks to consider
   private final List<MethodParams> callBacks = new ArrayList<>();
@@ -209,7 +209,7 @@ public class AppModelMethod {
           TypeReference tr = im.getDeclaringClass().getReference();
           if (!typeToID.containsKey(tr)) {
             typeToID.put(tr, nextLocal++);
-            // class is an innerclass
+            // class is an inner class
             if (tr.getName().getClassName().toString().contains("$")) {
               addDependencies(tr);
             }
@@ -253,12 +253,12 @@ public class AppModelMethod {
       TypeReference tr = eSet.getKey();
       String className = tr.getName().getClassName().toString();
 
-      // Not an anonymous innerclass
+      // Not an anonymous inner class
       if (!className.contains("$")) {
         processAllocation(tr, i, false);
         createdIDs.add(i);
       }
-      // Is an anonymous innerclass
+      // Is an anonymous inner class
       else {
         LinkedList<TypeReference> deps = icDependencies.get(tr);
         if (deps == null) {

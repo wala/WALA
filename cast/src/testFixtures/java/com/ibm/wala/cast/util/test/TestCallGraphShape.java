@@ -10,20 +10,27 @@
  */
 package com.ibm.wala.cast.util.test;
 
+import static com.ibm.wala.util.graph.EdgeManagerConditions.edge;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 
 public abstract class TestCallGraphShape {
 
@@ -45,9 +52,13 @@ public abstract class TestCallGraphShape {
         SSACFG cfg = N.getIR().getControlFlowGraph();
         for (int i = 0; i < edges.length; i++) {
           SSACFG.BasicBlock bb = cfg.getNode(i);
-          assert edges[i].length == cfg.getSuccNodeCount(bb) : "basic block " + i;
+          assertThat(cfg.getSuccNodes(bb))
+              .as("basic block %d", i)
+              .toIterable()
+              .hasSameSizeAs(edges[i]);
           for (int j = 0; j < edges[i].length; j++) {
-            assert cfg.hasEdge(bb, cfg.getNode(edges[i][j]));
+            Assertions.<EdgeManager<ISSABasicBlock>>assertThat(cfg)
+                .has(edge(bb, cfg.getNode(edges[i][j])));
           }
         }
       }
@@ -99,8 +110,8 @@ public abstract class TestCallGraphShape {
                   }
                 }
 
-                assert false
-                    : "unexpected location " + pos + " for " + inst + " of " + M + "\n" + N.getIR();
+                //noinspection ResultOfMethodCallIgnored
+                fail("unexpected location %s for %s of %s\n%s", pos, inst, M, N.getIR());
               }
             }
           }
@@ -129,20 +140,9 @@ public abstract class TestCallGraphShape {
         IR ir = N.getIR();
         final var names = element.snd;
         for (Name name : names) {
-
-          System.err.println("looking for " + name.name + ", " + name.vn + " in " + N);
-
-          String[] localNames = ir.getLocalNames(name.instructionIndex, name.vn);
-
-          boolean found = false;
-          for (String localName : localNames) {
-            if (localName.equals(name.name)) {
-              found = true;
-              break;
-            }
-          }
-
-          assert found : "no name " + name.name + " for " + N + "\n" + ir;
+          assertThat(ir.getLocalNames(name.instructionIndex, name.vn))
+              .as("Expected name '%s' for node %s%nIR:%n%s", name.name, N, N.getIR())
+              .contains(name.name);
         }
       }
     }
@@ -174,7 +174,7 @@ public abstract class TestCallGraphShape {
                 ? getNodes(CG, (String) assertionDatum.source).iterator()
                 : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
-        assert srcs.hasNext() : "cannot find " + assertionDatum.source;
+        assertThat(srcs).as("cannot find %s", assertionDatum.source).hasNext();
 
         boolean checkAbsence = false;
         String targetName = assertionDatum.targets[j];
@@ -189,7 +189,7 @@ public abstract class TestCallGraphShape {
 
             Iterator<CGNode> dsts = getNodes(CG, targetName).iterator();
             if (!checkAbsence) {
-              assert dsts.hasNext() : "cannot find " + targetName;
+              assertThat(dsts).as("cannot find %s", targetName).hasNext();
             }
 
             while (dsts.hasNext()) {
@@ -198,7 +198,8 @@ public abstract class TestCallGraphShape {
                 if (cgNode.equals(dst)) {
                   if (checkAbsence) {
                     System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
-                    assert false : "found edge " + assertionDatum.source + " ---> " + targetName;
+                    //noinspection ResultOfMethodCallIgnored
+                    fail("found edge %s ---> %s", assertionDatum.source, targetName);
                   } else {
                     continue check_target;
                   }
@@ -208,8 +209,10 @@ public abstract class TestCallGraphShape {
           }
         }
 
-        System.err.println("cannot find edge " + assertionDatum.source + " ---> " + targetName);
-        assert checkAbsence : "cannot find edge " + assertionDatum.source + " ---> " + targetName;
+        final var message =
+            String.format("cannot find edge %s ---> %s%n", assertionDatum.source, targetName);
+        System.err.println(message);
+        assertThat(checkAbsence).as(message).isTrue();
       }
     }
   }
@@ -221,12 +224,13 @@ public abstract class TestCallGraphShape {
    */
   public void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
     Collection<CGNode> sources = getNodes(CG, sourceDescription);
-    Collection<CGNode> dests = getNodes(CG, destDescription);
+    Collection<CGNode> destinations = getNodes(CG, destDescription);
     for (CGNode source : sources) {
-      for (Object dest : dests) {
+      for (Object dest : destinations) {
         for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(source))) {
           if (n.equals(dest)) {
-            assert false : "Found a link from " + source + " to " + dest;
+            //noinspection ResultOfMethodCallIgnored
+            fail("Found a link from %s to %s", source, dest);
           }
         }
       }

@@ -57,10 +57,10 @@ import java.util.Map;
 
 public class ArgumentSpecialization {
 
-  public static class ArgumentSpecializationContextIntepreter
+  public static class ArgumentSpecializationContextInterpreter
       extends AstContextInsensitiveSSAContextInterpreter {
 
-    public ArgumentSpecializationContextIntepreter(
+    public ArgumentSpecializationContextInterpreter(
         AnalysisOptions options, IAnalysisCacheView cache) {
       super(options, cache);
     }
@@ -170,7 +170,7 @@ public class ArgumentSpecialization {
 
     private static final CAstPattern destructuredCallPattern =
         CAstPattern.parse(
-            "CALL(VAR(<name>/[$][$]destructure[$]elt[0-9]+/),\"dispatch\",VAR(<thisptr>/[$][$]destructure[$]rcvr[0-9]+/),<args>**)");
+            "CALL(VAR(<name>/[$][$]destructure[$]elt[0-9]+/),\"dispatch\",VAR(<thisPointer>/[$][$]destructure[$]rcvr[0-9]+/),<args>**)");
 
     private final SSAOptions defaultOptions;
 
@@ -190,7 +190,7 @@ public class ArgumentSpecialization {
         final Value<Integer> v = (Value<Integer>) context.get(ArgumentCountContext.ARGUMENT_COUNT);
         final Retranslatable m = (Retranslatable) method;
         if (v != null) {
-          final JavaScriptLoader myloader =
+          final JavaScriptLoader myLoader =
               (JavaScriptLoader) method.getDeclaringClass().getClassLoader();
 
           class FixedArgumentsRewriter extends CAstBasicRewriter<NonCopyingContext> {
@@ -324,7 +324,7 @@ public class ArgumentSpecialization {
                 DebuggingInformation debugInfo) {
               if (N == codeBodyEntity) {
                 specializedCode =
-                    myloader.makeCodeBodyCode(
+                    myLoader.makeCodeBodyCode(
                         cfg,
                         symtab,
                         hasCatchBlock,
@@ -357,7 +357,7 @@ public class ArgumentSpecialization {
               }
             }
           }
-          ArgumentativeTranslator a = new ArgumentativeTranslator(myloader);
+          ArgumentativeTranslator a = new ArgumentativeTranslator(myLoader);
           m.retranslate(a);
           return super.makeIR(a.specializedCode, context, options);
         }

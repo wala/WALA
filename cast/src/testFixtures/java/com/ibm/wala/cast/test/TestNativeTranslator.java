@@ -1,5 +1,8 @@
 package com.ibm.wala.cast.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import com.ibm.wala.cast.ir.translator.NativeTranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstAnnotation;
@@ -42,7 +45,8 @@ public class TestNativeTranslator {
     @Override
     public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(
         CAstRewriterFactory<C, K> factory, boolean prepend) {
-      assert false;
+      //noinspection ResultOfMethodCallIgnored
+      fail("Unexpected call to `addRewriter`");
     }
 
     @Override
@@ -168,6 +172,6 @@ public class TestNativeTranslator {
 
     System.err.println(ast);
 
-    assert ast.getChildCount() == 3;
+    assertThat(ast.getChildren()).hasSize(3);
   }
 }

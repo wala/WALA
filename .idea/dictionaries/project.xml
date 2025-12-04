@@ -8,6 +8,7 @@
       <w>acmpeq</w>
       <w>acmpne</w>
       <w>aconst</w>
+      <w>actuals</w>
       <w>ajaxslt</w>
       <w>aload</w>
       <w>aluis</w>
@@ -34,6 +35,7 @@
       <w>clinit</w>
       <w>cmpg</w>
       <w>codetemplates</w>
+      <w>cons'ed</w>
       <w>constructorbody</w>
       <w>constructorcomment</w>
       <w>creswick</w>
@@ -45,9 +47,13 @@
       <w>dconst</w>
       <w>ddiv</w>
       <w>def'd</w>
+      <w>def'ed</w>
       <w>def'fed</w>
       <w>delegatecomment</w>
+      <w>demandpa</w>
       <w>develocity</w>
+      <w>dexf</w>
+      <w>dexm</w>
       <w>diffplug</w>
       <w>dmul</w>
       <w>doubble</w>
@@ -55,11 +61,14 @@
       <w>dtrans</w>
       <w>ecspride</w>
       <w>elts</w>
+      <w>enclosings</w>
       <w>enumbody</w>
       <w>eork</w>
       <w>explicitconstructorcall</w>
+      <w>extdoc</w>
       <w>faload</w>
       <w>fastore</w>
+      <w>fcls</w>
       <w>fcmpg</w>
       <w>fcmpl</w>
       <w>fconst</w>
@@ -70,15 +79,20 @@
       <w>foltzer</w>
       <w>foojay</w>
       <w>forin</w>
+      <w>forw</w>
+      <w>fput</w>
+      <w>fref</w>
       <w>freturn</w>
       <w>getfield</w>
       <w>getstatic</w>
       <w>getterbody</w>
       <w>gettercomment</w>
       <w>ghostview</w>
+      <w>goba</w>
       <w>gradleclasspathcontainer</w>
       <w>gradleprojectbuilder</w>
       <w>gradleprojectnature</w>
+      <w>i'th</w>
       <w>iaload</w>
       <w>iastore</w>
       <w>icmpeq</w>
@@ -91,6 +105,7 @@
       <w>ifds</w>
       <w>ifeq</w>
       <w>ifge</w>
+      <w>ifgoto</w>
       <w>ifgt</w>
       <w>ifle</w>
       <w>iflt</w>
@@ -99,6 +114,7 @@
       <w>ifnull</w>
       <w>iinc</w>
       <w>iindex</w>
+      <w>imethod</w>
       <w>impdep</w>
       <w>imple</w>
       <w>ineg</w>
@@ -124,7 +140,9 @@
       <w>javabuilder</w>
       <w>javanature</w>
       <w>javaonepointseven</w>
+      <w>jlex</w>
       <w>jmod</w>
+      <w>jsdelta</w>
       <w>juergen</w>
       <w>juliandolby</w>
       <w>juni</w>
@@ -135,25 +153,38 @@
       <w>laload</w>
       <w>landroid</w>
       <w>lannotations</w>
+      <w>larraybounds</w>
       <w>lastore</w>
       <w>launchconfig</w>
       <w>lcfg</w>
+      <w>lchess</w>
+      <w>lclass</w>
       <w>lcmp</w>
       <w>lconst</w>
       <w>lcorner</w>
       <w>ldataflow</w>
+      <w>ldefault</w>
       <w>ldemandpa</w>
+      <w>lexicals</w>
       <w>lfunction</w>
+      <w>lgnu</w>
+      <w>lhello</w>
       <w>libjvm</w>
       <w>liblit</w>
+      <w>limg</w>
       <w>ljava</w>
+      <w>lkawa</w>
       <w>lload</w>
       <w>lmul</w>
+      <w>lmulti</w>
       <w>lneg</w>
+      <w>lobj</w>
       <w>lockfiles</w>
       <w>lookupswitch</w>
       <w>lorg</w>
+      <w>lprivate</w>
       <w>lprologue</w>
+      <w>lrecurse</w>
       <w>lreflection</w>
       <w>lrem</w>
       <w>lreturn</w>
@@ -164,12 +195,15 @@
       <w>lstatic</w>
       <w>lstore</w>
       <w>lsub</w>
+      <w>ltest</w>
       <w>ltests</w>
+      <w>ltype</w>
       <w>lushr</w>
       <w>lval</w>
       <w>lxor</w>
       <w>markdownlint</w>
       <w>mavencentral</w>
+      <w>meeted</w>
       <w>methodbody</w>
       <w>methodcomment</w>
       <w>miniatur</w>
@@ -178,37 +212,63 @@
       <w>monitorexit</w>
       <w>mref</w>
       <w>msridhar</w>
+      <w>msum</w>
       <w>multianewarray</w>
+      <w>multivar</w>
+      <w>narf</w>
+      <w>nativedeps</w>
       <w>newarray</w>
       <w>newtype</w>
       <w>nonnullbydefault</w>
+      <w>nowarn</w>
       <w>nullanalysis</w>
+      <w>odexed</w>
+      <w>offsetted</w>
       <w>orsc</w>
       <w>overridecomment</w>
+      <w>packagelist</w>
       <w>peis</w>
+      <w>pfretzschner</w>
+      <w>plusish</w>
+      <w>popl</w>
       <w>preallocated</w>
       <w>pretransitive</w>
+      <w>projectdeps</w>
       <w>putfield</w>
       <w>putstatic</w>
+      <w>rankdir</w>
+      <w>rcvr</w>
+      <w>reprop</w>
+      <w>resourcefilters</w>
+      <w>retf</w>
+      <w>rnal</w>
       <w>rval</w>
       <w>rvals</w>
       <w>saload</w>
       <w>sastore</w>
       <w>scandroid</w>
+      <w>selibs</w>
       <w>setterbody</w>
       <w>settercomment</w>
       <w>sipush</w>
       <w>sjfink</w>
+      <w>smik</w>
       <w>sridharan</w>
+      <w>studienarbeit</w>
       <w>succs</w>
+      <w>sukyoung's</w>
       <w>switchstatements</w>
       <w>symtab</w>
       <w>tableswitch</w>
       <w>temurin</w>
       <w>testname</w>
+      <w>tmods</w>
+      <w>trefs</w>
       <w>typecomment</w>
+      <w>ushr</w>
       <w>werror</w>
       <w>xdoclint</w>
+      <w>xiangyu</w>
       <w>xxxunusedxxx</w>
     </words>
   </dictionary>

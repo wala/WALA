@@ -73,7 +73,7 @@ import java.util.List;
 /**
  * This is generates a dummy for the call to an external Activity.
  *
- * <p>Is used by the IntentContextInterpreter if an Intent is marked as beeing external.
+ * <p>Is used by the IntentContextInterpreter if an Intent is marked as being external.
  *
  * @see com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;

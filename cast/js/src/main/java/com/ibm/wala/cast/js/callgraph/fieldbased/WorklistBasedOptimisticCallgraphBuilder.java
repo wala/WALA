@@ -108,7 +108,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     }
     int cnt = 0;
     /*
-     * if bound is missing, calledges are added until all worklists are empty else, the calledges
+     * if bound is missing, call edges are added until all worklists are empty else, the call edges
      * are added until the bound value is hit *
      */
     while ((bound == -1
