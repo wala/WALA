@@ -30,7 +30,15 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, T> Set<T> findOrCreateSet(Map<K, Set<T>> M, K key) {
-    return findOrCreateValue(M, key, () -> HashSetFactory.make(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    Set<T> result = M.get(key);
+    if (result == null) {
+      result = HashSetFactory.make(2);
+      M.put(key, result);
+    }
+    return result;
   }
 
   /**
@@ -39,7 +47,15 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K> MutableIntSet findOrCreateMutableIntSet(Map<K, MutableIntSet> M, K key) {
-    return findOrCreateValue(M, key, MutableSparseIntSet::makeEmpty);
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    MutableIntSet mis = M.get(key);
+    if (mis == null) {
+      mis = MutableSparseIntSet.makeEmpty();
+      M.put(key, mis);
+    }
+    return mis;
   }
 
   /**
@@ -49,7 +65,15 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, T> Collection<T> findOrCreateCollection(Map<K, Collection<T>> M, K key) {
-    return findOrCreateValue(M, key, () -> HashSetFactory.make(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    Collection<T> result = M.get(key);
+    if (result == null) {
+      result = HashSetFactory.make(2);
+      M.put(key, result);
+    }
+    return result;
   }
 
   /**
@@ -60,7 +84,13 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, T> List<T> findOrCreateList(Map<K, List<T>> M, K key) {
-    return findOrCreateValue(M, key, ArrayList::new);
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    if (!M.containsKey(key)) {
+      M.put(key, new ArrayList<>());
+    }
+    return M.get(key);
   }
 
   /**
@@ -72,7 +102,15 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, K2, V> Map<K2, V> findOrCreateMap(Map<K, Map<K2, V>> M, K key) {
-    return findOrCreateValue(M, key, () -> HashMapFactory.make(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    Map<K2, V> result = M.get(key);
+    if (result == null) {
+      result = HashMapFactory.make(2);
+      M.put(key, result);
+    }
+    return result;
   }
 
   /**
@@ -84,7 +122,12 @@ public class MapUtil {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
-    return M.computeIfAbsent(key, missing -> factory.make());
+    V result = M.get(key);
+    if (result == null) {
+      result = factory.make();
+      M.put(key, result);
+    }
+    return result;
   }
 
   /**
@@ -97,7 +140,10 @@ public class MapUtil {
    */
   public static <K, V> WeakHashMap<K, V> findOrCreateWeakHashMap(
       Map<Object, WeakHashMap<K, V>> M, Object key) {
-    return findOrCreateValue(M, key, () -> new WeakHashMap<>(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, k -> new WeakHashMap<>(2));
   }
 
   /**
