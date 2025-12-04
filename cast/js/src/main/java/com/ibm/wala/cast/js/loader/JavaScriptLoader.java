@@ -101,6 +101,7 @@ import com.ibm.wala.ssa.SSALoadIndirectInstruction;
 import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -813,17 +814,22 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   private final CAstRewriterFactory<?, ?> preprocessor;
 
-  public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
-    this(cha, translatorFactory, null);
+  protected final SSAOptions ssaOptions;
+
+  public JavaScriptLoader(
+      IClassHierarchy cha, SSAOptions ssaOptions, JavaScriptTranslatorFactory translatorFactory) {
+    this(cha, ssaOptions, translatorFactory, null);
   }
 
   public JavaScriptLoader(
       IClassHierarchy cha,
+      SSAOptions ssaOptions,
       JavaScriptTranslatorFactory translatorFactory,
       CAstRewriterFactory<?, ?> preprocessor) {
     super(cha);
     this.translatorFactory = translatorFactory;
     this.preprocessor = preprocessor;
+    this.ssaOptions = ssaOptions;
   }
 
   private static final Set<CAstQualifier> functionQualifiers;
@@ -1018,7 +1024,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   @Override
   protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
-    return new JSAstTranslator(this);
+    return new JSAstTranslator(this, ssaOptions);
   }
 
   @Override

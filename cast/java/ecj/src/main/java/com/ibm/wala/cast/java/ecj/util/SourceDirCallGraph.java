@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.io.CommandLine;
@@ -66,7 +67,7 @@ public class SourceDirCallGraph {
   }
 
   protected ClassLoaderFactory getLoaderFactory(AnalysisScope scope) {
-    return new ECJClassLoaderFactory(scope.getExclusions());
+    return new ECJClassLoaderFactory(SSAOptions.defaultOptions(), scope.getExclusions());
   }
 
   public void doit(String[] args, Processor processor)

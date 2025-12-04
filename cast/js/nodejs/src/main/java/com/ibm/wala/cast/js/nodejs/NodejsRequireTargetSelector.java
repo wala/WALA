@@ -114,7 +114,11 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
             className = 'L' + sourceModule.getClassName() + "/jsonModule";
           }
 
-          JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy(), jsLoader, sourceModule);
+          JSCallGraphUtil.loadAdditionalFile(
+              builder.getClassHierarchy(),
+              jsLoader,
+              sourceModule,
+              builder.getOptions().getSSAOptions());
           IClass script =
               builder
                   .getClassHierarchy()

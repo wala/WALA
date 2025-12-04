@@ -80,7 +80,8 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
   private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
     MethodTargetSelector targetSelector =
-        new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector());
+        new JavaScriptConstructTargetSelector(
+            cha, options.getMethodTargetSelector(), options.getSSAOptions());
     if (options.handleCallApply()) {
       targetSelector =
           new JavaScriptFunctionApplyTargetSelector(

@@ -86,7 +86,8 @@ public class PrintIRs {
         WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory);
     SourceModule[] scripts = p.fst.toArray(new SourceModule[] {});
     JavaScriptLoaderFactory loaders =
-        new WebPageLoaderFactory(JSCallGraphUtil.getTranslatorFactory());
+        new WebPageLoaderFactory(
+            JSCallGraphUtil.getTranslatorFactory(), SSAOptions.defaultOptions());
     CAstAnalysisScope scope =
         new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchyFactory.make(scope, loaders, JavaScriptLoader.JS);

@@ -70,6 +70,7 @@ import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
@@ -475,22 +476,27 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   protected final SSAInstructionFactory insts;
 
+  protected final SSAOptions ssaOptions;
+
   protected AstTranslator(
       IClassLoader loader,
+      SSAOptions ssaOptions,
       Map<Object, CAstEntity> namedEntityResolver,
       ArrayOpHandler arrayOpHandler) {
     this.loader = loader;
+    this.ssaOptions = ssaOptions;
     this.namedEntityResolver = namedEntityResolver;
     this.arrayOpHandler = arrayOpHandler != null ? arrayOpHandler : this;
     this.insts = loader.getInstructionFactory();
   }
 
-  protected AstTranslator(IClassLoader loader, Map<Object, CAstEntity> namedEntityResolver) {
-    this(loader, namedEntityResolver, null);
+  protected AstTranslator(
+      IClassLoader loader, SSAOptions ssaOptions, Map<Object, CAstEntity> namedEntityResolver) {
+    this(loader, ssaOptions, namedEntityResolver, null);
   }
 
-  protected AstTranslator(IClassLoader loader) {
-    this(loader, null);
+  protected AstTranslator(IClassLoader loader, SSAOptions ssaOptions) {
+    this(loader, ssaOptions, null);
   }
 
   /** for keeping position information for the generated SSAInstructions and SSA locals */
@@ -3315,6 +3321,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_LT) return CAstBinaryOp.LT;
     else if (op == CAstOperator.OP_NE) return CAstBinaryOp.NE;
     else if (op == CAstOperator.OP_STRICT_NE) return CAstBinaryOp.STRICT_NE;
+    else if (op == CAstOperator.OP_INSTANCE_OF) return CAstBinaryOp.INSTANCE_OF;
     else {
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
       return null;

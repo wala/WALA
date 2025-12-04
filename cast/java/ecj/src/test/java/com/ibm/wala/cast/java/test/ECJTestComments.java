@@ -35,7 +35,7 @@ public class ECJTestComments extends IRTests {
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
-        new ECJJavaSourceAnalysisEngine() {
+        new ECJJavaSourceAnalysisEngine(getSSAOptions()) {
           @Override
           protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(

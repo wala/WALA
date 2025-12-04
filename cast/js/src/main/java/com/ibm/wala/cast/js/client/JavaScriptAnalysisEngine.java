@@ -57,7 +57,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
 
   @Override
   public void buildAnalysisScope() {
-    loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
+    loaderFactory = new JavaScriptLoaderFactory(translatorFactory, getOptions().getSSAOptions());
 
     SourceModule[] files = moduleFiles.toArray(new SourceModule[0]);
 

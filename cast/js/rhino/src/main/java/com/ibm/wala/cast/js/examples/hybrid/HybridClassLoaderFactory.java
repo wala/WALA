@@ -8,6 +8,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
@@ -15,15 +16,19 @@ import java.io.IOException;
 public class HybridClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   private final JavaScriptTranslatorFactory jsTranslatorFactory;
+  private SSAOptions ssaOptions;
 
   public HybridClassLoaderFactory(
-      JavaScriptTranslatorFactory jsTranslatorFactory, StringFilter exclusions) {
+      JavaScriptTranslatorFactory jsTranslatorFactory,
+      SSAOptions ssaOptions,
+      StringFilter exclusions) {
     super(exclusions);
     this.jsTranslatorFactory = jsTranslatorFactory;
+    this.ssaOptions = ssaOptions;
   }
 
   public HybridClassLoaderFactory() {
-    this(new CAstRhinoTranslatorFactory(), null);
+    this(new CAstRhinoTranslatorFactory(), SSAOptions.defaultOptions(), null);
   }
 
   @Override
@@ -34,7 +39,7 @@ public class HybridClassLoaderFactory extends ClassLoaderFactoryImpl {
       AnalysisScope scope)
       throws IOException {
     if (classLoaderReference.equals(JavaScriptTypes.jsLoader)) {
-      JavaScriptLoader L = new JavaScriptLoader(cha, jsTranslatorFactory);
+      JavaScriptLoader L = new JavaScriptLoader(cha, ssaOptions, jsTranslatorFactory);
       L.init(scope.getModules(classLoaderReference));
       return L;
 
