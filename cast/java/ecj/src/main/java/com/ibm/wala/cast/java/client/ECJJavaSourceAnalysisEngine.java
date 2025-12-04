@@ -12,12 +12,18 @@ package com.ibm.wala.cast.java.client;
 
 import com.ibm.wala.cast.java.translator.jdt.ecj.ECJClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.config.StringFilter;
 
 public class ECJJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
+  private final SSAOptions ssaOptions;
+
+  public ECJJavaSourceAnalysisEngine(SSAOptions ssaOptions) {
+    this.ssaOptions = ssaOptions;
+  }
 
   @Override
   protected ClassLoaderFactory getClassLoaderFactory(StringFilter exclusions) {
-    return new ECJClassLoaderFactory(exclusions);
+    return new ECJClassLoaderFactory(ssaOptions, exclusions);
   }
 }

@@ -34,6 +34,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
@@ -54,8 +55,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       ModuleEntry module,
       CAstEntity sourceFileEntity,
       JavaSourceLoaderImpl loader,
+      SSAOptions ssaOptions,
       StringFilter exclusions) {
-    super(loader);
+    super(loader, ssaOptions);
     fSourceEntity = sourceFileEntity;
     this.module = module;
     this.exclusions = exclusions;

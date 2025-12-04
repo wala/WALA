@@ -44,6 +44,7 @@ import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -97,7 +98,7 @@ public class EclipseJavaScriptAnalysisEngine
   @Override
   protected AnalysisScope makeAnalysisScope() {
     return new CAstAnalysisScope(
-        new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory()),
+        new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory(), SSAOptions.defaultOptions()),
         Collections.singleton(JavaScriptLoader.JS));
   }
 
