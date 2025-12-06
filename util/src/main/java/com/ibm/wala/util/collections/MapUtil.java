@@ -30,7 +30,10 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, T> Set<T> findOrCreateSet(Map<K, Set<T>> M, K key) {
-    return findOrCreateValue(M, key, () -> HashSetFactory.make(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, missing -> HashSetFactory.make(2));
   }
 
   /**
@@ -39,7 +42,10 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K> MutableIntSet findOrCreateMutableIntSet(Map<K, MutableIntSet> M, K key) {
-    return findOrCreateValue(M, key, MutableSparseIntSet::makeEmpty);
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, missing -> MutableSparseIntSet.makeEmpty());
   }
 
   /**
@@ -49,7 +55,10 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, T> Collection<T> findOrCreateCollection(Map<K, Collection<T>> M, K key) {
-    return findOrCreateValue(M, key, () -> HashSetFactory.make(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, missing -> HashSetFactory.make(2));
   }
 
   /**
@@ -60,7 +69,10 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, T> List<T> findOrCreateList(Map<K, List<T>> M, K key) {
-    return findOrCreateValue(M, key, ArrayList::new);
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, missing -> new ArrayList<>());
   }
 
   /**
@@ -72,7 +84,10 @@ public class MapUtil {
    *     keys (optional)
    */
   public static <K, K2, V> Map<K2, V> findOrCreateMap(Map<K, Map<K2, V>> M, K key) {
-    return findOrCreateValue(M, key, () -> HashMapFactory.make(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, missing -> HashMapFactory.make(2));
   }
 
   /**
@@ -97,7 +112,10 @@ public class MapUtil {
    */
   public static <K, V> WeakHashMap<K, V> findOrCreateWeakHashMap(
       Map<Object, WeakHashMap<K, V>> M, Object key) {
-    return findOrCreateValue(M, key, () -> new WeakHashMap<>(2));
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    return M.computeIfAbsent(key, missing -> new WeakHashMap<>(2));
   }
 
   /**
