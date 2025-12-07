@@ -48,7 +48,7 @@ nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "com-uber-null
 #noinspection UnusedVersionCatalogEntry
 nullaway-annotations = { module = "com.uber.nullaway:nullaway-annotations", version.ref = "com-uber-nullaway" }
 osgi-framework = "org.osgi:org.osgi.framework:1.10.0"
-rhino = "org.mozilla:rhino:1.8.0"
+rhino = "org.mozilla:rhino:1.8.1"
 slf4j-api = "org.slf4j:slf4j-api:2.0.17"
 
 [plugins]
