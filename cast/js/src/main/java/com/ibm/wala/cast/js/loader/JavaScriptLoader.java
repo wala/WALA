@@ -901,7 +901,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       new CoreClass(
           JavaScriptTypes.Primitives.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final CoreClass FAKEROOT =
+  final CoreClass FAKE_ROOT =
       new CoreClass(JavaScriptTypes.FakeRoot.getName(), JavaScriptTypes.Root.getName(), this, null);
 
   final CoreClass STRING =

@@ -27,6 +27,7 @@
       <w>bipush</w>
       <w>callsite</w>
       <w>caload</w>
+      <w>cast</w>
       <w>castore</w>
       <w>catchblock</w>
       <w>checkcast</w>

@@ -224,9 +224,9 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         if (annotationItem.getType().contentEquals("Ldalvik/annotation/Throws;")) {
           for (AnnotationElement e : annotationItem.getElements()) {
             for (EncodedValue v : ((ArrayEncodedValue) e.getValue()).getValue()) {
-              String tname = ((TypeEncodedValue) v).getValue();
-              if (tname.endsWith(";")) tname = tname.substring(0, tname.length() - 1);
-              strings.add(tname);
+              String tName = ((TypeEncodedValue) v).getValue();
+              if (tName.endsWith(";")) tName = tName.substring(0, tName.length() - 1);
+              strings.add(tName);
             }
           }
         }
@@ -1247,15 +1247,15 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
           break;
         case CONST_CLASS:
           {
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction21c) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
-            // IClass ic = this.myClass.loader.lookupClass(TypeName.findOrCreate(cname));
+            // IClass ic = this.myClass.loader.lookupClass(TypeName.findOrCreate(cName));
             TypeReference typeRef =
-                TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname);
+                TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName);
 
             instructions.add(
                 new Constant.ClassConstant(
@@ -1265,7 +1265,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     inst.getOpcode(),
                     this));
             // logger.debug("myClass found name: " +
-            // this.myClass.loader.lookupClass(TypeName.findOrCreate(cname)).toString());
+            // this.myClass.loader.lookupClass(TypeName.findOrCreate(cName)).toString());
             break;
           }
         case MONITOR_ENTER:
@@ -1280,17 +1280,17 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
           break;
         case CHECK_CAST:
           {
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction21c) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             // retrieving type reference correctly?
             instructions.add(
                 new CheckCast(
                     instLoc,
-                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname),
+                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName),
                     ((Instruction21c) inst).getRegisterA(),
                     inst.getOpcode(),
                     this));
@@ -1298,16 +1298,16 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
           }
         case INSTANCE_OF:
           {
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction22c) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
             instructions.add(
                 new InstanceOf(
                     instLoc,
                     ((Instruction22c) inst).getRegisterA(),
-                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname),
+                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName),
                     ((Instruction22c) inst).getRegisterB(),
                     inst.getOpcode(),
                     this));
@@ -1324,12 +1324,12 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
           break;
         case NEW_INSTANCE:
           {
-            // newsitereference use instLoc or pc?
-            String cname =
+            // NewSiteReference use instLoc or pc?
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction21c) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new New(
@@ -1337,7 +1337,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction21c) inst).getRegisterA(),
                     NewSiteReference.make(
                         instLoc,
-                        TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname)),
+                        TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName)),
                     inst.getOpcode(),
                     this));
             break;
@@ -1349,11 +1349,11 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             //              MyLogger.log(LogLevel.INFO, "Type: "
             // +((TypeIdItem)((Instruction22c)inst).getReferencedItem()).getTypeDescriptor());
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction22c) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new NewArray(
@@ -1361,7 +1361,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction22c) inst).getRegisterA(),
                     NewSiteReference.make(
                         instLoc,
-                        TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname)),
+                        TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName)),
                     params,
                     inst.getOpcode(),
                     this));
@@ -1398,16 +1398,16 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
               }
             }
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction35c) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             NewSiteReference newSiteRef =
                 NewSiteReference.make(
                     instLoc,
-                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname));
+                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName));
             TypeReference myTypeRef =
                 TypeReference.findOrCreate(
                     myClass.getClassLoader().getReference(),
@@ -1435,16 +1435,16 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             for (int i = 0; i < registerCount; i++)
               args[i] = ((Instruction3rc) inst).getStartRegister() + i;
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.TypeReference)
                         ((Instruction3rc) inst).getReference())
                     .getType();
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             NewSiteReference newSiteRef =
                 NewSiteReference.make(
                     instLoc,
-                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cname));
+                    TypeReference.findOrCreate(myClass.getClassLoader().getReference(), cName));
             TypeReference myTypeRef =
                 TypeReference.findOrCreate(
                     myClass.getClassLoader().getReference(),
@@ -1850,23 +1850,23 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         case IGET_CHAR:
         case IGET_SHORT:
           {
-            String cname =
+            String cName =
                 ((FieldReference) ((Instruction22c) inst).getReference()).getDefiningClass();
-            String fname = ((FieldReference) ((Instruction22c) inst).getReference()).getName();
-            String ftname = ((FieldReference) ((Instruction22c) inst).getReference()).getType();
+            String fName = ((FieldReference) ((Instruction22c) inst).getReference()).getName();
+            String ftName = ((FieldReference) ((Instruction22c) inst).getReference()).getType();
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
-            if (fname.endsWith(";")) fname = fname.substring(0, fname.length() - 1);
-            if (ftname.endsWith(";")) ftname = ftname.substring(0, ftname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
+            if (fName.endsWith(";")) fName = fName.substring(0, fName.length() - 1);
+            if (ftName.endsWith(";")) ftName = ftName.substring(0, ftName.length() - 1);
 
             instructions.add(
                 new GetField.GetInstanceField(
                     instLoc,
                     ((Instruction22c) inst).getRegisterA(),
                     ((Instruction22c) inst).getRegisterB(),
-                    cname,
-                    fname,
-                    ftname,
+                    cName,
+                    fName,
+                    ftName,
                     inst.getOpcode(),
                     this));
             break;
@@ -1879,23 +1879,23 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         case IPUT_CHAR:
         case IPUT_SHORT:
           {
-            String cname =
+            String cName =
                 ((FieldReference) ((Instruction22c) inst).getReference()).getDefiningClass();
-            String fname = ((FieldReference) ((Instruction22c) inst).getReference()).getName();
-            String ftname = ((FieldReference) ((Instruction22c) inst).getReference()).getType();
+            String fName = ((FieldReference) ((Instruction22c) inst).getReference()).getName();
+            String ftName = ((FieldReference) ((Instruction22c) inst).getReference()).getType();
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
-            if (fname.endsWith(";")) fname = fname.substring(0, fname.length() - 1);
-            if (ftname.endsWith(";")) ftname = ftname.substring(0, ftname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
+            if (fName.endsWith(";")) fName = fName.substring(0, fName.length() - 1);
+            if (ftName.endsWith(";")) ftName = ftName.substring(0, ftName.length() - 1);
 
             instructions.add(
                 new PutField.PutInstanceField(
                     instLoc,
                     ((TwoRegisterInstruction) inst).getRegisterA(),
                     ((TwoRegisterInstruction) inst).getRegisterB(),
-                    cname,
-                    fname,
-                    ftname,
+                    cName,
+                    fName,
+                    ftName,
                     inst.getOpcode(),
                     this));
             break;
@@ -1908,22 +1908,22 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         case SGET_CHAR:
         case SGET_SHORT:
           {
-            String cname =
+            String cName =
                 ((FieldReference) ((Instruction21c) inst).getReference()).getDefiningClass();
-            String fname = ((FieldReference) ((Instruction21c) inst).getReference()).getName();
-            String ftname = ((FieldReference) ((Instruction21c) inst).getReference()).getType();
+            String fName = ((FieldReference) ((Instruction21c) inst).getReference()).getName();
+            String ftName = ((FieldReference) ((Instruction21c) inst).getReference()).getType();
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
-            if (fname.endsWith(";")) fname = fname.substring(0, fname.length() - 1);
-            if (ftname.endsWith(";")) ftname = ftname.substring(0, ftname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
+            if (fName.endsWith(";")) fName = fName.substring(0, fName.length() - 1);
+            if (ftName.endsWith(";")) ftName = ftName.substring(0, ftName.length() - 1);
 
             instructions.add(
                 new GetField.GetStaticField(
                     instLoc,
                     ((Instruction21c) inst).getRegisterA(),
-                    cname,
-                    fname,
-                    ftname,
+                    cName,
+                    fName,
+                    ftName,
                     inst.getOpcode(),
                     this));
             break;
@@ -1936,22 +1936,22 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
         case SPUT_CHAR:
         case SPUT_SHORT:
           {
-            String cname =
+            String cName =
                 ((FieldReference) ((Instruction21c) inst).getReference()).getDefiningClass();
-            String fname = ((FieldReference) ((Instruction21c) inst).getReference()).getName();
-            String ftname = ((FieldReference) ((Instruction21c) inst).getReference()).getType();
+            String fName = ((FieldReference) ((Instruction21c) inst).getReference()).getName();
+            String ftName = ((FieldReference) ((Instruction21c) inst).getReference()).getType();
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
-            if (fname.endsWith(";")) fname = fname.substring(0, fname.length() - 1);
-            if (ftname.endsWith(";")) ftname = ftname.substring(0, ftname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
+            if (fName.endsWith(";")) fName = fName.substring(0, fName.length() - 1);
+            if (ftName.endsWith(";")) ftName = ftName.substring(0, ftName.length() - 1);
 
             instructions.add(
                 new PutField.PutStaticField(
                     instLoc,
                     ((Instruction21c) inst).getRegisterA(),
-                    cname,
-                    fname,
-                    ftname,
+                    cName,
+                    fName,
+                    ftName,
                     inst.getOpcode(),
                     this));
             break;
@@ -1984,34 +1984,34 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
               }
             }
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
-            //              if (mname.endsWith(";"))
-            //                  mname = mname.substring(0,mname.length()-1);
-            //              if (pname.endsWith(";"))
-            //                  pname = pname.substring(0,pname.length()-1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
+            //              if (mName.endsWith(";"))
+            //                  mName = mName.substring(0,mName.length()-1);
+            //              if (pName.endsWith(";"))
+            //                  pName = pName.substring(0,pName.length()-1);
 
             //              for (IMethod m:
-            // this.myClass.loader.lookupClass(TypeName.findOrCreate(cname)).getDeclaredMethods())
+            // this.myClass.loader.lookupClass(TypeName.findOrCreate(cName)).getDeclaredMethods())
             //                  System.out.println(m.getDescriptor().toString());
 
-            handleINVOKE_VIRTUAL(instLoc, cname, mname, pname, args, inst.getOpcode());
-            // instructions.add(new Invoke.InvokeVirtual(instLoc, cname, mname, pname, args,
+            handleINVOKE_VIRTUAL(instLoc, cName, mName, pName, args, inst.getOpcode());
+            // instructions.add(new Invoke.InvokeVirtual(instLoc, cName, mName, pName, args,
             // inst.opcode, this));
-            // logger.debug("\t" + inst.opcode.toString() + " class: "+ cname + ", method name: " +
-            // mname + ", prototype string: " + pname);
+            // logger.debug("\t" + inst.opcode.toString() + " class: "+ cName + ", method name: " +
+            // mName + ", prototype string: " + pName);
 
             break;
           }
@@ -2043,23 +2043,23 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
               }
             }
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
-                new Invoke.InvokeSuper(instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                new Invoke.InvokeSuper(instLoc, cName, mName, pName, args, inst.getOpcode(), this));
             break;
           }
         case INVOKE_DIRECT:
@@ -2092,24 +2092,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
             //              logger.debug(inst.opcode.toString() + " class:
             // "+((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor() + ", method name: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue() + ", prototype string: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString());
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeDirect(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
 
             break;
           }
@@ -2143,24 +2143,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
             // logger.debug(inst.opcode.toString() + " class:
             // "+((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor() + ", method name: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getMethodName().getStringValue() + ", prototype string: " + ((MethodIdItem)((Instruction35c)inst).getReferencedItem()).getPrototype().getPrototypeString());
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeStatic(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
 
             break;
           }
@@ -2192,24 +2192,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
               }
             }
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction35c) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeInterface(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
             break;
           }
         case INVOKE_VIRTUAL_RANGE:
@@ -2220,24 +2220,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             for (int i = 0; i < registerCount; i++)
               args[i] = ((Instruction3rc) inst).getStartRegister() + i;
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeVirtual(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
             break;
           }
         case INVOKE_SUPER_RANGE:
@@ -2248,23 +2248,23 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             for (int i = 0; i < registerCount; i++)
               args[i] = ((Instruction3rc) inst).getStartRegister() + i;
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
-                new Invoke.InvokeSuper(instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                new Invoke.InvokeSuper(instLoc, cName, mName, pName, args, inst.getOpcode(), this));
             break;
           }
         case INVOKE_DIRECT_RANGE:
@@ -2275,24 +2275,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             for (int i = 0; i < registerCount; i++)
               args[i] = ((Instruction3rc) inst).getStartRegister() + i;
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeDirect(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
             break;
           }
         case INVOKE_STATIC_RANGE:
@@ -2303,24 +2303,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             for (int i = 0; i < registerCount; i++)
               args[i] = ((Instruction3rc) inst).getStartRegister() + i;
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeStatic(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
 
             break;
           }
@@ -2332,24 +2332,24 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
             for (int i = 0; i < registerCount; i++)
               args[i] = ((Instruction3rc) inst).getStartRegister() + i;
 
-            String cname =
+            String cName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getDefiningClass();
-            String mname =
+            String mName =
                 ((org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference())
                     .getName();
-            String pname =
+            String pName =
                 DexUtil.getSignature(
                     (org.jf.dexlib2.iface.reference.MethodReference)
                         ((Instruction3rc) inst).getReference());
 
-            if (cname.endsWith(";")) cname = cname.substring(0, cname.length() - 1);
+            if (cName.endsWith(";")) cName = cName.substring(0, cName.length() - 1);
 
             instructions.add(
                 new Invoke.InvokeInterface(
-                    instLoc, cname, mname, pname, args, inst.getOpcode(), this));
+                    instLoc, cName, mName, pName, args, inst.getOpcode(), this));
             break;
           }
         case NEG_INT:
@@ -3545,7 +3545,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     }
 
     //// comment out start
-    ////        Instruction[] iinstructions = new Instruction[instrucs.length];
+    ////        Instruction[] iInstructions = new Instruction[instrucs.length];
     //      instructions = new InsructionArray();
     //
     //
@@ -4482,7 +4482,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     //          case Format35c: {
     //
     //              // = invoke virtual
-    //              //iinstructions[i] = new IInstruction35c((Instruction35c)instruction, this);
+    //              //iInstructions[i] = new IInstruction35c((Instruction35c)instruction, this);
     //              break;
     //          }
     //
@@ -4542,8 +4542,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   }
 
   protected void handleINVOKE_VIRTUAL(
-      int instLoc, String cname, String mname, String pname, int[] args, Opcode opcode) {
-    instructions.add(new Invoke.InvokeVirtual(instLoc, cname, mname, pname, args, opcode, this));
+      int instLoc, String cName, String mName, String pName, int[] args, Opcode opcode) {
+    instructions.add(new Invoke.InvokeVirtual(instLoc, cName, mName, pName, args, opcode, this));
   }
 
   public Instruction[] getDexInstructions() {
@@ -4560,8 +4560,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   }
 
   @Override
-  public int getInstructionIndex(int bytecodeindex) {
-    return instructions().getIndexFromPc(bytecodeindex);
+  public int getInstructionIndex(int bytecodeIndex) {
+    return instructions().getIndexFromPc(bytecodeIndex);
   }
 
   public Instruction getInstructionFromIndex(int instructionIndex) {
@@ -4620,7 +4620,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
 
     // assert(false) : "Please review getCallSites-Implementation before use!";        // TODO
 
-    ArrayList<CallSiteReference> csites = new ArrayList<>();
+    ArrayList<CallSiteReference> cSites = new ArrayList<>();
     // XXX The call Sites in this method or to this method?!!!
     for (Instruction inst : instructions()) {
       if (inst instanceof Invoke) {
@@ -4634,7 +4634,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ((Invoke) inst).methodName,
                 ((Invoke) inst).descriptor);
 
-        csites.add(
+        cSites.add(
             CallSiteReference.make(
                 inst.pc, // programCounter
                 target, // declaredTarget
@@ -4642,7 +4642,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ));
       }
     }
-    return csites;
+    return cSites;
   }
 
   @Override
@@ -4650,10 +4650,10 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     if (isNative()) {
       return Collections.emptyIterator();
     }
-    ArrayList<com.ibm.wala.types.FieldReference> fsites = new ArrayList<>();
+    ArrayList<com.ibm.wala.types.FieldReference> fSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
       if (inst instanceof GetField) {
-        fsites.add(
+        fSites.add(
             com.ibm.wala.types.FieldReference.findOrCreate(
                 getDeclaringClass().getClassLoader().getReference(),
                 ((GetField) inst).clazzName,
@@ -4661,7 +4661,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ((GetField) inst).fieldType));
       }
     }
-    return fsites.iterator();
+    return fSites.iterator();
   }
 
   @Override
@@ -4669,10 +4669,10 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     if (isNative()) {
       return Collections.emptyIterator();
     }
-    ArrayList<com.ibm.wala.types.FieldReference> fsites = new ArrayList<>();
+    ArrayList<com.ibm.wala.types.FieldReference> fSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
       if (inst instanceof PutField) {
-        fsites.add(
+        fSites.add(
             com.ibm.wala.types.FieldReference.findOrCreate(
                 getDeclaringClass().getClassLoader().getReference(),
                 ((PutField) inst).clazzName,
@@ -4680,7 +4680,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                 ((PutField) inst).fieldType));
       }
     }
-    return fsites.iterator();
+    return fSites.iterator();
   }
 
   @Override
@@ -4688,13 +4688,13 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     if (isNative()) {
       return Collections.emptyIterator();
     }
-    ArrayList<TypeReference> asites = new ArrayList<>();
+    ArrayList<TypeReference> aSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
       if (inst instanceof ArrayPut) {
-        asites.add(((ArrayPut) inst).getType());
+        aSites.add(((ArrayPut) inst).getType());
       }
     }
-    return asites.iterator();
+    return aSites.iterator();
   }
 
   @Override
@@ -4702,13 +4702,13 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     if (isNative()) {
       return Collections.emptySet();
     }
-    ArrayList<NewSiteReference> nsites = new ArrayList<>();
+    ArrayList<NewSiteReference> nSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
       if (inst instanceof New) {
-        nsites.add(((New) inst).newSiteRef);
+        nSites.add(((New) inst).newSiteRef);
       }
     }
-    return nsites;
+    return nSites;
   }
 
   @Override
