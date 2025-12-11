@@ -13,6 +13,7 @@ package com.ibm.wala.shrike.shrikeBT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.IdentityHashMap;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To rewrite code, construct
@@ -636,7 +637,7 @@ public final class MethodEditor {
     }
 
     // We want to update each exception handler array exactly once
-    IdentityHashMap<ExceptionHandler, Object> adjustedHandlers = null;
+    IdentityHashMap<ExceptionHandler, @Nullable Object> adjustedHandlers = null;
     for (int i = 0; i < handlers.length; i++) {
       ExceptionHandler[] hs = handlers[i];
       if (hs.length > 0 && (i == 0 || hs != handlers[i - 1])) {
