@@ -303,9 +303,14 @@ public class StringStuff {
   }
 
   public static boolean isTypeCodeChar(ImmutableByteArray name, int i) {
-    return name.b[i] == TypeReference.ArrayTypeCode
-        || name.b[i] == TypeReference.PointerTypeCode
-        || name.b[i] == TypeReference.ReferenceTypeCode;
+    switch (name.b[i]) {
+      case ArrayTypeCode:
+      case PointerTypeCode:
+      case ReferenceTypeCode:
+        return true;
+      default:
+        return false;
+    }
   }
 
   /**
