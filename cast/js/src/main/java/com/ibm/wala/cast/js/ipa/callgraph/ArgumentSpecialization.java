@@ -54,6 +54,7 @@ import com.ibm.wala.util.intset.IntSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ArgumentSpecialization {
 
@@ -318,7 +319,7 @@ public class ArgumentSpecialization {
                 AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
                 SymbolTable symtab,
                 boolean hasCatchBlock,
-                Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+                Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
                 boolean hasMonitorOp,
                 AstLexicalInformation LI,
                 DebuggingInformation debugInfo) {
