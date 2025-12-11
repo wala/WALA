@@ -256,10 +256,10 @@ public class SSAValueManager {
           if (param.status == ValueStatus.INVALIDATED) {
             info("Closing SSA Value {} in scope {}", param.value, param.setInScope);
             param.status = ValueStatus.CLOSED;
-          } else if (param.status == ValueStatus.FREE_INVALIDATED) { // TODO: FREE CLOSED
-            info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
-            param.status = ValueStatus.FREE_CLOSED;
           }
+          // TODO: FREE CLOSED
+          // info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
+          // param.status = ValueStatus.FREE_CLOSED;
         }
         //        else if (param.setInScope < currentScope) {
         //          // param.status = ValueStatus.INVALIDATED;
