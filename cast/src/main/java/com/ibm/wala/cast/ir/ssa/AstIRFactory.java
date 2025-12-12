@@ -79,9 +79,9 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
       return lexicalInfo;
     }
 
-    private void setCatchInstructions(SSACFG ssacfg, AbstractCFG<?, ?> oldcfg) {
-      for (int i = 0; i < oldcfg.getNumberOfNodes(); i++)
-        if (oldcfg.isCatchBlock(i)) {
+    private void setCatchInstructions(SSACFG ssacfg, AbstractCFG<?, ?> oldCfg) {
+      for (int i = 0; i < oldCfg.getNumberOfNodes(); i++)
+        if (oldCfg.isCatchBlock(i)) {
           ExceptionHandlerBasicBlock B = (ExceptionHandlerBasicBlock) ssacfg.getNode(i);
           B.setCatchInstruction(
               (SSAGetCaughtExceptionInstruction) getInstructions()[B.getFirstInstructionIndex()]);

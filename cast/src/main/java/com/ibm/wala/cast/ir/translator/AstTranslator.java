@@ -5154,17 +5154,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   @Override
   protected void leaveEcho(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
     int rvals[] = new int[n.getChildCount()];
-    Position rposs[] = new Position[n.getChildCount()];
+    Position rPoss[] = new Position[n.getChildCount()];
     int i = 0;
     for (CAstNode child : n.getChildren()) {
       rvals[i] = wc.getValue(child);
-      rposs[i] = wc.getSourceMap().getPosition(child);
+      rPoss[i] = wc.getSourceMap().getPosition(child);
       ++i;
     }
 
     int currentInstruction = wc.cfg().getCurrentInstruction();
     wc.cfg().addInstruction(new AstEchoInstruction(currentInstruction, rvals));
-    wc.cfg().noteOperands(currentInstruction, rposs);
+    wc.cfg().noteOperands(currentInstruction, rPoss);
   }
 
   @Override
@@ -5175,17 +5175,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   @Override
   protected void leaveYield(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
     int rvals[] = new int[n.getChildCount()];
-    Position rposs[] = new Position[n.getChildCount()];
+    Position rPoss[] = new Position[n.getChildCount()];
     int i = 0;
     for (CAstNode child : n.getChildren()) {
       rvals[i] = wc.getValue(child);
-      rposs[i] = wc.getSourceMap().getPosition(child);
+      rPoss[i] = wc.getSourceMap().getPosition(child);
       ++i;
     }
 
     int currentInstruction = wc.cfg().getCurrentInstruction();
     wc.cfg().addInstruction(new AstYieldInstruction(currentInstruction, rvals));
-    wc.cfg().noteOperands(currentInstruction, rposs);
+    wc.cfg().noteOperands(currentInstruction, rPoss);
   }
 
   public CAstEntity getIncludedEntity(CAstNode n) {
