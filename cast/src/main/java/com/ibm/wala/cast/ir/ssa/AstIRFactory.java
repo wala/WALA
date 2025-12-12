@@ -33,6 +33,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
 
@@ -92,14 +93,12 @@ public class AstIRFactory<T extends IMethod> implements IRFactory<T> {
     }
 
     private static void setupCatchTypes(
-        SSACFG cfg, Map<IBasicBlock<SSAInstruction>, TypeReference[]> map) {
-      for (Entry<IBasicBlock<SSAInstruction>, TypeReference[]> e : map.entrySet()) {
+        SSACFG cfg, Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> map) {
+      for (Entry<IBasicBlock<SSAInstruction>, Set<TypeReference>> e : map.entrySet()) {
         if (e.getKey().getNumber() != -1) {
           ExceptionHandlerBasicBlock bb =
               (ExceptionHandlerBasicBlock) cfg.getNode(e.getKey().getNumber());
-          for (int j = 0; j < e.getValue().length; j++) {
-            bb.addCaughtExceptionType(e.getValue()[j]);
-          }
+          e.getValue().forEach(bb::addCaughtExceptionType);
         }
       }
     }

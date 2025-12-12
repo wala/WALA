@@ -178,7 +178,7 @@ public class JSAstTranslator extends AstTranslator {
       AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation LI,
       DebuggingInformation debugInfo) {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.ir.translator;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
@@ -75,6 +77,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.ArraySet;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -150,7 +153,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> catchTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo);
@@ -2589,7 +2592,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     void setCatchType(CAstNode catchNode, TypeReference catchType);
 
-    Map<IBasicBlock<SSAInstruction>, TypeReference[]> getCatchTypes();
+    Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> getCatchTypes();
 
     void addEntityName(CAstEntity e, String name);
 
@@ -2686,7 +2689,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     @Override
-    public Map<IBasicBlock<SSAInstruction>, TypeReference[]> getCatchTypes() {
+    public Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> getCatchTypes() {
       return parent.getCatchTypes();
     }
 
@@ -2790,7 +2793,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private final IncipientCFG cfg;
 
-    private final Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes =
+    private final Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> catchTypes =
         HashMapFactory.make();
 
     Set<Pair<Pair<String, String>, Integer>> exposedReads;
@@ -2883,26 +2886,18 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public void setCatchType(IBasicBlock<SSAInstruction> bb, TypeReference catchType) {
-      if (!catchTypes.containsKey(bb)) {
-        catchTypes.put(bb, new TypeReference[] {catchType});
-      } else {
-        TypeReference[] data = catchTypes.get(bb);
-
-        for (TypeReference element : data) {
-          if (element == catchType) {
-            return;
-          }
-        }
-
-        TypeReference[] newData = Arrays.copyOf(data, data.length + 1);
-        newData[data.length] = catchType;
-
-        catchTypes.put(bb, newData);
-      }
+      catchTypes.compute(
+          bb,
+          (key, types) -> {
+            // use ArraySet for a low-cardinality, space-efficient mutable set
+            types = requireNonNullElseGet(types, ArraySet::new);
+            types.add(catchType);
+            return types;
+          });
     }
 
     @Override
-    public Map<IBasicBlock<SSAInstruction>, TypeReference[]> getCatchTypes() {
+    public Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> getCatchTypes() {
       return catchTypes;
     }
 
@@ -3581,7 +3576,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     // create code entry stuff for this entity
     SymbolTable symtab = ((AbstractScope) functionContext.currentScope()).getUnderlyingSymtab();
-    Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes = functionContext.getCatchTypes();
+    Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> catchTypes =
+        functionContext.getCatchTypes();
     AstCFG cfg = new AstCFG(n, functionContext.cfg(), symtab, insts);
     Position[] line = functionContext.cfg().getLinePositionMap();
     Position[][] operand = functionContext.cfg().getOperandPositionMap();
@@ -5352,7 +5348,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public void setCatchType(CAstNode castNode, TypeReference catchType) {}
 
     @Override
-    public Map<IBasicBlock<SSAInstruction>, TypeReference[]> getCatchTypes() {
+    public Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> getCatchTypes() {
       return null;
     }
 

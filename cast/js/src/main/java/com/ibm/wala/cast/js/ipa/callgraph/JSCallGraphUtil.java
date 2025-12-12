@@ -201,7 +201,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
                 AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
                 SymbolTable symtab,
                 boolean hasCatchBlock,
-                Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+                Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
                 boolean hasMonitorOp,
                 AstLexicalInformation LI,
                 DebuggingInformation debugInfo) {

@@ -190,7 +190,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -307,7 +307,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -453,7 +453,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -617,7 +617,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       AbstractCFG<?, ?> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo) {
