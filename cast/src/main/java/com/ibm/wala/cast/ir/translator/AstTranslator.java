@@ -10,7 +10,8 @@
  */
 package com.ibm.wala.cast.ir.translator;
 
-import com.google.common.collect.Sets;
+import static java.util.Objects.requireNonNullElseGet;
+
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
@@ -76,6 +77,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.ArraySet;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -2886,13 +2888,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       catchTypes.compute(
           bb,
           (key, types) -> {
-            if (types == null) {
-              // create a mutable set so we can add more catch types later
-              return Sets.newHashSet(catchType);
-            } else {
-              types.add(catchType);
-              return types;
-            }
+            // use ArraySet for a low-cardinality, space-efficient mutable set
+            types = requireNonNullElseGet(types, ArraySet::new);
+            types.add(catchType);
+            return types;
           });
     }
 
