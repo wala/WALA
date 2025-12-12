@@ -13,6 +13,7 @@ import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.core.util.ProgressMaster;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -62,7 +63,8 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
       String script, List<GraphAssertion> assertions, BuilderType builderType, int bound)
       throws WalaException, Error, CancelException {
     final JSCallGraph cg;
-    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory());
+    JavaScriptLoaderFactory loaders =
+        new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory(), SSAOptions.defaultOptions());
     IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
     List<Module> scripts = new ArrayList<>();
     URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);

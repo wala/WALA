@@ -56,7 +56,7 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
-        new ECJJavaSourceAnalysisEngine() {
+        new ECJJavaSourceAnalysisEngine(getSSAOptions()) {
           @Override
           protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(
@@ -65,16 +65,16 @@ public class ECJSyncDuplicatorTest extends SyncDuplicatorTests {
 
           @Override
           protected ClassLoaderFactory getClassLoaderFactory(StringFilter exclusions) {
-            return new ECJClassLoaderFactory(exclusions) {
+            return new ECJClassLoaderFactory(getSSAOptions(), exclusions) {
               @Override
               protected ECJSourceLoaderImpl makeSourceLoader(
                   ClassLoaderReference classLoaderReference,
                   IClassHierarchy cha,
                   IClassLoader parent) {
-                return new ECJSourceLoaderImpl(classLoaderReference, parent, cha) {
+                return new ECJSourceLoaderImpl(classLoaderReference, getSSAOptions(), parent, cha) {
                   @Override
                   protected SourceModuleTranslator getTranslator() {
-                    return new ECJSourceModuleTranslator(cha.getScope(), this) {
+                    return new ECJSourceModuleTranslator(cha.getScope(), getSSAOptions(), this) {
                       @Override
                       protected JDTJava2CAstTranslator<Position> makeCAstTranslator(
                           CompilationUnit astRoot, String fullPath) {

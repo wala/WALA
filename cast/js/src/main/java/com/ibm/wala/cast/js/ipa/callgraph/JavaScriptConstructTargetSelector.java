@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 
 /** generates instructions to simulate the semantics of JS constructor invocations */
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
@@ -27,8 +28,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
   private final JavaScriptConstructorFunctions constructors;
 
-  public JavaScriptConstructTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
-    this.constructors = new JavaScriptConstructorFunctions(cha);
+  public JavaScriptConstructTargetSelector(
+      IClassHierarchy cha, MethodTargetSelector base, SSAOptions ssaOptions) {
+    this.constructors = new JavaScriptConstructorFunctions(cha, ssaOptions);
     this.base = base;
   }
 

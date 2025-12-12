@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -132,7 +133,8 @@ public class FieldBasedCGUtil {
       IProgressMonitor monitor,
       boolean supportFullPointerAnalysis)
       throws WalaException, CancelException {
-    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
+    JavaScriptLoaderFactory loaders =
+        new JavaScriptLoaderFactory(translatorFactory, SSAOptions.defaultOptions());
     Module[] scripts =
         new Module[] {new SourceURLModule(url), JSCallGraphUtil.getPrologueFile("prologue.js")};
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
@@ -148,7 +150,8 @@ public class FieldBasedCGUtil {
       IProgressMonitor monitor,
       boolean supportFullPointerAnalysis)
       throws WalaException, CancelException, IOException {
-    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
+    JavaScriptLoaderFactory loaders =
+        new JavaScriptLoaderFactory(translatorFactory, SSAOptions.defaultOptions());
     List<Module> scripts = findScriptsInDir(scriptDir);
     return buildCG(
         loaders, scripts.toArray(new Module[0]), builderType, monitor, supportFullPointerAnalysis);
@@ -161,7 +164,8 @@ public class FieldBasedCGUtil {
   public CallGraphResult buildScriptDirBoundedCG(
       Path scriptDir, IProgressMonitor monitor, boolean supportFullPointerAnalysis, Integer bound)
       throws WalaException, CancelException, IOException {
-    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
+    JavaScriptLoaderFactory loaders =
+        new JavaScriptLoaderFactory(translatorFactory, SSAOptions.defaultOptions());
     List<Module> scripts = findScriptsInDir(scriptDir);
     return buildBoundedCG(
         loaders, scripts.toArray(new Module[0]), monitor, supportFullPointerAnalysis, bound);
@@ -190,7 +194,8 @@ public class FieldBasedCGUtil {
       IProgressMonitor monitor,
       boolean supportFullPointerAnalysis)
       throws IOException, WalaException, CancelException {
-    JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
+    JavaScriptLoaderFactory loaders =
+        new JavaScriptLoaderFactory(translatorFactory, SSAOptions.defaultOptions());
     Module[] scripts = JSCallGraphBuilderUtil.makeSourceModules(dir, name);
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
   }
@@ -202,7 +207,8 @@ public class FieldBasedCGUtil {
       boolean supportFullPointerAnalysis,
       Supplier<JSSourceExtractor> fExtractor)
       throws WalaException, CancelException {
-    JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory);
+    JavaScriptLoaderFactory loaders =
+        new WebPageLoaderFactory(translatorFactory, SSAOptions.defaultOptions());
     SourceModule[] scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders, fExtractor);
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
   }

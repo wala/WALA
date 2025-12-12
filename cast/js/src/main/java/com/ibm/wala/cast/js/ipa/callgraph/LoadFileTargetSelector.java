@@ -80,7 +80,8 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
               // try to open the input stream for the URL.  if it fails, we'll get an IOException
               // and fall through to default case
               try (InputStream inputStream = url.openConnection().getInputStream()) {}
-              JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy(), cl, url);
+              JSCallGraphUtil.loadAdditionalFile(
+                  builder.getClassHierarchy(), cl, builder.getOptions().getSSAOptions(), url);
               loadedFiles.add(url.toString());
               IClass script =
                   builder
