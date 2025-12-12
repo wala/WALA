@@ -1457,6 +1457,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               if (succs.hasNext()) {
                 PreBasicBlock target = succs.next();
                 assert liveBlocks.contains(target);
+                //noinspection AssertWithSideEffects
                 assert !succs.hasNext() || !liveBlocks.contains(succs.next())
                     : "unexpected successors for block " + block + ": " + this;
                 inst = insts.GotoInstruction(x, target.firstIndex);
