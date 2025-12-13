@@ -65,6 +65,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTRequestor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A SourceModuleTranslator whose implementation of loadAllSources() uses the PolyglotFrontEnd
@@ -162,16 +163,16 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     // TODO: group by project and send 'em in
 
     // sort files into projects
-    Map<IProject, Map<ICompilationUnit, EclipseSourceFileModule>> projectsFiles = new HashMap<>();
+    Map<IProject, @NonNull Map<ICompilationUnit, EclipseSourceFileModule>> projectsFiles =
+        new HashMap<>();
     for (ModuleEntry m : modules) {
       assert m instanceof EclipseSourceFileModule
           : "Expecting EclipseSourceFileModule, not " + m.getClass();
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
-      if (!projectsFiles.containsKey(proj)) {
-        projectsFiles.put(proj, new HashMap<>());
-      }
-      projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
+      projectsFiles
+          .computeIfAbsent(proj, absent -> new HashMap<>())
+          .put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }
 
     @SuppressWarnings("deprecation")
