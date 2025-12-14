@@ -25,6 +25,7 @@ import java.util.Map;
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Segment;
+import org.jspecify.annotations.NonNull;
 
 /**
  * ITag impel for Jericho generated tags
@@ -35,7 +36,7 @@ public class JerichoTag implements ITag {
 
   private final Element innerElement;
   private final String sourceFile;
-  private Map<String, Pair<String, Position>> allAttributes = null;
+  private Map<String, @NonNull Pair<String, Position>> allAttributes = null;
 
   public JerichoTag(Element root, String sourceFile) {
     this.innerElement = root;
@@ -93,7 +94,7 @@ public class JerichoTag implements ITag {
     };
   }
 
-  private Map<String, Pair<String, Position>> makeAllAttributes() {
+  private Map<String, @NonNull Pair<String, Position>> makeAllAttributes() {
     Map<String, Pair<String, Position>> result = HashMapFactory.make();
     if (innerElement.getStartTag().getAttributes() != null) {
       for (Attribute a : innerElement.getStartTag().getAttributes()) {
@@ -105,7 +106,7 @@ public class JerichoTag implements ITag {
   }
 
   @Override
-  public Map<String, Pair<String, Position>> getAllAttributes() {
+  public Map<String, @NonNull Pair<String, Position>> getAllAttributes() {
     if (allAttributes == null) {
       allAttributes = makeAllAttributes();
     }
@@ -113,14 +114,14 @@ public class JerichoTag implements ITag {
   }
 
   @Override
-  public Pair<String, Position> getAttributeByName(String name) {
+  public @NonNull Pair<String, Position> getAttributeByName(String name) {
     if (allAttributes == null) {
       allAttributes = makeAllAttributes();
     }
     return allAttributes.get(name.toLowerCase());
   }
 
-  public Pair<Integer, String> getBodyText() {
+  public @NonNull Pair<Integer, String> getBodyText() {
     Segment content = innerElement.getContent();
     Integer lineNum = innerElement.getSource().getRow(content.getBegin());
     String nl = content.getSource().getNewLine();

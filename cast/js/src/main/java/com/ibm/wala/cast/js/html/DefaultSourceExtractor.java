@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Supplier;
+import org.jspecify.annotations.NonNull;
 
 public class DefaultSourceExtractor extends DomLessSourceExtractor {
 
@@ -102,7 +103,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
     }
 
     protected void writeElement(ITag tag, String cons, String varName) {
-      Map<String, Pair<String, Position>> attrs = tag.getAllAttributes();
+      Map<String, @NonNull Pair<String, Position>> attrs = tag.getAllAttributes();
 
       printlnIndented("function make_" + varName + "(parent) {", tag);
       stack.push(varName);
@@ -121,8 +122,10 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
         printlnIndented("  var currentForm = this;", tag);
       }
       if (tag.getName().equalsIgnoreCase("INPUT")) {
-        String prop = attrs.containsKey("name") ? attrs.get("name").fst : null;
-        String type = attrs.containsKey("type") ? attrs.get("type").fst : null;
+        Pair<String, Position> nameAttr = attrs.get("name");
+        String prop = nameAttr == null ? null : nameAttr.fst;
+        Pair<String, Position> typeAttr = attrs.get("type");
+        String type = typeAttr == null ? null : typeAttr.fst;
 
         if (type != null && prop != null) {
           // input tags do not need to be in a form
