@@ -25,6 +25,7 @@ dependencies {
   api(libs.osgi.framework)
   api(projects.core)
   api(projects.util)
+  implementation(libs.jspecify)
 }
 
 dependencyAnalysis.issues {
