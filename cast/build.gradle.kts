@@ -34,13 +34,13 @@ val xlatorTestSharedLibrary by
     }
 
 dependencies {
+  api(libs.guava)
   api(projects.core) {
     because("public method AstCGNode.addTarget receives an argument of type CGNode")
   }
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
-  implementation(libs.guava)
   castJsJavadocDestinationDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
   )
