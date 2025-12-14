@@ -16,6 +16,7 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A selective Cartesian product context that enforces object sensitivity on some set of parameter
@@ -26,7 +27,7 @@ public class SelectiveCPAContext implements Context {
   protected final Context base;
 
   // maps parameters to their abstract objects
-  private final Map<ContextKey, InstanceKey> parameterObjs;
+  private final Map<ContextKey, @NonNull InstanceKey> parameterObjs;
 
   // cached hash code
   private final int hashCode;
@@ -47,7 +48,7 @@ public class SelectiveCPAContext implements Context {
     this(base, makeMap(x));
   }
 
-  public SelectiveCPAContext(Context base, Map<ContextKey, InstanceKey> parameterObjs) {
+  public SelectiveCPAContext(Context base, Map<ContextKey, @NonNull InstanceKey> parameterObjs) {
     this.base = base;
     this.parameterObjs = parameterObjs;
     hashCode = base.hashCode() ^ parameterObjs.hashCode();
@@ -60,11 +61,10 @@ public class SelectiveCPAContext implements Context {
 
   @Override
   public ContextItem get(ContextKey name) {
-    if (parameterObjs.containsKey(name)) {
-      return new FilteredPointerKey.SingleInstanceFilter(parameterObjs.get(name));
-    } else {
-      return base.get(name);
-    }
+    InstanceKey instanceKey = parameterObjs.get(name);
+    return instanceKey == null
+        ? base.get(name)
+        : new FilteredPointerKey.SingleInstanceFilter(instanceKey);
   }
 
   @Override

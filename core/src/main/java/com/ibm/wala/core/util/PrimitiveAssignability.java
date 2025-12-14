@@ -134,14 +134,23 @@ public class PrimitiveAssignability {
     assignability.get(Primitive.BYTE).put(Primitive.CHAR, AssignabilityKind.WIDENING_NARROWING);
   }
 
+  private static void put(final Primitive from, final Primitive to, final AssignabilityKind kind) {
+    assignability
+        .get(from)
+        .compute(
+            to,
+            (key, priorValue) -> {
+              assert priorValue == null;
+              return kind;
+            });
+  }
+
   private static void putNarrowing(final Primitive from, final Primitive to) {
-    assert !assignability.get(from).containsKey(to);
-    assignability.get(from).put(to, AssignabilityKind.NARROWING);
+    put(from, to, AssignabilityKind.NARROWING);
   }
 
   private static void putWidening(final Primitive from, final Primitive to) {
-    assert !assignability.get(from).containsKey(to);
-    assignability.get(from).put(to, AssignabilityKind.WIDENING);
+    put(from, to, AssignabilityKind.WIDENING);
   }
 
   private static final Map<TypeName, Primitive> namePrimitiveMap = new HashMap<>();

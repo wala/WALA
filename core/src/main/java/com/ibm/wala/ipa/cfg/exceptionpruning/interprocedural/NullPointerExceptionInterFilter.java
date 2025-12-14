@@ -15,11 +15,12 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.filter.NullPointerExceptionFilter;
 import com.ibm.wala.ssa.SSAInstruction;
+import org.jspecify.annotations.NonNull;
 
 public class NullPointerExceptionInterFilter extends StoringExceptionFilter<SSAInstruction> {
 
   @Override
-  protected ExceptionFilter<SSAInstruction> computeFilter(CGNode node) {
+  protected @NonNull ExceptionFilter<SSAInstruction> computeFilter(CGNode node) {
     IntraproceduralNullPointerAnalysis analysis =
         new IntraproceduralNullPointerAnalysis(node.getIR());
     return new NullPointerExceptionFilter(analysis);

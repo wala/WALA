@@ -1,5 +1,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
+import static com.ibm.wala.util.collections.HashSetFactory.make;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -16,7 +17,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.Acyclic;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -48,10 +48,7 @@ public class AcyclicCallGraphTest extends WalaTestCase {
     Map<CGNode, Set<CGNode>> cgBackEdges = HashMapFactory.make();
     for (IntPair p : backEdges) {
       CGNode src = cg.getNode(p.getX());
-      if (!cgBackEdges.containsKey(src)) {
-        cgBackEdges.put(src, HashSetFactory.<CGNode>make());
-      }
-      cgBackEdges.get(src).add(cg.getNode(p.getY()));
+      cgBackEdges.computeIfAbsent(src, absent -> make()).add(cg.getNode(p.getY()));
     }
 
     PrunedCallGraph pcg =

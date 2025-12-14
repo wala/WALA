@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Implementation of a directed hyper graph. In a hyper graph an edge can have more than one head
@@ -13,7 +14,7 @@ import java.util.Set;
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
 public class DirectedHyperGraph<T> {
-  private final Map<T, HyperNode<T>> nodes;
+  private final Map<T, @NonNull HyperNode<T>> nodes;
   private final Set<DirectedHyperEdge<T>> edges;
 
   public DirectedHyperGraph() {
@@ -25,7 +26,7 @@ public class DirectedHyperGraph<T> {
     return this.edges;
   }
 
-  public Map<T, HyperNode<T>> getNodes() {
+  public Map<T, @NonNull HyperNode<T>> getNodes() {
     return this.nodes;
   }
 
