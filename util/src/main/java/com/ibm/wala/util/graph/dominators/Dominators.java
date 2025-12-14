@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -132,7 +133,7 @@ public abstract class Dominators<T> {
 
       private final EdgeManager<T> edges =
           new EdgeManager<>() {
-            private final Map<T, Set<T>> nextMap = HashMapFactory.make();
+            private final Map<T, @NonNull Set<T>> nextMap = HashMapFactory.make();
 
             {
               for (T n : G) {
@@ -158,14 +159,14 @@ public abstract class Dominators<T> {
 
             @Override
             public Iterator<T> getSuccNodes(@Nullable Object N) {
-              if (nextMap.containsKey(N)) return nextMap.get(N).iterator();
-              else return EmptyIterator.instance();
+              Set<T> successors = nextMap.get(N);
+              return successors == null ? EmptyIterator.instance() : successors.iterator();
             }
 
             @Override
             public int getSuccNodeCount(Object N) {
-              if (nextMap.containsKey(N)) return nextMap.get(N).size();
-              else return 0;
+              Set<T> successors = nextMap.get(N);
+              return successors == null ? 0 : successors.size();
             }
 
             @Override
