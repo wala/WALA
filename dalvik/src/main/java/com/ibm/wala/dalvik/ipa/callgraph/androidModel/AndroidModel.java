@@ -99,6 +99,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 // For debug:
 /**
@@ -584,7 +585,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
    * @param callerNd CGNoodle of the caller - may be null
    * @return A wrapper that calls the model
    */
-  public SummarizedMethod getMethodAs(
+  public @NonNull SummarizedMethod getMethodAs(
       MethodReference asMethod,
       TypeReference caller,
       IntentStarters.StartInfo info,
