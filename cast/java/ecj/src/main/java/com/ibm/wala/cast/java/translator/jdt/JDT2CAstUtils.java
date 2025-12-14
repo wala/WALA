@@ -58,6 +58,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.jspecify.annotations.NonNull;
 
 public class JDT2CAstUtils {
   public static Collection<CAstQualifier> mapModifiersToQualifiers(
@@ -174,19 +175,14 @@ public class JDT2CAstUtils {
     return null;
   }
 
-  private static final Map<ITypeBinding, Integer> ids = new IdentityHashMap<>();
+  private static final Map<ITypeBinding, @NonNull Integer> ids = new IdentityHashMap<>();
 
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     int n;
     // synchronize defensively just in case this code ever runs in multiple threads
     synchronized (ids) {
-      if (ids.containsKey(ct)) {
-        n = ids.get(ct);
-      } else {
-        n = ids.size();
-        ids.put(ct, n);
-      }
+      n = ids.computeIfAbsent(ct, absent -> ids.size());
     }
 
     if (binName.contains("$")) {
