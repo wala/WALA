@@ -56,6 +56,7 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import org.intellij.lang.annotations.Language;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -401,7 +402,7 @@ public class AndroidManifestXMLReader {
    *
    * <p>The Item that consumes an Attribute has to pop it.
    */
-  private static final Map<HistoryKey, ArrayDeque<Object>> attributesHistory =
+  private static final Map<HistoryKey, @NonNull ArrayDeque<Object>> attributesHistory =
       new HashMap<>(); // No EnumMap possible :(
 
   static {
@@ -479,11 +480,10 @@ public class AndroidManifestXMLReader {
           throw e;
         }
       }
-      if (attributesHistory.containsKey(self)
-          && attributesHistory.get(self) != null
-          && !attributesHistory.get(self).isEmpty()) {
+      ArrayDeque<Object> objects = attributesHistory.get(self);
+      if (objects != null && !objects.isEmpty()) {
         try {
-          attributesHistory.get(self).pop();
+          objects.pop();
         } catch (java.util.EmptyStackException e) {
           System.err.println("The Stack for " + self + " was Empty when trying to pop");
           throw e;

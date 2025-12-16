@@ -47,6 +47,8 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 import com.ibm.wala.dalvik.dex.instructions.Instruction;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,6 +56,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Collection of {@code Instruction} which allows getting an instruction from its table index id or
@@ -61,7 +64,7 @@ import java.util.Map;
  */
 public class InstructionArray implements Collection<Instruction> {
   List<Instruction> instructions;
-  Map<Integer, Integer> pc2index;
+  Map<Integer, @NonNull Integer> pc2index;
   List<Integer> index2pc;
 
   public InstructionArray() {
@@ -167,10 +170,7 @@ public class InstructionArray implements Collection<Instruction> {
    * @return The index of the instruction of given byte code index
    */
   public int getIndexFromPc(int pc) {
-    if (!pc2index.containsKey(pc) && pc2index.containsKey(pc + 1)) {
-      pc++;
-    }
-    return pc2index.get(pc);
+    return requireNonNullElseGet(pc2index.get(pc), () -> pc2index.get(pc + 1));
   }
 
   /**
