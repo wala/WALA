@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Class files are taken as input arguments (or if there are none, from standard input). The methods
@@ -183,7 +184,7 @@ public class OfflineDynamicCallGraph {
 
     final ClassReader r = ci.getReader();
 
-    final Map<Object, MethodData> methods = HashMapFactory.make();
+    final Map<Object, @NonNull MethodData> methods = HashMapFactory.make();
 
     for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
       final MethodData d = ci.visitMethod(m);
