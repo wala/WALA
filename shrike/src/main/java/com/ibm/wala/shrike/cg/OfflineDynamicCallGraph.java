@@ -99,7 +99,7 @@ public class OfflineDynamicCallGraph {
     }
   }
 
-  private static final boolean disasm = true;
+  private static final boolean disassemble = true;
   private static final boolean verify = true;
 
   private static boolean patchExits = true;
@@ -176,7 +176,7 @@ public class OfflineDynamicCallGraph {
       return null;
     }
 
-    if (disasm) {
+    if (disassemble) {
       w.write("Class: " + className + '\n');
       w.flush();
     }
@@ -194,7 +194,7 @@ public class OfflineDynamicCallGraph {
           return null;
         }
 
-        if (disasm) {
+        if (disassemble) {
           w.write(
               "Instrumenting "
                   + ci.getReader().getMethodName(m)
@@ -418,7 +418,7 @@ public class OfflineDynamicCallGraph {
 
         me.endPass();
 
-        if (disasm) {
+        if (disassemble) {
           w.write("Final ShrikeBT code:\n");
           new Disassembler(d).disassembleTo(w);
           w.flush();
