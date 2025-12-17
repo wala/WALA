@@ -27,27 +27,30 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Set;
 
 public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
 
-  public WebPageLoaderFactory(JavaScriptTranslatorFactory factory) {
-    super(factory);
+  public WebPageLoaderFactory(JavaScriptTranslatorFactory factory, SSAOptions ssaOptions) {
+    super(factory, ssaOptions);
   }
 
   public WebPageLoaderFactory(
-      JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
-    super(factory, preprocessor);
+      JavaScriptTranslatorFactory factory,
+      CAstRewriterFactory<?, ?> preprocessor,
+      SSAOptions ssaOptions) {
+    super(factory, ssaOptions, preprocessor);
   }
 
   @Override
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
-    return new JavaScriptLoader(cha, translatorFactory, preprocessor) {
+    return new JavaScriptLoader(cha, ssaOptions, translatorFactory, preprocessor) {
       @Override
       protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntitie) {
-        return new JSAstTranslator(this) {
+        return new JSAstTranslator(this, ssaOptions) {
           private final CAst Ast = new CAstImpl();
 
           private boolean isNestedWithinScriptBody(WalkContext context) {

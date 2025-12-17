@@ -47,6 +47,8 @@ public class CAstOperator implements CAstLeafNode {
    * support languages that define multiple notions of equality, such as Scheme with
    * eql and eq and JavaScript with == and ===.
    */
+  public static final CAstOperator OP_INSTANCE_OF = new CAstOperator("isinstance");
+
   public static final CAstOperator OP_EQ = new CAstOperator("==");
   public static final CAstOperator OP_STRICT_EQ = new CAstOperator("===");
 

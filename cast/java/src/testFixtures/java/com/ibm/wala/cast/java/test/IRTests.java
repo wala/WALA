@@ -42,6 +42,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
@@ -294,6 +295,10 @@ public abstract class IRTests {
 
   protected abstract AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?>
       getAnalysisEngine(String[] mainClassDescriptors, Collection<Path> sources, List<String> libs);
+
+  protected SSAOptions getSSAOptions() {
+    return SSAOptions.defaultOptions();
+  }
 
   public Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> runTest(String testName)
       throws CancelException, IOException {

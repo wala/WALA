@@ -31,6 +31,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
@@ -45,8 +46,8 @@ import java.util.Set;
 public class JSAstTranslator extends AstTranslator {
   private static final boolean DEBUG = false;
 
-  public JSAstTranslator(JavaScriptLoader loader) {
-    super(loader);
+  public JSAstTranslator(JavaScriptLoader loader, SSAOptions ssaOptions) {
+    super(loader, ssaOptions);
   }
 
   private static boolean isPrologueScript(WalkContext context) {

@@ -276,7 +276,7 @@ public class ArgumentSpecialization {
           class ArgumentativeTranslator extends JSAstTranslator {
 
             public ArgumentativeTranslator(JavaScriptLoader loader) {
-              super(loader);
+              super(loader, options);
             }
 
             private CAstEntity codeBodyEntity;

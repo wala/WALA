@@ -86,7 +86,7 @@ public abstract class FieldBasedCallGraphBuilder {
     this.cha = cha;
     this.options = options;
     this.cache = iAnalysisCacheView;
-    this.constructors = new JavaScriptConstructorFunctions(cha);
+    this.constructors = new JavaScriptConstructorFunctions(cha, options.getSSAOptions());
     this.targetSelector = setupMethodTargetSelector(constructors, options);
     this.supportFullPointerAnalysis = supportFullPointerAnalysis;
   }
