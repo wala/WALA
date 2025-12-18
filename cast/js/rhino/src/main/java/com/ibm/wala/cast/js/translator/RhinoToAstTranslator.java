@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
@@ -386,7 +387,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     private final int kind;
 
-    private final Map<CAstNode, Collection<CAstEntity>> subs;
+    private final Map<CAstNode, @NonNull Collection<CAstEntity>> subs;
 
     private final CAstNode ast;
 
@@ -496,8 +497,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-      if (subs.containsKey(construct)) return subs.get(construct).iterator();
-      else return EmptyIterator.instance();
+      Collection<CAstEntity> cAstEntities = subs.get(construct);
+      return cAstEntities == null ? EmptyIterator.instance() : cAstEntities.iterator();
     }
 
     @Override

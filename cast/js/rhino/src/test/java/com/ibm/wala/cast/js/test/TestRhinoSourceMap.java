@@ -25,6 +25,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.IOException;
 import java.util.Map;
@@ -169,13 +170,12 @@ public class TestRhinoSourceMap {
         // System.err.println(fun.getDeclaringClass().getName() + " " + fun.getSourcePosition());
         SourceBuffer sb = new SourceBuffer(fun.getSourcePosition());
         // System.err.println(sb);
-        if (sources.containsKey(fun.getDeclaringClass().getName().toString())) {
+        TypeName declaringClassName = fun.getDeclaringClass().getName();
+        String expectedToString = sources.get(declaringClassName.toString());
+        if (expectedToString != null) {
           System.err.println(
-              "checking source of "
-                  + fun.getDeclaringClass().getName()
-                  + " at "
-                  + fun.getSourcePosition());
-          assertThat(sb).hasToString(sources.get(fun.getDeclaringClass().getName().toString()));
+              "checking source of " + declaringClassName + " at " + fun.getSourcePosition());
+          assertThat(sb).hasToString(expectedToString);
         }
       }
     }
