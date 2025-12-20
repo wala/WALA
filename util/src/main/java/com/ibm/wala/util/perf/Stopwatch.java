@@ -54,7 +54,6 @@ public class Stopwatch {
       sb.append(", inv: ").append(count);
       sb.append(", avg: ").append(getElapsedMillis() / count);
     }
-    var x = new Object(); var unused = x.hashCode();
     return sb.toString();
   }
 }
