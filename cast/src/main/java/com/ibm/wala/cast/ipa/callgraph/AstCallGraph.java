@@ -129,6 +129,7 @@ public class AstCallGraph extends ExplicitCallGraph {
         while (!done) {
           try {
             for (Function<Object, Object> function : callbacks) {
+              @SuppressWarnings("unused")
               Object ignored = function.apply(null);
             }
           } catch (ConcurrentModificationException e) {

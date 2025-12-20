@@ -93,15 +93,15 @@ public class TestInfo {
 
   public static final String TEST_CLONE = "Ldemandpa/TestClone";
 
-  public static final String FLOWSTO_TEST_LOCALS = "Ldemandpa/FlowsToTestLocals";
+  public static final String FLOWS_TO_TEST_LOCALS = "Ldemandpa/FlowsToTestLocals";
 
-  public static final String FLOWSTO_TEST_ID = "Ldemandpa/FlowsToTestId";
+  public static final String FLOWS_TO_TEST_ID = "Ldemandpa/FlowsToTestId";
 
-  public static final String FLOWSTO_TEST_FIELDS = "Ldemandpa/FlowsToTestFields";
+  public static final String FLOWS_TO_TEST_FIELDS = "Ldemandpa/FlowsToTestFields";
 
-  public static final String FLOWSTO_TEST_FIELDS_HARDER = "Ldemandpa/FlowsToTestFieldsHarder";
+  public static final String FLOWS_TO_TEST_FIELDS_HARDER = "Ldemandpa/FlowsToTestFieldsHarder";
 
-  public static final String FLOWSTO_TEST_ARRAYSET_ITER = "Ldemandpa/FlowsToTestArraySetIter";
+  public static final String FLOWS_TO_TEST_ARRAYSET_ITER = "Ldemandpa/FlowsToTestArraySetIter";
 
-  public static final String FLOWSTO_TEST_HASHSET = "Ldemandpa/FlowsToTestHashSet";
+  public static final String FLOWS_TO_TEST_HASHSET = "Ldemandpa/FlowsToTestHashSet";
 }

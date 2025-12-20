@@ -39,7 +39,6 @@ public class DFS {
    * @param filter only traverse nodes that need this filter
    * @throws IllegalArgumentException if C is null
    */
-  @SuppressWarnings("serial")
   public static <T> Collection<T> getReachableNodes(
       final Graph<T> G, Collection<? extends T> C, final Predicate<? super T> filter) {
     if (C == null) {

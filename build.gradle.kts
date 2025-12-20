@@ -20,8 +20,9 @@ plugins {
   alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)
   alias(libs.plugins.versions)
-  id("com.ibm.wala.gradle.javadoc")
+  id("com.ibm.wala.gradle.check-git-cleanliness")
   id("com.ibm.wala.gradle.eclipse-maven-central")
+  id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.maven-eclipse-jsdt")
   id("com.ibm.wala.gradle.project")
 }
@@ -100,12 +101,15 @@ shellcheck {
 node {
   download = true
   version = "24.10.0"
+
+  // workaround for <https://github.com/npm/cli/issues/8710>
+  npmVersion = "11.6.0"
 }
 
 val lintMarkdown by
     tasks.registering(NpxTask::class) {
       group = "verification"
-      command = "markdownlint-cli2"
+      command = "markdownlint-cli2@0.18.1"
       val markdownFiles = fileTree(".") { include("*.md") }
       inputs.files(markdownFiles)
       inputs.file(".markdownlint-cli2.yaml")

@@ -14,6 +14,7 @@ val compileTestSubjectsJava by
         // Some code in the test data is written in a deliberately bad style, so allow warnings
         compilerArgs.remove("-Werror")
         compilerArgs.add("-nowarn")
+        isDeprecation = false
       }
     }
 

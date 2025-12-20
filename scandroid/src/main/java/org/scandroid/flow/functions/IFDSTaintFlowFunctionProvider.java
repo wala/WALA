@@ -87,6 +87,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.DomainElement;
 import org.scandroid.domain.FieldElement;
@@ -419,7 +420,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     // dest.getMethod().getReference());
     //		}
 
-    final Map<CodeElement, CodeElement> parameterMap = HashMapFactory.make();
+    final Map<CodeElement, @NonNull CodeElement> parameterMap = HashMapFactory.make();
     for (int i = 0; i < instruction.getNumberOfPositionalParameters(); i++) {
       Set<CodeElement> elements = CodeElement.valueElements(instruction.getUse(i));
       for (CodeElement e : elements) {
@@ -433,10 +434,12 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
         set.add(d1);
       }
       DomainElement de = domain.getMappedObject(d1);
-      if (de != null && parameterMap.containsKey(de.codeElement))
-        set.add(
-            domain.getMappedIndex(
-                new DomainElement(parameterMap.get(de.codeElement), de.taintSource)));
+      if (de != null) {
+        CodeElement codeElement = parameterMap.get(de.codeElement);
+        if (codeElement != null) {
+          set.add(domain.getMappedIndex(new DomainElement(codeElement, de.taintSource)));
+        }
+      }
       return set;
     };
   }

@@ -10,9 +10,14 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A debugging aid. When HashSetFactory.DEBUG is set, this class creates ParanoidHashSets.
@@ -48,7 +53,7 @@ public class HashSetFactory {
   /**
    * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
    */
-  public static <T> HashSet<T> make(Collection<T> s) {
+  public static <T> HashSet<T> make(Collection<? extends T> s) {
     if (s == null) {
       throw new IllegalArgumentException("null s");
     }
@@ -57,5 +62,26 @@ public class HashSetFactory {
     } else {
       return new LinkedHashSet<>(s);
     }
+  }
+
+  /**
+   * @return A {@link ParanoidHashSet} if {@link #DEBUG} is {@code true}, a {@link HashSet}
+   *     otherwise
+   * @see java.util.Set#of(Object[])
+   */
+  @SafeVarargs
+  public static <T, U extends T> HashSet<T> of(U... elements) {
+    return make(Arrays.asList(elements));
+  }
+
+  /**
+   * Returns a {@code Collector} that accumulates the input elements into a new {@code HashSet} as
+   * provided by {@link #make()}.
+   *
+   * @param <T> the type of the input elements
+   * @return a {@link Collector} that collects all the input elements into a {@link HashSet}
+   */
+  public static <T> @NotNull Collector<T, ?, Set<T>> toSet() {
+    return Collectors.toCollection(HashSetFactory::make);
   }
 }

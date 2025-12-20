@@ -148,7 +148,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   /**
    * translate moduleEntry to CAst and store result in topLevelEntities
    *
-   * @param modules all mofules in the analysis
+   * @param modules all modules in the analysis
    */
   private void translateModuleEntryToCAst(
       ModuleEntry moduleEntry,
@@ -258,7 +258,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {

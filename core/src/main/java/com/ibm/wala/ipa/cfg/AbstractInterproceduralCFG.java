@@ -255,8 +255,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
       T callBlock,
       CGNode target,
       ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
-    T tentry = targetCFG.entry();
-    BasicBlockInContext<T> entry = new BasicBlockInContext<>(target, tentry);
+    T tEntry = targetCFG.entry();
+    BasicBlockInContext<T> entry = new BasicBlockInContext<>(target, tEntry);
     addNodeForBasicBlockIfNeeded(entry);
     BasicBlockInContext<T> call = new BasicBlockInContext<>(caller, callBlock);
     if (!g.containsNode(entry) || !g.containsNode(call)) {
@@ -302,17 +302,17 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
     }
     ControlFlowGraph<SSAInstruction, T> ccfg = getCFG(caller);
     if (ccfg != null) {
-      SSAInstruction[] cinsts = ccfg.getInstructions();
+      SSAInstruction[] cInsts = ccfg.getInstructions();
 
       if (DEBUG_LEVEL > 1) {
-        System.err.println("Visiting " + cinsts.length + " instructions");
+        System.err.println("Visiting " + cInsts.length + " instructions");
       }
-      for (int i = 0; i < cinsts.length; i++) {
-        if (cinsts[i] instanceof SSAAbstractInvokeInstruction) {
+      for (int i = 0; i < cInsts.length; i++) {
+        if (cInsts[i] instanceof SSAAbstractInvokeInstruction) {
           if (DEBUG_LEVEL > 1) {
-            System.err.println("Checking invokeinstruction: " + cinsts[i]);
+            System.err.println("Checking invoke instruction: " + cInsts[i]);
           }
-          SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cinsts[i];
+          SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cInsts[i];
           CallSiteReference site = call.getCallSite();
           assert site.getProgramCounter() == ccfg.getProgramCounter(i);
           if (cg.getPossibleTargets(caller, site).contains(n)) {
@@ -656,7 +656,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
   }
 
   /**
-   * @return true iff basic block B ends in a call instuction
+   * @return true iff basic block B ends in a call instruction
    */
   public boolean hasCall(BasicBlockInContext<T> B) {
     addNodeForBasicBlockIfNeeded(B);
@@ -664,7 +664,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
   }
 
   /**
-   * @return true iff basic block B ends in a call instuction
+   * @return true iff basic block B ends in a call instruction
    */
   protected boolean hasCall(BasicBlockInContext<T> B, ControlFlowGraph<SSAInstruction, T> cfg) {
     SSAInstruction[] statements = cfg.getInstructions();
@@ -700,9 +700,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    * @return the set of CGNodes that B may call, according to the governing call graph.
    */
   private Set<CGNode> getCallTargets(
-      IBasicBlock<SSAInstruction> B, ControlFlowGraph<SSAInstruction, T> cfg, CGNode Bnode) {
+      IBasicBlock<SSAInstruction> B, ControlFlowGraph<SSAInstruction, T> cfg, CGNode bNode) {
     CallSiteReference site = getCallSiteForCallBlock(B, cfg);
-    return cg.getPossibleTargets(Bnode, site);
+    return cg.getPossibleTargets(bNode, site);
   }
 
   /**

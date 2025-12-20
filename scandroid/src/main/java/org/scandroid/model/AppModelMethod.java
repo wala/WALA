@@ -72,6 +72,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.jspecify.annotations.NonNull;
 import org.scandroid.spec.AndroidSpecs;
 import org.scandroid.spec.MethodNamePattern;
 import org.scandroid.util.LoaderUtils;
@@ -94,8 +96,8 @@ public class AppModelMethod {
   SSAInstructionFactory insts;
 
   // Maps a Type to variable name
-  private final Map<TypeReference, Integer> typeToID = new HashMap<>();
-  // innerclass dependencies
+  private final Map<TypeReference, @NonNull Integer> typeToID = new HashMap<>();
+  // inner class dependencies
   private final Map<TypeReference, LinkedList<TypeReference>> icDependencies = new HashMap<>();
   // all callbacks to consider
   private final List<MethodParams> callBacks = new ArrayList<>();
@@ -207,12 +209,16 @@ public class AppModelMethod {
         if (LoaderUtils.fromLoader(im, ClassLoaderReference.Application)) {
           callBacks.add(new MethodParams(im));
           TypeReference tr = im.getDeclaringClass().getReference();
-          if (!typeToID.containsKey(tr)) {
-            typeToID.put(tr, nextLocal++);
-            // class is an innerclass
-            if (tr.getName().getClassName().toString().contains("$")) {
-              addDependencies(tr);
-            }
+          AtomicBoolean added = new AtomicBoolean();
+          typeToID.computeIfAbsent(
+              tr,
+              absent -> {
+                added.set(true);
+                return nextLocal++;
+              });
+          if (added.get() && tr.getName().getClassName().toString().contains("$")) {
+            // class is an inner class
+            addDependencies(tr);
           }
         }
       }
@@ -233,10 +239,12 @@ public class AppModelMethod {
           TypeReference.findOrCreate(
               ClassLoaderReference.Application, packageName + outerClassName);
       trLL.push(innerTR);
-      if (!typeToID.containsKey(innerTR)) {
-        typeToID.put(innerTR, nextLocal++);
-        aClassToTR.put(innerTR, tr);
-      }
+      typeToID.computeIfAbsent(
+          innerTR,
+          key -> {
+            aClassToTR.put(key, tr);
+            return nextLocal++;
+          });
 
       innerClassName = outerClassName;
       index = outerClassName.lastIndexOf('$');
@@ -253,12 +261,12 @@ public class AppModelMethod {
       TypeReference tr = eSet.getKey();
       String className = tr.getName().getClassName().toString();
 
-      // Not an anonymous innerclass
+      // Not an anonymous inner class
       if (!className.contains("$")) {
         processAllocation(tr, i, false);
         createdIDs.add(i);
       }
-      // Is an anonymous innerclass
+      // Is an anonymous inner class
       else {
         LinkedList<TypeReference> deps = icDependencies.get(tr);
         if (deps == null) {

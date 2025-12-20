@@ -116,7 +116,7 @@ public class CustomGenericsAndFields {
 
 		/////////////////////////////
 
-		String thrownaway = cg2.bar("a","b");
+		String thrownAway = cg2.bar("a","b");
 		cg2.setFoo("real one");
 		MyGeneric<String,ConcreteGeneric2<String>> mygeneric = new MyGeneric<>("useless",cg2);
 		String x = mygeneric.doFoo();
@@ -128,7 +128,7 @@ public class CustomGenericsAndFields {
 		cg2.x = "hello";
 
 //		mygeneric.getB().y+="hey"; // TODO: this is going to be a MAJOR pain...
-		String real_oneheyya = (((cg2WithSideEffects().y))+="hey")+"ya"; // TODO: this is going to be a MAJOR pain...
-		System.out.println(real_oneheyya);
+		String real_oneHeyYa = (((cg2WithSideEffects().y))+="hey")+"ya"; // TODO: this is going to be a MAJOR pain...
+		System.out.println(real_oneHeyYa);
 	}
 }

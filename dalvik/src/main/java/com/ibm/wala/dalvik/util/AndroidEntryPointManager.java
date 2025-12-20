@@ -69,6 +69,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.intellij.lang.annotations.Language;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -237,7 +238,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * some memory. In this case some calls to the OS (like getting the Activity-manager or so) will
    * not be able to be resolved.
    *
-   * <p>It is to be noted that the generated information is far from beeing complete.
+   * <p>It is to be noted that the generated information is far from being complete.
    *
    * <p>The default is to insert the code.
    *
@@ -419,7 +420,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * @see com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent
    * @see com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
    */
-  public final Map<Intent, Intent> overrideIntents = HashMapFactory.make();
+  public final Map<Intent, @NonNull Intent> overrideIntents = HashMapFactory.make();
 
   /**
    * Set more information to an Intent.
@@ -434,8 +435,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * @see #registerIntentForce
    */
   public void registerIntent(Intent intent) {
-    if (overrideIntents.containsKey(intent)) {
-      final Intent original = overrideIntents.get(intent);
+    Intent original = overrideIntents.get(intent);
+    if (original != null) {
       final Intent.IntentType oriType = original.getType();
       final Intent.IntentType newType = intent.getType();
 
@@ -517,8 +518,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
               + "alter Information on an Intent use registerIntent (you may register it multiple times).");
     }
 
-    if (overrideIntents.containsKey(from)) {
-      final Intent ori = overrideIntents.get(from);
+    Intent ori = overrideIntents.get(from);
+    if (ori != null) {
       final Intent source;
       if (ori == from) {
         // The Intent has been registered before. Set the registered variant as source so
@@ -627,8 +628,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    *     <p>TODO: TODO: Malicious Intent-Table could cause endless loops
    */
   public Intent getIntent(Intent intent) {
-    if (overrideIntents.containsKey(intent)) {
-      Intent ret = overrideIntents.get(intent);
+    Intent ret = overrideIntents.get(intent);
+    if (ret != null) {
       while (!ret.equals(intent)) {
         // Follow the chain of overrides
         if (!overrideIntents.containsKey(intent)) {

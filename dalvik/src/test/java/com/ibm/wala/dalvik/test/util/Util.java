@@ -2,6 +2,7 @@ package com.ibm.wala.dalvik.test.util;
 
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_DEX_DIR;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAVA_JAR;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.android.tools.r8.CompilationFailedException;
 import com.android.tools.r8.D8;
@@ -46,7 +47,7 @@ public class Util {
     if (javaJar instanceof JarFileModule) {
       return ((JarFileModule) javaJar).getAbsolutePath();
     } else {
-      assert javaJar instanceof NestedJarFileModule : javaJar;
+      assertThat(javaJar).isInstanceOf(NestedJarFileModule.class);
       File F = File.createTempFile("android", ".jar");
       // F.deleteOnExit();
       System.err.println(F.getAbsolutePath());
@@ -96,7 +97,7 @@ public class Util {
         libs.add(lib.toURI());
       }
     } else {
-      assert "Dalvik".equals(System.getProperty("java.vm.name"));
+      assertThat(System.getProperty("java.vm.name")).isEqualTo("Dalvik");
       for (File f :
           new File("/system/framework/")
               .listFiles(

@@ -128,7 +128,7 @@ public abstract class AbstractAndroidModel {
    * @param body The MethodSummary to add instructions to
    * @param insts Will be used to generate the instructions
    * @param paramManager aids in handling SSA-Values
-   * @param entryPoints This iterable has to contain only instances of AnroidEntryPoint.
+   * @param entryPoints This iterable has to contain only instances of AndroidEntryPoint.
    */
   public AbstractAndroidModel(
       VolatileMethodSummary body,

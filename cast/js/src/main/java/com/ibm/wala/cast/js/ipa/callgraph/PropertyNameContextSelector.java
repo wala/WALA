@@ -48,9 +48,9 @@ import java.util.HashMap;
  * correlation tracking.
  */
 public class PropertyNameContextSelector implements ContextSelector {
-  public static final ContextKey PROPNAME_KEY = new ContextKey() {};
-  public static final ContextItem PROPNAME_MARKER = new ContextItem() {};
-  public static final ContextKey PROPNAME_PARM_INDEX = new ContextKey() {};
+  public static final ContextKey PROP_NAME_KEY = new ContextKey() {};
+  public static final ContextItem PROP_NAME_MARKER = new ContextItem() {};
+  public static final ContextKey PROP_NAME_PARM_INDEX = new ContextKey() {};
   public static final ContextKey INSTANCE_KEY_KEY = new ContextKey() {};
 
   /** Context representing a particular name accessed by a correlated read/write pair. */
@@ -61,9 +61,9 @@ public class PropertyNameContextSelector implements ContextSelector {
 
     @Override
     public ContextItem get(ContextKey key) {
-      if (PROPNAME_KEY.equals(key)) {
-        return PROPNAME_MARKER;
-      } else if (PROPNAME_PARM_INDEX.equals(key)) {
+      if (PROP_NAME_KEY.equals(key)) {
+        return PROP_NAME_MARKER;
+      } else if (PROP_NAME_PARM_INDEX.equals(key)) {
         return ContextItem.Value.make(index);
       } else if (INSTANCE_KEY_KEY.equals(key)) {
         return ContextItem.Value.make(
@@ -208,7 +208,7 @@ public class PropertyNameContextSelector implements ContextSelector {
         return new PropNameContext(baseContext, receiver[index]);
     }
 
-    if (PROPNAME_MARKER.equals(caller.getContext().get(PROPNAME_KEY))) {
+    if (PROP_NAME_MARKER.equals(caller.getContext().get(PROP_NAME_KEY))) {
       if (!identifyDependentParameters(caller, site).isEmpty()) {
         // use a MarkerForInContext to clone based on the InstanceKey used in the caller context
         @SuppressWarnings("unchecked")

@@ -11,6 +11,9 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
@@ -69,7 +72,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
             "Lchess",
             "startingStatus",
             "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-    assert !status.isEmpty();
+    assertThat(status).isNotEmpty();
 
     Set<CGNode> color =
         getNodes(
@@ -77,19 +80,19 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
             "Lchess",
             "startingColor",
             "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
-    assert !color.isEmpty();
+    assertThat(color).isNotEmpty();
 
     Set<CGNode> loadImage =
         getNodes(
             CG, "Limg", "loadImage", "(Ljava/lang/CharSequence;)Ljava/awt/image/BufferedImage;");
-    assert !loadImage.isEmpty();
+    assertThat(loadImage).isNotEmpty();
 
     Set<CGNode> append$v =
         getNodes(CG, "Lkawa/lang/Quote", "append$V", "([Ljava/lang/Object;)Ljava/lang/Object;");
-    assert !append$v.isEmpty();
+    assertThat(append$v).isNotEmpty();
 
     Set<CGNode> clinit = getNodes(CG, "Lkawa/lib/kawa/base", "<clinit>", "()V");
-    assert !clinit.isEmpty();
+    assertThat(clinit).isNotEmpty();
   }
 
   @Test
@@ -102,7 +105,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
             "test");
 
     Set<CGNode> nodes = getNodes(CG, "Ltest", "plusish$V", "(Lgnu/lists/LList;)Ljava/lang/Object;");
-    assert !nodes.isEmpty();
+    assertThat(nodes).isNotEmpty();
   }
 
   private static Set<CGNode> getNodes(CallGraph CG, String cls, String method, String descr) {
@@ -181,7 +184,8 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
                 @Override
                 public void cancel() {
-                  assert false;
+                  //noinspection ResultOfMethodCallIgnored
+                  fail("Unexpected cancel callback");
                 }
 
                 @Override
@@ -205,12 +209,11 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
 
                 @Override
                 public String getCancelMessage() {
-                  assert false : "should not cancel";
-                  return null;
+                  return fail("should not cancel");
                 }
               });
-    } catch (CallGraphBuilderCancelException cgbe) {
-      cg = cgbe.getPartialCallGraph();
+    } catch (CallGraphBuilderCancelException problem) {
+      cg = problem.getPartialCallGraph();
     }
 
     return cg;

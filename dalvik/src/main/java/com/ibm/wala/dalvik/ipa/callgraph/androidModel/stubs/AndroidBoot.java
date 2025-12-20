@@ -106,7 +106,7 @@ public class AndroidBoot {
     this.pm = pm;
     this.body = body;
 
-    mainThread = createMainThred();
+    mainThread = createMainThread();
     systemContext = createSystemContext(mainThread);
     packageContext = createPackageContext(mainThread);
   }
@@ -133,8 +133,8 @@ public class AndroidBoot {
   }
 
   /** Create the main-thread as activity-thread. */
-  private SSAValue createMainThred() {
-    final SSAValue mainThread = this.pm.getUnmanaged(AndroidTypes.ActivityThread, "mMainThred");
+  private SSAValue createMainThread() {
+    final SSAValue mainThread = this.pm.getUnmanaged(AndroidTypes.ActivityThread, "mMainThread");
     { // New-Site
       final int pc = this.body.getNextProgramCounter();
       final NewSiteReference nRef = NewSiteReference.make(pc, AndroidTypes.ActivityThread);

@@ -13,10 +13,11 @@ package com.ibm.wala.shrike.shrikeBT;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.IdentityHashMap;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To rewrite code, construct
- * a MethodEditor initialized with the intial code for the method. Then perform a series of passes.
+ * a MethodEditor initialized with the initial code for the method. Then perform a series of passes.
  * In each pass you call beginPass(), insert a number of patches using the insert...() or
  * replace...() methods, then optionally call applyPatches() to update the code with your changes,
  * then call endPass(). The end of each pass updates the code in the MethodData that you passed in,
@@ -48,11 +49,11 @@ import java.util.IdentityHashMap;
  * <p>MethodEditor relies on labels. A label is an integer representing a point in the code. Labels
  * are valid only during a single pass; at the end of each pass, instructions are reordered and old
  * labels become invalid. At the beginning of a pass every instruction in the instructions array is
- * labelled with the index of that instruction in the array. During instrumentation new labels can
- * be allocated by calling MethodEditor.allocateLabel(); control instructions can be created
- * referring to these new labels or the existing labels. At the end of a pass, as patch code is
- * spliced into the method body, all instructions are updated to refer to the new labels which are
- * simply the indices of instructions in the instruction array.
+ * labeled with the index of that instruction in the array. During instrumentation new labels can be
+ * allocated by calling MethodEditor.allocateLabel(); control instructions can be created referring
+ * to these new labels or the existing labels. At the end of a pass, as patch code is spliced into
+ * the method body, all instructions are updated to refer to the new labels which are simply the
+ * indices of instructions in the instruction array.
  */
 public final class MethodEditor {
   private static final ExceptionHandler[] noHandlers = new ExceptionHandler[0];
@@ -636,7 +637,7 @@ public final class MethodEditor {
     }
 
     // We want to update each exception handler array exactly once
-    IdentityHashMap<ExceptionHandler, Object> adjustedHandlers = null;
+    IdentityHashMap<ExceptionHandler, @Nullable Object> adjustedHandlers = null;
     for (int i = 0; i < handlers.length; i++) {
       ExceptionHandler[] hs = handlers[i];
       if (hs.length > 0 && (i == 0 || hs != handlers[i - 1])) {

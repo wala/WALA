@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
+import static java.util.Objects.requireNonNullElseGet;
+
 import com.ibm.wala.core.util.ssa.ParameterAccessor;
 import com.ibm.wala.core.util.ssa.SSAValue;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -49,6 +51,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Manages SSA-Numbers for the arguments to Entrypoints.
@@ -65,10 +69,10 @@ import java.util.Map;
  * @since 2013-09-19
  *     <p>TODO:
  *     <ul>
- *       <li>Track if a variable has been refered to to be able to prune unused Phi-Instructions
+ *       <li>Track if a variable has been referred to to be able to prune unused Phi-Instructions
  *           later
  *       <li>Trim Memory consumption? The whole class should not be in * memory for long time so
- *           this might be not neccessary.
+ *           this might be not necessary.
  *     </ul>
  */
 public class AndroidModelParameterManager {
@@ -92,7 +96,7 @@ public class AndroidModelParameterManager {
     FREE_CLOSED
   }
 
-  // TODO: nextLocal may be 0 on getUnamanged!
+  // TODO: nextLocal may be 0 on getUnmanaged!
   /** The next variable not under management yet */
   private int nextLocal;
 
@@ -117,7 +121,7 @@ public class AndroidModelParameterManager {
   }
 
   /** The main data-structure of the management */
-  private final Map<TypeReference, List<ManagedParameter>> seenTypes = new HashMap<>();
+  private final Map<TypeReference, @NonNull List<ManagedParameter>> seenTypes = new HashMap<>();
 
   /**
    * Setting the behaviour may be handy in the later model.
@@ -183,41 +187,43 @@ public class AndroidModelParameterManager {
       throw new IllegalArgumentException("The SSA-Variable may not be zero or negative.");
     }
 
-    if (seenTypes.containsKey(type)) {
-      for (ManagedParameter param : seenTypes.get(type)) {
-        if (param.status == ValueStatus.UNALLOCATED) {
-          // XXX: Allow more?
-          assert param.type.equals(type) : "Inequal types";
+    seenTypes.compute(
+        type,
+        (key, priorValue) -> {
+          if (priorValue != null) {
+            for (ManagedParameter param : priorValue) {
+              if (param.status == ValueStatus.UNALLOCATED) {
+                // XXX: Allow more?
+                assert param.type.equals(type) : "Inequal types";
 
+                if ((ssaValue + 1) > nextLocal) {
+                  nextLocal = ssaValue + 1;
+                }
+
+                param.status = ValueStatus.ALLOCATED;
+                param.ssa = ssaValue;
+                param.setInScope = currentScope;
+                //                    param.setBy = setBy;
+
+                return priorValue;
+              }
+            }
+            throw new IllegalStateException(
+                "The parameter " + key.getName() + " has already been allocated!");
+          }
+          ManagedParameter param = new ManagedParameter();
+          param.status = ValueStatus.ALLOCATED;
+          param.type = key;
+          param.ssa = ssaValue;
           if ((ssaValue + 1) > nextLocal) {
             nextLocal = ssaValue + 1;
           }
-
-          param.status = ValueStatus.ALLOCATED;
-          param.ssa = ssaValue;
           param.setInScope = currentScope;
-          //                    param.setBy = setBy;
 
-          return;
-        }
-      }
-      throw new IllegalStateException(
-          "The parameter " + type.getName() + " has already been allocated!");
-    } else {
-      ManagedParameter param = new ManagedParameter();
-      param.status = ValueStatus.ALLOCATED;
-      param.type = type;
-      param.ssa = ssaValue;
-      if ((ssaValue + 1) > nextLocal) {
-        nextLocal = ssaValue + 1;
-      }
-      param.setInScope = currentScope;
-
-      List<ManagedParameter> aParam = new ArrayList<>();
-      aParam.add(param);
-
-      seenTypes.put(type, aParam);
-    }
+          List<ManagedParameter> aParam = new ArrayList<>();
+          aParam.add(param);
+          return aParam;
+        });
   }
 
   public void setAllocation(TypeReference type, int ssaValue) {
@@ -235,7 +241,7 @@ public class AndroidModelParameterManager {
    * @param ssaValue the number the SSA-Instruction assigns to
    * @param setBy the Phi-Instruction itself - may be null
    * @throws IllegalArgumentException if you assign to a number requested using {@link
-   *     #getFree(TypeReference)} but types mismach.
+   *     #getFree(TypeReference)} but types mismatch.
    * @throws IllegalStateException if you forgot to close some Phis
    */
   public void setPhi(TypeReference type, int ssaValue, SSAInstruction setBy) {
@@ -246,70 +252,75 @@ public class AndroidModelParameterManager {
       throw new IllegalArgumentException("The SSA-Variable may not be zero or negative.");
     }
 
-    boolean didPhi = false;
+    AtomicBoolean didPhi = new AtomicBoolean();
 
-    if (seenTypes.containsKey(type)) {
-      for (ManagedParameter param : seenTypes.get(type)) {
-        if ((param.status == ValueStatus.FREE)
-            || (param.status == ValueStatus.FREE_INVALIDATED)
-            || (param.status == ValueStatus.FREE_CLOSED)) {
-          // XXX: Allow more?
-          assert param.type.equals(type) : "Inequal types";
-          if (param.ssa != ssaValue) {
-            if ((param.status == ValueStatus.FREE) && (param.setInScope == currentScope)) {
-              param.status = ValueStatus.FREE_CLOSED;
+    seenTypes.compute(
+        type,
+        (key, priorValue) -> {
+          if (priorValue != null) {
+            for (ManagedParameter param : priorValue) {
+              if ((param.status == ValueStatus.FREE)
+                  || (param.status == ValueStatus.FREE_INVALIDATED)
+                  || (param.status == ValueStatus.FREE_CLOSED)) {
+                // XXX: Allow more?
+                assert param.type.equals(key) : "Inequal types";
+                if (param.ssa != ssaValue) {
+                  if ((param.status == ValueStatus.FREE) && (param.setInScope == currentScope)) {
+                    param.status = ValueStatus.FREE_CLOSED;
+                  }
+                  continue;
+                }
+
+                switch (param.status) {
+                  case FREE:
+                    param.status = ValueStatus.ALLOCATED;
+                    break;
+                  case FREE_INVALIDATED:
+                    param.status = ValueStatus.INVALIDATED;
+                    break;
+                  case FREE_CLOSED:
+                    param.status = ValueStatus.CLOSED;
+                    break;
+                }
+                param.setInScope = currentScope;
+                //                    param.setBy = setBy;
+
+                didPhi.set(true);
+              } else if (param.setInScope == currentScope) {
+                if (param.status == ValueStatus.INVALIDATED) {
+
+                  param.status = ValueStatus.CLOSED;
+                } else if (param.status == ValueStatus.FREE_INVALIDATED) { // TODO: FREE CLOSED
+
+                  param.status = ValueStatus.FREE_CLOSED;
+                }
+              }
+              //        else if (param.setInScope < currentScope) {
+              //            // param.status = ValueStatus.INVALIDATED;
+              //        } else {
+              //          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
+              //          // logger.error("MISSING PHI for "
+              //          // throw new IllegalStateException(
+              //          //   "You forgot Phis in subordinate blocks");
+              //        }
             }
-            continue;
+            assert didPhi.get();
+            return priorValue;
+          } else {
+            ManagedParameter param = new ManagedParameter();
+            param.status = ValueStatus.ALLOCATED;
+            param.type = key;
+            param.setInScope = currentScope;
+            param.ssa = ssaValue;
+            if ((ssaValue + 1) > nextLocal) {
+              nextLocal = ssaValue + 1;
+            }
+
+            List<ManagedParameter> aParam = new ArrayList<>();
+            aParam.add(param);
+            return aParam;
           }
-
-          switch (param.status) {
-            case FREE:
-              param.status = ValueStatus.ALLOCATED;
-              break;
-            case FREE_INVALIDATED:
-              param.status = ValueStatus.INVALIDATED;
-              break;
-            case FREE_CLOSED:
-              param.status = ValueStatus.CLOSED;
-              break;
-          }
-          param.setInScope = currentScope;
-          //                    param.setBy = setBy;
-
-          didPhi = true;
-        } else if (param.setInScope == currentScope) {
-          if (param.status == ValueStatus.INVALIDATED) {
-
-            param.status = ValueStatus.CLOSED;
-          } else if (param.status == ValueStatus.FREE_INVALIDATED) { // TODO: FREE CLOSED
-
-            param.status = ValueStatus.FREE_CLOSED;
-          }
-        }
-        //        else if (param.setInScope < currentScope) {
-        //            // param.status = ValueStatus.INVALIDATED;
-        //        } else {
-        //          // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
-        //          // logger.error("MISSING PHI for "
-        //          // throw new IllegalStateException("You forgot Phis in subordinate blocks");
-        //        }
-      }
-      assert didPhi;
-    } else {
-      ManagedParameter param = new ManagedParameter();
-      param.status = ValueStatus.ALLOCATED;
-      param.type = type;
-      param.setInScope = currentScope;
-      param.ssa = ssaValue;
-      if ((ssaValue + 1) > nextLocal) {
-        nextLocal = ssaValue + 1;
-      }
-
-      List<ManagedParameter> aParam = new ArrayList<>();
-      aParam.add(param);
-
-      seenTypes.put(type, aParam);
-    }
+        });
   }
 
   /**
@@ -334,14 +345,7 @@ public class AndroidModelParameterManager {
     param.ssa = nextLocal++;
     param.setInScope = currentScope;
 
-    if (seenTypes.containsKey(type)) {
-      seenTypes.get(type).add(param);
-    } else {
-      List<ManagedParameter> aParam = new ArrayList<>();
-      aParam.add(param);
-
-      seenTypes.put(type, aParam);
-    }
+    seenTypes.computeIfAbsent(type, absent -> new ArrayList<>()).add(param);
 
     return param.ssa;
   }
@@ -360,12 +364,11 @@ public class AndroidModelParameterManager {
       throw new IllegalArgumentException("The argument type may not be null");
     }
 
-    if (seenTypes.containsKey(type)) {
-      for (ManagedParameter p : seenTypes.get(type)) {
-        if (p.status == ValueStatus.UNALLOCATED) {
-          throw new IllegalStateException(
-              "There may be only one unallocated instance to a type (" + type + ") at a time");
-        }
+    for (ManagedParameter p :
+        requireNonNullElseGet(seenTypes.get(type), List::<ManagedParameter>of)) {
+      if (p.status == ValueStatus.UNALLOCATED) {
+        throw new IllegalStateException(
+            "There may be only one unallocated instance to a type (" + type + ") at a time");
       }
     }
 
@@ -375,14 +378,7 @@ public class AndroidModelParameterManager {
     param.ssa = nextLocal++;
     param.setInScope = currentScope;
 
-    if (seenTypes.containsKey(type)) {
-      seenTypes.get(type).add(param);
-    } else {
-      List<ManagedParameter> aParam = new ArrayList<>();
-      aParam.add(param);
-
-      seenTypes.put(type, aParam);
-    }
+    seenTypes.computeIfAbsent(type, absent -> new ArrayList<>()).add(param);
 
     return param.ssa;
   }
@@ -415,8 +411,9 @@ public class AndroidModelParameterManager {
     int candidateSSA = -1;
     int candidateScope = -1;
 
-    if (seenTypes.containsKey(type)) {
-      for (ManagedParameter param : seenTypes.get(type)) {
+    List<ManagedParameter> managedParameters = seenTypes.get(type);
+    if (managedParameters != null) {
+      for (ManagedParameter param : managedParameters) {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
           assert param.type.equals(type) : "Inequal types";
           if (param.setInScope > currentScope) {
@@ -479,8 +476,9 @@ public class AndroidModelParameterManager {
 
     List<Integer> ret = new ArrayList<>();
 
-    if (seenTypes.containsKey(type)) {
-      for (ManagedParameter param : seenTypes.get(type)) {
+    List<ManagedParameter> managedParameters = seenTypes.get(type);
+    if (managedParameters != null) {
+      for (ManagedParameter param : managedParameters) {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
           assert param.type.equals(type) : "Inequal types";
 
@@ -510,16 +508,8 @@ public class AndroidModelParameterManager {
       throw new IllegalArgumentException("The argument type may not be null");
     }
 
-    if (withSuper) {
-      return seenTypes.containsKey(type);
-    } else {
-      if (seenTypes.containsKey(type)) {
-        if (seenTypes.get(type).get(0).type.equals(type)) {
-          return true;
-        }
-      }
-      return false;
-    }
+    List<ManagedParameter> managedParameters = seenTypes.get(type);
+    return managedParameters != null && (withSuper || managedParameters.get(0).type.equals(type));
   }
 
   public boolean isSeen(TypeReference type) {
@@ -538,15 +528,10 @@ public class AndroidModelParameterManager {
       throw new IllegalArgumentException("The argument type may not be null");
     }
 
-    if (seenTypes.containsKey(type)) {
-      if (seenTypes.get(type).size() > 1) { // TODO INCORRECT may all be UNALLOCATED
-        return false;
-      } else {
-        return (seenTypes.get(type).get(0).status == ValueStatus.UNALLOCATED);
-      }
-    } else {
-      return true;
-    }
+    List<ManagedParameter> managedParameters = seenTypes.get(type);
+    return managedParameters == null
+        || managedParameters.size() <= 1 /* TODO INCORRECT may all be UNALLOCATED */
+            && managedParameters.get(0).status == ValueStatus.UNALLOCATED;
   }
 
   /**
@@ -564,9 +549,10 @@ public class AndroidModelParameterManager {
 
     boolean seenLive = false;
 
-    if (seenTypes.containsKey(type)) {
+    List<ManagedParameter> managedParameters = seenTypes.get(type);
+    if (managedParameters != null) {
 
-      for (ManagedParameter param : seenTypes.get(type)) { // TODO: Check all these
+      for (ManagedParameter param : managedParameters) { // TODO: Check all these
         if ((param.status == ValueStatus.FREE)) { // TODO: What about scopes
           return true;
         }
@@ -594,20 +580,19 @@ public class AndroidModelParameterManager {
       throw new IllegalArgumentException("The argument type may not be null");
     }
 
-    if (seenTypes.containsKey(type)) {
-      for (ManagedParameter param : seenTypes.get(type)) {
-        if ((param.status != ValueStatus.CLOSED)
-            && (param.status != ValueStatus.FREE_CLOSED)
-            && (param.status != ValueStatus.FREE_INVALIDATED)
-            && (param.status != ValueStatus.INVALIDATED)
-            && (param.setInScope == currentScope)) {
-          assert param.type.equals(type);
+    for (ManagedParameter param :
+        requireNonNullElseGet(seenTypes.get(type), List::<ManagedParameter>of)) {
+      if ((param.status != ValueStatus.CLOSED)
+          && (param.status != ValueStatus.FREE_CLOSED)
+          && (param.status != ValueStatus.FREE_INVALIDATED)
+          && (param.status != ValueStatus.INVALIDATED)
+          && (param.setInScope == currentScope)) {
+        assert param.type.equals(type);
 
-          if (param.status == ValueStatus.FREE) {
-            param.status = ValueStatus.FREE_INVALIDATED;
-          } else {
-            param.status = ValueStatus.INVALIDATED;
-          }
+        if (param.status == ValueStatus.FREE) {
+          param.status = ValueStatus.FREE_INVALIDATED;
+        } else {
+          param.status = ValueStatus.INVALIDATED;
         }
       }
     }
@@ -617,7 +602,7 @@ public class AndroidModelParameterManager {
    * Enter a subordinate scope.
    *
    * <p>Call this whenever a new code block starts i.e. when ever you would have to put a left
-   * curly-bracket in yout java code.
+   * curly-bracket in your java code.
    *
    * <p>This function influences the placement of Phi-Functions. Thus if you don't change values you
    * don't have to call it.
@@ -626,7 +611,7 @@ public class AndroidModelParameterManager {
    * @return The depth
    */
   public int scopeDown(boolean doesLoop) { // TODO: Rename scopeInto
-    // TODO: Delete Parameters if therw already was scopeNo
+    // TODO: Delete Parameters if there already was scopeNo
     currentScope++;
     return currentScope;
   }

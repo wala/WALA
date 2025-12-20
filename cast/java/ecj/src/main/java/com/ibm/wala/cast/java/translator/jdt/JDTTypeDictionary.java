@@ -157,7 +157,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
   public class JdtLambdaType implements JavaType {
 
     private final ITypeBinding parent;
-    private String name;
+    private final String name;
 
     public JdtLambdaType(String name, ITypeBinding parent) {
       this.parent = parent;
@@ -216,7 +216,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl<ITypeBinding> {
 
     private void buildSuperTypes() {
       // TODO this is a source entity, but it might actually be the root type
-      // (Object), so assume # intfs + 1
+      // (Object), so assume # interfaces + 1
       ITypeBinding superType =
           (fType.getSuperclass() == null)
               ? fAst.resolveWellKnownType("java.lang.Object")

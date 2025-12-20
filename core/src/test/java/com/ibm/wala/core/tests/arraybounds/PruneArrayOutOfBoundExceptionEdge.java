@@ -156,7 +156,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
     int numberOfDeletedExceptionEdges = 0;
     for (IMethod method : iClass.getAllMethods()) {
       if (method.getDeclaringClass().equals(iClass)) {
-        String identifyer =
+        String identifier =
             method.getDeclaringClass().getName().toString() + "#" + method.getName().toString();
         Pair<SSACFG, PrunedCFG<SSAInstruction, ISSABasicBlock>> cfgs =
             computeCfgAndPrunedCFG(method);
@@ -166,7 +166,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
         for (ISSABasicBlock block : cfg) {
           checkNormalSuccessors(softly, cfg, prunedCfg, block);
           boolean isEdgeRemoved =
-              checkExceptionalSuccessors(softly, block, cfg, prunedCfg, method, identifyer);
+              checkExceptionalSuccessors(softly, block, cfg, prunedCfg, method, identifier);
           numberOfDeletedExceptionEdges += isEdgeRemoved ? 1 : 0;
         }
       }
@@ -185,7 +185,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
      */
     softly
         .assertThat(numberOfDeletedExceptionEdges)
-        .as(() -> "Number of deleted edges is not as expected for " + iClass.getName().toString())
+        .as("Number of deleted edges is not as expected for %s", iClass.getName())
         .isEqualTo(expectedNumberOfArrayAccesses);
   }
 
@@ -202,7 +202,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
       SSACFG cfg,
       PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCfg,
       IMethod method,
-      String identifyer) {
+      String identifier) {
     boolean isEdgeRemoved = false;
     LinkedHashSet<ISSABasicBlock> exceptionalSuccessorCfg =
         new LinkedHashSet<>(cfg.getExceptionalSuccessors(block));
@@ -228,7 +228,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
                 () ->
                     "Edge deleted but cause instruction can't throw NullPointerException"
                         + "nor ArrayIndexOutOfBoundsException: "
-                        + identifyer
+                        + identifier
                         + ":"
                         + method.getLineNumber(lastInstruction.iIndex()))
             .areAtLeastOne(itemMatcher);
@@ -239,7 +239,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
                 () ->
                     "Edge deleted but cause instruction throws other exceptions as NullPointerException"
                         + "and ArrayIndexOutOfBoundsException: "
-                        + identifyer
+                        + identifier
                         + ":"
                         + method.getLineNumber(lastInstruction.iIndex()))
             .are(itemMatcher);

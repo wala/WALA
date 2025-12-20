@@ -102,14 +102,34 @@ tasks.named<Test>("test") {
   val trial = providers.gradleProperty("trial").orNull
   if (trial != null) {
     outputs.upToDateWhen { false }
+    val csvResultsFile = rootProject.layout.buildDirectory.file("time-trials.csv").map { it.asFile }
+
+    fun File.appendRow(
+        trial: String,
+        className: String,
+        name: String,
+        resultType: Any,
+        startTime: Any,
+        endTime: Any,
+    ) =
+        appendText(
+            listOf(trial, className, name, resultType, startTime, endTime)
+                .joinToString(",", postfix = "\n")
+        )
+
     afterTest(
         KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-          rootProject.layout.buildDirectory.file("time-trials.csv").get().asFile.let {
+          csvResultsFile.get().let {
             if (!it.exists()) {
-              it.appendText("trial,className,name,resultType,startTime,endTime\n")
+              it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
             }
-            it.appendText(
-                "$trial,${descriptor.className},${descriptor.name},${result.resultType},${result.startTime},${result.endTime}\n"
+            it.appendRow(
+                trial,
+                descriptor.className!!,
+                "\"${descriptor.name}\"",
+                result.resultType,
+                result.startTime,
+                result.endTime,
             )
           }
         })

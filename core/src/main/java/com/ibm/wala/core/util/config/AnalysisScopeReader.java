@@ -181,17 +181,17 @@ public class AnalysisScopeReader {
     if (line == null) {
       throw new IllegalArgumentException("null line");
     }
-    StringTokenizer toks = new StringTokenizer(line, "\n,");
-    if (!toks.hasMoreTokens()) {
+    StringTokenizer tokens = new StringTokenizer(line, "\n,");
+    if (!tokens.hasMoreTokens()) {
       return;
     }
-    Atom loaderName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
+    Atom loaderName = Atom.findOrCreateUnicodeAtom(tokens.nextToken());
     ClassLoaderReference walaLoader = scope.getLoader(loaderName);
 
-    String language = toks.nextToken();
-    String entryType = toks.nextToken();
+    String language = tokens.nextToken();
+    String entryType = tokens.nextToken();
     @Language("jvm-class-name")
-    String entryPathname = toks.nextToken();
+    String entryPathname = tokens.nextToken();
     FileProvider fp = new FileProvider();
     if ("classFile".equals(entryType)) {
       File cf = fp.getFile(entryPathname, javaLoader);
@@ -253,7 +253,7 @@ public class AnalysisScopeReader {
    * running JVM.
    *
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IllegalStateException if there are problmes reading wala properties
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public AnalysisScope makePrimordialScope(File exclusionsFile) throws IOException {
     return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
@@ -265,7 +265,7 @@ public class AnalysisScopeReader {
    * module for the running JVM.
    *
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IllegalStateException if there are problmes reading wala properties
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public AnalysisScope makeBasePrimordialScope(File exclusionsFile) throws IOException {
     return readJavaScope("primordial-base.txt", exclusionsFile, MY_CLASSLOADER);

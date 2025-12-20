@@ -423,7 +423,7 @@ public final class Atom implements Serializable {
   }
 
   /**
-   * Special method that is called by Java deserialization process. Any HashCons'ed object should
+   * Special method that is called by Java deserialization process. Any hash-cons'ed object should
    * implement it, in order to make sure that all equal objects are consolidated.
    */
   private Object readResolve() {

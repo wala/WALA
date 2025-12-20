@@ -81,7 +81,7 @@ public class HTMLCGBuilder {
     try {
       url = toUrl(src);
     } catch (MalformedURLException | URISyntaxException e1) {
-      fail("Could not find page to analyse: " + src);
+      fail("Could not find page to analyse: %s", src);
     }
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(
         new CAstRhinoTranslatorFactory());
@@ -126,7 +126,7 @@ public class HTMLCGBuilder {
     try {
       File f = new FileProvider().getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
       return f.toURI().toURL();
-    } catch (FileNotFoundException fnfe) {
+    } catch (FileNotFoundException problem) {
       return new URI(src).toURL();
     }
   }
@@ -164,17 +164,10 @@ public class HTMLCGBuilder {
       src = tmpFile.getAbsolutePath();
     }
 
-    int timeout;
-    if (parsedArgs.containsKey("timeout")) {
-      timeout = Integer.parseInt(parsedArgs.getProperty("timeout"));
-    } else {
-      timeout = DEFAULT_TIMEOUT;
-    }
+    String timeoutText = parsedArgs.getProperty("timeout");
+    int timeout = timeoutText == null ? DEFAULT_TIMEOUT : Integer.parseInt(timeoutText);
 
-    String reachableName = null;
-    if (parsedArgs.containsKey("reachable")) {
-      reachableName = parsedArgs.getProperty("reachable");
-    }
+    String reachableName = parsedArgs.getProperty("reachable");
 
     // suppress debug output
     JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;

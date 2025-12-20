@@ -188,7 +188,7 @@ public class ContextSensitiveTest extends AbstractPtrTest {
   @Test
   public void testFlowsToArraySetIter()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ARRAYSET_ITER, 7);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_ARRAYSET_ITER, 7);
   }
 
   @Override

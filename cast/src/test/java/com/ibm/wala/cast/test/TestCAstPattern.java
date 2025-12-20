@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Condition;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
 public class TestCAstPattern {
@@ -36,10 +37,10 @@ public class TestCAstPattern {
     @Override
     public CAstNode makeNode(int kind, List<CAstNode> children) {
       if (kind == NAME_ASSERTION_SINGLE || kind == NAME_ASSERTION_MULTI) {
-        assert children.size() == 2;
+        assertThat(children).hasSize(2);
         final Object child0Value = children.get(0).getValue();
-        assert child0Value instanceof String;
-        final String name = (String) child0Value;
+        final String name =
+            assertThat(child0Value).asInstanceOf(InstanceOfAssertFactories.STRING).actual();
         @SuppressWarnings("unused")
         CAstNode result = children.get(1);
         if (kind == NAME_ASSERTION_SINGLE) {

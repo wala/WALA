@@ -34,6 +34,7 @@ import com.ibm.wala.util.intset.IntSet;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AstMethod implements IMethod {
 
@@ -112,7 +113,7 @@ public abstract class AstMethod implements IMethod {
   private final MethodReference ref;
   private final boolean hasCatchBlock;
   private final boolean hasMonitorOp;
-  private final Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes;
+  private final Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> catchTypes;
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
   private final Collection<Annotation> annotations;
@@ -124,7 +125,7 @@ public abstract class AstMethod implements IMethod {
       SymbolTable symtab,
       MethodReference ref,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo,
@@ -171,7 +172,7 @@ public abstract class AstMethod implements IMethod {
     return symtab;
   }
 
-  public Map<IBasicBlock<SSAInstruction>, TypeReference[]> catchTypes() {
+  public Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> catchTypes() {
     return catchTypes;
   }
 

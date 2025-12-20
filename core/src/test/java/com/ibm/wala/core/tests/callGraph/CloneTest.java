@@ -67,7 +67,7 @@ public class CloneTest extends WalaTestCase {
             for (CGNode cgNode : targets) {
               System.err.println("  " + cgNode);
             }
-            fail("found " + targets.size() + " targets for " + site + " in " + node);
+            fail("found %d targets for %s in %s", targets.size(), site, node);
           }
         }
       }

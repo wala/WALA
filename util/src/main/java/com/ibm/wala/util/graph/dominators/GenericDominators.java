@@ -16,7 +16,7 @@ import java.util.Map;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
+ * Calculate dominators using Lengauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This
  * implementation uses path compression and results in a O(e * alpha(e,n)) complexity, where e is
  * the number of edges in the CFG and n is the number of nodes.
  *

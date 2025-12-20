@@ -40,6 +40,7 @@ dependencies {
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
+  implementation(libs.guava)
   castJsJavadocDestinationDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
   )
@@ -48,8 +49,11 @@ dependencies {
       project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory"))
   )
   javadocClasspath(projects.cast.js)
+  testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.core)
+  testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(projects.util)
+  testFixturesImplementation(testFixtures(projects.util))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   xlatorTestSharedLibrary(projects.cast.xlatorTest)
@@ -59,7 +63,7 @@ val castHeaderDirectory by configurations.registering { isCanBeResolved = false 
 
 artifacts.add(
     castHeaderDirectory.name,
-    tasks.named<JavaCompile>("compileTestJava").map { it.options.headerOutputDirectory },
+    tasks.named<JavaCompile>("compileTestFixturesJava").map { it.options.headerOutputDirectory },
 )
 
 tasks.named<Javadoc>("javadoc") {

@@ -6,7 +6,6 @@ plugins {
   `java-test-fixtures`
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
-  id("com.ibm.wala.gradle.xml-apis-ext")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
@@ -52,6 +51,7 @@ dependencies {
   ifdsExplorerExampleClasspath(
       project(mapOf("path" to ":core", "configuration" to "collectTestDataJar"))
   )
+  testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.osgi)
   testImplementation(libs.junit.jupiter.api)
@@ -78,7 +78,7 @@ tasks.named<Test>("test") {
   }
 }
 
-// This is required for IFDSExplorereExample to work correctly
+// This is required for IFDSExplorerExample to work correctly
 tasks.named<Copy>("processTestResources") {
   from(coreTestDataJar)
   from(coreTestResources) { include("wala.testdata.txt") }

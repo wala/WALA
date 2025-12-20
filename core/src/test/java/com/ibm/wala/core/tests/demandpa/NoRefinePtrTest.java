@@ -140,37 +140,37 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   public void testFlowsToLocals()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     // local var, init of FlowsToType, init of Object, and param of TestUtil.makeVarUsed()
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_LOCALS, 4);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_LOCALS, 4);
   }
 
   @Test
   public void testFlowsToId()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ID, 8);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_ID, 8);
   }
 
   @Test
   public void testFlowsToFields()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_FIELDS, 6);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_FIELDS, 6);
   }
 
   @Test
   public void testFlowsToFieldsHarder()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_FIELDS_HARDER, 6);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_FIELDS_HARDER, 6);
   }
 
   @Test
   public void testFlowsToArraySetIter()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ARRAYSET_ITER, 8);
+    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_ARRAYSET_ITER, 8);
   }
 
   // don't test this until we have a way to handle different library versions
   //  @Test
   //  public void testFlowsToHashSet() throws ClassHierarchyException, IllegalArgumentException,
   // CancelException, IOException {
-  //    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_HASHSET, 8);
+  //    doFlowsToSizeTest(TestInfo.FLOWS_TO_TEST_HASHSET, 8);
   //  }
 }

@@ -57,11 +57,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
   @Override
   public T get(int x) {
     int index = indices.getIndex(x);
-    if (index == -1) {
-      return null;
-    } else {
-      return (T) data[index];
-    }
+    return index == -1 ? null : data[index];
   }
 
   /**
@@ -118,7 +114,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
-        return (T) data[i++];
+        return data[i++];
       }
 
       @Override

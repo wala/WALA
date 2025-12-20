@@ -11,7 +11,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
 
 import com.ibm.wala.classLoader.IClass;
@@ -106,9 +105,7 @@ public class ReflectionTest extends WalaTestCase {
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }
-      if (w.toString().contains("Integer")) {
-        fail(w.toString());
-      }
+      assertThat(w).asString().doesNotContain("Integer");
     }
   }
 
@@ -162,7 +159,7 @@ public class ReflectionTest extends WalaTestCase {
     TypeReference extraneousTR =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect3$Hash");
     IClass hashClass = cha.lookupClass(extraneousTR);
-    assert hashClass != null;
+    assertThat(hashClass).isNotNull();
     MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "()V");
     Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
     succNodes.retainAll(extraneousNodes);
@@ -799,7 +796,7 @@ public class ReflectionTest extends WalaTestCase {
     IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(
-            cha, TestConstants.REFLECTGETMETHODCONTEXT_MAIN);
+            cha, TestConstants.REFLECT_GET_METHOD_CONTEXT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCacheImpl(), cha, false);
     Set<CGNode> cgn;
