@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 public class ArgumentSpecialization {
 
@@ -196,7 +197,7 @@ public class ArgumentSpecialization {
 
           class FixedArgumentsRewriter extends CAstBasicRewriter<NonCopyingContext> {
             private final CAstEntity e;
-            private final Map<String, CAstNode> argRefs = HashMapFactory.make();
+            private final Map<String, @NonNull CAstNode> argRefs = HashMapFactory.make();
 
             public FixedArgumentsRewriter(CAst Ast) {
               super(Ast, new NonCopyingContext(), false);
@@ -237,10 +238,10 @@ public class ArgumentSpecialization {
                 result = handleArgumentRef(s.getSingle("value"));
 
               } else if ((s = CAstPattern.match(destructuredCallPattern, root)) != null) {
-                if (argRefs.containsKey(s.getSingle("name").getValue().toString())) {
+                CAstNode nameArgRef = argRefs.get(s.getSingle("name").getValue().toString());
+                if (nameArgRef != null) {
                   List<CAstNode> x = new ArrayList<>();
-                  CAstNode ref =
-                      handleArgumentRef(argRefs.get(s.getSingle("name").getValue().toString()));
+                  CAstNode ref = handleArgumentRef(nameArgRef);
                   if (ref != null) {
                     x.add(ref);
                     x.add(Ast.makeConstant("do"));

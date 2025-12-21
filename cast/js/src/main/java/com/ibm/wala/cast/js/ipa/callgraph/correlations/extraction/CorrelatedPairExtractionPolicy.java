@@ -268,10 +268,12 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       Map<Position, CorrelationSummary> summaries,
       CorrelatedPairExtractionPolicy policy) {
     // add correlations for this entity
-    if (entity.getAST() != null && summaries.containsKey(entity.getPosition())) {
+    if (entity.getAST() != null) {
       CorrelationSummary correlations = summaries.get(entity.getPosition());
-      for (Correlation corr : correlations.getCorrelations())
-        policy.addCorrelation(entity, corr, correlations);
+      if (correlations != null) {
+        for (Correlation corr : correlations.getCorrelations())
+          policy.addCorrelation(entity, corr, correlations);
+      }
     }
     // recursively add correlations for scoped entities
     Map<CAstNode, Collection<CAstEntity>> allScopedEntities = entity.getAllScopedEntities();
