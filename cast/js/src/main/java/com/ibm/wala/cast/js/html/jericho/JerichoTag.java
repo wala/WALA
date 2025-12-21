@@ -114,7 +114,7 @@ public class JerichoTag implements ITag {
   }
 
   @Override
-  public @NonNull Pair<String, Position> getAttributeByName(String name) {
+  public Pair<String, Position> getAttributeByName(String name) {
     if (allAttributes == null) {
       allAttributes = makeAllAttributes();
     }
