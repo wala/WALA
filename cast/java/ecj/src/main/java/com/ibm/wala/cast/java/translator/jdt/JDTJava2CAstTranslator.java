@@ -164,6 +164,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
+import org.jspecify.annotations.NonNull;
 
 // TO TEST:
 // "1/0" surrounded by catch ArithmeticException & RunTimeException (TryCatchContext.getCatchTypes"
@@ -1151,20 +1152,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     // From Code Body Entity
-    private final Map<CAstNode, Collection<CAstEntity>> fEntities;
+    private final Map<CAstNode, @NonNull Collection<CAstEntity>> fEntities;
 
     @Override
-    public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
+    public Map<CAstNode, @NonNull Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.unmodifiableMap(fEntities);
     }
 
     @Override
-    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-      if (fEntities.containsKey(construct)) {
-        return fEntities.get(construct).iterator();
-      } else {
-        return EmptyIterator.instance();
-      }
+    public @NonNull Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+      Collection<CAstEntity> cAstEntities = fEntities.get(construct);
+      return cAstEntities == null ? EmptyIterator.instance() : cAstEntities.iterator();
     }
 
     @Override
