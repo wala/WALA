@@ -68,8 +68,8 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   public AbstractRootMethod getLanguageRoot(Atom language) {
     return languageRoots.computeIfAbsent(
         language,
-        absent -> {
-          AbstractRootMethod languageRoot = roots.get(absent, this);
+        newLanguage -> {
+          AbstractRootMethod languageRoot = roots.get(newLanguage, this);
 
           CGNode languageRootNode = null;
           try {
