@@ -19,6 +19,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.ArrayList;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /** Summary information for a method. */
 public class MethodSummary {
@@ -32,7 +34,7 @@ public class MethodSummary {
   private ArrayList<SSAInstruction> statements;
 
   /** Map: value number -&gt; constant */
-  private Map<Integer, ConstantValue> constantValues;
+  private Map<Integer, @Nullable ConstantValue> constantValues;
 
   /** Some reason this method summary indicates a problem. */
   private String poison;
@@ -49,7 +51,7 @@ public class MethodSummary {
   private final int numberOfParameters;
 
   /** Known names for values */
-  private Map<Integer, Atom> valueNames = null;
+  private Map<Integer, @NonNull Atom> valueNames = null;
 
   public MethodSummary(MethodReference method) {
     this(method, -1);
@@ -63,16 +65,16 @@ public class MethodSummary {
     this.method = method;
   }
 
-  public void setValueNames(Map<Integer, Atom> nameTable) {
+  public void setValueNames(Map<Integer, @NonNull Atom> nameTable) {
     this.valueNames = nameTable;
   }
 
-  public Map<Integer, Atom> getValueNames() {
+  public Map<Integer, @NonNull Atom> getValueNames() {
     return valueNames;
   }
 
   public Atom getValue(Integer v) {
-    return valueNames != null && valueNames.containsKey(v) ? valueNames.get(v) : null;
+    return valueNames == null ? null : valueNames.get(v);
   }
 
   public int getNumberOfStatements() {

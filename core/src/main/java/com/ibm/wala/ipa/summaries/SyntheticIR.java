@@ -26,6 +26,7 @@ import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 public class SyntheticIR extends IR {
 
@@ -47,7 +48,7 @@ public class SyntheticIR extends IR {
       AbstractCFG<?, ?> cfg,
       SSAInstruction[] instructions,
       SSAOptions options,
-      Map<Integer, ConstantValue> constants)
+      Map<Integer, @NonNull ConstantValue> constants)
       throws AssertionError {
     super(
         method,
@@ -82,7 +83,7 @@ public class SyntheticIR extends IR {
   private static SymbolTable makeSymbolTable(
       IMethod method,
       SSAInstruction[] instructions,
-      Map<Integer, ConstantValue> constants,
+      Map<Integer, @NonNull ConstantValue> constants,
       AbstractCFG<?, ?> cfg) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
@@ -111,15 +112,19 @@ public class SyntheticIR extends IR {
   }
 
   private static void updateForInstruction(
-      Map<Integer, ConstantValue> constants, SymbolTable symbolTable, SSAInstruction s) {
+      Map<Integer, @NonNull ConstantValue> constants, SymbolTable symbolTable, SSAInstruction s) {
     for (int j = 0; j < s.getNumberOfDefs(); j++) {
       symbolTable.ensureSymbol(s.getDef(j));
     }
     for (int j = 0; j < s.getNumberOfUses(); j++) {
       int vn = s.getUse(j);
       symbolTable.ensureSymbol(vn);
-      if (constants != null && constants.containsKey(vn))
-        symbolTable.setConstantValue(vn, constants.get(vn));
+      if (constants != null) {
+        ConstantValue constantValue = constants.get(vn);
+        if (constantValue != null) {
+          symbolTable.setConstantValue(vn, constantValue);
+        }
+      }
     }
   }
 

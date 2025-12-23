@@ -30,6 +30,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * "Non-standard" bypass rules to use during call graph construction.
@@ -72,7 +73,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * Mapping from MethodReference -&gt; SyntheticMethod We may call syntheticMethod.put(m,null) ..
    * in which case we use containsKey() to check for having already considered m.
    */
-  private final HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
+  private final HashMap<MethodReference, @Nullable SummarizedMethod> syntheticMethods =
+      HashMapFactory.make();
 
   public BypassMethodTargetSelector(
       MethodTargetSelector parent,

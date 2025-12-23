@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Some thoughts about implementation details, not mentioned in [1]:
@@ -75,11 +76,11 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
    * Maps each array variable to a node which is parent to all variables, that contain the array
    * length
    */
-  private final HashMap<Integer, Integer> arrayLength;
+  private final HashMap<Integer, @NonNull Integer> arrayLength;
 
   private final HashSet<Integer> phis;
 
-  private final HashMap<Integer, Pair<Integer, Integer>> constants;
+  private final HashMap<Integer, @NonNull Pair<Integer, Integer>> constants;
 
   /**
    * For simplicity we introduce extra variables, for arrayLength, to have a unique node
@@ -181,14 +182,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
   }
 
   public HyperNode<Integer> addNode(Integer value) {
-    HyperNode<Integer> result;
-    if (!this.getNodes().containsKey(value)) {
-      result = new HyperNode<>(value);
-      this.getNodes().put(value, result);
-    } else {
-      result = this.getNodes().get(value);
-    }
-    return result;
+    return getNodes().computeIfAbsent(value, HyperNode::new);
   }
 
   public void addPhi(Integer dst) {
@@ -211,12 +205,15 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
    * [var] is set to 0 it will stay 0.
    */
   public void createSourceVar(Integer var) {
-    if (this.getNodes().containsKey(var)) {
-      throw new AssertionError("Source variables should only be created once.");
-    }
-
-    SoftFinalHyperNode<Integer> node = new SoftFinalHyperNode<>(var);
-    this.getNodes().put(var, node);
+    getNodes()
+        .compute(
+            var,
+            (key, priorValue) -> {
+              if (priorValue != null) {
+                throw new AssertionError("Source variables should only be created once.");
+              }
+              return new SoftFinalHyperNode<>(var);
+            });
 
     //		final HyperNode<Integer> varNode = this.getNodes().get(var);
     //		final HyperNode<Integer> unlimitedNode = this.getNodes().get(UNLIMITED);
@@ -246,15 +243,13 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
   }
 
   public Integer getArrayNode(Integer array) {
-    Integer arrayVar;
-    if (!this.arrayLength.containsKey(array)) {
-      arrayVar = this.generateNewVar();
-      this.arrayLength.put(array, arrayVar);
-      this.createSourceVar(arrayVar);
-    } else {
-      arrayVar = this.arrayLength.get(array);
-    }
-    return arrayVar;
+    return arrayLength.computeIfAbsent(
+        array,
+        absent -> {
+          Integer arrayVar = this.generateNewVar();
+          createSourceVar(arrayVar);
+          return arrayVar;
+        });
   }
 
   public HashSet<Integer> getPhis() {
@@ -262,14 +257,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
   }
 
   public void markAsArrayAccess(Integer array, Integer index) {
-    Set<Integer> indices;
-    if (!this.arrayAccess.containsKey(array)) {
-      indices = new HashSet<>();
-      this.arrayAccess.put(array, indices);
-    } else {
-      indices = this.arrayAccess.get(array);
-    }
-    indices.add(index);
+    arrayAccess.computeIfAbsent(array, absent -> new HashSet<>()).add(index);
     this.addArray(array);
   }
 
@@ -283,8 +271,9 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
   }
 
   public Weight getVariableWeight(Integer variable) {
-    if (constants.containsKey(variable)) {
-      variable = constants.get(variable).fst;
+    Pair<Integer, Integer> value = constants.get(variable);
+    if (value != null) {
+      variable = value.fst;
     }
 
     return this.getNodes().get(variable).getWeight();

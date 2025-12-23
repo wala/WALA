@@ -135,6 +135,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.NonNull;
 
 /** Demand-driven refinement-based points-to analysis. */
 public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
@@ -767,7 +768,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         HashSetMultiMap.make();
 
     /** cache of the targets discovered for a call site during on-the-fly call graph construction */
-    private final MultiMap<CallerSiteContext, IMethod> callToOTFTargets = ArraySetMultiMap.make();
+    private final MultiMap<CallerSiteContext, @NonNull IMethod> callToOTFTargets =
+        ArraySetMultiMap.make();
 
     // alloc nodes to the fields we're looking to match on them,
     // matching getfield with putfield
@@ -1381,10 +1383,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               handler.handle(curPkAndState, retVal, ReturnLabel.make(callSiteAndCGNode));
             }
           } else {
-            if (callToOTFTargets.containsKey(callSiteAndCGNode)) {
+            @NonNull Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
+            if (!targetMethods.isEmpty()) {
               // already queried this call site
               // handle existing targets
-              Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
               for (CGNode callee : possibleCallees) {
                 if (targetMethods.contains(callee.getMethod())) {
                   if (hasNullIR(callee)) {
@@ -1695,10 +1697,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 handler.handle(curPkAndState, paramVal, ParamBarLabel.make(callSiteAndCGNode));
               }
             } else {
-              if (callToOTFTargets.containsKey(callSiteAndCGNode)) {
+              @NonNull Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
+              if (!targetMethods.isEmpty()) {
                 // already queried this call site
                 // handle existing targets
-                Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
                 for (CGNode callee : possibleCallees) {
                   if (targetMethods.contains(callee.getMethod())) {
                     if (hasNullIR(callee)) {
