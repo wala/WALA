@@ -20,6 +20,7 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Collection;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 public class CAstCloner extends CAstBasicRewriter<CAstBasicRewriter.NonCopyingContext> {
 
@@ -49,15 +50,15 @@ public class CAstCloner extends CAstBasicRewriter<CAstBasicRewriter.NonCopyingCo
       CAstNode root,
       CAstControlFlowMap cfg,
       NonCopyingContext context,
-      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap,
+      Map<Pair<CAstNode, @NonNull NoKey>, CAstNode> nodeMap,
       Pair<CAstNode, NoKey> pairKey) {
     if (root instanceof CAstOperator) {
       nodeMap.put(pairKey, root);
       return root;
     } else if (root.getValue() != null) {
       CAstNode copy = Ast.makeConstant(root.getValue());
-      assert !nodeMap.containsKey(pairKey);
-      nodeMap.put(pairKey, copy);
+      CAstNode priorValue = nodeMap.put(pairKey, copy);
+      assert priorValue == null;
       return copy;
     } else {
       return copySubtreesIntoNewNode(root, cfg, context, nodeMap, pairKey);

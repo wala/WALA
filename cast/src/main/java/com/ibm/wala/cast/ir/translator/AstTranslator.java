@@ -107,6 +107,7 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.function.Function;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Common code to translate CAst to IR. Must be specialized by each language to handle semantics
@@ -341,13 +342,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Symbol S = context.currentScope().lookup(name);
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
-    if (E.equals(context.currentScope().getEntity())
-        && !(entity2WrittenNames.containsKey(E)
-            && entity2WrittenNames.get(E).stream()
-                .filter(p -> p.snd.equals(name) && p.fst != E)
-                .iterator()
-                .hasNext())) {
-      return definingScope.lookup(name).valueNumber();
+    if (E.equals(context.currentScope().getEntity())) {
+      Set<Pair<CAstEntity, String>> pairs = entity2WrittenNames.get(E);
+      if (pairs == null || pairs.stream().noneMatch(p -> p.snd.equals(name) && p.fst != E)) {
+        return definingScope.lookup(name).valueNumber();
+      } else {
+        // record in declaring scope that the name is exposed to a nested scope
+        addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false, context);
+        String entityName = context.getEntityName(E);
+        int result = context.currentScope().allocateTempValue();
+        Access A = new Access(name, entityName, type, result);
+        context.cfg().addInstruction(new AstLexicalRead(context.cfg().currentInstruction, A));
+        markExposedInEnclosingEntities(context, name, definingScope, type, E, entityName, false);
+        return result;
+      }
     } else {
       // record in declaring scope that the name is exposed to a nested scope
       addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false, context);
@@ -1094,35 +1102,45 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     /** given some n which is now mapped by nodeToBlock, add any delayed edges to n's block */
     private void checkForRealizedEdges(CAstNode n) {
-      if (delayedEdges.containsKey(n)) {
-        for (Pair<PreBasicBlock, Boolean> s : delayedEdges.get(n)) {
-          PreBasicBlock src = s.fst;
-          boolean exception = s.snd;
-          if (unwind == null) {
-            addEdge(src, nodeToBlock.get(n));
-          } else {
-            PreBasicBlock target = nodeToBlock.get(n);
-            addEdge(src, unwind.findOrCreateCode(src, target, exception));
-          }
-        }
+      delayedEdges.compute(
+          n,
+          (key, priorValue) -> {
+            if (priorValue != null) {
+              for (Pair<PreBasicBlock, Boolean> s : priorValue) {
+                PreBasicBlock src = s.fst;
+                boolean exception = s.snd;
+                if (unwind == null) {
+                  addEdge(src, nodeToBlock.get(key));
+                } else {
+                  PreBasicBlock target = nodeToBlock.get(key);
+                  addEdge(src, unwind.findOrCreateCode(src, target, exception));
+                }
+              }
+            }
 
-        delayedEdges.remove(n);
-      }
+            // remove `n` from `delayedEdges`
+            return null;
+          });
     }
 
     /** add any delayed edges to the exit block */
     private void checkForRealizedExitEdges(PreBasicBlock exitBlock) {
-      if (delayedEdges.containsKey(exitMarker)) {
-        for (Pair<PreBasicBlock, Boolean> s : delayedEdges.get(exitMarker)) {
-          PreBasicBlock src = s.fst;
-          boolean exception = s.snd;
-          addEdge(src, exitBlock);
-          if (exception) exceptionalToExit.add(src);
-          else normalToExit.add(src);
-        }
+      delayedEdges.compute(
+          exitMarker,
+          (key, priorValue) -> {
+            if (priorValue != null) {
+              for (Pair<PreBasicBlock, Boolean> s : priorValue) {
+                PreBasicBlock src = s.fst;
+                boolean exception = s.snd;
+                addEdge(src, exitBlock);
+                if (exception) exceptionalToExit.add(src);
+                else normalToExit.add(src);
+              }
+            }
 
-        delayedEdges.remove(exitMarker);
-      }
+            // remove `exitMarker` from `delayedEdges`
+            return null;
+          });
     }
 
     private void setUnwindState(CAstNode node, UnwindState context) {
@@ -1145,8 +1163,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     public void addPreEdge(CAstNode src, CAstNode dst, boolean exception) {
-      assert nodeToBlock.containsKey(src);
-      addPreEdge(nodeToBlock.get(src), dst, exception);
+      PreBasicBlock preBasicBlock = nodeToBlock.get(src);
+      assert preBasicBlock != null;
+      addPreEdge(preBasicBlock, dst, exception);
     }
 
     /**
@@ -1157,23 +1176,26 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (dst == CAstControlFlowMap.EXCEPTION_TO_EXIT) {
         assert exception;
         addPreEdgeToExit(src, exception);
-      } else if (nodeToBlock.containsKey(dst)) {
-        PreBasicBlock target = nodeToBlock.get(dst);
-        if (DEBUG_CFG) System.err.println(("adding pre-edge " + src + " --> " + dst));
-        if (unwind == null) {
-          addEdge(src, target);
-        } else {
-          addEdge(src, unwind.findOrCreateCode(src, target, exception));
-        }
       } else {
-        if (DEBUG_CFG) System.err.println(("adding delayed pre-edge " + src + " --> " + dst));
-        addDelayedEdge(src, dst, exception);
+        PreBasicBlock target = nodeToBlock.get(dst);
+        if (target != null) {
+          if (DEBUG_CFG) System.err.println(("adding pre-edge " + src + " --> " + dst));
+          if (unwind == null) {
+            addEdge(src, target);
+          } else {
+            addEdge(src, unwind.findOrCreateCode(src, target, exception));
+          }
+        } else {
+          if (DEBUG_CFG) System.err.println(("adding delayed pre-edge " + src + " --> " + dst));
+          addDelayedEdge(src, dst, exception);
+        }
       }
     }
 
     public void addPreEdgeToExit(CAstNode src, boolean exception) {
-      assert nodeToBlock.containsKey(src);
-      addPreEdgeToExit(nodeToBlock.get(src), exception);
+      PreBasicBlock preBasicBlock = nodeToBlock.get(src);
+      assert preBasicBlock != null;
+      addPreEdgeToExit(preBasicBlock, exception);
     }
 
     public void addPreEdgeToExit(PreBasicBlock src, boolean exception) {
@@ -1362,26 +1384,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       instructionToBlockMap = new int[liveBlocks.size()];
       pcMap = hasDeadBlocks ? new int[icfg.currentInstruction] : null;
 
-      final Map<PreBasicBlock, Collection<PreBasicBlock>> normalEdges =
-          hasDeadBlocks ? HashMapFactory.<PreBasicBlock, Collection<PreBasicBlock>>make() : null;
-      final Map<PreBasicBlock, Collection<PreBasicBlock>> exceptionalEdges =
-          hasDeadBlocks ? HashMapFactory.<PreBasicBlock, Collection<PreBasicBlock>>make() : null;
+      Map<PreBasicBlock, @NonNull Collection<PreBasicBlock>> normalEdges =
+          hasDeadBlocks ? HashMapFactory.make() : null;
+      Map<PreBasicBlock, @NonNull Collection<PreBasicBlock>> exceptionalEdges =
+          hasDeadBlocks ? HashMapFactory.make() : null;
       if (hasDeadBlocks) {
         transferEdges(
             liveBlocks,
             icfg,
-            (src, dst) -> {
-              if (!normalEdges.containsKey(src)) {
-                normalEdges.put(src, HashSetFactory.<PreBasicBlock>make());
-              }
-              normalEdges.get(src).add(dst);
-            },
-            (src, dst) -> {
-              if (!exceptionalEdges.containsKey(src)) {
-                exceptionalEdges.put(src, HashSetFactory.<PreBasicBlock>make());
-              }
-              exceptionalEdges.get(src).add(dst);
-            });
+            (src, dst) -> normalEdges.computeIfAbsent(src, absent -> new HashSet<>()).add(dst),
+            (src, dst) ->
+                exceptionalEdges.computeIfAbsent(src, absent -> new HashSet<>()).add(dst));
       }
 
       int instruction = 0;
@@ -1424,18 +1437,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (hasDeadBlocks) {
         for (PreBasicBlock src : blocks) {
           if (liveBlocks.contains(src)) {
-            if (normalEdges.containsKey(src)) {
-              for (PreBasicBlock succ : normalEdges.get(src)) {
-                if (liveBlocks.contains(succ)) {
-                  addNormalEdge(src, succ);
-                }
+            for (PreBasicBlock succ : normalEdges.getOrDefault(src, List.of())) {
+              if (liveBlocks.contains(succ)) {
+                addNormalEdge(src, succ);
               }
             }
-            if (exceptionalEdges.containsKey(src)) {
-              for (PreBasicBlock succ : exceptionalEdges.get(src)) {
-                if (liveBlocks.contains(succ)) {
-                  addExceptionalEdge(src, succ);
-                }
+            for (PreBasicBlock succ : exceptionalEdges.getOrDefault(src, List.of())) {
+              if (liveBlocks.contains(succ)) {
+                addExceptionalEdge(src, succ);
               }
             }
           }
@@ -2261,7 +2270,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   private Scope makeGlobalScope() {
-    final Map<String, AbstractSymbol> globalSymbols = new LinkedHashMap<>();
+    final Map<String, @NonNull AbstractSymbol> globalSymbols = new LinkedHashMap<>();
     final Map<String, String> caseInsensitiveNames = new LinkedHashMap<>();
     return new Scope() {
 
@@ -2342,48 +2351,52 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       @Override
       public Symbol lookup(final String name) {
-        if (!globalSymbols.containsKey(mapName(name))) {
-          if (hasImplicitGlobals()) {
-            declare(
-                new CAstSymbol() {
-                  @Override
-                  public String name() {
-                    return name;
-                  }
-
-                  @Override
-                  public boolean isFinal() {
-                    return false;
-                  }
-
-                  @Override
-                  public boolean isCaseInsensitive() {
-                    return false;
-                  }
-
-                  @Override
-                  public boolean isInternalName() {
-                    return false;
-                  }
-
-                  @Override
-                  public Object defaultInitValue() {
-                    return null;
-                  }
-
-                  @Override
-                  public CAstType type() {
-                    return topType();
-                  }
-                });
-          } else if (hasSpecialUndeclaredVariables()) {
-            return null;
-          } else {
-            throw new UnimplementedError("cannot find " + name);
-          }
+        String key = mapName(name);
+        AbstractSymbol abstractSymbol = globalSymbols.get(key);
+        if (abstractSymbol != null) {
+          return abstractSymbol;
         }
 
-        return globalSymbols.get(mapName(name));
+        if (hasImplicitGlobals()) {
+          declare(
+              new CAstSymbol() {
+                @Override
+                public String name() {
+                  return name;
+                }
+
+                @Override
+                public boolean isFinal() {
+                  return false;
+                }
+
+                @Override
+                public boolean isCaseInsensitive() {
+                  return false;
+                }
+
+                @Override
+                public boolean isInternalName() {
+                  return false;
+                }
+
+                @Override
+                public Object defaultInitValue() {
+                  return null;
+                }
+
+                @Override
+                public CAstType type() {
+                  return topType();
+                }
+              });
+        } else if (hasSpecialUndeclaredVariables()) {
+          return null;
+        } else {
+          throw new UnimplementedError("cannot find " + name);
+        }
+
+        return globalSymbols.get(key);
       }
 
       @Override
@@ -2436,7 +2449,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   protected Scope makeTypeScope(final CAstEntity type, final Scope parent) {
-    final Map<String, AbstractSymbol> typeSymbols = new LinkedHashMap<>();
+    final Map<String, @NonNull AbstractSymbol> typeSymbols = new LinkedHashMap<>();
     final Map<String, String> caseInsensitiveNames = new LinkedHashMap<>();
     return new Scope() {
       private String mapName(String nm) {
@@ -2511,10 +2524,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       @Override
       public Symbol lookup(String nm) {
-        if (typeSymbols.containsKey(mapName(nm))) return typeSymbols.get(mapName(nm));
-        else {
-          return parent.lookup(nm);
-        }
+        AbstractSymbol abstractSymbol = typeSymbols.get(mapName(nm));
+        return abstractSymbol == null ? parent.lookup(nm) : abstractSymbol;
       }
 
       @Override
@@ -2805,7 +2816,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
      * maps nodes in the current function to the value number holding their value or, for constants,
      * to their constant value.
      */
-    private final Map<CAstNode, Integer> results = new LinkedHashMap<>();
+    private final Map<CAstNode, @NonNull Integer> results = new LinkedHashMap<>();
 
     public CodeEntityContext(WalkContext parent, Scope entityScope, CAstEntity s) {
       super(parent, s);
@@ -2914,12 +2925,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public final int getValue(CAstNode n) {
-      if (results.containsKey(n)) return results.get(n);
-      else {
+      Integer result = results.get(n);
+      if (result == null) {
         if (DEBUG) {
           System.err.println(("no value for " + n.getKind()));
         }
         return -1;
+      } else {
+        return result;
       }
     }
   }
@@ -5362,8 +5375,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (e == null) {
         return null;
       } else {
-        assert entityNames.containsKey(e);
-        return 'L' + entityNames.get(e);
+        String name = entityNames.get(e);
+        assert name != null;
+        return 'L' + name;
       }
     }
 

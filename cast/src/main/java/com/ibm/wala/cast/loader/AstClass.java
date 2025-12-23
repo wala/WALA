@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 public abstract class AstClass implements IClass, ClassConstants {
   private final CAstSourcePositionMap.Position sourcePosition;
@@ -39,9 +40,9 @@ public abstract class AstClass implements IClass, ClassConstants {
 
   private final short modifiers;
 
-  protected final Map<Atom, IField> declaredFields;
+  protected final Map<Atom, @NonNull IField> declaredFields;
 
-  protected final Map<Selector, IMethod> declaredMethods;
+  protected final Map<Selector, @NonNull IMethod> declaredMethods;
 
   protected AstClass(
       CAstSourcePositionMap.Position sourcePosition,
@@ -159,8 +160,9 @@ public abstract class AstClass implements IClass, ClassConstants {
 
   @Override
   public IMethod getMethod(Selector selector) {
-    if (declaredMethods.containsKey(selector)) {
-      return declaredMethods.get(selector);
+    IMethod method = declaredMethods.get(selector);
+    if (method != null) {
+      return method;
     } else if (getSuperclass() != null) {
       return getSuperclass().getMethod(selector);
     } else {
@@ -170,8 +172,9 @@ public abstract class AstClass implements IClass, ClassConstants {
 
   @Override
   public IField getField(Atom name) {
-    if (declaredFields.containsKey(name)) {
-      return declaredFields.get(name);
+    IField field = declaredFields.get(name);
+    if (field != null) {
+      return field;
     } else if (getSuperclass() != null) {
       return getSuperclass().getField(name);
     } else {

@@ -333,11 +333,13 @@ public class SSAConversion extends AbstractSSAConversion {
       x.addAll(Arrays.asList(vNames));
 
       MutableIntSet vals = IntSetUtil.make();
-      while (assignments.containsKey(v) && !vals.contains(v)) {
+      Integer nextV = assignments.get(v);
+      while (nextV != null && !vals.contains(v)) {
         vals.add(v);
-        v = assignments.get(v);
+        v = nextV;
         vNames = namesData[v];
         x.addAll(Arrays.asList(vNames));
+        nextV = assignments.get(v);
       }
 
       return computedNames[vn] = x.toArray(new String[0]);
@@ -349,15 +351,17 @@ public class SSAConversion extends AbstractSSAConversion {
         System.err.println(("undoing for use #" + useNumber + " of inst #" + instructionIndex));
 
       UseRecord use = new UseRecord(instructionIndex, useNumber);
-      if (copyPropagationMap.containsKey(use)) {
-        copyPropagationMap.get(use).undo();
+      CopyPropagationRecord copyPropagationRecord = copyPropagationMap.get(use);
+      if (copyPropagationRecord != null) {
+        copyPropagationRecord.undo();
       }
     }
 
     private void copyUse(int fromInst, int fromUse, int toInst, int toUse) {
       UseRecord use = new UseRecord(fromInst, fromUse);
-      if (copyPropagationMap.containsKey(use)) {
-        copyPropagationMap.get(use).addUse(toInst, toUse);
+      CopyPropagationRecord copyPropagationRecord = copyPropagationMap.get(use);
+      if (copyPropagationRecord != null) {
+        copyPropagationRecord.addUse(toInst, toUse);
       }
     }
 
