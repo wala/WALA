@@ -54,6 +54,9 @@ import org.mozilla.javascript.ast.StringLiteral;
 import org.mozilla.javascript.ast.SwitchCase;
 import org.mozilla.javascript.ast.SwitchStatement;
 import org.mozilla.javascript.ast.Symbol;
+import org.mozilla.javascript.ast.TaggedTemplateLiteral;
+import org.mozilla.javascript.ast.TemplateCharacters;
+import org.mozilla.javascript.ast.TemplateLiteral;
 import org.mozilla.javascript.ast.ThrowStatement;
 import org.mozilla.javascript.ast.TryStatement;
 import org.mozilla.javascript.ast.UnaryExpression;
@@ -158,6 +161,12 @@ public abstract class TypedNodeVisitor<R, A> {
       return visitSwitchCase((SwitchCase) node, arg);
     } else if (node instanceof SwitchStatement) {
       return visitSwitchStatement((SwitchStatement) node, arg);
+    } else if (node instanceof TaggedTemplateLiteral) {
+      return visitTaggedTemplateLiteral((TaggedTemplateLiteral) node, arg);
+    } else if (node instanceof TemplateCharacters) {
+      return visitTemplateCharacters((TemplateCharacters) node, arg);
+    } else if (node instanceof TemplateLiteral) {
+      return visitTemplateLiteral((TemplateLiteral) node, arg);
     } else if (node instanceof ThrowStatement) {
       return visitThrowStatement((ThrowStatement) node, arg);
     } else if (node instanceof TryStatement) {
@@ -282,6 +291,12 @@ public abstract class TypedNodeVisitor<R, A> {
   public abstract R visitSwitchStatement(SwitchStatement node, A arg);
 
   public abstract R visitSymbol(Symbol node, A arg);
+
+  public abstract R visitTaggedTemplateLiteral(TaggedTemplateLiteral node, A arg);
+
+  public abstract R visitTemplateCharacters(TemplateCharacters node, A arg);
+
+  public abstract R visitTemplateLiteral(TemplateLiteral node, A arg);
 
   public abstract R visitThrowStatement(ThrowStatement node, A arg);
 
