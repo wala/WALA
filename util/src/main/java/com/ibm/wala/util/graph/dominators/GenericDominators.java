@@ -13,7 +13,6 @@ package com.ibm.wala.util.graph.dominators;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.Graph;
 import java.util.Map;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -34,7 +33,7 @@ public class GenericDominators<T> extends Dominators<T> {
   /*
    * Look-aside table for DominatorInfo objects
    */
-  private final Map<Object, @NonNull DominatorInfo> infoMap;
+  private final Map<Object, DominatorInfo> infoMap;
 
   @Override
   protected DominatorInfo getInfo(@Nullable T node) {

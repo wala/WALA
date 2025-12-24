@@ -18,13 +18,12 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.jspecify.annotations.NonNull;
 
 public class WelshPowell<T> {
 
   public static class ColoredVertices<T> {
     private final boolean fullColoring;
-    private final Map<T, @NonNull Integer> colors;
+    private final Map<T, Integer> colors;
     private final int numColors;
 
     public boolean isFullColoring() {

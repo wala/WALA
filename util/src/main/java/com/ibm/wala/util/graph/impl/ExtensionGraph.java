@@ -27,7 +27,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -39,8 +38,7 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         private final Map<T, MutableIntSet> inEdges = HashMapFactory.make();
         private final Map<T, MutableIntSet> outEdges = HashMapFactory.make();
 
-        private Iterator<T> nodes(
-            final @Nullable T node, final Map<T, @NonNull ? extends IntSet> extra) {
+        private Iterator<T> nodes(final @Nullable T node, final Map<T, ? extends IntSet> extra) {
           IntSet intSet = extra.get(node);
           if (intSet != null) {
             return new Iterator<>() {
