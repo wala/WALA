@@ -158,14 +158,14 @@ public abstract class Dominators<T> {
 
             @Override
             public Iterator<T> getSuccNodes(@Nullable Object N) {
-              if (nextMap.containsKey(N)) return nextMap.get(N).iterator();
-              else return EmptyIterator.instance();
+              Set<T> successors = nextMap.get(N);
+              return successors == null ? EmptyIterator.instance() : successors.iterator();
             }
 
             @Override
             public int getSuccNodeCount(Object N) {
-              if (nextMap.containsKey(N)) return nextMap.get(N).size();
-              else return 0;
+              Set<T> successors = nextMap.get(N);
+              return successors == null ? 0 : successors.size();
             }
 
             @Override

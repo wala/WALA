@@ -37,7 +37,6 @@ public class GenericDominators<T> extends Dominators<T> {
 
   @Override
   protected DominatorInfo getInfo(@Nullable T node) {
-    if (!infoMap.containsKey(node)) infoMap.put(node, new DominatorInfo(node));
-    return infoMap.get(node);
+    return infoMap.computeIfAbsent(node, absent -> new DominatorInfo(node));
   }
 }
