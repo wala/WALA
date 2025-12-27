@@ -13,23 +13,38 @@ package com.ibm.wala.cast.ir.translator;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
-import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractFieldEntity extends AbstractDataEntity {
+public class AbstractFieldEntity extends AbstractDataEntity {
   private final String name;
 
   private final Set<CAstQualifier> modifiers;
 
+  private final CAstType fieldType;
+
   private final CAstEntity declaringClass;
 
+  private Position loc;
+
+  private Position nameLoc;
+
   public AbstractFieldEntity(
-      String name, Set<CAstQualifier> modifiers, boolean isStatic, CAstEntity declaringClass) {
+      String name,
+      CAstType fieldType,
+      Set<CAstQualifier> modifiers,
+      boolean isStatic,
+      CAstEntity declaringClass,
+      Position loc,
+      Position nameLoc) {
     this.name = name;
     this.declaringClass = declaringClass;
+    this.fieldType = fieldType;
+    this.loc = loc;
+    this.nameLoc = nameLoc;
 
     this.modifiers = new HashSet<>();
     if (modifiers != null) {
@@ -57,12 +72,21 @@ public abstract class AbstractFieldEntity extends AbstractDataEntity {
 
   @Override
   public CAstType getType() {
-    Assertions.UNREACHABLE();
-    return null;
+    return fieldType;
   }
 
   @Override
   public Collection<CAstQualifier> getQualifiers() {
     return modifiers;
+  }
+
+  @Override
+  public Position getNamePosition() {
+    return nameLoc;
+  }
+
+  @Override
+  public Position getPosition(int arg) {
+    return loc;
   }
 }

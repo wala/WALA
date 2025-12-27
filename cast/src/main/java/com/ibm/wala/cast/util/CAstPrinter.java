@@ -13,6 +13,7 @@ package com.ibm.wala.cast.util;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -357,10 +358,19 @@ public class CAstPrinter {
       w.write(e.getName());
       w.write('\n');
       if (e.getArgumentNames().length > 0) {
+        int i = 0;
         w.write("(");
         String[] names = e.getArgumentNames();
+        java.util.List<CAstType> types =
+            (e.getType() instanceof CAstType.Function)
+                ? ((CAstType.Function) e.getType()).getArgumentTypes()
+                : null;
         for (String name : names) {
           w.write("  " + name);
+          if (types != null) {
+            w.write(" " + types.get(i));
+          }
+          i++;
         }
         w.write("  )\n");
       }

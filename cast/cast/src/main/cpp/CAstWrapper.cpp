@@ -119,7 +119,7 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
 
   this->NativeFieldEntity = env->FindClass(FieldCls);
   THROW_ANY_EXCEPTION(java_ex);
-  this->fieldEntityInit = env->GetMethodID(NativeFieldEntity, "<init>", "(Ljava/lang/String;Ljava/util/Set;Z" __CES ")V");
+  this->fieldEntityInit = env->GetMethodID(NativeFieldEntity, "<init>", "(Ljava/lang/String;Lcom/ibm/wala/cast/tree/CAstType;Ljava/util/Set;Z" __CES "Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
   THROW_ANY_EXCEPTION(java_ex);
 
   this->NativeGlobalEntity = env->FindClass(GlobalCls);
@@ -577,32 +577,32 @@ const char *CAstWrapper::getEntityName(jobject entity) {
   return cstr2;
 }
 
-jobject CAstWrapper::makeSymbol(const char *name) {
+jobject CAstWrapper::makeSymbol(const char *name, jobject type) {
   jobject val = env->NewStringUTF( name );
 
-  jobject s = env->NewObject(CAstSymbol, castSymbolInit1, val);
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit1, val, type);
   THROW_ANY_EXCEPTION(java_ex);
 
   LOG(s);
   return s;
 }
 
-jobject CAstWrapper::makeSymbol(const char *name, bool isFinal) {
+jobject CAstWrapper::makeSymbol(const char *name, jobject type, bool isFinal) {
   jobject val = env->NewStringUTF( name );
 
   THROW_ANY_EXCEPTION(java_ex);
 
-  jobject s = env->NewObject(CAstSymbol, castSymbolInit2, val, isFinal);
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit2, val, type, isFinal);
   LOG(s);
   return s;
 }
 
 jobject 
-  CAstWrapper::makeSymbol(const char *name, bool isFinal, bool isCaseInsensitive) 
+CAstWrapper::makeSymbol(const char *name, jobject type, bool isFinal, bool isCaseInsensitive) 
 {
   jobject val = env->NewStringUTF( name );
 
-  jobject s = env->NewObject(CAstSymbol, castSymbolInit3, val, isFinal, isCaseInsensitive);
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit3, val, type, isFinal, isCaseInsensitive);
   THROW_ANY_EXCEPTION(java_ex);
 
   LOG(s);
@@ -610,14 +610,15 @@ jobject
 }
 
 jobject 
-  CAstWrapper::makeSymbol(const char *name, 
+  CAstWrapper::makeSymbol(const char *name,
+			  jobject type,
 			  bool isFinal, 
 			  bool isCaseInsensitive, 
 			  jobject defaultValue) 
 {
   jobject val = env->NewStringUTF( name );
 
-  jobject s = env->NewObject(CAstSymbol, castSymbolInit4, val, isFinal, isCaseInsensitive, defaultValue);
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit4, val, type, isFinal, isCaseInsensitive, defaultValue);
   THROW_ANY_EXCEPTION(java_ex);
 
   LOG(s);
@@ -668,9 +669,9 @@ jobject CAstWrapper::makeLocation(int fl, int fc, int ll, int lc) {
   return env->CallObjectMethod(xlator, _makeLocation, fl, fc, ll, lc);
 }
 
-jobject CAstWrapper::makeFieldEntity(jobject declaringClass, jobject name, bool isStatic, list<jobject> *modifiers) {
+jobject CAstWrapper::makeFieldEntity(jobject declaringClass, jobject name, jobject type, bool isStatic, jobject loc, jobject nameLoc, list<jobject> *modifiers) {
 
-  jobject entity = env->NewObject(NativeFieldEntity, fieldEntityInit, getConstantValue(name), makeSet(modifiers), isStatic, declaringClass);
+  jobject entity = env->NewObject(NativeFieldEntity, fieldEntityInit, getConstantValue(name), type, makeSet(modifiers), isStatic, declaringClass, loc, nameLoc);
 
   THROW_ANY_EXCEPTION(java_ex);
   return entity;
