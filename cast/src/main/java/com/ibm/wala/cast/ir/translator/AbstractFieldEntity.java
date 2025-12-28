@@ -57,7 +57,7 @@ public class AbstractFieldEntity extends AbstractDataEntity {
 
   @Override
   public String toString() {
-    return "field " + name + " of " + declaringClass.getName();
+    return "field " + name + "(" + fieldType + ") of " + declaringClass.getName();
   }
 
   @Override
