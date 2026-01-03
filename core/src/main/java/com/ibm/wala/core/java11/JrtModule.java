@@ -5,13 +5,17 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.util.collections.ComposedIterator;
+import com.ibm.wala.util.collections.EmptyIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JrtModule implements Module {
   final Path root;
@@ -28,15 +32,22 @@ public class JrtModule implements Module {
     return "[module " + root.toString() + "]";
   }
 
-  private Stream<? extends ModuleEntry> rec(Path pp) {
+  private Iterator<? extends ModuleEntry> rec(Path pp) throws IOException {
     Module me = this;
-    try (var list = Files.list(pp)) {
-      return list.flatMap(
-          s -> {
-            if (Files.isDirectory(s)) {
-              return rec(s);
-            } else {
-              return Stream.of(
+    List<Path> elts = Files.list(pp).collect(Collectors.toList());
+    return new ComposedIterator<>(elts.iterator()) {
+
+      @Override
+      public Iterator<? extends ModuleEntry> makeInner(Path outer) {
+        if (Files.isDirectory(outer)) {
+          try {
+            return rec(outer);
+          } catch (IOException e) {
+            assert false : e;
+            return EmptyIterator.instance();
+          }
+        } else {
+          return Collections.singleton(
                   new ModuleEntry() {
 
                     @Override
@@ -55,7 +66,7 @@ public class JrtModule implements Module {
 
                     @Override
                     public String getName() {
-                      return s.toString().substring(root.toString().length() + 1);
+                      return outer.toString().substring(root.toString().length() + 1);
                     }
 
                     @Override
@@ -71,7 +82,7 @@ public class JrtModule implements Module {
                     @Override
                     public InputStream getInputStream() {
                       try {
-                        return new ByteArrayInputStream(Files.readAllBytes(s));
+                        return new ByteArrayInputStream(Files.readAllBytes(outer));
                       } catch (IOException e) {
                         assert false : e;
                         return null;
@@ -111,17 +122,20 @@ public class JrtModule implements Module {
                     public Module getContainer() {
                       return me;
                     }
-                  });
-            }
-          });
-    } catch (IOException e) {
-      assert false;
-      return null;
-    }
+                  })
+              .iterator();
+        }
+      }
+    };
   }
 
   @Override
   public Iterator<? extends ModuleEntry> getEntries() {
-    return rec(root).iterator();
+    try {
+      return rec(root);
+    } catch (IOException e) {
+      assert false : e;
+      return EmptyIterator.instance();
+    }
   }
 }

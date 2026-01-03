@@ -169,6 +169,8 @@ public class CAstPrinter {
         return "IS_DEFINED_EXPR";
       case CAstNode.NARY_EXPR:
         return "NARY_EXPR";
+      case CAstNode.TYPE_LITERAL_EXPR:
+        return "TYPE_LITERAL_EXPR";
 
       // explicit lexical scopes
       case CAstNode.LOCAL_SCOPE:
