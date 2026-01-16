@@ -32,9 +32,7 @@ val coreTestResources by configurations.registering { isCanBeConsumed = false }
 val coreMainSource by
     configurations.registering {
       isCanBeConsumed = false
-      attributes {
-        attribute(VERIFICATION_TYPE_ATTRIBUTE, objects.named(VerificationType::class, MAIN_SOURCES))
-      }
+      attributes { attribute(VERIFICATION_TYPE_ATTRIBUTE, named(MAIN_SOURCES)) }
     }
 
 val ifdsExplorerExampleClasspath by
