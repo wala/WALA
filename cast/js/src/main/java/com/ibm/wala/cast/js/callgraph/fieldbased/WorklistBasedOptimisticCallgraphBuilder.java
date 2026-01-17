@@ -159,7 +159,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
               FuncVertex fv = mapping.getMappedObject(mappedFuncs.next());
               if (wReach.add(mapping.getMappedIndex(fv))) {
                 changed = true;
-                MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, (VarVertex) w).add(fv);
+                MapUtil.findOrCreateSet(pendingReflectiveCallWorklist, w).add(fv);
               }
             }
           } else {

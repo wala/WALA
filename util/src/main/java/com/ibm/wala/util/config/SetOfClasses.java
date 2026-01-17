@@ -24,12 +24,15 @@ public abstract class SetOfClasses implements StringFilter {
 
   private static final long serialVersionUID = -3048222852073799533L;
 
+  @Deprecated
   @Override
   public boolean test(String klassName) {
     return contains(klassName);
   }
 
+  @Deprecated
   public abstract boolean contains(String klassName);
 
+  @Deprecated
   public abstract void add(String klass);
 }

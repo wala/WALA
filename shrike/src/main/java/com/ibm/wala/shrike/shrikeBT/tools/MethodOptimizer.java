@@ -58,8 +58,9 @@ public final class MethodOptimizer {
   // instruction
   // or -1 if there is more than one such instruction.
 
-  static final int[] noEdges = new int[0];
+  @Deprecated static final int[] noEdges = new int[0];
 
+  @Deprecated
   public MethodOptimizer(MethodData d, MethodEditor e) {
     if (d == null) {
       throw new IllegalArgumentException("null d");
