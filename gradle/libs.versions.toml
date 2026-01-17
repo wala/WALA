@@ -20,7 +20,7 @@ eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.23.200"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
-errorprone-core = "com.google.errorprone:error_prone_core:2.43.0"
+errorprone-core = "com.google.errorprone:error_prone_core:2.46.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.2.0"
 gradle-goomph-plugin = "com.diffplug.gradle:goomph:4.4.1"
 gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.34.0"
