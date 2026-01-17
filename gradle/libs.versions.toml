@@ -12,18 +12,18 @@ spotless = "8.0.0"
 android-tools = "com.android.tools:r8:8.2.46"
 ant = "org.apache.ant:ant:1.10.15"
 assertj-core = "org.assertj:assertj-core:3.27.6"
-commons-cli = "commons-cli:commons-cli:1.10.0"
-commons-io = "commons-io:commons-io:2.20.0"
+commons-cli = "commons-cli:commons-cli:1.11.0"
+commons-io = "commons-io:commons-io:2.21.0"
 dexlib2 = "org.smali:dexlib2:2.5.2"
 eclipse-ecj = "org.eclipse.jdt:ecj:3.43.0"
-eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.23.200"
+eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.24.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
 errorprone-core = "com.google.errorprone:error_prone_core:2.43.0"
 gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.2.0"
 gradle-goomph-plugin = "com.diffplug.gradle:goomph:4.4.1"
-gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.34.0"
+gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.35.0"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gson = "com.google.code.gson:gson:2.13.2"
 guava = "com.google.guava:guava:33.5.0-jre"
@@ -32,9 +32,9 @@ java_cup = "java_cup:java_cup:0.9e"
 jericho-html = "net.htmlparser.jericho:jericho-html:3.4"
 jetbrains-annotations = "org.jetbrains:annotations:26.0.2-1"
 jgit = "org.netbeans.external:org-eclipse-jgit:RELEASE190"
-json = "org.json:json:20250517"
+json = "org.json:json:20251224"
 jspecify = "org.jspecify:jspecify:1.0.0"
-junit-bom = "org.junit:junit-bom:5.14.1"
+junit-bom = "org.junit:junit-bom:5.14.2"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 #noinspection UnusedVersionCatalogEntry
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
@@ -52,7 +52,7 @@ rhino = "org.mozilla:rhino:1.8.1"
 slf4j-api = "org.slf4j:slf4j-api:2.0.17"
 
 [plugins]
-dependency-analysis = "com.autonomousapps.dependency-analysis:3.4.1"
+dependency-analysis = "com.autonomousapps.dependency-analysis:3.5.1"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 node = "com.github.node-gradle.node:7.1.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.0"
