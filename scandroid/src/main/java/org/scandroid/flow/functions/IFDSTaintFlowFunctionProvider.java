@@ -108,6 +108,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   private final ISupergraph<BasicBlockInContext<E>, CGNode> graph;
   private final PointerAnalysis<InstanceKey> pa;
 
+  @Deprecated
   public IFDSTaintFlowFunctionProvider(
       IFDSTaintDomain<E> domain,
       ISupergraph<BasicBlockInContext<E>, CGNode> graph,
@@ -394,6 +395,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     }
   }
 
+  @Deprecated
   @Override
   public IUnaryFlowFunction getCallFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
@@ -444,6 +446,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     };
   }
 
+  @Deprecated
   @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
@@ -463,6 +466,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     return new DefUse(dest);
   }
 
+  @Deprecated
   @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
@@ -484,6 +488,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     return new DefUse(dest);
   }
 
+  @Deprecated
   public class ReturnDefUse extends DefUse {
     CodeElement callSet;
     Set<CodeElement> receivers = new HashSet<>();
@@ -557,6 +562,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     }
   }
 
+  @Deprecated
   @Override
   public IFlowFunction getReturnFlowFunction(
       BasicBlockInContext<E> call, BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {

@@ -15,7 +15,7 @@ assertj-core = "org.assertj:assertj-core:3.27.6"
 commons-cli = "commons-cli:commons-cli:1.11.0"
 commons-io = "commons-io:commons-io:2.21.0"
 dexlib2 = "org.smali:dexlib2:2.5.2"
-eclipse-ecj = "org.eclipse.jdt:ecj:3.43.0"
+eclipse-ecj = "org.eclipse.jdt:ecj:3.44.0"
 eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.24.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
