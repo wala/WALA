@@ -196,7 +196,7 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(n, options, cache, cha);
+    CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(n, Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {

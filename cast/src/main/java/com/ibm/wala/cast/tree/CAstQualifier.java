@@ -35,6 +35,7 @@ public class CAstQualifier {
   public static final CAstQualifier ANNOTATION = new CAstQualifier("@annotation");
   public static final CAstQualifier ENUM = new CAstQualifier("enum");
   public static final CAstQualifier MODULE = new CAstQualifier("module");
+  public static final CAstQualifier PURE = new CAstQualifier("pure");
 
   static {
     sQualifiers.add(ANNOTATION);
@@ -53,6 +54,7 @@ public class CAstQualifier {
     sQualifiers.add(CONST);
     sQualifiers.add(ENUM);
     sQualifiers.add(MODULE);
+    sQualifiers.add(PURE);
   }
 
   private static int sNextBitNum = 0;

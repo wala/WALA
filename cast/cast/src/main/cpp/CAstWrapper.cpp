@@ -661,8 +661,8 @@ void CAstWrapper::setAstNodeLocation(jobject entity, jobject astNode, jobject lo
   env->CallVoidMethod(entity, setNodePosition, astNode, loc);
 }
 
-void CAstWrapper::setAstNodeType(jobject entity, jobject astNode, jobject loc) {
-  env->CallVoidMethod(entity, setNodeType, astNode, loc);
+void CAstWrapper::setAstNodeType(jobject entity, jobject astNode, jobject type) {
+  env->CallVoidMethod(entity, setNodeType, astNode, type);
 }
 
 jobject CAstWrapper::makeLocation(int fl, int fc, int ll, int lc) {

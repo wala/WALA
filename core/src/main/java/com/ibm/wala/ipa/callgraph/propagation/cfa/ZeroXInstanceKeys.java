@@ -297,7 +297,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       throw new IllegalArgumentException("null c");
     }
     return c.getClassHierarchy()
-        .isSubclassOf(c, c.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable));
+        .isSubclassOf(c, c.getClassHierarchy().lookupClass(c.getClassLoader().getLanguage().getThrowableType()));
   }
 
   public static boolean isStackTraceElement(IClass c) {

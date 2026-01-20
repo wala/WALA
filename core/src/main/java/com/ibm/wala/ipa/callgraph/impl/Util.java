@@ -793,27 +793,9 @@ public class Util {
   /**
    * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
-   *
-   * @deprecated
-   *     <p>Use {@link Util#makeNCFABuilder(int, AnalysisOptions,
-   *     IAnalysisCacheView,IClassHierarchy)}
-   */
-  @Deprecated
-  public static SSAPropagationCallGraphBuilder makeNCFABuilder(
-      int n,
-      AnalysisOptions options,
-      IAnalysisCacheView cache,
-      IClassHierarchy cha,
-      @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeNCFABuilder(n, options, cache, cha);
-  }
-
-  /**
-   * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
-   * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
    */
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
-      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+      int n, Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -824,7 +806,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            l.getFakeRootMethod(cha, options, cache),
             options,
             cache,
             appSelector,
