@@ -28,12 +28,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.jspecify.annotations.NonNull;
 
 public class PrunedCallGraph implements CallGraph {
 
   private final CallGraph cg;
   private final Set<CGNode> keep;
-  private Map<CGNode, Set<CGNode>> remove = Collections.emptyMap();
+  private Map<CGNode, @NonNull Set<CGNode>> remove = Collections.emptyMap();
 
   /**
    * Create a pruned (filtered) view of an existing call graph.
@@ -55,7 +56,7 @@ public class PrunedCallGraph implements CallGraph {
         throw new IllegalArgumentException(String.format("%s does not contain %s", cg, keptNode));
   }
 
-  public PrunedCallGraph(CallGraph cg, Set<CGNode> keep, Map<CGNode, Set<CGNode>> remove) {
+  public PrunedCallGraph(CallGraph cg, Set<CGNode> keep, Map<CGNode, @NonNull Set<CGNode>> remove) {
     this(cg, keep);
     this.remove = remove;
   }
@@ -101,7 +102,8 @@ public class PrunedCallGraph implements CallGraph {
   }
 
   private boolean removedEdge(CGNode src, CGNode target) {
-    return remove.containsKey(src) && remove.get(src).contains(target);
+    Set<CGNode> nodes = remove.get(src);
+    return nodes != null && nodes.contains(target);
   }
 
   @Override

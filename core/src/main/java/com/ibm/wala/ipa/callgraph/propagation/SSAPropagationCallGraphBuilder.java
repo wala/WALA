@@ -467,8 +467,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     if (cb.isExitBlock()) {
       return getPointerKeyForExceptionalReturnValue(node);
     } else {
-      SSACFG.ExceptionHandlerBasicBlock ehbb = (ExceptionHandlerBasicBlock) cb;
-      SSAGetCaughtExceptionInstruction ci = ehbb.getCatchInstruction();
+      SSACFG.ExceptionHandlerBasicBlock handler = (ExceptionHandlerBasicBlock) cb;
+      SSAGetCaughtExceptionInstruction ci = handler.getCatchInstruction();
       return getPointerKeyForLocal(node, ci.getDef());
     }
   }
@@ -958,7 +958,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
 
-      // skip getfields of primitive type (optimisation)
+      // skip getFields of primitive type (optimisation)
       if (field.getFieldType().isPrimitiveType()) {
         return;
       }
@@ -1008,7 +1008,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("visitPut " + field);
       }
 
-      // skip putfields of primitive type
+      // skip putFields of primitive type
       if (field.getFieldType().isPrimitiveType()) {
         return;
       }
@@ -1045,8 +1045,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         InstanceKey[] ik = getInvariantContents(rval);
         if (contentsAreInvariant(symbolTable, du, ref)) {
           system.recordImplicitPointsToSet(refKey);
-          InstanceKey[] refk = getInvariantContents(ref);
-          for (InstanceKey instanceKey : refk) {
+          InstanceKey[] refK = getInvariantContents(ref);
+          for (InstanceKey instanceKey : refK) {
             if (!representsNullType(instanceKey)) {
               system.findOrCreateIndexForInstanceKey(instanceKey);
               PointerKey p = getPointerKeyForInstanceField(instanceKey, f);
@@ -1064,8 +1064,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       } else {
         if (contentsAreInvariant(symbolTable, du, ref)) {
           system.recordImplicitPointsToSet(refKey);
-          InstanceKey[] refk = getInvariantContents(ref);
-          for (InstanceKey instanceKey : refk) {
+          InstanceKey[] refK = getInvariantContents(ref);
+          for (InstanceKey instanceKey : refK) {
             if (!representsNullType(instanceKey)) {
               system.findOrCreateIndexForInstanceKey(instanceKey);
               PointerKey p = getPointerKeyForInstanceField(instanceKey, f);
@@ -1663,7 +1663,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // }
     // }
     // } else {
-    // generate contraints from parameter passing
+    // generate constraints from parameter passing
     int nUses = instruction.getNumberOfPositionalParameters();
     int nExpected = target.getMethod().getNumberOfParameters();
 
@@ -1704,7 +1704,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    // generate contraints from return value.
+    // generate constraints from return value.
     if (instruction.hasDef() && instruction.getDeclaredResultType().isReferenceType()) {
       PointerKey result = getPointerKeyForLocal(caller, instruction.getDef());
       PointerKey ret = getPointerKeyForReturnValue(target);

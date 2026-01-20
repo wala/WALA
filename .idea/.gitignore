@@ -1,4 +1,5 @@
 *.iml
+/AndroidProjectSystem.xml
 /aws.xml
 /compiler.xml
 /GitLink.xml

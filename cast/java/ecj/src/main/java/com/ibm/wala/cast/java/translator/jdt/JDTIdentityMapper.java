@@ -52,6 +52,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Class responsible for mapping JDT type system objects representing types, methods and fields to
@@ -65,11 +66,11 @@ import org.eclipse.jdt.core.dom.IVariableBinding;
  * @author rfuhrer
  */
 public class JDTIdentityMapper {
-  private final Map<String, TypeReference> fTypeMap = HashMapFactory.make();
+  private final Map<String, @NonNull TypeReference> fTypeMap = HashMapFactory.make();
 
-  private final Map<String, FieldReference> fFieldMap = HashMapFactory.make();
+  private final Map<String, @NonNull FieldReference> fFieldMap = HashMapFactory.make();
 
-  private final Map<String, MethodReference> fMethodMap = HashMapFactory.make();
+  private final Map<String, @NonNull MethodReference> fMethodMap = HashMapFactory.make();
 
   private final ClassLoaderReference fClassLoaderRef; // TAGALONG
 
@@ -87,16 +88,12 @@ public class JDTIdentityMapper {
    * This method canonicalizes the TypeReferences
    */
   public TypeReference getTypeRef(ITypeBinding type) {
-    type = JDT2CAstUtils.getErasedType(type, fAst); // GENERICS: erasure...
-
-    if (!fTypeMap.containsKey(type.getKey())) {
-      TypeName typeName = TypeName.string2TypeName(typeToTypeID(type));
-      TypeReference ref = TypeReference.findOrCreate(fClassLoaderRef, typeName);
-
-      fTypeMap.put(type.getKey(), ref);
-      return ref;
-    }
-    return fTypeMap.get(type.getKey());
+    ITypeBinding erasedType = JDT2CAstUtils.getErasedType(type, fAst);
+    return fTypeMap.computeIfAbsent(
+        erasedType.getKey(),
+        key ->
+            TypeReference.findOrCreate(
+                fClassLoaderRef, TypeName.string2TypeName(typeToTypeID(erasedType))));
   }
 
   /**
@@ -142,57 +139,55 @@ public class JDTIdentityMapper {
   // FIELDS
 
   public FieldReference getFieldRef(IVariableBinding field) {
-    if (!fFieldMap.containsKey(field.getKey())) {
-      // create one
-      ITypeBinding targetType = field.getDeclaringClass();
-      TypeReference targetTypeRef =
-          TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
-      ITypeBinding fieldType = field.getType();
-      TypeReference fieldTypeRef =
-          TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(fieldType));
-      Atom fieldName = Atom.findOrCreateUnicodeAtom(field.getName());
-      FieldReference ref = FieldReference.findOrCreate(targetTypeRef, fieldName, fieldTypeRef);
-
-      fFieldMap.put(field.getKey(), ref);
-      return ref;
-    }
-    return fFieldMap.get(field.getKey());
+    return fFieldMap.computeIfAbsent(
+        field.getKey(),
+        absent -> {
+          // create one
+          ITypeBinding targetType = field.getDeclaringClass();
+          TypeReference targetTypeRef =
+              TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
+          ITypeBinding fieldType = field.getType();
+          TypeReference fieldTypeRef =
+              TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(fieldType));
+          Atom fieldName = Atom.findOrCreateUnicodeAtom(field.getName());
+          return FieldReference.findOrCreate(targetTypeRef, fieldName, fieldTypeRef);
+        });
   }
 
   public MethodReference fakeMethodRefNoArgs(
       String key, String typeID, String metName, String returnTypeID) {
-    if (!fMethodMap.containsKey(key)) {
-      // create one
-      TypeName ownerType = TypeName.string2TypeName(typeID);
-      TypeReference ownerTypeRef = TypeReference.findOrCreate(fClassLoaderRef, ownerType);
+    return fMethodMap.computeIfAbsent(
+        key,
+        absent -> {
+          // create one
+          TypeName ownerType = TypeName.string2TypeName(typeID);
+          TypeReference ownerTypeRef = TypeReference.findOrCreate(fClassLoaderRef, ownerType);
 
-      // FAKE SELECTOR
-      Atom name = Atom.findOrCreateUnicodeAtom(metName);
-      TypeName[] argTypeNames = null;
-      TypeName retTypeName = TypeName.string2TypeName(returnTypeID);
-      Descriptor desc = Descriptor.findOrCreate(argTypeNames, retTypeName);
-      Selector selector = new Selector(name, desc);
+          // FAKE SELECTOR
+          Atom name = Atom.findOrCreateUnicodeAtom(metName);
+          TypeName[] argTypeNames = null;
+          TypeName retTypeName = TypeName.string2TypeName(returnTypeID);
+          Descriptor desc = Descriptor.findOrCreate(argTypeNames, retTypeName);
+          Selector selector = new Selector(name, desc);
 
-      MethodReference ref = MethodReference.findOrCreate(ownerTypeRef, selector);
-
-      fMethodMap.put(key, ref);
-      return ref;
-    }
-    return fMethodMap.get(key);
+          return MethodReference.findOrCreate(ownerTypeRef, selector);
+        });
   }
 
   // METHODS
   public MethodReference getMethodRef(IMethodBinding met) {
-    if (!fMethodMap.containsKey(met.getKey())) {
+    String key = met.getKey();
+    MethodReference methodReference = fMethodMap.get(key);
+    if (methodReference == null) {
       // create one
       TypeName ownerType = TypeName.string2TypeName(typeToTypeID(met.getDeclaringClass()));
       TypeReference ownerTypeRef = TypeReference.findOrCreate(fClassLoaderRef, ownerType);
       MethodReference ref = MethodReference.findOrCreate(ownerTypeRef, selectorForMethod(met));
 
-      fMethodMap.put(met.getKey(), ref);
+      fMethodMap.put(key, ref);
       return ref;
     }
-    return fMethodMap.get(met.getKey());
+    return methodReference;
   }
 
   private Selector selectorForMethod(IMethodBinding met) {

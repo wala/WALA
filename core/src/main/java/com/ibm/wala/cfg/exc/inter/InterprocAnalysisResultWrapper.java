@@ -48,7 +48,8 @@ class InterprocAnalysisResultWrapper
 
   @Override
   public boolean containsResult(final CGNode n) {
-    return map.containsKey(n) && map.get(n).canBeAnalyzed();
+    IntraprocAnalysisState state = map.get(n);
+    return state != null && state.canBeAnalyzed();
   }
 
   @Override

@@ -35,6 +35,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.IntIterator;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Generate IR to model Function.call()
@@ -111,15 +112,17 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = false;
 
   /** cache synthetic method for each arity of Function.call() invocation */
-  private final Map<Object, JavaScriptSummarizedFunction> callModels = HashMapFactory.make();
+  private final Map<Object, @NonNull JavaScriptSummarizedFunction> callModels =
+      HashMapFactory.make();
 
   /** generate a synthetic method modeling the invocation of Function.call() at the site */
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     int nargs = getNumberOfArgsPassed(caller, site);
     if (nargs < 2) return null;
     String key = getKey(nargs, caller, site);
-    if (callModels.containsKey(key)) {
-      return callModels.get(key);
+    JavaScriptSummarizedFunction model = callModels.get(key);
+    if (model != null) {
+      return model;
     }
     JSInstructionFactory insts =
         (JSInstructionFactory) receiver.getClassLoader().getInstructionFactory();

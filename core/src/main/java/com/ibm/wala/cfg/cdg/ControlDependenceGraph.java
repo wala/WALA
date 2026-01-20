@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /** Control Dependence Graph */
 public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
@@ -96,9 +97,9 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * control children), this method creates an EdgeManager that provides the edge half of the Graph
    * abstraction.
    */
-  private NumberedEdgeManager<T> constructGraphEdges(final Map<T, Set<T>> forwardEdges) {
+  private NumberedEdgeManager<T> constructGraphEdges(final Map<T, @NonNull Set<T>> forwardEdges) {
     return new NumberedEdgeManager<>() {
-      final Map<T, Set<T>> backwardEdges = HashMapFactory.make(forwardEdges.size());
+      Map<T, @NonNull Set<T>> backwardEdges = HashMapFactory.make(forwardEdges.size());
 
       {
         for (T name : cfg) {
@@ -112,55 +113,61 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
         }
       }
 
+      private Iterator<T> getNeighboringNodes(T node, Map<T, Set<T>> neighborsOfNode) {
+        Set<T> nodes = neighborsOfNode.get(node);
+        return nodes == null ? EmptyIterator.instance() : nodes.iterator();
+      }
+
+      private int getNeighboringNodeCount(T node, Map<T, Set<T>> neighborsOfNode) {
+        Set<T> neighbors = neighborsOfNode.get(node);
+        return neighbors == null ? 0 : neighbors.size();
+      }
+
+      private IntSet getNeighboringNodeNumbers(T node, Map<T, Set<T>> neighborsOfNode) {
+        MutableIntSet result = IntSetUtil.make();
+        Set<T> neighbors = neighborsOfNode.get(node);
+        if (neighbors != null) {
+          for (T neighbor : neighbors) {
+            result.add(cfg.getNumber(neighbor));
+          }
+        }
+        return result;
+      }
+
       @Override
       public Iterator<T> getPredNodes(T N) {
-        if (backwardEdges.containsKey(N)) return backwardEdges.get(N).iterator();
-        else return EmptyIterator.instance();
+        return getNeighboringNodes(N, backwardEdges);
       }
 
       @Override
       public IntSet getPredNodeNumbers(T node) {
-        MutableIntSet x = IntSetUtil.make();
-        if (backwardEdges.containsKey(node)) {
-          for (T pred : backwardEdges.get(node)) {
-            x.add(cfg.getNumber(pred));
-          }
-        }
-        return x;
+        return getNeighboringNodeNumbers(node, backwardEdges);
       }
 
       @Override
       public int getPredNodeCount(T N) {
-        if (backwardEdges.containsKey(N)) return backwardEdges.get(N).size();
-        else return 0;
+        return getNeighboringNodeCount(N, backwardEdges);
       }
 
       @Override
       public Iterator<T> getSuccNodes(T N) {
-        if (forwardEdges.containsKey(N)) return forwardEdges.get(N).iterator();
-        else return EmptyIterator.instance();
+        return getNeighboringNodes(N, forwardEdges);
       }
 
       @Override
       public IntSet getSuccNodeNumbers(T node) {
-        MutableIntSet x = IntSetUtil.make();
-        if (forwardEdges.containsKey(node)) {
-          for (T succ : forwardEdges.get(node)) {
-            x.add(cfg.getNumber(succ));
-          }
-        }
-        return x;
+        return getNeighboringNodeNumbers(node, forwardEdges);
       }
 
       @Override
       public int getSuccNodeCount(T N) {
-        if (forwardEdges.containsKey(N)) return forwardEdges.get(N).size();
-        else return 0;
+        return getNeighboringNodeCount(N, forwardEdges);
       }
 
       @Override
       public boolean hasEdge(T src, T dst) {
-        return forwardEdges.containsKey(src) && forwardEdges.get(src).contains(dst);
+        Set<T> successors = forwardEdges.get(src);
+        return successors != null && successors.contains(dst);
       }
 
       @Override

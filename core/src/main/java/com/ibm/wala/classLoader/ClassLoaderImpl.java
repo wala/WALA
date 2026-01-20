@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import org.jspecify.annotations.NonNull;
 
 /** A class loader that reads class definitions from a set of Modules. */
 public class ClassLoaderImpl implements IClassLoader {
@@ -279,7 +280,7 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   @SuppressWarnings("unused")
-  private Map<String, Object> getAllClassAndSourceFileContents(
+  private Map<String, @NonNull Object> getAllClassAndSourceFileContents(
       byte[] jarFileContents, String fileName, Map<String, Map<String, Long>> entrySizes) {
     if (jarFileContents == null) {
       return null;
@@ -288,7 +289,7 @@ public class ClassLoaderImpl implements IClassLoader {
     if (entrySizesForFile == null) {
       return null;
     }
-    Map<String, Object> result = HashMapFactory.make();
+    Map<String, @NonNull Object> result = HashMapFactory.make();
     try (final JarInputStream s =
         new JarInputStream(new ByteArrayInputStream(jarFileContents), false)) {
       JarEntry entry;
@@ -299,16 +300,13 @@ public class ClassLoaderImpl implements IClassLoader {
         }
         String name = entry.getName();
         if (FileSuffixes.isJarFile(name) || FileSuffixes.isWarFile(name)) {
-          Map<String, Object> nestedResult =
+          Map<String, @NonNull Object> nestedResult =
               getAllClassAndSourceFileContents(entryBytes, name, entrySizes);
           if (nestedResult == null) {
             return null;
           }
-          for (Map.Entry<String, Object> nestedEntry : nestedResult.entrySet()) {
-            final String entryName = nestedEntry.getKey();
-            if (!result.containsKey(entryName)) {
-              result.put(entryName, nestedEntry.getValue());
-            }
+          for (Map.Entry<String, @NonNull Object> nestedEntry : nestedResult.entrySet()) {
+            result.computeIfAbsent(nestedEntry.getKey(), absent -> nestedEntry.getValue());
           }
         } else if (FileSuffixes.isClassFile(name) || FileSuffixes.isSourceFile(name)) {
           result.put(name, entryBytes);

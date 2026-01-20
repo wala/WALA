@@ -199,16 +199,19 @@ public class ArrayBoundsGraphBuilder {
 
       final HyperNode<Integer> node = edge.getDestination().iterator().next();
       if (!graph.getPhis().contains(node.getValue())) {
-        if (inEdges.containsKey(node)) {
-          final DirectedHyperEdge<Integer> inEdge = inEdges.get(node);
-          assert inEdge.getWeight().equals(edge.getWeight());
-          for (final HyperNode<Integer> src : edge.getSource()) {
-            inEdge.getSource().add(src);
-          }
-          graph.getEdges().remove(edge);
-        } else {
-          inEdges.put(node, edge);
-        }
+        inEdges.compute(
+            node,
+            (priorKey, priorInEdge) -> {
+              if (priorInEdge != null) {
+                assert priorInEdge.getWeight().equals(edge.getWeight());
+                for (final HyperNode<Integer> src : edge.getSource()) {
+                  priorInEdge.getSource().add(src);
+                }
+                graph.getEdges().remove(edge);
+                return priorInEdge;
+              }
+              return edge;
+            });
       }
     }
   }

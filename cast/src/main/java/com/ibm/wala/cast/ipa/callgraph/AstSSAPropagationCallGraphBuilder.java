@@ -381,14 +381,14 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             protected void action(PointerKey lexicalKey, int vn) {
               PointerKey lval = getPointerKeyForLocal(vn);
               if (lexicalKey instanceof LocalPointerKey) {
-                CGNode lnode = ((LocalPointerKey) lexicalKey).getNode();
+                CGNode lNode = ((LocalPointerKey) lexicalKey).getNode();
                 int lvn = ((LocalPointerKey) lexicalKey).getValueNumber();
-                IRView lir = getBuilder().getCFAContextInterpreter().getIRView(lnode);
-                SymbolTable lsymtab = lir.getSymbolTable();
-                DefUse ldu = getBuilder().getCFAContextInterpreter().getDU(lnode);
+                IRView lir = getBuilder().getCFAContextInterpreter().getIRView(lNode);
+                SymbolTable lSymTab = lir.getSymbolTable();
+                DefUse ldu = getBuilder().getCFAContextInterpreter().getDU(lNode);
                 // DefUse ldu = getAnalysisCache().getDefUse(lir);
-                if (contentsAreInvariant(lsymtab, ldu, lvn)) {
-                  InstanceKey[] ik = getInvariantContents(lsymtab, ldu, lnode, lvn);
+                if (contentsAreInvariant(lSymTab, ldu, lvn)) {
+                  InstanceKey[] ik = getInvariantContents(lSymTab, ldu, lNode, lvn);
                   system.recordImplicitPointsToSet(lexicalKey);
                   for (InstanceKey element : ik) {
                     system.findOrCreateIndexForInstanceKey(element);
@@ -594,10 +594,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)} .
        */
       private void doLexicalPointerKeys() {
-        for (Access accesse : accesses) {
-          final String name = accesse.variableName;
-          final String definer = accesse.variableDefiner;
-          final int vn = accesse.valueNumber;
+        for (Access access : accesses) {
+          final String name = access.variableName;
+          final String definer = access.variableDefiner;
+          final int vn = access.valueNumber;
 
           if (AstTranslator.DEBUG_LEXICAL)
             System.err.println(("looking up lexical parent " + definer));
@@ -945,8 +945,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                 receivers
                     .getValue()
                     .foreach(
-                        rptr -> {
-                          final InstanceKey receiver = system.getInstanceKey(rptr);
+                        rPtr -> {
+                          final InstanceKey receiver = system.getInstanceKey(rPtr);
 
                           if (!isLoadOperation) {
                             PointerKey cat = getPointerKeyForObjectCatalog(receiver);
@@ -959,7 +959,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                               .getValue()
                               .foreach(
                                   fptr -> {
-                                    if (!doneField.contains(fptr) || !doneReceiver.contains(rptr)) {
+                                    if (!doneField.contains(fptr) || !doneReceiver.contains(rPtr)) {
                                       InstanceKey field = system.getInstanceKey(fptr);
                                       for (PointerKey pkey :
                                           Iterator2Iterable.make(

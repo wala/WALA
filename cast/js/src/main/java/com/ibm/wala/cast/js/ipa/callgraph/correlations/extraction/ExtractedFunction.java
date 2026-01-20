@@ -128,11 +128,8 @@ class ExtractedFunction implements CAstEntity {
 
   @Override
   public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-    if (getAllScopedEntities().containsKey(construct)) {
-      return getAllScopedEntities().get(construct).iterator();
-    } else {
-      return EmptyIterator.instance();
-    }
+    Collection<CAstEntity> cAstEntities = getAllScopedEntities().get(construct);
+    return cAstEntities == null ? EmptyIterator.instance() : cAstEntities.iterator();
   }
 
   @Override

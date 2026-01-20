@@ -21,18 +21,13 @@ val coreResources by
     configurations.registering {
       isCanBeConsumed = false
       isTransitive = false
-      attributes {
-        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, RESOURCES))
-      }
+      attributes { attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES)) }
     }
 
 val smokeMainExtraPathElements by
     configurations.registering {
       isCanBeConsumed = false
-      attributes.attribute(
-          TARGET_JVM_ENVIRONMENT_ATTRIBUTE,
-          objects.named(TargetJvmEnvironment::class, STANDARD_JVM),
-      )
+      attributes { attribute(TARGET_JVM_ENVIRONMENT_ATTRIBUTE, named(STANDARD_JVM)) }
       attributes.attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, JAVA_RUNTIME))
     }
 
@@ -44,7 +39,7 @@ fun createXlatorConfig(isOptimized: Boolean): NamedDomainObjectProvider<Configur
       isTransitive = false
       attributes {
         attribute(OPTIMIZED_ATTRIBUTE, isOptimized)
-        attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+        attribute(USAGE_ATTRIBUTE, named(NATIVE_RUNTIME))
       }
     }
 

@@ -54,6 +54,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A SummarizedMethod (for synthetic functions) with variable names.
@@ -70,7 +71,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
   private static final boolean DEBUG = false;
 
   private final MethodSummary summary;
-  private final Map<Integer, Atom> localNames;
+  private final Map<Integer, @NonNull Atom> localNames;
 
   public SummarizedMethodWithNames(
       MethodReference ref, MethodSummary summary, IClass declaringClass) {
@@ -81,7 +82,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
       MethodReference ref,
       MethodSummary summary,
       IClass declaringClass,
-      Map<Integer, Atom> localNames)
+      Map<Integer, @NonNull Atom> localNames)
       throws NullPointerException {
     super(ref, summary, declaringClass);
 
@@ -109,9 +110,9 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
     private final SSA2LocalMap localMap;
 
     public static class SyntheticSSA2LocalMap implements SSA2LocalMap {
-      private final Map<Integer, Atom> localNames;
+      private final Map<Integer, @NonNull Atom> localNames;
 
-      public SyntheticSSA2LocalMap(Map<Integer, Atom> localNames) {
+      public SyntheticSSA2LocalMap(Map<Integer, @NonNull Atom> localNames) {
         this.localNames = localNames;
       }
 
@@ -121,11 +122,14 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         if (DEBUG) {
           System.err.printf("IR.getLocalNames(%d, %d)\n", index, vn);
         }
-        if (localNames != null && localNames.containsKey(vn)) {
-          return new String[] {this.localNames.get(vn).toString()};
-        } else {
+        if (localNames == null) {
           return null;
         }
+        Atom atom = this.localNames.get(vn);
+        if (atom == null) {
+          return null;
+        }
+        return new String[] {atom.toString()};
       }
     }
 
@@ -136,7 +140,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         SSAInstruction[] instructions,
         SSAOptions options,
         Map<Integer, ConstantValue> constants,
-        Map<Integer, Atom> localNames)
+        Map<Integer, @NonNull Atom> localNames)
         throws AssertionError {
       super(method, context, cfg, instructions, options, constants);
       this.localMap = new SyntheticSSA2LocalMap(localNames);
@@ -155,18 +159,18 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
    */
   @Override
   public String getLocalVariableName(int bcIndex, int localNumber) {
-    if (this.localNames.containsKey(localNumber)) {
-      String name = this.localNames.get(localNumber).toString();
-      if (DEBUG) {
-        System.err.printf("getLocalVariableName(bc=%d, no=%d) = %s\n", bcIndex, localNumber, name);
-      }
-      return name;
-    } else {
+    Atom atom = this.localNames.get(localNumber);
+    if (atom == null) {
       if (DEBUG) {
         System.err.printf("No name for %d\n", localNumber);
       }
       return super.getLocalVariableName(bcIndex, localNumber);
     }
+    String name = atom.toString();
+    if (DEBUG) {
+      System.err.printf("getLocalVariableName(bc=%d, no=%d) = %s\n", bcIndex, localNumber, name);
+    }
+    return name;
   }
 
   @Override

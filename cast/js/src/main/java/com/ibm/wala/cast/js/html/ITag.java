@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.html;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author danielk Data structure representing an HTML tag, with its attributes and content. Used by
@@ -32,7 +33,7 @@ public interface ITag {
    */
   Pair<String, Position> getAttributeByName(String name);
 
-  Map<String, Pair<String, Position>> getAllAttributes();
+  Map<String, @NonNull Pair<String, Position>> getAllAttributes();
 
   /**
    * Returns the starting line number of the tag.

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /** An implementation of {@link SSAIndirectionData} specialized for IRs originated from Shrike. */
 public class ShrikeIndirectionData
@@ -54,9 +55,9 @@ public class ShrikeIndirectionData
     }
   }
 
-  private final Map<ShrikeLocalName, Integer>[] defs;
+  private final Map<ShrikeLocalName, @NonNull Integer>[] defs;
 
-  private final Map<ShrikeLocalName, Integer>[] uses;
+  private final Map<ShrikeLocalName, @NonNull Integer>[] uses;
 
   @SuppressWarnings("unchecked")
   public ShrikeIndirectionData(int instructionArrayLength) {
@@ -66,20 +67,12 @@ public class ShrikeIndirectionData
 
   @Override
   public int getDef(int instructionIndex, ShrikeLocalName name) {
-    if (defs[instructionIndex] == null || !defs[instructionIndex].containsKey(name)) {
-      return -1;
-    } else {
-      return defs[instructionIndex].get(name);
-    }
+    return defs[instructionIndex] == null ? -1 : defs[instructionIndex].getOrDefault(name, -1);
   }
 
   @Override
   public int getUse(int instructionIndex, ShrikeLocalName name) {
-    if (uses[instructionIndex] == null || !uses[instructionIndex].containsKey(name)) {
-      return -1;
-    } else {
-      return uses[instructionIndex].get(name);
-    }
+    return uses[instructionIndex] == null ? -1 : uses[instructionIndex].getOrDefault(name, -1);
   }
 
   @Override

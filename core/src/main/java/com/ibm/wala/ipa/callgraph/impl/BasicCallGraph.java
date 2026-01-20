@@ -370,11 +370,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       String nm = nmBuilder.toString();
 
       do {
-        if (packages.containsKey(nm)) {
-          packages.put(nm, 1 + packages.get(nm));
-        } else {
-          packages.put(nm, 1);
-        }
+        packages.compute(nm, (key, priorValue) -> priorValue == null ? 1 : priorValue + 1);
 
         if (nm.indexOf('/') < 0) {
           break;

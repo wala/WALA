@@ -15,7 +15,7 @@ val castCastSharedLibrary by
       isCanBeConsumed = false
       attributes {
         attribute(OPTIMIZED_ATTRIBUTE, false)
-        attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+        attribute(USAGE_ATTRIBUTE, named(NATIVE_RUNTIME))
       }
     }
 
@@ -29,18 +29,18 @@ val xlatorTestSharedLibrary by
       isTransitive = false
       attributes {
         attribute(OPTIMIZED_ATTRIBUTE, false)
-        attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+        attribute(USAGE_ATTRIBUTE, named(NATIVE_RUNTIME))
       }
     }
 
 dependencies {
+  api(libs.guava)
   api(projects.core) {
     because("public method AstCGNode.addTarget receives an argument of type CGNode")
   }
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
-  implementation(libs.guava)
   castJsJavadocDestinationDirectory(
       project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
   )

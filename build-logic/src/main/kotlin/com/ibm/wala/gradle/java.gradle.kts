@@ -72,6 +72,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("AssertEqualsArgumentOrderChecker")
       error("ArgumentSelectionDefectChecker")
       // checks we do not intend to try to fix in the near-term:
+      disable("LabelledBreakTarget")
       // Just too many of these; proper Javadoc would be a great long-term goal
       disable("MissingSummary")
       // WALA has many optimizations involving using == to check reference equality.  They

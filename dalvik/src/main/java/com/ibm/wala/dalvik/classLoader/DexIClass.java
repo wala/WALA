@@ -73,6 +73,7 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
+import org.jspecify.annotations.NonNull;
 
 public class DexIClass extends BytecodeClass<IClassLoader> {
 
@@ -295,14 +296,13 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
   }
 
   Map<Integer, List<Annotation>> getParameterAnnotations(Method m) {
-    Map<Integer, List<Annotation>> result = HashMapFactory.make();
+    Map<Integer, @NonNull List<Annotation>> result = HashMapFactory.make();
     int i = 0;
     for (MethodParameter as : m.getParameters()) {
       for (org.jf.dexlib2.iface.Annotation a : as.getAnnotations()) {
-        if (!result.containsKey(i)) {
-          result.put(i, new ArrayList<>());
-        }
-        result.get(i).add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
+        result
+            .computeIfAbsent(i, absent -> new ArrayList<>())
+            .add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
       }
       i++;
     }

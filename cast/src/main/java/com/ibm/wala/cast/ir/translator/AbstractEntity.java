@@ -22,14 +22,16 @@ import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 public abstract class AbstractEntity implements CAstEntity {
   private Position sourcePosition;
 
-  private final Map<CAstNode, Collection<CAstEntity>> scopedEntities = HashMapFactory.make();
+  private final Map<CAstNode, @NonNull Collection<CAstEntity>> scopedEntities =
+      HashMapFactory.make();
 
   @Override
-  public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
+  public Map<CAstNode, @NonNull Collection<CAstEntity>> getAllScopedEntities() {
     return scopedEntities;
   }
 
@@ -55,18 +57,11 @@ public abstract class AbstractEntity implements CAstEntity {
 
   @Override
   public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-    if (scopedEntities.containsKey(construct)) {
-      return scopedEntities.get(construct).iterator();
-    } else {
-      return EmptyIterator.instance();
-    }
+    Collection<CAstEntity> cAstEntities = scopedEntities.get(construct);
+    return cAstEntities == null ? EmptyIterator.instance() : cAstEntities.iterator();
   }
 
   public void addScopedEntity(CAstNode construct, CAstEntity child) {
-    if (!scopedEntities.containsKey(construct)) {
-      Collection<CAstEntity> set = HashSetFactory.make(1);
-      scopedEntities.put(construct, set);
-    }
-    scopedEntities.get(construct).add(child);
+    scopedEntities.computeIfAbsent(construct, absent -> HashSetFactory.make(1)).add(child);
   }
 }

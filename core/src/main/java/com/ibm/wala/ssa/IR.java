@@ -27,6 +27,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -239,12 +240,9 @@ public abstract class IR implements IRView {
 
   private void addNames(int j, Map<Integer, Set<String>> valNames, int valNum) {
     if (getLocalNames(j, valNum) != null && getLocalNames(j, valNum).length > 0) {
-      if (!valNames.containsKey(valNum)) {
-        valNames.put(valNum, HashSetFactory.<String>make());
-      }
-      for (String s : getLocalNames(j, valNum)) {
-        valNames.get(valNum).add(s);
-      }
+      valNames
+          .computeIfAbsent(valNum, absent -> HashSetFactory.make())
+          .addAll(Arrays.asList(getLocalNames(j, valNum)));
     }
   }
 

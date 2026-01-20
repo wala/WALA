@@ -79,6 +79,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.jspecify.annotations.NonNull;
 import org.scandroid.prefixtransfer.StringBuilderUseAnalysis.StringBuilderToStringInstanceKeySite;
 import org.scandroid.prefixtransfer.modeledAllocations.ConstantString;
 import org.scandroid.prefixtransfer.modeledAllocations.UriAppendString;
@@ -86,7 +87,7 @@ import org.scandroid.prefixtransfer.modeledAllocations.UriParseString;
 
 public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 
-  public final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<>();
+  public final Map<InstanceKey, @NonNull InstanceKeySite> nodeMap = new HashMap<>();
   public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap = new HashMap<>();
 
   private final List<InstanceKeySite> nodes = new ArrayList<>();
@@ -243,14 +244,16 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                     mapping.getMappedIndex(uriKey),
                     mapping.getMappedIndex(stringKey));
 
-            if (!nodeMap.containsKey(returnIK)) {
-              addNode(node);
-              nodeMap.put(returnIK, node);
-              final HashSet<InstanceKey> iks = new HashSet<>();
-              iks.add(uriKey);
-              iks.add(stringKey);
-              unresolvedDependencies.put(node, iks);
-            }
+            nodeMap.computeIfAbsent(
+                returnIK,
+                absent -> {
+                  addNode(node);
+                  final HashSet<InstanceKey> iks = new HashSet<>();
+                  iks.add(uriKey);
+                  iks.add(stringKey);
+                  unresolvedDependencies.put(node, iks);
+                  return node;
+                });
           }
         }
       }

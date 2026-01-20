@@ -74,6 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,7 +177,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
   //
   private IMethod macroModel = null;
   //    private IMethod allActivitiesModel = null;
-  private final Map<Selector, IMethod> methods =
+  private final Map<Selector, @NonNull IMethod> methods =
       HashMapFactory.make(); // does not contain macroModel
 
   public boolean containsMethod(Selector selector) {
@@ -192,8 +193,9 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
       return macroModel;
     }
 
-    if (methods.containsKey(selector)) {
-      return methods.get(selector);
+    IMethod method = methods.get(selector);
+    if (method != null) {
+      return method;
     }
     if (selector.equals(MethodReference.initSelector)) {
       logger.warn("AndroidModelClass is not intended to be initialized");
@@ -225,14 +227,18 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
   }
 
   public void addMethod(IMethod method) {
-    if (this.methods.containsKey(method.getSelector())) {
-      // TODO: Check this matches on signature not on contents!
-      // TODO: What on different Context versions
-      throw new IllegalStateException(
-          "The AndroidModelClass already contains a Method called" + method.getName());
-    }
-    assert (this.methods != null);
-    this.methods.put(method.getSelector(), method);
+    methods.compute(
+        method.getSelector(),
+        (key, priorValue) -> {
+          if (priorValue != null) {
+            // TODO: Check this matches on signature not on contents!
+            // TODO: What on different Context versions
+            throw new IllegalStateException(
+                "The AndroidModelClass already contains a Method called" + method.getName());
+          }
+          assert (this.methods != null);
+          return method;
+        });
   }
 
   @Override

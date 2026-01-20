@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Manage SSA-Variables in synthetic methods.
@@ -128,7 +130,7 @@ public class SSAValueManager {
   }
 
   /** The main data-structure of the management */
-  private final Map<VariableKey, List<Managed<? extends SSAValue>>> seenTypes =
+  private final Map<VariableKey, @NonNull List<Managed<? extends SSAValue>>> seenTypes =
       HashMapFactory.make();
 
   private final List<SSAValue> unmanaged = new ArrayList<>();
@@ -170,44 +172,47 @@ public class SSAValueManager {
       throw new IllegalArgumentException("The SSA-Variable may not be null");
     }
 
-    if (seenTypes.containsKey(value.key)) {
-      for (Managed<? extends SSAValue> param : seenTypes.get(value.key)) {
-        if (param.status == ValueStatus.UNALLOCATED) {
-          // XXX: Allow more?
-          assert param.value.getType().equals(value.getType()) : "Inequal types";
+    seenTypes.compute(
+        value.key,
+        (key, priorValue) -> {
+          if (priorValue != null) {
+            for (Managed<? extends SSAValue> param : priorValue) {
+              if (param.status == ValueStatus.UNALLOCATED) {
+                // XXX: Allow more?
+                assert param.value.getType().equals(value.getType()) : "Inequal types";
 
-          if ((param.value.getNumber() + 1) > nextLocal) {
-            nextLocal = param.value.getNumber() + 1;
+                if ((param.value.getNumber() + 1) > nextLocal) {
+                  nextLocal = param.value.getNumber() + 1;
+                }
+
+                debug("reSetting SSA {} to allocated", value);
+                param.status = ValueStatus.ALLOCATED;
+                param.setInScope = currentScope;
+                param.setBy = setBy;
+
+                return priorValue;
+              }
+            }
+            { // DEBUG
+              System.out.println("Keys for " + value + ':');
+              for (Managed<? extends SSAValue> param : seenTypes.get(key)) {
+                System.out.println("\tKey " + param.key + "\t=>" + param.status);
+              }
+            } // */
+            throw new IllegalStateException(
+                "The parameter " + value + " using Key " + key + " has already been allocated");
+          } else {
+            info("New variable in management: {}", value);
+            final Managed<SSAValue> param = new Managed<>(value, key);
+            param.status = ValueStatus.ALLOCATED;
+            param.setInScope = currentScope;
+            param.setBy = setBy;
+
+            final List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
+            aParam.add(param);
+            return aParam;
           }
-
-          debug("reSetting SSA {} to allocated", value);
-          param.status = ValueStatus.ALLOCATED;
-          param.setInScope = currentScope;
-          param.setBy = setBy;
-
-          return;
-        }
-      }
-      { // DEBUG
-        System.out.println("Keys for " + value + ':');
-        for (Managed<? extends SSAValue> param : seenTypes.get(value.key)) {
-          System.out.println("\tKey " + param.key + "\t=>" + param.status);
-        }
-      } // */
-      throw new IllegalStateException(
-          "The parameter " + value + " using Key " + value.key + " has already been allocated");
-    } else {
-      info("New variable in management: {}", value);
-      final Managed<SSAValue> param = new Managed<>(value, value.key);
-      param.status = ValueStatus.ALLOCATED;
-      param.setInScope = currentScope;
-      param.setBy = setBy;
-
-      final List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
-      aParam.add(param);
-
-      seenTypes.put(value.key, aParam);
-    }
+        });
   }
 
   /**
@@ -226,8 +231,9 @@ public class SSAValueManager {
 
     boolean didPhi = false;
 
-    if (seenTypes.containsKey(value.key)) {
-      for (Managed<? extends SSAValue> param : seenTypes.get(value.key)) {
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(value.key);
+    if (managedList != null) {
+      for (Managed<? extends SSAValue> param : managedList) {
         if ((param.status == ValueStatus.FREE)
             || (param.status == ValueStatus.FREE_INVALIDATED)
             || (param.status == ValueStatus.FREE_CLOSED)) {
@@ -300,14 +306,7 @@ public class SSAValueManager {
     param.status = ValueStatus.FREE;
     param.setInScope = currentScope;
 
-    if (seenTypes.containsKey(key)) {
-      seenTypes.get(key).add(param);
-    } else {
-      List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
-      aParam.add(param);
-
-      seenTypes.put(key, aParam);
-    }
+    seenTypes.computeIfAbsent(key, absent -> new ArrayList<>()).add(param);
 
     debug("Returning as Free SSA: {}", param);
     return var;
@@ -330,8 +329,9 @@ public class SSAValueManager {
       throw new IllegalArgumentException("The argument key may not be null");
     }
 
-    if (seenTypes.containsKey(key)) {
-      for (Managed<? extends SSAValue> p : seenTypes.get(key)) {
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
+    if (managedList != null) {
+      for (Managed<? extends SSAValue> p : managedList) {
         if (p.status == ValueStatus.UNALLOCATED) {
           throw new IllegalStateException(
               "There may be only one unallocated instance to a kay (" + key + ") at a time");
@@ -345,8 +345,8 @@ public class SSAValueManager {
     param.status = ValueStatus.UNALLOCATED;
     param.setInScope = currentScope;
 
-    if (seenTypes.containsKey(key)) {
-      seenTypes.get(key).add(param);
+    if (managedList != null) {
+      managedList.add(param);
     } else {
       List<Managed<? extends SSAValue>> aParam = new ArrayList<>();
       aParam.add(param);
@@ -391,8 +391,9 @@ public class SSAValueManager {
 
     Managed<? extends SSAValue> candidate = null;
 
-    if (seenTypes.containsKey(key)) {
-      for (Managed<? extends SSAValue> param : seenTypes.get(key)) {
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
+    if (managedList != null) {
+      for (Managed<? extends SSAValue> param : managedList) {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
           // assert (param.value.getType().equals(type)) : "Unequal types";
           if (param.setInScope > currentScope) {
@@ -458,8 +459,9 @@ public class SSAValueManager {
 
     List<SSAValue> ret = new ArrayList<>();
 
-    if (seenTypes.containsKey(key)) {
-      for (Managed<? extends SSAValue> param : seenTypes.get(key)) {
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
+    if (managedList != null) {
+      for (Managed<? extends SSAValue> param : managedList) {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
           // assert (param.type.equals(type)) : "Unequal types";
 
@@ -525,15 +527,12 @@ public class SSAValueManager {
       throw new IllegalArgumentException("The argument key may not be null");
     }
 
-    if (seenTypes.containsKey(key)) {
-      if (seenTypes.get(key).size() > 1) { // TODO INCORRECT may all be UNALLOCATED
-        return false;
-      } else {
-        return (seenTypes.get(key).get(0).status == ValueStatus.UNALLOCATED);
-      }
-    } else {
-      return true;
-    }
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
+    return managedList == null
+        ? true
+        : managedList.size() > 1
+            ? false /* TODO INCORRECT may all be UNALLOCATED */
+            : managedList.get(0).status == ValueStatus.UNALLOCATED;
   }
 
   /**
@@ -551,9 +550,10 @@ public class SSAValueManager {
 
     boolean seenLive = false;
 
-    if (seenTypes.containsKey(key)) {
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
+    if (managedList != null) {
 
-      for (Managed<? extends SSAValue> param : seenTypes.get(key)) { // TODO: Check all these
+      for (Managed<? extends SSAValue> param : managedList) { // TODO: Check all these
         if ((param.status == ValueStatus.FREE)) { // TODO: What about scopes
           return true;
         }
@@ -587,8 +587,9 @@ public class SSAValueManager {
       throw new IllegalArgumentException("The argument key may not be null");
     }
 
-    if (seenTypes.containsKey(key)) {
-      for (Managed<? extends SSAValue> param : seenTypes.get(key)) {
+    List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
+    if (managedList != null) {
+      for (Managed<? extends SSAValue> param : managedList) {
         if ((param.status != ValueStatus.CLOSED)
             && (param.status != ValueStatus.FREE_CLOSED)
             && (param.status != ValueStatus.FREE_INVALIDATED)
@@ -678,8 +679,8 @@ public class SSAValueManager {
   /** Collect the variable-names of all known variables. */
   public Map<Integer, Atom> makeLocalNames() {
     final Map<Integer, Atom> names = new HashMap<>();
-    final Map<VariableKey, Integer> suffix = new HashMap<>();
-    int currentSuffix = 0;
+    Map<VariableKey, @NonNull Integer> suffix = new HashMap<>();
+    AtomicInteger currentSuffix = new AtomicInteger();
 
     for (final List<Managed<? extends SSAValue>> managedValues : seenTypes.values()) {
       for (final Managed<? extends SSAValue> managed : managedValues) {
@@ -698,13 +699,7 @@ public class SSAValueManager {
             autoName = autoName.substring(autoName.lastIndexOf('$') + 1);
           }
           autoName = autoName.replace("[", "Ar");
-          final int mySuffix;
-          if (suffix.containsKey(val.key)) {
-            mySuffix = suffix.get(val.key);
-          } else {
-            mySuffix = currentSuffix++;
-            suffix.put(val.key, mySuffix);
-          }
+          int mySuffix = suffix.computeIfAbsent(val.key, absent -> currentSuffix.getAndIncrement());
           autoName = 'm' + autoName + '_' + mySuffix;
           final Atom nameAtom = Atom.findOrCreateAsciiAtom(autoName);
           names.put(val.getNumber(), nameAtom);
@@ -727,13 +722,8 @@ public class SSAValueManager {
           autoName = autoName.substring(autoName.lastIndexOf('$') + 1);
         }
         autoName = autoName.replace("[", "Ar");
-        final int mySuffix;
-        if (suffix.containsKey(val.key)) {
-          mySuffix = suffix.get(val.key);
-        } else {
-          mySuffix = currentSuffix++;
-          suffix.put(val.key, mySuffix);
-        }
+        final int mySuffix =
+            suffix.computeIfAbsent(val.key, absent -> currentSuffix.getAndIncrement());
         autoName = 'm' + autoName + '_' + mySuffix;
         final Atom nameAtom = Atom.findOrCreateAsciiAtom(autoName);
         names.put(val.getNumber(), nameAtom);

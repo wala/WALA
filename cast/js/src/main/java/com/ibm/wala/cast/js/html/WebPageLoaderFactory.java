@@ -46,7 +46,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
     return new JavaScriptLoader(cha, translatorFactory, preprocessor) {
       @Override
-      protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntitie) {
+      protected TranslatorToIR initTranslator(Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
         return new JSAstTranslator(this) {
           private final CAst Ast = new CAstImpl();
 

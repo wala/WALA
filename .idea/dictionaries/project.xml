@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>Funargs</w>
       <w>aaload</w>
       <w>aastore</w>
       <w>abaa</w>
@@ -34,6 +35,7 @@
       <w>classbody</w>
       <w>classpathentry</w>
       <w>clinit</w>
+      <w>clinits</w>
       <w>cmpg</w>
       <w>codetemplates</w>
       <w>cons'ed</w>
@@ -84,6 +86,7 @@
       <w>fput</w>
       <w>fref</w>
       <w>freturn</w>
+      <w>funarg</w>
       <w>getfield</w>
       <w>getstatic</w>
       <w>getterbody</w>
@@ -131,6 +134,7 @@
       <w>invokespecial</w>
       <w>invokestatic</w>
       <w>invokevirtual</w>
+      <w>invs</w>
       <w>ipcfg</w>
       <w>irem</w>
       <w>ireturn</w>
@@ -242,6 +246,7 @@
       <w>reprop</w>
       <w>resourcefilters</w>
       <w>retf</w>
+      <w>rhsi</w>
       <w>rnal</w>
       <w>rval</w>
       <w>rvals</w>

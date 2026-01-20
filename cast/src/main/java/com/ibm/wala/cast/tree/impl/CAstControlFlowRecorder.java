@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -23,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * An implementation of a CAstControlFlowMap that is designed to be used by producers of CAPA asts.
@@ -40,9 +43,9 @@ import java.util.Set;
 public class CAstControlFlowRecorder implements CAstControlFlowMap {
   private final CAstSourcePositionMap src;
 
-  private final BiMap<CAstNode, Object> CAstToNode = HashBiMap.create();
+  private final BiMap<@NonNull CAstNode, @NonNull Object> CAstToNode = HashBiMap.create();
 
-  private final BiMap<Object, CAstNode> nodeToCAst = CAstToNode.inverse();
+  private final BiMap<@NonNull Object, @NonNull CAstNode> nodeToCAst = CAstToNode.inverse();
 
   private final Map<Key, Object> table = new LinkedHashMap<>();
 
@@ -90,27 +93,25 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   }
 
   @Override
-  public CAstNode getTarget(CAstNode from, Object label) {
-    assert CAstToNode.get(from) != null;
-    Key key = new Key(label, CAstToNode.get(from));
-    if (table.containsKey(key)) {
-      Object target = table.get(key);
-      assert nodeToCAst.containsKey(target);
-      return nodeToCAst.get(target);
-    } else return null;
+  public CAstNode getTarget(@NonNull CAstNode from, @NonNull Object label) {
+    Key key = new Key(label, requireNonNull(CAstToNode.get(from)));
+    Object target = table.get(key);
+    return target == null ? null : requireNonNull(nodeToCAst.get(target));
+  }
+
+  private <K, V> @NonNull Set<V> getOrEmptySet(Map<? super K, Set<V>> map, K key) {
+    Set<V> existing = map.get(CAstToNode.get(key));
+    return existing == null ? Collections.emptySet() : existing;
   }
 
   @Override
   public Collection<Object> getTargetLabels(CAstNode from) {
-    Object node = CAstToNode.get(from);
-    Set<Object> found = labelMap.get(node);
-    return found == null ? Collections.emptySet() : found;
+    return getOrEmptySet(labelMap, from);
   }
 
   @Override
   public Set<Object> getSourceNodes(CAstNode to) {
-    Set<Object> found = sourceMap.get(CAstToNode.get(to));
-    return found == null ? Collections.emptySet() : found;
+    return getOrEmptySet(sourceMap, to);
   }
 
   @Override
@@ -140,41 +141,26 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
         && ((CAstNode) from).getKind() == CAstNode.GOTO
         && to == EXCEPTION_TO_EXIT);
 
-    if (CAstToNode.containsKey(to)) {
-      to = CAstToNode.get(to);
-    }
-
-    if (CAstToNode.containsKey(from)) {
-      from = CAstToNode.get(from);
-    }
+    to = CAstToNode.getOrDefault(to, to);
+    from = CAstToNode.getOrDefault(from, from);
 
     table.put(new Key(label, from), to);
 
-    if (!labelMap.containsKey(from)) {
-      labelMap.put(from, HashSetFactory.make(2));
-    }
-    Set<Object> ls = labelMap.get(from);
-    ls.add(label);
-
-    if (!sourceMap.containsKey(to)) {
-      sourceMap.put(to, HashSetFactory.make(2));
-    }
-    Set<Object> ss = sourceMap.get(to);
-    ss.add(from);
+    labelMap.computeIfAbsent(from, absent -> HashSetFactory.make(2)).add(label);
+    sourceMap.computeIfAbsent(to, absent -> HashSetFactory.make(2)).add(from);
   }
 
   /**
    * Establish a mapping between some object `node' and the ast node `ast'. Objects used as
    * endpoints in a control flow edge must be mapped to ast nodes using this call.
    */
-  public void map(Object node, CAstNode ast) {
+  public void map(@NonNull Object node, @NonNull CAstNode ast) {
     assert node != null;
     assert ast != null;
-    assert !nodeToCAst.containsKey(node) || nodeToCAst.get(node) == ast
-        : node + " already mapped:\n" + this;
-    assert !CAstToNode.containsKey(ast) || CAstToNode.get(ast) == node
-        : ast + " already mapped:\n" + this;
     cachedMappedNodes = null;
+
+    // The following will fail if `ast` already mapped to something other than `node`, or if `node`
+    // already mapped from something other than `ast`.  Good: that's exactly what we want here.
     CAstToNode.put(ast, node);
   }
 
@@ -200,10 +186,11 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     for (Map.Entry<Key, Object> entry : table.entrySet()) {
       final Key key = entry.getKey();
       sb.append(key.from);
-      if (src != null
-          && nodeToCAst.get(key.from) != null
-          && src.getPosition(nodeToCAst.get(key.from)) != null) {
-        sb.append(" (").append(src.getPosition(nodeToCAst.get(key.from))).append(") ");
+      if (src != null) {
+        CAstNode cAstNode = nodeToCAst.get(key.from);
+        if (cAstNode != null && src.getPosition(cAstNode) != null) {
+          sb.append(" (").append(src.getPosition(cAstNode)).append(") ");
+        }
       }
       sb.append(" -- ");
       sb.append(key.label);

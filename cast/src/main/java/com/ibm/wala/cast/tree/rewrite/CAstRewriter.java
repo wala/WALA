@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Abstract superclass for types performing a rewrite operation on a CAst. The CAst is not mutated;
@@ -130,8 +131,8 @@ public abstract class CAstRewriter<
       Pair<CAstNode, K> pairKey) {
     final List<CAstNode> newChildren = copyChildrenArray(n, cfg, c, nodeMap);
     CAstNode newN = Ast.makeNode(n.getKind(), newChildren);
-    assert !nodeMap.containsKey(pairKey);
-    nodeMap.put(pairKey, newN);
+    CAstNode priorValue = nodeMap.put(pairKey, newN);
+    assert priorValue == null;
     return newN;
   }
 
@@ -177,7 +178,7 @@ public abstract class CAstRewriter<
    * key) pairs ot new nodes and the original control-flow map.
    */
   protected CAstControlFlowMap copyFlow(
-      Map<Pair<CAstNode, K>, CAstNode> nodeMap,
+      Map<Pair<CAstNode, K>, @NonNull CAstNode> nodeMap,
       CAstControlFlowMap orig,
       CAstSourcePositionMap newSrc) {
 
@@ -233,19 +234,12 @@ public abstract class CAstRewriter<
             }
           } while (!nodeMap.containsKey(targetKey));
 
-          Object newLabel;
-          if (nodeMap.containsKey(Pair.make(origLabel, targetKey.snd))) { // label
-            // is
-            // mapped
-            // too
-            newLabel = nodeMap.get(Pair.make(origLabel, targetKey.snd));
-          } else {
-            newLabel = origLabel;
-          }
+          // label might be mapped too
+          Object newLabel = nodeMap.get(Pair.make(origLabel, targetKey.snd));
+          if (newLabel == null) newLabel = origLabel;
 
-          CAstNode newTarget;
-          if (nodeMap.containsKey(targetKey)) {
-            newTarget = nodeMap.get(targetKey);
+          CAstNode newTarget = nodeMap.get(targetKey);
+          if (newTarget != null) {
             newMap.add(newSource, newTarget, newLabel);
             allNewTargetNodes.add(newTarget);
 
@@ -352,7 +346,7 @@ public abstract class CAstRewriter<
   protected Map<CAstNode, Collection<CAstEntity>> copyChildren(
       @SuppressWarnings("unused") CAstNode root,
       Map<Pair<CAstNode, K>, CAstNode> nodeMap,
-      Map<CAstNode, Collection<CAstEntity>> children) {
+      Map<CAstNode, @NonNull Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<>();
 
     for (Entry<Pair<CAstNode, K>, CAstNode> entry : nodeMap.entrySet()) {
@@ -361,10 +355,11 @@ public abstract class CAstRewriter<
 
       CAstNode newNode = entry.getValue();
 
-      if (children.containsKey(oldNode)) {
+      Collection<CAstEntity> oldEntities = children.get(oldNode);
+      if (oldEntities != null) {
         Set<CAstEntity> newEntities = new LinkedHashSet<>();
         newChildren.put(newNode, newEntities);
-        for (CAstEntity cAstEntity : children.get(oldNode)) {
+        for (CAstEntity cAstEntity : oldEntities) {
           newEntities.add(rewrite(cAstEntity));
         }
       }
@@ -468,11 +463,8 @@ public abstract class CAstRewriter<
         @Override
         public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
           Map<CAstNode, Collection<CAstEntity>> newChildren = getAllScopedEntities();
-          if (newChildren.containsKey(construct)) {
-            return newChildren.get(construct).iterator();
-          } else {
-            return EmptyIterator.instance();
-          }
+          Collection<CAstEntity> entities = newChildren.get(construct);
+          return entities == null ? EmptyIterator.instance() : entities.iterator();
         }
 
         @Override
@@ -527,11 +519,8 @@ public abstract class CAstRewriter<
 
         @Override
         public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-          if (newChildren.containsKey(construct)) {
-            return newChildren.get(construct).iterator();
-          } else {
-            return EmptyIterator.instance();
-          }
+          Collection<CAstEntity> entities = newChildren.get(construct);
+          return entities == null ? EmptyIterator.instance() : entities.iterator();
         }
 
         @Override

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
+import static com.ibm.wala.util.collections.Pair.make;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ibm.wala.analysis.pointers.HeapGraph;
@@ -77,6 +79,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A flow graph models data flow between vertices representing local variables, properties, return
@@ -182,7 +185,7 @@ public class FlowGraph implements Iterable<Vertex> {
       throws CancelException {
     return new PointerAnalysis<>() {
 
-      private final Map<Pair<PrototypeField, ObjectVertex>, PrototypeFieldVertex> proto =
+      private final Map<Pair<PrototypeField, ObjectVertex>, @NonNull PrototypeFieldVertex> proto =
           HashMapFactory.make();
 
       private GraphReachability<Vertex, ObjectVertex> pointerAnalysis;
@@ -233,11 +236,7 @@ public class FlowGraph implements Iterable<Vertex> {
       }
 
       private PrototypeFieldVertex get(PrototypeField f, ObjectVertex o) {
-        Pair<PrototypeField, ObjectVertex> key = Pair.make(f, o);
-        if (!proto.containsKey(key)) {
-          proto.put(key, new PrototypeFieldVertex(f, o));
-        }
-        return proto.get(key);
+        return proto.computeIfAbsent(make(f, o), absent -> new PrototypeFieldVertex(f, o));
       }
 
       private FuncVertex getVertex(CGNode n) {

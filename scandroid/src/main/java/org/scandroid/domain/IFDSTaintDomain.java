@@ -81,13 +81,14 @@ public class IFDSTaintDomain<E extends ISSABasicBlock>
 
   @Override
   public int add(DomainElement o) {
-    Integer i = table.get(o);
-    if (i == null) {
-      objects.add(o);
-      i = table.size() + 1;
-      table.put(o, i);
-      // System.out.println("Adding domain element "+i+": "+o);
-    }
+    int i =
+        table.computeIfAbsent(
+            o,
+            absent -> {
+              objects.add(o);
+              // System.out.println("Adding domain element " + (table.size() + 1) + ": " + o);
+              return table.size() + 1;
+            });
     index(o);
 
     return i;

@@ -14,6 +14,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.jspecify.annotations.NonNull;
 
 /**
  * An utf8-encoded byte string.
@@ -47,7 +48,7 @@ public final class Atom implements Serializable {
    * @param str atom value, as string literal whose characters are unicode
    * @return atom
    */
-  public static Atom findOrCreateUnicodeAtom(String str) {
+  public static @NonNull Atom findOrCreateUnicodeAtom(String str) {
     byte[] utf8 = UTF8Convert.toUTF8(str);
     return findOrCreate(utf8);
   }
@@ -112,7 +113,7 @@ public final class Atom implements Serializable {
     return findOrCreate(val);
   }
 
-  public static synchronized Atom findOrCreate(byte[] bytes) {
+  public static synchronized @NonNull Atom findOrCreate(byte[] bytes) {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes is null");
     }

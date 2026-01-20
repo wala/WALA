@@ -47,6 +47,8 @@ import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Stores references to the WALA-Intent objects.
@@ -56,75 +58,62 @@ import java.util.Map;
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 /*package*/ class IntentMap {
-  private final Map<InstanceKey, Intent> seen = new HashMap<>();
-  private final Map<Intent, Intent> immutables = new HashMap<>();
+  private final Map<InstanceKey, @NonNull Intent> seen = new HashMap<>();
+  private final Map<Intent, @NonNull Intent> immutables = new HashMap<>();
 
   public Intent findOrCreateImmutable(final Intent intent) {
-    if (immutables.containsKey(intent)) {
-      final Intent immutable = immutables.get(intent);
-      assert immutable.getAction().equals(intent.getAction());
-      return immutable;
-    } else {
-      final Intent immutable = intent.clone();
-      immutable.setImmutable();
-      immutables.put(intent, immutable);
-
-      return immutable;
-    }
+    return immutables.compute(
+        intent,
+        (key, immutable) -> {
+          if (immutable != null) {
+            assert immutable.getAction().equals(intent.getAction());
+          } else {
+            immutable = intent.clone();
+            immutable.setImmutable();
+          }
+          return immutable;
+        });
   }
 
   public Intent find(final InstanceKey key) throws IndexOutOfBoundsException {
     if (key == null) {
       throw new IllegalArgumentException("InstanceKey may not be null");
     }
-    if (!seen.containsKey(key)) {
+    Intent intent = seen.get(key);
+    if (intent == null) {
       throw new IndexOutOfBoundsException("No Intent was seen for key " + key);
     }
-    return seen.get(key);
+    return intent;
+  }
+
+  private Intent create(final InstanceKey key, final Supplier<Intent> intentSupplier) {
+    if (key == null) {
+      throw new IllegalArgumentException("InstanceKey may not be null");
+    }
+    return seen.compute(
+        key,
+        (priorKey, priorIntent) -> {
+          if (priorIntent != null) {
+            throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
+          }
+          return intentSupplier.get();
+        });
   }
 
   public Intent create(final InstanceKey key, final String action) {
-    if (key == null) {
-      throw new IllegalArgumentException("InstanceKey may not be null");
-    }
-    if (seen.containsKey(key)) {
-      throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
-    }
-    final Intent intent = new Intent(action);
-    seen.put(key, intent);
-    return intent;
+    return create(key, () -> new Intent(action));
   }
 
   public Intent create(final InstanceKey key, final Atom action) {
-    if (key == null) {
-      throw new IllegalArgumentException("InstanceKey may not be null");
-    }
-    if (seen.containsKey(key)) {
-      throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
-    }
-    final Intent intent = new Intent(action);
-    seen.put(key, intent);
-    return intent;
+    return create(key, () -> new Intent(action));
   }
 
   public Intent create(final InstanceKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("InstanceKey may not be null");
-    }
-    if (seen.containsKey(key)) {
-      throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
-    }
-    final Intent intent = new Intent();
-    seen.put(key, intent);
-    return intent;
+    return create(key, Intent::new);
   }
 
   public Intent findOrCreate(final InstanceKey key) {
-    if (seen.containsKey(key)) {
-      return find(key);
-    } else {
-      return create(key);
-    }
+    return seen.computeIfAbsent(key, absent -> new Intent());
   }
 
   public void put(final InstanceKey key, final Intent intent) {

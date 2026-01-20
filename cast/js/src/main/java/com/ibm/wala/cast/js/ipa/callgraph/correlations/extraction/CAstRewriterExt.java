@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Extension of {@link CAstRewriter} which allows adding or deleting control flow edges, and keeps
@@ -177,7 +178,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
 
   @Override
   protected CAstControlFlowMap copyFlow(
-      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap,
+      Map<Pair<CAstNode, NoKey>, @NonNull CAstNode> nodeMap,
       CAstControlFlowMap orig,
       CAstSourcePositionMap newSrc) {
     Map<Pair<CAstNode, NoKey>, CAstNode> nodeMapCopy = HashMapFactory.make(nodeMap);
@@ -198,8 +199,8 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
       CAstNode from = e.from;
       Object label = e.label;
       CAstNode to = e.to;
-      if (nodeMap.containsKey(Pair.make(from, null))) from = nodeMap.get(Pair.make(from, null));
-      if (nodeMap.containsKey(Pair.make(to, null))) to = nodeMap.get(Pair.make(to, null));
+      from = nodeMap.getOrDefault(Pair.make(from, null), from);
+      to = nodeMap.getOrDefault(Pair.make(to, null), to);
       from = nodeMap.getOrDefault(Pair.make(from, null), from);
       to = nodeMap.getOrDefault(Pair.make(to, null), to);
       if (!flow.isMapped(from)) flow.map(from, from);

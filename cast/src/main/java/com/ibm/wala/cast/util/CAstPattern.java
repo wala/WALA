@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.NonNull;
 
 public class CAstPattern {
   private static final boolean DEBUG_PARSER = false;
@@ -56,28 +57,22 @@ public class CAstPattern {
 
   private final Map<String, CAstPattern> references;
 
-  public static class Segments extends TreeMap<String, Object> {
+  public static class Segments extends TreeMap<String, @NonNull Object> {
 
     private static final long serialVersionUID = 4119719848336209576L;
 
     public CAstNode getSingle(String name) {
-      assert containsKey(name) : name;
-      return (CAstNode) get(name);
+      Object value = get(name);
+      assert value != null : name;
+      return (CAstNode) value;
     }
 
     @SuppressWarnings("unchecked")
     public List<CAstNode> getMultiple(String name) {
-      if (!containsKey(name)) {
-        return Collections.emptyList();
-      } else {
-        Object o = get(name);
-        if (o instanceof CAstNode) {
-          return Collections.singletonList((CAstNode) o);
-        } else {
-          assert o instanceof List;
-          return (List<CAstNode>) o;
-        }
-      }
+      Object o = get(name);
+      return o == null
+          ? Collections.emptyList()
+          : o instanceof CAstNode ? Collections.singletonList((CAstNode) o) : (List<CAstNode>) o;
     }
 
     private void addAll(Segments other) {
@@ -96,21 +91,25 @@ public class CAstPattern {
     }
 
     @SuppressWarnings("unchecked")
-    private void add(String name, CAstNode result) {
-      if (containsKey(name)) {
-        Object o = get(name);
-        if (o instanceof List) {
-          ((List<CAstNode>) o).add(result);
-        } else {
-          assert o instanceof CAstNode;
-          List<Object> x = new ArrayList<>();
-          x.add(o);
-          x.add(result);
-          put(name, x);
-        }
-      } else {
-        put(name, result);
-      }
+    private void add(String name, @NonNull CAstNode result) {
+      compute(
+          name,
+          (priorKey, o) -> {
+            if (o != null) {
+              if (o instanceof List) {
+                ((List<CAstNode>) o).add(result);
+                return o;
+              } else {
+                assert o instanceof CAstNode;
+                List<Object> x = new ArrayList<>();
+                x.add(o);
+                x.add(result);
+                return x;
+              }
+            } else {
+              return result;
+            }
+          });
     }
   }
 
@@ -470,7 +469,7 @@ public class CAstPattern {
       String internalName = parseName(true);
       String name = parseName(false);
 
-      CAstPattern result;
+      @NonNull CAstPattern result;
       if (patternString.charAt(start) == '`') {
         int strEnd = patternString.indexOf('`', start + 1);
         end = strEnd + 1;

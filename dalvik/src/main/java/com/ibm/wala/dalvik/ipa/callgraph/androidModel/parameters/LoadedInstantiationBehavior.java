@@ -51,6 +51,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Behavior loaded from a file.
@@ -128,7 +129,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
   }
 
   private InstanceBehavior defaultBehavior = null;
-  private final Map<BehaviorKey<?>, BehviourValue> behaviours = new HashMap<>();
+  private final Map<BehaviorKey<?>, @NonNull BehviourValue> behaviours = new HashMap<>();
   private final IClassHierarchy cha;
 
   public LoadedInstantiationBehavior(IClassHierarchy cha) {
@@ -155,8 +156,8 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
 
     final BehaviorKey<TypeName> typeK = BehaviorKey.mk(type);
-    if (behaviours.containsKey(typeK)) {
-      BehviourValue typeV = behaviours.get(typeK);
+    BehviourValue typeV = behaviours.get(typeK);
+    if (typeV != null) {
       while (typeV.cacheFrom != null) {
         typeV = typeV.cacheFrom;
       }
@@ -170,9 +171,9 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
       final Atom pack = type.getPackage();
       if (pack != null) {
         final BehaviorKey<Atom> packK = BehaviorKey.mk(pack);
-        if (behaviours.containsKey(packK)) {
+        final BehviourValue packV = behaviours.get(packK);
+        if (packV != null) {
           // Add (cache) the result
-          final BehviourValue packV = behaviours.get(packK);
           final InstanceBehavior beh = packV.behaviour;
           behaviours.put(typeK, new BehviourValue(beh, Exactness.PACKAGE, packV));
           return beh;
@@ -193,9 +194,9 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
         }
         while (testClass != null) {
           final BehaviorKey<TypeName> testKey = BehaviorKey.mk(testClass.getName());
-          if (behaviours.containsKey(testKey)) {
+          final BehviourValue value = behaviours.get(testKey);
+          if (value != null) {
             // Add (cache) the result
-            final BehviourValue value = behaviours.get(testKey);
             final InstanceBehavior beh = value.behaviour;
             behaviours.put(typeK, new BehviourValue(beh, Exactness.INHERITED, value));
             return beh;
@@ -213,9 +214,9 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
       while (prefix.contains("/")) {
         prefix = prefix.substring(0, prefix.lastIndexOf('/') - 1);
         final BehaviorKey<Atom> prefixKey = BehaviorKey.mk(Atom.findOrCreateAsciiAtom(prefix));
-        if (behaviours.containsKey(prefixKey)) {
+        final BehviourValue value = behaviours.get(prefixKey);
+        if (value != null) {
           // cache
-          final BehviourValue value = behaviours.get(prefixKey);
           final InstanceBehavior beh = value.behaviour;
           behaviours.put(typeK, new BehviourValue(beh, Exactness.PREFIX, value));
           return beh;
