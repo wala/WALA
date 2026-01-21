@@ -1,5 +1,5 @@
 [versions]
-com-uber-nullaway = "0.12.15"
+com-uber-nullaway = "0.13.0"
 #noinspection UnusedVersionCatalogEntry
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
@@ -21,7 +21,7 @@ eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "e
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
 errorprone-core = "com.google.errorprone:error_prone_core:2.46.0"
-gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.2.0"
+gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.4.0"
 gradle-goomph-plugin = "com.diffplug.gradle:goomph:4.4.1"
 gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.35.0"
 gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
