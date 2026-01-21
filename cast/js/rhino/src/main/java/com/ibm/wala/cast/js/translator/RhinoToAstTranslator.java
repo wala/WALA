@@ -55,6 +55,7 @@ import java.util.Objects;
 import java.util.Set;
 import org.jspecify.annotations.NonNull;
 import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Kit;
@@ -105,6 +106,9 @@ import org.mozilla.javascript.ast.StringLiteral;
 import org.mozilla.javascript.ast.SwitchCase;
 import org.mozilla.javascript.ast.SwitchStatement;
 import org.mozilla.javascript.ast.Symbol;
+import org.mozilla.javascript.ast.TaggedTemplateLiteral;
+import org.mozilla.javascript.ast.TemplateCharacters;
+import org.mozilla.javascript.ast.TemplateLiteral;
 import org.mozilla.javascript.ast.ThrowStatement;
 import org.mozilla.javascript.ast.TryStatement;
 import org.mozilla.javascript.ast.UnaryExpression;
@@ -1598,6 +1602,40 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     }
 
     @Override
+    public CAstNode visitTemplateCharacters(TemplateCharacters node, WalkContext arg) {
+      return Ast.makeConstant(node.getValue());
+    }
+
+    @Override
+    public CAstNode visitTemplateLiteral(TemplateLiteral node, WalkContext arg) {
+      List<AstNode> elements = node.getElements();
+      if (elements.size() == 1) {
+        return this.visit(elements.get(0), arg);
+      }
+      CAstNode lastBinaryNode =
+          Ast.makeNode(
+              CAstNode.BINARY_EXPR,
+              translateOpcode(Token.ADD),
+              visit(elements.get(elements.size() - 2), arg),
+              visit(elements.get(elements.size() - 1), arg));
+      for (int i = elements.size() - 3; i >= 0; i--) {
+        lastBinaryNode =
+            Ast.makeNode(
+                CAstNode.BINARY_EXPR,
+                translateOpcode(Token.ADD),
+                visit(elements.get(i), arg),
+                lastBinaryNode);
+      }
+      return lastBinaryNode;
+    }
+
+    @Override
+    public CAstNode visitTaggedTemplateLiteral(TaggedTemplateLiteral node, WalkContext arg) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
     public CAstNode visitThrowStatement(ThrowStatement n, WalkContext context) {
       CAstNode catchNode = context.getCatchTarget();
       if (catchNode != null) {
@@ -2759,6 +2797,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     CAstErrorReporter reporter = new CAstErrorReporter();
     CompilerEnvirons compilerEnv = new CompilerEnvirons();
+    compilerEnv.setLanguageVersion(Context.VERSION_ES6);
     compilerEnv.setErrorReporter(reporter);
     compilerEnv.setReservedKeywordAsIdentifier(true);
     compilerEnv.setIdeMode(true);
