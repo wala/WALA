@@ -60,6 +60,10 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
     return new InputStreamReader(getInputStream());
   }
 
+  public String logicalFileName() {
+    return fileName;
+  }
+  
   @Override
   public URL getURL() {
     if (url == null) {

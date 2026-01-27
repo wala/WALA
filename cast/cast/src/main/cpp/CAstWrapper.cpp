@@ -658,6 +658,9 @@ void CAstWrapper::setLocation(jobject entity, jobject loc) {
 }
 
 void CAstWrapper::setAstNodeLocation(jobject entity, jobject astNode, jobject loc) {
+  if (entity == NULL) {
+    die("need entity");
+  }
   env->CallVoidMethod(entity, setNodePosition, astNode, loc);
 }
 
