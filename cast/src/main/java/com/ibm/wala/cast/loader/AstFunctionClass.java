@@ -128,7 +128,7 @@ public abstract class AstFunctionClass implements IClass, ClassConstants {
 
   @Override
   public IMethod getMethod(Selector selector) {
-    if (selector.equals(AstMethodReference.fnSelector)) {
+    if (selector.equals(AstMethodReference.fnSelector) || selector.equals(functionBody.getSelector())) {
       return functionBody;
     } else {
       return loader.lookupClass(superReference.getName()).getMethod(selector);
