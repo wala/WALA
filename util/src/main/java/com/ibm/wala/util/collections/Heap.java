@@ -149,7 +149,7 @@ public abstract class Heap<T> {
     for (int i = 0; i < size(); i++) {
       if (backingStore[i] != null) {
         if (i > 0) s.append(',');
-        s.append(backingStore[i].toString());
+        s.append(backingStore[i]);
       }
     }
     s.append(']');
