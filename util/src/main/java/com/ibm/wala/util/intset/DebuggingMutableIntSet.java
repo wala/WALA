@@ -379,6 +379,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   @Override
   public String toString() {
-    return "[[P " + primaryImpl.toString() + ", S " + secondaryImpl.toString() + " ]]";
+    return "[[P " + primaryImpl + ", S " + secondaryImpl + " ]]";
   }
 }

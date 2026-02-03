@@ -197,7 +197,7 @@ public class GraphIntegrity {
       System.err.println("none\n");
     } else {
       for (Object name : c) {
-        System.err.println(name.toString());
+        System.err.println(name);
       }
       System.err.println("\n");
     }
