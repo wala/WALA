@@ -233,6 +233,10 @@ public:
   jobject getEntityType(jobject);
 
   void die(const char *);
+
+  void checkExceptions(const char *, int);
 };
+
+#define CheckExceptions(CAST) (CAST).checkExceptions(__FILE__, __LINE__)
 #endif
 

@@ -61,11 +61,11 @@ public abstract class AstFunctionClass implements IClass, ClassConstants {
 
   @Override
   public String toString() {
-    try {
-      return "function " + functionBody.getReference().getDeclaringClass().getName();
-    } catch (NullPointerException e) {
+    if (functionBody == null) {
       return "<need to set code body>";
-    }
+    } else {
+      return "function " + functionBody.getReference().getDeclaringClass().getName();
+    } 
   }
 
   @Override

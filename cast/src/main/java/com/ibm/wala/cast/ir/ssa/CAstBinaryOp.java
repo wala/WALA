@@ -21,7 +21,8 @@ public enum CAstBinaryOp implements IBinaryOpInstruction.IOperator {
   GT,
   LE,
   STRICT_EQ,
-  STRICT_NE;
+  STRICT_NE,
+  POW;
 
   @Override
   public String toString() {

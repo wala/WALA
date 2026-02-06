@@ -719,4 +719,9 @@ jobject CAstWrapper::getEntityType(jobject entity) {
 void CAstWrapper::die(const char *message) {
   THROW(java_ex, message);
 }
- 
+
+void CAstWrapper::checkExceptions(const char *file, int line) {
+  java_ex.throwAnyException(file, line);
+}
+
+

@@ -3313,6 +3313,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_BIT_AND) return BinaryOpInstruction.Operator.AND;
     else if (op == CAstOperator.OP_BIT_OR) return BinaryOpInstruction.Operator.OR;
     else if (op == CAstOperator.OP_BIT_XOR) return BinaryOpInstruction.Operator.XOR;
+    else if (op == CAstOperator.OP_REL_XOR) return BinaryOpInstruction.Operator.XOR;
     else if (op == CAstOperator.OP_CONCAT) return CAstBinaryOp.CONCAT;
     else if (op == CAstOperator.OP_EQ) return CAstBinaryOp.EQ;
     else if (op == CAstOperator.OP_STRICT_EQ) return CAstBinaryOp.STRICT_EQ;
@@ -3322,6 +3323,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_LT) return CAstBinaryOp.LT;
     else if (op == CAstOperator.OP_NE) return CAstBinaryOp.NE;
     else if (op == CAstOperator.OP_STRICT_NE) return CAstBinaryOp.STRICT_NE;
+    else if (op == CAstOperator.OP_POW) return CAstBinaryOp.POW;
     else {
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
       return null;
