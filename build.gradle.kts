@@ -65,10 +65,8 @@ dependencies {
   aggregatedJavadocClasspathExtras(libs.nullaway.annotations)
 
   forEachJavaProject {
-    aggregatedJavadocRuntimeElements(
-        project("path" to it.path, "configuration" to "runtimeElements")
-    )
-    aggregatedJavadocSource(project("path" to it.path, "configuration" to "mainSourceElements"))
+    aggregatedJavadocRuntimeElements(project(it.path, "runtimeElements"))
+    aggregatedJavadocSource(project(it.path, "mainSourceElements"))
   }
 }
 

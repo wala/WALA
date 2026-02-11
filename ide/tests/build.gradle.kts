@@ -42,13 +42,11 @@ val ifdsExplorerExampleClasspath by
     }
 
 dependencies {
-  coreMainSource(project(mapOf("path" to ":core")))
+  coreMainSource(project(":core"))
   coreTestDataJar(projects.core)
-  coreTestResources(project(mapOf("path" to ":core", "configuration" to "testResources")))
+  coreTestResources(project(":core", "testResources"))
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
-  ifdsExplorerExampleClasspath(
-      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar"))
-  )
+  ifdsExplorerExampleClasspath(project(":core", "collectTestDataJar"))
   testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.osgi)

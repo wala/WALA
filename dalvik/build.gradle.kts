@@ -84,8 +84,8 @@ dependencies {
 
   compileOnly(libs.jetbrains.annotations)
 
-  coreTestJar(project("path" to ":core", "configuration" to "testJarConfig"))
-  extraTestResources(project("path" to ":core", "configuration" to "dalvikTestResources"))
+  coreTestJar(project(":core", "testJarConfig"))
+  extraTestResources(project(":core", "dalvikTestResources"))
 
   implementation(libs.slf4j.api)
   implementation(libs.guava)
