@@ -990,4 +990,38 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
     CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
   }
+
+  private static final Object[][] assertionsES6Args =
+      new Object[][] {
+        new Object[] {ROOT, new String[] {"es6.js"}},
+        new Object[] {"es6.js", new String[] {"es6.js/runTemplateTests"}},
+        new Object[] {
+          "es6.js/runTemplateTests",
+          new String[] {
+            "es6.js/testSimpleTemplateLiteral",
+            "es6.js/testMultilineTemplateLiteral",
+            "es6.js/testTemplateLiteralWithExpression",
+            "es6.js/testFunctionInTemplateLiteral",
+            "es6.js/testTemplateLiteralWithFallback",
+            "es6.js/testIllegalEscapeSequence",
+            "es6.js/testNestedExpressions",
+            "es6.js/testTemplateWithFunctions",
+            "es6.js/testNestedTemplateLiterals",
+            "es6.js/testTemplateLiteralWithObject",
+            "es6.js/testTemplateLiteralWithUndefined",
+            "es6.js/testEscapeSequences",
+            "es6.js/testTemplateWithFunctionCalls"
+          }
+        }
+      };
+
+  @Test
+  public void testES6()
+      throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "es6.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyGraphAssertions(CG, assertionsES6Args);
+
+    CAstCallGraphUtil.dumpCG(B.getCFAContextInterpreter(), B.getPointerAnalysis(), CG);
+  }
 }
