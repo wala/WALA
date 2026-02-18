@@ -32,6 +32,7 @@ _CAstQualifier(PROTECTED)
 _CAstQualifier(PUBLIC)
 _CAstQualifier(CONST)
 _CAstQualifier(PURE)
+_CAstQualifier(EXTERNAL)
 
 #undef _CODE_QUALIFIERS
 #undef _CPP_QUALIFIERS

@@ -18,5 +18,5 @@ public interface ArrayOpHandler {
       WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues);
 
   void doArrayWrite(
-      WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval);
+      WalkContext context, int arrayValue, CAstNode arrayRef, CAstNode rvalNode, int[] dimValues, int rval);
 }

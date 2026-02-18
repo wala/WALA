@@ -36,6 +36,7 @@ public class CAstQualifier {
   public static final CAstQualifier ENUM = new CAstQualifier("enum");
   public static final CAstQualifier MODULE = new CAstQualifier("module");
   public static final CAstQualifier PURE = new CAstQualifier("pure");
+  public static final CAstQualifier EXTERNAL = new CAstQualifier("external");
 
   static {
     sQualifiers.add(ANNOTATION);
@@ -55,6 +56,7 @@ public class CAstQualifier {
     sQualifiers.add(ENUM);
     sQualifiers.add(MODULE);
     sQualifiers.add(PURE);
+    sQualifiers.add(EXTERNAL);
   }
 
   private static int sNextBitNum = 0;
