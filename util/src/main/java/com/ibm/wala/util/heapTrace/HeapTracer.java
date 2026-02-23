@@ -103,7 +103,7 @@ public class HeapTracer {
   public static void main(String[] args) {
     try {
       Result r = new HeapTracer(true).perform();
-      System.err.println(r.toString());
+      System.err.println(r);
     } catch (Throwable t) {
       t.printStackTrace();
     }
@@ -499,7 +499,7 @@ public class HeapTracer {
       System.err.println(("Occupied Memory:  " + (t - f)));
       HeapTracer.Result r = new HeapTracer(traceStatics).perform();
       System.err.println("HeapTracer Analysis:");
-      System.err.println(r.toString());
+      System.err.println(r);
     } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
       e.printStackTrace();
     }
@@ -525,7 +525,7 @@ public class HeapTracer {
       System.err.println(("Occupied Memory:  " + (t - f)));
       HeapTracer.Result r = new HeapTracer(instances, traceStatics).perform();
       System.err.println("HeapTracer Analysis:");
-      System.err.println(r.toString());
+      System.err.println(r);
       return r;
     } catch (IllegalArgumentException | IllegalAccessException | ClassNotFoundException e) {
       e.printStackTrace();

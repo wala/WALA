@@ -44,7 +44,6 @@ configurations {
 dependencies {
   "ecj"(catalogLibrary("eclipse-ecj"))
   "errorprone"(catalogLibrary("errorprone-core"))
-  "javadocSource"(sourceSets.main.get().allJava)
 
   testFixturesImplementation(platform(catalogLibrary("junit-bom")))
 

@@ -663,7 +663,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     if (densePart != null) {
       sb.append("densePart: ").append(densePart).append(' ');
     }
-    sb.append("sparsePart: ").append(sparsePart.toString()).append(']');
+    sb.append("sparsePart: ").append(sparsePart).append(']');
     return sb.toString();
   }
 

@@ -52,17 +52,23 @@ version = property("VERSION_NAME") as String
 //  Javadoc documentation
 //
 
-val aggregatedJavadocClasspath by configurations.registering { isCanBeConsumed = false }
+val aggregatedJavadocClasspathExtras by configurations.registering { isCanBeConsumed = false }
+
+val aggregatedJavadocRuntimeElements by configurations.registering { isCanBeConsumed = false }
 
 val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
-  forEachJavaProject {
-    aggregatedJavadocClasspath(
-        project(mapOf("path" to it.path, "configuration" to "javadocClasspath"))
-    )
+  // Some `compileOnly` dependencies are needed during Javadoc generation but are not included in
+  // `aggregatedJavadocRuntimeElements`.
+  aggregatedJavadocClasspathExtras(libs.jetbrains.annotations)
+  aggregatedJavadocClasspathExtras(libs.nullaway.annotations)
 
-    aggregatedJavadocSource(project(mapOf("path" to it.path, "configuration" to "javadocSource")))
+  forEachJavaProject {
+    aggregatedJavadocRuntimeElements(
+        project("path" to it.path, "configuration" to "runtimeElements")
+    )
+    aggregatedJavadocSource(project("path" to it.path, "configuration" to "mainSourceElements"))
   }
 }
 
@@ -72,8 +78,9 @@ tasks.register<Javadoc>("aggregatedJavadocs") {
   destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
-  classpath = aggregatedJavadocClasspath.get()
+  classpath = files(aggregatedJavadocClasspathExtras, aggregatedJavadocRuntimeElements)
   source(aggregatedJavadocSource)
+  include("**/*.java")
 }
 
 ////////////////////////////////////////////////////////////////////////

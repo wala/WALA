@@ -2,6 +2,7 @@
 /AndroidProjectSystem.xml
 /aws.xml
 /compiler.xml
+/copilot.data.migration.*.xml
 /GitLink.xml
 /gradle.xml
 /jarRepositories.xml

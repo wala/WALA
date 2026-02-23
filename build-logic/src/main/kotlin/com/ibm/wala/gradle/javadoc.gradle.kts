@@ -5,15 +5,7 @@ package com.ibm.wala.gradle
 val javadocClasspath by
     configurations.registering { description = "Classpath used during Javadoc creation." }
 
-val javadocSource by
-    configurations.registering {
-      description = "Java source files from which Javadoc should be extracted."
-    }
-
-tasks.named<Javadoc>("javadoc") {
-  classpath = javadocClasspath.get()
-  source(javadocSource)
-}
+tasks.named<Javadoc>("javadoc") { classpath = files(javadocClasspath) }
 
 tasks.withType<Javadoc>().configureEach {
   with(options as StandardJavadocDocletOptions) {
