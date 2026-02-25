@@ -6,7 +6,6 @@ eclipse-wst-jsdt = "1.0.201.v2010012803"
 #noinspection UnusedVersionCatalogEntry
 google-java-format = "1.28.0"
 ktfmt = "0.59"
-spotless = "8.0.0"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"
@@ -21,10 +20,6 @@ eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "e
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
 errorprone-core = "com.google.errorprone:error_prone_core:2.46.0"
-gradle-errorprone-plugin = "net.ltgt.gradle:gradle-errorprone-plugin:4.4.0"
-gradle-goomph-plugin = "com.diffplug.gradle:goomph:4.4.1"
-gradle-maven-publish-plugin = "com.vanniktech:gradle-maven-publish-plugin:0.36.0"
-gradle-spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 gson = "com.google.code.gson:gson:2.13.2"
 guava = "com.google.guava:guava:33.5.0-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
@@ -53,10 +48,13 @@ slf4j-api = "org.slf4j:slf4j-api:2.0.17"
 
 [plugins]
 dependency-analysis = "com.autonomousapps.dependency-analysis:3.5.1"
+eclipse-mavencentral = "com.diffplug.eclipse.mavencentral:4.4.1"
+errorprone = "net.ltgt.errorprone:4.4.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
+maven-publish = "com.vanniktech.maven.publish:0.36.0"
 node = "com.github.node-gradle.node:7.1.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.0"
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+spotless = "com.diffplug.spotless:8.0.0"
 task-tree = "com.dorongold.task-tree:4.0.1"
 version-catalog-update = "nl.littlerobots.version-catalog-update:1.0.1"
 versions = "com.github.ben-manes.versions:0.53.0"
