@@ -41,13 +41,9 @@ dependencies {
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
-  castJsJavadocDestinationDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
-  )
+  castJsJavadocDestinationDirectory(project(":cast:js", "javadocDestinationDirectory"))
   castCastSharedLibrary(projects.cast.cast)
-  castJsPackageListDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory"))
-  )
+  castJsPackageListDirectory(project(":cast:js", "packageListDirectory"))
   javadocClasspath(projects.cast.js)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.core)

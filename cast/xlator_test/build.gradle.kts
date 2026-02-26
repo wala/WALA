@@ -8,9 +8,7 @@ plugins {
 
 val castHeaderDirectory by configurations.registering { isCanBeConsumed = false }
 
-dependencies {
-  castHeaderDirectory(project(mapOf("path" to ":cast", "configuration" to "castHeaderDirectory")))
-}
+dependencies { castHeaderDirectory(project(":cast", "castHeaderDirectory")) }
 
 library {
   privateHeaders.from(castHeaderDirectory)
