@@ -4,7 +4,7 @@ val extraTestResources by configurations.registering { isCanBeConsumed = false }
 
 dependencies {
   api(projects.cast.js)
-  extraTestResources(project(mapOf("path" to ":cast:js", "configuration" to "testResources")))
+  extraTestResources(project(":cast:js", "testResources"))
   implementation(libs.htmlparser)
   implementation(projects.cast)
   implementation(projects.util)

@@ -191,11 +191,7 @@ val copyJavaCup by
 
 val collectJLexFrom by configurations.registering { isCanBeConsumed = false }
 
-dependencies {
-  collectJLexFrom(
-      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJarConfig"))
-  )
-}
+dependencies { collectJLexFrom(project(":cast:java:test:data", "testJarConfig")) }
 
 val collectJLex by
     tasks.registering(Jar::class) {
