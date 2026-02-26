@@ -65,7 +65,7 @@ public class ReflectionHandler {
           Slicer.computeForwardSlice(
               st,
               builder.callGraph,
-              null,
+              builder.getPointerAnalysis(),
               DataDependenceOptions.REFLECTION,
               ControlDependenceOptions.NONE);
       if (VERBOSE) {
