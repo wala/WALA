@@ -72,12 +72,11 @@ public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
     String mainFileClassName =
         NodejsRequiredSourceModule.convertFileToClassName(workingDir, mainFile);
 
-    Module[] files =
-        new Module[] {
-          JSCallGraphUtil.getPrologueFile("prologue.js"),
-          JSCallGraphUtil.getPrologueFile("extended-prologue.js"),
-          new NodejsRequiredSourceModule(mainFileClassName, mainFile, mainSourceModule)
-        };
+    Module[] files = {
+      JSCallGraphUtil.getPrologueFile("prologue.js"),
+      JSCallGraphUtil.getPrologueFile("extended-prologue.js"),
+      new NodejsRequiredSourceModule(mainFileClassName, mainFile, mainSourceModule)
+    };
 
     CAstAnalysisScope scope = new CAstAnalysisScope(files, loaders, languages);
 

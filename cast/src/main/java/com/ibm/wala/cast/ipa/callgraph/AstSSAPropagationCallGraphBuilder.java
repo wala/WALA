@@ -456,7 +456,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       final PointerKey objKey = getPointerKeyForLocal(objVn);
 
-      final InstanceKey[] fieldNameKeys = new InstanceKey[] {getInstanceKeyForConstant(fieldName)};
+      final InstanceKey[] fieldNameKeys = {getInstanceKeyForConstant(fieldName)};
       assert fieldNameKeys.length == 1;
 
       if (contentsAreInvariant(symtab, du, objVn)) {

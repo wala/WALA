@@ -117,58 +117,57 @@ public class FloydWarshallTest extends WalaTestCase {
 
   private final NumberedGraph<Node> G = makeGraph();
 
-  private final int[][] shortestPaths =
-      new int[][] {
-        {
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE
-        },
-        {Integer.MAX_VALUE, Integer.MAX_VALUE, 1, 2, 3, 3, 4, 4, 5},
-        {Integer.MAX_VALUE, Integer.MAX_VALUE, 4, 1, 2, 2, 3, 3, 4},
-        {Integer.MAX_VALUE, Integer.MAX_VALUE, 3, 4, 1, 1, 2, 2, 3},
-        {Integer.MAX_VALUE, Integer.MAX_VALUE, 2, 3, 2, 4, 1, 5, 2},
-        {
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          1,
-          2
-        },
-        {Integer.MAX_VALUE, Integer.MAX_VALUE, 1, 2, 1, 3, 2, 4, 1},
-        {
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          1
-        },
-        {
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE,
-          Integer.MAX_VALUE
-        }
-      };
+  private final int[][] shortestPaths = {
+    {
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE
+    },
+    {Integer.MAX_VALUE, Integer.MAX_VALUE, 1, 2, 3, 3, 4, 4, 5},
+    {Integer.MAX_VALUE, Integer.MAX_VALUE, 4, 1, 2, 2, 3, 3, 4},
+    {Integer.MAX_VALUE, Integer.MAX_VALUE, 3, 4, 1, 1, 2, 2, 3},
+    {Integer.MAX_VALUE, Integer.MAX_VALUE, 2, 3, 2, 4, 1, 5, 2},
+    {
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      1,
+      2
+    },
+    {Integer.MAX_VALUE, Integer.MAX_VALUE, 1, 2, 1, 3, 2, 4, 1},
+    {
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      1
+    },
+    {
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE,
+      Integer.MAX_VALUE
+    }
+  };
 
   @Test
   public void TestPathLengths() {

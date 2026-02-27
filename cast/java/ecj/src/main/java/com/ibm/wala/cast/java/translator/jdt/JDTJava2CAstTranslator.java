@@ -1781,8 +1781,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
               qualNode);
     else newNode = makeNode(context, fFactory, nn, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
 
-    ITypeBinding[] newExceptions =
-        new ITypeBinding[] {NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError};
+    ITypeBinding[] newExceptions = {
+      NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError
+    };
     context.cfg().map(newNode, newNode);
     for (ITypeBinding exp : newExceptions) {
       for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(exp)) {
