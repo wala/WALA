@@ -43,7 +43,7 @@ public class SimpleEnums {
 	    NORTH,
 	    EAST,
 	    SOUTH,
-	    WEST;
+	    WEST
 
 	}
 

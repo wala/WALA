@@ -268,7 +268,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         return;
       }
       try (final Reader scriptInputStream = new InputStreamReader(bs);
-          final BufferedReader scriptReader = new BufferedReader(scriptInputStream); ) {
+          final BufferedReader scriptReader = new BufferedReader(scriptInputStream)) {
         String line;
         StringBuilder x = new StringBuilder();
         while ((line = scriptReader.readLine()) != null) {

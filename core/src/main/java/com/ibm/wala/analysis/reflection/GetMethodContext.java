@@ -73,7 +73,6 @@ public class GetMethodContext implements Context {
       return getName();
     }
   }
-  ;
 
   @Override
   public ContextItem get(ContextKey name) {

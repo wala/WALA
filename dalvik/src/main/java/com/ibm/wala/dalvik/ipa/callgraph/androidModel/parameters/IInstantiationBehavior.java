@@ -73,7 +73,7 @@ public abstract class IInstantiationBehavior implements Serializable {
     PACKAGE,
     PREFIX,
     /** No mapping was found, the default-value was used as a fall-back. */
-    DEFAULT;
+    DEFAULT
   }
 
   /**
