@@ -1979,9 +1979,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     boolean isStatic = (methodBinding.getModifiers() & Modifier.STATIC) != 0;
     ITypeBinding methodOwner = methodBinding.getDeclaringClass();
 
-    if (!(methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum())) {
-      assert false : "owner " + methodOwner + " of " + methodBinding + " is not a class";
-    }
+    assert methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum()
+        : "owner " + methodOwner + " of " + methodBinding + " is not a class";
 
     // POPULATE PARAMETERS
     // this (or void for static), method reference, rest of args

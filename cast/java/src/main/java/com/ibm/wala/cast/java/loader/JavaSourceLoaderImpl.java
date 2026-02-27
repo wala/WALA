@@ -175,10 +175,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         if (domoType != null && domoType.isInterface()) {
           result.add(domoType);
         }
-        if (domoType == null
-            && !getClassHierarchy().getScope().getExclusions().test(name.toString().substring(1))) {
-          assert false : "Failed to find non-excluded interface: " + name;
-        }
+        assert domoType != null
+                || getClassHierarchy().getScope().getExclusions().test(name.toString().substring(1))
+            : "Failed to find non-excluded interface: " + name;
       }
 
       return result;
