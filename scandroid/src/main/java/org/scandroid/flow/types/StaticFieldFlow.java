@@ -42,6 +42,7 @@ package org.scandroid.flow.types;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import java.util.Objects;
 
 /**
  * @author acfoltzer
@@ -89,11 +90,7 @@ public class StaticFieldFlow<E extends ISSABasicBlock> extends FlowType<E> {
     if (this == obj) return true;
     if (!super.equals(obj)) return false;
     if (getClass() != obj.getClass()) return false;
-    @SuppressWarnings("unchecked")
-    StaticFieldFlow<E> other = (StaticFieldFlow<E>) obj;
-    if (field == null) {
-      if (other.field != null) return false;
-    } else if (!field.equals(other.field)) return false;
+    if (!Objects.equals(field, ((StaticFieldFlow<?>) obj).field)) return false;
     return true;
   }
 }

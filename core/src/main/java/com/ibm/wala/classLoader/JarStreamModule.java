@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
@@ -199,9 +200,7 @@ public class JarStreamModule extends JarInputStream implements Module {
       if (getClass() != obj.getClass()) return false;
       Entry other = (Entry) obj;
       if (!getOuterType().equals(other.getOuterType())) return false;
-      if (name == null) {
-        if (other.name != null) return false;
-      } else if (!name.equals(other.name)) return false;
+      if (!Objects.equals(name, other.name)) return false;
       return true;
     }
 

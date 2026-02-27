@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import java.util.Objects;
+
 /**
  * Base class for wrappers around Strings that represent Signature annotations according to Java 5.0
  * JVM spec enhancements.
@@ -45,10 +47,7 @@ public abstract class Signature {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final Signature other = (Signature) obj;
-    if (s == null) {
-      if (other.s != null) return false;
-    } else if (!s.equals(other.s)) return false;
+    if (!Objects.equals(s, ((Signature) obj).s)) return false;
     return true;
   }
 

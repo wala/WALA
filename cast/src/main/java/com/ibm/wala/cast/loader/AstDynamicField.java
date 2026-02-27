@@ -1,5 +1,7 @@
 package com.ibm.wala.cast.loader;
 
+import static com.google.common.base.Objects.equal;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.core.util.strings.Atom;
@@ -105,16 +107,10 @@ public class AstDynamicField implements IField {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     AstDynamicField other = (AstDynamicField) obj;
-    if (cls == null) {
-      if (other.cls != null) return false;
-    } else if (!cls.equals(other.cls)) return false;
-    if (descriptor == null) {
-      if (other.descriptor != null) return false;
-    } else if (!descriptor.equals(other.descriptor)) return false;
+    if (!java.util.Objects.equals(cls, other.cls)) return false;
+    if (!java.util.Objects.equals(descriptor, other.descriptor)) return false;
     if (isStatic != other.isStatic) return false;
-    if (name == null) {
-      if (other.name != null) return false;
-    } else if (!name.equals(other.name)) return false;
+    if (!equal(name, other.name)) return false;
     return true;
   }
 }

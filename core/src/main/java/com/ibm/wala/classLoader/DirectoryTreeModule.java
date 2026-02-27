@@ -13,6 +13,7 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.io.File;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 /** A module containing files under some directory. */
@@ -91,10 +92,7 @@ public abstract class DirectoryTreeModule implements Module {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final DirectoryTreeModule other = (DirectoryTreeModule) obj;
-    if (root == null) {
-      if (other.root != null) return false;
-    } else if (!root.equals(other.root)) return false;
+    if (!Objects.equals(root, ((DirectoryTreeModule) obj).root)) return false;
     return true;
   }
 }

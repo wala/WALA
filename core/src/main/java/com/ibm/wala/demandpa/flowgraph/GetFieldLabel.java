@@ -38,6 +38,7 @@
 package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.classLoader.IField;
+import java.util.Objects;
 
 public class GetFieldLabel implements IFlowLabel {
 
@@ -69,10 +70,7 @@ public class GetFieldLabel implements IFlowLabel {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final GetFieldLabel other = (GetFieldLabel) obj;
-    if (field == null) {
-      if (other.field != null) return false;
-    } else if (!field.equals(other.field)) return false;
+    if (!Objects.equals(field, ((GetFieldLabel) obj).field)) return false;
     return true;
   }
 

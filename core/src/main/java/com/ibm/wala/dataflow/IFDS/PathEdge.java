@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
+import java.util.Objects;
+
 /**
  * an individual edge &lt;entry, d1&gt; -&gt; &lt;target, d2&gt;
  *
@@ -63,12 +65,8 @@ public final class PathEdge<T> {
     final PathEdge<?> other = (PathEdge<?>) obj;
     if (d1 != other.d1) return false;
     if (d2 != other.d2) return false;
-    if (target == null) {
-      if (other.target != null) return false;
-    } else if (!target.equals(other.target)) return false;
-    if (entry == null) {
-      if (other.entry != null) return false;
-    } else if (!entry.equals(other.entry)) return false;
+    if (!Objects.equals(target, other.target)) return false;
+    if (!Objects.equals(entry, other.entry)) return false;
     return true;
   }
 

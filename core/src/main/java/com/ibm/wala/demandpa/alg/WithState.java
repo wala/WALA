@@ -38,6 +38,7 @@
 package com.ibm.wala.demandpa.alg;
 
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine.State;
+import java.util.Objects;
 
 /** Simple abstraction for pairing some type with a {@link State}. */
 public abstract class WithState<T> {
@@ -85,12 +86,8 @@ public abstract class WithState<T> {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     final WithState<T> other = (WithState<T>) obj;
-    if (state == null) {
-      if (other.state != null) return false;
-    } else if (!state.equals(other.state)) return false;
-    if (wrapped == null) {
-      if (other.wrapped != null) return false;
-    } else if (!wrapped.equals(other.wrapped)) return false;
+    if (!Objects.equals(state, other.state)) return false;
+    if (!Objects.equals(wrapped, other.wrapped)) return false;
     return true;
   }
 }

@@ -12,6 +12,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import com.ibm.wala.cast.tree.CAstNode;
+import java.util.Objects;
 
 /**
  * A {@link NodePos} for a non-root node; includes information about the parent node, the child
@@ -72,12 +73,8 @@ public class ChildPos extends NodePos {
     if (getClass() != obj.getClass()) return false;
     ChildPos other = (ChildPos) obj;
     if (index != other.index) return false;
-    if (parent == null) {
-      if (other.parent != null) return false;
-    } else if (!parent.equals(other.parent)) return false;
-    if (parent_pos == null) {
-      if (other.parent_pos != null) return false;
-    } else if (!parent_pos.equals(other.parent_pos)) return false;
+    if (!Objects.equals(parent, other.parent)) return false;
+    if (!Objects.equals(parent_pos, other.parent_pos)) return false;
     return true;
   }
 }
