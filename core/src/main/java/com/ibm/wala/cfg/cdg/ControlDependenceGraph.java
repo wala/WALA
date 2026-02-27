@@ -47,7 +47,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * the labels of the control flow edges that edge corresponds to. The labels are Boolean.True or
    * Boolean.False for conditionals and an Integer for a switch label.
    */
-  private Map<Pair<T, T>, Set<? extends Object>> edgeLabels;
+  private Map<Pair<T, T>, Set<?>> edgeLabels;
 
   /**
    * This is the heart of the CDG computation. Based on Cytron et al., this is the reverse dominance
@@ -241,7 +241,7 @@ public class ControlDependenceGraph<T> extends AbstractNumberedGraph<T> {
    * Return the set of edge labels for the control flow edges that cause the given edge in the CDG.
    * Requires that the CDG be constructed with wantEdgeLabels being true.
    */
-  public Set<? extends Object> getEdgeLabels(T from, T to) {
+  public Set<?> getEdgeLabels(T from, T to) {
     return edgeLabels.get(Pair.make(from, to));
   }
 
