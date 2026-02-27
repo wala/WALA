@@ -22,7 +22,7 @@ package javaonepointfive;
 }
 
 @AnotherTestAnnotation("string")
-@TestAnnotation (doSomething="The class", count=-1, date="09-09-2001", stuff={0,1})
+@TestAnnotation(doSomething = "The class", count = -1, date = "09-09-2001", stuff = {0, 1})
 public class Annotations {
 	
 	@TestAnnotation (doSomething="What to do", count=1, date="09-09-2005", stuff={})

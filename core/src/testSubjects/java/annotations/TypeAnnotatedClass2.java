@@ -20,55 +20,55 @@ import java.util.Map;
 public class TypeAnnotatedClass2 extends @TypeAnnotationTypeUse Object {
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface A {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface B {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface C {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface D {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface E {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface F {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface G {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface H {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface I {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface J {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface K {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface L {}
 
   @Retention(RetentionPolicy.RUNTIME)
-  @Target({ElementType.TYPE_USE})
+  @Target(ElementType.TYPE_USE)
   @interface M {}
 
   @A Map<@B ? extends @C String, @D List<@E Object>> field1;
