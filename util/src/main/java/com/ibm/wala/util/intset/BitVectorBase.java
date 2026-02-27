@@ -30,7 +30,7 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   protected static final int LOW_MASK = 0x1f;
 
   @SuppressWarnings("NullAway.Init")
-  protected int bits[];
+  protected int[] bits;
 
   public abstract void set(int bit);
 

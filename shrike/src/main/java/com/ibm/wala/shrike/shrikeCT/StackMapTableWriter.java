@@ -85,7 +85,7 @@ public class StackMapTableWriter extends Element {
 
     // positions of frames
     int i = 1;
-    int positions[] = new int[sm.size()];
+    int[] positions = new int[sm.size()];
     Iterator<StackMapFrame> sms = sm.iterator();
     int position = sms.next().getOffset();
     positions[0] = oldToNew.get(position);
@@ -140,19 +140,19 @@ public class StackMapTableWriter extends Element {
   }
 
   static void writeUByte(OutputStream s, int v) throws IOException {
-    byte bytes[] = new byte[1];
+    byte[] bytes = new byte[1];
     ClassWriter.setUByte(bytes, 0, v);
     s.write(bytes);
   }
 
   static void writeUShort(OutputStream s, int v) throws IOException {
-    byte bytes[] = new byte[2];
+    byte[] bytes = new byte[2];
     ClassWriter.setUShort(bytes, 0, v);
     s.write(bytes);
   }
 
   static void writeInt(OutputStream s, int v) throws IOException {
-    byte bytes[] = new byte[4];
+    byte[] bytes = new byte[4];
     ClassWriter.setInt(bytes, 0, v);
     s.write(bytes);
   }

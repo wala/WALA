@@ -510,7 +510,7 @@ public class CAstPattern {
 
       } else if (patternString.startsWith("@(", start)) {
         start += 2;
-        CAstPattern children[] = new CAstPattern[] {parse()};
+        CAstPattern[] children = new CAstPattern[] {parse()};
         assert patternString.startsWith(")@", end);
         end += 2;
 
@@ -522,7 +522,7 @@ public class CAstPattern {
 
       } else if (patternString.startsWith("?(", start)) {
         start += 2;
-        CAstPattern children[] = new CAstPattern[] {parse()};
+        CAstPattern[] children = new CAstPattern[] {parse()};
         assert patternString.startsWith(")?", end);
         end += 2;
 

@@ -122,7 +122,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    SSAInstruction instrs[] = getStatements(options);
+    SSAInstruction[] instrs = getStatements(options);
     Map<Integer, ConstantValue> constants = null;
     if (!constant2ValueNumber.isEmpty()) {
       constants = HashMapFactory.make(constant2ValueNumber.size());

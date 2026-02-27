@@ -502,7 +502,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         return new LexicalParent[0];
       }
 
-      LexicalParent result[] = new LexicalParent[parents.length];
+      LexicalParent[] result = new LexicalParent[parents.length];
 
       for (int i = 0; i < parents.length; i++) {
         int lastLeftParen = parents[i].lastIndexOf('(');
@@ -697,7 +697,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public AstJavaInvokeInstruction JavaInvokeInstruction(
-        int iindex, int result[], int[] params, int exception, CallSiteReference site) {
+        int iindex, int[] result, int[] params, int exception, CallSiteReference site) {
       return result == null
           ? new AstJavaInvokeInstruction(iindex, params, exception, site)
           : new AstJavaInvokeInstruction(iindex, result[0], params, exception, site);

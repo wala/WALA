@@ -30,7 +30,7 @@ public class TestThrowCatch {
 
   public static void doNothing(int x) {}
 
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     try {
       callee(7);
     } catch (MyException e) {

@@ -345,7 +345,7 @@ public class LambdaSummaryClass extends SyntheticClass {
                 + " "
                 + lambdaBodyCallee);
       }
-      int params[] = new int[numLambdaCalleeParams];
+      int[] params = new int[numLambdaCalleeParams];
 
       // if it's a new invocation, holds the value number for the new object
       int newValNum = -1;

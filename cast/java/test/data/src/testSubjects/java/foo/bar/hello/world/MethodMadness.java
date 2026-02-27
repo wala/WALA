@@ -118,7 +118,7 @@ public class MethodMadness {
 		}
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		new MethodMadness().new Inner().hello();
 	}
 }

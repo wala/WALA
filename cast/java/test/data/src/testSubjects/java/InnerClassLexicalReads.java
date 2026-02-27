@@ -47,7 +47,7 @@ public class InnerClassLexicalReads {
 	 * 3   v8 = invokeinterface < Source, LIntConstant, getConstant()I > v2:com.ibm.wala.ssa.SymbolTable$1@4272b2 @3 exception:v9[18:21] -> [18:37]
 	 * 4   invokevirtual < Source, Ljava/io/PrintStream, println(I)V > v7,v8 @4 exception:v10[18:2] -> [18:38]
 	 */
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		InnerClassLexicalReads ignored = new InnerClassLexicalReads(); // call this just to make <init> reachable (test checks for unreachable methods)
 		int foo = 5;
 		int haha = foo * foo;

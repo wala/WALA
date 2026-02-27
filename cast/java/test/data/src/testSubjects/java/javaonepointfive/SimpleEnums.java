@@ -51,7 +51,7 @@ public class SimpleEnums {
 		System.out.println(d + " " + Direction.valueOf(d.toString()));
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		System.out.println("never eat shredded wheat");
 		for(Direction d : Direction.values()) {
 			(new SimpleEnums()).doit(d);

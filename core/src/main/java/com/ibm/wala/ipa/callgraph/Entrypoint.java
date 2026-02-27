@@ -156,7 +156,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    * @return the call instruction added, or null if the operation fails
    */
   public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m) {
-    int paramValues[];
+    int[] paramValues;
     CallSiteReference site = makeSite(0);
     if (site == null) {
       return null;

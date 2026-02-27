@@ -59,7 +59,7 @@ public class Varargs {
 		System.out.println("gotcha!");
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		varargs(2, 3, new String[] { "hello", "world" });
 		varargs(2, 3, (Object) new String[] { "hello", "world" });
 		varargs(2, 3, (Object[]) new String[] { "hello", "world" });

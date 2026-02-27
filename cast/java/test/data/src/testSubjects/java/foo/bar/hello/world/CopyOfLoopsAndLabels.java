@@ -39,7 +39,7 @@ package foo.bar.hello.world;
 
 public class CopyOfLoopsAndLabels {
 	static int X=5;
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		int k=X;
 		for (; ; k++)
 			break;

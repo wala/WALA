@@ -15,9 +15,9 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 
 public class CallString implements ContextItem {
-  private final CallSiteReference sites[];
+  private final CallSiteReference[] sites;
 
-  private final IMethod methods[];
+  private final IMethod[] methods;
 
   public CallString(CallSiteReference site, IMethod method) {
     if (site == null) {

@@ -840,7 +840,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       calltarget = makeNode(context, fFactory, null, CAstNode.SUPER);
     else calltarget = makeNode(context, fFactory, null, CAstNode.VOID);
 
-    ITypeBinding paramTypes[] = overridden.getParameterTypes();
+    ITypeBinding[] paramTypes = overridden.getParameterTypes();
 
     ArrayList<CAstNode> arguments = new ArrayList<>();
     int i = 0;

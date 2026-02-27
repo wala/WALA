@@ -61,7 +61,7 @@ public class InnerClasses extends Temp {
 	
 	static String xxxx = "odd";
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		new Outie("eenie").new Innie().meenie();
 		System.out.println(anonymousCoward().hashCode());
 		final String xx = "crazy";

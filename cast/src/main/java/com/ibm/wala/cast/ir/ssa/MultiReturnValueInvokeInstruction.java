@@ -14,10 +14,10 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 public abstract class MultiReturnValueInvokeInstruction extends SSAAbstractInvokeInstruction {
-  protected final int results[];
+  protected final int[] results;
 
   protected MultiReturnValueInvokeInstruction(
-      int iindex, int results[], int exception, CallSiteReference site) {
+      int iindex, int[] results, int exception, CallSiteReference site) {
     super(iindex, exception, site);
     this.results = results;
   }

@@ -686,7 +686,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     public CGNode getTargetForCall(
-        CGNode caller, CallSiteReference site, IClass recv, InstanceKey iKey[]) {
+        CGNode caller, CallSiteReference site, IClass recv, InstanceKey[] iKey) {
       return getBuilder().getTargetForCall(caller, site, recv, iKey);
     }
 
@@ -694,7 +694,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return getBuilder().contentsAreInvariant(symbolTable, du, valueNumber);
     }
 
-    protected boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int valueNumber[]) {
+    protected boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int[] valueNumber) {
       return getBuilder().contentsAreInvariant(symbolTable, du, valueNumber);
     }
 
@@ -1169,7 +1169,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         // Add a side effect that will fire when we determine a value
         // for a dispatch parameter. This side effect will create a new node
         // and new constraints based on the new callee context.
-        final int vns[] = new int[params.size()];
+        final int[] vns = new int[params.size()];
         params.foreach(
             new IntSetAction() {
               private int i = 0;
@@ -2312,7 +2312,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  protected boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int valueNumbers[]) {
+  protected boolean contentsAreInvariant(SymbolTable symbolTable, DefUse du, int[] valueNumbers) {
     for (int valueNumber : valueNumbers) {
       if (!contentsAreInvariant(symbolTable, du, valueNumber)) {
         return false;
