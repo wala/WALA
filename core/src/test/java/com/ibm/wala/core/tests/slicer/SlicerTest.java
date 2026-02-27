@@ -1034,8 +1034,8 @@ public class SlicerTest {
     List<Statement> normalsInMain =
         slice.stream()
             .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
+            .peek(System.err::println)
             .collect(Collectors.toList());
-    normalsInMain.stream().forEach(System.err::println);
     assertThat(normalsInMain).hasSize(5);
   }
 
@@ -1112,8 +1112,10 @@ public class SlicerTest {
             s, cg, pointerAnalysis, DataDependenceOptions.NO_HEAP, ControlDependenceOptions.NONE);
     // SlicerUtil.dumpSlice(slice);
     List<Statement> inMain =
-        slice.stream().filter(st -> st.getNode().equals(main)).collect(Collectors.toList());
-    inMain.stream().forEach(System.err::println);
+        slice.stream()
+            .filter(st -> st.getNode().equals(main))
+            .peek(System.err::println)
+            .collect(Collectors.toList());
     assertThat(inMain).hasSize(4);
     // returns for Integer.valueOf() and getInt()
     assertThat(inMain).filteredOn(st -> st instanceof NormalReturnCaller).hasSize(2);
