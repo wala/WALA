@@ -181,7 +181,7 @@ public class Slicer {
       ControlDependenceOptions cOptions)
       throws IllegalArgumentException, CancelException {
     return computeSlice(
-        new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), true);
+        new SDG<>(cg, pa, ModRef.make(), dOptions, cOptions), Collections.singleton(s), true);
   }
 
   /**
@@ -196,7 +196,7 @@ public class Slicer {
       ControlDependenceOptions cOptions)
       throws IllegalArgumentException, CancelException {
     return computeSlice(
-        new SDG<>(cg, pa, ModRef.<U>make(), dOptions, cOptions), Collections.singleton(s), false);
+        new SDG<>(cg, pa, ModRef.make(), dOptions, cOptions), Collections.singleton(s), false);
   }
 
   /** Use the passed-in SDG */

@@ -357,9 +357,7 @@ public class ExplodedControlFlowGraph
     }
     if (eb.isEntryBlock()) {
       IExplodedBasicBlock z = normalNodes.get(0);
-      return z == null
-          ? EmptyIterator.<IExplodedBasicBlock>instance()
-          : NonNullSingletonIterator.make(z);
+      return z == null ? EmptyIterator.instance() : NonNullSingletonIterator.make(z);
     }
     if (eb.instructionIndex == eb.original.getLastInstructionIndex()) {
       List<IExplodedBasicBlock> result = new ArrayList<>();

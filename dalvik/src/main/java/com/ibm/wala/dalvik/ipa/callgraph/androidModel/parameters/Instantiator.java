@@ -454,7 +454,7 @@ public class Instantiator implements IInstantiator {
     if (isExcluded(cls)) {
       return new HashSet<>();
     }
-    return getTypes(T, Collections.<TypeReference>emptySet());
+    return getTypes(T, Collections.emptySet());
   }
 
   /** Used internally to avoid endless recursion on getTypes(). */
@@ -534,7 +534,7 @@ public class Instantiator implements IInstantiator {
 
         if (inner.isInterface() || inner.isAbstract()) {
           final Set<TypeReference> innerTypes =
-              getTypes(inner.getReference(), Collections.<TypeReference>emptySet());
+              getTypes(inner.getReference(), Collections.emptySet());
           for (TypeReference iT : innerTypes) {
             TypeReference aT = TypeReference.findOrCreateArrayOf(iT);
             for (int i = 1; i < dim; ++i) {

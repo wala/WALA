@@ -72,7 +72,7 @@ public class PDFViewUtil {
 
     Graph<ISSABasicBlock> g = CFGSanitizer.sanitize(ir, cha);
 
-    DotUtil.<ISSABasicBlock>dotify(g, labels, dotFile, pdfFile, dotExe);
+    DotUtil.dotify(g, labels, dotFile, pdfFile, dotExe);
 
     return launchPDFView(pdfFile, pdfViewExe);
   }

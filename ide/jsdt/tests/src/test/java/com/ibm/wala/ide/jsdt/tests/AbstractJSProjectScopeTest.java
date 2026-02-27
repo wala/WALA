@@ -27,12 +27,10 @@ import com.ibm.wala.ide.util.JsdtUtil;
 import com.ibm.wala.ide.util.JsdtUtil.CGInfo;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.collections.Pair;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -70,7 +68,7 @@ public abstract class AbstractJSProjectScopeTest {
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p)
       throws IOException, CoreException {
-    return JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String, Plugin>>emptySet());
+    return JavaScriptEclipseProjectPath.make(p, Collections.emptySet());
   }
 
   @Disabled("works for me on Eclipse Luna, but I cannot make it work with maven")

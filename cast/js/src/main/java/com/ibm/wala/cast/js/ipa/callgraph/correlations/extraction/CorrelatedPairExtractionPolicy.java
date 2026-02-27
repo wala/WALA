@@ -147,7 +147,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     List<String> locals =
         corr.getFlownThroughLocals().size() == 1
             ? Collections.singletonList(corr.getFlownThroughLocals().iterator().next())
-            : Collections.<String>emptyList();
+            : Collections.emptyList();
     Pair<CAstNode, ? extends ExtractionRegion> region_info =
         findClosestContainingBlock(entity, startNode, endNode, corr.getIndexName(), locals);
     if (region_info == null) {

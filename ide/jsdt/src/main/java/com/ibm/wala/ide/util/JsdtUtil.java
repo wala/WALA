@@ -24,7 +24,6 @@ import com.ibm.wala.ide.util.HeadlessUtil.Parser;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class JsdtUtil {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     AnalysisScope s =
-        JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String, Plugin>>emptySet())
+        JavaScriptEclipseProjectPath.make(p, Collections.emptySet())
             .toAnalysisScope(
                 new CAstAnalysisScope(
                     JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));

@@ -35,8 +35,7 @@ public class JsPaPanel extends PaPanel {
   private static final long serialVersionUID = 1L;
 
   private final MutableMapping<List<ObjectPropertyCatalogKey>>
-      instanceKeyIdToObjectPropertyCatalogKey =
-          MutableMapping.<List<ObjectPropertyCatalogKey>>make();
+      instanceKeyIdToObjectPropertyCatalogKey = MutableMapping.make();
   private final List<AstGlobalPointerKey> globalsPointerKeys = new ArrayList<>();
 
   public JsPaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
