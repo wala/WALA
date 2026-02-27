@@ -204,7 +204,7 @@ public class StackMapTableWriter extends Element {
 
   private static boolean isUselessGoto(IInstruction inst, int index) {
     if (inst instanceof GotoInstruction) {
-      if (((GotoInstruction) inst).getBranchTargets()[0] == index + 1) {
+      if (inst.getBranchTargets()[0] == index + 1) {
         return true;
       }
     }

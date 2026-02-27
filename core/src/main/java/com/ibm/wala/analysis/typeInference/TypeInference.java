@@ -409,9 +409,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       TypeReference elementType = null;
 
       if (arrayType instanceof PointType) {
-        elementType = ((PointType) arrayType).getType().getReference().getArrayElementType();
+        elementType = arrayType.getType().getReference().getArrayElementType();
       } else if (arrayType instanceof ConeType) {
-        elementType = ((ConeType) arrayType).getType().getReference().getArrayElementType();
+        elementType = arrayType.getType().getReference().getArrayElementType();
       } else {
         Assertions.UNREACHABLE("Unexpected type " + arrayType.getClass());
       }
@@ -426,9 +426,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (lhs.getType() != TypeAbstraction.TOP) {
         TypeReference tType = null;
         if (lhs.getType() instanceof PointType) {
-          tType = ((PointType) lhs.getType()).getType().getReference();
+          tType = lhs.getType().getType().getReference();
         } else if (lhs.getType() instanceof ConeType) {
-          tType = ((ConeType) lhs.getType()).getType().getReference();
+          tType = lhs.getType().getType().getReference();
         } else {
           Assertions.UNREACHABLE("Unexpected type " + lhs.getType().getClass());
         }

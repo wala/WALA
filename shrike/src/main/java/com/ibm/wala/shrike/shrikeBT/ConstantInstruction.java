@@ -745,9 +745,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   public static ConstantInstruction makeString(String s) {
-    return s == null
-        ? (ConstantInstruction) ConstNull.makeInternal()
-        : (ConstantInstruction) ConstString.makeInternal(s);
+    return s == null ? ConstNull.makeInternal() : ConstString.makeInternal(s);
   }
 
   public static ConstantInstruction makeClass(String s) {

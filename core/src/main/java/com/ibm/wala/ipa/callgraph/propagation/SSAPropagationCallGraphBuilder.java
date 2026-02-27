@@ -2460,8 +2460,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       throw new IllegalArgumentException("instruction is null");
     }
     Iterator<TypeReference> exceptionTypes =
-        ((ExceptionHandlerBasicBlock)
-                ir.getControlFlowGraph().getNode(instruction.getBasicBlockNumber()))
+        ir.getControlFlowGraph()
+            .getNode(instruction.getBasicBlockNumber())
             .getCaughtExceptionTypes();
     HashSet<IClass> types = HashSetFactory.make(10);
     for (TypeReference tr : Iterator2Iterable.make(exceptionTypes)) {

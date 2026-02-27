@@ -553,7 +553,7 @@ public class ClassWriter implements ClassConstants {
   /** Set the names of the implemented interfaces. */
   public void setInterfaceNames(String[] interfaces) {
     if (interfaces == null) {
-      setInterfaceNameIndices((int[]) null);
+      setInterfaceNameIndices(null);
     } else {
       int[] ifs = new int[interfaces.length];
       for (int i = 0; i < interfaces.length; i++) {

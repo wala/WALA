@@ -236,7 +236,7 @@ public class MethodHandles {
         if (actualParameters != null && actualParameters.length > 0) {
           InstanceKey selfKey = actualParameters[0];
           if (selfKey instanceof ConstantKey
-              && ((ConstantKey<?>) selfKey)
+              && selfKey
                   .getConcreteType()
                   .getReference()
                   .equals(TypeReference.JavaLangInvokeMethodHandle)) {
@@ -255,15 +255,9 @@ public class MethodHandles {
           InstanceKey classKey = actualParameters[1];
           InstanceKey nameKey = actualParameters[2];
           if (classKey instanceof ConstantKey
-              && ((ConstantKey<?>) classKey)
-                  .getConcreteType()
-                  .getReference()
-                  .equals(TypeReference.JavaLangClass)
+              && classKey.getConcreteType().getReference().equals(TypeReference.JavaLangClass)
               && nameKey instanceof ConstantKey
-              && ((ConstantKey<?>) nameKey)
-                  .getConcreteType()
-                  .getReference()
-                  .equals(TypeReference.JavaLangString)) {
+              && nameKey.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
             return new FindContext(
                 baseContext,
                 ((IClass) ((ConstantKey<?>) classKey).getValue()).getReference(),
