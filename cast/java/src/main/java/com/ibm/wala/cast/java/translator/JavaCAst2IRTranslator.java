@@ -325,7 +325,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     IClass owner = loader.lookupClass(makeType(owningType).getName());
 
     assert owner != null || exclusions.test(owningType.getName())
-        : makeType(owningType).getName().toString() + " not found in " + loader;
+        : makeType(owningType).getName() + " not found in " + loader;
 
     if (owner != null && N.getQualifiers().contains(CAstQualifier.ABSTRACT)) {
       ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
@@ -351,7 +351,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     IClass owner = loader.lookupClass(typeName);
 
     assert owner != null || exclusions.test(owningType.getName())
-        : typeName.toString() + " not found in " + loader;
+        : typeName + " not found in " + loader;
 
     if (owner != null) {
       symtab.getConstant(0);
