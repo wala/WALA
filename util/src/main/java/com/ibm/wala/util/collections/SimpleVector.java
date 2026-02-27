@@ -27,8 +27,6 @@ public class SimpleVector<T> implements IVector<T> {
 
   int maxIndex = -1;
 
-  public SimpleVector() {}
-
   /**
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */

@@ -25,8 +25,6 @@ import com.ibm.wala.util.intset.IntSetUtil;
 /** This context selector selects a context based on the concrete type of the receiver. */
 public class ReceiverTypeContextSelector implements ContextSelector {
 
-  public ReceiverTypeContextSelector() {}
-
   @Override
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
