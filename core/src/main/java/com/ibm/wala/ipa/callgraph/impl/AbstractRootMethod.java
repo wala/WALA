@@ -243,6 +243,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
             int[] sizes = new int[((ArrayClass) cha.lookupClass(T)).getDimensionality()];
             Arrays.fill(sizes, getValueNumberForIntConstant(1));
             ni = insts.NewInstruction(statements.size(), alloc, n, sizes);
+          } else if (cha.lookupClass(e) == null || cha.lookupClass(e).isInterface()) {
+            break;
           } else {
             ni = insts.NewInstruction(statements.size(), alloc, n);
           }
