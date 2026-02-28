@@ -4398,7 +4398,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // RuntimeException above where
       // it is supposed to be caught?
       return Collections.singleton(
-          Pair.<ITypeBinding, Object>make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+          Pair.make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
     @Override

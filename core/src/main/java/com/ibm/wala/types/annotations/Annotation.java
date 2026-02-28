@@ -66,11 +66,11 @@ public class Annotation {
 
   public static Annotation makeWithUnnamed(
       TypeReference t, Pair<TypeReference, Object>[] unnamedArguments) {
-    return new Annotation(t, Collections.<String, ElementValue>emptyMap(), unnamedArguments);
+    return new Annotation(t, Collections.emptyMap(), unnamedArguments);
   }
 
   public static Annotation make(TypeReference t) {
-    return new Annotation(t, Collections.<String, ElementValue>emptyMap(), null);
+    return new Annotation(t, Collections.emptyMap(), null);
   }
 
   public static Annotation makeWithNamed(

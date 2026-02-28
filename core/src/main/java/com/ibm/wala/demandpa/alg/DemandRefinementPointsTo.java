@@ -257,9 +257,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     Pair<PointsToResult, Collection<InstanceKeyAndState>> p = getPointsToWithStates(pk, ikeyPred);
     final Collection<InstanceKeyAndState> p2SetWithStates = p.snd;
     Collection<InstanceKey> finalP2Set =
-        p2SetWithStates != null
-            ? removeStates(p2SetWithStates)
-            : Collections.<InstanceKey>emptySet();
+        p2SetWithStates != null ? removeStates(p2SetWithStates) : Collections.emptySet();
     return Pair.make(p.fst, finalP2Set);
   }
 

@@ -289,7 +289,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     }
 
     SSAInstruction[] instrs = new SSAInstruction[m.allInstructions.size()];
-    m.allInstructions.<SSAInstruction>toArray(instrs);
+    m.allInstructions.toArray(instrs);
 
     return new SyntheticIR(
         method,

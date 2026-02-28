@@ -212,8 +212,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
       case type_parameter_target:
         {
           checkSize(begin, 1);
-          return Pair.<TypeAnnotationTarget, Integer>make(
-              new TypeParameterTarget(cr.getUnsignedByte(begin)), 1);
+          return Pair.make(new TypeParameterTarget(cr.getUnsignedByte(begin)), 1);
         }
       case supertype_target:
         {
@@ -225,12 +224,12 @@ public class TypeAnnotationsReader extends AnnotationsReader {
           } else {
             superType = cr.getInterfaceName(interfaceIndex);
           }
-          return Pair.<TypeAnnotationTarget, Integer>make(new SuperTypeTarget(superType), 2);
+          return Pair.make(new SuperTypeTarget(superType), 2);
         }
       case type_parameter_bound_target:
         {
           checkSize(begin, 2);
-          return Pair.<TypeAnnotationTarget, Integer>make(
+          return Pair.make(
               new TypeParameterBoundTarget(
                   cr.getUnsignedByte(begin),
                   cr.getUnsignedByte(begin + 1),
@@ -239,21 +238,19 @@ public class TypeAnnotationsReader extends AnnotationsReader {
         }
       case empty_target:
         {
-          return Pair.<TypeAnnotationTarget, Integer>make(new EmptyTarget(), 0);
+          return Pair.make(new EmptyTarget(), 0);
         }
       case formal_parameter_target:
         {
           checkSize(begin, 1);
-          return Pair.<TypeAnnotationTarget, Integer>make(
-              new FormalParameterTarget(cr.getUnsignedByte(begin)), 1);
+          return Pair.make(new FormalParameterTarget(cr.getUnsignedByte(begin)), 1);
         }
       case throws_target:
         {
           assert exceptionReader != null;
           checkSize(begin, 2);
           final int throwsIndex = cr.getUShort(begin);
-          return Pair.<TypeAnnotationTarget, Integer>make(
-              new ThrowsTarget(exceptionReader.getClasses()[throwsIndex]), 2);
+          return Pair.make(new ThrowsTarget(exceptionReader.getClasses()[throwsIndex]), 2);
         }
       /*
       * localvar_target {
@@ -279,7 +276,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
             length[i] = cr.getUShort(offset + 2 + (2 + 2 + 2) * i);
             index[i] = cr.getUShort(offset + 4 + (2 + 2 + 2) * i);
           }
-          return Pair.<TypeAnnotationTarget, Integer>make(
+          return Pair.make(
               new LocalVarTarget(start_pc, length, index), 2 + (2 + 2 + 2) * table_length);
         }
       case catch_target:
@@ -294,22 +291,20 @@ public class TypeAnnotationsReader extends AnnotationsReader {
               rawHandler[3] == 0
                   ? CatchTarget.ALL_EXCEPTIONS
                   : cr.getCP().getCPClass(rawHandler[3]);
-          return Pair.<TypeAnnotationTarget, Integer>make(
-              new CatchTarget(rawHandler, catchType), 2);
+          return Pair.make(new CatchTarget(rawHandler, catchType), 2);
         }
       case offset_target:
         {
           checkSize(begin, 2);
           int offset = cr.getUShort(begin);
-          return Pair.<TypeAnnotationTarget, Integer>make(new OffsetTarget(offset), 2);
+          return Pair.make(new OffsetTarget(offset), 2);
         }
       case type_argument_target:
         {
           checkSize(begin, 3);
           int offset = cr.getUShort(begin);
           int type_argument_index = cr.getUnsignedByte(begin);
-          return Pair.<TypeAnnotationTarget, Integer>make(
-              new TypeArgumentTarget(offset, type_argument_index), 3);
+          return Pair.make(new TypeArgumentTarget(offset, type_argument_index), 3);
         }
       default:
         Assertions.UNREACHABLE();

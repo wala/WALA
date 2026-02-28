@@ -63,11 +63,10 @@ public class PaPanel extends JSplitPane {
   private IrAndSourceViewer irViewer;
 
   private final MutableMapping<List<LocalPointerKey>> cgNodeIdToLocalPointers =
-      MutableMapping.<List<LocalPointerKey>>make();
-  private final MutableMapping<List<ReturnValueKey>> cgNodeIdToReturnValue =
-      MutableMapping.<List<ReturnValueKey>>make();
+      MutableMapping.make();
+  private final MutableMapping<List<ReturnValueKey>> cgNodeIdToReturnValue = MutableMapping.make();
   private final MutableMapping<List<InstanceFieldPointerKey>> instanceKeyIdToInstanceFieldPointers =
-      MutableMapping.<List<InstanceFieldPointerKey>>make();
+      MutableMapping.make();
 
   public PaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     super(JSplitPane.HORIZONTAL_SPLIT);

@@ -209,7 +209,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
           smushees.add(e.getKey());
         }
       }
-      s = smushees.isEmpty() ? Collections.<IClass>emptySet() : smushees;
+      s = smushees.isEmpty() ? Collections.emptySet() : smushees;
       smushMap.put(node, s);
     }
     return s.contains(c);
