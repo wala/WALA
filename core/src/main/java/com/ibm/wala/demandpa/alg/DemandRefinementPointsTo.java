@@ -554,9 +554,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private Pair<PointsToResult, Collection<PointerKey>> getFlowsToInternal(
       InstanceKeyAndState ikAndState) {
     InstanceKey ik = ikAndState.getInstanceKey();
-    if (!(ik instanceof InstanceKeyWithNode)) {
-      assert false : "TODO: handle " + ik.getClass();
-    }
+    assert ik instanceof InstanceKeyWithNode : "TODO: handle " + ik.getClass();
     if (DEBUG) {
       System.err.println("answering flows-to query for " + ikAndState);
     }
@@ -1045,9 +1043,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (pointsToQueried.put(pkAndState.getPointerKey(), pkAndState.getState())) {
         if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
           CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
-          if (!g.hasSubgraphForNode(node)) {
-            assert false : "missing constraints for " + node;
-          }
+          assert g.hasSubgraphForNode(node) : "missing constraints for " + node;
         }
         if (DEBUG) {
           // System.err.println("adding to init_ " + pkAndState);
@@ -1064,9 +1060,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     protected void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
       if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
         CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
-        if (!g.hasSubgraphForNode(node)) {
-          assert false : "missing constraints for " + node;
-        }
+        assert g.hasSubgraphForNode(node) : "missing constraints for " + node;
       }
       if (DEBUG) {
         // System.err.println("adding to tracked points-to " + pkAndState);
@@ -1200,9 +1194,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG) System.err.println("init " + curPkAndState);
-        if (curPk instanceof LocalPointerKey) {
-          assert g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
-        }
+        assert !(curPk instanceof LocalPointerKey)
+            || g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
         // if (curPk instanceof LocalPointerKey) {
         // Collection<InstanceKey> constantVals =
         // getConstantVals((LocalPointerKey) curPk);

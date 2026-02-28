@@ -34,9 +34,7 @@ public class ArrayClassLoader {
   public IClass lookupClass(TypeName className, IClassLoader delegator, IClassHierarchy cha)
       throws IllegalArgumentException {
     ArrayClass arrayClass;
-    if (DEBUG) {
-      assert className.toString().startsWith("[");
-    }
+    assert !DEBUG || className.toString().startsWith("[");
     if (delegator == null) {
       throw new IllegalArgumentException("delegator must not be null");
     }

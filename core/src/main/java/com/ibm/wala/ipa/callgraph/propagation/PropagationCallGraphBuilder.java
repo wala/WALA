@@ -402,9 +402,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       throw new IllegalArgumentException("I is null");
     }
     IClass C = I.getConcreteType();
-    if (!C.isArrayClass()) {
-      assert false : "illegal arguments: " + I;
-    }
+    assert C.isArrayClass() : "illegal arguments: " + I;
     return pointerKeyFactory.getPointerKeyForArrayContents(I);
   }
 
@@ -887,9 +885,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
           continue;
         }
         IClass contents = getClassHierarchy().lookupClass(C);
-        if (contents == null) {
-          assert false : "null type for " + C + ' ' + I.getConcreteType();
-        }
+        assert contents != null : "null type for " + C + ' ' + I.getConcreteType();
         PointerKey p = getPointerKeyForArrayContents(I);
         if (DEBUG_ARRAY_STORE) {
           System.err.println("ArrayStore add filtered-assign: " + p + ' ' + pVal);
@@ -1256,9 +1252,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
               return;
             }
             IClass contents = getClassHierarchy().lookupClass(C);
-            if (contents == null) {
-              assert false : "null type for " + C + ' ' + I.getConcreteType();
-            }
+            assert contents != null : "null type for " + C + ' ' + I.getConcreteType();
             PointerKey p = getPointerKeyForArrayContents(I);
             if (contents.isInterface()) {
               if (getClassHierarchy().implementsInterface(instance.getConcreteType(), contents)) {

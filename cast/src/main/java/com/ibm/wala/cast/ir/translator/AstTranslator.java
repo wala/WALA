@@ -3988,10 +3988,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   private static boolean handleBinaryOpThrow(CAstNode n, CAstNode op, WalkContext context) {
     boolean mayBeInteger = handlePossibleThrow(n, context);
-    if (mayBeInteger) {
-      // currently, only integer / and % throw exceptions
-      assert op == CAstOperator.OP_DIV || op == CAstOperator.OP_MOD : CAstPrinter.print(n);
-    }
+    assert !mayBeInteger || op == CAstOperator.OP_DIV || op == CAstOperator.OP_MOD
+        : CAstPrinter.print(n);
     return mayBeInteger;
   }
 
@@ -4234,15 +4232,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       CAstControlFlowMap controlFlowMap = context.getControlFlow();
       context.cfg().addPreEdge(n, controlFlowMap.getTarget(n, null), false);
       context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction, -1));
-      if (controlFlowMap.getTarget(n, null) == null) {
-        assert controlFlowMap.getTarget(n, null) != null
-            : controlFlowMap
-                + " does not map "
-                + n
-                + " ("
-                + context.getSourceMap().getPosition(n)
-                + ')';
-      }
+      assert controlFlowMap.getTarget(n, null) != null
+          : controlFlowMap
+              + " does not map "
+              + n
+              + " ("
+              + context.getSourceMap().getPosition(n)
+              + ')';
       context.cfg().newBlock(false);
     }
   }
