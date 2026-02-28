@@ -78,7 +78,7 @@ public class SummarizedMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    SSAInstruction instrs[] = getStatements(options);
+    SSAInstruction[] instrs = getStatements(options);
     return new SyntheticIR(
         this,
         Everywhere.EVERYWHERE,

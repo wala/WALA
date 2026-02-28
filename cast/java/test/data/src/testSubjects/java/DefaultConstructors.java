@@ -10,7 +10,7 @@
  */
 
 public class DefaultConstructors {
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		E e = new E();
 //		System.out.println(e.x);
 //		System.out.println(e.y);
@@ -18,7 +18,7 @@ public class DefaultConstructors {
 //		System.out.println(e.x);
 //		System.out.println(e.y);
 
-		Object x[] = new Object[4];
+		Object[] x = new Object[4];
 		x.clone();
 		x.equals(new Object());
 		x.toString();

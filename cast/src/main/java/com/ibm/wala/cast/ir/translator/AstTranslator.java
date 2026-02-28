@@ -1561,7 +1561,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     public String toString() {
       SSAInstruction[] insts = getInstructions();
       StringBuilder s = new StringBuilder("CAst CFG of " + functionName);
-      int params[] = symtab.getParameterValueNumbers();
+      int[] params = symtab.getParameterValueNumbers();
       for (int param : params) s.append(' ').append(param);
       s.append('\n');
 
@@ -3237,7 +3237,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     public static boolean hasExposedUses(CGNode caller, CallSiteReference site) {
-      int uses[] =
+      int[] uses =
           ((AstMethod) caller.getMethod()).lexicalInfo().getExposedUses(site.getProgramCounter());
       if (uses != null) {
         for (int use : uses) {
@@ -5159,8 +5159,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   @Override
   protected void leaveEcho(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
-    int rvals[] = new int[n.getChildCount()];
-    Position rPoss[] = new Position[n.getChildCount()];
+    int[] rvals = new int[n.getChildCount()];
+    Position[] rPoss = new Position[n.getChildCount()];
     int i = 0;
     for (CAstNode child : n.getChildren()) {
       rvals[i] = wc.getValue(child);
@@ -5180,8 +5180,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   @Override
   protected void leaveYield(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
-    int rvals[] = new int[n.getChildCount()];
-    Position rPoss[] = new Position[n.getChildCount()];
+    int[] rvals = new int[n.getChildCount()];
+    Position[] rPoss = new Position[n.getChildCount()];
     int i = 0;
     for (CAstNode child : n.getChildren()) {
       rvals[i] = wc.getValue(child);

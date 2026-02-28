@@ -128,7 +128,7 @@ public class JsdtUtil {
                             if (elt instanceof IFunction)
                               try {
                                 MethodWrapper mw = ch.getCallerRoot((IFunction) elt);
-                                MethodWrapper calls[] = mw.getCalls(new NullProgressMonitor());
+                                MethodWrapper[] calls = mw.getCalls(new NullProgressMonitor());
                                 if (calls != null && calls.length > 0) {
                                   System.err.println("calls: for " + elt);
                                   for (MethodWrapper call : calls) {

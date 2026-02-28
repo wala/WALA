@@ -22,7 +22,7 @@ import java.util.Collection;
 public class AstJavaInvokeInstruction extends FixedParametersInvokeInstruction {
 
   protected AstJavaInvokeInstruction(
-      int iindex, int results[], int[] params, int exception, CallSiteReference site) {
+      int iindex, int[] results, int[] params, int exception, CallSiteReference site) {
     super(iindex, results, params, exception, site);
   }
 
@@ -39,7 +39,7 @@ public class AstJavaInvokeInstruction extends FixedParametersInvokeInstruction {
 
   @Override
   protected SSAInstruction copyInstruction(
-      SSAInstructionFactory insts, int results[], int[] params, int exception) {
+      SSAInstructionFactory insts, int[] results, int[] params, int exception) {
     return ((AstJavaInstructionFactory) insts)
         .JavaInvokeInstruction(iIndex(), results, params, exception, getCallSite());
   }

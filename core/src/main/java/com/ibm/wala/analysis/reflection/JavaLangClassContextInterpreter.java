@@ -148,7 +148,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   private static IR makeIR(IMethod method, Context context) {
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
     if (method.getReference().equals(GET_CONSTRUCTOR)) {
-      SSAInstruction instrs[] = makeGetCtorStatements(context, constants);
+      SSAInstruction[] instrs = makeGetCtorStatements(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -158,7 +158,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_CONSTRUCTORS)) {
-      SSAInstruction instrs[] = makeGetCtorsStatements(context, constants);
+      SSAInstruction[] instrs = makeGetCtorsStatements(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -168,7 +168,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_METHOD)) {
-      SSAInstruction instrs[] = makeGetMethodStatements(context, constants);
+      SSAInstruction[] instrs = makeGetMethodStatements(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -178,7 +178,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_METHODS)) {
-      SSAInstruction instrs[] = makeGetMethodsStatments(context, constants);
+      SSAInstruction[] instrs = makeGetMethodsStatments(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -188,7 +188,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_DECLARED_CONSTRUCTOR)) {
-      SSAInstruction instrs[] = makeGetDeclCtorStatements(context, constants);
+      SSAInstruction[] instrs = makeGetDeclCtorStatements(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -198,7 +198,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_DECLARED_CONSTRUCTORS)) {
-      SSAInstruction instrs[] = makeGetDeclCtorsStatements(context, constants);
+      SSAInstruction[] instrs = makeGetDeclCtorsStatements(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -208,7 +208,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_DECLARED_METHOD)) {
-      SSAInstruction instrs[] = makeGetDeclaredMethodStatements(context, constants);
+      SSAInstruction[] instrs = makeGetDeclaredMethodStatements(context, constants);
       return new SyntheticIR(
           method,
           context,
@@ -218,7 +218,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           constants);
     }
     if (method.getReference().equals(GET_DECLARED_METHODS)) {
-      SSAInstruction instrs[] = makeGetDeclaredMethodsStatements(context, constants);
+      SSAInstruction[] instrs = makeGetDeclaredMethodsStatements(context, constants);
       return new SyntheticIR(
           method,
           context,

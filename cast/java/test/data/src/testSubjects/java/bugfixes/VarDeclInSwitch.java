@@ -40,11 +40,11 @@ package bugfixes;
 public class VarDeclInSwitch {
 	private int y = 7;
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		new VarDeclInSwitch().run(args);
 	}
 
-	public void run(String args[]) {
+	public void run(String[] args) {
 		int x = 5;
 		x = x + x;
 		switch ( x ) {

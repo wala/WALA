@@ -40,7 +40,7 @@ import java.net.URL;
 import java.util.Set;
 
 public class JsViewerDriver extends JSCallGraphBuilderUtil {
-  public static void main(String args[])
+  public static void main(String[] args)
       throws ClassHierarchyException,
           IllegalArgumentException,
           IOException,

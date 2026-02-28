@@ -50,13 +50,13 @@ public class MethodGenerics {
 		System.out.println(x);
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new MethodGenerics()).doit();
 	}
 	
 	private void doit() {
 		ArrayList<String> list = new ArrayList<>();
-		String array[] = new String[] { "coucou monde", "ciao mondo", "guten tag welt", "hola mundo", "shalom olam" };
+		String[] array = new String[] { "coucou monde", "ciao mondo", "guten tag welt", "hola mundo", "shalom olam" };
 		fromArrayToCollection(array, list);
 		System.out.println(list);
 		foo("whatever", "whatever");

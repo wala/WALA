@@ -312,7 +312,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
       if (parents == null) return new LexicalParent[0];
 
-      LexicalParent result[] = new LexicalParent[parents.length];
+      LexicalParent[] result = new LexicalParent[parents.length];
 
       for (int i = 0; i < parents.length; i++) {
         final int hack = i;

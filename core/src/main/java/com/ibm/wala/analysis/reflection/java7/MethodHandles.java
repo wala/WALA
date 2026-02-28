@@ -503,7 +503,7 @@ public class MethodHandles {
                     case "invokeWithArguments":
                       {
                         int nargs = ref.getNumberOfParameters();
-                        int params[] = new int[nargs];
+                        int[] params = new int[nargs];
                         for (int i = 0; i < nargs; i++) {
                           code.addConstant(i + nargs + 3, new ConstantValue(i));
                           code.addStatement(
@@ -534,7 +534,7 @@ public class MethodHandles {
                     case "invokeExact":
                       {
                         int nargs = key.getMethod().getReference().getNumberOfParameters();
-                        int params[] = new int[nargs];
+                        int[] params = new int[nargs];
                         if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
                           for (int i = 0; i < nargs; i++) {
                             params[i] = i + 2;

@@ -267,9 +267,9 @@ public class SSACFG
     private final int number;
 
     /** List of PhiInstructions associated with the entry of this block. */
-    private SSAPhiInstruction stackSlotPhis[];
+    private SSAPhiInstruction[] stackSlotPhis;
 
-    private SSAPhiInstruction localPhis[];
+    private SSAPhiInstruction[] localPhis;
 
     private static final int initialCapacity = 10;
 

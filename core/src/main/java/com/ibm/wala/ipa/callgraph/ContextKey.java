@@ -57,7 +57,7 @@ public interface ContextKey {
   }
 
   /** Generally useful constants for possible parameter indices */
-  ContextKey PARAMETERS[] =
+  ContextKey[] PARAMETERS =
       new ContextKey[] {
         new ParameterKey(0),
         new ParameterKey(1),

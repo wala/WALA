@@ -50,7 +50,7 @@ public class OverridesOnePointFour {
 		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new OverridesOnePointFour()).doit();
 	}	
 	

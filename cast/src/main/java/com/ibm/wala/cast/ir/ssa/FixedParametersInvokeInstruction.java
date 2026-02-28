@@ -30,7 +30,7 @@ public abstract class FixedParametersInvokeInstruction extends MultiReturnValueI
   private final int[] params;
 
   public FixedParametersInvokeInstruction(
-      int iindex, int results[], int[] params, int exception, CallSiteReference site) {
+      int iindex, int[] results, int[] params, int exception, CallSiteReference site) {
     super(iindex, results, exception, site);
     this.params = params;
   }
@@ -47,11 +47,11 @@ public abstract class FixedParametersInvokeInstruction extends MultiReturnValueI
   }
 
   protected abstract SSAInstruction copyInstruction(
-      SSAInstructionFactory insts, int result[], int[] params, int exception);
+      SSAInstructionFactory insts, int[] result, int[] params, int exception);
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    int newParams[] = params;
+    int[] newParams = params;
 
     if (uses != null) {
       int i = 0;
@@ -60,7 +60,7 @@ public abstract class FixedParametersInvokeInstruction extends MultiReturnValueI
       for (int j = 0; j < newParams.length; j++) newParams[j] = uses[i++];
     }
 
-    int newLvals[] = null;
+    int[] newLvals = null;
     if (getNumberOfReturnValues() > 0) {
       newLvals = results.clone();
     }

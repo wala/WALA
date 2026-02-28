@@ -106,13 +106,13 @@ public class AppModelMethod {
 
   private static class MethodParams {
     public IMethod im;
-    public int params[];
+    public int[] params;
 
     private MethodParams(IMethod method) {
       im = method;
     }
 
-    private void setParams(int p[]) {
+    private void setParams(int[] p) {
       params = p;
     }
 
@@ -289,7 +289,7 @@ public class AppModelMethod {
 
   private void processCallBackParams() {
     for (MethodParams mp : callBacks) {
-      int params[] = new int[mp.getIMethod().getNumberOfParameters()];
+      int[] params = new int[mp.getIMethod().getNumberOfParameters()];
       int startPos;
       if (mp.getIMethod().isStatic()) {
         startPos = 0;

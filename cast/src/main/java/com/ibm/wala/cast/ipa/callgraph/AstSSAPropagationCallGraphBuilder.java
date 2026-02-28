@@ -522,7 +522,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       final PointerKey rk = getPointerKeyForLocal(rval);
 
       if (contentsAreInvariant(symbolTable, du, rval)) {
-        InstanceKey objects[] = getInvariantContents(rval);
+        InstanceKey[] objects = getInvariantContents(rval);
         for (InstanceKey object : objects) {
           PointerKey catalog = getPointerKeyForObjectCatalog(object);
           system.newConstraint(lk, assignOperator, catalog);

@@ -191,7 +191,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
   private static int getNumberOfArgsPassed(CGNode caller, CallSiteReference site) {
     IR callerIR = caller.getIR();
-    SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
+    SSAAbstractInvokeInstruction[] callStmts = callerIR.getCalls(site);
     assert callStmts.length == 1;
     return callStmts[0].getNumberOfPositionalParameters();
   }
