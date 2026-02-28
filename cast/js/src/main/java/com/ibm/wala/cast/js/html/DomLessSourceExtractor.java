@@ -221,7 +221,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
 
       String content;
-      if (attValue.toLowerCase().equals("javascript:")) {
+      if (attValue.equalsIgnoreCase("javascript:")) {
         content = attValue.substring("javascript:".length());
       } else {
         content = attValue;

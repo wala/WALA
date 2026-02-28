@@ -192,7 +192,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           new Warning(Warning.SEVERE) {
             @Override
             public String getMsg() {
-              return "Parsing issue: " + new String(s.toByteArray());
+              return "Parsing issue: " + s;
             }
           });
     }
