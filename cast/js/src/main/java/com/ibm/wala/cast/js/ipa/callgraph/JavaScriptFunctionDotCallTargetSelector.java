@@ -138,8 +138,8 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
       IMethod method = caller.getMethod();
       if (method instanceof AstMethod) {
         int line =
-            ((AstMethod) method)
-                .getLineNumber(caller.getIR().getCallInstructionIndices(site).intIterator().next());
+            method.getLineNumber(
+                caller.getIR().getCallInstructionIndices(site).intIterator().next());
         System.err.println("creating " + ref.getName() + " at line " + line + " in " + caller);
       } else {
         System.err.println("creating " + ref.getName() + " in " + method.getName());

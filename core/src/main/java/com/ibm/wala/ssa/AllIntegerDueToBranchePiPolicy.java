@@ -55,7 +55,7 @@ public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
     if (cond.isIntegerComparison()) {
       final List<Pair<Integer, SSAInstruction>> result = new ArrayList<>();
       for (int i = 0; i < cond.getNumberOfUses(); i++) {
-        result.add(Pair.make(cond.getUse(i), (SSAInstruction) cond));
+        result.add(Pair.make(cond.getUse(i), cond));
       }
       return result;
     } else {

@@ -110,7 +110,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
         }
       }
       // the following saves space by allowing the original iterator to be GCed
-      setPendingChildren(v, (Iterator<T>) EmptyIterator.instance());
+      setPendingChildren(v, EmptyIterator.instance());
 
       // no more children to visit: finished this vertex
       while (getPendingChildren(theNextElement) != null && roots.hasNext()) {

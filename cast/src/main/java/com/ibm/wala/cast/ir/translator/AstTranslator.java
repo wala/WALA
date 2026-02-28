@@ -268,7 +268,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           int argVN = symbol.valueNumber();
           CAstType type =
               (entity.getType() instanceof CAstType.Method)
-                  ? (CAstType) ((CAstType.Method) entity.getType()).getArgumentTypes().get(i)
+                  ? ((CAstType.Method) entity.getType()).getArgumentTypes().get(i)
                   : topType();
           Access A = new Access(arg, context.getEntityName(entity), makeType(type), argVN);
           context.cfg().addInstruction(new AstLexicalWrite(context.cfg().currentInstruction, A));
@@ -1956,7 +1956,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       @Override
       public boolean isLexicallyScoped(Symbol s) {
         if (isGlobal(s)) return false;
-        else return ((AbstractScope) s.getDefiningScope()).getEntity() != getEntity();
+        else return s.getDefiningScope().getEntity() != getEntity();
       }
 
       @Override
@@ -2102,7 +2102,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       @Override
       public boolean isLexicallyScoped(Symbol s) {
         if (isGlobal(s)) return false;
-        else return ((AbstractScope) s.getDefiningScope()).getEntity() != getEntity();
+        else return s.getDefiningScope().getEntity() != getEntity();
       }
 
       @Override

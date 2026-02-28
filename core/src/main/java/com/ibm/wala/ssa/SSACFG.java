@@ -742,7 +742,7 @@ public class SSACFG
 
       Iterator<ISSABasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
-        s.append("    -> BB").append(((BasicBlock) succNodes.next()).getNumber()).append('\n');
+        s.append("    -> BB").append(succNodes.next().getNumber()).append('\n');
       }
     }
     return s.toString();

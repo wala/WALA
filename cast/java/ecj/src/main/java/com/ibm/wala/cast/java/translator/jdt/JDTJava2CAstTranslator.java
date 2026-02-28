@@ -4271,8 +4271,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       super(parent);
 
       for (CatchClause c : (Iterable<CatchClause>) tryNode.catchClauses()) {
-        Pair<ITypeBinding, Object> p =
-            Pair.make(c.getException().resolveBinding().getType(), (Object) c);
+        Pair<ITypeBinding, Object> p = Pair.make(c.getException().resolveBinding().getType(), c);
 
         fCatchNodes.add(p);
       }

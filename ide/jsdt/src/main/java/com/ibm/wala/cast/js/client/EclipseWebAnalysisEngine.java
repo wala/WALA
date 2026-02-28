@@ -35,7 +35,7 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
       BuilderType builderType) {
     super(project, builderType);
     // core DOM model
-    this.models.add(Pair.make("preamble.js", (Plugin) Activator.getDefault()));
+    this.models.add(Pair.make("preamble.js", Activator.getDefault()));
     this.models.addAll(models);
   }
 
