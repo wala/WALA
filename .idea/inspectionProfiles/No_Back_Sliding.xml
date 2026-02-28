@@ -129,7 +129,9 @@
     <inspection_tool class="ExplicitArrayFilling" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
     </inspection_tool>
-    <inspection_tool class="ExtendsObject" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ExtendsObject" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="FallThroughInSwitchStatementJS" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Eclipse Build Artifacts" level="WARNING" enabled="false" />
       <scope name="JavaScript Test Subjects" level="WARNING" enabled="false" />
@@ -223,7 +225,9 @@
     </inspection_tool>
     <inspection_tool class="IgnoreUnusedEntry" enabled="false" level="UNUSED ENTRY" enabled_by_default="false" />
     <inspection_tool class="ImplicitArrayToString" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="InfiniteRecursion" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="InfiniteRecursion" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="InfiniteRecursionJS" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Eclipse Build Artifacts" level="WARNING" enabled="false" />
       <scope name="JavaScript Test Subjects" level="WARNING" enabled="false" />
@@ -369,6 +373,9 @@
     <inspection_tool class="JavaExistingMethodCanBeUsed" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WEAK WARNING" enabled="false" />
     </inspection_tool>
+    <inspection_tool class="JavaLangImport" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES" />
+    </inspection_tool>
     <inspection_tool class="JavaReflectionInvocation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavaReflectionMemberAccess" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JavadocDeclaration" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
@@ -473,7 +480,9 @@
     </inspection_tool>
     <inspection_tool class="PackageDotHtmlMayBePackageInfo" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PackageJsonMismatchedDependency" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="ParameterCanBeLocal" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="ParameterCanBeLocal" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES" />
+    </inspection_tool>
     <inspection_tool class="PointlessArithmeticExpression" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false">
         <option name="m_ignoreExpressionsContainingConstants" value="true" />
@@ -504,7 +513,9 @@
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES" />
     </inspection_tool>
     <inspection_tool class="RedundantBackticksAroundRawStringLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="RedundantCast" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="RedundantCast" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
+    </inspection_tool>
     <inspection_tool class="RedundantMethodOverride" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
       <option name="ignoreDelegates" value="false" />
@@ -588,6 +599,7 @@
         <constraint name="actual" within="" contains="" />
       </replaceConfiguration>
     </inspection_tool>
+    <inspection_tool class="SamePackageImport" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SameParameterValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SameReturnValue" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SetReplaceableByEnumSet" enabled="true" level="WARNING" enabled_by_default="true" />
