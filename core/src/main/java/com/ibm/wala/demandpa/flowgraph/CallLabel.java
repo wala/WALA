@@ -38,6 +38,7 @@
 package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
+import java.util.Objects;
 
 public abstract class CallLabel implements IFlowLabel {
 
@@ -64,10 +65,7 @@ public abstract class CallLabel implements IFlowLabel {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final ParamBarLabel other = (ParamBarLabel) obj;
-    if (callSite == null) {
-      if (other.callSite != null) return false;
-    } else if (!callSite.equals(other.callSite)) return false;
+    if (!Objects.equals(callSite, ((ParamBarLabel) obj).callSite)) return false;
     return true;
   }
 }

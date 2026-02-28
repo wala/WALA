@@ -41,6 +41,7 @@ package org.scandroid.flow.types;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import java.util.Objects;
 
 public class IKFlow<E extends ISSABasicBlock> extends FlowType<E> {
   private final InstanceKey ik;
@@ -63,14 +64,7 @@ public class IKFlow<E extends ISSABasicBlock> extends FlowType<E> {
     if (this == obj) return true;
     if (!super.equals(obj)) return false;
     if (getClass() != obj.getClass()) return false;
-    @SuppressWarnings("unchecked")
-    IKFlow<E> other = (IKFlow<E>) obj;
-    if (ik == null) {
-      if (other.ik != null) return false;
-    } else if (!ik.equals(other.ik)) {
-      // TODO InstanceKey may not supply equals()
-      return false;
-    }
+    if (!Objects.equals(ik, ((IKFlow<?>) obj).ik)) return false;
     return true;
   }
 

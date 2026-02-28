@@ -17,6 +17,7 @@ import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
+import java.util.Objects;
 
 /**
  * Simple object that represents a static call site (ie., an invoke instruction in the bytecode)
@@ -54,10 +55,7 @@ public abstract class CallSiteReference extends ProgramCounter
     if (this == obj) return true;
     if (!super.equals(obj)) return false;
     if (getClass() != obj.getClass()) return false;
-    CallSiteReference other = (CallSiteReference) obj;
-    if (declaredTarget == null) {
-      if (other.declaredTarget != null) return false;
-    } else if (!declaredTarget.equals(other.declaredTarget)) return false;
+    if (!Objects.equals(declaredTarget, ((CallSiteReference) obj).declaredTarget)) return false;
     return true;
   }
 

@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 /** Represents a member annotation, e.g., Java 5.0 class file annotations */
@@ -148,12 +149,8 @@ public class Annotation {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     Annotation other = (Annotation) obj;
-    if (namedArguments == null) {
-      if (other.namedArguments != null) return false;
-    } else if (!namedArguments.equals(other.namedArguments)) return false;
-    if (type == null) {
-      if (other.type != null) return false;
-    } else if (!type.equals(other.type)) return false;
+    if (!Objects.equals(namedArguments, other.namedArguments)) return false;
+    if (!Objects.equals(type, other.type)) return false;
     if (!Arrays.equals(unnamedArguments, other.unnamedArguments)) return false;
     return true;
   }

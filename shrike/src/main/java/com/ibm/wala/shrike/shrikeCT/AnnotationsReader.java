@@ -15,6 +15,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This class reads Annotations attributes, e.g., RuntimeInvisibleAnnotations.
@@ -99,10 +100,7 @@ public class AnnotationsReader extends AttributeReader {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      ConstantElementValue other = (ConstantElementValue) obj;
-      if (val == null) {
-        if (other.val != null) return false;
-      } else if (!val.equals(other.val)) return false;
+      if (!Objects.equals(val, ((ConstantElementValue) obj).val)) return false;
       return true;
     }
   }

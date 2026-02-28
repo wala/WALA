@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A {@link TypeAnnotation} represents a JSR 308 Java Type Annotation.
@@ -91,18 +92,10 @@ public class TypeAnnotation {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     TypeAnnotation other = (TypeAnnotation) obj;
-    if (annotation == null) {
-      if (other.annotation != null) return false;
-    } else if (!annotation.equals(other.annotation)) return false;
-    if (typeAnnotationTarget == null) {
-      if (other.typeAnnotationTarget != null) return false;
-    } else if (!typeAnnotationTarget.equals(other.typeAnnotationTarget)) return false;
-    if (typePath == null) {
-      if (other.typePath != null) return false;
-    } else if (!typePath.equals(other.typePath)) return false;
-    if (targetType == null) {
-      if (other.targetType != null) return false;
-    } else if (!targetType.equals(other.targetType)) return false;
+    if (!Objects.equals(annotation, other.annotation)) return false;
+    if (!Objects.equals(typeAnnotationTarget, other.typeAnnotationTarget)) return false;
+    if (!Objects.equals(typePath, other.typePath)) return false;
+    if (!Objects.equals(targetType, other.targetType)) return false;
     return true;
   }
 
@@ -254,10 +247,7 @@ public class TypeAnnotation {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      SuperTypeTarget other = (SuperTypeTarget) obj;
-      if (superType == null) {
-        if (other.superType != null) return false;
-      } else if (!superType.equals(other.superType)) return false;
+      if (!Objects.equals(superType, ((SuperTypeTarget) obj).superType)) return false;
       return true;
     }
   }
@@ -395,10 +385,7 @@ public class TypeAnnotation {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      ThrowsTarget other = (ThrowsTarget) obj;
-      if (throwType == null) {
-        if (other.throwType != null) return false;
-      } else if (!throwType.equals(other.throwType)) return false;
+      if (!Objects.equals(throwType, ((ThrowsTarget) obj).throwType)) return false;
       return true;
     }
   }
@@ -447,9 +434,7 @@ public class TypeAnnotation {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
       LocalVarTarget other = (LocalVarTarget) obj;
-      if (name == null) {
-        if (other.name != null) return false;
-      } else if (!name.equals(other.name)) return false;
+      if (!Objects.equals(name, other.name)) return false;
       if (varIindex != other.varIindex) return false;
       return true;
     }
@@ -505,9 +490,7 @@ public class TypeAnnotation {
       if (getClass() != obj.getClass()) return false;
       CatchTarget other = (CatchTarget) obj;
       if (catchIIndex != other.catchIIndex) return false;
-      if (catchType == null) {
-        if (other.catchType != null) return false;
-      } else if (!catchType.equals(other.catchType)) return false;
+      if (!Objects.equals(catchType, other.catchType)) return false;
       return true;
     }
   }

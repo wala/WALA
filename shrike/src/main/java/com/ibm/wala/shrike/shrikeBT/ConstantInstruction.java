@@ -13,6 +13,7 @@ package com.ibm.wala.shrike.shrikeBT;
 import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrike.shrikeCT.ConstantPoolParser;
 import java.util.Arrays;
+import java.util.Objects;
 
 /** A ConstantInstruction pushes some constant value onto the stack. */
 public abstract class ConstantInstruction extends Instruction {
@@ -44,15 +45,9 @@ public abstract class ConstantInstruction extends Instruction {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
       InvokeDynamicToken other = (InvokeDynamicToken) obj;
-      if (bootstrapMethod == null) {
-        if (other.bootstrapMethod != null) return false;
-      } else if (!bootstrapMethod.equals(other.bootstrapMethod)) return false;
-      if (name == null) {
-        if (other.name != null) return false;
-      } else if (!name.equals(other.name)) return false;
-      if (type == null) {
-        if (other.type != null) return false;
-      } else if (!type.equals(other.type)) return false;
+      if (!Objects.equals(bootstrapMethod, other.bootstrapMethod)) return false;
+      if (!Objects.equals(name, other.name)) return false;
+      if (!Objects.equals(type, other.type)) return false;
       return true;
     }
   }
@@ -77,10 +72,7 @@ public abstract class ConstantInstruction extends Instruction {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      ClassToken other = (ClassToken) obj;
-      if (typeName == null) {
-        if (other.typeName != null) return false;
-      } else if (!typeName.equals(other.typeName)) return false;
+      if (!Objects.equals(typeName, ((ClassToken) obj).typeName)) return false;
       return true;
     }
 

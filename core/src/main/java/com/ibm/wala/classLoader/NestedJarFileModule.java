@@ -12,6 +12,7 @@ package com.ibm.wala.classLoader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 
 public class NestedJarFileModule extends AbstractNestedJarFileModule {
@@ -55,10 +56,7 @@ public class NestedJarFileModule extends AbstractNestedJarFileModule {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    NestedJarFileModule other = (NestedJarFileModule) obj;
-    if (parent == null) {
-      if (other.parent != null) return false;
-    } else if (!parent.equals(other.parent)) return false;
+    if (Objects.equals(parent, ((NestedJarFileModule) obj).parent)) return false;
     return true;
   }
 }

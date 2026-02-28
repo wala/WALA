@@ -40,6 +40,7 @@
 package org.scandroid.domain;
 
 import com.ibm.wala.types.FieldReference;
+import java.util.Objects;
 
 public class StaticFieldElement extends CodeElement {
   private final FieldReference fieldRef;
@@ -65,10 +66,7 @@ public class StaticFieldElement extends CodeElement {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    StaticFieldElement other = (StaticFieldElement) obj;
-    if (fieldRef == null) {
-      if (other.fieldRef != null) return false;
-    } else if (!fieldRef.equals(other.fieldRef)) return false;
+    if (!Objects.equals(fieldRef, ((StaticFieldElement) obj).fieldRef)) return false;
     return true;
   }
 }

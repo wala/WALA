@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import java.util.Objects;
+
 /** Options that govern SSA construction */
 public class SSAOptions {
 
@@ -74,10 +76,7 @@ public class SSAOptions {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final SSAOptions other = (SSAOptions) obj;
-    if (piNodePolicy == null) {
-      if (other.piNodePolicy != null) return false;
-    } else if (!piNodePolicy.equals(other.piNodePolicy)) return false;
+    if (!Objects.equals(piNodePolicy, ((SSAOptions) obj).piNodePolicy)) return false;
     return true;
   }
 }
