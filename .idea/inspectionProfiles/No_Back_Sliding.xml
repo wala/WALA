@@ -750,7 +750,6 @@
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" editorAttributes="NOT_USED_ELEMENT_ATTRIBUTES" />
     </inspection_tool>
     <inspection_tool class="UnnecessaryReturnJS" enabled="false" level="WARNING" enabled_by_default="false" />
-    <inspection_tool class="UnnecessarySemicolon" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="UnnecessaryTemporaryOnConversionToString" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
     </inspection_tool>

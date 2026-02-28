@@ -328,7 +328,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     ClassFile,
     method_info,
     field_info,
-    Code;
+    Code
   }
 
   /**

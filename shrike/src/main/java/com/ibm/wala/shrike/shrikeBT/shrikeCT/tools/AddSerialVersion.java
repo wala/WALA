@@ -90,7 +90,7 @@ public class AddSerialVersion {
       throw new Error("SHA algorithm not supported: " + e.getMessage());
     }
     try (SinkOutputStream sink = new SinkOutputStream();
-        DataOutputStream out = new DataOutputStream(new DigestOutputStream(sink, digest)); ) {
+        DataOutputStream out = new DataOutputStream(new DigestOutputStream(sink, digest))) {
       try {
         // step 1
         out.writeUTF(r.getName());

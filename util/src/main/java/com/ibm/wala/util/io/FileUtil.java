@@ -85,7 +85,7 @@ public class FileUtil {
     try (final FileInputStream srcStream = new FileInputStream(srcFileName);
         final FileOutputStream dstStream = new FileOutputStream(destFileName);
         final FileChannel src = srcStream.getChannel();
-        final FileChannel dest = dstStream.getChannel(); ) {
+        final FileChannel dest = dstStream.getChannel()) {
       long n = src.size();
       MappedByteBuffer buf = src.map(FileChannel.MapMode.READ_ONLY, 0, n);
       dest.write(buf);
