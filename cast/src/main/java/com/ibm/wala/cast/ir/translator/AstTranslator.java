@@ -1861,7 +1861,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       this.parent = parent;
     }
 
-    private final String mapName(String nm) {
+    private String mapName(String nm) {
       String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
       return (mappedName == null) ? nm : mappedName;
     }

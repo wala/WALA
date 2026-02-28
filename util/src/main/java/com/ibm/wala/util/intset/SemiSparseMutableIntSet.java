@@ -49,7 +49,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     copySet(set);
   }
 
-  private final boolean assertDisjoint() {
+  private boolean assertDisjoint() {
     if (DEBUG) {
       if (densePart != null) {
         for (IntIterator sparseBits = sparsePart.intIterator(); sparseBits.hasNext(); ) {
