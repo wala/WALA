@@ -964,8 +964,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
     }
 
-    void handleAllCopies(
-        PointerKeyAndState curPk, Iterator<? extends Object> succNodes, IFlowLabel label) {
+    void handleAllCopies(PointerKeyAndState curPk, Iterator<?> succNodes, IFlowLabel label) {
       while (succNodes.hasNext()) {
         handleCopy(curPk, (PointerKey) succNodes.next(), label);
       }
@@ -1019,7 +1018,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     void handleAllBackCopies(
-        PointerKeyAndState curPkAndState, Iterator<? extends Object> predNodes, IFlowLabel label) {
+        PointerKeyAndState curPkAndState, Iterator<?> predNodes, IFlowLabel label) {
       while (predNodes.hasNext()) {
         handleBackCopy(curPkAndState, (PointerKey) predNodes.next(), label);
       }

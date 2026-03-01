@@ -226,8 +226,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk)
-      throws IllegalArgumentException {
+  public Iterator<?> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
@@ -239,8 +238,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk)
-      throws IllegalArgumentException {
+  public Iterator<?> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }

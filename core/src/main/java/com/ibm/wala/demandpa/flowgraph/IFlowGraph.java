@@ -63,16 +63,14 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
    * @return all the variables whose values are written to sfk
    * @throws IllegalArgumentException if sfk == null
    */
-  Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk)
-      throws IllegalArgumentException;
+  Iterator<?> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException;
 
   /**
    * @param sfk the static field
    * @return all the variables that get the value of sfk
    * @throws IllegalArgumentException if sfk == null
    */
-  Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk)
-      throws IllegalArgumentException;
+  Iterator<?> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException;
 
   Iterator<PointerKey> getWritesToInstanceField(PointerKey pk, IField f);
 
