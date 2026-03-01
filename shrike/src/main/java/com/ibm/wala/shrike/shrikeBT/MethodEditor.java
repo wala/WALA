@@ -303,8 +303,6 @@ public final class MethodEditor {
   public abstract static class Patch {
     Patch next;
 
-    public Patch() {}
-
     final Patch insert(Patch next) {
       this.next = next;
       return this;

@@ -47,15 +47,4 @@
 
 package org.scandroid.spec;
 
-class ResolvedSpec {
-  ResolvedSpec() {
-    //        AndroidSpecs spec = new AndroidSpecs();
-    //
-    //        for(MethodNamePattern m: spec.getEntrypointSpecs()) {
-    //        }
-    //        for(SourceSpec s: spec.getSourceSpecs()) {
-    //        }
-    //        for(ISinkSpec s: spec.getSinkSpecs()) {
-    //        }
-  }
-}
+class ResolvedSpec {}
