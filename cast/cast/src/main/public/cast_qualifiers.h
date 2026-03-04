@@ -33,6 +33,7 @@ _CAstQualifier(PUBLIC)
 _CAstQualifier(CONST)
 _CAstQualifier(PURE)
 _CAstQualifier(EXTERNAL)
+_CAstQualifier(VIRTUAL)
 
 #undef _CODE_QUALIFIERS
 #undef _CPP_QUALIFIERS

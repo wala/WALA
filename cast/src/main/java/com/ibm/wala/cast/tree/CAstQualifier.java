@@ -37,6 +37,7 @@ public class CAstQualifier {
   public static final CAstQualifier MODULE = new CAstQualifier("module");
   public static final CAstQualifier PURE = new CAstQualifier("pure");
   public static final CAstQualifier EXTERNAL = new CAstQualifier("external");
+  public static final CAstQualifier VIRTUAL = new CAstQualifier("virtual");
 
   static {
     sQualifiers.add(ANNOTATION);
