@@ -60,7 +60,6 @@ public class DalvikTypeInference extends TypeInference {
   }
 
   private static final class DalvikPhiOperator extends AbstractOperator<TypeVariable> {
-    private DalvikPhiOperator() {}
 
     @Override
     public byte evaluate(TypeVariable _lhs, TypeVariable[] _rhs) {

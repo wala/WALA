@@ -270,8 +270,6 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   private static final class PhiOperator extends AbstractOperator<TypeVariable> {
 
-    private PhiOperator() {}
-
     /** TODO: work on efficiency shortcuts for this. */
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
@@ -317,8 +315,6 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   private static final class PiOperator extends AbstractOperator<TypeVariable> {
 
-    private PiOperator() {}
-
     /** TODO: work on efficiency shortcuts for this. */
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhsOperands) {
@@ -352,8 +348,6 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
   }
 
   protected static class PrimitivePropagateOperator extends AbstractOperator<TypeVariable> {
-
-    protected PrimitivePropagateOperator() {}
 
     @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {

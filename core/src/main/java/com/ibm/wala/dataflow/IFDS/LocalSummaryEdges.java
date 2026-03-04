@@ -55,9 +55,6 @@ public class LocalSummaryEdges {
 
   private int nextEntryExitIndex = 0;
 
-  /** */
-  public LocalSummaryEdges() {}
-
   /**
    * Record a summary edge for the flow d1 -&gt; d2 from an entry s_p to an exit x.
    *

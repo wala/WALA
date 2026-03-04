@@ -251,8 +251,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
     private static final StateMeet INSTANCE = new StateMeet();
 
-    private StateMeet() {}
-
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
      */
@@ -484,8 +482,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   private static class IdentityFunction extends UnaryOperator<NullPointerState> {
 
     private static final IdentityFunction INSTANCE = new IdentityFunction();
-
-    private IdentityFunction() {}
 
     /* (non-Javadoc)
      * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)

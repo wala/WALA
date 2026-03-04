@@ -300,7 +300,6 @@ public class TypeAnnotation {
   }
 
   public static class EmptyTarget extends TypeAnnotationTarget {
-    public EmptyTarget() {}
 
     @Override
     public String toString() {

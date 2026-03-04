@@ -47,8 +47,6 @@ public class MultiDimArrayTest extends WalaTestCase {
     justThisTest(MultiDimArrayTest.class);
   }
 
-  public MultiDimArrayTest() {}
-
   @Test
   public void testMultiDim()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

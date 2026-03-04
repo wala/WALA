@@ -77,8 +77,6 @@ public final class Verifier extends Analyzer {
 
     private String[] curLocals;
 
-    VerifyVisitor() {}
-
     @Override
     public void setState(
         int offset, List<PathElement> path, String[] curStack, String[] curLocals) {

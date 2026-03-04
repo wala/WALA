@@ -21,8 +21,6 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   private @Nullable MutableSharedBitVectorIntSet V;
 
-  public BitVectorVariable() {}
-
   /**
    * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
    */

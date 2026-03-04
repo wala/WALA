@@ -223,8 +223,6 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
 
     final int setSize = size();
 
-    public ArraySetIterator() {}
-
     @Override
     public void remove() {
       throw new UnsupportedOperationException();

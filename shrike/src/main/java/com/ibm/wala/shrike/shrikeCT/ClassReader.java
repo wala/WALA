@@ -440,12 +440,6 @@ public final class ClassReader implements ClassConstants {
 
     private int remaining;
 
-    /**
-     * Create a blank iterator. The iterator is not valid until it is initialized by some other
-     * class.
-     */
-    public AttrIterator() {}
-
     private void setSize() {
       if (remaining > 0) {
         size = 6 + cr.getInt(offset + 2);
