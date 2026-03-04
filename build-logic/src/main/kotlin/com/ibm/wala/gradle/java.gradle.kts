@@ -38,7 +38,7 @@ base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
-  named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
+  named("javadocClasspath") { extendsFrom(compileClasspath) }
 }
 
 dependencies {
@@ -117,22 +117,24 @@ tasks.named<Test>("test") {
                 .joinToString(",", postfix = "\n")
         )
 
-    afterTest(
-        KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-          csvResultsFile.get().let {
-            if (!it.exists()) {
-              it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
+    addTestListener(
+        object : TestListener {
+          override fun afterTest(descriptor: TestDescriptor, result: TestResult) {
+            csvResultsFile.get().let {
+              if (!it.exists()) {
+                it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
+              }
+              it.appendRow(
+                  trial,
+                  descriptor.className!!,
+                  "\"${descriptor.name}\"",
+                  result.resultType,
+                  result.startTime,
+                  result.endTime,
+              )
             }
-            it.appendRow(
-                trial,
-                descriptor.className!!,
-                "\"${descriptor.name}\"",
-                result.resultType,
-                result.startTime,
-                result.endTime,
-            )
           }
-        })
+        }
     )
   } else {
     maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
