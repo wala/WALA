@@ -731,7 +731,7 @@ public class Analyzer {
           if (cls == null) {
             cls = "Ljava/lang/Throwable;";
           }
-          String[] catchStack = new String[] {cls};
+          String[] catchStack = {cls};
           if (mergeTypes(target, catchStack, 1, curLocals, curLocalsSize[0], path)) {
             computeTypes(target, visitor, makeTypesAt, path);
           }

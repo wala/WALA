@@ -618,7 +618,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           };
 
       TransitivePrototypeKey prototypeObjs = new TransitivePrototypeKey(receiverType);
-      InstanceKey[] objKeys = new InstanceKey[] {receiverType};
+      InstanceKey[] objKeys = {receiverType};
       if (contentsAreInvariant(symbolTable, du, functionVn)) {
         InstanceKey[] fieldsKeys = getInvariantContents(functionVn);
         newFieldOperationObjectAndFieldConstant(true, fieldDispatchAction, objKeys, fieldsKeys);
@@ -1060,11 +1060,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn =
-          new InstanceKey[] {
-            builder.getInstanceKeyForConstant(
-                JavaScriptTypes.String, String.valueOf(i - numPseudoArgs))
-          };
+      InstanceKey[] fn = {
+        builder.getInstanceKeyForConstant(JavaScriptTypes.String, String.valueOf(i - numPseudoArgs))
+      };
       PointerKey F = builder.getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -1093,11 +1091,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn =
-              new InstanceKey[] {
-                builder.getInstanceKeyForConstant(
-                    JavaScriptTypes.String, String.valueOf(i - numPseudoArgs))
-              };
+          InstanceKey[] fn = {
+            builder.getInstanceKeyForConstant(
+                JavaScriptTypes.String, String.valueOf(i - numPseudoArgs))
+          };
           if (constParams != null && constParams[i] != null && i >= numPseudoArgs) {
             targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
           } else if (i >= numPseudoArgs) {
@@ -1124,12 +1121,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // write `length' in argument objects
     if (av != -1) {
-      InstanceKey[] svn =
-          new InstanceKey[] {
-            builder.getInstanceKeyForConstant(JavaScriptTypes.Number, argCount - 1)
-          };
-      InstanceKey[] lnv =
-          new InstanceKey[] {builder.getInstanceKeyForConstant(JavaScriptTypes.String, "length")};
+      InstanceKey[] svn = {builder.getInstanceKeyForConstant(JavaScriptTypes.Number, argCount - 1)};
+      InstanceKey[] lnv = {builder.getInstanceKeyForConstant(JavaScriptTypes.String, "length")};
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
 
