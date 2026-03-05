@@ -7,6 +7,8 @@ public class JGF {
 
   public interface EntityTypes<T> {
     JSONObject obj(T entity);
+    
+    String label(T entity);
 
     String label(Graph<T> entity);
 
@@ -21,7 +23,9 @@ public class JGF {
     JSONObject nodes = new JSONObject();
     jgf.put("nodes", nodes);
     for(T n : G) {
-      JSONObject node = labels.obj(n);
+      JSONObject node = new JSONObject();
+      node.put("metadata", labels.obj(n));
+      node.put("label", labels.label(n));
       nodes.put(""+G.getNumber(n), node);
     }
 
