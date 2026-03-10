@@ -118,7 +118,8 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     if (exclusionsFile != null) {
       File tmpFile =
           TemporaryFile.urlToFile(
-              "exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
+              String.format("exclusions-%s.txt", mainClass.replace('.', '_')),
+              getClass().getClassLoader().getResource(exclusionsFile));
       jvmArgs += " -DdynamicCGFilter=" + tmpFile.getCanonicalPath();
     }
     childJvm.createJvmarg().setLine(jvmArgs);
