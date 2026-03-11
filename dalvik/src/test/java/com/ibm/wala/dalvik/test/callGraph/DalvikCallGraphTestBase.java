@@ -56,6 +56,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -106,9 +107,9 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
           SecurityException,
           IllegalArgumentException,
           InterruptedException {
-    File F;
+    File F = Files.createTempFile(temporaryDirectory, "test_jar", ".jar").toFile();
     try (final FileInputStream in = new FileInputStream(javaJarPath)) {
-      F = TemporaryFile.streamToFile(new File("build/test_jar.jar"), in);
+      TemporaryFile.streamToFile(F, in);
     }
     F.deleteOnExit();
     instrument(F.getAbsolutePath());
