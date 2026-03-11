@@ -1109,7 +1109,7 @@ public class SSACFG
     final IMethod method;
 
     ExceptionLoadFailure(TypeReference type, IMethod method) {
-      super(Warning.MODERATE);
+      super(MODERATE);
       this.type = type;
       this.method = method;
     }

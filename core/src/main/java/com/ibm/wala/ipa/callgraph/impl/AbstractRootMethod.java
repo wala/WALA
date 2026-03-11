@@ -310,7 +310,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     final TypeReference t;
 
     AllocationFailure(TypeReference t) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.t = t;
     }
 

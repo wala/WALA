@@ -145,7 +145,7 @@ public class FormalTypeParameter extends Signature {
 
     int beginToken = 1;
     while (s.charAt(beginToken) != '>') {
-      int endToken = FormalTypeParameter.formalTypeParameterEnds(s, beginToken);
+      int endToken = formalTypeParameterEnds(s, beginToken);
       sigs.add(s.substring(beginToken, endToken));
       beginToken = endToken;
     }

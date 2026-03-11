@@ -73,12 +73,12 @@ public final class WalaProperties {
   public static String[] getJDKLibraryFiles(boolean justBase) {
     final Properties p;
     try {
-      p = WalaProperties.loadProperties();
+      p = loadProperties();
     } catch (WalaException e) {
       return PlatformUtil.getJDKModules(justBase);
     }
 
-    String dir = p.getProperty(WalaProperties.J2SE_DIR);
+    String dir = p.getProperty(J2SE_DIR);
     if (dir == null) {
       return PlatformUtil.getJDKModules(justBase);
     }
@@ -99,12 +99,12 @@ public final class WalaProperties {
   public static String[] getJ2EEJarFiles() {
     final Properties p;
     try {
-      p = WalaProperties.loadProperties();
+      p = loadProperties();
     } catch (WalaException e) {
       e.printStackTrace();
       throw new IllegalStateException("problem loading wala.properties");
     }
-    String dir = p.getProperty(WalaProperties.J2EE_DIR);
+    String dir = p.getProperty(J2EE_DIR);
     if (dir == null) {
       throw new IllegalStateException("No J2EE directory specified");
     }
@@ -147,7 +147,7 @@ public final class WalaProperties {
     final File file = new File(path);
     return file.isAbsolute()
         ? file.getAbsolutePath()
-        : WalaProperties.getWalaHomeDir().concat(File.separator).concat(path);
+        : getWalaHomeDir().concat(File.separator).concat(path);
   }
 
   public static Properties loadPropertiesFromFile(ClassLoader loader, String fileName)

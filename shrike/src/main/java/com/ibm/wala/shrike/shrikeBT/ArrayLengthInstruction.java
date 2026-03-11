@@ -39,7 +39,7 @@ public final class ArrayLengthInstruction extends Instruction {
 
   @Override
   public String getPushedType(String[] types) {
-    return Constants.TYPE_int;
+    return TYPE_int;
   }
 
   @Override

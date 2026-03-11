@@ -35,7 +35,7 @@ public interface CAstControlFlowMap {
       new CAstLeafNode() {
         @Override
         public int getKind() {
-          return CAstNode.CONSTANT;
+          return CONSTANT;
         }
 
         @Override

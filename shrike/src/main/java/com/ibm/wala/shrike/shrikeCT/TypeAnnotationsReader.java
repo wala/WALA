@@ -392,7 +392,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     private static final Map<Integer, TargetType> fromValue;
 
     static {
-      final TargetType[] targetTypes = TargetType.values();
+      final TargetType[] targetTypes = values();
       fromValue = HashMapFactory.make(targetTypes.length);
       for (TargetType targetType : targetTypes) {
         fromValue.put(targetType.target_type, targetType);
@@ -784,7 +784,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
     private static final Map<Integer, TypePathKind> fromValue;
 
     static {
-      final TypePathKind[] typePathKinds = TypePathKind.values();
+      final TypePathKind[] typePathKinds = values();
       fromValue = HashMapFactory.make(typePathKinds.length);
       for (TypePathKind typePathKind : typePathKinds) {
         fromValue.put(typePathKind.type_path_kind, typePathKind);

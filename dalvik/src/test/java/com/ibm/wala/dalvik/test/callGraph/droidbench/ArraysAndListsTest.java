@@ -16,6 +16,6 @@ public class ArraysAndListsTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("ArraysAndLists");
+    return generateData("ArraysAndLists");
   }
 }

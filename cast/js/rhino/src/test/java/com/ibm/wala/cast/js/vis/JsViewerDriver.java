@@ -21,7 +21,6 @@ import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.JSCallGraphBuilderUtil;
@@ -58,7 +57,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
     URL url = new URI(args[0]).toURL();
 
     // computing CG + PA
-    JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+    setTranslatorFactory(new CAstRhinoTranslatorFactory());
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
 
     SourceModule[] sources = getSources(domless, url);

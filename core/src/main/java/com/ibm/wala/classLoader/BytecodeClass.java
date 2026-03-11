@@ -108,7 +108,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     final ImmutableByteArray className;
 
     ClassNotFoundWarning(ImmutableByteArray className) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.className = className;
     }
 

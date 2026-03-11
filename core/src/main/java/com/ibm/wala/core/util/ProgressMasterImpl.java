@@ -174,7 +174,7 @@ class ProgressMasterImpl implements IProgressMonitor {
           }
         }
 
-        Thread.sleep(msPerWorkItem);
+        sleep(msPerWorkItem);
 
         if (checkMemory) {
           try {

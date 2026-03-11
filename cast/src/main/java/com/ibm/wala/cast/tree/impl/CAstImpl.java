@@ -152,7 +152,7 @@ public class CAstImpl implements CAst {
 
     @Override
     public int getKind() {
-      return CAstNode.CONSTANT;
+      return CONSTANT;
     }
 
     @Override

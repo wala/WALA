@@ -32,11 +32,11 @@ public class Exceptions {
     }
 
     public static MethodResolutionFailure moderate(MemberReference method) {
-      return new MethodResolutionFailure(Warning.MODERATE, method);
+      return new MethodResolutionFailure(MODERATE, method);
     }
 
     public static MethodResolutionFailure severe(MemberReference method) {
-      return new MethodResolutionFailure(Warning.SEVERE, method);
+      return new MethodResolutionFailure(SEVERE, method);
     }
   }
 }

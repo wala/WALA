@@ -18,7 +18,7 @@ public final class TrueOperator extends UnaryOperator<BooleanVariable> {
   private static final TrueOperator SINGLETON = new TrueOperator();
 
   public static TrueOperator instance() {
-    return TrueOperator.SINGLETON;
+    return SINGLETON;
   }
 
   private TrueOperator() {}

@@ -1346,7 +1346,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public int getKind() {
-      return CAstEntity.FUNCTION_ENTITY;
+      return FUNCTION_ENTITY;
     }
 
     @Override
@@ -1509,7 +1509,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public int getKind() {
-      return CAstEntity.FIELD_ENTITY;
+      return FIELD_ENTITY;
     }
 
     @Override

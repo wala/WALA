@@ -13,7 +13,6 @@ package com.ibm.wala.cfg.exc.intra;
 
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.fixpoint.AbstractVariable;
-import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ssa.SymbolTable;
 import java.util.Collection;
@@ -271,7 +270,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
         changed |= lhs.meet(state);
       }
 
-      return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
+      return (changed ? CHANGED : NOT_CHANGED);
     }
 
     /* (non-Javadoc)
@@ -320,7 +319,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
         changed |= lhs.meet(varNum, rhs.vars[from]);
       }
 
-      return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
+      return (changed ? CHANGED : NOT_CHANGED);
     }
 
     /* (non-Javadoc)
@@ -387,15 +386,15 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
-      byte state = FixedPointConstants.NOT_CHANGED;
+      byte state = NOT_CHANGED;
 
       if (!lhs.equals(rhs)) {
         lhs.copyState(rhs);
-        state = FixedPointConstants.CHANGED;
+        state = CHANGED;
       }
 
       if (lhs.nullify(varNum)) {
-        state = FixedPointConstants.CHANGED;
+        state = CHANGED;
       }
 
       return state;
@@ -440,15 +439,15 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
-      byte state = FixedPointConstants.NOT_CHANGED;
+      byte state = NOT_CHANGED;
 
       if (!lhs.equals(rhs)) {
         lhs.copyState(rhs);
-        state = FixedPointConstants.CHANGED;
+        state = CHANGED;
       }
 
       if (lhs.denullify(varNum)) {
-        state = FixedPointConstants.CHANGED;
+        state = CHANGED;
       }
 
       return state;
@@ -489,10 +488,10 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       if (lhs.equals(rhs)) {
-        return FixedPointConstants.NOT_CHANGED;
+        return NOT_CHANGED;
       } else {
         lhs.copyState(rhs);
-        return FixedPointConstants.CHANGED;
+        return CHANGED;
       }
     }
 

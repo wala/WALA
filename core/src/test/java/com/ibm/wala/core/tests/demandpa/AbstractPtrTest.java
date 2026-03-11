@@ -174,7 +174,7 @@ public abstract class AbstractPtrTest {
 
     // find the single allocation site of FlowsToType, make an InstanceKey, and
     // query it
-    CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
+    CGNode mainMethod = findMainMethod(dmp.getBaseCallGraph());
     InstanceKey keyToQuery = getFlowsToInstanceKey(mainMethod, dmp.getHeapModel());
     return dmp.getFlowsTo(keyToQuery).snd;
   }
@@ -212,8 +212,8 @@ public abstract class AbstractPtrTest {
     final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
-    CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
-    PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", dmp.getHeapModel());
+    CGNode mainMethod = findMainMethod(dmp.getBaseCallGraph());
+    PointerKey keyToQuery = getParam(mainMethod, "testThisVar", dmp.getHeapModel());
     return dmp.getPointsTo(keyToQuery);
   }
 

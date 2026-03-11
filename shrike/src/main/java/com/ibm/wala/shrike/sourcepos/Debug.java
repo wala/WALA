@@ -188,12 +188,12 @@ public final class Debug {
 
     @Override
     public void print(String str) {
-      Debug.log(level, str);
+      log(level, str);
     }
 
     @Override
     public void println(String str) {
-      Debug.log(level, str + '\n');
+      log(level, str + '\n');
     }
   }
 

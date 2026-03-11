@@ -16,6 +16,6 @@ public class ImplicitFlowsTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("ImplicitFlows");
+    return generateData("ImplicitFlows");
   }
 }

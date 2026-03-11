@@ -117,6 +117,6 @@ public class AstJavaSlicer {
       stmts.addAll(gatherWrites(CG, partialRoots));
       stmts.addAll(gatherMonitors(CG, partialRoots));
     }
-    return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, stmts), sdg);
+    return Pair.make(computeBackwardSlice(sdg, stmts), sdg);
   }
 }

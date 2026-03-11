@@ -712,6 +712,16 @@
       <scope name="JavaScript Test Subjects" level="ERROR" enabled="false" />
     </inspection_tool>
     <inspection_tool class="UNCHECKED_WARNING" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="UnnecessarilyQualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
+      <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false">
+        <option name="m_ignoreStaticFieldAccesses" value="false" />
+        <option name="m_ignoreStaticMethodCalls" value="false" />
+        <option name="m_ignoreStaticAccessFromStaticContext" value="false" />
+      </scope>
+      <option name="m_ignoreStaticFieldAccesses" value="false" />
+      <option name="m_ignoreStaticMethodCalls" value="false" />
+      <option name="m_ignoreStaticAccessFromStaticContext" value="false" />
+    </inspection_tool>
     <inspection_tool class="UnnecessaryBoxing" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Java Sources as Test Subjects" level="WARNING" enabled="false" />
     </inspection_tool>

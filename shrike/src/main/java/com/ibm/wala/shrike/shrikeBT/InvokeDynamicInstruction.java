@@ -68,7 +68,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   @Override
   public final String getPushedType(String[] types) {
     String t = Util.getReturnType(getMethodSignature());
-    if (t.equals(Constants.TYPE_void)) {
+    if (t.equals(TYPE_void)) {
       return null;
     } else {
       return t;

@@ -105,7 +105,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     final TypeAbstraction T;
 
     ManySubtypesWarning(TypeAbstraction T, int nImplementors) {
-      super(Warning.MODERATE);
+      super(MODERATE);
       this.T = T;
       this.nImplementors = nImplementors;
     }
@@ -126,7 +126,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     final TypeAbstraction T;
 
     NoSubtypesWarning(TypeAbstraction T) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.T = T;
     }
 

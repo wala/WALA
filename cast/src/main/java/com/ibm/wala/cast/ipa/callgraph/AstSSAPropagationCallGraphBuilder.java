@@ -343,7 +343,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     @Override
     public void visitPropertyRead(AstPropertyRead instruction) {
-      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+      if (DEBUG_PROPERTIES) {
         Position instructionPosition = getInstructionPosition(instruction);
         if (instructionPosition != null) {
           System.err.println(
@@ -363,7 +363,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     @Override
     public void visitPropertyWrite(AstPropertyWrite instruction) {
-      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+      if (DEBUG_PROPERTIES) {
         Position instructionPosition = getInstructionPosition(instruction);
         if (instructionPosition != null) {
           System.err.println(

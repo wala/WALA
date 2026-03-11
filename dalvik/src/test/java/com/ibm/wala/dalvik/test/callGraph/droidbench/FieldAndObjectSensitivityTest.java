@@ -16,6 +16,6 @@ public class FieldAndObjectSensitivityTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("FieldAndObjectSensitivity");
+    return generateData("FieldAndObjectSensitivity");
   }
 }

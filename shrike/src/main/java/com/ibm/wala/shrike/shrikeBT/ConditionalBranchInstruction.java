@@ -116,7 +116,7 @@ public final class ConditionalBranchInstruction extends Instruction
   @Override
   public int getPoppedCount() {
     // Xiangyu, to support if_eq (if_ne)...
-    if (opcode >= Constants.OP_ifeq && opcode <= Constants.OP_ifle) return 1;
+    if (opcode >= OP_ifeq && opcode <= OP_ifle) return 1;
     return 2;
   }
 

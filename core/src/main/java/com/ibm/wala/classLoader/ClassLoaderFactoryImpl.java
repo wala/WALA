@@ -136,7 +136,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
     final String impl;
 
     InvalidClassLoaderImplementation(String impl) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.impl = impl;
     }
 

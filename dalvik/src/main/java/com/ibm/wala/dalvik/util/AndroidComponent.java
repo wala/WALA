@@ -127,8 +127,8 @@ public enum AndroidComponent {
   }
 
   public static boolean isAndroidComponent(final TypeReference T, final IClassHierarchy cha) {
-    for (final AndroidComponent candid : AndroidComponent.values()) {
-      if (candid == AndroidComponent.UNKNOWN) continue;
+    for (final AndroidComponent candid : values()) {
+      if (candid == UNKNOWN) continue;
       if (candid.getName().equals(T.getName())) {
         return true;
       }
@@ -195,7 +195,7 @@ public enum AndroidComponent {
    * @return The Element if found or AndroidComponent.UNKNOWN if not
    */
   public static AndroidComponent explicit(final TypeName type) {
-    for (AndroidComponent test : AndroidComponent.values()) {
+    for (AndroidComponent test : values()) {
       if (type.equals(test.type)) {
         return test;
       }
@@ -232,7 +232,7 @@ public enum AndroidComponent {
    * @return the corresponding Enum-Element or AndroidComponent.UNKNOWN
    */
   public static AndroidComponent from(final IClass type, final IClassHierarchy cha) {
-    for (AndroidComponent test : AndroidComponent.values()) {
+    for (AndroidComponent test : values()) {
       if (type.getReference().equals(test.toReference())
           || cha.isSubclassOf(type, cha.lookupClass(test.toReference()))) {
         return test;
@@ -247,15 +247,15 @@ public enum AndroidComponent {
    * @return the corresponding Enum-Element or AndroidComponent.UNKNOWN
    */
   public static AndroidComponent from(final IMethod method, final IClassHierarchy cha) {
-    if (method == null) return AndroidComponent.UNKNOWN;
+    if (method == null) return UNKNOWN;
     IClass type = method.getDeclaringClass();
 
     if (type == null) {
       throw new IllegalStateException("Unable to retrieve the declaring class of " + method);
     }
 
-    for (AndroidComponent test : AndroidComponent.values()) {
-      if (test.equals(AndroidComponent.UNKNOWN)) continue;
+    for (AndroidComponent test : values()) {
+      if (test.equals(UNKNOWN)) continue;
       final TypeReference testRef = test.toReference();
       if (testRef == null) {
         continue; // Happens when the Android-Stubs are to old

@@ -154,8 +154,8 @@ public class GraphIntegrity {
         return new UnsoundGraphException("set2 already contained " + o2);
       }
     }
-    GraphIntegrity.printCollection("set 1 ", set1);
-    GraphIntegrity.printCollection("set 2 ", set2);
+    printCollection("set 1 ", set1);
+    printCollection("set 2 ", set2);
     @SuppressWarnings("unchecked")
     HashSet<T> s1clone = (HashSet<T>) set1.clone();
     set1.removeAll(set2);

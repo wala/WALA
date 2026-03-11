@@ -63,7 +63,7 @@ class ExtractedFunction implements CAstEntity {
 
   @Override
   public int getKind() {
-    return CAstEntity.FUNCTION_ENTITY;
+    return FUNCTION_ENTITY;
   }
 
   @Override

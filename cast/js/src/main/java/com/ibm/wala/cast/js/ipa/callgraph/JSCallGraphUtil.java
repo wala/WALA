@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
@@ -124,7 +123,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles)
       throws ClassHierarchyException {
     JavaScriptLoaderFactory loaders = makeLoaders();
-    AnalysisScope scope = CAstCallGraphUtil.makeScope(scriptFiles, loaders, JavaScriptLoader.JS);
+    AnalysisScope scope = makeScope(scriptFiles, loaders, JavaScriptLoader.JS);
     return makeHierarchy(scope, loaders);
   }
 

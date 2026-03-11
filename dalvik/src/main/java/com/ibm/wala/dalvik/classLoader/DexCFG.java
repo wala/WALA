@@ -683,7 +683,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     final TypeReference T;
 
     FailedExceptionResolutionWarning(TypeReference T) {
-      super(Warning.MODERATE);
+      super(MODERATE);
       this.T = T;
     }
 

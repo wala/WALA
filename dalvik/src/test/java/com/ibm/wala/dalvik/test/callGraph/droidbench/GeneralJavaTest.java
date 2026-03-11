@@ -16,6 +16,6 @@ public class GeneralJavaTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("GeneralJava");
+    return generateData("GeneralJava");
   }
 }

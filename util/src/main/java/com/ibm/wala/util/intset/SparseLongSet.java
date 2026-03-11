@@ -412,7 +412,7 @@ public class SparseLongSet implements LongSet {
    */
   public static SparseLongSet add(SparseLongSet s, int j) {
     if (s == null || s.elements == null) {
-      return SparseLongSet.singleton(j);
+      return singleton(j);
     }
     SparseLongSet result = new SparseLongSet(s.size + 1);
     int k = 0;

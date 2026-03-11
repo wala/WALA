@@ -18,7 +18,7 @@ public final class UnaryOr extends UnaryOperator<BooleanVariable> {
   private static final UnaryOr SINGLETON = new UnaryOr();
 
   public static UnaryOr instance() {
-    return UnaryOr.SINGLETON;
+    return SINGLETON;
   }
 
   private UnaryOr() {}
@@ -32,7 +32,7 @@ public final class UnaryOr extends UnaryOperator<BooleanVariable> {
 
     boolean old = lhs.getValue();
     lhs.or(rhs);
-    return (lhs.getValue() != old) ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED;
+    return (lhs.getValue() != old) ? CHANGED : NOT_CHANGED;
   }
 
   @Override

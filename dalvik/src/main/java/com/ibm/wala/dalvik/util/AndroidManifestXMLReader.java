@@ -145,7 +145,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.MANIFEST);
+            return EnumSet.of(MANIFEST);
           }
         },
         null,
@@ -155,7 +155,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.APPLICATION);
+            return EnumSet.of(APPLICATION);
           }
         },
         EnumSet.of(Attr.PACKAGE),
@@ -165,7 +165,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.ACTIVITY, Tag.SERVICE, Tag.RECEIVER, Tag.PROVIDER, Tag.ALIAS);
+            return EnumSet.of(ACTIVITY, SERVICE, RECEIVER, PROVIDER, ALIAS);
           }
         }, // Allowed children..
         Collections.emptySet(), // Interesting Attributes
@@ -175,7 +175,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.INTENT);
+            return EnumSet.of(INTENT);
           }
         },
         EnumSet.of(Attr.NAME, Attr.ENABLED, Attr.PROCESS),
@@ -185,7 +185,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.INTENT);
+            return EnumSet.of(INTENT);
           }
         },
         EnumSet.of(Attr.ENABLED, Attr.TARGET, Attr.NAME),
@@ -195,7 +195,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.INTENT);
+            return EnumSet.of(INTENT);
           }
         },
         EnumSet.of(Attr.ENABLED, Attr.NAME, Attr.PROCESS),
@@ -205,7 +205,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.INTENT);
+            return EnumSet.of(INTENT);
           }
         },
         EnumSet.of(Attr.ENABLED, Attr.NAME, Attr.PROCESS),
@@ -215,7 +215,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.INTENT);
+            return EnumSet.of(INTENT);
           }
         },
         EnumSet.of(Attr.ENABLED, Attr.ORDER, Attr.NAME, Attr.PROCESS),
@@ -225,7 +225,7 @@ public class AndroidManifestXMLReader {
         new ISubTags() {
           @Override
           public Set<Tag> getSubTags() {
-            return EnumSet.of(Tag.ACTION, Tag.DATA);
+            return EnumSet.of(ACTION, DATA);
           }
         },
         Collections.emptySet(),
@@ -284,7 +284,7 @@ public class AndroidManifestXMLReader {
     }
 
     static {
-      for (Tag tag : Tag.values()) {
+      for (Tag tag : values()) {
         reverseMap.put(tag.tagName, tag);
       }
     }
@@ -328,7 +328,7 @@ public class AndroidManifestXMLReader {
     /** All Tags in this Enum but UNIMPORTANT are relevant. */
     @SuppressWarnings("unused")
     public boolean isRelevant() {
-      return (this != Tag.UNIMPORTANT);
+      return (this != UNIMPORTANT);
     }
 
     /**
@@ -342,7 +342,7 @@ public class AndroidManifestXMLReader {
     public static Tag fromString(String tag) {
       tag = tag.toLowerCase();
 
-      return reverseMap.getOrDefault(tag, Tag.UNIMPORTANT);
+      return reverseMap.getOrDefault(tag, UNIMPORTANT);
     }
 
     /** The Tag appears in the XML File using this name. */

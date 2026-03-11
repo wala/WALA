@@ -16,6 +16,6 @@ public class AndroidSpecificTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("AndroidSpecific");
+    return generateData("AndroidSpecific");
   }
 }

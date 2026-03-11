@@ -91,11 +91,11 @@ public class TunedRefinementTest extends AbstractPtrTest {
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(mainClass);
 
     CGNode testMethod =
-        AbstractPtrTest.findStaticMethod(
+        findStaticMethod(
             dmp.getBaseCallGraph(),
             Atom.findOrCreateUnicodeAtom("testMethod"),
             Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
-    PointerKey keyToQuery = AbstractPtrTest.getParam(testMethod, "testThisVar", dmp.getHeapModel());
+    PointerKey keyToQuery = getParam(testMethod, "testThisVar", dmp.getHeapModel());
     Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);

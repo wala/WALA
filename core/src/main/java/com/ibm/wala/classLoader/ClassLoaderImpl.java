@@ -342,7 +342,7 @@ public class ClassLoaderImpl implements IClassLoader {
     final String className;
 
     MultipleImplementationsWarning(String className) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.className = className;
     }
 
@@ -362,7 +362,7 @@ public class ClassLoaderImpl implements IClassLoader {
     final String className;
 
     InvalidClassFile(String className) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.className = className;
     }
 

@@ -212,7 +212,7 @@ public final class MethodReference extends MemberReference {
   }
 
   public boolean isInit() {
-    return getName().equals(MethodReference.initAtom);
+    return getName().equals(initAtom);
   }
 
   /**

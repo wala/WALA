@@ -16,6 +16,6 @@ public class LifecycleTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("Lifecycle");
+    return generateData("Lifecycle");
   }
 }
