@@ -131,13 +131,12 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(
-      URI[] androidLibs,
       File androidAPIJar,
       final Path apkFileName,
       IProgressMonitor monitor,
       ReflectionOptions policy)
       throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-    AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, apkFileName);
+    AnalysisScope scope = makeDalvikScope(null, androidAPIJar, apkFileName);
 
     final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
@@ -188,9 +187,9 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(
-      URI[] androidLibs, File androidAPIJar, String mainClassName, final Path dexFileName)
+      URI[] androidLibs, String mainClassName, final Path dexFileName)
       throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-    AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, dexFileName);
+    AnalysisScope scope = makeDalvikScope(androidLibs, null, dexFileName);
 
     final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
