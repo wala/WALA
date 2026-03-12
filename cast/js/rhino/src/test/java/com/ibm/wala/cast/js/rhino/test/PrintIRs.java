@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.rhino.test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
@@ -37,7 +36,6 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
@@ -76,7 +74,7 @@ public class PrintIRs {
   }
 
   private static void printIRsForHTML(String filename)
-      throws IllegalArgumentException, MalformedURLException, IOException, WalaException, Error {
+      throws IllegalArgumentException, IOException, WalaException {
     // use Rhino to parse JavaScript
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     // add model for DOM APIs
@@ -95,7 +93,7 @@ public class PrintIRs {
   }
 
   public static void main(String[] args)
-      throws IOException, IllegalArgumentException, WalaException, Error {
+      throws IOException, IllegalArgumentException, WalaException {
     String filename = args[0];
     if (filename.endsWith(".js")) {
       printIRsForJS(filename);

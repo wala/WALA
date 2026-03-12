@@ -56,7 +56,7 @@ import java.util.Properties;
 public class WalaUtil {
 
   public static void dumpAllIR(CallGraph cg, String benchName, Properties p)
-      throws IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
     if (cg == null) {
       throw new IllegalArgumentException("cg == null");
     }

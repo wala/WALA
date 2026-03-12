@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -44,11 +43,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
 
   @Test
   public void testArgs()
-      throws IOException,
-          IllegalArgumentException,
-          CancelException,
-          ClassHierarchyException,
-          WalaException {
+      throws IOException, IllegalArgumentException, CancelException, WalaException {
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);
 
