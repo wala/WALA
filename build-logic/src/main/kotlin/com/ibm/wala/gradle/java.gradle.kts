@@ -137,7 +137,7 @@ tasks.named<Test>("test") {
         }
     )
   } else {
-    maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
   }
 }
 
