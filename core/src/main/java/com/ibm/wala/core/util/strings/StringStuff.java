@@ -269,7 +269,7 @@ public class StringStuff {
         case TypeReference.ReferenceTypeCode:
           {
             int off = i - 1;
-            while (StringStuff.isTypeCodeChar(b, i)) {
+            while (isTypeCodeChar(b, i)) {
               ++i;
             }
             final TypeName T;

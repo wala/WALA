@@ -149,13 +149,13 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   public final String getInvocationModeString() {
     switch (opcode) {
-      case Constants.OP_invokestatic:
+      case OP_invokestatic:
         return "STATIC";
-      case Constants.OP_invokeinterface:
+      case OP_invokeinterface:
         return "INTERFACE";
-      case Constants.OP_invokespecial:
+      case OP_invokespecial:
         return "SPECIAL";
-      case Constants.OP_invokevirtual:
+      case OP_invokevirtual:
         return "VIRTUAL";
       default:
         throw new Error("Unknown mode: " + opcode);
@@ -172,14 +172,13 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   @Override
   public final int getPoppedCount() {
-    return (opcode == Constants.OP_invokestatic ? 0 : 1)
-        + Util.getParamsCount(getMethodSignature());
+    return (opcode == OP_invokestatic ? 0 : 1) + Util.getParamsCount(getMethodSignature());
   }
 
   @Override
   public final String getPushedType(String[] types) {
     String t = Util.getReturnType(getMethodSignature());
-    if (t.equals(Constants.TYPE_void)) {
+    if (t.equals(TYPE_void)) {
       return null;
     } else {
       return t;
@@ -219,13 +218,13 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   @Override
   public Dispatch getInvocationCode() {
     switch (opcode) {
-      case Constants.OP_invokestatic:
+      case OP_invokestatic:
         return Dispatch.STATIC;
-      case Constants.OP_invokeinterface:
+      case OP_invokeinterface:
         return Dispatch.INTERFACE;
-      case Constants.OP_invokespecial:
+      case OP_invokespecial:
         return Dispatch.SPECIAL;
-      case Constants.OP_invokevirtual:
+      case OP_invokevirtual:
         return Dispatch.VIRTUAL;
       default:
         throw new Error("Unknown mode: " + opcode);

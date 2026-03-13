@@ -65,7 +65,7 @@ public class ExtractionPos extends NodePos {
 
   public boolean contains(CAstNode node) {
     for (int i = getStart(); i < getEnd(); ++i)
-      if (NodePos.inSubtree(node, parent.getChild(i))) return true;
+      if (inSubtree(node, parent.getChild(i))) return true;
     return false;
   }
 

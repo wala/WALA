@@ -447,7 +447,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         arguments = new String[0];
         namePosition = null;
       }
-      kind = (n instanceof FunctionNode) ? CAstEntity.FUNCTION_ENTITY : CAstEntity.SCRIPT_ENTITY;
+      kind = (n instanceof FunctionNode) ? FUNCTION_ENTITY : SCRIPT_ENTITY;
       this.subs = subs;
       this.ast = ast;
       this.map = map;

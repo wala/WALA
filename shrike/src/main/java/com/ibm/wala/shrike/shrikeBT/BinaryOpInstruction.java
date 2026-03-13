@@ -128,10 +128,7 @@ public final class BinaryOpInstruction extends Instruction implements IBinaryOpI
 
   @Override
   public boolean isPEI() {
-    return opcode == Constants.OP_idiv
-        || opcode == Constants.OP_ldiv
-        || opcode == Constants.OP_irem
-        || opcode == Constants.OP_lrem;
+    return opcode == OP_idiv || opcode == OP_ldiv || opcode == OP_irem || opcode == OP_lrem;
   }
 
   @Override

@@ -18,7 +18,7 @@ public class ClassHierarchyWarning extends Warning {
   final String message;
 
   ClassHierarchyWarning(String message) {
-    super(Warning.SEVERE);
+    super(SEVERE);
     this.message = message;
   }
 

@@ -90,7 +90,7 @@ public final class ArrayLoadInstruction extends Instruction implements IArrayLoa
 
   @Override
   public String getType() {
-    return Constants.indexedTypes[opcode - OP_iaload];
+    return indexedTypes[opcode - OP_iaload];
   }
 
   @Override

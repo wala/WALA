@@ -414,7 +414,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
             IClass klass = ck.getType();
-            if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
+            if (catches(catchClasses, klass, cha)) {
               system.newConstraint(
                   exceptionVar, getInstanceKeyForPEI(node, peiLoc, type, instanceKeyFactory));
             }
@@ -2409,7 +2409,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     final TypeReference type;
 
     CheckcastFailure(TypeReference type) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.type = type;
     }
 
@@ -2432,7 +2432,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     final FieldReference field;
 
     FieldResolutionFailure(FieldReference field) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.field = field;
     }
 

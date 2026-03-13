@@ -543,7 +543,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
     final TypeReference T;
 
     FailedExceptionResolutionWarning(TypeReference T) {
-      super(Warning.MODERATE);
+      super(MODERATE);
       this.T = T;
     }
 

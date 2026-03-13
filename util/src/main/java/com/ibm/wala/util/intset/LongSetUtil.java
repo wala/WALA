@@ -84,7 +84,7 @@ public class LongSetUtil {
     if (B == null) {
       throw new IllegalArgumentException("null B");
     }
-    return diff(A, B, LongSetUtil.getDefaultLongSetFactory());
+    return diff(A, B, getDefaultLongSetFactory());
   }
 
   @NullUnmarked

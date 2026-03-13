@@ -92,7 +92,7 @@ public class IntSetUtil {
       MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet) set).secondaryImpl);
       return new DebuggingMutableIntSet(pCopy, sCopy);
     } else if (set instanceof EmptyIntSet) {
-      return IntSetUtil.make();
+      return make();
     } else {
       Assertions.UNREACHABLE(set.getClass().toString());
       return null;
@@ -107,7 +107,7 @@ public class IntSetUtil {
     if (B == null) {
       throw new IllegalArgumentException("null B");
     }
-    return diff(A, B, IntSetUtil.getDefaultIntSetFactory());
+    return diff(A, B, getDefaultIntSetFactory());
   }
 
   private static IntSet defaultSlowDiff(IntSet A, IntSet B, MutableIntSetFactory<?> factory) {

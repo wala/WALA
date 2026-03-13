@@ -101,7 +101,7 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     String mainClass = TestInfo.TEST_ONTHEFLY_CS;
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(mainClass);
     CGNode testMethod =
-        AbstractPtrTest.findInstanceMethod(
+        findInstanceMethod(
             dmp.getBaseCallGraph(),
             dmp.getClassHierarchy()
                 .lookupClass(
@@ -109,7 +109,7 @@ public class ContextSensitiveTest extends AbstractPtrTest {
                         ClassLoaderReference.Application, "Ldemandpa/TestOnTheFlyCS$C2")),
             Atom.findOrCreateUnicodeAtom("doSomething"),
             Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
-    PointerKey keyToQuery = AbstractPtrTest.getParam(testMethod, "testThisVar", dmp.getHeapModel());
+    PointerKey keyToQuery = getParam(testMethod, "testThisVar", dmp.getHeapModel());
     Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
@@ -124,11 +124,11 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(mainClass);
 
     CGNode testMethod =
-        AbstractPtrTest.findStaticMethod(
+        findStaticMethod(
             dmp.getBaseCallGraph(),
             Atom.findOrCreateUnicodeAtom("testMethod"),
             Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
-    PointerKey keyToQuery = AbstractPtrTest.getParam(testMethod, "testThisVar", dmp.getHeapModel());
+    PointerKey keyToQuery = getParam(testMethod, "testThisVar", dmp.getHeapModel());
     Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);

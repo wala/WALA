@@ -327,7 +327,7 @@ public class SparseIntSet implements IntSet {
 
   public static SparseIntSet pair(int i, int j) {
     if (i == j) {
-      return SparseIntSet.singleton(i);
+      return singleton(i);
     }
     if (j > i) {
       return new SparseIntSet(new int[] {i, j});
@@ -440,7 +440,7 @@ public class SparseIntSet implements IntSet {
       throw new IllegalArgumentException("s is null");
     }
     if (s.elements == null) {
-      return SparseIntSet.singleton(j);
+      return singleton(j);
     }
     SparseIntSet result = new SparseIntSet(s.size + 1);
     int k = 0;

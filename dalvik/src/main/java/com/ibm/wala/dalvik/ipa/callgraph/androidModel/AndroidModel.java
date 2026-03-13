@@ -252,7 +252,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
     this.monitor = AndroidEntryPointManager.MANAGER.getProgressMonitor();
     this.maxProgress = entrypoints.size();
 
-    AndroidModel.doBoot &= AndroidEntryPointManager.MANAGER.getDoBootSequence();
+    doBoot &= AndroidEntryPointManager.MANAGER.getDoBootSequence();
 
     // BUILD
     this.monitor.beginTask("Building " + name, this.maxProgress);
@@ -345,7 +345,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
     //
     //  Add preparing code to the model
     //
-    if (AndroidModel.doBoot) {
+    if (doBoot) {
       //            final Set<Parameter> allActivities = new
       // HashSet<Parameter>(modelAcc.allExtend(AndroidTypes.ActivityName, getClassHierarchy()));
       // assert(allActivities.size() > 0) : "There are no Activities in the Model"; // XXX

@@ -117,8 +117,7 @@ public class PDFWalaIR {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile =
-          wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFWalaIR.PDF_FILE;
+      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
       String dotFile =
           wp.getProperty(WalaProperties.OUTPUT_DIR)
               + File.separatorChar

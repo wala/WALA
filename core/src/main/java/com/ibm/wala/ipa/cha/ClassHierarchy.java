@@ -1252,7 +1252,7 @@ public class ClassHierarchy implements IClassHierarchy {
     final String message;
 
     ClassExclusion(TypeReference klass, String message) {
-      super(Warning.MODERATE);
+      super(MODERATE);
       this.klass = klass;
       this.message = message;
     }

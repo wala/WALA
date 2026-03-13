@@ -16,6 +16,6 @@ public class CallbacksTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("Callbacks");
+    return generateData("Callbacks");
   }
 }

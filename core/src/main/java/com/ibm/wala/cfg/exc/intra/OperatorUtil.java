@@ -1,6 +1,5 @@
 package com.ibm.wala.cfg.exc.intra;
 
-import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import java.util.Arrays;
@@ -63,9 +62,9 @@ public class OperatorUtil {
       for (int i = 1; i < operators.length; i++) {
         byte changed = operators[i].evaluate(lhs, lhs);
         result =
-            ((result | changed) & FixedPointConstants.CHANGED_MASK)
-                | ((result | changed) & FixedPointConstants.SIDE_EFFECT_MASK)
-                | ((result & changed) & FixedPointConstants.FIXED_MASK);
+            ((result | changed) & CHANGED_MASK)
+                | ((result | changed) & SIDE_EFFECT_MASK)
+                | ((result & changed) & FIXED_MASK);
       }
 
       return (byte) result;

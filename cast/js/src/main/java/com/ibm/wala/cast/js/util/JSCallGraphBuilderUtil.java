@@ -18,7 +18,6 @@ import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
@@ -99,7 +98,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
         builderType.extractCorrelatedPairs
             ? new CorrelatedPairExtractorFactory(translatorFactory, script)
             : null;
-    JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(preprocessor);
+    JavaScriptLoaderFactory loaders = makeLoaders(preprocessor);
 
     AnalysisScope scope = makeScriptScope(dir, name, loaders, loader);
 

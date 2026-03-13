@@ -112,10 +112,7 @@ public class PDFControlDependenceGraph {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile =
-          wp.getProperty(WalaProperties.OUTPUT_DIR)
-              + File.separatorChar
-              + PDFControlDependenceGraph.PDF_FILE;
+      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
       String dotFile =
           wp.getProperty(WalaProperties.OUTPUT_DIR)
               + File.separatorChar

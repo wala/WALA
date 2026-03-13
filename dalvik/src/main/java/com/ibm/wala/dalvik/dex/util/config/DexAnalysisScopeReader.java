@@ -66,8 +66,7 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
       throw new IllegalArgumentException("classPath null");
     }
     AnalysisScope scope =
-        AnalysisScopeReader.instance.readJavaScope(
-            BASIC_FILE, new File(exclusionsFile), WALA_CLASSLOADER);
+        instance.readJavaScope(BASIC_FILE, new File(exclusionsFile), WALA_CLASSLOADER);
 
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
     final String path = classPath.getPath();

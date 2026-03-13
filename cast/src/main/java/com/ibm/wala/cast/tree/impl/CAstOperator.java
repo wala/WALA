@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.tree.impl;
 
 import com.ibm.wala.cast.tree.CAstLeafNode;
-import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  * Various operators that are built in to many languages, and hence perhaps deserve special notice
@@ -34,7 +33,7 @@ public class CAstOperator implements CAstLeafNode {
 
   @Override
   public int getKind() {
-    return CAstNode.OPERATOR;
+    return OPERATOR;
   }
 
   @Override

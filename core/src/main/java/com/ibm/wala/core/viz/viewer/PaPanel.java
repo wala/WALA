@@ -69,7 +69,7 @@ public class PaPanel extends JSplitPane {
       MutableMapping.make();
 
   public PaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
-    super(JSplitPane.HORIZONTAL_SPLIT);
+    super(HORIZONTAL_SPLIT);
 
     this.pa = pa;
     this.cg = cg;

@@ -16,6 +16,6 @@ public class ReflectionTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("Reflection");
+    return generateData("Reflection");
   }
 }

@@ -151,14 +151,13 @@ public class CAstCallGraphUtil {
       if (new File(fileNameArgs[i]).exists()) {
         try {
           fileNames[i] =
-              CAstCallGraphUtil.makeSourceModule(
-                  new File(fileNameArgs[i]).toURI().toURL(), fileNameArgs[i]);
+              makeSourceModule(new File(fileNameArgs[i]).toURI().toURL(), fileNameArgs[i]);
         } catch (MalformedURLException e) {
           Assertions.UNREACHABLE(e.toString());
         }
       } else {
         URL url = CAstCallGraphUtil.class.getClassLoader().getResource(fileNameArgs[i]);
-        fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, fileNameArgs[i]);
+        fileNames[i] = makeSourceModule(url, fileNameArgs[i]);
       }
     }
 

@@ -188,7 +188,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     final String className;
 
     MultipleDexImplementationsWarning(String className) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.className = className;
     }
 
@@ -208,7 +208,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     final String className;
 
     InvalidDexFile(String className) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.className = className;
     }
 

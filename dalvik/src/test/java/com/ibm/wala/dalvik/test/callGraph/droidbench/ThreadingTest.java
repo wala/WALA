@@ -16,6 +16,6 @@ public class ThreadingTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("Threading");
+    return generateData("Threading");
   }
 }

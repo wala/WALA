@@ -267,7 +267,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     final Entrypoint entrypoint;
 
     EntrypointResolutionWarning(Entrypoint entrypoint) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.entrypoint = entrypoint;
     }
 
@@ -456,7 +456,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     final TypeReference t;
 
     ExceptionLookupFailure(TypeReference t) {
-      super(Warning.SEVERE);
+      super(SEVERE);
       this.t = t;
     }
 

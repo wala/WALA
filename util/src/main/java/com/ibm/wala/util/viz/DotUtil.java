@@ -85,7 +85,7 @@ public class DotUtil {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    File f = DotUtil.writeDotFile(g, labels, title, dotFile);
+    File f = writeDotFile(g, labels, title, dotFile);
     if (dotExe != null) {
       spawnDot(dotExe, outputFile, f);
     }

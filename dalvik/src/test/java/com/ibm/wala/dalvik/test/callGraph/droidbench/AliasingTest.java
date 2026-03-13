@@ -16,6 +16,6 @@ public class AliasingTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("Aliasing");
+    return generateData("Aliasing");
   }
 }

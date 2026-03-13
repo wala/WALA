@@ -400,7 +400,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   @Override
   public JSConstraintVisitor makeVisitor(CGNode node) {
-    if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+    if (DEBUG_PROPERTIES) {
       final IMethod method = node.getMethod();
       if (method instanceof AstMethod) {
         System.err.println("\n\nNode: " + node);

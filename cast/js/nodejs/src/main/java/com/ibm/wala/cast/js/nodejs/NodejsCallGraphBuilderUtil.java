@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.nodejs;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
-import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
@@ -57,7 +56,7 @@ public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
   public static PropagationCallGraphBuilder makeCGBuilder(File workingDir, File mainFile)
       throws IOException, IllegalArgumentException, WalaException {
     JavaScriptTranslatorFactory translatorFactory = new CAstRhinoTranslatorFactory();
-    JSCallGraphUtil.setTranslatorFactory(translatorFactory);
+    setTranslatorFactory(translatorFactory);
 
     Language language = JavaScriptLoader.JS;
     Collection<Language> languages = Collections.singleton(language);
@@ -68,13 +67,13 @@ public class NodejsCallGraphBuilderUtil extends JSCallGraphUtil {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory, null);
 
     SourceFileModule mainSourceModule =
-        CAstCallGraphUtil.makeSourceModule(mainFile.toURI().toURL(), mainFile.getName());
+        makeSourceModule(mainFile.toURI().toURL(), mainFile.getName());
     String mainFileClassName =
         NodejsRequiredSourceModule.convertFileToClassName(workingDir, mainFile);
 
     Module[] files = {
-      JSCallGraphUtil.getPrologueFile("prologue.js"),
-      JSCallGraphUtil.getPrologueFile("extended-prologue.js"),
+      getPrologueFile("prologue.js"),
+      getPrologueFile("extended-prologue.js"),
       new NodejsRequiredSourceModule(mainFileClassName, mainFile, mainSourceModule)
     };
 

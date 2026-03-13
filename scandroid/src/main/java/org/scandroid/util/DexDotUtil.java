@@ -83,7 +83,7 @@ public class DexDotUtil extends DotUtil {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    File f = DexDotUtil.writeDotFile(g, labels, title, dotFile);
+    File f = writeDotFile(g, labels, title, dotFile);
     spawnDot(dotExe, outputFile, f);
   }
 

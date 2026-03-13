@@ -223,7 +223,7 @@ public abstract class Launcher {
         boolean repeat = true;
         while (repeat) {
           try {
-            Thread.sleep(SLEEP_MS);
+            sleep(SLEEP_MS);
           } catch (InterruptedException e1) {
             // e1.printStackTrace();
             // just ignore and continue

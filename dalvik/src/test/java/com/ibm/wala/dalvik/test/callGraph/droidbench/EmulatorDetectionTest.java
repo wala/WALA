@@ -16,6 +16,6 @@ public class EmulatorDetectionTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("EmulatorDetection");
+    return generateData("EmulatorDetection");
   }
 }

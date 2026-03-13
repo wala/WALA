@@ -369,7 +369,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   public static void main(String[] args) throws IOException, Error {
     //    DomLessSourceExtractor domLessScopeGenerator = new DomLessSourceExtractor();
     JSSourceExtractor domLessScopeGenerator = new DefaultSourceExtractor();
-    JSSourceExtractor.DELETE_UPON_EXIT = false;
+    DELETE_UPON_EXIT = false;
     URL entrypointUrl = URI.create(args[0]).toURL();
     IHtmlParser htmlParser = new JerichoHtmlParser();
     IUrlResolver urlResolver = new IdentityUrlResolver();

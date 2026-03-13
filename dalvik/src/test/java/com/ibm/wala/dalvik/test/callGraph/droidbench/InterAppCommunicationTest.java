@@ -16,6 +16,6 @@ public class InterAppCommunicationTest extends DroidBenchCGTest {
   }
 
   static Stream<Named<TestParameters>> generateData() {
-    return DroidBenchCGTest.generateData("InterAppCommunication");
+    return generateData("InterAppCommunication");
   }
 }

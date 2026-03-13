@@ -113,7 +113,7 @@ public final class ComparisonInstruction extends Instruction implements ICompari
 
   @Override
   public String getPushedType(String[] types) {
-    return Constants.TYPE_boolean;
+    return TYPE_boolean;
   }
 
   @Override
