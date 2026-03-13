@@ -2727,7 +2727,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   /** parse the JavaScript code using Rhino, and then translate the resulting AST to CAst */
   @Override
   public CAstEntity translateToCAst()
-      throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
+      throws IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
     class CAstErrorReporter implements ErrorReporter {
       private final Set<Warning> w = HashSetFactory.make();
 

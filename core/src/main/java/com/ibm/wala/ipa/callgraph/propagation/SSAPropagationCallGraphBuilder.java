@@ -453,7 +453,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @throws IllegalArgumentException if call == null
    */
   public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IRView ir, CGNode node)
-      throws IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }

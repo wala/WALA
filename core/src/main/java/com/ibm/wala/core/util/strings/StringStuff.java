@@ -424,7 +424,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if b == null
    */
   public static int parseForArrayDimensionality(ImmutableByteArray b, int start, int length)
-      throws IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
 
     if (b == null) {
       throw new IllegalArgumentException("b == null");

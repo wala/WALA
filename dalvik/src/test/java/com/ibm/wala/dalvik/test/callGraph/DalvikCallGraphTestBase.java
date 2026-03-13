@@ -53,7 +53,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -99,8 +98,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public void dynamicCG(File javaJarPath, String mainClass, String... args)
-      throws FileNotFoundException,
-          IOException,
+      throws IOException,
           ClassNotFoundException,
           InvalidClassFileException,
           FailureException,
