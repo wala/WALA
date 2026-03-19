@@ -189,7 +189,6 @@ public class EntryPoints {
 
     try {
       // Process p = Runtime.getRuntime().exec(command);
-      @SuppressWarnings("resource")
       Process p = pb.start();
       BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 

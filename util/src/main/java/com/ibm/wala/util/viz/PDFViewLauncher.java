@@ -59,7 +59,6 @@ public class PDFViewLauncher {
   public void run() {
     String[] cmdarray = {getGvExe(), getPDFFile()};
     try {
-      @SuppressWarnings("resource")
       Process p = Runtime.getRuntime().exec(cmdarray);
       setProcess(p);
     } catch (IOException e) {

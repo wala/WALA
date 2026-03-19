@@ -38,7 +38,6 @@ public class BasicLauncher extends Launcher {
   }
 
   /** Launch the process and wait until it is finished. Returns the exit value of the process. */
-  @SuppressWarnings("resource")
   public int launch() throws IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
     Thread d1 = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
