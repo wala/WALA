@@ -322,6 +322,10 @@ public class SSAConversion extends AbstractSSAConversion {
     @Override
     public String[] getLocalNames(int pc, int vn) {
 
+      if (computedNames.length <= vn) {
+        return null;
+      }
+      
       if (computedNames[vn] != null) {
         return computedNames[vn];
       }

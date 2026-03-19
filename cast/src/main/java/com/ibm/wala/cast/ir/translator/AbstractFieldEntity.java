@@ -26,8 +26,6 @@ public class AbstractFieldEntity extends AbstractDataEntity {
 
   private final CAstType fieldType;
 
-  private final CAstEntity declaringClass;
-
   private Position loc;
 
   private Position nameLoc;
@@ -37,11 +35,20 @@ public class AbstractFieldEntity extends AbstractDataEntity {
       CAstType fieldType,
       Set<CAstQualifier> modifiers,
       boolean isStatic,
-      CAstEntity declaringClass,
+      @SuppressWarnings("unused") CAstEntity declaringClass,
+      Position loc,
+      Position nameLoc) {
+    this(name, fieldType, modifiers, isStatic, loc, nameLoc);
+  }
+  
+  public AbstractFieldEntity(
+      String name,
+      CAstType fieldType,
+      Set<CAstQualifier> modifiers,
+      boolean isStatic,
       Position loc,
       Position nameLoc) {
     this.name = name;
-    this.declaringClass = declaringClass;
     this.fieldType = fieldType;
     this.loc = loc;
     this.nameLoc = nameLoc;
@@ -57,7 +64,7 @@ public class AbstractFieldEntity extends AbstractDataEntity {
 
   @Override
   public String toString() {
-    return "field " + name + "(" + fieldType + ") of " + declaringClass.getName();
+    return "field " + name + "(" + fieldType + ")";
   }
 
   @Override
