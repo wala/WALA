@@ -87,6 +87,7 @@ public class DexDotUtil extends DotUtil {
     spawnDot(dotExe, outputFile, f);
   }
 
+  @SuppressWarnings("resource")
   public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {
     if (dotFile == null) {
       throw new IllegalArgumentException("dotFile is null");

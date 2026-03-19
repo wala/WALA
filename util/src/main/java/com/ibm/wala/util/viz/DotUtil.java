@@ -102,6 +102,7 @@ public class DotUtil {
     BufferedInputStream output = null;
     BufferedInputStream error = null;
     try {
+      @SuppressWarnings("resource")
       Process p = Runtime.getRuntime().exec(cmdarray);
       output = new BufferedInputStream(p.getInputStream());
       error = new BufferedInputStream(p.getErrorStream());
