@@ -10,8 +10,19 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.Worklist;
@@ -38,15 +49,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /** System of constraints that define propagation for call graph construction */
 public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariable> {
@@ -455,7 +457,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (klass.isArrayClass()) {
       ArrayClass aClass = (ArrayClass) klass;
       int dim = aClass.getDimensionality();
-      registerMultiDimArraysForArrayOfObjectTypes(dim, index, aClass);
+      if (aClass.getClassLoader().getLanguage() == Language.JAVA) {
+        registerMultiDimArraysForArrayOfObjectTypes(dim, index, aClass);
+      }
 
       IClass elementClass = aClass.getInnermostElementClass();
       if (elementClass != null) {
