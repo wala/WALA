@@ -59,6 +59,10 @@ jobs:
           distribution: 'zulu'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: https://gradle.com/terms-of-service
+          build-scan-terms-of-use-agree: 'yes'
       - name: Choose extra Linux-only Gradle tasks
         run: echo OS_SPECIFIC_GRADLE_TASKS='publishAllPublicationsToFakeRemoteRepository shellcheck' >> $GITHUB_ENV
         if: runner.os == 'Linux'
