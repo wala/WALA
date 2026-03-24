@@ -67,6 +67,7 @@ jobs:
         with:
           run: >-
             ./gradlew
+            --scan
             --console=colored "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
             aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }} checkGitCleanliness
       - name: Upload test results
