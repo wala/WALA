@@ -81,7 +81,7 @@ tasks.named<Copy>("processTestResources") {
 }
 
 // Task to make it easier to run IFDSExplorerExample.  Command-line arguments are passed via
-// the "args" Gradle project property, e.g. (on a Mac):
+// the "args" Gradle project property, e.g., (on a Mac):
 // `./gradlew :com.ibm.wala.ide.tests:runIFDSExplorerExample -Pargs="-dotExe /usr/local/bin/dot
 // -viewerExe /usr/bin/open"`
 tasks.register<JavaExec>("runIFDSExplorerExample") {

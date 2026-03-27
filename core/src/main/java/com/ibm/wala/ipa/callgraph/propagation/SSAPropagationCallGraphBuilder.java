@@ -2357,8 +2357,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           result = new InstanceKey[0];
         }
       } else {
-        // some non-built in type (e.g. Integer). give up on strong typing.
-        // language-specific subclasses (e.g. Javascript) should override this method to get strong
+        // some non-built in type (e.g., Integer). give up on strong typing.
+        // language-specific subclasses (e.g., Javascript) should override this method to get strong
         // typing
         // with generics if desired.
         TypeReference type =

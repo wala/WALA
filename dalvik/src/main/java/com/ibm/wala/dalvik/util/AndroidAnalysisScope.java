@@ -40,7 +40,7 @@ public class AndroidAnalysisScope {
    * @param codeFileName the name of a .oat|.apk|.dex file
    * @param exclusions the name of the exclusions file (nullable)
    * @param loader the classloader to use
-   * @param androidLib an array of libraries (e.g. the Android SDK jar) to add to the scope
+   * @param androidLib an array of libraries (e.g., the Android SDK jar) to add to the scope
    * @return a {@link AnalysisScope}
    */
   public static AnalysisScope setUpAndroidAnalysisScope(
