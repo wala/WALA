@@ -40,7 +40,7 @@ public class AbstractFieldEntity extends AbstractDataEntity {
       Position nameLoc) {
     this(name, fieldType, modifiers, isStatic, loc, nameLoc);
   }
-  
+
   public AbstractFieldEntity(
       String name,
       CAstType fieldType,

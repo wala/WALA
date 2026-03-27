@@ -177,7 +177,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /** generate IR for a CAst array write, updating context.cfg() */
   @Override
   public abstract void doArrayWrite(
-      WalkContext context, int arrayValue, CAstNode arrayRef, CAstNode rvalNode, int[] dimValues, int rval);
+      WalkContext context,
+      int arrayValue,
+      CAstNode arrayRef,
+      CAstNode rvalNode,
+      int[] dimValues,
+      int rval);
 
   /** generate IR for a CAst field read, updating context.cfg() */
   protected abstract void doFieldRead(
@@ -185,7 +190,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   /** generate IR for a CAst field write, updating context.cfg() */
   protected abstract void doFieldWrite(
-      WalkContext context, int receiver, CAstNode elt, CAstNode parent, CAstNode rvalNode, int rval);
+      WalkContext context,
+      int receiver,
+      CAstNode elt,
+      CAstNode parent,
+      CAstNode rvalNode,
+      int rval);
 
   /** generate IR for a CAst function expression, updating context.cfg() */
   protected abstract void doMaterializeFunction(

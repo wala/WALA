@@ -297,7 +297,12 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   public void doArrayWrite(
-      WalkContext context, int arrayValue, CAstNode arrayRef, CAstNode rvalNode, int[] dimValues, int rval) {
+      WalkContext context,
+      int arrayValue,
+      CAstNode arrayRef,
+      CAstNode rvalNode,
+      int[] dimValues,
+      int rval) {
     Assertions.UNREACHABLE("JSAstTranslator.doArrayWrite() called!");
   }
 
@@ -354,7 +359,12 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected void doFieldWrite(
-      WalkContext context, int receiver, CAstNode elt, CAstNode parent, CAstNode rvalNode, int rval) {
+      WalkContext context,
+      int receiver,
+      CAstNode elt,
+      CAstNode parent,
+      CAstNode rvalNode,
+      int rval) {
     this.visit(elt, context, this);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();

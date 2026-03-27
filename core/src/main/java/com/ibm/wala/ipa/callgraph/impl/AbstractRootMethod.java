@@ -183,13 +183,13 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   public SSANewInstruction add1DArrayAllocation(TypeReference T, int length) {
-    return addArrayAllocation(T, new int[] { length });
+    return addArrayAllocation(T, new int[] {length});
   }
-  
+
   /** Add a New statement of the given array type and length */
   public SSANewInstruction addArrayAllocation(TypeReference T, int[] length) {
     SSANewInstruction result = null;
-    int i = length.length-1;
+    int i = length.length - 1;
     while (i >= 0) {
       int instance = nextLocal++;
       NewSiteReference ref = NewSiteReference.make(statements.size(), T);
@@ -199,17 +199,18 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       if (result != null) {
         SSANewInstruction x = insts.NewInstruction(statements.size(), instance, ref, sizes);
         statements.add(x);
-        insts.ArrayStoreInstruction(statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
+        insts.ArrayStoreInstruction(
+            statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
         result = x;
       } else {
         result = insts.NewInstruction(statements.size(), instance, ref, sizes);
       }
       T = T.getArrayElementType();
       i--;
-    } 
+    }
     cache.invalidate(this, Everywhere.EVERYWHERE);
     return result;
- }
+  }
 
   /** Add a New statement of the given type */
   public SSANewInstruction addAllocationWithoutCtor(TypeReference T) {

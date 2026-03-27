@@ -156,7 +156,7 @@ public class ClassHierarchy implements IClassHierarchy {
       if (klass == null) {
         return result;
       }
-      
+
       klass = klass.getSuperclass();
 
       while (klass != null) {

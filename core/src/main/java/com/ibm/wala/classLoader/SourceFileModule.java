@@ -63,7 +63,7 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
   public String logicalFileName() {
     return fileName;
   }
-  
+
   @Override
   public URL getURL() {
     if (url == null) {

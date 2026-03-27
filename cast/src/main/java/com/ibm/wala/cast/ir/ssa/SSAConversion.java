@@ -325,7 +325,7 @@ public class SSAConversion extends AbstractSSAConversion {
       if (computedNames.length <= vn) {
         return null;
       }
-      
+
       if (computedNames[vn] != null) {
         return computedNames[vn];
       }

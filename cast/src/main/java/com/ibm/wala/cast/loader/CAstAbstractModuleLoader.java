@@ -10,19 +10,6 @@
  */
 package com.ibm.wala.cast.loader;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.ir.translator.AstTranslator.WalkContext;
@@ -57,6 +44,18 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.TemporaryFile;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * abstract class loader that performs CAst and IR generation for relevant entities in a list of
@@ -281,7 +280,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       // force creation of these constants by calling the getter methods
       symtab.getNullConstant();
     }
- 
+
     public DynamicMethodObject(
         IClass cls,
         Collection<CAstQualifier> qualifiers,

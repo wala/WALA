@@ -131,7 +131,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   @Override
   public void doArrayWrite(
-      WalkContext context, int arrayValue, CAstNode arrayRefNode, CAstNode rvalNode, int[] dimValues, int rval) {
+      WalkContext context,
+      int arrayValue,
+      CAstNode arrayRefNode,
+      CAstNode rvalNode,
+      int[] dimValues,
+      int rval) {
     TypeReference arrayTypeRef =
         arrayRefNode.getKind() == CAstNode.ARRAY_LITERAL
             ? ((TypeReference) arrayRefNode.getChild(0).getChild(0).getValue())
@@ -175,7 +180,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   @Override
   protected void doFieldWrite(
-      WalkContext context, int receiver, CAstNode elt, CAstNode parent, CAstNode rvalNode, int rval) {
+      WalkContext context,
+      int receiver,
+      CAstNode elt,
+      CAstNode parent,
+      CAstNode rvalNode,
+      int rval) {
     FieldReference fieldRef = (FieldReference) elt.getValue();
 
     if (receiver == -1) { // a static field: AstTranslator.getValue() produces
