@@ -246,14 +246,14 @@ public abstract class TestCorrelatedPairExtraction {
   @Test
   public void test9() {
     testRewriter(
-        "function defglobals(globals) {\n"
+        "function defGlobals(globals) {\n"
             + "  for(var p in globals) {\n"
             + "    (function() {\n"
             + "      this[p] = globals[p];\n"
             + "    })();\n"
             + "  }\n"
             + "}",
-        "function defglobals(globals) {\n"
+        "function defGlobals(globals) {\n"
             + "  for(var p in globals) {\n"
             + "    (function() {\n"
             + "      (function _forin_body_0(p, thi$) {\n"
