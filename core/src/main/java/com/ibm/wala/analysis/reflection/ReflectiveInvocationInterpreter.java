@@ -173,7 +173,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     int nargs =
         target.getNumberOfParameters(); // nargs := number of parameters to target, including "this"
     // pointer
-    int args[] = new int[nargs];
+    int[] args = new int[nargs];
     int pc = 0;
     final int parametersVn; // parametersVn will hold the value number of parameters array
 
@@ -289,7 +289,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     }
 
     SSAInstruction[] instrs = new SSAInstruction[m.allInstructions.size()];
-    m.allInstructions.<SSAInstruction>toArray(instrs);
+    m.allInstructions.toArray(instrs);
 
     return new SyntheticIR(
         method,

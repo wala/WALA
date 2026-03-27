@@ -257,9 +257,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     Pair<PointsToResult, Collection<InstanceKeyAndState>> p = getPointsToWithStates(pk, ikeyPred);
     final Collection<InstanceKeyAndState> p2SetWithStates = p.snd;
     Collection<InstanceKey> finalP2Set =
-        p2SetWithStates != null
-            ? removeStates(p2SetWithStates)
-            : Collections.<InstanceKey>emptySet();
+        p2SetWithStates != null ? removeStates(p2SetWithStates) : Collections.emptySet();
     return Pair.make(p.fst, finalP2Set);
   }
 
@@ -554,9 +552,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private Pair<PointsToResult, Collection<PointerKey>> getFlowsToInternal(
       InstanceKeyAndState ikAndState) {
     InstanceKey ik = ikAndState.getInstanceKey();
-    if (!(ik instanceof InstanceKeyWithNode)) {
-      assert false : "TODO: handle " + ik.getClass();
-    }
+    assert ik instanceof InstanceKeyWithNode : "TODO: handle " + ik.getClass();
     if (DEBUG) {
       System.err.println("answering flows-to query for " + ikAndState);
     }
@@ -968,8 +964,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
     }
 
-    void handleAllCopies(
-        PointerKeyAndState curPk, Iterator<? extends Object> succNodes, IFlowLabel label) {
+    void handleAllCopies(PointerKeyAndState curPk, Iterator<?> succNodes, IFlowLabel label) {
       while (succNodes.hasNext()) {
         handleCopy(curPk, (PointerKey) succNodes.next(), label);
       }
@@ -1023,7 +1018,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     void handleAllBackCopies(
-        PointerKeyAndState curPkAndState, Iterator<? extends Object> predNodes, IFlowLabel label) {
+        PointerKeyAndState curPkAndState, Iterator<?> predNodes, IFlowLabel label) {
       while (predNodes.hasNext()) {
         handleBackCopy(curPkAndState, (PointerKey) predNodes.next(), label);
       }
@@ -1045,9 +1040,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (pointsToQueried.put(pkAndState.getPointerKey(), pkAndState.getState())) {
         if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
           CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
-          if (!g.hasSubgraphForNode(node)) {
-            assert false : "missing constraints for " + node;
-          }
+          assert g.hasSubgraphForNode(node) : "missing constraints for " + node;
         }
         if (DEBUG) {
           // System.err.println("adding to init_ " + pkAndState);
@@ -1064,9 +1057,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     protected void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
       if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
         CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
-        if (!g.hasSubgraphForNode(node)) {
-          assert false : "missing constraints for " + node;
-        }
+        assert g.hasSubgraphForNode(node) : "missing constraints for " + node;
       }
       if (DEBUG) {
         // System.err.println("adding to tracked points-to " + pkAndState);
@@ -1200,9 +1191,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG) System.err.println("init " + curPkAndState);
-        if (curPk instanceof LocalPointerKey) {
-          assert g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
-        }
+        assert !(curPk instanceof LocalPointerKey)
+            || g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
         // if (curPk instanceof LocalPointerKey) {
         // Collection<InstanceKey> constantVals =
         // getConstantVals((LocalPointerKey) curPk);

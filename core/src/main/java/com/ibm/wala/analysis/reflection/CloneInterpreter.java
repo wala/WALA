@@ -213,7 +213,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
    */
   private IR makeIR(IMethod method, Context context, IClass klass) {
     assert klass != null;
-    SSAInstruction instrs[] = makeStatements(klass);
+    SSAInstruction[] instrs = makeStatements(klass);
     return new SyntheticIR(
         method,
         context,

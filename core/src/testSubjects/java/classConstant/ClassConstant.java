@@ -12,7 +12,7 @@ package classConstant;
 
 class ClassConstant {
 
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     Class<ClassConstant> x = ClassConstant.class;
     x.hashCode();
   }

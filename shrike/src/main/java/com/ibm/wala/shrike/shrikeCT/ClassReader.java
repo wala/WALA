@@ -67,8 +67,8 @@ public final class ClassReader implements ClassConstants {
     if (magic != MAGIC) {
       throw new InvalidClassFileException(offset, "bad magic number: " + magic);
     }
-    // Support class files up through JDK 25 (version 69)
-    if (majorVersion < 45 || majorVersion > 69) {
+    // Support class files up through JDK 26 (version 70)
+    if (majorVersion < 45 || majorVersion > 70) {
       throw new InvalidClassFileException(
           offset, "unknown class file version: " + majorVersion + '.' + minorVersion);
     }
@@ -439,12 +439,6 @@ public final class ClassReader implements ClassConstants {
     int size;
 
     private int remaining;
-
-    /**
-     * Create a blank iterator. The iterator is not valid until it is initialized by some other
-     * class.
-     */
-    public AttrIterator() {}
 
     private void setSize() {
       if (remaining > 0) {

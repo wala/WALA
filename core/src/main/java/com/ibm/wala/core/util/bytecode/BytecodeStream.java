@@ -474,31 +474,31 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   // // READ BYTECODES
-  private final byte readSignedByte() {
+  private byte readSignedByte() {
     return bcodes[bcIndex++];
   }
 
-  private final int readUnsignedByte() {
+  private int readUnsignedByte() {
     return (bcodes[bcIndex++] & 0xFF);
   }
 
-  private final int getUnsignedByte(int index) {
+  private int getUnsignedByte(int index) {
     return (bcodes[index] & 0xFF);
   }
 
-  private final int readSignedShort() {
+  private int readSignedShort() {
     int i = bcodes[bcIndex++] << 8;
     i |= (bcodes[bcIndex++] & 0xFF);
     return i;
   }
 
-  private final int readUnsignedShort() {
+  private int readUnsignedShort() {
     int i = (bcodes[bcIndex++] & 0xFF) << 8;
     i |= (bcodes[bcIndex++] & 0xFF);
     return i;
   }
 
-  private final int readSignedInt() {
+  private int readSignedInt() {
     int i = bcodes[bcIndex++] << 24;
     i |= (bcodes[bcIndex++] & 0xFF) << 16;
     i |= (bcodes[bcIndex++] & 0xFF) << 8;
@@ -506,7 +506,7 @@ public class BytecodeStream implements BytecodeConstants {
     return i;
   }
 
-  private final int getSignedInt(int index) {
+  private int getSignedInt(int index) {
     int i = bcodes[index++] << 24;
     i |= (bcodes[index++] & 0xFF) << 16;
     i |= (bcodes[index++] & 0xFF) << 8;

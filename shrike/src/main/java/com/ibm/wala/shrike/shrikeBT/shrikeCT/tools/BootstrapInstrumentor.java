@@ -97,7 +97,7 @@ public class BootstrapInstrumentor {
             InvokeDynamicInstruction x = (InvokeDynamicInstruction) inst;
             BootstrapMethod m = x.getBootstrap();
 
-            IInstruction insts[] = new IInstruction[m.callArgumentCount() + 8];
+            IInstruction[] insts = new IInstruction[m.callArgumentCount() + 8];
             int arg = 0;
 
             insts[arg++] =

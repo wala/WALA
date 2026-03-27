@@ -230,7 +230,7 @@ public class StringBuilderUseAnalysis {
   }
 
   public InstanceKeySite getNode(final CallSiteReference csr, final InstanceKey k) {
-    final ISSABasicBlock bbs[] = node.getIR().getBasicBlocksForCall(csr);
+    final ISSABasicBlock[] bbs = node.getIR().getBasicBlocksForCall(csr);
 
     final OrdinalSetMapping<InstanceKey> mapping = pa.getInstanceKeyMapping();
     final HashSet<ISSABasicBlock> blocksSeen = new HashSet<>();

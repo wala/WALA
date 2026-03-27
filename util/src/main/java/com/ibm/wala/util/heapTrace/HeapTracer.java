@@ -363,7 +363,7 @@ public class HeapTracer {
 
   private final HashMap<Package, Object> packageStatus = HashMapFactory.make();
 
-  private final boolean isInBadPackage(Class<?> c) {
+  private boolean isInBadPackage(Class<?> c) {
     Package p = c.getPackage();
     if (p == null) {
       return false;

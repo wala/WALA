@@ -144,10 +144,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
     if (isPrimordialJarFile(j)) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
-      s.add(
-          file.isDirectory()
-              ? (Module) new BinaryDirectoryTreeModule(file)
-              : (Module) new JarFileModule(j));
+      s.add(file.isDirectory() ? new BinaryDirectoryTreeModule(file) : new JarFileModule(j));
     }
   }
 

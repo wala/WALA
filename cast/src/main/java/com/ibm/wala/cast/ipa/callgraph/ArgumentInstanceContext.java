@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import java.util.Objects;
 
 public class ArgumentInstanceContext implements Context {
   private final Context base;
@@ -55,13 +56,9 @@ public class ArgumentInstanceContext implements Context {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     ArgumentInstanceContext other = (ArgumentInstanceContext) obj;
-    if (base == null) {
-      if (other.base != null) return false;
-    } else if (!base.equals(other.base)) return false;
+    if (!Objects.equals(base, other.base)) return false;
     if (index != other.index) return false;
-    if (instanceKey == null) {
-      if (other.instanceKey != null) return false;
-    } else if (!instanceKey.equals(other.instanceKey)) return false;
+    if (!Objects.equals(instanceKey, other.instanceKey)) return false;
     return true;
   }
 

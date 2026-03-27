@@ -42,7 +42,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
       IR callerIR = caller.getIR();
-      SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
+      SSAAbstractInvokeInstruction[] callStmts = callerIR.getCalls(site);
       assert callStmts.length == 1;
       int nargs = callStmts[0].getNumberOfPositionalParameters();
       return constructors.findOrCreateConstructorMethod(

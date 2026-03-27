@@ -20,8 +20,6 @@ public class Stopwatch {
 
   private long startTime;
 
-  public Stopwatch() {}
-
   public void start() {
     startTime = System.nanoTime();
   }

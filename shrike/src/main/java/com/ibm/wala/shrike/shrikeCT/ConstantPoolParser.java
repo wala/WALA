@@ -12,6 +12,7 @@ package com.ibm.wala.shrike.shrikeCT;
 
 import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrike.shrikeCT.ClassReader.AttrIterator;
+import java.util.Objects;
 
 /** A ConstantPoolParser provides read-only access to the constant pool of a class file. */
 public final class ConstantPoolParser implements ClassConstants {
@@ -63,15 +64,9 @@ public final class ConstantPoolParser implements ClassConstants {
       if (kind != other.kind) {
         return false;
       }
-      if (className == null) {
-        if (other.className != null) return false;
-      } else if (!className.equals(other.className)) return false;
-      if (descriptor == null) {
-        if (other.descriptor != null) return false;
-      } else if (!descriptor.equals(other.descriptor)) return false;
-      if (elementName == null) {
-        if (other.elementName != null) return false;
-      } else if (!elementName.equals(other.elementName)) return false;
+      if (!Objects.equals(className, other.className)) return false;
+      if (!Objects.equals(descriptor, other.descriptor)) return false;
+      if (!Objects.equals(elementName, other.elementName)) return false;
       return true;
     }
   }

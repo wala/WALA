@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SubtypesEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -51,7 +50,7 @@ public class SyntheticTest extends WalaTestCase {
     assertThat(m).isNotNull();
     SubtypesEntrypoint e = new SubtypesEntrypoint(m, cha);
     AnalysisOptions options =
-        CallGraphTestUtil.makeAnalysisOptions(scope, Collections.<Entrypoint>singleton(e));
+        CallGraphTestUtil.makeAnalysisOptions(scope, Collections.singleton(e));
 
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCacheImpl(), cha, false);
 

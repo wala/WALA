@@ -38,6 +38,7 @@
 package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
+import java.util.Objects;
 
 public class AssignLabel implements IFlowLabelWithFilter {
 
@@ -62,10 +63,7 @@ public class AssignLabel implements IFlowLabelWithFilter {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final AssignLabel other = (AssignLabel) obj;
-    if (filter == null) {
-      if (other.filter != null) return false;
-    } else if (!filter.equals(other.filter)) return false;
+    if (!Objects.equals(filter, ((AssignLabel) obj).filter)) return false;
     return true;
   }
 

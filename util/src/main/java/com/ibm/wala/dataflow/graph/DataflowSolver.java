@@ -130,7 +130,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
 
     UnionFind() {
       allKeys = new Object[node2In.size() + node2Out.size() + edge2Var.size()];
-      Object allVars[] = new Object[node2In.size() + node2Out.size() + edge2Var.size()];
+      Object[] allVars = new Object[node2In.size() + node2Out.size() + edge2Var.size()];
 
       int i = mapIt(0, allVars, node2In);
       i = mapIt(i, allVars, node2Out);

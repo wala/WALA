@@ -61,7 +61,7 @@ public class AstJavaSlicer {
     for (CGNode n : DFS.getReachableNodes(CG, partialRoots)) {
       IR nir = n.getIR();
       if (nir != null) {
-        SSAInstruction insts[] = nir.getInstructions();
+        SSAInstruction[] insts = nir.getInstructions();
         for (int i = 0; i < insts.length; i++) {
           if (filter.test(insts[i])) {
             result.add(new NormalStatement(n, i));

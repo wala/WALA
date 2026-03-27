@@ -120,7 +120,7 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
       if (backingStore instanceof SmallMap) {
         if (t.size() > cutOff) {
           Map<K, V> old = backingStore;
-          backingStore = (Map<K, V>) HashMapFactory.make(t);
+          backingStore = HashMapFactory.make(t);
           backingStore.putAll(old);
         } else {
           backingStore.putAll(t);
@@ -142,14 +142,13 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   @Override
   @SuppressWarnings("unchecked")
   public Set<K> keySet() {
-    return (Set<K>) ((backingStore == null) ? Collections.emptySet() : backingStore.keySet());
+    return (backingStore == null) ? Collections.emptySet() : backingStore.keySet();
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public Collection<V> values() {
-    return (Collection<V>)
-        ((backingStore == null) ? Collections.emptySet() : backingStore.values());
+    return (backingStore == null) ? Collections.emptySet() : backingStore.values();
   }
 
   /**
@@ -158,7 +157,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   @Override
   @SuppressWarnings("unchecked")
   public Set<Map.Entry<K, V>> entrySet() {
-    return (Set<Entry<K, V>>)
-        ((backingStore == null) ? Collections.emptySet() : backingStore.entrySet());
+    return (backingStore == null) ? Collections.emptySet() : backingStore.entrySet();
   }
 }

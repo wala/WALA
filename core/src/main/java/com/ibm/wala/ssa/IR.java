@@ -143,8 +143,7 @@ public abstract class IR implements IRView {
       if (bb instanceof ExceptionHandlerBasicBlock) {
 
         result.append("<Handler> (");
-        Iterator<TypeReference> catchIter =
-            ((ExceptionHandlerBasicBlock) bb).getCaughtExceptionTypes();
+        Iterator<TypeReference> catchIter = bb.getCaughtExceptionTypes();
         while (catchIter.hasNext()) {
           TypeReference next = catchIter.next();
           result.append(next);

@@ -19,6 +19,7 @@ import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import java.util.Iterator;
+import java.util.Objects;
 
 /** A helper class to make the ipcfg work correctly with context-sensitive call graphs. */
 public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber
@@ -114,12 +115,8 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     final BasicBlockInContext<?> other = (BasicBlockInContext<?>) obj;
-    if (delegate == null) {
-      if (other.delegate != null) return false;
-    } else if (!delegate.equals(other.delegate)) return false;
-    if (node == null) {
-      if (other.node != null) return false;
-    } else if (!node.equals(other.node)) return false;
+    if (!Objects.equals(delegate, other.delegate)) return false;
+    if (!Objects.equals(node, other.node)) return false;
     return true;
   }
 

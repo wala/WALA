@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -26,7 +25,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:call", new String[] {"!suffix:m"}));
 
   @Test
-  public void testBound0Worklist() throws WalaException, Error, CancelException {
+  public void testBound0Worklist() throws WalaException, CancelException {
     runBoundedTest(
         "tests/field-based/bounded.js", assertionsForBound0JS, BuilderType.OPTIMISTIC_WORKLIST, 0);
   }
@@ -39,7 +38,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:call", new String[] {"!suffix:m"}));
 
   @Test
-  public void testBound1Worklist() throws WalaException, Error, CancelException {
+  public void testBound1Worklist() throws WalaException, CancelException {
     runBoundedTest(
         "tests/field-based/bounded.js", assertionsForBound1JS, BuilderType.OPTIMISTIC_WORKLIST, 1);
   }
@@ -52,7 +51,7 @@ public class TestBoundedFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:call", new String[] {"suffix:m"}));
 
   @Test
-  public void testBound2Worklist() throws WalaException, Error, CancelException {
+  public void testBound2Worklist() throws WalaException, CancelException {
     runBoundedTest(
         "tests/field-based/bounded.js", assertionsForBound2JS, BuilderType.OPTIMISTIC_WORKLIST, 2);
   }

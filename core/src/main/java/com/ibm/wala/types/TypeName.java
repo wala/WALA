@@ -272,7 +272,7 @@ public final class TypeName implements Serializable {
         result.append(packageName);
         result.append('/');
       }
-      result.append(className.toString());
+      result.append(className);
 
       return result.toString();
     }

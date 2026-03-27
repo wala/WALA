@@ -54,8 +54,6 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 public class PrefixTransferFunctionProvider
     implements ITransferFunctionProvider<InstanceKeySite, PrefixVariable> {
 
-  public PrefixTransferFunctionProvider() {}
-
   @Override
   public UnaryOperator<PrefixVariable> getEdgeTransferFunction(
       InstanceKeySite src, InstanceKeySite dst) {

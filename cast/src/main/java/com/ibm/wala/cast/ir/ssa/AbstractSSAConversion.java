@@ -103,17 +103,17 @@ public abstract class AbstractSSAConversion {
 
   protected final SSAInstruction[] instructions;
 
-  private final int flags[];
+  private final int[] flags;
 
   protected final SymbolTable symbolTable;
 
   protected final DefaultValues defaultValues;
 
-  protected IntStack S[];
+  protected IntStack[] S;
 
-  protected int C[];
+  protected int[] C;
 
-  protected int valueMap[];
+  protected int[] valueMap;
 
   private Set<SSACFG.BasicBlock>[] assignmentMap;
 

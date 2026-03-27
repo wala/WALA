@@ -45,7 +45,7 @@ public class EnumSwitch {
 		BASTOS;
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		for(Palo p : Palo.values()) {
 			(new EnumSwitch()).doit(p);
 		}
@@ -83,4 +83,3 @@ public class EnumSwitch {
 		System.out.println(Palo.valueOf(caballo.toString()));
 	}
 }
-

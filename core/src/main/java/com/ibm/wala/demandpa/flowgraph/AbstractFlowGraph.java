@@ -226,8 +226,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk)
-      throws IllegalArgumentException {
+  public Iterator<?> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
@@ -239,8 +238,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk)
-      throws IllegalArgumentException {
+  public Iterator<?> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
@@ -458,10 +456,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
               // this is probably due to analysis scope exclusions.
               continue;
             }
-            if (!(ik instanceof ConcreteTypeKey)) {
-              assert ik instanceof ConcreteTypeKey
-                  : "uh oh: need to implement getCaughtException constraints for instance " + ik;
-            }
+            assert ik instanceof ConcreteTypeKey
+                : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
             IClass klass = ck.getType();
             if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {

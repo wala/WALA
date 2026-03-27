@@ -180,7 +180,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    final SSAInstruction instrs[] = getStatements(options);
+    final SSAInstruction[] instrs = getStatements(options);
 
     return new SyntheticIRWithNames(
         this,

@@ -142,7 +142,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     }
 
     if (A.S == null) {
-      return (B.S == null) ? OrdinalSet.<T>empty() : new OrdinalSet<>(B.S, B.mapping);
+      return (B.S == null) ? OrdinalSet.empty() : new OrdinalSet<>(B.S, B.mapping);
     } else if (B.S == null) {
       return new OrdinalSet<>(A.S, A.mapping);
     }

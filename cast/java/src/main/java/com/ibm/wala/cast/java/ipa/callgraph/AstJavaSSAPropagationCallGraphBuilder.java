@@ -232,7 +232,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         // in the case of a AstJavaNewEnclosingInstruction (a new instruction like outer.new Bla()),
         // we may need to record the instance keys if the pointer key outer is invariant (and thus
         // implicit)
-        InstanceKey enclosingInvariantKeys[] = null;
+        InstanceKey[] enclosingInvariantKeys = null;
 
         if (klass instanceof JavaClass) {
           IClass enclosingClass =

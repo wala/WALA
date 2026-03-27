@@ -14,7 +14,6 @@ import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,7 +44,7 @@ public class StringTable extends Table<String> implements Cloneable {
    * @throws IllegalArgumentException if fileName is null
    */
   public static StringTable readFromDirectTextFile(String fileName, Character comment)
-      throws FileNotFoundException, IOException {
+      throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("fileName is null");
     }
@@ -68,8 +67,7 @@ public class StringTable extends Table<String> implements Cloneable {
   /**
    * @param f a file containing a table in text format, whitespace delimited
    */
-  public static StringTable readFromTextFile(File f, Character comment)
-      throws FileNotFoundException, IOException {
+  public static StringTable readFromTextFile(File f, Character comment) throws IOException {
     if (f == null) {
       throw new IllegalArgumentException("null f");
     }

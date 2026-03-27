@@ -11,6 +11,7 @@
 package com.ibm.wala.demandpa.util;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
+import java.util.Objects;
 
 /**
  * * represents a single static occurrence of a memory access (i.e., an access to a field or to the
@@ -65,9 +66,7 @@ public class MemoryAccess {
     if (getClass() != obj.getClass()) return false;
     MemoryAccess other = (MemoryAccess) obj;
     if (instructionIndex != other.instructionIndex) return false;
-    if (node == null) {
-      if (other.node != null) return false;
-    } else if (!node.equals(other.node)) return false;
+    if (!Objects.equals(node, other.node)) return false;
     return true;
   }
 }

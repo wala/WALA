@@ -54,7 +54,7 @@ public class VarargsCovariant {
 		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new VarargsCovariant()).doit();
 	}
 	

@@ -21,7 +21,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
 
   private static final int LOW_MASK = 0x1f;
 
-  private int bits[];
+  private int[] bits;
 
   private final int nbits;
 

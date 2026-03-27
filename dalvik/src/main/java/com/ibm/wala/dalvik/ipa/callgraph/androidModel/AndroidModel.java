@@ -673,7 +673,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             final SSAValue target =
                 pm.getUnallocated(
                     activityType,
-                    new SSAValue.WeaklyNamedKey(activityType.getName(), "got" + fdName.toString()));
+                    new SSAValue.WeaklyNamedKey(activityType.getName(), "got" + fdName));
             final SSAInstruction getInst =
                 instructionFactory.GetInstruction(instPC, target, field.getReference());
             redirect.addStatement(getInst);
@@ -971,7 +971,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             final int instPC = encap.getNextProgramCounter();
             arg =
                 pm.getUnallocated(
-                    argT, new SSAValue.WeaklyNamedKey(argT.getName(), "got" + fdName.toString()));
+                    argT, new SSAValue.WeaklyNamedKey(argT.getName(), "got" + fdName));
             final SSAInstruction getInst =
                 instructionFactory.GetInstruction(instPC, arg, field.getReference());
             encap.addStatement(getInst);

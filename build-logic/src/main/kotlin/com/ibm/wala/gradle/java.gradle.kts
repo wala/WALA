@@ -19,7 +19,7 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
-jacoco.toolVersion = "0.8.13"
+jacoco.toolVersion = "0.8.14"
 
 repositories {
   mavenCentral()
@@ -38,7 +38,7 @@ base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
-  named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
+  named("javadocClasspath") { extendsFrom(compileClasspath) }
 }
 
 dependencies {
@@ -55,7 +55,7 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
-  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(25) }
+  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(26) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
   options.run {
     isDeprecation = true
@@ -117,25 +117,27 @@ tasks.named<Test>("test") {
                 .joinToString(",", postfix = "\n")
         )
 
-    afterTest(
-        KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-          csvResultsFile.get().let {
-            if (!it.exists()) {
-              it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
+    addTestListener(
+        object : TestListener {
+          override fun afterTest(descriptor: TestDescriptor, result: TestResult) {
+            csvResultsFile.get().let {
+              if (!it.exists()) {
+                it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
+              }
+              it.appendRow(
+                  trial,
+                  descriptor.className!!,
+                  "\"${descriptor.name}\"",
+                  result.resultType,
+                  result.startTime,
+                  result.endTime,
+              )
             }
-            it.appendRow(
-                trial,
-                descriptor.className!!,
-                "\"${descriptor.name}\"",
-                result.resultType,
-                result.startTime,
-                result.endTime,
-            )
           }
-        })
+        }
     )
   } else {
-    maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
   }
 }
 

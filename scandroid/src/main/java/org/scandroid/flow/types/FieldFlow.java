@@ -42,6 +42,7 @@ package org.scandroid.flow.types;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import java.util.Objects;
 
 /**
  * A flow to or from a field. The associated block represents either the location of the get or put
@@ -88,11 +89,7 @@ public class FieldFlow<E extends ISSABasicBlock> extends FlowType<E> {
     if (this == obj) return true;
     if (!super.equals(obj)) return false;
     if (getClass() != obj.getClass()) return false;
-    @SuppressWarnings("unchecked")
-    FieldFlow<E> other = (FieldFlow<E>) obj;
-    if (field == null) {
-      if (other.field != null) return false;
-    } else if (!field.equals(other.field)) return false;
+    if (!Objects.equals(field, ((FieldFlow<?>) obj).field)) return false;
     return true;
   }
 

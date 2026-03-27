@@ -389,7 +389,7 @@ public abstract class CAstRewriter<
       final CAstNode[] defaults) {
     final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, cfg, rootContext, nodes);
-    final CAstNode newDefaults[] = new CAstNode[defaults == null ? 0 : defaults.length];
+    final CAstNode[] newDefaults = new CAstNode[defaults == null ? 0 : defaults.length];
     for (int i = 0; i < newDefaults.length; i++) {
       newDefaults[i] = copyNodes(defaults[i], cfg, rootContext, nodes);
     }

@@ -29,8 +29,6 @@ public class GetClassContextSelector implements ContextSelector {
   public static final MethodReference GET_CLASS =
       MethodReference.findOrCreate(TypeReference.JavaLangObject, "getClass", "()Ljava/lang/Class;");
 
-  public GetClassContextSelector() {}
-
   @Override
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {

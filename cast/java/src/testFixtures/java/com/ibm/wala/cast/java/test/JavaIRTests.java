@@ -475,7 +475,7 @@ public abstract class JavaIRTests extends IRTests {
 
     for (CGNode n : cg) {
       // assume in the test we have one enclosing instruction for each of the methods here.
-      String methodSigs[] = {
+      String[] methodSigs = {
         "InnerClassA$AB.getA_X_from_AB()I",
         "InnerClassA$AB.getA_X_thru_AB()I",
         "InnerClassA$AB$ABSubA.getA_X()I",
@@ -487,7 +487,7 @@ public abstract class JavaIRTests extends IRTests {
       };
 
       // each type suffixed by ","
-      String ikConcreteTypeStrings[] = {
+      String[] ikConcreteTypeStrings = {
         "LInnerClassA,",
         "LInnerClassA,",
         "LInnerClassA,",

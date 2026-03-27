@@ -52,12 +52,6 @@ public class ClassWriter implements ClassConstants {
   private int bufLen;
 
   /**
-   * Create a blank ClassWriter with no methods, fields, or attributes, an empty constant pool, no
-   * super class, no implemented interfaces, no name, majorVersion 46, and minorVersion 0.
-   */
-  public ClassWriter() {}
-
-  /**
    * Set the class file format major version. You probably don't want to use this unless you really
    * know what you are doing.
    */
@@ -553,7 +547,7 @@ public class ClassWriter implements ClassConstants {
   /** Set the names of the implemented interfaces. */
   public void setInterfaceNames(String[] interfaces) {
     if (interfaces == null) {
-      setInterfaceNameIndices((int[]) null);
+      setInterfaceNameIndices(null);
     } else {
       int[] ifs = new int[interfaces.length];
       for (int i = 0; i < interfaces.length; i++) {
@@ -570,7 +564,6 @@ public class ClassWriter implements ClassConstants {
    * earlier.
    */
   public abstract static class Element {
-    public Element() {}
 
     /**
      * @return the number of bytes that will be generated.

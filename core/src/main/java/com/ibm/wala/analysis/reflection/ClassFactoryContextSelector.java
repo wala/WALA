@@ -59,8 +59,6 @@ public class ClassFactoryContextSelector implements ContextSelector {
   public static final MethodReference LOAD_CLASS_REF =
       MethodReference.findOrCreate(CLASSLOADER, loadClassAtom, loadClassDescriptor);
 
-  public ClassFactoryContextSelector() {}
-
   public static boolean isClassFactory(MethodReference m) {
     if (m.equals(FOR_NAME_REF)) {
       return true;

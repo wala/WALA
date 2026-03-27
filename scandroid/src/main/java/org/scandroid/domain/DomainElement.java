@@ -47,6 +47,7 @@
 
 package org.scandroid.domain;
 
+import java.util.Objects;
 import org.scandroid.flow.types.FlowType;
 
 @SuppressWarnings("rawtypes")
@@ -106,12 +107,8 @@ public class DomainElement {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     DomainElement other = (DomainElement) obj;
-    if (codeElement == null) {
-      if (other.codeElement != null) return false;
-    } else if (!codeElement.equals(other.codeElement)) return false;
-    if (taintSource == null) {
-      if (other.taintSource != null) return false;
-    } else if (!taintSource.equals(other.taintSource)) return false;
+    if (!Objects.equals(codeElement, other.codeElement)) return false;
+    if (!Objects.equals(taintSource, other.taintSource)) return false;
     return true;
   }
 }

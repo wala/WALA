@@ -192,7 +192,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
             final int pc = this.body.getNextProgramCounter();
             final VariableKey subKey =
                 new SSAValue.WeaklyNamedKey(
-                    fdType.getName(), "ctx" + fdType.getName().getClassName().toString());
+                    fdType.getName(), "ctx" + fdType.getName().getClassName());
             instance = this.pm.getUnallocated(fdType, subKey);
             final SSAInstruction getInst =
                 instructionFactory.GetInstruction(pc, instance, f.getReference());

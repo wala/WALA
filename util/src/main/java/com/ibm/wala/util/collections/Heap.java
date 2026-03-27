@@ -75,7 +75,7 @@ public abstract class Heap<T> {
     return index * 2 + 2;
   }
 
-  private final void ensureCapacity(int min) {
+  private void ensureCapacity(int min) {
     if (backingStore.length < min) {
       backingStore = Arrays.copyOf(backingStore, 2 * min);
     }
@@ -85,7 +85,7 @@ public abstract class Heap<T> {
    * SJF: I know this is horribly uglified ... I've attempted to make things as easy as possible on
    * the JIT, since this is performance critical.
    */
-  private final void removeElement(int index) {
+  private void removeElement(int index) {
     int ne = numberOfElements;
     T[] bs = backingStore;
     while (true) {
@@ -122,7 +122,7 @@ public abstract class Heap<T> {
    * SJF: I know this is uglified ... I've attempted to make things as easy as possible on the JIT,
    * since this is performance critical.
    */
-  private final void bubbleUp(T elt, int index) {
+  private void bubbleUp(T elt, int index) {
     T[] bs = backingStore;
     while (true) {
       if (index == 0) {

@@ -41,7 +41,7 @@ public class SwitchCase {
 	
 	public static final int X = 10;
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		
 		
 		int x = 5+X;

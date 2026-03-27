@@ -433,7 +433,7 @@ public interface BytecodeConstants {
   // -1 indicates a variable length instruction.
   // -2 indicates an unused instruction.
   //
-  byte JBC_length[] = {
+  byte[] JBC_length = {
     1, // nop
     1, // aconst_null
     1, // iconst_m1
@@ -639,7 +639,7 @@ public interface BytecodeConstants {
   };
 
   /** Bytecode names (for debugging/printing) */
-  String JBC_name[] = {
+  String[] JBC_name = {
     "nop",
     "aconst_null",
     "iconst_m1",

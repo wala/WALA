@@ -40,7 +40,7 @@ package foo.bar.hello.world;
 public class DefaultCtorInitializerTest {
 	String x;
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		// MAKE SURE initializer added to default ctor!!!
 		System.out.println(new DefaultCtorInitializerTest().x + z); // hellohellogoodbye
 	}

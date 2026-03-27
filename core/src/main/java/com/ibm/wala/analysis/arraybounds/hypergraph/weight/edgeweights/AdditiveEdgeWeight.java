@@ -1,6 +1,7 @@
 package com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights;
 
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
+import java.util.Objects;
 
 /**
  * EdgeWeight that adds a specific value.
@@ -25,14 +26,7 @@ public class AdditiveEdgeWeight implements EdgeWeight {
     if (this.getClass() != obj.getClass()) {
       return false;
     }
-    final AdditiveEdgeWeight other = (AdditiveEdgeWeight) obj;
-    if (this.value == null) {
-      if (other.value != null) {
-        return false;
-      }
-    } else if (!this.value.equals(other.value)) {
-      return false;
-    }
+    if (!Objects.equals(value, ((AdditiveEdgeWeight) obj).value)) return false;
     return true;
   }
 

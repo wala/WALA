@@ -628,9 +628,7 @@ public class TabulationSolver<T, P, F> {
               P p = supergraph.getProcOf(calleeEntry);
               T[] exits = supergraph.getExitsForProcedure(p);
               for (final T exit : exits) {
-                if (DEBUG_LEVEL > 0) {
-                  assert supergraph.containsNode(exit);
-                }
+                assert DEBUG_LEVEL <= 0 || supergraph.containsNode(exit);
                 int x_num = supergraph.getLocalBlockNumber(exit);
                 // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
                 // was recorded as a summary edge

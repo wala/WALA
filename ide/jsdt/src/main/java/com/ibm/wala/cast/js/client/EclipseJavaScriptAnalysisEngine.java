@@ -55,7 +55,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 public class EclipseJavaScriptAnalysisEngine
@@ -104,7 +103,7 @@ public class EclipseJavaScriptAnalysisEngine
   @Override
   protected JavaScriptEclipseProjectPath createProjectPath(IJavaScriptProject project)
       throws IOException, CoreException {
-    return JavaScriptEclipseProjectPath.make(project, Collections.<Pair<String, Plugin>>emptySet());
+    return JavaScriptEclipseProjectPath.make(project, Collections.emptySet());
   }
 
   @Override

@@ -30,7 +30,7 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   protected static final int LOW_MASK = 0x1f;
 
   @SuppressWarnings("NullAway.Init")
-  protected int bits[];
+  protected int[] bits;
 
   public abstract void set(int bit);
 
@@ -134,40 +134,32 @@ public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return get(i);
   }
 
-  private static final int[][] masks =
-      new int[][] {
-        {0xFFFF0000},
-        {0xFF000000, 0x0000FF00},
-        {0xF0000000, 0x00F00000, 0x0000F000, 0x000000F0},
-        {
-          0xC0000000,
-          0x0C000000,
-          0x00C00000,
-          0x000C0000,
-          0x0000C000,
-          0x00000C00,
-          0x000000C0,
-          0x0000000C
-        },
-        {
-          0x80000000,
-          0x20000000,
-          0x08000000,
-          0x02000000,
-          0x00800000,
-          0x00200000,
-          0x00080000,
-          0x00020000,
-          0x00008000,
-          0x00002000,
-          0x00000800,
-          0x00000200,
-          0x00000080,
-          0x00000020,
-          0x00000008,
-          0x00000002
-        }
-      };
+  private static final int[][] masks = {
+    {0xFFFF0000},
+    {0xFF000000, 0x0000FF00},
+    {0xF0000000, 0x00F00000, 0x0000F000, 0x000000F0},
+    {
+      0xC0000000, 0x0C000000, 0x00C00000, 0x000C0000, 0x0000C000, 0x00000C00, 0x000000C0, 0x0000000C
+    },
+    {
+      0x80000000,
+      0x20000000,
+      0x08000000,
+      0x02000000,
+      0x00800000,
+      0x00200000,
+      0x00080000,
+      0x00020000,
+      0x00008000,
+      0x00002000,
+      0x00000800,
+      0x00000200,
+      0x00000080,
+      0x00000020,
+      0x00000008,
+      0x00000002
+    }
+  };
 
   public int max() {
     int lastWord = bits.length - 1;

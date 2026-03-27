@@ -30,7 +30,6 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
@@ -40,12 +39,10 @@ import java.net.URL;
 import java.util.Set;
 
 public class JsViewerDriver extends JSCallGraphBuilderUtil {
-  public static void main(String args[])
-      throws ClassHierarchyException,
-          IllegalArgumentException,
+  public static void main(String[] args)
+      throws IllegalArgumentException,
           IOException,
           CancelException,
-          Error,
           WalaException,
           URISyntaxException {
 

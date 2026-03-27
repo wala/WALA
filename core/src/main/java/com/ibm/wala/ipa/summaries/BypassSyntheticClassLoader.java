@@ -169,7 +169,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     for (IClass c : toRemove) {
       syntheticClasses.remove(c.getName());
     }
-    ;
   }
 
   @Override

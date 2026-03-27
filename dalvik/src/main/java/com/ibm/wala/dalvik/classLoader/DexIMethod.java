@@ -770,7 +770,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
       ClassPathResolver path =
           new ClassPathResolver(
               Collections.singletonList(m.getFile().getParent() + '/'),
-              Collections.<String>emptyList(),
+              Collections.emptyList(),
               container.getEntry(dummyDexName));
 
       ClassPath cp =

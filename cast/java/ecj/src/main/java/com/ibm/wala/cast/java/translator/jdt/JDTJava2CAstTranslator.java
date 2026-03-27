@@ -840,7 +840,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       calltarget = makeNode(context, fFactory, null, CAstNode.SUPER);
     else calltarget = makeNode(context, fFactory, null, CAstNode.VOID);
 
-    ITypeBinding paramTypes[] = overridden.getParameterTypes();
+    ITypeBinding[] paramTypes = overridden.getParameterTypes();
 
     ArrayList<CAstNode> arguments = new ArrayList<>();
     int i = 0;
@@ -1781,8 +1781,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
               qualNode);
     else newNode = makeNode(context, fFactory, nn, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
 
-    ITypeBinding[] newExceptions =
-        new ITypeBinding[] {NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError};
+    ITypeBinding[] newExceptions = {
+      NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError
+    };
     context.cfg().map(newNode, newNode);
     for (ITypeBinding exp : newExceptions) {
       for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(exp)) {
@@ -1979,9 +1980,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     boolean isStatic = (methodBinding.getModifiers() & Modifier.STATIC) != 0;
     ITypeBinding methodOwner = methodBinding.getDeclaringClass();
 
-    if (!(methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum())) {
-      assert false : "owner " + methodOwner + " of " + methodBinding + " is not a class";
-    }
+    assert methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum()
+        : "owner " + methodOwner + " of " + methodBinding + " is not a class";
 
     // POPULATE PARAMETERS
     // this (or void for static), method reference, rest of args
@@ -4272,8 +4272,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       super(parent);
 
       for (CatchClause c : (Iterable<CatchClause>) tryNode.catchClauses()) {
-        Pair<ITypeBinding, Object> p =
-            Pair.make(c.getException().resolveBinding().getType(), (Object) c);
+        Pair<ITypeBinding, Object> p = Pair.make(c.getException().resolveBinding().getType(), c);
 
         fCatchNodes.add(p);
       }
@@ -4400,7 +4399,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // RuntimeException above where
       // it is supposed to be caught?
       return Collections.singleton(
-          Pair.<ITypeBinding, Object>make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+          Pair.make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
     @Override

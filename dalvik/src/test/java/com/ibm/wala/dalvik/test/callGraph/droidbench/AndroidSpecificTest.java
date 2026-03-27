@@ -1,9 +1,6 @@
 package com.ibm.wala.dalvik.test.callGraph.droidbench;
 
-import static com.ibm.wala.dalvik.test.util.Util.androidJavaLib;
-
 import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
-import java.io.IOException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +15,7 @@ public class AndroidSpecificTest extends DroidBenchCGTest {
     super.runTest(testParameters);
   }
 
-  static Stream<Named<TestParameters>> generateData() throws IOException {
-    return DroidBenchCGTest.generateData(null, androidJavaLib(), "AndroidSpecific");
+  static Stream<Named<TestParameters>> generateData() {
+    return DroidBenchCGTest.generateData("AndroidSpecific");
   }
 }

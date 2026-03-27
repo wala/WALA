@@ -287,8 +287,7 @@ public class SparseLongSet implements LongSet {
    *
    * @throws IllegalArgumentException if str is null
    */
-  public static long[] parseLongArray(String str)
-      throws NumberFormatException, IllegalArgumentException {
+  public static long[] parseLongArray(String str) throws IllegalArgumentException {
     if (str == null) {
       throw new IllegalArgumentException("str is null");
     }

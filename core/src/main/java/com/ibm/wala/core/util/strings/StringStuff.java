@@ -424,7 +424,7 @@ public class StringStuff {
    * @throws IllegalArgumentException if b == null
    */
   public static int parseForArrayDimensionality(ImmutableByteArray b, int start, int length)
-      throws IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
 
     if (b == null) {
       throw new IllegalArgumentException("b == null");
@@ -605,13 +605,9 @@ public class StringStuff {
         break;
       case 'L':
         readable.append(
-            jvmType.substring(
-                numberOfDimensions + 1, // strip
-                // all
-                // leading
-                // '[' &
-                // 'L'
-                jvmType.length()) // Trim off the trailing ';'
+            jvmType,
+            numberOfDimensions + 1, // strip all leading '[' & 'L'
+            jvmType.length() // trim off the trailing ';'
             );
         // Convert to standard Java dot-notation
         readable = new StringBuilder(slashToDot(readable.toString()));
@@ -677,13 +673,9 @@ public class StringStuff {
         break;
       case 'L':
         readable.append(
-            jvmType.substring(
-                numberOfDimensions + 1, // strip
-                // all
-                // leading
-                // '[' &
-                // 'L'
-                jvmType.length()) // Trim off the trailing ';'
+            jvmType,
+            numberOfDimensions + 1, // strip all leading '[' & 'L'
+            jvmType.length() // trim off the trailing ';'
             );
         // Convert to standard Java dot-notation
         readable = new StringBuilder(slashToDot(readable.toString()));

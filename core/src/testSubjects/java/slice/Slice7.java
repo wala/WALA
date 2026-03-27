@@ -13,7 +13,7 @@ package slice;
 import java.util.Hashtable;
 
 public class Slice7 {
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     Hashtable<Object, Object> abc = new Hashtable<>(3, 0.75f);
   }
 }

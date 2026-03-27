@@ -346,7 +346,7 @@ public class PropertyReadExpander
       return copy;
 
     } else if (kind == CAstNode.BLOCK_EXPR) {
-      CAstNode children[] = new CAstNode[root.getChildCount()];
+      CAstNode[] children = new CAstNode[root.getChildCount()];
       int last = (children.length - 1);
       for (int i = 0; i < last; i++) {
         children[i] = copyNodes(root.getChild(i), cfg, READ, nodeMap);

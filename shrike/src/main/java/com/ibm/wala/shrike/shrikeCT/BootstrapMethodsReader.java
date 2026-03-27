@@ -61,7 +61,7 @@ public class BootstrapMethodsReader extends AttributeReader {
     }
   }
 
-  private BootstrapMethod entries[];
+  private BootstrapMethod[] entries;
 
   protected BootstrapMethodsReader(AttrIterator attr) throws InvalidClassFileException {
     super(attr, "BootstrapMethods");

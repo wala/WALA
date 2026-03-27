@@ -133,8 +133,7 @@ public class FieldBasedCGUtil {
       boolean supportFullPointerAnalysis)
       throws WalaException, CancelException {
     JavaScriptLoaderFactory loaders = new JavaScriptLoaderFactory(translatorFactory);
-    Module[] scripts =
-        new Module[] {new SourceURLModule(url), JSCallGraphUtil.getPrologueFile("prologue.js")};
+    Module[] scripts = {new SourceURLModule(url), JSCallGraphUtil.getPrologueFile("prologue.js")};
     return buildCG(loaders, scripts, builderType, monitor, supportFullPointerAnalysis);
   }
 

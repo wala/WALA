@@ -15,6 +15,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This class reads Annotations attributes, e.g., RuntimeInvisibleAnnotations.
@@ -99,10 +100,7 @@ public class AnnotationsReader extends AttributeReader {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      ConstantElementValue other = (ConstantElementValue) obj;
-      if (val == null) {
-        if (other.val != null) return false;
-      } else if (!val.equals(other.val)) return false;
+      if (!Objects.equals(val, ((ConstantElementValue) obj).val)) return false;
       return true;
     }
   }
@@ -305,23 +303,18 @@ public class AnnotationsReader extends AttributeReader {
       case 'I':
       case 'S':
       case 'Z':
-        return Pair.<ElementValue, Integer>make(
-            new ConstantElementValue(cr.getCP().getCPInt(nextShort)), 3);
+        return Pair.make(new ConstantElementValue(cr.getCP().getCPInt(nextShort)), 3);
       case 'J':
-        return Pair.<ElementValue, Integer>make(
-            new ConstantElementValue(cr.getCP().getCPLong(nextShort)), 3);
+        return Pair.make(new ConstantElementValue(cr.getCP().getCPLong(nextShort)), 3);
       case 'D':
-        return Pair.<ElementValue, Integer>make(
-            new ConstantElementValue(cr.getCP().getCPDouble(nextShort)), 3);
+        return Pair.make(new ConstantElementValue(cr.getCP().getCPDouble(nextShort)), 3);
       case 'F':
-        return Pair.<ElementValue, Integer>make(
-            new ConstantElementValue(cr.getCP().getCPFloat(nextShort)), 3);
+        return Pair.make(new ConstantElementValue(cr.getCP().getCPFloat(nextShort)), 3);
       case 's': // string
       case 'c': // class; just represent as a constant element with the type name
-        return Pair.<ElementValue, Integer>make(
-            new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)), 3);
+        return Pair.make(new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)), 3);
       case 'e': // enum
-        return Pair.<ElementValue, Integer>make(
+        return Pair.make(
             new EnumElementValue(
                 cr.getCP().getCPUtf8(nextShort), cr.getCP().getCPUtf8(cr.getUShort(offset + 3))),
             5);
@@ -339,11 +332,11 @@ public class AnnotationsReader extends AttributeReader {
           curArrayOffset += arrayElemValueAndSize.snd;
           numArrayBytes += arrayElemValueAndSize.snd;
         }
-        return Pair.<ElementValue, Integer>make(new ArrayElementValue(vals), numArrayBytes);
+        return Pair.make(new ArrayElementValue(vals), numArrayBytes);
       case '@': // annotation
         Pair<AnnotationAttribute, Integer> attributeAndSize = getAttributeAndSize(offset + 1);
         // add 1 to size for the tag
-        return Pair.<ElementValue, Integer>make(attributeAndSize.fst, attributeAndSize.snd + 1);
+        return Pair.make(attributeAndSize.fst, attributeAndSize.snd + 1);
       default:
         assert false;
         return null;

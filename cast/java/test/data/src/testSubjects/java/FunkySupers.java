@@ -15,7 +15,7 @@ public class FunkySupers {
 		return 5;
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		new SubFunkySupers().funky(new FunkySupers());
 	}
 }

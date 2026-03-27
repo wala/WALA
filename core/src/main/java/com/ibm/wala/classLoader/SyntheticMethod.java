@@ -28,6 +28,7 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * An implementation of {@link IMethod}, usually for a synthesized method that is not read directly
@@ -228,12 +229,8 @@ public class SyntheticMethod implements IMethod {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     final SyntheticMethod other = (SyntheticMethod) obj;
-    if (declaringClass == null) {
-      if (other.declaringClass != null) return false;
-    } else if (!declaringClass.equals(other.declaringClass)) return false;
-    if (method == null) {
-      if (other.method != null) return false;
-    } else if (!method.equals(other.method)) return false;
+    if (!Objects.equals(declaringClass, other.declaringClass)) return false;
+    if (!Objects.equals(method, other.method)) return false;
     return true;
   }
 

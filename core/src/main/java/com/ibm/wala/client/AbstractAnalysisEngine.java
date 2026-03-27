@@ -193,11 +193,7 @@ public abstract class AbstractAnalysisEngine<
   /** Add the application modules to the analysis scope. */
   protected void addApplicationModulesToScope() {
     ClassLoaderReference app = scope.getApplicationLoader();
-    for (Object o : moduleFiles) {
-      if (!(o instanceof Module)) {
-        Assertions.UNREACHABLE("Unexpected type: " + o.getClass());
-      }
-      Module M = (Module) o;
+    for (Module M : moduleFiles) {
       scope.addToScope(app, M);
     }
   }

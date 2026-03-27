@@ -48,6 +48,7 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.DomainElement;
@@ -121,12 +122,8 @@ public class LocalSinkPoint implements ISinkPoint {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     LocalSinkPoint other = (LocalSinkPoint) obj;
-    if (block == null) {
-      if (other.block != null) return false;
-    } else if (!block.equals(other.block)) return false;
-    if (sinkFlow == null) {
-      if (other.sinkFlow != null) return false;
-    } else if (!sinkFlow.equals(other.sinkFlow)) return false;
+    if (!Objects.equals(block, other.block)) return false;
+    if (!Objects.equals(sinkFlow, other.sinkFlow)) return false;
     if (ssaVal != other.ssaVal) return false;
     return true;
   }

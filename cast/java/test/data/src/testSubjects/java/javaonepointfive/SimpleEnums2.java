@@ -52,7 +52,7 @@ public class SimpleEnums2 {
 	    }
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new SimpleEnums2()).doit();
 	}
 	

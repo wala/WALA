@@ -24,7 +24,7 @@ public interface JSInstructionFactory extends AstInstructionFactory {
   JavaScriptInstanceOf InstanceOf(int iindex, int result, int objVal, int typeVal);
 
   JavaScriptInvoke Invoke(
-      int iindex, int function, int results[], int[] params, int exception, CallSiteReference site);
+      int iindex, int function, int[] results, int[] params, int exception, CallSiteReference site);
 
   JavaScriptInvoke Invoke(
       int iindex, int function, int result, int[] params, int exception, CallSiteReference site);

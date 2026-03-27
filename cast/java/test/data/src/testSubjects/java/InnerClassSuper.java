@@ -15,7 +15,7 @@ public class InnerClassSuper {
 			System.out.println(x);
 		}
 	}
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		new Sub().new SubInner();
 	}
 }

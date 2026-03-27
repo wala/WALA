@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.PlatformUtil;
@@ -29,17 +28,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:aluis", new String[] {"suffix:aluis"}));
 
   @Test
-  public void testSimpleJSPessimistic() throws WalaException, Error, CancelException {
+  public void testSimpleJSPessimistic() throws WalaException, CancelException {
     runTest("tests/field-based/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC);
   }
 
   @Test
-  public void testSimpleJSOptimistic() throws WalaException, Error, CancelException {
+  public void testSimpleJSOptimistic() throws WalaException, CancelException {
     runTest("tests/field-based/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testSimpleJSWorklist() throws WalaException, Error, CancelException {
+  public void testSimpleJSWorklist() throws WalaException, CancelException {
     runTest("tests/field-based/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -50,17 +49,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:f", new String[] {"suffix:g"}));
 
   @Test
-  public void testOneshotPessimistic() throws WalaException, Error, CancelException {
+  public void testOneshotPessimistic() throws WalaException, CancelException {
     runTest("tests/field-based/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC);
   }
 
   @Test
-  public void testOneshotOptimistic() throws WalaException, Error, CancelException {
+  public void testOneshotOptimistic() throws WalaException, CancelException {
     runTest("tests/field-based/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testOneshotWorklist() throws WalaException, Error, CancelException {
+  public void testOneshotWorklist() throws WalaException, CancelException {
     runTest("tests/field-based/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -72,12 +71,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:k", new String[] {"suffix:l", "suffix:p"}));
 
   @Test
-  public void testCallbacksOptimistic() throws WalaException, Error, CancelException {
+  public void testCallbacksOptimistic() throws WalaException, CancelException {
     runTest("tests/field-based/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testCallbacksWorklist() throws WalaException, Error, CancelException {
+  public void testCallbacksWorklist() throws WalaException, CancelException {
     runTest(
         "tests/field-based/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
   }
@@ -86,17 +85,17 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
       List.of(new GraphAssertion("suffix:h", new String[] {"suffix:g"}));
 
   @Test
-  public void testLexicalPessimistic() throws WalaException, Error, CancelException {
+  public void testLexicalPessimistic() throws WalaException, CancelException {
     runTest("tests/field-based/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC);
   }
 
   @Test
-  public void testLexicalOptimistic() throws WalaException, Error, CancelException {
+  public void testLexicalOptimistic() throws WalaException, CancelException {
     runTest("tests/field-based/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testLexicalWorklist() throws WalaException, Error, CancelException {
+  public void testLexicalWorklist() throws WalaException, CancelException {
     runTest("tests/field-based/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -111,7 +110,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:p", new String[] {"suffix:n"}));
 
   @Test
-  public void testReflectiveCallOptimistic() throws WalaException, Error, CancelException {
+  public void testReflectiveCallOptimistic() throws WalaException, CancelException {
     runTest(
         "tests/field-based/reflective_calls.js",
         assertionsForReflectiveCall,
@@ -119,7 +118,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testReflectiveCallWorklist() throws WalaException, Error, CancelException {
+  public void testReflectiveCallWorklist() throws WalaException, CancelException {
     runTest(
         "tests/field-based/reflective_calls.js",
         assertionsForReflectiveCall,
@@ -132,12 +131,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:g", new String[] {"!suffix:k"}));
 
   @Test
-  public void testNewOptimistic() throws WalaException, Error, CancelException {
+  public void testNewOptimistic() throws WalaException, CancelException {
     runTest("tests/field-based/new.js", assertionsForNew, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testNewWorklist() throws WalaException, Error, CancelException {
+  public void testNewWorklist() throws WalaException, CancelException {
     runTest("tests/field-based/new.js", assertionsForNew, BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -147,12 +146,12 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
           new GraphAssertion("suffix:g", new String[] {"suffix:k", "!suffix:l"}));
 
   @Test
-  public void testCallbacks2Optimistic() throws WalaException, Error, CancelException {
+  public void testCallbacks2Optimistic() throws WalaException, CancelException {
     runTest("tests/field-based/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC);
   }
 
   @Test
-  public void testCallbacks2Worklist() throws WalaException, Error, CancelException {
+  public void testCallbacks2Worklist() throws WalaException, CancelException {
     runTest(
         "tests/field-based/callbacks2.js",
         assertionsForCallbacks2,
@@ -160,7 +159,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testNewFnEmptyNoCrash() throws WalaException, Error, CancelException {
+  public void testNewFnEmptyNoCrash() throws WalaException, CancelException {
     runTest("tests/field-based/new_fn_empty.js", List.of(), BuilderType.OPTIMISTIC_WORKLIST);
   }
 
@@ -168,7 +167,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
       List.of(new GraphAssertion("suffix:outer", new String[] {"suffix:foo", "suffix:bar"}));
 
   @Test
-  public void testRecursiveLexWrite() throws WalaException, Error, CancelException {
+  public void testRecursiveLexWrite() throws WalaException, CancelException {
     runTest(
         "tests/recursive_lex_write.js",
         assertionsForRecursiveLexWrite,
@@ -176,7 +175,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testNamedFnTwice() throws WalaException, Error, CancelException {
+  public void testNamedFnTwice() throws WalaException, CancelException {
     // hack since Windows column offsets are different
     String secondFunName =
         PlatformUtil.onWindows() ? "suffix:testFunExp@390" : "suffix:testFunExp@381";
@@ -189,7 +188,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testSwitchDefault() throws WalaException, Error, CancelException {
+  public void testSwitchDefault() throws WalaException, CancelException {
     runTest(
         "tests/switch_default.js",
         List.of(
@@ -201,7 +200,7 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 
   @Disabled
   @Test
-  public void testBug2979() throws WalaException, Error, CancelException {
+  public void testBug2979() throws WalaException, CancelException {
     System.err.println(
         runTest(
             "pages/2979.html",

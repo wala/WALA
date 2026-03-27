@@ -68,7 +68,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private final Map<Object, CopyPropagationRecord> copyPropagationMap;
 
-  private final ArrayList<CopyPropagationRecord> R[];
+  private final ArrayList<CopyPropagationRecord>[] R;
 
   public static class UseRecord {
     final int instructionIndex;

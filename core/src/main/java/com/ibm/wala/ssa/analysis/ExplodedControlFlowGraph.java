@@ -37,6 +37,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -357,9 +358,7 @@ public class ExplodedControlFlowGraph
     }
     if (eb.isEntryBlock()) {
       IExplodedBasicBlock z = normalNodes.get(0);
-      return z == null
-          ? EmptyIterator.<IExplodedBasicBlock>instance()
-          : NonNullSingletonIterator.make(z);
+      return z == null ? EmptyIterator.instance() : NonNullSingletonIterator.make(z);
     }
     if (eb.instructionIndex == eb.original.getLastInstructionIndex()) {
       List<IExplodedBasicBlock> result = new ArrayList<>();
@@ -583,9 +582,7 @@ public class ExplodedControlFlowGraph
       if (getClass() != obj.getClass()) return false;
       final ExplodedBasicBlock other = (ExplodedBasicBlock) obj;
       if (instructionIndex != other.instructionIndex) return false;
-      if (original == null) {
-        if (other.original != null) return false;
-      } else if (!original.equals(other.original)) return false;
+      if (!Objects.equals(original, other.original)) return false;
       return true;
     }
 

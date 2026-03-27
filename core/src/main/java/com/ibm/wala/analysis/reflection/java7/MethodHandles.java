@@ -55,6 +55,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import org.jspecify.annotations.NonNull;
 
@@ -108,10 +109,7 @@ public class MethodHandles {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      HandlesItem<?> other = (HandlesItem<?>) obj;
-      if (item == null) {
-        if (other.item != null) return false;
-      } else if (!item.equals(other.item)) return false;
+      if (!Objects.equals(item, ((HandlesItem<?>) obj).item)) return false;
       return true;
     }
   }
@@ -155,15 +153,9 @@ public class MethodHandles {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
       FindContext other = (FindContext) obj;
-      if (base == null) {
-        if (other.base != null) return false;
-      } else if (!base.equals(other.base)) return false;
-      if (cls == null) {
-        if (other.cls != null) return false;
-      } else if (!cls.equals(other.cls)) return false;
-      if (selector == null) {
-        if (other.selector != null) return false;
-      } else if (!selector.equals(other.selector)) return false;
+      if (!Objects.equals(base, other.base)) return false;
+      if (!Objects.equals(cls, other.cls)) return false;
+      if (!Objects.equals(selector, other.selector)) return false;
       return true;
     }
   }
@@ -201,12 +193,8 @@ public class MethodHandles {
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
       MethodContext other = (MethodContext) obj;
-      if (base == null) {
-        if (other.base != null) return false;
-      } else if (!base.equals(other.base)) return false;
-      if (method == null) {
-        if (other.method != null) return false;
-      } else if (!method.equals(other.method)) return false;
+      if (!Objects.equals(base, other.base)) return false;
+      if (!Objects.equals(method, other.method)) return false;
       return true;
     }
 
@@ -236,7 +224,7 @@ public class MethodHandles {
         if (actualParameters != null && actualParameters.length > 0) {
           InstanceKey selfKey = actualParameters[0];
           if (selfKey instanceof ConstantKey
-              && ((ConstantKey<?>) selfKey)
+              && selfKey
                   .getConcreteType()
                   .getReference()
                   .equals(TypeReference.JavaLangInvokeMethodHandle)) {
@@ -255,15 +243,9 @@ public class MethodHandles {
           InstanceKey classKey = actualParameters[1];
           InstanceKey nameKey = actualParameters[2];
           if (classKey instanceof ConstantKey
-              && ((ConstantKey<?>) classKey)
-                  .getConcreteType()
-                  .getReference()
-                  .equals(TypeReference.JavaLangClass)
+              && classKey.getConcreteType().getReference().equals(TypeReference.JavaLangClass)
               && nameKey instanceof ConstantKey
-              && ((ConstantKey<?>) nameKey)
-                  .getConcreteType()
-                  .getReference()
-                  .equals(TypeReference.JavaLangString)) {
+              && nameKey.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
             return new FindContext(
                 baseContext,
                 ((IClass) ((ConstantKey<?>) classKey).getValue()).getReference(),
@@ -503,7 +485,7 @@ public class MethodHandles {
                     case "invokeWithArguments":
                       {
                         int nargs = ref.getNumberOfParameters();
-                        int params[] = new int[nargs];
+                        int[] params = new int[nargs];
                         for (int i = 0; i < nargs; i++) {
                           code.addConstant(i + nargs + 3, new ConstantValue(i));
                           code.addStatement(
@@ -534,7 +516,7 @@ public class MethodHandles {
                     case "invokeExact":
                       {
                         int nargs = key.getMethod().getReference().getNumberOfParameters();
-                        int params[] = new int[nargs];
+                        int[] params = new int[nargs];
                         if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
                           for (int i = 0; i < nargs; i++) {
                             params[i] = i + 2;

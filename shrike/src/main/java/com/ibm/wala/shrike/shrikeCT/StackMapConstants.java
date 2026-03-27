@@ -142,7 +142,7 @@ public class StackMapConstants {
     }
   }
 
-  public static Item items[] = {
+  public static Item[] items = {
     Item.ITEM_Top,
     Item.ITEM_Integer,
     Item.ITEM_Float,

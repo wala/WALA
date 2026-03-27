@@ -28,7 +28,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
   public JavaScriptInvoke(
       int iindex,
       int function,
-      int results[],
+      int[] results,
       int[] params,
       int exception,
       CallSiteReference site) {
@@ -50,7 +50,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int fn = function;
-    int newParams[] = params;
+    int[] newParams = params;
 
     if (uses != null) {
       int i = 0;

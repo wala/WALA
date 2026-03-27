@@ -19,7 +19,7 @@ public class IntStack {
   private int top = -1;
 
   /** Comment for {@code state} */
-  private int state[] = new int[0];
+  private int[] state = new int[0];
 
   public void push(int i) {
     if (state.length <= (top + 1)) {

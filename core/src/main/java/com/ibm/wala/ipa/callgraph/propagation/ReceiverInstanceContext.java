@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
+import java.util.Objects;
 
 /** This is a context which is customized for the {@link InstanceKey} of the receiver. */
 public class ReceiverInstanceContext implements Context {
@@ -57,10 +58,7 @@ public class ReceiverInstanceContext implements Context {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final ReceiverInstanceContext other = (ReceiverInstanceContext) obj;
-    if (ik == null) {
-      if (other.ik != null) return false;
-    } else if (!ik.equals(other.ik)) return false;
+    if (!Objects.equals(ik, ((ReceiverInstanceContext) obj).ik)) return false;
     return true;
   }
 

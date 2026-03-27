@@ -51,6 +51,7 @@ package com.ibm.wala.dalvik.classLoader;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import java.io.InputStream;
+import java.util.Objects;
 import org.jf.dexlib2.iface.ClassDef;
 
 public class DexModuleEntry implements ModuleEntry {
@@ -160,14 +161,7 @@ public class DexModuleEntry implements ModuleEntry {
     if (!(obj instanceof DexModuleEntry)) {
       return false;
     }
-    DexModuleEntry other = (DexModuleEntry) obj;
-    if (className == null) {
-      if (other.className != null) {
-        return false;
-      }
-    } else if (!className.equals(other.className)) {
-      return false;
-    }
+    if (!Objects.equals(className, ((DexModuleEntry) obj).className)) return false;
     return true;
   }
 }

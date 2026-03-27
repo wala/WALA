@@ -48,9 +48,8 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
     if (bypassLoader == null) {
       throw new IllegalArgumentException("bypassLoader == null");
     }
-    if (!(bypassLoader instanceof BypassSyntheticClassLoader)) {
-      assert false : "unexpected bypass loader: " + bypassLoader.getClass();
-    }
+    assert bypassLoader instanceof BypassSyntheticClassLoader
+        : "unexpected bypass loader: " + bypassLoader.getClass();
 
     this.allocatableTypes = allocatableTypes;
     this.bypassLoader = (BypassSyntheticClassLoader) bypassLoader;

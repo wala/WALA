@@ -208,7 +208,7 @@ public class SourceBuffer {
     int endLine = range.getLastLine() - p.getFirstLine();
 
     if (startLine != endLine) {
-      String newLines[] = new String[lines.length - (endLine - startLine)];
+      String[] newLines = new String[lines.length - (endLine - startLine)];
       int i = 0;
       while (i < startLine) {
         newLines[i] = lines[i];

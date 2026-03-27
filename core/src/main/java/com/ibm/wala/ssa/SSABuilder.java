@@ -366,9 +366,8 @@ public class SSABuilder extends AbstractIntStackMachine {
      */
     private int reuseOrCreateException() {
 
-      if (getCurrentInstruction() != null) {
-        assert getCurrentInstruction() instanceof SSAInvokeInstruction;
-      }
+      assert getCurrentInstruction() == null
+          || getCurrentInstruction() instanceof SSAInvokeInstruction;
       if (getCurrentInstruction() == null) {
         return symbolTable.newSymbol();
       } else {

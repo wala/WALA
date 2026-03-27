@@ -964,15 +964,14 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
       // set up
       String tempName = "for in loop temp";
-      CAstNode[] loopHeader =
-          new CAstNode[] {
-            Ast.makeNode(
-                CAstNode.DECL_STMT,
-                Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)),
-                readName(arg, null, "$$undefined")),
-            Ast.makeNode(
-                CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
-          };
+      CAstNode[] loopHeader = {
+        Ast.makeNode(
+            CAstNode.DECL_STMT,
+            Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)),
+            readName(arg, null, "$$undefined")),
+        Ast.makeNode(
+            CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
+      };
       if (useNewForIn) {
         assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode
             : var.getClass() + " " + var;
@@ -2728,7 +2727,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   /** parse the JavaScript code using Rhino, and then translate the resulting AST to CAst */
   @Override
   public CAstEntity translateToCAst()
-      throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
+      throws IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
     class CAstErrorReporter implements ErrorReporter {
       private final Set<Warning> w = HashSetFactory.make();
 

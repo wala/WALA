@@ -70,7 +70,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     }
     IntSet pred = N.getPredNumbers();
     Iterator<T> empty = EmptyIterator.instance();
-    return (pred == null) ? empty : (Iterator<T>) new IntSetNodeIterator(pred.intIterator());
+    return (pred == null) ? empty : new IntSetNodeIterator(pred.intIterator());
   }
 
   @Override
@@ -108,7 +108,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges>
     }
     IntSet succ = N.getSuccNumbers();
     Iterator<T> empty = EmptyIterator.instance();
-    return (succ == null) ? empty : (Iterator<T>) new IntSetNodeIterator(succ.intIterator());
+    return (succ == null) ? empty : new IntSetNodeIterator(succ.intIterator());
   }
 
   /**
