@@ -58,7 +58,6 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      System.err.println("###### unknown " + allocation.getDeclaredType());
       return null;
     }
 
