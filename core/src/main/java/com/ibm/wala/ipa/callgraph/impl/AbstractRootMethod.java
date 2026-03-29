@@ -192,16 +192,16 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     int instance = nextLocal++;
     NewSiteReference ref = NewSiteReference.make(statements.size(), T);
     if (idx >= length.length) {
-      return insts.NewInstruction(statements.size(), instance, ref);     
+      return insts.NewInstruction(statements.size(), instance, ref);
     } else {
-      SSANewInstruction result = addArrayAllocation(T.getArrayElementType(), idx+1, length);
+      SSANewInstruction result = addArrayAllocation(T.getArrayElementType(), idx + 1, length);
       assert T.isArrayType() : T;
       int[] sizes = new int[1];
       Arrays.fill(sizes, getValueNumberForIntConstant(length[idx]));
       SSANewInstruction x = insts.NewInstruction(statements.size(), instance, ref, sizes);
       statements.add(x);
       insts.ArrayStoreInstruction(
-         statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
+          statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
       result = x;
       cache.invalidate(this, Everywhere.EVERYWHERE);
       return result;
