@@ -112,7 +112,7 @@ public class CallGraphTest extends WalaTestCase {
   @Test
   public void testBcelVerifier()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    testBcelVerifier( 
+    testBcelVerifier(
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             TestConstants.BCEL, CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
@@ -121,11 +121,11 @@ public class CallGraphTest extends WalaTestCase {
   @Test
   public void testBcelVerifier_jrt()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    testBcelVerifier( 
+    testBcelVerifier(
         CallGraphTestUtil.makeJ2SEAnalysisScope(
             TestConstants.BCEL_JRT, CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
-  
+
   @Test
   public void testJLex()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

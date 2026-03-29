@@ -10,8 +10,6 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import java.io.IOException;
-
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.java11.Java9AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -29,6 +27,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.perf.StopwatchGC;
+import java.io.IOException;
 
 /** Utilities for call graph tests */
 public class CallGraphTestUtil {
