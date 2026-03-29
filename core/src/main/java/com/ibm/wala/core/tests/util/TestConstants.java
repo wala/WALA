@@ -26,6 +26,8 @@ public interface TestConstants {
 
   String BCEL = "bcel.txt";
 
+  String BCEL_JRT = "bcel_jrt.txt";
+
   String BCEL_VERIFIER_MAIN = "Lorg/apache/bcel/verifier/Verifier";
 
   String JLEX = "JLex.txt";
