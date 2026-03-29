@@ -256,6 +256,19 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   @Test
+  public void testTestDataAllEntrypoints()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    doCallGraphs(options, new AnalysisCacheImpl(), cha);
+  }
+
+  @Test
   public void testHelloAllEntrypoints()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
