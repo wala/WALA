@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /** A synthetic method from the {@link FakeRootClass} */
 public abstract class AbstractRootMethod extends SyntheticMethod {
@@ -183,33 +184,38 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   public SSANewInstruction add1DArrayAllocation(TypeReference T, int length) {
-    return addArrayAllocation(T, new int[] {length});
+    return addArrayAllocation(T, 0, new int[] {length});
   }
 
   /** Add a New statement of the given array type and length */
-  public SSANewInstruction addArrayAllocation(TypeReference T, int[] length) {
-    SSANewInstruction result = null;
-    int i = length.length - 1;
-    while (i >= 0) {
-      int instance = nextLocal++;
-      NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-      assert T.isArrayType();
+  public SSANewInstruction addArrayAllocation(TypeReference T, int idx, int[] length) {
+    int instance = nextLocal++;
+    NewSiteReference ref = NewSiteReference.make(statements.size(), T);
+    if (idx >= length.length) {
+      return insts.NewInstruction(statements.size(), instance, ref);     
+    } else {
+      SSANewInstruction result = addArrayAllocation(T.getArrayElementType(), idx+1, length);
+      assert T.isArrayType() : T;
       int[] sizes = new int[1];
-      Arrays.fill(sizes, getValueNumberForIntConstant(length[i]));
-      if (result != null) {
-        SSANewInstruction x = insts.NewInstruction(statements.size(), instance, ref, sizes);
-        statements.add(x);
-        insts.ArrayStoreInstruction(
-            statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
-        result = x;
-      } else {
-        result = insts.NewInstruction(statements.size(), instance, ref, sizes);
-      }
-      T = T.getArrayElementType();
-      i--;
+      Arrays.fill(sizes, getValueNumberForIntConstant(length[idx]));
+      SSANewInstruction x = insts.NewInstruction(statements.size(), instance, ref, sizes);
+      statements.add(x);
+      insts.ArrayStoreInstruction(
+         statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
+      result = x;
+      cache.invalidate(this, Everywhere.EVERYWHERE);
+      return result;
     }
-    cache.invalidate(this, Everywhere.EVERYWHERE);
-    return result;
+  }
+
+  public SSANewInstruction addArrayAllocation(TypeReference T) {
+    IntStream x = IntStream.empty();
+    TypeReference X = T;
+    while (X.isArrayType()) {
+      X = X.getArrayElementType();
+      x = IntStream.concat(x, IntStream.of(1));
+    }
+    return addArrayAllocation(T, 0, x.toArray());
   }
 
   /** Add a New statement of the given type */

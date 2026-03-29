@@ -101,6 +101,9 @@ public abstract class Entrypoint implements BytecodeConstants {
       case 1:
         if (p[0].isPrimitiveType()) {
           return m.addLocal();
+        } else if (p[0].isArrayType()) {
+          SSANewInstruction n = m.addArrayAllocation(p[0]);
+          return (n == null) ? -1 : n.getDef();
         } else {
           SSANewInstruction n = m.addAllocation(p[0]);
           return (n == null) ? -1 : n.getDef();
@@ -109,7 +112,8 @@ public abstract class Entrypoint implements BytecodeConstants {
         int[] values = new int[p.length];
         int countErrors = 0;
         for (int j = 0; j < p.length; j++) {
-          SSANewInstruction n = m.addAllocation(p[j]);
+          SSANewInstruction n =
+              p[j].isArrayType() ? m.addArrayAllocation(p[j]) : m.addAllocation(p[j]);
           int value = (n == null) ? -1 : n.getDef();
           if (value == -1) {
             countErrors++;
