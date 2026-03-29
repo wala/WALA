@@ -12,6 +12,8 @@ package com.ibm.wala.core.tests.basic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFilter;
@@ -26,11 +28,11 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
-import org.junit.jupiter.api.Test;
 
 /** Simple Regression test for a graph-based dataflow problem. */
 public class GraphDataflowTest extends WalaTestCase {
@@ -101,8 +103,8 @@ public class GraphDataflowTest extends WalaTestCase {
   /**
    * @return a graph with the expected structure
    */
-  public static Graph<String> buildGraph() {
-    Graph<String> G = SlowSparseNumberedGraph.make();
+  public static NumberedGraph<String> buildGraph() {
+    NumberedGraph<String> G = SlowSparseNumberedGraph.make();
     for (int i = 0; i < nodeNames.length(); i++) {
       String n = nodeNames.substring(i, i + 1);
       G.addNode(n);
