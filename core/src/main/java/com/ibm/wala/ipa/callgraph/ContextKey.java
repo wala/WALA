@@ -40,7 +40,7 @@ public interface ContextKey {
   ContextKey RECEIVER = new ContextKey() {};
 
   /**
-   * context key representing some parameter index, useful, e.g. for CPA-style context-sensitivity
+   * context key representing some parameter index, useful, e.g., for CPA-style context-sensitivity
    * policies.
    */
   class ParameterKey implements ContextKey {

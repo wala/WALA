@@ -1740,7 +1740,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ITypeBinding newType = ctorBinding.getDeclaringClass();
     TypeReference newTypeRef = fIdentityMapper.getTypeRef(newType);
 
-    // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly
+    // new nodes with an explicit enclosing argument, e.g., "outer.new Inner()". They are mostly
     // treated the same, except
     // in JavaCAst2IRTranslator.doNewObject
     CAstNode qualNode = null;
@@ -2826,8 +2826,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         new Object(); // safer as 'pos' may be used for another purpose (i.e., this could be an
     // implicit cast)
 
-    // null can go into anything (e.g. in "((Foobar) null)" null can be assumed to be of type Foobar
-    // already)
+    // null can go into anything (e.g., in "((Foobar) null)" null can be assumed to be of type
+    // Foobar already)
     if (castedFrom.isNullType()) castedFrom = castedTo;
 
     CAstNode ast =

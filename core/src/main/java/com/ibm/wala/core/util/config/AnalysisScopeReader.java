@@ -83,7 +83,7 @@ public class AnalysisScopeReader {
     try {
       // Now reading from jar is included in WALA, but we can't use their version, because they load
       // from
-      // jar by default and use filesystem as fallback. We want it the other way round. E.g. to
+      // jar by default and use filesystem as fallback. We want it the other way round. e.g., to
       // deliver default
       // configuration files with the jar, but use userprovided ones if present in the working
       // directory.
@@ -243,7 +243,7 @@ public class AnalysisScopeReader {
       @SuppressWarnings("unused") String language,
       @SuppressWarnings("unused") String entryType,
       @SuppressWarnings("unused") String entryPathname) {
-    // hook for e.g. Java 11
+    // hook for e.g., Java 11
     return false;
   }
 

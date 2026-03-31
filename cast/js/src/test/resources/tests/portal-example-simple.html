@@ -3,7 +3,7 @@
 <!--
 Possible channels of interference, explored in this document or general properties we would like the portlet markup fragment to have
 1. A global variable created in HEAD
-2. A global built in object (e.g. navigator)
+2. A global built in object (e.g., navigator)
 3. (Later)Access Keys, Tab Index (who wins if there is a conflict, eg. override Alt+F)
 4. Dynamically modifying the DOM, Disallowed HTML Tags
 5. Direct access by traversing the DOM Tree
@@ -15,12 +15,12 @@ Possible channels of interference, explored in this document or general properti
 11. Use of 'eval', self-modifying code
 12. Shared style sheets
 13. Access to shared library functions, eg. parseInt()
-14. Maintain general structural integrity of the document - e.g. tags should appear where they should according to the DTD
+14. Maintain general structural integrity of the document - e.g., tags should appear where they should according to the DTD
 
 TODO:
 // creating a new function using a prototype, can the new function access the local variable of the event handler which creates the new function?
 // when you create a new function in different html contexts, what is the value of this?
-// The parser automatically inserts HTML Elements, e.g. TBODY in the table. We have to handle that. The swing html parser doesn't recognize TBODY, though.
+// The parser automatically inserts HTML Elements, e.g., TBODY in the table. We have to handle that. The swing html parser doesn't recognize TBODY, though.
 -->
 <style>
  .test{color: red;}

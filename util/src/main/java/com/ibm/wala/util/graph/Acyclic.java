@@ -52,7 +52,7 @@ public class Acyclic {
 
     final BasicNaturalRelation result = new BasicNaturalRelation();
 
-    // for large methods (e.g. obfuscated library code as found in android libraries
+    // for large methods (e.g., obfuscated library code as found in android libraries
     // 'com.google.ads.ad.a([B[B)V')
     // the recursive dfs can lead to a stack overflow error.
     // for smaller methods the recursive solution seems to be faster, so we keep it.

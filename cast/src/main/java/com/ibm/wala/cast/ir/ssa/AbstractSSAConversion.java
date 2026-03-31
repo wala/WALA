@@ -196,7 +196,7 @@ public abstract class AbstractSSAConversion {
     Set<BasicBlock> W = new LinkedHashSet<>();
     for (int V = 0; V < assignmentMap.length; V++) {
 
-      // some things (e.g. constants) have no defs at all
+      // some things (e.g., constants) have no defs at all
       if (assignmentMap[V] == null) continue;
 
       // ignore values as requested

@@ -49,13 +49,13 @@ public interface SSAIndirectionData<T extends SSAIndirectionData.Name> {
 
   /**
    * A Name is a mock interface introduced just for strong typing. A Name represents some semantic
-   * entity in the program representation (e.g. a local variable in the source code or a local
+   * entity in the program representation (e.g., a local variable in the source code or a local
    * number in the bytecode)
    */
   interface Name {}
 
   /**
-   * Returns the set of "source" level names (e.g. local variables in bytecode or source code) for
+   * Returns the set of "source" level names (e.g., local variables in bytecode or source code) for
    * which this map holds information.
    */
   Collection<T> getNames();

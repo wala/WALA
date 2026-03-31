@@ -1126,7 +1126,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     }
 
     /**
-     * subclasses (e.g. XTA) can override this to enforce a filtered assignment. returns null if
+     * subclasses (e.g., XTA) can override this to enforce a filtered assignment. returns null if
      * there's a problem.
      */
     public UnaryOperator<PointsToSetVariable> getPutAssignmentOperator() {
@@ -1382,7 +1382,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     return solver;
   }
 
-  /** Add constraints when the interpretation of a node changes (e.g. reflection) */
+  /** Add constraints when the interpretation of a node changes (e.g., reflection) */
   public void addConstraintsFromChangedNode(CGNode node, IProgressMonitor monitor)
       throws CancelException {
     unconditionallyAddConstraintsFromNode(node, monitor);

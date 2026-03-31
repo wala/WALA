@@ -155,7 +155,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
   }
 
   /**
-   * TODO: clean this up. Create the IR for the synthetic method (e.g. Method.invoke)
+   * TODO: clean this up. Create the IR for the synthetic method (e.g., Method.invoke)
    *
    * @param method is something like Method.invoke or Construction.newInstance
    * @param target is the method being called reflectively

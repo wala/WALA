@@ -142,7 +142,7 @@ public interface CAstEntity {
   CAstSourcePositionMap.Position getPosition(int arg);
 
   /**
-   * The map from CAstNodes to types. Valid for nodes that have an explicitly declared type (e.g.
+   * The map from CAstNodes to types. Valid for nodes that have an explicitly declared type (e.g.,
    * local vars).
    */
   CAstNodeTypeMap getNodeTypeMap();
