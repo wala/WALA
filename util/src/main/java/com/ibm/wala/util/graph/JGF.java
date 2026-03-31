@@ -3,6 +3,11 @@ package com.ibm.wala.util.graph;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Serialize a {@link com.ibm.wala.util.graph.Graph} into the JSON Graph Format (JGF).
+ *
+ * @see <a href="https://jsongraphformat.info/">JSON Graph Format</a>
+ */
 public class JGF {
 
   public interface EntityTypes<T> {
