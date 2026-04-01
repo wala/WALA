@@ -26,9 +26,9 @@ public class AbstractFieldEntity extends AbstractDataEntity {
 
   private final CAstType fieldType;
 
-  private Position loc;
+  private final Position loc;
 
-  private Position nameLoc;
+  private final Position nameLoc;
 
   public AbstractFieldEntity(
       String name,
