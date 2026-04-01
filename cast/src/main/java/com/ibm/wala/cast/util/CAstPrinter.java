@@ -374,8 +374,8 @@ public class CAstPrinter {
             w.write(" ");
             w.write(
                 (i == 0 && type instanceof CAstType.Method
-                        ? e.getType().toString()
-                        : types.get(type instanceof CAstType.Method ? i - 1 : i).toString()));
+                    ? e.getType().toString()
+                    : types.get(type instanceof CAstType.Method ? i - 1 : i).toString()));
           }
           i++;
         }
