@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.basic;
 
+import static org.assertj.core.api.Assertions.*;
+
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.JGF;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -52,11 +54,13 @@ public class JGFTest {
     JSONObject nodes = JG.getJSONObject("nodes");
     JSONArray edges = JG.getJSONArray("edges");
     for (String n : G) {
-      assert nodes
-          .getJSONObject("" + G.getNumber(n))
-          .getJSONObject("metadata")
-          .getString("name")
-          .equals(n);
+      @SuppressWarnings("unused") 
+      var unused = assertThat(
+          nodes
+              .getJSONObject("" + G.getNumber(n))
+              .getJSONObject("metadata")
+              .getString("name")
+              .equals(n));
       G.getSuccNodes(n)
           .forEachRemaining(
               s -> {
@@ -68,7 +72,8 @@ public class JGFTest {
                     found = true;
                   }
                 }
-                assert found;
+                @SuppressWarnings("unused") 
+                var anotherUnused = assertThat(found);
               });
     }
   }
