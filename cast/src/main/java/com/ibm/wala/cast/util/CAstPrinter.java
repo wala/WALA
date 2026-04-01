@@ -371,11 +371,11 @@ public class CAstPrinter {
         for (String name : names) {
           w.write("  " + name);
           if (types != null) {
+            w.write(" ");
             w.write(
-                " "
-                    + (i == 0 && type instanceof CAstType.Method
-                        ? e.getType()
-                        : types.get(type instanceof CAstType.Method ? i - 1 : i)));
+                (i == 0 && type instanceof CAstType.Method
+                        ? e.getType().toString()
+                        : types.get(type instanceof CAstType.Method ? i - 1 : i).toString()));
           }
           i++;
         }
