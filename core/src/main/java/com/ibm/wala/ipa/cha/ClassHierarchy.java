@@ -716,7 +716,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * n1 is a child of n2 iff n2.left &lt;= n1.left ^ n1.left &lt;= n2.right. Described as "relative
    * numbering" by Vitek, Horspool, and Krall, OOPSLA 97
    *
-   * <p>TODO: this implementation is recursive; un-recursify if needed
+   * <p>TODO: this implementation is recursive; make non-recursive if needed
    */
   private int nextNumber = 1;
 
