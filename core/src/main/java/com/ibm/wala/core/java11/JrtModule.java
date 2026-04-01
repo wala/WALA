@@ -34,7 +34,10 @@ public class JrtModule implements Module {
 
   private Iterator<? extends ModuleEntry> rec(Path pp) throws IOException {
     Module me = this;
-    List<Path> elts = Files.list(pp).collect(Collectors.toList());
+    List<Path> elts;
+    try (var x = Files.list(pp)) {
+      elts = x.collect(Collectors.toList());
+    }
     return new ComposedIterator<>(elts.iterator()) {
 
       @Override
