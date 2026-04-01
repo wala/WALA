@@ -190,7 +190,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
   /**
    * The ExecutionOrder is used to partially order EntryPoints.
    *
-   * <p>The order has to be understood inclusive! E.g. "after(END_OF_LOOP)" means that the position
+   * <p>The order has to be understood inclusive! e.g., "after(END_OF_LOOP)" means that the position
    * is __BEFORE__ the loop is actually closed!
    *
    * <p>Before building the model a list of AdroidEntryPoints is to be sorted by that criterion. You
@@ -299,7 +299,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
         // An alternative solution could be to choose other values for before or after.
         throw new ArithmeticException(
             "Precision to low when cascading the ExecutionOrder. You can prevent this error by "
-                + "assigning the ExecutionOrders (e.g. using before() and after()) in a different order.");
+                + "assigning the ExecutionOrders (e.g., using before() and after()) in a different order.");
       }
       if (after > before) {
         throw new IllegalArgumentException(

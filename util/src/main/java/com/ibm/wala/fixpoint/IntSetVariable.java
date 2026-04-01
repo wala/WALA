@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * A variable for dataflow analysis, representing a set of integers.
  *
- * <p>TODO: optimize the representation more; e.g. BitVectors with non-zero lower bound.
+ * <p>TODO: optimize the representation more; e.g., BitVectors with non-zero lower bound.
  */
 @SuppressWarnings("rawtypes")
 public abstract class IntSetVariable<T extends IntSetVariable<T>> extends AbstractVariable<T> {

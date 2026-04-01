@@ -72,7 +72,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Languages that contribute classes to the set represented in this hierarchy. The languages may
-   * for example be related by inheritance (e.g. X10 derives from Java, and shares a common type
+   * for example be related by inheritance (e.g., X10 derives from Java, and shares a common type
    * hierarchy rooted at java.lang.Object).
    */
   private final Set<Language> languages = HashSetFactory.make();
@@ -82,7 +82,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * Node}
    *
    * <p>Note that this class provides an iterator() over this map, and that some WALA utilities
-   * (e.g. ReferenceCleanser) must iterate over all classes. But also note that the class hierarchy
+   * (e.g., ReferenceCleanser) must iterate over all classes. But also note that the class hierarchy
    * is mutable (addClass()). So, when trying to run multiple threads, we could see a race condition
    * between iterator() and addClass(). With a normal {@link HashMap}, this would result in a {@link
    * ConcurrentModificationException}. But with a {@link ConcurrentHashMap}, at least the code
