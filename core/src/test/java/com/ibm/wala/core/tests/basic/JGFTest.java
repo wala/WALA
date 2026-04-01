@@ -54,13 +54,14 @@ public class JGFTest {
     JSONObject nodes = JG.getJSONObject("nodes");
     JSONArray edges = JG.getJSONArray("edges");
     for (String n : G) {
-      @SuppressWarnings("unused") 
-      var unused = assertThat(
-          nodes
-              .getJSONObject("" + G.getNumber(n))
-              .getJSONObject("metadata")
-              .getString("name")
-              .equals(n));
+      @SuppressWarnings("unused")
+      var unused =
+          assertThat(
+              nodes
+                  .getJSONObject("" + G.getNumber(n))
+                  .getJSONObject("metadata")
+                  .getString("name")
+                  .equals(n));
       G.getSuccNodes(n)
           .forEachRemaining(
               s -> {
@@ -72,7 +73,7 @@ public class JGFTest {
                     found = true;
                   }
                 }
-                @SuppressWarnings("unused") 
+                @SuppressWarnings("unused")
                 var anotherUnused = assertThat(found);
               });
     }
