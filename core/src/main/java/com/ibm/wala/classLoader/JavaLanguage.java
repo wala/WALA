@@ -858,4 +858,9 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       boolean ignoreAllocHeapDefs) {
     return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
   }
+  
+  @Override
+  public boolean arraysAsNestedObject() {
+    return true;
+  }
 }

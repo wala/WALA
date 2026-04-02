@@ -149,4 +149,9 @@ public interface Language {
       PointerAnalysis<T> pa,
       ExtendedHeapModel h,
       boolean ignoreAllocHeapDefs);
+
+  /** whether language has arrays as nested object types, i.e. A[]. A[][], etc. */
+  default boolean arraysAsNestedObject() {
+    return false;
+  }
 }
