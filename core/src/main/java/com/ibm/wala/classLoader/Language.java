@@ -56,12 +56,10 @@ public interface Language {
 
   Set<Language> getDerivedLanguages();
 
-  /**
-   * What is the root type in a type hierarchy for this language? e.g., java.lang.Object in Java.
-   */
+  /** What is the root type in a type hierarchy for this language? e.g., {@link Object} in Java. */
   TypeReference getRootType();
 
-  /** What is the root type of exceptions in this language? e.g., java.lang.Throwable in Java */
+  /** What is the root type of exceptions in this language? e.g., {@link Throwable} in Java */
   TypeReference getThrowableType();
 
   /**

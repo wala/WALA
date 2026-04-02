@@ -720,7 +720,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * n1 is a child of n2 iff n2.left &lt;= n1.left ^ n1.left &lt;= n2.right. Described as "relative
    * numbering" by Vitek, Horspool, and Krall, OOPSLA 97
    *
-   * <p>TODO: this implementation is recursive; un-recursify if needed
+   * <p>TODO: this implementation is recursive; make non-recursive if needed
    */
   private int nextNumber = 1;
 
@@ -1189,9 +1189,10 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we
-   *     return array classes B[][]...[] (same dimensionality) where B is an immediate subclass of
-   *     A. If A is primitive, we return the empty set.
+   * @return the classes that immediately extend klass. If {@code klass} is an array class {@code
+   *     A[][]...[]}, we return array classes {@code B[][]...[]} (same dimensionality) where {@code
+   *     B} is an immediate subclass of {@code A}. If {@code A} is primitive, we return the empty
+   *     set.
    */
   @Override
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
