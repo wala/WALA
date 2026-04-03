@@ -27,7 +27,7 @@ public class JGFTest {
     JSONObject JG =
         JGF.toJGF(
             G,
-            new JGF.EntityTypes<String>() {
+            new JGF.EntityTypes<>() {
 
               @Override
               public JSONObject obj(String entity) {
