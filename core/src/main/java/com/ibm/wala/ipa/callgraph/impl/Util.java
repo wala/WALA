@@ -826,6 +826,24 @@ public class Util {
   }
 
   /**
+   * make a {@link CallGraphBuilder} that uses call-string context sensitivity, with call-string
+   * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
+   *
+   * @deprecated
+   *     <p>Use {@link Util#makeNCFABuilder(int, Language, AnalysisOptions,
+   *     IAnalysisCacheView,IClassHierarchy)}
+   */
+  @Deprecated
+  public static SSAPropagationCallGraphBuilder makeNCFABuilder(
+      int n,
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisScope scope) {
+    return makeNCFABuilder(n, Language.JAVA, options, cache, cha);
+  }
+
+  /**
    * make a {@link CallGraphBuilder} that uses object context sensitivity, with allocation-string
    * length limited to n
    *
