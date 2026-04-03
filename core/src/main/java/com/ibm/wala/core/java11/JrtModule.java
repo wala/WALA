@@ -138,7 +138,7 @@ public class JrtModule implements Module {
     try {
       return rec(root);
     } catch (IOException e) {
-      throw new UncheckedIOException(e);   
+      throw new UncheckedIOException(e);
     }
   }
 }
