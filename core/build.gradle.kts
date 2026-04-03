@@ -64,6 +64,7 @@ dependencies {
   testFixturesImplementation(projects.util)
   implementation(libs.gson)
   testImplementation(libs.assertj.core)
+  testImplementation(libs.json.unit.assertj)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.util))
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
