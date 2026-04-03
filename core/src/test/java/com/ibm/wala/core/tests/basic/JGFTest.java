@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.basic;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
-
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.JGF;
 import com.ibm.wala.util.graph.NumberedGraph;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.jupiter.api.Test;
 
 public class JGFTest {
 
