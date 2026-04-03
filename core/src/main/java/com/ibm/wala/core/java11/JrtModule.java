@@ -10,6 +10,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -137,8 +138,7 @@ public class JrtModule implements Module {
     try {
       return rec(root);
     } catch (IOException e) {
-      assert false : e;
-      return EmptyIterator.instance();
+      throw new UncheckedIOException(e);   
     }
   }
 }
