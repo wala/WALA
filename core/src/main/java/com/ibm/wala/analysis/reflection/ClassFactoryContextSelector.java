@@ -35,8 +35,8 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
- * A {@link ContextSelector} to intercept calls to reflective class factories (e.g.,
- * Class.forName()) when the parameter is a string constant
+ * A {@link ContextSelector} to intercept calls to reflective class factories (e.g., {@link
+ * Class#forName(String)}) when the parameter is a string constant
  */
 public class ClassFactoryContextSelector implements ContextSelector {
 

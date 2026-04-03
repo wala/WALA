@@ -68,6 +68,7 @@
       <w>enumbody</w>
       <w>eork</w>
       <w>explicitconstructorcall</w>
+      <w>expretval</w>
       <w>extdoc</w>
       <w>faload</w>
       <w>fastore</w>
@@ -122,6 +123,7 @@
       <w>impdep</w>
       <w>imple</w>
       <w>ineg</w>
+      <w>inpa</w>
       <w>instrs</w>
       <w>instrumenter</w>
       <w>instrumenters</w>
@@ -147,6 +149,7 @@
       <w>javaonepointseven</w>
       <w>jlex</w>
       <w>jmod</w>
+      <w>jmods</w>
       <w>jsdelta</w>
       <w>juergen</w>
       <w>juliandolby</w>
@@ -229,9 +232,12 @@
       <w>nullanalysis</w>
       <w>odexed</w>
       <w>offsetted</w>
+      <w>olddisplay</w>
+      <w>oopsla</w>
       <w>orsc</w>
       <w>overridecomment</w>
       <w>packagelist</w>
+      <w>paramses</w>
       <w>peis</w>
       <w>pfretzschner</w>
       <w>plusish</w>
