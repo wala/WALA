@@ -123,7 +123,7 @@ public class CAstCallGraphUtil {
       for (CGNode n : Iterator2Iterable.make(CG.getSuccNodes(N))) {
         if (fst) fst = false;
         else System.err.print(", ");
-        System.err.print(getShortName(n) + " (" + CG.getNumber(n) + ")");
+        System.err.print("%s (%s)", getShortName(n), CG.getNumber(n));
       }
       System.err.println("]");
       System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());
