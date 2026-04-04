@@ -1,12 +1,5 @@
 package com.ibm.wala.core.java11;
 
-import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.ModuleEntry;
-import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
-import com.ibm.wala.core.util.strings.ImmutableByteArray;
-import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.util.collections.ComposedIterator;
-import com.ibm.wala.util.collections.EmptyIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +10,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
+import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.util.collections.ComposedIterator;
 
 public class JrtModule implements Module {
   final Path root;
@@ -47,8 +47,7 @@ public class JrtModule implements Module {
           try {
             return rec(outer);
           } catch (IOException e) {
-            assert false : e;
-            return EmptyIterator.instance();
+            throw new UncheckedIOException(e);
           }
         } else {
           return Collections.singleton(
