@@ -58,6 +58,7 @@ public class CAstQualifier {
     sQualifiers.add(MODULE);
     sQualifiers.add(PURE);
     sQualifiers.add(EXTERNAL);
+    sQualifiers.add(VIRTUAL);
   }
 
   private static int sNextBitNum = 0;
