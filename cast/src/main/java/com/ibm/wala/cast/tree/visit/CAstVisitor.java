@@ -2455,7 +2455,8 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   }
 
   /**
-   * Visit a Cast node.
+   *  Visit a CAst node with kind EXPR_STMT, representing a statement
+   * that contains an expression.
    *
    * @param n the node to process
    * @param c a visitor-specific context
@@ -2466,7 +2467,8 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   }
 
   /**
-   * Leave a Cast node.
+   *  Leave a CAst node with kind EXPR_STMT, representing a statement
+   * that contains an expression.
    *
    * @param n the node to process
    * @param c a visitor-specific context
