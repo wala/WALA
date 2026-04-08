@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 /** A synthetic method from the {@link FakeRootClass} */
 public abstract class AbstractRootMethod extends SyntheticMethod {
