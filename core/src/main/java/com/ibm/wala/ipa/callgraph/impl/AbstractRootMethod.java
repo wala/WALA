@@ -209,13 +209,15 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   public SSANewInstruction addArrayAllocation(TypeReference T) {
-    IntStream x = IntStream.empty();
+    int numDims = 0;
     TypeReference X = T;
     while (X.isArrayType()) {
       X = X.getArrayElementType();
-      x = IntStream.concat(x, IntStream.of(1));
+      numDims++;
     }
-    return addArrayAllocation(T, 0, x.toArray());
+    int[] lengths = new int[numDims];
+    Arrays.fill(lengths, 1);
+    return addArrayAllocation(T, 0, lengths);
   }
 
   /** Add a New statement of the given type */
