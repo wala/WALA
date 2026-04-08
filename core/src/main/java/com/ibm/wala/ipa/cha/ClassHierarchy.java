@@ -153,10 +153,6 @@ public class ClassHierarchy implements IClassHierarchy {
     Set<IClass> result = HashSetFactory.make(3);
 
     try {
-      if (klass == null) {
-        return result;
-      }
-
       klass = klass.getSuperclass();
 
       while (klass != null) {
@@ -428,7 +424,7 @@ public class ClassHierarchy implements IClassHierarchy {
           Warnings.add(ClassExclusion.create(iface.getReference(), e.getMessage()));
           continue;
         }
-        if (iface != null && !iface.isInterface()) {
+        if (!iface.isInterface()) {
           Warnings.add(
               new Warning() {
 
