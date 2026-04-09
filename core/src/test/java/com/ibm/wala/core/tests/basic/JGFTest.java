@@ -10,10 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.basic;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_EXTRA_FIELDS;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.JGF;
 import com.ibm.wala.util.graph.NumberedGraph;
-import org.json.JSONArray;
+import java.util.Map;
+import net.javacrumbs.jsonunit.assertj.JsonAssert;
+import net.javacrumbs.jsonunit.assertj.JsonListAssert;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
@@ -49,27 +55,21 @@ public class JGFTest {
                 return from + " --> " + to;
               }
             });
-    JSONObject nodes = JG.getJSONObject("nodes");
-    JSONArray edges = JG.getJSONArray("edges");
-    for (String n : G) {
-      assert nodes
-          .getJSONObject("" + G.getNumber(n))
-          .getJSONObject("metadata")
-          .getString("name")
-          .equals(n);
-      G.getSuccNodes(n)
-          .forEachRemaining(
-              s -> {
-                boolean found = false;
-                for (int i = 0; i < edges.length(); i++) {
-                  JSONObject e = edges.getJSONObject(i);
-                  if (e.getString("source").equals("" + G.getNumber(n))
-                      && e.getString("target").equals("" + G.getNumber(s))) {
-                    found = true;
-                  }
-                }
-                assert found;
-              });
-    }
+    JsonAssert assertThatGraph = assertThatJson(JG).when(IGNORING_EXTRA_FIELDS);
+    JsonAssert assertThatNodes = assertThatGraph.node("nodes");
+    JsonListAssert assertThatEdges = assertThatGraph.node("edges").isArray();
+    assertThat(G)
+        .allSatisfy(
+            node -> {
+              int number = G.getNumber(node);
+              assertThatNodes.node(number + ".metadata.name").isEqualTo(node);
+              assertThat(G.getSuccNodes(node))
+                  .toIterable()
+                  .allSatisfy(
+                      successor ->
+                          assertThatEdges.contains(
+                              Map.of(
+                                  "source", "" + number, "target", "" + G.getNumber(successor))));
+            });
   }
 }

@@ -28,6 +28,7 @@ jericho-html = "net.htmlparser.jericho:jericho-html:3.4"
 jetbrains-annotations = "org.jetbrains:annotations:26.0.2-1"
 jgit = "org.netbeans.external:org-eclipse-jgit:RELEASE190"
 json = "org.json:json:20251224"
+json-unit-assertj = "net.javacrumbs.json-unit:json-unit-assertj:2.40.1"
 jspecify = "org.jspecify:jspecify:1.0.0"
 junit-bom = "org.junit:junit-bom:5.14.2"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
