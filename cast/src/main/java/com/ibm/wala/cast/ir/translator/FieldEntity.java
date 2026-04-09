@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbstractFieldEntity extends AbstractDataEntity {
+public class FieldEntity extends AbstractDataEntity {
   private final String name;
 
   private final Set<CAstQualifier> modifiers;
@@ -30,7 +30,7 @@ public class AbstractFieldEntity extends AbstractDataEntity {
 
   private final Position nameLoc;
 
-  public AbstractFieldEntity(
+  public FieldEntity(
       String name,
       CAstType fieldType,
       Set<CAstQualifier> modifiers,
@@ -41,7 +41,7 @@ public class AbstractFieldEntity extends AbstractDataEntity {
     this(name, fieldType, modifiers, isStatic, loc, nameLoc);
   }
 
-  public AbstractFieldEntity(
+  public FieldEntity(
       String name,
       CAstType fieldType,
       Set<CAstQualifier> modifiers,
