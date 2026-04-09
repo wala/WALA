@@ -795,7 +795,7 @@ public class Util {
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
    *
    * @deprecated
-   *     <p>Use {@link Util#makeNCFABuilder(int, AnalysisOptions,
+   *     <p>Use {@link Util#makeNCFABuilder(int, Language, AnalysisOptions,
    *     IAnalysisCacheView,IClassHierarchy)}
    */
   @Deprecated
@@ -805,7 +805,7 @@ public class Util {
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeNCFABuilder(n, options, cache, cha);
+    return makeNCFABuilder(n, Language.JAVA, options, cache, cha);
   }
 
   /**
@@ -813,7 +813,7 @@ public class Util {
    * length limited to n, and a context-sensitive allocation-site-based heap abstraction.
    */
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
-      int n, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
+      int n, Language l, AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -824,7 +824,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            l.getFakeRootMethod(cha, options, cache),
             options,
             cache,
             appSelector,

@@ -11,7 +11,7 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.core.util.config.AnalysisScopeReader;
+import com.ibm.wala.core.java11.Java9AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -53,7 +53,7 @@ public class CallGraphTestUtil {
 
   public static AnalysisScope makeJ2SEAnalysisScope(
       String scopeFile, String exclusionsFile, ClassLoader myClassLoader) throws IOException {
-    return AnalysisScopeReader.instance.readJavaScope(
+    return Java9AnalysisScopeReader.instance.readJavaScope(
         scopeFile, new FileProvider().getFile(exclusionsFile), myClassLoader);
   }
 
@@ -196,7 +196,8 @@ public class CallGraphTestUtil {
       S.start();
     }
 
-    CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(n, options, cache, cha);
+    CallGraphBuilder<InstanceKey> builder =
+        Util.makeNCFABuilder(n, Language.JAVA, options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {

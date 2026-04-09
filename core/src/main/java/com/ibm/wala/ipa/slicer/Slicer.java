@@ -60,7 +60,8 @@ public class Slicer {
      * entirely captured by the {@code is*()} methods in {@link DataDependenceOptions}
      */
     NONE("none", true, true, true, true),
-    REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
+    REFLECTION("no_base_no_heap_no_cast", true, true, true, true),
+    REFLECTION_THRU_HEAP("no_base_no_cast", true, false, true, true);
 
     private final String name;
 

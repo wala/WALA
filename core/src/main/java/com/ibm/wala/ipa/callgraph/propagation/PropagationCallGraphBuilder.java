@@ -751,7 +751,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     discoveredNodes.add(node);
   }
 
-  protected void markChanged(CGNode node) {
+  public void markChanged(CGNode node) {
     alreadyVisited.remove(node);
     discoveredNodes.add(node);
   }

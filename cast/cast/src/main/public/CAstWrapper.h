@@ -194,13 +194,13 @@ public:
 
   const char *getEntityName(jobject);
 
-  jobject makeSymbol(const char *);
+  jobject makeSymbol(const char *, jobject);
 
-  jobject makeSymbol(const char *, bool);
+  jobject makeSymbol(const char *, jobject, bool);
 
-  jobject makeSymbol(const char *, bool, bool);
+  jobject makeSymbol(const char *, jobject, bool, bool);
 
-  jobject makeSymbol(const char *, bool, bool, jobject);
+  jobject makeSymbol(const char *, jobject, bool, bool, jobject);
 
   void log(jobject);
 
@@ -220,7 +220,7 @@ public:
 
   jobject makeLocation(int, int, int, int);
 
-  jobject makeFieldEntity(jobject, jobject, bool, list<jobject> *);
+  jobject makeFieldEntity(jobject, jobject, jobject, bool, jobject, jobject, list<jobject> *);
 
   jobject makeGlobalEntity(char *, jobject, list<jobject> *);
 
@@ -233,6 +233,10 @@ public:
   jobject getEntityType(jobject);
 
   void die(const char *);
+
+  void checkExceptions(const char *, int);
 };
+
+#define CheckExceptions(CAST) (CAST).checkExceptions(__FILE__, __LINE__)
 #endif
 

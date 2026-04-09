@@ -177,7 +177,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /** generate IR for a CAst array write, updating context.cfg() */
   @Override
   public abstract void doArrayWrite(
-      WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval);
+      WalkContext context,
+      int arrayValue,
+      CAstNode arrayRef,
+      CAstNode rvalNode,
+      int[] dimValues,
+      int rval);
 
   /** generate IR for a CAst field read, updating context.cfg() */
   protected abstract void doFieldRead(
@@ -185,7 +190,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   /** generate IR for a CAst field write, updating context.cfg() */
   protected abstract void doFieldWrite(
-      WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval);
+      WalkContext context,
+      int receiver,
+      CAstNode elt,
+      CAstNode parent,
+      CAstNode rvalNode,
+      int rval);
 
   /** generate IR for a CAst function expression, updating context.cfg() */
   protected abstract void doMaterializeFunction(
@@ -3313,6 +3323,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_BIT_AND) return BinaryOpInstruction.Operator.AND;
     else if (op == CAstOperator.OP_BIT_OR) return BinaryOpInstruction.Operator.OR;
     else if (op == CAstOperator.OP_BIT_XOR) return BinaryOpInstruction.Operator.XOR;
+    else if (op == CAstOperator.OP_REL_XOR) return BinaryOpInstruction.Operator.XOR;
     else if (op == CAstOperator.OP_CONCAT) return CAstBinaryOp.CONCAT;
     else if (op == CAstOperator.OP_EQ) return CAstBinaryOp.EQ;
     else if (op == CAstOperator.OP_STRICT_EQ) return CAstBinaryOp.STRICT_EQ;
@@ -3322,6 +3333,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_LT) return CAstBinaryOp.LT;
     else if (op == CAstOperator.OP_NE) return CAstBinaryOp.NE;
     else if (op == CAstOperator.OP_STRICT_NE) return CAstBinaryOp.STRICT_NE;
+    else if (op == CAstOperator.OP_POW) return CAstBinaryOp.POW;
     else {
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
       return null;
@@ -4414,6 +4426,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         context.getValue(n.getChild(0)),
         n.getChild(i),
         n,
+        n.getChild(i + 1),
         context.getValue(n.getChild(i + 1)));
   }
 
@@ -4441,6 +4454,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         context,
         context.getValue(n.getChild(0)),
         n,
+        n.getChild(i),
         new int[] {context.currentScope().getConstantValue(i - 1)},
         context.getValue(n.getChild(i)));
   }
@@ -4528,7 +4542,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     int rval = context.getValue(v);
     context.setValue(n, rval);
     arrayOpHandler.doArrayWrite(
-        context, context.getValue(n.getChild(0)), n, gatherArrayDims(context, n), rval);
+        context, context.getValue(n.getChild(0)), n, v, gatherArrayDims(context, n), rval);
   }
 
   @Override
@@ -4544,7 +4558,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     arrayOpHandler.doArrayRead(context, temp, context.getValue(n.getChild(0)), n, dims);
     int rval = processAssignOp(v, a, temp, context);
     context.setValue(n, pre ? rval : temp);
-    arrayOpHandler.doArrayWrite(context, context.getValue(n.getChild(0)), n, dims, rval);
+    arrayOpHandler.doArrayWrite(context, context.getValue(n.getChild(0)), n, v, dims, rval);
   }
 
   @Override
@@ -4552,7 +4566,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       CAstNode n, CAstNode v, CAstNode a, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int rval = context.getValue(v);
     context.setValue(n, rval);
-    doFieldWrite(context, context.getValue(n.getChild(0)), n.getChild(1), n, rval);
+    doFieldWrite(context, context.getValue(n.getChild(0)), n.getChild(1), n, v, rval);
   }
 
   @Override
@@ -4567,7 +4581,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     doFieldRead(context, temp, context.getValue(n.getChild(0)), n.getChild(1), n);
     int rval = processAssignOp(v, a, temp, context);
     context.setValue(n, pre ? rval : temp);
-    doFieldWrite(context, context.getValue(n.getChild(0)), n.getChild(1), n, rval);
+    doFieldWrite(context, context.getValue(n.getChild(0)), n.getChild(1), n, v, rval);
   }
 
   @Override

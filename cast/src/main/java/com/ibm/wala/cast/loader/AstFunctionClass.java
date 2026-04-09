@@ -61,10 +61,10 @@ public abstract class AstFunctionClass implements IClass, ClassConstants {
 
   @Override
   public String toString() {
-    try {
-      return "function " + functionBody.getReference().getDeclaringClass().getName();
-    } catch (NullPointerException e) {
+    if (functionBody == null) {
       return "<need to set code body>";
+    } else {
+      return "function " + functionBody.getReference().getDeclaringClass().getName();
     }
   }
 
@@ -128,7 +128,8 @@ public abstract class AstFunctionClass implements IClass, ClassConstants {
 
   @Override
   public IMethod getMethod(Selector selector) {
-    if (selector.equals(AstMethodReference.fnSelector)) {
+    if (selector.equals(AstMethodReference.fnSelector)
+        || selector.equals(functionBody.getSelector())) {
       return functionBody;
     } else {
       return loader.lookupClass(superReference.getName()).getMethod(selector);

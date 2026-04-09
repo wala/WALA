@@ -26,6 +26,7 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -101,8 +102,8 @@ public class GraphDataflowTest extends WalaTestCase {
   /**
    * @return a graph with the expected structure
    */
-  public static Graph<String> buildGraph() {
-    Graph<String> G = SlowSparseNumberedGraph.make();
+  public static NumberedGraph<String> buildGraph() {
+    NumberedGraph<String> G = SlowSparseNumberedGraph.make();
     for (int i = 0; i < nodeNames.length(); i++) {
       String n = nodeNames.substring(i, i + 1);
       G.addNode(n);

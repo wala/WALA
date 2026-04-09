@@ -18,6 +18,7 @@ import com.ibm.wala.cfg.exc.NullPointerAnalysis;
 import com.ibm.wala.cfg.exc.intra.IntraprocNullPointerAnalysis;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -84,7 +85,8 @@ public class NullPointerExceptionInterTest extends WalaTestCase {
               cha, "Lcfg/exc/inter/CallFieldAccess");
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
-      CallGraphBuilder<InstanceKey> builder = Util.makeNCFABuilder(1, options, cache, cha);
+      CallGraphBuilder<InstanceKey> builder =
+          Util.makeNCFABuilder(1, Language.JAVA, options, cache, cha);
       cg = builder.makeCallGraph(options, null);
     } catch (ClassHierarchyException e) {
       throw new Exception(e);

@@ -455,7 +455,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (klass.isArrayClass()) {
       ArrayClass aClass = (ArrayClass) klass;
       int dim = aClass.getDimensionality();
-      registerMultiDimArraysForArrayOfObjectTypes(dim, index, aClass);
+      if (aClass.getClassLoader().getLanguage().arraysAsNestedObject()) {
+        registerMultiDimArraysForArrayOfObjectTypes(dim, index, aClass);
+      }
 
       IClass elementClass = aClass.getInnermostElementClass();
       if (elementClass != null) {

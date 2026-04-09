@@ -20,12 +20,12 @@ public class TestMultiDim {
     testMulti(multi);
   }
 
-  static void testMulti(Object[][] multi) {
+  public static void testMulti(Object[][] multi) {
     Object[] t = multi[0];
     doNothing(t);
   }
 
-  static void testNewMultiArray() {
+  public static void testNewMultiArray() {
     String[][][] x = new String[3][4][];
     doNothing(x);
   }

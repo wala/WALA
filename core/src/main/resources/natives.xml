@@ -293,6 +293,9 @@
 				</method>
 			</class>
 			<class name="Float">
+				<method name="floatToRawIntBits" descriptor="(F)I"
+					static="true">
+				</method>
 				<method name="floatToIntBits" descriptor="(F)I"
 					static="true">
 				</method>

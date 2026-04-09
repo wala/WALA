@@ -60,6 +60,16 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
     return new InputStreamReader(getInputStream());
   }
 
+  /**
+   * Sometimes a file has a name that is not really a pathname, such as a name with respect to an
+   * include path specified elsewhere. We call this a logical name.
+   *
+   * @return a logical file name
+   */
+  public String logicalFileName() {
+    return fileName;
+  }
+
   @Override
   public URL getURL() {
     if (url == null) {

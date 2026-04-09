@@ -36,6 +36,7 @@ import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -254,6 +255,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
     public DynamicMethodObject(
         IClass cls,
+        MethodReference ref,
         Collection<CAstQualifier> qualifiers,
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
@@ -267,7 +269,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           qualifiers,
           cfg,
           symtab,
-          AstMethodReference.fnReference(cls.getReference()),
+          ref,
           hasCatchBlock,
           caughtTypes,
           hasMonitorOp,
@@ -277,6 +279,29 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
       // force creation of these constants by calling the getter methods
       symtab.getNullConstant();
+    }
+
+    public DynamicMethodObject(
+        IClass cls,
+        Collection<CAstQualifier> qualifiers,
+        AbstractCFG<?, ?> cfg,
+        SymbolTable symtab,
+        boolean hasCatchBlock,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
+        boolean hasMonitorOp,
+        AstLexicalInformation lexicalInfo,
+        DebuggingInformation debugInfo) {
+      this(
+          cls,
+          AstMethodReference.fnReference(cls.getReference()),
+          qualifiers,
+          cfg,
+          symtab,
+          hasCatchBlock,
+          caughtTypes,
+          hasMonitorOp,
+          lexicalInfo,
+          debugInfo);
     }
 
     @Override

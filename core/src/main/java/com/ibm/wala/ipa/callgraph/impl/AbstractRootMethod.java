@@ -182,18 +182,41 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return addAllocation(T, true);
   }
 
-  /** Add a New statement of the given array type and length */
   public SSANewInstruction add1DArrayAllocation(TypeReference T, int length) {
+    return addArrayAllocation(T, 0, new int[] {length});
+  }
+
+  /** Add a New statement of the given array type and length */
+  public SSANewInstruction addArrayAllocation(TypeReference T, int idx, int[] length) {
     int instance = nextLocal++;
     NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-    assert T.isArrayType();
-    assert ((ArrayClass) cha.lookupClass(T)).getDimensionality() == 1;
-    int[] sizes = new int[1];
-    Arrays.fill(sizes, getValueNumberForIntConstant(length));
-    SSANewInstruction result = insts.NewInstruction(statements.size(), instance, ref, sizes);
-    statements.add(result);
-    cache.invalidate(this, Everywhere.EVERYWHERE);
-    return result;
+    if (idx >= length.length) {
+      return insts.NewInstruction(statements.size(), instance, ref);
+    } else {
+      SSANewInstruction result = addArrayAllocation(T.getArrayElementType(), idx + 1, length);
+      assert T.isArrayType() : T;
+      int[] sizes = new int[1];
+      Arrays.fill(sizes, getValueNumberForIntConstant(length[idx]));
+      SSANewInstruction x = insts.NewInstruction(statements.size(), instance, ref, sizes);
+      statements.add(x);
+      insts.ArrayStoreInstruction(
+          statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
+      result = x;
+      cache.invalidate(this, Everywhere.EVERYWHERE);
+      return result;
+    }
+  }
+
+  public SSANewInstruction addArrayAllocation(TypeReference T) {
+    int numDims = 0;
+    TypeReference X = T;
+    while (X.isArrayType()) {
+      X = X.getArrayElementType();
+      numDims++;
+    }
+    int[] lengths = new int[numDims];
+    Arrays.fill(lengths, 1);
+    return addArrayAllocation(T, 0, lengths);
   }
 
   /** Add a New statement of the given type */
@@ -243,6 +266,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
             int[] sizes = new int[((ArrayClass) cha.lookupClass(T)).getDimensionality()];
             Arrays.fill(sizes, getValueNumberForIntConstant(1));
             ni = insts.NewInstruction(statements.size(), alloc, n, sizes);
+          } else if (cha.lookupClass(e) == null || cha.lookupClass(e).isInterface()) {
+            break;
           } else {
             ni = insts.NewInstruction(statements.size(), alloc, n);
           }
