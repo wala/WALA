@@ -15,18 +15,17 @@ import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
 import com.ibm.wala.classLoader.ResourceJarFileModule;
-import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -195,13 +194,7 @@ public class FileProvider {
     // This solution works. See discussion at
     // http://stackoverflow.com/questions/4494063/how-to-avoid-java-net-urisyntaxexception-in-url-touri
     // we assume url has been properly encoded, so we decode it
-    try {
-      URI uri = new File(URLDecoder.decode(url.getPath(), "UTF-8")).toURI();
-      return uri.getPath();
-    } catch (UnsupportedEncodingException e) {
-      // this really shouldn't happen
-      Assertions.UNREACHABLE();
-      return null;
-    }
+    URI uri = new File(URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8)).toURI();
+    return uri.getPath();
   }
 }

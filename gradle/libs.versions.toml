@@ -1,5 +1,5 @@
 [versions]
-com-uber-nullaway = "0.13.1"
+com-uber-nullaway = "0.13.2"
 #noinspection UnusedVersionCatalogEntry
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
@@ -19,7 +19,7 @@ eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.24.0"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
-errorprone-core = "com.google.errorprone:error_prone_core:2.46.0"
+errorprone-core = "com.google.errorprone:error_prone_core:2.49.0"
 gson = "com.google.code.gson:gson:2.13.2"
 guava = "com.google.guava:guava:33.5.0-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"

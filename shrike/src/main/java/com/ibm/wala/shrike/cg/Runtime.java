@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.zip.GZIPOutputStream;
 
@@ -75,7 +76,7 @@ public class Runtime {
       output =
           new PrintWriter(
               new OutputStreamWriter(
-                  new GZIPOutputStream(new FileOutputStream(fileName)), "UTF-8"));
+                  new GZIPOutputStream(new FileOutputStream(fileName)), StandardCharsets.UTF_8));
     } catch (IOException e) {
       output = new PrintWriter(System.err);
     }
