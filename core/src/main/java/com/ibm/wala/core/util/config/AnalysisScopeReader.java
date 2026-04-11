@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import org.intellij.lang.annotations.Language;
@@ -95,7 +96,9 @@ public class AnalysisScopeReader {
       // assume the scope file is UTF-8 encoded; ASCII files will also be handled properly
       // TODO allow specifying encoding as a parameter?
       if (scopeFile.exists()) {
-        r = new BufferedReader(new InputStreamReader(new FileInputStream(scopeFile), "UTF-8"));
+        r =
+            new BufferedReader(
+                new InputStreamReader(new FileInputStream(scopeFile), StandardCharsets.UTF_8));
       } else {
         // try to read from jar
         InputStream inFromJar = javaLoader.getResourceAsStream(scopeFileName);
@@ -146,7 +149,7 @@ public class AnalysisScopeReader {
       if (inStream == null) {
         throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI);
       }
-      r = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+      r = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
 
       while ((line = r.readLine()) != null) {
         processScopeDefLine(scope, javaLoader, line);

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.shrike.shrikeCT;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class SourceDebugExtensionWriter extends ClassWriter.Element {
   private final int attrID;
@@ -59,11 +59,7 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
     if (sourceDebug == null) {
       throw new IllegalArgumentException("sourceDebug is null");
     }
-    try {
-      byte[] bytes = sourceDebug.getBytes("UTF8");
-      setRawTable(bytes);
-    } catch (UnsupportedEncodingException e) {
-      System.err.println(e);
-    }
+    byte[] bytes = sourceDebug.getBytes(StandardCharsets.UTF_8);
+    setRawTable(bytes);
   }
 }

@@ -86,8 +86,8 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
@@ -206,16 +206,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   private static final FieldReference prototypeRef;
 
   static {
-    FieldReference x = null;
-    try {
-      byte[] utf8 = "__proto__".getBytes("UTF-8");
-      x =
-          FieldReference.findOrCreate(
-              JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
-    } catch (UnsupportedEncodingException e) {
-      assert false;
-    }
-    prototypeRef = x;
+    byte[] utf8 = "__proto__".getBytes(StandardCharsets.UTF_8);
+    prototypeRef =
+        FieldReference.findOrCreate(
+            JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
   }
 
   public PointerKey getPointerKeyForGlobalVar(String varName) {
