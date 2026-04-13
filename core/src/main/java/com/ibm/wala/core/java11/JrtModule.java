@@ -12,8 +12,8 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
-import java.nio.file.FileSystems;
 import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -26,7 +26,9 @@ public class JrtModule implements Module {
   private static final java.net.URI JRT_URI = java.net.URI.create("jrt:/");
 
   public JrtModule(String module) throws IOException {
+    // Reuse the shared jrt filesystem when it is already installed; creating it repeatedly fails.
     root = getJrtFileSystem().getPath("modules", module);
+    // Fail fast for an unknown module name.
     if (!Files.exists(root)) {
       throw new IOException("cannot find jrt module " + module + ", tried " + root);
     }
@@ -39,6 +41,7 @@ public class JrtModule implements Module {
       try {
         return FileSystems.newFileSystem(JRT_URI, Collections.emptyMap());
       } catch (FileSystemAlreadyExistsException ignored) {
+        // Another caller won the race to install the filesystem; reuse that instance.
         return FileSystems.getFileSystem(JRT_URI);
       }
     }
