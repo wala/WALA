@@ -10,6 +10,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -19,12 +23,25 @@ import java.util.stream.Collectors;
 
 public class JrtModule implements Module {
   final Path root;
+  private static final java.net.URI JRT_URI = java.net.URI.create("jrt:/");
 
   public JrtModule(String module) throws IOException {
-    root =
-        java.nio.file.FileSystems.newFileSystem(
-                java.net.URI.create("jrt:/"), java.util.Collections.emptyMap())
-            .getPath("modules", module);
+    root = getJrtFileSystem().getPath("modules", module);
+    if (!Files.exists(root)) {
+      throw new IOException("cannot find jrt module " + module + ", tried " + root);
+    }
+  }
+
+  private static FileSystem getJrtFileSystem() throws IOException {
+    try {
+      return FileSystems.getFileSystem(JRT_URI);
+    } catch (FileSystemNotFoundException e) {
+      try {
+        return FileSystems.newFileSystem(JRT_URI, Collections.emptyMap());
+      } catch (FileSystemAlreadyExistsException ignored) {
+        return FileSystems.getFileSystem(JRT_URI);
+      }
+    }
   }
 
   @Override

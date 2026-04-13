@@ -31,7 +31,7 @@ java.toolchain {
   languageVersion = JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
   // We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
   // Temurin does not include jmod files as of their JDK 24 builds.
-  vendor = JvmVendorSpec.AZUL
+  //vendor = JvmVendorSpec.AZUL
 }
 
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"

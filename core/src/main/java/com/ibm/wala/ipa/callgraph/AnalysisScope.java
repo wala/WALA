@@ -21,6 +21,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
@@ -29,7 +30,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -42,8 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.NotSerializableException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -206,11 +204,19 @@ public class AnalysisScope {
    * @throws IOException if a module by that name cannot successfully be loaded
    */
   public void addJDKModuleToScope(String moduleName) throws IOException {
-    Path path = PlatformUtil.getPathForJDKModule(moduleName);
-    if (!Files.exists(path)) {
-      throw new IOException("cannot find jmod file for module " + moduleName + ", tried " + path);
-    }
-    addToScope(ClassLoaderReference.Primordial, new JarFile(path.toString(), false));
+    addJDKModuleToScope(ClassLoaderReference.Primordial, moduleName);
+  }
+
+  /**
+   * Adds a module from the running JDK image to the analysis scope for a specific loader.
+   *
+   * @param loader the target loader
+   * @param moduleName the name of the module, e.g., {@code "java.sql"}
+   * @throws IOException if a module by that name cannot successfully be loaded
+   */
+  public void addJDKModuleToScope(ClassLoaderReference loader, String moduleName)
+      throws IOException {
+    addToScope(loader, new JrtModule(moduleName));
   }
 
   /**
