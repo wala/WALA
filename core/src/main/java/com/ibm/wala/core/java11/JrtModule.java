@@ -5,15 +5,12 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.ComposedIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystemAlreadyExistsException;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -23,27 +20,13 @@ import java.util.stream.Collectors;
 
 public class JrtModule implements Module {
   final Path root;
-  private static final java.net.URI JRT_URI = java.net.URI.create("jrt:/");
 
   public JrtModule(String module) throws IOException {
     // Reuse the shared jrt filesystem when it is already installed; creating it repeatedly fails.
-    root = getJrtFileSystem().getPath("modules", module);
+    root = PlatformUtil.getJrtFileSystem().getPath("modules", module);
     // Fail fast for an unknown module name.
     if (!Files.exists(root)) {
       throw new IOException("cannot find jrt module " + module + ", tried " + root);
-    }
-  }
-
-  private static FileSystem getJrtFileSystem() throws IOException {
-    try {
-      return FileSystems.getFileSystem(JRT_URI);
-    } catch (FileSystemNotFoundException e) {
-      try {
-        return FileSystems.newFileSystem(JRT_URI, Collections.emptyMap());
-      } catch (FileSystemAlreadyExistsException ignored) {
-        // Another caller won the race to install the filesystem; reuse that instance.
-        return FileSystems.getFileSystem(JRT_URI);
-      }
     }
   }
 

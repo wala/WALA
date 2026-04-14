@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.BufferedReader;
@@ -230,8 +231,14 @@ public class AnalysisScopeReader {
     } else if ("stdlib".equals(entryType)) {
       boolean justBase = entryPathname.equals("base");
       String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
-      for (String stdlib : stdlibs) {
-        scope.addToScope(walaLoader, new JarFile(stdlib, false));
+      if (stdlibs != null) {
+        for (String stdlib : stdlibs) {
+          scope.addToScope(walaLoader, new JarFile(stdlib, false));
+        }
+      } else {
+        for (String moduleName : PlatformUtil.getJDKModuleNames(justBase)) {
+          scope.addJDKModuleToScope(walaLoader, moduleName);
+        }
       }
     } else if ("jdkModule".equals(entryType) || "jrt".equals(entryType)) {
       scope.addJDKModuleToScope(walaLoader, entryPathname);

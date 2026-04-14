@@ -11,15 +11,22 @@
 package com.ibm.wala.util;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** Platform-specific utility functions. */
 public class PlatformUtil {
+
+  private static final java.net.URI JRT_URI = java.net.URI.create("jrt:/");
 
   /** are we running on Mac OS X? */
   public static boolean onMacOSX() {
@@ -54,15 +61,20 @@ public class PlatformUtil {
    * @throws IllegalStateException if modules cannot be found
    */
   public static String[] getJDKModules(boolean justBase) {
+    Path jmodsDir = Paths.get(System.getProperty("java.home"), "jmods");
+    if (!Files.isDirectory(jmodsDir)) {
+      return new String[0];
+    }
+
     List<String> jmods;
     if (justBase) {
-      Path basePath = Paths.get(System.getProperty("java.home"), "jmods", "java.base.jmod");
+      Path basePath = jmodsDir.resolve("java.base.jmod");
       if (!Files.exists(basePath)) {
         throw new IllegalStateException("could not find java.base.jmod");
       }
       jmods = List.of(basePath.toString());
     } else {
-      try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("java.home"), "jmods"))) {
+      try (Stream<Path> stream = Files.list(jmodsDir)) {
         jmods =
             stream
                 .map(Path::toString)
@@ -73,6 +85,32 @@ public class PlatformUtil {
       }
     }
     return jmods.toArray(new String[0]);
+  }
+
+  /**
+   * Gets the standard JDK module names exposed by the running JDK image.
+   *
+   * @param justBase if {@code true}, only include {@code java.base}
+   * @return array of module names from the {@code jrt:/modules} filesystem
+   */
+  public static String[] getJDKModuleNames(boolean justBase) {
+    List<String> modules;
+    try {
+      if (justBase) {
+        modules = List.of("java.base");
+      } else {
+        try (Stream<Path> modulePaths = Files.list(getJrtFileSystem().getPath("modules"))) {
+          modules =
+              modulePaths
+                  .map(Path::getFileName)
+                  .map(Path::toString)
+                  .collect(Collectors.toList());
+        }
+      }
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+    return modules.toArray(new String[0]);
   }
 
   /**
@@ -89,5 +127,18 @@ public class PlatformUtil {
       }
     }
     return Integer.parseInt(version);
+  }
+
+  public static FileSystem getJrtFileSystem() throws IOException {
+    try {
+      return FileSystems.getFileSystem(JRT_URI);
+    } catch (FileSystemNotFoundException e) {
+      try {
+        return FileSystems.newFileSystem(JRT_URI, Collections.emptyMap());
+      } catch (FileSystemAlreadyExistsException ignored) {
+        // Another caller won the race to install the filesystem; reuse that instance.
+        return FileSystems.getFileSystem(JRT_URI);
+      }
+    }
   }
 }
