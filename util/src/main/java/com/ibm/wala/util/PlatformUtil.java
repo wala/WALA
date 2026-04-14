@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jspecify.annotations.Nullable;
 
 /** Platform-specific utility functions. */
 public class PlatformUtil {
@@ -60,10 +61,10 @@ public class PlatformUtil {
    * @return array of {@code .jmod} module files
    * @throws IllegalStateException if modules cannot be found
    */
-  public static String[] getJDKModules(boolean justBase) {
+  public static String @Nullable [] getJDKModules(boolean justBase) {
     Path jmodsDir = Paths.get(System.getProperty("java.home"), "jmods");
     if (!Files.isDirectory(jmodsDir)) {
-      return new String[0];
+      return null;
     }
 
     List<String> jmods;
@@ -101,10 +102,7 @@ public class PlatformUtil {
       } else {
         try (Stream<Path> modulePaths = Files.list(getJrtFileSystem().getPath("modules"))) {
           modules =
-              modulePaths
-                  .map(Path::getFileName)
-                  .map(Path::toString)
-                  .collect(Collectors.toList());
+              modulePaths.map(Path::getFileName).map(Path::toString).collect(Collectors.toList());
         }
       }
     } catch (IOException e) {

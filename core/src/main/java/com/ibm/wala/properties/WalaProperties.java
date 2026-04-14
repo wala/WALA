@@ -75,26 +75,21 @@ public final class WalaProperties {
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
-      return resolveSystemJDKLibraryFiles(justBase);
+      return PlatformUtil.getJDKModules(justBase);
     }
 
     String dir = p.getProperty(WalaProperties.J2SE_DIR);
     if (dir == null) {
-      return resolveSystemJDKLibraryFiles(justBase);
+      return PlatformUtil.getJDKModules(justBase);
     }
     if (!new File(dir).isDirectory()) {
       System.err.println(
           "WARNING: java_runtime_dir "
               + dir
               + " in wala.properties is invalid.  Using boot class path instead.");
-      return resolveSystemJDKLibraryFiles(justBase);
+      return PlatformUtil.getJDKModules(justBase);
     }
     return getJarsInDirectory(dir);
-  }
-
-  private static String[] resolveSystemJDKLibraryFiles(boolean justBase) {
-    String[] modules = PlatformUtil.getJDKModules(justBase);
-    return modules.length == 0 ? null : modules;
   }
 
   /**
