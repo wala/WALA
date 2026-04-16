@@ -103,15 +103,17 @@ public class AnalysisScopeTest {
   public void testToJsonCustom() throws IOException {
     AnalysisScope scope;
     scope = AnalysisScope.createJavaAnalysisScope();
+    String[] stdlibs;
     try {
-      String[] stdlibs = WalaProperties.getJ2SEJarFiles();
+      stdlibs = WalaProperties.getJ2SEJarFiles();
       Arrays.sort(stdlibs);
       for (String stdlib : stdlibs) {
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
         scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
       }
     } catch (NoJDKModulesFoundException e) {
-      // TODO handle case where JDK has no jmod files
+      // TODO properly handle case where JDK has no jmod files
+      stdlibs = new String[0];
     }
     scope.setExclusions((StringFilter) null);
     Gson gson = new Gson();
