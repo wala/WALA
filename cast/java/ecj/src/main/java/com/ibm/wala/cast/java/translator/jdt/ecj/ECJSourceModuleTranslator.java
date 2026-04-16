@@ -94,8 +94,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     private final String[] libs;
     private final boolean includeRunningVMBootclasspath;
 
-    private ClassPath(
-        String[] sources, String[] libs, boolean includeRunningVMBootclasspath) {
+    private ClassPath(String[] sources, String[] libs, boolean includeRunningVMBootclasspath) {
       this.sources = sources;
       this.libs = libs;
       this.includeRunningVMBootclasspath = includeRunningVMBootclasspath;
@@ -254,9 +253,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     }
 
     return new ClassPath(
-        sources.toArray(new String[0]),
-        libs.toArray(new String[0]),
-        includeRunningVMBootclasspath);
+        sources.toArray(new String[0]), libs.toArray(new String[0]), includeRunningVMBootclasspath);
   }
 
   /*

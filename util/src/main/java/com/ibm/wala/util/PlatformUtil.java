@@ -53,18 +53,25 @@ public class PlatformUtil {
     return "IKVM.NET".equals(System.getProperty("java.runtime.name"));
   }
 
+  public static class NoJDKModulesFoundException extends Exception {
+
+    public NoJDKModulesFoundException(String msg) {
+      super(msg);
+    }
+  }
+
   /**
    * Gets the standard JDK modules shipped with the running JDK
    *
    * @param justBase if {@code true}, only include the file corresponding to the {@code java.base}
    *     module
    * @return array of {@code .jmod} module files, or an empty array if the files cannot be loaded
-   * @throws IllegalStateException if modules cannot be found
+   * @throws IllegalStateException if the running JDK does not include jmod files
    */
-  public static String[] getJDKModules(boolean justBase) {
+  public static String[] getJDKModules(boolean justBase) throws NoJDKModulesFoundException {
     Path jmodsDir = Paths.get(System.getProperty("java.home"), "jmods");
     if (!Files.isDirectory(jmodsDir)) {
-      return new String[0];
+      throw new NoJDKModulesFoundException("could not find jmods directory at " + jmodsDir);
     }
 
     List<String> jmods;

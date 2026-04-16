@@ -12,6 +12,7 @@ package com.ibm.wala.properties;
 
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileUtil;
@@ -53,10 +54,10 @@ public final class WalaProperties {
    *
    * <p>If wala.properties cannot be loaded, returns library files in boot classpath.
    *
-   * @throws IllegalStateException if library files cannot be discovered
+   * @throws NoJDKModulesFoundException if library files cannot be discovered
    * @see PlatformUtil#getJDKModules(boolean)
    */
-  public static String[] getJ2SEJarFiles() {
+  public static String[] getJ2SEJarFiles() throws NoJDKModulesFoundException {
     return getJDKLibraryFiles(false);
   }
 
@@ -69,8 +70,10 @@ public final class WalaProperties {
    *     returns the {@code java.base} library from boot classpath. Otherwise, returns all library
    *     modules from boot classpath.
    * @see PlatformUtil#getJDKModules(boolean)
+   * @throws com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException if wala.properties cannot be
+   *     loaded and also jmod files from the running JDK cannot be found
    */
-  public static String[] getJDKLibraryFiles(boolean justBase) {
+  public static String[] getJDKLibraryFiles(boolean justBase) throws NoJDKModulesFoundException {
     final Properties p;
     try {
       p = WalaProperties.loadProperties();

@@ -21,6 +21,7 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
 import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.BufferedReader;
@@ -230,12 +231,12 @@ public class AnalysisScopeReader {
       scope.setLoaderImpl(walaLoader, entryPathname);
     } else if ("stdlib".equals(entryType)) {
       boolean justBase = entryPathname.equals("base");
-      String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
-      if (stdlibs.length > 0) {
+      try {
+        String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
         for (String stdlib : stdlibs) {
           scope.addToScope(walaLoader, new JarFile(stdlib, false));
         }
-      } else {
+      } catch (NoJDKModulesFoundException e) {
         for (String moduleName : PlatformUtil.getJDKModuleNames(justBase)) {
           scope.addJDKModuleToScope(walaLoader, moduleName);
         }

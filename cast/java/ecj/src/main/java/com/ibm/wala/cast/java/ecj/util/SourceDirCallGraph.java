@@ -26,6 +26,7 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
 import com.ibm.wala.util.io.CommandLine;
 import java.io.File;
 import java.io.IOException;
@@ -81,12 +82,12 @@ public class SourceDirCallGraph {
     String mainClass = p.getProperty("mainClass");
     AnalysisScope scope = new JavaSourceAnalysisScope();
     // add standard libraries to scope
-    String[] stdlibs = WalaProperties.getJ2SEJarFiles();
-    if (stdlibs.length > 0) {
+    try {
+      String[] stdlibs = WalaProperties.getJ2SEJarFiles();
       for (String stdlib : stdlibs) {
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
       }
-    } else {
+    } catch (NoJDKModulesFoundException e) {
       for (String moduleName : PlatformUtil.getJDKModuleNames(false)) {
         scope.addJDKModuleToScope(ClassLoaderReference.Primordial, moduleName);
       }

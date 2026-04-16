@@ -24,6 +24,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
@@ -71,13 +72,16 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       Files.deleteIfExists(instrumentedJarLocation);
 
       String rtJar = null;
-      for (String jar : WalaProperties.getJ2SEJarFiles()) {
-        if (jar.endsWith(File.separator + "rt.jar")
-            || jar.endsWith(File.separator + "classes.jar")) {
-          rtJar = jar;
+      try {
+        for (String jar : WalaProperties.getJ2SEJarFiles()) {
+          if (jar.endsWith(File.separator + "rt.jar")
+              || jar.endsWith(File.separator + "classes.jar")) {
+            rtJar = jar;
+          }
         }
+      } catch (NoJDKModulesFoundException e) {
+        // TODO handle case where JDK has no jmod files
       }
-
       List<String> args =
           new ArrayList<>(Arrays.asList(testJarLocation, "-o", instrumentedJarLocation.toString()));
       if (rtJar != null) {

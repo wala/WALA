@@ -14,6 +14,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -102,11 +103,15 @@ public class AnalysisScopeTest {
   public void testToJsonCustom() throws IOException {
     AnalysisScope scope;
     scope = AnalysisScope.createJavaAnalysisScope();
-    String[] stdlibs = WalaProperties.getJ2SEJarFiles();
-    Arrays.sort(stdlibs);
-    for (String stdlib : stdlibs) {
-      scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
-      scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
+    try {
+      String[] stdlibs = WalaProperties.getJ2SEJarFiles();
+      Arrays.sort(stdlibs);
+      for (String stdlib : stdlibs) {
+        scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
+        scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
+      }
+    } catch (NoJDKModulesFoundException e) {
+      // TODO handle case where JDK has no jmod files
     }
     scope.setExclusions((StringFilter) null);
     Gson gson = new Gson();

@@ -48,6 +48,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
@@ -72,7 +73,18 @@ public abstract class IRTests {
 
   protected boolean dump = true;
 
-  public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
+  public static final List<String> rtJar;
+
+  static {
+    List<String> jars;
+    try {
+      jars = Arrays.asList(WalaProperties.getJ2SEJarFiles());
+    } catch (NoJDKModulesFoundException e) {
+      // TODO better handle case when there are no stdlib jar / jmod files
+      jars = Collections.emptyList();
+    }
+    rtJar = jars;
+  }
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
