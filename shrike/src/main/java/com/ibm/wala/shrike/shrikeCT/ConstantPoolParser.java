@@ -634,6 +634,7 @@ public final class ConstantPoolParser implements ClassConstants {
         case CONSTANT_InterfaceMethodRef:
         case CONSTANT_Integer:
         case CONSTANT_Float:
+        case CONSTANT_Dynamic:
         case CONSTANT_InvokeDynamic:
           itemLen = 4;
           break;

@@ -503,6 +503,8 @@ public interface Constants {
 
   byte CONSTANT_MethodType = 16;
 
+  byte CONSTANT_Dynamic = 17;
+
   byte CONSTANT_InvokeDynamic = 18;
 
   byte T_BOOLEAN = 4;
