@@ -32,7 +32,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import org.intellij.lang.annotations.Language;
