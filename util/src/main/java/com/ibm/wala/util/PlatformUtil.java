@@ -62,7 +62,7 @@ public class PlatformUtil {
    * @return array of {@code .jmod} module files, or an empty array if the files cannot be loaded
    * @throws IllegalStateException if modules cannot be found
    */
-  public static String @Nullable [] getJDKModules(boolean justBase) {
+  public static String[] getJDKModules(boolean justBase) {
     Path jmodsDir = Paths.get(System.getProperty("java.home"), "jmods");
     if (!Files.isDirectory(jmodsDir)) {
       return new String[0];
