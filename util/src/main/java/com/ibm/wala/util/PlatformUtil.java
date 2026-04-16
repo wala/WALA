@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 public class PlatformUtil {
 
   private static final java.net.URI JRT_URI = java.net.URI.create("jrt:/");
+  private static final FileSystem JRT_FILE_SYSTEM = initJrtFileSystem();
 
   /** are we running on Mac OS X? */
   public static boolean onMacOSX() {
@@ -100,7 +101,7 @@ public class PlatformUtil {
       if (justBase) {
         modules = List.of("java.base");
       } else {
-        try (Stream<Path> modulePaths = Files.list(getJrtFileSystem().getPath("modules"))) {
+        try (Stream<Path> modulePaths = Files.list(JRT_FILE_SYSTEM.getPath("modules"))) {
           modules =
               modulePaths.map(Path::getFileName).map(Path::toString).collect(Collectors.toList());
         }
@@ -127,7 +128,12 @@ public class PlatformUtil {
     return Integer.parseInt(version);
   }
 
-  public static FileSystem getJrtFileSystem() throws IOException {
+  /** Returns the shared {@code jrt:/} filesystem for this JVM. Callers should not close it. */
+  public static FileSystem getJrtFileSystem() {
+    return JRT_FILE_SYSTEM;
+  }
+
+  private static FileSystem initJrtFileSystem() {
     try {
       return FileSystems.getFileSystem(JRT_URI);
     } catch (FileSystemNotFoundException e) {
@@ -136,6 +142,8 @@ public class PlatformUtil {
       } catch (FileSystemAlreadyExistsException ignored) {
         // Another caller won the race to install the filesystem; reuse that instance.
         return FileSystems.getFileSystem(JRT_URI);
+      } catch (IOException ioException) {
+        throw new IllegalStateException("unable to initialize jrt filesystem", ioException);
       }
     }
   }
