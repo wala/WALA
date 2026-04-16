@@ -49,10 +49,10 @@ import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.StringFilter;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
@@ -82,6 +82,26 @@ import org.eclipse.jdt.core.dom.FileASTRequestor;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class ECJSourceModuleTranslator implements SourceModuleTranslator {
+  /**
+   * Classpath inputs derived from an {@link AnalysisScope} for ECJ parser configuration.
+   *
+   * <p>{@code libs} and {@code sources} are passed directly to {@link ASTParser#setEnvironment},
+   * while {@code includeRunningVMBootclasspath} is enabled when the scope is backed by {@link
+   * JrtModule} entries instead of jar or jmod paths.
+   */
+  private static final class ClassPath {
+    private final String[] sources;
+    private final String[] libs;
+    private final boolean includeRunningVMBootclasspath;
+
+    private ClassPath(
+        String[] sources, String[] libs, boolean includeRunningVMBootclasspath) {
+      this.sources = sources;
+      this.libs = libs;
+      this.includeRunningVMBootclasspath = includeRunningVMBootclasspath;
+    }
+  }
+
   protected static class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
     public ECJJavaToCAstTranslator(
         JavaSourceLoaderImpl sourceLoader,
@@ -176,6 +196,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   protected ECJSourceLoaderImpl sourceLoader;
   private final String[] sources;
   private final String[] libs;
+  private final boolean includeRunningVMBootclasspath;
   private final StringFilter exclusions;
 
   public ECJSourceModuleTranslator(AnalysisScope scope, ECJSourceLoaderImpl sourceLoader) {
@@ -187,16 +208,18 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     this.sourceLoader = sourceLoader;
     this.dump = dump;
 
-    Pair<String[], String[]> paths = computeClassPath(scope);
-    sources = paths.fst;
-    libs = paths.snd;
+    ClassPath paths = computeClassPath(scope);
+    sources = paths.sources;
+    libs = paths.libs;
+    includeRunningVMBootclasspath = paths.includeRunningVMBootclasspath;
 
     this.exclusions = scope.getExclusions();
   }
 
-  private static Pair<String[], String[]> computeClassPath(AnalysisScope scope) {
+  private static ClassPath computeClassPath(AnalysisScope scope) {
     List<String> sources = new ArrayList<>();
     List<String> libs = new ArrayList<>();
+    boolean includeRunningVMBootclasspath = false;
     for (ClassLoaderReference cl : scope.getLoaders()) {
 
       while (cl != null) {
@@ -220,6 +243,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
             DirectoryTreeModule directoryTreeModule = (DirectoryTreeModule) m;
 
             sources.add(directoryTreeModule.getPath());
+          } else if (m instanceof JrtModule) {
+            includeRunningVMBootclasspath = true;
           } else {
             // Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
           }
@@ -228,7 +253,10 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
       }
     }
 
-    return Pair.make(sources.toArray(new String[0]), libs.toArray(new String[0]));
+    return new ClassPath(
+        sources.toArray(new String[0]),
+        libs.toArray(new String[0]),
+        includeRunningVMBootclasspath);
   }
 
   /*
@@ -251,7 +279,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     @SuppressWarnings("deprecation")
     final ASTParser parser = ASTParser.newParser(AST.JLS8);
     parser.setResolveBindings(true);
-    parser.setEnvironment(libs, this.sources, null, false);
+    parser.setEnvironment(libs, this.sources, null, includeRunningVMBootclasspath);
     Hashtable<String, String> options = JavaCore.getOptions();
     options.put(JavaCore.COMPILER_SOURCE, "11");
     parser.setCompilerOptions(options);
