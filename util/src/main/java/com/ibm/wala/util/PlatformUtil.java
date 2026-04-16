@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /** Platform-specific utility functions. */
 public class PlatformUtil {
