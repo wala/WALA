@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import org.intellij.lang.annotations.Language;
@@ -231,7 +232,7 @@ public class AnalysisScopeReader {
     } else if ("stdlib".equals(entryType)) {
       boolean justBase = entryPathname.equals("base");
       String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
-      if (stdlibs != null) {
+      if (stdlibs.length > 0) {
         for (String stdlib : stdlibs) {
           scope.addToScope(walaLoader, new JarFile(stdlib, false));
         }
