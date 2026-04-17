@@ -30,6 +30,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -48,6 +49,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.PlatformUtil.NoJDKLibraryFilesFoundException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -76,14 +78,15 @@ public abstract class IRTests {
   public static final List<String> rtJar;
 
   static {
-    List<String> jars;
+    rtJar = getJavaRuntimeLibraries();
+  }
+
+  private static List<String> getJavaRuntimeLibraries() {
     try {
-      jars = Arrays.asList(WalaProperties.getJ2SEJarFiles());
+      return Arrays.asList(WalaProperties.getJ2SEJarFiles());
     } catch (NoJDKLibraryFilesFoundException e) {
-      // TODO better handle case when there are no stdlib jar / jmod files
-      jars = Collections.emptyList();
+      return Arrays.asList(PlatformUtil.getJDKModuleNames(false));
     }
-    rtJar = jars;
   }
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
@@ -448,12 +451,19 @@ public abstract class IRTests {
 
   public static void populateScope(
       JavaSourceAnalysisEngine engine, Collection<Path> sources, List<String> libs) {
-    assertThat(libs)
-        .map(File::new)
-        .filteredOn(File::exists)
-        .isNotEmpty()
-        .allSatisfy(
-            libFile -> engine.addSystemModule(new JarFileModule(new JarFile(libFile, false))));
+    assertThat(libs).isNotEmpty();
+    for (String lib : libs) {
+      File libFile = new File(lib);
+      try {
+        if (libFile.exists()) {
+          engine.addSystemModule(new JarFileModule(new JarFile(libFile, false)));
+        } else {
+          engine.addSystemModule(new JrtModule(lib));
+        }
+      } catch (IOException e) {
+        throw new IllegalStateException("unable to add Java runtime library " + lib, e);
+      }
+    }
 
     for (Path srcFilePath : sources) {
       Path srcFileName = srcFilePath.getFileName();
