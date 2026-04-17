@@ -70,10 +70,11 @@ public final class WalaProperties {
    *     returns the {@code java.base} library from boot classpath. Otherwise, returns all library
    *     modules from boot classpath.
    * @see PlatformUtil#getJDKModules(boolean)
-   * @throws NoJDKLibraryFilesFoundException if wala.properties cannot be
-   *     loaded and also jmod files from the running JDK cannot be found
+   * @throws NoJDKLibraryFilesFoundException if wala.properties cannot be loaded and also jmod files
+   *     from the running JDK cannot be found
    */
-  public static String[] getJDKLibraryFiles(boolean justBase) throws NoJDKLibraryFilesFoundException {
+  public static String[] getJDKLibraryFiles(boolean justBase)
+      throws NoJDKLibraryFilesFoundException {
     final Properties p;
     try {
       p = WalaProperties.loadProperties();
