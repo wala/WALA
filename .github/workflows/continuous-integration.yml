@@ -17,29 +17,21 @@ jobs:
         include:
           - os: macos-latest
             java: 17
-            coverage: false
           # Apple Silicon M1 CPU according to <https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories>
           - os: macos-14
             java: 17
-            coverage: false
           - os: windows-latest
             java: 17
-            coverage: false
           - os: ubuntu-latest
             java: 11
-            coverage: false
           - os: ubuntu-latest
             java: 17
-            coverage: true
           - os: ubuntu-latest
             java: 21
-            coverage: false
           - os: ubuntu-latest
             java: 25
-            coverage: false
           - os: ubuntu-latest
             java: 26
-            coverage: false
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -85,7 +77,7 @@ jobs:
       - name: Aggregate coverage
         id: jacoco_report
         run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
-        if: matrix.coverage && github.repository == 'wala/WALA'
+        if: github.repository == 'wala/WALA'
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
