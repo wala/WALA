@@ -53,9 +53,15 @@ public class PlatformUtil {
     return "IKVM.NET".equals(System.getProperty("java.runtime.name"));
   }
 
-  public static class NoJDKModulesFoundException extends Exception {
+  /** Exception thrown when WALA cannot locate the JDK library files for the running runtime. */
+  public static class NoJDKLibraryFilesFoundException extends Exception {
 
-    public NoJDKModulesFoundException(String msg) {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * @param msg description of the missing-library failure
+     */
+    public NoJDKLibraryFilesFoundException(String msg) {
       super(msg);
     }
   }
@@ -68,10 +74,10 @@ public class PlatformUtil {
    * @return array of {@code .jmod} module files, or an empty array if the files cannot be loaded
    * @throws IllegalStateException if the running JDK does not include jmod files
    */
-  public static String[] getJDKModules(boolean justBase) throws NoJDKModulesFoundException {
+  public static String[] getJDKModules(boolean justBase) throws NoJDKLibraryFilesFoundException {
     Path jmodsDir = Paths.get(System.getProperty("java.home"), "jmods");
     if (!Files.isDirectory(jmodsDir)) {
-      throw new NoJDKModulesFoundException("could not find jmods directory at " + jmodsDir);
+      throw new NoJDKLibraryFilesFoundException("could not find jmods directory at " + jmodsDir);
     }
 
     List<String> jmods;

@@ -14,7 +14,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.PlatformUtil.NoJDKModulesFoundException;
+import com.ibm.wala.util.PlatformUtil.NoJDKLibraryFilesFoundException;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -111,7 +111,7 @@ public class AnalysisScopeTest {
         scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
         scope.addToScope(ClassLoaderReference.Application, new JarFile(stdlib));
       }
-    } catch (NoJDKModulesFoundException e) {
+    } catch (NoJDKLibraryFilesFoundException e) {
       // TODO properly handle case where JDK has no jmod files
       stdlibs = new String[0];
     }
