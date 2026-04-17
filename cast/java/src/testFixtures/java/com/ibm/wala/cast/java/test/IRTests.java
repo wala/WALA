@@ -456,8 +456,13 @@ public abstract class IRTests {
       File libFile = new File(lib);
       try {
         if (libFile.exists()) {
+          // Traditional test setup passes jar/jmod filesystem paths, which we add directly.
           engine.addSystemModule(new JarFileModule(new JarFile(libFile, false)));
         } else {
+          // When the running JDK exposes standard libraries only via the jrt:/ image, the
+          // fallback runtime list contains module names such as "java.base" rather than paths.
+          // Convert those names into JrtModule instances so the source analysis scope can still
+          // resolve JDK classes without requiring jar or jmod files on disk.
           engine.addSystemModule(new JrtModule(lib));
         }
       } catch (IOException e) {
