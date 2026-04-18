@@ -11,8 +11,6 @@
 package com.ibm.wala.properties;
 
 import com.ibm.wala.core.util.io.FileProvider;
-import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.PlatformUtil.NoJDKLibraryFilesFoundException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileUtil;
@@ -54,10 +52,9 @@ public final class WalaProperties {
    *
    * <p>If wala.properties cannot be loaded, returns library files in boot classpath.
    *
-   * @throws NoJDKLibraryFilesFoundException if library files cannot be discovered
-   * @see PlatformUtil#getJDKModules(boolean)
+   * @throws WalaException if library files cannot be discovered
    */
-  public static String[] getJ2SEJarFiles() throws NoJDKLibraryFilesFoundException {
+  public static String[] getJ2SEJarFiles() throws WalaException {
     return getJDKLibraryFiles(false);
   }
 
@@ -69,29 +66,22 @@ public final class WalaProperties {
    * @param justBase Only relevant if wala.properties cannot be loaded. If {@code true}, only
    *     returns the {@code java.base} library from boot classpath. Otherwise, returns all library
    *     modules from boot classpath.
-   * @see PlatformUtil#getJDKModules(boolean)
-   * @throws NoJDKLibraryFilesFoundException if wala.properties cannot be loaded and also jmod files
-   *     from the running JDK cannot be found
+   * @throws WalaException if JDK library files cannot be loaded based on properties in
+   *     wala.properties
    */
-  public static String[] getJDKLibraryFiles(boolean justBase)
-      throws NoJDKLibraryFilesFoundException {
+  public static String[] getJDKLibraryFiles(boolean justBase) throws WalaException {
     final Properties p;
-    try {
-      p = WalaProperties.loadProperties();
-    } catch (WalaException e) {
-      return PlatformUtil.getJDKModules(justBase);
-    }
+    p = WalaProperties.loadProperties();
 
     String dir = p.getProperty(WalaProperties.J2SE_DIR);
     if (dir == null) {
-      return PlatformUtil.getJDKModules(justBase);
+      throw new WalaException("J2SE_DIR not set in WALA properties file");
     }
     if (!new File(dir).isDirectory()) {
-      System.err.println(
+      throw new WalaException(
           "WARNING: java_runtime_dir "
               + dir
               + " in wala.properties is invalid.  Using boot class path instead.");
-      return PlatformUtil.getJDKModules(justBase);
     }
     return getJarsInDirectory(dir);
   }

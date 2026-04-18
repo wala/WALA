@@ -17,11 +17,8 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.PlatformUtil.NoJDKLibraryFilesFoundException;
 import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.BufferedReader;
@@ -231,16 +228,7 @@ public class AnalysisScopeReader {
       scope.setLoaderImpl(walaLoader, entryPathname);
     } else if ("stdlib".equals(entryType)) {
       boolean justBase = entryPathname.equals("base");
-      try {
-        String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
-        for (String stdlib : stdlibs) {
-          scope.addToScope(walaLoader, new JarFile(stdlib, false));
-        }
-      } catch (NoJDKLibraryFilesFoundException e) {
-        for (String moduleName : PlatformUtil.getJDKModuleNames(justBase)) {
-          scope.addJDKModuleToScope(walaLoader, moduleName);
-        }
-      }
+      scope.addStdLibs(justBase, walaLoader);
     } else if ("jdkModule".equals(entryType) || "jrt".equals(entryType)) {
       scope.addJDKModuleToScope(walaLoader, entryPathname);
     } else if (!handleInSubclass(scope, walaLoader, language, entryType, entryPathname)) {
