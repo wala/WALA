@@ -89,17 +89,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
    * while {@code includeRunningVMBootclasspath} is enabled when the scope is backed by {@link
    * JrtModule} entries instead of jar or jmod paths.
    */
-  private static final class ClassPath {
-    private final String[] sources;
-    private final String[] libs;
-    private final boolean includeRunningVMBootclasspath;
-
-    private ClassPath(String[] sources, String[] libs, boolean includeRunningVMBootclasspath) {
-      this.sources = sources;
-      this.libs = libs;
-      this.includeRunningVMBootclasspath = includeRunningVMBootclasspath;
-    }
-  }
+  private record ClassPath(
+      String[] sources, String[] libs, boolean includeRunningVMBootclasspath) {}
 
   protected static class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
     public ECJJavaToCAstTranslator(
@@ -208,9 +199,9 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     this.dump = dump;
 
     ClassPath paths = computeClassPath(scope);
-    sources = paths.sources;
-    libs = paths.libs;
-    includeRunningVMBootclasspath = paths.includeRunningVMBootclasspath;
+    sources = paths.sources();
+    libs = paths.libs();
+    includeRunningVMBootclasspath = paths.includeRunningVMBootclasspath();
 
     this.exclusions = scope.getExclusions();
   }
