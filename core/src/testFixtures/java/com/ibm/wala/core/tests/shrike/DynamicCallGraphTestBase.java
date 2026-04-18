@@ -24,7 +24,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.PlatformUtil.NoJDKLibraryFilesFoundException;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
@@ -79,7 +79,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
             rtJar = jar;
           }
         }
-      } catch (NoJDKLibraryFilesFoundException e) {
+      } catch (WalaException e) {
         // TODO handle case where JDK has no jmod files
       }
       List<String> args =

@@ -50,7 +50,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.PlatformUtil;
-import com.ibm.wala.util.PlatformUtil.NoJDKLibraryFilesFoundException;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
@@ -84,7 +84,7 @@ public abstract class IRTests {
   private static List<String> getJavaRuntimeLibraries() {
     try {
       return Arrays.asList(WalaProperties.getJ2SEJarFiles());
-    } catch (NoJDKLibraryFilesFoundException e) {
+    } catch (WalaException e) {
       return Arrays.asList(PlatformUtil.getJDKModuleNames(false));
     }
   }
