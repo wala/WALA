@@ -71,8 +71,8 @@ public class PlatformUtil {
    *
    * @param justBase if {@code true}, only include the file corresponding to the {@code java.base}
    *     module
-   * @return array of {@code .jmod} module files, or an empty array if the files cannot be loaded
-   * @throws IllegalStateException if the running JDK does not include jmod files
+   * @return array of {@code .jmod} module files
+   * @throws NoJDKLibraryFilesFoundException if the running JDK does not include jmod files
    */
   public static String[] getJDKModules(boolean justBase) throws NoJDKLibraryFilesFoundException {
     Path jmodsDir = Paths.get(System.getProperty("java.home"), "jmods");
