@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrike.shrikeBT;
 
+import com.ibm.wala.shrike.shrikeCT.ClassConstants;
+
 /**
  * This interface defines a bunch of constants from the JVM spec. It also defines some constants we
  * need for other purposes.
@@ -443,31 +445,31 @@ public interface Constants {
 
   short OP_jsr_w = 201;
 
-  char ACC_PUBLIC = 0x1;
+  char ACC_PUBLIC = ClassConstants.ACC_PUBLIC;
 
-  char ACC_PRIVATE = 0x2;
+  char ACC_PRIVATE = ClassConstants.ACC_PRIVATE;
 
-  char ACC_PROTECTED = 0x4;
+  char ACC_PROTECTED = ClassConstants.ACC_PROTECTED;
 
-  char ACC_STATIC = 0x8;
+  char ACC_STATIC = ClassConstants.ACC_STATIC;
 
-  char ACC_FINAL = 0x10;
+  char ACC_FINAL = ClassConstants.ACC_FINAL;
 
-  char ACC_SYNCHRONIZED = 0x20;
+  char ACC_SYNCHRONIZED = ClassConstants.ACC_SYNCHRONIZED;
 
-  char ACC_SUPER = 0x20;
+  char ACC_SUPER = ClassConstants.ACC_SUPER;
 
-  char ACC_VOLATILE = 0x40;
+  char ACC_VOLATILE = ClassConstants.ACC_VOLATILE;
 
-  char ACC_TRANSIENT = 0x80;
+  char ACC_TRANSIENT = ClassConstants.ACC_TRANSIENT;
 
-  char ACC_NATIVE = 0x100;
+  char ACC_NATIVE = ClassConstants.ACC_NATIVE;
 
-  char ACC_INTERFACE = 0x200;
+  char ACC_INTERFACE = ClassConstants.ACC_INTERFACE;
 
-  char ACC_ABSTRACT = 0x400;
+  char ACC_ABSTRACT = ClassConstants.ACC_ABSTRACT;
 
-  char ACC_STRICT = 0x800;
+  char ACC_STRICT = ClassConstants.ACC_STRICT;
 
   char ACC_SYNTHETIC = 0x1000;
 
@@ -477,35 +479,35 @@ public interface Constants {
 
   char ACC_MODULE = 0x8000;
 
-  byte CONSTANT_Utf8 = 1;
+  byte CONSTANT_Utf8 = ClassConstants.CONSTANT_Utf8;
 
-  byte CONSTANT_Integer = 3;
+  byte CONSTANT_Integer = ClassConstants.CONSTANT_Integer;
 
-  byte CONSTANT_Float = 4;
+  byte CONSTANT_Float = ClassConstants.CONSTANT_Float;
 
-  byte CONSTANT_Long = 5;
+  byte CONSTANT_Long = ClassConstants.CONSTANT_Long;
 
-  byte CONSTANT_Double = 6;
+  byte CONSTANT_Double = ClassConstants.CONSTANT_Double;
 
-  byte CONSTANT_Class = 7;
+  byte CONSTANT_Class = ClassConstants.CONSTANT_Class;
 
-  byte CONSTANT_String = 8;
+  byte CONSTANT_String = ClassConstants.CONSTANT_String;
 
-  byte CONSTANT_FieldRef = 9;
+  byte CONSTANT_FieldRef = ClassConstants.CONSTANT_FieldRef;
 
-  byte CONSTANT_MethodRef = 10;
+  byte CONSTANT_MethodRef = ClassConstants.CONSTANT_MethodRef;
 
-  byte CONSTANT_InterfaceMethodRef = 11;
+  byte CONSTANT_InterfaceMethodRef = ClassConstants.CONSTANT_InterfaceMethodRef;
 
-  byte CONSTANT_NameAndType = 12;
+  byte CONSTANT_NameAndType = ClassConstants.CONSTANT_NameAndType;
 
-  byte CONSTANT_MethodHandle = 15;
+  byte CONSTANT_MethodHandle = ClassConstants.CONSTANT_MethodHandle;
 
-  byte CONSTANT_MethodType = 16;
+  byte CONSTANT_MethodType = ClassConstants.CONSTANT_MethodType;
 
-  byte CONSTANT_Dynamic = 17;
+  byte CONSTANT_Dynamic = ClassConstants.CONSTANT_Dynamic;
 
-  byte CONSTANT_InvokeDynamic = 18;
+  byte CONSTANT_InvokeDynamic = ClassConstants.CONSTANT_InvokeDynamic;
 
   byte T_BOOLEAN = 4;
 
