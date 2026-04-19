@@ -75,11 +75,7 @@ public abstract class IRTests {
 
   protected boolean dump = true;
 
-  public static final List<String> rtJar;
-
-  static {
-    rtJar = getJavaRuntimeLibraries();
-  }
+  public static final List<String> rtJar = getJavaRuntimeLibraries();
 
   private static List<String> getJavaRuntimeLibraries() {
     try {
