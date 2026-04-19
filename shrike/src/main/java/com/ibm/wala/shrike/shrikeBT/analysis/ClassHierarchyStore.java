@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.shrike.shrikeBT.analysis;
 
-import com.ibm.wala.shrike.shrikeBT.Constants;
+import com.ibm.wala.shrike.shrikeBT.AnalysisResult;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -91,8 +91,10 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
   }
 
   @Override
-  public int isInterface(String cl) {
+  public AnalysisResult isInterface(String cl) {
     ClassInfo info = contents.get(cl);
-    return info == null ? Constants.MAYBE : (info.isInterface ? Constants.YES : Constants.NO);
+    return info == null
+        ? AnalysisResult.MAYBE
+        : (info.isInterface ? AnalysisResult.YES : AnalysisResult.NO);
   }
 }
