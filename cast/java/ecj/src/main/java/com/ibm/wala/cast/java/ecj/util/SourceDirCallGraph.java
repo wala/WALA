@@ -22,14 +22,12 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.io.CommandLine;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.jar.JarFile;
 
 /**
  * Driver that constructs a call graph for an application specified as a directory of source code.
@@ -80,10 +78,7 @@ public class SourceDirCallGraph {
     String mainClass = p.getProperty("mainClass");
     AnalysisScope scope = new JavaSourceAnalysisScope();
     // add standard libraries to scope
-    String[] stdlibs = WalaProperties.getJ2SEJarFiles();
-    for (String stdlib : stdlibs) {
-      scope.addToScope(ClassLoaderReference.Primordial, new JarFile(stdlib));
-    }
+    scope.addStdLibs(false, ClassLoaderReference.Primordial);
     // add the source directory
     File root = new File(sourceDir);
     if (root.isDirectory()) {

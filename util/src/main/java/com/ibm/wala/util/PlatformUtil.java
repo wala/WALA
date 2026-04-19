@@ -11,15 +11,22 @@
 package com.ibm.wala.util;
 
 import java.io.IOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** Platform-specific utility functions. */
 public class PlatformUtil {
+
+  private static final java.net.URI JRT_URI = java.net.URI.create("jrt:/");
+  private static final FileSystem JRT_FILE_SYSTEM = initJrtFileSystem();
 
   /** are we running on Mac OS X? */
   public static boolean onMacOSX() {
@@ -46,43 +53,26 @@ public class PlatformUtil {
   }
 
   /**
-   * Gets the standard JDK modules shipped with the running JDK
+   * Gets the standard JDK module names exposed by the running JDK image.
    *
-   * @param justBase if {@code true}, only include the file corresponding to the {@code java.base}
-   *     module
-   * @return array of {@code .jmod} module files
-   * @throws IllegalStateException if modules cannot be found
+   * @param justBase if {@code true}, only include {@code java.base}
+   * @return array of module names from the {@code jrt:/modules} filesystem
    */
-  public static String[] getJDKModules(boolean justBase) {
-    List<String> jmods;
-    if (justBase) {
-      Path basePath = Paths.get(System.getProperty("java.home"), "jmods", "java.base.jmod");
-      if (!Files.exists(basePath)) {
-        throw new IllegalStateException("could not find java.base.jmod");
+  public static String[] getJDKModuleNames(boolean justBase) {
+    List<String> modules;
+    try {
+      if (justBase) {
+        modules = List.of("java.base");
+      } else {
+        try (Stream<Path> modulePaths = Files.list(JRT_FILE_SYSTEM.getPath("modules"))) {
+          modules =
+              modulePaths.map(Path::getFileName).map(Path::toString).collect(Collectors.toList());
+        }
       }
-      jmods = List.of(basePath.toString());
-    } else {
-      try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("java.home"), "jmods"))) {
-        jmods =
-            stream
-                .map(Path::toString)
-                .filter(p -> p.endsWith(".jmod"))
-                .collect(Collectors.toList());
-      } catch (IOException e) {
-        throw new IllegalStateException(e);
-      }
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
     }
-    return jmods.toArray(new String[0]);
-  }
-
-  /**
-   * Returns the filesystem path for a JDK module from the running JVM
-   *
-   * @param moduleName name of the module, e.g., {@code "java.sql"}
-   * @return path to the module
-   */
-  public static Path getPathForJDKModule(String moduleName) {
-    return Paths.get(System.getProperty("java.home"), "jmods", moduleName + ".jmod");
+    return modules.toArray(new String[0]);
   }
 
   /**
@@ -99,5 +89,25 @@ public class PlatformUtil {
       }
     }
     return Integer.parseInt(version);
+  }
+
+  /** Returns the shared {@code jrt:/} filesystem for this JVM. Callers should not close it. */
+  public static FileSystem getJrtFileSystem() {
+    return JRT_FILE_SYSTEM;
+  }
+
+  private static FileSystem initJrtFileSystem() {
+    try {
+      return FileSystems.getFileSystem(JRT_URI);
+    } catch (FileSystemNotFoundException e) {
+      try {
+        return FileSystems.newFileSystem(JRT_URI, Collections.emptyMap());
+      } catch (FileSystemAlreadyExistsException ignored) {
+        // Another caller won the race to install the filesystem; reuse that instance.
+        return FileSystems.getFileSystem(JRT_URI);
+      } catch (IOException ioException) {
+        throw new IllegalStateException("unable to initialize jrt filesystem", ioException);
+      }
+    }
   }
 }
