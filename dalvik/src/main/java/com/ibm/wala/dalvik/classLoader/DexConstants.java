@@ -47,27 +47,29 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
+import org.jf.dexlib2.AccessFlags;
+
 public interface DexConstants {
-  int ACC_PUBLIC = 0x1;
-  int ACC_PRIVATE = 0x2;
-  int ACC_PROTECTED = 0x4;
-  int ACC_STATIC = 0x8;
-  int ACC_FINAL = 0x10;
-  int ACC_SYNCHRONIZED = 0x20;
-  int ACC_VOLATILE = 0x40;
-  int ACC_BRIDGE = 0x40;
-  int ACC_TRANSIENT = 0x80;
-  int ACC_VARARGS = 0x80;
-  int ACC_NATIVE = 0x100;
-  int ACC_INTERFACE = 0x200;
-  int ACC_ABSTRACT = 0x400;
-  int ACC_STRICT = 0x800;
-  int ACC_SYNTHETIC = 0x1000;
-  int ACC_ANNOTATION = 0x2000;
-  int ACC_ENUM = 0x4000;
+  int ACC_PUBLIC = AccessFlags.PUBLIC.getValue();
+  int ACC_PRIVATE = AccessFlags.PRIVATE.getValue();
+  int ACC_PROTECTED = AccessFlags.PROTECTED.getValue();
+  int ACC_STATIC = AccessFlags.STATIC.getValue();
+  int ACC_FINAL = AccessFlags.FINAL.getValue();
+  int ACC_SYNCHRONIZED = AccessFlags.SYNCHRONIZED.getValue();
+  int ACC_VOLATILE = AccessFlags.VOLATILE.getValue();
+  int ACC_BRIDGE = AccessFlags.BRIDGE.getValue();
+  int ACC_TRANSIENT = AccessFlags.TRANSIENT.getValue();
+  int ACC_VARARGS = AccessFlags.VARARGS.getValue();
+  int ACC_NATIVE = AccessFlags.NATIVE.getValue();
+  int ACC_INTERFACE = AccessFlags.INTERFACE.getValue();
+  int ACC_ABSTRACT = AccessFlags.ABSTRACT.getValue();
+  int ACC_STRICT = AccessFlags.STRICTFP.getValue();
+  int ACC_SYNTHETIC = AccessFlags.SYNTHETIC.getValue();
+  int ACC_ANNOTATION = AccessFlags.ANNOTATION.getValue();
+  int ACC_ENUM = AccessFlags.ENUM.getValue();
   int ACC_UNUSED = 0x8000;
-  int ACC_CONSTRUCTOR = 0x10000;
-  int ACC_DECLARED_SYNCHRONIZED = 0x2000;
+  int ACC_CONSTRUCTOR = AccessFlags.CONSTRUCTOR.getValue();
+  int ACC_DECLARED_SYNCHRONIZED = AccessFlags.DECLARED_SYNCHRONIZED.getValue();
 
   /**
    * @deprecated
