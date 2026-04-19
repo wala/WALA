@@ -48,7 +48,7 @@
 package com.ibm.wala.dalvik.classLoader;
 
 public interface DexConstants {
-  int ACC_private = 0x1;
+  int ACC_PUBLIC = 0x1;
   int ACC_PRIVATE = 0x2;
   int ACC_PROTECTED = 0x4;
   int ACC_STATIC = 0x8;
@@ -68,6 +68,13 @@ public interface DexConstants {
   int ACC_UNUSED = 0x8000;
   int ACC_CONSTRUCTOR = 0x10000;
   int ACC_DECLARED_SYNCHRONIZED = 0x2000;
+
+  /**
+   * @deprecated
+   * @see #ACC_PUBLIC
+   */
+  @Deprecated(forRemoval = true, since = "1.7.1")
+  int ACC_private = ACC_PUBLIC;
 
   int VALUE_BYTE = 0x00;
   int VALUE_SHORT = 0x02;
