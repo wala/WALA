@@ -119,7 +119,7 @@ public class JdtUtil {
     return javaElt.getHandleIdentifier();
   }
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static IJavaElement createJavaElementFromJdtHandle(String jdtHandle) {
     return JavaCore.create(jdtHandle);
   }
@@ -475,7 +475,7 @@ public class JdtUtil {
    *
    * @return null if not found
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static IMethod findJavaMethodInWorkspaceBrokenForInnerClasses(String methodSig) {
     // dammit ... this doesn't work for inner classes.
 

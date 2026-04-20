@@ -100,7 +100,7 @@ import org.scandroid.flow.types.FlowType;
 /**
  * @deprecated Replaced by TaintTransferFunctions.
  */
-@Deprecated
+@Deprecated(forRemoval = true, since = "1.7.2")
 public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
@@ -108,7 +108,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   private final ISupergraph<BasicBlockInContext<E>, CGNode> graph;
   private final PointerAnalysis<InstanceKey> pa;
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public IFDSTaintFlowFunctionProvider(
       IFDSTaintDomain<E> domain,
       ISupergraph<BasicBlockInContext<E>, CGNode> graph,
@@ -395,7 +395,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     }
   }
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   @Override
   public IUnaryFlowFunction getCallFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
@@ -446,7 +446,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     };
   }
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
@@ -466,7 +466,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     return new DefUse(dest);
   }
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(
       BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
@@ -488,7 +488,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     return new DefUse(dest);
   }
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public class ReturnDefUse extends DefUse {
     CodeElement callSet;
     Set<CodeElement> receivers = new HashSet<>();
@@ -562,7 +562,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     }
   }
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   @Override
   public IFlowFunction getReturnFlowFunction(
       BasicBlockInContext<E> call, BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
