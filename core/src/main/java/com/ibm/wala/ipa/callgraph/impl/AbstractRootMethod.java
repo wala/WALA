@@ -105,12 +105,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         cache);
   }
 
-  /**
-   * @see SyntheticMethod#getStatements()
-   */
-  @SuppressWarnings("deprecation")
   @Override
-  public SSAInstruction[] getStatements(SSAOptions options) {
+  public SSAInstruction[] getStatements() {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     int i = 0;
     for (SSAInstruction ssaInstruction : statements) {
@@ -122,7 +118,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    SSAInstruction[] instrs = getStatements(options);
+    SSAInstruction[] instrs = getStatements();
     Map<Integer, ConstantValue> constants = null;
     if (!constant2ValueNumber.isEmpty()) {
       constants = HashMapFactory.make(constant2ValueNumber.size());
@@ -406,7 +402,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       @Override
       public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
         ArrayList<NewSiteReference> result = new ArrayList<>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions());
+        SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSANewInstruction) {
             SSANewInstruction s = (SSANewInstruction) statement;
@@ -418,7 +414,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
       public Iterator<SSAInstruction> getInvokeStatements() {
         ArrayList<SSAInstruction> result = new ArrayList<>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions());
+        SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSAInvokeInstruction) {
             result.add(statement);
