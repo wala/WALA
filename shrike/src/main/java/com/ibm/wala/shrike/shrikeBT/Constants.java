@@ -603,9 +603,25 @@ public interface Constants {
   byte[] indexedTypes_T = {T_INT, T_LONG, T_FLOAT, T_DOUBLE, 0, T_BYTE, T_CHAR, T_SHORT, T_BOOLEAN};
 
   // analyses use these constants to report results
-  int NO = 1;
 
-  int YES = 2;
+  /**
+   * @deprecated use {@code AnalysisResult.NO.ordinal() + 1}
+   * @see AnalysisResult#NO
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  int NO = AnalysisResult.NO.ordinal() + 1;
 
-  int MAYBE = 3;
+  /**
+   * @deprecated use {@code AnalysisResult.YES.ordinal() + 1}
+   * @see AnalysisResult#YES
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  int YES = AnalysisResult.YES.ordinal() + 1;
+
+  /**
+   * @deprecated use {@code AnalysisResult.MAYBE.ordinal() + 1}
+   * @see AnalysisResult#MAYBE
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  int MAYBE = AnalysisResult.MAYBE.ordinal() + 1;
 }
