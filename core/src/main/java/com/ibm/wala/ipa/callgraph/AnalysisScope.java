@@ -358,15 +358,6 @@ public class AnalysisScope {
     return exclusions;
   }
 
-  /**
-   * @deprecated Use {@link #setExclusions(StringFilter)}} instead.
-   */
-  @Deprecated(since = "1.6.12", forRemoval = true)
-  public void setExclusions(
-      @SuppressWarnings("removal") com.ibm.wala.util.config.SetOfClasses classes) {
-    exclusions = classes;
-  }
-
   public void setExclusions(StringFilter classes) {
     exclusions = classes;
   }
