@@ -24,7 +24,7 @@ import com.ibm.wala.shrike.shrikeBT.info.LocalAllocator;
 import java.util.Arrays;
 import java.util.BitSet;
 
-@Deprecated
+@Deprecated(forRemoval = true, since = "1.7.2")
 public final class MethodOptimizer {
   private final MethodData data;
 
@@ -58,9 +58,10 @@ public final class MethodOptimizer {
   // instruction
   // or -1 if there is more than one such instruction.
 
-  @Deprecated static final int[] noEdges = new int[0];
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  static final int[] noEdges = new int[0];
 
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public MethodOptimizer(MethodData d, MethodEditor e) {
     if (d == null) {
       throw new IllegalArgumentException("null d");
