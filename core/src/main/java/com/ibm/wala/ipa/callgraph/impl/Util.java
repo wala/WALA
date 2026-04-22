@@ -95,7 +95,7 @@ public class Util {
    *     <p>Use {@link Util#addBypassLogic(AnalysisOptions, ClassLoader, String, IClassHierarchy)}
    *     instead
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static void addBypassLogic(
       AnalysisOptions options,
       @SuppressWarnings("unused") AnalysisScope scope,
@@ -141,7 +141,7 @@ public class Util {
    *     <p>Use {@link Util#addBypassLogic(AnalysisOptions, ClassLoader, XMLMethodSummaryReader,
    *     IClassHierarchy)} instead
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static void addBypassLogic(
       AnalysisOptions options,
       @SuppressWarnings("unused") AnalysisScope scope,
@@ -188,7 +188,7 @@ public class Util {
    * @deprecated
    *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy)} instead
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static Iterable<Entrypoint> makeMainEntrypoints(
       @SuppressWarnings("unused") AnalysisScope scope, IClassHierarchy cha) {
 
@@ -230,7 +230,7 @@ public class Util {
    * @deprecated
    *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy, String)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static Iterable<Entrypoint> makeMainEntrypoints(
       @SuppressWarnings("unused") AnalysisScope scope,
       final IClassHierarchy cha,
@@ -250,7 +250,7 @@ public class Util {
    * @deprecated Please
    *     <p>Use {@link Util#makeMainEntrypoints(IClassHierarchy, String[])}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static Iterable<Entrypoint> makeMainEntrypoints(
       @SuppressWarnings("unused") final AnalysisScope scope,
       final IClassHierarchy cha,
@@ -397,7 +397,7 @@ public class Util {
    * @deprecated
    *     <p>Use {@link Util#makeRTABuilder(AnalysisOptions, IAnalysisCacheView, IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static CallGraphBuilder<InstanceKey> makeRTABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -430,7 +430,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -462,7 +462,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -510,7 +510,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -542,7 +542,7 @@ public class Util {
    *     <p>Use {@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
    *     IAnalysisCacheView, IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -597,7 +597,7 @@ public class Util {
    *     <p>use {@link Util#makeVanillaZeroOneCFABuilder(Language, AnalysisOptions,
    *     IAnalysisCacheView, IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -629,7 +629,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(
       Language l,
       AnalysisOptions options,
@@ -687,7 +687,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -727,7 +727,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroOneCFABuilder(Language, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -741,7 +741,7 @@ public class Util {
    *     <p>Use {@link Util#makeZeroOneContainerCFABuilder(AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy, ContextSelector, SSAContextInterpreter)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -798,7 +798,7 @@ public class Util {
    *     <p>Use {@link Util#makeNCFABuilder(int, Language, AnalysisOptions,
    *     IAnalysisCacheView,IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeNCFABuilder(
       int n,
       AnalysisOptions options,
@@ -851,7 +851,7 @@ public class Util {
    *     <p>Use {@link Util#makeNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeNObjBuilder(
       int n,
       AnalysisOptions options,
@@ -896,7 +896,7 @@ public class Util {
    *     <p>Use {@link Util#makeVanillaNObjBuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeVanillaNObjBuilder(
       int n,
       AnalysisOptions options,
@@ -928,7 +928,7 @@ public class Util {
    *     <p>Use {@link Util#makeVanillaNCFABuilder(int, AnalysisOptions, IAnalysisCacheView,
    *     IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(
       int n,
       AnalysisOptions options,
@@ -975,7 +975,7 @@ public class Util {
    *     <p>Use {@link Util#makeVanillaZeroOneContainerCFABuilder(AnalysisOptions,
    *     IAnalysisCacheView, IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(
       AnalysisOptions options,
       IAnalysisCacheView cache,
@@ -1011,7 +1011,7 @@ public class Util {
    * @deprecated
    *     <p>Use {@link Util#addDefaultBypassLogic(AnalysisOptions, ClassLoader, IClassHierarchy)}
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static void addDefaultBypassLogic(
       AnalysisOptions options,
       @SuppressWarnings("unused") AnalysisScope scope,

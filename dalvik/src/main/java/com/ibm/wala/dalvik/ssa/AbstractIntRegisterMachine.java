@@ -14,7 +14,6 @@ package com.ibm.wala.dalvik.ssa;
 import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.dalvik.classLoader.DexCFG;
 import com.ibm.wala.dalvik.classLoader.DexCFG.BasicBlock;
-import com.ibm.wala.dalvik.classLoader.DexConstants;
 import com.ibm.wala.dalvik.dex.instructions.ArrayGet;
 import com.ibm.wala.dalvik.dex.instructions.ArrayLength;
 import com.ibm.wala.dalvik.dex.instructions.ArrayPut;
@@ -751,7 +750,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
    * This gives some basic facilities for shoving things around on the stack. Client analyses should
    * subclass this as needed.
    */
-  protected abstract static class BasicRegisterFlowProvider implements FlowProvider, DexConstants {
+  protected abstract static class BasicRegisterFlowProvider implements FlowProvider {
     private final DexCFG cfg;
 
     protected MachineState workingState;
