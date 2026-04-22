@@ -6,9 +6,15 @@ function a() {
 			arguments[1]();
 		}
 	    if (arguments.length >= 3) {
-		    arguments[1]();
+			if (arguments[1] != null) {
+		    	arguments[1]();
+			} else {
+				print("null");
+			} 
 	    } else {
-			arguments[0]();			
+			if (arguments[0] != null) {
+				arguments[0]();			
+			}
 		}
 	}
 }
