@@ -355,7 +355,7 @@ public class ArgumentSpecialization {
                 codeBodyEntity = fold.rewrite(args.rewrite(N));
                 super.translate(codeBodyEntity, context);
               } else {
-                 super.translate(N, context);
+                super.translate(N, context);
               }
             }
           }
