@@ -27,12 +27,22 @@ public class FakeWorldClinitMethod extends AbstractRootMethod {
   private static final Descriptor descr =
       Descriptor.findOrCreate(new TypeName[0], TypeReference.VoidName);
 
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #FakeWorldClinitMethod(IClass, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public FakeWorldClinitMethod(
-      final IClass fakeRootClass, AnalysisOptions options, IAnalysisCacheView cache) {
+      final IClass fakeRootClass,
+      @SuppressWarnings("unused") AnalysisOptions options,
+      IAnalysisCacheView cache) {
+    this(fakeRootClass, cache);
+  }
+
+  public FakeWorldClinitMethod(final IClass fakeRootClass, IAnalysisCacheView cache) {
     super(
         MethodReference.findOrCreate(fakeRootClass.getReference(), name, descr),
         fakeRootClass.getClassHierarchy(),
-        options,
         cache);
   }
 }

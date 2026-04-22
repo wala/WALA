@@ -67,9 +67,8 @@ public class SummarizedMethod extends SyntheticMethod {
     return summary.hasPoison();
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  public SSAInstruction[] getStatements(SSAOptions options) {
+  public SSAInstruction[] getStatements() {
     if (DEBUG) {
       System.err.println(("getStatements: " + this));
     }
@@ -78,7 +77,7 @@ public class SummarizedMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    SSAInstruction[] instrs = getStatements(options);
+    SSAInstruction[] instrs = getStatements();
     return new SyntheticIR(
         this,
         Everywhere.EVERYWHERE,

@@ -114,9 +114,20 @@ public class CrossLanguageCallGraph extends AstCallGraph {
       super(rootMethod, declaringClass, cha, options, cache);
     }
 
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #CrossLanguageFakeRoot(IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.7.2")
     public CrossLanguageFakeRoot(
-        IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      super(rootMethod, cha, options, cache);
+        IClassHierarchy cha,
+        @SuppressWarnings("unused") AnalysisOptions options,
+        IAnalysisCacheView cache) {
+      this(cha, cache);
+    }
+
+    public CrossLanguageFakeRoot(IClassHierarchy cha, IAnalysisCacheView cache) {
+      super(rootMethod, cha, cache);
     }
 
     public int addPhi(TypeReference type, int[] values) {
@@ -192,6 +203,6 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(
-        new CrossLanguageFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
+        new CrossLanguageFakeRoot(cha, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 }

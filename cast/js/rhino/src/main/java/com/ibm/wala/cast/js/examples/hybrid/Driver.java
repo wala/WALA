@@ -91,7 +91,7 @@ public class Driver {
     JavaJavaScriptHybridCallGraphBuilder b =
         new JavaJavaScriptHybridCallGraphBuilder(
             new FakeRootMethod(
-                new FakeRootClass(CrossLanguageCallGraph.crossCoreLoader, cha), options, cache),
+                new FakeRootClass(CrossLanguageCallGraph.crossCoreLoader, cha), cache),
             options,
             cache);
 
