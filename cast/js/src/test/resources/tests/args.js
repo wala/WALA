@@ -5,6 +5,11 @@ function a() {
 		if (arguments.length >= 3) {
 			arguments[1]();
 		}
+	    if (arguments.length >= 3) {
+		    arguments[1]();
+	    } else {
+			arguments[0]();			
+		}
 	}
 }
 
