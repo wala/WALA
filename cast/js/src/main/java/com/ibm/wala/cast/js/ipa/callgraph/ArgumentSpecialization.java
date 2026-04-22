@@ -218,7 +218,7 @@ public class ArgumentSpecialization {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$arg" + arg));
                   }
                 } else if ("length".equals(x)) {
-                  return Ast.makeConstant(v.getValue());
+                  return Ast.makeConstant(v.getValue() - 2);
                 }
               }
 
@@ -355,7 +355,7 @@ public class ArgumentSpecialization {
                 codeBodyEntity = fold.rewrite(args.rewrite(N));
                 super.translate(codeBodyEntity, context);
               } else {
-                super.translate(N, context);
+                 super.translate(N, context);
               }
             }
           }

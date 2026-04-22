@@ -37,7 +37,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
       List.of(
           new GraphAssertion(ROOT, new String[] {"args.js"}),
           new GraphAssertion("args.js", new String[] {"args.js/a"}),
-          new GraphAssertion("args.js/a", new String[] {"args.js/x"}),
+          new GraphAssertion("args.js/a", new String[] {"args.js/x", "!args.js/q"}),
           new GraphAssertion(
               "args.js/a", new String[] {"args.js/y", "args.js/z", "!args.js/wrong"}));
 
