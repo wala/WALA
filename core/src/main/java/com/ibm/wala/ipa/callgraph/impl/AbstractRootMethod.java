@@ -64,21 +64,31 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   public final IClassHierarchy cha;
 
-  private final AnalysisOptions options;
-
   protected final IAnalysisCacheView cache;
 
   protected final SSAInstructionFactory insts;
+
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #AbstractRootMethod(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  public AbstractRootMethod(
+      MethodReference method,
+      IClass declaringClass,
+      final IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisOptions options,
+      IAnalysisCacheView cache) {
+    this(method, declaringClass, cha, cache);
+  }
 
   public AbstractRootMethod(
       MethodReference method,
       IClass declaringClass,
       final IClassHierarchy cha,
-      AnalysisOptions options,
       IAnalysisCacheView cache) {
     super(method, declaringClass, true, false);
     this.cha = cha;
-    this.options = options;
     this.cache = cache;
     this.insts = declaringClass.getClassLoader().getInstructionFactory();
     if (cache == null) {
@@ -92,17 +102,22 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
   }
 
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #AbstractRootMethod(MethodReference, IClassHierarchy, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public AbstractRootMethod(
       MethodReference method,
       final IClassHierarchy cha,
-      AnalysisOptions options,
+      @SuppressWarnings("unused") AnalysisOptions options,
       IAnalysisCacheView cache) {
-    this(
-        method,
-        new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha),
-        cha,
-        options,
-        cache);
+    this(method, cha, cache);
+  }
+
+  public AbstractRootMethod(
+      MethodReference method, final IClassHierarchy cha, IAnalysisCacheView cache) {
+    this(method, new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha), cha, cache);
   }
 
   @Override
