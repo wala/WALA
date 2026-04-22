@@ -90,7 +90,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
   @Override
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return findOrCreateNode(
-        new FakeWorldClinitMethod(fakeRootMethod.getDeclaringClass(), options, cache),
+        new FakeWorldClinitMethod(fakeRootMethod.getDeclaringClass(), cache),
         Everywhere.EVERYWHERE);
   }
 

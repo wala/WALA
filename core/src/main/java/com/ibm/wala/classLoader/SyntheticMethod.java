@@ -251,16 +251,6 @@ public class SyntheticMethod implements IMethod {
     return -1;
   }
 
-  /*
-   * TODO: why isn't this abstract?
-   *
-   * @param options options governing SSA construction
-   */
-  @Deprecated
-  public SSAInstruction[] getStatements(@SuppressWarnings("unused") SSAOptions options) {
-    return NO_STATEMENTS;
-  }
-
   /**
    * Most subclasses should override this.
    *
@@ -355,7 +345,7 @@ public class SyntheticMethod implements IMethod {
   }
 
   public SSAInstruction[] getStatements() {
-    return getStatements(SSAOptions.defaultOptions());
+    return NO_STATEMENTS;
   }
 
   @Override

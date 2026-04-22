@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.PatternsFilter;
@@ -229,12 +228,9 @@ public class AnalysisScopeReader {
       scope.setLoaderImpl(walaLoader, entryPathname);
     } else if ("stdlib".equals(entryType)) {
       boolean justBase = entryPathname.equals("base");
-      String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
-      for (String stdlib : stdlibs) {
-        scope.addToScope(walaLoader, new JarFile(stdlib, false));
-      }
-    } else if ("jdkModule".equals(entryType)) {
-      scope.addJDKModuleToScope(entryPathname);
+      scope.addStdLibs(justBase, walaLoader);
+    } else if ("jdkModule".equals(entryType) || "jrt".equals(entryType)) {
+      scope.addJDKModuleToScope(walaLoader, entryPathname);
     } else if (!handleInSubclass(scope, walaLoader, language, entryType, entryPathname)) {
       Assertions.UNREACHABLE();
     }
@@ -246,7 +242,7 @@ public class AnalysisScopeReader {
       @SuppressWarnings("unused") String language,
       @SuppressWarnings("unused") String entryType,
       @SuppressWarnings("unused") String entryPathname) {
-    // hook for e.g., Java 11
+    // hook for reader extensions that add custom scope entry types
     return false;
   }
 

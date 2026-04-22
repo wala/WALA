@@ -5,6 +5,7 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.ComposedIterator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,10 +22,12 @@ public class JrtModule implements Module {
   final Path root;
 
   public JrtModule(String module) throws IOException {
-    root =
-        java.nio.file.FileSystems.newFileSystem(
-                java.net.URI.create("jrt:/"), java.util.Collections.emptyMap())
-            .getPath("modules", module);
+    // Reuse the shared jrt filesystem when it is already installed; creating it repeatedly fails.
+    root = PlatformUtil.getJrtFileSystem().getPath("modules", module);
+    // Fail fast for an unknown module name.
+    if (!Files.exists(root)) {
+      throw new IOException("cannot find jrt module " + module + ", tried " + root);
+    }
   }
 
   @Override

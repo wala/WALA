@@ -30,6 +30,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
+import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -48,6 +49,8 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
@@ -72,7 +75,15 @@ public abstract class IRTests {
 
   protected boolean dump = true;
 
-  public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
+  public static final List<String> rtJar = getJavaRuntimeLibraries();
+
+  private static List<String> getJavaRuntimeLibraries() {
+    try {
+      return Arrays.asList(WalaProperties.getJ2SEJarFiles());
+    } catch (WalaException e) {
+      return Arrays.asList(PlatformUtil.getJDKModuleNames(false));
+    }
+  }
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
@@ -436,12 +447,24 @@ public abstract class IRTests {
 
   public static void populateScope(
       JavaSourceAnalysisEngine engine, Collection<Path> sources, List<String> libs) {
-    assertThat(libs)
-        .map(File::new)
-        .filteredOn(File::exists)
-        .isNotEmpty()
-        .allSatisfy(
-            libFile -> engine.addSystemModule(new JarFileModule(new JarFile(libFile, false))));
+    assertThat(libs).isNotEmpty();
+    for (String lib : libs) {
+      File libFile = new File(lib);
+      try {
+        if (libFile.exists()) {
+          // Traditional test setup passes jar/jmod filesystem paths, which we add directly.
+          engine.addSystemModule(new JarFileModule(new JarFile(libFile, false)));
+        } else {
+          // When the running JDK exposes standard libraries only via the jrt:/ image, the
+          // fallback runtime list contains module names such as "java.base" rather than paths.
+          // Convert those names into JrtModule instances so the source analysis scope can still
+          // resolve JDK classes without requiring jar or jmod files on disk.
+          engine.addSystemModule(new JrtModule(lib));
+        }
+      } catch (IOException e) {
+        throw new IllegalStateException("unable to add Java runtime library " + lib, e);
+      }
+    }
 
     for (Path srcFilePath : sources) {
       Path srcFileName = srcFilePath.getFileName();

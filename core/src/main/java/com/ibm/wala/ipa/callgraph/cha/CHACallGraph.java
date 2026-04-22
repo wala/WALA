@@ -307,9 +307,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return new CHARootNode(
         new FakeWorldClinitMethod(
-            Language.JAVA.getFakeRootMethod(cha, options, cache).getDeclaringClass(),
-            options,
-            cache),
+            Language.JAVA.getFakeRootMethod(cha, options, cache).getDeclaringClass(), cache),
         Everywhere.EVERYWHERE);
   }
 

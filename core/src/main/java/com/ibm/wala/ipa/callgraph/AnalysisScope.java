@@ -21,8 +21,10 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
+import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -30,6 +32,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -42,8 +45,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.NotSerializableException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -206,11 +207,42 @@ public class AnalysisScope {
    * @throws IOException if a module by that name cannot successfully be loaded
    */
   public void addJDKModuleToScope(String moduleName) throws IOException {
-    Path path = PlatformUtil.getPathForJDKModule(moduleName);
-    if (!Files.exists(path)) {
-      throw new IOException("cannot find jmod file for module " + moduleName + ", tried " + path);
+    addJDKModuleToScope(ClassLoaderReference.Primordial, moduleName);
+  }
+
+  /**
+   * Adds a module from the running JDK image to the analysis scope for a specific loader.
+   *
+   * @param loader the target loader
+   * @param moduleName the name of the module, e.g., {@code "java.sql"}
+   * @throws IOException if a module by that name cannot successfully be loaded
+   */
+  public void addJDKModuleToScope(ClassLoaderReference loader, String moduleName)
+      throws IOException {
+    addToScope(loader, new JrtModule(moduleName));
+  }
+
+  /**
+   * Add modules for the Java standard library to the scope. First, try to add the standard
+   * libraries specified in the wala.properties file. If that fails, add the standard library
+   * modules from the running JDK.
+   *
+   * @param justBase if true, just include the base module; otherwise, include all discovered
+   *     modules
+   * @param loader the target loader for the standard library modules
+   * @throws IOException if creating a {@link JarFile} fails with an {@link IOException}
+   */
+  public void addStdLibs(boolean justBase, ClassLoaderReference loader) throws IOException {
+    try {
+      String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
+      for (String stdlib : stdlibs) {
+        addToScope(loader, new JarFile(stdlib, false));
+      }
+    } catch (WalaException e) {
+      for (String moduleName : PlatformUtil.getJDKModuleNames(justBase)) {
+        addJDKModuleToScope(loader, moduleName);
+      }
     }
-    addToScope(ClassLoaderReference.Primordial, new JarFile(path.toString(), false));
   }
 
   /**
@@ -324,15 +356,6 @@ public class AnalysisScope {
 
   public StringFilter getExclusions() {
     return exclusions;
-  }
-
-  /**
-   * @deprecated Use {@link #setExclusions(StringFilter)}} instead.
-   */
-  @Deprecated(since = "1.6.12", forRemoval = true)
-  public void setExclusions(
-      @SuppressWarnings("removal") com.ibm.wala.util.config.SetOfClasses classes) {
-    exclusions = classes;
   }
 
   public void setExclusions(StringFilter classes) {

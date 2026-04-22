@@ -64,21 +64,31 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   public final IClassHierarchy cha;
 
-  private final AnalysisOptions options;
-
   protected final IAnalysisCacheView cache;
 
   protected final SSAInstructionFactory insts;
+
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #AbstractRootMethod(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  public AbstractRootMethod(
+      MethodReference method,
+      IClass declaringClass,
+      final IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisOptions options,
+      IAnalysisCacheView cache) {
+    this(method, declaringClass, cha, cache);
+  }
 
   public AbstractRootMethod(
       MethodReference method,
       IClass declaringClass,
       final IClassHierarchy cha,
-      AnalysisOptions options,
       IAnalysisCacheView cache) {
     super(method, declaringClass, true, false);
     this.cha = cha;
-    this.options = options;
     this.cache = cache;
     this.insts = declaringClass.getClassLoader().getInstructionFactory();
     if (cache == null) {
@@ -92,25 +102,26 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
   }
 
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #AbstractRootMethod(MethodReference, IClassHierarchy, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public AbstractRootMethod(
       MethodReference method,
       final IClassHierarchy cha,
-      AnalysisOptions options,
+      @SuppressWarnings("unused") AnalysisOptions options,
       IAnalysisCacheView cache) {
-    this(
-        method,
-        new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha),
-        cha,
-        options,
-        cache);
+    this(method, cha, cache);
   }
 
-  /**
-   * @see SyntheticMethod#getStatements()
-   */
-  @SuppressWarnings("deprecation")
+  public AbstractRootMethod(
+      MethodReference method, final IClassHierarchy cha, IAnalysisCacheView cache) {
+    this(method, new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha), cha, cache);
+  }
+
   @Override
-  public SSAInstruction[] getStatements(SSAOptions options) {
+  public SSAInstruction[] getStatements() {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     int i = 0;
     for (SSAInstruction ssaInstruction : statements) {
@@ -122,7 +133,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    SSAInstruction[] instrs = getStatements(options);
+    SSAInstruction[] instrs = getStatements();
     Map<Integer, ConstantValue> constants = null;
     if (!constant2ValueNumber.isEmpty()) {
       constants = HashMapFactory.make(constant2ValueNumber.size());
@@ -406,7 +417,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       @Override
       public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
         ArrayList<NewSiteReference> result = new ArrayList<>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions());
+        SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSANewInstruction) {
             SSANewInstruction s = (SSANewInstruction) statement;
@@ -418,7 +429,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
       public Iterator<SSAInstruction> getInvokeStatements() {
         ArrayList<SSAInstruction> result = new ArrayList<>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions());
+        SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSAInvokeInstruction) {
             result.add(statement);

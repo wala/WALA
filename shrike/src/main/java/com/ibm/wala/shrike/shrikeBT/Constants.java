@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrike.shrikeBT;
 
+import com.ibm.wala.shrike.shrikeCT.ClassConstants;
+
 /**
  * This interface defines a bunch of constants from the JVM spec. It also defines some constants we
  * need for other purposes.
@@ -17,457 +19,458 @@ package com.ibm.wala.shrike.shrikeBT;
  * <p>Here are the JVM constants:
  *
  * <ul>
- *   <li>The OP_ constants define the JVM instruction opcodes.
- *   <li>The ACC_ constants define the accessibility flags for classes, fields and methods.
- *   <li>The CONSTANT_ constants define the constant pool item types.
- *   <li>The T_ constants define the types of arrays that can be created by OP_newarray.
- *   <li>The TYPE_ constants define the string representations of various JVM types. Two special
- *       non-JVM types are defined, TYPE_null and TYPE_unknown, as noted below.
+ *   <li>The {@code OP_} constants define the JVM instruction opcodes.
+ *   <li>The {@code ACC_} constants define the accessibility flags for classes, fields, and methods.
+ *   <li>The {@code CONSTANT_} constants define the constant pool item types.
+ *   <li>The {@code T_} constants define the types of arrays that can be created by {@link
+ *       #OP_newarray}.
+ *   <li>The {@code TYPE_} constants define the string representations of various JVM types. Two
+ *       special non-JVM types are defined, {@link #TYPE_null} and {@link #TYPE_unknown}, as noted
+ *       below.
  * </ul>
  *
  * Non-JVM constants:
  *
  * <ul>
- *   <li>The OPR_ constants define the set of operators present in JVM instructions.
- *   <li>The operatorNames array gives the string names of those operators.
- *   <li>The TYPE_..._index constants define numeric representations of the JVM base types.
- *   <li>The indexedTypes array maps those numeric representations to their official string
+ *   <li>The {@code OPR_} constants define the set of operators present in JVM instructions.
+ *   <li>The {@code TYPE_..._index} constants define numeric representations of the JVM base types.
+ *   <li>The {@link #indexedTypes} array maps those numeric representations to their official string
  *       representations.
- *   <li>The indexedTypes_T array maps those numeric representations to the corresponding T_
- *       constant.
+ *   <li>The {@link #indexedTypes_T} array maps those numeric representations to the corresponding
+ *       {@code T_} constant.
  * </ul>
  */
 public interface Constants {
 
-  short OP_nop = 0;
+  short OP_nop = BytecodeConstants.JBC_nop;
 
-  short OP_aconst_null = 1;
+  short OP_aconst_null = BytecodeConstants.JBC_aconst_null;
 
-  short OP_iconst_m1 = 2;
+  short OP_iconst_m1 = BytecodeConstants.JBC_iconst_m1;
 
-  short OP_iconst_0 = 3;
+  short OP_iconst_0 = BytecodeConstants.JBC_iconst_0;
 
-  short OP_iconst_1 = 4;
+  short OP_iconst_1 = BytecodeConstants.JBC_iconst_1;
 
-  short OP_iconst_2 = 5;
+  short OP_iconst_2 = BytecodeConstants.JBC_iconst_2;
 
-  short OP_iconst_3 = 6;
+  short OP_iconst_3 = BytecodeConstants.JBC_iconst_3;
 
-  short OP_iconst_4 = 7;
+  short OP_iconst_4 = BytecodeConstants.JBC_iconst_4;
 
-  short OP_iconst_5 = 8;
+  short OP_iconst_5 = BytecodeConstants.JBC_iconst_5;
 
-  short OP_lconst_0 = 9;
+  short OP_lconst_0 = BytecodeConstants.JBC_lconst_0;
 
-  short OP_lconst_1 = 10;
+  short OP_lconst_1 = BytecodeConstants.JBC_lconst_1;
 
-  short OP_fconst_0 = 11;
+  short OP_fconst_0 = BytecodeConstants.JBC_fconst_0;
 
-  short OP_fconst_1 = 12;
+  short OP_fconst_1 = BytecodeConstants.JBC_fconst_1;
 
-  short OP_fconst_2 = 13;
+  short OP_fconst_2 = BytecodeConstants.JBC_fconst_2;
 
-  short OP_dconst_0 = 14;
+  short OP_dconst_0 = BytecodeConstants.JBC_dconst_0;
 
-  short OP_dconst_1 = 15;
+  short OP_dconst_1 = BytecodeConstants.JBC_dconst_1;
 
-  short OP_bipush = 16;
+  short OP_bipush = BytecodeConstants.JBC_bipush;
 
-  short OP_sipush = 17;
+  short OP_sipush = BytecodeConstants.JBC_sipush;
 
-  short OP_ldc = 18;
+  short OP_ldc = BytecodeConstants.JBC_ldc;
 
-  short OP_ldc_w = 19;
+  short OP_ldc_w = BytecodeConstants.JBC_ldc_w;
 
-  short OP_ldc2_w = 20;
+  short OP_ldc2_w = BytecodeConstants.JBC_ldc2_w;
 
-  short OP_iload = 21;
+  short OP_iload = BytecodeConstants.JBC_iload;
 
-  short OP_lload = 22;
+  short OP_lload = BytecodeConstants.JBC_lload;
 
-  short OP_fload = 23;
+  short OP_fload = BytecodeConstants.JBC_fload;
 
-  short OP_dload = 24;
+  short OP_dload = BytecodeConstants.JBC_dload;
 
-  short OP_aload = 25;
+  short OP_aload = BytecodeConstants.JBC_aload;
 
-  short OP_iload_0 = 26;
+  short OP_iload_0 = BytecodeConstants.JBC_iload_0;
 
-  short OP_iload_1 = 27;
+  short OP_iload_1 = BytecodeConstants.JBC_iload_1;
 
-  short OP_iload_2 = 28;
+  short OP_iload_2 = BytecodeConstants.JBC_iload_2;
 
-  short OP_iload_3 = 29;
+  short OP_iload_3 = BytecodeConstants.JBC_iload_3;
 
-  short OP_lload_0 = 30;
+  short OP_lload_0 = BytecodeConstants.JBC_lload_0;
 
-  short OP_lload_1 = 31;
+  short OP_lload_1 = BytecodeConstants.JBC_lload_1;
 
-  short OP_lload_2 = 32;
+  short OP_lload_2 = BytecodeConstants.JBC_lload_2;
 
-  short OP_lload_3 = 33;
+  short OP_lload_3 = BytecodeConstants.JBC_lload_3;
 
-  short OP_fload_0 = 34;
+  short OP_fload_0 = BytecodeConstants.JBC_fload_0;
 
-  short OP_fload_1 = 35;
+  short OP_fload_1 = BytecodeConstants.JBC_fload_1;
 
-  short OP_fload_2 = 36;
+  short OP_fload_2 = BytecodeConstants.JBC_fload_2;
 
-  short OP_fload_3 = 37;
+  short OP_fload_3 = BytecodeConstants.JBC_fload_3;
 
-  short OP_dload_0 = 38;
+  short OP_dload_0 = BytecodeConstants.JBC_dload_0;
 
-  short OP_dload_1 = 39;
+  short OP_dload_1 = BytecodeConstants.JBC_dload_1;
 
-  short OP_dload_2 = 40;
+  short OP_dload_2 = BytecodeConstants.JBC_dload_2;
 
-  short OP_dload_3 = 41;
+  short OP_dload_3 = BytecodeConstants.JBC_dload_3;
 
-  short OP_aload_0 = 42;
+  short OP_aload_0 = BytecodeConstants.JBC_aload_0;
 
-  short OP_aload_1 = 43;
+  short OP_aload_1 = BytecodeConstants.JBC_aload_1;
 
-  short OP_aload_2 = 44;
+  short OP_aload_2 = BytecodeConstants.JBC_aload_2;
 
-  short OP_aload_3 = 45;
+  short OP_aload_3 = BytecodeConstants.JBC_aload_3;
 
-  short OP_iaload = 46;
+  short OP_iaload = BytecodeConstants.JBC_iaload;
 
-  short OP_laload = 47;
+  short OP_laload = BytecodeConstants.JBC_laload;
 
-  short OP_faload = 48;
+  short OP_faload = BytecodeConstants.JBC_faload;
 
-  short OP_daload = 49;
+  short OP_daload = BytecodeConstants.JBC_daload;
 
-  short OP_aaload = 50;
+  short OP_aaload = BytecodeConstants.JBC_aaload;
 
-  short OP_baload = 51;
+  short OP_baload = BytecodeConstants.JBC_baload;
 
-  short OP_caload = 52;
+  short OP_caload = BytecodeConstants.JBC_caload;
 
-  short OP_saload = 53;
+  short OP_saload = BytecodeConstants.JBC_saload;
 
-  short OP_istore = 54;
+  short OP_istore = BytecodeConstants.JBC_istore;
 
-  short OP_lstore = 55;
+  short OP_lstore = BytecodeConstants.JBC_lstore;
 
-  short OP_fstore = 56;
+  short OP_fstore = BytecodeConstants.JBC_fstore;
 
-  short OP_dstore = 57;
+  short OP_dstore = BytecodeConstants.JBC_dstore;
 
-  short OP_astore = 58;
+  short OP_astore = BytecodeConstants.JBC_astore;
 
-  short OP_istore_0 = 59;
+  short OP_istore_0 = BytecodeConstants.JBC_istore_0;
 
-  short OP_istore_1 = 60;
+  short OP_istore_1 = BytecodeConstants.JBC_istore_1;
 
-  short OP_istore_2 = 61;
+  short OP_istore_2 = BytecodeConstants.JBC_istore_2;
 
-  short OP_istore_3 = 62;
+  short OP_istore_3 = BytecodeConstants.JBC_istore_3;
 
-  short OP_lstore_0 = 63;
+  short OP_lstore_0 = BytecodeConstants.JBC_lstore_0;
 
-  short OP_lstore_1 = 64;
+  short OP_lstore_1 = BytecodeConstants.JBC_lstore_1;
 
-  short OP_lstore_2 = 65;
+  short OP_lstore_2 = BytecodeConstants.JBC_lstore_2;
 
-  short OP_lstore_3 = 66;
+  short OP_lstore_3 = BytecodeConstants.JBC_lstore_3;
 
-  short OP_fstore_0 = 67;
+  short OP_fstore_0 = BytecodeConstants.JBC_fstore_0;
 
-  short OP_fstore_1 = 68;
+  short OP_fstore_1 = BytecodeConstants.JBC_fstore_1;
 
-  short OP_fstore_2 = 69;
+  short OP_fstore_2 = BytecodeConstants.JBC_fstore_2;
 
-  short OP_fstore_3 = 70;
+  short OP_fstore_3 = BytecodeConstants.JBC_fstore_3;
 
-  short OP_dstore_0 = 71;
+  short OP_dstore_0 = BytecodeConstants.JBC_dstore_0;
 
-  short OP_dstore_1 = 72;
+  short OP_dstore_1 = BytecodeConstants.JBC_dstore_1;
 
-  short OP_dstore_2 = 73;
+  short OP_dstore_2 = BytecodeConstants.JBC_dstore_2;
 
-  short OP_dstore_3 = 74;
+  short OP_dstore_3 = BytecodeConstants.JBC_dstore_3;
 
-  short OP_astore_0 = 75;
+  short OP_astore_0 = BytecodeConstants.JBC_astore_0;
 
-  short OP_astore_1 = 76;
+  short OP_astore_1 = BytecodeConstants.JBC_astore_1;
 
-  short OP_astore_2 = 77;
+  short OP_astore_2 = BytecodeConstants.JBC_astore_2;
 
-  short OP_astore_3 = 78;
+  short OP_astore_3 = BytecodeConstants.JBC_astore_3;
 
-  short OP_iastore = 79;
+  short OP_iastore = BytecodeConstants.JBC_iastore;
 
-  short OP_lastore = 80;
+  short OP_lastore = BytecodeConstants.JBC_lastore;
 
-  short OP_fastore = 81;
+  short OP_fastore = BytecodeConstants.JBC_fastore;
 
-  short OP_dastore = 82;
+  short OP_dastore = BytecodeConstants.JBC_dastore;
 
-  short OP_aastore = 83;
+  short OP_aastore = BytecodeConstants.JBC_aastore;
 
-  short OP_bastore = 84;
+  short OP_bastore = BytecodeConstants.JBC_bastore;
 
-  short OP_castore = 85;
+  short OP_castore = BytecodeConstants.JBC_castore;
 
-  short OP_sastore = 86;
+  short OP_sastore = BytecodeConstants.JBC_sastore;
 
-  short OP_pop = 87;
+  short OP_pop = BytecodeConstants.JBC_pop;
 
-  short OP_pop2 = 88;
+  short OP_pop2 = BytecodeConstants.JBC_pop2;
 
-  short OP_dup = 89;
+  short OP_dup = BytecodeConstants.JBC_dup;
 
-  short OP_dup_x1 = 90;
+  short OP_dup_x1 = BytecodeConstants.JBC_dup_x1;
 
-  short OP_dup_x2 = 91;
+  short OP_dup_x2 = BytecodeConstants.JBC_dup_x2;
 
-  short OP_dup2 = 92;
+  short OP_dup2 = BytecodeConstants.JBC_dup2;
 
-  short OP_dup2_x1 = 93;
+  short OP_dup2_x1 = BytecodeConstants.JBC_dup2_x1;
 
-  short OP_dup2_x2 = 94;
+  short OP_dup2_x2 = BytecodeConstants.JBC_dup2_x2;
 
-  short OP_swap = 95;
+  short OP_swap = BytecodeConstants.JBC_swap;
 
-  short OP_iadd = 96;
+  short OP_iadd = BytecodeConstants.JBC_iadd;
 
-  short OP_ladd = 97;
+  short OP_ladd = BytecodeConstants.JBC_ladd;
 
-  short OP_fadd = 98;
+  short OP_fadd = BytecodeConstants.JBC_fadd;
 
-  short OP_dadd = 99;
+  short OP_dadd = BytecodeConstants.JBC_dadd;
 
-  short OP_isub = 100;
+  short OP_isub = BytecodeConstants.JBC_isub;
 
-  short OP_lsub = 101;
+  short OP_lsub = BytecodeConstants.JBC_lsub;
 
-  short OP_fsub = 102;
+  short OP_fsub = BytecodeConstants.JBC_fsub;
 
-  short OP_dsub = 103;
+  short OP_dsub = BytecodeConstants.JBC_dsub;
 
-  short OP_imul = 104;
+  short OP_imul = BytecodeConstants.JBC_imul;
 
-  short OP_lmul = 105;
+  short OP_lmul = BytecodeConstants.JBC_lmul;
 
-  short OP_fmul = 106;
+  short OP_fmul = BytecodeConstants.JBC_fmul;
 
-  short OP_dmul = 107;
+  short OP_dmul = BytecodeConstants.JBC_dmul;
 
-  short OP_idiv = 108;
+  short OP_idiv = BytecodeConstants.JBC_idiv;
 
-  short OP_ldiv = 109;
+  short OP_ldiv = BytecodeConstants.JBC_ldiv;
 
-  short OP_fdiv = 110;
+  short OP_fdiv = BytecodeConstants.JBC_fdiv;
 
-  short OP_ddiv = 111;
+  short OP_ddiv = BytecodeConstants.JBC_ddiv;
 
-  short OP_irem = 112;
+  short OP_irem = BytecodeConstants.JBC_irem;
 
-  short OP_lrem = 113;
+  short OP_lrem = BytecodeConstants.JBC_lrem;
 
-  short OP_frem = 114;
+  short OP_frem = BytecodeConstants.JBC_frem;
 
-  short OP_drem = 115;
+  short OP_drem = BytecodeConstants.JBC_drem;
 
-  short OP_ineg = 116;
+  short OP_ineg = BytecodeConstants.JBC_ineg;
 
-  short OP_lneg = 117;
+  short OP_lneg = BytecodeConstants.JBC_lneg;
 
-  short OP_fneg = 118;
+  short OP_fneg = BytecodeConstants.JBC_fneg;
 
-  short OP_dneg = 119;
+  short OP_dneg = BytecodeConstants.JBC_dneg;
 
-  short OP_ishl = 120;
+  short OP_ishl = BytecodeConstants.JBC_ishl;
 
-  short OP_lshl = 121;
+  short OP_lshl = BytecodeConstants.JBC_lshl;
 
-  short OP_ishr = 122;
+  short OP_ishr = BytecodeConstants.JBC_ishr;
 
-  short OP_lshr = 123;
+  short OP_lshr = BytecodeConstants.JBC_lshr;
 
-  short OP_iushr = 124;
+  short OP_iushr = BytecodeConstants.JBC_iushr;
 
-  short OP_lushr = 125;
+  short OP_lushr = BytecodeConstants.JBC_lushr;
 
-  short OP_iand = 126;
+  short OP_iand = BytecodeConstants.JBC_iand;
 
-  short OP_land = 127;
+  short OP_land = BytecodeConstants.JBC_land;
 
-  short OP_ior = 128;
+  short OP_ior = BytecodeConstants.JBC_ior;
 
-  short OP_lor = 129;
+  short OP_lor = BytecodeConstants.JBC_lor;
 
-  short OP_ixor = 130;
+  short OP_ixor = BytecodeConstants.JBC_ixor;
 
-  short OP_lxor = 131;
+  short OP_lxor = BytecodeConstants.JBC_lxor;
 
-  short OP_iinc = 132;
+  short OP_iinc = BytecodeConstants.JBC_iinc;
 
-  short OP_i2l = 133;
+  short OP_i2l = BytecodeConstants.JBC_i2l;
 
-  short OP_i2f = 134;
+  short OP_i2f = BytecodeConstants.JBC_i2f;
 
-  short OP_i2d = 135;
+  short OP_i2d = BytecodeConstants.JBC_i2d;
 
-  short OP_l2i = 136;
+  short OP_l2i = BytecodeConstants.JBC_l2i;
 
-  short OP_l2f = 137;
+  short OP_l2f = BytecodeConstants.JBC_l2f;
 
-  short OP_l2d = 138;
+  short OP_l2d = BytecodeConstants.JBC_l2d;
 
-  short OP_f2i = 139;
+  short OP_f2i = BytecodeConstants.JBC_f2i;
 
-  short OP_f2l = 140;
+  short OP_f2l = BytecodeConstants.JBC_f2l;
 
-  short OP_f2d = 141;
+  short OP_f2d = BytecodeConstants.JBC_f2d;
 
-  short OP_d2i = 142;
+  short OP_d2i = BytecodeConstants.JBC_d2i;
 
-  short OP_d2l = 143;
+  short OP_d2l = BytecodeConstants.JBC_d2l;
 
-  short OP_d2f = 144;
+  short OP_d2f = BytecodeConstants.JBC_d2f;
 
-  short OP_i2b = 145;
+  short OP_i2b = BytecodeConstants.JBC_int2byte;
 
-  short OP_i2c = 146;
+  short OP_i2c = BytecodeConstants.JBC_int2char;
 
-  short OP_i2s = 147;
+  short OP_i2s = BytecodeConstants.JBC_int2short;
 
-  short OP_lcmp = 148;
+  short OP_lcmp = BytecodeConstants.JBC_lcmp;
 
-  short OP_fcmpl = 149;
+  short OP_fcmpl = BytecodeConstants.JBC_fcmpl;
 
-  short OP_fcmpg = 150;
+  short OP_fcmpg = BytecodeConstants.JBC_fcmpg;
 
-  short OP_dcmpl = 151;
+  short OP_dcmpl = BytecodeConstants.JBC_dcmpl;
 
-  short OP_dcmpg = 152;
+  short OP_dcmpg = BytecodeConstants.JBC_dcmpg;
 
-  short OP_ifeq = 153;
+  short OP_ifeq = BytecodeConstants.JBC_ifeq;
 
-  short OP_ifne = 154;
+  short OP_ifne = BytecodeConstants.JBC_ifne;
 
-  short OP_iflt = 155;
+  short OP_iflt = BytecodeConstants.JBC_iflt;
 
-  short OP_ifge = 156;
+  short OP_ifge = BytecodeConstants.JBC_ifge;
 
-  short OP_ifgt = 157;
+  short OP_ifgt = BytecodeConstants.JBC_ifgt;
 
-  short OP_ifle = 158;
+  short OP_ifle = BytecodeConstants.JBC_ifle;
 
-  short OP_if_icmpeq = 159;
+  short OP_if_icmpeq = BytecodeConstants.JBC_if_icmpeq;
 
-  short OP_if_icmpne = 160;
+  short OP_if_icmpne = BytecodeConstants.JBC_if_icmpne;
 
-  short OP_if_icmplt = 161;
+  short OP_if_icmplt = BytecodeConstants.JBC_if_icmplt;
 
-  short OP_if_icmpge = 162;
+  short OP_if_icmpge = BytecodeConstants.JBC_if_icmpge;
 
-  short OP_if_icmpgt = 163;
+  short OP_if_icmpgt = BytecodeConstants.JBC_if_icmpgt;
 
-  short OP_if_icmple = 164;
+  short OP_if_icmple = BytecodeConstants.JBC_if_icmple;
 
-  short OP_if_acmpeq = 165;
+  short OP_if_acmpeq = BytecodeConstants.JBC_if_acmpeq;
 
-  short OP_if_acmpne = 166;
+  short OP_if_acmpne = BytecodeConstants.JBC_if_acmpne;
 
-  short OP_goto = 167;
+  short OP_goto = BytecodeConstants.JBC_goto;
 
-  short OP_jsr = 168;
+  short OP_jsr = BytecodeConstants.JBC_jsr;
 
-  short OP_ret = 169;
+  short OP_ret = BytecodeConstants.JBC_ret;
 
-  short OP_tableswitch = 170;
+  short OP_tableswitch = BytecodeConstants.JBC_tableswitch;
 
-  short OP_lookupswitch = 171;
+  short OP_lookupswitch = BytecodeConstants.JBC_lookupswitch;
 
-  short OP_ireturn = 172;
+  short OP_ireturn = BytecodeConstants.JBC_ireturn;
 
-  short OP_lreturn = 173;
+  short OP_lreturn = BytecodeConstants.JBC_lreturn;
 
-  short OP_freturn = 174;
+  short OP_freturn = BytecodeConstants.JBC_freturn;
 
-  short OP_dreturn = 175;
+  short OP_dreturn = BytecodeConstants.JBC_dreturn;
 
-  short OP_areturn = 176;
+  short OP_areturn = BytecodeConstants.JBC_areturn;
 
-  short OP_return = 177;
+  short OP_return = BytecodeConstants.JBC_return;
 
-  short OP_getstatic = 178;
+  short OP_getstatic = BytecodeConstants.JBC_getstatic;
 
-  short OP_putstatic = 179;
+  short OP_putstatic = BytecodeConstants.JBC_putstatic;
 
-  short OP_getfield = 180;
+  short OP_getfield = BytecodeConstants.JBC_getfield;
 
-  short OP_putfield = 181;
+  short OP_putfield = BytecodeConstants.JBC_putfield;
 
-  short OP_invokevirtual = 182;
+  short OP_invokevirtual = BytecodeConstants.JBC_invokevirtual;
 
-  short OP_invokespecial = 183;
+  short OP_invokespecial = BytecodeConstants.JBC_invokespecial;
 
-  short OP_invokestatic = 184;
+  short OP_invokestatic = BytecodeConstants.JBC_invokestatic;
 
-  short OP_invokeinterface = 185;
+  short OP_invokeinterface = BytecodeConstants.JBC_invokeinterface;
 
-  short OP_invokedynamic = 186;
+  short OP_invokedynamic = BytecodeConstants.JBC_xxxunusedxxx;
 
-  short OP_new = 187;
+  short OP_new = BytecodeConstants.JBC_new;
 
-  short OP_newarray = 188;
+  short OP_newarray = BytecodeConstants.JBC_newarray;
 
-  short OP_anewarray = 189;
+  short OP_anewarray = BytecodeConstants.JBC_anewarray;
 
-  short OP_arraylength = 190;
+  short OP_arraylength = BytecodeConstants.JBC_arraylength;
 
-  short OP_athrow = 191;
+  short OP_athrow = BytecodeConstants.JBC_athrow;
 
-  short OP_checkcast = 192;
+  short OP_checkcast = BytecodeConstants.JBC_checkcast;
 
-  short OP_instanceof = 193;
+  short OP_instanceof = BytecodeConstants.JBC_instanceof;
 
-  short OP_monitorenter = 194;
+  short OP_monitorenter = BytecodeConstants.JBC_monitorenter;
 
-  short OP_monitorexit = 195;
+  short OP_monitorexit = BytecodeConstants.JBC_monitorexit;
 
-  short OP_wide = 196;
+  short OP_wide = BytecodeConstants.JBC_wide;
 
-  short OP_multianewarray = 197;
+  short OP_multianewarray = BytecodeConstants.JBC_multianewarray;
 
-  short OP_ifnull = 198;
+  short OP_ifnull = BytecodeConstants.JBC_ifnull;
 
-  short OP_ifnonnull = 199;
+  short OP_ifnonnull = BytecodeConstants.JBC_ifnonnull;
 
-  short OP_goto_w = 200;
+  short OP_goto_w = BytecodeConstants.JBC_goto_w;
 
-  short OP_jsr_w = 201;
+  short OP_jsr_w = BytecodeConstants.JBC_jsr_w;
 
-  char ACC_PUBLIC = 0x1;
+  char ACC_PUBLIC = ClassConstants.ACC_PUBLIC;
 
-  char ACC_PRIVATE = 0x2;
+  char ACC_PRIVATE = ClassConstants.ACC_PRIVATE;
 
-  char ACC_PROTECTED = 0x4;
+  char ACC_PROTECTED = ClassConstants.ACC_PROTECTED;
 
-  char ACC_STATIC = 0x8;
+  char ACC_STATIC = ClassConstants.ACC_STATIC;
 
-  char ACC_FINAL = 0x10;
+  char ACC_FINAL = ClassConstants.ACC_FINAL;
 
-  char ACC_SYNCHRONIZED = 0x20;
+  char ACC_SYNCHRONIZED = ClassConstants.ACC_SYNCHRONIZED;
 
-  char ACC_SUPER = 0x20;
+  char ACC_SUPER = ClassConstants.ACC_SUPER;
 
-  char ACC_VOLATILE = 0x40;
+  char ACC_VOLATILE = ClassConstants.ACC_VOLATILE;
 
-  char ACC_TRANSIENT = 0x80;
+  char ACC_TRANSIENT = ClassConstants.ACC_TRANSIENT;
 
-  char ACC_NATIVE = 0x100;
+  char ACC_NATIVE = ClassConstants.ACC_NATIVE;
 
-  char ACC_INTERFACE = 0x200;
+  char ACC_INTERFACE = ClassConstants.ACC_INTERFACE;
 
-  char ACC_ABSTRACT = 0x400;
+  char ACC_ABSTRACT = ClassConstants.ACC_ABSTRACT;
 
-  char ACC_STRICT = 0x800;
+  char ACC_STRICT = ClassConstants.ACC_STRICT;
 
   char ACC_SYNTHETIC = 0x1000;
 
@@ -477,33 +480,35 @@ public interface Constants {
 
   char ACC_MODULE = 0x8000;
 
-  byte CONSTANT_Utf8 = 1;
+  byte CONSTANT_Utf8 = ClassConstants.CONSTANT_Utf8;
 
-  byte CONSTANT_Integer = 3;
+  byte CONSTANT_Integer = ClassConstants.CONSTANT_Integer;
 
-  byte CONSTANT_Float = 4;
+  byte CONSTANT_Float = ClassConstants.CONSTANT_Float;
 
-  byte CONSTANT_Long = 5;
+  byte CONSTANT_Long = ClassConstants.CONSTANT_Long;
 
-  byte CONSTANT_Double = 6;
+  byte CONSTANT_Double = ClassConstants.CONSTANT_Double;
 
-  byte CONSTANT_Class = 7;
+  byte CONSTANT_Class = ClassConstants.CONSTANT_Class;
 
-  byte CONSTANT_String = 8;
+  byte CONSTANT_String = ClassConstants.CONSTANT_String;
 
-  byte CONSTANT_FieldRef = 9;
+  byte CONSTANT_FieldRef = ClassConstants.CONSTANT_FieldRef;
 
-  byte CONSTANT_MethodRef = 10;
+  byte CONSTANT_MethodRef = ClassConstants.CONSTANT_MethodRef;
 
-  byte CONSTANT_InterfaceMethodRef = 11;
+  byte CONSTANT_InterfaceMethodRef = ClassConstants.CONSTANT_InterfaceMethodRef;
 
-  byte CONSTANT_NameAndType = 12;
+  byte CONSTANT_NameAndType = ClassConstants.CONSTANT_NameAndType;
 
-  byte CONSTANT_MethodHandle = 15;
+  byte CONSTANT_MethodHandle = ClassConstants.CONSTANT_MethodHandle;
 
-  byte CONSTANT_MethodType = 16;
+  byte CONSTANT_MethodType = ClassConstants.CONSTANT_MethodType;
 
-  byte CONSTANT_InvokeDynamic = 18;
+  byte CONSTANT_Dynamic = ClassConstants.CONSTANT_Dynamic;
+
+  byte CONSTANT_InvokeDynamic = ClassConstants.CONSTANT_InvokeDynamic;
 
   byte T_BOOLEAN = 4;
 
@@ -597,10 +602,26 @@ public interface Constants {
 
   byte[] indexedTypes_T = {T_INT, T_LONG, T_FLOAT, T_DOUBLE, 0, T_BYTE, T_CHAR, T_SHORT, T_BOOLEAN};
 
-  // these constants are used by analyses to report results
-  int NO = 1;
+  // analyses use these constants to report results
 
-  int YES = 2;
+  /**
+   * @deprecated use {@code AnalysisResult.NO.ordinal() + 1}
+   * @see AnalysisResult#NO
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  int NO = AnalysisResult.NO.ordinal() + 1;
 
-  int MAYBE = 3;
+  /**
+   * @deprecated use {@code AnalysisResult.YES.ordinal() + 1}
+   * @see AnalysisResult#YES
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  int YES = AnalysisResult.YES.ordinal() + 1;
+
+  /**
+   * @deprecated use {@code AnalysisResult.MAYBE.ordinal() + 1}
+   * @see AnalysisResult#MAYBE
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  int MAYBE = AnalysisResult.MAYBE.ordinal() + 1;
 }
