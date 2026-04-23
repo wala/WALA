@@ -53,6 +53,7 @@ public abstract class ConstantFoldingRewriter extends CAstBasicRewriter<NonCopyi
       if (expr.getKind() == CAstNode.CONSTANT && expr.getValue() == Boolean.TRUE) {
         result = copyNodes(root.getChild(1), cfg, context, nodeMap);
       } else if (expr.getKind() == CAstNode.CONSTANT && expr.getValue() == Boolean.FALSE) {
+        // user the `else` clause, if such there be, and empty otherwise.
         if (root.getChildCount() > 2) {
           result = copyNodes(root.getChild(2), cfg, context, nodeMap);
         } else {
