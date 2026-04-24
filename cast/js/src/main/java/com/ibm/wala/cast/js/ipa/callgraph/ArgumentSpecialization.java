@@ -59,6 +59,13 @@ import org.jspecify.annotations.NonNull;
 
 public class ArgumentSpecialization {
 
+  /**
+   * WALA IR adds 2 arguments at function calls, one for the function object itself and one for the
+   * `this` pointer, but the CAstEntities do not have them. Hence, some operations need to have
+   * their notion of argument number adjusted.
+   */
+  private static final int WALA_FUNCTION_AND_THIS_ARGS = 2;
+
   public static class ArgumentSpecializationContextInterpreter
       extends AstContextInsensitiveSSAContextInterpreter {
 
@@ -210,15 +217,16 @@ public class ArgumentSpecialization {
             private CAstNode handleArgumentRef(CAstNode n) {
               Object x = n.getValue();
               if (x != null) {
-                if (x instanceof Number && ((Number) x).intValue() < v.getValue() - 2) {
-                  int arg = ((Number) x).intValue() + 2;
+                if (x instanceof Number
+                    && ((Number) x).intValue() < v.getValue() - WALA_FUNCTION_AND_THIS_ARGS) {
+                  int arg = ((Number) x).intValue() + WALA_FUNCTION_AND_THIS_ARGS;
                   if (arg < e.getArgumentCount()) {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(e.getArgumentNames()[arg]));
                   } else {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$arg" + arg));
                   }
                 } else if ("length".equals(x)) {
-                  return Ast.makeConstant(v.getValue());
+                  return Ast.makeConstant(v.getValue() - WALA_FUNCTION_AND_THIS_ARGS);
                 }
               }
 
