@@ -9,24 +9,24 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val coreTestJar by configurations.registering { isCanBeConsumed = false }
+val coreTestJar = configurations.register("coreTestJar") { isCanBeConsumed = false }
 
-val extraTestResources by configurations.registering { isCanBeConsumed = false }
+val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
 
-val sampleCupSources by configurations.registering { isCanBeConsumed = false }
+val sampleCupSources = configurations.register("sampleCupSources") { isCanBeConsumed = false }
 
-val isWindows: Boolean by extra
+val isWindows = extra["isWindows"] as Boolean
 
-val platformsVersion by extra("android-28")
+val platformsVersion = "android-28"
 
-val unpackAndroidSdkInstaller by
-    tasks.registering(Sync::class) {
+val unpackAndroidSdkInstaller =
+    tasks.register<Sync>("unpackAndroidSdkInstaller") {
       from({ zipTree(downloadAndroidSdk.singleFile) })
       into(layout.buildDirectory.dir(name))
     }
 
-val installAndroidSdk by
-    tasks.registering(Exec::class) {
+val installAndroidSdk =
+    tasks.register<Exec>("installAndroidSdk") {
       inputs.files(unpackAndroidSdkInstaller)
       val sdkManager =
           unpackAndroidSdkInstaller
@@ -108,15 +108,15 @@ val downloadDroidBench =
         "zip",
     )
 
-val unpackDroidBench by
-    tasks.registering(Sync::class) {
+val unpackDroidBench =
+    tasks.register<Sync>("unpackDroidBench") {
       from({ zipTree(downloadDroidBench.singleFile) }) { include("*/apk/**") }
       into(layout.buildDirectory.dir("DroidBench"))
       dropTopDirectory()
     }
 
 val downloadAndroidSdk = run {
-  val osName: String by extra
+  val osName = extra["osName"] as String
   val sdkOs =
       when {
         "Linux".toRegex().containsMatchIn(osName) -> "linux"
@@ -132,8 +132,8 @@ val downloadAndroidSdk = run {
   )
 }
 
-val extractSampleCup by
-    tasks.registering(Sync::class) {
+val extractSampleCup =
+    tasks.register<Sync>("extractSampleCup") {
       from({ zipTree(sampleCupSources.get().singleFile) })
       into(layout.buildDirectory.file(name))
       include("parser.cup")

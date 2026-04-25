@@ -2,8 +2,10 @@ package com.ibm.wala.gradle
 
 // Build configuration for projects that include `Javadoc` tasks.
 
-val javadocClasspath by
-    configurations.registering { description = "Classpath used during Javadoc creation." }
+val javadocClasspath =
+    configurations.register("javadocClasspath") {
+      description = "Classpath used during Javadoc creation."
+    }
 
 tasks.named<Javadoc>("javadoc") { classpath = files(javadocClasspath) }
 

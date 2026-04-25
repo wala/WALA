@@ -6,7 +6,7 @@ plugins {
   id("com.ibm.wala.gradle.subproject")
 }
 
-val castHeaderDirectory by configurations.registering { isCanBeConsumed = false }
+val castHeaderDirectory = configurations.register("castHeaderDirectory") { isCanBeConsumed = false }
 
 dependencies { castHeaderDirectory(project(":cast", "castHeaderDirectory")) }
 

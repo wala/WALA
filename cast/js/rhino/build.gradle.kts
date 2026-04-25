@@ -5,7 +5,7 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val extraTestResources by configurations.registering { isCanBeConsumed = false }
+val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
 
 dependencies {
   extraTestResources(project(":cast:js", "testResources"))

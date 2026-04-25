@@ -10,8 +10,8 @@ plugins {
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
-val castCastSharedLibrary by
-    configurations.registering {
+val castCastSharedLibrary =
+    configurations.register("castCastSharedLibrary") {
       isCanBeConsumed = false
       attributes {
         attribute(OPTIMIZED_ATTRIBUTE, false)
@@ -19,12 +19,14 @@ val castCastSharedLibrary by
       }
     }
 
-val castJsJavadocDestinationDirectory by configurations.registering { isCanBeConsumed = false }
+val castJsJavadocDestinationDirectory =
+    configurations.register("castJsJavadocDestinationDirectory") { isCanBeConsumed = false }
 
-val castJsPackageListDirectory by configurations.registering { isCanBeConsumed = false }
+val castJsPackageListDirectory =
+    configurations.register("castJsPackageListDirectory") { isCanBeConsumed = false }
 
-val xlatorTestSharedLibrary by
-    configurations.registering {
+val xlatorTestSharedLibrary =
+    configurations.register("xlatorTestSharedLibrary") {
       isCanBeConsumed = false
       isTransitive = false
       attributes {
@@ -55,7 +57,7 @@ dependencies {
   xlatorTestSharedLibrary(projects.cast.xlatorTest)
 }
 
-val castHeaderDirectory by configurations.registering { isCanBeResolved = false }
+val castHeaderDirectory = configurations.register("castHeaderDirectory") { isCanBeResolved = false }
 
 artifacts.add(
     castHeaderDirectory.name,

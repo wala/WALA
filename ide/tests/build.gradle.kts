@@ -21,22 +21,22 @@ walaEclipseMavenCentral {
   testImplementation("org.eclipse.jface")
 }
 
-val coreTestDataJar by
-    configurations.registering {
+val coreTestDataJar =
+    configurations.register("coreTestDataJar") {
       isCanBeConsumed = false
       isTransitive = false
     }
 
-val coreTestResources by configurations.registering { isCanBeConsumed = false }
+val coreTestResources = configurations.register("coreTestResources") { isCanBeConsumed = false }
 
-val coreMainSource by
-    configurations.registering {
+val coreMainSource =
+    configurations.register("coreMainSource") {
       isCanBeConsumed = false
       attributes { attribute(VERIFICATION_TYPE_ATTRIBUTE, named(MAIN_SOURCES)) }
     }
 
-val ifdsExplorerExampleClasspath by
-    configurations.registering {
+val ifdsExplorerExampleClasspath =
+    configurations.register("ifdsExplorerExampleClasspath") {
       isCanBeConsumed = false
       isTransitive = false
     }

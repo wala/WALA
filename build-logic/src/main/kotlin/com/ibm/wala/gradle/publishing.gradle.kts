@@ -8,13 +8,15 @@ plugins {
 
 val isSnapshot = "SNAPSHOT" in version as String
 
-val java: JavaPluginExtension by extensions
+val java = extensions.getByType<JavaPluginExtension>()
 
-val testFixturesJavadoc by
-    tasks.existing(Javadoc::class) { destinationDir = java.docsDir.get().dir(name).asFile }
+val testFixturesJavadoc =
+    tasks.named<Javadoc>("testFixturesJavadoc") {
+      destinationDir = java.docsDir.get().dir(name).asFile
+    }
 
-val testFixturesJavadocJar by
-    tasks.registering(Jar::class) {
+val testFixturesJavadocJar =
+    tasks.register<Jar>("testFixturesJavadocJar") {
       archiveClassifier = "test-fixtures-javadoc"
       from(testFixturesJavadoc.map { it.destinationDir!! })
     }

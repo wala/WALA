@@ -8,7 +8,7 @@ import net.ltgt.gradle.errorprone.errorprone
 
 plugins { id("com.ibm.wala.gradle.java") }
 
-val testSubjects: SourceSet by sourceSets.creating
+val testSubjects = sourceSets.create("testSubjects")
 
 val compileTestSubjectsJavaUsingEcj = JavaCompileUsingEcj.withSourceSet(project, testSubjects)
 
