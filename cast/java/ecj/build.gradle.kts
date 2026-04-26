@@ -12,7 +12,7 @@ walaEclipseMavenCentral.implementation(
     "org.eclipse.jdt.core",
 )
 
-val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
+val runSourceDirectory = configurations.register("runSourceDirectory") { isCanBeConsumed = false }
 
 dependencies {
   implementation(libs.eclipse.ecj)
@@ -30,8 +30,8 @@ dependencies {
 
 application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
-val run by
-    tasks.existing(JavaExec::class) {
+val run =
+    tasks.named<JavaExec>("run") {
       val runSourceDirectoryPath = runSourceDirectory.map { it.singleFile }
       inputs.dir(runSourceDirectoryPath)
       // this is for testing purposes

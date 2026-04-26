@@ -17,15 +17,15 @@ plugins {
   id("com.ibm.wala.gradle.subproject")
 }
 
-val coreResources by
-    configurations.registering {
+val coreResources =
+    configurations.register("coreResources") {
       isCanBeConsumed = false
       isTransitive = false
       attributes { attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES)) }
     }
 
-val smokeMainExtraPathElements by
-    configurations.registering {
+val smokeMainExtraPathElements =
+    configurations.register("smokeMainExtraPathElements") {
       isCanBeConsumed = false
       attributes { attribute(TARGET_JVM_ENVIRONMENT_ATTRIBUTE, named(STANDARD_JVM)) }
       attributes.attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, JAVA_RUNTIME))
@@ -69,8 +69,8 @@ application {
       val libxlatorTest = libxlatorTestConfig.map { it.singleFile }
 
       if (isDebuggable && !isOptimized) {
-        val checkSmokeMain by
-            tasks.registering(Exec::class) {
+        val checkSmokeMain =
+            tasks.register<Exec>("checkSmokeMain") {
               group = "verification"
 
               // main executable to run for test

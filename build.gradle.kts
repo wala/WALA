@@ -52,11 +52,14 @@ version = property("VERSION_NAME") as String
 //  Javadoc documentation
 //
 
-val aggregatedJavadocClasspathExtras by configurations.registering { isCanBeConsumed = false }
+val aggregatedJavadocClasspathExtras =
+    configurations.register("aggregatedJavadocClasspathExtras") { isCanBeConsumed = false }
 
-val aggregatedJavadocRuntimeElements by configurations.registering { isCanBeConsumed = false }
+val aggregatedJavadocRuntimeElements =
+    configurations.register("aggregatedJavadocRuntimeElements") { isCanBeConsumed = false }
 
-val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = false }
+val aggregatedJavadocSource =
+    configurations.register("aggregatedJavadocSource") { isCanBeConsumed = false }
 
 dependencies {
   // Some `compileOnly` dependencies are needed during Javadoc generation but are not included in
@@ -108,8 +111,8 @@ node {
   version = "24.14.0"
 }
 
-val lintMarkdown by
-    tasks.registering(NpxTask::class) {
+val lintMarkdown =
+    tasks.register<NpxTask>("lintMarkdown") {
       group = "verification"
       command = "markdownlint-cli2@0.18.1"
       val markdownFiles = fileTree(".") { include("*.md") }
@@ -157,8 +160,8 @@ listOf("check", "spotlessCheck", "spotlessApply").forEach {
 //  use in CI/CD pipelines than for daily use by live WALA developers.
 //
 
-val runInspections by
-    tasks.registering(Exec::class) {
+val runInspections =
+    tasks.register<Exec>("runInspections") {
       group = "intellij-idea"
       description = "Run all enabled IntelliJ IDEA inspections on the entire WALA project"
 
