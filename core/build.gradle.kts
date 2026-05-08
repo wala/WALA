@@ -173,11 +173,12 @@ val extractBcel =
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  download "java-cup-11a.jar"
+//  download "java-cup-11a-RELEASE290.jar"
 //
 
-val downloadJavaCup =
-    adHocDownload(uri("https://www2.cs.tum.edu/projects/cup"), "java-cup", "jar", "11a")
+val downloadJavaCup = configurations.create("downloadJavaCup") { isCanBeConsumed = false }
+
+dependencies { downloadJavaCup(libs.netbeans.java.cup) }
 
 val copyJavaCup =
     tasks.register<Sync>("copyJavaCup") {

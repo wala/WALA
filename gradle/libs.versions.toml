@@ -39,6 +39,7 @@ junit-platform-engine = { module = "org.junit.platform:junit-platform-engine" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 #noinspection UnusedVersionCatalogEntry
 junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine" }
+netbeans-java-cup = "org.netbeans.external:java-cup-11a:RELEASE290"
 #noinspection UnusedVersionCatalogEntry
 nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "com-uber-nullaway" }
 #noinspection UnusedVersionCatalogEntry
