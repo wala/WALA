@@ -83,10 +83,8 @@ issue](https://github.com/wala/WALA/issues).
 
 ## Required Java Versions
 
-Most components of each [official WALA
-release](https://github.com/wala/WALA/releases) are built for use with
-Java 11 or newer.  However, components that use Eclipse require at
-least Java 17.
+Each [official WALA release](https://github.com/wala/WALA/releases) is
+built for use with Java 17 or newer.
 
 ## Building from Source
 

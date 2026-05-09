@@ -41,6 +41,7 @@ class A {
 
   Object f;
 
+  @SuppressWarnings("removal")
   Object foo() {
     return new Integer(3);
   }
