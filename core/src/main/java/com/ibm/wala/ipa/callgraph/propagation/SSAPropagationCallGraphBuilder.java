@@ -948,7 +948,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (DEBUG) {
             System.err.println("getstatic call class init " + klass);
           }
-          processClassInitializer(klass);
+          getBuilder().processClassInitializer(klass);
         }
       }
 
@@ -1100,7 +1100,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (klass == null) {
         Warnings.add(FieldResolutionFailure.create(field));
       } else {
-        processClassInitializer(klass);
+        getBuilder().processClassInitializer(klass);
       }
     }
 
@@ -1228,7 +1228,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (DEBUG) {
         System.err.println("visitNew call clinit: " + klass);
       }
-      processClassInitializer(klass);
+      getBuilder().processClassInitializer(klass);
       processFinalizeMethod(klass);
 
       // add instance keys and pointer keys for array contents
@@ -1492,7 +1492,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (instruction.getToken() instanceof TypeReference) {
         IClass klass = getClassHierarchy().lookupClass((TypeReference) instruction.getToken());
         if (klass != null) {
-          processClassInitializer(klass);
+          getBuilder().processClassInitializer(klass);
         }
       }
 
@@ -1526,55 +1526,54 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    /**
-     * TODO: lift most of this logic to PropagationCallGraphBuilder
-     *
-     * <p>Add a call to the class initializer from the root method.
-     */
-    protected void processClassInitializer(IClass klass) {
+  }
 
-      assert klass != null;
+  /**
+   * TODO: lift most of this logic to PropagationCallGraphBuilder
+   *
+   * <p>Add a call to the class initializer from the root method.
+   */
+  protected void processClassInitializer(IClass klass) {
 
-      if (!getBuilder().getOptions().getHandleStaticInit()) {
-        return;
+    assert klass != null;
+
+    if (!getOptions().getHandleStaticInit()) {
+      return;
+    }
+
+    if (clinitVisited.contains(klass)) {
+      return;
+    }
+    clinitVisited.add(klass);
+
+    if (klass.getClassInitializer() != null) {
+      if (DEBUG) {
+        System.err.println("process class initializer for " + klass);
       }
 
-      if (getBuilder().clinitVisited.contains(klass)) {
-        return;
-      }
-      getBuilder().clinitVisited.add(klass);
-
-      if (klass.getClassInitializer() != null) {
-        if (DEBUG) {
-          System.err.println("process class initializer for " + klass);
+      // add an invocation from the fake root method to the <clinit>
+      MethodReference m = klass.getClassInitializer().getReference();
+      CallSiteReference site = CallSiteReference.make(1, m, IInvokeInstruction.Dispatch.STATIC);
+      IMethod targetMethod =
+          getOptions()
+              .getMethodTargetSelector()
+              .getCalleeTarget(callGraph.getFakeRootNode(), site, null);
+      if (targetMethod != null) {
+        CGNode target = getTargetForCall(callGraph.getFakeRootNode(), site, null, null);
+        if (target != null && callGraph.getPredNodeCount(target) == 0) {
+          AbstractRootMethod fakeWorldClinitMethod =
+              (AbstractRootMethod) callGraph.getFakeWorldClinitNode().getMethod();
+          SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(new int[0], site);
+          PointerKey uniqueCatch = getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
+          processResolvedCall(
+              callGraph.getFakeWorldClinitNode(), s, target, null, uniqueCatch);
         }
-
-        // add an invocation from the fake root method to the <clinit>
-        MethodReference m = klass.getClassInitializer().getReference();
-        CallSiteReference site = CallSiteReference.make(1, m, IInvokeInstruction.Dispatch.STATIC);
-        IMethod targetMethod =
-            getOptions()
-                .getMethodTargetSelector()
-                .getCalleeTarget(callGraph.getFakeRootNode(), site, null);
-        if (targetMethod != null) {
-          CGNode target = getTargetForCall(callGraph.getFakeRootNode(), site, null, null);
-          if (target != null && callGraph.getPredNodeCount(target) == 0) {
-            AbstractRootMethod fakeWorldClinitMethod =
-                (AbstractRootMethod) callGraph.getFakeWorldClinitNode().getMethod();
-            SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(new int[0], site);
-            PointerKey uniqueCatch =
-                getBuilder().getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
-            getBuilder()
-                .processResolvedCall(
-                    callGraph.getFakeWorldClinitNode(), s, target, null, uniqueCatch);
-          }
-        }
       }
+    }
 
-      IClass sc = klass.getSuperclass();
-      if (sc != null) {
-        processClassInitializer(sc);
-      }
+    IClass sc = klass.getSuperclass();
+    if (sc != null) {
+      processClassInitializer(sc);
     }
   }
 
@@ -1712,6 +1711,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       InstanceKey[] v) {
     CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
     if (target != null) {
+      processClassInitializer(target.getMethod().getDeclaringClass());
       processResolvedCall(node, call, target, constParams, uniqueCatch);
       if (!haveAlreadyVisited(target)) {
         markDiscovered(target);
