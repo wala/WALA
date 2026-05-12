@@ -2,6 +2,7 @@ plugins {
   alias(libs.plugins.dependency.analysis)
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.publishing")
 }
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
