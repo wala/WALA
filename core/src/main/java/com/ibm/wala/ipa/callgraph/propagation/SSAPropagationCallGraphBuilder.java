@@ -10,6 +10,17 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -78,15 +89,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * This abstract base class provides the general algorithm for a call graph builder that relies on
@@ -509,23 +511,22 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   private class CrossProductRec {
     private final InstanceKey[][] invariants;
-    private final Consumer<InstanceKey[]> f;
-    private final SSAAbstractInvokeInstruction call;
-    private final CGNode caller;
+    private final BiConsumer<IClass, InstanceKey[]> f;
     private final int[] params;
     private final CallSiteReference site;
     private final InstanceKey[] keys;
+    private final BiFunction<Integer,Integer,IntSet> getParamObjects;
 
     private CrossProductRec(
         InstanceKey[][] invariants,
         SSAAbstractInvokeInstruction call,
         CGNode caller,
-        Consumer<InstanceKey[]> f) {
+        BiConsumer<IClass, InstanceKey[]> f,
+        BiFunction<Integer,Integer,IntSet> getParamObjects) {
       this.invariants = invariants;
       this.f = f;
-      this.call = call;
-      this.caller = caller;
       this.site = call.getCallSite();
+      this.getParamObjects = getParamObjects;
       MutableIntSet indices = IntSetUtil.makeMutableCopy(getRelevantParameters(caller, site));
       getRelevantParameters(caller, site)
           .foreach(
@@ -540,7 +541,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     protected void rec(final int pi, final int rhsi) {
       if (pi == params.length) {
-        f.accept(keys);
+        IClass recv = null;
+        if (site.isDispatch()) {
+          recv = keys[0].getConcreteType();
+        }
+
+        f.accept(recv, keys);
       } else {
         final int p = params[pi];
         InstanceKey[] ik = invariants != null ? invariants[p] : null;
@@ -551,27 +557,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             rec(pi + 1, rhsi);
           }
         } else {
-          IntSet s = getParamObjects(pi, rhsi);
+          IntSet s = getParamObjects.apply(pi, rhsi);
           if (s != null && !s.isEmpty()) {
             s.foreach(
                 x -> {
                   keys[pi] = system.getInstanceKey(x);
                   rec(pi + 1, rhsi + 1);
                 });
-          } /*else {
-              if (!site.isDispatch() || p != 0) {
-                keys[pi] = null;
-                rec(pi + 1, rhsi + 1);
-              }
-            } */
+          } 
         }
       }
-    }
-
-    protected IntSet getParamObjects(int paramIndex, @SuppressWarnings("unused") int rhsi) {
-      int paramVn = call.getUse(paramIndex);
-      PointerKey var = getPointerKeyForLocal(caller, paramVn);
-      return system.findOrCreatePointsToSet(var).getValue();
     }
   }
 
@@ -1121,10 +1116,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("visitInvoke: " + instruction);
       }
 
-      PointerKey uniqueCatch = null;
-      if (hasUniqueCatchBlock(instruction, ir)) {
-        uniqueCatch = getBuilder().getUniqueCatchKey(instruction, ir, node);
-      }
+      PointerKey uniqueCatch = hasUniqueCatchBlock(instruction, ir)? 
+        getBuilder().getUniqueCatchKey(instruction, ir, node):
+        null;
 
       InstanceKey[][] invariantParameters = invs.computeInvariantParameters(instruction);
 
@@ -1154,17 +1148,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             });
         params = trimmedParams;
       }
-
+      
       if (params.isEmpty()) {
-        for (CGNode n : getBuilder().getTargetsForCall(node, instruction, invariantParameters)) {
-          getBuilder().processResolvedCall(node, instruction, n, invariantParameters, uniqueCatch);
-          if (DEBUG) {
-            System.err.println("visitInvoke class init " + n);
-          }
-
-          // side effect of invoke: may call class initializer
-          processClassInitializer(n.getMethod().getDeclaringClass());
-        }
+        getBuilder().processTargetsForCall(node, instruction, invariantParameters);
       } else {
         // Add a side effect that will fire when we determine a value
         // for a dispatch parameter. This side effect will create a new node
@@ -1181,12 +1167,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             });
 
         if (contentsAreInvariant(symbolTable, du, vns)) {
-          for (CGNode n : getBuilder().getTargetsForCall(node, instruction, invariantParameters)) {
-            getBuilder()
-                .processResolvedCall(node, instruction, n, invariantParameters, uniqueCatch);
-            // side effect of invoke: may call class initializer
-            processClassInitializer(n.getMethod().getDeclaringClass());
-          }
+          getBuilder().processTargetsForCall(node, instruction, invariantParameters);
         } else {
           if (DEBUG) {
             System.err.println("Add side effect, dispatch to " + instruction + " for " + params);
@@ -1607,7 +1588,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param uniqueCatchKey if non-null, then this is the unique PointerKey that catches all
    *     exceptions from this call site.
    */
-  private void processResolvedCall(
+  protected void processResolvedCall(
       CGNode caller,
       SSAAbstractInvokeInstruction instruction,
       CGNode target,
@@ -1721,7 +1702,21 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     // }
   }
-
+  
+  protected boolean handleCall(CGNode node, IClass recv, SSAAbstractInvokeInstruction call, InstanceKey[][] constParams,
+      PointerKey uniqueCatch, InstanceKey[] v) {
+    CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
+   if (target != null) {
+     processResolvedCall(node, call, target, constParams, uniqueCatch);
+     if (!haveAlreadyVisited(target)) {
+       markDiscovered(target);
+     }
+     return true;
+   } else {
+     return false;
+   }
+ }
+  
   /**
    * An operator to fire when we discover a potential new callee for a virtual or interface call
    * site.
@@ -1782,40 +1777,21 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
           currentObjs.foreachExcluding(
               oldObjs,
-              x ->
-                  new CrossProductRec(
+              x -> {
+                CrossProductRec cpa = new CrossProductRec(
                       constParams,
                       call,
                       node,
-                      v -> {
-                        IClass recv = null;
-                        if (call.getCallSite().isDispatch()) {
-                          recv = v[0].getConcreteType();
+                      (recv, v) -> handleCall(node, recv, call, constParams, uniqueCatch, v), 
+                      (paramVn, rhsi) -> {
+                        if (rhsi == y) {
+                          return IntSetUtil.make(new int[] {x});
+                        } else {
+                          return previousPtrs[rhsi];
                         }
-
-                        CGNode target = getTargetForCall(node, call.getCallSite(), recv, v);
-                        if (target != null) {
-                          changed.b = true;
-                          processResolvedCall(node, call, target, constParams, uniqueCatch);
-                          if (!haveAlreadyVisited(target)) {
-                            markDiscovered(target);
-                          }
-                        }
-                      }) {
-
-                    {
-                      rec(0, 0);
-                    }
-
-                    @Override
-                    protected IntSet getParamObjects(int paramVn, int rhsi) {
-                      if (rhsi == y) {
-                        return IntSetUtil.make(new int[] {x});
-                      } else {
-                        return previousPtrs[rhsi];
-                      }
-                    }
-                  });
+                      });
+              cpa.rec(0, 0);
+          });
           previousPtrs[rhsIndex].addAll(currentObjs);
         }
       }
@@ -2049,15 +2025,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  protected void iterateCrossProduct(
-      final CGNode caller,
-      final SSAAbstractInvokeInstruction call,
-      final InstanceKey[][] invariants,
-      final Consumer<InstanceKey[]> f) {
-    new CrossProductRec(invariants, call, caller, f).rec(0, 0);
-  }
-
-  protected Set<CGNode> getTargetsForCall(
+  protected void processTargetsForCall(
       final CGNode caller, final SSAAbstractInvokeInstruction instruction, InstanceKey[][] invs) {
     // This method used to take a CallSiteReference as a parameter, rather than
     // an SSAAbstractInvokeInstruction. This was bad, since it's
@@ -2065,21 +2033,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // parameters to be associated with a single CallSiteReference. Changed
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
-    final CallSiteReference site = instruction.getCallSite();
-    final Set<CGNode> targets = HashSetFactory.make();
-    Consumer<InstanceKey[]> f =
-        v -> {
-          IClass recv = null;
-          if (site.isDispatch()) {
-            recv = v[0].getConcreteType();
-          }
-          CGNode target = getTargetForCall(caller, site, recv, v);
-          if (target != null) {
-            targets.add(target);
-          }
+    BiConsumer<IClass, InstanceKey[]> f =
+        (recv, v) -> {
+          handleCall(caller, recv, instruction, invs, null, v);
         };
-    iterateCrossProduct(caller, instruction, invs, f);
-    return targets;
+    final InstanceKey[][] invariants = invs;
+    new CrossProductRec(invariants, instruction, caller, f, (paramIndex, rhsi) -> {
+      int paramVn = instruction.getUse(paramIndex);
+      PointerKey var = getPointerKeyForLocal(caller, paramVn);
+      return system.findOrCreatePointsToSet(var).getValue();
+    }).rec(0, 0);
   }
 
   private IntSet getRelevantParameters(final CGNode caller, final CallSiteReference site)
