@@ -1525,7 +1525,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
     }
-
   }
 
   /**
@@ -1564,9 +1563,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           AbstractRootMethod fakeWorldClinitMethod =
               (AbstractRootMethod) callGraph.getFakeWorldClinitNode().getMethod();
           SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(new int[0], site);
-          PointerKey uniqueCatch = getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
-          processResolvedCall(
-              callGraph.getFakeWorldClinitNode(), s, target, null, uniqueCatch);
+          PointerKey uniqueCatch =
+              getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
+          processResolvedCall(callGraph.getFakeWorldClinitNode(), s, target, null, uniqueCatch);
         }
       }
     }
