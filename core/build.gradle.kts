@@ -31,7 +31,10 @@ eclipse {
 val compileTestSubjectsJava = tasks.named("compileTestSubjectsJava")
 
 tasks {
-  named<JavaCompile>("compileTestSubjectsJava") { options.isDeprecation = false }
+  named<JavaCompile>("compileTestSubjectsJava") {
+    options.isDeprecation = false
+    options.compilerArgs.add("-Xlint:-removal")
+  }
 
   named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
     options.compilerArgumentProviders.add {
