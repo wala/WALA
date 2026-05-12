@@ -510,7 +510,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   private class CrossProductRec {
     private final InstanceKey[][] invariants;
-    private final BiConsumer<IClass, InstanceKey[]> f;
+    private final BiConsumer<IClass, InstanceKey[]> handleCallWithSpecificInstanceKeys;
     private final int[] params;
     private final CallSiteReference site;
     private final InstanceKey[] keys;
@@ -520,10 +520,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         InstanceKey[][] invariants,
         SSAAbstractInvokeInstruction call,
         CGNode caller,
-        BiConsumer<IClass, InstanceKey[]> f,
+        BiConsumer<IClass, InstanceKey[]> handleCallWithSpecificInstanceKeys,
         BiFunction<Integer, Integer, IntSet> getParamObjects) {
       this.invariants = invariants;
-      this.f = f;
+      this.handleCallWithSpecificInstanceKeys = handleCallWithSpecificInstanceKeys;
       this.site = call.getCallSite();
       this.getParamObjects = getParamObjects;
       MutableIntSet indices = IntSetUtil.makeMutableCopy(getRelevantParameters(caller, site));
@@ -545,7 +545,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           recv = keys[0].getConcreteType();
         }
 
-        f.accept(recv, keys);
+        handleCallWithSpecificInstanceKeys.accept(recv, keys);
       } else {
         final int p = params[pi];
         InstanceKey[] ik = invariants != null ? invariants[p] : null;
@@ -2038,7 +2038,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // parameters to be associated with a single CallSiteReference. Changed
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
-    BiConsumer<IClass, InstanceKey[]> f =
+    BiConsumer<IClass, InstanceKey[]> handleCallWithSpecificInstanceKeys =
         (recv, v) -> {
           handleCall(caller, recv, instruction, invs, null, v);
         };
@@ -2047,7 +2047,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             invariants,
             instruction,
             caller,
-            f,
+            handleCallWithSpecificInstanceKeys,
             (paramIndex, rhsi) -> {
               int paramVn = instruction.getUse(paramIndex);
               PointerKey var = getPointerKeyForLocal(caller, paramVn);
