@@ -1,7 +1,5 @@
 package cpa;
 
-import cpa.CPATest1.N;
-
 public class CPATest3 {
 
   protected abstract static class N {
