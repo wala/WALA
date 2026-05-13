@@ -26,7 +26,7 @@ public class ECJIssue666Test extends Issue666Test {
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
-        new ECJJavaSourceAnalysisEngine() {
+        new ECJJavaSourceAnalysisEngine(getSSAOptions()) {
           @Override
           protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(

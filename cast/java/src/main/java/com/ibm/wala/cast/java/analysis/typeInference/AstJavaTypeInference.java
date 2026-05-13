@@ -44,7 +44,8 @@ public class AstJavaTypeInference extends AstTypeInference {
             || op == CAstBinaryOp.LT
             || op == CAstBinaryOp.GE
             || op == CAstBinaryOp.GT
-            || op == CAstBinaryOp.LE) {
+            || op == CAstBinaryOp.LE
+            || op == CAstBinaryOp.INSTANCE_OF) {
           result =
               new DeclaredTypeOperator(
                   language.getPrimitive(language.getConstantType(Boolean.TRUE)));

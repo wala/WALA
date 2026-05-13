@@ -33,6 +33,7 @@ import com.ibm.wala.shrike.shrikeBT.IConditionalBranchInstruction.Operator;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
@@ -58,8 +59,11 @@ public class JavaScriptConstructorFunctions {
 
   private final IClassHierarchy cha;
 
-  public JavaScriptConstructorFunctions(IClassHierarchy cha) {
+  private SSAOptions ssaOptions;
+
+  public JavaScriptConstructorFunctions(IClassHierarchy cha, SSAOptions ssaOptions) {
     this.cha = cha;
+    this.ssaOptions = ssaOptions;
   }
 
   public static class JavaScriptConstructor extends JavaScriptSummarizedFunction {
@@ -566,7 +570,7 @@ public class JavaScriptConstructorFunctions {
                 }
               };
 
-          Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, ME);
+          Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, ME, ssaOptions);
           IClass fcls = null;
           for (String nm : fnNames) {
             if (nm.endsWith("_from_ctor")) {

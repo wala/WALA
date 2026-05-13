@@ -41,24 +41,34 @@ import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class ECJSourceLoaderImpl extends JavaSourceLoaderImpl {
   protected final boolean dump;
+  protected final SSAOptions ssaOptions;
 
   public ECJSourceLoaderImpl(
-      ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha) {
-    this(loaderRef, parent, cha, false);
+      ClassLoaderReference loaderRef,
+      SSAOptions ssaOptions,
+      IClassLoader parent,
+      IClassHierarchy cha) {
+    this(loaderRef, ssaOptions, parent, cha, false);
   }
 
   public ECJSourceLoaderImpl(
-      ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha, boolean dump) {
+      ClassLoaderReference loaderRef,
+      SSAOptions ssaOptions,
+      IClassLoader parent,
+      IClassHierarchy cha,
+      boolean dump) {
     super(loaderRef, parent, cha);
     this.dump = dump;
+    this.ssaOptions = ssaOptions;
   }
 
   @Override
   protected SourceModuleTranslator getTranslator() {
-    return new ECJSourceModuleTranslator(cha.getScope(), this, dump);
+    return new ECJSourceModuleTranslator(cha.getScope(), ssaOptions, this, dump);
   }
 }

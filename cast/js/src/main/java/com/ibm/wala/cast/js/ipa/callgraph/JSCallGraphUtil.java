@@ -47,6 +47,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
@@ -114,7 +115,8 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       throw new IllegalStateException(
           "com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
-    return new JavaScriptLoaderFactory(translatorFactory, preprocessor);
+    return new JavaScriptLoaderFactory(
+        translatorFactory, SSAOptions.defaultOptions(), preprocessor);
   }
 
   public static JavaScriptLoaderFactory makeLoaders() {
@@ -182,18 +184,19 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   /**
    * @return The set of class names that where defined in the CHA as a result loading process.
    */
-  public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, URL url)
-      throws IOException {
-    return loadAdditionalFile(cha, cl, new SourceURLModule(url));
+  public static Set<String> loadAdditionalFile(
+      IClassHierarchy cha, JavaScriptLoader cl, SSAOptions ssaOptions, URL url) throws IOException {
+    return loadAdditionalFile(cha, cl, new SourceURLModule(url), ssaOptions);
   }
 
   public static Set<String> loadAdditionalFile(
-      IClassHierarchy cha, JavaScriptLoader cl, ModuleEntry M) throws IOException {
+      IClassHierarchy cha, JavaScriptLoader cl, ModuleEntry M, SSAOptions ssaOptions)
+      throws IOException {
     try {
       TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
       final Set<String> names = new HashSet<>();
       AstTranslator toIR =
-          new JSAstTranslator(cl) {
+          new JSAstTranslator(cl, ssaOptions) {
             @Override
             protected void defineFunction(
                 CAstEntity N,
