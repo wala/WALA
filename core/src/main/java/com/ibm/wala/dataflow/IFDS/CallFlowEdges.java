@@ -43,8 +43,6 @@ public class CallFlowEdges {
    */
   private final SparseVector<IntSet> identityEdges = new SparseVector<>(1, 1.1f);
 
-  public CallFlowEdges() {}
-
   /**
    * Record that we've discovered a call edge &lt;c,d1&gt; -&gt; &lt;s_p, d2&gt;
    *

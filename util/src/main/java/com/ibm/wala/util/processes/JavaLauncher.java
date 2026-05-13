@@ -266,7 +266,7 @@ public class JavaLauncher extends Launcher {
    * to make a Mac happy with quotes. Trailing separators are unsafe, so we have to escape the last
    * backslash (if present and unescaped), so it doesn't escape the closing quote.
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public static String quoteStringIfNeeded(String s) {
     s = s.trim();
     // s = s.replaceAll(" ", "\\\\ ");

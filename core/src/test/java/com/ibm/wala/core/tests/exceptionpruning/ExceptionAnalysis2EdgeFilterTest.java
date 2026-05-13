@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -109,7 +110,7 @@ public class ExceptionAnalysis2EdgeFilterTest {
 
   @Test
   public void test() {
-    HashMap<String, Integer> deletedExceptional = new HashMap<>();
+    HashMap<String, @NonNull Integer> deletedExceptional = new HashMap<>();
     int deletedNormal = 0;
 
     ExceptionAnalysis analysis = new ExceptionAnalysis(cg, pointerAnalysis, cha, filter);
@@ -160,12 +161,9 @@ public class ExceptionAnalysis2EdgeFilterTest {
                   }
 
                   if (count) {
-                    Integer value = 0;
                     String key = node.getMethod().getName().toString();
-                    if (deletedExceptional.containsKey(key)) {
-                      value = deletedExceptional.get(key);
-                    }
-                    deletedExceptional.put(key, value + 1);
+                    deletedExceptional.compute(
+                        key, (priorKey, value) -> value == null ? 1 : value + 1);
                   }
                 }
               }

@@ -96,7 +96,7 @@ public class CorrelationFinder {
     for (SSAInstruction inst : Iterator2Iterable.make(ir.iterateNormalInstructions()))
       if (inst instanceof AbstractReflectivePut) puts.addFirst((AbstractReflectivePut) inst);
 
-    SSAInstruction insts[] = ir.getInstructions();
+    SSAInstruction[] insts = ir.getInstructions();
     instrs:
     for (int ii = 0; ii < insts.length; ii++) {
       SSAInstruction inst = insts[ii];

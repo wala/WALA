@@ -5,10 +5,10 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val extraTestResources by configurations.registering { isCanBeConsumed = false }
+val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
 
 dependencies {
-  extraTestResources(project(mapOf("path" to ":cast:js", "configuration" to "testResources")))
+  extraTestResources(project(":cast:js", "testResources"))
   api(libs.rhino)
   api(projects.cast)
   api(projects.cast.js)

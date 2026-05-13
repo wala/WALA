@@ -63,6 +63,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Context Free overrides for the startComponent-Methods.
@@ -100,7 +101,8 @@ public class Overrides {
      * @param child Ask child if unable to resolve. May be null
      */
     public StartComponentMethodTargetSelector(
-        HashMap<MethodReference, SummarizedMethod> syntheticMethods, MethodTargetSelector child) {
+        HashMap<MethodReference, @NonNull SummarizedMethod> syntheticMethods,
+        MethodTargetSelector child) {
       // for (MethodReference mRef : syntheticMethods.keySet()) {
       //
       // }
@@ -153,7 +155,8 @@ public class Overrides {
       }
 
       final MethodReference mRef = site.getDeclaredTarget();
-      if (syntheticMethods.containsKey(mRef)) {
+      SummarizedMethod summarizedMethod = syntheticMethods.get(mRef);
+      if (summarizedMethod != null) {
         if (caller != null) { // XXX: Debug remove
           // Context ctx = caller.getContext();
 
@@ -165,7 +168,7 @@ public class Overrides {
           // throw new IllegalArgumentException("site is null");
         }
 
-        return syntheticMethods.get(mRef);
+        return summarizedMethod;
       }
 
       if (this.child != null) {
@@ -189,7 +192,7 @@ public class Overrides {
    *     computation?
    */
   public MethodTargetSelector overrideAll() throws CancelException {
-    final HashMap<MethodReference, SummarizedMethod> overrides = HashMapFactory.make();
+    final HashMap<MethodReference, @NonNull SummarizedMethod> overrides = HashMapFactory.make();
     final Map<AndroidComponent, AndroidModel> callTo = new EnumMap<>(AndroidComponent.class);
     final IProgressMonitor monitor = AndroidEntryPointManager.MANAGER.getProgressMonitor();
     int monitorCounter = 0;
@@ -231,7 +234,7 @@ public class Overrides {
         for (final AndroidComponent target : possibleTargets) {
           final AndroidModel targetModel = callTo.get(target);
 
-          final SummarizedMethod override =
+          final @NonNull SummarizedMethod override =
               targetModel.getMethodAs(
                   overrideMe,
                   this.caller.getMethod().getReference().getDeclaringClass(),

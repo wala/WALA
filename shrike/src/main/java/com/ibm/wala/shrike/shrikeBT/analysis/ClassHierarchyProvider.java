@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrike.shrikeBT.analysis;
 
+import com.ibm.wala.shrike.shrikeBT.AnalysisResult;
+
 /**
  * This interface provides information about the class hierarchy to some consumer, such as a
  * bytecode verifier.
@@ -35,7 +37,7 @@ public interface ClassHierarchyProvider {
   String[] getSubClasses(String cl);
 
   /**
-   * @return whether or not cl is an interface, or Constants.MAYBE if not known
+   * @return whether or not cl is an interface, or {@link AnalysisResult#MAYBE} if not known
    */
-  int isInterface(String cl);
+  AnalysisResult isInterface(String cl);
 }

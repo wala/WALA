@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import nu.validator.htmlparser.common.XmlViolationPolicy;
 import nu.validator.htmlparser.sax.HtmlParser;
+import org.jspecify.annotations.NonNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -99,12 +100,13 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                   }
 
                   @Override
-                  public Map<String, Pair<String, Position>> getAllAttributes() {
+                  public Map<String, @NonNull Pair<String, Position>> getAllAttributes() {
                     return new AbstractMap<>() {
-                      private Set<Map.Entry<String, Pair<String, Position>>> es = null;
+                      private Set<Map.Entry<String, @NonNull Pair<String, Position>>> es = null;
 
                       @Override
-                      public Set<java.util.Map.Entry<String, Pair<String, Position>>> entrySet() {
+                      public Set<java.util.Map.Entry<String, @NonNull Pair<String, Position>>>
+                          entrySet() {
                         if (es == null) {
                           es = new HashSet<>();
                           for (int i = 0; i < atts.getLength(); i++) {
@@ -118,7 +120,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                                   }
 
                                   @Override
-                                  public Pair<String, Position> getValue() {
+                                  public @NonNull Pair<String, Position> getValue() {
                                     if (atts.getValue(index) != null) {
                                       return Pair.make(atts.getValue(index), line);
                                     } else {
@@ -127,8 +129,8 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                                   }
 
                                   @Override
-                                  public Pair<String, Position> setValue(
-                                      Pair<String, Position> value) {
+                                  public @NonNull Pair<String, Position> setValue(
+                                      @NonNull Pair<String, Position> value) {
                                     throw new UnsupportedOperationException();
                                   }
                                 });

@@ -164,17 +164,10 @@ public class HTMLCGBuilder {
       src = tmpFile.getAbsolutePath();
     }
 
-    int timeout;
-    if (parsedArgs.containsKey("timeout")) {
-      timeout = Integer.parseInt(parsedArgs.getProperty("timeout"));
-    } else {
-      timeout = DEFAULT_TIMEOUT;
-    }
+    String timeoutText = parsedArgs.getProperty("timeout");
+    int timeout = timeoutText == null ? DEFAULT_TIMEOUT : Integer.parseInt(timeoutText);
 
-    String reachableName = null;
-    if (parsedArgs.containsKey("reachable")) {
-      reachableName = parsedArgs.getProperty("reachable");
-    }
+    String reachableName = parsedArgs.getProperty("reachable");
 
     // suppress debug output
     JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;

@@ -47,8 +47,6 @@ public class ModRef<T extends InstanceKey> {
     return new ModRef<>();
   }
 
-  public ModRef() {}
-
   /**
    * For each call graph node, what heap locations (as determined by a heap model) may it write,
    * including its callees transitively

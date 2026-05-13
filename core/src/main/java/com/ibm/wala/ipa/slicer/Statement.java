@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
+import java.util.Objects;
 
 /** Identifier of a statement in an SDG. */
 public abstract class Statement {
@@ -61,10 +62,7 @@ public abstract class Statement {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final Statement other = (Statement) obj;
-    if (node == null) {
-      if (other.node != null) return false;
-    } else if (!node.equals(other.node)) return false;
+    if (!Objects.equals(node, ((Statement) obj).node)) return false;
     return true;
   }
 

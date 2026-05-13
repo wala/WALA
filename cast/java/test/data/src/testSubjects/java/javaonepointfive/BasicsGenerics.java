@@ -53,7 +53,7 @@ public class BasicsGenerics {
 		strs.add(s);
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		BasicsGenerics a = new BasicsGenerics();
 		String frenchy = a.part1();
 //		

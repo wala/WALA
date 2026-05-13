@@ -87,6 +87,10 @@ public abstract class Entrypoint implements BytecodeConstants {
     }
   }
 
+  protected SSANewInstruction addNewStatement(AbstractRootMethod m, TypeReference t) {
+    return t.isArrayType() ? m.addArrayAllocation(t) : m.addAllocation(t);
+  }
+
   /**
    * Add allocation statements to the fake root method for each possible value of parameter i. If
    * necessary, add a phi to combine the values.
@@ -102,14 +106,14 @@ public abstract class Entrypoint implements BytecodeConstants {
         if (p[0].isPrimitiveType()) {
           return m.addLocal();
         } else {
-          SSANewInstruction n = m.addAllocation(p[0]);
+          SSANewInstruction n = addNewStatement(m, p[0]);
           return (n == null) ? -1 : n.getDef();
         }
       default:
         int[] values = new int[p.length];
         int countErrors = 0;
         for (int j = 0; j < p.length; j++) {
-          SSANewInstruction n = m.addAllocation(p[j]);
+          SSANewInstruction n = addNewStatement(m, p[j]);
           int value = (n == null) ? -1 : n.getDef();
           if (value == -1) {
             countErrors++;
@@ -156,7 +160,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    * @return the call instruction added, or null if the operation fails
    */
   public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m) {
-    int paramValues[];
+    int[] paramValues;
     CallSiteReference site = makeSite(0);
     if (site == null) {
       return null;

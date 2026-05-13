@@ -20,6 +20,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * An {@link InstanceKey} which represents a {@link NewSiteReference} in some {@link IMethod}. Note
@@ -73,12 +74,8 @@ public class AllocationSite implements InstanceKey {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     final AllocationSite other = (AllocationSite) obj;
-    if (method == null) {
-      if (other.method != null) return false;
-    } else if (!method.equals(other.method)) return false;
-    if (site == null) {
-      if (other.site != null) return false;
-    } else if (!site.equals(other.site)) return false;
+    if (!Objects.equals(method, other.method)) return false;
+    if (!Objects.equals(site, other.site)) return false;
     return true;
   }
 

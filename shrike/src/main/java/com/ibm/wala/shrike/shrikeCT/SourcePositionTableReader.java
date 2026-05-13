@@ -69,7 +69,7 @@ public final class SourcePositionTableReader extends AttributeReader {
 
       for (; cIter.isValid(); cIter.advance()) {
         if (MethodPositions.ATTRIBUTE_NAME.equals(cIter.getName())) {
-          byte data[] = getData(cr, cIter.getRawOffset(), cIter.getRawSize());
+          byte[] data = getData(cr, cIter.getRawOffset(), cIter.getRawSize());
           MethodPositions mPos = new MethodPositions(data);
           Range r = mPos.getMethodInfo();
           params = convert(r);
@@ -86,7 +86,7 @@ public final class SourcePositionTableReader extends AttributeReader {
       throw new IllegalArgumentException();
     }
 
-    Position pos[] = null;
+    Position[] pos = null;
     ClassReader.AttrIterator iter = new ClassReader.AttrIterator();
     code.initAttributeIterator(iter);
 
@@ -121,16 +121,16 @@ public final class SourcePositionTableReader extends AttributeReader {
 
   private static byte[] getData(ClassReader cr, int rawOffset, int rawSize) {
     // prepare raw data of attribute to pass to sourceinfo
-    byte klass[] = cr.getBytes();
+    byte[] klass = cr.getBytes();
     int size = rawSize - ATTRIBUTE_HEADER_SIZE;
-    byte data[] = new byte[size];
+    byte[] data = new byte[size];
     System.arraycopy(klass, rawOffset + ATTRIBUTE_HEADER_SIZE, data, 0, size);
 
     return data;
   }
 
   private void fillBytecodeToPositionMap(Position[] pos) throws IOException {
-    byte tableData[] = getData(getClassReader(), getRawOffset(), getRawSize());
+    byte[] tableData = getData(getClassReader(), getRawOffset(), getRawSize());
 
     CRTable crTable = new CRTable(tableData);
 
@@ -161,7 +161,7 @@ public final class SourcePositionTableReader extends AttributeReader {
   }
 
   public static Position[] makeLineNumberToPositionMap(int[] lineNumberMap) {
-    Position pos[] = new Position[lineNumberMap.length];
+    Position[] pos = new Position[lineNumberMap.length];
 
     for (int i = 0; i < pos.length; i++) {
       int line = lineNumberMap[i];

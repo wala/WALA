@@ -1,6 +1,7 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>Funargs</w>
       <w>aaload</w>
       <w>aastore</w>
       <w>abaa</w>
@@ -27,12 +28,14 @@
       <w>bipush</w>
       <w>callsite</w>
       <w>caload</w>
+      <w>cast</w>
       <w>castore</w>
       <w>catchblock</w>
       <w>checkcast</w>
       <w>classbody</w>
       <w>classpathentry</w>
       <w>clinit</w>
+      <w>clinits</w>
       <w>cmpg</w>
       <w>codetemplates</w>
       <w>cons'ed</w>
@@ -65,6 +68,7 @@
       <w>enumbody</w>
       <w>eork</w>
       <w>explicitconstructorcall</w>
+      <w>expretval</w>
       <w>extdoc</w>
       <w>faload</w>
       <w>fastore</w>
@@ -83,6 +87,7 @@
       <w>fput</w>
       <w>fref</w>
       <w>freturn</w>
+      <w>funarg</w>
       <w>getfield</w>
       <w>getstatic</w>
       <w>getterbody</w>
@@ -118,6 +123,7 @@
       <w>impdep</w>
       <w>imple</w>
       <w>ineg</w>
+      <w>inpa</w>
       <w>instrs</w>
       <w>instrumenter</w>
       <w>instrumenters</w>
@@ -130,6 +136,7 @@
       <w>invokespecial</w>
       <w>invokestatic</w>
       <w>invokevirtual</w>
+      <w>invs</w>
       <w>ipcfg</w>
       <w>irem</w>
       <w>ireturn</w>
@@ -142,6 +149,7 @@
       <w>javaonepointseven</w>
       <w>jlex</w>
       <w>jmod</w>
+      <w>jmods</w>
       <w>jsdelta</w>
       <w>juergen</w>
       <w>juliandolby</w>
@@ -224,9 +232,12 @@
       <w>nullanalysis</w>
       <w>odexed</w>
       <w>offsetted</w>
+      <w>olddisplay</w>
+      <w>oopsla</w>
       <w>orsc</w>
       <w>overridecomment</w>
       <w>packagelist</w>
+      <w>paramses</w>
       <w>peis</w>
       <w>pfretzschner</w>
       <w>plusish</w>
@@ -241,6 +252,7 @@
       <w>reprop</w>
       <w>resourcefilters</w>
       <w>retf</w>
+      <w>rhsi</w>
       <w>rnal</w>
       <w>rval</w>
       <w>rvals</w>

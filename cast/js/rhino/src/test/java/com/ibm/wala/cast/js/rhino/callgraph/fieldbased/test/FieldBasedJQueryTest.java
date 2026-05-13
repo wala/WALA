@@ -1,6 +1,5 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -15,8 +14,7 @@ import org.junit.jupiter.api.Test;
 public class FieldBasedJQueryTest extends AbstractFieldBasedTest {
 
   @Test
-  public void test1_8_2()
-      throws IOException, WalaException, Error, CancelException, URISyntaxException {
+  public void test1_8_2() throws IOException, WalaException, CancelException, URISyntaxException {
     runTest(
         new URI("http://code.jquery.com/jquery-1.8.2.js").toURL(),
         List.of(),

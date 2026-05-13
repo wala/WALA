@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A class representing which originates in some form of bytecode.
@@ -99,7 +100,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /** hash code; cached here for efficiency */
   protected int hashCode;
 
-  private final HashMap<Atom, IField> fieldMap = HashMapFactory.make(5);
+  private final HashMap<Atom, @NonNull IField> fieldMap = HashMapFactory.make(5);
 
   /** A warning for when we get a class not found exception */
   private static class ClassNotFoundWarning extends Warning {
@@ -177,36 +178,35 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   @Override
   public IField getField(Atom name) {
-    if (fieldMap.containsKey(name)) {
-      return fieldMap.get(name);
-    } else {
-      List<IField> fields = findDeclaredField(name);
-      if (!fields.isEmpty()) {
-        if (fields.size() == 1) {
-          IField f = fields.iterator().next();
-          fieldMap.put(name, f);
-          return f;
-        } else {
-          throw new IllegalStateException("multiple fields with name " + name);
-        }
-      } else if ((superClass = getSuperclass()) != null) {
-        IField f = superClass.getField(name);
-        if (f != null) {
-          fieldMap.put(name, f);
-          return f;
-        }
-      }
-      // try superinterfaces
-      for (IClass i : getAllImplementedInterfaces()) {
-        IField f = i.getField(name);
-        if (f != null) {
-          fieldMap.put(name, f);
-          return f;
-        }
-      }
-    }
+    return fieldMap.compute(
+        name,
+        (key, priorField) -> {
+          if (priorField != null) {
+            return priorField;
+          }
+          List<IField> fields = findDeclaredField(name);
+          if (!fields.isEmpty()) {
+            if (fields.size() == 1) {
+              return fields.iterator().next();
+            }
+            throw new IllegalStateException("multiple fields with name " + name);
+          }
+          if ((superClass = getSuperclass()) != null) {
+            IField f = superClass.getField(name);
+            if (f != null) {
+              return f;
+            }
+          }
+          // try superinterfaces
+          for (IClass i : getAllImplementedInterfaces()) {
+            IField f = i.getField(name);
+            if (f != null) {
+              return f;
+            }
+          }
 
-    return null;
+          return null;
+        });
   }
 
   @Override

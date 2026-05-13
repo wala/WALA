@@ -11,6 +11,8 @@
 
 package com.ibm.wala.util.graph.impl;
 
+import static com.ibm.wala.util.intset.IntSetUtil.make;
+
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -37,9 +39,10 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
         private final Map<T, MutableIntSet> outEdges = HashMapFactory.make();
 
         private Iterator<T> nodes(final @Nullable T node, final Map<T, ? extends IntSet> extra) {
-          if (extra.containsKey(node)) {
+          IntSet intSet = extra.get(node);
+          if (intSet != null) {
             return new Iterator<>() {
-              private final IntIterator i = extra.get(node).intIterator();
+              private final IntIterator i = intSet.intIterator();
 
               @Override
               public boolean hasNext() {
@@ -70,8 +73,9 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
 
         @Override
         public int getPredNodeCount(T n) {
+          MutableIntSet inEdgesForNode = inEdges.get(n);
           return (original.containsNode(n) ? original.getPredNodeCount(n) : 0)
-              + (inEdges.containsKey(n) ? inEdges.get(n).size() : 0);
+              + (inEdgesForNode == null ? 0 : inEdgesForNode.size());
         }
 
         @Override
@@ -83,22 +87,17 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
 
         @Override
         public int getSuccNodeCount(T n) {
+          MutableIntSet outEdgesForNode = outEdges.get(n);
           return (original.containsNode(n) ? original.getSuccNodeCount(n) : 0)
-              + (outEdges.containsKey(n) ? outEdges.get(n).size() : 0);
+              + (outEdgesForNode == null ? 0 : outEdgesForNode.size());
         }
 
         @Override
         public void addEdge(T src, T dst) {
           assert !original.hasEdge(src, dst);
           assert containsNode(src) && containsNode(dst);
-          if (!inEdges.containsKey(dst)) {
-            inEdges.put(dst, IntSetUtil.make());
-          }
-          inEdges.get(dst).add(getNumber(src));
-          if (!outEdges.containsKey(src)) {
-            outEdges.put(src, IntSetUtil.make());
-          }
-          outEdges.get(src).add(getNumber(dst));
+          inEdges.computeIfAbsent(dst, absent -> make()).add(getNumber(src));
+          outEdges.computeIfAbsent(src, absent -> make()).add(getNumber(dst));
         }
 
         @NullUnmarked
@@ -131,8 +130,9 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
 
         @Override
         public boolean hasEdge(@Nullable T src, @Nullable T dst) {
-          return original.hasEdge(src, dst)
-              || (outEdges.containsKey(src) && outEdges.get(src).contains(getNumber(dst)));
+          if (original.hasEdge(src, dst)) return true;
+          MutableIntSet outEdgesForSrc = outEdges.get(src);
+          return outEdgesForSrc != null && outEdgesForSrc.contains(getNumber(dst));
         }
 
         @Override

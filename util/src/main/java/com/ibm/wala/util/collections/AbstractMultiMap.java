@@ -60,7 +60,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
   protected abstract Set<V> createSet();
 
   protected Set<V> emptySet() {
-    return Collections.<V>emptySet();
+    return Collections.emptySet();
   }
 
   @Override

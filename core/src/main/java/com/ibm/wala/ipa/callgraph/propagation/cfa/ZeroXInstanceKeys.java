@@ -209,7 +209,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
           smushees.add(e.getKey());
         }
       }
-      s = smushees.isEmpty() ? Collections.<IClass>emptySet() : smushees;
+      s = smushees.isEmpty() ? Collections.emptySet() : smushees;
       smushMap.put(node, s);
     }
     return s.contains(c);
@@ -297,7 +297,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       throw new IllegalArgumentException("null c");
     }
     return c.getClassHierarchy()
-        .isSubclassOf(c, c.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable));
+        .isSubclassOf(
+            c,
+            c.getClassHierarchy().lookupClass(c.getClassLoader().getLanguage().getThrowableType()));
   }
 
   public static boolean isStackTraceElement(IClass c) {

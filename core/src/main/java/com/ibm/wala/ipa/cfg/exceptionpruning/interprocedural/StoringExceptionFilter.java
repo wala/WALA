@@ -14,25 +14,20 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cfg.exceptionpruning.ExceptionFilter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 public abstract class StoringExceptionFilter<Instruction>
     implements InterproceduralExceptionFilter<Instruction> {
-  private final Map<CGNode, ExceptionFilter<Instruction>> store;
+  private final Map<CGNode, @NonNull ExceptionFilter<Instruction>> store;
 
   public StoringExceptionFilter() {
     this.store = new LinkedHashMap<>();
   }
 
-  protected abstract ExceptionFilter<Instruction> computeFilter(CGNode node);
+  protected abstract @NonNull ExceptionFilter<Instruction> computeFilter(CGNode node);
 
   @Override
   public ExceptionFilter<Instruction> getFilter(CGNode node) {
-    if (store.containsKey(node)) {
-      return store.get(node);
-    } else {
-      ExceptionFilter<Instruction> filter = computeFilter(node);
-      store.put(node, filter);
-      return filter;
-    }
+    return store.computeIfAbsent(node, this::computeFilter);
   }
 }

@@ -573,9 +573,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     public int pop() {
-      if (stackHeight <= 0) {
-        assert stackHeight > 0 : "can't pop stack of height " + stackHeight;
-      }
+      assert stackHeight > 0 : "can't pop stack of height " + stackHeight;
       stackHeight -= 1;
       return stack[stackHeight];
     }

@@ -28,12 +28,14 @@ dependencies {
   testImplementation(testFixtures(projects.core))
 }
 
-val createPackageList by
-    tasks.registering(CreatePackageList::class) { sourceSet(sourceSets.main.get()) }
+val createPackageList =
+    tasks.register<CreatePackageList>("createPackageList") { sourceSet(sourceSets.main.get()) }
 
-val packageListDirectory by configurations.registering { isCanBeResolved = false }
+val packageListDirectory =
+    configurations.register("packageListDirectory") { isCanBeResolved = false }
 
-val javadocDestinationDirectory by configurations.registering { isCanBeResolved = false }
+val javadocDestinationDirectory =
+    configurations.register("javadocDestinationDirectory") { isCanBeResolved = false }
 
 tasks.named<Test>("test") { maxHeapSize = "800M" }
 
@@ -47,16 +49,17 @@ val downloadAjaxslt =
         "0.8.1",
     )
 
-val unpackAjaxslt by
-    tasks.registering(Sync::class) {
+val unpackAjaxslt =
+    tasks.register<Sync>("unpackAjaxslt") {
       from({ tarTree(downloadAjaxslt.singleFile) })
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()
     }
 
-val processTestResources by tasks.existing(Copy::class) { from(unpackAjaxslt) { into("ajaxslt") } }
+val processTestResources =
+    tasks.named<Copy>("processTestResources") { from(unpackAjaxslt) { into("ajaxslt") } }
 
-val testResources by configurations.registering { isCanBeResolved = false }
+val testResources = configurations.register("testResources") { isCanBeResolved = false }
 
 artifacts {
   add(javadocDestinationDirectory.name, tasks.javadoc)

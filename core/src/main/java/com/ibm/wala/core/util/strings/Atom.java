@@ -14,6 +14,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
+import org.jspecify.annotations.NonNull;
 
 /**
  * An utf8-encoded byte string.
@@ -36,7 +37,7 @@ public final class Atom implements Serializable {
   private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
 
   /** The utf8 value this atom represents */
-  private final byte val[];
+  private final byte[] val;
 
   /** Cached hash code for this atom key. */
   private final int hash;
@@ -47,7 +48,7 @@ public final class Atom implements Serializable {
    * @param str atom value, as string literal whose characters are unicode
    * @return atom
    */
-  public static Atom findOrCreateUnicodeAtom(String str) {
+  public static @NonNull Atom findOrCreateUnicodeAtom(String str) {
     byte[] utf8 = UTF8Convert.toUTF8(str);
     return findOrCreate(utf8);
   }
@@ -87,8 +88,8 @@ public final class Atom implements Serializable {
    *
    * @throws IllegalArgumentException if utf8.length &lt;= off
    */
-  public static Atom findOrCreate(byte utf8[], int off, int len)
-      throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
+  public static Atom findOrCreate(byte[] utf8, int off, int len)
+      throws IllegalArgumentException, IllegalArgumentException {
 
     if (utf8 == null) {
       throw new IllegalArgumentException("utf8 == null");
@@ -105,14 +106,14 @@ public final class Atom implements Serializable {
     if (off + len < 0) {
       throw new IllegalArgumentException("off + len is too big: " + off + " + " + len);
     }
-    byte val[] = new byte[len];
+    byte[] val = new byte[len];
     for (int i = 0; i < len; ++i) {
       val[i] = utf8[off++];
     }
     return findOrCreate(val);
   }
 
-  public static synchronized Atom findOrCreate(byte[] bytes) {
+  public static synchronized @NonNull Atom findOrCreate(byte[] bytes) {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes is null");
     }
@@ -182,7 +183,7 @@ public final class Atom implements Serializable {
    * @return array descriptor - something like "[I" or "[Ljava/lang/Object;"
    */
   public Atom arrayDescriptorFromElementDescriptor() {
-    byte sig[] = new byte[1 + val.length];
+    byte[] sig = new byte[1 + val.length];
     sig[0] = (byte) '[';
     for (int i = 0, n = val.length; i < n; ++i) sig[i + 1] = val[i];
     return findOrCreate(sig);
@@ -291,13 +292,13 @@ public final class Atom implements Serializable {
   /** key for the dictionary. */
   private static final class AtomKey {
     /** The utf8 value this atom key represents */
-    private final byte val[];
+    private final byte[] val;
 
     /** Cached hash code for this atom key. */
     private final int hash;
 
     /** Create atom from given utf8 sequence. */
-    private AtomKey(byte utf8[]) {
+    private AtomKey(byte[] utf8) {
       int tmp = 99989;
       for (int i = utf8.length; --i >= 0; ) {
         tmp = 99991 * tmp + utf8[i];

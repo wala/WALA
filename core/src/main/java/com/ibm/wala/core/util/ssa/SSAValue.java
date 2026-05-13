@@ -79,9 +79,7 @@ public class SSAValue {
   public interface VariableKey {}
 
   /** A key that cannot be recreated. */
-  public static class UniqueKey implements VariableKey {
-    public UniqueKey() {}
-  }
+  public static class UniqueKey implements VariableKey {}
 
   /** A key that matches variables by their type - does not compare to NamedKey. */
   public static class TypeKey implements VariableKey {

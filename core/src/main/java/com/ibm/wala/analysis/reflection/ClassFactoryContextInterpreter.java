@@ -42,7 +42,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret reflective class factories (e.g.
+ * An {@link SSAContextInterpreter} specialized to interpret reflective class factories (e.g.,
  * Class.forName()) in a {@link JavaTypeContext} which represents the point-type of the class object
  * created by the call.
  */
@@ -160,7 +160,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
   }
 
   private static IR makeIR(IMethod method, Context context) {
-    SSAInstruction instrs[] = makeStatements(context);
+    SSAInstruction[] instrs = makeStatements(context);
     return new SyntheticIR(
         method,
         context,

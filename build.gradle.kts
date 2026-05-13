@@ -52,17 +52,24 @@ version = property("VERSION_NAME") as String
 //  Javadoc documentation
 //
 
-val aggregatedJavadocClasspath by configurations.registering { isCanBeConsumed = false }
+val aggregatedJavadocClasspathExtras =
+    configurations.register("aggregatedJavadocClasspathExtras") { isCanBeConsumed = false }
 
-val aggregatedJavadocSource by configurations.registering { isCanBeConsumed = false }
+val aggregatedJavadocRuntimeElements =
+    configurations.register("aggregatedJavadocRuntimeElements") { isCanBeConsumed = false }
+
+val aggregatedJavadocSource =
+    configurations.register("aggregatedJavadocSource") { isCanBeConsumed = false }
 
 dependencies {
-  forEachJavaProject {
-    aggregatedJavadocClasspath(
-        project(mapOf("path" to it.path, "configuration" to "javadocClasspath"))
-    )
+  // Some `compileOnly` dependencies are needed during Javadoc generation but are not included in
+  // `aggregatedJavadocRuntimeElements`.
+  aggregatedJavadocClasspathExtras(libs.jetbrains.annotations)
+  aggregatedJavadocClasspathExtras(libs.nullaway.annotations)
 
-    aggregatedJavadocSource(project(mapOf("path" to it.path, "configuration" to "javadocSource")))
+  forEachJavaProject {
+    aggregatedJavadocRuntimeElements(project(it.path, "runtimeElements"))
+    aggregatedJavadocSource(project(it.path, "mainSourceElements"))
   }
 }
 
@@ -72,8 +79,9 @@ tasks.register<Javadoc>("aggregatedJavadocs") {
   destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
-  classpath = aggregatedJavadocClasspath.get()
+  classpath = files(aggregatedJavadocClasspathExtras, aggregatedJavadocRuntimeElements)
   source(aggregatedJavadocSource)
+  include("**/*.java")
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -100,14 +108,11 @@ shellcheck {
 
 node {
   download = true
-  version = "24.10.0"
-
-  // workaround for <https://github.com/npm/cli/issues/8710>
-  npmVersion = "11.6.0"
+  version = "24.14.0"
 }
 
-val lintMarkdown by
-    tasks.registering(NpxTask::class) {
+val lintMarkdown =
+    tasks.register<NpxTask>("lintMarkdown") {
       group = "verification"
       command = "markdownlint-cli2@0.18.1"
       val markdownFiles = fileTree(".") { include("*.md") }
@@ -155,8 +160,8 @@ listOf("check", "spotlessCheck", "spotlessApply").forEach {
 //  use in CI/CD pipelines than for daily use by live WALA developers.
 //
 
-val runInspections by
-    tasks.registering(Exec::class) {
+val runInspections =
+    tasks.register<Exec>("runInspections") {
       group = "intellij-idea"
       description = "Run all enabled IntelliJ IDEA inspections on the entire WALA project"
 

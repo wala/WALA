@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.loader;
 
+import static com.ibm.wala.util.collections.HashSetFactory.make;
+
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -20,7 +22,6 @@ import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
@@ -52,10 +53,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   private Set<Warning> messagesFor(ModuleEntry module) {
-    if (!errors.containsKey(module)) {
-      errors.put(module, HashSetFactory.make());
-    }
-    return errors.get(module);
+    return errors.computeIfAbsent(module, absent -> make());
   }
 
   public void addMessages(ModuleEntry module, Set<Warning> message) {

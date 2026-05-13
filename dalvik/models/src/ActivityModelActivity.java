@@ -49,7 +49,7 @@ package activity.model;
 import android.app.Activity;
 
 /** @deprecated building the Android-Livecycle is done in the class AndroidModel now */
-@Deprecated
+@Deprecated(forRemoval = true, since="1.7.2")
 public class ActivityModelActivity extends Activity {
   /*   |, /, \ flow down
    *   ^ flow up , <= flow left, => flow right

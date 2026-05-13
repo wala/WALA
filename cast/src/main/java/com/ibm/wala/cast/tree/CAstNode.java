@@ -83,7 +83,7 @@ public interface CAstNode {
   int TRY = 4;
 
   /**
-   * Represents an expression statement (e.g. "foo();"). Children:
+   * Represents an expression statement (e.g., "foo();"). Children:
    *
    * <ul>
    *   <li>the expression
@@ -161,7 +161,7 @@ public interface CAstNode {
   int IS_DEFINED_EXPR = 128;
   int MACRO_VAR = 129;
   int NARY_EXPR = 130;
-  // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly
+  // new nodes with an explicit enclosing argument, e.g., "outer.new Inner()". They are mostly
   // treated the same, except in JavaCAst2IRTranslator.doNewObject
   int NEW_ENCLOSING = 131;
   int COMPREHENSION_EXPR = 132;

@@ -74,11 +74,11 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
         .matches(node)) {
       List<String> parms = Collections.singletonList((String) loopVar.getLastMatch());
       if (node.getChild(1).getKind() == LOCAL_SCOPE) {
-        return Collections.<ExtractionRegion>singletonList(
-            new TwoLevelExtractionRegion(1, 2, 0, -1, parms, Collections.<String>emptyList()));
+        return Collections.singletonList(
+            new TwoLevelExtractionRegion(1, 2, 0, -1, parms, Collections.emptyList()));
       } else {
         return Collections.singletonList(
-            new ExtractionRegion(1, 2, parms, Collections.<String>emptyList()));
+            new ExtractionRegion(1, 2, parms, Collections.emptyList()));
       }
     }
 
@@ -98,8 +98,7 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
             new AnyNode())
         .matches(node)) {
       List<String> parms = Collections.singletonList((String) loopVar.getLastMatch());
-      return Collections.singletonList(
-          new ExtractionRegion(1, 2, parms, Collections.<String>emptyList()));
+      return Collections.singletonList(new ExtractionRegion(1, 2, parms, Collections.emptyList()));
     }
     return null;
   }

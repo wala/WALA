@@ -267,9 +267,9 @@ public class SSACFG
     private final int number;
 
     /** List of PhiInstructions associated with the entry of this block. */
-    private SSAPhiInstruction stackSlotPhis[];
+    private SSAPhiInstruction[] stackSlotPhis;
 
-    private SSAPhiInstruction localPhis[];
+    private SSAPhiInstruction[] localPhis;
 
     private static final int initialCapacity = 10;
 
@@ -742,7 +742,7 @@ public class SSACFG
 
       Iterator<ISSABasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
-        s.append("    -> BB").append(((BasicBlock) succNodes.next()).getNumber()).append('\n');
+        s.append("    -> BB").append(succNodes.next().getNumber()).append('\n');
       }
     }
     return s.toString();

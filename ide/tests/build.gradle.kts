@@ -21,36 +21,32 @@ walaEclipseMavenCentral {
   testImplementation("org.eclipse.jface")
 }
 
-val coreTestDataJar by
-    configurations.registering {
+val coreTestDataJar =
+    configurations.register("coreTestDataJar") {
       isCanBeConsumed = false
       isTransitive = false
     }
 
-val coreTestResources by configurations.registering { isCanBeConsumed = false }
+val coreTestResources = configurations.register("coreTestResources") { isCanBeConsumed = false }
 
-val coreMainSource by
-    configurations.registering {
+val coreMainSource =
+    configurations.register("coreMainSource") {
       isCanBeConsumed = false
-      attributes {
-        attribute(VERIFICATION_TYPE_ATTRIBUTE, objects.named(VerificationType::class, MAIN_SOURCES))
-      }
+      attributes { attribute(VERIFICATION_TYPE_ATTRIBUTE, named(MAIN_SOURCES)) }
     }
 
-val ifdsExplorerExampleClasspath by
-    configurations.registering {
+val ifdsExplorerExampleClasspath =
+    configurations.register("ifdsExplorerExampleClasspath") {
       isCanBeConsumed = false
       isTransitive = false
     }
 
 dependencies {
-  coreMainSource(project(mapOf("path" to ":core")))
+  coreMainSource(project(":core"))
   coreTestDataJar(projects.core)
-  coreTestResources(project(mapOf("path" to ":core", "configuration" to "testResources")))
+  coreTestResources(project(":core", "testResources"))
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
-  ifdsExplorerExampleClasspath(
-      project(mapOf("path" to ":core", "configuration" to "collectTestDataJar"))
-  )
+  ifdsExplorerExampleClasspath(project(":core", "collectTestDataJar"))
   testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(libs.eclipse.osgi)
   testImplementation(libs.eclipse.osgi)
@@ -85,7 +81,7 @@ tasks.named<Copy>("processTestResources") {
 }
 
 // Task to make it easier to run IFDSExplorerExample.  Command-line arguments are passed via
-// the "args" Gradle project property, e.g. (on a Mac):
+// the "args" Gradle project property, e.g., (on a Mac):
 // `./gradlew :com.ibm.wala.ide.tests:runIFDSExplorerExample -Pargs="-dotExe /usr/local/bin/dot
 // -viewerExe /usr/bin/open"`
 tasks.register<JavaExec>("runIFDSExplorerExample") {

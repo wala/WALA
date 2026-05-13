@@ -266,7 +266,7 @@ public abstract class Launcher {
         p.write(data, 0, actuallyRead);
       }
     } catch (IOException e) {
-      // assume the stream has been closed (e.g. the process died)
+      // assume the stream has been closed (e.g., the process died)
       // so, just exit
     }
   }
@@ -276,7 +276,7 @@ public abstract class Launcher {
     try {
       s.transferTo(p);
     } catch (IOException e) {
-      // assume the stream has been closed (e.g. the process died)
+      // assume the stream has been closed (e.g., the process died)
       // so, just print the data and then leave
     }
   }
@@ -290,7 +290,7 @@ public abstract class Launcher {
         b.write(data, 0, nRead);
       }
     } catch (IOException e) {
-      // assume the stream has been closed (e.g. the process died)
+      // assume the stream has been closed (e.g., the process died)
       // so, just exit
     }
   }
@@ -304,7 +304,7 @@ public abstract class Launcher {
         next = s.read();
       }
     } catch (IOException e) {
-      // assume the stream has been closed (e.g. the process died)
+      // assume the stream has been closed (e.g., the process died)
       // so, just exit
     }
   }

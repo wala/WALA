@@ -87,7 +87,6 @@ public class APKCallGraphDriver {
                 };
             CG =
                 DalvikCallGraphTestBase.makeAPKCallGraph(
-                    null,
                     Util.androidJavaLib(),
                     apk1.toPath().toAbsolutePath(),
                     pm,

@@ -221,7 +221,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
 
       String content;
-      if (attValue.toLowerCase().equals("javascript:")) {
+      if (attValue.equalsIgnoreCase("javascript:")) {
         content = attValue.substring("javascript:".length());
       } else {
         content = attValue;
@@ -247,8 +247,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
-    private void getScriptFromUrl(String urlAsString, ITag scriptTag)
-        throws IOException, MalformedURLException {
+    private void getScriptFromUrl(String urlAsString, ITag scriptTag) throws IOException {
       URL scriptSrc = UrlManipulator.relativeToAbsoluteUrl(urlAsString, entrypointUrl);
       BOMInputStream bs;
       try {
@@ -268,7 +267,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         return;
       }
       try (final Reader scriptInputStream = new InputStreamReader(bs);
-          final BufferedReader scriptReader = new BufferedReader(scriptInputStream); ) {
+          final BufferedReader scriptReader = new BufferedReader(scriptInputStream)) {
         String line;
         StringBuilder x = new StringBuilder();
         while ((line = scriptReader.readLine()) != null) {

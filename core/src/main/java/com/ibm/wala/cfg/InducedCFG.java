@@ -395,9 +395,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     private Collection<SSAPhiInstruction> phis;
 
     public Collection<SSAPhiInstruction> getPhis() {
-      return phis == null
-          ? Collections.<SSAPhiInstruction>emptyList()
-          : Collections.unmodifiableCollection(phis);
+      return phis == null ? Collections.emptyList() : Collections.unmodifiableCollection(phis);
     }
 
     public void addPhi(SSAPhiInstruction phiInstruction) {
@@ -410,9 +408,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     private ArrayList<SSAPiInstruction> pis;
 
     public Collection<SSAPiInstruction> getPis() {
-      return pis == null
-          ? Collections.<SSAPiInstruction>emptyList()
-          : Collections.unmodifiableCollection(pis);
+      return pis == null ? Collections.emptyList() : Collections.unmodifiableCollection(pis);
     }
 
     public void addPi(SSAPiInstruction piInstruction) {

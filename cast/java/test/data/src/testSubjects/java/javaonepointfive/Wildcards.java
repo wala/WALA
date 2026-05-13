@@ -59,7 +59,7 @@ public class Wildcards {
 		System.out.println(e);
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new Wildcards()).doit();
 	}
 	

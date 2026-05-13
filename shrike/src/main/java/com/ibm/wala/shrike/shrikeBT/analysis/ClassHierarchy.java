@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.shrike.shrikeBT.analysis;
 
+import com.ibm.wala.shrike.shrikeBT.AnalysisResult;
 import com.ibm.wala.shrike.shrikeBT.Constants;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,33 +26,35 @@ public final class ClassHierarchy {
   private ClassHierarchy() {}
 
   /** Equals Constants.NO */
-  public static final int NO = Constants.NO;
+  public static final AnalysisResult NO = AnalysisResult.NO;
 
   /** Equals Constants.YES */
-  public static final int YES = Constants.YES;
+  public static final AnalysisResult YES = AnalysisResult.YES;
 
   /** Equals Constants.MAYBE */
-  public static final int MAYBE = Constants.MAYBE;
+  public static final AnalysisResult MAYBE = AnalysisResult.MAYBE;
 
-  private static int checkSuperinterfacesContain(
+  private static AnalysisResult checkSuperinterfacesContain(
       ClassHierarchyProvider hierarchy, String t1, String t2, HashSet<String> visited) {
     String[] interfaces = hierarchy.getSuperInterfaces(t1);
     if (interfaces == null) {
       return MAYBE;
     }
 
-    int r = NO;
+    AnalysisResult r = NO;
     for (String iface : interfaces) {
       if (visited.add(iface)) {
         if (iface.equals(t2)) {
           return YES;
         } else {
-          int v = checkSuperinterfacesContain(hierarchy, iface, t2, visited);
+          AnalysisResult v = checkSuperinterfacesContain(hierarchy, iface, t2, visited);
           switch (v) {
             case YES:
               return YES;
             case MAYBE:
               r = MAYBE;
+              break;
+            case NO:
               break;
           }
         }
@@ -60,9 +63,9 @@ public final class ClassHierarchy {
     return r;
   }
 
-  private static int checkSupertypesContain(
+  private static AnalysisResult checkSupertypesContain(
       ClassHierarchyProvider hierarchy, String t1, String t2) {
-    int r = NO;
+    AnalysisResult r = NO;
 
     String c = t1;
     while (true) {
@@ -85,12 +88,14 @@ public final class ClassHierarchy {
       HashSet<String> visited = new HashSet<>();
 
       for (c = t1; c != null; c = hierarchy.getSuperClass(c)) {
-        int v = checkSuperinterfacesContain(hierarchy, c, t2, visited);
+        AnalysisResult v = checkSuperinterfacesContain(hierarchy, c, t2, visited);
         switch (v) {
           case YES:
             return YES;
           case MAYBE:
             r = MAYBE;
+            break;
+          case NO:
             break;
         }
       }
@@ -99,7 +104,7 @@ public final class ClassHierarchy {
     return r;
   }
 
-  private static int checkSubtypesContain(
+  private static AnalysisResult checkSubtypesContain(
       ClassHierarchyProvider hierarchy, String t1, String t2, HashSet<String> visited) {
     // No interface is a subclass of a real class
     if (hierarchy.isInterface(t1) == NO && hierarchy.isInterface(t2) == YES) {
@@ -111,18 +116,20 @@ public final class ClassHierarchy {
       return MAYBE;
     }
 
-    int r = NO;
+    AnalysisResult r = NO;
     for (String subtype : subtypes) {
       if (visited.add(subtype)) {
         if (subtype.equals(t2)) {
           return YES;
         } else {
-          int v = checkSubtypesContain(hierarchy, subtype, t2, visited);
+          AnalysisResult v = checkSubtypesContain(hierarchy, subtype, t2, visited);
           switch (v) {
             case YES:
               return YES;
             case MAYBE:
               r = MAYBE;
+              break;
+            case NO:
               break;
           }
         }
@@ -131,12 +138,12 @@ public final class ClassHierarchy {
     return r;
   }
 
-  private static int checkSubtypeOfHierarchy(
+  private static AnalysisResult checkSubtypeOfHierarchy(
       ClassHierarchyProvider hierarchy, String t1, String t2) {
     if (t2.equals(Constants.TYPE_Object)) {
       return YES;
     } else {
-      int v = checkSupertypesContain(hierarchy, t1, t2);
+      AnalysisResult v = checkSupertypesContain(hierarchy, t1, t2);
       if (v == MAYBE) {
         v = checkSubtypesContain(hierarchy, t2, t1, new HashSet<>());
       }
@@ -152,7 +159,7 @@ public final class ClassHierarchy {
    * @param t2 a type in JVM format
    * @return whether t1 is a subtype of t2 (YES, NO, MAYBE)
    */
-  public static int isSubtypeOf(ClassHierarchyProvider hierarchy, String t1, String t2) {
+  public static AnalysisResult isSubtypeOf(ClassHierarchyProvider hierarchy, String t1, String t2) {
     if (t1 == null || t2 == null) {
       return NO;
     } else if (t1.equals(t2)) {

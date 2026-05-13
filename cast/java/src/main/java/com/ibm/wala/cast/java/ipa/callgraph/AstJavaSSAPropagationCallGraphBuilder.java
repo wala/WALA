@@ -232,7 +232,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         // in the case of a AstJavaNewEnclosingInstruction (a new instruction like outer.new Bla()),
         // we may need to record the instance keys if the pointer key outer is invariant (and thus
         // implicit)
-        InstanceKey enclosingInvariantKeys[] = null;
+        InstanceKey[] enclosingInvariantKeys = null;
 
         if (klass instanceof JavaClass) {
           IClass enclosingClass =
@@ -277,7 +277,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
               for (InstanceKey obj : enclosingInvariantKeys) system.newConstraint(x, obj);
             else system.newConstraint(x, assignOperator, objKey);
 
-            // If the immediate inclosing class is not a top-level class, we must make EORKs for all
+            // If the immediate enclosing class is not a top-level class, we must make EORKs for all
             // enclosing classes up to the top level.
             // for instance, if we have "D d = c.new D()", and c is of type A$B$C, methods in D may
             // reference variables and functions from

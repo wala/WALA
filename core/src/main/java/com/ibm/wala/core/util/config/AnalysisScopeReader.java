@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.PatternsFilter;
@@ -30,6 +29,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import org.intellij.lang.annotations.Language;
@@ -83,7 +83,7 @@ public class AnalysisScopeReader {
     try {
       // Now reading from jar is included in WALA, but we can't use their version, because they load
       // from
-      // jar by default and use filesystem as fallback. We want it the other way round. E.g. to
+      // jar by default and use filesystem as fallback. We want it the other way round. e.g., to
       // deliver default
       // configuration files with the jar, but use userprovided ones if present in the working
       // directory.
@@ -95,7 +95,9 @@ public class AnalysisScopeReader {
       // assume the scope file is UTF-8 encoded; ASCII files will also be handled properly
       // TODO allow specifying encoding as a parameter?
       if (scopeFile.exists()) {
-        r = new BufferedReader(new InputStreamReader(new FileInputStream(scopeFile), "UTF-8"));
+        r =
+            new BufferedReader(
+                new InputStreamReader(new FileInputStream(scopeFile), StandardCharsets.UTF_8));
       } else {
         // try to read from jar
         InputStream inFromJar = javaLoader.getResourceAsStream(scopeFileName);
@@ -146,7 +148,7 @@ public class AnalysisScopeReader {
       if (inStream == null) {
         throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI);
       }
-      r = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+      r = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
 
       while ((line = r.readLine()) != null) {
         processScopeDefLine(scope, javaLoader, line);
@@ -226,12 +228,9 @@ public class AnalysisScopeReader {
       scope.setLoaderImpl(walaLoader, entryPathname);
     } else if ("stdlib".equals(entryType)) {
       boolean justBase = entryPathname.equals("base");
-      String[] stdlibs = WalaProperties.getJDKLibraryFiles(justBase);
-      for (String stdlib : stdlibs) {
-        scope.addToScope(walaLoader, new JarFile(stdlib, false));
-      }
-    } else if ("jdkModule".equals(entryType)) {
-      scope.addJDKModuleToScope(entryPathname);
+      scope.addStdLibs(justBase, walaLoader);
+    } else if ("jdkModule".equals(entryType) || "jrt".equals(entryType)) {
+      scope.addJDKModuleToScope(walaLoader, entryPathname);
     } else if (!handleInSubclass(scope, walaLoader, language, entryType, entryPathname)) {
       Assertions.UNREACHABLE();
     }
@@ -243,7 +242,7 @@ public class AnalysisScopeReader {
       @SuppressWarnings("unused") String language,
       @SuppressWarnings("unused") String entryType,
       @SuppressWarnings("unused") String entryPathname) {
-    // hook for e.g. Java 11
+    // hook for reader extensions that add custom scope entry types
     return false;
   }
 

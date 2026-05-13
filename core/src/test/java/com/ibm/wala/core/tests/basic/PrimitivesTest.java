@@ -763,10 +763,9 @@ public class PrimitivesTest extends WalaTestCase {
 
   @Test
   public void testBinaryIntegerRelation() {
-    byte[] impl =
-        new byte[] {
-          BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL, BasicNaturalRelation.SIMPLE
-        };
+    byte[] impl = {
+      BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL, BasicNaturalRelation.SIMPLE
+    };
     IBinaryNaturalRelation R = new BasicNaturalRelation(impl, BasicNaturalRelation.TWO_LEVEL);
     R.add(3, 5);
     R.add(3, 7);
@@ -894,8 +893,8 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(bv).matches(v -> v.get(55)).matches(v -> v.get(59));
 
     {
-      boolean[] gets = new boolean[] {false, true, true};
-      int[] bits = new int[] {0, 55, 59};
+      boolean[] gets = {false, true, true};
+      int[] bits = {0, 55, 59};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(bv.get(i));
@@ -906,8 +905,8 @@ public class PrimitivesTest extends WalaTestCase {
 
     assertThat(bv.max()).isEqualTo(77);
     {
-      boolean[] gets = new boolean[] {false, true, true, true};
-      int[] bits = new int[] {0, 55, 59, 77};
+      boolean[] gets = {false, true, true, true};
+      int[] bits = {0, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(bv.get(i));
@@ -917,8 +916,8 @@ public class PrimitivesTest extends WalaTestCase {
     bv.set(3);
     assertThat(bv.max()).isEqualTo(77);
     {
-      boolean[] gets = new boolean[] {false, true, true, true, true};
-      int[] bits = new int[] {0, 3, 55, 59, 77};
+      boolean[] gets = {false, true, true, true, true};
+      int[] bits = {0, 3, 55, 59, 77};
       for (int i = 0, j = 0; i != -1; i = bv.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(bv.get(i));
@@ -975,8 +974,8 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(v1.max()).isEqualTo(202);
 
     {
-      boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
-      int[] bits = new int[] {0, 100, 101, 102, 200, 201, 202};
+      boolean[] gets = {false, true, true, true, true, true, true};
+      int[] bits = {0, 100, 101, 102, 200, 201, 202};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(v1.get(i));
@@ -1004,8 +1003,8 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(v1.max()).isEqualTo(104);
 
     {
-      boolean[] gets = new boolean[] {false, true, true};
-      int[] bits = new int[] {0, 103, 104};
+      boolean[] gets = {false, true, true};
+      int[] bits = {0, 103, 104};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(v1.get(i));
@@ -1019,8 +1018,8 @@ public class PrimitivesTest extends WalaTestCase {
     assertThat(v1.max()).isEqualTo(105);
 
     {
-      boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
-      int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
+      boolean[] gets = {false, true, true, true, true, true, true};
+      int[] bits = {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(v1.get(i));
@@ -1032,8 +1031,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.andNot(v2);
 
     {
-      boolean[] gets = new boolean[] {false, true, true, true, true, true, true};
-      int[] bits = new int[] {0, 100, 101, 102, 103, 104, 105};
+      boolean[] gets = {false, true, true, true, true, true, true};
+      int[] bits = {0, 100, 101, 102, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(v1.get(i));
@@ -1047,8 +1046,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.andNot(v2);
 
     {
-      boolean[] gets = new boolean[] {false, true, true, true, true};
-      int[] bits = new int[] {0, 100, 103, 104, 105};
+      boolean[] gets = {false, true, true, true, true};
+      int[] bits = {0, 100, 103, 104, 105};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(v1.get(i));
@@ -1074,8 +1073,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.xor(v2);
 
     {
-      boolean[] gets = new boolean[] {false, true, true, true, true};
-      int[] bits = new int[] {0, 35, 103, 105, 206};
+      boolean[] gets = {false, true, true, true, true};
+      int[] bits = {0, 35, 103, 105, 206};
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertThat(bits[j]).isEqualTo(i);
         assertThat(gets[j]).isEqualTo(v1.get(i));

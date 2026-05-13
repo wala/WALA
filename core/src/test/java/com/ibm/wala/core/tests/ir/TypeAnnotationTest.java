@@ -69,7 +69,7 @@ public class TypeAnnotationTest extends WalaTestCase {
                         ClassLoaderReference.Application, "Lannotations/TypeAnnotationTypeUse")),
                 // TODO: currently, annotations will reference class loaders from which they were
                 // loaded, even if the type
-                // comes from, e.g., primordial (e.g.: Application instead of Primordial).
+                // comes from, e.g., primordial (e.g.,: Application instead of Primordial).
                 // See {@link TypeAnnotation#fromString(ClassLoaderReference, String)}
                 new TypeAnnotation.SuperTypeTarget(
                     TypeReference.findOrCreate(

@@ -18,7 +18,13 @@
     </ExternalSystemSettings>
     <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+    <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <method v="2" />
+    <RunAsTest>false</RunAsTest>
+    <GradleProfilingDisabled>false</GradleProfilingDisabled>
+    <GradleCoverageDisabled>false</GradleCoverageDisabled>
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="wala [spotlessApply]" run_configuration_type="GradleRunConfiguration" />
+    </method>
   </configuration>
 </component>

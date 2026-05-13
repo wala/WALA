@@ -839,8 +839,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   @Override
   public AbstractRootMethod getFakeRootMethod(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return new FakeRootMethod(
-        new FakeRootClass(ClassLoaderReference.Primordial, cha), options, cache);
+    return new FakeRootMethod(new FakeRootClass(ClassLoaderReference.Primordial, cha), cache);
   }
 
   @Override
@@ -857,5 +856,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       ExtendedHeapModel h,
       boolean ignoreAllocHeapDefs) {
     return new ModVisitor<>(n, result, h, pa, ignoreAllocHeapDefs);
+  }
+
+  @Override
+  public boolean arraysAsNestedObject() {
+    return true;
   }
 }

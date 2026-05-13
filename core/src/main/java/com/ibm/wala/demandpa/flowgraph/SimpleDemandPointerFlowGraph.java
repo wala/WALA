@@ -85,7 +85,7 @@ import java.util.Set;
  *   <li>flow from formal -&gt; actual parameter
  *   <li>flow from return value -&gt; local
  *   <li>match edges
- *   <li>local -&gt; local edges representing loads/stores (e.g. x = y.f will have a edge x-&gt;y,
+ *   <li>local -&gt; local edges representing loads/stores (e.g., x = y.f will have a edge x-&gt;y,
  *       labelled with f) for a getstatic x = Y.f, we have an edge from x -&gt; Y.f.
  * </ul>
  *

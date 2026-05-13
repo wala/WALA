@@ -43,7 +43,7 @@ public class QualifiedNames {
         public QualifiedNames(int xx) {
         	x = xx;
         }
-        public static void main(String args[]) {
+        public static void main(String[] args) {
         	QualifiedNames qn = new QualifiedNames(5);
         	int y = 3;
         	y = y + qn.x;

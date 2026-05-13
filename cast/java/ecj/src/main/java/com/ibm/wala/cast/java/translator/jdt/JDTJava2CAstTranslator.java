@@ -164,6 +164,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
+import org.jspecify.annotations.NonNull;
 
 // TO TEST:
 // "1/0" surrounded by catch ArithmeticException & RunTimeException (TryCatchContext.getCatchTypes"
@@ -839,7 +840,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       calltarget = makeNode(context, fFactory, null, CAstNode.SUPER);
     else calltarget = makeNode(context, fFactory, null, CAstNode.VOID);
 
-    ITypeBinding paramTypes[] = overridden.getParameterTypes();
+    ITypeBinding[] paramTypes = overridden.getParameterTypes();
 
     ArrayList<CAstNode> arguments = new ArrayList<>();
     int i = 0;
@@ -1151,20 +1152,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     // From Code Body Entity
-    private final Map<CAstNode, Collection<CAstEntity>> fEntities;
+    private final Map<CAstNode, @NonNull Collection<CAstEntity>> fEntities;
 
     @Override
-    public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
+    public Map<CAstNode, @NonNull Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.unmodifiableMap(fEntities);
     }
 
     @Override
-    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-      if (fEntities.containsKey(construct)) {
-        return fEntities.get(construct).iterator();
-      } else {
-        return EmptyIterator.instance();
-      }
+    public @NonNull Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+      Collection<CAstEntity> cAstEntities = fEntities.get(construct);
+      return cAstEntities == null ? EmptyIterator.instance() : cAstEntities.iterator();
     }
 
     @Override
@@ -1742,7 +1740,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ITypeBinding newType = ctorBinding.getDeclaringClass();
     TypeReference newTypeRef = fIdentityMapper.getTypeRef(newType);
 
-    // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly
+    // new nodes with an explicit enclosing argument, e.g., "outer.new Inner()". They are mostly
     // treated the same, except
     // in JavaCAst2IRTranslator.doNewObject
     CAstNode qualNode = null;
@@ -1783,8 +1781,9 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
               qualNode);
     else newNode = makeNode(context, fFactory, nn, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
 
-    ITypeBinding[] newExceptions =
-        new ITypeBinding[] {NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError};
+    ITypeBinding[] newExceptions = {
+      NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError
+    };
     context.cfg().map(newNode, newNode);
     for (ITypeBinding exp : newExceptions) {
       for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(exp)) {
@@ -1981,9 +1980,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     boolean isStatic = (methodBinding.getModifiers() & Modifier.STATIC) != 0;
     ITypeBinding methodOwner = methodBinding.getDeclaringClass();
 
-    if (!(methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum())) {
-      assert false : "owner " + methodOwner + " of " + methodBinding + " is not a class";
-    }
+    assert methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum()
+        : "owner " + methodOwner + " of " + methodBinding + " is not a class";
 
     // POPULATE PARAMETERS
     // this (or void for static), method reference, rest of args
@@ -2828,8 +2826,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         new Object(); // safer as 'pos' may be used for another purpose (i.e., this could be an
     // implicit cast)
 
-    // null can go into anything (e.g. in "((Foobar) null)" null can be assumed to be of type Foobar
-    // already)
+    // null can go into anything (e.g., in "((Foobar) null)" null can be assumed to be of type
+    // Foobar already)
     if (castedFrom.isNullType()) castedFrom = castedTo;
 
     CAstNode ast =
@@ -4274,8 +4272,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       super(parent);
 
       for (CatchClause c : (Iterable<CatchClause>) tryNode.catchClauses()) {
-        Pair<ITypeBinding, Object> p =
-            Pair.make(c.getException().resolveBinding().getType(), (Object) c);
+        Pair<ITypeBinding, Object> p = Pair.make(c.getException().resolveBinding().getType(), c);
 
         fCatchNodes.add(p);
       }
@@ -4402,7 +4399,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // RuntimeException above where
       // it is supposed to be caught?
       return Collections.singleton(
-          Pair.<ITypeBinding, Object>make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+          Pair.make(fRuntimeExcType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
     @Override

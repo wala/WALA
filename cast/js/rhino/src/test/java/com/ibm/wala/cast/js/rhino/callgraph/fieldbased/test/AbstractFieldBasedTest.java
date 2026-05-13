@@ -1,6 +1,5 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -36,14 +35,14 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
   protected JSCallGraph runTest(
       String script, List<GraphAssertion> assertions, BuilderType... builderTypes)
-      throws WalaException, Error, CancelException {
+      throws WalaException, CancelException {
     return runTest(
         TestFieldBasedCG.class.getClassLoader().getResource(script), assertions, builderTypes);
   }
 
   protected JSCallGraph runTest(
       URL url, List<GraphAssertion> assertions, BuilderType... builderTypes)
-      throws WalaException, Error, CancelException {
+      throws WalaException, CancelException {
     JSCallGraph cg = null;
     for (BuilderType builderType : builderTypes) {
       IProgressMonitor monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
@@ -61,7 +60,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
   protected JSCallGraph runBoundedTest(
       String script, List<GraphAssertion> assertions, BuilderType builderType, int bound)
-      throws WalaException, Error, CancelException {
+      throws WalaException, CancelException {
     final JSCallGraph cg;
     JavaScriptLoaderFactory loaders =
         new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory(), SSAOptions.defaultOptions());

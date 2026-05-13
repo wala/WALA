@@ -260,7 +260,7 @@ public class AndroidSpecs implements ISpecs {
     return sinkSpecs;
   }
 
-  private static MethodNamePattern[] callBacks = new MethodNamePattern[] {};
+  private static MethodNamePattern[] callBacks = {};
 
   //	public MethodNamePattern[] getCallBacks() {
   //		if (callBacks == null)

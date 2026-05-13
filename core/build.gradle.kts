@@ -28,7 +28,7 @@ eclipse {
   }
 }
 
-val compileTestSubjectsJava by tasks.existing
+val compileTestSubjectsJava = tasks.named("compileTestSubjectsJava")
 
 tasks {
   named<JavaCompile>("compileTestSubjectsJava") { options.isDeprecation = false }
@@ -64,6 +64,7 @@ dependencies {
   testFixturesImplementation(projects.util)
   implementation(libs.gson)
   testImplementation(libs.assertj.core)
+  testImplementation(libs.json.unit.assertj)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.util))
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
@@ -87,8 +88,8 @@ interface GenerateHelloHashServices {
 
 val kawa = adHocDownload(uri("https://ftpmirror.gnu.org/gnu/kawa"), "kawa", "zip", "3.0")
 
-val extractKawa by
-    tasks.registering(Sync::class) {
+val extractKawa =
+    tasks.register<Sync>("extractKawa") {
       from({ zipTree(kawa.singleFile) })
       into(layout.buildDirectory.dir(name))
       include("*/lib/kawa.jar")
@@ -110,20 +111,20 @@ val kawaChess =
         "zip",
     )
 
-val unpackKawaChess by
-    tasks.registering(Sync::class) {
+val unpackKawaChess =
+    tasks.register<Sync>("unpackKawaChess") {
       from({ zipTree(kawaChess.singleFile) })
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()
     }
 
-val compileKawaSchemeChessMain by
-    tasks.registering(CompileKawaScheme::class) {
+val compileKawaSchemeChessMain =
+    tasks.register<CompileKawaScheme>("compileKawaSchemeChessMain") {
       schemeFile = unpackKawaChess.map { it.destinationDir.resolve("main.scm") }
     }
 
-val buildChessJar by
-    tasks.registering(Jar::class) {
+val buildChessJar =
+    tasks.register<Jar>("buildChessJar") {
       from(compileKawaSchemeChessMain)
       destinationDirectory = layout.buildDirectory.dir(name)
       archiveFileName = "kawachess.jar"
@@ -135,13 +136,13 @@ val buildChessJar by
 //  build the kawa test jar
 //
 
-val compileKawaSchemeTest by
-    tasks.registering(CompileKawaScheme::class) {
+val compileKawaSchemeTest =
+    tasks.register<CompileKawaScheme>("compileKawaSchemeTest") {
       schemeFile = layout.projectDirectory.file("kawasrc/test.scm")
     }
 
-val buildKawaTestJar by
-    tasks.registering(Jar::class) {
+val buildKawaTestJar =
+    tasks.register<Jar>("buildKawaTestJar") {
       from(compileKawaSchemeTest)
       destinationDirectory = layout.buildDirectory.dir(name)
       archiveFileName = "kawatest.jar"
@@ -161,8 +162,8 @@ val downloadBcel =
         "5.2",
     )
 
-val extractBcel by
-    tasks.registering(Sync::class) {
+val extractBcel =
+    tasks.register<Sync>("extractBcel") {
       from({ tarTree(downloadBcel.singleFile) })
       include("**/*.jar")
       into(layout.buildDirectory.dir(name))
@@ -172,14 +173,15 @@ val extractBcel by
 
 ////////////////////////////////////////////////////////////////////////
 //
-//  download "java-cup-11a.jar"
+//  download "java-cup-11a-RELEASE290.jar"
 //
 
-val downloadJavaCup =
-    adHocDownload(uri("https://www2.cs.tum.edu/projects/cup"), "java-cup", "jar", "11a")
+val downloadJavaCup = configurations.create("downloadJavaCup") { isCanBeConsumed = false }
 
-val copyJavaCup by
-    tasks.registering(Sync::class) {
+dependencies { downloadJavaCup(libs.netbeans.java.cup) }
+
+val copyJavaCup =
+    tasks.register<Sync>("copyJavaCup") {
       from(downloadJavaCup)
       into(layout.buildDirectory.dir(name))
     }
@@ -189,16 +191,12 @@ val copyJavaCup by
 //  collect "JLex.jar"
 //
 
-val collectJLexFrom by configurations.registering { isCanBeConsumed = false }
+val collectJLexFrom = configurations.register("collectJLexFrom") { isCanBeConsumed = false }
 
-dependencies {
-  collectJLexFrom(
-      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJarConfig"))
-  )
-}
+dependencies { collectJLexFrom(project(":cast:java:test:data", "testJarConfig")) }
 
-val collectJLex by
-    tasks.registering(Jar::class) {
+val collectJLex =
+    tasks.register<Jar>("collectJLex") {
       inputs.files(collectJLexFrom)
       from({ zipTree(collectJLexFrom.get().singleFile) })
       include("JLex/")
@@ -226,8 +224,8 @@ val downloadOcamlJava =
 // Ideally this would be a `Sync` task using `from({ tarTree(downloadOcamlJava.singleFile) })`.
 // However, this specific tar archive contains a member with a leading slash, and that apparently
 // causes Gradle's native tar support to fail.
-val unpackOcamlJava by
-    tasks.registering(Exec::class) {
+val unpackOcamlJava =
+    tasks.register<Exec>("unpackOcamlJava") {
       inputs.files(downloadOcamlJava)
       executable = "tar"
       argumentProviders.add {
@@ -241,8 +239,8 @@ val unpackOcamlJava by
       outputs.dir(outputDir)
     }
 
-val generateHelloHashJar by
-    tasks.registering(Exec::class) {
+val generateHelloHashJar =
+    tasks.register<Exec>("generateHelloHashJar") {
 
       // haven't been able to get `ocamljava.bat` to work on Windows yet
       val isWindows = project.extra["isWindows"] as Boolean
@@ -296,8 +294,8 @@ val generateHelloHashJar by
 //  collect "com.ibm.wala.core.testdata_1.0.0.jar"
 //
 
-val collectTestData by
-    tasks.registering(Jar::class) {
+val collectTestData =
+    tasks.register<Jar>("collectTestData") {
       archiveFileName = "com.ibm.wala.core.testdata_1.0.0.jar"
       from(compileTestSubjectsJava)
       from("classes")
@@ -305,7 +303,7 @@ val collectTestData by
       destinationDirectory = layout.buildDirectory.dir(name)
     }
 
-val collectTestDataJar by configurations.registering { isCanBeResolved = false }
+val collectTestDataJar = configurations.register("collectTestDataJar") { isCanBeResolved = false }
 
 artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirectory })
 
@@ -314,8 +312,8 @@ artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirec
 //  collect "com.ibm.wala.core.testdata_1.0.0a.jar" for Dalvik tests
 //
 
-val collectTestDataAForDalvik by
-    tasks.registering(Jar::class) {
+val collectTestDataAForDalvik =
+    tasks.register<Jar>("collectTestDataAForDalvik") {
       archiveFileName = "com.ibm.wala.core.testdata_1.0.0a.jar"
       from(compileTestSubjectsJava)
       from("classes")
@@ -358,24 +356,24 @@ tasks.named<Test>("test") {
   outputs.file(layout.buildDirectory.file("report"))
 }
 
-val testResources by configurations.registering { isCanBeResolved = false }
+val testResources = configurations.register("testResources") { isCanBeResolved = false }
 
 artifacts.add(testResources.name, sourceSets.test.map { it.resources.srcDirs.single() })
 
 ////////////////////////////////////////////////////////////////////////
 
-val testJar by
-    tasks.registering(Jar::class) {
+val testJar =
+    tasks.register<Jar>("testJar") {
       group = "build"
       archiveClassifier = "test"
       from(tasks.named("compileTestJava"))
     }
 
-val testJarConfig by configurations.registering { isCanBeResolved = false }
+val testJarConfig = configurations.register("testJarConfig") { isCanBeResolved = false }
 
 artifacts.add(testJarConfig.name, testJar)
 
-val dalvikTestResources by configurations.registering { isCanBeResolved = false }
+val dalvikTestResources = configurations.register("dalvikTestResources") { isCanBeResolved = false }
 
 listOf(
         collectJLex,

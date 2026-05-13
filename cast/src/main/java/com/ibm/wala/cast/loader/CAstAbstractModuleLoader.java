@@ -36,6 +36,7 @@ import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -148,7 +149,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   /**
    * translate moduleEntry to CAst and store result in topLevelEntities
    *
-   * @param modules all mofules in the analysis
+   * @param modules all modules in the analysis
    */
   private void translateModuleEntryToCAst(
       ModuleEntry moduleEntry,
@@ -192,7 +193,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           new Warning(Warning.SEVERE) {
             @Override
             public String getMsg() {
-              return "Parsing issue: " + new String(s.toByteArray());
+              return "Parsing issue: " + s;
             }
           });
     }
@@ -254,11 +255,12 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
     public DynamicMethodObject(
         IClass cls,
+        MethodReference ref,
         Collection<CAstQualifier> qualifiers,
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -267,7 +269,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           qualifiers,
           cfg,
           symtab,
-          AstMethodReference.fnReference(cls.getReference()),
+          ref,
           hasCatchBlock,
           caughtTypes,
           hasMonitorOp,
@@ -277,6 +279,29 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
       // force creation of these constants by calling the getter methods
       symtab.getNullConstant();
+    }
+
+    public DynamicMethodObject(
+        IClass cls,
+        Collection<CAstQualifier> qualifiers,
+        AbstractCFG<?, ?> cfg,
+        SymbolTable symtab,
+        boolean hasCatchBlock,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
+        boolean hasMonitorOp,
+        AstLexicalInformation lexicalInfo,
+        DebuggingInformation debugInfo) {
+      this(
+          cls,
+          AstMethodReference.fnReference(cls.getReference()),
+          qualifiers,
+          cfg,
+          symtab,
+          hasCatchBlock,
+          caughtTypes,
+          hasMonitorOp,
+          lexicalInfo,
+          debugInfo);
     }
 
     @Override
@@ -312,7 +337,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
       if (parents == null) return new LexicalParent[0];
 
-      LexicalParent result[] = new LexicalParent[parents.length];
+      LexicalParent[] result = new LexicalParent[parents.length];
 
       for (int i = 0; i < parents.length; i++) {
         final int hack = i;

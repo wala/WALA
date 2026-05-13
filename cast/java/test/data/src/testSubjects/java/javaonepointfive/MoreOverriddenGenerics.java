@@ -76,7 +76,7 @@ public class MoreOverriddenGenerics {
 		System.err.println(n);
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new MoreOverriddenGenerics()).doit();
 	}
 }

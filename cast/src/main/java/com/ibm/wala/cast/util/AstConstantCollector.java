@@ -44,14 +44,20 @@ public class AstConstantCollector {
         } else {
           Object val = s.getSingle("value").getValue();
           if (!bad.contains(var)) {
-            if (values.containsKey(var)) {
-              if (val == null ? values.get(var) != null : !val.equals(values.get(var))) {
-                values.remove(var);
-                bad.add(var);
-              }
-            } else {
-              values.put(var, val);
-            }
+            values.compute(
+                var,
+                (priorKey, priorValue) -> {
+                  if (priorValue == null) {
+                    return val;
+                  }
+                  if (val == null
+                      ? values.get(priorKey) != null
+                      : !val.equals(values.get(priorKey))) {
+                    bad.add(priorKey);
+                    return null;
+                  }
+                  return priorValue;
+                });
           }
         }
       }

@@ -135,6 +135,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.jspecify.annotations.NonNull;
 
 /** Demand-driven refinement-based points-to analysis. */
 public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
@@ -256,9 +257,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     Pair<PointsToResult, Collection<InstanceKeyAndState>> p = getPointsToWithStates(pk, ikeyPred);
     final Collection<InstanceKeyAndState> p2SetWithStates = p.snd;
     Collection<InstanceKey> finalP2Set =
-        p2SetWithStates != null
-            ? removeStates(p2SetWithStates)
-            : Collections.<InstanceKey>emptySet();
+        p2SetWithStates != null ? removeStates(p2SetWithStates) : Collections.emptySet();
     return Pair.make(p.fst, finalP2Set);
   }
 
@@ -553,9 +552,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private Pair<PointsToResult, Collection<PointerKey>> getFlowsToInternal(
       InstanceKeyAndState ikAndState) {
     InstanceKey ik = ikAndState.getInstanceKey();
-    if (!(ik instanceof InstanceKeyWithNode)) {
-      assert false : "TODO: handle " + ik.getClass();
-    }
+    assert ik instanceof InstanceKeyWithNode : "TODO: handle " + ik.getClass();
     if (DEBUG) {
       System.err.println("answering flows-to query for " + ikAndState);
     }
@@ -767,7 +764,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         HashSetMultiMap.make();
 
     /** cache of the targets discovered for a call site during on-the-fly call graph construction */
-    private final MultiMap<CallerSiteContext, IMethod> callToOTFTargets = ArraySetMultiMap.make();
+    private final MultiMap<CallerSiteContext, @NonNull IMethod> callToOTFTargets =
+        ArraySetMultiMap.make();
 
     // alloc nodes to the fields we're looking to match on them,
     // matching getfield with putfield
@@ -966,8 +964,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
     }
 
-    void handleAllCopies(
-        PointerKeyAndState curPk, Iterator<? extends Object> succNodes, IFlowLabel label) {
+    void handleAllCopies(PointerKeyAndState curPk, Iterator<?> succNodes, IFlowLabel label) {
       while (succNodes.hasNext()) {
         handleCopy(curPk, (PointerKey) succNodes.next(), label);
       }
@@ -1021,7 +1018,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     void handleAllBackCopies(
-        PointerKeyAndState curPkAndState, Iterator<? extends Object> predNodes, IFlowLabel label) {
+        PointerKeyAndState curPkAndState, Iterator<?> predNodes, IFlowLabel label) {
       while (predNodes.hasNext()) {
         handleBackCopy(curPkAndState, (PointerKey) predNodes.next(), label);
       }
@@ -1043,9 +1040,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (pointsToQueried.put(pkAndState.getPointerKey(), pkAndState.getState())) {
         if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
           CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
-          if (!g.hasSubgraphForNode(node)) {
-            assert false : "missing constraints for " + node;
-          }
+          assert g.hasSubgraphForNode(node) : "missing constraints for " + node;
         }
         if (DEBUG) {
           // System.err.println("adding to init_ " + pkAndState);
@@ -1062,9 +1057,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     protected void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
       if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
         CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
-        if (!g.hasSubgraphForNode(node)) {
-          assert false : "missing constraints for " + node;
-        }
+        assert g.hasSubgraphForNode(node) : "missing constraints for " + node;
       }
       if (DEBUG) {
         // System.err.println("adding to tracked points-to " + pkAndState);
@@ -1198,9 +1191,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG) System.err.println("init " + curPkAndState);
-        if (curPk instanceof LocalPointerKey) {
-          assert g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
-        }
+        assert !(curPk instanceof LocalPointerKey)
+            || g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
         // if (curPk instanceof LocalPointerKey) {
         // Collection<InstanceKey> constantVals =
         // getConstantVals((LocalPointerKey) curPk);
@@ -1381,10 +1373,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               handler.handle(curPkAndState, retVal, ReturnLabel.make(callSiteAndCGNode));
             }
           } else {
-            if (callToOTFTargets.containsKey(callSiteAndCGNode)) {
+            @NonNull Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
+            if (!targetMethods.isEmpty()) {
               // already queried this call site
               // handle existing targets
-              Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
               for (CGNode callee : possibleCallees) {
                 if (targetMethods.contains(callee.getMethod())) {
                   if (hasNullIR(callee)) {
@@ -1695,10 +1687,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 handler.handle(curPkAndState, paramVal, ParamBarLabel.make(callSiteAndCGNode));
               }
             } else {
-              if (callToOTFTargets.containsKey(callSiteAndCGNode)) {
+              @NonNull Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
+              if (!targetMethods.isEmpty()) {
                 // already queried this call site
                 // handle existing targets
-                Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
                 for (CGNode callee : possibleCallees) {
                   if (targetMethods.contains(callee.getMethod())) {
                     if (hasNullIR(callee)) {

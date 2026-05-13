@@ -165,9 +165,8 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     protected NodeImpl(IMethod method, Context C) {
       this.method = method;
       this.context = C;
-      if (method != null && !method.isWalaSynthetic() && method.isAbstract()) {
-        assert !method.isAbstract() : "Abstract method " + method;
-      }
+      assert method == null || method.isWalaSynthetic() || !method.isAbstract()
+          : "Abstract method " + method;
       assert C != null;
     }
 
@@ -370,11 +369,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       String nm = nmBuilder.toString();
 
       do {
-        if (packages.containsKey(nm)) {
-          packages.put(nm, 1 + packages.get(nm));
-        } else {
-          packages.put(nm, 1);
-        }
+        packages.compute(nm, (key, priorValue) -> priorValue == null ? 1 : priorValue + 1);
 
         if (nm.indexOf('/') < 0) {
           break;

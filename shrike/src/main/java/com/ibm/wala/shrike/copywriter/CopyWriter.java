@@ -46,10 +46,10 @@ public class CopyWriter {
   private static final String USAGE =
       "IBM CopyWriter Tool\n"
           + "This tool takes the following command line options:\n"
-          + "    <jarname> <jarname> ...   Process the classes from these jars\n"
-          + "    -o <jarname>              Put the resulting classes into <jarname>\n"
-          + "    -c <copyright>            Make the copyright string be\n"
-          + "                              '\u00A9 Copyright <copyright>'";
+          + "    <jar-name> <jar-name> ...   Process the classes from these jars\n"
+          + "    -o <jar-name>               Put the resulting classes into <jar-name>\n"
+          + "    -c <copyright>              Make the copyright string be\n"
+          + "                                '\u00A9 Copyright <copyright>'";
 
   private static OfflineInstrumenter instrumenter;
 

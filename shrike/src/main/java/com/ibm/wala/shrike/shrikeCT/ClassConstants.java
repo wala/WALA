@@ -43,6 +43,8 @@ public interface ClassConstants {
 
   byte CONSTANT_MethodType = 16;
 
+  byte CONSTANT_Dynamic = 17;
+
   byte CONSTANT_InvokeDynamic = 18;
 
   byte CONSTANT_Module = 19;

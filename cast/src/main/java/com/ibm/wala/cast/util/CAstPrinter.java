@@ -13,6 +13,7 @@ package com.ibm.wala.cast.util;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
@@ -168,6 +169,8 @@ public class CAstPrinter {
         return "IS_DEFINED_EXPR";
       case CAstNode.NARY_EXPR:
         return "NARY_EXPR";
+      case CAstNode.TYPE_LITERAL_EXPR:
+        return "TYPE_LITERAL_EXPR";
 
       // explicit lexical scopes
       case CAstNode.LOCAL_SCOPE:
@@ -357,10 +360,24 @@ public class CAstPrinter {
       w.write(e.getName());
       w.write('\n');
       if (e.getArgumentNames().length > 0) {
+        int i = 0;
         w.write("(");
         String[] names = e.getArgumentNames();
+        CAstType type = e.getType();
+        java.util.List<CAstType> types =
+            (type instanceof CAstType.Function)
+                ? ((CAstType.Function) type).getArgumentTypes()
+                : null;
         for (String name : names) {
           w.write("  " + name);
+          if (types != null) {
+            w.write(" ");
+            w.write(
+                (i == 0 && type instanceof CAstType.Method
+                    ? e.getType().toString()
+                    : types.get(type instanceof CAstType.Method ? i - 1 : i).toString()));
+          }
+          i++;
         }
         w.write("  )\n");
       }

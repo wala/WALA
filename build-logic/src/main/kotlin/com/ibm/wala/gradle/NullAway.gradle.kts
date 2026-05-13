@@ -17,8 +17,9 @@ tasks.withType<JavaCompile>().configureEach {
   options.errorprone {
     if (!name.contains("test", true)) {
       error("NullAway")
+      error("RequireExplicitNullMarking")
       errorproneArgs.addAll(
-          "-XepOpt:NullAway:AnnotatedPackages=com.ibm.wala",
+          "-XepOpt:NullAway:OnlyNullMarked=true",
           "-XepOpt:NullAway:JSpecifyMode=true",
           "-XepOpt:NullAway:CastToNonNullMethod=com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull",
       )

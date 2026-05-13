@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.summaries;
 import static com.ibm.wala.types.TypeName.ArrayMask;
 import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
+import static java.util.Objects.requireNonNullElseGet;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
@@ -51,6 +52,7 @@ import java.util.StringTokenizer;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.jspecify.annotations.NonNull;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -251,7 +253,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     private int nextLocal = -1;
 
     /** A mapping from String (variable name) -&gt; Integer (local number) */
-    private Map<String, Integer> symbolTable = null;
+    private Map<String, @NonNull Integer> symbolTable = null;
 
     /**
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String,
@@ -647,7 +649,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (V == null) {
         Assertions.UNREACHABLE("Must specify value for putfield " + governingMethod);
       }
-      Integer valueNumber = symbolTable.containsKey(V) ? symbolTable.get(V) : Integer.parseInt(V);
+      Integer valueNumber = requireNonNullElseGet(symbolTable.get(V), () -> Integer.parseInt(V));
 
       // get the ref stored to
       String R = atts.getValue(A_REF);
@@ -772,18 +774,23 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
       // get the value def'fed
       String defVar = atts.getValue(A_DEF);
-      if (symbolTable.containsKey(defVar)) {
-        Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
-      }
-      if (defVar == null) {
-        Assertions.UNREACHABLE("Must specify def for getfield " + governingMethod);
-      }
-      int defNum = nextLocal;
-      symbolTable.put(defVar, nextLocal++);
-      SSAArrayLoadInstruction S =
-          insts.ArrayLoadInstruction(
-              governingMethod.getNumberOfStatements(), defNum, refNumber, idxNumber, type);
-      governingMethod.addStatement(S);
+      symbolTable.compute(
+          defVar,
+          (key, priorValue) -> {
+            if (priorValue != null) {
+              Assertions.UNREACHABLE(
+                  "Cannot def variable twice: " + key + " in " + governingMethod);
+            }
+            if (key == null) {
+              Assertions.UNREACHABLE("Must specify def for getfield " + governingMethod);
+            }
+            int defNum = nextLocal;
+            SSAArrayLoadInstruction S =
+                insts.ArrayLoadInstruction(
+                    governingMethod.getNumberOfStatements(), defNum, refNumber, idxNumber, type);
+            governingMethod.addStatement(S);
+            return nextLocal++;
+          });
     }
 
     /** Process an element indicating a return statement. */
@@ -955,7 +962,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         }
       }
 
-      Map<Integer, Atom> nameTable = HashMapFactory.make();
+      Map<Integer, @NonNull Atom> nameTable = HashMapFactory.make();
       for (Map.Entry<String, Integer> x : symbolTable.entrySet()) {
         if (!x.getKey().startsWith("arg")) {
           nameTable.put(x.getValue(), Atom.findOrCreateUnicodeAtom(x.getKey()));

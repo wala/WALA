@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Class files are taken as input arguments (or if there are none, from standard input). The methods
@@ -99,7 +100,7 @@ public class OfflineDynamicCallGraph {
     }
   }
 
-  private static final boolean disasm = true;
+  private static final boolean disassemble = true;
   private static final boolean verify = true;
 
   private static boolean patchExits = true;
@@ -176,14 +177,14 @@ public class OfflineDynamicCallGraph {
       return null;
     }
 
-    if (disasm) {
+    if (disassemble) {
       w.write("Class: " + className + '\n');
       w.flush();
     }
 
     final ClassReader r = ci.getReader();
 
-    final Map<Object, MethodData> methods = HashMapFactory.make();
+    final Map<Object, @NonNull MethodData> methods = HashMapFactory.make();
 
     for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
       final MethodData d = ci.visitMethod(m);
@@ -194,7 +195,7 @@ public class OfflineDynamicCallGraph {
           return null;
         }
 
-        if (disasm) {
+        if (disassemble) {
           w.write(
               "Instrumenting "
                   + ci.getReader().getMethodName(m)
@@ -418,7 +419,7 @@ public class OfflineDynamicCallGraph {
 
         me.endPass();
 
-        if (disasm) {
+        if (disassemble) {
           w.write("Final ShrikeBT code:\n");
           new Disassembler(d).disassembleTo(w);
           w.flush();

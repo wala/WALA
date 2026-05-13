@@ -330,9 +330,7 @@ public class LocalPathEdges {
    * @return set of d2 s.t. d1 -&gt; d2 is a path edge for node n.
    */
   public IntSet getReachable(int n, int d1) {
-    if (PARANOID) {
-      assert getReachableSlow(n, d1).sameValue(getReachableFast(n, d1));
-    }
+    assert !PARANOID || getReachableSlow(n, d1).sameValue(getReachableFast(n, d1));
     return (altPaths == null) ? getReachableSlow(n, d1) : getReachableFast(n, d1);
   }
 

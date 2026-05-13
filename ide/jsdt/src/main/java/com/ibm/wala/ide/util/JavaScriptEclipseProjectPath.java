@@ -54,7 +54,7 @@ public class JavaScriptEclipseProjectPath
   protected JavaScriptEclipseProjectPath(Set<Pair<String, Plugin>> models) {
     super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
     this.models.addAll(models);
-    this.models.add(Pair.make("prologue.js", (Plugin) Activator.getDefault()));
+    this.models.add(Pair.make("prologue.js", Activator.getDefault()));
   }
 
   public static JavaScriptEclipseProjectPath make(

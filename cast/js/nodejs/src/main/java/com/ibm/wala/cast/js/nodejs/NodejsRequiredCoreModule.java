@@ -18,10 +18,12 @@ import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
+import org.jspecify.annotations.NonNull;
 
 /**
  * @author Brian Pfretzschner &lt;brian.pfretzschner@gmail.com&gt;
@@ -96,17 +98,29 @@ public class NodejsRequiredCoreModule extends NodejsRequiredSourceModule {
         .getResourceAsStream("core-modules/" + name + ".js");
   }
 
-  private static final Map<String, File> names = HashMapFactory.make();
+  private static final Map<String, @NonNull File> names = HashMapFactory.make();
 
   public static NodejsRequiredCoreModule make(String name) throws IOException {
-    if (!names.containsKey(name)) {
-      java.nio.file.Path p = Files.createTempDirectory("nodejs");
-      File f = new File(p.toFile(), name + ".js");
-      f.deleteOnExit();
-      p.toFile().deleteOnExit();
-      names.put(name, f);
+    File file;
+    try {
+      file =
+          names.computeIfAbsent(
+              name,
+              absent -> {
+                java.nio.file.Path p;
+                try {
+                  p = Files.createTempDirectory("nodejs");
+                } catch (IOException problem) {
+                  throw new UncheckedIOException(problem);
+                }
+                File f = new File(p.toFile(), name + ".js");
+                f.deleteOnExit();
+                p.toFile().deleteOnExit();
+                return f;
+              });
+    } catch (UncheckedIOException problem) {
+      throw problem.getCause();
     }
-    File file = names.get(name);
     try (InputStream module = getModule(name)) {
       TemporaryFile.streamToFile(file, module);
     }

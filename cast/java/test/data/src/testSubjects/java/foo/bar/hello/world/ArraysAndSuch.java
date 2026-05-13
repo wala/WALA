@@ -39,7 +39,7 @@ package foo.bar.hello.world;
 
 public class ArraysAndSuch {
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		ArraysAndSuch.main();
 	}
 	public static void main() {
@@ -65,13 +65,13 @@ public class ArraysAndSuch {
 			}
 		}
 		
-		float x[] = new float[4+5];
+		float[] x = new float[4+5];
 		int[][][][] y = new int[2][x.length][1][1+1];
-		int z[] = new int[] { 2+3, 4+3 };
+		int[] z = new int[] { 2+3, 4+3 };
 		boolean[] a = new boolean[] { };
 		Object b = new String[] { };
-		Object c[] = new String[] {};
-		String d[] = new String[3];
+		Object[] c = new String[] {};
+		String[] d = new String[3];
 	}
 	
 	

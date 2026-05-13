@@ -19,8 +19,8 @@ dependencies {
 val downloadNodeJS =
     adHocDownload(uri("https://nodejs.org/dist/v0.12.4"), "node", "tar.gz", "v0.12.4")
 
-val unpackNodeJSLib by
-    tasks.registering(Sync::class) {
+val unpackNodeJSLib =
+    tasks.register<Sync>("unpackNodeJSLib") {
       from({ tarTree(downloadNodeJS.singleFile) }) {
         include("*/lib/*.js")
         eachFile { path = name }

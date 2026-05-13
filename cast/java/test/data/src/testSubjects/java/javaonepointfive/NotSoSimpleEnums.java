@@ -67,7 +67,7 @@ public class NotSoSimpleEnums {
 		System.out.println(d.getTranslation() + " " + Direction.valueOf(d.getOpposite().toString()));
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		System.out.println("never eat shredded wheat");
 		for(Direction d : Direction.values()) {
 			(new NotSoSimpleEnums()).doit(d);

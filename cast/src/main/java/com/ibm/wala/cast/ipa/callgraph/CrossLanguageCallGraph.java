@@ -38,6 +38,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A CallGraph implementation adapted to work for graphs that contain code entities from multiple
@@ -62,37 +63,37 @@ public class CrossLanguageCallGraph extends AstCallGraph {
 
   private final Set<CGNode> languageRootNodes = HashSetFactory.make();
 
-  private final Map<Atom, IMethod> languageRoots = HashMapFactory.make();
+  private final Map<Atom, @NonNull AbstractRootMethod> languageRoots = HashMapFactory.make();
 
   public AbstractRootMethod getLanguageRoot(Atom language) {
-    if (!languageRoots.containsKey(language)) {
-      AbstractRootMethod languageRoot = roots.get(language, this);
+    return languageRoots.computeIfAbsent(
+        language,
+        newLanguage -> {
+          AbstractRootMethod languageRoot = roots.get(newLanguage, this);
 
-      CGNode languageRootNode = null;
-      try {
-        languageRootNode = findOrCreateNode(languageRoot, Everywhere.EVERYWHERE);
-      } catch (CancelException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+          CGNode languageRootNode = null;
+          try {
+            languageRootNode = findOrCreateNode(languageRoot, Everywhere.EVERYWHERE);
+          } catch (CancelException e) {
+            e.printStackTrace();
+            Assertions.UNREACHABLE();
+          }
 
-      languageRootNodes.add(languageRootNode);
+          languageRootNodes.add(languageRootNode);
 
-      CallSiteReference site =
-          CallSiteReference.make(
-              1, languageRoot.getReference(), IInvokeInstruction.Dispatch.STATIC);
+          CallSiteReference site =
+              CallSiteReference.make(
+                  1, languageRoot.getReference(), IInvokeInstruction.Dispatch.STATIC);
 
-      CGNode fakeRootNode = getFakeRootNode();
-      CrossLanguageFakeRoot fakeRootMethod = (CrossLanguageFakeRoot) fakeRootNode.getMethod();
+          CGNode fakeRootNode = getFakeRootNode();
+          CrossLanguageFakeRoot fakeRootMethod = (CrossLanguageFakeRoot) fakeRootNode.getMethod();
 
-      site = fakeRootMethod.addInvocationInternal(new int[0], site).getCallSite();
+          site = fakeRootMethod.addInvocationInternal(new int[0], site).getCallSite();
 
-      fakeRootNode.addTarget(site, languageRootNode);
+          fakeRootNode.addTarget(site, languageRootNode);
 
-      languageRoots.put(language, languageRoot);
-    }
-
-    return (AbstractRootMethod) languageRoots.get(language);
+          return languageRoot;
+        });
   }
 
   public static ClassLoaderReference crossCoreLoader = ClassLoaderReference.Primordial;
@@ -113,9 +114,20 @@ public class CrossLanguageCallGraph extends AstCallGraph {
       super(rootMethod, declaringClass, cha, options, cache);
     }
 
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #CrossLanguageFakeRoot(IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.7.2")
     public CrossLanguageFakeRoot(
-        IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      super(rootMethod, cha, options, cache);
+        IClassHierarchy cha,
+        @SuppressWarnings("unused") AnalysisOptions options,
+        IAnalysisCacheView cache) {
+      this(cha, cache);
+    }
+
+    public CrossLanguageFakeRoot(IClassHierarchy cha, IAnalysisCacheView cache) {
+      super(rootMethod, cha, cache);
     }
 
     public int addPhi(TypeReference type, int[] values) {
@@ -191,6 +203,6 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(
-        new CrossLanguageFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
+        new CrossLanguageFakeRoot(cha, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 }

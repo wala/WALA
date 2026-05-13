@@ -73,7 +73,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    * The default implementation policy conservatively uses 2-level vectors, in an attempt to
    * somewhat optimize for space.
    */
-  private static final byte[] defaultImpl = new byte[] {BasicNaturalRelation.TWO_LEVEL};
+  private static final byte[] defaultImpl = {BasicNaturalRelation.TWO_LEVEL};
 
   private final IBinaryNaturalRelation successors;
 

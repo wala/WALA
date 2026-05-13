@@ -44,6 +44,7 @@ import com.ibm.wala.util.debug.Assertions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import org.intellij.lang.annotations.Language;
 
 public class JavaCAst2IRTranslator extends AstTranslator {
@@ -132,7 +133,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   @Override
   public void doArrayWrite(
-      WalkContext context, int arrayValue, CAstNode arrayRefNode, int[] dimValues, int rval) {
+      WalkContext context,
+      int arrayValue,
+      CAstNode arrayRefNode,
+      CAstNode rvalNode,
+      int[] dimValues,
+      int rval) {
     TypeReference arrayTypeRef =
         arrayRefNode.getKind() == CAstNode.ARRAY_LITERAL
             ? ((TypeReference) arrayRefNode.getChild(0).getChild(0).getValue())
@@ -176,7 +182,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   @Override
   protected void doFieldWrite(
-      WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
+      WalkContext context,
+      int receiver,
+      CAstNode elt,
+      CAstNode parent,
+      CAstNode rvalNode,
+      int rval) {
     FieldReference fieldRef = (FieldReference) elt.getValue();
 
     if (receiver == -1) { // a static field: AstTranslator.getValue() produces
@@ -326,7 +337,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     IClass owner = loader.lookupClass(makeType(owningType).getName());
 
     assert owner != null || exclusions.test(owningType.getName())
-        : makeType(owningType).getName().toString() + " not found in " + loader;
+        : makeType(owningType).getName() + " not found in " + loader;
 
     if (owner != null && N.getQualifiers().contains(CAstQualifier.ABSTRACT)) {
       ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
@@ -340,7 +351,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo) {
@@ -352,7 +363,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     IClass owner = loader.lookupClass(typeName);
 
     assert owner != null || exclusions.test(owningType.getName())
-        : typeName.toString() + " not found in " + loader;
+        : typeName + " not found in " + loader;
 
     if (owner != null) {
       symtab.getConstant(0);

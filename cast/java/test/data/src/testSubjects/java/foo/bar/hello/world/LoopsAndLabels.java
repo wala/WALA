@@ -38,7 +38,7 @@
 package foo.bar.hello.world;
 
 public class LoopsAndLabels {
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 
 		aaa: do {
 			while (null instanceof String) {

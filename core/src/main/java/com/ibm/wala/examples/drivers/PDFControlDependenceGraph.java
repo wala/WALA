@@ -123,7 +123,7 @@ public class PDFControlDependenceGraph {
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
 
-      DotUtil.<ISSABasicBlock>dotify(cdg, PDFViewUtil.makeIRDecorator(ir), dotFile, psFile, dotExe);
+      DotUtil.dotify(cdg, PDFViewUtil.makeIRDecorator(ir), dotFile, psFile, dotExe);
 
       return PDFViewUtil.launchPDFView(psFile, gvExe);
 

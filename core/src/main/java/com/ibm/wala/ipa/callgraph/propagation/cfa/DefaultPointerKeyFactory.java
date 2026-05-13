@@ -26,8 +26,6 @@ import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 /** Default implementation of {@link PointerKeyFactory} */
 public class DefaultPointerKeyFactory implements PointerKeyFactory {
 
-  public DefaultPointerKeyFactory() {}
-
   @Override
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     if (valueNumber <= 0) {

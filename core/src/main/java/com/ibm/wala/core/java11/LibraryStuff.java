@@ -25,7 +25,7 @@ public class LibraryStuff {
 
   public static void main(String[] args) throws Exception {
     try {
-      AnalysisScopeReader r = new Java9AnalysisScopeReader();
+      AnalysisScopeReader r = AnalysisScopeReader.instance;
       AnalysisScope scope =
           r.readJavaScope(
               (args.length > 0 ? args[0] : "wala.testdata.txt"),

@@ -131,7 +131,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
   }
 
   private static IR makeIR(IMethod method, Context context) {
-    SSAInstruction instrs[] = makeStatements(context);
+    SSAInstruction[] instrs = makeStatements(context);
     return new SyntheticIR(
         method,
         context,

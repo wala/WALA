@@ -496,9 +496,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
         case NORMAL_RET_CALLER:
         case PARAM_CALLEE:
           {
-            if (dOptions.isIgnoreExceptions()) {
-              assert !s.getKind().equals(Kind.EXC_RET_CALLER);
-            }
+            assert !dOptions.isIgnoreExceptions() || !s.getKind().equals(Kind.EXC_RET_CALLER);
 
             ValueNumberCarrier a = (ValueNumberCarrier) s;
             for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(a.getValueNumber()))) {

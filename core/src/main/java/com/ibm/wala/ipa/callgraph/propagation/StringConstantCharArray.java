@@ -18,6 +18,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * An {@link InstanceKey} which represents the constant char[] contents of a string constant object.
@@ -50,10 +51,7 @@ public class StringConstantCharArray implements InstanceKey {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
-    final StringConstantCharArray other = (StringConstantCharArray) obj;
-    if (constant == null) {
-      if (other.constant != null) return false;
-    } else if (!constant.equals(other.constant)) return false;
+    if (!Objects.equals(constant, ((StringConstantCharArray) obj).constant)) return false;
     return true;
   }
 

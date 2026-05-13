@@ -37,7 +37,7 @@ import java.util.Iterator;
 
 /**
  * This ContextInterpreter can be used when using another WALA frontend than the shrike frontend.
- * WALA's standard ContextInterpreters, like e.g. DefaultSSAInterpreter delegate to CodeScanner,
+ * WALA's standard ContextInterpreters, like e.g., DefaultSSAInterpreter delegate to CodeScanner,
  * which assumes, that the provided methods are instances of shrike classes. When using these
  * ContextInterpreter with another frontend than shrike, this leads to ClassCastExceptions. This
  * class can be used to work around this issue. It delegates to a given ContextInterpreter, if the

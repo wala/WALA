@@ -175,10 +175,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         if (domoType != null && domoType.isInterface()) {
           result.add(domoType);
         }
-        if (domoType == null
-            && !getClassHierarchy().getScope().getExclusions().test(name.toString().substring(1))) {
-          assert false : "Failed to find non-excluded interface: " + name;
-        }
+        assert domoType != null
+                || getClassHierarchy().getScope().getExclusions().test(name.toString().substring(1))
+            : "Failed to find non-excluded interface: " + name;
       }
 
       return result;
@@ -190,7 +189,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -307,7 +306,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -453,7 +452,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         AbstractCFG<?, ?> cfg,
         SymbolTable symtab,
         boolean hasCatchBlock,
-        Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+        Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
         boolean hasMonitorOp,
         AstLexicalInformation lexicalInfo,
         DebuggingInformation debugInfo) {
@@ -502,7 +501,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         return new LexicalParent[0];
       }
 
-      LexicalParent result[] = new LexicalParent[parents.length];
+      LexicalParent[] result = new LexicalParent[parents.length];
 
       for (int i = 0; i < parents.length; i++) {
         int lastLeftParen = parents[i].lastIndexOf('(');
@@ -617,7 +616,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       AbstractCFG<?, ?> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo) {
@@ -663,7 +662,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
             type.getPosition(),
             type.getQualifiers(),
             this,
-            (owner != null) ? (JavaClass) fTypeMap.get(owner) : (JavaClass) null,
+            owner != null ? fTypeMap.get(owner) : null,
             getAnnotations(type));
 
     if (getParent().lookupClass(javaClass.getName()) != null) {
@@ -697,7 +696,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public AstJavaInvokeInstruction JavaInvokeInstruction(
-        int iindex, int result[], int[] params, int exception, CallSiteReference site) {
+        int iindex, int[] result, int[] params, int exception, CallSiteReference site) {
       return result == null
           ? new AstJavaInvokeInstruction(iindex, params, exception, site)
           : new AstJavaInvokeInstruction(iindex, result[0], params, exception, site);

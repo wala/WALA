@@ -118,8 +118,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -291,20 +290,15 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
             @Override
             public SSAPutInstruction PutInstruction(int iindex, int ref, int value, String field) {
-              try {
-                byte[] utf8 = field.getBytes("UTF-8");
-                return PutInstruction(
-                    iindex,
-                    ref,
-                    value,
-                    FieldReference.findOrCreate(
-                        JavaScriptTypes.Root,
-                        Atom.findOrCreate(utf8, 0, utf8.length),
-                        JavaScriptTypes.Root));
-              } catch (UnsupportedEncodingException e) {
-                Assertions.UNREACHABLE();
-                return null;
-              }
+              byte[] utf8 = field.getBytes(StandardCharsets.UTF_8);
+              return PutInstruction(
+                  iindex,
+                  ref,
+                  value,
+                  FieldReference.findOrCreate(
+                      JavaScriptTypes.Root,
+                      Atom.findOrCreate(utf8, 0, utf8.length),
+                      JavaScriptTypes.Root));
             }
 
             @Override
@@ -865,7 +859,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       AbstractCFG<?, ?> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo) {
@@ -880,7 +874,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       AbstractCFG<?, ?> cfg,
       SymbolTable symtab,
       boolean hasCatchBlock,
-      Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+      Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
       boolean hasMonitorOp,
       AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo,
@@ -907,7 +901,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       new CoreClass(
           JavaScriptTypes.Primitives.getName(), JavaScriptTypes.Root.getName(), this, null);
 
-  final CoreClass FAKEROOT =
+  final CoreClass FAKE_ROOT =
       new CoreClass(JavaScriptTypes.FakeRoot.getName(), JavaScriptTypes.Root.getName(), this, null);
 
   final CoreClass STRING =

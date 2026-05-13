@@ -63,7 +63,7 @@ public class GenericMemberClasses<T>
     public void remove() {
 		}
     }
-    public static void main(String args[]) {
+    public static void main(String[] args) {
     	(new GenericMemberClasses<>()).doit();
     }
     

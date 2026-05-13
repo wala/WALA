@@ -52,10 +52,8 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
     options.compilerArgumentProviders.run {
       add {
         listOf(
-            "-source",
-            sourceCompatibility,
-            "-target",
-            targetCompatibility,
+            "--release",
+            options.release.get().toString(),
             "-properties",
             jdtPrefs.toString(),
             "-classpath",

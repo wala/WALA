@@ -21,7 +21,7 @@
 public class InnerClassA {
 	int a_x;
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		// prints out 5 5 9 7 5 5 7 5 7 5
 		InnerClassA a = new InnerClassA();
 		AA aa = a.new AA();

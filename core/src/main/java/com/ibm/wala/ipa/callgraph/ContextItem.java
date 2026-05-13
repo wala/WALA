@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph;
 
+import java.util.Objects;
+
 /** A placeholder for strong typing. */
 public interface ContextItem {
 
@@ -39,10 +41,7 @@ public interface ContextItem {
       if (this == obj) return true;
       if (obj == null) return false;
       if (getClass() != obj.getClass()) return false;
-      Value<?> other = (Value<?>) obj;
-      if (v == null) {
-        if (other.v != null) return false;
-      } else if (!v.equals(other.v)) return false;
+      if (!Objects.equals(v, ((Value<?>) obj).v)) return false;
       return true;
     }
   }

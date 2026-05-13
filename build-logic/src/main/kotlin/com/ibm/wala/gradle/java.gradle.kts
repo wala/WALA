@@ -3,7 +3,6 @@ package com.ibm.wala.gradle
 // Build configuration for subprojects that include Java source code.
 
 import net.ltgt.gradle.errorprone.errorprone
-import org.gradle.jvm.toolchain.JvmVendorSpec
 
 plugins {
   eclipse
@@ -19,7 +18,7 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
-jacoco.toolVersion = "0.8.13"
+jacoco.toolVersion = "0.8.14"
 
 repositories {
   mavenCentral()
@@ -29,22 +28,18 @@ repositories {
 
 java.toolchain {
   languageVersion = JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
-  // We prefer a toolchain that includes jmod files for the Java standard library, like Azul Zulu.
-  // Temurin does not include jmod files as of their JDK 24 builds.
-  vendor = JvmVendorSpec.AZUL
 }
 
 base.archivesName = "com.ibm.wala${path.replace(':', '.')}"
 
 configurations {
   resolvable("ecj")
-  named("javadocClasspath") { extendsFrom(compileClasspath.get()) }
+  named("javadocClasspath") { extendsFrom(compileClasspath) }
 }
 
 dependencies {
   "ecj"(catalogLibrary("eclipse-ecj"))
   "errorprone"(catalogLibrary("errorprone-core"))
-  "javadocSource"(sourceSets.main.get().allJava)
 
   testFixturesImplementation(platform(catalogLibrary("junit-bom")))
 
@@ -56,7 +51,7 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
-  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(25) }
+  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(26) }
   // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
   options.run {
     isDeprecation = true
@@ -72,6 +67,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("AssertEqualsArgumentOrderChecker")
       error("ArgumentSelectionDefectChecker")
       // checks we do not intend to try to fix in the near-term:
+      disable("LabelledBreakTarget")
       // Just too many of these; proper Javadoc would be a great long-term goal
       disable("MissingSummary")
       // WALA has many optimizations involving using == to check reference equality.  They
@@ -117,25 +113,27 @@ tasks.named<Test>("test") {
                 .joinToString(",", postfix = "\n")
         )
 
-    afterTest(
-        KotlinClosure2<TestDescriptor, TestResult, Unit>({ descriptor, result ->
-          csvResultsFile.get().let {
-            if (!it.exists()) {
-              it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
+    addTestListener(
+        object : TestListener {
+          override fun afterTest(descriptor: TestDescriptor, result: TestResult) {
+            csvResultsFile.get().let {
+              if (!it.exists()) {
+                it.appendRow("trial", "className", "name", "resultType", "startTime", "endTime")
+              }
+              it.appendRow(
+                  trial,
+                  descriptor.className!!,
+                  "\"${descriptor.name}\"",
+                  result.resultType,
+                  result.startTime,
+                  result.endTime,
+              )
             }
-            it.appendRow(
-                trial,
-                descriptor.className!!,
-                "\"${descriptor.name}\"",
-                result.resultType,
-                result.startTime,
-                result.endTime,
-            )
           }
-        })
+        }
     )
   } else {
-    maxParallelForks = Runtime.getRuntime().availableProcessors().div(2).takeIf { it > 0 } ?: 1
+    maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
   }
 }
 

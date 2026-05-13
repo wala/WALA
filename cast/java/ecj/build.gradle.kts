@@ -12,7 +12,7 @@ walaEclipseMavenCentral.implementation(
     "org.eclipse.jdt.core",
 )
 
-val runSourceDirectory by configurations.registering { isCanBeConsumed = false }
+val runSourceDirectory = configurations.register("runSourceDirectory") { isCanBeConsumed = false }
 
 dependencies {
   implementation(libs.eclipse.ecj)
@@ -21,9 +21,7 @@ dependencies {
   implementation(projects.core)
   implementation(projects.shrike)
   implementation(projects.util)
-  runSourceDirectory(
-      project(mapOf("path" to ":cast:java:test:data", "configuration" to "testJavaSourceDirectory"))
-  )
+  runSourceDirectory(project(":cast:java:test:data", "testJavaSourceDirectory"))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
@@ -32,8 +30,8 @@ dependencies {
 
 application.mainClass = "com.ibm.wala.cast.java.ecj.util.SourceDirCallGraph"
 
-val run by
-    tasks.existing(JavaExec::class) {
+val run =
+    tasks.named<JavaExec>("run") {
       val runSourceDirectoryPath = runSourceDirectory.map { it.singleFile }
       inputs.dir(runSourceDirectoryPath)
       // this is for testing purposes

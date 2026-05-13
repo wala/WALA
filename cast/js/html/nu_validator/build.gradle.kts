@@ -1,10 +1,10 @@
 plugins { id("com.ibm.wala.gradle.java") }
 
-val extraTestResources by configurations.registering { isCanBeConsumed = false }
+val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
 
 dependencies {
   api(projects.cast.js)
-  extraTestResources(project(mapOf("path" to ":cast:js", "configuration" to "testResources")))
+  extraTestResources(project(":cast:js", "testResources"))
   implementation(libs.htmlparser)
   implementation(projects.cast)
   implementation(projects.util)

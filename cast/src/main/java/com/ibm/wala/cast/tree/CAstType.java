@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 public interface CAstType {
-  /** Returns the fully-qualified (e.g. bytecode-compliant for Java) type name. */
+  /** Returns the fully-qualified (e.g., bytecode-compliant for Java) type name. */
   String getName();
 
   Collection<CAstType> getSupertypes();

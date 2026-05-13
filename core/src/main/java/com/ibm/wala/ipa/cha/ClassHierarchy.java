@@ -72,7 +72,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Languages that contribute classes to the set represented in this hierarchy. The languages may
-   * for example be related by inheritance (e.g. X10 derives from Java, and shares a common type
+   * for example be related by inheritance (e.g., X10 derives from Java, and shares a common type
    * hierarchy rooted at java.lang.Object).
    */
   private final Set<Language> languages = HashSetFactory.make();
@@ -82,7 +82,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * Node}
    *
    * <p>Note that this class provides an iterator() over this map, and that some WALA utilities
-   * (e.g. ReferenceCleanser) must iterate over all classes. But also note that the class hierarchy
+   * (e.g., ReferenceCleanser) must iterate over all classes. But also note that the class hierarchy
    * is mutable (addClass()). So, when trying to run multiple threads, we could see a race condition
    * between iterator() and addClass(). With a normal {@link HashMap}, this would result in a {@link
    * ConcurrentModificationException}. But with a {@link ConcurrentHashMap}, at least the code
@@ -716,7 +716,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * n1 is a child of n2 iff n2.left &lt;= n1.left ^ n1.left &lt;= n2.right. Described as "relative
    * numbering" by Vitek, Horspool, and Krall, OOPSLA 97
    *
-   * <p>TODO: this implementation is recursive; un-recursify if needed
+   * <p>TODO: this implementation is recursive; make non-recursive if needed
    */
   private int nextNumber = 1;
 
@@ -1185,9 +1185,10 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we
-   *     return array classes B[][]...[] (same dimensionality) where B is an immediate subclass of
-   *     A. If A is primitive, we return the empty set.
+   * @return the classes that immediately extend klass. If {@code klass} is an array class {@code
+   *     A[][]...[]}, we return array classes {@code B[][]...[]} (same dimensionality) where {@code
+   *     B} is an immediate subclass of {@code A}. If {@code A} is primitive, we return the empty
+   *     set.
    */
   @Override
   public Collection<IClass> getImmediateSubclasses(IClass klass) {

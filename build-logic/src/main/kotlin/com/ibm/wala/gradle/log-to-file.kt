@@ -31,7 +31,7 @@ fun <T> T.logToFile(baseName: String) where T : Task, T : BaseExecSpec =
       // then `doLast` will not run, so the stream will remain open until the garbage collector
       // reclaims it. See also
       // <https://discuss.gradle.org/t/close-fileoutputstream-after-javaexec-task/51592> for
-      // disucssion of alternative approaches and
+      // discussion of alternative approaches and
       // <https://github.com/gradle/gradle/issues/35066> for a Gradle feature request that would
       // make a robust implementation much easier.
       doLast { standardOutput.close() }

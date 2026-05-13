@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class GenericSuperSink {
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		(new GenericSuperSink()).doit();
 	}
 	

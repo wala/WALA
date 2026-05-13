@@ -113,7 +113,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
     String javaJarPath = getJavaJar(javaScope);
     File androidDex = convertJarToDex(javaJarPath);
     Pair<CallGraph, PointerAnalysis<InstanceKey>> android =
-        makeDalvikCallGraph(null, null, mainClass, androidDex.toPath().toAbsolutePath());
+        makeDalvikCallGraph(null, mainClass, androidDex.toPath().toAbsolutePath());
 
     Set<MethodReference> androidMethods = applicationMethods(android.fst);
     Set<MethodReference> javaMethods = applicationMethods(java.fst);

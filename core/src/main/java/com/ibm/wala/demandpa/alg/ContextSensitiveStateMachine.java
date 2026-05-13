@@ -218,8 +218,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   }
 
   @Override
-  public State transition(State prevState, IFlowLabel label)
-      throws IllegalArgumentException, IllegalArgumentException {
+  public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
     if (prevState == null) {
       throw new IllegalArgumentException("prevState == null");
     }

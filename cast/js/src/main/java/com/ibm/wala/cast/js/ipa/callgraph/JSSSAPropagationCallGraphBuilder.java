@@ -86,8 +86,8 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 /**
@@ -206,16 +206,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   private static final FieldReference prototypeRef;
 
   static {
-    FieldReference x = null;
-    try {
-      byte[] utf8 = "__proto__".getBytes("UTF-8");
-      x =
-          FieldReference.findOrCreate(
-              JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
-    } catch (UnsupportedEncodingException e) {
-      assert false;
-    }
-    prototypeRef = x;
+    byte[] utf8 = "__proto__".getBytes(StandardCharsets.UTF_8);
+    prototypeRef =
+        FieldReference.findOrCreate(
+            JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
   }
 
   public PointerKey getPointerKeyForGlobalVar(String varName) {
@@ -357,9 +351,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         InstanceKey globalObj =
             ((AstSSAPropagationCallGraphBuilder) jsAnalysis.builder)
                 .getGlobalObject(JavaScriptTypes.jsName);
-        PointerKey fkey = analysis.getHeapModel().getPointerKeyForInstanceField(globalObj, f);
-        if (fkey != null) {
-          OrdinalSet<InstanceKey> pointees = analysis.getPointsToSet(fkey);
+        PointerKey fKey = analysis.getHeapModel().getPointerKeyForInstanceField(globalObj, f);
+        if (fKey != null) {
+          OrdinalSet<InstanceKey> pointees = analysis.getPointsToSet(fKey);
           IntSet set = pointees.getBackingSet();
           if (set != null) {
             S.addAll(set);
@@ -618,7 +612,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           };
 
       TransitivePrototypeKey prototypeObjs = new TransitivePrototypeKey(receiverType);
-      InstanceKey[] objKeys = new InstanceKey[] {receiverType};
+      InstanceKey[] objKeys = {receiverType};
       if (contentsAreInvariant(symbolTable, du, functionVn)) {
         InstanceKey[] fieldsKeys = getInvariantContents(functionVn);
         newFieldOperationObjectAndFieldConstant(true, fieldDispatchAction, objKeys, fieldsKeys);
@@ -1056,15 +1050,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // the first two arguments are the function object and the receiver, neither of which
     // should become part of the arguments array
-    int num_pseudoargs = 2;
+    int numPseudoArgs = 2;
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn =
-          new InstanceKey[] {
-            builder.getInstanceKeyForConstant(
-                JavaScriptTypes.String, String.valueOf(i - num_pseudoargs))
-          };
+      InstanceKey[] fn = {
+        builder.getInstanceKeyForConstant(JavaScriptTypes.String, String.valueOf(i - numPseudoArgs))
+      };
       PointerKey F = builder.getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -1072,7 +1064,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           builder.getSystem().newConstraint(F, constParams[i][j]);
         }
 
-        if (av != -1 && i >= num_pseudoargs) {
+        if (av != -1 && i >= numPseudoArgs) {
           targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
         }
 
@@ -1083,7 +1075,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
             .newConstraint(
                 F, (F instanceof FilteredPointerKey) ? builder.filterOperator : assignOperator, A);
 
-        if (av != -1 && i >= num_pseudoargs) {
+        if (av != -1 && i >= numPseudoArgs) {
           targetVisitor.newFieldWrite(target, av, fn, F);
         }
       }
@@ -1093,14 +1085,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn =
-              new InstanceKey[] {
-                builder.getInstanceKeyForConstant(
-                    JavaScriptTypes.String, String.valueOf(i - num_pseudoargs))
-              };
-          if (constParams != null && constParams[i] != null && i >= num_pseudoargs) {
+          InstanceKey[] fn = {
+            builder.getInstanceKeyForConstant(
+                JavaScriptTypes.String, String.valueOf(i - numPseudoArgs))
+          };
+          if (constParams != null && constParams[i] != null && i >= numPseudoArgs) {
             targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
-          } else if (i >= num_pseudoargs) {
+          } else if (i >= numPseudoArgs) {
             PointerKey A = builder.getPointerKeyForLocal(caller, instruction.getUse(i));
             targetVisitor.newFieldWrite(target, av, fn, A);
           }
@@ -1110,26 +1101,22 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // extra formal parameters get null (extra args are ignored here)
     else if (argCount < paramCount) {
-      int nullvn = sourceST.getNullConstant();
+      int nullVN = sourceST.getNullConstant();
       DefUse sourceDU = builder.getCFAContextInterpreter().getDU(caller);
-      InstanceKey[] nullkeys =
-          builder.getInvariantContents(sourceST, sourceDU, caller, nullvn, builder);
+      InstanceKey[] nullKeys =
+          builder.getInvariantContents(sourceST, sourceDU, caller, nullVN, builder);
       for (int i = argCount; i < paramCount; i++) {
         PointerKey F = builder.getPointerKeyForLocal(target, targetST.getParameter(i));
-        for (InstanceKey nullkey : nullkeys) {
-          builder.getSystem().newConstraint(F, nullkey);
+        for (InstanceKey nullKey : nullKeys) {
+          builder.getSystem().newConstraint(F, nullKey);
         }
       }
     }
 
     // write `length' in argument objects
     if (av != -1) {
-      InstanceKey[] svn =
-          new InstanceKey[] {
-            builder.getInstanceKeyForConstant(JavaScriptTypes.Number, argCount - 1)
-          };
-      InstanceKey[] lnv =
-          new InstanceKey[] {builder.getInstanceKeyForConstant(JavaScriptTypes.String, "length")};
+      InstanceKey[] svn = {builder.getInstanceKeyForConstant(JavaScriptTypes.Number, argCount - 1)};
+      InstanceKey[] lnv = {builder.getInstanceKeyForConstant(JavaScriptTypes.String, "length")};
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
 

@@ -120,7 +120,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    * @param cg the call graph
    */
   public AbstractInterproceduralCFG(CallGraph cg) {
-    this(cg, IndiscriminateFilter.<CGNode>singleton());
+    this(cg, IndiscriminateFilter.singleton());
   }
 
   /**

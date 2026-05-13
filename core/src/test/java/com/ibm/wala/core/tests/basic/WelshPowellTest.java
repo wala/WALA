@@ -21,23 +21,26 @@ import com.ibm.wala.util.graph.impl.NodeWithNumberedEdges;
 import com.ibm.wala.util.graph.traverse.WelshPowell;
 import com.ibm.wala.util.graph.traverse.WelshPowell.ColoredVertices;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
 public class WelshPowellTest {
 
-  public static <T> void assertColoring(Graph<T> G, Map<T, Integer> colors, boolean fullColor) {
+  public static <T> void assertColoring(
+      Graph<T> G, Map<T, @NonNull Integer> colors, boolean fullColor) {
     for (T n : G) {
+      Integer nColor = colors.get(n);
       for (T succ : Iterator2Iterable.make(G.getSuccNodes(n))) {
-        if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(succ))) {
-          continue;
+        Integer succColor = colors.get(succ);
+        if (fullColor || (nColor != null && succColor != null)) {
+          assertThat(nColor).isNotEqualTo(succColor);
         }
-        assertThat(colors.get(n).intValue()).isNotEqualTo(colors.get(succ).intValue());
       }
       for (T pred : Iterator2Iterable.make(G.getPredNodes(n))) {
-        if (!fullColor && (!colors.containsKey(n) || !colors.containsKey(pred))) {
-          continue;
+        Integer predColor = colors.get(pred);
+        if (fullColor || (nColor != null && predColor != null)) {
+          assertThat(nColor).isNotEqualTo(predColor);
         }
-        assertThat(colors.get(n).intValue()).isNotEqualTo(colors.get(pred).intValue());
       }
     }
   }

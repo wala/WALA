@@ -9,12 +9,16 @@ repositories {
   mavenCentral()
 }
 
+private fun Provider<PluginDependency>.asDependency() = map {
+  it.run { "$pluginId:$pluginId.gradle.plugin:${version.requiredVersion}" }
+}
+
 dependencies {
-  implementation(libs.gradle.errorprone.plugin)
-  implementation(libs.gradle.goomph.plugin)
-  implementation(libs.gradle.maven.publish.plugin)
-  implementation(libs.gradle.spotless.plugin)
   implementation(libs.jgit)
+  implementation(libs.plugins.eclipse.mavencentral.asDependency())
+  implementation(libs.plugins.errorprone.asDependency())
+  implementation(libs.plugins.maven.publish.asDependency())
+  implementation(libs.plugins.spotless.asDependency())
 }
 
 kotlin.jvmToolchain(17)

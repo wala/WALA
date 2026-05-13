@@ -15,7 +15,7 @@ public interface IShiftInstruction extends IInstruction {
   enum Operator implements IBinaryOpInstruction.IOperator {
     SHL,
     SHR,
-    USHR;
+    USHR
   }
 
   Operator getOperator();

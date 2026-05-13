@@ -569,7 +569,7 @@ public final class Util {
   }
 
   public static void readFully(InputStream s, byte[] bytes)
-      throws IllegalArgumentException, IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     if (s == null) {
       throw new IllegalArgumentException("s == null");
     }

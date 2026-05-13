@@ -50,7 +50,7 @@ package alreadywalaunittests;
 public class InnerClassAA {
 	int a_x;
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		// prints out 5 5 9 7 5 5 7 5 7 5
 		InnerClassAA a = new InnerClassAA();
 		a.doAllThis();

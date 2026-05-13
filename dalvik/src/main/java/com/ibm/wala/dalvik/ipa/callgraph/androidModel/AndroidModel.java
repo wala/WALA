@@ -99,6 +99,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 // For debug:
 /**
@@ -584,7 +585,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
    * @param callerNd CGNoodle of the caller - may be null
    * @return A wrapper that calls the model
    */
-  public SummarizedMethod getMethodAs(
+  public @NonNull SummarizedMethod getMethodAs(
       MethodReference asMethod,
       TypeReference caller,
       IntentStarters.StartInfo info,
@@ -672,7 +673,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             final SSAValue target =
                 pm.getUnallocated(
                     activityType,
-                    new SSAValue.WeaklyNamedKey(activityType.getName(), "got" + fdName.toString()));
+                    new SSAValue.WeaklyNamedKey(activityType.getName(), "got" + fdName));
             final SSAInstruction getInst =
                 instructionFactory.GetInstruction(instPC, target, field.getReference());
             redirect.addStatement(getInst);
@@ -970,7 +971,7 @@ public class AndroidModel /* makes SummarizedMethod */ implements IClassHierarch
             final int instPC = encap.getNextProgramCounter();
             arg =
                 pm.getUnallocated(
-                    argT, new SSAValue.WeaklyNamedKey(argT.getName(), "got" + fdName.toString()));
+                    argT, new SSAValue.WeaklyNamedKey(argT.getName(), "got" + fdName));
             final SSAInstruction getInst =
                 instructionFactory.GetInstruction(instPC, arg, field.getReference());
             encap.addStatement(getInst);

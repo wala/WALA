@@ -6,8 +6,8 @@ plugins {
   id("com.ibm.wala.gradle.test-subjects")
 }
 
-val compileTestSubjectsJava by
-    tasks.existing(JavaCompile::class) {
+val compileTestSubjectsJava =
+    tasks.named<JavaCompile>("compileTestSubjectsJava") {
       options.run {
         // No need to run Error Prone on our analysis test inputs
         errorprone.isEnabled = false
@@ -18,18 +18,19 @@ val compileTestSubjectsJava by
       }
     }
 
-val testJar by
-    tasks.registering(Jar::class) {
+val testJar =
+    tasks.register<Jar>("testJar") {
       group = "build"
       archiveClassifier = "test"
       from(compileTestSubjectsJava)
     }
 
-val testJarConfig by configurations.registering { isCanBeResolved = false }
+val testJarConfig = configurations.register("testJarConfig") { isCanBeResolved = false }
 
-val testJavaSourceDirectory by configurations.registering { isCanBeResolved = false }
+val testJavaSourceDirectory =
+    configurations.register("testJavaSourceDirectory") { isCanBeResolved = false }
 
-val testSubjects by sourceSets.existing
+val testSubjects = sourceSets.named("testSubjects")
 
 artifacts {
   add(testJarConfig.name, testJar)
@@ -53,8 +54,8 @@ val jLex =
         "java",
     )
 
-val downloadJLex by
-    tasks.registering(Sync::class) {
+val downloadJLex =
+    tasks.register<Sync>("downloadJLex") {
       from(jLex) { eachFile { name = "Main.java" } }
       into(layout.buildDirectory.dir(name))
     }

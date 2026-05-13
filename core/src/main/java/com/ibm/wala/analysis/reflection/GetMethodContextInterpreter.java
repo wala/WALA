@@ -84,7 +84,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
     if (method.getReference().equals(GET_METHOD)) {
       Atom name = Atom.findOrCreateAsciiAtom(((NameItem) context.get(ContextKey.NAME)).name());
-      SSAInstruction instrs[] = makeGetMethodStatements(context, constants, name);
+      SSAInstruction[] instrs = makeGetMethodStatements(context, constants, name);
       return new SyntheticIR(
           method,
           context,
@@ -95,7 +95,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     }
     if (method.getReference().equals(GET_DECLARED_METHOD)) {
       Atom name = Atom.findOrCreateAsciiAtom(((NameItem) context.get(ContextKey.NAME)).name());
-      SSAInstruction instrs[] = makeGetDeclaredMethodStatements(context, constants, name);
+      SSAInstruction[] instrs = makeGetDeclaredMethodStatements(context, constants, name);
       return new SyntheticIR(
           method,
           context,

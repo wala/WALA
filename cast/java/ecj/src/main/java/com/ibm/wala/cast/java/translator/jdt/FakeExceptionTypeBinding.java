@@ -368,22 +368,24 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   public boolean isSubTypeCompatible(ITypeBinding type) {
     String name = type.getBinaryName();
     if (exceptionBinaryName.endsWith("Error;")) {
-      if (name.equals("Ljava/lang/Throwable;")
-          || name.equals("Ljava/lang/Error;")
-          || name.equals(exceptionBinaryName)) {
-        return true;
+      switch (name) {
+        case "Ljava/lang/Error;":
+        case "Ljava/lang/Throwable;":
+          return true;
+        default:
+          return name.equals(exceptionBinaryName);
       }
 
     } else {
-      if (name.equals("Ljava/lang/Throwable;")
-          || name.equals("Ljava/lang/Exception;")
-          || name.equals("Ljava/lang/RuntimeException;")
-          || name.equals(exceptionBinaryName)) {
-        return true;
+      switch (name) {
+        case "Ljava/lang/Exception;":
+        case "Ljava/lang/RuntimeException;":
+        case "Ljava/lang/Throwable;":
+          return true;
+        default:
+          return name.equals(exceptionBinaryName);
       }
     }
-
-    return false;
   }
 
   @Override

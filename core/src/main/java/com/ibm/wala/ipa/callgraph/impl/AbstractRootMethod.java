@@ -64,21 +64,31 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   public final IClassHierarchy cha;
 
-  private final AnalysisOptions options;
-
   protected final IAnalysisCacheView cache;
 
   protected final SSAInstructionFactory insts;
+
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #AbstractRootMethod(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
+  public AbstractRootMethod(
+      MethodReference method,
+      IClass declaringClass,
+      final IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisOptions options,
+      IAnalysisCacheView cache) {
+    this(method, declaringClass, cha, cache);
+  }
 
   public AbstractRootMethod(
       MethodReference method,
       IClass declaringClass,
       final IClassHierarchy cha,
-      AnalysisOptions options,
       IAnalysisCacheView cache) {
     super(method, declaringClass, true, false);
     this.cha = cha;
-    this.options = options;
     this.cache = cache;
     this.insts = declaringClass.getClassLoader().getInstructionFactory();
     if (cache == null) {
@@ -92,25 +102,26 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
   }
 
+  /**
+   * @deprecated to remove unused {@code options} parameter
+   * @see #AbstractRootMethod(MethodReference, IClassHierarchy, IAnalysisCacheView)
+   */
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public AbstractRootMethod(
       MethodReference method,
       final IClassHierarchy cha,
-      AnalysisOptions options,
+      @SuppressWarnings("unused") AnalysisOptions options,
       IAnalysisCacheView cache) {
-    this(
-        method,
-        new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha),
-        cha,
-        options,
-        cache);
+    this(method, cha, cache);
   }
 
-  /**
-   * @see SyntheticMethod#getStatements()
-   */
-  @SuppressWarnings("deprecation")
+  public AbstractRootMethod(
+      MethodReference method, final IClassHierarchy cha, IAnalysisCacheView cache) {
+    this(method, new FakeRootClass(method.getDeclaringClass().getClassLoader(), cha), cha, cache);
+  }
+
   @Override
-  public SSAInstruction[] getStatements(SSAOptions options) {
+  public SSAInstruction[] getStatements() {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     int i = 0;
     for (SSAInstruction ssaInstruction : statements) {
@@ -122,7 +133,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(Context context, SSAOptions options) {
-    SSAInstruction instrs[] = getStatements(options);
+    SSAInstruction[] instrs = getStatements();
     Map<Integer, ConstantValue> constants = null;
     if (!constant2ValueNumber.isEmpty()) {
       constants = HashMapFactory.make(constant2ValueNumber.size());
@@ -182,18 +193,41 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return addAllocation(T, true);
   }
 
-  /** Add a New statement of the given array type and length */
   public SSANewInstruction add1DArrayAllocation(TypeReference T, int length) {
+    return addArrayAllocation(T, 0, new int[] {length});
+  }
+
+  /** Add a New statement of the given array type and length */
+  public SSANewInstruction addArrayAllocation(TypeReference T, int idx, int[] length) {
     int instance = nextLocal++;
     NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-    assert T.isArrayType();
-    assert ((ArrayClass) cha.lookupClass(T)).getDimensionality() == 1;
-    int[] sizes = new int[1];
-    Arrays.fill(sizes, getValueNumberForIntConstant(length));
-    SSANewInstruction result = insts.NewInstruction(statements.size(), instance, ref, sizes);
-    statements.add(result);
-    cache.invalidate(this, Everywhere.EVERYWHERE);
-    return result;
+    if (idx >= length.length) {
+      return insts.NewInstruction(statements.size(), instance, ref);
+    } else {
+      SSANewInstruction result = addArrayAllocation(T.getArrayElementType(), idx + 1, length);
+      assert T.isArrayType() : T;
+      int[] sizes = new int[1];
+      Arrays.fill(sizes, getValueNumberForIntConstant(length[idx]));
+      SSANewInstruction x = insts.NewInstruction(statements.size(), instance, ref, sizes);
+      statements.add(x);
+      insts.ArrayStoreInstruction(
+          statements.size(), instance, getValueNumberForIntConstant(0), result.getDef(), T);
+      result = x;
+      cache.invalidate(this, Everywhere.EVERYWHERE);
+      return result;
+    }
+  }
+
+  public SSANewInstruction addArrayAllocation(TypeReference T) {
+    int numDims = 0;
+    TypeReference X = T;
+    while (X.isArrayType()) {
+      X = X.getArrayElementType();
+      numDims++;
+    }
+    int[] lengths = new int[numDims];
+    Arrays.fill(lengths, 1);
+    return addArrayAllocation(T, 0, lengths);
   }
 
   /** Add a New statement of the given type */
@@ -243,6 +277,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
             int[] sizes = new int[((ArrayClass) cha.lookupClass(T)).getDimensionality()];
             Arrays.fill(sizes, getValueNumberForIntConstant(1));
             ni = insts.NewInstruction(statements.size(), alloc, n, sizes);
+          } else if (cha.lookupClass(e) == null || cha.lookupClass(e).isInterface()) {
+            break;
           } else {
             ni = insts.NewInstruction(statements.size(), alloc, n);
           }
@@ -381,7 +417,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       @Override
       public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
         ArrayList<NewSiteReference> result = new ArrayList<>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions());
+        SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSANewInstruction) {
             SSANewInstruction s = (SSANewInstruction) statement;
@@ -393,7 +429,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
       public Iterator<SSAInstruction> getInvokeStatements() {
         ArrayList<SSAInstruction> result = new ArrayList<>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions());
+        SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
           if (statement instanceof SSAInvokeInstruction) {
             result.add(statement);

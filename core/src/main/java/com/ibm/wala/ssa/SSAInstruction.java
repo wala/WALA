@@ -119,7 +119,7 @@ public abstract class SSAInstruction {
 
   /**
    * Does this instruction define a normal value, as distinct from a set of exceptions possibly
-   * thrown by it (e.g. for invoke instructions).
+   * thrown by it (e.g., for invoke instructions).
    *
    * @return true if the instruction does define a proper value.
    */
@@ -188,7 +188,7 @@ public abstract class SSAInstruction {
    * <p>Depending on the caching policy (see {@link com.ibm.wala.ssa.SSACache}), the governing IR
    * may be deleted to reclaim memory and recomputed as needed. When an IR is recomputed, it also
    * creates fresh SSAInstruction objects that will not equal old ones. Thus, do not compare for
-   * identity SSAInstructions obtained from distinct calls that retrieve cached values (e.g.
+   * identity SSAInstructions obtained from distinct calls that retrieve cached values (e.g.,
    * distinct CGNode.getIR() calls). See <a href="https://github.com/wala/WALA/issues/6">the github
    * issue </a> for details.
    */

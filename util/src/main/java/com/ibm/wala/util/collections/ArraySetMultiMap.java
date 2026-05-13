@@ -79,7 +79,7 @@ public class ArraySetMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
   @Override
   protected Set<V> emptySet() {
-    return ArraySet.<V>empty();
+    return ArraySet.empty();
   }
 
   @Override

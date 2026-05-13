@@ -2,7 +2,6 @@ package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.test.ExtractingToPredictableFileNames;
 import com.ibm.wala.cast.js.test.TestSimplePageCallGraphShape;
 import com.ibm.wala.cast.js.util.FieldBasedCGUtil.BuilderType;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
 
   private void test(String file, List<GraphAssertion> assertions, BuilderType builderType)
-      throws WalaException, Error, CancelException {
+      throws WalaException, CancelException {
     try (ExtractingToPredictableFileNames predictable = new ExtractingToPredictableFileNames()) {
       runTest(file, assertions, builderType);
     }
@@ -32,7 +31,7 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testSkeletonOptimistic() throws WalaException, Error, CancelException {
+  public void testSkeletonOptimistic() throws WalaException, CancelException {
     test(
         "pages/skeleton.html",
         TestSimplePageCallGraphShape.assertionsForSkeleton,
@@ -40,7 +39,7 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testSkeletonWorklist() throws WalaException, Error, CancelException {
+  public void testSkeletonWorklist() throws WalaException, CancelException {
     test(
         "pages/skeleton.html",
         TestSimplePageCallGraphShape.assertionsForSkeleton,
@@ -59,7 +58,7 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testSkeleton2Optimistic() throws WalaException, Error, CancelException {
+  public void testSkeleton2Optimistic() throws WalaException, CancelException {
     test(
         "pages/skeleton2.html",
         TestSimplePageCallGraphShape.assertionsForSkeleton2,
@@ -67,7 +66,7 @@ public class FieldBasedComparisonTest extends AbstractFieldBasedTest {
   }
 
   @Test
-  public void testSkeleton2Worklist() throws WalaException, Error, CancelException {
+  public void testSkeleton2Worklist() throws WalaException, CancelException {
     test(
         "pages/skeleton2.html",
         TestSimplePageCallGraphShape.assertionsForSkeleton2,

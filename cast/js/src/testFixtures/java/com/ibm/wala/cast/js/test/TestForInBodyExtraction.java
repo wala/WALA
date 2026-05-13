@@ -232,14 +232,14 @@ public abstract class TestForInBodyExtraction {
   @Test
   public void test9() {
     testRewriter(
-        "function defglobals(globals) {"
+        "function defGlobals(globals) {"
             + "  for(var p in globals) {"
             + "    (function inner() {"
             + "      this[p] = globals[p];"
             + "    })();"
             + "  }"
             + "}",
-        "function defglobals(globals) {"
+        "function defGlobals(globals) {"
             + "  for(var p in globals) {"
             + "    (function _forin_body_0(p) {"
             + "      (function inner() {"

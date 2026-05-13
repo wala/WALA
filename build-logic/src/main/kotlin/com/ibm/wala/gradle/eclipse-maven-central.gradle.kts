@@ -15,6 +15,10 @@ plugins {
 // WALA uses elsewhere.
 java.toolchain.languageVersion = the<EclipseCompatibleJavaExtension>().languageVersion
 
+// When building Eclipse-compatible code, always generate Java 17 bitcode, and assume a Java 17
+// standard library.
+tasks.withType<JavaCompile>().configureEach { options.release = 17 }
+
 /**
  * WALA-specialized adaptation of
  * [ReleaseConfigurer](https://javadoc.io/doc/com.diffplug.gradle/goomph/latest/com/diffplug/gradle/eclipse/MavenCentralExtension.ReleaseConfigurer.html).

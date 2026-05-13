@@ -53,9 +53,9 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -98,17 +98,16 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public void dynamicCG(File javaJarPath, String mainClass, String... args)
-      throws FileNotFoundException,
-          IOException,
+      throws IOException,
           ClassNotFoundException,
           InvalidClassFileException,
           FailureException,
           SecurityException,
           IllegalArgumentException,
           InterruptedException {
-    File F;
+    File F = Files.createTempFile(temporaryDirectory, "test_jar", ".jar").toFile();
     try (final FileInputStream in = new FileInputStream(javaJarPath)) {
-      F = TemporaryFile.streamToFile(new File("build/test_jar.jar"), in);
+      TemporaryFile.streamToFile(F, in);
     }
     F.deleteOnExit();
     instrument(F.getAbsolutePath());
@@ -130,13 +129,12 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(
-      URI[] androidLibs,
       File androidAPIJar,
       final Path apkFileName,
       IProgressMonitor monitor,
       ReflectionOptions policy)
       throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-    AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, apkFileName);
+    AnalysisScope scope = makeDalvikScope(null, androidAPIJar, apkFileName);
 
     final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 
@@ -187,9 +185,9 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
   }
 
   public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(
-      URI[] androidLibs, File androidAPIJar, String mainClassName, final Path dexFileName)
+      URI[] androidLibs, String mainClassName, final Path dexFileName)
       throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-    AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, dexFileName);
+    AnalysisScope scope = makeDalvikScope(androidLibs, null, dexFileName);
 
     final IClassHierarchy cha = ClassHierarchyFactory.make(scope);
 

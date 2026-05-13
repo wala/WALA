@@ -18,17 +18,22 @@ import java.lang.ref.SoftReference;
 import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.jspecify.annotations.NonNull;
 
 public class ASTNodeFinder {
 
-  private final Map<IFile, SoftReference<ASTNode>> fileASTs = HashMapFactory.make();
+  private final Map<IFile, @NonNull SoftReference<ASTNode>> fileASTs = HashMapFactory.make();
 
   public ASTNode getASTNode(JdtPosition pos) {
-    IFile sourceFile = pos.getEclipseFile();
-    if (!fileASTs.containsKey(sourceFile) || fileASTs.get(sourceFile).get() == null) {
-      fileASTs.put(sourceFile, new SoftReference<>(getAST(sourceFile)));
-    }
-
-    return getOriginalNode(fileASTs.get(sourceFile).get(), pos);
+    return getOriginalNode(
+        fileASTs
+            .compute(
+                pos.getEclipseFile(),
+                (key, priorReference) ->
+                    priorReference == null || priorReference.get() == null
+                        ? new SoftReference<>(getAST(key))
+                        : priorReference)
+            .get(),
+        pos);
   }
 }

@@ -42,6 +42,7 @@ _CAstOperator(OP_BIT_OR)
 _CAstOperator(OP_REL_OR)
 _CAstOperator(OP_BIT_XOR)
 _CAstOperator(OP_REL_XOR)
+_CAstOperator(OP_POW)
 
 #undef _CODE_OPERATORS
 #undef _CPP_OPERATORS

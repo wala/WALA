@@ -68,7 +68,7 @@ public interface TranslatorToCAst {
     }
 
     /**
-     * get a mapping from CAstNodes to the scoped entities (e.g. functions or local classes)
+     * get a mapping from CAstNodes to the scoped entities (e.g., functions or local classes)
      * introduced by those nodes. Also maps {@code null} to those entities not corresponding to any
      * node (e.g nested classes)
      */
@@ -88,7 +88,7 @@ public interface TranslatorToCAst {
       return getParent().top();
     }
 
-    /** associate a child entity with a given CAstNode, e.g. for a function declaration */
+    /** associate a child entity with a given CAstNode, e.g., for a function declaration */
     default void addScopedEntity(CAstNode newNode, CAstEntity visit) {
       getParent().addScopedEntity(newNode, visit);
     }
@@ -274,10 +274,7 @@ public interface TranslatorToCAst {
 
     @Override
     public void addScopedEntity(CAstNode construct, CAstEntity e) {
-      if (!scopedEntities.containsKey(construct)) {
-        scopedEntities.put(construct, new HashSet<>(1));
-      }
-      scopedEntities.get(construct).add(e);
+      scopedEntities.computeIfAbsent(construct, absent -> new HashSet<>(1)).add(e);
     }
 
     @Override

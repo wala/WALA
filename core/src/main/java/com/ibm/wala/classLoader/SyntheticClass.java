@@ -19,6 +19,7 @@ import com.ibm.wala.types.annotations.Annotation;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /** An {@link IClass} that exists nowhere in bytecode. */
 public abstract class SyntheticClass implements IClass {
@@ -50,12 +51,8 @@ public abstract class SyntheticClass implements IClass {
     if (obj == null) return false;
     if (!(obj instanceof SyntheticClass)) return false;
     final SyntheticClass other = (SyntheticClass) obj;
-    if (T == null) {
-      if (other.T != null) return false;
-    } else if (!T.equals(other.T)) return false;
-    if (cha == null) {
-      if (other.cha != null) return false;
-    } else if (!cha.equals(other.cha)) return false;
+    if (!Objects.equals(T, other.T)) return false;
+    if (!Objects.equals(cha, other.cha)) return false;
     return true;
   }
 

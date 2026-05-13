@@ -30,8 +30,6 @@ public class SourceRegion {
 
   private int currentLine = 1;
 
-  public SourceRegion() {}
-
   public void print(final String text, Position originalPos, URL url, boolean bogusURL) {
     int startOffset = source.length();
     source.append(text);

@@ -64,7 +64,7 @@ public class RecursionCheckContextSelector implements ContextSelector {
       return false;
     }
     ArrayDeque<Pair<Context, Collection<IMethod>>> worklist = new ArrayDeque<>();
-    worklist.push(Pair.make(baseContext, (Collection<IMethod>) Collections.singleton(callee)));
+    worklist.push(Pair.make(baseContext, Collections.singleton(callee)));
     while (!worklist.isEmpty()) {
       Pair<Context, Collection<IMethod>> p = worklist.removeFirst();
       Context curContext = p.fst;

@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Computes interprocedural field accesses for a given method.
@@ -62,10 +63,10 @@ public final class ModRefFieldAccess {
 
   private final CallGraph cg;
 
-  private final Map<CGNode, Map<IClass, Set<IField>>> mods;
-  private final Map<CGNode, Map<IClass, Set<IField>>> refs;
-  private final Map<CGNode, Map<IClass, Set<IField>>> tmods;
-  private final Map<CGNode, Map<IClass, Set<IField>>> trefs;
+  private final Map<CGNode, @NonNull Map<IClass, Set<IField>>> mods;
+  private final Map<CGNode, @NonNull Map<IClass, Set<IField>>> refs;
+  private final Map<CGNode, @NonNull Map<IClass, Set<IField>>> tmods;
+  private final Map<CGNode, @NonNull Map<IClass, Set<IField>>> trefs;
 
   private final List<CGNode> done;
 
@@ -104,12 +105,8 @@ public final class ModRefFieldAccess {
   private void run() {
 
     for (CGNode cgNode : cg) {
-      if (!refs.containsKey(cgNode)) {
-        refs.put(cgNode, new HashMap<>());
-      }
-      if (!mods.containsKey(cgNode)) {
-        mods.put(cgNode, new HashMap<>());
-      }
+      Map<IClass, Set<IField>> refsMap = refs.computeIfAbsent(cgNode, absent -> new HashMap<>());
+      Map<IClass, Set<IField>> modsMap = mods.computeIfAbsent(cgNode, absent -> new HashMap<>());
 
       final IR ir = cgNode.getIR();
 
@@ -125,10 +122,7 @@ public final class ModRefFieldAccess {
           if (field != null) {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
-              if (!refs.get(cgNode).containsKey(cls)) {
-                refs.get(cgNode).put(cls, new HashSet<>());
-              }
-              refs.get(cgNode).get(cls).add(field);
+              refsMap.computeIfAbsent(cls, absent -> new HashSet<>()).add(field);
             }
           }
         } else if (instr instanceof SSAPutInstruction) {
@@ -138,10 +132,7 @@ public final class ModRefFieldAccess {
           if (field != null) {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
-              if (!mods.get(cgNode).containsKey(cls)) {
-                mods.get(cgNode).put(cls, new HashSet<>());
-              }
-              mods.get(cgNode).get(cls).add(field);
+              modsMap.computeIfAbsent(cls, absent -> new HashSet<>()).add(field);
             }
           }
         }
@@ -152,12 +143,8 @@ public final class ModRefFieldAccess {
   }
 
   private TwoMaps recAdd(CGNode node) {
-    if (!trefs.containsKey(node)) {
-      trefs.put(node, new HashMap<>());
-    }
-    if (!tmods.containsKey(node)) {
-      tmods.put(node, new HashMap<>());
-    }
+    Map<IClass, Set<IField>> trefsMap = trefs.computeIfAbsent(node, absent -> new HashMap<>());
+    Map<IClass, Set<IField>> tmodsMap = tmods.computeIfAbsent(node, absent -> new HashMap<>());
 
     final IR ir = node.getIR();
     if (ir != null) {
@@ -169,10 +156,7 @@ public final class ModRefFieldAccess {
           if (field != null) {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
-              if (!trefs.get(node).containsKey(cls)) {
-                trefs.get(node).put(cls, new HashSet<>());
-              }
-              trefs.get(node).get(cls).add(field);
+              trefsMap.computeIfAbsent(cls, absent -> new HashSet<>()).add(field);
             }
           }
         } else if (instr instanceof SSAPutInstruction) {
@@ -182,10 +166,7 @@ public final class ModRefFieldAccess {
           if (field != null) {
             IClass cls = field.getDeclaringClass();
             if (cls != null) {
-              if (!tmods.get(node).containsKey(cls)) {
-                tmods.get(node).put(cls, new HashSet<>());
-              }
-              tmods.get(node).get(cls).add(field);
+              tmodsMap.computeIfAbsent(cls, absent -> new HashSet<>()).add(field);
             }
           }
         }
@@ -197,18 +178,31 @@ public final class ModRefFieldAccess {
         done.add(n);
         TwoMaps t = recAdd(n);
         for (IClass c : t.getRefs().keySet()) {
-          if (trefs.get(node).containsKey(c)) {
-            trefs.get(node).get(c).addAll(t.getRefs().get(c));
-          } else {
-            trefs.get(node).put(c, t.getRefs().get(c));
-          }
+          Map<IClass, Set<IField>> setMap = trefs.get(node);
+          setMap.compute(
+              c,
+              (key, priorValue) -> {
+                if (priorValue != null) {
+                  priorValue.addAll(t.getRefs().get(key));
+                  return priorValue;
+                } else {
+                  return t.getRefs().get(key);
+                }
+              });
         }
         for (IClass c : t.getMods().keySet()) {
-          if (tmods.get(node).containsKey(c)) {
-            tmods.get(node).get(c).addAll(t.getMods().get(c));
-          } else {
-            tmods.get(node).put(c, t.getMods().get(c));
-          }
+          tmods
+              .get(node)
+              .compute(
+                  c,
+                  (key, priorValue) -> {
+                    Set<IField> iFields = t.getMods().get(c);
+                    if (priorValue == null) {
+                      return iFields;
+                    }
+                    priorValue.addAll(iFields);
+                    return priorValue;
+                  });
         }
       }
     }

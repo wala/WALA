@@ -13,11 +13,15 @@ package com.ibm.wala.gradle
  * This value is obtained from
  * [the `os.name` system property](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.html#getProperties()).
  */
-val osName: String by extra(System.getProperty("os.name"))
+val osName = System.getProperty("os.name")!!
+
+extra["osName"] = osName
 
 /**
  * Indicates whether the current operating system is Windows.
  *
  * This is determined by checking if the operating system name starts with `"Windows "`.
  */
-@Suppress("unused") val isWindows by extra(osName.startsWith("Windows "))
+val isWindows = osName.startsWith("Windows ")
+
+extra["isWindows"] = isWindows

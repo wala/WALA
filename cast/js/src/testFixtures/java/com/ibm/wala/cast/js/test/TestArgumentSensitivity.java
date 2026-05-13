@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -38,17 +37,13 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
       List.of(
           new GraphAssertion(ROOT, new String[] {"args.js"}),
           new GraphAssertion("args.js", new String[] {"args.js/a"}),
-          new GraphAssertion("args.js/a", new String[] {"args.js/x"}),
+          new GraphAssertion("args.js/a", new String[] {"args.js/x", "!args.js/q"}),
           new GraphAssertion(
               "args.js/a", new String[] {"args.js/y", "args.js/z", "!args.js/wrong"}));
 
   @Test
   public void testArgs()
-      throws IOException,
-          IllegalArgumentException,
-          CancelException,
-          ClassHierarchyException,
-          WalaException {
+      throws IOException, IllegalArgumentException, CancelException, WalaException {
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);
 

@@ -43,21 +43,43 @@ public class AstCallGraph extends ExplicitCallGraph {
 
   public static class AstFakeRoot extends AbstractRootMethod {
 
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #AstFakeRoot(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.7.2")
     public AstFakeRoot(
         MethodReference rootMethod,
         IClass declaringClass,
         IClassHierarchy cha,
-        AnalysisOptions options,
+        @SuppressWarnings("unused") AnalysisOptions options,
         IAnalysisCacheView cache) {
-      super(rootMethod, declaringClass, cha, options, cache);
+      this(rootMethod, declaringClass, cha, cache);
     }
 
     public AstFakeRoot(
         MethodReference rootMethod,
+        IClass declaringClass,
         IClassHierarchy cha,
-        AnalysisOptions options,
         IAnalysisCacheView cache) {
-      super(rootMethod, cha, options, cache);
+      super(rootMethod, declaringClass, cha, cache);
+    }
+
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #AstFakeRoot(MethodReference, IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.7.2")
+    public AstFakeRoot(
+        MethodReference rootMethod,
+        IClassHierarchy cha,
+        @SuppressWarnings("unused") AnalysisOptions options,
+        IAnalysisCacheView cache) {
+      this(rootMethod, cha, cache);
+    }
+
+    public AstFakeRoot(MethodReference rootMethod, IClassHierarchy cha, IAnalysisCacheView cache) {
+      super(rootMethod, cha, cache);
     }
 
     @Override
@@ -78,17 +100,27 @@ public class AstCallGraph extends ExplicitCallGraph {
         MethodReference rootMethod,
         IClass declaringClass,
         IClassHierarchy cha,
-        AnalysisOptions options,
+        @SuppressWarnings("unused") AnalysisOptions options,
         IAnalysisCacheView cache) {
-      super(rootMethod, declaringClass, cha, options, cache);
+      super(rootMethod, declaringClass, cha, cache);
     }
 
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #ScriptFakeRoot(MethodReference, IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.7.2")
     public ScriptFakeRoot(
         MethodReference rootMethod,
         IClassHierarchy cha,
-        AnalysisOptions options,
+        @SuppressWarnings("unused") AnalysisOptions options,
         IAnalysisCacheView cache) {
-      super(rootMethod, cha, options, cache);
+      this(rootMethod, cha, cache);
+    }
+
+    public ScriptFakeRoot(
+        MethodReference rootMethod, IClassHierarchy cha, IAnalysisCacheView cache) {
+      super(rootMethod, cha, cache);
     }
 
     public abstract SSAAbstractInvokeInstruction addDirectCall(

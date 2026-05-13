@@ -54,8 +54,17 @@ import com.ibm.wala.util.intset.IntSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import org.jspecify.annotations.NonNull;
 
 public class ArgumentSpecialization {
+
+  /**
+   * WALA IR adds 2 arguments at function calls, one for the function object itself and one for the
+   * `this` pointer, but the CAstEntities do not have them. Hence, some operations need to have
+   * their notion of argument number adjusted.
+   */
+  private static final int WALA_FUNCTION_AND_THIS_ARGS = 2;
 
   public static class ArgumentSpecializationContextInterpreter
       extends AstContextInsensitiveSSAContextInterpreter {
@@ -195,7 +204,7 @@ public class ArgumentSpecialization {
 
           class FixedArgumentsRewriter extends CAstBasicRewriter<NonCopyingContext> {
             private final CAstEntity e;
-            private final Map<String, CAstNode> argRefs = HashMapFactory.make();
+            private final Map<String, @NonNull CAstNode> argRefs = HashMapFactory.make();
 
             public FixedArgumentsRewriter(CAst Ast) {
               super(Ast, new NonCopyingContext(), false);
@@ -208,15 +217,16 @@ public class ArgumentSpecialization {
             private CAstNode handleArgumentRef(CAstNode n) {
               Object x = n.getValue();
               if (x != null) {
-                if (x instanceof Number && ((Number) x).intValue() < v.getValue() - 2) {
-                  int arg = ((Number) x).intValue() + 2;
+                if (x instanceof Number
+                    && ((Number) x).intValue() < v.getValue() - WALA_FUNCTION_AND_THIS_ARGS) {
+                  int arg = ((Number) x).intValue() + WALA_FUNCTION_AND_THIS_ARGS;
                   if (arg < e.getArgumentCount()) {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(e.getArgumentNames()[arg]));
                   } else {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("$arg" + arg));
                   }
                 } else if ("length".equals(x)) {
-                  return Ast.makeConstant(v.getValue());
+                  return Ast.makeConstant(v.getValue() - WALA_FUNCTION_AND_THIS_ARGS);
                 }
               }
 
@@ -236,10 +246,10 @@ public class ArgumentSpecialization {
                 result = handleArgumentRef(s.getSingle("value"));
 
               } else if ((s = CAstPattern.match(destructuredCallPattern, root)) != null) {
-                if (argRefs.containsKey(s.getSingle("name").getValue().toString())) {
+                CAstNode nameArgRef = argRefs.get(s.getSingle("name").getValue().toString());
+                if (nameArgRef != null) {
                   List<CAstNode> x = new ArrayList<>();
-                  CAstNode ref =
-                      handleArgumentRef(argRefs.get(s.getSingle("name").getValue().toString()));
+                  CAstNode ref = handleArgumentRef(nameArgRef);
                   if (ref != null) {
                     x.add(ref);
                     x.add(Ast.makeConstant("do"));
@@ -318,7 +328,7 @@ public class ArgumentSpecialization {
                 AbstractCFG<SSAInstruction, ? extends IBasicBlock<SSAInstruction>> cfg,
                 SymbolTable symtab,
                 boolean hasCatchBlock,
-                Map<IBasicBlock<SSAInstruction>, TypeReference[]> caughtTypes,
+                Map<IBasicBlock<SSAInstruction>, Set<TypeReference>> caughtTypes,
                 boolean hasMonitorOp,
                 AstLexicalInformation LI,
                 DebuggingInformation debugInfo) {

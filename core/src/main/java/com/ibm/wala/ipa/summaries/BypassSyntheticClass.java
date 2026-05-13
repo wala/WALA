@@ -48,7 +48,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   private final IClassLoader loader;
 
   public BypassSyntheticClass(IClass realType, IClassLoader loader, IClassHierarchy cha)
-      throws NullPointerException, NullPointerException {
+      throws NullPointerException {
     super(TypeReference.findOrCreate(loader.getReference(), getName(realType.getReference())), cha);
     this.loader = loader;
     this.realType = realType;

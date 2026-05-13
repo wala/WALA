@@ -62,7 +62,7 @@ public class IntraproceduralExceptionAnalysis {
    * You can use this method, if you don't have a call graph, but want some exception analysis. But
    * as no pointer analysis is given, we can not consider throw instructions.
    */
-  @Deprecated
+  @Deprecated(forRemoval = true, since = "1.7.2")
   public IntraproceduralExceptionAnalysis(
       IR ir, ExceptionFilter<SSAInstruction> filter, ClassHierarchy cha) {
     this(ir, filter, cha, null, null);

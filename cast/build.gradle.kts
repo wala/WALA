@@ -10,44 +10,42 @@ plugins {
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
-val castCastSharedLibrary by
-    configurations.registering {
+val castCastSharedLibrary =
+    configurations.register("castCastSharedLibrary") {
       isCanBeConsumed = false
       attributes {
         attribute(OPTIMIZED_ATTRIBUTE, false)
-        attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+        attribute(USAGE_ATTRIBUTE, named(NATIVE_RUNTIME))
       }
     }
 
-val castJsJavadocDestinationDirectory by configurations.registering { isCanBeConsumed = false }
+val castJsJavadocDestinationDirectory =
+    configurations.register("castJsJavadocDestinationDirectory") { isCanBeConsumed = false }
 
-val castJsPackageListDirectory by configurations.registering { isCanBeConsumed = false }
+val castJsPackageListDirectory =
+    configurations.register("castJsPackageListDirectory") { isCanBeConsumed = false }
 
-val xlatorTestSharedLibrary by
-    configurations.registering {
+val xlatorTestSharedLibrary =
+    configurations.register("xlatorTestSharedLibrary") {
       isCanBeConsumed = false
       isTransitive = false
       attributes {
         attribute(OPTIMIZED_ATTRIBUTE, false)
-        attribute(USAGE_ATTRIBUTE, objects.named(Usage::class, NATIVE_RUNTIME))
+        attribute(USAGE_ATTRIBUTE, named(NATIVE_RUNTIME))
       }
     }
 
 dependencies {
+  api(libs.guava)
   api(projects.core) {
     because("public method AstCGNode.addTarget receives an argument of type CGNode")
   }
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
-  implementation(libs.guava)
-  castJsJavadocDestinationDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "javadocDestinationDirectory"))
-  )
+  castJsJavadocDestinationDirectory(project(":cast:js", "javadocDestinationDirectory"))
   castCastSharedLibrary(projects.cast.cast)
-  castJsPackageListDirectory(
-      project(mapOf("path" to ":cast:js", "configuration" to "packageListDirectory"))
-  )
+  castJsPackageListDirectory(project(":cast:js", "packageListDirectory"))
   javadocClasspath(projects.cast.js)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.core)
@@ -59,7 +57,7 @@ dependencies {
   xlatorTestSharedLibrary(projects.cast.xlatorTest)
 }
 
-val castHeaderDirectory by configurations.registering { isCanBeResolved = false }
+val castHeaderDirectory = configurations.register("castHeaderDirectory") { isCanBeResolved = false }
 
 artifacts.add(
     castHeaderDirectory.name,

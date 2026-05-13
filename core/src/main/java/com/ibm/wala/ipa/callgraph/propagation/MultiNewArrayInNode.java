@@ -26,8 +26,7 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
    * @return null if the element type is a primitive
    * @throws IllegalArgumentException if T == null
    */
-  private static IClass myElementType(ArrayClass T, int d)
-      throws IllegalArgumentException, IllegalArgumentException {
+  private static IClass myElementType(ArrayClass T, int d) throws IllegalArgumentException {
     if (T == null) {
       throw new IllegalArgumentException("T == null");
     }

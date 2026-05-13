@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.util.collections.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A Combination of 2 {@link SSAPiNodePolicy}s. This policy will insert Pi nodes if either of two
@@ -84,12 +85,8 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     final CompoundPiPolicy other = (CompoundPiPolicy) obj;
-    if (p1 == null) {
-      if (other.p1 != null) return false;
-    } else if (!p1.equals(other.p1)) return false;
-    if (p2 == null) {
-      if (other.p2 != null) return false;
-    } else if (!p2.equals(other.p2)) return false;
+    if (!Objects.equals(p1, other.p1)) return false;
+    if (!Objects.equals(p2, other.p2)) return false;
     return true;
   }
 

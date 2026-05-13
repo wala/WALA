@@ -56,11 +56,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
-    if (site.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-      if (result != -1) {
-        assert result == -1 : "bogus call to " + site;
-      }
-    }
+    assert !site.getDeclaredTarget().getReturnType().equals(TypeReference.Void) || result == -1
+        : "bogus call to " + site;
 
     int nExpected = 0;
     if (!site.isStatic()) {
@@ -70,15 +67,13 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     nExpected += site.getDeclaredTarget().getNumberOfParameters();
     if (nExpected > 0) {
       assert params != null : "null params for " + site;
-      if (params.length != nExpected) {
-        assert params.length == nExpected
-            : "wrong number of params for "
-                + site
-                + " Expected "
-                + nExpected
-                + " got "
-                + params.length;
-      }
+      assert params.length == nExpected
+          : "wrong number of params for "
+              + site
+              + " Expected "
+              + nExpected
+              + " got "
+              + params.length;
     }
   }
 
@@ -131,9 +126,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
    */
   @Override
   public int getUse(int j) {
-    if (params == null) {
-      assert false : "Invalid getUse: " + j + " , null params " + this;
-    }
+    assert params != null : "Invalid getUse: " + j + " , null params " + this;
     if (j >= params.length) {
       throw new ArrayIndexOutOfBoundsException(
           "Invalid getUse: " + this + ", index " + j + ", params.length " + params.length);

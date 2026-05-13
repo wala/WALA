@@ -37,8 +37,6 @@ public class FloatingPointsTest extends WalaTestCase {
   private Path instrumentedJarLocation;
   private List<ClassInstrumenter> classInstrumenters;
 
-  public FloatingPointsTest() {}
-
   @BeforeEach
   public void setOfflineInstrumenter(@TempDir final Path tmpDir) throws IOException {
     // Create a temporary file for the shrike instrumented output

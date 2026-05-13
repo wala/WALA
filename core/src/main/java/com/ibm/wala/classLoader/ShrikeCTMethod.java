@@ -240,7 +240,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       }
     }
 
-    Position pos[] = null;
+    Position[] pos = null;
     try {
       pos = SourcePositionTableReader.makeBytecodeToPositionMap(cr);
     } catch (IOException e) {

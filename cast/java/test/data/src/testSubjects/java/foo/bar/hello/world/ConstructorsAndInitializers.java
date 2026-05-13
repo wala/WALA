@@ -96,7 +96,7 @@ public class ConstructorsAndInitializers extends Super {
 		sX = 22;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		System.out.println(new ConstructorsAndInitializers().x.toString()); // yo wassup i say wassup! i say i say -- from an anon class in 99,6: yo
 
 		class T{
@@ -105,4 +105,3 @@ public class ConstructorsAndInitializers extends Super {
 		T t = new T();
 	}
 }
-

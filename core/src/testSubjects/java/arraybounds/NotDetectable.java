@@ -129,7 +129,7 @@ public class NotDetectable {
    *
    * @return sum of all elements in arr
    */
-  public int nonMonotounous(int arr[]) {
+  public int nonMonotounous(int[] arr) {
     int index = 0;
     int sum = 0;
     boolean forward = true;
@@ -147,7 +147,7 @@ public class NotDetectable {
 
   /** Multidimensional Arrays are not supported yet. */
   public int multiDimensional() {
-    int arr[][] = new int[5][10];
+    int[][] arr = new int[5][10];
     return arr[2][3];
   }
 }

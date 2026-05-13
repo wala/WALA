@@ -71,6 +71,7 @@ import java.io.UTFDataFormatException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.jspecify.annotations.NonNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -79,7 +80,7 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
   private int defCounter = 0;
 
   /** Map the known defNum to local def names. */
-  private final Map<Integer, String> localDefs = HashMapFactory.make();
+  private final Map<Integer, @NonNull String> localDefs = HashMapFactory.make();
 
   /** XML document to use for creating elements. */
   private final Document doc;
@@ -424,12 +425,9 @@ public class SSAtoXMLVisitor implements SSAInstruction.IVisitor {
     if (0 == defNum) {
       return "unknown";
     }
-    if (localDefs.containsKey(defNum)) {
-      return localDefs.get(defNum);
-    }
-    return XMLSummaryWriter.A_ARG + (defNum - 1);
-    //        throw new IllegalStateException("defNum: " + defNum
-    //                + " is not defined.");
+    String name = localDefs.get(defNum);
+    return name == null ? XMLSummaryWriter.A_ARG + (defNum - 1) : name;
+    // if (name == null) throw new IllegalStateException("defNum: " + defNum + " is not defined.");
   }
 
   public List<Element> getInstSummary() {

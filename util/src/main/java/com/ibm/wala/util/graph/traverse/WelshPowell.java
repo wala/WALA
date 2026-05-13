@@ -38,7 +38,7 @@ public class WelshPowell<T> {
       return numColors;
     }
 
-    public ColoredVertices(boolean fullColoring, NumberedGraph<T> G, int colors[], int numColors) {
+    public ColoredVertices(boolean fullColoring, NumberedGraph<T> G, int[] colors, int numColors) {
       this(fullColoring, makeMap(G, colors), numColors);
     }
 

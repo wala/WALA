@@ -490,7 +490,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     private int addOriginalStatements(SummarizedMethod m) {
-      SSAInstruction[] original = m.getStatements(options.getSSAOptions());
+      SSAInstruction[] original = m.getStatements();
       // local value number 1 is "this", so the next free value number is 2
       int nextLocal = 2;
       for (SSAInstruction s : original) {

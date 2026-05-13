@@ -35,7 +35,7 @@ public abstract class JavaScriptLoopUnwindingTranslatorFactory
   public TranslatorToCAst make(CAst ast, final ModuleEntry M) {
     String N;
     if (M instanceof SourceFileModule) {
-      N = ((SourceFileModule) M).getClassName();
+      N = M.getClassName();
     } else {
       N = M.getName();
     }
