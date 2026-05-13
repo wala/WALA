@@ -52,6 +52,12 @@ public class CPATest extends WalaTestCase {
     doCPATest("Lcpa/CPATest2", "(Lcpa/CPATest2$N;I)Lcpa/CPATest2$N;");
   }
 
+  @Test
+  public void cpaTest3()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    doCPATest("Lcpa/CPATest3", "(Lcpa/CPATest3$N;)Lcpa/CPATest3$N;");
+  }
+
   private static void doCPATest(String testClass, String testIdSignature)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
