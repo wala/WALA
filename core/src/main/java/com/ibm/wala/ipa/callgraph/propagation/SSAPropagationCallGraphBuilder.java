@@ -75,7 +75,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import java.util.ArrayList;
@@ -556,6 +555,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             rec(pi + 1, rhsi);
           }
         } else {
+          assert getParamObjects != null;
           IntSet s = getParamObjects.apply(pi, rhsi);
           if (s != null && !s.isEmpty()) {
             s.foreach(
@@ -1150,42 +1150,30 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       if (params.isEmpty()) {
-        getBuilder().processTargetsForCall(node, instruction, invariantParameters);
+        getBuilder()
+            .processTargetsForCallWithInvariantParameters(node, instruction, invariantParameters);
       } else {
-        // Add a side effect that will fire when we determine a value
-        // for a dispatch parameter. This side effect will create a new node
+        // Since params is not empty, we need some degree of dispatch, so add a side effect that
+        // will fire
+        // when we determine a value for a dispatch parameter. This side effect will create a new
+        // node
         // and new constraints based on the new callee context.
-        final int[] vns = new int[params.size()];
-        params.foreach(
-            new IntSetAction() {
-              private int i = 0;
+        if (DEBUG) {
+          System.err.println("Add side effect, dispatch to " + instruction + " for " + params);
+        }
 
-              @Override
-              public void act(int x) {
-                vns[i++] = instruction.getUse(x);
+        final List<PointerKey> pks = new ArrayList<>(params.size());
+        params.foreach(
+            x -> {
+              if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
+                pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
               }
             });
 
-        if (contentsAreInvariant(symbolTable, du, vns)) {
-          getBuilder().processTargetsForCall(node, instruction, invariantParameters);
-        } else {
-          if (DEBUG) {
-            System.err.println("Add side effect, dispatch to " + instruction + " for " + params);
-          }
-
-          final List<PointerKey> pks = new ArrayList<>(params.size());
-          params.foreach(
-              x -> {
-                if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
-                  pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
-                }
-              });
-
-          DispatchOperator dispatchOperator =
-              getBuilder()
-              .new DispatchOperator(instruction, node, invariantParameters, uniqueCatch, params);
-          system.newSideEffect(dispatchOperator, pks.toArray(new PointerKey[0]));
-        }
+        DispatchOperator dispatchOperator =
+            getBuilder()
+            .new DispatchOperator(instruction, node, invariantParameters, uniqueCatch, params);
+        system.newSideEffect(dispatchOperator, pks.toArray(new PointerKey[0]));
       }
     }
 
@@ -1797,7 +1785,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                         });
                 cpa.rec(0, 0);
               });
-          previousPtrs[rhsIndex].addAll(currentObjs);
+          changed.b |= previousPtrs[rhsIndex].addAll(currentObjs);
         }
       }
 
@@ -2030,7 +2018,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
   }
 
-  protected void processTargetsForCall(
+  protected void processTargetsForCallWithInvariantParameters(
       final CGNode caller, final SSAAbstractInvokeInstruction instruction, InstanceKey[][] invs) {
     // This method used to take a CallSiteReference as a parameter, rather than
     // an SSAAbstractInvokeInstruction. This was bad, since it's
@@ -2043,16 +2031,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           handleCall(caller, recv, instruction, invs, null, v);
         };
     final InstanceKey[][] invariants = invs;
-    new CrossProductRec(
-            invariants,
-            instruction,
-            caller,
-            handleCallWithSpecificInstanceKeys,
-            (paramIndex, rhsi) -> {
-              int paramVn = instruction.getUse(paramIndex);
-              PointerKey var = getPointerKeyForLocal(caller, paramVn);
-              return system.findOrCreatePointsToSet(var).getValue();
-            })
+    new CrossProductRec(invariants, instruction, caller, handleCallWithSpecificInstanceKeys, null)
         .rec(0, 0);
   }
 
