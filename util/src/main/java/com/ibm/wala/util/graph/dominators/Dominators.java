@@ -299,6 +299,8 @@ public abstract class Dominators<T> {
       Iterator<T> bucketEnum = iterateBucket(getParent(node));
       while (bucketEnum.hasNext()) {
         T node2 = bucketEnum.next();
+        // LT paper step 3: "delete v from bucket(parent(w))".
+        // Otherwise siblings with the same parent reprocess old bucket entries.
         bucketEnum.remove();
 
         // u = EVAL(node2)
