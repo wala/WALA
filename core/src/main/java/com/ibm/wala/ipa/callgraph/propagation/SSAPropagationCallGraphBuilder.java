@@ -10,17 +10,6 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -88,6 +77,16 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
  * This abstract base class provides the general algorithm for a call graph builder that relies on
@@ -1118,7 +1117,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
       PointerKey uniqueCatch =
           hasUniqueCatchBlock(instruction, ir)
-          ? getBuilder().getUniqueCatchKey(instruction, ir, node)
+              ? getBuilder().getUniqueCatchKey(instruction, ir, node)
               : null;
 
       InstanceKey[][] invariantParameters = invs.computeInvariantParameters(instruction);
@@ -1151,10 +1150,13 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       if (params.isEmpty()) {
-        getBuilder().processTargetsForCallWithInvariantParameters(node, instruction, invariantParameters);
+        getBuilder()
+            .processTargetsForCallWithInvariantParameters(node, instruction, invariantParameters);
       } else {
-        // Since params is not empty, we need some degree of dispatch, so add a side effect that will fire 
-        // when we determine a value for a dispatch parameter. This side effect will create a new node
+        // Since params is not empty, we need some degree of dispatch, so add a side effect that
+        // will fire
+        // when we determine a value for a dispatch parameter. This side effect will create a new
+        // node
         // and new constraints based on the new callee context.
         if (DEBUG) {
           System.err.println("Add side effect, dispatch to " + instruction + " for " + params);
@@ -2029,12 +2031,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           handleCall(caller, recv, instruction, invs, null, v);
         };
     final InstanceKey[][] invariants = invs;
-    new CrossProductRec(
-            invariants,
-            instruction,
-            caller,
-            handleCallWithSpecificInstanceKeys,
-            null)
+    new CrossProductRec(invariants, instruction, caller, handleCallWithSpecificInstanceKeys, null)
         .rec(0, 0);
   }
 
