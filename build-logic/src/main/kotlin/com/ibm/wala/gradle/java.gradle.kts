@@ -52,10 +52,10 @@ dependencies {
 tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
   javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(26) }
-  // Generate JDK 11 bytecodes; that is the minimum version supported by WALA
+  // Generate JDK 17 bytecodes; that is the minimum version supported by WALA
   options.run {
     isDeprecation = true
-    release = 11
+    release = 17
     errorprone {
       // don't run warning-level checks by default as they add too much noise to build output
       disableAllWarnings = true

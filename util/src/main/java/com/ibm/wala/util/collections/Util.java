@@ -214,6 +214,7 @@ public class Util {
    *
    * @throws IllegalArgumentException if obj == null
    */
+  @SuppressWarnings("removal")
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
     if (obj == null) {
       throw new IllegalArgumentException("obj == null");

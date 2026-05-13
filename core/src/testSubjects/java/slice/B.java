@@ -12,6 +12,7 @@ package slice;
 
 class B extends A {
   @Override
+  @SuppressWarnings("removal")
   Object foo() {
     return new Float(4);
   }

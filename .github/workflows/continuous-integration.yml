@@ -23,8 +23,6 @@ jobs:
           - os: windows-latest
             java: 17
           - os: ubuntu-latest
-            java: 11
-          - os: ubuntu-latest
             java: 17
           - os: ubuntu-latest
             java: 21
@@ -43,7 +41,6 @@ jobs:
           # Install all the JDK versions we use in the matrix.  We do JDK 26 last to use that
           # to run Gradle.
           java-version: |
-            11
             17
             21
             25
