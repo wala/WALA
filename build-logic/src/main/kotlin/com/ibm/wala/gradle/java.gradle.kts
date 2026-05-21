@@ -178,8 +178,3 @@ if (gradle.parent != null) {
 }
 
 spotless { java { googleJavaFormat(catalogVersion("google-java-format")) } }
-
-// Google Java Format versions 1.25.0 and higher require Java 17
-tasks.named("spotlessJava") {
-  onlyIf { JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17) }
-}

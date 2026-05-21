@@ -348,10 +348,8 @@ tasks.named<Test>("test") {
     exceptionFormat = TestExceptionFormat.FULL
     events("passed", "skipped", "failed")
   }
-  // temporarily turn off some tests on JDK 11+
-  if (JavaVersion.current() >= JavaVersion.VERSION_11) {
-    exclude("**/cha/LibraryVersionTest.class") // https://github.com/wala/WALA/issues/963
-  }
+  // temporarily turn off some tests on JDK 11+: https://github.com/wala/WALA/issues/963
+  exclude("**/cha/LibraryVersionTest.class")
 
   outputs.file(layout.buildDirectory.file("report"))
 }
