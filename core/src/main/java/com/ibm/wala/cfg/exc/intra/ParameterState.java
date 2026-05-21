@@ -120,12 +120,13 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     Set<Entry<Integer, State>> paramsSet = params.entrySet();
 
     for (Entry<Integer, State> param : paramsSet) {
-      switch (param.getValue()) {
-        case BOTH -> buf.append('*');
-        case NOT_NULL -> buf.append('1');
-        case NULL -> buf.append('0');
-        case UNKNOWN -> buf.append('?');
-      }
+      buf.append(
+          switch (param.getValue()) {
+            case BOTH -> '*';
+            case NOT_NULL -> '1';
+            case NULL -> '0';
+            case UNKNOWN -> '?';
+          });
     }
     buf.append('>');
 

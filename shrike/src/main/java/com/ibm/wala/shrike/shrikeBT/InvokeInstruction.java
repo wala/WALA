@@ -39,13 +39,13 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     if (mode == null) {
       throw new NullPointerException("mode must not be null");
     }
-    short opcode = 0;
-    switch (mode) {
-      case VIRTUAL -> opcode = OP_invokevirtual;
-      case SPECIAL -> opcode = OP_invokespecial;
-      case STATIC -> opcode = OP_invokestatic;
-      case INTERFACE -> opcode = OP_invokeinterface;
-    }
+    short opcode =
+        switch (mode) {
+          case VIRTUAL -> OP_invokevirtual;
+          case SPECIAL -> OP_invokespecial;
+          case STATIC -> OP_invokestatic;
+          case INTERFACE -> OP_invokeinterface;
+        };
     return new InvokeInstruction(opcode, type, className, methodName);
   }
 

@@ -277,68 +277,50 @@ public class ParameterAccessor {
 
     @Override
     public String toString() {
-      switch (this.disp) {
-        case THIS -> {
-          return "Implicit this-parameter of "
-              + this.mRef.getName()
-              + " as "
-              + this.type
-              + " accessible using "
-              + "SSA-Value "
-              + this.number;
-        }
-        case PARAM -> {
-          if (this.key instanceof NamedKey) {
-            return "Parameter "
-                + getNumberInDescriptor()
-                + " \""
-                + getVariableName()
-                + "\" of "
+      return switch (this.disp) {
+        case THIS ->
+            "Implicit this-parameter of "
                 + this.mRef.getName()
-                + " is "
+                + " as "
+                + this.type
+                + " accessible using "
+                + "SSA-Value "
+                + this.number;
+        case PARAM ->
+            this.key instanceof NamedKey
+                ? "Parameter "
+                    + getNumberInDescriptor()
+                    + " \""
+                    + getVariableName()
+                    + "\" of "
+                    + this.mRef.getName()
+                    + " is "
+                    + this.type
+                    + " accessible using SSA-Value "
+                    + this.number
+                : "Parameter "
+                    + getNumberInDescriptor()
+                    + " of "
+                    + this.mRef.getName()
+                    + " is "
+                    + this.type
+                    + " accessible using SSA-Value "
+                    + this.number;
+        case RETURN ->
+            "Return Value of "
+                + this.mRef.getName()
+                + " as "
                 + this.type
                 + " accessible using SSA-Value "
                 + this.number;
-          } else {
-            return "Parameter "
-                + getNumberInDescriptor()
-                + " of "
-                + this.mRef.getName()
-                + " is "
+        case NEW ->
+            "New instance of "
                 + this.type
-                + " accessible using SSA-Value "
+                + " accessible in "
+                + this.mRef.getName()
+                + " using number "
                 + this.number;
-          }
-        }
-        case RETURN -> {
-          return "Return Value of "
-              + this.mRef.getName()
-              + " as "
-              + this.type
-              + " accessible using SSA-Value "
-              + this.number;
-        }
-        case NEW -> {
-          return "New instance of "
-              + this.type
-              + " accessible in "
-              + this.mRef.getName()
-              + " using number "
-              + this.number;
-        }
-        default -> {
-          return "Parameter "
-              + getNumberInDescriptor()
-              + " - "
-              + this.disp
-              + " of "
-              + this.mRef.getName()
-              + " as "
-              + this.type
-              + " accessible using SSA-Value "
-              + this.number;
-        }
-      }
+      };
     }
   }
 
@@ -597,21 +579,10 @@ public class ParameterAccessor {
               + this);
     }
 
-    switch (this.base) {
-      case IMETHOD -> {
-        return no + this.implicitThis; // + this.implicitThis; // TODO: Verify
-      }
-      case METHOD_REFERENCE -> {
-        if (this.implicitThis > 0) {
-          return no + this.implicitThis; //
-        } else {
-          return no;
-        }
-      }
-      default ->
-          throw new UnsupportedOperationException(
-              "No implementation of getParameter() for base " + this.base);
-    }
+    return switch (this.base) {
+      case IMETHOD -> no + this.implicitThis; // + this.implicitThis; // TODO: Verify
+      case METHOD_REFERENCE -> this.implicitThis > 0 ? no + this.implicitThis : no;
+    };
   }
 
   /**

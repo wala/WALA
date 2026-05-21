@@ -161,33 +161,23 @@ public final class ClassHierarchy {
     } else if (t1.equals(Constants.TYPE_unknown) || t2.equals(Constants.TYPE_unknown)) {
       return MAYBE;
     } else {
-      switch (t1.charAt(0)) {
-        case 'L' -> {
-          if (t1.equals(Constants.TYPE_null)) {
-            return YES;
-          } else if (t2.startsWith("[")) {
-            return NO;
-          } else if (hierarchy == null) {
-            return MAYBE;
-          } else {
-            return checkSubtypeOfHierarchy(hierarchy, t1, t2);
-          }
-        }
-        case '[' -> {
-          if (t2.equals(Constants.TYPE_Object)
-              || t2.equals("Ljava/io/Serializable;")
-              || t2.equals("Ljava/lang/Cloneable;")) {
-            return YES;
-          } else if (t2.startsWith("[")) {
-            return isSubtypeOf(hierarchy, t1.substring(1), t2.substring(1));
-          } else {
-            return NO;
-          }
-        }
-        default -> {
-          return NO;
-        }
-      }
+      return switch (t1.charAt(0)) {
+        case 'L' ->
+            t1.equals(Constants.TYPE_null)
+                ? YES
+                : t2.startsWith("[")
+                    ? NO
+                    : hierarchy == null ? MAYBE : checkSubtypeOfHierarchy(hierarchy, t1, t2);
+        case '[' ->
+            t2.equals(Constants.TYPE_Object)
+                    || t2.equals("Ljava/io/Serializable;")
+                    || t2.equals("Ljava/lang/Cloneable;")
+                ? YES
+                : t2.startsWith("[")
+                    ? isSubtypeOf(hierarchy, t1.substring(1), t2.substring(1))
+                    : NO;
+        default -> NO;
+      };
     }
   }
 

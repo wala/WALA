@@ -148,50 +148,26 @@ public class StringStuff {
     if (b.length() < i + 1) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
-    switch (b.get(i)) {
-      case TypeReference.VoidTypeCode -> {
-        return TypeReference.Void.getName();
-      }
-      case TypeReference.BooleanTypeCode -> {
-        return TypeReference.Boolean.getName();
-      }
-      case TypeReference.ByteTypeCode -> {
-        return TypeReference.Byte.getName();
-      }
-      case TypeReference.ShortTypeCode -> {
-        return TypeReference.Short.getName();
-      }
-      case TypeReference.IntTypeCode -> {
-        return TypeReference.Int.getName();
-      }
-      case TypeReference.LongTypeCode -> {
-        return TypeReference.Long.getName();
-      }
-      case TypeReference.FloatTypeCode -> {
-        return TypeReference.Float.getName();
-      }
-      case TypeReference.DoubleTypeCode -> {
-        return TypeReference.Double.getName();
-      }
-      case TypeReference.CharTypeCode -> {
-        return TypeReference.Char.getName();
-      }
-      case TypeReference.OtherPrimitiveTypeCode -> {
-        if (b.get(b.length() - 1) == ';') {
-          return l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 2)));
-        } else {
-          return l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 1)));
-        }
-      }
-      case TypeReference.ClassTypeCode, TypeReference.ArrayTypeCode -> {
-        if (b.get(b.length() - 1) == ';') {
-          return TypeName.findOrCreate(b, i, b.length() - i - 1);
-        } else {
-          return TypeName.findOrCreate(b, i, b.length() - i);
-        }
-      }
+    return switch (b.get(i)) {
+      case TypeReference.VoidTypeCode -> TypeReference.Void.getName();
+      case TypeReference.BooleanTypeCode -> TypeReference.Boolean.getName();
+      case TypeReference.ByteTypeCode -> TypeReference.Byte.getName();
+      case TypeReference.ShortTypeCode -> TypeReference.Short.getName();
+      case TypeReference.IntTypeCode -> TypeReference.Int.getName();
+      case TypeReference.LongTypeCode -> TypeReference.Long.getName();
+      case TypeReference.FloatTypeCode -> TypeReference.Float.getName();
+      case TypeReference.DoubleTypeCode -> TypeReference.Double.getName();
+      case TypeReference.CharTypeCode -> TypeReference.Char.getName();
+      case TypeReference.OtherPrimitiveTypeCode ->
+          b.get(b.length() - 1) == ';'
+              ? l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 2)))
+              : l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 1)));
+      case TypeReference.ClassTypeCode, TypeReference.ArrayTypeCode ->
+          b.get(b.length() - 1) == ';'
+              ? TypeName.findOrCreate(b, i, b.length() - i - 1)
+              : TypeName.findOrCreate(b, i, b.length() - i);
       default -> throw new IllegalArgumentException("unexpected type in descriptor " + b);
-    }
+    };
   }
 
   public static TypeName[] parseForParameterNames(String descriptor)

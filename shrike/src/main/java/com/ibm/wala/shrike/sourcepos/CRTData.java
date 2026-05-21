@@ -128,13 +128,13 @@ public final class CRTData {
       range = new Range(source_start, source_end);
     } catch (InvalidRangeException e) {
       final Cause cause = e.getThisCause();
-      switch (cause) {
+      throw switch (cause) {
         case END_BEFORE_START ->
-            throw new InvalidCRTDataException(
+            new InvalidCRTDataException(
                 WARN_END_BEFORE_START, source_start.toString(), source_end.toString());
-        case START_UNDEFINED -> throw new InvalidCRTDataException(WARN_START_UNDEFINED);
-        case END_UNDEFINED -> throw new InvalidCRTDataException(WARN_END_UNDEFINED);
-      }
+        case START_UNDEFINED -> new InvalidCRTDataException(WARN_START_UNDEFINED);
+        case END_UNDEFINED -> new InvalidCRTDataException(WARN_END_UNDEFINED);
+      };
     } finally {
       this.source_positions = range;
     }

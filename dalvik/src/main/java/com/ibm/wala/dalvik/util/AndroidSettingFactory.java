@@ -244,29 +244,15 @@ public class AndroidSettingFactory {
     }
 
     final Atom action = Atom.findOrCreateAsciiAtom(name);
-    final Intent ret;
     Atom mUri = null;
     if (uri != null) {
       mUri = Atom.findOrCreateAsciiAtom(uri);
     }
-    switch (type) {
-      case INTERNAL_TARGET -> {
-        if (uri != null) {
-          ret = new InternalIntent(action, mUri);
-        } else {
-          ret = new InternalIntent(action);
-        }
-      }
-      default -> {
-        if (uri != null) {
-          ret = new StandardIntent(action, mUri);
-        } else {
-          ret = new StandardIntent(action);
-        }
-      }
-    }
-
-    return ret;
+    return switch (type) {
+      case INTERNAL_TARGET ->
+          uri != null ? new InternalIntent(action, mUri) : new InternalIntent(action);
+      default -> uri != null ? new StandardIntent(action, mUri) : new StandardIntent(action);
+    };
   }
 
   //

@@ -284,14 +284,15 @@ public final class TypeName implements Serializable {
             d != 0;
             d >>= ElementBits) {
           final int masked = d & ElementMask;
-          switch (masked) {
-            case ArrayMask -> result.append('[');
-            case PointerMask -> result.append('*');
-            case ReferenceMask -> result.append('&');
-            default ->
-                throw new UnsupportedOperationException(
-                    "unexpected masked type-name component " + masked);
-          }
+          result.append(
+              switch (masked) {
+                case ArrayMask -> '[';
+                case PointerMask -> '*';
+                case ReferenceMask -> '&';
+                default ->
+                    throw new UnsupportedOperationException(
+                        "unexpected masked type-name component " + masked);
+              });
         }
       }
       if (!isPrimitive) {

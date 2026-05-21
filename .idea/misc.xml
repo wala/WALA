@@ -68,4 +68,7 @@
   <component name="TaskProjectConfiguration">
     <server type="GitHub" url="https://github.com" />
   </component>
+  <component name="com.github.lipiridi.spotless.applier.ui.settings.ModuleSettingsState">
+    <option name="applyOnRootProject" value="true" />
+  </component>
 </project>
