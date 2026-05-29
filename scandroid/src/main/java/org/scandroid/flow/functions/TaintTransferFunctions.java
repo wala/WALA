@@ -72,11 +72,11 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.SparseIntSet;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.DomainElement;
 import org.scandroid.domain.FieldElement;
@@ -126,7 +126,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     this.callFlowFunctions =
         CacheBuilder.newBuilder()
             .maximumSize(10000)
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(Duration.ofMinutes(10))
             .build(
                 new CacheLoader<>() {
                   @Override
@@ -137,7 +137,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     this.normalFlowFunctions =
         CacheBuilder.newBuilder()
             .maximumSize(10000)
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(Duration.ofMinutes(10))
             .build(
                 new CacheLoader<>() {
                   @Override
