@@ -177,4 +177,13 @@ if (gradle.parent != null) {
   }
 }
 
-spotless { java { googleJavaFormat(catalogVersion("google-java-format")) } }
+spotless {
+  java {
+    googleJavaFormat(
+        catalogVersion(
+            if (JavaVersion.current() >= JavaVersion.VERSION_21) "google-java-format-jdk21"
+            else "google-java-format"
+        )
+    )
+  }
+}

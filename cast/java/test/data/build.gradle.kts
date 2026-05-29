@@ -37,10 +37,10 @@ artifacts {
   add(testJavaSourceDirectory.name, testSubjects.map { it.java.srcDirs.first() })
 }
 
-// exclude since various tests make assertions based on
-// source positions in the test inputs.  to auto-format
+// Exclude since various tests make assertions based on
+// source positions in the test inputs.  To auto-format
 // we also need to update the test assertions
-spotless { java { targetExclude("**/*") } }
+spotless { java { target(files()) } }
 
 ////////////////////////////////////////////////////////////////////////
 //

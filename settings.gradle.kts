@@ -6,7 +6,7 @@ pluginManagement {
       settings.rootDir.resolve("foojay-resolver-convention-version.txt").readText().trim()
 }
 
-buildscript { dependencies.classpath("com.diffplug.spotless:spotless-lib-extra:4.0.0") }
+buildscript { dependencies.classpath("com.diffplug.spotless:spotless-lib-extra:4.6.1") }
 
 plugins {
   id("com.diffplug.configuration-cache-for-platform-specific-build") version "4.4.0"
