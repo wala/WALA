@@ -21,7 +21,7 @@ eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclip
 #noinspection UnusedVersionCatalogEntry
 errorprone-core = "com.google.errorprone:error_prone_core:2.49.0"
 gson = "com.google.code.gson:gson:2.14.0"
-guava = "com.google.guava:guava:33.5.0-jre"
+guava = "com.google.guava:guava:33.6.0-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
 jericho-html = "net.htmlparser.jericho:jericho-html:3.4"
