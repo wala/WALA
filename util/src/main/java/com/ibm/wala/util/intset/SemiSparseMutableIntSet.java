@@ -69,8 +69,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   private void fixAfterSparseInsert() {
     if (sparsePart.size() % FIX_SPARSE_MOD == FIX_SPARSE_MOD - 1
-        && (densePart == null
-            || (densePart != null && sparsePart.size() > FIX_SPARSE_RATIO * densePart.getSize()))) {
+        && (densePart == null || sparsePart.size() > FIX_SPARSE_RATIO * densePart.getSize())) {
       assert assertDisjoint() : this.toString();
 
       if (densePart == null) {
