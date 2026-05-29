@@ -51,7 +51,7 @@ slf4j-api = "org.slf4j:slf4j-api:2.0.18"
 [plugins]
 dependency-analysis = "com.autonomousapps.dependency-analysis:3.13.0"
 eclipse-mavencentral = "com.diffplug.eclipse.mavencentral:4.4.1"
-errorprone = "net.ltgt.errorprone:4.4.0"
+errorprone = "net.ltgt.errorprone:5.1.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 maven-publish = "com.vanniktech.maven.publish:0.36.0"
 node = "com.github.node-gradle.node:7.1.0"
