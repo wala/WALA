@@ -10,7 +10,7 @@ val compileTestSubjectsJava =
     tasks.named<JavaCompile>("compileTestSubjectsJava") {
       options.run {
         // No need to run Error Prone on our analysis test inputs
-        errorprone.isEnabled = false
+        errorprone.enabled = false
         // Some code in the test data is written in a deliberately bad style, so allow warnings
         compilerArgs.remove("-Werror")
         compilerArgs.add("-nowarn")

@@ -15,7 +15,7 @@ val compileTestSubjectsJavaUsingEcj = JavaCompileUsingEcj.withSourceSet(project,
 tasks {
   named<JavaCompile>("compileTestSubjectsJava") {
     // No need to run Error Prone on our analysis test inputs
-    options.errorprone.isEnabled = false
+    options.errorprone.enabled = false
   }
 
   named("check") { dependsOn(compileTestSubjectsJavaUsingEcj) }
