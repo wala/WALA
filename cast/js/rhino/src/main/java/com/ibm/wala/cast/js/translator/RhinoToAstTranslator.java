@@ -61,6 +61,7 @@ import org.mozilla.javascript.Kit;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.Token;
+import org.mozilla.javascript.ast.AbstractObjectProperty;
 import org.mozilla.javascript.ast.ArrayComprehension;
 import org.mozilla.javascript.ast.ArrayComprehensionLoop;
 import org.mozilla.javascript.ast.ArrayLiteral;
@@ -1218,9 +1219,9 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       for (int i = 5; fn != null && i > 0; i--, fn = fn.getParent()) {
         if (fn instanceof ObjectProperty) {
           ObjectProperty prop = (ObjectProperty) fn;
-          AstNode label = prop.getLeft();
-          if (label instanceof Name) {
-            return label.getString();
+          AstNode key = prop.getKey();
+          if (key instanceof Name) {
+            return key.getString();
           }
         }
       }
@@ -1390,6 +1391,10 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           {
             return Ast.makeConstant(null);
           }
+        case Token.UNDEFINED:
+          {
+            return readName(arg, node, "undefined");
+          }
         default:
           throw new RuntimeException(
               "unexpected keyword literal " + node + " (" + node.getType() + ')');
@@ -1461,18 +1466,19 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public CAstNode visitObjectLiteral(ObjectLiteral n, WalkContext context) {
-      List<ObjectProperty> props = n.getElements();
+      List<AbstractObjectProperty> props = n.getElements();
       List<CAstNode> args = new ArrayList<>(props.size() * 2 + 1);
       args.add(
           (isPrologueScript(context)
               ? makeBuiltinNew("Object")
               : handleNew(context, "Object", null)));
-      for (ObjectProperty prop : props) {
-        AstNode label = prop.getLeft();
-        args.add(
-            (label instanceof Name)
-                ? Ast.makeConstant(prop.getLeft().getString())
-                : visit(label, context));
+      for (AbstractObjectProperty abstractProp : props) {
+        if (!(abstractProp instanceof ObjectProperty)) {
+          continue;
+        }
+        final ObjectProperty prop = (ObjectProperty) abstractProp;
+        final AstNode key = prop.getKey();
+        args.add((key instanceof Name) ? Ast.makeConstant(key.getString()) : visit(key, context));
         args.add(visit(prop, context));
       }
 
@@ -1483,7 +1489,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public CAstNode visitObjectProperty(ObjectProperty node, WalkContext context) {
-      return visit(node.getRight(), context);
+      return visit(node.getValue(), context);
     }
 
     @Override
@@ -2465,13 +2471,17 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       case Token.OBJECTLIT: {
       	CAstNode[] args;
       	if (n instanceof ObjectLiteral) {
-      		List<ObjectProperty> props = ((ObjectLiteral)n).getElements();
-      		args = new CAstNode[props.size() * 2 + 1];
-      		int i = 0;
-      		args[i++] = ((isPrologueScript(context)) ? makeBuiltinNew("Object") : handleNew(context, "Object", null));
-      		for(ObjectProperty prop : props) {
-      			args[i++] = walkNodes(prop.getLeft(), context);
-      			args[i++] = walkNodes(prop.getRight(), context);
+       		List<AbstractObjectProperty> props = ((ObjectLiteral)n).getElements();
+       		args = new CAstNode[props.size() * 2 + 1];
+       		int i = 0;
+       		args[i++] = ((isPrologueScript(context)) ? makeBuiltinNew("Object") : handleNew(context, "Object", null));
+       		for(AbstractObjectProperty abstractProp : props) {
+       			if (!(abstractProp instanceof ObjectProperty)) {
+       			  continue;
+       			}
+       			final ObjectProperty prop = (ObjectProperty) abstractProp;
+       			args[i++] = walkNodes(prop.getKey(), context);
+       			args[i++] = walkNodes(prop.getValue(), context);
       		}
       	} else {
       		Object[] propertyList = (Object[]) n.getProp(Node.OBJECT_IDS_PROP);
