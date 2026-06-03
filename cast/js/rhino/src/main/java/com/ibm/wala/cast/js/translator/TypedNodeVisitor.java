@@ -148,6 +148,9 @@ public abstract class TypedNodeVisitor<R, A> {
       return visitRegExpLiteral((RegExpLiteral) node, arg);
     } else if (node instanceof ReturnStatement) {
       return visitReturnStatement((ReturnStatement) node, arg);
+    } else if (node instanceof SwitchStatement) {
+      // `SwitchStatement` extends `Scope`, so we must check for the former _before_ the latter.
+      return visitSwitchStatement((SwitchStatement) node, arg);
     } else if (node instanceof Scope) {
       return visitScope((Scope) node, arg);
     } else if (node instanceof ScriptNode) {
@@ -156,8 +159,6 @@ public abstract class TypedNodeVisitor<R, A> {
       return visitStringLiteral((StringLiteral) node, arg);
     } else if (node instanceof SwitchCase) {
       return visitSwitchCase((SwitchCase) node, arg);
-    } else if (node instanceof SwitchStatement) {
-      return visitSwitchStatement((SwitchStatement) node, arg);
     } else if (node instanceof ThrowStatement) {
       return visitThrowStatement((ThrowStatement) node, arg);
     } else if (node instanceof TryStatement) {
