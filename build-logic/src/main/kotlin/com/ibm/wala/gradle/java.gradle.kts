@@ -72,6 +72,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("StatementSwitchToExpressionSwitch")
       error("TraditionalSwitchExpression")
       error("UnnecessaryBreakInSwitch")
+      error("UnnecessaryDefaultInEnumSwitch")
       error("UseEnumSwitch")
       // checks we do not intend to try to fix in the near-term:
       disable("LabelledBreakTarget")

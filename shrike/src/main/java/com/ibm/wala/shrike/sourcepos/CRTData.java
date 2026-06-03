@@ -134,9 +134,6 @@ public final class CRTData {
                 WARN_END_BEFORE_START, source_start.toString(), source_end.toString());
         case START_UNDEFINED -> throw new InvalidCRTDataException(WARN_START_UNDEFINED);
         case END_UNDEFINED -> throw new InvalidCRTDataException(WARN_END_UNDEFINED);
-        default ->
-            throw new UnsupportedOperationException(
-                String.format("cannot convert %s into an InvalidCRTDataException", cause));
       }
     } finally {
       this.source_positions = range;

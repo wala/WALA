@@ -125,7 +125,6 @@ public class ParameterState extends AbstractVariable<ParameterState> {
         case NOT_NULL -> buf.append('1');
         case NULL -> buf.append('0');
         case UNKNOWN -> buf.append('?');
-        default -> throw new IllegalStateException();
       }
     }
     buf.append('>');
