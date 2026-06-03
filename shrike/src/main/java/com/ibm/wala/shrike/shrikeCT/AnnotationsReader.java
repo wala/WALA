@@ -298,27 +298,30 @@ public class AnnotationsReader extends AttributeReader {
     // meaning of this short depends on the tag
     int nextShort = cr.getUShort(offset + 1);
     switch (tag) {
-      case 'B':
-      case 'C':
-      case 'I':
-      case 'S':
-      case 'Z':
+      case 'B', 'C', 'I', 'S', 'Z' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPInt(nextShort)), 3);
-      case 'J':
+      }
+      case 'J' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPLong(nextShort)), 3);
-      case 'D':
+      }
+      case 'D' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPDouble(nextShort)), 3);
-      case 'F':
+      }
+      case 'F' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPFloat(nextShort)), 3);
-      case 's': // string
-      case 'c': // class; just represent as a constant element with the type name
-        return Pair.make(new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)), 3);
-      case 'e': // enum
+      } // string
+      case 's', 'c' -> {
+        return Pair.make(
+            new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)),
+            3); // class; just represent as a constant element with the type name
+      }
+      case 'e' -> {
         return Pair.make(
             new EnumElementValue(
                 cr.getCP().getCPUtf8(nextShort), cr.getCP().getCPUtf8(cr.getUShort(offset + 3))),
-            5);
-      case '[': // array
+            5); // enum
+      }
+      case '[' -> {
         @SuppressWarnings("UnnecessaryLocalVariable")
         int numValues = nextShort;
         int numArrayBytes = 3; // start with 3 for the tag and num_values bytes
@@ -333,13 +336,17 @@ public class AnnotationsReader extends AttributeReader {
           numArrayBytes += arrayElemValueAndSize.snd;
         }
         return Pair.make(new ArrayElementValue(vals), numArrayBytes);
-      case '@': // annotation
+      }
+      case '@' -> {
         Pair<AnnotationAttribute, Integer> attributeAndSize = getAttributeAndSize(offset + 1);
         // add 1 to size for the tag
         return Pair.make(attributeAndSize.fst, attributeAndSize.snd + 1);
-      default:
+        // add 1 to size for the tag
+      }
+      default -> {
         assert false;
         return null;
+      }
     }
   }
 

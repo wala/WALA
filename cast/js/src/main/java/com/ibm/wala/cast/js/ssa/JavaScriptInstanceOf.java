@@ -93,14 +93,13 @@ public class JavaScriptInstanceOf extends SSAInstruction {
 
   @Override
   public int getUse(int i) {
-    switch (i) {
-      case 0:
-        return objVal;
-      case 1:
-        return typeVal;
-      default:
+    return switch (i) {
+      case 0 -> objVal;
+      case 1 -> typeVal;
+      default -> {
         Assertions.UNREACHABLE();
-        return -1;
-    }
+        yield -1;
+      }
+    };
   }
 }

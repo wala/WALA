@@ -177,24 +177,13 @@ public class PDFSDG {
 
   private static NodeDecorator<Statement> makeNodeDecorator() {
     return s -> {
-      switch (s.getKind()) {
-        case HEAP_PARAM_CALLEE:
-        case HEAP_PARAM_CALLER:
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
+      return switch (s.getKind()) {
+        case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
           HeapStatement h = (HeapStatement) s;
-          return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-        case EXC_RET_CALLEE:
-        case EXC_RET_CALLER:
-        case NORMAL:
-        case NORMAL_RET_CALLEE:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case PARAM_CALLER:
-        case PHI:
-        default:
-          return s.toString();
-      }
+          yield s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+        }
+        default -> s.toString();
+      };
     };
   }
 

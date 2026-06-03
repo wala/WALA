@@ -261,33 +261,31 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
 
       if (sym.isNullConstant(arg1)) {
         switch (op) {
-          case EQ:
+          case EQ -> {
             noIdentity = true;
             transfer1 = NullPointerState.nullifyFunction(arg2);
             transfer2 = NullPointerState.denullifyFunction(arg2);
-            break;
-          case NE:
+          }
+          case NE -> {
             noIdentity = true;
             transfer1 = NullPointerState.denullifyFunction(arg2);
             transfer2 = NullPointerState.nullifyFunction(arg2);
-            break;
-          default:
-            throw new IllegalStateException("Comparision to a null constant using " + op);
+          }
+          default -> throw new IllegalStateException("Comparision to a null constant using " + op);
         }
       } else if (sym.isNullConstant(arg2)) {
         switch (op) {
-          case EQ:
+          case EQ -> {
             noIdentity = true;
             transfer1 = NullPointerState.nullifyFunction(arg1);
             transfer2 = NullPointerState.denullifyFunction(arg1);
-            break;
-          case NE:
+          }
+          case NE -> {
             noIdentity = true;
             transfer1 = NullPointerState.denullifyFunction(arg1);
             transfer2 = NullPointerState.nullifyFunction(arg1);
-            break;
-          default:
-            throw new IllegalStateException("Comparision to a null constant using " + op);
+          }
+          default -> throw new IllegalStateException("Comparision to a null constant using " + op);
         }
       } else {
         noIdentity = false;

@@ -68,13 +68,11 @@ public class Bench {
         args = instrumenter.parseStandardArgs(args);
         if (args.length > 0) {
           switch (args[0]) {
-            case "-do-exit":
-              doExit = true;
-              break;
-            case "-do-exception":
+            case "-do-exit" -> doExit = true;
+            case "-do-exception" -> {
               doExit = true;
               doException = true;
-              break;
+            }
           }
         }
         instrumenter = new OfflineInstrumenter();

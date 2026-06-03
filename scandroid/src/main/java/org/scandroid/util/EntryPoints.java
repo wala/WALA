@@ -331,16 +331,13 @@ public class EntryPoints {
   }
 
   private ArrayList<String[]> chooseIntentList(String name) {
-    switch (name) {
-      case "receiver":
-        return ReceiverIntentList;
-      case "service":
-        return ServiceIntentList;
-      default:
-        return ActivityIntentList;
+    return switch (name) {
+      case "receiver" -> ReceiverIntentList;
+      case "service" -> ServiceIntentList;
+      default -> ActivityIntentList;
         //          throw new UnimplementedError("EntryPoints intent category not yet covered: " +
         // name);
-    }
+    };
   }
 
   public LinkedList<Entrypoint> getEntries() {

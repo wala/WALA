@@ -50,9 +50,6 @@ public final class MethodPositions extends PositionsAttribute {
   private static final String ERR_END_BEFORE_START =
       "Error in MethodPositions attribute: %2$s (%4$s) is before %1$s (%3$s).";
 
-  private static final String ERR_UNKNOWN_REASON =
-      "Error in MethodPositions attribute: unknown reason %1$s.";
-
   private static final String WARN_INVALID_BLOCK_END =
       "Warning in MethodPositions attribute: Invalid method block end position.";
 
@@ -128,17 +125,10 @@ public final class MethodPositions extends PositionsAttribute {
       } catch (InvalidRangeException e) {
         final Cause thisCause = e.getThisCause();
         switch (thisCause) {
-          case END_BEFORE_START:
-            Debug.warn(ERR_END_BEFORE_START, startVarName, endVarName, start, end);
-            break;
-          case START_UNDEFINED:
-            Debug.warn(ERR_POSITION_UNDEFINED, startVarName);
-            break;
-          case END_UNDEFINED:
-            Debug.warn(ERR_POSITION_UNDEFINED, endVarName);
-            break;
-          default:
-            Debug.warn(ERR_UNKNOWN_REASON, thisCause);
+          case END_BEFORE_START ->
+              Debug.warn(ERR_END_BEFORE_START, startVarName, endVarName, start, end);
+          case START_UNDEFINED -> Debug.warn(ERR_POSITION_UNDEFINED, startVarName);
+          case END_UNDEFINED -> Debug.warn(ERR_POSITION_UNDEFINED, endVarName);
         }
       }
     }
@@ -168,14 +158,17 @@ public final class MethodPositions extends PositionsAttribute {
       pos = new Position(in.readInt());
     } catch (InvalidPositionException e) {
       switch (e.getThisCause()) {
-        case LINE_NUMBER_ZERO:
+        case LINE_NUMBER_ZERO -> {
           Debug.warn(ERR_LINE_ZERO, varName);
           throw e;
-        case COLUMN_NUMBER_ZERO:
+        }
+        case COLUMN_NUMBER_ZERO -> {
           Debug.warn(ERR_COLUMN_ZERO, varName);
           throw e;
-        default:
+        }
+        default -> {
           assert false;
+        }
       }
     }
     return pos;

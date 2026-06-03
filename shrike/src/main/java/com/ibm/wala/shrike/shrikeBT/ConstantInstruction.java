@@ -702,18 +702,13 @@ public abstract class ConstantInstruction extends Instruction {
       return makeClass((String) constant);
     } else {
       try {
-        switch (Util.getTypeIndex(type)) {
-          case TYPE_int_index:
-            return make(((Number) constant).intValue());
-          case TYPE_long_index:
-            return make(((Number) constant).longValue());
-          case TYPE_float_index:
-            return make(((Number) constant).floatValue());
-          case TYPE_double_index:
-            return make(((Number) constant).doubleValue());
-          default:
-            throw new IllegalArgumentException("Invalid type for constant: " + type);
-        }
+        return switch (Util.getTypeIndex(type)) {
+          case TYPE_int_index -> make(((Number) constant).intValue());
+          case TYPE_long_index -> make(((Number) constant).longValue());
+          case TYPE_float_index -> make(((Number) constant).floatValue());
+          case TYPE_double_index -> make(((Number) constant).doubleValue());
+          default -> throw new IllegalArgumentException("Invalid type for constant: " + type);
+        };
       } catch (ClassCastException e) {
         throw new IllegalArgumentException(e);
       }
@@ -745,28 +740,18 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   public static ConstantInstruction make(ConstantPoolReader cp, int index) {
-    switch (cp.getConstantPoolItemType(index)) {
-      case CONSTANT_Integer:
-        return new LazyInt(OP_ldc_w, cp, index);
-      case CONSTANT_Long:
-        return new LazyLong(OP_ldc2_w, cp, index);
-      case CONSTANT_Float:
-        return new LazyFloat(OP_ldc_w, cp, index);
-      case CONSTANT_Double:
-        return new LazyDouble(OP_ldc2_w, cp, index);
-      case CONSTANT_String:
-        return new LazyString(OP_ldc_w, cp, index);
-      case CONSTANT_Class:
-        return new LazyClass(OP_ldc_w, cp, index);
-      case CONSTANT_MethodHandle:
-        return new LazyMethodHandle(OP_ldc_w, cp, index);
-      case CONSTANT_MethodType:
-        return new LazyMethodType(OP_ldc_w, cp, index);
-      case CONSTANT_InvokeDynamic:
-        return new LazyInvokeDynamic(OP_ldc_w, cp, index);
-      default:
-        return null;
-    }
+    return switch (cp.getConstantPoolItemType(index)) {
+      case CONSTANT_Integer -> new LazyInt(OP_ldc_w, cp, index);
+      case CONSTANT_Long -> new LazyLong(OP_ldc2_w, cp, index);
+      case CONSTANT_Float -> new LazyFloat(OP_ldc_w, cp, index);
+      case CONSTANT_Double -> new LazyDouble(OP_ldc2_w, cp, index);
+      case CONSTANT_String -> new LazyString(OP_ldc_w, cp, index);
+      case CONSTANT_Class -> new LazyClass(OP_ldc_w, cp, index);
+      case CONSTANT_MethodHandle -> new LazyMethodHandle(OP_ldc_w, cp, index);
+      case CONSTANT_MethodType -> new LazyMethodType(OP_ldc_w, cp, index);
+      case CONSTANT_InvokeDynamic -> new LazyInvokeDynamic(OP_ldc_w, cp, index);
+      default -> null;
+    };
   }
 
   @Override
@@ -823,18 +808,13 @@ public abstract class ConstantInstruction extends Instruction {
       for (int i = 0; i < len; i++) {
         char ch = s.charAt(i);
         switch (ch) {
-          case '"':
+          case '"' -> {
             buf.append('\\');
             buf.append(ch);
-            break;
-          case '\n':
-            buf.append("\\\n");
-            break;
-          case '\t':
-            buf.append("\\\t");
-            break;
-          default:
-            buf.append(ch);
+          }
+          case '\n' -> buf.append("\\\n");
+          case '\t' -> buf.append("\\\t");
+          default -> buf.append(ch);
         }
       }
       buf.append('\"');

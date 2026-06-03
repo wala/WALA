@@ -109,18 +109,18 @@ public class JavaScriptEclipseProjectPath
     IIncludePathEntry e = JavaScriptCore.getResolvedIncludepathEntry(entry);
     final int entryKind = e.getEntryKind();
     switch (entryKind) {
-      case IIncludePathEntry.CPE_SOURCE:
-        resolveSourcePathEntry(
-            JSLoader.JAVASCRIPT,
-            true,
-            cpeFromMainProject,
-            e.getPath(),
-            null,
-            e.getExclusionPatterns(),
-            "js");
-        break;
-      default:
+      case IIncludePathEntry.CPE_SOURCE ->
+          resolveSourcePathEntry(
+              JSLoader.JAVASCRIPT,
+              true,
+              cpeFromMainProject,
+              e.getPath(),
+              null,
+              e.getExclusionPatterns(),
+              "js");
+      default -> {
         // do nothing
+      }
     }
   }
 

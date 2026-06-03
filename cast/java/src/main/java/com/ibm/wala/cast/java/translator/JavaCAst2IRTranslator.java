@@ -389,22 +389,15 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   @Override
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
-    switch (f.getKind()) {
-      case CAstEntity.TYPE_ENTITY:
-        {
-          return parent.getName().isEmpty() ? f.getName() : parent.getName() + '/' + f.getName();
-        }
-      case CAstEntity.FUNCTION_ENTITY:
-        {
+    return switch (f.getKind()) {
+      case CAstEntity.TYPE_ENTITY ->
+          parent.getName().isEmpty() ? f.getName() : parent.getName() + '/' + f.getName();
+      case CAstEntity.FUNCTION_ENTITY ->
           // TODO properly handle types with clashing names/signatures within a
           // given method
-          return parent.getName() + '/' + f.getSignature();
-        }
-      default:
-        {
-          return parent.getName();
-        }
-    }
+          parent.getName() + '/' + f.getSignature();
+      default -> parent.getName();
+    };
   }
 
   private CAstEntity getEnclosingType(CAstEntity entity) {
@@ -414,23 +407,19 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   private CAstEntity getEnclosingTypeInternal(CAstEntity entity) {
     switch (entity.getKind()) {
-      case CAstEntity.TYPE_ENTITY:
-        {
-          return entity;
-        }
-      case CAstEntity.FUNCTION_ENTITY:
-        {
-          if (entity.getQualifiers().contains(CAstQualifier.STATIC)) return null;
-          else return getEnclosingTypeInternal(getParent(entity));
-        }
-      case CAstEntity.FILE_ENTITY:
-        {
-          return null;
-        }
-      default:
-        {
-          return getEnclosingTypeInternal(getParent(entity));
-        }
+      case CAstEntity.TYPE_ENTITY -> {
+        return entity;
+      }
+      case CAstEntity.FUNCTION_ENTITY -> {
+        if (entity.getQualifiers().contains(CAstQualifier.STATIC)) return null;
+        else return getEnclosingTypeInternal(getParent(entity));
+      }
+      case CAstEntity.FILE_ENTITY -> {
+        return null;
+      }
+      default -> {
+        return getEnclosingTypeInternal(getParent(entity));
+      }
     }
   }
 

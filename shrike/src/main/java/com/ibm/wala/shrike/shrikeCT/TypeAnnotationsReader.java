@@ -209,49 +209,44 @@ public class TypeAnnotationsReader extends AnnotationsReader {
   private Pair<TypeAnnotationTarget, Integer> getTypeAnnotationTargetAndSize(
       int begin, TargetInfo target_info) throws InvalidClassFileException {
     switch (target_info) {
-      case type_parameter_target:
-        {
-          checkSize(begin, 1);
-          return Pair.make(new TypeParameterTarget(cr.getUnsignedByte(begin)), 1);
+      case type_parameter_target -> {
+        checkSize(begin, 1);
+        return Pair.make(new TypeParameterTarget(cr.getUnsignedByte(begin)), 1);
+      }
+      case supertype_target -> {
+        checkSize(begin, 2);
+        final int interfaceIndex = cr.getUShort(begin);
+        final String superType;
+        if (interfaceIndex == 65535) {
+          superType = cr.getSuperName();
+        } else {
+          superType = cr.getInterfaceName(interfaceIndex);
         }
-      case supertype_target:
-        {
-          checkSize(begin, 2);
-          final int interfaceIndex = cr.getUShort(begin);
-          final String superType;
-          if (interfaceIndex == 65535) {
-            superType = cr.getSuperName();
-          } else {
-            superType = cr.getInterfaceName(interfaceIndex);
-          }
-          return Pair.make(new SuperTypeTarget(superType), 2);
-        }
-      case type_parameter_bound_target:
-        {
-          checkSize(begin, 2);
-          return Pair.make(
-              new TypeParameterBoundTarget(
-                  cr.getUnsignedByte(begin),
-                  cr.getUnsignedByte(begin + 1),
-                  signatureReader.getSignature()),
-              2);
-        }
-      case empty_target:
-        {
-          return Pair.make(new EmptyTarget(), 0);
-        }
-      case formal_parameter_target:
-        {
-          checkSize(begin, 1);
-          return Pair.make(new FormalParameterTarget(cr.getUnsignedByte(begin)), 1);
-        }
-      case throws_target:
-        {
-          assert exceptionReader != null;
-          checkSize(begin, 2);
-          final int throwsIndex = cr.getUShort(begin);
-          return Pair.make(new ThrowsTarget(exceptionReader.getClasses()[throwsIndex]), 2);
-        }
+        return Pair.make(new SuperTypeTarget(superType), 2);
+      }
+      case type_parameter_bound_target -> {
+        checkSize(begin, 2);
+        return Pair.make(
+            new TypeParameterBoundTarget(
+                cr.getUnsignedByte(begin),
+                cr.getUnsignedByte(begin + 1),
+                signatureReader.getSignature()),
+            2);
+      }
+      case empty_target -> {
+        return Pair.make(new EmptyTarget(), 0);
+      }
+      case formal_parameter_target -> {
+        checkSize(begin, 1);
+        return Pair.make(new FormalParameterTarget(cr.getUnsignedByte(begin)), 1);
+      }
+      case throws_target -> {
+        assert exceptionReader != null;
+        checkSize(begin, 2);
+        final int throwsIndex = cr.getUShort(begin);
+        return Pair.make(new ThrowsTarget(exceptionReader.getClasses()[throwsIndex]), 2);
+      }
+
       /*
       * localvar_target {
       * u2 table_length;
@@ -261,54 +256,48 @@ public class TypeAnnotationsReader extends AnnotationsReader {
       *   } table[table_length];
       * }
       */
-      case localvar_target:
-        {
-          checkSize(begin, 2);
-          final int table_length = cr.getUShort(begin);
-          final int offset = begin + 2;
-          checkSize(offset, (2 + 2 + 2) * table_length);
-          int[] start_pc = new int[table_length];
-          int[] length = new int[table_length];
-          int[] index = new int[table_length];
+      case localvar_target -> {
+        checkSize(begin, 2);
+        final int table_length = cr.getUShort(begin);
+        final int offset = begin + 2;
+        checkSize(offset, (2 + 2 + 2) * table_length);
+        int[] start_pc = new int[table_length];
+        int[] length = new int[table_length];
+        int[] index = new int[table_length];
 
-          for (int i = 0; i < table_length; i++) {
-            start_pc[i] = cr.getUShort(offset + (2 + 2 + 2) * i);
-            length[i] = cr.getUShort(offset + 2 + (2 + 2 + 2) * i);
-            index[i] = cr.getUShort(offset + 4 + (2 + 2 + 2) * i);
-          }
-          return Pair.make(
-              new LocalVarTarget(start_pc, length, index), 2 + (2 + 2 + 2) * table_length);
+        for (int i = 0; i < table_length; i++) {
+          start_pc[i] = cr.getUShort(offset + (2 + 2 + 2) * i);
+          length[i] = cr.getUShort(offset + 2 + (2 + 2 + 2) * i);
+          index[i] = cr.getUShort(offset + 4 + (2 + 2 + 2) * i);
         }
-      case catch_target:
-        {
-          assert codeReader != null;
-          checkSize(begin, 2);
-          int exception_table_index = cr.getUShort(begin);
-          int[] rawHandler = new int[4];
-          System.arraycopy(
-              codeReader.getRawHandlers(), exception_table_index * 4, rawHandler, 0, 4);
-          final String catchType =
-              rawHandler[3] == 0
-                  ? CatchTarget.ALL_EXCEPTIONS
-                  : cr.getCP().getCPClass(rawHandler[3]);
-          return Pair.make(new CatchTarget(rawHandler, catchType), 2);
-        }
-      case offset_target:
-        {
-          checkSize(begin, 2);
-          int offset = cr.getUShort(begin);
-          return Pair.make(new OffsetTarget(offset), 2);
-        }
-      case type_argument_target:
-        {
-          checkSize(begin, 3);
-          int offset = cr.getUShort(begin);
-          int type_argument_index = cr.getUnsignedByte(begin);
-          return Pair.make(new TypeArgumentTarget(offset, type_argument_index), 3);
-        }
-      default:
+        return Pair.make(
+            new LocalVarTarget(start_pc, length, index), 2 + (2 + 2 + 2) * table_length);
+      }
+      case catch_target -> {
+        assert codeReader != null;
+        checkSize(begin, 2);
+        int exception_table_index = cr.getUShort(begin);
+        int[] rawHandler = new int[4];
+        System.arraycopy(codeReader.getRawHandlers(), exception_table_index * 4, rawHandler, 0, 4);
+        final String catchType =
+            rawHandler[3] == 0 ? CatchTarget.ALL_EXCEPTIONS : cr.getCP().getCPClass(rawHandler[3]);
+        return Pair.make(new CatchTarget(rawHandler, catchType), 2);
+      }
+      case offset_target -> {
+        checkSize(begin, 2);
+        int offset = cr.getUShort(begin);
+        return Pair.make(new OffsetTarget(offset), 2);
+      }
+      case type_argument_target -> {
+        checkSize(begin, 3);
+        int offset = cr.getUShort(begin);
+        int type_argument_index = cr.getUnsignedByte(begin);
+        return Pair.make(new TypeArgumentTarget(offset, type_argument_index), 3);
+      }
+      default -> {
         Assertions.UNREACHABLE();
         return null;
+      }
     }
   }
 

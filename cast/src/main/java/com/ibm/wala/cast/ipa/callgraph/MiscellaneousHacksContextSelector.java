@@ -48,75 +48,61 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
       switch (descr.length) {
 
         // loader name, loader language, classname, method name, method descr
-        case 5:
-          {
-            ClassLoaderReference clr =
-                cha.getScope().getLoader(Atom.findOrCreateUnicodeAtom(descr[0]));
-            IClassLoader loader = cha.getLoader(clr);
-            MethodReference ref =
-                MethodReference.findOrCreate(
-                    TypeReference.findOrCreate(clr, TypeName.string2TypeName(descr[2])),
-                    Atom.findOrCreateUnicodeAtom(descr[3]),
-                    Descriptor.findOrCreateUTF8(loader.getLanguage(), descr[4]));
+        case 5 -> {
+          ClassLoaderReference clr =
+              cha.getScope().getLoader(Atom.findOrCreateUnicodeAtom(descr[0]));
+          IClassLoader loader = cha.getLoader(clr);
+          MethodReference ref =
+              MethodReference.findOrCreate(
+                  TypeReference.findOrCreate(clr, TypeName.string2TypeName(descr[2])),
+                  Atom.findOrCreateUnicodeAtom(descr[3]),
+                  Descriptor.findOrCreateUTF8(loader.getLanguage(), descr[4]));
 
-            if (cha.resolveMethod(ref) != null) {
-              methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
-            } else {
-              methodsToSpecialize.add(ref);
-            }
-            break;
+          if (cha.resolveMethod(ref) != null) {
+            methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
+          } else {
+            methodsToSpecialize.add(ref);
           }
+        }
 
         // classname, method name, method descr
-        case 3:
-          {
-            MethodReference ref =
-                MethodReference.findOrCreate(
-                    TypeReference.findOrCreate(
-                        ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])),
-                    Atom.findOrCreateUnicodeAtom(descr[1]),
-                    Descriptor.findOrCreateUTF8(Language.JAVA, descr[2]));
+        case 3 -> {
+          MethodReference ref =
+              MethodReference.findOrCreate(
+                  TypeReference.findOrCreate(
+                      ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])),
+                  Atom.findOrCreateUnicodeAtom(descr[1]),
+                  Descriptor.findOrCreateUTF8(Language.JAVA, descr[2]));
 
-            methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
-            break;
-          }
+          methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
+        }
 
         // loader name, classname, meaning all methods of that class
-        case 2:
-          {
-            IClass klass =
-                cha.lookupClass(
-                    TypeReference.findOrCreate(
-                        new ClassLoaderReference(
-                            Atom.findOrCreateUnicodeAtom(descr[0]),
-                            ClassLoaderReference.Java,
-                            null),
-                        TypeName.string2TypeName(descr[1])));
+        case 2 -> {
+          IClass klass =
+              cha.lookupClass(
+                  TypeReference.findOrCreate(
+                      new ClassLoaderReference(
+                          Atom.findOrCreateUnicodeAtom(descr[0]), ClassLoaderReference.Java, null),
+                      TypeName.string2TypeName(descr[1])));
 
-            for (IMethod M : klass.getDeclaredMethods()) {
-              methodsToSpecialize.add(M.getReference());
-            }
-
-            break;
+          for (IMethod M : klass.getDeclaredMethods()) {
+            methodsToSpecialize.add(M.getReference());
           }
+        }
 
         // classname, meaning all methods of that class
-        case 1:
-          {
-            IClass klass =
-                cha.lookupClass(
-                    TypeReference.findOrCreate(
-                        ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])));
+        case 1 -> {
+          IClass klass =
+              cha.lookupClass(
+                  TypeReference.findOrCreate(
+                      ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])));
 
-            for (IMethod M : klass.getDeclaredMethods()) {
-              methodsToSpecialize.add(M.getReference());
-            }
-
-            break;
+          for (IMethod M : klass.getDeclaredMethods()) {
+            methodsToSpecialize.add(M.getReference());
           }
-
-        default:
-          Assertions.UNREACHABLE();
+        }
+        default -> Assertions.UNREACHABLE();
       }
     }
 

@@ -266,73 +266,46 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Invalid element: " + qName);
       }
       switch (element) {
-        case E_CLASSLOADER:
-          {
-            String clName = atts.getValue(A_NAME);
-            governingLoader = classLoaderName2Ref(clName);
-          }
-          break;
-        case E_METHOD:
+        case E_CLASSLOADER -> {
+          String clName = atts.getValue(A_NAME);
+          governingLoader = classLoaderName2Ref(clName);
+        }
+        case E_METHOD -> {
           String mname = atts.getValue(A_NAME);
           if (mname.equals(A_WILDCARD)) {
             Assertions.UNREACHABLE("Wildcards not currently implemented.");
           } else {
             startMethod(atts);
           }
-          break;
-        case E_CLASS:
+        }
+        case E_CLASS -> {
           String cname = atts.getValue(A_NAME);
           if (cname.equals(A_WILDCARD)) {
             Assertions.UNREACHABLE("Wildcards not currently implemented");
           } else {
             startClass(cname, atts);
           }
-          break;
-        case E_PACKAGE:
+        }
+        case E_PACKAGE -> {
           governingPackage = Atom.findOrCreateUnicodeAtom(atts.getValue(A_NAME));
           String ignore = atts.getValue(A_IGNORE);
           if (ignore != null && ignore.equals(V_TRUE)) {
             ignoredPackages.add(governingPackage);
           }
-          break;
-        case E_CALL:
-          processCallSite(atts);
-          break;
-        case E_NEW:
-          processAllocation(atts);
-          break;
-        case E_PUTSTATIC:
-          processPutStatic(atts);
-          break;
-        case E_PUTFIELD:
-          processPutField(atts);
-          break;
-        case E_GETFIELD:
-          processGetField(atts);
-          break;
-        case E_ATHROW:
-          processAthrow(atts);
-          break;
-        case E_AASTORE:
-          processAastore(atts);
-          break;
-        case E_AALOAD:
-          processAaload(atts);
-          break;
-        case E_RETURN:
-          processReturn(atts);
-          break;
-        case E_POISON:
-          processPoison(atts);
-          break;
-        case E_CONSTANT:
-          processConstant(atts);
-          break;
-        case E_SUMMARY_SPEC:
-          break;
-        default:
-          Assertions.UNREACHABLE("Unexpected element: " + name);
-          break;
+        }
+        case E_CALL -> processCallSite(atts);
+        case E_NEW -> processAllocation(atts);
+        case E_PUTSTATIC -> processPutStatic(atts);
+        case E_PUTFIELD -> processPutField(atts);
+        case E_GETFIELD -> processGetField(atts);
+        case E_ATHROW -> processAthrow(atts);
+        case E_AASTORE -> processAastore(atts);
+        case E_AALOAD -> processAaload(atts);
+        case E_RETURN -> processReturn(atts);
+        case E_POISON -> processPoison(atts);
+        case E_CONSTANT -> processConstant(atts);
+        case E_SUMMARY_SPEC -> {}
+        default -> Assertions.UNREACHABLE("Unexpected element: " + name);
       }
     }
 
@@ -357,38 +330,29 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Invalid element: " + name);
       }
       switch (element) {
-        case E_CLASSLOADER:
-          governingLoader = null;
-          break;
-        case E_METHOD:
+        case E_CLASSLOADER -> governingLoader = null;
+        case E_METHOD -> {
           if (governingMethod != null) {
             checkReturnValue(governingMethod);
           }
           governingMethod = null;
           symbolTable = null;
-          break;
-        case E_CLASS:
-          governingClass = null;
-          break;
-        case E_PACKAGE:
-          governingPackage = null;
-          break;
-        case E_CALL:
-        case E_GETFIELD:
-        case E_NEW:
-        case E_POISON:
-        case E_PUTSTATIC:
-        case E_PUTFIELD:
-        case E_AALOAD:
-        case E_AASTORE:
-        case E_ATHROW:
-        case E_SUMMARY_SPEC:
-        case E_RETURN:
-        case E_CONSTANT:
-          break;
-        default:
-          Assertions.UNREACHABLE("Unexpected element: " + name);
-          break;
+        }
+        case E_CLASS -> governingClass = null;
+        case E_PACKAGE -> governingPackage = null;
+        case E_CALL,
+            E_GETFIELD,
+            E_NEW,
+            E_POISON,
+            E_PUTSTATIC,
+            E_PUTFIELD,
+            E_AALOAD,
+            E_AASTORE,
+            E_ATHROW,
+            E_SUMMARY_SPEC,
+            E_RETURN,
+            E_CONSTANT -> {}
+        default -> Assertions.UNREACHABLE("Unexpected element: " + name);
       }
     }
 
@@ -427,38 +391,37 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       CallSiteReference site = null;
       int nParams = ref.getNumberOfParameters();
       switch (typeString) {
-        case "virtual":
+        case "virtual" -> {
           site =
               CallSiteReference.make(
                   governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.VIRTUAL);
           nParams++;
-          break;
-        case "special":
+        }
+        case "special" -> {
           site =
               CallSiteReference.make(
                   governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.SPECIAL);
           nParams++;
-          break;
-        case "interface":
+        }
+        case "interface" -> {
           site =
               CallSiteReference.make(
                   governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.INTERFACE);
           nParams++;
-          break;
-        case "static":
-          site =
-              CallSiteReference.make(
-                  governingMethod.getNumberOfStatements(), ref, IInvokeInstruction.Dispatch.STATIC);
-          break;
-        default:
-          Assertions.UNREACHABLE("Invalid call type " + typeString);
-          break;
+        }
+        case "static" ->
+            site =
+                CallSiteReference.make(
+                    governingMethod.getNumberOfStatements(),
+                    ref,
+                    IInvokeInstruction.Dispatch.STATIC);
+        default -> Assertions.UNREACHABLE("Invalid call type " + typeString);
       }
 
       String paramCount = atts.getValue(A_NUM_ARGS);
@@ -861,18 +824,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       governingMethod.addPoison(reason);
       String level = atts.getValue(A_LEVEL);
       switch (level) {
-        case "severe":
-          governingMethod.setPoisonLevel(Warning.SEVERE);
-          break;
-        case "moderate":
-          governingMethod.setPoisonLevel(Warning.MODERATE);
-          break;
-        case "mild":
-          governingMethod.setPoisonLevel(Warning.MILD);
-          break;
-        default:
-          Assertions.UNREACHABLE("Unexpected level: " + level);
-          break;
+        case "severe" -> governingMethod.setPoisonLevel(Warning.SEVERE);
+        case "moderate" -> governingMethod.setPoisonLevel(Warning.MODERATE);
+        case "mild" -> governingMethod.setPoisonLevel(Warning.MILD);
+        default -> Assertions.UNREACHABLE("Unexpected level: " + level);
       }
     }
 
@@ -895,15 +850,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String staticString = atts.getValue(A_STATIC);
       if (staticString != null) {
         switch (staticString) {
-          case "true":
-            isStatic = true;
-            break;
-          case "false":
-            isStatic = false;
-            break;
-          default:
-            Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
-            break;
+          case "true" -> isStatic = true;
+          case "false" -> isStatic = false;
+          default ->
+              Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
         }
       }
 
@@ -932,15 +882,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String factoryString = atts.getValue(A_FACTORY);
       if (factoryString != null) {
         switch (factoryString) {
-          case "true":
-            governingMethod.setFactory(true);
-            break;
-          case "false":
-            governingMethod.setFactory(false);
-            break;
-          default:
-            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
-            break;
+          case "true" -> governingMethod.setFactory(true);
+          case "false" -> governingMethod.setFactory(false);
+          default ->
+              Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
         }
       }
 

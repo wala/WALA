@@ -84,23 +84,21 @@ public class TypeArgument extends Signature {
   }
 
   private static TypeArgument makeTypeArgument(String s) {
-    switch (s.charAt(0)) {
-      case '*':
-        return WILDCARD;
-      case '+':
-        {
-          TypeSignature sig = TypeSignature.make(s.substring(1));
-          return new TypeArgument(sig, WildcardIndicator.PLUS);
-        }
-      case '-':
-        {
-          TypeSignature sig = TypeSignature.make(s.substring(1));
-          return new TypeArgument(sig, WildcardIndicator.MINUS);
-        }
-      default:
+    return switch (s.charAt(0)) {
+      case '*' -> WILDCARD;
+      case '+' -> {
+        TypeSignature sig = TypeSignature.make(s.substring(1));
+        yield new TypeArgument(sig, WildcardIndicator.PLUS);
+      }
+      case '-' -> {
+        TypeSignature sig = TypeSignature.make(s.substring(1));
+        yield new TypeArgument(sig, WildcardIndicator.MINUS);
+      }
+      default -> {
         TypeSignature sig = TypeSignature.make(s);
-        return new TypeArgument(sig, null);
-    }
+        yield new TypeArgument(sig, null);
+      }
+    };
   }
 
   /**
@@ -113,54 +111,42 @@ public class TypeArgument extends Signature {
     int i = 1;
     while (true) {
       switch (typeArgs.charAt(i++)) {
-        case TypeReference.ClassTypeCode:
-          {
-            int off = i - 1;
-            int depth = 0;
-            while (typeArgs.charAt(i++) != ';' || depth > 0) {
-              if (typeArgs.charAt(i - 1) == '<') {
-                depth++;
-              }
-              if (typeArgs.charAt(i - 1) == '>') {
-                depth--;
-              }
+        case TypeReference.ClassTypeCode -> {
+          int off = i - 1;
+          int depth = 0;
+          while (typeArgs.charAt(i++) != ';' || depth > 0) {
+            if (typeArgs.charAt(i - 1) == '<') {
+              depth++;
             }
-            args.add(typeArgs.substring(off, i));
-            continue;
+            if (typeArgs.charAt(i - 1) == '>') {
+              depth--;
+            }
           }
-        case TypeReference.ArrayTypeCode:
-          {
-            int off = i - 1;
-            while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
-              ++i;
-            }
-            if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
-              while (typeArgs.charAt(i++) != ';')
-                ;
-            } else if (typeArgs.charAt(i++) == (byte) 'T') {
-              while (typeArgs.charAt(i++) != ';')
-                ;
-            }
-            args.add(typeArgs.substring(off, i));
-            continue;
+          args.add(typeArgs.substring(off, i));
+        }
+        case TypeReference.ArrayTypeCode -> {
+          int off = i - 1;
+          while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
+            ++i;
           }
-        case (byte) '-':
-        case (byte) '+':
-        case (byte) 'T':
-          { // type variable
-            int off = i - 1;
+          if (typeArgs.charAt(i) == TypeReference.ClassTypeCode) {
             while (typeArgs.charAt(i++) != ';')
               ;
-            args.add(typeArgs.substring(off, i));
-            continue;
+          } else if (typeArgs.charAt(i++) == (byte) 'T') {
+            while (typeArgs.charAt(i++) != ';')
+              ;
           }
-        case (byte) '*':
-          {
-            // a wildcard
+          args.add(typeArgs.substring(off, i));
+        }
+        case (byte) '-', (byte) '+', (byte) 'T' -> { // type variable
+          int off = i - 1;
+          while (typeArgs.charAt(i++) != ';')
+            ;
+          args.add(typeArgs.substring(off, i));
+        }
+        case (byte) '*' -> // a wildcard
             args.add("*");
-            continue;
-          }
-        case (byte) '>': // end of argument list
+        case (byte) '>' -> {
           int size = args.size();
           if (size == 0) {
             return null;
@@ -171,8 +157,10 @@ public class TypeArgument extends Signature {
             result[j] = it.next();
           }
           return result;
-        default:
+        }
+        default -> {
           assert false : "bad type argument list " + typeArgs;
+        }
       }
     }
   }

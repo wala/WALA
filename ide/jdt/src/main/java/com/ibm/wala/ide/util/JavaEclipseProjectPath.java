@@ -84,8 +84,7 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
     entry = JavaCore.getResolvedClasspathEntry(entry);
     final int entryKind = entry.getEntryKind();
     switch (entryKind) {
-      case IClasspathEntry.CPE_SOURCE:
-        {
+      case IClasspathEntry.CPE_SOURCE ->
           resolveSourcePathEntry(
               includeSource ? JavaSourceLoader.SOURCE : Loader.APPLICATION,
               includeSource,
@@ -94,38 +93,26 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
               entry.getOutputLocation(),
               entry.getExclusionPatterns(),
               "java");
-          break;
+      case IClasspathEntry.CPE_LIBRARY -> resolveLibraryPathEntry(loader, entry.getPath());
+      case IClasspathEntry.CPE_PROJECT -> resolveProjectPathEntry(includeSource, entry.getPath());
+      case IClasspathEntry.CPE_CONTAINER -> {
+        try {
+          IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
+          IClasspathEntry[] entries = cont.getClasspathEntries();
+          resolveClasspathEntries(
+              project,
+              Arrays.asList(entries),
+              cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL,
+              includeSource,
+              false);
+        } catch (CoreException e) {
+          System.err.println(e);
+          Assertions.UNREACHABLE();
         }
-      case IClasspathEntry.CPE_LIBRARY:
-        {
-          resolveLibraryPathEntry(loader, entry.getPath());
-          break;
-        }
-      case IClasspathEntry.CPE_PROJECT:
-        {
-          resolveProjectPathEntry(includeSource, entry.getPath());
-          break;
-        }
-      case IClasspathEntry.CPE_CONTAINER:
-        {
-          try {
-            IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
-            IClasspathEntry[] entries = cont.getClasspathEntries();
-            resolveClasspathEntries(
-                project,
-                Arrays.asList(entries),
-                cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL,
-                includeSource,
-                false);
-          } catch (CoreException e) {
-            System.err.println(e);
-            Assertions.UNREACHABLE();
-          }
-          break;
-        }
-      default:
-        throw new UnsupportedOperationException(
-            String.format("unexpected classpath entry kind %s", entryKind));
+      }
+      default ->
+          throw new UnsupportedOperationException(
+              String.format("unexpected classpath entry kind %s", entryKind));
     }
   }
 

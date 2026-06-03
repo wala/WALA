@@ -86,28 +86,17 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     smallStore = new IntVector[implementation.length];
     for (int i = 0; i < implementation.length; i++) {
       switch (implementation[i]) {
-        case SIMPLE:
-          smallStore[i] = new SimpleIntVector(EMPTY_CODE);
-          break;
-        case TWO_LEVEL:
-          smallStore[i] = new TwoLevelIntVector(EMPTY_CODE);
-          break;
-        case SIMPLE_SPACE_STINGY:
-          smallStore[i] = new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
-          break;
-        default:
-          throw new IllegalArgumentException("unsupported implementation " + implementation[i]);
+        case SIMPLE -> smallStore[i] = new SimpleIntVector(EMPTY_CODE);
+        case TWO_LEVEL -> smallStore[i] = new TwoLevelIntVector(EMPTY_CODE);
+        case SIMPLE_SPACE_STINGY -> smallStore[i] = new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
+        default ->
+            throw new IllegalArgumentException("unsupported implementation " + implementation[i]);
       }
     }
     switch (vectorImpl) {
-      case SIMPLE:
-        delegateStore = new SimpleVector<>();
-        break;
-      case TWO_LEVEL:
-        delegateStore = new TwoLevelVector<>();
-        break;
-      default:
-        throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
+      case SIMPLE -> delegateStore = new SimpleVector<>();
+      case TWO_LEVEL -> delegateStore = new TwoLevelVector<>();
+      default -> throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
     }
   }
 
@@ -287,34 +276,32 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
       } else {
         int ssLength = smallStore.length;
         switch (ssLength) {
-          case 2:
-            {
-              int ss1 = smallStore[1].get(x);
-              if (ss1 == EMPTY_CODE) {
-                return SparseIntSet.singleton(ss0);
-              } else {
-                return SparseIntSet.pair(ss0, ss1);
-              }
+          case 2 -> {
+            int ss1 = smallStore[1].get(x);
+            if (ss1 == EMPTY_CODE) {
+              return SparseIntSet.singleton(ss0);
+            } else {
+              return SparseIntSet.pair(ss0, ss1);
             }
-          case 1:
+          }
+          case 1 -> {
             return SparseIntSet.singleton(ss0);
-          default:
-            {
-              int ss1 = smallStore[1].get(x);
-              if (ss1 == EMPTY_CODE) {
-                return SparseIntSet.singleton(ss0);
-              } else {
-                MutableSparseIntSet result =
-                    MutableSparseIntSet.createMutableSparseIntSet(ssLength);
-                for (IntVector element : smallStore) {
-                  if (element.get(x) == EMPTY_CODE) {
-                    break;
-                  }
-                  result.add(element.get(x));
+          }
+          default -> {
+            int ss1 = smallStore[1].get(x);
+            if (ss1 == EMPTY_CODE) {
+              return SparseIntSet.singleton(ss0);
+            } else {
+              MutableSparseIntSet result = MutableSparseIntSet.createMutableSparseIntSet(ssLength);
+              for (IntVector element : smallStore) {
+                if (element.get(x) == EMPTY_CODE) {
+                  break;
                 }
-                return result;
+                result.add(element.get(x));
               }
+              return result;
             }
+          }
         }
       }
     }

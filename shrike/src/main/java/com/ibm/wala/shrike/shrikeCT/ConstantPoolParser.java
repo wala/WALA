@@ -247,14 +247,10 @@ public final class ConstantPoolParser implements ClassConstants {
 
   /** Does b represent the tag of a constant pool reference to an (interface) method or field? */
   public static boolean isRef(byte b) {
-    switch (b) {
-      case CONSTANT_MethodRef:
-      case CONSTANT_FieldRef:
-      case CONSTANT_InterfaceMethodRef:
-        return true;
-      default:
-        return false;
-    }
+    return switch (b) {
+      case CONSTANT_MethodRef, CONSTANT_FieldRef, CONSTANT_InterfaceMethodRef -> true;
+      default -> false;
+    };
   }
 
   /**
@@ -621,36 +617,29 @@ public final class ConstantPoolParser implements ClassConstants {
       byte tag = getByte(offset);
       int itemLen;
       switch (tag) {
-        case CONSTANT_String:
-        case CONSTANT_Class:
-        case CONSTANT_MethodType:
-        case CONSTANT_Module:
-        case CONSTANT_Package:
-          itemLen = 2;
-          break;
-        case CONSTANT_NameAndType:
-        case CONSTANT_MethodRef:
-        case CONSTANT_FieldRef:
-        case CONSTANT_InterfaceMethodRef:
-        case CONSTANT_Integer:
-        case CONSTANT_Float:
-        case CONSTANT_Dynamic:
-        case CONSTANT_InvokeDynamic:
-          itemLen = 4;
-          break;
-        case CONSTANT_Long:
-        case CONSTANT_Double:
+        case CONSTANT_String,
+            CONSTANT_Class,
+            CONSTANT_MethodType,
+            CONSTANT_Module,
+            CONSTANT_Package ->
+            itemLen = 2;
+        case CONSTANT_NameAndType,
+            CONSTANT_MethodRef,
+            CONSTANT_FieldRef,
+            CONSTANT_InterfaceMethodRef,
+            CONSTANT_Integer,
+            CONSTANT_Float,
+            CONSTANT_Dynamic,
+            CONSTANT_InvokeDynamic ->
+            itemLen = 4;
+        case CONSTANT_Long, CONSTANT_Double -> {
           itemLen = 8;
           i++; // ick
-          break;
-        case CONSTANT_Utf8:
-          itemLen = 2 + getUShort(offset + 1);
-          break;
-        case CONSTANT_MethodHandle:
-          itemLen = 3;
-          break;
-        default:
-          throw new InvalidClassFileException(offset, "unknown constant pool entry type" + tag);
+        }
+        case CONSTANT_Utf8 -> itemLen = 2 + getUShort(offset + 1);
+        case CONSTANT_MethodHandle -> itemLen = 3;
+        default ->
+            throw new InvalidClassFileException(offset, "unknown constant pool entry type" + tag);
       }
       checkLength(offset, itemLen);
       offset += itemLen + 1;

@@ -4186,7 +4186,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveIfgoto(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int currentInstruction = context.cfg().currentInstruction;
     switch (n.getChildCount()) {
-      case 1:
+      case 1 -> {
         CAstNode arg = n.getChild(0);
         context
             .cfg()
@@ -4199,8 +4199,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                     context.currentScope().getConstantValue(0),
                     -1));
         context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
-        break;
-      case 3:
+      }
+      case 3 -> {
         CAstNode op = n.getChild(0);
         CAstNode leftExpr = n.getChild(1);
         CAstNode rightExpr = n.getChild(2);
@@ -4220,9 +4220,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 currentInstruction,
                 context.getSourceMap().getPosition(leftExpr),
                 context.getSourceMap().getPosition(rightExpr));
-        break;
-      default:
-        Assertions.UNREACHABLE();
+      }
+      default -> Assertions.UNREACHABLE();
     }
 
     context.cfg().addPreNode(n, context.getUnwindState());

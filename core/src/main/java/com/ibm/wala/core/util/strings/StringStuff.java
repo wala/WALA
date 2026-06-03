@@ -149,39 +149,48 @@ public class StringStuff {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
     switch (b.get(i)) {
-      case TypeReference.VoidTypeCode:
+      case TypeReference.VoidTypeCode -> {
         return TypeReference.Void.getName();
-      case TypeReference.BooleanTypeCode:
+      }
+      case TypeReference.BooleanTypeCode -> {
         return TypeReference.Boolean.getName();
-      case TypeReference.ByteTypeCode:
+      }
+      case TypeReference.ByteTypeCode -> {
         return TypeReference.Byte.getName();
-      case TypeReference.ShortTypeCode:
+      }
+      case TypeReference.ShortTypeCode -> {
         return TypeReference.Short.getName();
-      case TypeReference.IntTypeCode:
+      }
+      case TypeReference.IntTypeCode -> {
         return TypeReference.Int.getName();
-      case TypeReference.LongTypeCode:
+      }
+      case TypeReference.LongTypeCode -> {
         return TypeReference.Long.getName();
-      case TypeReference.FloatTypeCode:
+      }
+      case TypeReference.FloatTypeCode -> {
         return TypeReference.Float.getName();
-      case TypeReference.DoubleTypeCode:
+      }
+      case TypeReference.DoubleTypeCode -> {
         return TypeReference.Double.getName();
-      case TypeReference.CharTypeCode:
+      }
+      case TypeReference.CharTypeCode -> {
         return TypeReference.Char.getName();
-      case TypeReference.OtherPrimitiveTypeCode:
+      }
+      case TypeReference.OtherPrimitiveTypeCode -> {
         if (b.get(b.length() - 1) == ';') {
           return l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 2)));
         } else {
           return l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 1)));
         }
-      case TypeReference.ClassTypeCode: // fall through
-      case TypeReference.ArrayTypeCode:
+      }
+      case TypeReference.ClassTypeCode, TypeReference.ArrayTypeCode -> {
         if (b.get(b.length() - 1) == ';') {
           return TypeName.findOrCreate(b, i, b.length() - i - 1);
         } else {
           return TypeName.findOrCreate(b, i, b.length() - i);
         }
-      default:
-        throw new IllegalArgumentException("unexpected type in descriptor " + b);
+      }
+      default -> throw new IllegalArgumentException("unexpected type in descriptor " + b);
     }
   }
 
@@ -219,73 +228,46 @@ public class StringStuff {
     int i = 1;
     while (true) {
       switch (b.get(i++)) {
-        case TypeReference.VoidTypeCode:
-          sigs.add(TypeReference.VoidName);
-          continue;
-        case TypeReference.BooleanTypeCode:
-          sigs.add(TypeReference.BooleanName);
-          continue;
-        case TypeReference.ByteTypeCode:
-          sigs.add(TypeReference.ByteName);
-          continue;
-        case TypeReference.ShortTypeCode:
-          sigs.add(TypeReference.ShortName);
-          continue;
-        case TypeReference.IntTypeCode:
-          sigs.add(TypeReference.IntName);
-          continue;
-        case TypeReference.LongTypeCode:
-          sigs.add(TypeReference.LongName);
-          continue;
-        case TypeReference.FloatTypeCode:
-          sigs.add(TypeReference.FloatName);
-          continue;
-        case TypeReference.DoubleTypeCode:
-          sigs.add(TypeReference.DoubleName);
-          continue;
-        case TypeReference.CharTypeCode:
-          sigs.add(TypeReference.CharName);
-          continue;
-        case TypeReference.OtherPrimitiveTypeCode:
-          {
-            int off = i - 1;
+        case TypeReference.VoidTypeCode -> sigs.add(TypeReference.VoidName);
+        case TypeReference.BooleanTypeCode -> sigs.add(TypeReference.BooleanName);
+        case TypeReference.ByteTypeCode -> sigs.add(TypeReference.ByteName);
+        case TypeReference.ShortTypeCode -> sigs.add(TypeReference.ShortName);
+        case TypeReference.IntTypeCode -> sigs.add(TypeReference.IntName);
+        case TypeReference.LongTypeCode -> sigs.add(TypeReference.LongName);
+        case TypeReference.FloatTypeCode -> sigs.add(TypeReference.FloatName);
+        case TypeReference.DoubleTypeCode -> sigs.add(TypeReference.DoubleName);
+        case TypeReference.CharTypeCode -> sigs.add(TypeReference.CharName);
+        case TypeReference.OtherPrimitiveTypeCode -> {
+          int off = i - 1;
+          while (b.get(i++) != ';')
+            ;
+          sigs.add(l.lookupPrimitiveType(new String(b.substring(off + 1, i - off - 2))));
+        }
+        case TypeReference.ClassTypeCode -> {
+          int off = i - 1;
+          while (b.get(i++) != ';')
+            ;
+          sigs.add(TypeName.findOrCreate(b, off, i - off - 1));
+        }
+        case TypeReference.ArrayTypeCode,
+            TypeReference.PointerTypeCode,
+            TypeReference.ReferenceTypeCode -> {
+          int off = i - 1;
+          while (StringStuff.isTypeCodeChar(b, i)) {
+            ++i;
+          }
+          final TypeName T;
+          byte c = b.get(i++);
+          if (c == TypeReference.ClassTypeCode || c == TypeReference.OtherPrimitiveTypeCode) {
             while (b.get(i++) != ';')
               ;
-            sigs.add(l.lookupPrimitiveType(new String(b.substring(off + 1, i - off - 2))));
-
-            continue;
+            T = TypeName.findOrCreate(b, off, i - off - 1);
+          } else {
+            T = TypeName.findOrCreate(b, off, i - off);
           }
-        case TypeReference.ClassTypeCode:
-          {
-            int off = i - 1;
-            while (b.get(i++) != ';')
-              ;
-            sigs.add(TypeName.findOrCreate(b, off, i - off - 1));
-
-            continue;
-          }
-        case TypeReference.ArrayTypeCode:
-        case TypeReference.PointerTypeCode:
-        case TypeReference.ReferenceTypeCode:
-          {
-            int off = i - 1;
-            while (StringStuff.isTypeCodeChar(b, i)) {
-              ++i;
-            }
-            final TypeName T;
-            byte c = b.get(i++);
-            if (c == TypeReference.ClassTypeCode || c == TypeReference.OtherPrimitiveTypeCode) {
-              while (b.get(i++) != ';')
-                ;
-              T = TypeName.findOrCreate(b, off, i - off - 1);
-            } else {
-              T = TypeName.findOrCreate(b, off, i - off);
-            }
-            sigs.add(T);
-
-            continue;
-          }
-        case (byte) ')': // end of parameter list
+          sigs.add(T);
+        }
+        case (byte) ')' -> {
           int size = sigs.size();
           if (size == 0) {
             return null;
@@ -296,21 +278,19 @@ public class StringStuff {
             result[j] = it.next();
           }
           return result;
-        default:
+        }
+        default -> {
           assert false : "bad descriptor " + b;
+        }
       }
     }
   }
 
   public static boolean isTypeCodeChar(ImmutableByteArray name, int i) {
-    switch (name.b[i]) {
-      case ArrayTypeCode:
-      case PointerTypeCode:
-      case ReferenceTypeCode:
-        return true;
-      default:
-        return false;
-    }
+    return switch (name.b[i]) {
+      case ArrayTypeCode, PointerTypeCode, ReferenceTypeCode -> true;
+      default -> false;
+    };
   }
 
   /**
@@ -435,17 +415,10 @@ public class StringStuff {
         if (isTypeCodeChar(b, i)) {
           code <<= ElementBits;
           switch (b.b[i]) {
-            case ArrayTypeCode:
-              code |= ArrayMask;
-              break;
-            case PointerTypeCode:
-              code |= PointerMask;
-              break;
-            case ReferenceTypeCode:
-              code |= ReferenceMask;
-              break;
-            default:
-              throw new IllegalArgumentException("ill-formed array descriptor " + b);
+            case ArrayTypeCode -> code |= ArrayMask;
+            case PointerTypeCode -> code |= PointerMask;
+            case ReferenceTypeCode -> code |= ReferenceMask;
+            default -> throw new IllegalArgumentException("ill-formed array descriptor " + b);
           }
         } else {
           // type codes must be at the start of the descriptor; if we see something else, stop
@@ -576,34 +549,16 @@ public class StringStuff {
       prefix = jvmType.charAt(numberOfDimensions);
     }
     switch (prefix) {
-      case 'V':
-        readable.append("void");
-        break;
-      case 'B':
-        readable.append("byte");
-        break;
-      case 'C':
-        readable.append("char");
-        break;
-      case 'D':
-        readable.append("double");
-        break;
-      case 'F':
-        readable.append("float");
-        break;
-      case 'I':
-        readable.append("int");
-        break;
-      case 'J':
-        readable.append("long");
-        break;
-      case 'S':
-        readable.append("short");
-        break;
-      case 'Z':
-        readable.append("boolean");
-        break;
-      case 'L':
+      case 'V' -> readable.append("void");
+      case 'B' -> readable.append("byte");
+      case 'C' -> readable.append("char");
+      case 'D' -> readable.append("double");
+      case 'F' -> readable.append("float");
+      case 'I' -> readable.append("int");
+      case 'J' -> readable.append("long");
+      case 'S' -> readable.append("short");
+      case 'Z' -> readable.append("boolean");
+      case 'L' -> {
         readable.append(
             jvmType,
             numberOfDimensions + 1, // strip all leading '[' & 'L'
@@ -612,7 +567,7 @@ public class StringStuff {
         // Convert to standard Java dot-notation
         readable = new StringBuilder(slashToDot(readable.toString()));
         readable = new StringBuilder(dollarToDot(readable.toString()));
-        break;
+      }
     }
     // append trailing "[]" for each array dimension
     readable.append("[]".repeat(numberOfDimensions));
@@ -644,34 +599,16 @@ public class StringStuff {
       prefix = jvmType.charAt(numberOfDimensions);
     }
     switch (prefix) {
-      case 'V':
-        readable.append("void");
-        break;
-      case 'B':
-        readable.append("byte");
-        break;
-      case 'C':
-        readable.append("char");
-        break;
-      case 'D':
-        readable.append("double");
-        break;
-      case 'F':
-        readable.append("float");
-        break;
-      case 'I':
-        readable.append("int");
-        break;
-      case 'J':
-        readable.append("long");
-        break;
-      case 'S':
-        readable.append("short");
-        break;
-      case 'Z':
-        readable.append("boolean");
-        break;
-      case 'L':
+      case 'V' -> readable.append("void");
+      case 'B' -> readable.append("byte");
+      case 'C' -> readable.append("char");
+      case 'D' -> readable.append("double");
+      case 'F' -> readable.append("float");
+      case 'I' -> readable.append("int");
+      case 'J' -> readable.append("long");
+      case 'S' -> readable.append("short");
+      case 'Z' -> readable.append("boolean");
+      case 'L' -> {
         readable.append(
             jvmType,
             numberOfDimensions + 1, // strip all leading '[' & 'L'
@@ -679,7 +616,7 @@ public class StringStuff {
             );
         // Convert to standard Java dot-notation
         readable = new StringBuilder(slashToDot(readable.toString()));
-        break;
+      }
     }
     // append trailing "[]" for each array dimension
     readable.append("[]".repeat(numberOfDimensions));

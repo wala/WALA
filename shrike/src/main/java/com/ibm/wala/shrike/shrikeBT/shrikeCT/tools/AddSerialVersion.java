@@ -145,15 +145,9 @@ public class AddSerialVersion {
             methods[methodCount] = m;
             methodSigs[m] = name + r.getMethodType(m);
             switch (name) {
-              case "<clinit>":
-                methodKinds[m] = 0;
-                break;
-              case "<init>":
-                methodKinds[m] = 1;
-                break;
-              default:
-                methodKinds[m] = 2;
-                break;
+              case "<clinit>" -> methodKinds[m] = 0;
+              case "<init>" -> methodKinds[m] = 1;
+              default -> methodKinds[m] = 2;
             }
             methodCount++;
           }

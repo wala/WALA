@@ -443,29 +443,18 @@ public class OfflineDynamicCallGraph {
               for (int i = 1; i < p.getItemCount(); i++) {
                 final byte itemType = p.getItemType(i);
                 switch (itemType) {
-                  case CONSTANT_Integer:
-                    entries.put(p.getCPInt(i), i);
-                    break;
-                  case CONSTANT_Long:
-                    entries.put(p.getCPLong(i), i);
-                    break;
-                  case CONSTANT_Float:
-                    entries.put(p.getCPFloat(i), i);
-                    break;
-                  case CONSTANT_Double:
-                    entries.put(p.getCPDouble(i), i);
-                    break;
-                  case CONSTANT_Utf8:
-                    entries.put(p.getCPUtf8(i), i);
-                    break;
-                  case CONSTANT_String:
-                    entries.put(new CWStringItem(p.getCPString(i), CONSTANT_String), i);
-                    break;
-                  case CONSTANT_Class:
-                    entries.put(new CWStringItem(p.getCPClass(i), CONSTANT_Class), i);
-                    break;
-                  default:
+                  case CONSTANT_Integer -> entries.put(p.getCPInt(i), i);
+                  case CONSTANT_Long -> entries.put(p.getCPLong(i), i);
+                  case CONSTANT_Float -> entries.put(p.getCPFloat(i), i);
+                  case CONSTANT_Double -> entries.put(p.getCPDouble(i), i);
+                  case CONSTANT_Utf8 -> entries.put(p.getCPUtf8(i), i);
+                  case CONSTANT_String ->
+                      entries.put(new CWStringItem(p.getCPString(i), CONSTANT_String), i);
+                  case CONSTANT_Class ->
+                      entries.put(new CWStringItem(p.getCPClass(i), CONSTANT_Class), i);
+                  default -> {
                     // do nothing
+                  }
                 }
               }
             }

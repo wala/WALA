@@ -261,49 +261,33 @@ public class ClassWriter implements ClassConstants {
       for (int i = 1; i < nextCPIndex; i++) {
         byte t = cp.getItemType(i);
         switch (t) {
-          case CONSTANT_String:
-            cachedCPEntries.put(new CWStringItem(cp.getCPString(i), CONSTANT_String), i);
-            break;
-          case CONSTANT_Class:
-            cachedCPEntries.put(new CWStringItem(cp.getCPClass(i), CONSTANT_Class), i);
-            break;
-          case CONSTANT_MethodType:
-            cachedCPEntries.put(new CWStringItem(cp.getCPMethodType(i), CONSTANT_MethodType), i);
-            break;
-          case CONSTANT_MethodHandle:
-          case CONSTANT_FieldRef:
-          case CONSTANT_InterfaceMethodRef:
-          case CONSTANT_MethodRef:
-            cachedCPEntries.put(
-                new CWRef(t, cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i)), i);
-            break;
-          case CONSTANT_NameAndType:
-            cachedCPEntries.put(new CWNAT(cp.getCPNATName(i), cp.getCPNATType(i)), i);
-            break;
-          case CONSTANT_InvokeDynamic:
-            cachedCPEntries.put(
-                new CWInvokeDynamic(
-                    cp.getCPDynBootstrap(i), cp.getCPDynName(i), cp.getCPDynType(i)),
-                i);
-            break;
-          case CONSTANT_Integer:
-            cachedCPEntries.put(cp.getCPInt(i), i);
-            break;
-          case CONSTANT_Float:
-            cachedCPEntries.put(cp.getCPFloat(i), i);
-            break;
-          case CONSTANT_Long:
-            cachedCPEntries.put(cp.getCPLong(i), i);
-            break;
-          case CONSTANT_Double:
-            cachedCPEntries.put(cp.getCPDouble(i), i);
-            break;
-          case CONSTANT_Utf8:
-            cachedCPEntries.put(cp.getCPUtf8(i), i);
-            break;
-          default:
-            throw new UnsupportedOperationException(
-                String.format("unexpected constant-pool item type %s", t));
+          case CONSTANT_String ->
+              cachedCPEntries.put(new CWStringItem(cp.getCPString(i), CONSTANT_String), i);
+          case CONSTANT_Class ->
+              cachedCPEntries.put(new CWStringItem(cp.getCPClass(i), CONSTANT_Class), i);
+          case CONSTANT_MethodType ->
+              cachedCPEntries.put(new CWStringItem(cp.getCPMethodType(i), CONSTANT_MethodType), i);
+          case CONSTANT_MethodHandle,
+              CONSTANT_FieldRef,
+              CONSTANT_InterfaceMethodRef,
+              CONSTANT_MethodRef ->
+              cachedCPEntries.put(
+                  new CWRef(t, cp.getCPRefClass(i), cp.getCPRefName(i), cp.getCPRefType(i)), i);
+          case CONSTANT_NameAndType ->
+              cachedCPEntries.put(new CWNAT(cp.getCPNATName(i), cp.getCPNATType(i)), i);
+          case CONSTANT_InvokeDynamic ->
+              cachedCPEntries.put(
+                  new CWInvokeDynamic(
+                      cp.getCPDynBootstrap(i), cp.getCPDynName(i), cp.getCPDynType(i)),
+                  i);
+          case CONSTANT_Integer -> cachedCPEntries.put(cp.getCPInt(i), i);
+          case CONSTANT_Float -> cachedCPEntries.put(cp.getCPFloat(i), i);
+          case CONSTANT_Long -> cachedCPEntries.put(cp.getCPLong(i), i);
+          case CONSTANT_Double -> cachedCPEntries.put(cp.getCPDouble(i), i);
+          case CONSTANT_Utf8 -> cachedCPEntries.put(cp.getCPUtf8(i), i);
+          default ->
+              throw new UnsupportedOperationException(
+                  String.format("unexpected constant-pool item type %s", t));
         }
       }
     }
@@ -800,77 +784,52 @@ public class ClassWriter implements ClassConstants {
         byte t = item.getType();
         int offset;
         switch (t) {
-          case CONSTANT_Class:
-          case CONSTANT_String:
-          case CONSTANT_MethodType:
+          case CONSTANT_Class, CONSTANT_String, CONSTANT_MethodType -> {
             offset = reserveBuf(3);
             setUShort(buf, offset + 1, addCPUtf8(((CWStringItem) item).s));
-            break;
-          case CONSTANT_NameAndType:
-            {
-              offset = reserveBuf(5);
-              CWNAT nat = (CWNAT) item;
-              setUShort(buf, offset + 1, addCPUtf8(nat.n));
-              setUShort(buf, offset + 3, addCPUtf8(nat.t));
-              break;
-            }
-          case CONSTANT_InvokeDynamic:
-            {
-              offset = reserveBuf(5);
-              CWInvokeDynamic inv = (CWInvokeDynamic) item;
-              setUShort(buf, offset + 1, inv.b.getIndexInClassFile());
-              setUShort(buf, offset + 3, addCPNAT(inv.n, inv.t));
-              break;
-            }
-          case CONSTANT_MethodHandle:
-            {
-              offset = reserveBuf(4);
-              CWHandle handle = (CWHandle) item;
-              final byte kind = handle.getKind();
-              setUByte(buf, offset + 1, kind);
-              switch (kind) {
-                case REF_getStatic:
-                case REF_getField:
-                case REF_putField:
-                case REF_putStatic:
-                  {
-                    int x = addCPFieldRef(handle.c, handle.n, handle.t);
-                    setUShort(buf, offset + 2, x);
-                    break;
-                  }
-                case REF_invokeVirtual:
-                case REF_newInvokeSpecial:
-                case REF_invokeSpecial:
-                case REF_invokeStatic:
-                  {
-                    int x = addCPMethodRef(handle.c, handle.n, handle.t);
-                    setUShort(buf, offset + 2, x);
-                    break;
-                  }
-                case REF_invokeInterface:
-                  {
-                    int x = addCPInterfaceMethodRef(handle.c, handle.n, handle.t);
-                    setUShort(buf, offset + 2, x);
-                    break;
-                  }
-                default:
+          }
+          case CONSTANT_NameAndType -> {
+            offset = reserveBuf(5);
+            CWNAT nat = (CWNAT) item;
+            setUShort(buf, offset + 1, addCPUtf8(nat.n));
+            setUShort(buf, offset + 3, addCPUtf8(nat.t));
+          }
+          case CONSTANT_InvokeDynamic -> {
+            offset = reserveBuf(5);
+            CWInvokeDynamic inv = (CWInvokeDynamic) item;
+            setUShort(buf, offset + 1, inv.b.getIndexInClassFile());
+            setUShort(buf, offset + 3, addCPNAT(inv.n, inv.t));
+          }
+          case CONSTANT_MethodHandle -> {
+            offset = reserveBuf(4);
+            CWHandle handle = (CWHandle) item;
+            final byte kind = handle.getKind();
+            setUByte(buf, offset + 1, kind);
+            switch (kind) {
+              case REF_getStatic, REF_getField, REF_putField, REF_putStatic -> {
+                int x = addCPFieldRef(handle.c, handle.n, handle.t);
+                setUShort(buf, offset + 2, x);
+              }
+              case REF_invokeVirtual, REF_newInvokeSpecial, REF_invokeSpecial, REF_invokeStatic -> {
+                int x = addCPMethodRef(handle.c, handle.n, handle.t);
+                setUShort(buf, offset + 2, x);
+              }
+              case REF_invokeInterface -> {
+                int x = addCPInterfaceMethodRef(handle.c, handle.n, handle.t);
+                setUShort(buf, offset + 2, x);
+              }
+              default ->
                   throw new UnsupportedOperationException(
                       String.format("unexpected ref kind %s", kind));
-              }
-              break;
             }
-          case CONSTANT_MethodRef:
-          case CONSTANT_FieldRef:
-          case CONSTANT_InterfaceMethodRef:
-            {
-              offset = reserveBuf(5);
-              CWRef ref = (CWRef) item;
-              setUShort(buf, offset + 1, addCPClass(ref.c));
-              setUShort(buf, offset + 3, addCPNAT(ref.n, ref.t));
-              break;
-            }
-          default:
-            throw new Error("Invalid type: " + t);
+          }
+          case CONSTANT_MethodRef, CONSTANT_FieldRef, CONSTANT_InterfaceMethodRef -> {
+            offset = reserveBuf(5);
+            CWRef ref = (CWRef) item;
+            setUShort(buf, offset + 1, addCPClass(ref.c));
+            setUShort(buf, offset + 3, addCPNAT(ref.n, ref.t));
+          }
+          default -> throw new Error("Invalid type: " + t);
         }
         buf[offset] = t;
       } else {

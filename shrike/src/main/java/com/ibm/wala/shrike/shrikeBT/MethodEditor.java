@@ -157,18 +157,14 @@ public final class MethodEditor {
   }
 
   private static String getStateMessage(int state) {
-    switch (state) {
-      case BEFORE_PASS:
-        return "This operation can only be performed before or after an editing pass";
-      case DURING_PASS:
-        return "This operation can only be performed during an editing pass";
-      case EMITTING_CODE:
-        return "This operation can only be performed while applying patches and emitting code";
-      case BEFORE_END_PASS:
-        return "This operation can only be performed after applying patches";
-      default:
-        return "This operation cannot be performed in this state";
-    }
+    return switch (state) {
+      case BEFORE_PASS -> "This operation can only be performed before or after an editing pass";
+      case DURING_PASS -> "This operation can only be performed during an editing pass";
+      case EMITTING_CODE ->
+          "This operation can only be performed while applying patches and emitting code";
+      case BEFORE_END_PASS -> "This operation can only be performed after applying patches";
+      default -> "This operation cannot be performed in this state";
+    };
   }
 
   /**

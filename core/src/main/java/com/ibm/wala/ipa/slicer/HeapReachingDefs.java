@@ -216,23 +216,18 @@ public class HeapReachingDefs<T extends InstanceKey> {
       Map<PointerKey, MutableIntSet> pointerKeyMod = HashMapFactory.make();
       for (Statement s : domain) {
         switch (s.getKind()) {
-          case HEAP_PARAM_CALLEE:
-          case HEAP_RET_CALLER:
-            {
-              HeapStatement hs = (HeapStatement) s;
-              MutableIntSet set = findOrCreateIntSet(pointerKeyMod, hs.getLocation());
+          case HEAP_PARAM_CALLEE, HEAP_RET_CALLER -> {
+            HeapStatement hs = (HeapStatement) s;
+            MutableIntSet set = findOrCreateIntSet(pointerKeyMod, hs.getLocation());
+            set.add(domain.getMappedIndex(s));
+          }
+          default -> {
+            Collection<PointerKey> m = getMod(s, node, h, pa, exclusions);
+            for (PointerKey p : m) {
+              MutableIntSet set = findOrCreateIntSet(pointerKeyMod, p);
               set.add(domain.getMappedIndex(s));
-              break;
             }
-          default:
-            {
-              Collection<PointerKey> m = getMod(s, node, h, pa, exclusions);
-              for (PointerKey p : m) {
-                MutableIntSet set = findOrCreateIntSet(pointerKeyMod, p);
-                set.add(domain.getMappedIndex(s));
-              }
-              break;
-            }
+          }
         }
       }
       return pointerKeyMod;
@@ -346,7 +341,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
         ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement) {
       switch (s.getKind()) {
-        case NORMAL:
+        case NORMAL -> {
           NormalStatement n = (NormalStatement) s;
           Collection<PointerKey> ref = modRef.getRef(node, h, pa, n.getInstruction(), exclusions);
           if (!ref.isEmpty()) {
@@ -364,75 +359,75 @@ public class HeapReachingDefs<T extends InstanceKey> {
           } else {
             return OrdinalSet.empty();
           }
-        case HEAP_RET_CALLEE:
-          {
-            HeapStatement.HeapReturnCallee r = (HeapStatement.HeapReturnCallee) s;
-            PointerKey p = r.getLocation();
-            BitVectorVariable v = solver.getIn(cfg.exit());
-            if (DEBUG) {
-              System.err.println(
-                  "computeResult " + cfg.exit() + ' ' + s + ' ' + pointerKeyMod.get(p) + ' ' + v);
-            }
-            if (pointerKeyMod.get(p) == null) {
-              return OrdinalSet.empty();
-            }
-            return new OrdinalSet<>(pointerKeyMod.get(p).intersection(v.getValue()), domain);
+        }
+        case HEAP_RET_CALLEE -> {
+          HeapStatement.HeapReturnCallee r = (HeapStatement.HeapReturnCallee) s;
+          PointerKey p = r.getLocation();
+          BitVectorVariable v = solver.getIn(cfg.exit());
+          if (DEBUG) {
+            System.err.println(
+                "computeResult " + cfg.exit() + ' ' + s + ' ' + pointerKeyMod.get(p) + ' ' + v);
           }
-        case HEAP_RET_CALLER:
-          {
-            HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) s;
-            ISSABasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
-            BitVectorVariable v = solver.getIn(bb);
-            if (allCalleesMod(cg, r, mod)
-                || pointerKeyMod.get(r.getLocation()) == null
-                || v.getValue() == null) {
-              // do nothing ... force flow into and out of the callees
-              return OrdinalSet.empty();
-            } else {
-              // the defs that flow to the call may flow to this return, since
-              // the callees may have no relevant effect.
-              return new OrdinalSet<>(
-                  pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
-            }
+          if (pointerKeyMod.get(p) == null) {
+            return OrdinalSet.empty();
           }
-        case HEAP_PARAM_CALLER:
-          {
-            HeapStatement.HeapParamCaller r = (HeapStatement.HeapParamCaller) s;
-            NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
-            ISSABasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
-            if (callBlock.isEntryBlock()) {
-              int x =
-                  domain.getMappedIndex(new HeapStatement.HeapParamCallee(node, r.getLocation()));
-              assert x >= 0;
-              IntSet xset = SparseIntSet.singleton(x);
-              return new OrdinalSet<>(xset, domain);
-            }
-            BitVectorVariable v = solver.getIn(callBlock);
-            if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
-              // do nothing ... force flow into and out of the callees
-              return OrdinalSet.empty();
-            } else {
-              return new OrdinalSet<>(
-                  pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
-            }
+          return new OrdinalSet<>(pointerKeyMod.get(p).intersection(v.getValue()), domain);
+        }
+        case HEAP_RET_CALLER -> {
+          HeapReturnCaller r = (HeapReturnCaller) s;
+          ISSABasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
+          BitVectorVariable v = solver.getIn(bb);
+          if (allCalleesMod(cg, r, mod)
+              || pointerKeyMod.get(r.getLocation()) == null
+              || v.getValue() == null) {
+            // do nothing ... force flow into and out of the callees
+            return OrdinalSet.empty();
+          } else {
+            // the defs that flow to the call may flow to this return, since
+            // the callees may have no relevant effect.
+            return new OrdinalSet<>(
+                pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
           }
-        case HEAP_PARAM_CALLEE:
+        }
+        case HEAP_PARAM_CALLER -> {
+          HeapStatement.HeapParamCaller r = (HeapStatement.HeapParamCaller) s;
+          NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
+          ISSABasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
+          if (callBlock.isEntryBlock()) {
+            int x = domain.getMappedIndex(new HeapStatement.HeapParamCallee(node, r.getLocation()));
+            assert x >= 0;
+            IntSet xset = SparseIntSet.singleton(x);
+            return new OrdinalSet<>(xset, domain);
+          }
+          BitVectorVariable v = solver.getIn(callBlock);
+          if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
+            // do nothing ... force flow into and out of the callees
+            return OrdinalSet.empty();
+          } else {
+            return new OrdinalSet<>(
+                pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
+          }
+        }
+
         // no statements in this method will def the heap being passed in
-        case NORMAL_RET_CALLEE:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case PARAM_CALLER:
-        case EXC_RET_CALLEE:
-        case EXC_RET_CALLER:
-        case PHI:
-        case PI:
-        case CATCH:
-        case METHOD_ENTRY:
-        case METHOD_EXIT:
+        case HEAP_PARAM_CALLEE,
+            NORMAL_RET_CALLEE,
+            NORMAL_RET_CALLER,
+            PARAM_CALLEE,
+            PARAM_CALLER,
+            EXC_RET_CALLEE,
+            EXC_RET_CALLER,
+            PHI,
+            PI,
+            CATCH,
+            METHOD_ENTRY,
+            METHOD_EXIT -> {
           return OrdinalSet.empty();
-        default:
+        }
+        default -> {
           Assertions.UNREACHABLE(s.getKind().toString());
           return null;
+        }
       }
     }
   }
@@ -475,33 +470,31 @@ public class HeapReachingDefs<T extends InstanceKey> {
       ExtendedHeapModel h,
       PointerAnalysis<T> pa,
       HeapExclusions exclusions) {
-    switch (s.getKind()) {
-      case NORMAL:
+    return switch (s.getKind()) {
+      case NORMAL -> {
         NormalStatement ns = (NormalStatement) s;
-        return modRef.getMod(n, h, pa, ns.getInstruction(), exclusions);
-      case HEAP_PARAM_CALLEE:
-      case HEAP_RET_CALLER:
+        yield modRef.getMod(n, h, pa, ns.getInstruction(), exclusions);
+      }
+      case HEAP_PARAM_CALLEE, HEAP_RET_CALLER -> {
         HeapStatement hs = (HeapStatement) s;
-        return Collections.singleton(hs.getLocation());
-      case HEAP_RET_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case EXC_RET_CALLEE:
-      case EXC_RET_CALLER:
-      case NORMAL_RET_CALLEE:
-      case NORMAL_RET_CALLER:
-      case PARAM_CALLEE:
-      case PARAM_CALLER:
-      case PHI:
-      case PI:
-      case METHOD_ENTRY:
-      case METHOD_EXIT:
-      case CATCH:
-        // doesn't mod anything in the heap.
-        return Collections.emptySet();
-      default:
-        Assertions.UNREACHABLE(s.getKind() + " " + s);
-        return null;
-    }
+        yield Collections.singleton(hs.getLocation());
+      }
+      case HEAP_RET_CALLEE,
+          HEAP_PARAM_CALLER,
+          EXC_RET_CALLEE,
+          EXC_RET_CALLER,
+          NORMAL_RET_CALLEE,
+          NORMAL_RET_CALLER,
+          PARAM_CALLEE,
+          PARAM_CALLER,
+          PHI,
+          PI,
+          METHOD_ENTRY,
+          METHOD_EXIT,
+          CATCH ->
+          // doesn't mod anything in the heap.
+          Collections.emptySet();
+    };
   }
 
   /** map each SSAInstruction index to the NormalStatement which represents it. */

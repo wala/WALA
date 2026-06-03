@@ -455,9 +455,10 @@ public class JavaScriptConstructorFunctions {
     SymbolTable ST = callerIR.getSymbolTable();
 
     switch (nargs) {
-      case 0:
+      case 0 -> {
         return makeFunctionConstructor(cls, cls);
-      case 1:
+      }
+      case 1 -> {
         if (ST.isStringConstant(callStmt.getUse(1))
             && !ST.getStringValue(callStmt.getUse(1)).isEmpty()) {
           TypeReference ref =
@@ -472,7 +473,8 @@ public class JavaScriptConstructorFunctions {
         }
 
         return makeFunctionConstructor(cls, cls);
-      default:
+      }
+      default -> {
         assert nargs > 1;
         JavaScriptLoader cl = (JavaScriptLoader) cha.getLoader(JavaScriptTypes.jsLoader);
 
@@ -588,6 +590,7 @@ public class JavaScriptConstructorFunctions {
         }
 
         return makeFunctionConstructor(cls, cls);
+      }
     }
   }
 

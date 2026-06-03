@@ -85,22 +85,14 @@ public abstract class Branch extends Instruction {
 
     @Override
     public IOperator getOperator() {
-      switch (op) {
-        case EQZ:
-          return IConditionalBranchInstruction.Operator.EQ;
-        case NEZ:
-          return IConditionalBranchInstruction.Operator.NE;
-        case LTZ:
-          return IConditionalBranchInstruction.Operator.LT;
-        case LEZ:
-          return IConditionalBranchInstruction.Operator.LE;
-        case GTZ:
-          return IConditionalBranchInstruction.Operator.GT;
-        case GEZ:
-          return IConditionalBranchInstruction.Operator.GE;
-        default:
-          return null;
-      }
+      return switch (op) {
+        case EQZ -> IConditionalBranchInstruction.Operator.EQ;
+        case NEZ -> IConditionalBranchInstruction.Operator.NE;
+        case LTZ -> IConditionalBranchInstruction.Operator.LT;
+        case LEZ -> IConditionalBranchInstruction.Operator.LE;
+        case GTZ -> IConditionalBranchInstruction.Operator.GT;
+        case GEZ -> IConditionalBranchInstruction.Operator.GE;
+      };
     }
   }
 
@@ -134,22 +126,14 @@ public abstract class Branch extends Instruction {
 
     @Override
     public IOperator getOperator() {
-      switch (op) {
-        case EQ:
-          return IConditionalBranchInstruction.Operator.EQ;
-        case NE:
-          return IConditionalBranchInstruction.Operator.NE;
-        case LT:
-          return IConditionalBranchInstruction.Operator.LT;
-        case LE:
-          return IConditionalBranchInstruction.Operator.LE;
-        case GT:
-          return IConditionalBranchInstruction.Operator.GT;
-        case GE:
-          return IConditionalBranchInstruction.Operator.GE;
-        default:
-          return null;
-      }
+      return switch (op) {
+        case EQ -> IConditionalBranchInstruction.Operator.EQ;
+        case NE -> IConditionalBranchInstruction.Operator.NE;
+        case LT -> IConditionalBranchInstruction.Operator.LT;
+        case LE -> IConditionalBranchInstruction.Operator.LE;
+        case GT -> IConditionalBranchInstruction.Operator.GT;
+        case GE -> IConditionalBranchInstruction.Operator.GE;
+      };
     }
   }
 

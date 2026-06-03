@@ -188,18 +188,14 @@ public class CAstPattern {
     } else if (i < tree.getChildCount() && j >= cs.length) {
       return false;
     } else if (i >= tree.getChildCount() && j < cs.length) {
-      switch (cs[j].kind) {
-        case CHILDREN_KIND:
-        case OPTIONAL_PATTERN_KIND:
-        case REPEATED_PATTERN_KIND:
-          return matchChildren(tree, i, cs, j + 1, s);
-
-        default:
-          return false;
-      }
+      return switch (cs[j].kind) {
+        case CHILDREN_KIND, OPTIONAL_PATTERN_KIND, REPEATED_PATTERN_KIND ->
+            matchChildren(tree, i, cs, j + 1, s);
+        default -> false;
+      };
     } else {
       switch (cs[j].kind) {
-        case CHILD_KIND:
+        case CHILD_KIND -> {
           if (DEBUG_MATCH) {
             System.err.println(("* matches " + CAstPrinter.print(tree.getChild(i))));
           }
@@ -208,8 +204,8 @@ public class CAstPattern {
             s.add(cs[j].name, tree.getChild(i));
           }
           return matchChildren(tree, i + 1, cs, j + 1, s);
-
-        case CHILDREN_KIND:
+        }
+        case CHILDREN_KIND -> {
           if (tryMatchChildren(tree, i, cs, j + 1, s)) {
 
             if (DEBUG_MATCH) {
@@ -230,8 +226,8 @@ public class CAstPattern {
 
             return matchChildren(tree, i + 1, cs, j, s);
           }
-
-        case REPEATED_PATTERN_KIND:
+        }
+        case REPEATED_PATTERN_KIND -> {
           CAstPattern repeatedPattern = cs[j].children[0];
           if (repeatedPattern.tryMatch(tree.getChild(i), s)) {
             if (s != null && cs[j].name != null) {
@@ -252,8 +248,8 @@ public class CAstPattern {
 
             return matchChildren(tree, i, cs, j + 1, s);
           }
-
-        case OPTIONAL_PATTERN_KIND:
+        }
+        case OPTIONAL_PATTERN_KIND -> {
           if (tryMatchChildren(tree, i, cs, j + 1, s)) {
 
             if (DEBUG_MATCH) {
@@ -274,9 +270,10 @@ public class CAstPattern {
               return false;
             }
           }
-
-        default:
+        }
+        default -> {
           return cs[j].match(tree.getChild(i), s) && matchChildren(tree, i + 1, cs, j + 1, s);
+        }
       }
     }
   }
@@ -287,10 +284,10 @@ public class CAstPattern {
     }
 
     switch (kind) {
-      case REFERENCE_PATTERN_KIND:
+      case REFERENCE_PATTERN_KIND -> {
         return references.get(value).match(tree, s);
-
-      case ALTERNATIVE_PATTERN_KIND:
+      }
+      case ALTERNATIVE_PATTERN_KIND -> {
         for (CAstPattern element : children) {
           if (element.tryMatch(tree, s)) {
 
@@ -304,8 +301,8 @@ public class CAstPattern {
           System.err.println("match failed (a)");
         }
         return false;
-
-      default:
+      }
+      default -> {
         if ((value == null)
             ? tree.getKind() != kind
             : (tree.getKind() != CAstNode.CONSTANT
@@ -331,6 +328,7 @@ public class CAstPattern {
         } else {
           return matchChildren(tree, 0, children, 0, s);
         }
+      }
     }
   }
 

@@ -747,40 +747,29 @@ public abstract class Compiler implements Constants {
                 cpIndex = ci.getCPIndex();
               } else {
                 String t = instr.getPushedType(null);
-                switch (t) {
-                  case TYPE_int:
-                    cpIndex =
-                        allocateConstantPoolInteger(
-                            ((ConstantInstruction.ConstInt) instr).getIntValue());
-                    break;
-                  case TYPE_String:
-                    cpIndex =
-                        allocateConstantPoolString(
-                            (String) ((ConstantInstruction.ConstString) instr).getValue());
-                    break;
-                  case TYPE_Class:
-                    cpIndex =
-                        allocateConstantPoolClassType(
-                            ((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue())
-                                .getTypeName());
-                    break;
-                  case TYPE_MethodType:
-                    cpIndex =
-                        allocateConstantPoolMethodType(
-                            ((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
-                    break;
-                  case TYPE_MethodHandle:
-                    cpIndex =
-                        allocateConstantPoolMethodHandle(
-                            ((ReferenceToken)
-                                ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
-                    break;
-                  default:
-                    cpIndex =
-                        allocateConstantPoolFloat(
-                            ((ConstantInstruction.ConstFloat) instr).getFloatValue());
-                    break;
-                }
+                cpIndex =
+                    switch (t) {
+                      case TYPE_int ->
+                          allocateConstantPoolInteger(
+                              ((ConstantInstruction.ConstInt) instr).getIntValue());
+                      case TYPE_String ->
+                          allocateConstantPoolString(
+                              (String) ((ConstantInstruction.ConstString) instr).getValue());
+                      case TYPE_Class ->
+                          allocateConstantPoolClassType(
+                              ((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue())
+                                  .getTypeName());
+                      case TYPE_MethodType ->
+                          allocateConstantPoolMethodType(
+                              ((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
+                      case TYPE_MethodHandle ->
+                          allocateConstantPoolMethodHandle(
+                              ((ReferenceToken)
+                                  ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
+                      default ->
+                          allocateConstantPoolFloat(
+                              ((ConstantInstruction.ConstFloat) instr).getFloatValue());
+                    };
               }
 
               if (cpIndex < 256) {

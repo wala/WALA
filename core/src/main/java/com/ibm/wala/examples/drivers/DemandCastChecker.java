@@ -254,7 +254,7 @@ public class DemandCastChecker {
           final FieldRefinePolicy fieldRefinePolicy =
               dmp.getRefinementPolicy().getFieldRefinePolicy();
           switch (queryResult.fst) {
-            case SUCCESS:
+            case SUCCESS -> {
               System.err.println("SAFE: " + castInstr + " in " + node.getMethod());
               if (fieldRefinePolicy instanceof ManualFieldPolicy) {
                 ManualFieldPolicy hackedFieldPolicy = (ManualFieldPolicy) fieldRefinePolicy;
@@ -262,8 +262,8 @@ public class DemandCastChecker {
               }
               System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
               numSafe++;
-              break;
-            case NO_MORE_REFINE:
+            }
+            case NO_MORE_REFINE -> {
               if (queryResult.snd != null) {
                 System.err.println(
                     "MIGHT FAIL: no more refinement possible for "
@@ -276,15 +276,13 @@ public class DemandCastChecker {
               }
               failing.add(Pair.make(node, castInstr));
               numMightFail++;
-              break;
-            case BUDGET_EXCEEDED:
+            }
+            case BUDGET_EXCEEDED -> {
               System.err.println(
                   "MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
               failing.add(Pair.make(node, castInstr));
               numMightFail++;
-              break;
-            default:
-              Assertions.UNREACHABLE();
+            }
           }
         }
       }

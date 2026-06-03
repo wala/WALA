@@ -124,40 +124,40 @@ public class ArrayBoundsGraphBuilder {
 
     Integer helper;
     switch (op) {
-      case EQ:
+      case EQ -> {
         this.upperBoundGraph.addPi(piVar, piParent, piRestrictor);
         this.lowerBoundGraph.addPi(piVar, piParent, piRestrictor);
-        break;
-      case NE:
+      }
+      case NE -> {
         this.upperBoundGraph.addEdge(piParent, piVar);
         this.lowerBoundGraph.addEdge(piParent, piVar);
-        break;
-      case LE: // piVar <= piRestrictor
+      }
+      case LE -> {
         this.upperBoundGraph.addPi(piVar, piParent, piRestrictor);
 
         this.lowerBoundGraph.addEdge(piParent, piVar);
-        break;
-      case GE: // piVar >= piRestrictor
+      }
+      case GE -> {
         this.lowerBoundGraph.addPi(piVar, piParent, piRestrictor);
 
         this.upperBoundGraph.addEdge(piParent, piVar);
-        break;
-      case LT: // piVar < piRestrictor
+      }
+      case LT -> {
         helper = this.upperBoundGraph.generateNewVar();
         this.upperBoundGraph.addAdditionEdge(piRestrictor, helper, -1);
         this.upperBoundGraph.addPi(piVar, piParent, helper);
 
         this.lowerBoundGraph.addEdge(piParent, piVar);
-        break;
-      case GT: // piVar > piRestrictor
+      }
+      case GT -> {
         helper = this.lowerBoundGraph.generateNewVar();
         this.lowerBoundGraph.addAdditionEdge(piRestrictor, helper, 1);
         this.lowerBoundGraph.addPi(piVar, piParent, helper);
 
         this.upperBoundGraph.addEdge(piParent, piVar);
-        break;
-      default:
-        throw new UnsupportedOperationException(String.format("unexpected operator %s", op));
+      }
+      default ->
+          throw new UnsupportedOperationException(String.format("unexpected operator %s", op));
     }
   }
 

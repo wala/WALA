@@ -71,22 +71,23 @@ public class NodejsRequiredSourceModule extends SourceFileModule {
 
     final String wrapperSource;
     String ext = FilenameUtils.getExtension(getFile().toString()).toLowerCase();
-    switch (ext) {
-      case "js":
-        // JS file -> use module wrapper
-        wrapperSource = MODULE_WRAPPER_SOURCE;
-        break;
-      case "json":
-        // JSON file -> use JSON wrapper
-        wrapperSource = JSON_WRAPPER_SOURCE;
-        break;
-      default:
-        // No clue -> try module wrapper
-        System.err.println(
-            "NodejsRequiredSourceModule: Unsupported file type (" + ext + "), continue anyway.");
-        wrapperSource = MODULE_WRAPPER_SOURCE;
-        break;
-    }
+    wrapperSource =
+        switch (ext) {
+          case "js" ->
+              // JS file -> use module wrapper
+              MODULE_WRAPPER_SOURCE;
+          case "json" ->
+              // JSON file -> use JSON wrapper
+              JSON_WRAPPER_SOURCE;
+          default -> {
+            // No clue -> try module wrapper
+            System.err.println(
+                "NodejsRequiredSourceModule: Unsupported file type ("
+                    + ext
+                    + "), continue anyway.");
+            yield MODULE_WRAPPER_SOURCE;
+          }
+        };
 
     String wrappedModuleSource =
         wrapperSource

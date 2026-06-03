@@ -179,25 +179,14 @@ public class ExceptionAnalysis2EdgeFilterTest {
     for (Map.Entry<String, Integer> entry : deletedExceptional.entrySet()) {
       final String key = entry.getKey();
       final int value = entry.getValue();
-      final int expected;
-      switch (key) {
-        case "testTryCatchMultipleExceptions":
-          expected = 12;
-          break;
-        case "testTryCatchOwnException":
-        case "testTryCatchImplicitException":
-          expected = 5;
-          break;
-        case "testTryCatchSuper":
-          expected = 3;
-          break;
-        case "main":
-          expected = 4;
-          break;
-        default:
-          expected = 0;
-          break;
-      }
+      final int expected =
+          switch (key) {
+            case "testTryCatchMultipleExceptions" -> 12;
+            case "testTryCatchOwnException", "testTryCatchImplicitException" -> 5;
+            case "testTryCatchSuper" -> 3;
+            case "main" -> 4;
+            default -> 0;
+          };
       assertThat(value).isEqualTo(expected);
     }
   }
