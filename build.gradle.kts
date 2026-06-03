@@ -6,7 +6,8 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.npm.task.NpxTask
 import com.ibm.wala.gradle.forEachJavaProject
-import org.gradle.api.JavaVersion.VERSION_17
+import org.gradle.api.GradleException
+import org.gradle.api.JavaVersion.VERSION_21
 
 buildscript { dependencies.classpath(libs.commons.io) }
 
@@ -31,9 +32,10 @@ plugins {
 repositories.mavenCentral()
 
 JavaVersion.current().let {
-  if (!it.isCompatibleWith(VERSION_17)) {
-    logger.error(
-        "Gradle is running on a Java $it JVM, which is not compatible with Java 17. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable."
+  val minimumRequired = VERSION_21
+  if (!it.isCompatibleWith(minimumRequired)) {
+    throw GradleException(
+        "Gradle is running on a Java $it JVM, which is not compatible with Java $minimumRequired. Build failures are likely. For advice on changing JVMs, visit <https://docs.gradle.org/current/userguide/build_environment.html> and look for discussion of the `org.gradle.java.home` Gradle property or the `JAVA_HOME` environment variable."
     )
   }
 }
