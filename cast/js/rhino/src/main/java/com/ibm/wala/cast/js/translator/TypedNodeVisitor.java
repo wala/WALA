@@ -149,6 +149,7 @@ public abstract class TypedNodeVisitor<R, A> {
     } else if (node instanceof ReturnStatement) {
       return visitReturnStatement((ReturnStatement) node, arg);
     } else if (node instanceof SwitchStatement) {
+      // `SwitchStatement` extends `Scope`, so we must check for the former _before_ the latter.
       return visitSwitchStatement((SwitchStatement) node, arg);
     } else if (node instanceof Scope) {
       return visitScope((Scope) node, arg);
