@@ -225,12 +225,13 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   public String toString() {
     StringBuilder buf = new StringBuilder("<");
     for (State var : vars) {
-      switch (var) {
-        case BOTH -> buf.append('*');
-        case NOT_NULL -> buf.append('1');
-        case NULL -> buf.append('0');
-        case UNKNOWN -> buf.append('?');
-      }
+      buf.append(
+          switch (var) {
+            case BOTH -> '*';
+            case NOT_NULL -> '1';
+            case NULL -> '0';
+            case UNKNOWN -> '?';
+          });
     }
     buf.append('>');
 

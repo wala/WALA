@@ -406,21 +406,15 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   }
 
   private CAstEntity getEnclosingTypeInternal(CAstEntity entity) {
-    switch (entity.getKind()) {
-      case CAstEntity.TYPE_ENTITY -> {
-        return entity;
-      }
-      case CAstEntity.FUNCTION_ENTITY -> {
-        if (entity.getQualifiers().contains(CAstQualifier.STATIC)) return null;
-        else return getEnclosingTypeInternal(getParent(entity));
-      }
-      case CAstEntity.FILE_ENTITY -> {
-        return null;
-      }
-      default -> {
-        return getEnclosingTypeInternal(getParent(entity));
-      }
-    }
+    return switch (entity.getKind()) {
+      case CAstEntity.TYPE_ENTITY -> entity;
+      case CAstEntity.FUNCTION_ENTITY ->
+          entity.getQualifiers().contains(CAstQualifier.STATIC)
+              ? null
+              : getEnclosingTypeInternal(getParent(entity));
+      case CAstEntity.FILE_ENTITY -> null;
+      default -> getEnclosingTypeInternal(getParent(entity));
+    };
   }
 
   @Override

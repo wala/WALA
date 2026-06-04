@@ -144,11 +144,12 @@ public class AddSerialVersion {
           if (name.equals("<clinit>") || (flags & ClassConstants.ACC_PRIVATE) == 0) {
             methods[methodCount] = m;
             methodSigs[m] = name + r.getMethodType(m);
-            switch (name) {
-              case "<clinit>" -> methodKinds[m] = 0;
-              case "<init>" -> methodKinds[m] = 1;
-              default -> methodKinds[m] = 2;
-            }
+            methodKinds[m] =
+                switch (name) {
+                  case "<clinit>" -> 0;
+                  case "<init>" -> 1;
+                  default -> 2;
+                };
             methodCount++;
           }
         }

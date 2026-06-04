@@ -159,35 +159,16 @@ public class Util {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
     final ConditionalBranchInstruction.Operator operator =
         (ConditionalBranchInstruction.Operator) c.getOperator();
-    switch (operator) {
-      case EQ -> {
-        if (c1 == c2) return getTakenSuccessor(G, bb);
-        else return getNotTakenSuccessor(G, bb);
-      }
-      case NE -> {
-        if (c1 != c2) return getTakenSuccessor(G, bb);
-        else return getNotTakenSuccessor(G, bb);
-      }
-      case LT -> {
-        if (c1 < c2) return getTakenSuccessor(G, bb);
-        else return getNotTakenSuccessor(G, bb);
-      }
-      case GE -> {
-        if (c1 >= c2) return getTakenSuccessor(G, bb);
-        else return getNotTakenSuccessor(G, bb);
-      }
-      case GT -> {
-        if (c1 > c2) return getTakenSuccessor(G, bb);
-        else return getNotTakenSuccessor(G, bb);
-      }
-      case LE -> {
-        if (c1 <= c2) return getTakenSuccessor(G, bb);
-        else return getNotTakenSuccessor(G, bb);
-      }
-      default ->
-          throw new UnsupportedOperationException(
-              String.format("unexpected operator %s", operator));
-    }
+    return switch (operator) {
+          case EQ -> c1 == c2;
+          case NE -> c1 != c2;
+          case LT -> c1 < c2;
+          case GE -> c1 >= c2;
+          case GT -> c1 > c2;
+          case LE -> c1 <= c2;
+        }
+        ? getTakenSuccessor(G, bb)
+        : getNotTakenSuccessor(G, bb);
   }
 
   /**

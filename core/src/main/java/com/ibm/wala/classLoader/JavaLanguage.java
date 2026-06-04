@@ -666,7 +666,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
-    switch (((Instruction) pei).getOpcode()) {
+    return switch (((Instruction) pei).getOpcode()) {
       case OP_iaload,
           OP_laload,
           OP_faload,
@@ -681,16 +681,13 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
           OP_dastore,
           OP_bastore,
           OP_castore,
-          OP_sastore -> {
-        return getArrayAccessExceptions();
-      }
-      case OP_aastore -> {
-        return getAaStoreExceptions();
-      }
+          OP_sastore ->
+          getArrayAccessExceptions();
+      case OP_aastore -> getAaStoreExceptions();
       // we're currently ignoring MonitorStateExceptions, since J2EE stuff
       // should be
       // logically single-threaded
-      // N.B: the caller must handle the explicitly-thrown exception
+      // N.B: for `OP_athrow`, the caller must handle the explicitly-thrown exception
       case OP_getfield,
           OP_putfield,
           OP_invokevirtual,
@@ -699,33 +696,19 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
           OP_monitorenter,
           OP_monitorexit,
           OP_athrow,
-          OP_arraylength -> {
-        return getNullPointerException();
-      }
-      case OP_idiv, OP_irem, OP_ldiv, OP_lrem -> {
-        return getArithmeticException();
-      }
-      case OP_new -> {
-        return newScalarExceptions;
-      }
-      case OP_newarray, OP_anewarray, OP_multianewarray -> {
-        return newArrayExceptions;
-      }
-      case OP_checkcast -> {
-        return getClassCastException();
-      }
-      case OP_ldc_w -> {
-        if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
-          return getClassNotFoundException();
-        else return null;
-      }
-      case OP_getstatic, OP_putstatic -> {
-        return getExceptionInInitializerError();
-      }
-      default -> {
-        return Collections.emptySet();
-      }
-    }
+          OP_arraylength ->
+          getNullPointerException();
+      case OP_idiv, OP_irem, OP_ldiv, OP_lrem -> getArithmeticException();
+      case OP_new -> newScalarExceptions;
+      case OP_newarray, OP_anewarray, OP_multianewarray -> newArrayExceptions;
+      case OP_checkcast -> getClassCastException();
+      case OP_ldc_w ->
+          ((ConstantInstruction) pei).getType().equals(TYPE_Class)
+              ? getClassNotFoundException()
+              : null;
+      case OP_getstatic, OP_putstatic -> getExceptionInInitializerError();
+      default -> Collections.emptySet();
+    };
   }
 
   @Override

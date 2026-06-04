@@ -85,19 +85,22 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     }
     smallStore = new IntVector[implementation.length];
     for (int i = 0; i < implementation.length; i++) {
-      switch (implementation[i]) {
-        case SIMPLE -> smallStore[i] = new SimpleIntVector(EMPTY_CODE);
-        case TWO_LEVEL -> smallStore[i] = new TwoLevelIntVector(EMPTY_CODE);
-        case SIMPLE_SPACE_STINGY -> smallStore[i] = new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
-        default ->
-            throw new IllegalArgumentException("unsupported implementation " + implementation[i]);
-      }
+      smallStore[i] =
+          switch (implementation[i]) {
+            case SIMPLE -> new SimpleIntVector(EMPTY_CODE);
+            case TWO_LEVEL -> new TwoLevelIntVector(EMPTY_CODE);
+            case SIMPLE_SPACE_STINGY -> new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
+            default ->
+                throw new IllegalArgumentException(
+                    "unsupported implementation " + implementation[i]);
+          };
     }
-    switch (vectorImpl) {
-      case SIMPLE -> delegateStore = new SimpleVector<>();
-      case TWO_LEVEL -> delegateStore = new TwoLevelVector<>();
-      default -> throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
-    }
+    delegateStore =
+        switch (vectorImpl) {
+          case SIMPLE -> new SimpleVector<>();
+          case TWO_LEVEL -> new TwoLevelVector<>();
+          default -> throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
+        };
   }
 
   public BasicNaturalRelation() {
