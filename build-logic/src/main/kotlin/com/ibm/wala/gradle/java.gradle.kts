@@ -69,6 +69,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("FallThrough")
       error("IfChainToSwitch")
       error("RefactorSwitch")
+      error("StringConcatToTextBlock")
       error("StatementSwitchToExpressionSwitch")
       error("TraditionalSwitchExpression")
       error("UnnecessaryBreakInSwitch")

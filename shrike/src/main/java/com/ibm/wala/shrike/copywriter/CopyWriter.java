@@ -45,12 +45,13 @@ import java.util.zip.ZipEntry;
 
 public class CopyWriter {
   private static final String USAGE =
-      "IBM CopyWriter Tool\n"
-          + "This tool takes the following command line options:\n"
-          + "    <jar-name> <jar-name> ...   Process the classes from these jars\n"
-          + "    -o <jar-name>               Put the resulting classes into <jar-name>\n"
-          + "    -c <copyright>              Make the copyright string be\n"
-          + "                                '\u00A9 Copyright <copyright>'";
+      """
+          IBM CopyWriter Tool
+          This tool takes the following command line options:
+              <jar-name> <jar-name> ...   Process the classes from these jars
+              -o <jar-name>               Put the resulting classes into <jar-name>
+              -c <copyright>              Make the copyright string be
+                                          '\u00A9 Copyright <copyright>'""";
 
   private static OfflineInstrumenter instrumenter;
 
