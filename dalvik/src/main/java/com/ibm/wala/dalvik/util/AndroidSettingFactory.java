@@ -250,20 +250,20 @@ public class AndroidSettingFactory {
       mUri = Atom.findOrCreateAsciiAtom(uri);
     }
     switch (type) {
-      case INTERNAL_TARGET:
+      case INTERNAL_TARGET -> {
         if (uri != null) {
           ret = new InternalIntent(action, mUri);
         } else {
           ret = new InternalIntent(action);
         }
-        break;
-      default:
+      }
+      default -> {
         if (uri != null) {
           ret = new StandardIntent(action, mUri);
         } else {
           ret = new StandardIntent(action);
         }
-        break;
+      }
     }
 
     return ret;

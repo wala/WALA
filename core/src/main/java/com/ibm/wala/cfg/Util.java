@@ -160,26 +160,33 @@ public class Util {
     final ConditionalBranchInstruction.Operator operator =
         (ConditionalBranchInstruction.Operator) c.getOperator();
     switch (operator) {
-      case EQ:
+      case EQ -> {
         if (c1 == c2) return getTakenSuccessor(G, bb);
         else return getNotTakenSuccessor(G, bb);
-      case NE:
+      }
+      case NE -> {
         if (c1 != c2) return getTakenSuccessor(G, bb);
         else return getNotTakenSuccessor(G, bb);
-      case LT:
+      }
+      case LT -> {
         if (c1 < c2) return getTakenSuccessor(G, bb);
         else return getNotTakenSuccessor(G, bb);
-      case GE:
+      }
+      case GE -> {
         if (c1 >= c2) return getTakenSuccessor(G, bb);
         else return getNotTakenSuccessor(G, bb);
-      case GT:
+      }
+      case GT -> {
         if (c1 > c2) return getTakenSuccessor(G, bb);
         else return getNotTakenSuccessor(G, bb);
-      case LE:
+      }
+      case LE -> {
         if (c1 <= c2) return getTakenSuccessor(G, bb);
         else return getNotTakenSuccessor(G, bb);
-      default:
-        throw new UnsupportedOperationException(String.format("unexpected operator %s", operator));
+      }
+      default ->
+          throw new UnsupportedOperationException(
+              String.format("unexpected operator %s", operator));
     }
   }
 

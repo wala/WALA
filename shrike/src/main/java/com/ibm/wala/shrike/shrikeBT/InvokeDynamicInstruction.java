@@ -45,18 +45,13 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   @Override
   public Dispatch getInvocationCode() {
     int invokeType = getBootstrap().invokeType();
-    switch (invokeType) {
-      case 5:
-        return Dispatch.VIRTUAL;
-      case 6:
-        return Dispatch.STATIC;
-      case 7:
-        return Dispatch.SPECIAL;
-      case 9:
-        return Dispatch.INTERFACE;
-      default:
-        throw new Error("unexpected dynamic invoke type " + invokeType);
-    }
+    return switch (invokeType) {
+      case 5 -> Dispatch.VIRTUAL;
+      case 6 -> Dispatch.STATIC;
+      case 7 -> Dispatch.SPECIAL;
+      case 9 -> Dispatch.INTERFACE;
+      default -> throw new Error("unexpected dynamic invoke type " + invokeType);
+    };
   }
 
   @Override

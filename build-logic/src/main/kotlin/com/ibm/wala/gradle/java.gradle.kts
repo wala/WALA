@@ -66,6 +66,13 @@ tasks.withType<JavaCompile>().configureEach {
       error("AnnotationPosition")
       error("AssertEqualsArgumentOrderChecker")
       error("ArgumentSelectionDefectChecker")
+      error("FallThrough")
+      error("IfChainToSwitch")
+      error("RefactorSwitch")
+      error("StatementSwitchToExpressionSwitch")
+      error("TraditionalSwitchExpression")
+      error("UnnecessaryBreakInSwitch")
+      error("UseEnumSwitch")
       // checks we do not intend to try to fix in the near-term:
       disable("LabelledBreakTarget")
       // Just too many of these; proper Javadoc would be a great long-term goal

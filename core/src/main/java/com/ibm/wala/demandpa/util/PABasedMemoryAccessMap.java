@@ -149,12 +149,11 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     }
     for (Statement s : stmts) {
       switch (s.getKind()) {
-        case NORMAL:
+        case NORMAL -> {
           NormalStatement normStmt = (NormalStatement) s;
           result.add(new MemoryAccess(normStmt.getInstructionIndex(), normStmt.getNode()));
-          break;
-        default:
-          Assertions.UNREACHABLE();
+        }
+        default -> Assertions.UNREACHABLE();
       }
     }
   }

@@ -81,80 +81,72 @@ public class DexUtil {
 
   static ElementValue getValue(ClassLoaderReference clr, EncodedValue v) {
     switch (v.getValueType()) {
-      case ANNOTATION:
-        {
-          Map<String, ElementValue> values = HashMapFactory.make();
-          String at = ((AnnotationEncodedValue) v).getType();
+      case ANNOTATION -> {
+        Map<String, ElementValue> values = HashMapFactory.make();
+        String at = ((AnnotationEncodedValue) v).getType();
 
-          for (AnnotationElement elt : ((AnnotationEncodedValue) v).getElements()) {
-            String name = elt.getName();
-            EncodedValue ev = elt.getValue();
-            ElementValue value = getValue(clr, ev);
-            values.put(name, value);
-          }
-
-          return new AnnotationAttribute(at, values);
+        for (AnnotationElement elt : ((AnnotationEncodedValue) v).getElements()) {
+          String name = elt.getName();
+          EncodedValue ev = elt.getValue();
+          ElementValue value = getValue(clr, ev);
+          values.put(name, value);
         }
 
-      case ARRAY:
-        {
-          List<? extends EncodedValue> vs = ((ArrayEncodedValue) v).getValue();
-          ElementValue[] rs = new ElementValue[vs.size()];
-          int idx = 0;
-          for (EncodedValue ev : vs) {
-            rs[idx++] = getValue(clr, ev);
-          }
-          return new ArrayElementValue(rs);
+        return new AnnotationAttribute(at, values);
+      }
+      case ARRAY -> {
+        List<? extends EncodedValue> vs = ((ArrayEncodedValue) v).getValue();
+        ElementValue[] rs = new ElementValue[vs.size()];
+        int idx = 0;
+        for (EncodedValue ev : vs) {
+          rs[idx++] = getValue(clr, ev);
         }
-
-      case BOOLEAN:
+        return new ArrayElementValue(rs);
+      }
+      case BOOLEAN -> {
         Boolean bl = ((BooleanEncodedValue) v).getValue();
         return new ConstantElementValue(bl);
-
-      case BYTE:
+      }
+      case BYTE -> {
         Byte bt = ((ByteEncodedValue) v).getValue();
         return new ConstantElementValue(bt);
-
-      case CHAR:
+      }
+      case CHAR -> {
         Character c = ((CharEncodedValue) v).getValue();
         return new ConstantElementValue(c);
-
-      case DOUBLE:
+      }
+      case DOUBLE -> {
         Double d = ((DoubleEncodedValue) v).getValue();
         return new ConstantElementValue(d);
-
-      case ENUM:
-        {
-          org.jf.dexlib2.iface.reference.FieldReference o = ((EnumEncodedValue) v).getValue();
-          return new EnumElementValue(o.getType(), o.getName());
-        }
-
-      case FIELD:
-        {
-          org.jf.dexlib2.iface.reference.FieldReference o =
-              v.getValueType() == ENUM
-                  ? ((EnumEncodedValue) v).getValue()
-                  : ((FieldEncodedValue) v).getValue();
-          String fieldName = o.getName();
-          TypeReference ft = getTypeRef(o.getType(), clr);
-          TypeReference ct = getTypeRef(o.getDefiningClass(), clr);
-          return new ConstantElementValue(
-              FieldReference.findOrCreate(ct, Atom.findOrCreateUnicodeAtom(fieldName), ft));
-        }
-
-      case FLOAT:
+      }
+      case ENUM -> {
+        org.jf.dexlib2.iface.reference.FieldReference o = ((EnumEncodedValue) v).getValue();
+        return new EnumElementValue(o.getType(), o.getName());
+      }
+      case FIELD -> {
+        org.jf.dexlib2.iface.reference.FieldReference o =
+            v.getValueType() == ENUM
+                ? ((EnumEncodedValue) v).getValue()
+                : ((FieldEncodedValue) v).getValue();
+        String fieldName = o.getName();
+        TypeReference ft = getTypeRef(o.getType(), clr);
+        TypeReference ct = getTypeRef(o.getDefiningClass(), clr);
+        return new ConstantElementValue(
+            FieldReference.findOrCreate(ct, Atom.findOrCreateUnicodeAtom(fieldName), ft));
+      }
+      case FLOAT -> {
         Float f = ((FloatEncodedValue) v).getValue();
         return new ConstantElementValue(f);
-
-      case INT:
+      }
+      case INT -> {
         Integer iv = ((IntEncodedValue) v).getValue();
         return new ConstantElementValue(iv);
-
-      case LONG:
+      }
+      case LONG -> {
         Long l = ((LongEncodedValue) v).getValue();
         return new ConstantElementValue(l);
-
-      case METHOD:
+      }
+      case METHOD -> {
         org.jf.dexlib2.iface.reference.MethodReference m = ((MethodEncodedValue) v).getValue();
         TypeReference ct = getTypeRef(m.getDefiningClass(), clr);
         String methodName = m.getName();
@@ -164,25 +156,26 @@ public class DexUtil {
                 ct,
                 Atom.findOrCreateUnicodeAtom(methodName),
                 Descriptor.findOrCreateUTF8(methodSig)));
-
-      case NULL:
+      }
+      case NULL -> {
         return new ConstantElementValue(null);
-
-      case SHORT:
+      }
+      case SHORT -> {
         Short s = ((ShortEncodedValue) v).getValue();
         return new ConstantElementValue(s);
-
-      case STRING:
+      }
+      case STRING -> {
         String str = ((StringEncodedValue) v).getValue();
         return new ConstantElementValue(str);
-
-      case TYPE:
+      }
+      case TYPE -> {
         String t = ((TypeEncodedValue) v).getValue();
         return new ConstantElementValue(getTypeName(t) + ";");
-
-      default:
+      }
+      default -> {
         assert false : v;
         return null;
+      }
     }
   }
 

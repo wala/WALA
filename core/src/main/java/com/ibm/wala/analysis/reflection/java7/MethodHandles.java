@@ -482,68 +482,64 @@ public class MethodHandles {
                 if (isInvoke(key)) {
                   String name = key.getMethod().getName().toString();
                   switch (name) {
-                    case "invokeWithArguments":
-                      {
-                        int nargs = ref.getNumberOfParameters();
-                        int[] params = new int[nargs];
+                    case "invokeWithArguments" -> {
+                      int nargs = ref.getNumberOfParameters();
+                      int[] params = new int[nargs];
+                      for (int i = 0; i < nargs; i++) {
+                        code.addConstant(i + nargs + 3, new ConstantValue(i));
+                        code.addStatement(
+                            insts.ArrayLoadInstruction(
+                                code.getNumberOfStatements(),
+                                i + 3,
+                                1,
+                                i + nargs + 3,
+                                TypeReference.JavaLangObject));
+                        params[i] = i + 3;
+                      }
+                      CallSiteReference site =
+                          CallSiteReference.make(
+                              nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
+                      code.addStatement(
+                          insts.InvokeInstruction(
+                              code.getNumberOfStatements(),
+                              2 * nargs + 3,
+                              params,
+                              2 * nargs + 4,
+                              site,
+                              null));
+                      code.addStatement(
+                          insts.ReturnInstruction(
+                              code.getNumberOfStatements(), 2 * nargs + 3, false));
+                    }
+                    case "invokeExact" -> {
+                      int nargs = key.getMethod().getReference().getNumberOfParameters();
+                      int[] params = new int[nargs];
+                      if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
                         for (int i = 0; i < nargs; i++) {
-                          code.addConstant(i + nargs + 3, new ConstantValue(i));
-                          code.addStatement(
-                              insts.ArrayLoadInstruction(
-                                  code.getNumberOfStatements(),
-                                  i + 3,
-                                  1,
-                                  i + nargs + 3,
-                                  TypeReference.JavaLangObject));
-                          params[i] = i + 3;
+                          params[i] = i + 2;
                         }
                         CallSiteReference site =
                             CallSiteReference.make(
-                                nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
-                        code.addStatement(
-                            insts.InvokeInstruction(
-                                code.getNumberOfStatements(),
-                                2 * nargs + 3,
-                                params,
-                                2 * nargs + 4,
-                                site,
-                                null));
-                        code.addStatement(
-                            insts.ReturnInstruction(
-                                code.getNumberOfStatements(), 2 * nargs + 3, false));
-                        break;
-                      }
-                    case "invokeExact":
-                      {
-                        int nargs = key.getMethod().getReference().getNumberOfParameters();
-                        int[] params = new int[nargs];
-                        if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
-                          for (int i = 0; i < nargs; i++) {
-                            params[i] = i + 2;
-                          }
-                          CallSiteReference site =
-                              CallSiteReference.make(
-                                  0, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
-                          if (isVoid) {
-                            code.addStatement(
-                                insts.InvokeInstruction(
-                                    code.getNumberOfStatements(), params, nargs + 2, site, null));
-                          } else {
-                            code.addStatement(
-                                insts.InvokeInstruction(
-                                    code.getNumberOfStatements(),
-                                    nargs + 2,
-                                    params,
-                                    nargs + 3,
-                                    site,
-                                    null));
-                            code.addStatement(
-                                insts.ReturnInstruction(
-                                    code.getNumberOfStatements(), nargs + 2, false));
-                          }
+                                0, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
+                        if (isVoid) {
+                          code.addStatement(
+                              insts.InvokeInstruction(
+                                  code.getNumberOfStatements(), params, nargs + 2, site, null));
+                        } else {
+                          code.addStatement(
+                              insts.InvokeInstruction(
+                                  code.getNumberOfStatements(),
+                                  nargs + 2,
+                                  params,
+                                  nargs + 3,
+                                  site,
+                                  null));
+                          code.addStatement(
+                              insts.ReturnInstruction(
+                                  code.getNumberOfStatements(), nargs + 2, false));
                         }
-                        break;
                       }
+                    }
                   }
                 } else {
                   assert isType(key);

@@ -100,16 +100,18 @@ public abstract class Entrypoint implements BytecodeConstants {
   protected int makeArgument(AbstractRootMethod m, int i) {
     TypeReference[] p = getParameterTypes(i);
     switch (p.length) {
-      case 0:
+      case 0 -> {
         return -1;
-      case 1:
+      }
+      case 1 -> {
         if (p[0].isPrimitiveType()) {
           return m.addLocal();
         } else {
           SSANewInstruction n = addNewStatement(m, p[0]);
           return (n == null) ? -1 : n.getDef();
         }
-      default:
+      }
+      default -> {
         int[] values = new int[p.length];
         int countErrors = 0;
         for (int j = 0; j < p.length; j++) {
@@ -144,6 +146,7 @@ public abstract class Entrypoint implements BytecodeConstants {
         }
 
         return m.addPhi(values);
+      }
     }
   }
 

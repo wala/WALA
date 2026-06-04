@@ -427,117 +427,94 @@ public class JSAstTranslator extends AstTranslator {
     try {
       String name = (String) primitiveCall.getChild(0).getValue();
       switch (name) {
-        case "GlobalNaN":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Float.NaN)));
-          break;
-        case "GlobalInfinity":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Float.POSITIVE_INFINITY)));
-          break;
-        case "MathE":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Math.E)));
-          break;
-        case "MathPI":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Math.PI)));
-          break;
-        case "MathSQRT1_2":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Math.sqrt(.5))));
-          break;
-        case "MathSQRT2":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Math.sqrt(2))));
-          break;
-        case "MathLN2":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Math.log(2))));
-          break;
-        case "MathLN10":
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(Math.log(10))));
-          break;
-        case "NewObject":
-          doNewObject(context, null, resultVal, "Object", null);
-          break;
-        case "NewArray":
-          doNewObject(context, null, resultVal, "Array", null);
-          break;
-        case "NewString":
-          doPrimitiveNew(context, resultVal, "String");
-          break;
-        case "NewNumber":
-          doPrimitiveNew(context, resultVal, "Number");
-          break;
-        case "NewRegExp":
-          doPrimitiveNew(context, resultVal, "RegExp");
-          break;
-        case "NewFunction":
-          doNewObject(context, null, resultVal, "Function", null);
-          break;
-        case "NewUndefined":
-          doNewObject(context, null, resultVal, "Undefined", null);
-          break;
-        default:
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .AssignInstruction(
-                          context.cfg().getCurrentInstruction(),
-                          resultVal,
-                          context.currentScope().getConstantValue(null)));
-          break;
+        case "GlobalNaN" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Float.NaN)));
+        case "GlobalInfinity" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Float.POSITIVE_INFINITY)));
+        case "MathE" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Math.E)));
+        case "MathPI" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Math.PI)));
+        case "MathSQRT1_2" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Math.sqrt(.5))));
+        case "MathSQRT2" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Math.sqrt(2))));
+        case "MathLN2" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Math.log(2))));
+        case "MathLN10" ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(Math.log(10))));
+        case "NewObject" -> doNewObject(context, null, resultVal, "Object", null);
+        case "NewArray" -> doNewObject(context, null, resultVal, "Array", null);
+        case "NewString" -> doPrimitiveNew(context, resultVal, "String");
+        case "NewNumber" -> doPrimitiveNew(context, resultVal, "Number");
+        case "NewRegExp" -> doPrimitiveNew(context, resultVal, "RegExp");
+        case "NewFunction" -> doNewObject(context, null, resultVal, "Function", null);
+        case "NewUndefined" -> doNewObject(context, null, resultVal, "Undefined", null);
+        default ->
+            context
+                .cfg()
+                .addInstruction(
+                    ((JSInstructionFactory) insts)
+                        .AssignInstruction(
+                            context.cfg().getCurrentInstruction(),
+                            resultVal,
+                            context.currentScope().getConstantValue(null)));
       }
     } catch (ClassCastException e) {
       throw new RuntimeException(
@@ -584,44 +561,39 @@ public class JSAstTranslator extends AstTranslator {
   @Override
   protected boolean doVisit(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     switch (n.getKind()) {
-      case CAstNode.TYPE_OF:
-        {
-          int result = context.currentScope().allocateTempValue();
+      case CAstNode.TYPE_OF -> {
+        int result = context.currentScope().allocateTempValue();
 
-          this.visit(n.getChild(0), context, this);
-          int ref = context.getValue(n.getChild(0));
+        this.visit(n.getChild(0), context, this);
+        int ref = context.getValue(n.getChild(0));
 
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .TypeOfInstruction(context.cfg().getCurrentInstruction(), result, ref));
+        context
+            .cfg()
+            .addInstruction(
+                ((JSInstructionFactory) insts)
+                    .TypeOfInstruction(context.cfg().getCurrentInstruction(), result, ref));
 
-          context.setValue(n, result);
-          return true;
-        }
+        context.setValue(n, result);
+        return true;
+      }
+      case JavaScriptCAstNode.ENTER_WITH, JavaScriptCAstNode.EXIT_WITH -> {
+        this.visit(n.getChild(0), context, this);
+        int ref = context.getValue(n.getChild(0));
 
-      case JavaScriptCAstNode.ENTER_WITH:
-      case JavaScriptCAstNode.EXIT_WITH:
-        {
-          this.visit(n.getChild(0), context, this);
-          int ref = context.getValue(n.getChild(0));
+        context
+            .cfg()
+            .addInstruction(
+                ((JSInstructionFactory) insts)
+                    .WithRegion(
+                        context.cfg().getCurrentInstruction(),
+                        ref,
+                        n.getKind() == JavaScriptCAstNode.ENTER_WITH));
 
-          context
-              .cfg()
-              .addInstruction(
-                  ((JSInstructionFactory) insts)
-                      .WithRegion(
-                          context.cfg().getCurrentInstruction(),
-                          ref,
-                          n.getKind() == JavaScriptCAstNode.ENTER_WITH));
-
-          return true;
-        }
-      default:
-        {
-          return false;
-        }
+        return true;
+      }
+      default -> {
+        return false;
+      }
     }
   }
 

@@ -444,32 +444,25 @@ public class BytecodeStream implements BytecodeConstants {
   // Skip a tableswitch or a lookupswitch instruction
   private void skipSpecialInstruction(int opcode) {
     switch (opcode) {
-      case JBC_tableswitch:
-        {
-          alignSwitch();
-          getDefaultSwitchOffset();
-          int l = getLowSwitchValue();
-          int h = getHighSwitchValue();
-          skipTableSwitchOffsets(h - l + 1); // jump offsets
-        }
-        break;
-      case JBC_lookupswitch:
-        {
-          alignSwitch();
-          getDefaultSwitchOffset();
-          int n = getSwitchLength();
-          skipLookupSwitchPairs(n); // match-offset pairs
-        }
-        break;
-      case JBC_wide:
-        {
-          int oc = getWideOpcode();
-          int len = JBC_length[oc] - 1;
-          bcIndex += len + len;
-        }
-        break;
-      default:
-        throw new NullPointerException();
+      case JBC_tableswitch -> {
+        alignSwitch();
+        getDefaultSwitchOffset();
+        int l = getLowSwitchValue();
+        int h = getHighSwitchValue();
+        skipTableSwitchOffsets(h - l + 1); // jump offsets
+      }
+      case JBC_lookupswitch -> {
+        alignSwitch();
+        getDefaultSwitchOffset();
+        int n = getSwitchLength();
+        skipLookupSwitchPairs(n); // match-offset pairs
+      }
+      case JBC_wide -> {
+        int oc = getWideOpcode();
+        int len = JBC_length[oc] - 1;
+        bcIndex += len + len;
+      }
+      default -> throw new NullPointerException();
     }
   }
 

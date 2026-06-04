@@ -260,19 +260,16 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   @Override
   public byte classifyEdge(T src, T dest) {
     byte d = delegate.classifyEdge(dest, src);
-    switch (d) {
-      case CALL_EDGE:
-        return RETURN_EDGE;
-      case RETURN_EDGE:
-        return CALL_EDGE;
-      case OTHER:
-        return OTHER;
-      case CALL_TO_RETURN_EDGE:
-        return CALL_TO_RETURN_EDGE;
-      default:
+    return switch (d) {
+      case CALL_EDGE -> RETURN_EDGE;
+      case RETURN_EDGE -> CALL_EDGE;
+      case OTHER -> OTHER;
+      case CALL_TO_RETURN_EDGE -> CALL_TO_RETURN_EDGE;
+      default -> {
         Assertions.UNREACHABLE();
-        return -1;
-    }
+        yield -1;
+      }
+    };
   }
 
   @Override

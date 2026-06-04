@@ -36,15 +36,13 @@ public class ArrayOutOfBoundsAnalysis {
       if (set.contains(BOTH) || (set.contains(UPPER) && set.contains(LOWER))) {
         return BOTH;
       } else {
-        switch (set.size()) {
-          case 0:
-            return NONE;
-          case 1:
-            return set.iterator().next();
-          default:
-            throw new RuntimeException(
-                "Case that should not happen, this method is implemented wrong.");
-        }
+        return switch (set.size()) {
+          case 0 -> NONE;
+          case 1 -> set.iterator().next();
+          default ->
+              throw new RuntimeException(
+                  "Case that should not happen, this method is implemented wrong.");
+        };
       }
     }
   }

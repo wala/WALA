@@ -65,39 +65,23 @@ public class ConditionNormalizer {
   }
 
   private static Operator negateOperator(Operator op) {
-    switch (op) {
-      case EQ:
-        return Operator.NE;
-      case NE:
-        return Operator.EQ;
-      case LT:
-        return Operator.GE;
-      case GE:
-        return Operator.LT;
-      case GT:
-        return Operator.LE;
-      case LE:
-        return Operator.GT;
-      default:
-        throw new RuntimeException("Programming Error: Got unknown operator.");
-    }
+    return switch (op) {
+      case EQ -> Operator.NE;
+      case NE -> Operator.EQ;
+      case LT -> Operator.GE;
+      case GE -> Operator.LT;
+      case GT -> Operator.LE;
+      case LE -> Operator.GT;
+    };
   }
 
   private static Operator swapOperator(Operator op) {
-    switch (op) {
-      case EQ:
-      case NE:
-        return op;
-      case LT:
-        return Operator.GT;
-      case GE:
-        return Operator.LE;
-      case GT:
-        return Operator.LT;
-      case LE:
-        return Operator.GE;
-      default:
-        throw new RuntimeException("Programming Error: Got unknown operator.");
-    }
+    return switch (op) {
+      case EQ, NE -> op;
+      case LT -> Operator.GT;
+      case GE -> Operator.LE;
+      case GT -> Operator.LT;
+      case LE -> Operator.GE;
+    };
   }
 }

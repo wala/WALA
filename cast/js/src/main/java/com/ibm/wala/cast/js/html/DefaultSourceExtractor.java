@@ -199,18 +199,18 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
     protected void writePortletAttribute(ITag tag, String attr, String value, String varName) {
       if (attr.equals("portletid")) {
         switch (value.substring(value.length() - 4)) {
-          case "vice":
+          case "vice" -> {
             newLine();
             newLine();
             printlnIndented(
                 "function cVice() { var contextVice = " + varName + "; }\ncVice();\n", tag);
-            break;
-          case "root":
+          }
+          case "root" -> {
             newLine();
             newLine();
             printlnIndented(
                 "function cRoot() { var contextRoot = " + varName + "; }\ncRoot();\n", tag);
-            break;
+          }
         }
       }
     }

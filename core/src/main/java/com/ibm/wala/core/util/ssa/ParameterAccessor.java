@@ -278,7 +278,7 @@ public class ParameterAccessor {
     @Override
     public String toString() {
       switch (this.disp) {
-        case THIS:
+        case THIS -> {
           return "Implicit this-parameter of "
               + this.mRef.getName()
               + " as "
@@ -286,7 +286,8 @@ public class ParameterAccessor {
               + " accessible using "
               + "SSA-Value "
               + this.number;
-        case PARAM:
+        }
+        case PARAM -> {
           if (this.key instanceof NamedKey) {
             return "Parameter "
                 + getNumberInDescriptor()
@@ -308,21 +309,24 @@ public class ParameterAccessor {
                 + " accessible using SSA-Value "
                 + this.number;
           }
-        case RETURN:
+        }
+        case RETURN -> {
           return "Return Value of "
               + this.mRef.getName()
               + " as "
               + this.type
               + " accessible using SSA-Value "
               + this.number;
-        case NEW:
+        }
+        case NEW -> {
           return "New instance of "
               + this.type
               + " accessible in "
               + this.mRef.getName()
               + " using number "
               + this.number;
-        default:
+        }
+        default -> {
           return "Parameter "
               + getNumberInDescriptor()
               + " - "
@@ -333,6 +337,7 @@ public class ParameterAccessor {
               + this.type
               + " accessible using SSA-Value "
               + this.number;
+        }
       }
     }
   }
@@ -541,29 +546,26 @@ public class ParameterAccessor {
     // no is checked by getParameterNo(int)
     final int newNo = getParameterNo(no);
 
-    switch (this.base) {
-      case IMETHOD: // TODO: Try reading parameter name
-        return new Parameter(
-            newNo,
-            null,
-            this.method.getParameterType(no),
-            ParameterDisposition.PARAM,
-            this.base,
-            this.method.getReference(),
-            this.descriptorOffset);
-      case METHOD_REFERENCE:
-        return new Parameter(
-            newNo,
-            null,
-            this.mRef.getParameterType(no - 1),
-            ParameterDisposition.PARAM,
-            this.base,
-            this.mRef,
-            this.descriptorOffset);
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getParameter() for base " + this.base);
-    }
+    return switch (this.base) {
+      case IMETHOD -> // TODO: Try reading parameter name
+          new Parameter(
+              newNo,
+              null,
+              this.method.getParameterType(no),
+              ParameterDisposition.PARAM,
+              this.base,
+              this.method.getReference(),
+              this.descriptorOffset);
+      case METHOD_REFERENCE ->
+          new Parameter(
+              newNo,
+              null,
+              this.mRef.getParameterType(no - 1),
+              ParameterDisposition.PARAM,
+              this.base,
+              this.mRef,
+              this.descriptorOffset);
+    };
   }
 
   /**
@@ -596,17 +598,19 @@ public class ParameterAccessor {
     }
 
     switch (this.base) {
-      case IMETHOD:
+      case IMETHOD -> {
         return no + this.implicitThis; // + this.implicitThis; // TODO: Verify
-      case METHOD_REFERENCE:
+      }
+      case METHOD_REFERENCE -> {
         if (this.implicitThis > 0) {
           return no + this.implicitThis; //
         } else {
           return no;
         }
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getParameter() for base " + this.base);
+      }
+      default ->
+          throw new UnsupportedOperationException(
+              "No implementation of getParameter() for base " + this.base);
     }
   }
 
@@ -638,50 +642,44 @@ public class ParameterAccessor {
       return all;
     } else {
       switch (this.base) {
-        case IMETHOD:
-          {
-            // final int firstInSelector = firstInSelector();
-            for (int i = (hasImplicitThis() ? 1 : 0);
-                i < this.method.getNumberOfParameters();
-                ++i) {
-              debug(
-                  "all() adding: Parameter({}, {}, {}, {}, {})",
-                  (i + 1),
-                  this.method.getParameterType(i),
-                  this.base,
-                  this.method,
-                  this.descriptorOffset);
-              all.add(
-                  new Parameter(
-                      i + 1,
-                      null,
-                      this.method.getParameterType(i),
-                      ParameterDisposition.PARAM,
-                      this.base,
-                      this.method.getReference(),
-                      this.descriptorOffset));
-            }
+        case IMETHOD -> {
+          // final int firstInSelector = firstInSelector();
+          for (int i = (hasImplicitThis() ? 1 : 0); i < this.method.getNumberOfParameters(); ++i) {
+            debug(
+                "all() adding: Parameter({}, {}, {}, {}, {})",
+                (i + 1),
+                this.method.getParameterType(i),
+                this.base,
+                this.method,
+                this.descriptorOffset);
+            all.add(
+                new Parameter(
+                    i + 1,
+                    null,
+                    this.method.getParameterType(i),
+                    ParameterDisposition.PARAM,
+                    this.base,
+                    this.method.getReference(),
+                    this.descriptorOffset));
           }
-          break;
-        case METHOD_REFERENCE:
-          {
-            final int firstInSelector = firstInSelector();
-            for (int i = 0 /*firstInSelector()*/; i < this.numberOfParameters; ++i) { // TODO:
-              all.add(
-                  new Parameter(
-                      i + firstInSelector,
-                      null,
-                      this.mRef.getParameterType(i),
-                      ParameterDisposition.PARAM,
-                      this.base,
-                      this.mRef,
-                      this.descriptorOffset));
-            }
+        }
+        case METHOD_REFERENCE -> {
+          final int firstInSelector = firstInSelector();
+          for (int i = 0 /*firstInSelector()*/; i < this.numberOfParameters; ++i) { // TODO:
+            all.add(
+                new Parameter(
+                    i + firstInSelector,
+                    null,
+                    this.mRef.getParameterType(i),
+                    ParameterDisposition.PARAM,
+                    this.base,
+                    this.mRef,
+                    this.descriptorOffset));
           }
-          break;
-        default:
-          throw new UnsupportedOperationException(
-              "No implementation of all() for base " + this.base);
+        }
+        default ->
+            throw new UnsupportedOperationException(
+                "No implementation of all() for base " + this.base);
       }
     }
 
@@ -701,18 +699,11 @@ public class ParameterAccessor {
    */
   public Parameter getThis() {
     final int self = getThisNo();
-    final TypeReference selfType;
-    switch (this.base) {
-      case IMETHOD:
-        selfType = this.method.getParameterType(self);
-        break;
-      case METHOD_REFERENCE:
-        selfType = this.mRef.getDeclaringClass();
-        break;
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getThis() for base " + this.base);
-    }
+    final TypeReference selfType =
+        switch (this.base) {
+          case IMETHOD -> this.method.getParameterType(self);
+          case METHOD_REFERENCE -> this.mRef.getDeclaringClass();
+        };
     return getThisAs(selfType);
   }
 
@@ -725,7 +716,7 @@ public class ParameterAccessor {
     final int self = getThisNo();
 
     switch (this.base) {
-      case IMETHOD:
+      case IMETHOD -> {
         final IClassHierarchy cha = this.method.getClassHierarchy();
         try {
           if (!isSubclassOf(this.method.getParameterType(self), asType, cha)) {
@@ -747,7 +738,8 @@ public class ParameterAccessor {
             this.base,
             this.method.getReference(),
             this.descriptorOffset);
-      case METHOD_REFERENCE:
+      }
+      case METHOD_REFERENCE -> {
         // TODO assert asType is a subtype of self.type - we need cha to do that :(
         return new Parameter(
             self,
@@ -757,9 +749,11 @@ public class ParameterAccessor {
             this.base,
             this.mRef,
             this.descriptorOffset);
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getThis() for base " + this.base);
+        // TODO assert asType is a subtype of self.type - we need cha to do that :(
+      }
+      default ->
+          throw new UnsupportedOperationException(
+              "No implementation of getThis() for base " + this.base);
     }
   }
 
@@ -797,29 +791,26 @@ public class ParameterAccessor {
       throw new IllegalStateException("Can't generate a return-value for a void-function.");
     }
 
-    switch (this.base) {
-      case IMETHOD:
-        return new Parameter(
-            ssa,
-            "retVal",
-            getReturnType(),
-            ParameterDisposition.RETURN,
-            this.base,
-            this.method.getReference(),
-            this.descriptorOffset);
-      case METHOD_REFERENCE:
-        return new Parameter(
-            ssa,
-            "retVal",
-            getReturnType(),
-            ParameterDisposition.RETURN,
-            this.base,
-            this.mRef,
-            this.descriptorOffset);
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getReturn() for base " + this.base);
-    }
+    return switch (this.base) {
+      case IMETHOD ->
+          new Parameter(
+              ssa,
+              "retVal",
+              getReturnType(),
+              ParameterDisposition.RETURN,
+              this.base,
+              this.method.getReference(),
+              this.descriptorOffset);
+      case METHOD_REFERENCE ->
+          new Parameter(
+              ssa,
+              "retVal",
+              getReturnType(),
+              ParameterDisposition.RETURN,
+              this.base,
+              this.mRef,
+              this.descriptorOffset);
+    };
   }
 
   /**
@@ -869,7 +860,7 @@ public class ParameterAccessor {
     }
 
     switch (this.base) {
-      case IMETHOD:
+      case IMETHOD -> {
         if (this.hasImplicitThis()) { // XXX TODO BUG!
           debug(
               "This IMethod {} has an implicit this pointer at {}, so firstInSelector is accessible using SSA-Value {}",
@@ -883,7 +874,8 @@ public class ParameterAccessor {
               this.method);
           return 1;
         }
-      case METHOD_REFERENCE:
+      }
+      case METHOD_REFERENCE -> {
         if (this.hasImplicitThis()) {
           debug(
               "This IMethod {} has an implicit this pointer at {}, so firstInSelector is accessible using SSA-Value {}",
@@ -897,9 +889,10 @@ public class ParameterAccessor {
               this.mRef);
           return 1;
         }
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of firstInSelector() for base " + this.base);
+      }
+      default ->
+          throw new UnsupportedOperationException(
+              "No implementation of firstInSelector() for base " + this.base);
     }
   }
 
@@ -917,14 +910,9 @@ public class ParameterAccessor {
    * @return the type of the parameter
    */
   public TypeReference getParameterType(final int no) { // XXX Remove?
-    switch (this.base) {
-      case IMETHOD:
-      case METHOD_REFERENCE:
-        return this.method.getParameterType(getParameterNo(no));
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getParameterType() for base " + this.base);
-    }
+    return switch (this.base) {
+      case IMETHOD, METHOD_REFERENCE -> this.method.getParameterType(getParameterNo(no));
+    };
   }
 
   /**
@@ -1908,15 +1896,10 @@ public class ParameterAccessor {
 
   /** Handed through to the IMethod / MethodReference */
   public TypeReference getReturnType() {
-    switch (this.base) {
-      case IMETHOD:
-        return this.method.getReturnType();
-      case METHOD_REFERENCE:
-        return this.mRef.getReturnType();
-      default:
-        throw new UnsupportedOperationException(
-            "No implementation of getReturnType() for base " + this.base);
-    }
+    return switch (this.base) {
+      case IMETHOD -> this.method.getReturnType();
+      case METHOD_REFERENCE -> this.mRef.getReturnType();
+    };
   }
 
   /** Number of parameters _excluding_ implicit this */

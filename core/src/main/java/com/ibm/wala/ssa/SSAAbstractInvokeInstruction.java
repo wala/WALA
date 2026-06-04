@@ -91,14 +91,11 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
       assert i == 0;
       return exception;
     } else {
-      switch (i) {
-        case 0:
-          return getReturnValue(0);
-        case 1:
-          return exception;
-        default:
-          return getReturnValue(i - 1);
-      }
+      return switch (i) {
+        case 0 -> getReturnValue(0);
+        case 1 -> exception;
+        default -> getReturnValue(i - 1);
+      };
     }
   }
 

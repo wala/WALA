@@ -236,71 +236,33 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
   }
 
   private static CAstNode translateOpcode(int nodeType) {
-    switch (nodeType) {
-      case Token.POS:
-      case Token.ADD:
-      case Token.ASSIGN_ADD:
-        return CAstOperator.OP_ADD;
-      case Token.DIV:
-      case Token.ASSIGN_DIV:
-        return CAstOperator.OP_DIV;
-      case Token.ASSIGN_LSH:
-      case Token.LSH:
-        return CAstOperator.OP_LSH;
-      case Token.MOD:
-      case Token.ASSIGN_MOD:
-        return CAstOperator.OP_MOD;
-      case Token.MUL:
-      case Token.ASSIGN_MUL:
-        return CAstOperator.OP_MUL;
-      case Token.RSH:
-      case Token.ASSIGN_RSH:
-        return CAstOperator.OP_RSH;
-      case Token.SUB:
-      case Token.NEG:
-      case Token.ASSIGN_SUB:
-        return CAstOperator.OP_SUB;
-      case Token.URSH:
-      case Token.ASSIGN_URSH:
-        return CAstOperator.OP_URSH;
-      case Token.BITAND:
-      case Token.ASSIGN_BITAND:
-        return CAstOperator.OP_BIT_AND;
-      case Token.BITOR:
-      case Token.ASSIGN_BITOR:
-        return CAstOperator.OP_BIT_OR;
-      case Token.BITXOR:
-      case Token.ASSIGN_BITXOR:
-        return CAstOperator.OP_BIT_XOR;
-
-      case Token.EQ:
-      case Token.IFEQ:
-        return CAstOperator.OP_EQ;
-      case Token.SHEQ:
-        return CAstOperator.OP_STRICT_EQ;
-      case Token.GE:
-        return CAstOperator.OP_GE;
-      case Token.GT:
-        return CAstOperator.OP_GT;
-      case Token.LE:
-        return CAstOperator.OP_LE;
-      case Token.LT:
-        return CAstOperator.OP_LT;
-      case Token.NE:
-      case Token.IFNE:
-        return CAstOperator.OP_NE;
-      case Token.SHNE:
-        return CAstOperator.OP_STRICT_NE;
-
-      case Token.BITNOT:
-        return CAstOperator.OP_BITNOT;
-      case Token.NOT:
-        return CAstOperator.OP_NOT;
-
-      default:
+    return switch (nodeType) {
+      case Token.POS, Token.ADD, Token.ASSIGN_ADD -> CAstOperator.OP_ADD;
+      case Token.DIV, Token.ASSIGN_DIV -> CAstOperator.OP_DIV;
+      case Token.ASSIGN_LSH, Token.LSH -> CAstOperator.OP_LSH;
+      case Token.MOD, Token.ASSIGN_MOD -> CAstOperator.OP_MOD;
+      case Token.MUL, Token.ASSIGN_MUL -> CAstOperator.OP_MUL;
+      case Token.RSH, Token.ASSIGN_RSH -> CAstOperator.OP_RSH;
+      case Token.SUB, Token.NEG, Token.ASSIGN_SUB -> CAstOperator.OP_SUB;
+      case Token.URSH, Token.ASSIGN_URSH -> CAstOperator.OP_URSH;
+      case Token.BITAND, Token.ASSIGN_BITAND -> CAstOperator.OP_BIT_AND;
+      case Token.BITOR, Token.ASSIGN_BITOR -> CAstOperator.OP_BIT_OR;
+      case Token.BITXOR, Token.ASSIGN_BITXOR -> CAstOperator.OP_BIT_XOR;
+      case Token.EQ, Token.IFEQ -> CAstOperator.OP_EQ;
+      case Token.SHEQ -> CAstOperator.OP_STRICT_EQ;
+      case Token.GE -> CAstOperator.OP_GE;
+      case Token.GT -> CAstOperator.OP_GT;
+      case Token.LE -> CAstOperator.OP_LE;
+      case Token.LT -> CAstOperator.OP_LT;
+      case Token.NE, Token.IFNE -> CAstOperator.OP_NE;
+      case Token.SHNE -> CAstOperator.OP_STRICT_NE;
+      case Token.BITNOT -> CAstOperator.OP_BITNOT;
+      case Token.NOT -> CAstOperator.OP_NOT;
+      default -> {
         Assertions.UNREACHABLE();
-        return null;
-    }
+        yield null;
+      }
+    };
   }
 
   private CAstNode makeBuiltinNew(String typeName) {
@@ -1368,36 +1330,30 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
     @Override
     public CAstNode visitKeywordLiteral(KeywordLiteral node, WalkContext arg) {
       switch (node.getType()) {
-        case Token.THIS:
-          {
-            if (arg.top() instanceof ScriptNode && !(arg.top() instanceof FunctionNode)) {
-              CAstNode globalRef = makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME);
-              arg.cfg().map(globalRef, globalRef);
-              return globalRef;
-            } else {
-              return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("this"));
-            }
+        case Token.THIS -> {
+          if (arg.top() instanceof ScriptNode && !(arg.top() instanceof FunctionNode)) {
+            CAstNode globalRef = makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME);
+            arg.cfg().map(globalRef, globalRef);
+            return globalRef;
+          } else {
+            return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("this"));
           }
-        case Token.TRUE:
-          {
-            return Ast.makeConstant(true);
-          }
-        case Token.FALSE:
-          {
-            return Ast.makeConstant(false);
-          }
-        case Token.NULL:
-        case Token.DEBUGGER:
-          {
-            return Ast.makeConstant(null);
-          }
-        case Token.UNDEFINED:
-          {
-            return readName(arg, node, "undefined");
-          }
-        default:
-          throw new RuntimeException(
-              "unexpected keyword literal " + node + " (" + node.getType() + ')');
+        }
+        case Token.TRUE -> {
+          return Ast.makeConstant(true);
+        }
+        case Token.FALSE -> {
+          return Ast.makeConstant(false);
+        }
+        case Token.NULL, Token.DEBUGGER -> {
+          return Ast.makeConstant(null);
+        }
+        case Token.UNDEFINED -> {
+          return readName(arg, node, "undefined");
+        }
+        default ->
+            throw new RuntimeException(
+                "unexpected keyword literal " + node + " (" + node.getType() + ')');
       }
     }
 

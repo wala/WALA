@@ -41,20 +41,10 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     }
     short opcode = 0;
     switch (mode) {
-      case VIRTUAL:
-        opcode = OP_invokevirtual;
-        break;
-      case SPECIAL:
-        opcode = OP_invokespecial;
-        break;
-      case STATIC:
-        opcode = OP_invokestatic;
-        break;
-      case INTERFACE:
-        opcode = OP_invokeinterface;
-        break;
-      default:
-        assert false;
+      case VIRTUAL -> opcode = OP_invokevirtual;
+      case SPECIAL -> opcode = OP_invokespecial;
+      case STATIC -> opcode = OP_invokestatic;
+      case INTERFACE -> opcode = OP_invokeinterface;
     }
     return new InvokeInstruction(opcode, type, className, methodName);
   }
@@ -148,18 +138,13 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   }
 
   public final String getInvocationModeString() {
-    switch (opcode) {
-      case Constants.OP_invokestatic:
-        return "STATIC";
-      case Constants.OP_invokeinterface:
-        return "INTERFACE";
-      case Constants.OP_invokespecial:
-        return "SPECIAL";
-      case Constants.OP_invokevirtual:
-        return "VIRTUAL";
-      default:
-        throw new Error("Unknown mode: " + opcode);
-    }
+    return switch (opcode) {
+      case Constants.OP_invokestatic -> "STATIC";
+      case Constants.OP_invokeinterface -> "INTERFACE";
+      case Constants.OP_invokespecial -> "SPECIAL";
+      case Constants.OP_invokevirtual -> "VIRTUAL";
+      default -> throw new Error("Unknown mode: " + opcode);
+    };
   }
 
   @Override
@@ -218,17 +203,12 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   @Override
   public Dispatch getInvocationCode() {
-    switch (opcode) {
-      case Constants.OP_invokestatic:
-        return Dispatch.STATIC;
-      case Constants.OP_invokeinterface:
-        return Dispatch.INTERFACE;
-      case Constants.OP_invokespecial:
-        return Dispatch.SPECIAL;
-      case Constants.OP_invokevirtual:
-        return Dispatch.VIRTUAL;
-      default:
-        throw new Error("Unknown mode: " + opcode);
-    }
+    return switch (opcode) {
+      case Constants.OP_invokestatic -> Dispatch.STATIC;
+      case Constants.OP_invokeinterface -> Dispatch.INTERFACE;
+      case Constants.OP_invokespecial -> Dispatch.SPECIAL;
+      case Constants.OP_invokevirtual -> Dispatch.VIRTUAL;
+      default -> throw new Error("Unknown mode: " + opcode);
+    };
   }
 }

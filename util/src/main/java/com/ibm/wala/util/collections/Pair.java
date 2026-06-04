@@ -57,16 +57,17 @@ public class Pair<T, U> implements Serializable {
 
       @Override
       public Object next() {
-        switch (nextFlag) {
-          case 1:
+        return switch (nextFlag) {
+          case 1 -> {
             nextFlag++;
-            return fst;
-          case 2:
+            yield fst;
+          }
+          case 2 -> {
             nextFlag = 0;
-            return snd;
-          default:
-            throw new NoSuchElementException();
-        }
+            yield snd;
+          }
+          default -> throw new NoSuchElementException();
+        };
       }
 
       @Override

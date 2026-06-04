@@ -53,150 +53,83 @@ public class CAstPrinter {
   }
 
   public String getKindAsString(int kind) {
-    switch (kind) {
+    return switch (kind) {
       // statements
-      case CAstNode.SWITCH:
-        return "SWITCH";
-      case CAstNode.LOOP:
-        return "LOOP";
-      case CAstNode.BLOCK_STMT:
-        return "BLOCK";
-      case CAstNode.TRY:
-        return "TRY";
-      case CAstNode.EXPR_STMT:
-        return "EXPR_STMT";
-      case CAstNode.DECL_STMT:
-        return "DECL_STMT";
-      case CAstNode.RETURN:
-        return "RETURN";
-      case CAstNode.GOTO:
-        return "GOTO";
-      case CAstNode.BREAK:
-        return "BREAK";
-      case CAstNode.CONTINUE:
-        return "CONTINUE";
-      case CAstNode.IF_STMT:
-        return "IF_STMT";
-      case CAstNode.THROW:
-        return "THROW";
-      case CAstNode.FUNCTION_STMT:
-        return "FUNCTION_STMT";
-      case CAstNode.ASSIGN:
-        return "ASSIGN";
-      case CAstNode.ASSIGN_PRE_OP:
-        return "ASSIGN_PRE_OP";
-      case CAstNode.ASSIGN_POST_OP:
-        return "ASSIGN_POST_OP";
-      case CAstNode.LABEL_STMT:
-        return "LABEL_STMT";
-      case CAstNode.IFGOTO:
-        return "IFGOTO";
-      case CAstNode.EMPTY:
-        return "EMPTY";
-      case CAstNode.YIELD_STMT:
-        return "YIELD";
-      case CAstNode.CATCH:
-        return "CATCH";
-      case CAstNode.UNWIND:
-        return "UNWIND";
-      case CAstNode.MONITOR_ENTER:
-        return "MONITOR_ENTER";
-      case CAstNode.MONITOR_EXIT:
-        return "MONITOR_EXIT";
-      case CAstNode.ECHO:
-        return "ECHO";
-      case CAstNode.FORIN_LOOP:
-        return "FOR..IN";
+      case CAstNode.SWITCH -> "SWITCH";
+      case CAstNode.LOOP -> "LOOP";
+      case CAstNode.BLOCK_STMT -> "BLOCK";
+      case CAstNode.TRY -> "TRY";
+      case CAstNode.EXPR_STMT -> "EXPR_STMT";
+      case CAstNode.DECL_STMT -> "DECL_STMT";
+      case CAstNode.RETURN -> "RETURN";
+      case CAstNode.GOTO -> "GOTO";
+      case CAstNode.BREAK -> "BREAK";
+      case CAstNode.CONTINUE -> "CONTINUE";
+      case CAstNode.IF_STMT -> "IF_STMT";
+      case CAstNode.THROW -> "THROW";
+      case CAstNode.FUNCTION_STMT -> "FUNCTION_STMT";
+      case CAstNode.ASSIGN -> "ASSIGN";
+      case CAstNode.ASSIGN_PRE_OP -> "ASSIGN_PRE_OP";
+      case CAstNode.ASSIGN_POST_OP -> "ASSIGN_POST_OP";
+      case CAstNode.LABEL_STMT -> "LABEL_STMT";
+      case CAstNode.IFGOTO -> "IFGOTO";
+      case CAstNode.EMPTY -> "EMPTY";
+      case CAstNode.YIELD_STMT -> "YIELD";
+      case CAstNode.CATCH -> "CATCH";
+      case CAstNode.UNWIND -> "UNWIND";
+      case CAstNode.MONITOR_ENTER -> "MONITOR_ENTER";
+      case CAstNode.MONITOR_EXIT -> "MONITOR_EXIT";
+      case CAstNode.ECHO -> "ECHO";
+      case CAstNode.FORIN_LOOP -> "FOR..IN";
 
       // expression kinds
-      case CAstNode.FUNCTION_EXPR:
-        return "FUNCTION_EXPR";
-      case CAstNode.EXPR_LIST:
-        return "EXPR_LIST";
-      case CAstNode.CALL:
-        return "CALL";
-      case CAstNode.GET_CAUGHT_EXCEPTION:
-        return "EXCEPTION";
-      case CAstNode.BLOCK_EXPR:
-        return "BLOCK_EXPR";
-      case CAstNode.BINARY_EXPR:
-        return "BINARY_EXPR";
-      case CAstNode.UNARY_EXPR:
-        return "UNARY_EXPR";
-      case CAstNode.IF_EXPR:
-        return "IF_EXPR";
-      case CAstNode.ANDOR_EXPR:
-        return "ANDOR_EXPR";
-      case CAstNode.NEW:
-        return "NEW";
-      case CAstNode.NEW_ENCLOSING:
-        return "NEW_ENCLOSING";
-      case CAstNode.OBJECT_LITERAL:
-        return "OBJECT_LITERAL";
-      case CAstNode.VAR:
-        return "VAR";
-      case CAstNode.OBJECT_REF:
-        return "OBJECT_REF";
-      case CAstNode.CHOICE_EXPR:
-        return "CHOICE_EXPR";
-      case CAstNode.CHOICE_CASE:
-        return "CHOICE_CASE";
-      case CAstNode.SUPER:
-        return "SUPER";
-      case CAstNode.THIS:
-        return "THIS";
-      case CAstNode.ARRAY_LITERAL:
-        return "ARRAY_LITERAL";
-      case CAstNode.CAST:
-        return "CAST";
-      case CAstNode.INSTANCEOF:
-        return "INSTANCEOF";
-      case CAstNode.ARRAY_REF:
-        return "ARRAY_REF";
-      case CAstNode.ARRAY_LENGTH:
-        return "ARRAY_LENGTH";
-      case CAstNode.TYPE_OF:
-        return "TYPE_OF";
-      case CAstNode.EACH_ELEMENT_HAS_NEXT:
-        return "EACH_ELEMENT_HAS_NEXT";
-      case CAstNode.EACH_ELEMENT_GET:
-        return "EACH_ELEMENT_GET";
-      case CAstNode.LIST_EXPR:
-        return "LIST_EXPR";
-      case CAstNode.EMPTY_LIST_EXPR:
-        return "EMPTY_LIST_EXPR";
-      case CAstNode.IS_DEFINED_EXPR:
-        return "IS_DEFINED_EXPR";
-      case CAstNode.NARY_EXPR:
-        return "NARY_EXPR";
-      case CAstNode.TYPE_LITERAL_EXPR:
-        return "TYPE_LITERAL_EXPR";
+      case CAstNode.FUNCTION_EXPR -> "FUNCTION_EXPR";
+      case CAstNode.EXPR_LIST -> "EXPR_LIST";
+      case CAstNode.CALL -> "CALL";
+      case CAstNode.GET_CAUGHT_EXCEPTION -> "EXCEPTION";
+      case CAstNode.BLOCK_EXPR -> "BLOCK_EXPR";
+      case CAstNode.BINARY_EXPR -> "BINARY_EXPR";
+      case CAstNode.UNARY_EXPR -> "UNARY_EXPR";
+      case CAstNode.IF_EXPR -> "IF_EXPR";
+      case CAstNode.ANDOR_EXPR -> "ANDOR_EXPR";
+      case CAstNode.NEW -> "NEW";
+      case CAstNode.NEW_ENCLOSING -> "NEW_ENCLOSING";
+      case CAstNode.OBJECT_LITERAL -> "OBJECT_LITERAL";
+      case CAstNode.VAR -> "VAR";
+      case CAstNode.OBJECT_REF -> "OBJECT_REF";
+      case CAstNode.CHOICE_EXPR -> "CHOICE_EXPR";
+      case CAstNode.CHOICE_CASE -> "CHOICE_CASE";
+      case CAstNode.SUPER -> "SUPER";
+      case CAstNode.THIS -> "THIS";
+      case CAstNode.ARRAY_LITERAL -> "ARRAY_LITERAL";
+      case CAstNode.CAST -> "CAST";
+      case CAstNode.INSTANCEOF -> "INSTANCEOF";
+      case CAstNode.ARRAY_REF -> "ARRAY_REF";
+      case CAstNode.ARRAY_LENGTH -> "ARRAY_LENGTH";
+      case CAstNode.TYPE_OF -> "TYPE_OF";
+      case CAstNode.EACH_ELEMENT_HAS_NEXT -> "EACH_ELEMENT_HAS_NEXT";
+      case CAstNode.EACH_ELEMENT_GET -> "EACH_ELEMENT_GET";
+      case CAstNode.LIST_EXPR -> "LIST_EXPR";
+      case CAstNode.EMPTY_LIST_EXPR -> "EMPTY_LIST_EXPR";
+      case CAstNode.IS_DEFINED_EXPR -> "IS_DEFINED_EXPR";
+      case CAstNode.NARY_EXPR -> "NARY_EXPR";
+      case CAstNode.TYPE_LITERAL_EXPR -> "TYPE_LITERAL_EXPR";
 
       // explicit lexical scopes
-      case CAstNode.LOCAL_SCOPE:
-        return "SCOPE";
-      case CAstNode.SPECIAL_PARENT_SCOPE:
-        return "SPECIAL PARENT SCOPE";
+      case CAstNode.LOCAL_SCOPE -> "SCOPE";
+      case CAstNode.SPECIAL_PARENT_SCOPE -> "SPECIAL PARENT SCOPE";
 
       // literal expression kinds
-      case CAstNode.CONSTANT:
-        return "CONSTANT";
-      case CAstNode.OPERATOR:
-        return "OPERATOR";
+      case CAstNode.CONSTANT -> "CONSTANT";
+      case CAstNode.OPERATOR -> "OPERATOR";
 
       // special stuff
-      case CAstNode.PRIMITIVE:
-        return "PRIMITIVE";
-      case CAstNode.VOID:
-        return "VOID";
-      case CAstNode.ERROR:
-        return "ERROR";
-      case CAstNode.ASSERT:
-        return "ASSERT";
-
-      default:
-        return "UNKNOWN(" + kind + ')';
-    }
+      case CAstNode.PRIMITIVE -> "PRIMITIVE";
+      case CAstNode.VOID -> "VOID";
+      case CAstNode.ERROR -> "ERROR";
+      case CAstNode.ASSERT -> "ASSERT";
+      default -> "UNKNOWN(" + kind + ')';
+    };
   }
 
   public static String print(CAstNode top) {
@@ -330,22 +263,15 @@ public class CAstPrinter {
   }
 
   public String getEntityKindAsString(int kind) {
-    switch (kind) {
-      case CAstEntity.FUNCTION_ENTITY:
-        return "function";
-      case CAstEntity.FIELD_ENTITY:
-        return "field";
-      case CAstEntity.FILE_ENTITY:
-        return "unit";
-      case CAstEntity.TYPE_ENTITY:
-        return "type";
-      case CAstEntity.SCRIPT_ENTITY:
-        return "script";
-      case CAstEntity.RULE_ENTITY:
-        return "rule";
-      default:
-        return "<unknown entity kind>";
-    }
+    return switch (kind) {
+      case CAstEntity.FUNCTION_ENTITY -> "function";
+      case CAstEntity.FIELD_ENTITY -> "field";
+      case CAstEntity.FILE_ENTITY -> "unit";
+      case CAstEntity.TYPE_ENTITY -> "type";
+      case CAstEntity.SCRIPT_ENTITY -> "script";
+      case CAstEntity.RULE_ENTITY -> "rule";
+      default -> "<unknown entity kind>";
+    };
   }
 
   public static void printTo(CAstEntity e, Writer w) {

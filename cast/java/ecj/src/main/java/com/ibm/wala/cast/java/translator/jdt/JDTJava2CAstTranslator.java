@@ -2939,31 +2939,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       CAstNode zero;
       ITypeBinding type = n.getOperand().resolveTypeBinding();
       switch (type.getBinaryName()) {
-        case "C":
-          zero = fFactory.makeConstant((char) 0);
-          break;
-        case "B":
-          zero = fFactory.makeConstant((byte) 0);
-          break;
-        case "S":
-          zero = fFactory.makeConstant((short) 0);
-          break;
-        case "I":
-          zero = fFactory.makeConstant(0);
-          break;
-        case "J":
-          zero = fFactory.makeConstant(0L);
-          break;
-        case "F":
-          zero = fFactory.makeConstant(0.0);
-          break;
-        case "D":
-          zero = fFactory.makeConstant(0.0D);
-          break;
-        default:
+        case "C" -> zero = fFactory.makeConstant((char) 0);
+        case "B" -> zero = fFactory.makeConstant((byte) 0);
+        case "S" -> zero = fFactory.makeConstant((short) 0);
+        case "I" -> zero = fFactory.makeConstant(0);
+        case "J" -> zero = fFactory.makeConstant(0L);
+        case "F" -> zero = fFactory.makeConstant(0.0);
+        case "D" -> zero = fFactory.makeConstant(0.0D);
+        default -> {
           zero = null;
           assert false : "unexpected type " + type.getBinaryName();
-          break;
+        }
       }
       return makeNode(
           context,
@@ -4816,15 +4802,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       // the type
       switch (i) {
-        case 1:
-          paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
-          break;
-        case 2:
-          paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")));
-          break;
-        default:
-          paramTypes.add(fTypeDict.getCAstTypeFor(ctor.getParameterTypes()[i - 3]));
-          break;
+        case 1 ->
+            paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
+        case 2 -> paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")));
+        default -> paramTypes.add(fTypeDict.getCAstTypeFor(ctor.getParameterTypes()[i - 3]));
       }
     }
 

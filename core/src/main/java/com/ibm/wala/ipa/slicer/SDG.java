@@ -288,140 +288,136 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       }
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
-        case NORMAL:
-        case PHI:
-        case PI:
-        case EXC_RET_CALLEE:
-        case NORMAL_RET_CALLEE:
-        case PARAM_CALLER:
-        case HEAP_PARAM_CALLER:
-        case HEAP_RET_CALLEE:
-        case CATCH:
-        case METHOD_EXIT:
+        case NORMAL,
+            PHI,
+            PI,
+            EXC_RET_CALLEE,
+            NORMAL_RET_CALLEE,
+            PARAM_CALLER,
+            HEAP_PARAM_CALLER,
+            HEAP_RET_CALLEE,
+            CATCH,
+            METHOD_EXIT -> {
           return getPDG(N.getNode()).getPredNodes(N);
-        case EXC_RET_CALLER:
-          {
-            ExceptionalReturnCaller nrc = (ExceptionalReturnCaller) N;
-            SSAAbstractInvokeInstruction call = nrc.getInstruction();
-            Collection<Statement> result =
-                Iterator2Collection.toSet(getPDG(N.getNode()).getPredNodes(N));
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-                Statement s = new ExceptionalReturnCallee(t);
+        }
+        case EXC_RET_CALLER -> {
+          ExceptionalReturnCaller nrc = (ExceptionalReturnCaller) N;
+          SSAAbstractInvokeInstruction call = nrc.getInstruction();
+          Collection<Statement> result =
+              Iterator2Collection.toSet(getPDG(N.getNode()).getPredNodes(N));
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
+              Statement s = new ExceptionalReturnCallee(t);
+              addNode(s);
+              result.add(s);
+            }
+          }
+          return result.iterator();
+        }
+        case NORMAL_RET_CALLER -> {
+          NormalReturnCaller nrc = (NormalReturnCaller) N;
+          SSAAbstractInvokeInstruction call = nrc.getInstruction();
+          Collection<Statement> result =
+              Iterator2Collection.toSet(getPDG(N.getNode()).getPredNodes(N));
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
+              Statement s = new NormalReturnCallee(t);
+              addNode(s);
+              result.add(s);
+            }
+          }
+          return result.iterator();
+        }
+        case HEAP_RET_CALLER -> {
+          HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) N;
+          SSAAbstractInvokeInstruction call = r.getCall();
+          Collection<Statement> result =
+              Iterator2Collection.toSet(getPDG(N.getNode()).getPredNodes(N));
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
+              if (mod.get(t).contains(r.getLocation())) {
+                Statement s = new HeapStatement.HeapReturnCallee(t, r.getLocation());
                 addNode(s);
                 result.add(s);
               }
             }
-            return result.iterator();
           }
-        case NORMAL_RET_CALLER:
-          {
-            NormalReturnCaller nrc = (NormalReturnCaller) N;
-            SSAAbstractInvokeInstruction call = nrc.getInstruction();
-            Collection<Statement> result =
-                Iterator2Collection.toSet(getPDG(N.getNode()).getPredNodes(N));
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-                Statement s = new NormalReturnCallee(t);
-                addNode(s);
-                result.add(s);
-              }
-            }
-            return result.iterator();
-          }
-        case HEAP_RET_CALLER:
-          {
-            HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) N;
-            SSAAbstractInvokeInstruction call = r.getCall();
-            Collection<Statement> result =
-                Iterator2Collection.toSet(getPDG(N.getNode()).getPredNodes(N));
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-                if (mod.get(t).contains(r.getLocation())) {
-                  Statement s = new HeapStatement.HeapReturnCallee(t, r.getLocation());
-                  addNode(s);
-                  result.add(s);
-                }
-              }
-            }
-            return result.iterator();
-          }
-        case PARAM_CALLEE:
-          {
-            ParamCallee pac = (ParamCallee) N;
-            int parameterIndex = pac.getValueNumber() - 1;
-            Collection<Statement> result = HashSetFactory.make(5);
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
+          return result.iterator();
+        }
+        case PARAM_CALLEE -> {
+          ParamCallee pac = (ParamCallee) N;
+          int parameterIndex = pac.getValueNumber() - 1;
+          Collection<Statement> result = HashSetFactory.make(5);
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
 
-              if (dOptions.isTerminateAtCast()
-                  && !pac.getNode().getMethod().isStatic()
-                  && pac.getValueNumber() == 1) {
-                // a virtual dispatch is just like a cast. No flow.
-                return EmptyIterator.instance();
-              }
-              if (dOptions.isTerminateAtCast() && isUninformativeForReflection(pac.getNode())) {
-                // don't track flow for reflection
-                return EmptyIterator.instance();
-              }
-
-              // data dependence predecessors
-              for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
-                for (CallSiteReference site :
-                    Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
-                  IR ir = caller.getIR();
-                  IntSet indices = ir.getCallInstructionIndices(site);
-                  for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
-                    int i = ii.next();
-                    SSAAbstractInvokeInstruction call =
-                        (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                    if (call.getNumberOfUses() > parameterIndex) {
-                      int p = call.getUse(parameterIndex);
-                      Statement s = new ParamCaller(caller, i, p);
-                      addNode(s);
-                      result.add(s);
-                    }
-                  }
-                }
-              }
+            if (dOptions.isTerminateAtCast()
+                && !pac.getNode().getMethod().isStatic()
+                && pac.getValueNumber() == 1) {
+              // a virtual dispatch is just like a cast. No flow.
+              return EmptyIterator.instance();
             }
-            // if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-            // Statement s = new MethodEntryStatement(N.getNode());
-            // addNode(s);
-            // result.add(s);
-            // }
-            return result.iterator();
-          }
-        case HEAP_PARAM_CALLEE:
-          {
-            HeapStatement.HeapParamCallee hpc = (HeapStatement.HeapParamCallee) N;
-            Collection<Statement> result = HashSetFactory.make(5);
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
-                for (CallSiteReference site :
-                    Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
-                  IR ir = caller.getIR();
-                  IntSet indices = ir.getCallInstructionIndices(site);
-                  for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
-                    int i = ii.next();
-                    Statement s = new HeapStatement.HeapParamCaller(caller, i, hpc.getLocation());
+            if (dOptions.isTerminateAtCast() && isUninformativeForReflection(pac.getNode())) {
+              // don't track flow for reflection
+              return EmptyIterator.instance();
+            }
+
+            // data dependence predecessors
+            for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
+              for (CallSiteReference site :
+                  Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
+                IR ir = caller.getIR();
+                IntSet indices = ir.getCallInstructionIndices(site);
+                for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
+                  int i = ii.next();
+                  SSAAbstractInvokeInstruction call =
+                      (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
+                  if (call.getNumberOfUses() > parameterIndex) {
+                    int p = call.getUse(parameterIndex);
+                    Statement s = new ParamCaller(caller, i, p);
                     addNode(s);
                     result.add(s);
                   }
                 }
               }
             }
-            // if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-            // Statement s = new MethodEntryStatement(N.getNode());
-            // addNode(s);
-            // result.add(s);
-            // }
-            return result.iterator();
           }
-        case METHOD_ENTRY:
+          // if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+          // Statement s = new MethodEntryStatement(N.getNode());
+          // addNode(s);
+          // result.add(s);
+          // }
+          return result.iterator();
+        }
+        case HEAP_PARAM_CALLEE -> {
+          HeapStatement.HeapParamCallee hpc = (HeapStatement.HeapParamCallee) N;
+          Collection<Statement> result = HashSetFactory.make(5);
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
+              for (CallSiteReference site :
+                  Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
+                IR ir = caller.getIR();
+                IntSet indices = ir.getCallInstructionIndices(site);
+                for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
+                  int i = ii.next();
+                  Statement s = new HeapStatement.HeapParamCaller(caller, i, hpc.getLocation());
+                  addNode(s);
+                  result.add(s);
+                }
+              }
+            }
+          }
+          // if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+          // Statement s = new MethodEntryStatement(N.getNode());
+          // addNode(s);
+          // result.add(s);
+          // }
+          return result.iterator();
+        }
+        case METHOD_ENTRY -> {
           Collection<Statement> result = HashSetFactory.make(5);
           if (!cOptions.isIgnoreInterproc()) {
             for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
@@ -439,9 +435,11 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
             }
           }
           return result.iterator();
-        default:
+        }
+        default -> {
           Assertions.UNREACHABLE(N.getKind().toString());
           return null;
+        }
       }
     }
 
@@ -457,7 +455,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       }
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
-        case NORMAL:
+        case NORMAL -> {
           if (cOptions.isIgnoreInterproc()) {
             return getPDG(N.getNode()).getSuccNodes(N);
           } else {
@@ -476,117 +474,115 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
               return getPDG(N.getNode()).getSuccNodes(N);
             }
           }
-        case PHI:
-        case PI:
-        case CATCH:
-        case EXC_RET_CALLER:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case HEAP_PARAM_CALLEE:
-        case HEAP_RET_CALLER:
-        case METHOD_ENTRY:
-        case METHOD_EXIT:
+        }
+        case PHI,
+            PI,
+            CATCH,
+            EXC_RET_CALLER,
+            NORMAL_RET_CALLER,
+            PARAM_CALLEE,
+            HEAP_PARAM_CALLEE,
+            HEAP_RET_CALLER,
+            METHOD_ENTRY,
+            METHOD_EXIT -> {
           return getPDG(N.getNode()).getSuccNodes(N);
-        case EXC_RET_CALLEE:
-          {
-            Collection<Statement> result = HashSetFactory.make(5);
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
-                for (CallSiteReference site :
-                    Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
-                  IR ir = caller.getIR();
-                  IntSet indices = ir.getCallInstructionIndices(site);
-                  for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
-                    int i = ii.next();
-                    Statement s = new ExceptionalReturnCaller(caller, i);
-                    addNode(s);
-                    result.add(s);
-                  }
+        }
+        case EXC_RET_CALLEE -> {
+          Collection<Statement> result = HashSetFactory.make(5);
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
+              for (CallSiteReference site :
+                  Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
+                IR ir = caller.getIR();
+                IntSet indices = ir.getCallInstructionIndices(site);
+                for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
+                  int i = ii.next();
+                  Statement s = new ExceptionalReturnCaller(caller, i);
+                  addNode(s);
+                  result.add(s);
                 }
               }
             }
-            return result.iterator();
           }
-        case NORMAL_RET_CALLEE:
-          {
-            Collection<Statement> result = HashSetFactory.make(5);
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
-                for (CallSiteReference site :
-                    Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
-                  IR ir = caller.getIR();
-                  IntSet indices = ir.getCallInstructionIndices(site);
-                  for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
-                    int i = ii.next();
-                    Statement s = new NormalReturnCaller(caller, i);
-                    addNode(s);
-                    result.add(s);
-                  }
+          return result.iterator();
+        }
+        case NORMAL_RET_CALLEE -> {
+          Collection<Statement> result = HashSetFactory.make(5);
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
+              for (CallSiteReference site :
+                  Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
+                IR ir = caller.getIR();
+                IntSet indices = ir.getCallInstructionIndices(site);
+                for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
+                  int i = ii.next();
+                  Statement s = new NormalReturnCaller(caller, i);
+                  addNode(s);
+                  result.add(s);
                 }
               }
             }
-            return result.iterator();
           }
-        case HEAP_RET_CALLEE:
-          {
-            HeapStatement.HeapReturnCallee r = (HeapStatement.HeapReturnCallee) N;
-            Collection<Statement> result = HashSetFactory.make(5);
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence predecessors
-              for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
-                for (CallSiteReference site :
-                    Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
-                  IR ir = caller.getIR();
-                  IntSet indices = ir.getCallInstructionIndices(site);
-                  for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
-                    int i = ii.next();
-                    Statement s = new HeapStatement.HeapReturnCaller(caller, i, r.getLocation());
-                    addNode(s);
-                    result.add(s);
-                  }
+          return result.iterator();
+        }
+        case HEAP_RET_CALLEE -> {
+          HeapStatement.HeapReturnCallee r = (HeapStatement.HeapReturnCallee) N;
+          Collection<Statement> result = HashSetFactory.make(5);
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence predecessors
+            for (CGNode caller : Iterator2Iterable.make(cg.getPredNodes(N.getNode()))) {
+              for (CallSiteReference site :
+                  Iterator2Iterable.make(cg.getPossibleSites(caller, N.getNode()))) {
+                IR ir = caller.getIR();
+                IntSet indices = ir.getCallInstructionIndices(site);
+                for (IntIterator ii = indices.intIterator(); ii.hasNext(); ) {
+                  int i = ii.next();
+                  Statement s = new HeapStatement.HeapReturnCaller(caller, i, r.getLocation());
+                  addNode(s);
+                  result.add(s);
                 }
               }
             }
-            return result.iterator();
           }
-        case PARAM_CALLER:
-          {
-            ParamCaller pac = (ParamCaller) N;
-            SSAAbstractInvokeInstruction call = pac.getInstruction();
-            int numParamsPassed = call.getNumberOfUses();
-            Collection<Statement> result = HashSetFactory.make(5);
-            if (!dOptions.equals(DataDependenceOptions.NONE)) {
-              // data dependence successors
-              for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-                // in some languages (*cough* JavaScript *cough*) you can pass
-                // fewer parameters than the number of formals.  So, only loop
-                // over the parameters actually being passed here
-                for (int i = 0;
-                    i < t.getMethod().getNumberOfParameters() && i < numParamsPassed;
-                    i++) {
-                  if (dOptions.isTerminateAtCast()
-                      && call.isDispatch()
-                      && pac.getValueNumber() == call.getReceiver()) {
-                    // a virtual dispatch is just like a cast.
-                    continue;
-                  }
-                  if (dOptions.isTerminateAtCast() && isUninformativeForReflection(t)) {
-                    // don't track reflection into reflective invokes
-                    continue;
-                  }
-                  if (call.getUse(i) == pac.getValueNumber()) {
-                    Statement s = new ParamCallee(t, i + 1);
-                    addNode(s);
-                    result.add(s);
-                  }
+          return result.iterator();
+        }
+        case PARAM_CALLER -> {
+          ParamCaller pac = (ParamCaller) N;
+          SSAAbstractInvokeInstruction call = pac.getInstruction();
+          int numParamsPassed = call.getNumberOfUses();
+          Collection<Statement> result = HashSetFactory.make(5);
+          if (!dOptions.equals(DataDependenceOptions.NONE)) {
+            // data dependence successors
+            for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
+              // in some languages (*cough* JavaScript *cough*) you can pass
+              // fewer parameters than the number of formals.  So, only loop
+              // over the parameters actually being passed here
+              for (int i = 0;
+                  i < t.getMethod().getNumberOfParameters() && i < numParamsPassed;
+                  i++) {
+                if (dOptions.isTerminateAtCast()
+                    && call.isDispatch()
+                    && pac.getValueNumber() == call.getReceiver()) {
+                  // a virtual dispatch is just like a cast.
+                  continue;
+                }
+                if (dOptions.isTerminateAtCast() && isUninformativeForReflection(t)) {
+                  // don't track reflection into reflective invokes
+                  continue;
+                }
+                if (call.getUse(i) == pac.getValueNumber()) {
+                  Statement s = new ParamCallee(t, i + 1);
+                  addNode(s);
+                  result.add(s);
                 }
               }
             }
-            return result.iterator();
           }
-        case HEAP_PARAM_CALLER:
+          return result.iterator();
+        }
+        case HEAP_PARAM_CALLER -> {
           HeapStatement.HeapParamCaller pc = (HeapStatement.HeapParamCaller) N;
           SSAAbstractInvokeInstruction call = pc.getCall();
           Collection<Statement> result = HashSetFactory.make(5);
@@ -601,9 +597,11 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
             }
           }
           return result.iterator();
-        default:
+        }
+        default -> {
           Assertions.UNREACHABLE(N.getKind().toString());
           return null;
+        }
       }
     }
 
@@ -636,7 +634,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       addPDGStatementNodes(src.getNode());
       addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {
-        case NORMAL:
+        case NORMAL -> {
           if (cOptions.isIgnoreInterproc()) {
             return getPDG(src.getNode()).getEdgeLabels(src, dst);
           } else {
@@ -658,107 +656,105 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
               return getPDG(src.getNode()).getEdgeLabels(src, dst);
             }
           }
-        case CATCH:
+        }
+        case CATCH -> {
           assert src.getNode().equals(dst.getNode());
           return getPDG(src.getNode()).getEdgeLabels(src, dst);
-        case PHI:
-        case PI:
-        case EXC_RET_CALLER:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case HEAP_PARAM_CALLEE:
-        case HEAP_RET_CALLER:
-        case METHOD_ENTRY:
-        case METHOD_EXIT:
+        }
+        case PHI,
+            PI,
+            EXC_RET_CALLER,
+            NORMAL_RET_CALLER,
+            PARAM_CALLEE,
+            HEAP_PARAM_CALLEE,
+            HEAP_RET_CALLER,
+            METHOD_ENTRY,
+            METHOD_EXIT -> {
           return getPDG(src.getNode()).getEdgeLabels(src, dst);
-        case EXC_RET_CALLEE:
-          {
-            if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return Collections.emptySet();
-            }
-            if (dst.getKind().equals(Kind.EXC_RET_CALLER)) {
-              ExceptionalReturnCaller r = (ExceptionalReturnCaller) dst;
-              if (cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
-                  .contains(src.getNode())) {
-                return Collections.singleton(Dependency.DATA_DEP);
-              } else {
-                return Collections.emptySet();
-              }
+        }
+        case EXC_RET_CALLEE -> {
+          if (dOptions.equals(DataDependenceOptions.NONE)) {
+            return Collections.emptySet();
+          }
+          if (dst.getKind().equals(Kind.EXC_RET_CALLER)) {
+            ExceptionalReturnCaller r = (ExceptionalReturnCaller) dst;
+            if (cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
+                .contains(src.getNode())) {
+              return Collections.singleton(Dependency.DATA_DEP);
             } else {
               return Collections.emptySet();
             }
+          } else {
+            return Collections.emptySet();
           }
-        case NORMAL_RET_CALLEE:
-          {
-            if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return Collections.emptySet();
-            }
-            if (dst.getKind().equals(Kind.NORMAL_RET_CALLER)) {
-              NormalReturnCaller r = (NormalReturnCaller) dst;
-              if (cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
-                  .contains(src.getNode())) {
-                return Collections.singleton(Dependency.DATA_DEP);
-              } else {
-                return Collections.emptySet();
-              }
+        }
+        case NORMAL_RET_CALLEE -> {
+          if (dOptions.equals(DataDependenceOptions.NONE)) {
+            return Collections.emptySet();
+          }
+          if (dst.getKind().equals(Kind.NORMAL_RET_CALLER)) {
+            NormalReturnCaller r = (NormalReturnCaller) dst;
+            if (cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite())
+                .contains(src.getNode())) {
+              return Collections.singleton(Dependency.DATA_DEP);
             } else {
               return Collections.emptySet();
             }
+          } else {
+            return Collections.emptySet();
           }
-        case HEAP_RET_CALLEE:
-          {
-            if (dOptions.equals(DataDependenceOptions.NONE)) {
-              return Collections.emptySet();
-            }
-            if (dst.getKind().equals(Kind.HEAP_RET_CALLER)) {
-              HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) dst;
-              HeapStatement h = (HeapStatement) src;
-              if (h.getLocation().equals(r.getLocation())
-                  && cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite())
-                      .contains(src.getNode())) {
-                return Collections.singleton(Dependency.HEAP_DATA_DEP);
-              } else {
-                return Collections.emptySet();
-              }
+        }
+        case HEAP_RET_CALLEE -> {
+          if (dOptions.equals(DataDependenceOptions.NONE)) {
+            return Collections.emptySet();
+          }
+          if (dst.getKind().equals(Kind.HEAP_RET_CALLER)) {
+            HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) dst;
+            HeapStatement h = (HeapStatement) src;
+            if (h.getLocation().equals(r.getLocation())
+                && cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite())
+                    .contains(src.getNode())) {
+              return Collections.singleton(Dependency.HEAP_DATA_DEP);
             } else {
               return Collections.emptySet();
             }
+          } else {
+            return Collections.emptySet();
           }
-        case PARAM_CALLER:
-          {
-            if (dOptions.equals(DataDependenceOptions.NONE)) {
+        }
+        case PARAM_CALLER -> {
+          if (dOptions.equals(DataDependenceOptions.NONE)) {
+            return Collections.emptySet();
+          }
+          if (dst.getKind().equals(Kind.PARAM_CALLEE)) {
+            ParamCallee callee = (ParamCallee) dst;
+            ParamCaller caller = (ParamCaller) src;
+            SSAAbstractInvokeInstruction call = caller.getInstruction();
+            final CGNode calleeNode = callee.getNode();
+            if (!cg.getPossibleTargets(caller.getNode(), call.getCallSite()).contains(calleeNode)) {
               return Collections.emptySet();
             }
-            if (dst.getKind().equals(Kind.PARAM_CALLEE)) {
-              ParamCallee callee = (ParamCallee) dst;
-              ParamCaller caller = (ParamCaller) src;
-              SSAAbstractInvokeInstruction call = caller.getInstruction();
-              final CGNode calleeNode = callee.getNode();
-              if (!cg.getPossibleTargets(caller.getNode(), call.getCallSite())
-                  .contains(calleeNode)) {
-                return Collections.emptySet();
-              }
-              if (dOptions.isTerminateAtCast()
-                  && call.isDispatch()
-                  && caller.getValueNumber() == call.getReceiver()) {
-                // a virtual dispatch is just like a cast.
-                return Collections.emptySet();
-              }
-              if (dOptions.isTerminateAtCast() && isUninformativeForReflection(calleeNode)) {
-                // don't track reflection into reflective invokes
-                return Collections.emptySet();
-              }
-              for (int i = 0; i < call.getNumberOfUses(); i++) {
-                if (call.getUse(i) == caller.getValueNumber()) {
-                  if (callee.getValueNumber() == i + 1) {
-                    return Collections.singleton(Dependency.DATA_DEP);
-                  }
+            if (dOptions.isTerminateAtCast()
+                && call.isDispatch()
+                && caller.getValueNumber() == call.getReceiver()) {
+              // a virtual dispatch is just like a cast.
+              return Collections.emptySet();
+            }
+            if (dOptions.isTerminateAtCast() && isUninformativeForReflection(calleeNode)) {
+              // don't track reflection into reflective invokes
+              return Collections.emptySet();
+            }
+            for (int i = 0; i < call.getNumberOfUses(); i++) {
+              if (call.getUse(i) == caller.getValueNumber()) {
+                if (callee.getValueNumber() == i + 1) {
+                  return Collections.singleton(Dependency.DATA_DEP);
                 }
               }
             }
-            return Collections.emptySet();
           }
-        case HEAP_PARAM_CALLER:
+          return Collections.emptySet();
+        }
+        case HEAP_PARAM_CALLER -> {
           if (dOptions.equals(DataDependenceOptions.NONE)) {
             return Collections.emptySet();
           }
@@ -776,9 +772,11 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
           } else {
             return Collections.emptySet();
           }
-        default:
+        }
+        default -> {
           Assertions.UNREACHABLE(src.getKind());
           return Collections.emptySet();
+        }
       }
     }
 

@@ -41,34 +41,21 @@ public abstract class TypeSignature extends Signature {
       throw new IllegalArgumentException("illegal empty string s");
     }
     assert !s.isEmpty();
-    switch (s.charAt(0)) {
-      case TypeReference.VoidTypeCode:
-        return BaseType.VOID;
-      case TypeReference.BooleanTypeCode:
-        return BaseType.BOOLEAN;
-      case TypeReference.ByteTypeCode:
-        return BaseType.BYTE;
-      case TypeReference.ShortTypeCode:
-        return BaseType.SHORT;
-      case TypeReference.IntTypeCode:
-        return BaseType.INT;
-      case TypeReference.LongTypeCode:
-        return BaseType.LONG;
-      case TypeReference.FloatTypeCode:
-        return BaseType.FLOAT;
-      case TypeReference.DoubleTypeCode:
-        return BaseType.DOUBLE;
-      case TypeReference.CharTypeCode:
-        return BaseType.CHAR;
-      case 'L':
-        return ClassTypeSignature.makeClassTypeSig(s);
-      case 'T':
-        return TypeVariableSignature.make(s);
-      case TypeReference.ArrayTypeCode:
-        return ArrayTypeSignature.make(s);
-      default:
-        throw new IllegalArgumentException("malformed TypeSignature string:" + s);
-    }
+    return switch (s.charAt(0)) {
+      case TypeReference.VoidTypeCode -> BaseType.VOID;
+      case TypeReference.BooleanTypeCode -> BaseType.BOOLEAN;
+      case TypeReference.ByteTypeCode -> BaseType.BYTE;
+      case TypeReference.ShortTypeCode -> BaseType.SHORT;
+      case TypeReference.IntTypeCode -> BaseType.INT;
+      case TypeReference.LongTypeCode -> BaseType.LONG;
+      case TypeReference.FloatTypeCode -> BaseType.FLOAT;
+      case TypeReference.DoubleTypeCode -> BaseType.DOUBLE;
+      case TypeReference.CharTypeCode -> BaseType.CHAR;
+      case 'L' -> ClassTypeSignature.makeClassTypeSig(s);
+      case 'T' -> TypeVariableSignature.make(s);
+      case TypeReference.ArrayTypeCode -> ArrayTypeSignature.make(s);
+      default -> throw new IllegalArgumentException("malformed TypeSignature string:" + s);
+    };
   }
 
   public abstract boolean isTypeVariable();
@@ -101,92 +88,64 @@ public abstract class TypeSignature extends Signature {
     int i = 1;
     while (true) {
       switch (typeSigs.charAt(i++)) {
-        case TypeReference.VoidTypeCode:
-          sigs.add(TypeReference.VoidName.toString());
-          continue;
-        case TypeReference.BooleanTypeCode:
-          sigs.add(TypeReference.BooleanName.toString());
-          continue;
-        case TypeReference.ByteTypeCode:
-          sigs.add(TypeReference.ByteName.toString());
-          continue;
-        case TypeReference.ShortTypeCode:
-          sigs.add(TypeReference.ShortName.toString());
-          continue;
-        case TypeReference.IntTypeCode:
-          sigs.add(TypeReference.IntName.toString());
-          continue;
-        case TypeReference.LongTypeCode:
-          sigs.add(TypeReference.LongName.toString());
-          continue;
-        case TypeReference.FloatTypeCode:
-          sigs.add(TypeReference.FloatName.toString());
-          continue;
-        case TypeReference.DoubleTypeCode:
-          sigs.add(TypeReference.DoubleName.toString());
-          continue;
-        case TypeReference.CharTypeCode:
-          sigs.add(TypeReference.CharName.toString());
-          continue;
-        case TypeReference.ClassTypeCode:
-          {
-            int off = i - 1;
-            i = getEndIndexOfClassType(typeSigs, i);
-            sigs.add(typeSigs.substring(off, i));
-            continue;
+        case TypeReference.VoidTypeCode -> sigs.add(TypeReference.VoidName.toString());
+        case TypeReference.BooleanTypeCode -> sigs.add(TypeReference.BooleanName.toString());
+        case TypeReference.ByteTypeCode -> sigs.add(TypeReference.ByteName.toString());
+        case TypeReference.ShortTypeCode -> sigs.add(TypeReference.ShortName.toString());
+        case TypeReference.IntTypeCode -> sigs.add(TypeReference.IntName.toString());
+        case TypeReference.LongTypeCode -> sigs.add(TypeReference.LongName.toString());
+        case TypeReference.FloatTypeCode -> sigs.add(TypeReference.FloatName.toString());
+        case TypeReference.DoubleTypeCode -> sigs.add(TypeReference.DoubleName.toString());
+        case TypeReference.CharTypeCode -> sigs.add(TypeReference.CharName.toString());
+        case TypeReference.ClassTypeCode -> {
+          int off = i - 1;
+          i = getEndIndexOfClassType(typeSigs, i);
+          sigs.add(typeSigs.substring(off, i));
+        }
+        case TypeReference.ArrayTypeCode -> {
+          int arrayStart = i - 1;
+          while (typeSigs.charAt(i) == TypeReference.ArrayTypeCode) {
+            i++;
           }
-        case TypeReference.ArrayTypeCode:
-          {
-            int arrayStart = i - 1;
-            while (typeSigs.charAt(i) == TypeReference.ArrayTypeCode) {
+          switch (typeSigs.charAt(i)) {
+            case TypeReference.BooleanTypeCode,
+                TypeReference.ByteTypeCode,
+                TypeReference.ShortTypeCode,
+                TypeReference.IntTypeCode,
+                TypeReference.LongTypeCode,
+                TypeReference.FloatTypeCode,
+                TypeReference.DoubleTypeCode,
+                TypeReference.CharTypeCode -> {
+              sigs.add(typeSigs.substring(arrayStart, i + 1));
               i++;
             }
-            switch (typeSigs.charAt(i)) {
-              case TypeReference.BooleanTypeCode:
-              case TypeReference.ByteTypeCode:
-              case TypeReference.ShortTypeCode:
-              case TypeReference.IntTypeCode:
-              case TypeReference.LongTypeCode:
-              case TypeReference.FloatTypeCode:
-              case TypeReference.DoubleTypeCode:
-              case TypeReference.CharTypeCode:
-                sigs.add(typeSigs.substring(arrayStart, i + 1));
-                i++;
-                break;
-              case 'T':
-              case TypeReference.ClassTypeCode:
-                i++; // to skip 'L' or 'T'
-                i = getEndIndexOfClassType(typeSigs, i);
-                sigs.add(typeSigs.substring(arrayStart, i));
-                break;
-              default:
-                Assertions.UNREACHABLE("BANG " + typeSigs.charAt(i));
+            case 'T', TypeReference.ClassTypeCode -> {
+              i++; // to skip 'L' or 'T'
+              i = getEndIndexOfClassType(typeSigs, i);
+              sigs.add(typeSigs.substring(arrayStart, i));
             }
-            continue;
+            default -> Assertions.UNREACHABLE("BANG " + typeSigs.charAt(i));
           }
-        case (byte) 'T':
-          { // type variable
-            int off = i - 1;
-            while (typeSigs.charAt(i++) != ';')
-              ;
-            sigs.add(typeSigs.substring(off, i));
-            continue;
-          }
-        case (byte) '*': // unbounded wildcard
-          sigs.add("*");
-          break;
-        case (byte) '-': // bounded wildcard
-        case (byte) '+': // bounded wildcard
+        }
+        case (byte) 'T' -> { // type variable
+          int off = i - 1;
+          while (typeSigs.charAt(i++) != ';')
+            ;
+          sigs.add(typeSigs.substring(off, i));
+        }
+        case (byte) '*' -> // unbounded wildcard
+            sigs.add("*");
+        // bounded wildcard
+        case (byte) '-', (byte) '+' -> {
           int boundedStart = i - 1;
           i++; // to skip 'L'
           i = getEndIndexOfClassType(typeSigs, i);
           sigs.add(typeSigs.substring(boundedStart, i));
-          break;
-        case (byte) ')': // end of parameter list
-        case (byte) '>': // end of type argument list
-          return sigs.toArray(new String[0]);
-        default:
-          throw new IllegalArgumentException("bad type signature list " + typeSigs);
+        } // end of parameter list
+        case (byte) ')', (byte) '>' -> {
+          return sigs.toArray(new String[0]); // end of type argument list
+        }
+        default -> throw new IllegalArgumentException("bad type signature list " + typeSigs);
       }
     }
   }

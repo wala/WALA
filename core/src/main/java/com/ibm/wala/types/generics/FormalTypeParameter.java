@@ -116,25 +116,23 @@ public class FormalTypeParameter extends Signature {
     do {
       assert (s.charAt(result) == ':');
       switch (s.charAt(++result)) {
-        case TypeReference.ClassTypeCode:
-          {
-            int depth = 0;
-            while (s.charAt(result) != ';' || depth > 0) {
-              if (s.charAt(result) == '<') {
-                depth++;
-              }
-              if (s.charAt(result) == '>') {
-                depth--;
-              }
-              result++;
+        case TypeReference.ClassTypeCode -> {
+          int depth = 0;
+          while (s.charAt(result) != ';' || depth > 0) {
+            if (s.charAt(result) == '<') {
+              depth++;
+            }
+            if (s.charAt(result) == '>') {
+              depth--;
             }
             result++;
-            break;
           }
-        case ':':
-          break;
-        default:
+          result++;
+        }
+        case ':' -> {}
+        default -> {
           assert false : "bad type signature list " + s + ' ' + (result - 1);
+        }
       }
     } while (s.charAt(result) == ':');
     return result;

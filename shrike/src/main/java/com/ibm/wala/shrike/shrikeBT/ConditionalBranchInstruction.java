@@ -27,23 +27,21 @@ public final class ConditionalBranchInstruction extends Instruction
   public static ConditionalBranchInstruction make(String type, Operator operator, int label)
       throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
-    short opcode;
-
-    switch (t) {
-      case TYPE_int_index:
-        opcode = (short) (OP_if_icmpeq + (operator.ordinal() - Operator.EQ.ordinal()));
-        break;
-      case TYPE_Object_index:
-        if (operator != Operator.EQ && operator != Operator.NE) {
-          throw new IllegalArgumentException(
-              "Cannot test for condition " + operator + " on a reference");
-        }
-        opcode = (short) (OP_if_acmpeq + (operator.ordinal() - Operator.EQ.ordinal()));
-        break;
-      default:
-        throw new IllegalArgumentException(
-            "Cannot conditionally branch on a value of type " + type);
-    }
+    short opcode =
+        switch (t) {
+          case TYPE_int_index ->
+              (short) (OP_if_icmpeq + (operator.ordinal() - Operator.EQ.ordinal()));
+          case TYPE_Object_index -> {
+            if (operator != Operator.EQ && operator != Operator.NE) {
+              throw new IllegalArgumentException(
+                  "Cannot test for condition " + operator + " on a reference");
+            }
+            yield (short) (OP_if_acmpeq + (operator.ordinal() - Operator.EQ.ordinal()));
+          }
+          default ->
+              throw new IllegalArgumentException(
+                  "Cannot conditionally branch on a value of type " + type);
+        };
 
     return make(opcode, label);
   }

@@ -100,12 +100,12 @@ public final class CRTData {
       source_start = new Position(source_start_position);
     } catch (InvalidPositionException e) {
       switch (e.getThisCause()) {
-        case LINE_NUMBER_ZERO:
-          throw new InvalidCRTDataException(WARN_INVALID_START_LINE_NUMBER);
-        case COLUMN_NUMBER_ZERO:
-          throw new InvalidCRTDataException(WARN_INVALID_START_COLUMN_NUMBER);
-        default:
+        case LINE_NUMBER_ZERO -> throw new InvalidCRTDataException(WARN_INVALID_START_LINE_NUMBER);
+        case COLUMN_NUMBER_ZERO ->
+            throw new InvalidCRTDataException(WARN_INVALID_START_COLUMN_NUMBER);
+        default -> {
           assert false;
+        }
       }
     }
 
@@ -114,12 +114,12 @@ public final class CRTData {
       source_end = new Position(source_end_position);
     } catch (InvalidPositionException e) {
       switch (e.getThisCause()) {
-        case LINE_NUMBER_ZERO:
-          throw new InvalidCRTDataException(WARN_INVALID_END_LINE_NUMBER);
-        case COLUMN_NUMBER_ZERO:
-          throw new InvalidCRTDataException(WARN_INVALID_END_COLUMN_NUMBER);
-        default:
+        case LINE_NUMBER_ZERO -> throw new InvalidCRTDataException(WARN_INVALID_END_LINE_NUMBER);
+        case COLUMN_NUMBER_ZERO ->
+            throw new InvalidCRTDataException(WARN_INVALID_END_COLUMN_NUMBER);
+        default -> {
           assert false;
+        }
       }
     }
 
@@ -129,16 +129,14 @@ public final class CRTData {
     } catch (InvalidRangeException e) {
       final Cause cause = e.getThisCause();
       switch (cause) {
-        case END_BEFORE_START:
-          throw new InvalidCRTDataException(
-              WARN_END_BEFORE_START, source_start.toString(), source_end.toString());
-        case START_UNDEFINED:
-          throw new InvalidCRTDataException(WARN_START_UNDEFINED);
-        case END_UNDEFINED:
-          throw new InvalidCRTDataException(WARN_END_UNDEFINED);
-        default:
-          throw new UnsupportedOperationException(
-              String.format("cannot convert %s into an InvalidCRTDataException", cause));
+        case END_BEFORE_START ->
+            throw new InvalidCRTDataException(
+                WARN_END_BEFORE_START, source_start.toString(), source_end.toString());
+        case START_UNDEFINED -> throw new InvalidCRTDataException(WARN_START_UNDEFINED);
+        case END_UNDEFINED -> throw new InvalidCRTDataException(WARN_END_UNDEFINED);
+        default ->
+            throw new UnsupportedOperationException(
+                String.format("cannot convert %s into an InvalidCRTDataException", cause));
       }
     } finally {
       this.source_positions = range;

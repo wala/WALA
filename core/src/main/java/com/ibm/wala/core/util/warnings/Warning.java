@@ -74,23 +74,18 @@ public abstract class Warning implements Comparable<Warning> {
   }
 
   protected String severityString() {
-    switch (level) {
-      case MILD:
-        return "mild";
-      case MODERATE:
-        return "Moderate";
-      case SEVERE:
-        return "SEVERE";
-      case CLIENT_MILD:
-        return "Client mild";
-      case CLIENT_MODERATE:
-        return "Client moderate";
-      case CLIENT_SEVERE:
-        return "Client severe";
-      default:
+    return switch (level) {
+      case MILD -> "mild";
+      case MODERATE -> "Moderate";
+      case SEVERE -> "SEVERE";
+      case CLIENT_MILD -> "Client mild";
+      case CLIENT_MODERATE -> "Client moderate";
+      case CLIENT_SEVERE -> "Client severe";
+      default -> {
         Assertions.UNREACHABLE();
-        return null;
-    }
+        yield null;
+      }
+    };
   }
 
   public byte getLevel() {

@@ -1183,74 +1183,75 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
           TypeReference fromType, toType;
           boolean overflows = false;
           // TODO: figure out if any of these can overflow
-          switch (instruction.op) {
-            case DOUBLETOLONG:
-              fromType = TypeReference.Double;
-              toType = TypeReference.Long;
-              break;
-            case DOUBLETOFLOAT:
-              fromType = TypeReference.Double;
-              toType = TypeReference.Float;
-              break;
-            case INTTOBYTE:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Byte;
-              break;
-            case INTTOCHAR:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Char;
-              break;
-            case INTTOSHORT:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Short;
-              break;
-            case DOUBLETOINT:
-              fromType = TypeReference.Double;
-              toType = TypeReference.Int;
-              break;
-            case FLOATTODOUBLE:
-              fromType = TypeReference.Float;
-              toType = TypeReference.Double;
-              break;
-            case FLOATTOLONG:
-              fromType = TypeReference.Float;
-              toType = TypeReference.Long;
-              break;
-            case FLOATTOINT:
-              fromType = TypeReference.Float;
-              toType = TypeReference.Int;
-              break;
-            case LONGTODOUBLE:
-              fromType = TypeReference.Long;
-              toType = TypeReference.Double;
-              break;
-            case LONGTOFLOAT:
-              fromType = TypeReference.Long;
-              toType = TypeReference.Float;
-              break;
-            case LONGTOINT:
-              fromType = TypeReference.Long;
-              toType = TypeReference.Int;
-              break;
-            case INTTODOUBLE:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Double;
-              break;
-            case INTTOFLOAT:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Float;
-              break;
-            case INTTOLONG:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Long;
-              break;
-            default:
-              throw new IllegalArgumentException(
-                  "unknown conversion type "
-                      + instruction.op
-                      + " in unary instruction: "
-                      + instruction);
-          }
+          toType =
+              switch (instruction.op) {
+                case DOUBLETOLONG -> {
+                  fromType = TypeReference.Double;
+                  yield TypeReference.Long;
+                }
+                case DOUBLETOFLOAT -> {
+                  fromType = TypeReference.Double;
+                  yield TypeReference.Float;
+                }
+                case INTTOBYTE -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Byte;
+                }
+                case INTTOCHAR -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Char;
+                }
+                case INTTOSHORT -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Short;
+                }
+                case DOUBLETOINT -> {
+                  fromType = TypeReference.Double;
+                  yield TypeReference.Int;
+                }
+                case FLOATTODOUBLE -> {
+                  fromType = TypeReference.Float;
+                  yield TypeReference.Double;
+                }
+                case FLOATTOLONG -> {
+                  fromType = TypeReference.Float;
+                  yield TypeReference.Long;
+                }
+                case FLOATTOINT -> {
+                  fromType = TypeReference.Float;
+                  yield TypeReference.Int;
+                }
+                case LONGTODOUBLE -> {
+                  fromType = TypeReference.Long;
+                  yield TypeReference.Double;
+                }
+                case LONGTOFLOAT -> {
+                  fromType = TypeReference.Long;
+                  yield TypeReference.Float;
+                }
+                case LONGTOINT -> {
+                  fromType = TypeReference.Long;
+                  yield TypeReference.Int;
+                }
+                case INTTODOUBLE -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Double;
+                }
+                case INTTOFLOAT -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Float;
+                }
+                case INTTOLONG -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Long;
+                }
+                default ->
+                    throw new IllegalArgumentException(
+                        "unknown conversion type "
+                            + instruction.op
+                            + " in unary instruction: "
+                            + instruction);
+              };
           int dest = instruction.destination;
           int result = reuseOrCreateDef();
           setLocal(dest, result);

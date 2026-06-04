@@ -180,13 +180,12 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
           }
           { // Fetch model and info
             switch (type) {
-              case INTERNAL_TARGET:
+              case INTERNAL_TARGET -> {
                 info = intentStarters.getInfo(method.getReference());
 
                 model = new MicroModel(this.cha, this.options, this.cache, intent.getAction());
-
-                break;
-              case SYSTEM_SERVICE:
+              }
+              case SYSTEM_SERVICE -> {
                 info =
                     new IntentStarters.StartInfo(
                         node.getMethod().getReference().getDeclaringClass(),
@@ -196,35 +195,33 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
 
                 model =
                     new SystemServiceModel(this.cha, this.options, this.cache, intent.getAction());
-
-                break;
-              case EXTERNAL_TARGET:
+              }
+              case EXTERNAL_TARGET -> {
                 info = intentStarters.getInfo(method.getReference());
 
                 model =
                     new ExternalModel(
                         this.cha, this.options, this.cache, fetchTargetComponent(intent, method));
-
-                break;
-              case STANDARD_ACTION:
+              }
               // TODO!
               // In Order to correctly evaluate a standard-action we would also have to look
               // at the URI of the Intent.
-              case UNKNOWN_TARGET:
+              case STANDARD_ACTION, UNKNOWN_TARGET -> {
                 info = intentStarters.getInfo(method.getReference());
 
                 model =
                     new UnknownTargetModel(
                         this.cha, this.options, this.cache, fetchTargetComponent(intent, method));
-
-                break;
-              case IGNORE:
+              }
+              case IGNORE -> {
                 return null;
-              default:
-                throw new java.lang.UnsupportedOperationException(
-                    "The Intent-Type "
-                        + intent.getType()
-                        + " is not known to IntentContextInterpreter");
+              }
+              default ->
+                  throw new UnsupportedOperationException(
+                      "The Intent-Type "
+                          + intent.getType()
+                          + " is not known to IntentContextInterpreter");
+
                 // return method.makeIR(ctx, this.options.getSSAOptions());
             }
 

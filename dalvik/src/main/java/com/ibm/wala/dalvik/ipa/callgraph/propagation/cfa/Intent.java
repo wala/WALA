@@ -136,16 +136,13 @@ public class Intent implements Cloneable, ContextItem, Comparable<Intent> {
 
   public void setExplicit() {
     switch (explicit) {
-      case UNSET:
-        // TODO: This is dangerous?
-        explicit = Explicit.EXPLICIT;
-        break;
-      case EXPLICIT:
-        unbind();
-        break;
-      default:
-        throw new UnsupportedOperationException(
-            String.format("unexpected explicitness setting %s", explicit));
+      case UNSET ->
+          // TODO: This is dangerous?
+          explicit = Explicit.EXPLICIT;
+      case EXPLICIT -> unbind();
+      default ->
+          throw new UnsupportedOperationException(
+              String.format("unexpected explicitness setting %s", explicit));
     }
   }
 

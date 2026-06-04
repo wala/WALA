@@ -667,60 +667,64 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       throw new IllegalArgumentException("pei is null");
     }
     switch (((Instruction) pei).getOpcode()) {
-      case OP_iaload:
-      case OP_laload:
-      case OP_faload:
-      case OP_daload:
-      case OP_aaload:
-      case OP_baload:
-      case OP_caload:
-      case OP_saload:
-      case OP_iastore:
-      case OP_lastore:
-      case OP_fastore:
-      case OP_dastore:
-      case OP_bastore:
-      case OP_castore:
-      case OP_sastore:
+      case OP_iaload,
+          OP_laload,
+          OP_faload,
+          OP_daload,
+          OP_aaload,
+          OP_baload,
+          OP_caload,
+          OP_saload,
+          OP_iastore,
+          OP_lastore,
+          OP_fastore,
+          OP_dastore,
+          OP_bastore,
+          OP_castore,
+          OP_sastore -> {
         return getArrayAccessExceptions();
-      case OP_aastore:
+      }
+      case OP_aastore -> {
         return getAaStoreExceptions();
-      case OP_getfield:
-      case OP_putfield:
-      case OP_invokevirtual:
-      case OP_invokespecial:
-      case OP_invokeinterface:
-      case OP_monitorenter:
-      case OP_monitorexit:
+      }
       // we're currently ignoring MonitorStateExceptions, since J2EE stuff
       // should be
       // logically single-threaded
-      case OP_athrow:
       // N.B: the caller must handle the explicitly-thrown exception
-      case OP_arraylength:
+      case OP_getfield,
+          OP_putfield,
+          OP_invokevirtual,
+          OP_invokespecial,
+          OP_invokeinterface,
+          OP_monitorenter,
+          OP_monitorexit,
+          OP_athrow,
+          OP_arraylength -> {
         return getNullPointerException();
-      case OP_idiv:
-      case OP_irem:
-      case OP_ldiv:
-      case OP_lrem:
+      }
+      case OP_idiv, OP_irem, OP_ldiv, OP_lrem -> {
         return getArithmeticException();
-      case OP_new:
+      }
+      case OP_new -> {
         return newScalarExceptions;
-      case OP_newarray:
-      case OP_anewarray:
-      case OP_multianewarray:
+      }
+      case OP_newarray, OP_anewarray, OP_multianewarray -> {
         return newArrayExceptions;
-      case OP_checkcast:
+      }
+      case OP_checkcast -> {
         return getClassCastException();
-      case OP_ldc_w:
+      }
+      case OP_ldc_w -> {
         if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
           return getClassNotFoundException();
         else return null;
-      case OP_getstatic:
-      case OP_putstatic:
+      }
+      case OP_getstatic, OP_putstatic -> {
         return getExceptionInInitializerError();
-      default:
+      }
+      default -> {
         return Collections.emptySet();
+      }
     }
   }
 

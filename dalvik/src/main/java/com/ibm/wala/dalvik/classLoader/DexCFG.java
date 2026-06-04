@@ -409,15 +409,8 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
       if (pei == null) {
         throw new IllegalArgumentException("pei is null");
       }
-      switch (pei.getOpcode()) {
+      return switch (pei.getOpcode()) {
         // TODO: Make sure all the important cases and exceptions are covered.
-        case AGET:
-        case AGET_WIDE:
-        case AGET_OBJECT:
-        case AGET_BOOLEAN:
-        case AGET_BYTE:
-        case AGET_CHAR:
-        case AGET_SHORT:
         //      case OP_iaload:
         //      case OP_laload:
         //      case OP_faload:
@@ -426,98 +419,103 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         //      case OP_baload:
         //      case OP_caload:
         //      case OP_saload:
-        case APUT:
-        case APUT_WIDE:
         //      case APUT_OBJECT:
-        case APUT_BOOLEAN:
-        case APUT_BYTE:
-        case APUT_CHAR:
-        case APUT_SHORT:
-          //      case OP_iastore:
-          //      case OP_lastore:
-          //      case OP_fastore:
-          //      case OP_dastore:
-          //      case OP_bastore:
-          //      case OP_castore:
-          //      case OP_sastore:
-          return JavaLanguage.getArrayAccessExceptions();
-        case APUT_OBJECT:
-          // case OP_aastore:
-          return JavaLanguage.getAaStoreExceptions();
-        case IGET:
-        case IGET_WIDE:
-        case IGET_OBJECT:
-        case IGET_BOOLEAN:
-        case IGET_BYTE:
-        case IGET_CHAR:
-        case IGET_SHORT:
+        case AGET,
+            AGET_WIDE,
+            AGET_OBJECT,
+            AGET_BOOLEAN,
+            AGET_BYTE,
+            AGET_CHAR,
+            AGET_SHORT,
+            APUT,
+            APUT_WIDE,
+            APUT_BOOLEAN,
+            APUT_BYTE,
+            APUT_CHAR,
+            APUT_SHORT ->
+            //      case OP_iastore:
+            //      case OP_lastore:
+            //      case OP_fastore:
+            //      case OP_dastore:
+            //      case OP_bastore:
+            //      case OP_castore:
+            //      case OP_sastore:
+            JavaLanguage.getArrayAccessExceptions();
+        case APUT_OBJECT ->
+            // case OP_aastore:
+            JavaLanguage.getAaStoreExceptions();
         //      case OP_getfield:
-        case IPUT:
-        case IPUT_WIDE:
-        case IPUT_OBJECT:
-        case IPUT_BOOLEAN:
-        case IPUT_BYTE:
-        case IPUT_CHAR:
-        case IPUT_SHORT:
         //      case OP_putfield:
 
         // Shrike imp does not include the static invoke calls, so likewise will do the same
-        case INVOKE_VIRTUAL:
-        case INVOKE_SUPER:
-        case INVOKE_DIRECT:
         // case INVOKE_STATIC:
-        case INVOKE_INTERFACE:
-        case INVOKE_VIRTUAL_RANGE:
-        case INVOKE_SUPER_RANGE:
-        case INVOKE_DIRECT_RANGE:
         // case INVOKE_STATIC_RANGE:
-        case INVOKE_INTERFACE_RANGE:
         //      case OP_invokevirtual:
         //      case OP_invokespecial:
         //      case OP_invokeinterface:
-        case ARRAY_LENGTH:
         //      case OP_arraylength:
-        case MONITOR_ENTER:
-        case MONITOR_EXIT:
         //      case OP_monitorenter:
         //      case OP_monitorexit:
         // we're currently ignoring MonitorStateExceptions, since J2EE stuff
         // should be
         // logically single-threaded
-        case THROW:
-          //      case OP_athrow:
-          // N.B: the caller must handle the explicitly-thrown exception
-          return JavaLanguage.getNullPointerException();
-        case DIV_INT:
-        case DIV_INT_2ADDR:
-        case DIV_INT_LIT16:
-        case DIV_INT_LIT8:
-        case REM_INT:
-        case REM_INT_2ADDR:
-        case REM_INT_LIT16:
-        case REM_INT_LIT8:
-        case DIV_LONG:
-        case DIV_LONG_2ADDR:
-        case REM_LONG:
-        case REM_LONG_2ADDR:
-          //      case OP_idiv:
-          //      case OP_irem:
-          //      case OP_ldiv:
-          //      case OP_lrem:
-          return JavaLanguage.getArithmeticException();
-        case NEW_INSTANCE:
-          // case OP_new:
-          return JavaLanguage.getNewScalarExceptions();
-        case NEW_ARRAY:
-        case FILLED_NEW_ARRAY:
-        case FILLED_NEW_ARRAY_RANGE:
-          //      case OP_newarray:
-          //      case OP_anewarray:
-          //      case OP_multianewarray:
-          return JavaLanguage.getNewArrayExceptions();
-        case CHECK_CAST:
-          //      case OP_checkcast:
-          return JavaLanguage.getClassCastException();
+        case IGET,
+            IGET_WIDE,
+            IGET_OBJECT,
+            IGET_BOOLEAN,
+            IGET_BYTE,
+            IGET_CHAR,
+            IGET_SHORT,
+            IPUT,
+            IPUT_WIDE,
+            IPUT_OBJECT,
+            IPUT_BOOLEAN,
+            IPUT_BYTE,
+            IPUT_CHAR,
+            IPUT_SHORT,
+            INVOKE_VIRTUAL,
+            INVOKE_SUPER,
+            INVOKE_DIRECT,
+            INVOKE_INTERFACE,
+            INVOKE_VIRTUAL_RANGE,
+            INVOKE_SUPER_RANGE,
+            INVOKE_DIRECT_RANGE,
+            INVOKE_INTERFACE_RANGE,
+            ARRAY_LENGTH,
+            MONITOR_ENTER,
+            MONITOR_EXIT,
+            THROW ->
+            //      case OP_athrow:
+            // N.B: the caller must handle the explicitly-thrown exception
+            JavaLanguage.getNullPointerException();
+        case DIV_INT,
+            DIV_INT_2ADDR,
+            DIV_INT_LIT16,
+            DIV_INT_LIT8,
+            REM_INT,
+            REM_INT_2ADDR,
+            REM_INT_LIT16,
+            REM_INT_LIT8,
+            DIV_LONG,
+            DIV_LONG_2ADDR,
+            REM_LONG,
+            REM_LONG_2ADDR ->
+            //      case OP_idiv:
+            //      case OP_irem:
+            //      case OP_ldiv:
+            //      case OP_lrem:
+            JavaLanguage.getArithmeticException();
+        case NEW_INSTANCE ->
+            // case OP_new:
+            JavaLanguage.getNewScalarExceptions();
+        case NEW_ARRAY, FILLED_NEW_ARRAY, FILLED_NEW_ARRAY_RANGE ->
+            //      case OP_newarray:
+            //      case OP_anewarray:
+            //      case OP_multianewarray:
+            JavaLanguage.getNewArrayExceptions();
+        case CHECK_CAST ->
+            //      case OP_checkcast:
+            JavaLanguage.getClassCastException();
 
         // I Don't think dalvik has to worry about this?
         //      case OP_ldc_w:
@@ -526,26 +524,25 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         //        else
         //          return null;
 
-        case SGET:
-        case SGET_BOOLEAN:
-        case SGET_BYTE:
-        case SGET_CHAR:
-        case SGET_OBJECT:
-        case SGET_SHORT:
-        case SGET_WIDE:
-        case SPUT:
-        case SPUT_BOOLEAN:
-        case SPUT_BYTE:
-        case SPUT_CHAR:
-        case SPUT_OBJECT:
-        case SPUT_SHORT:
-        case SPUT_WIDE:
-          //      case OP_getstatic:
-          //      case OP_putstatic:
-          return JavaLanguage.getExceptionInInitializerError();
-        default:
-          return Collections.emptySet();
-      }
+        case SGET,
+            SGET_BOOLEAN,
+            SGET_BYTE,
+            SGET_CHAR,
+            SGET_OBJECT,
+            SGET_SHORT,
+            SGET_WIDE,
+            SPUT,
+            SPUT_BOOLEAN,
+            SPUT_BYTE,
+            SPUT_CHAR,
+            SPUT_OBJECT,
+            SPUT_SHORT,
+            SPUT_WIDE ->
+            //      case OP_getstatic:
+            //      case OP_putstatic:
+            JavaLanguage.getExceptionInInitializerError();
+        default -> Collections.emptySet();
+      };
     }
 
     private ExceptionHandler[] getExceptionHandlers() {

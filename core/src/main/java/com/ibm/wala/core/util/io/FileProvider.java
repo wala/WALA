@@ -155,21 +155,25 @@ public class FileProvider {
       }
     }
     switch (url.getProtocol()) {
-      case "jar":
+      case "jar" -> {
         JarURLConnection jc = (JarURLConnection) url.openConnection();
         JarFile f = jc.getJarFile();
         JarEntry entry = jc.getJarEntry();
         JarFileModule parent = new JarFileModule(f);
         return new NestedJarFileModule(parent, entry);
-      case "rsrc":
+      }
+      case "rsrc" -> {
         return new ResourceJarFileModule(url);
-      case "file":
+      }
+      case "file" -> {
         String filePath = filePathFromURL(url);
         return new JarFileModule(new JarFile(filePath, false));
-      default:
+      }
+      default -> {
         final URLConnection in = url.openConnection();
         final JarInputStream jarIn = new JarInputStream(in.getInputStream(), false);
         return new JarStreamModule(jarIn);
+      }
     }
   }
 
