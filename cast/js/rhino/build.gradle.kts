@@ -23,6 +23,7 @@ dependencies {
   testFixturesImplementation(projects.core)
   testImplementation(libs.assertj.core)
   testImplementation(libs.gson)
+  testImplementation(libs.jetbrains.annotations)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.cast.js))
 }
