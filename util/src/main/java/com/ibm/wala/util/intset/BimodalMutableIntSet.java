@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -21,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class BimodalMutableIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = 7332332295529936562L;
+  @Serial private static final long serialVersionUID = 7332332295529936562L;
   MutableIntSet impl;
 
   @Override

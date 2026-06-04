@@ -10,10 +10,12 @@
  */
 package com.ibm.wala.util;
 
+import java.io.Serial;
+
 /** An exception to raise for some WALA failure */
 public class WalaException extends Exception {
 
-  private static final long serialVersionUID = 3959226859263419122L;
+  @Serial private static final long serialVersionUID = 3959226859263419122L;
 
   /**
    * @param s a message describing the failure

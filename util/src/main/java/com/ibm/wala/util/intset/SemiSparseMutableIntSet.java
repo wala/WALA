@@ -12,11 +12,12 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
-  private static final long serialVersionUID = 8647721176321526013L;
+  @Serial private static final long serialVersionUID = 8647721176321526013L;
 
   private static final boolean DEBUG = true;
 

@@ -86,6 +86,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.Pair;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -98,7 +99,7 @@ import java.util.Set;
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
   /** */
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   public DemandPointerFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, IClassHierarchy cha) {

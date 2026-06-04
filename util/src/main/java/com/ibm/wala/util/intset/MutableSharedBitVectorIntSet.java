@@ -14,6 +14,7 @@ import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -23,7 +24,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = -6630888692508092370L;
+  @Serial private static final long serialVersionUID = -6630888692508092370L;
 
   private static final boolean DEBUG = false;
 

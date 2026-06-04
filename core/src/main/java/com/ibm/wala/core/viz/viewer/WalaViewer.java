@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -27,7 +28,7 @@ import javax.swing.UIManager;
  */
 public class WalaViewer extends JFrame {
 
-  private static final long serialVersionUID = -8580178580211053765L;
+  @Serial private static final long serialVersionUID = -8580178580211053765L;
   protected static final String DefaultMutableTreeNode = null;
 
   public WalaViewer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {

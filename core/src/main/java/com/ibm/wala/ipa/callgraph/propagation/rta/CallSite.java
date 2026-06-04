@@ -14,11 +14,12 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.collections.Pair;
+import java.io.Serial;
 
 /** A utility class consisting of a pair CallSiteReference x CGNode */
 public final class CallSite extends Pair<CallSiteReference, CGNode> {
 
-  private static final long serialVersionUID = -5277592800329960642L;
+  @Serial private static final long serialVersionUID = -5277592800329960642L;
 
   public CallSite(CallSiteReference site, CGNode node) {
     super(site, node);

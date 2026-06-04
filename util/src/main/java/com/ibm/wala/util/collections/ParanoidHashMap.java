@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Map;
  * use System.identityHashCode()
  */
 public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
-  private static final long serialVersionUID = 909018793791787198L;
+  @Serial private static final long serialVersionUID = 909018793791787198L;
 
   /**
    * @throws NullPointerException if t is null

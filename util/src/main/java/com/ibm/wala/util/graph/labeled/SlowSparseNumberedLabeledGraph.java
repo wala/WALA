@@ -51,6 +51,7 @@ package com.ibm.wala.util.graph.labeled;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
+import java.io.Serial;
 import java.io.Serializable;
 import org.jspecify.annotations.Nullable;
 
@@ -59,7 +60,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
     implements Serializable {
 
   /** */
-  private static final long serialVersionUID = -6929183520814732209L;
+  @Serial private static final long serialVersionUID = -6929183520814732209L;
 
   /**
    * @return a graph with the same nodes and edges as g

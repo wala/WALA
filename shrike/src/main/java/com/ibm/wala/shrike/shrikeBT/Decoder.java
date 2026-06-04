@@ -11,6 +11,7 @@
 package com.ibm.wala.shrike.shrikeBT;
 
 import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction.Operator;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -805,7 +806,7 @@ public abstract class Decoder implements Constants {
    */
   public static class InvalidBytecodeException extends Exception {
 
-    private static final long serialVersionUID = -8807125136613458111L;
+    @Serial private static final long serialVersionUID = -8807125136613458111L;
 
     private int index;
 

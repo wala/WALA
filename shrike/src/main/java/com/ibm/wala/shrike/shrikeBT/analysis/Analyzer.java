@@ -25,6 +25,7 @@ import com.ibm.wala.shrike.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrike.shrikeBT.SwapInstruction;
 import com.ibm.wala.shrike.shrikeBT.Util;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -401,7 +402,7 @@ public class Analyzer {
   /** This exception is thrown by verify() when it fails. */
   public static final class FailureException extends Exception {
 
-    private static final long serialVersionUID = -7663520961403117526L;
+    @Serial private static final long serialVersionUID = -7663520961403117526L;
 
     private final int offset;
 

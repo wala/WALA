@@ -72,6 +72,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.SparseIntSet;
+import java.io.Serial;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +94,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
   // Java, you need type aliases.
   private static class BlockPair<E extends ISSABasicBlock>
       extends Pair<BasicBlockInContext<E>, BasicBlockInContext<E>> {
-    private static final long serialVersionUID = 6838579950051954781L;
+    @Serial private static final long serialVersionUID = 6838579950051954781L;
 
     protected BlockPair(BasicBlockInContext<E> fst, BasicBlockInContext<E> snd) {
       super(fst, snd);

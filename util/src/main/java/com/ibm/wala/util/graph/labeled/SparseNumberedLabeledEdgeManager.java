@@ -56,6 +56,7 @@ import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -68,7 +69,7 @@ public class SparseNumberedLabeledEdgeManager<T, U>
     implements Serializable, NumberedLabeledEdgeManager<T, U> {
 
   /** */
-  private static final long serialVersionUID = 5298089288917726790L;
+  @Serial private static final long serialVersionUID = 5298089288917726790L;
 
   /** the label to be attached to an edge when no label is specified */
   private final @Nullable U defaultLabel;

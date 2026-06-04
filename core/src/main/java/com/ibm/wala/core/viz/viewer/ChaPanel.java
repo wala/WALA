@@ -13,6 +13,7 @@ package com.ibm.wala.core.viz.viewer;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import java.io.Serial;
 import java.util.Collection;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -28,7 +29,7 @@ import javax.swing.tree.TreePath;
 
 public class ChaPanel extends JSplitPane {
 
-  private static final long serialVersionUID = -9058908127737757320L;
+  @Serial private static final long serialVersionUID = -9058908127737757320L;
   private final IClassHierarchy cha;
 
   public ChaPanel(IClassHierarchy cha) {

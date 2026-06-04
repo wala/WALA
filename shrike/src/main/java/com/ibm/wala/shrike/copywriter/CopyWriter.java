@@ -37,6 +37,7 @@ import com.ibm.wala.shrike.shrikeCT.LocalVariableTableWriter;
 import com.ibm.wala.shrike.shrikeCT.SourceFileReader;
 import com.ibm.wala.shrike.shrikeCT.SourceFileWriter;
 import java.io.OutputStreamWriter;
+import java.io.Serial;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class CopyWriter {
   private int replace;
 
   static class UnknownAttributeException extends Exception {
-    private static final long serialVersionUID = 8845177787110364793L;
+    @Serial private static final long serialVersionUID = 8845177787110364793L;
 
     UnknownAttributeException(String t) {
       super("Attribute '" + t + "' not understood");

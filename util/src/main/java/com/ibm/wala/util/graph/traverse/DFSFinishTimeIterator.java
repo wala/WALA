@@ -15,6 +15,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.uber.nullaway.annotations.Initializer;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -28,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
 
-  private static final long serialVersionUID = 8440061593631309429L;
+  @Serial private static final long serialVersionUID = 8440061593631309429L;
 
   /** the current next element in finishing time order */
   private @Nullable T theNextElement;

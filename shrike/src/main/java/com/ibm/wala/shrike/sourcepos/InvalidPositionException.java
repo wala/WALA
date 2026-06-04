@@ -17,6 +17,8 @@
 
 package com.ibm.wala.shrike.sourcepos;
 
+import java.io.Serial;
+
 /**
  * An exception for invalid positions.
  *
@@ -25,7 +27,7 @@ package com.ibm.wala.shrike.sourcepos;
  */
 class InvalidPositionException extends Exception {
 
-  private static final long serialVersionUID = 7949660405524028349L;
+  @Serial private static final long serialVersionUID = 7949660405524028349L;
 
   /** possible causes for this exception */
   enum Cause {

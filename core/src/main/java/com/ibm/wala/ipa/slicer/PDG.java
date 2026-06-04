@@ -62,6 +62,7 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -592,7 +593,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   private static class SingletonSet implements StringFilter {
 
     /* Serial version */
-    private static final long serialVersionUID = -672435219867965584L;
+    @Serial private static final long serialVersionUID = -672435219867965584L;
 
     private final TypeReference t;
 
@@ -614,7 +615,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   private static class SetComplement implements StringFilter {
 
     /* Serial version */
-    private static final long serialVersionUID = -7873800088647368431L;
+    @Serial private static final long serialVersionUID = -7873800088647368431L;
 
     private final StringFilter set;
 

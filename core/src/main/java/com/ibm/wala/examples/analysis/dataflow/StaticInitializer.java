@@ -40,6 +40,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class StaticInitializer {
   private static class InitializerDomain extends MutableMapping<IClass>
       implements TabulationDomain<IClass, BasicBlockInContext<IExplodedBasicBlock>> {
 
-    private static final long serialVersionUID = -1897766113586243833L;
+    @Serial private static final long serialVersionUID = -1897766113586243833L;
 
     @Override
     public boolean hasPriorityOver(

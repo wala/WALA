@@ -41,6 +41,7 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -197,7 +198,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
 
   private class Nodes extends SlowNumberedNodeManager<Statement> {
 
-    private static final long serialVersionUID = -1450214776332091211L;
+    @Serial private static final long serialVersionUID = -1450214776332091211L;
 
     @Override
     public boolean containsNode(Statement N) {

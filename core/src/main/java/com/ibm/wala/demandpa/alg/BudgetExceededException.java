@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when a demand-driven points-to query exceeds its allocated budget.
  *
@@ -44,5 +46,5 @@ package com.ibm.wala.demandpa.alg;
  */
 public class BudgetExceededException extends RuntimeException {
 
-  private static final long serialVersionUID = -797000809257983053L;
+  @Serial private static final long serialVersionUID = -797000809257983053L;
 }

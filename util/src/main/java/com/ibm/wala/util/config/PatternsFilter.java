@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.Serial;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import org.jspecify.annotations.NullMarked;
 public class PatternsFilter implements StringFilter {
 
   /** Serial version */
-  private static final long serialVersionUID = 2613051147552054190L;
+  @Serial private static final long serialVersionUID = 2613051147552054190L;
 
   /** The regular expressions that define set membership. */
   private final List<String> regexps;
@@ -190,6 +191,7 @@ public class PatternsFilter implements StringFilter {
     return regexps;
   }
 
+  @Serial
   private void readObject(ObjectInputStream input) throws ClassNotFoundException, IOException {
     input.defaultReadObject();
     isMatch = compileStringPredicate();

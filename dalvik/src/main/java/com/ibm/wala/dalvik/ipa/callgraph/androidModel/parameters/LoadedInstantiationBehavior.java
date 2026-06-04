@@ -47,6 +47,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +65,7 @@ import org.jspecify.annotations.NonNull;
 public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
   private static final class BehviourValue implements Serializable {
-    private static final long serialVersionUID = -7558845015122601212L;
+    @Serial private static final long serialVersionUID = -7558845015122601212L;
     public final InstanceBehavior behaviour;
     public final Exactness exactness;
     public final BehviourValue cacheFrom;
@@ -90,7 +91,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
   }
 
   private static final class BehaviorKey<T> implements Serializable {
-    private static final long serialVersionUID = 73530;
+    @Serial private static final long serialVersionUID = 73530;
 
     // T is expected to be TypeName or Atom
     final T base;
@@ -290,11 +291,12 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
   //
 
   /** The last eight digits encode the date. */
-  private static final long serialVersionUID = 810020131212L;
+  @Serial private static final long serialVersionUID = 810020131212L;
 
   /** Including the cache may be useful to get all seen types. */
   public transient boolean serializationIncludesCache = true;
 
+  @Serial
   private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
     if (this.serializationIncludesCache) {
       stream.writeObject(this.behaviours);
@@ -310,6 +312,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
   }
 
+  @Serial
   @SuppressWarnings("unchecked")
   private void readObject(java.io.ObjectInputStream stream)
       throws IOException, ClassNotFoundException {

@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
 public class ShallowAnalysisScope implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654321L;
+  @Serial private static final long serialVersionUID = -3256390509887654321L;
 
   private final StringFilter exclusions;
 

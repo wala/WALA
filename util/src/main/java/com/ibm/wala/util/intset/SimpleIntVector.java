@@ -10,13 +10,14 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 
 /** simple implementation of IntVector */
 public class SimpleIntVector implements IntVector, Serializable {
 
-  private static final long serialVersionUID = -7909547846468543777L;
+  @Serial private static final long serialVersionUID = -7909547846468543777L;
 
   private static final int MAX_SIZE = Integer.MAX_VALUE / 4;
 

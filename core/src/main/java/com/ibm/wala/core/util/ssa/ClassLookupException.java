@@ -42,6 +42,8 @@
 */
 package com.ibm.wala.core.util.ssa;
 
+import java.io.Serial;
+
 /**
  * Class is not in scope.
  *
@@ -53,7 +55,7 @@ package com.ibm.wala.core.util.ssa;
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public class ClassLookupException extends RuntimeException {
-  private static final long serialVersionUID = 7551139209041666026L;
+  @Serial private static final long serialVersionUID = 7551139209041666026L;
 
   public ClassLookupException(String message) {
     super(message);

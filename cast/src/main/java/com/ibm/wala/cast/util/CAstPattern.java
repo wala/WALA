@@ -18,6 +18,7 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +60,7 @@ public class CAstPattern {
 
   public static class Segments extends TreeMap<String, @NonNull Object> {
 
-    private static final long serialVersionUID = 4119719848336209576L;
+    @Serial private static final long serialVersionUID = 4119719848336209576L;
 
     public CAstNode getSingle(String name) {
       Object value = get(name);

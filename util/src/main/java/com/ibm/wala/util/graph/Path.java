@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph;
 
 import com.ibm.wala.util.intset.SimpleIntVector;
+import java.io.Serial;
 
 /**
  * We represent a path in a numbered graph as a vector of integers &lt;i_1, ..., i_n&gt; where node
@@ -18,7 +19,7 @@ import com.ibm.wala.util.intset.SimpleIntVector;
  */
 public class Path extends SimpleIntVector {
 
-  private static final long serialVersionUID = 5622964158500601280L;
+  @Serial private static final long serialVersionUID = 5622964158500601280L;
   final int size;
 
   private Path(int defaultValue, int size) {

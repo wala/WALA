@@ -21,6 +21,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import java.util.List;
  */
 public class JsPaPanel extends PaPanel {
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private final MutableMapping<List<ObjectPropertyCatalogKey>>
       instanceKeyIdToObjectPropertyCatalogKey = MutableMapping.make();

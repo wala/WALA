@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -22,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class BitVectorIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = 7477243071826223843L;
+  @Serial private static final long serialVersionUID = 7477243071826223843L;
 
   // population count of -1 means needs to be computed again.
   private int populationCount = 0;

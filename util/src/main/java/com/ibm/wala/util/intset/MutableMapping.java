@@ -13,6 +13,7 @@ package com.ibm.wala.util.intset;
 import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 public class MutableMapping<T extends @Nullable Object>
     implements OrdinalSetMapping<T>, Serializable {
 
-  private static final long serialVersionUID = 4011751404163534418L;
+  @Serial private static final long serialVersionUID = 4011751404163534418L;
 
   private static final int INITIAL_CAPACITY = 20;
 

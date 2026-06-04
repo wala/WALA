@@ -23,6 +23,7 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -236,7 +237,7 @@ public abstract class Dominators<T> {
 
     DFSDiscoverTimeIterator<T> dfs =
         new SlowDFSDiscoverTimeIterator<>(G, root) {
-          private static final long serialVersionUID = 88831771771711L;
+          @Serial private static final long serialVersionUID = 88831771771711L;
 
           @Override
           protected void visitEdge(T from, T to) {

@@ -10,10 +10,12 @@
  */
 package com.ibm.wala.util;
 
+import java.io.Serial;
+
 /** Runtime exception for some WALA failure. */
 public class WalaRuntimeException extends RuntimeException {
 
-  private static final long serialVersionUID = -272544923431659418L;
+  @Serial private static final long serialVersionUID = -272544923431659418L;
 
   /**
    * @param s a message describing the failure

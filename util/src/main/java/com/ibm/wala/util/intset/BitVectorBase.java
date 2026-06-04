@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -17,7 +18,7 @@ import java.util.Arrays;
 @SuppressWarnings("rawtypes")
 public abstract class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
 
-  private static final long serialVersionUID = 1151811022797406841L;
+  @Serial private static final long serialVersionUID = 1151811022797406841L;
 
   protected static final boolean DEBUG = false;
 
