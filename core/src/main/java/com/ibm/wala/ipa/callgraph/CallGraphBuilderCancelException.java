@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.CancelException;
+import java.io.Serial;
 
 /**
  * An exception to throw when call graph construction is canceled. This exception allows clients to
@@ -20,7 +21,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class CallGraphBuilderCancelException extends CancelException {
 
-  private static final long serialVersionUID = -3071193971009314659L;
+  @Serial private static final long serialVersionUID = -3071193971009314659L;
 
   private final CallGraph cg;
 

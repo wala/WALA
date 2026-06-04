@@ -75,6 +75,7 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -437,7 +438,7 @@ public class FlowGraph implements Iterable<Vertex> {
           class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object>
               implements HeapGraph<ObjectVertex> {
 
-            private static final long serialVersionUID = -3544629644808422215L;
+            @Serial private static final long serialVersionUID = -3544629644808422215L;
 
             private <X> X ensureNode(X n) {
               if (!containsNode(n)) {

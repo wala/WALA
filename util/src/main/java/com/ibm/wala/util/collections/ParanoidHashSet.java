@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -23,7 +24,7 @@ import java.util.Set;
  * indicated a bad hash function)
  */
 public class ParanoidHashSet<T> extends LinkedHashSet<T> {
-  private static final long serialVersionUID = 30919839181133333L;
+  @Serial private static final long serialVersionUID = 30919839181133333L;
 
   /** A mapping from Integer (hashcode) -&gt; Set of objects */
   private final Map<Integer, Set<T>> hcFreq;

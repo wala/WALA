@@ -80,6 +80,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.util.List;
 import java.util.Set;
 
@@ -93,7 +94,7 @@ import java.util.Set;
 public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
   /** */
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   public DemandValueFlowGraph(
       CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {

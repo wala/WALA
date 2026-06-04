@@ -15,6 +15,7 @@ import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ import java.util.Map;
 public final class TypeReference implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654327L;
+  @Serial private static final long serialVersionUID = -3256390509887654327L;
 
   /*
    * NOTE: initialisation order is important!

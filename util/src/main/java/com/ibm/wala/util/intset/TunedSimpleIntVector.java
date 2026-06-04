@@ -10,10 +10,12 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
+
 /** a simple implementation of int vector that can be tuned to control space usage */
 public class TunedSimpleIntVector extends SimpleIntVector {
 
-  private static final long serialVersionUID = -1380867351543398351L;
+  @Serial private static final long serialVersionUID = -1380867351543398351L;
 
   private final int initialSize;
 

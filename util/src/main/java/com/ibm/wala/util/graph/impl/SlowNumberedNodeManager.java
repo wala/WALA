@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.impl;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -21,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 /** An object which manages node numbers via a mapping. */
 public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Serializable {
 
-  private static final long serialVersionUID = 8956107128389624337L;
+  @Serial private static final long serialVersionUID = 8956107128389624337L;
 
   /** A bijection between integer &lt;-&gt; node */
   private final MutableMapping<T> map = MutableMapping.make();

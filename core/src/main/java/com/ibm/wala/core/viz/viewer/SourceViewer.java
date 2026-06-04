@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serial;
 import java.net.URL;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -22,7 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 public class SourceViewer extends JPanel {
-  private static final long serialVersionUID = -1688405955293925453L;
+  @Serial private static final long serialVersionUID = -1688405955293925453L;
   private URL sourceURL;
   private final JTextField sourceCodeLocation;
   private final DefaultListModel<String> sourceCodeLinesList = new DefaultListModel<>();

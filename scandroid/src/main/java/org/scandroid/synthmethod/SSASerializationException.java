@@ -46,9 +46,11 @@
  */
 package org.scandroid.synthmethod;
 
+import java.io.Serial;
+
 public class SSASerializationException extends RuntimeException {
 
-  private static final long serialVersionUID = 5679383911644331821L;
+  @Serial private static final long serialVersionUID = 5679383911644331821L;
 
   public SSASerializationException(Exception e) {
     super(e);

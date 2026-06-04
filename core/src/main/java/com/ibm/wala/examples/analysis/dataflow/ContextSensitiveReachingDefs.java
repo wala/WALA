@@ -38,6 +38,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import java.io.Serial;
 import java.util.Collection;
 
 /**
@@ -66,7 +67,7 @@ public class ContextSensitiveReachingDefs {
   private static class ReachingDefsDomain extends MutableMapping<Pair<CGNode, Integer>>
       implements TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> {
 
-    private static final long serialVersionUID = 4014252274660361965L;
+    @Serial private static final long serialVersionUID = 4014252274660361965L;
 
     @Override
     public boolean hasPriorityOver(

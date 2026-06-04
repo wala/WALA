@@ -11,13 +11,14 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.math.Logs;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Vector;
 
 /** an int vector implementation which delegates to pages of int vectors. */
 public class TwoLevelIntVector implements IntVector, Serializable {
 
-  private static final long serialVersionUID = -7383053435395846217L;
+  @Serial private static final long serialVersionUID = -7383053435395846217L;
 
   private static final int PAGE_SIZE = 4096;
 

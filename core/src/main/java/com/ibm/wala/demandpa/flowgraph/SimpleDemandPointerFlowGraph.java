@@ -64,6 +64,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -95,7 +96,7 @@ import java.util.Set;
  */
 public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object> {
 
-  private static final long serialVersionUID = 5208052568163692029L;
+  @Serial private static final long serialVersionUID = 5208052568163692029L;
 
   private static final boolean DEBUG = false;
 

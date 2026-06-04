@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
+
 /**
  * A {@link MutableSparseIntSet} that allows for tuning of its initial size and expansion factor.
  *
@@ -18,7 +20,7 @@ package com.ibm.wala.util.intset;
  */
 public class TunedMutableSparseIntSet extends MutableSparseIntSet {
 
-  private static final long serialVersionUID = -1559172158241923881L;
+  @Serial private static final long serialVersionUID = -1559172158241923881L;
 
   private final int initialSize;
 

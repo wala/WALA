@@ -11,6 +11,7 @@
 package com.ibm.wala.core.util;
 
 import com.ibm.wala.util.CancelException;
+import java.io.Serial;
 
 /**
  * An exception for when work is canceled in eclipse. This is identical to {@link CancelException},
@@ -19,7 +20,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class CancelRuntimeException extends RuntimeException {
 
-  private static final long serialVersionUID = 5859062345002606705L;
+  @Serial private static final long serialVersionUID = 5859062345002606705L;
 
   protected CancelRuntimeException(String msg) {
     super(msg);

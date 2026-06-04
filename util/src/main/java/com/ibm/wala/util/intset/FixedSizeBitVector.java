@@ -10,10 +10,11 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.util.Arrays;
 
 public final class FixedSizeBitVector implements Cloneable, java.io.Serializable {
-  private static final long serialVersionUID = 33181877746462822L;
+  @Serial private static final long serialVersionUID = 33181877746462822L;
 
   private static final int LOG_BITS_PER_UNIT = 5;
 

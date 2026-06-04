@@ -25,6 +25,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +55,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class PaPanel extends JSplitPane {
 
-  private static final long serialVersionUID = 8120735305334110889L;
+  @Serial private static final long serialVersionUID = 8120735305334110889L;
   protected final PointerAnalysis<InstanceKey> pa;
   protected final CallGraph cg;
 

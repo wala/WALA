@@ -16,6 +16,7 @@ import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.collections.TwoLevelVector;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import org.jspecify.annotations.NullUnmarked;
@@ -29,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class BasicNaturalRelation implements IBinaryNaturalRelation, Serializable {
 
-  private static final long serialVersionUID = 4483720230344867621L;
+  @Serial private static final long serialVersionUID = 4483720230344867621L;
 
   private static final boolean VERBOSE = false;
 

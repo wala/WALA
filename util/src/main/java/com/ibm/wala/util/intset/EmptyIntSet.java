@@ -10,11 +10,12 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.util.NoSuchElementException;
 
 public class EmptyIntSet implements IntSet {
 
-  private static final long serialVersionUID = 5116475799916663164L;
+  @Serial private static final long serialVersionUID = 5116475799916663164L;
   public static EmptyIntSet instance = new EmptyIntSet();
 
   @Override

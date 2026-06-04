@@ -16,12 +16,13 @@ package com.ibm.wala.cast.tree.impl;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstType;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.HashMap;
 
 public class CAstNodeTypeMapRecorder extends HashMap<CAstNode, CAstType>
     implements CAstNodeTypeMap {
-  private static final long serialVersionUID = 7812144102027916961L;
+  @Serial private static final long serialVersionUID = 7812144102027916961L;
 
   @Override
   public CAstType getNodeType(CAstNode node) {

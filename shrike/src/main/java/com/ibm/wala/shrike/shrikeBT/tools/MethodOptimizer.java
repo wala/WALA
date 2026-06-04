@@ -21,6 +21,7 @@ import com.ibm.wala.shrike.shrikeBT.PopInstruction;
 import com.ibm.wala.shrike.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrike.shrikeBT.Util;
 import com.ibm.wala.shrike.shrikeBT.info.LocalAllocator;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.BitSet;
 
@@ -75,7 +76,7 @@ public final class MethodOptimizer {
   }
 
   public static class UnoptimizableCodeException extends Exception {
-    private static final long serialVersionUID = 2543170335674010642L;
+    @Serial private static final long serialVersionUID = 2543170335674010642L;
 
     public UnoptimizableCodeException(String s) {
       super(s);

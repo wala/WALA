@@ -33,6 +33,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -447,7 +448,7 @@ public class LambdaSummaryClass extends SyntheticClass {
    */
   static class UnresolvedLambdaBodyException extends RuntimeException {
 
-    private static final long serialVersionUID = -6504849409929928820L;
+    @Serial private static final long serialVersionUID = -6504849409929928820L;
 
     public UnresolvedLambdaBodyException(String s) {
       super(s);

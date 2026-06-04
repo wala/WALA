@@ -11,6 +11,7 @@
 package com.ibm.wala.core.util;
 
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import java.io.Serial;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryNotificationInfo;
@@ -131,7 +132,7 @@ class ProgressMasterImpl implements IProgressMonitor {
 
   public static class TooMuchMemoryUsed extends Exception {
 
-    private static final long serialVersionUID = -7174940833610292692L;
+    @Serial private static final long serialVersionUID = -7174940833610292692L;
   }
 
   private class Timeout extends Thread {

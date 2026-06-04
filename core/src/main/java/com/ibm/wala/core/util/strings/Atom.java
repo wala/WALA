@@ -11,6 +11,7 @@
 package com.ibm.wala.core.util.strings;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import org.jspecify.annotations.NonNull;
 public final class Atom implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654329L;
+  @Serial private static final long serialVersionUID = -3256390509887654329L;
 
   /**
    * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
@@ -427,6 +428,7 @@ public final class Atom implements Serializable {
    * Special method that is called by Java deserialization process. Any hash-cons'ed object should
    * implement it, in order to make sure that all equal objects are consolidated.
    */
+  @Serial
   private Object readResolve() {
     return findOrCreate(this.val);
   }

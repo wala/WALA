@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.util.Set;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
@@ -23,7 +24,7 @@ import org.jspecify.annotations.Nullable;
  */
 class DebuggingMutableIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = 6879912730471879687L;
+  @Serial private static final long serialVersionUID = 6879912730471879687L;
 
   final MutableIntSet primaryImpl;
 

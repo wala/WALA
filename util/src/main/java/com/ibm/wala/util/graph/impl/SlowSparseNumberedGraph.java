@@ -16,12 +16,13 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
+import java.io.Serial;
 import java.io.Serializable;
 
 /** A graph of numbered nodes, expected to have a fairly sparse edge structure. */
 public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> implements Serializable {
 
-  private static final long serialVersionUID = 7014361126159594838L;
+  @Serial private static final long serialVersionUID = 7014361126159594838L;
 
   private final SlowNumberedNodeManager<T> nodeManager = new SlowNumberedNodeManager<>();
 

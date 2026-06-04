@@ -43,13 +43,14 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  * @author Tobias Blaschke &lt;code@tobiasblaschke.de&gt;
  */
 public abstract class IInstantiationBehavior implements Serializable {
-  private static final long serialVersionUID = -3698760758700891479L;
+  @Serial private static final long serialVersionUID = -3698760758700891479L;
 
   /** The handling for a variable occurring in the AndroidModel. */
   public enum InstanceBehavior {

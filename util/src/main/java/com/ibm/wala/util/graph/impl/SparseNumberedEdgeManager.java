@@ -18,6 +18,7 @@ import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 /** An object which tracks edges for nodes that have numbers. */
 public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T>, Serializable {
 
-  private static final long serialVersionUID = 6751048618312429623L;
+  @Serial private static final long serialVersionUID = 6751048618312429623L;
 
   private final NumberedNodeManager<T> nodeManager;
 

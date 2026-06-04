@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,7 +18,7 @@ import java.util.Set;
 
 public class Iterator2Set<T> extends Iterator2Collection<T> implements Serializable, Set<T> {
 
-  private static final long serialVersionUID = 3771468677527694694L;
+  @Serial private static final long serialVersionUID = 3771468677527694694L;
 
   private final Set<T> delegate;
 

@@ -15,13 +15,14 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import java.io.Serial;
 import java.util.HashSet;
 import java.util.function.Function;
 
 /** Includes all application methods in an analysis scope as entrypoints. */
 public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
 
-  private static final long serialVersionUID = 6541081454519490199L;
+  @Serial private static final long serialVersionUID = 6541081454519490199L;
   private static final boolean DEBUG = false;
 
   /**

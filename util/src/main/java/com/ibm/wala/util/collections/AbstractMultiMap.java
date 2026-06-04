@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +48,7 @@ import org.jspecify.annotations.Nullable;
 abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   /** */
-  private static final long serialVersionUID = 4064901973301954076L;
+  @Serial private static final long serialVersionUID = 4064901973301954076L;
 
   protected final Map<K, Set<V>> map = HashMapFactory.make();
 

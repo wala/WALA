@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
@@ -21,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 /** A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable */
 public class SparseIntSet implements IntSet {
 
-  private static final long serialVersionUID = 2394141733718319022L;
+  @Serial private static final long serialVersionUID = 2394141733718319022L;
 
   private static final int SINGLETON_CACHE_SIZE = 5000;
 

@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.traverse;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
@@ -23,7 +24,7 @@ import org.jspecify.annotations.Nullable;
  * to define the graph, but this behavior can be changed by overriding the getConnected method.
  */
 public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
-  private static final long serialVersionUID = 3903190104743762628L;
+  @Serial private static final long serialVersionUID = 3903190104743762628L;
 
   /** An iterator of child nodes for each node being searched */
   private final Map<T, Iterator<T>> pendingChildren = HashMapFactory.make(25);

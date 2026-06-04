@@ -49,6 +49,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,7 @@ import org.jspecify.annotations.NonNull;
 public class DefaultInstantiationBehavior extends IInstantiationBehavior {
 
   /* package-private */ static final class BehviourValue implements Serializable {
-    private static final long serialVersionUID = 190943987799306506L;
+    @Serial private static final long serialVersionUID = 190943987799306506L;
     public final InstanceBehavior behaviour;
     public final Exactness exactness;
     public final BehviourValue cacheFrom;
@@ -84,7 +85,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
   }
 
   /* package-private */ static final class BehaviorKey<T> implements Serializable {
-    private static final long serialVersionUID = -1932639921432060660L;
+    @Serial private static final long serialVersionUID = -1932639921432060660L;
     // T is expected to be TypeName or Atom
     final T base;
 
@@ -326,11 +327,12 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
   //
 
   /** The last eight digits encode the date. */
-  private static final long serialVersionUID = 89220020131212L;
+  @Serial private static final long serialVersionUID = 89220020131212L;
 
   /** Including the cache may be useful to get all seen types. */
   public transient boolean serializationIncludesCache = true;
 
+  @Serial
   private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
     if (this.serializationIncludesCache) {
       stream.writeObject(this.behaviours);
@@ -353,6 +355,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
    * hard-coded behaviors don't get mixed with loaded ones. It may be deserialized but using a
    * LoadedInstantiationBehavior instead may be a better way (as it starts in an empty state)
    */
+  @Serial
   @SuppressWarnings("unchecked")
   private void readObject(java.io.ObjectInputStream stream)
       throws IOException, ClassNotFoundException {

@@ -15,6 +15,7 @@ import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.io.Serializable;
 import java.io.UTFDataFormatException;
 import java.util.Map;
@@ -35,7 +36,7 @@ public final class TypeName implements Serializable {
   public static final byte ElementBits = 3;
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654326L;
+  @Serial private static final long serialVersionUID = -3256390509887654326L;
 
   /** canonical mapping from TypeNameKey -&gt; TypeName */
   private static final Map<TypeNameKey, TypeName> map = HashMapFactory.make();
@@ -213,7 +214,7 @@ public final class TypeName implements Serializable {
    * object equality.
    */
   private static final class TypeNameKey implements Serializable {
-    private static final long serialVersionUID = -8284030936836318929L;
+    @Serial private static final long serialVersionUID = -8284030936836318929L;
 
     /** The package, like "java/lang". null means the unnamed package. */
     private final Atom packageName;

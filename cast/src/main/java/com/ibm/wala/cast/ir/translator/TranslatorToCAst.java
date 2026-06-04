@@ -26,6 +26,7 @@ import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,7 +39,7 @@ public interface TranslatorToCAst {
       CAstRewriterFactory<C, K> factory, boolean prepend);
 
   class Error extends WalaException {
-    private static final long serialVersionUID = -8440950320425119751L;
+    @Serial private static final long serialVersionUID = -8440950320425119751L;
     public final Set<Warning> warning;
 
     public Error(Set<Warning> message) {

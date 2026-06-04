@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,7 @@ import javax.swing.tree.TreePath;
 
 public class CgPanel extends JSplitPane {
 
-  private static final long serialVersionUID = -4094408933344852549L;
+  @Serial private static final long serialVersionUID = -4094408933344852549L;
   private final CallGraph cg;
 
   public CgPanel(CallGraph cg) {

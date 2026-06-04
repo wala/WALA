@@ -31,6 +31,7 @@ import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Function;
@@ -57,7 +58,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
   /** Graph implementation we delegate to. */
   private final NumberedGraph<BasicBlockInContext<T>> g =
       new SlowSparseNumberedGraph<>(2) {
-        private static final long serialVersionUID = 1L;
+        @Serial private static final long serialVersionUID = 1L;
 
         @Override
         protected String nodeString(BasicBlockInContext<T> n, boolean forEdge) {

@@ -17,6 +17,7 @@
 
 package com.ibm.wala.shrike.sourcepos;
 
+import java.io.Serial;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.List;
  */
 class InvalidCRTDataException extends Exception {
 
-  private static final long serialVersionUID = 1088484553652342438L;
+  @Serial private static final long serialVersionUID = 1088484553652342438L;
 
   /** Stores additional information */
   private List<Object> data;

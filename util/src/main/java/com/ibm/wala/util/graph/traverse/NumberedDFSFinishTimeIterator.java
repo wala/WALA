@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph.traverse;
 
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.NumberedGraph;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Iterator;
 import org.jspecify.annotations.Nullable;
@@ -23,7 +24,7 @@ import org.jspecify.annotations.Nullable;
  * method.
  */
 public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
-  private static final long serialVersionUID = 8737376661L;
+  @Serial private static final long serialVersionUID = 8737376661L;
 
   /** An iterator of child nodes for each node being searched */
   private Iterator<T>[] pendingChildren;
