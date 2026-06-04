@@ -42,108 +42,114 @@ public class TestRhinoSourceMap {
   private static final String[][] jquery_spec_testSource = {
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/isEmptyDataObject",
-      "function isEmptyDataObject(obj) {\n"
-          + "        for (var name in obj) {\n"
-          + "            if (name !== \"toJSON\") {\n"
-          + "                return false;\n"
-          + "            }\n"
-          + "        }\n"
-          + "        return true;\n"
-          + "    }"
+"""
+function isEmptyDataObject(obj) {
+        for (var name in obj) {
+            if (name !== "toJSON") {
+                return false;
+            }
+        }
+        return true;
+    }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__59/anonymous__62/anonymous__63/anonymous__64/anonymous__65",
-      "function anonymous__65() {\n"
-          + "                                    returned = fn.apply(this, arguments);\n"
-          + "                                    if (returned && jQuery.isFunction(returned.promise)) {\n"
-          + "                                        returned.promise().then(newDefer.resolve, newDefer.reject);\n"
-          + "                                    } else {\n"
-          + "                                        newDefer[action](returned);\n"
-          + "                                    }\n"
-          + "                                }"
+"""
+function anonymous__65() {
+                                    returned = fn.apply(this, arguments);
+                                    if (returned && jQuery.isFunction(returned.promise)) {
+                                        returned.promise().then(newDefer.resolve, newDefer.reject);
+                                    } else {
+                                        newDefer[action](returned);
+                                    }
+                                }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__386/anonymous__392",
-      "function anonymous__392(map) {\n"
-          + "                if (map) {\n"
-          + "                    var tmp;\n"
-          + "                    if (state < 2) {\n"
-          + "                        for (tmp in map) {\n"
-          + "                            statusCode[tmp] = [ statusCode[tmp], map[tmp] ];\n"
-          + "                        }\n"
-          + "                    } else {\n"
-          + "                        tmp = map[jqXHR.status];\n"
-          + "                        jqXHR.then(tmp, tmp);\n"
-          + "                    }\n"
-          + "                }\n"
-          + "                return this;\n"
-          + "            }"
+"""
+function anonymous__392(map) {
+                if (map) {
+                    var tmp;
+                    if (state < 2) {
+                        for (tmp in map) {
+                            statusCode[tmp] = [ statusCode[tmp], map[tmp] ];
+                        }
+                    } else {
+                        tmp = map[jqXHR.status];
+                        jqXHR.then(tmp, tmp);
+                    }
+                }
+                return this;
+            }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/getWindow",
-      "function getWindow(elem) {\n"
-          + "        return jQuery.isWindow(elem) ? elem : elem.nodeType === 9 ? elem.defaultView || elem.parentWindow : false;\n"
-          + "    }"
+"""
+function getWindow(elem) {
+        return jQuery.isWindow(elem) ? elem : elem.nodeType === 9 ? elem.defaultView || elem.parentWindow : false;
+    }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__7",
-      "function anonymous__7(elems, name, selector) {\n"
-          + "                var ret = this.constructor();\n"
-          + "                if (jQuery.isArray(elems)) {\n"
-          + "                    push.apply(ret, elems);\n"
-          + "                } else {\n"
-          + "                    jQuery.merge(ret, elems);\n"
-          + "                }\n"
-          + "                ret.prevObject = this;\n"
-          + "                ret.context = this.context;\n"
-          + "                if (name === \"find\") {\n"
-          + "                    ret.selector = this.selector + (this.selector ? \" \" : \"\") + selector;\n"
-          + "                } else if (name) {\n"
-          + "                    ret.selector = this.selector + \".\" + name + \"(\" + selector + \")\";\n"
-          + "                }\n"
-          + "                return ret;\n"
-          + "            }"
+"""
+function anonymous__7(elems, name, selector) {
+                var ret = this.constructor();
+                if (jQuery.isArray(elems)) {
+                    push.apply(ret, elems);
+                } else {
+                    jQuery.merge(ret, elems);
+                }
+                ret.prevObject = this;
+                ret.context = this.context;
+                if (name === "find") {
+                    ret.selector = this.selector + (this.selector ? " " : "") + selector;
+                } else if (name) {
+                    ret.selector = this.selector + "." + name + "(" + selector + ")";
+                }
+                return ret;
+            }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__17",
-      "function anonymous__17() {\n"
-          + "            var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;\n"
-          + "            if (typeof target === \"boolean\") {\n"
-          + "                deep = target;\n"
-          + "                target = arguments[1] || {};\n"
-          + "                i = 2;\n"
-          + "            }\n"
-          + "            if (typeof target !== \"object\" && !jQuery.isFunction(target)) {\n"
-          + "                target = {};\n"
-          + "            }\n"
-          + "            if (length === i) {\n"
-          + "                target = this;\n"
-          + "                --i;\n"
-          + "            }\n"
-          + "            for (; i < length; i++) {\n"
-          + "                if ((options = arguments[i]) != null) {\n"
-          + "                    for (name in options) {\n"
-          + "                        (function _forin_body_extra_1(name) { var src = target[name];\n"
-          + "                        var copy = options[name];\n"
-          + "                        if (target === copy) {\n"
-          + "                            return; //continue;\n"
-          + "                        }\n"
-          + "                        if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {\n"
-          + "                            if (copyIsArray) {\n"
-          + "                                copyIsArray = false;\n"
-          + "                                clone = src && jQuery.isArray(src) ? src : [];\n"
-          + "                            } else {\n"
-          + "                                clone = src && jQuery.isPlainObject(src) ? src : {};\n"
-          + "                            }\n"
-          + "                            target[name] = jQuery.extend(deep, clone, copy);\n"
-          + "                        } else if (copy !== undefined) {\n"
-          + "                            target[name] = copy;\n"
-          + "                        } })(name);\n"
-          + "                    }\n"
-          + "                }\n"
-          + "            }\n"
-          + "            return target;\n"
-          + "        }"
+"""
+function anonymous__17() {
+            var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
+            if (typeof target === "boolean") {
+                deep = target;
+                target = arguments[1] || {};
+                i = 2;
+            }
+            if (typeof target !== "object" && !jQuery.isFunction(target)) {
+                target = {};
+            }
+            if (length === i) {
+                target = this;
+                --i;
+            }
+            for (; i < length; i++) {
+                if ((options = arguments[i]) != null) {
+                    for (name in options) {
+                        (function _forin_body_extra_1(name) { var src = target[name];
+                        var copy = options[name];
+                        if (target === copy) {
+                            return; //continue;
+                        }
+                        if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                            if (copyIsArray) {
+                                copyIsArray = false;
+                                clone = src && jQuery.isArray(src) ? src : [];
+                            } else {
+                                clone = src && jQuery.isPlainObject(src) ? src : {};
+                            }
+                            target[name] = jQuery.extend(deep, clone, copy);
+                        } else if (copy !== undefined) {
+                            target[name] = copy;
+                        } })(name);
+                    }
+                }
+            }
+            return target;
+        }"""
     }
   };
 

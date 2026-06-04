@@ -76,27 +76,31 @@ public class GraphDataflowTest extends WalaTestCase {
    * @return the expected dataflow result as a String
    */
   public static String expectedStringNodeOnly() {
-    return "------\n"
-        + "Node A(0) = { 0 }\n"
-        + "Node B(1) = { 0 1 }\n"
-        + "Node C(2) = { 0 1 2 }\n"
-        + "Node D(3) = { 0 1 3 }\n"
-        + "Node E(4) = { 0 1 2 3 4 }\n"
-        + "Node F(5) = { 0 1 2 3 4 5 }\n"
-        + "Node G(6) = { 6 }\n"
-        + "Node H(7) = { 7 }\n";
+    return """
+        ------
+        Node A(0) = { 0 }
+        Node B(1) = { 0 1 }
+        Node C(2) = { 0 1 2 }
+        Node D(3) = { 0 1 3 }
+        Node E(4) = { 0 1 2 3 4 }
+        Node F(5) = { 0 1 2 3 4 5 }
+        Node G(6) = { 6 }
+        Node H(7) = { 7 }
+        """;
   }
 
   public static String expectedStringNodeEdge() {
-    return "------\n"
-        + "Node A(0) = { 0 }\n"
-        + "Node B(1) = { 0 1 }\n"
-        + "Node C(2) = { 0 2 }\n"
-        + "Node D(3) = { 1 3 }\n"
-        + "Node E(4) = { 0 1 2 3 4 }\n"
-        + "Node F(5) = { 0 1 2 3 4 5 }\n"
-        + "Node G(6) = { 6 }\n"
-        + "Node H(7) = { 7 }\n";
+    return """
+        ------
+        Node A(0) = { 0 }
+        Node B(1) = { 0 1 }
+        Node C(2) = { 0 2 }
+        Node D(3) = { 1 3 }
+        Node E(4) = { 0 1 2 3 4 }
+        Node F(5) = { 0 1 2 3 4 5 }
+        Node G(6) = { 6 }
+        Node H(7) = { 7 }
+        """;
   }
 
   /**
