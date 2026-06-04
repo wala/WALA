@@ -677,9 +677,6 @@ public class ParameterAccessor {
                     this.descriptorOffset));
           }
         }
-        default ->
-            throw new UnsupportedOperationException(
-                "No implementation of all() for base " + this.base);
       }
     }
 
