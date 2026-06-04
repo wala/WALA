@@ -42,77 +42,77 @@ public class TestRhinoSourceMap {
   private static final String[][] jquery_spec_testSource = {
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/isEmptyDataObject",
-"""
-function isEmptyDataObject(obj) {
-        for (var name in obj) {
-            if (name !== "toJSON") {
-                return false;
+      """
+        function isEmptyDataObject(obj) {
+            for (var name in obj) {
+                if (name !== "toJSON") {
+                    return false;
+                }
             }
-        }
-        return true;
-    }"""
+            return true;
+        }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__59/anonymous__62/anonymous__63/anonymous__64/anonymous__65",
-"""
-function anonymous__65() {
-                                    returned = fn.apply(this, arguments);
-                                    if (returned && jQuery.isFunction(returned.promise)) {
-                                        returned.promise().then(newDefer.resolve, newDefer.reject);
-                                    } else {
-                                        newDefer[action](returned);
-                                    }
-                                }"""
+      """
+        function anonymous__65() {
+            returned = fn.apply(this, arguments);
+            if (returned && jQuery.isFunction(returned.promise)) {
+                returned.promise().then(newDefer.resolve, newDefer.reject);
+            } else {
+                newDefer[action](returned);
+            }
+        }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__386/anonymous__392",
-"""
-function anonymous__392(map) {
-                if (map) {
-                    var tmp;
-                    if (state < 2) {
-                        for (tmp in map) {
-                            statusCode[tmp] = [ statusCode[tmp], map[tmp] ];
-                        }
-                    } else {
-                        tmp = map[jqXHR.status];
-                        jqXHR.then(tmp, tmp);
+      """
+        function anonymous__392(map) {
+            if (map) {
+                var tmp;
+                if (state < 2) {
+                    for (tmp in map) {
+                        statusCode[tmp] = [ statusCode[tmp], map[tmp] ];
                     }
+                } else {
+                    tmp = map[jqXHR.status];
+                    jqXHR.then(tmp, tmp);
                 }
-                return this;
-            }"""
+            }
+            return this;
+        }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/getWindow",
-"""
-function getWindow(elem) {
+      """
+    function getWindow(elem) {
         return jQuery.isWindow(elem) ? elem : elem.nodeType === 9 ? elem.defaultView || elem.parentWindow : false;
     }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__7",
-"""
-function anonymous__7(elems, name, selector) {
-                var ret = this.constructor();
-                if (jQuery.isArray(elems)) {
-                    push.apply(ret, elems);
-                } else {
-                    jQuery.merge(ret, elems);
-                }
-                ret.prevObject = this;
-                ret.context = this.context;
-                if (name === "find") {
-                    ret.selector = this.selector + (this.selector ? " " : "") + selector;
-                } else if (name) {
-                    ret.selector = this.selector + "." + name + "(" + selector + ")";
-                }
-                return ret;
-            }"""
+      """
+        function anonymous__7(elems, name, selector) {
+            var ret = this.constructor();
+            if (jQuery.isArray(elems)) {
+                push.apply(ret, elems);
+            } else {
+                jQuery.merge(ret, elems);
+            }
+            ret.prevObject = this;
+            ret.context = this.context;
+            if (name === "find") {
+                ret.selector = this.selector + (this.selector ? " " : "") + selector;
+            } else if (name) {
+                ret.selector = this.selector + "." + name + "(" + selector + ")";
+            }
+            return ret;
+        }"""
     },
     new String[] {
       "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__17",
-"""
-function anonymous__17() {
+      """
+        function anonymous__17() {
             var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
             if (typeof target === "boolean") {
                 deep = target;
