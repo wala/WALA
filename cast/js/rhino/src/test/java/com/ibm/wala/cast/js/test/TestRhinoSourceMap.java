@@ -28,7 +28,9 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,10 +41,12 @@ public class TestRhinoSourceMap {
     setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }
 
-  private static final String[][] jquery_spec_testSource = {
-    new String[] {
-      "Ltests/jquery_spec_test.js/anonymous__0/isEmptyDataObject",
-      """
+  private record Assertion(String key, @Language("JavaScript") String source) {}
+
+  private static final Assertion[] jquery_spec_testSource = {
+    new Assertion(
+        "Ltests/jquery_spec_test.js/anonymous__0/isEmptyDataObject",
+        """
         function isEmptyDataObject(obj) {
             for (var name in obj) {
                 if (name !== "toJSON") {
@@ -50,11 +54,10 @@ public class TestRhinoSourceMap {
                 }
             }
             return true;
-        }"""
-    },
-    new String[] {
-      "Ltests/jquery_spec_test.js/anonymous__0/anonymous__59/anonymous__62/anonymous__63/anonymous__64/anonymous__65",
-      """
+        }"""),
+    new Assertion(
+        "Ltests/jquery_spec_test.js/anonymous__0/anonymous__59/anonymous__62/anonymous__63/anonymous__64/anonymous__65",
+        """
         function anonymous__65() {
             returned = fn.apply(this, arguments);
             if (returned && jQuery.isFunction(returned.promise)) {
@@ -62,11 +65,10 @@ public class TestRhinoSourceMap {
             } else {
                 newDefer[action](returned);
             }
-        }"""
-    },
-    new String[] {
-      "Ltests/jquery_spec_test.js/anonymous__0/anonymous__386/anonymous__392",
-      """
+        }"""),
+    new Assertion(
+        "Ltests/jquery_spec_test.js/anonymous__0/anonymous__386/anonymous__392",
+        """
         function anonymous__392(map) {
             if (map) {
                 var tmp;
@@ -80,18 +82,16 @@ public class TestRhinoSourceMap {
                 }
             }
             return this;
-        }"""
-    },
-    new String[] {
-      "Ltests/jquery_spec_test.js/anonymous__0/getWindow",
-      """
+        }"""),
+    new Assertion(
+        "Ltests/jquery_spec_test.js/anonymous__0/getWindow",
+        """
     function getWindow(elem) {
         return jQuery.isWindow(elem) ? elem : elem.nodeType === 9 ? elem.defaultView || elem.parentWindow : false;
-    }"""
-    },
-    new String[] {
-      "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__7",
-      """
+    }"""),
+    new Assertion(
+        "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__7",
+        """
         function anonymous__7(elems, name, selector) {
             var ret = this.constructor();
             if (jQuery.isArray(elems)) {
@@ -107,11 +107,10 @@ public class TestRhinoSourceMap {
                 ret.selector = this.selector + "." + name + "(" + selector + ")";
             }
             return ret;
-        }"""
-    },
-    new String[] {
-      "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__17",
-      """
+        }"""),
+    new Assertion(
+        "Ltests/jquery_spec_test.js/anonymous__0/anonymous__1/anonymous__17",
+        """
         function anonymous__17() {
             var options, name, src, copy, copyIsArray, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
             if (typeof target === "boolean") {
@@ -149,8 +148,7 @@ public class TestRhinoSourceMap {
                 }
             }
             return target;
-        }"""
-    }
+        }""")
   };
 
   @Test
@@ -159,12 +157,10 @@ public class TestRhinoSourceMap {
     checkFunctionBodies("jquery_spec_test.js", jquery_spec_testSource);
   }
 
-  private static void checkFunctionBodies(String fileName, String[][] assertions)
+  private static void checkFunctionBodies(String fileName, Assertion[] assertions)
       throws IOException, ClassHierarchyException {
-    Map<String, String> sources = HashMapFactory.make();
-    for (String[] assertion : assertions) {
-      sources.put(assertion[0], assertion[1]);
-    }
+    Map<String, String> sources =
+        Arrays.stream(assertions).collect(HashMapFactory.toMap(Assertion::key, Assertion::source));
 
     JavaScriptLoaderFactory loaders = makeLoaders(null);
     AnalysisScope scope = makeScriptScope("tests", fileName, loaders);

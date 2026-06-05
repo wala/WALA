@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -44,11 +45,12 @@ public abstract class TestCorrelatedPairExtraction {
 
   @TempDir private File tmpDir;
 
-  public void testRewriter(String in, String out) {
+  public void testRewriter(@Language("JavaScript") String in, @Language("JavaScript") String out) {
     testRewriter(null, in, out);
   }
 
-  public void testRewriter(String testName, String in, String out) {
+  public void testRewriter(
+      String testName, @Language("JavaScript") String in, @Language("JavaScript") String out) {
     try {
       final var tmp = File.createTempFile("test", ".js", tmpDir);
       FileUtil.writeFile(tmp, in);
