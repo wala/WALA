@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+  api(libs.jspecify)
   api(projects.core)
   api(projects.util)
   implementation(libs.commons.cli)

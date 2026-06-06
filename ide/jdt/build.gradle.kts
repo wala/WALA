@@ -20,6 +20,7 @@ walaEclipseMavenCentral {
 }
 
 dependencies {
+  api(libs.jspecify)
   api(libs.osgi.framework)
   api(projects.cast)
   api(projects.cast.java)

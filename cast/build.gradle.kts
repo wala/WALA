@@ -37,6 +37,7 @@ val xlatorTestSharedLibrary =
 
 dependencies {
   api(libs.guava)
+  api(libs.jspecify)
   api(projects.core) {
     because("public method AstCGNode.addTarget receives an argument of type CGNode")
   }

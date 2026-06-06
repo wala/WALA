@@ -78,6 +78,7 @@ eclipse { synchronizationTasks(installAndroidSdk) }
 
 dependencies {
   api(libs.dexlib2)
+  api(libs.jspecify)
   api(projects.core)
   api(projects.shrike)
   api(projects.util)
