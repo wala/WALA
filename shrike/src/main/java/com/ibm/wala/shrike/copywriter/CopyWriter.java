@@ -63,7 +63,7 @@ public class CopyWriter {
 
   private int replace;
 
-  static class UnknownAttributeException extends Exception {
+  private static class UnknownAttributeException extends Exception {
     @Serial private static final long serialVersionUID = 8845177787110364793L;
 
     UnknownAttributeException(String t) {

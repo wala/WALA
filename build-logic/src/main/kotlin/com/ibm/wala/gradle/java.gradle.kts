@@ -68,6 +68,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("ArgumentSelectionDefectChecker")
       error("FallThrough")
       error("IfChainToSwitch")
+      error("ProtectedMembersInFinalClass")
       error("RefactorSwitch")
       error("StringConcatToTextBlock")
       error("StatementSwitchToExpressionSwitch")

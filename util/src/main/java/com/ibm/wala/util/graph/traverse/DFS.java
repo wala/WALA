@@ -116,7 +116,7 @@ public class DFS {
   }
 
   /** Comparator class to order the nodes in the DFS according to the depth first order */
-  static class DFSComparator<T> implements Comparator<T> {
+  private static class DFSComparator<T> implements Comparator<T> {
     private final Map<T, Integer> order;
 
     DFSComparator(Map<T, Integer> order) {

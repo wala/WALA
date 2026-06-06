@@ -414,7 +414,7 @@ public abstract class Compiler implements Constants {
     computeStackWordsAt(0, 0, new byte[instructions.length * 2], new boolean[instructions.length]);
   }
 
-  abstract static class Patch {
+  private abstract static class Patch {
     final int instrStart;
 
     final int instrOffset;
@@ -430,7 +430,7 @@ public abstract class Compiler implements Constants {
     abstract boolean apply();
   }
 
-  class ShortPatch extends Patch {
+  private class ShortPatch extends Patch {
     ShortPatch(int instrStart, int instrOffset, int targetLabel) {
       super(instrStart, instrOffset, targetLabel);
     }
@@ -447,7 +447,7 @@ public abstract class Compiler implements Constants {
     }
   }
 
-  class IntPatch extends Patch {
+  private class IntPatch extends Patch {
     IntPatch(int instrStart, int instrOffset, int targetLabel) {
       super(instrStart, instrOffset, targetLabel);
     }
@@ -1263,7 +1263,7 @@ public abstract class Compiler implements Constants {
     return r;
   }
 
-  static class HelperPatch {
+  private static class HelperPatch {
     final int start;
 
     final int length;

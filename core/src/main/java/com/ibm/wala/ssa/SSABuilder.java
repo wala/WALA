@@ -377,7 +377,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
 
     /** Update the machine state to account for an instruction */
-    class NodeVisitor extends BasicStackMachineVisitor {
+    private class NodeVisitor extends BasicStackMachineVisitor {
 
       /**
        * @see
@@ -965,7 +965,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
     }
 
-    class EdgeVisitor extends com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor {
+    private class EdgeVisitor extends com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor {
 
       @Override
       public void visitInvoke(IInvokeInstruction instruction) {
