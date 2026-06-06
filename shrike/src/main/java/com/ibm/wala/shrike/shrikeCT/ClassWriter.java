@@ -105,7 +105,7 @@ public class ClassWriter implements ClassConstants {
     }
   }
 
-  static class CWRef extends CWItem {
+  private static class CWRef extends CWItem {
     protected final String c;
 
     protected final String n;
@@ -142,7 +142,7 @@ public class ClassWriter implements ClassConstants {
     }
   }
 
-  static class CWHandle extends CWRef {
+  private static class CWHandle extends CWRef {
     private final byte kind;
 
     CWHandle(byte type, byte kind, String c, String n, String t) {
@@ -165,7 +165,7 @@ public class ClassWriter implements ClassConstants {
     }
   }
 
-  static class CWNAT extends CWItem {
+  private static class CWNAT extends CWItem {
     private final String n;
 
     private final String t;
@@ -196,7 +196,7 @@ public class ClassWriter implements ClassConstants {
     }
   }
 
-  static class CWInvokeDynamic extends CWItem {
+  private static class CWInvokeDynamic extends CWItem {
     private final BootstrapMethod b;
 
     private final String n;

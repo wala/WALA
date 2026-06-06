@@ -415,7 +415,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     }
 
     /** Update the machine state to account for an instruction */
-    class NodeVisitor extends BasicRegisterMachineVisitor {
+    private class NodeVisitor extends BasicRegisterMachineVisitor {
       private final SSACFG cfg;
 
       public NodeVisitor(SSACFG cfg) {
@@ -1389,7 +1389,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       }
     }
 
-    class EdgeVisitor extends Visitor {
+    private class EdgeVisitor extends Visitor {
 
       @Override
       public void visitInvoke(Invoke instruction) {

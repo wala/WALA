@@ -23,7 +23,7 @@ public class AstConstantFolder {
     return false;
   }
 
-  static class AssignSkipContext extends NonCopyingContext {
+  private static class AssignSkipContext extends NonCopyingContext {
     private final Set<CAstNode> skip = HashSetFactory.make();
   }
 

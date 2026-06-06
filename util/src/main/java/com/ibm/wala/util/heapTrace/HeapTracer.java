@@ -537,7 +537,7 @@ public class HeapTracer {
    * @author sfink
    *     <p>Statistics about objects reached from a single root
    */
-  class Demographics {
+  private class Demographics {
     /** mapping: Object (key) -&gt; Integer (number of instances in a partition) */
     private final HashMap<Object, Integer> instanceCount = HashMapFactory.make();
 
