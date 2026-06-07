@@ -66,6 +66,7 @@ tasks.withType<JavaCompile>().configureEach {
       error("AnnotationPosition")
       error("AssertEqualsArgumentOrderChecker")
       error("ArgumentSelectionDefectChecker")
+      error("ArrayRecordComponent")
       error("FallThrough")
       error("IfChainToSwitch")
       error("ProtectedMembersInFinalClass")
