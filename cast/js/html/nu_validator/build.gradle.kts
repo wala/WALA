@@ -3,6 +3,7 @@ plugins { id("com.ibm.wala.gradle.java") }
 val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
 
 dependencies {
+  api(libs.jspecify)
   api(projects.cast.js)
   extraTestResources(project(":cast:js", "testResources"))
   implementation(libs.htmlparser)

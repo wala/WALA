@@ -3,6 +3,7 @@ import com.ibm.wala.gradle.adHocDownload
 plugins { id("com.ibm.wala.gradle.java") }
 
 dependencies {
+  api(libs.jspecify)
   api(projects.cast.js) {
     because("public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil")
   }

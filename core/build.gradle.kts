@@ -48,11 +48,11 @@ tasks {
 }
 
 dependencies {
+  api(libs.jspecify)
   api(projects.shrike) {
     because("public class Entrypoint implements interface BytecodeConstraints")
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
-  api(libs.jspecify)
   compileOnly(libs.jetbrains.annotations)
   testCompileOnly(libs.jetbrains.annotations)
   testFixturesApi(libs.assertj.core)
@@ -65,6 +65,7 @@ dependencies {
   implementation(libs.gson)
   testImplementation(libs.assertj.core)
   testImplementation(libs.json.unit.assertj)
+  testImplementation(libs.jspecify)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.util))
   testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)

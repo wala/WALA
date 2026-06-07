@@ -9,6 +9,7 @@ plugins {
 
 dependencies {
   api(libs.jericho.html)
+  api(libs.jspecify)
   api(projects.cast) { because("public class JSCallGraphUtil extends class CAstCallGraphUtil") }
   api(projects.core)
   api(projects.util)

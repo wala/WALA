@@ -9,6 +9,7 @@ val extraTestResources = configurations.register("extraTestResources") { isCanBe
 
 dependencies {
   extraTestResources(project(":cast:js", "testResources"))
+  api(libs.jspecify)
   api(libs.rhino)
   api(projects.cast)
   api(projects.cast.js)

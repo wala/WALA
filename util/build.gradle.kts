@@ -12,5 +12,6 @@ dependencies {
   compileOnly(libs.jetbrains.annotations)
   javadocClasspath(projects.core)
   testFixturesApi(libs.assertj.core)
+  testFixturesApi(libs.jspecify)
   testImplementation(libs.junit.jupiter.api)
 }
