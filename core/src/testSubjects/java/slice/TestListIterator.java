@@ -15,7 +15,6 @@ public class TestListIterator {
     private E[] elements;
     private int size = 0;
 
-    @SuppressWarnings("unchecked")
     public ArrayList() {
       elements = (E[]) new Object[10];
     }
@@ -23,7 +22,7 @@ public class TestListIterator {
     @Override
     public void add(E e) {
       if (size == elements.length) {
-        @SuppressWarnings("unchecked")
+
         E[] newElements = (E[]) new Object[elements.length * 2];
         System.arraycopy(elements, 0, newElements, 0, elements.length);
         elements = newElements;
