@@ -21,7 +21,7 @@ import java.util.Iterator;
 public final class ClassHierarchyStore implements ClassHierarchyProvider {
   private static final String[] noClasses = new String[0];
 
-  static final class ClassInfo {
+  private static final class ClassInfo {
     final boolean isInterface;
 
     final boolean isFinal;
