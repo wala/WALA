@@ -1778,7 +1778,6 @@ public abstract class Compiler implements Constants {
     }
 
     for (HelperPatch p : patches) {
-      System.arraycopy(p.code, 0, instructions, p.start, p.code.length);
       for (int j = 0; j < p.length; j++) {
         int index = j + p.start;
         if (j < p.code.length) {
