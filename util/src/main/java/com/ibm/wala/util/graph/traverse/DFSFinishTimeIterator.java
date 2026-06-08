@@ -86,7 +86,6 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    * @return the next graph node in finishing time order.
    */
   @Override
-  @SuppressWarnings("unchecked")
   public @Nullable T next() throws NoSuchElementException {
     if (!hasNext()) {
       throw new NoSuchElementException();

@@ -103,7 +103,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
     if (t == null) {
       throw new IllegalArgumentException("null t");
@@ -140,13 +139,11 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Set<K> keySet() {
     return (backingStore == null) ? Collections.emptySet() : backingStore.keySet();
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Collection<V> values() {
     return (backingStore == null) ? Collections.emptySet() : backingStore.values();
   }
@@ -155,7 +152,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
    * @throws UnimplementedError if the backingStore implementation does
    */
   @Override
-  @SuppressWarnings("unchecked")
   public Set<Map.Entry<K, V>> entrySet() {
     return (backingStore == null) ? Collections.emptySet() : backingStore.entrySet();
   }
