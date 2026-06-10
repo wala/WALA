@@ -48,12 +48,6 @@ public interface FilteredPointerKey extends PointerKey {
     }
 
     @Override
-    public boolean equals(Object o) {
-      return (o instanceof SingleClassFilter)
-          && ((SingleClassFilter) o).concreteType().equals(concreteType);
-    }
-
-    @Override
     public boolean addFiltered(
         PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = system.getInstanceKeysForClass(concreteType);
