@@ -60,23 +60,25 @@ tasks.withType<JavaCompile>().configureEach {
       // don't run warning-level checks by default as they add too much noise to build output
       disableAllWarnings = true
       // warning-level checks upgraded to error, since we've fixed all the warnings
-      error("UnnecessaryParentheses")
-      error("UnusedVariable")
-      error("JdkObsolete")
-      error("AnnotationPosition")
-      error("AssertEqualsArgumentOrderChecker")
-      error("ArgumentSelectionDefectChecker")
-      error("ArrayRecordComponent")
-      error("FallThrough")
-      error("IfChainToSwitch")
-      error("ProtectedMembersInFinalClass")
-      error("RefactorSwitch")
-      error("StringConcatToTextBlock")
-      error("StatementSwitchToExpressionSwitch")
-      error("TraditionalSwitchExpression")
-      error("UnnecessaryBreakInSwitch")
-      error("UnnecessaryDefaultInEnumSwitch")
-      error("UseEnumSwitch")
+      error(
+          "AnnotationPosition",
+          "ArgumentSelectionDefectChecker",
+          "ArrayRecordComponent",
+          "AssertEqualsArgumentOrderChecker",
+          "FallThrough",
+          "IfChainToSwitch",
+          "JdkObsolete",
+          "ProtectedMembersInFinalClass",
+          "RefactorSwitch",
+          "StatementSwitchToExpressionSwitch",
+          "StringConcatToTextBlock",
+          "TraditionalSwitchExpression",
+          "UnnecessaryBreakInSwitch",
+          "UnnecessaryDefaultInEnumSwitch",
+          "UnnecessaryParentheses",
+          "UnusedVariable",
+          "UseEnumSwitch",
+      )
       // checks we do not intend to try to fix in the near-term:
       disable("LabelledBreakTarget")
       // Just too many of these; proper Javadoc would be a great long-term goal
