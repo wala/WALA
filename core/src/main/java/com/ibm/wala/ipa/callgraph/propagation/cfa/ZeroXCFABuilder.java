@@ -35,7 +35,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       SSAContextInterpreter appContextInterpreter,
       int instancePolicy) {
 
-    super(l.getFakeRootMethod(cha, options, cache), options, cache, new DefaultPointerKeyFactory());
+    super(l.getFakeRootMethod(cha, cache), options, cache, new DefaultPointerKeyFactory());
 
     ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector =

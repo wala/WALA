@@ -188,7 +188,7 @@ public abstract class FieldBasedCallGraphBuilder {
       throws CancelException {
     // set up call graph
     final JSCallGraph cg =
-        new JSCallGraph(JavaScriptLoader.JS.getFakeRootMethod(cha, options, cache), options, cache);
+        new JSCallGraph(JavaScriptLoader.JS.getFakeRootMethod(cha, cache), options, cache);
     cg.init();
 
     // setup context interpreters

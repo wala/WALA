@@ -823,12 +823,7 @@ public class Util {
     SSAContextInterpreter appInterpreter = null;
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
-            n,
-            l.getFakeRootMethod(cha, options, cache),
-            options,
-            cache,
-            appSelector,
-            appInterpreter);
+            n, l.getFakeRootMethod(cha, cache), options, cache, appSelector, appInterpreter);
     // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
     result.setInstanceKeys(
         new ZeroXInstanceKeys(
@@ -955,7 +950,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            Language.JAVA.getFakeRootMethod(cha, cache),
             options,
             cache,
             appSelector,

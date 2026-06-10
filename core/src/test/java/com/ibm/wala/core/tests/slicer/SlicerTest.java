@@ -854,7 +854,7 @@ public class SlicerTest {
     SSAPropagationCallGraphBuilder builder =
         new nCFABuilder(
             1,
-            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            Language.JAVA.getFakeRootMethod(cha, cache),
             options,
             cache,
             appSelector,

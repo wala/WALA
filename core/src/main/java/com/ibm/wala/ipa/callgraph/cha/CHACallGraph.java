@@ -15,11 +15,11 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.BasicCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitPredecessorsEdgeManager;
@@ -54,7 +54,6 @@ import java.util.function.Predicate;
 /** Call graph in which call targets are determined entirely based on an {@link IClassHierarchy}. */
 public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
-  private final AnalysisOptions options;
   private final IAnalysisCacheView cache;
 
   /**
@@ -68,6 +67,9 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       new LambdaMethodTargetSelector((caller, site, receiver) -> null);
 
   private boolean isInitialized = false;
+
+  /** Lazily created via {@link #getOrCreateFakeRootMethod()}. */
+  private AbstractRootMethod fakeRootMethod;
 
   private class CHANode extends NodeImpl {
 
@@ -125,7 +127,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    */
   public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
     this.cha = cha;
-    this.options = new AnalysisOptions();
     this.cache = new AnalysisCacheImpl();
     this.applicationOnly = applicationOnly;
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
@@ -299,16 +300,27 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
-    return new CHARootNode(
-        Language.JAVA.getFakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
+    return new CHARootNode(getOrCreateFakeRootMethod(), Everywhere.EVERYWHERE);
   }
 
   @Override
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return new CHARootNode(
-        new FakeWorldClinitMethod(
-            Language.JAVA.getFakeRootMethod(cha, options, cache).getDeclaringClass(), cache),
+        new FakeWorldClinitMethod(getOrCreateFakeRootMethod().getDeclaringClass(), cache),
         Everywhere.EVERYWHERE);
+  }
+
+  /**
+   * Lazily creates the fake root method, caching it so that the fake-root and fake-world-clinit
+   * nodes share a single instance.
+   *
+   * @return the fake root method for this call graph.
+   */
+  private AbstractRootMethod getOrCreateFakeRootMethod() {
+    if (fakeRootMethod == null) {
+      fakeRootMethod = Language.JAVA.getFakeRootMethod(cha, cache);
+    }
+    return fakeRootMethod;
   }
 
   private int clinitPC = 0;

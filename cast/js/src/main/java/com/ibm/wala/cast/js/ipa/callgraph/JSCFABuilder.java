@@ -33,7 +33,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
   public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(
-        JavaScriptLoader.JS.getFakeRootMethod(cha, options, cache),
+        JavaScriptLoader.JS.getFakeRootMethod(cha, cache),
         options,
         cache,
         new AstCFAPointerKeys() {

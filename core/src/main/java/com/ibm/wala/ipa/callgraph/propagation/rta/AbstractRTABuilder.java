@@ -102,7 +102,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter) {
     super(
-        Language.JAVA.getFakeRootMethod(cha, options, cache),
+        Language.JAVA.getFakeRootMethod(cha, cache),
         options,
         cache,
         new DefaultPointerKeyFactory());
