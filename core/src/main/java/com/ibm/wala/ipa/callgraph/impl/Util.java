@@ -824,7 +824,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            l.getFakeRootMethod(cha, options, cache),
+            l.getFakeRootMethod(cha, cache),
             options,
             cache,
             appSelector,
@@ -955,7 +955,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            Language.JAVA.getFakeRootMethod(cha, cache),
             options,
             cache,
             appSelector,

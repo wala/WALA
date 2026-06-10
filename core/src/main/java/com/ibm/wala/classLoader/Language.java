@@ -131,8 +131,17 @@ public interface Language {
   /** do MethodReference objects have declared parameter types? */
   boolean methodsHaveDeclaredParameterTypes();
 
-  AbstractRootMethod getFakeRootMethod(
-      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache);
+  AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, IAnalysisCacheView cache);
+
+  /**
+   * @deprecated Use {@link #getFakeRootMethod(IClassHierarchy, IAnalysisCacheView)}; the {@code
+   *     options} parameter is unused.
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
+  default AbstractRootMethod getFakeRootMethod(
+      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+    return getFakeRootMethod(cha, cache);
+  }
 
   InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context);
 

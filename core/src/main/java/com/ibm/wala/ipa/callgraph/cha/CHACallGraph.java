@@ -15,7 +15,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -54,7 +53,6 @@ import java.util.function.Predicate;
 /** Call graph in which call targets are determined entirely based on an {@link IClassHierarchy}. */
 public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private final IClassHierarchy cha;
-  private final AnalysisOptions options;
   private final IAnalysisCacheView cache;
 
   /**
@@ -125,7 +123,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    */
   public CHACallGraph(IClassHierarchy cha, boolean applicationOnly) {
     this.cha = cha;
-    this.options = new AnalysisOptions();
     this.cache = new AnalysisCacheImpl();
     this.applicationOnly = applicationOnly;
     setInterpreter(new ContextInsensitiveCHAContextInterpreter());
@@ -300,14 +297,14 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return new CHARootNode(
-        Language.JAVA.getFakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
+        Language.JAVA.getFakeRootMethod(cha, cache), Everywhere.EVERYWHERE);
   }
 
   @Override
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return new CHARootNode(
         new FakeWorldClinitMethod(
-            Language.JAVA.getFakeRootMethod(cha, options, cache).getDeclaringClass(), cache),
+            Language.JAVA.getFakeRootMethod(cha, cache).getDeclaringClass(), cache),
         Everywhere.EVERYWHERE);
   }
 

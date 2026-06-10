@@ -21,7 +21,7 @@ public class AstJavaCFABuilder extends AstJavaSSAPropagationCallGraphBuilder {
 
   public AstJavaCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(
-        Language.JAVA.getFakeRootMethod(cha, options, cache),
+        Language.JAVA.getFakeRootMethod(cha, cache),
         options,
         cache,
         new DefaultPointerKeyFactory());

@@ -17,7 +17,6 @@ import com.ibm.wala.core.util.shrike.Exceptions.MethodResolutionFailure;
 import com.ibm.wala.core.util.shrike.ShrikeUtil;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.warnings.Warnings;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
@@ -824,8 +823,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   }
 
   @Override
-  public AbstractRootMethod getFakeRootMethod(
-      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, IAnalysisCacheView cache) {
     return new FakeRootMethod(new FakeRootClass(ClassLoaderReference.Primordial, cha), cache);
   }
 

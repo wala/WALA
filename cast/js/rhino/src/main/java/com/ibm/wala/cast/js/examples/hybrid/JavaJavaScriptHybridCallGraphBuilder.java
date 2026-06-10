@@ -123,7 +123,7 @@ public class JavaJavaScriptHybridCallGraphBuilder
         getOptions()
             .getAnalysisScope()
             .getLanguage(language)
-            .getFakeRootMethod(getClassHierarchy(), getOptions(), getAnalysisCache());
+            .getFakeRootMethod(getClassHierarchy(), getAnalysisCache());
   }
 
   @Override

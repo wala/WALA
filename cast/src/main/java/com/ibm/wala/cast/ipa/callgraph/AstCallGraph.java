@@ -100,9 +100,17 @@ public class AstCallGraph extends ExplicitCallGraph {
         MethodReference rootMethod,
         IClass declaringClass,
         IClassHierarchy cha,
-        @SuppressWarnings("unused") AnalysisOptions options,
         IAnalysisCacheView cache) {
       super(rootMethod, declaringClass, cha, cache);
+    }
+
+    public ScriptFakeRoot(
+        MethodReference rootMethod,
+        IClass declaringClass,
+        IClassHierarchy cha,
+        @SuppressWarnings("unused") AnalysisOptions options,
+        IAnalysisCacheView cache) {
+      this(rootMethod, declaringClass, cha, cache);
     }
 
     /**
