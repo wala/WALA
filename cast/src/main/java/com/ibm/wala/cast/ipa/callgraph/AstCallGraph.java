@@ -104,6 +104,11 @@ public class AstCallGraph extends ExplicitCallGraph {
       super(rootMethod, declaringClass, cha, cache);
     }
 
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #ScriptFakeRoot(MethodReference, IClass, IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public ScriptFakeRoot(
         MethodReference rootMethod,
         IClass declaringClass,

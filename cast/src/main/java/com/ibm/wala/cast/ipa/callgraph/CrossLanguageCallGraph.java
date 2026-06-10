@@ -106,12 +106,17 @@ public class CrossLanguageCallGraph extends AstCallGraph {
 
   public class CrossLanguageFakeRoot extends ScriptFakeRoot {
 
+    /**
+     * @deprecated to remove unused {@code options} parameter
+     * @see #CrossLanguageFakeRoot(IClassHierarchy, IAnalysisCacheView)
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public CrossLanguageFakeRoot(
         IClass declaringClass,
         IClassHierarchy cha,
-        AnalysisOptions options,
+        @SuppressWarnings("unused") AnalysisOptions options,
         IAnalysisCacheView cache) {
-      super(rootMethod, declaringClass, cha, options, cache);
+      super(rootMethod, declaringClass, cha, cache);
     }
 
     /**
