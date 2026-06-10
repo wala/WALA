@@ -88,8 +88,8 @@ public class IntSetUtil {
     } else if (set instanceof SemiSparseMutableIntSet) {
       return new SemiSparseMutableIntSet((SemiSparseMutableIntSet) set);
     } else if (set instanceof DebuggingMutableIntSet) {
-      MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet) set).primaryImpl);
-      MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet) set).secondaryImpl);
+      MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet) set).primaryImpl());
+      MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet) set).secondaryImpl());
       return new DebuggingMutableIntSet(pCopy, sCopy);
     } else if (set instanceof EmptyIntSet) {
       return IntSetUtil.make();

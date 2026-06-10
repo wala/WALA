@@ -787,12 +787,11 @@ public class TypeAnnotationsReader extends AnnotationsReader {
 
   public static final List<Pair<TypePathKind, Integer>> TYPEPATH_EMPTY = Collections.emptyList();
 
-  public static class TypeAnnotationAttribute {
-    public final TypeAnnotationTarget annotationTarget;
-    public final AnnotationAttribute annotationAttribute;
-    public final List<Pair<TypePathKind, Integer>> typePath;
-    public final TargetType targetType;
-
+  public record TypeAnnotationAttribute(
+      TypeAnnotationTarget annotationTarget,
+      AnnotationAttribute annotationAttribute,
+      List<Pair<TypePathKind, Integer>> typePath,
+      TargetType targetType) {
     public TypeAnnotationAttribute(
         TypeAnnotationTarget annotationTarget,
         AnnotationAttribute annotationAttribute,

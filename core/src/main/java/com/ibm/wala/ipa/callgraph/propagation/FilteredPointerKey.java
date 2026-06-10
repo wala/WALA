@@ -32,31 +32,25 @@ public interface FilteredPointerKey extends PointerKey {
     boolean isRootFilter();
   }
 
-  class SingleClassFilter implements TypeFilter {
-    private final IClass concreteType;
-
-    public SingleClassFilter(IClass concreteType) {
-      this.concreteType = concreteType;
-    }
+  record SingleClassFilter(IClass concreteType) implements TypeFilter {
 
     @Override
     public String toString() {
       return "SingleClassFilter: " + concreteType;
     }
 
+    /**
+     * @deprecated Use {@link #concreteType()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public IClass getConcreteType() {
-      return concreteType;
-    }
-
-    @Override
-    public int hashCode() {
-      return concreteType.hashCode();
+      return concreteType();
     }
 
     @Override
     public boolean equals(Object o) {
       return (o instanceof SingleClassFilter)
-          && ((SingleClassFilter) o).getConcreteType().equals(concreteType);
+          && ((SingleClassFilter) o).concreteType().equals(concreteType);
     }
 
     @Override
@@ -264,7 +258,7 @@ public interface FilteredPointerKey extends PointerKey {
       @Override
       public void act(int i) {
         InstanceKey I = system.getInstanceKey(i);
-        IClass C = I.getConcreteType();
+        IClass C = I.concreteType();
         if ((C.getMethod(targetMethod.getSelector()) == targetMethod) == sense) {
           if (L.add(i)) {
             result = true;

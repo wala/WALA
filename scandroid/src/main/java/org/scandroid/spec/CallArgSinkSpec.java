@@ -82,6 +82,6 @@ public class CallArgSinkSpec extends SinkSpec {
   @Override
   public String toString() {
     return String.format(
-        "CallArgSinkSpec(%s,%s)", namePattern.getDescriptor(), Arrays.toString(argNums));
+        "CallArgSinkSpec(%s,%s)", namePattern.descriptor(), Arrays.toString(argNums));
   }
 }

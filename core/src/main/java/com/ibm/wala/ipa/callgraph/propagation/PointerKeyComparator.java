@@ -53,7 +53,7 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   protected int compareInstanceKeys(InstanceKey k1, InstanceKey k2) {
-    return compareConcreteTypes(k1.getConcreteType(), k2.getConcreteType());
+    return compareConcreteTypes(k1.concreteType(), k2.concreteType());
   }
 
   protected int compareFields(IField if1, IField if2) {
@@ -131,8 +131,8 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
 
   private int compareArrayKey(ArrayContentsKey key1, Object key2) {
     if (key2 instanceof ArrayContentsKey) {
-      ArrayClass k1 = (ArrayClass) key1.getInstanceKey().getConcreteType();
-      ArrayClass k2 = (ArrayClass) ((ArrayContentsKey) key2).getInstanceKey().getConcreteType();
+      ArrayClass k1 = (ArrayClass) key1.getInstanceKey().concreteType();
+      ArrayClass k2 = (ArrayClass) ((ArrayContentsKey) key2).getInstanceKey().concreteType();
       int d1 = k1.getDimensionality();
       int d2 = k2.getDimensionality();
       if (d1 != d2) {

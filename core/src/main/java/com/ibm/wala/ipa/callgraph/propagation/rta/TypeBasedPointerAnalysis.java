@@ -150,7 +150,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       LocalPointerKeyWithFilter lpk = (LocalPointerKeyWithFilter) key;
       FilteredPointerKey.TypeFilter filter = lpk.getTypeFilter();
       assert filter instanceof FilteredPointerKey.SingleClassFilter;
-      return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
+      return ((FilteredPointerKey.SingleClassFilter) filter).concreteType();
     } else if (key instanceof StaticFieldKey) {
       StaticFieldKey s = (StaticFieldKey) key;
       return getCallGraph().getClassHierarchy().lookupClass(s.getField().getFieldTypeReference());
@@ -161,7 +161,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       ArrayContentsKey i = (ArrayContentsKey) key;
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
       assert filter instanceof FilteredPointerKey.SingleClassFilter;
-      return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
+      return ((FilteredPointerKey.SingleClassFilter) filter).concreteType();
     } else if (key instanceof ExceptionReturnValueKey) {
       return getCallGraph().getClassHierarchy().lookupClass(TypeReference.JavaLangException);
     } else if (key instanceof ReturnValueKey) {

@@ -140,7 +140,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
       return node.getMethod().getReference().getDeclaringClass();
     } else if (ctx.get(ContextKey.RECEIVER) != null) {
       final AbstractTypeInNode aType = (AbstractTypeInNode) ctx.get(ContextKey.RECEIVER);
-      return aType.getConcreteType().getReference();
+      return aType.concreteType().getReference();
     } else {
       return node.getMethod()
           .getReference()

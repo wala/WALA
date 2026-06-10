@@ -62,11 +62,11 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     }
     if (x instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) x;
-      MutableIntSet pr = primary.makeCopy(db.primaryImpl);
-      MutableIntSet sr = secondary.makeCopy(db.secondaryImpl);
+      MutableIntSet pr = primary.makeCopy(db.primaryImpl());
+      MutableIntSet sr = secondary.makeCopy(db.secondaryImpl());
 
-      assert pr.sameValue(db.primaryImpl);
-      assert sr.sameValue(db.secondaryImpl);
+      assert pr.sameValue(db.primaryImpl());
+      assert sr.sameValue(db.secondaryImpl());
       assert pr.sameValue(sr);
 
       return new DebuggingMutableIntSet(pr, sr);

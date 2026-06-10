@@ -129,8 +129,8 @@ public class LocalSummaryEdges {
     } else {
       MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
       for (IntPair p : R) {
-        if (p.getY() == d2) {
-          result.add(p.getX());
+        if (p.y() == d2) {
+          result.add(p.x());
         }
       }
       return result;

@@ -109,7 +109,7 @@ public class TypeAnnotation {
       for (TypeAnnotationAttribute tatt : allTypeAnnotations) {
         final Collection<Annotation> annotations =
             Annotation.convertToAnnotations(
-                clRef, new AnnotationAttribute[] {tatt.annotationAttribute});
+                clRef, new AnnotationAttribute[] {tatt.annotationAttribute()});
         assert annotations.size() == 1;
 
         final Annotation annotation = annotations.iterator().next();
@@ -117,9 +117,9 @@ public class TypeAnnotation {
         result.add(
             new TypeAnnotation(
                 annotation,
-                tatt.typePath,
-                tatt.annotationTarget.acceptVisitor(converter),
-                tatt.targetType));
+                tatt.typePath(),
+                tatt.annotationTarget().acceptVisitor(converter),
+                tatt.targetType()));
       }
       return result;
     } else {

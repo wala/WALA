@@ -384,7 +384,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       TypeReference type =
           TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
       Atom nm = Atom.findOrCreateAsciiAtom(nameString);
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
       MethodReference ref = MethodReference.findOrCreate(type, nm, D);
@@ -478,7 +478,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a new allocation site. */
     private void processAllocation(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the concrete type allocated
@@ -525,7 +525,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating an Athrow */
     private void processAthrow(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // get the value thrown
@@ -545,7 +545,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a putfield. */
     private void processGetField(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the field written
@@ -590,7 +590,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a putfield. */
     private void processPutField(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the field written
@@ -632,7 +632,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a putstatic. */
     private void processPutStatic(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the field written
@@ -665,7 +665,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating an Aastore */
     private void processAastore(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       String R = atts.getValue(A_REF);
@@ -709,7 +709,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     /** Process an element indicating an Aaload */
     private void processAaload(Attributes atts) {
       // <aaload def="foo" ref="arg1" index="the-answer" />
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       String R = atts.getValue(A_REF);
@@ -758,7 +758,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a return statement. */
     private void processReturn(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       if (governingMethod.getReturnType() != null) {
@@ -841,7 +841,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       Atom mName = Atom.findOrCreateUnicodeAtom(methodName);
       String descString = atts.getValue(A_DESCRIPTOR);
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
 
       MethodReference ref = MethodReference.findOrCreate(governingClass, mName, D);

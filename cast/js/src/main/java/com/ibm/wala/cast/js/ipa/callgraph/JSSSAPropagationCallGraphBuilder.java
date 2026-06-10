@@ -756,7 +756,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         private boolean isStringConstant(InstanceKey k) {
           return (k instanceof ConstantKey)
-              && k.getConcreteType().getReference().equals(JavaScriptTypes.String);
+              && k.concreteType().getReference().equals(JavaScriptTypes.String);
         }
 
         private boolean addKey(InstanceKey k) {
@@ -854,12 +854,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         protected boolean handleBinaryOperatorArgs(InstanceKey left, InstanceKey right) {
           Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
-          if (l.isStringType(left.getConcreteType().getReference())
-              || l.isStringType(right.getConcreteType().getReference())) {
+          if (l.isStringType(left.concreteType().getReference())
+              || l.isStringType(right.concreteType().getReference())) {
             return addKey(
                 new ConcreteTypeKey(node.getClassHierarchy().lookupClass(l.getStringType())));
-          } else if (isNumberType(l, left.getConcreteType().getReference())
-              && isNumberType(l, right.getConcreteType().getReference())) {
+          } else if (isNumberType(l, left.concreteType().getReference())
+              && isNumberType(l, right.concreteType().getReference())) {
             if (left instanceof ConstantKey && right instanceof ConstantKey) {
               return addKey(
                   new ConcreteTypeKey(

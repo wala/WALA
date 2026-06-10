@@ -48,7 +48,8 @@ public class AstLexicalRead extends AstLexicalAccess {
       for (int i = 0; i < accesses.length; i++) {
         Access oldAccess = getAccess(i);
         accesses[i] =
-            new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, defs[i]);
+            new Access(
+                oldAccess.variableName(), oldAccess.variableDefiner(), oldAccess.type(), defs[i]);
       }
 
       return ((AstInstructionFactory) insts).LexicalRead(iIndex(), accesses);
@@ -62,7 +63,7 @@ public class AstLexicalRead extends AstLexicalAccess {
 
   @Override
   public int getDef(int i) {
-    return getAccess(i).valueNumber;
+    return getAccess(i).valueNumber();
   }
 
   @Override
@@ -76,11 +77,11 @@ public class AstLexicalRead extends AstLexicalAccess {
     for (int i = 0; i < getAccessCount(); i++) {
       Access A = getAccess(i);
       if (i != 0) sb.append(", ");
-      sb.append(getValueString(symbolTable, A.valueNumber));
+      sb.append(getValueString(symbolTable, A.valueNumber()));
       sb.append(" = lexical:");
-      sb.append(A.variableName);
+      sb.append(A.variableName());
       sb.append('@');
-      sb.append(A.variableDefiner);
+      sb.append(A.variableDefiner());
     }
 
     return sb.toString();

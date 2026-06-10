@@ -77,7 +77,7 @@ public class ExceptionMatcher {
 
   private void fillIgnore(Collection<FilteredException> filteredExceptions) {
     for (final FilteredException filteredException : filteredExceptions) {
-      final TypeReference exception = filteredException.getException();
+      final TypeReference exception = filteredException.exception();
 
       this.ignoreExact.add(exception);
       if (filteredException.isSubclassFiltered()) {

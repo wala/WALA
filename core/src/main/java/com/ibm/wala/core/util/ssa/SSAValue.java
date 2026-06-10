@@ -82,12 +82,7 @@ public class SSAValue {
   public static class UniqueKey implements VariableKey {}
 
   /** A key that matches variables by their type - does not compare to NamedKey. */
-  public static class TypeKey implements VariableKey {
-    public final TypeName type;
-
-    public TypeKey(final TypeName type) {
-      this.type = type;
-    }
+  public record TypeKey(TypeName type) implements VariableKey {
 
     @Override
     public boolean equals(Object o) {
@@ -102,11 +97,6 @@ public class SSAValue {
       } else {
         return false;
       }
-    }
-
-    @Override
-    public int hashCode() {
-      return this.type.hashCode();
     }
 
     @Override

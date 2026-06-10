@@ -48,7 +48,7 @@ public class ReflectiveCallVertex extends Vertex {
 
   @Override
   public String toSourceLevelString(IAnalysisCacheView cache) {
-    IClass concreteType = caller.getConcreteType();
+    IClass concreteType = caller.concreteType();
     AstMethod method = (AstMethod) concreteType.getMethod(AstMethodReference.fnSelector);
     return "ReflectiveCallee("
         + method.getSourcePosition(site.getProgramCounter()).prettyPrint()

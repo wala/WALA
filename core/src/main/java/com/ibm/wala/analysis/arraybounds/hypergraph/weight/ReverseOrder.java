@@ -20,9 +20,9 @@ public class ReverseOrder implements Comparator<Weight> {
   @Override
   public int compare(Weight o1, Weight o2) {
     int result;
-    if (o1.getType() == Type.UNLIMITED) {
+    if (o1.type() == Type.UNLIMITED) {
       result = -1;
-    } else if (o2.getType() == Type.UNLIMITED) {
+    } else if (o2.type() == Type.UNLIMITED) {
       result = 1;
     } else {
       result = -this.normalOrder.compare(o1, o2);

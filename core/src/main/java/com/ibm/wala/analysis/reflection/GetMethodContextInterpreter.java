@@ -161,7 +161,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   private static Collection<IMethod> getDeclaredNormalMethods(IClass cls, Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
     for (IMethod m : cls.getDeclaredMethods()) {
-      if (!m.isInit() && !m.isClinit() && m.getSelector().getName().equals(name)) {
+      if (!m.isInit() && !m.isClinit() && m.getSelector().name().equals(name)) {
         result.add(m);
       }
     }
@@ -180,7 +180,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
 
     Collection<? extends IMethod> allMethods = cls.getAllMethods();
     for (IMethod m : allMethods) {
-      if (!m.isInit() && !m.isClinit() && m.isPublic() && m.getSelector().getName().equals(name)) {
+      if (!m.isInit() && !m.isClinit() && m.isPublic() && m.getSelector().name().equals(name)) {
         result.add(m);
       }
     }

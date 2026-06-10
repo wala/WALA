@@ -164,8 +164,8 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
             throw CallGraphBuilderCancelException.createCallGraphBuilderCancelException(
                 e, null, null);
           }
-          ptr = result.getPointerAnalysis();
-          return result.getCallGraph();
+          ptr = result.pointerAnalysis();
+          return result.callGraph();
         }
 
         @Override

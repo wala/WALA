@@ -86,7 +86,7 @@ public final class FieldReference extends MemberReference {
   @Override
   public String toString() {
     return "< "
-        + getDeclaringClass().getClassLoader().getName()
+        + getDeclaringClass().getClassLoader().name()
         + ", "
         + getDeclaringClass().getName()
         + ", "

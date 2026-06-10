@@ -268,15 +268,7 @@ public abstract class AbstractSSAConversion {
    *
    * @author yinnonh
    */
-  private static class Frame {
-    public final SSACFG.BasicBlock X;
-    public final Iterator<ISSABasicBlock> i; // iterator o
-
-    public Frame(SSACFG.BasicBlock X, Iterator<ISSABasicBlock> i) {
-      this.X = X;
-      this.i = i;
-    }
-  }
+  private record Frame(BasicBlock X, Iterator<ISSABasicBlock> i) {}
 
   private void SEARCH(SSACFG.BasicBlock X) {
     // original method was recursive:

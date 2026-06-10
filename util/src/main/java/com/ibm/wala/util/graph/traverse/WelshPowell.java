@@ -21,21 +21,30 @@ import java.util.TreeSet;
 
 public class WelshPowell<T> {
 
-  public static class ColoredVertices<T> {
-    private final boolean fullColoring;
-    private final Map<T, Integer> colors;
-    private final int numColors;
+  public record ColoredVertices<T>(boolean fullColoring, Map<T, Integer> colors, int numColors) {
 
+    /**
+     * @deprecated Use {@link #fullColoring()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public boolean isFullColoring() {
-      return fullColoring;
+      return fullColoring();
     }
 
+    /**
+     * @deprecated Use {@link #colors()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public Map<T, Integer> getColors() {
-      return colors;
+      return colors();
     }
 
+    /**
+     * @deprecated Use {@link #numColors()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public int getNumColors() {
-      return numColors;
+      return numColors();
     }
 
     public ColoredVertices(boolean fullColoring, NumberedGraph<T> G, int[] colors, int numColors) {
@@ -50,12 +59,6 @@ public class WelshPowell<T> {
         }
       }
       return colorMap;
-    }
-
-    public ColoredVertices(boolean fullColoring, Map<T, Integer> colors, int numColors) {
-      this.fullColoring = fullColoring;
-      this.colors = colors;
-      this.numColors = numColors;
     }
 
     @Override

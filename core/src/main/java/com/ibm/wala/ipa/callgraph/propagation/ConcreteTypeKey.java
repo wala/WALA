@@ -26,32 +26,15 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /** An instance key which represents a unique set for each concrete type. */
-public final class ConcreteTypeKey implements InstanceKey {
-  private final IClass type;
+public record ConcreteTypeKey(IClass type) implements InstanceKey {
 
-  public ConcreteTypeKey(IClass type) {
+  public ConcreteTypeKey {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
     if (type.isInterface()) {
       Assertions.UNREACHABLE("unexpected interface: " + type);
     }
-    this.type = type;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof ConcreteTypeKey) {
-      ConcreteTypeKey other = (ConcreteTypeKey) obj;
-      return type.equals(other.type);
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return 461 * type.hashCode();
   }
 
   @Override
@@ -59,12 +42,16 @@ public final class ConcreteTypeKey implements InstanceKey {
     return "[" + type + ']';
   }
 
+  /**
+   * @deprecated Use {@link #type()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public IClass getType() {
-    return type;
+    return type();
   }
 
   @Override
-  public IClass getConcreteType() {
+  public IClass concreteType() {
     return type;
   }
 

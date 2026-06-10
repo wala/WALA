@@ -149,7 +149,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
           buf.append(directoryTreeModule.getPath());
         } else Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
       }
-      cl = cl.getParent();
+      cl = cl.parent();
     }
   }
 

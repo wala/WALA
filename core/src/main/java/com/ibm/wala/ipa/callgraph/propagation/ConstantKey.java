@@ -53,7 +53,7 @@ public final class ConstantKey<T> implements InstanceKey {
   }
 
   @Override
-  public IClass getConcreteType() {
+  public IClass concreteType() {
     return valueClass;
   }
 

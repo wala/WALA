@@ -28,36 +28,26 @@ public abstract class AstLexicalAccess extends SSAInstruction {
    * A single lexical access.
    *
    * @author Julian Dolby (dolby@us.ibm.com)
+   * @param variableName name being accessed
+   * @param variableDefiner name of entity that defines the variable
+   * @param type type of the lexical value
+   * @param valueNumber value number used for name where access is being performed (not in the
+   *     declaring entity)
    */
-  public static class Access {
-    /** name being accessed */
-    public final String variableName;
-
-    /** name of entity that defines the variable */
-    public final String variableDefiner;
-
-    /** type of the lexical value */
-    public final TypeReference type;
-
-    /** value number used for name where access is being performed (not in the declaring entity) */
-    public final int valueNumber;
-
-    public Access(String name, String definer, TypeReference type, int vn) {
-      variableName = name;
-      variableDefiner = definer;
-      this.type = type;
-      valueNumber = vn;
-    }
+  public record Access(
+      String variableName, String variableDefiner, TypeReference type, int valueNumber) {
 
     public Pair<String, String> getName() {
       return Pair.make(variableName, variableDefiner);
     }
 
+    // intentional: omits variableDefiner and type
     @Override
     public int hashCode() {
       return variableName.hashCode() * valueNumber;
     }
 
+    // intentional: omits type
     @Override
     public boolean equals(Object other) {
       return (other instanceof Access)

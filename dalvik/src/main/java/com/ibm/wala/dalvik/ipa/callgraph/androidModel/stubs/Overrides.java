@@ -217,7 +217,7 @@ public class Overrides {
       monitor.beginTask("Context-Free overrides", methodsToOverride.size());
 
       for (final Selector mSel : methodsToOverride) {
-        monitor.subTask(mSel.getName().toString());
+        monitor.subTask(mSel.name().toString());
         final IntentStarters.StartInfo info = starters.getInfo(mSel);
         info.setContextFree();
         final TypeReference inClass = info.getDeclaringClass();

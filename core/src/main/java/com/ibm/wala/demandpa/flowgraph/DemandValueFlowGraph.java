@@ -307,7 +307,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       addNode(def);
       addEdge(def, iKey, NewLabel.v());
 
-      IClass klass = iKey.getConcreteType();
+      IClass klass = iKey.concreteType();
       int dim = 0;
       InstanceKey lastInstance = iKey;
       PointerKey lastVar = def;

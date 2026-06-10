@@ -3156,8 +3156,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (accesses != null) {
         Set<String> parents = new LinkedHashSet<>();
         for (Access AC : accesses) {
-          if (AC.variableDefiner != null) {
-            parents.add(AC.variableDefiner);
+          if (AC.variableDefiner() != null) {
+            parents.add(AC.variableDefiner());
           }
         }
         scopingParents = parents.toArray(new String[0]);

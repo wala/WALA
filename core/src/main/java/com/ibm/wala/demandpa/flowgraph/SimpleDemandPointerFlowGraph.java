@@ -276,13 +276,13 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   private void addArrayMatchEdges(LocalPointerKey pk) {
     Collection<MemoryAccess> arrayWrites = fam.getArrayWrites(null);
     for (MemoryAccess a : arrayWrites) {
-      addSubgraphForNode(a.getNode());
+      addSubgraphForNode(a.node());
     }
     for (MemoryAccess a : arrayWrites) {
-      IR ir = a.getNode().getIR();
+      IR ir = a.node().getIR();
       SSAArrayStoreInstruction s =
-          (SSAArrayStoreInstruction) ir.getInstructions()[a.getInstructionIndex()];
-      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getValue());
+          (SSAArrayStoreInstruction) ir.getInstructions()[a.instructionIndex()];
+      PointerKey r = heapModel.getPointerKeyForLocal(a.node(), s.getValue());
       assert containsNode(r);
       assert containsNode(pk);
       addMatchEdge(pk, r);
@@ -341,12 +341,12 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   private void addMatchHelper(LocalPointerKey pk, Collection<MemoryAccess> writes) {
     for (MemoryAccess a : writes) {
-      addSubgraphForNode(a.getNode());
+      addSubgraphForNode(a.node());
     }
     for (MemoryAccess a : writes) {
-      IR ir = a.getNode().getIR();
-      SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
-      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
+      IR ir = a.node().getIR();
+      SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.instructionIndex()];
+      PointerKey r = heapModel.getPointerKeyForLocal(a.node(), s.getVal());
       assert containsNode(r);
       assert containsNode(pk);
       addMatchEdge(pk, r);
@@ -360,7 +360,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   private void addNodesThatWriteToStaticField(IField field) {
     Collection<MemoryAccess> fieldWrites = fam.getStaticFieldWrites(field);
     for (MemoryAccess a : fieldWrites) {
-      addSubgraphForNode(a.getNode());
+      addSubgraphForNode(a.node());
     }
   }
 
@@ -457,7 +457,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
             assert ik instanceof ConcreteTypeKey
                 : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
-            IClass klass = ck.getType();
+            IClass klass = ck.type();
             if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
               addNode(exceptionVar);
               addNode(ik);

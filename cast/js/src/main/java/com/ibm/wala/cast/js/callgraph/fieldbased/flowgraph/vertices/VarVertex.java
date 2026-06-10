@@ -55,7 +55,7 @@ public final class VarVertex extends Vertex implements PointerKey {
   @Override
   public String toSourceLevelString(IAnalysisCacheView cache) {
     // we want to get a variable name rather than a value number
-    IClass concreteType = func.getConcreteType();
+    IClass concreteType = func.concreteType();
     AstMethod method = (AstMethod) concreteType.getMethod(AstMethodReference.fnSelector);
     IR ir = cache.getIR(method);
     String methodPos = method.getSourcePosition().prettyPrint();

@@ -292,12 +292,12 @@ public class SyntheticMethod implements IMethod {
 
   @Override
   public Atom getName() {
-    return method.getSelector().getName();
+    return method.getSelector().name();
   }
 
   @Override
   public Descriptor getDescriptor() {
-    return method.getSelector().getDescriptor();
+    return method.getSelector().descriptor();
   }
 
   /* BEGIN Custom change: : precise bytecode positions */

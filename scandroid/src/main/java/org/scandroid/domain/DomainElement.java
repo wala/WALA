@@ -47,23 +47,16 @@
 
 package org.scandroid.domain;
 
-import java.util.Objects;
 import org.scandroid.flow.types.FlowType;
 
+/**
+ * @param codeElement the code element in question alternate framing: the /current/ fact about the
+ *     element
+ * @param taintSource the taint (probably from some other point in the code) that affects the code
+ *     element in question alternate framing: the /initial/ fact about the element
+ */
 @SuppressWarnings("rawtypes")
-public class DomainElement {
-  // the code element in question
-  // alternate framing: the /current/ fact about the element
-  public final CodeElement codeElement;
-  // the taint (probably from some other point in the code) that affects the
-  // code element in question
-  // alternate framing: the /initial/ fact about the element
-  public final FlowType taintSource;
-
-  public DomainElement(CodeElement codeElement, FlowType taintSource) {
-    this.codeElement = codeElement;
-    this.taintSource = taintSource;
-  }
+public record DomainElement(CodeElement codeElement, FlowType taintSource) {
 
   /*
   @Override
@@ -90,25 +83,5 @@ public class DomainElement {
   @Override
   public String toString() {
     return codeElement.toString() + ", " + taintSource;
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((codeElement == null) ? 0 : codeElement.hashCode());
-    result = prime * result + ((taintSource == null) ? 0 : taintSource.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-    DomainElement other = (DomainElement) obj;
-    if (!Objects.equals(codeElement, other.codeElement)) return false;
-    if (!Objects.equals(taintSource, other.taintSource)) return false;
-    return true;
   }
 }

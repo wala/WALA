@@ -63,7 +63,6 @@ tasks.withType<JavaCompile>().configureEach {
       error(
           "AnnotationPosition",
           "ArgumentSelectionDefectChecker",
-          "ArrayRecordComponent",
           "AssertEqualsArgumentOrderChecker",
           "FallThrough",
           "IfChainToSwitch",

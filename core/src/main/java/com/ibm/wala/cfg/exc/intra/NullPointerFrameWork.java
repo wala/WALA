@@ -41,8 +41,8 @@ public class NullPointerFrameWork<T extends ISSABasicBlock>
       MutableCFG<SSAInstruction, T> cfg2 = MutableCFG.copyFrom(cfg);
 
       for (IntPair edge : backEdges) {
-        T from = cfg2.getNode(edge.getX());
-        T to = cfg2.getNode(edge.getY());
+        T from = cfg2.getNode(edge.x());
+        T to = cfg2.getNode(edge.y());
         cfg2.removeEdge(from, to);
         cfg2.addEdge(from, cfg.exit());
       }

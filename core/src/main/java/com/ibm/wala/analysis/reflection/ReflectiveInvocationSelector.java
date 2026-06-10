@@ -127,7 +127,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
   private static boolean isConstructorConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       ConstantKey<?> c = (ConstantKey<?>) instance;
-      if (c.getConcreteType().getReference().equals(TypeReference.JavaLangReflectConstructor)) {
+      if (c.concreteType().getReference().equals(TypeReference.JavaLangReflectConstructor)) {
         return true;
       }
     }

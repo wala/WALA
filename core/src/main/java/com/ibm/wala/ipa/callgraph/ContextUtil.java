@@ -35,7 +35,7 @@ public class ContextUtil {
       if (item instanceof PointType) {
         return ((PointType) item).getIClass();
       } else if (item instanceof InstanceKey) {
-        return ((InstanceKey) item).getConcreteType();
+        return ((InstanceKey) item).concreteType();
       } else {
         Assertions.UNREACHABLE("Unexpected: " + item.getClass());
         return null;

@@ -39,7 +39,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
         new AstCFAPointerKeys() {
 
           private boolean isBogusKey(InstanceKey K) {
-            TypeReference t = K.getConcreteType().getReference();
+            TypeReference t = K.concreteType().getReference();
             return t == JavaScriptTypes.Null || t == JavaScriptTypes.Undefined;
           }
 
@@ -97,7 +97,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
             String strVal = JSCallGraphUtil.simulateToStringForPropertyNames(v);
             // if we know the string representation of the constant, use it...
             if (strVal != null) {
-              IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom(strVal));
+              IField f = I.concreteType().getField(Atom.findOrCreateUnicodeAtom(strVal));
               return getPointerKeyForInstanceField(I, f);
 
               // ...otherwise it is some unknown string
@@ -111,7 +111,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
            */
           @Override
           protected IClass getFieldNameType(InstanceKey F) {
-            return F.getConcreteType().getClassHierarchy().lookupClass(JavaScriptTypes.String);
+            return F.concreteType().getClassHierarchy().lookupClass(JavaScriptTypes.String);
           }
         });
   }

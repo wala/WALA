@@ -381,7 +381,6 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public IntSet getTargets(int d1) {
       // System.out.println(this.toString()+".getTargets("+d1+") "+bb);
       // BitVectorIntSet set = new BitVectorIntSet();
@@ -389,7 +388,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
       set.add(d1);
       DomainElement de = domain.getMappedObject(d1);
       if (de != null) {
-        addTargets(de.codeElement, set, de.taintSource);
+        addTargets(de.codeElement(), set, de.taintSource());
       }
       return set;
     }
@@ -432,14 +431,14 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
 
     return d1 -> {
       BitVectorIntSet set = new BitVectorIntSet();
-      if (d1 == 0 || !(domain.getMappedObject(d1).codeElement instanceof LocalElement)) {
+      if (d1 == 0 || !(domain.getMappedObject(d1).codeElement() instanceof LocalElement)) {
         set.add(d1);
       }
       DomainElement de = domain.getMappedObject(d1);
       if (de != null) {
-        CodeElement codeElement = parameterMap.get(de.codeElement);
+        CodeElement codeElement = parameterMap.get(de.codeElement());
         if (codeElement != null) {
-          set.add(domain.getMappedIndex(new DomainElement(codeElement, de.taintSource)));
+          set.add(domain.getMappedIndex(new DomainElement(codeElement, de.taintSource())));
         }
       }
       return set;
@@ -537,23 +536,23 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
 
     @Override
     public IntSet getTargets(int d1) {
-      if (d1 != 0 && domain.getMappedObject(d1).codeElement instanceof ReturnElement) {
+      if (d1 != 0 && domain.getMappedObject(d1).codeElement() instanceof ReturnElement) {
         BitVectorIntSet set = new BitVectorIntSet();
         if (callSet != null) {
           //					System.out.println("callset: " + callSet);
           set.add(
               domain.getMappedIndex(
-                  new DomainElement(callSet, domain.getMappedObject(d1).taintSource)));
+                  new DomainElement(callSet, domain.getMappedObject(d1).taintSource())));
         }
         return set;
-      } else if (d1 != 0 && domain.getMappedObject(d1).codeElement instanceof LocalElement) {
+      } else if (d1 != 0 && domain.getMappedObject(d1).codeElement() instanceof LocalElement) {
         return new BitVectorIntSet();
-      } else if (d1 != 0 && receivers.contains(domain.getMappedObject(d1).codeElement)) {
+      } else if (d1 != 0 && receivers.contains(domain.getMappedObject(d1).codeElement())) {
         BitVectorIntSet set = new BitVectorIntSet();
         if (callSet != null)
           set.add(
               domain.getMappedIndex(
-                  new DomainElement(callSet, domain.getMappedObject(d1).taintSource)));
+                  new DomainElement(callSet, domain.getMappedObject(d1).taintSource())));
         set.addAll(super.getTargets(d1));
         return set;
       } else {

@@ -439,7 +439,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
   }
 
   private static boolean isOfType(final InstanceKey ik, final String typeName) {
-    return typeName.equals(ik.getConcreteType().getName().toString());
+    return typeName.equals(ik.concreteType().getName().toString());
   }
 
   private static boolean hasSignature(final CGNode n, final String signature) {

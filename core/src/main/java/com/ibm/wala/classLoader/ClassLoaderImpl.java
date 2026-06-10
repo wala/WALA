@@ -593,7 +593,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
   @Override
   public Atom getName() {
-    return loader.getName();
+    return loader.name();
   }
 
   @Override

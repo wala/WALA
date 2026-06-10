@@ -98,12 +98,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     setText("View Local Supergraph");
   }
 
-  private static class Labels<T, P, F> implements NodeDecorator<T> {
-    private final TabulationResult<T, P, F> result;
-
-    Labels(TabulationResult<T, P, F> result) {
-      this.result = result;
-    }
+  private record Labels<T, P, F>(TabulationResult<T, P, F> result) implements NodeDecorator<T> {
 
     @Override
     @SuppressWarnings("unchecked")

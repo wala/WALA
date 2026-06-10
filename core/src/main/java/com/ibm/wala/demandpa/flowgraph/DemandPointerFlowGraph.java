@@ -449,7 +449,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
               assert ik instanceof ConcreteTypeKey
                   : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               ConcreteTypeKey ck = (ConcreteTypeKey) ik;
-              IClass klass = ck.getType();
+              IClass klass = ck.type();
               if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
                 g.addNode(exceptionVar);
                 g.addNode(ik);
@@ -499,20 +499,12 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
   }
 
-  public static class NewMultiDimInfo {
-
-    public final Collection<Pair<PointerKey, InstanceKey>> newInstrs;
-
-    // pairs of (base pointer, stored val)
-    public final Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs;
-
-    public NewMultiDimInfo(
-        Collection<Pair<PointerKey, InstanceKey>> newInstrs,
-        Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs) {
-      this.newInstrs = newInstrs;
-      this.arrStoreInstrs = arrStoreInstrs;
-    }
-  }
+  /**
+   * @param arrStoreInstrs pairs of (base pointer, stored val)
+   */
+  public record NewMultiDimInfo(
+      Collection<Pair<PointerKey, InstanceKey>> newInstrs,
+      Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs) {}
 
   /**
    * collect information about the new instructions and putfield instructions used to model an
@@ -531,7 +523,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       // something went wrong. I hope someone raised a warning.
       return null;
     }
-    IClass klass = iKey.getConcreteType();
+    IClass klass = iKey.concreteType();
     // if not a multi-dim array allocation, return null
     if (!klass.isArrayClass()
         || ((ArrayClass) klass).getElementClass() == null

@@ -33,7 +33,7 @@ public class CrossLanguageClassTargetSelector implements ClassTargetSelector {
   }
 
   private static Atom getLanguage(NewSiteReference target) {
-    return target.getDeclaredType().getClassLoader().getLanguage();
+    return target.getDeclaredType().getClassLoader().language();
   }
 
   private ClassTargetSelector getSelector(NewSiteReference site) {

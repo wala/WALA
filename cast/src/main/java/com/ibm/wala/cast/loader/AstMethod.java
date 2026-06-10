@@ -239,7 +239,7 @@ public abstract class AstMethod implements IMethod {
 
   @Override
   public boolean isInit() {
-    return getSelector().getName().equals(MethodReference.initAtom);
+    return getSelector().name().equals(MethodReference.initAtom);
   }
 
   @Override

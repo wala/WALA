@@ -464,7 +464,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         final InstanceKey[] objKeys = getInvariantContents(objVn);
 
         for (InstanceKey key : objKeys) {
-          if (!getBuilder().isUncataloguedField(key.getConcreteType(), fieldName)) {
+          if (!getBuilder().isUncataloguedField(key.concreteType(), fieldName)) {
             PointerKey objCatalog = getPointerKeyForObjectCatalog(key);
             if (objCatalog != null) {
               system.newConstraint(objCatalog, fieldNameKeys[0]);
@@ -483,7 +483,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                       .foreach(
                           optr -> {
                             InstanceKey object = system.getInstanceKey(optr);
-                            if (!getBuilder().isUncataloguedField(object.getConcreteType(), hack)) {
+                            if (!getBuilder().isUncataloguedField(object.concreteType(), hack)) {
                               PointerKey cat = getPointerKeyForObjectCatalog(object);
                               if (cat != null) {
                                 system.newConstraint(cat, fieldNameKeys[0]);
@@ -595,9 +595,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        */
       private void doLexicalPointerKeys() {
         for (Access access : accesses) {
-          final String name = access.variableName;
-          final String definer = access.variableDefiner;
-          final int vn = access.valueNumber;
+          final String name = access.variableName();
+          final String definer = access.variableDefiner();
+          final int vn = access.valueNumber();
 
           if (AstTranslator.DEBUG_LEXICAL)
             System.err.println(("looking up lexical parent " + definer));

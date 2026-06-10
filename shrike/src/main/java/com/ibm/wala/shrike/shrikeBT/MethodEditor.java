@@ -99,22 +99,7 @@ public final class MethodEditor {
   private int nextLabel;
 
   /** This patch lets us stuff an exception handler into the code. */
-  private static class HandlerPatch {
-    final HandlerPatch next;
-
-    final String catchClass;
-
-    final int label;
-
-    final Patch patch;
-
-    HandlerPatch(HandlerPatch next, String catchClass, int label, Patch patch) {
-      this.next = next;
-      this.catchClass = catchClass;
-      this.label = label;
-      this.patch = patch;
-    }
-  }
+  private record HandlerPatch(HandlerPatch next, String catchClass, int label, Patch patch) {}
 
   /**
    * Build an editor for the given method. This editor will write back its changes to the method

@@ -195,6 +195,6 @@ public class EclipseJavaScriptAnalysisEngine
             };
 
     CallGraphResult result = builder.buildCallGraph(roots, new NullProgressMonitor());
-    return Pair.make(result.getCallGraph(), result.getPointerAnalysis());
+    return Pair.make(result.callGraph(), result.pointerAnalysis());
   }
 }

@@ -40,6 +40,6 @@ public final class ArrayContentsKey extends AbstractFieldPointerKey implements F
 
   @Override
   public TypeFilter getTypeFilter() {
-    return new SingleClassFilter(((ArrayClass) instance.getConcreteType()).getElementClass());
+    return new SingleClassFilter(((ArrayClass) instance.concreteType()).getElementClass());
   }
 }

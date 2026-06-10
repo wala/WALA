@@ -381,11 +381,7 @@ public class ClassWriter implements ClassConstants {
     }
     return addCPEntry(
         new CWHandle(
-            CONSTANT_MethodHandle,
-            c.getKind(),
-            c.getClassName(),
-            c.getElementName(),
-            c.getDescriptor()),
+            CONSTANT_MethodHandle, c.kind(), c.className(), c.elementName(), c.descriptor()),
         1);
   }
 

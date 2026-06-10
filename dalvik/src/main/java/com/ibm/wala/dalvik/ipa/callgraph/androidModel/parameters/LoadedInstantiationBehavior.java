@@ -64,20 +64,10 @@ import org.jspecify.annotations.NonNull;
  */
 public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
-  private static final class BehviourValue implements Serializable {
+  private record BehviourValue(
+      InstanceBehavior behaviour, Exactness exactness, BehviourValue cacheFrom)
+      implements Serializable {
     @Serial private static final long serialVersionUID = -7558845015122601212L;
-    public final InstanceBehavior behaviour;
-    public final Exactness exactness;
-    public final BehviourValue cacheFrom;
-
-    public BehviourValue(
-        final InstanceBehavior behaviour,
-        final Exactness exactness,
-        final BehviourValue cacheFrom) {
-      this.behaviour = behaviour;
-      this.exactness = exactness;
-      this.cacheFrom = cacheFrom;
-    }
 
     @Override
     public String toString() {
@@ -90,15 +80,11 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
   }
 
-  private static final class BehaviorKey<T> implements Serializable {
+  /**
+   * @param base T is expected to be TypeName or Atom
+   */
+  private record BehaviorKey<T>(T base) implements Serializable {
     @Serial private static final long serialVersionUID = 73530;
-
-    // T is expected to be TypeName or Atom
-    final T base;
-
-    public BehaviorKey(T base) {
-      this.base = base;
-    }
 
     public static BehaviorKey<TypeName> mk(TypeName base) {
       return new BehaviorKey<>(base);
@@ -116,11 +102,6 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
       } else {
         return false;
       }
-    }
-
-    @Override
-    public int hashCode() {
-      return this.base.hashCode();
     }
 
     @Override

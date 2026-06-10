@@ -590,16 +590,10 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  private static class SingletonSet implements StringFilter {
+  private record SingletonSet(TypeReference t) implements StringFilter {
 
     /* Serial version */
     @Serial private static final long serialVersionUID = -672435219867965584L;
-
-    private final TypeReference t;
-
-    SingletonSet(TypeReference t) {
-      this.t = t;
-    }
 
     @Override
     public boolean test(String klassName) {
@@ -612,16 +606,10 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  private static class SetComplement implements StringFilter {
+  private record SetComplement(StringFilter set) implements StringFilter {
 
     /* Serial version */
     @Serial private static final long serialVersionUID = -7873800088647368431L;
-
-    private final StringFilter set;
-
-    SetComplement(StringFilter set) {
-      this.set = set;
-    }
 
     static SetComplement complement(StringFilter set) {
       return new SetComplement(set);

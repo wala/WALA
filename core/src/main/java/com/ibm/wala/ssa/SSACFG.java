@@ -233,18 +233,7 @@ public class SSACFG
 
   private final Map<RefPathKey, SSAPiInstruction> piInstructions = HashMapFactory.make(2);
 
-  private static class RefPathKey {
-    private final int n;
-
-    private final Object src;
-
-    private final Object path;
-
-    RefPathKey(int n, Object src, Object path) {
-      this.n = n;
-      this.src = src;
-      this.path = path;
-    }
+  private record RefPathKey(int n, Object src, Object path) {
 
     @Override
     public int hashCode() {

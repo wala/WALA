@@ -122,7 +122,7 @@ public final class MethodReference extends MemberReference {
     if (selector == null) {
       throw new IllegalArgumentException("selector is null");
     }
-    return findOrCreate(tref, selector.getName(), selector.getDescriptor());
+    return findOrCreate(tref, selector.name(), selector.descriptor());
   }
 
   public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor)
@@ -160,13 +160,13 @@ public final class MethodReference extends MemberReference {
    * @return the descriptor component of this member reference
    */
   public Descriptor getDescriptor() {
-    return selector.getDescriptor();
+    return selector.descriptor();
   }
 
   @Override
   public String toString() {
     return "< "
-        + getDeclaringClass().getClassLoader().getName()
+        + getDeclaringClass().getClassLoader().name()
         + ", "
         + getDeclaringClass().getName()
         + ", "

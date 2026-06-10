@@ -83,8 +83,8 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     @Override
-    public IClass getConcreteType() {
-      return base.getConcreteType();
+    public IClass concreteType() {
+      return base.concreteType();
     }
 
     /** get the CGNode representing the lexical parent of {@link #creator} with name definer */

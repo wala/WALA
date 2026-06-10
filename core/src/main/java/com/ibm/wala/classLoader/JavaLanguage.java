@@ -772,12 +772,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     } else if (value instanceof ReferenceToken) {
       ReferenceToken tok = (ReferenceToken) value;
       TypeReference cls =
-          ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.getClassName());
+          ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.className());
       return MethodReference.findOrCreate(
           cls,
           new Selector(
-              Atom.findOrCreateUnicodeAtom(tok.getElementName()),
-              Descriptor.findOrCreateUTF8(tok.getDescriptor())));
+              Atom.findOrCreateUnicodeAtom(tok.elementName()),
+              Descriptor.findOrCreateUTF8(tok.descriptor())));
     } else if (value instanceof MethodHandle || value instanceof MethodType) {
       return value;
     } else {

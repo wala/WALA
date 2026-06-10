@@ -131,7 +131,7 @@ public class IntentContextSelector implements ContextSelector {
         for (InstanceKey actualParameter : actualParameters) {
           if (actualParameter == null) {
             // do nothing
-          } else if (actualParameter.getConcreteType().getName().equals(AndroidTypes.IntentName)) {
+          } else if (actualParameter.concreteType().getName().equals(AndroidTypes.IntentName)) {
             if (!intents.contains(actualParameter)) {
               logger.error("Unable to resolve Intent called from {}", caller.getMethod());
               logger.error("Search Key: {} hash: {}", actualParameter, actualParameter.hashCode());

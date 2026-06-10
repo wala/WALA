@@ -294,7 +294,7 @@ public class ContainerContextSelector implements ContextSelector {
         return true;
       }
 
-      if (!delegate.isInteresting(receiver.getConcreteType())) {
+      if (!delegate.isInteresting(receiver.concreteType())) {
         return false;
       }
       if (receiver instanceof AllocationSiteInNode) {

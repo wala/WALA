@@ -25,18 +25,7 @@ import java.util.Iterator;
  * @see com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder
  */
 @SuppressWarnings({"javadoc", "JavadocReference"})
-public class GlobalObjectKey implements InstanceKey {
-
-  private final IClass concreteType;
-
-  public GlobalObjectKey(IClass concreteType) {
-    this.concreteType = concreteType;
-  }
-
-  @Override
-  public IClass getConcreteType() {
-    return concreteType;
-  }
+public record GlobalObjectKey(IClass concreteType) implements InstanceKey {
 
   @Override
   public String toString() {

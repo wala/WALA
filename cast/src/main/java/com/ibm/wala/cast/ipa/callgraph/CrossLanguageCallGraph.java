@@ -136,7 +136,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     }
 
     public int addPhi(TypeReference type, int[] values) {
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addPhi(values);
     }
@@ -144,7 +144,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     @Override
     public int addGetInstance(FieldReference ref, int object) {
       TypeReference type = ref.getDeclaringClass();
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addGetInstance(ref, object);
     }
@@ -152,21 +152,21 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     @Override
     public int addGetStatic(FieldReference ref) {
       TypeReference type = ref.getDeclaringClass();
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addGetStatic(ref);
     }
 
     @Override
     public int addCheckcast(TypeReference[] type, int rv, boolean isPEI) {
-      Atom language = type[0].getClassLoader().getLanguage();
+      Atom language = type[0].getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addCheckcast(type, rv, isPEI);
     }
 
     @Override
     public SSANewInstruction addAllocation(TypeReference type) {
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addAllocation(type);
     }
@@ -174,7 +174,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     @Override
     public SSAAbstractInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
       TypeReference type = site.getDeclaredTarget().getDeclaringClass();
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addInvocation(params, site);
     }
@@ -186,7 +186,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
 
     @Override
     public AstLexicalRead addGlobalRead(TypeReference type, String name) {
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return ((AstFakeRoot) root).addGlobalRead(type, name);
     }
@@ -195,7 +195,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     public SSAAbstractInvokeInstruction addDirectCall(
         int functionVn, int[] argVns, CallSiteReference callSite) {
       TypeReference type = callSite.getDeclaredTarget().getDeclaringClass();
-      Atom language = type.getClassLoader().getLanguage();
+      Atom language = type.getClassLoader().language();
       AbstractRootMethod root = getLanguageRoot(language);
       return ((ScriptFakeRoot) root).addDirectCall(functionVn, argVns, callSite);
     }

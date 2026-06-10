@@ -12,39 +12,46 @@ package com.ibm.wala.shrike.shrikeCT;
 
 import com.ibm.wala.shrike.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrike.shrikeCT.ClassReader.AttrIterator;
-import java.util.Objects;
 
 /** A ConstantPoolParser provides read-only access to the constant pool of a class file. */
 public final class ConstantPoolParser implements ClassConstants {
-  public static class ReferenceToken {
-    private final byte kind;
-    private final String className;
-    private final String elementName;
-    private final String descriptor;
 
-    public ReferenceToken(byte kind, String className, String elementName, String descriptor) {
-      this.kind = kind;
-      this.className = className;
-      this.elementName = elementName;
-      this.descriptor = descriptor;
-    }
+  public record ReferenceToken(byte kind, String className, String elementName, String descriptor) {
 
+    /**
+     * @deprecated Use {@link #kind()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public byte getKind() {
-      return kind;
+      return kind();
     }
 
+    /**
+     * @deprecated Use {@link #className()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public String getClassName() {
-      return className;
+      return className();
     }
 
+    /**
+     * @deprecated Use {@link #elementName()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public String getElementName() {
-      return elementName;
+      return elementName();
     }
 
+    /**
+     * @deprecated Use {@link #descriptor()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public String getDescriptor() {
-      return descriptor;
+      return descriptor();
     }
 
+    // intentional: omits kind since the tuple (className, descriptor,
+    // elementName) already uniquely identifies a reference token
     @Override
     public int hashCode() {
       final int prime = 31;
@@ -53,21 +60,6 @@ public final class ConstantPoolParser implements ClassConstants {
       result = prime * result + ((descriptor == null) ? 0 : descriptor.hashCode());
       result = prime * result + ((elementName == null) ? 0 : elementName.hashCode());
       return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
-      ReferenceToken other = (ReferenceToken) obj;
-      if (kind != other.kind) {
-        return false;
-      }
-      if (!Objects.equals(className, other.className)) return false;
-      if (!Objects.equals(descriptor, other.descriptor)) return false;
-      if (!Objects.equals(elementName, other.elementName)) return false;
-      return true;
     }
   }
 

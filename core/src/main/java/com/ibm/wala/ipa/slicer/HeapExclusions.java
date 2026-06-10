@@ -47,14 +47,9 @@ public class HeapExclusions {
     for (PointerKey p : s) {
       if (p instanceof AbstractFieldPointerKey) {
         AbstractFieldPointerKey f = (AbstractFieldPointerKey) p;
-        if (f.getInstanceKey().getConcreteType() != null) {
+        if (f.getInstanceKey().concreteType() != null) {
           if (!set.test(
-              f.getInstanceKey()
-                  .getConcreteType()
-                  .getReference()
-                  .getName()
-                  .toString()
-                  .substring(1))) {
+              f.getInstanceKey().concreteType().getReference().getName().toString().substring(1))) {
             result.add(p);
             if (VERBOSE) {
               verboseAction(p);
@@ -84,8 +79,8 @@ public class HeapExclusions {
   private static void verboseAction(PointerKey p) {
     if (p instanceof AbstractFieldPointerKey) {
       AbstractFieldPointerKey f = (AbstractFieldPointerKey) p;
-      if (f.getInstanceKey().getConcreteType() != null) {
-        TypeReference t = f.getInstanceKey().getConcreteType().getReference();
+      if (f.getInstanceKey().concreteType() != null) {
+        TypeReference t = f.getInstanceKey().concreteType().getReference();
         if (!considered.contains(t)) {
           considered.add(t);
           System.err.println("Considered " + t);
@@ -109,8 +104,8 @@ public class HeapExclusions {
   public static TypeReference getType(PointerKey pk) {
     if (pk instanceof AbstractFieldPointerKey) {
       AbstractFieldPointerKey f = (AbstractFieldPointerKey) pk;
-      if (f.getInstanceKey().getConcreteType() != null) {
-        return f.getInstanceKey().getConcreteType().getReference();
+      if (f.getInstanceKey().concreteType() != null) {
+        return f.getInstanceKey().concreteType().getReference();
       }
     } else if (pk instanceof StaticFieldKey) {
       StaticFieldKey sf = (StaticFieldKey) pk;

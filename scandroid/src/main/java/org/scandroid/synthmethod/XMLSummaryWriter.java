@@ -159,7 +159,7 @@ public class XMLSummaryWriter {
     Element methElt;
     TypeReference methClass = summary.getMethod().getDeclaringClass();
 
-    Atom clrName = methClass.getClassLoader().getName();
+    Atom clrName = methClass.getClassLoader().name();
     Atom pkg = methClass.getName().getPackage();
     Atom className = methClass.getName().getClassName();
     Atom methodName = summary.getMethod().getName();

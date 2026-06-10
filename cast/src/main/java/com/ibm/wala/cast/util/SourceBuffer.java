@@ -21,31 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SourceBuffer {
-  private static final class DetailedPosition implements Position {
-    private final int endOffset;
-    private final int endLine;
-    private final int endColumn;
-    private final int startColumn;
-    private final Position p;
-    private final int startLine;
-    private final int startOffset;
 
-    private DetailedPosition(
-        int endOffset,
-        int endLine,
-        int endColumn,
-        int startColumn,
-        Position p,
-        int startLine,
-        int startOffset) {
-      this.endOffset = endOffset;
-      this.endLine = endLine;
-      this.endColumn = endColumn;
-      this.startColumn = startColumn;
-      this.p = p;
-      this.startLine = startLine;
-      this.startOffset = startOffset;
-    }
+  private record DetailedPosition(
+      int endOffset,
+      int endLine,
+      int endColumn,
+      int startColumn,
+      Position p,
+      int startLine,
+      int startOffset)
+      implements Position {
 
     @Override
     public int getFirstLine() {

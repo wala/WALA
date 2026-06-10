@@ -1433,35 +1433,23 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
   /**
    * A logical mapping from &lt;pc, valueNumber&gt; -&gt; local number Note: make sure this class
    * remains static: this persists as part of the IR!!
+   *
+   * @param localStoreMap Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a
+   *     range at pc p where value number vn corresponds to local L
+   * @param block2LocalState For each basic block i and local j, block2LocalState[i][j] gives the
+   *     contents of local j at the start of block i
+   * @param maxLocals maximum number of locals used at any program point
    */
-  private static class SSA2LocalMap implements com.ibm.wala.ssa.IR.SSA2LocalMap {
-
-    private final DexCFG dexCFG;
-
-    /**
-     * Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a range at pc p where
-     * value number vn corresponds to local L
-     */
-    private final IntPair[] localStoreMap;
-
-    /**
-     * For each basic block i and local j, block2LocalState[i][j] gives the contents of local j at
-     * the start of block i
-     */
-    private final int[][] block2LocalState;
-
-    /** maximum number of locals used at any program point */
-    private final int maxLocals;
+  private record SSA2LocalMap(
+      DexCFG dexCFG, IntPair[] localStoreMap, int[][] block2LocalState, int maxLocals)
+      implements IR.SSA2LocalMap {
 
     /**
      * @param nInstructions number of instructions in the bytecode for this method
      * @param nBlocks number of basic blocks in the CFG
      */
     SSA2LocalMap(DexCFG dexCfg, int nInstructions, int nBlocks, int maxLocals) {
-      dexCFG = dexCfg;
-      localStoreMap = new IntPair[nInstructions];
-      block2LocalState = new int[nBlocks][];
-      this.maxLocals = maxLocals;
+      this(dexCfg, new IntPair[nInstructions], new int[nBlocks][], maxLocals);
     }
 
     /**
@@ -1535,7 +1523,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       for (int i = firstInstruction; i <= pc; i++) {
         if (localStoreMap[i] != null) {
           IntPair p = localStoreMap[i];
-          locals[p.getY()] = p.getX();
+          locals[p.y()] = p.x();
         }
       }
       return extractIndices(locals, vn);

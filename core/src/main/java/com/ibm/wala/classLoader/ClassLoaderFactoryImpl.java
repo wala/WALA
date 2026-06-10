@@ -55,7 +55,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
     }
     IClassLoader result = map.get(classLoaderReference);
     if (result == null) {
-      ClassLoaderReference parentRef = classLoaderReference.getParent();
+      ClassLoaderReference parentRef = classLoaderReference.parent();
       IClassLoader parent = null;
       if (parentRef != null) {
         parent = getLoader(parentRef, cha, scope);

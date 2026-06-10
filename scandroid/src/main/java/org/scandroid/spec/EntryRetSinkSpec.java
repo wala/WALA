@@ -60,6 +60,6 @@ public class EntryRetSinkSpec extends SinkSpec {
 
   @Override
   public String toString() {
-    return String.format("EntryRetSinkSpec(%s)", namePattern.getDescriptor());
+    return String.format("EntryRetSinkSpec(%s)", namePattern.descriptor());
   }
 }

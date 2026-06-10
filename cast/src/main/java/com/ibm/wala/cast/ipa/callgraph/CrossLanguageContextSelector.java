@@ -39,7 +39,7 @@ public class CrossLanguageContextSelector implements ContextSelector {
   }
 
   private static Atom getLanguage(CallSiteReference site) {
-    return site.getDeclaredTarget().getDeclaringClass().getClassLoader().getLanguage();
+    return site.getDeclaredTarget().getDeclaringClass().getClassLoader().language();
   }
 
   private ContextSelector getSelector(CallSiteReference site) {

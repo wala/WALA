@@ -94,16 +94,8 @@ public class PDFViewUtil {
    *
    * @param <T> the type of the node
    */
-  private static final class ConcatenatingNodeDecorator<T> implements NodeDecorator<T> {
-
-    private final NodeDecorator<T> A;
-
-    private final NodeDecorator<T> B;
-
-    ConcatenatingNodeDecorator(NodeDecorator<T> A, NodeDecorator<T> B) {
-      this.A = A;
-      this.B = B;
-    }
+  private record ConcatenatingNodeDecorator<T>(NodeDecorator<T> A, NodeDecorator<T> B)
+      implements NodeDecorator<T> {
 
     @Override
     public String getLabel(T n) throws WalaException {
