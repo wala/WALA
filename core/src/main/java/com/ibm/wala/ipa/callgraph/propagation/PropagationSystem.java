@@ -252,7 +252,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         System.err.println(cg);
         cg.forEach(n -> System.err.println(n.getIR()));
       }
-      Assertions.UNREACHABLE();
+      Assertions.UNREACHABLE(
+          "Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey " + key);
     }
     PointsToSetVariable result = pointsToMap.getPointsToSet(key);
     if (result == null) {
