@@ -74,8 +74,7 @@ public class JSCallGraph extends AstCallGraph {
 
   @Override
   protected CGNode makeFakeRootNode() throws com.ibm.wala.util.CancelException {
-    return findOrCreateNode(
-        new JSFakeRoot(cha, getAnalysisCache()), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new JSFakeRoot(cha, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 
   @Override

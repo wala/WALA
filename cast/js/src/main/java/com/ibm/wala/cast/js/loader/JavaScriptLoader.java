@@ -780,8 +780,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public AbstractRootMethod getFakeRootMethod(
-            IClassHierarchy cha, IAnalysisCacheView cache) {
+        public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, IAnalysisCacheView cache) {
           return new JSFakeRoot(cha, cache);
         }
 
