@@ -139,7 +139,9 @@ public interface Language {
    */
   @Deprecated(forRemoval = true, since = "1.8.0")
   default AbstractRootMethod getFakeRootMethod(
-      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisOptions options,
+      IAnalysisCacheView cache) {
     return getFakeRootMethod(cha, cache);
   }
 
