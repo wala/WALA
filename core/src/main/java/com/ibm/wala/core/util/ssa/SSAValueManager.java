@@ -42,6 +42,7 @@
 */
 package com.ibm.wala.core.util.ssa;
 
+import com.google.errorprone.annotations.FormatMethod;
 import com.ibm.wala.core.util.ssa.SSAValue.NamedKey;
 import com.ibm.wala.core.util.ssa.SSAValue.VariableKey;
 import com.ibm.wala.core.util.strings.Atom;
@@ -185,7 +186,7 @@ public class SSAValueManager {
                   nextLocal = param.value.getNumber() + 1;
                 }
 
-                debug("reSetting SSA {} to allocated", value);
+                debug("reSetting SSA %s to allocated", value);
                 param.status = ValueStatus.ALLOCATED;
                 param.setInScope = currentScope;
                 param.setBy = setBy;
@@ -202,7 +203,7 @@ public class SSAValueManager {
             throw new IllegalStateException(
                 "The parameter " + value + " using Key " + key + " has already been allocated");
           } else {
-            info("New variable in management: {}", value);
+            info("New variable in management: %s", value);
             final Managed<SSAValue> param = new Managed<>(value, key);
             param.status = ValueStatus.ALLOCATED;
             param.setInScope = currentScope;
@@ -256,15 +257,15 @@ public class SSAValueManager {
           param.setInScope = currentScope;
           param.setBy = setBy;
 
-          info("Setting SSA {} to phi! now {}", value, param.status);
+          info("Setting SSA %s to phi! now %s", value, param.status);
           didPhi = true;
         } else if (param.setInScope == currentScope) {
           if (param.status == ValueStatus.INVALIDATED) {
-            info("Closing SSA Value {} in scope {}", param.value, param.setInScope);
+            info("Closing SSA Value %s in scope %s", param.value, param.setInScope);
             param.status = ValueStatus.CLOSED;
           }
           // TODO: FREE CLOSED
-          // info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
+          // info("Closing free SSA Value %s in scope %s", param.value, param.setInScope);
           // param.status = ValueStatus.FREE_CLOSED;
         }
         //        else if (param.setInScope < currentScope) {
@@ -308,7 +309,7 @@ public class SSAValueManager {
 
     seenTypes.computeIfAbsent(key, absent -> new ArrayList<>()).add(param);
 
-    debug("Returning as Free SSA: {}", param);
+    debug("Returning as Free SSA: %s", param);
     return var;
   }
 
@@ -354,7 +355,7 @@ public class SSAValueManager {
       seenTypes.put(key, aParam);
     }
 
-    debug("Returning as Unallocated SSA: {}", param);
+    debug("Returning as Unallocated SSA: %s", param);
     return var;
   }
 
@@ -397,9 +398,9 @@ public class SSAValueManager {
         if ((param.status == ValueStatus.FREE) || (param.status == ValueStatus.ALLOCATED)) {
           // assert (param.value.getType().equals(type)) : "Unequal types";
           if (param.setInScope > currentScope) {
-            debug("SSA Value {} is out of scope {}", param, currentScope);
+            debug("SSA Value %s is out of scope %s", param, currentScope);
           } else if (param.setInScope == currentScope) {
-            debug("Returning SSA Value {} is {}", param.value, param.status);
+            debug("Returning SSA Value %s is %s", param.value, param.status);
             return param.value;
           } else {
             if ((candidate == null) || (param.setInScope > candidate.setInScope)) {
@@ -407,7 +408,7 @@ public class SSAValueManager {
             }
           }
         } else {
-          debug("SSA Value {} is {}", param, param.status);
+          debug("SSA Value %s is %s", param, param.status);
         }
       }
     } else {
@@ -416,7 +417,7 @@ public class SSAValueManager {
     }
 
     if (candidate != null) {
-      debug("Returning inherited (from {}) SSA Value {}", candidate.setInScope, candidate);
+      debug("Returning inherited (from %s) SSA Value %s", candidate.setInScope, candidate);
       return candidate.value;
     } else {
       throw new IllegalStateException("No suitable candidate has been found for Key " + key);
@@ -602,7 +603,7 @@ public class SSAValueManager {
           } else {
             param.status = ValueStatus.INVALIDATED;
           }
-          info("Invalidated SSA {} for key {}", param, key);
+          info("Invalidated SSA %s for key %s", param, key);
         }
       }
     }
@@ -733,12 +734,14 @@ public class SSAValueManager {
     return names;
   }
 
+  @FormatMethod
   private static void debug(String s, Object... args) {
     if (DEBUG) {
       System.err.printf(s, args);
     }
   }
 
+  @FormatMethod
   private static void info(String s, Object... args) {
     if (DEBUG) {
       System.err.printf(s, args);

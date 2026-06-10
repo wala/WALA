@@ -61,6 +61,7 @@ tasks.withType<JavaCompile>().configureEach {
       disableAllWarnings = true
       // warning-level checks upgraded to error, since we've fixed all the warnings
       error(
+          "AnnotateFormatMethod",
           "AnnotationPosition",
           "ArgumentSelectionDefectChecker",
           "AssertEqualsArgumentOrderChecker",
