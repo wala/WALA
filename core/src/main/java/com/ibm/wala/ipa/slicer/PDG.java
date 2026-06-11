@@ -473,8 +473,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
                       // skip the edge to the base pointer
                       continue;
                     }
-                    if (use instanceof SSAArrayReferenceInstruction) {
-                      SSAArrayReferenceInstruction arr = (SSAArrayReferenceInstruction) use;
+                    if (use instanceof SSAArrayReferenceInstruction arr) {
                       if (def == arr.getIndex()) {
                         // skip the edge to the array index
                         continue;
@@ -504,8 +503,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
                   // skip the edge to the base pointer
                   continue;
                 }
-                if (use instanceof SSAArrayReferenceInstruction) {
-                  SSAArrayReferenceInstruction arr = (SSAArrayReferenceInstruction) use;
+                if (use instanceof SSAArrayReferenceInstruction arr) {
                   if (a.getValueNumber() == arr.getIndex()) {
                     // skip the edge to the array index
                     continue;
@@ -559,8 +557,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
                 break;
               }
               if (d != null) {
-                if (d instanceof SSAAbstractInvokeInstruction) {
-                  SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
+                if (d instanceof SSAAbstractInvokeInstruction call) {
                   if (vn == call.getException()) {
                     if (!dOptions.isIgnoreExceptions()) {
                       Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
@@ -657,8 +654,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     // irrelevant.
     Predicate<Statement> f =
         o -> {
-          if (o instanceof HeapStatement) {
-            HeapStatement h = (HeapStatement) o;
+          if (o instanceof HeapStatement h) {
             return h.getLocation().equals(pk);
           } else {
             return true;
@@ -710,8 +706,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   }
 
   private static boolean hasBasePointer(SSAInstruction use) {
-    if (use instanceof SSAFieldAccessInstruction) {
-      SSAFieldAccessInstruction f = (SSAFieldAccessInstruction) use;
+    if (use instanceof SSAFieldAccessInstruction f) {
       return !f.isStatic();
     } else if (use instanceof SSAArrayReferenceInstruction) {
       return true;
@@ -723,14 +718,11 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   }
 
   private static int getBasePointer(SSAInstruction use) {
-    if (use instanceof SSAFieldAccessInstruction) {
-      SSAFieldAccessInstruction f = (SSAFieldAccessInstruction) use;
+    if (use instanceof SSAFieldAccessInstruction f) {
       return f.getRef();
-    } else if (use instanceof SSAArrayReferenceInstruction) {
-      SSAArrayReferenceInstruction a = (SSAArrayReferenceInstruction) use;
+    } else if (use instanceof SSAArrayReferenceInstruction a) {
       return a.getArrayRef();
-    } else if (use instanceof SSAArrayLengthInstruction) {
-      SSAArrayLengthInstruction s = (SSAArrayLengthInstruction) use;
+    } else if (use instanceof SSAArrayLengthInstruction s) {
       return s.getArrayRef();
     } else {
       Assertions.UNREACHABLE("BOOM");
@@ -744,8 +736,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   private Collection<NormalStatement> computeReturnStatements(final IR ir) {
     Predicate<Statement> filter =
         o -> {
-          if (o instanceof NormalStatement) {
-            NormalStatement s = (NormalStatement) o;
+          if (o instanceof NormalStatement s) {
             SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
             return st instanceof SSAReturnInstruction;
           } else {
@@ -788,14 +779,12 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     if (s == null) {
       throw new IllegalArgumentException("null s");
     }
-    if (s instanceof SSAPhiInstruction) {
-      SSAPhiInstruction phi = (SSAPhiInstruction) s;
+    if (s instanceof SSAPhiInstruction phi) {
       return new PhiStatement(node, phi);
-    } else if (s instanceof SSAPiInstruction) {
-      SSAPiInstruction pi = (SSAPiInstruction) s;
+    } else if (s instanceof SSAPiInstruction pi) {
       return new PiStatement(node, pi);
-    } else if (s instanceof SSAGetCaughtExceptionInstruction) {
-      return new GetCaughtExceptionStatement(node, ((SSAGetCaughtExceptionInstruction) s));
+    } else if (s instanceof SSAGetCaughtExceptionInstruction ssaGetCaughtExceptionInstruction) {
+      return new GetCaughtExceptionStatement(node, ssaGetCaughtExceptionInstruction);
     } else {
       Integer x = instructionIndices.get(s);
       if (x == null) {
@@ -921,13 +910,12 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   private void createSpecialStatements(IR ir) {
     // create a node for instructions which do not correspond to bytecode
     for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
-      if (s instanceof SSAPhiInstruction) {
-        delegate.addNode(new PhiStatement(node, (SSAPhiInstruction) s));
-      } else if (s instanceof SSAGetCaughtExceptionInstruction) {
-        delegate.addNode(
-            new GetCaughtExceptionStatement(node, (SSAGetCaughtExceptionInstruction) s));
-      } else if (s instanceof SSAPiInstruction) {
-        delegate.addNode(new PiStatement(node, (SSAPiInstruction) s));
+      if (s instanceof SSAPhiInstruction ssaPhiInstruction) {
+        delegate.addNode(new PhiStatement(node, ssaPhiInstruction));
+      } else if (s instanceof SSAGetCaughtExceptionInstruction ssaGetCaughtExceptionInstruction) {
+        delegate.addNode(new GetCaughtExceptionStatement(node, ssaGetCaughtExceptionInstruction));
+      } else if (s instanceof SSAPiInstruction ssaPiInstruction) {
+        delegate.addNode(new PiStatement(node, ssaPiInstruction));
       }
     }
   }
@@ -946,8 +934,8 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       if (s != null) {
         final NormalStatement statement = new NormalStatement(node, i);
         delegate.addNode(statement);
-        if (s instanceof SSAAbstractInvokeInstruction) {
-          callSite2Statement.put(((SSAAbstractInvokeInstruction) s).getCallSite(), statement);
+        if (s instanceof SSAAbstractInvokeInstruction ssaAbstractInvokeInstruction) {
+          callSite2Statement.put(ssaAbstractInvokeInstruction.getCallSite(), statement);
           addParamPassingStatements(i, ref, ir);
         }
       }

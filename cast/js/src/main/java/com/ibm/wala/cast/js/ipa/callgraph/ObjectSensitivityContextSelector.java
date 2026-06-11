@@ -50,8 +50,7 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
         factory
             .makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions())
             .getInstructions()) {
-      if (inst instanceof SSAReturnInstruction) {
-        SSAReturnInstruction ret = (SSAReturnInstruction) inst;
+      if (inst instanceof SSAReturnInstruction ret) {
         if (ret.getResult() == 2) {
           returnsThis_cache.put(mref, true);
           return true;

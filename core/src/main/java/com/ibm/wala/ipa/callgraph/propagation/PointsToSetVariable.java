@@ -59,8 +59,8 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof PointsToSetVariable) {
-      return pointerKey.equals(((PointsToSetVariable) obj).pointerKey);
+    if (obj instanceof PointsToSetVariable pointsToSetVariable) {
+      return pointerKey.equals(pointsToSetVariable.pointerKey);
     } else {
       return false;
     }
@@ -102,10 +102,9 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   private void checkTypes(IntSet b) {
     assert PARANOID;
     if (b == null) return;
-    if (!(pointerKey instanceof LocalPointerKey)) {
+    if (!(pointerKey instanceof LocalPointerKey lpk)) {
       return;
     }
-    final LocalPointerKey lpk = (LocalPointerKey) pointerKey;
     CGNode node = lpk.getNode();
     final IClassHierarchy cha = node.getClassHierarchy();
     final IR ir = node.getIR();

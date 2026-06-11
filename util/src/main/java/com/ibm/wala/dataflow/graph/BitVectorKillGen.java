@@ -71,8 +71,7 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof BitVectorKillGen) {
-      BitVectorKillGen other = (BitVectorKillGen) o;
+    if (o instanceof BitVectorKillGen other) {
       return kill.sameValue(other.kill) && gen.sameValue(other.gen);
     } else {
       return false;

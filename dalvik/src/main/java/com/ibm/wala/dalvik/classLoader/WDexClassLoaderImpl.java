@@ -131,8 +131,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
 
     for (ModuleEntry entry : moduleEntries) {
       // Dalvik class
-      if (entry instanceof DexModuleEntry) {
-        DexModuleEntry dexEntry = ((DexModuleEntry) entry);
+      if (entry instanceof DexModuleEntry dexEntry) {
         String className = dexEntry.getClassName();
         TypeName tName = TypeName.string2TypeName(className);
 

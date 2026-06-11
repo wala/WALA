@@ -105,8 +105,8 @@ public class JUnitEntryPoints {
           // Since JUnit4 test classes are POJOs, look through each method.
           for (com.ibm.wala.classLoader.IMethod method : klass.getDeclaredMethods()) {
             // if method has an annotation
-            if (!(method instanceof ShrikeCTMethod)) continue;
-            for (Annotation annotation : ((ShrikeCTMethod) method).getAnnotations())
+            if (!(method instanceof ShrikeCTMethod shrikeCTMethod)) continue;
+            for (Annotation annotation : shrikeCTMethod.getAnnotations())
               if (isTestEntryPoint(annotation.getType().getName())) {
                 result.add(new DefaultEntrypoint(method, cha));
                 isTestClass = true;

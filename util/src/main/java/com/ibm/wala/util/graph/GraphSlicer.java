@@ -157,8 +157,8 @@ public class GraphSlicer {
       @SuppressWarnings({"unchecked", "rawtypes"})
       @Override
       protected String nodeString(T n1, boolean forEdge) {
-        if (g instanceof AbstractGraph) {
-          return ((AbstractGraph) g).nodeString(n1, forEdge);
+        if (g instanceof AbstractGraph abstractGraph) {
+          return abstractGraph.nodeString(n1, forEdge);
         } else {
           return super.nodeString(n1, forEdge);
         }
@@ -332,8 +332,8 @@ public class GraphSlicer {
       @SuppressWarnings({"unchecked", "rawtypes"})
       @Override
       protected String nodeString(E n, boolean forEdge) {
-        if (G instanceof AbstractGraph) {
-          return ((AbstractGraph) G).nodeString(n, forEdge);
+        if (G instanceof AbstractGraph abstractGraph) {
+          return abstractGraph.nodeString(n, forEdge);
         } else {
           return super.nodeString(n, forEdge);
         }

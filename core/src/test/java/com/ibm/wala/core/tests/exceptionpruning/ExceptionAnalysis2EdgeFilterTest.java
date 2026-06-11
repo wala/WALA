@@ -155,8 +155,8 @@ public class ExceptionAnalysis2EdgeFilterTest {
                     .equals("TestPruning")) {
                   boolean count = true;
                   SSAInstruction instruction = block.getLastInstruction();
-                  if (instruction instanceof SSAInvokeInstruction
-                      && ((SSAInvokeInstruction) instruction).isSpecial()) {
+                  if (instruction instanceof SSAInvokeInstruction ssaInvokeInstruction
+                      && ssaInvokeInstruction.isSpecial()) {
                     count = false;
                   }
 

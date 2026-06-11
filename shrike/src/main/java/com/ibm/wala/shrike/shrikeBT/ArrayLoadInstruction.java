@@ -37,8 +37,7 @@ public final class ArrayLoadInstruction extends Instruction implements IArrayLoa
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ArrayLoadInstruction) {
-      ArrayLoadInstruction i = (ArrayLoadInstruction) o;
+    if (o instanceof ArrayLoadInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

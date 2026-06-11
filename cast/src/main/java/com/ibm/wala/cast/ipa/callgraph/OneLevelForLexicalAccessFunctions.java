@@ -39,8 +39,9 @@ public class OneLevelForLexicalAccessFunctions implements ContextSelector {
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     final Context base = baseSelector.getCalleeTarget(caller, site, callee, receiver);
-    if (receiver != null && receiver[0] != null && receiver[0] instanceof ScopeMappingInstanceKey) {
-      final ScopeMappingInstanceKey smik = (ScopeMappingInstanceKey) receiver[0];
+    if (receiver != null
+        && receiver[0] != null
+        && receiver[0] instanceof ScopeMappingInstanceKey smik) {
       return new ArgumentInstanceContext(base, 0, smik);
     } else {
       return base;

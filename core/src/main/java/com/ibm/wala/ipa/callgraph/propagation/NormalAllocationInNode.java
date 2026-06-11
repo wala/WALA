@@ -26,8 +26,7 @@ public final class NormalAllocationInNode extends AllocationSiteInNode {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof NormalAllocationInNode) {
-      AllocationSiteInNode other = (AllocationSiteInNode) obj;
+    if (obj instanceof NormalAllocationInNode other) {
       return getNode().equals(other.getNode()) && getSite().equals(other.getSite());
     } else {
       return false;

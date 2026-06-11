@@ -58,8 +58,7 @@ public class ECJTestComments extends IRTests {
   public void testComments() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result = runTest("Comments");
     for (CGNode node : result.fst.getNodes(testMethod)) {
-      if (node.getMethod() instanceof AstMethod) {
-        AstMethod m = (AstMethod) node.getMethod();
+      if (node.getMethod() instanceof AstMethod m) {
         DebuggingInformation dbg = m.debugInfo();
         for (SSAInstruction inst : node.getIR().getInstructions()) {
           System.err.println("leading for " + inst.toString(node.getIR().getSymbolTable()));

@@ -94,14 +94,14 @@ public class CorrelationFinder {
     // collect all dynamic property writes in the method
     ArrayDeque<AbstractReflectivePut> puts = new ArrayDeque<>();
     for (SSAInstruction inst : Iterator2Iterable.make(ir.iterateNormalInstructions()))
-      if (inst instanceof AbstractReflectivePut) puts.addFirst((AbstractReflectivePut) inst);
+      if (inst instanceof AbstractReflectivePut abstractReflectivePut)
+        puts.addFirst(abstractReflectivePut);
 
     SSAInstruction[] insts = ir.getInstructions();
     instrs:
     for (int ii = 0; ii < insts.length; ii++) {
       SSAInstruction inst = insts[ii];
-      if (inst instanceof AbstractReflectiveGet) {
-        AbstractReflectiveGet get = (AbstractReflectiveGet) inst;
+      if (inst instanceof AbstractReflectiveGet get) {
         int index = get.getMemberRef();
 
         if (ir.getSymbolTable().isConstant(index)) continue;
@@ -140,7 +140,7 @@ public class CorrelationFinder {
             if (inst2 instanceof SSAPhiInstruction) {
               int def = inst2.getDef();
               if (reached.add(def) && !done.contains(def)) worklist.add(def);
-            } else if (inst2 instanceof SSAAbstractInvokeInstruction) {
+            } else if (inst2 instanceof SSAAbstractInvokeInstruction ssaAbstractInvokeInstruction) {
               int def = inst2.getDef();
               if (reached.add(def) && !done.contains(def)) worklist.add(def);
               // if the index also flows into this invocation, record an escape correlation
@@ -150,7 +150,7 @@ public class CorrelationFinder {
                     summary.addCorrelation(
                         new EscapeCorrelation(
                             get,
-                            (SSAAbstractInvokeInstruction) inst2,
+                            ssaAbstractInvokeInstruction,
                             indexName,
                             getSourceLevelNames(ir, i2, reached)));
                     break;
@@ -218,8 +218,8 @@ public class CorrelationFinder {
           int use = inst2.getUse(j);
           if (!done.contains(use)) worklist.add(use);
         }
-      } else if (inst2 instanceof SSABinaryOpInstruction) {
-        IOperator operator = ((SSABinaryOpInstruction) inst2).getOperator();
+      } else if (inst2 instanceof SSABinaryOpInstruction ssaBinaryOpInstruction) {
+        IOperator operator = ssaBinaryOpInstruction.getOperator();
         // if it is an ADD, both operands have to be provably numeric
         if (operator == IBinaryOpInstruction.Operator.ADD) {
           for (int j = 0; j < inst2.getNumberOfUses(); ++j) {

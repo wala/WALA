@@ -78,11 +78,11 @@ public final class JdtPosition implements Position {
 
   @Override
   public int compareTo(SourcePosition arg0) {
-    if (arg0 instanceof JdtPosition) {
-      if (firstOffset != ((JdtPosition) arg0).firstOffset) {
-        return firstOffset - ((JdtPosition) arg0).firstOffset;
-      } else if (lastOffset != ((JdtPosition) arg0).lastOffset) {
-        return lastOffset - ((JdtPosition) arg0).lastOffset;
+    if (arg0 instanceof JdtPosition jdtPosition) {
+      if (firstOffset != jdtPosition.firstOffset) {
+        return firstOffset - jdtPosition.firstOffset;
+      } else if (lastOffset != jdtPosition.lastOffset) {
+        return lastOffset - jdtPosition.lastOffset;
       }
     }
 
@@ -110,8 +110,7 @@ public final class JdtPosition implements Position {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof JdtPosition) {
-      JdtPosition jp = (JdtPosition) obj;
+    if (obj instanceof JdtPosition jp) {
       return jp.getEclipseFile().equals(eclipseFile)
           && jp.getFirstOffset() == firstOffset
           && jp.getLastOffset() == lastOffset;

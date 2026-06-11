@@ -541,8 +541,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final.
     // if (this.getClass().equals(obj.getClass())) {
-    if (obj instanceof ShrikeBTMethod) {
-      ShrikeBTMethod that = (ShrikeBTMethod) obj;
+    if (obj instanceof ShrikeBTMethod that) {
       return (getDeclaringClass().equals(that.getDeclaringClass())
           && getReference().equals(that.getReference()));
     } else {

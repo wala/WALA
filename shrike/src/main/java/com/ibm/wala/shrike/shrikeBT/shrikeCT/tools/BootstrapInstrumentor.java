@@ -93,8 +93,7 @@ public class BootstrapInstrumentor {
         ConstantPoolReader cpr = decoder.getConstantPool();
         IInstruction[] origInsts = decoder.getInstructions();
         for (IInstruction inst : origInsts) {
-          if (inst instanceof InvokeDynamicInstruction) {
-            InvokeDynamicInstruction x = (InvokeDynamicInstruction) inst;
+          if (inst instanceof InvokeDynamicInstruction x) {
             BootstrapMethod m = x.getBootstrap();
 
             IInstruction[] insts = new IInstruction[m.callArgumentCount() + 8];
@@ -130,10 +129,7 @@ public class BootstrapInstrumentor {
 
             insts[arg++] =
                 InvokeInstruction.make(
-                    m.methodType(),
-                    m.methodClass(),
-                    m.methodName(),
-                    ((InvokeDynamicInstruction) inst).getInvocationCode());
+                    m.methodType(), m.methodClass(), m.methodName(), x.getInvocationCode());
             //noinspection UnusedAssignment
             insts[arg++] = ReturnInstruction.make("Ljava/lang/invoke/CallSite;");
 

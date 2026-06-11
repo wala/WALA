@@ -93,12 +93,12 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
     }
-    if (statement instanceof UnaryStatement) {
-      addStatement((UnaryStatement<T>) statement);
-    } else if (statement instanceof NullaryStatement) {
-      addStatement((NullaryStatement<T>) statement);
-    } else if (statement instanceof GeneralStatement) {
-      addStatement((GeneralStatement<T>) statement);
+    if (statement instanceof UnaryStatement<T> tUnaryStatement) {
+      addStatement(tUnaryStatement);
+    } else if (statement instanceof NullaryStatement<T> tNullaryStatement) {
+      addStatement(tNullaryStatement);
+    } else if (statement instanceof GeneralStatement<T> tGeneralStatement) {
+      addStatement(tGeneralStatement);
     } else {
       Assertions.UNREACHABLE("unexpected: " + statement.getClass());
     }

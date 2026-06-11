@@ -189,12 +189,12 @@ import org.jspecify.annotations.NonNull;
     }
     final String action;
     {
-      if (actionKey instanceof ConstantKey) {
-        final Object actionO = ((ConstantKey<?>) actionKey).getValue();
-        if (actionO instanceof String) {
-          action = StringStuff.deployment2CanonicalTypeString((String) actionO);
-        } else if (actionO instanceof IClass) {
-          action = ((IClass) actionO).getName().toString();
+      if (actionKey instanceof ConstantKey<?> constantKey) {
+        final Object actionO = constantKey.getValue();
+        if (actionO instanceof String s) {
+          action = StringStuff.deployment2CanonicalTypeString(s);
+        } else if (actionO instanceof IClass iClass) {
+          action = iClass.getName().toString();
         } else {
           throw new IllegalArgumentException("Wrong action type: " + actionO.getClass());
         }

@@ -96,8 +96,8 @@ public abstract class SSAInference<T extends IVariable<T>> extends DefaultFixedP
       AbstractOperator<T> op = opFactory.get(s);
       if (op != null) {
         T def = getVariable(s.getDef());
-        if (op instanceof NullaryOperator) {
-          newStatement(def, (NullaryOperator<T>) op, false, false);
+        if (op instanceof NullaryOperator<T> tNullaryOperator) {
+          newStatement(def, tNullaryOperator, false, false);
         } else {
           int n = s.getNumberOfUses();
           T[] uses = makeStmtRHS(n);

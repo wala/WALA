@@ -45,9 +45,9 @@ public class AstLoopUnwinder
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof UnwindKey)
-          && ((UnwindKey) o).iteration == iteration
-          && Objects.equals(rest, ((UnwindKey) o).rest);
+      return (o instanceof UnwindKey unwindKey)
+          && unwindKey.iteration == iteration
+          && Objects.equals(rest, unwindKey.rest);
     }
 
     @Override

@@ -66,8 +66,7 @@ public final class DupInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof DupInstruction) {
-      DupInstruction i = (DupInstruction) o;
+    if (o instanceof DupInstruction i) {
       return i.size == size && i.delta == delta;
     } else {
       return false;

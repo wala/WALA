@@ -38,8 +38,7 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
 
   private RTAContextInterpreter getNodeInterpreter(CGNode node) {
 
-    if (node.getMethod() instanceof FakeRootMethod) {
-      FakeRootMethod f = (FakeRootMethod) node.getMethod();
+    if (node.getMethod() instanceof FakeRootMethod f) {
       return f.getInterpreter();
     } else {
       if (DEBUG) {

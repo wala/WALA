@@ -508,8 +508,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof AndroidEntryPoint) {
-      AndroidEntryPoint other = (AndroidEntryPoint) o;
+    if (o instanceof AndroidEntryPoint other) {
       return this.getMethod().equals(other.getMethod());
     } else {
       return false;

@@ -110,8 +110,7 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
         for (SSAInstruction use : Iterator2Iterable.make(du.getUses(defn))) {
 
           // check whether this is a local call
-          if (use instanceof JavaScriptInvoke && ((JavaScriptInvoke) use).getFunction() == defn) {
-            JavaScriptInvoke use_invoke = (JavaScriptInvoke) use;
+          if (use instanceof JavaScriptInvoke use_invoke && use_invoke.getFunction() == defn) {
 
             // yes, so add edges from arguments to parameters...
             for (int i = 2; i < use_invoke.getNumberOfPositionalParameters(); ++i)
@@ -136,8 +135,8 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
         SSAInstruction def = du.getDef(invoke.getFunction());
 
         // if it's not a local call, add flows from/to unknown
-        if (!(def instanceof JavaScriptInvoke)
-            || !isFunctionConstructorInvoke((JavaScriptInvoke) def)) {
+        if (!(def instanceof JavaScriptInvoke javaScriptInvoke)
+            || !isFunctionConstructorInvoke(javaScriptInvoke)) {
           for (int i = 1; i < invoke.getNumberOfPositionalParameters(); ++i)
             flowgraph.addEdge(
                 factory.makeVarVertex(caller, invoke.getUse(i)), factory.makeUnknownVertex());

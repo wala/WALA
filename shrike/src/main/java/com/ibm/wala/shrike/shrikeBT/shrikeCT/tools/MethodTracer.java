@@ -124,8 +124,7 @@ public class MethodTracer {
         if (INSTRUMENT_CALLERS) {
           IInstruction[] ins = d.getInstructions();
           for (int k = 0; k < ins.length; k++) {
-            if (ins[k] instanceof InvokeInstruction) {
-              InvokeInstruction instr = (InvokeInstruction) ins[k];
+            if (ins[k] instanceof InvokeInstruction instr) {
               final String msg =
                   "Call from "
                       + Util.makeClass('L' + ci.getReader().getName() + ';')

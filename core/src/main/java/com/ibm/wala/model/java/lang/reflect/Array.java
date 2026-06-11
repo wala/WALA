@@ -21,32 +21,23 @@ public class Array {
       throw new IllegalArgumentException();
     }
 
-    if (array instanceof Object[]) {
-      Object[] A = (Object[]) array;
+    if (array instanceof Object[] A) {
       return A[index];
-    } else if (array instanceof int[]) {
-      int[] A = (int[]) array;
+    } else if (array instanceof int[] A) {
       return A[index];
-    } else if (array instanceof char[]) {
-      char[] A = (char[]) array;
+    } else if (array instanceof char[] A) {
       return A[index];
-    } else if (array instanceof short[]) {
-      short[] A = (short[]) array;
+    } else if (array instanceof short[] A) {
       return A[index];
-    } else if (array instanceof long[]) {
-      long[] A = (long[]) array;
+    } else if (array instanceof long[] A) {
       return A[index];
-    } else if (array instanceof byte[]) {
-      byte[] A = (byte[]) array;
+    } else if (array instanceof byte[] A) {
       return A[index];
-    } else if (array instanceof double[]) {
-      double[] A = (double[]) array;
+    } else if (array instanceof double[] A) {
       return A[index];
-    } else if (array instanceof boolean[]) {
-      boolean[] A = (boolean[]) array;
+    } else if (array instanceof boolean[] A) {
       return A[index];
-    } else if (array instanceof float[]) {
-      float[] A = (float[]) array;
+    } else if (array instanceof float[] A) {
       return A[index];
     } else {
       return null;

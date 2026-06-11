@@ -461,10 +461,8 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
             return getPDG(N.getNode()).getSuccNodes(N);
           } else {
             NormalStatement ns = (NormalStatement) N;
-            if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
+            if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction call) {
               HashSet<Statement> result = HashSetFactory.make();
-              SSAAbstractInvokeInstruction call =
-                  (SSAAbstractInvokeInstruction) ns.getInstruction();
               for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
                 Statement s = new MethodEntryStatement(t);
                 addNode(s);
@@ -641,9 +639,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
           } else {
             NormalStatement ns = (NormalStatement) src;
             if (dst instanceof MethodEntryStatement) {
-              if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
-                SSAAbstractInvokeInstruction call =
-                    (SSAAbstractInvokeInstruction) ns.getInstruction();
+              if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction call) {
                 if (cg.getPossibleTargets(src.getNode(), call.getCallSite())
                     .contains(dst.getNode())) {
                   return Collections.singleton(Dependency.CONTROL_DEP);

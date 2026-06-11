@@ -560,12 +560,12 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         Literal lit = instruction.oper2;
 
         int val2;
-        if (lit instanceof Literal.IntLiteral)
-          val2 = symbolTable.getConstant(((Literal.IntLiteral) lit).value);
-        else if (lit instanceof Literal.LongLiteral)
-          val2 = symbolTable.getConstant(((Literal.LongLiteral) lit).value);
-        else if (lit instanceof Literal.DoubleLiteral)
-          val2 = symbolTable.getConstant(((Literal.DoubleLiteral) lit).value);
+        if (lit instanceof Literal.IntLiteral intLiteral)
+          val2 = symbolTable.getConstant(intLiteral.value);
+        else if (lit instanceof Literal.LongLiteral longLiteral)
+          val2 = symbolTable.getConstant(longLiteral.value);
+        else if (lit instanceof Literal.DoubleLiteral doubleLiteral)
+          val2 = symbolTable.getConstant(doubleLiteral.value);
         else val2 = symbolTable.getConstant(((Literal.FloatLiteral) lit).value);
 
         int val1 = workingState.getLocal(instruction.oper1);
@@ -630,8 +630,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
       @Override
       public void visitBranch(Branch instruction) {
-        if (instruction instanceof Branch.BinaryBranch) {
-          Branch.BinaryBranch bbranch = (Branch.BinaryBranch) instruction;
+        if (instruction instanceof Branch.BinaryBranch bbranch) {
           int val2 = workingState.getLocal(bbranch.oper2);
           int val1 = workingState.getLocal(bbranch.oper1);
           //                  int val2 = workingState.pop();
@@ -641,8 +640,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
           emitInstruction(
               insts.ConditionalBranchInstruction(
                   getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2, -1));
-        } else if (instruction instanceof Branch.UnaryBranch) {
-          Branch.UnaryBranch ubranch = (Branch.UnaryBranch) instruction;
+        } else if (instruction instanceof Branch.UnaryBranch ubranch) {
           int val2 = symbolTable.getConstant(0);
           int val1 = workingState.getLocal(ubranch.oper1);
           TypeReference t = TypeReference.Int;
@@ -661,8 +659,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       public void visitConstant(Constant instruction) {
         int dest = instruction.destination;
         int symbol = 0;
-        if (instruction instanceof Constant.ClassConstant) {
-          Constant.ClassConstant constInst = (Constant.ClassConstant) instruction;
+        if (instruction instanceof Constant.ClassConstant constInst) {
 
           // TODO: change to a symbol that represents the given IClass
           //                  symbol =
@@ -674,12 +671,12 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
               insts.LoadMetadataInstruction(
                   getCurrentInstructionIndex(), symbol, TypeReference.JavaLangClass, typeRef);
           emitInstruction(s);
-        } else if (instruction instanceof Constant.IntConstant) {
-          symbol = symbolTable.getConstant(((Constant.IntConstant) instruction).value);
-        } else if (instruction instanceof Constant.LongConstant) {
-          symbol = symbolTable.getConstant(((Constant.LongConstant) instruction).value);
-        } else if (instruction instanceof Constant.StringConstant) {
-          symbol = symbolTable.getConstant(((Constant.StringConstant) instruction).value);
+        } else if (instruction instanceof Constant.IntConstant intConstant) {
+          symbol = symbolTable.getConstant(intConstant.value);
+        } else if (instruction instanceof Constant.LongConstant longConstant) {
+          symbol = symbolTable.getConstant(longConstant.value);
+        } else if (instruction instanceof Constant.StringConstant stringConstant) {
+          symbol = symbolTable.getConstant(stringConstant.value);
         } else {
           Assertions.UNREACHABLE("unexpected constant instruction " + instruction);
         }
@@ -744,8 +741,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 loader, instruction.clazzName, instruction.fieldName, instruction.fieldType);
         // TODO: what is isAddressOf()?
         // shouldn't matter, java doesn't allow isAddressOf()
-        if (instruction instanceof GetField.GetInstanceField) {
-          int instance = workingState.getLocal(((GetField.GetInstanceField) instruction).instance);
+        if (instruction instanceof GetField.GetInstanceField getInstanceField) {
+          int instance = workingState.getLocal(getInstanceField.instance);
           emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, instance, f));
         } else if (instruction instanceof GetField.GetStaticField) {
           emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, f));
@@ -1019,9 +1016,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         if (instruction instanceof PutField.PutStaticField) {
           //              if (instruction.isStatic()) {
           emitInstruction(insts.PutInstruction(getCurrentInstructionIndex(), value, f));
-        } else if (instruction instanceof PutField.PutInstanceField) {
+        } else if (instruction instanceof PutField.PutInstanceField putInstanceField) {
           //              } else {
-          int ref = workingState.getLocal(((PutField.PutInstanceField) instruction).instance);
+          int ref = workingState.getLocal(putInstanceField.instance);
           //                  int ref = workingState.pop();
           emitInstruction(insts.PutInstruction(getCurrentInstructionIndex(), ref, value, f));
         } else {
@@ -1034,9 +1031,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
        */
       @Override
       public void visitReturn(Return instruction) {
-        if (instruction instanceof Return.ReturnDouble) {
+        if (instruction instanceof Return.ReturnDouble retD) {
           // TODO: figure out how to return a double
-          Return.ReturnDouble retD = (Return.ReturnDouble) instruction;
           int result = workingState.getLocal(retD.source1);
           //                  boolean isPrimitive = symbolTable.isLongConstant(result) ||
           // symbolTable.isDoubleConstant(result);
@@ -1045,8 +1041,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
               insts.ReturnInstruction(getCurrentInstructionIndex(), result, isPrimitive));
           //                  throw new UnsupportedOperationException("can't yet support returning
           // doubles");
-        } else if (instruction instanceof Return.ReturnSingle) {
-          Return.ReturnSingle retS = (Return.ReturnSingle) instruction;
+        } else if (instruction instanceof Return.ReturnSingle retS) {
           int result = workingState.getLocal(retS.source);
           // TODO: figure out if this is primitive or not
           // boolean isPrimitive = false;

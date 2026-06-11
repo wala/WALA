@@ -68,7 +68,8 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
       int bound) {
     super(cha, options, cache, supportFullPointerAnalysis);
     handleCallApply =
-        options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply();
+        options instanceof JSAnalysisOptions jsAnalysisOptions
+            && jsAnalysisOptions.handleCallApply();
     this.bound = bound;
   }
 
@@ -99,8 +100,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     Map<Vertex, Set<FuncVertex>> pendingReflectiveCallWorklist = HashMapFactory.make();
 
     for (Vertex v : flowgraph) {
-      if (v instanceof FuncVertex) {
-        FuncVertex fv = (FuncVertex) v;
+      if (v instanceof FuncVertex fv) {
         worklist.add(fv);
         int mappedVal = mapping.add(fv);
         findOrCreateMutableIntSet(reachingFunctions, fv).add(mappedVal);
@@ -177,11 +177,11 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
     Set<Pair<CallVertex, FuncVertex>> res = HashSetFactory.make();
     for (Map.Entry<Vertex, MutableIntSet> entry : reachingFunctions.entrySet()) {
       final Vertex v = entry.getKey();
-      if (v instanceof CallVertex) {
+      if (v instanceof CallVertex callVertex) {
         IntIterator mapped = entry.getValue().intIterator();
         while (mapped.hasNext()) {
           FuncVertex fv = mapping.getMappedObject(mapped.next());
-          res.add(Pair.make((CallVertex) v, fv));
+          res.add(Pair.make(callVertex, fv));
         }
       }
     }

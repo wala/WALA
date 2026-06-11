@@ -155,8 +155,7 @@ public class CFGSanitizer {
       throws InvalidClassFileException {
     final Collection<TypeReference> c;
     Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
-    if (s instanceof SSAInvokeInstruction) {
-      SSAInvokeInstruction call = (SSAInvokeInstruction) s;
+    if (s instanceof SSAInvokeInstruction call) {
       c = l.inferInvokeExceptions(call.getDeclaredTarget(), cha);
     } else {
       c = s.getExceptionTypes();

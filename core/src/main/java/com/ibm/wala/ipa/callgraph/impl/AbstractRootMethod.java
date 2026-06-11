@@ -97,8 +97,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     // I'd like to enforce that declaringClass is a FakeRootClass ... but CASt would currently
     // break.
     // so checking dynamically instead.
-    if (declaringClass instanceof FakeRootClass) {
-      ((FakeRootClass) declaringClass).addMethod(this);
+    if (declaringClass instanceof FakeRootClass fakeRootClass) {
+      fakeRootClass.addMethod(this);
     }
   }
 
@@ -419,8 +419,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         ArrayList<NewSiteReference> result = new ArrayList<>();
         SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {
-          if (statement instanceof SSANewInstruction) {
-            SSANewInstruction s = (SSANewInstruction) statement;
+          if (statement instanceof SSANewInstruction s) {
             result.add(s.getNewSite());
           }
         }

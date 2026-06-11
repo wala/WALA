@@ -88,8 +88,7 @@ public class HeadlessUtil {
     // sort files into projects
     Map<IProject, @NonNull Map<Unit, EclipseSourceFileModule>> projectsFiles = new HashMap<>();
     for (ModuleEntry m : modules) {
-      if (m instanceof EclipseSourceFileModule) {
-        EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
+      if (m instanceof EclipseSourceFileModule entry) {
         projectsFiles
             .computeIfAbsent(entry.getIFile().getProject(), absent -> new HashMap<>())
             .put(compiler.getCompilationUnit(entry.getIFile()), entry);

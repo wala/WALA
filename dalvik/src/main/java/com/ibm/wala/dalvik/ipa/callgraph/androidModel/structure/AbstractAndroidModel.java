@@ -98,8 +98,7 @@ public abstract class AbstractAndroidModel {
 
     List<TypeReference> returnTypes = new ArrayList<>();
     for (Entrypoint ep : this.entryPoints) {
-      if (ep instanceof AndroidEntryPoint) {
-        AndroidEntryPoint aep = (AndroidEntryPoint) ep;
+      if (ep instanceof AndroidEntryPoint aep) {
         if ((aep.compareTo(start) >= 0) && (aep.compareTo(end) <= 0)) {
           if (!(aep.getMethod().getReturnType().equals(TypeReference.Void)
               || aep.getMethod().getReturnType().isPrimitiveType())) {

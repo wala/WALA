@@ -26,8 +26,7 @@ public final class StaticFieldKey extends AbstractPointerKey {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof StaticFieldKey) {
-      StaticFieldKey other = (StaticFieldKey) obj;
+    if (obj instanceof StaticFieldKey other) {
       return field.equals(other.field);
     } else {
       return false;

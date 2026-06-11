@@ -55,8 +55,7 @@ public abstract class Warning implements Comparable<Warning> {
 
   @Override
   public final boolean equals(Object obj) {
-    if (obj instanceof Warning) {
-      Warning other = (Warning) obj;
+    if (obj instanceof Warning other) {
       return (getMsg().equals(other.getMsg()) && getLevel() == other.getLevel());
     } else {
       return false;

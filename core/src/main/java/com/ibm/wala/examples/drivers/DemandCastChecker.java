@@ -219,8 +219,7 @@ public class DemandCastChecker {
       SSAInstruction[] instrs = ir.getInstructions();
       for (SSAInstruction instruction : instrs) {
         if ((long) numSafe + numMightFail > MAX_CASTS) break outer;
-        if (instruction instanceof SSACheckCastInstruction) {
-          SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
+        if (instruction instanceof SSACheckCastInstruction castInstr) {
           final TypeReference[] declaredResultTypes = castInstr.getDeclaredResultTypes();
 
           boolean primOnly = true;
@@ -256,8 +255,7 @@ public class DemandCastChecker {
           switch (queryResult.fst) {
             case SUCCESS -> {
               System.err.println("SAFE: " + castInstr + " in " + node.getMethod());
-              if (fieldRefinePolicy instanceof ManualFieldPolicy) {
-                ManualFieldPolicy hackedFieldPolicy = (ManualFieldPolicy) fieldRefinePolicy;
+              if (fieldRefinePolicy instanceof ManualFieldPolicy hackedFieldPolicy) {
                 System.err.println(hackedFieldPolicy.getHistory());
               }
               System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");

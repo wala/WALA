@@ -83,11 +83,11 @@ public class RecursionCheckContextSelector implements ContextSelector {
             (SingleInstanceFilter) curContext.get(ContextKey.PARAMETERS[i]);
         if (filter != null) {
           InstanceKey ik = filter.getInstance();
-          if (ik instanceof ScopeMappingInstanceKey) {
-            ik = ((ScopeMappingInstanceKey) ik).getBase();
+          if (ik instanceof ScopeMappingInstanceKey scopeMappingInstanceKey) {
+            ik = scopeMappingInstanceKey.getBase();
           }
-          if (ik instanceof InstanceKeyWithNode) {
-            CGNode node = ((InstanceKeyWithNode) ik).getNode();
+          if (ik instanceof InstanceKeyWithNode instanceKeyWithNode) {
+            CGNode node = instanceKeyWithNode.getNode();
             if (!updateForNode(baseContext, curEncountered, worklist, node)) {
               System.err.println("callee " + callee);
               return true;

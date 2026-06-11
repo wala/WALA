@@ -30,10 +30,10 @@ public class Annotations {
 
   /** Does a particular method have a particular annotation? */
   public static boolean hasAnnotation(IMethod m, TypeName type) {
-    if (m instanceof ShrikeCTMethod) {
+    if (m instanceof ShrikeCTMethod shrikeCTMethod) {
       Collection<Annotation> annotations = null;
       try {
-        annotations = ((ShrikeCTMethod) m).getRuntimeInvisibleAnnotations();
+        annotations = shrikeCTMethod.getRuntimeInvisibleAnnotations();
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
@@ -49,10 +49,10 @@ public class Annotations {
 
   /** Does a particular class have a particular annotation? */
   public static boolean hasAnnotation(IClass c, TypeName type) {
-    if (c instanceof ShrikeClass) {
+    if (c instanceof ShrikeClass shrikeClass) {
       Collection<Annotation> annotations = null;
       try {
-        annotations = ((ShrikeClass) c).getRuntimeInvisibleAnnotations();
+        annotations = shrikeClass.getRuntimeInvisibleAnnotations();
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
@@ -67,8 +67,7 @@ public class Annotations {
   }
 
   public static boolean hasAnnotation(IField field, TypeName type) {
-    if (field instanceof FieldImpl) {
-      FieldImpl f = (FieldImpl) field;
+    if (field instanceof FieldImpl f) {
       Collection<Annotation> annotations = f.getAnnotations();
       if (annotations != null) {
         for (Annotation a : annotations) {

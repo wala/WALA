@@ -222,11 +222,10 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     if (prevState == null) {
       throw new IllegalArgumentException("prevState == null");
     }
-    if (!(prevState instanceof CallStack)) {
+    if (!(prevState instanceof CallStack prevStack)) {
       throw new IllegalArgumentException(
           "not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
     }
-    CallStack prevStack = (CallStack) prevState;
     if (!prevStack.isEmpty() && recursionHandler.isRecursive(prevStack.peek())) {
       // I don't think this is possible anymore
       assert false;

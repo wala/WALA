@@ -496,8 +496,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
       super(dest);
 
       // TODO: look into exception handling through getDef(1)
-      if (call.getLastInstruction() instanceof SSAInvokeInstruction) {
-        SSAInvokeInstruction invInst = (SSAInvokeInstruction) call.getLastInstruction();
+      if (call.getLastInstruction() instanceof SSAInvokeInstruction invInst) {
         if (!invInst.isSpecial()) { // && !invInst.isStatic()) {
           //					for (int i = 0; i < invInst.getNumberOfReturnValues(); i++) {
           //

@@ -82,8 +82,8 @@ public class GetMethodContext implements Context {
     } else if (name == ContextKey.NAME) {
       return new NameItem();
     } else if (name == ContextKey.PARAMETERS[0]) {
-      if (type instanceof PointType) {
-        IClass cls = ((PointType) type).getIClass();
+      if (type instanceof PointType pointType) {
+        IClass cls = pointType.getIClass();
         return new FilteredPointerKey.SingleClassFilter(cls);
       } else {
         return null;

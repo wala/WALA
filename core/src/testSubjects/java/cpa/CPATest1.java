@@ -15,8 +15,8 @@ public class CPATest1 {
 
     @Override
     N op(N other) {
-      if (other instanceof I) {
-        return new I(I + ((I) other).I);
+      if (other instanceof I i) {
+        return new I(I + i.I);
       } else {
         return new F(I + ((F) other).F);
       }
@@ -32,8 +32,8 @@ public class CPATest1 {
 
     @Override
     N op(N other) {
-      if (other instanceof I) {
-        return new F(F + ((I) other).I);
+      if (other instanceof I i) {
+        return new F(F + i.I);
       } else {
         return new F(F + ((F) other).F);
       }

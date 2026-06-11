@@ -90,10 +90,9 @@ class ReflectiveInvocationSelector implements ContextSelector {
     int paramIndex = isConstructor ? 1 : 2;
     int paramUse = invokeInstructions[0].getUse(paramIndex);
     SSAInstruction instr = caller.getDU().getDef(paramUse);
-    if (!(instr instanceof SSANewInstruction)) {
+    if (!(instr instanceof SSANewInstruction newInstr)) {
       return new ReceiverInstanceContext(receiver[0]);
     }
-    SSANewInstruction newInstr = (SSANewInstruction) instr;
     if (!newInstr.getConcreteType().isArrayType()) {
       return null;
     }
@@ -125,8 +124,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
   }
 
   private static boolean isConstructorConstant(InstanceKey instance) {
-    if (instance instanceof ConstantKey) {
-      ConstantKey<?> c = (ConstantKey<?>) instance;
+    if (instance instanceof ConstantKey<?> c) {
       if (c.concreteType().getReference().equals(TypeReference.JavaLangReflectConstructor)) {
         return true;
       }

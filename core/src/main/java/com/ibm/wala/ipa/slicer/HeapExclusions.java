@@ -45,8 +45,7 @@ public class HeapExclusions {
     }
     HashSet<PointerKey> result = HashSetFactory.make();
     for (PointerKey p : s) {
-      if (p instanceof AbstractFieldPointerKey) {
-        AbstractFieldPointerKey f = (AbstractFieldPointerKey) p;
+      if (p instanceof AbstractFieldPointerKey f) {
         if (f.getInstanceKey().concreteType() != null) {
           if (!set.test(
               f.getInstanceKey().concreteType().getReference().getName().toString().substring(1))) {
@@ -58,8 +57,7 @@ public class HeapExclusions {
             // do nothing
           }
         }
-      } else if (p instanceof StaticFieldKey) {
-        StaticFieldKey sf = (StaticFieldKey) p;
+      } else if (p instanceof StaticFieldKey sf) {
         if (!set.test(
             sf.getField().getDeclaringClass().getReference().getName().toString().substring(1))) {
           result.add(p);
@@ -77,8 +75,7 @@ public class HeapExclusions {
   }
 
   private static void verboseAction(PointerKey p) {
-    if (p instanceof AbstractFieldPointerKey) {
-      AbstractFieldPointerKey f = (AbstractFieldPointerKey) p;
+    if (p instanceof AbstractFieldPointerKey f) {
       if (f.getInstanceKey().concreteType() != null) {
         TypeReference t = f.getInstanceKey().concreteType().getReference();
         if (!considered.contains(t)) {
@@ -86,8 +83,7 @@ public class HeapExclusions {
           System.err.println("Considered " + t);
         }
       }
-    } else if (p instanceof StaticFieldKey) {
-      StaticFieldKey sf = (StaticFieldKey) p;
+    } else if (p instanceof StaticFieldKey sf) {
       TypeReference t = sf.getField().getDeclaringClass().getReference();
       if (!considered.contains(t)) {
         considered.add(t);
@@ -102,13 +98,11 @@ public class HeapExclusions {
   }
 
   public static TypeReference getType(PointerKey pk) {
-    if (pk instanceof AbstractFieldPointerKey) {
-      AbstractFieldPointerKey f = (AbstractFieldPointerKey) pk;
+    if (pk instanceof AbstractFieldPointerKey f) {
       if (f.getInstanceKey().concreteType() != null) {
         return f.getInstanceKey().concreteType().getReference();
       }
-    } else if (pk instanceof StaticFieldKey) {
-      StaticFieldKey sf = (StaticFieldKey) pk;
+    } else if (pk instanceof StaticFieldKey sf) {
       return sf.getField().getDeclaringClass().getReference();
     }
     return null;

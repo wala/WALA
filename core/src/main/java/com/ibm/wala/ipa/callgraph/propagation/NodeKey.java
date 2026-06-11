@@ -24,8 +24,7 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
   }
 
   protected boolean internalEquals(Object obj) {
-    if (obj instanceof NodeKey) {
-      NodeKey other = (NodeKey) obj;
+    if (obj instanceof NodeKey other) {
       return node.equals(other.node);
     } else {
       return false;

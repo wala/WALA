@@ -36,8 +36,7 @@ public class ConeType extends TypeAbstraction {
   public TypeAbstraction meet(TypeAbstraction rhs) {
     if (rhs == TOP) {
       return this;
-    } else if (rhs instanceof ConeType) {
-      ConeType other = (ConeType) rhs;
+    } else if (rhs instanceof ConeType other) {
       if (type.equals(other.type)) {
         return this;
       } else if (type.isArrayClass() || other.type.isArrayClass()) {
@@ -74,10 +73,9 @@ public class ConeType extends TypeAbstraction {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof ConeType)) {
+    if (!(obj instanceof ConeType other)) {
       return false;
     }
-    ConeType other = (ConeType) obj;
     if (other == TOP) {
       return false;
     }

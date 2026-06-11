@@ -294,8 +294,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof MeetOperator) {
-        MeetOperator other = (MeetOperator) o;
+      if (o instanceof MeetOperator other) {
         return meeter.equals(other.meeter);
       } else {
         return false;

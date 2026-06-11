@@ -218,8 +218,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }
-    if (key instanceof LocalPointerKey) {
-      LocalPointerKey lpk = (LocalPointerKey) key;
+    if (key instanceof LocalPointerKey lpk) {
       if (lpk.isParameter()) {
         System.err.println("------------------ ERROR:");
         System.err.println("LocalPointerKey: " + lpk);
@@ -261,7 +260,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       pointsToMap.put(key, result);
     } else {
       // check that the filter for this variable remains unique
-      if (!pointsToMap.isUnified(key) && key instanceof FilteredPointerKey) {
+      if (!pointsToMap.isUnified(key) && key instanceof FilteredPointerKey filteredPointerKey) {
         PointerKey pk = result.getPointerKey();
         if (!(pk instanceof FilteredPointerKey)) {
           // add a filter for all future evaluations.
@@ -277,10 +276,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         if (fpk.getTypeFilter() == null) {
           Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
         }
-        if (!fpk.getTypeFilter().equals(((FilteredPointerKey) key).getTypeFilter())) {
+        if (!fpk.getTypeFilter().equals(filteredPointerKey.getTypeFilter())) {
           Assertions.UNREACHABLE(
               "Cannot use filter "
-                  + ((FilteredPointerKey) key).getTypeFilter()
+                  + filteredPointerKey.getTypeFilter()
                   + " for "
                   + key
                   + ": previously created different filter "
@@ -627,8 +626,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   private String printRHSInstances(AbstractStatement s) {
-    if (s instanceof UnaryStatement) {
-      UnaryStatement<?> u = (UnaryStatement<?>) s;
+    if (s instanceof UnaryStatement<?> u) {
       PointsToSetVariable rhs = (PointsToSetVariable) u.getRightHandSide();
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
@@ -794,8 +792,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         // pRef is the representative for p.
         // be careful: cache the defs before mucking with the underlying system
         for (AbstractStatement as : Iterator2Collection.toSet(getStatementsThatDef(p))) {
-          if (as instanceof AssignEquation) {
-            AssignEquation assign = (AssignEquation) as;
+          if (as instanceof AssignEquation assign) {
             PointsToSetVariable rhs = assign.getRightHandSide();
             int rhsRep = pointsToMap.getRepresentative(pointsToMap.getIndex(rhs.getPointerKey()));
             if (rhsRep == rep) {
@@ -809,8 +806,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         }
         // be careful: cache the defs before mucking with the underlying system
         for (AbstractStatement as : Iterator2Collection.toSet(getStatementsThatUse(p))) {
-          if (as instanceof AssignEquation) {
-            AssignEquation assign = (AssignEquation) as;
+          if (as instanceof AssignEquation assign) {
             PointsToSetVariable lhs = assign.getLHS();
             int lhsRep = pointsToMap.getRepresentative(pointsToMap.getIndex(lhs.getPointerKey()));
             if (lhsRep == rep) {
@@ -839,8 +835,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       PointsToSetVariable pRef,
       PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
-    if (as instanceof UnaryStatement) {
-      assert ((UnaryStatement) as).getRightHandSide() == p;
+    if (as instanceof UnaryStatement unaryStatement) {
+      assert unaryStatement.getRightHandSide() == p;
       newStatement(
           as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {

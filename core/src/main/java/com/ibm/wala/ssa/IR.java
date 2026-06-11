@@ -105,12 +105,11 @@ public abstract class IR implements IRView {
     for (int i = 0; i < instructions.length; i++) {
       SSAInstruction x = instructions[i];
       if (x != null) {
-        if (x instanceof SSAAbstractInvokeInstruction) {
-          callSiteMapping.add(
-              ((SSAAbstractInvokeInstruction) x).getCallSite().getProgramCounter(), i);
+        if (x instanceof SSAAbstractInvokeInstruction ssaAbstractInvokeInstruction) {
+          callSiteMapping.add(ssaAbstractInvokeInstruction.getCallSite().getProgramCounter(), i);
         }
-        if (x instanceof SSANewInstruction) {
-          newSiteMapping.put(((SSANewInstruction) x).getNewSite(), i);
+        if (x instanceof SSANewInstruction ssaNewInstruction) {
+          newSiteMapping.put(ssaNewInstruction.getNewSite(), i);
         }
         if (x.isPEI()) {
           peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), i);
@@ -159,8 +158,7 @@ public abstract class IR implements IRView {
           result.append("           ").append(phi.toString(symbolTable)).append('\n');
         }
       }
-      if (bb instanceof ExceptionHandlerBasicBlock) {
-        ExceptionHandlerBasicBlock ebb = (ExceptionHandlerBasicBlock) bb;
+      if (bb instanceof ExceptionHandlerBasicBlock ebb) {
         SSAGetCaughtExceptionInstruction s = ebb.getCatchInstruction();
         if (s != null) {
           result.append("           ").append(s.toString(symbolTable)).append('\n');
@@ -405,8 +403,8 @@ public abstract class IR implements IRView {
     private int currentBlockIndex;
 
     private boolean hasCatch(Object x) {
-      return (x instanceof ExceptionHandlerBasicBlock)
-          && (((ExceptionHandlerBasicBlock) x).getCatchInstruction() != null);
+      return (x instanceof ExceptionHandlerBasicBlock ssaInstructions)
+          && (ssaInstructions.getCatchInstruction() != null);
     }
 
     CatchIterator() {

@@ -27,8 +27,7 @@ public final class AssignEquation extends UnaryStatement<PointsToSetVariable> {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof AssignEquation) {
-      AssignEquation other = (AssignEquation) o;
+    if (o instanceof AssignEquation other) {
       return getLHS().equals(other.getLHS()) && getRightHandSide().equals(other.getRightHandSide());
     } else {
       return false;

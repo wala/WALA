@@ -106,9 +106,9 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof InducedCFG)
-        && getMethod().equals(((InducedCFG) o).getMethod())
-        && context.equals(((InducedCFG) o).context);
+    return (o instanceof InducedCFG basicBlocks)
+        && getMethod().equals(basicBlocks.getMethod())
+        && context.equals(basicBlocks.context);
   }
 
   @Override
@@ -471,8 +471,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       SSAInstruction last = getInstructions()[getLastInstructionIndex()];
       addExceptionalEdges(last);
 
-      if (last instanceof SSAGotoInstruction) {
-        int tgt = ((SSAGotoInstruction) last).getTarget();
+      if (last instanceof SSAGotoInstruction gotoInstruction) {
+        int tgt = gotoInstruction.getTarget();
 
         if (tgt != -1) {
           int tgtNd = getIndexFromIIndex(tgt); // index in instructions-array
@@ -511,13 +511,12 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         addNormalEdgeTo(getNode(normalSuccNodeNumber));
       }
 
-      if (last instanceof SSAGotoInstruction) {
-        addNormalEdgeTo(getBlockForInstruction(((SSAGotoInstruction) last).getTarget()));
-      } else if (last instanceof SSAConditionalBranchInstruction) {
-        addNormalEdgeTo(
-            getBlockForInstruction(((SSAConditionalBranchInstruction) last).getTarget()));
-      } else if (last instanceof SSASwitchInstruction) {
-        int[] targets = ((SSASwitchInstruction) last).getCasesAndLabels();
+      if (last instanceof SSAGotoInstruction ssaGotoInstruction) {
+        addNormalEdgeTo(getBlockForInstruction(ssaGotoInstruction.getTarget()));
+      } else if (last instanceof SSAConditionalBranchInstruction ssaConditionalBranchInstruction) {
+        addNormalEdgeTo(getBlockForInstruction(ssaConditionalBranchInstruction.getTarget()));
+      } else if (last instanceof SSASwitchInstruction ssaSwitchInstruction) {
+        int[] targets = ssaSwitchInstruction.getCasesAndLabels();
         for (int i = 1; i < targets.length; i += 2) {
           addNormalEdgeTo(getBlockForInstruction(targets[i]));
         }

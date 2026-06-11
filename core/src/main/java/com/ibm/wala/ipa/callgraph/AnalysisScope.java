@@ -515,18 +515,18 @@ public class AnalysisScope {
       for (Module m : e.getValue()) {
         String moduleType;
         String modulePath;
-        if (m instanceof JarFileModule) {
+        if (m instanceof JarFileModule jarFileModule) {
           moduleType = "jarFile";
-          modulePath = ((JarFileModule) m).getAbsolutePath();
-        } else if (m instanceof BinaryDirectoryTreeModule) {
+          modulePath = jarFileModule.getAbsolutePath();
+        } else if (m instanceof BinaryDirectoryTreeModule binaryDirectoryTreeModule) {
           moduleType = "binaryDir";
-          modulePath = ((BinaryDirectoryTreeModule) m).getPath();
-        } else if (m instanceof SourceDirectoryTreeModule) {
+          modulePath = binaryDirectoryTreeModule.getPath();
+        } else if (m instanceof SourceDirectoryTreeModule sourceDirectoryTreeModule) {
           moduleType = "sourceDir";
-          modulePath = ((SourceDirectoryTreeModule) m).getPath();
-        } else if (m instanceof SourceFileModule) {
+          modulePath = sourceDirectoryTreeModule.getPath();
+        } else if (m instanceof SourceFileModule sourceFileModule) {
           moduleType = "sourceFile";
-          modulePath = ((SourceFileModule) m).getAbsolutePath();
+          modulePath = sourceFileModule.getAbsolutePath();
         } else {
           Assertions.UNREACHABLE("Module type isn't supported - " + m);
           continue;

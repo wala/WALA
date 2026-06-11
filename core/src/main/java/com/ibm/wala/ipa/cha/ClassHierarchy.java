@@ -174,10 +174,10 @@ public class ClassHierarchy implements IClassHierarchy {
       }
     } catch (NoSuperclassFoundException e) {
       if (!superClassHandling.equals(MissingSuperClassHandling.NONE)
-          && klass instanceof BytecodeClass) {
+          && klass instanceof BytecodeClass<?> bytecodeClass) {
         if (superClassHandling.equals(MissingSuperClassHandling.PHANTOM)) {
           // create a phantom superclass.  add it and the root class to the result
-          IClass phantom = getPhantomSuperclass((BytecodeClass<?>) klass);
+          IClass phantom = getPhantomSuperclass(bytecodeClass);
           result.add(phantom);
         }
         result.add(getRootClass());

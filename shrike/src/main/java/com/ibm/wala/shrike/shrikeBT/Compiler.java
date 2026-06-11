@@ -336,8 +336,7 @@ public abstract class Compiler implements Constants {
         throw new IllegalArgumentException("Stack underflow in intermediate code, at offset " + i);
       }
 
-      if (instr instanceof DupInstruction) {
-        DupInstruction d = (DupInstruction) instr;
+      if (instr instanceof DupInstruction d) {
         int size = d.getSize();
         int delta = d.getDelta();
 
@@ -591,8 +590,8 @@ public abstract class Compiler implements Constants {
 
         switch (opcode) {
           case OP_iconst_0:
-            if (inBasicBlock(i, 2) && instructions[i + 1] instanceof ConditionalBranchInstruction) {
-              ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
+            if (inBasicBlock(i, 2)
+                && instructions[i + 1] instanceof ConditionalBranchInstruction cbr) {
               if (cbr.getType().equals(TYPE_int)) {
                 code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifeq);
                 fallToConditional = true;
@@ -607,8 +606,7 @@ public abstract class Compiler implements Constants {
           case OP_aconst_null:
             if (!fallToConditional
                 && inBasicBlock(i, 2)
-                && instructions[i + 1] instanceof ConditionalBranchInstruction) {
-              ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
+                && instructions[i + 1] instanceof ConditionalBranchInstruction cbr) {
               if (cbr.getType().equals(TYPE_Object)) {
                 code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifnull);
                 fallToConditional = true;
@@ -813,14 +811,10 @@ public abstract class Compiler implements Constants {
             {
               if (inBasicBlock(i, 4)) {
                 // try to generate an OP_iinc
-                if (instructions[i + 1] instanceof ConstantInstruction.ConstInt
-                    && instructions[i + 2] instanceof BinaryOpInstruction
-                    && instructions[i + 3] instanceof StoreInstruction) {
+                if (instructions[i + 1] instanceof ConstantInstruction.ConstInt i1
+                    && instructions[i + 2] instanceof BinaryOpInstruction i2
+                    && instructions[i + 3] instanceof StoreInstruction i3) {
                   LoadInstruction i0 = (LoadInstruction) instr;
-                  ConstantInstruction.ConstInt i1 =
-                      (ConstantInstruction.ConstInt) instructions[i + 1];
-                  BinaryOpInstruction i2 = (BinaryOpInstruction) instructions[i + 2];
-                  StoreInstruction i3 = (StoreInstruction) instructions[i + 3];
 
                   int c = i1.getIntValue();
                   int v = i0.getVarIndex();
@@ -1115,8 +1109,7 @@ public abstract class Compiler implements Constants {
                 "Stack underflow in intermediate code, at offset " + startI);
           }
 
-          if (instr instanceof DupInstruction) {
-            DupInstruction d = (DupInstruction) instr;
+          if (instr instanceof DupInstruction d) {
             int size = d.getSize();
             int delta = d.getDelta();
 
@@ -1307,7 +1300,8 @@ public abstract class Compiler implements Constants {
       }
 
       IInstruction instr = instructions[instruction];
-      if (instr instanceof StoreInstruction && ((StoreInstruction) instr).getVarIndex() == index) {
+      if (instr instanceof StoreInstruction storeInstruction
+          && storeInstruction.getVarIndex() == index) {
         break;
       }
 
@@ -1359,8 +1353,8 @@ public abstract class Compiler implements Constants {
 
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof LoadInstruction) {
-        addLiveVar(i, ((LoadInstruction) instr).getVarIndex());
+      if (instr instanceof LoadInstruction loadInstruction) {
+        addLiveVar(i, loadInstruction.getVarIndex());
       }
     }
   }
@@ -1661,8 +1655,8 @@ public abstract class Compiler implements Constants {
       int secondDef = -1;
       for (int i = start; i < start + len; i++) {
         IInstruction instr = instructions[i];
-        if (instr instanceof StoreInstruction) {
-          int l = ((StoreInstruction) instr).getVarIndex();
+        if (instr instanceof StoreInstruction storeInstruction) {
+          int l = storeInstruction.getVarIndex();
           if (liveAtEnd.get(l) && l != localDefed) {
             if (localDefed < 0) {
               localDefed = l;

@@ -128,8 +128,8 @@ public class CallGraphStats {
     for (CGNode node : cg) {
       IMethod method = node.getMethod();
       if (counted.add(method)) {
-        if (method instanceof ShrikeCTMethod) {
-          byte[] bytecodes = ((ShrikeCTMethod) method).getBytecodes();
+        if (method instanceof ShrikeCTMethod shrikeCTMethod) {
+          byte[] bytecodes = shrikeCTMethod.getBytecodes();
           if (bytecodes != null) {
             ret += bytecodes.length;
           }

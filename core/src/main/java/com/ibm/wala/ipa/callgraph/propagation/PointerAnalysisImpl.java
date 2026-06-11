@@ -109,10 +109,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     // special logic to handle contents of char[] from string constants.
-    if (key instanceof InstanceFieldKey) {
-      InstanceFieldKey ifk = (InstanceFieldKey) key;
-      if (ifk.getInstanceKey() instanceof ConstantKey) {
-        ConstantKey<?> i = (ConstantKey<?>) ifk.getInstanceKey();
+    if (key instanceof InstanceFieldKey ifk) {
+      if (ifk.getInstanceKey() instanceof ConstantKey<?> i) {
         if (i.getValue() instanceof String
             && i.concreteType().getClassLoader().getLanguage().equals(Language.JAVA)) {
           StringConstantCharArray contents = StringConstantCharArray.make((ConstantKey<String>) i);
@@ -208,8 +206,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSet(PointerKey key) {
-    if (key instanceof LocalPointerKey) {
-      LocalPointerKey lpk = (LocalPointerKey) key;
+    if (key instanceof LocalPointerKey lpk) {
       CGNode node = lpk.getNode();
       IR ir = node.getIR();
       DefUse du = node.getDU();
@@ -338,11 +335,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       SSAInstruction pei = ir.getPEI(peiLoc);
       PointerKey e = null;
       // first deal with exception variables from calls and throws.
-      if (pei instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+      if (pei instanceof SSAAbstractInvokeInstruction s) {
         e = pointerKeys.getPointerKeyForLocal(node, s.getException());
-      } else if (pei instanceof SSAThrowInstruction) {
-        SSAThrowInstruction s = (SSAThrowInstruction) pei;
+      } else if (pei instanceof SSAThrowInstruction s) {
         e = pointerKeys.getPointerKeyForLocal(node, s.getException());
       }
       if (e != null) {

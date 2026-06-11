@@ -91,9 +91,9 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
   @Override
   public boolean equals(Object o) {
     // return (o instanceof DexCFG) && getMethod().equals(((DexCFG) o).getMethod());
-    return o instanceof DexCFG
-        && ((DexCFG) o).dexMethod.equals(dexMethod)
-        && ((DexCFG) o).context.equals(context);
+    return o instanceof DexCFG basicBlocks
+        && basicBlocks.dexMethod.equals(dexMethod)
+        && basicBlocks.context.equals(context);
   }
 
   @Override
@@ -274,8 +274,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
             BytecodeLanguage l = (BytecodeLanguage) loader.getLanguage();
             // exceptionTypes = l.getImplicitExceptionTypes(last);
             exceptionTypes = getImplicitExceptionTypes(last);
-            if (last instanceof Invoke) {
-              Invoke call = (Invoke) last;
+            if (last instanceof Invoke call) {
               exceptionTypes = HashSetFactory.make(exceptionTypes);
               MethodReference target =
                   MethodReference.findOrCreate(
@@ -613,9 +612,9 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof BasicBlock)
-          && ((BasicBlock) o).getMethod().equals(getMethod())
-          && ((BasicBlock) o).getNumber() == getNumber();
+      return (o instanceof BasicBlock instructions)
+          && instructions.getMethod().equals(getMethod())
+          && instructions.getNumber() == getNumber();
     }
 
     @Override

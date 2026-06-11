@@ -50,10 +50,10 @@ public abstract class AstLexicalAccess extends SSAInstruction {
     // intentional: omits type
     @Override
     public boolean equals(Object other) {
-      return (other instanceof Access)
-          && variableName.equals(((Access) other).variableName)
-          && valueNumber == ((Access) other).valueNumber
-          && Objects.equals(variableDefiner, ((Access) other).variableDefiner);
+      return (other instanceof Access access)
+          && variableName.equals(access.variableName)
+          && valueNumber == access.valueNumber
+          && Objects.equals(variableDefiner, access.variableDefiner);
     }
 
     @Override

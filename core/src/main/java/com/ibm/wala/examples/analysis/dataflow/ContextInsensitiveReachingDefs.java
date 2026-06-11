@@ -81,9 +81,7 @@ public class ContextInsensitiveReachingDefs {
       SSAInstruction[] instructions = ir.getInstructions();
       for (int i = 0; i < instructions.length; i++) {
         SSAInstruction instruction = instructions[i];
-        if (instruction instanceof SSAPutInstruction
-            && ((SSAPutInstruction) instruction).isStatic()) {
-          SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+        if (instruction instanceof SSAPutInstruction putInstr && putInstr.isStatic()) {
           // instrNum is the number that will be assigned to this putstatic
           int instrNum = putInstrs.size();
           putInstrs.add(Pair.make(node, i));
@@ -126,10 +124,8 @@ public class ContextInsensitiveReachingDefs {
       SSAInstruction instruction = ebb.getInstruction();
       int instructionIndex = ebb.getFirstInstructionIndex();
       CGNode cgNode = node.getNode();
-      if (instruction instanceof SSAPutInstruction
-          && ((SSAPutInstruction) instruction).isStatic()) {
+      if (instruction instanceof SSAPutInstruction putInstr && putInstr.isStatic()) {
         // kill all defs of the same static field, and gen this instruction
-        final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
         final IField field = cha.resolveField(putInstr.getDeclaredField());
         assert field != null;
         BitVector kill = staticField2DefStatements.get(field);

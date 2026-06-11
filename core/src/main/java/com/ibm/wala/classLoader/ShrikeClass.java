@@ -186,8 +186,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final
     // if (this.getClass().equals(obj.getClass())) {
-    if (obj instanceof ShrikeClass) {
-      return getReference().equals(((ShrikeClass) obj).getReference());
+    if (obj instanceof ShrikeClass shrikeClass) {
+      return getReference().equals(shrikeClass.getReference());
     } else {
       return false;
     }

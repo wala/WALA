@@ -42,7 +42,6 @@ import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
@@ -233,8 +232,7 @@ public class PDFSlice {
     if (s.getKind() == Kind.NORMAL) {
       NormalStatement n = (NormalStatement) s;
       SSAInstruction st = n.getInstruction();
-      if (st instanceof SSAInvokeInstruction) {
-        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) st;
+      if (st instanceof SSAInvokeInstruction call) {
         if (call.getCallSite().getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
           throw new IllegalArgumentException(
               "this driver computes forward slices from the return value of calls.\n"

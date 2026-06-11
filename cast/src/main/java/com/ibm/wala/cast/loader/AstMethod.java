@@ -209,9 +209,9 @@ public abstract class AstMethod implements IMethod {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof LexicalParent)
-          && getName().equals(((LexicalParent) o).getName())
-          && getMethod().equals(((LexicalParent) o).getMethod());
+      return (o instanceof LexicalParent lexicalParent)
+          && getName().equals(lexicalParent.getName())
+          && getMethod().equals(lexicalParent.getMethod());
     }
   }
 

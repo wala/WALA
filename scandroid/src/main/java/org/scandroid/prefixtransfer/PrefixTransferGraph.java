@@ -85,8 +85,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
     ArrayList<InstanceKey> instanceKeys = new ArrayList<>(pa.getInstanceKeys());
     for (InstanceKey k : instanceKeys) {
       if (k.concreteType().getName().toString().equals("Ljava/lang/StringBuilder")) {
-        if (k instanceof AllocationSiteInNode) {
-          AllocationSiteInNode as = (AllocationSiteInNode) k;
+        if (k instanceof AllocationSiteInNode as) {
           if (as.getSite()
               .getDeclaredType()
               .getClassLoader()
@@ -114,11 +113,11 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
                   (String) ((ConstantKey<?>) k).getValue());
           addNode(node);
           nodeMap.put(k, node);
-        } else if (k instanceof NormalAllocationInNode) {
+        } else if (k instanceof NormalAllocationInNode normalAllocationInNode) {
 
-          IMethod m = ((NormalAllocationInNode) k).getNode().getMethod();
+          IMethod m = normalAllocationInNode.getNode().getMethod();
           if (m.getSignature().equals("java.lang.StringBuilder.toString()Ljava/lang/String;")) {
-            Context context = ((NormalAllocationInNode) k).getNode().getContext();
+            Context context = normalAllocationInNode.getNode().getContext();
             CGNode caller = (CGNode) context.get(ContextKey.CALLER);
             CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
             InstanceKey receiver = (InstanceKey) context.get(ContextKey.RECEIVER);

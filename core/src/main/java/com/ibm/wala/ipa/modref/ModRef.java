@@ -116,8 +116,8 @@ public class ModRef<T extends InstanceKey> {
 
   public ExtendedHeapModel makeHeapModel(PointerAnalysis<T> pa) {
     HeapModel heapModel = pa.getHeapModel();
-    if (heapModel instanceof ExtendedHeapModel) {
-      return (ExtendedHeapModel) heapModel;
+    if (heapModel instanceof ExtendedHeapModel extendedHeapModel) {
+      return extendedHeapModel;
     } else {
       return new DelegatingExtendedHeapModel(heapModel);
     }

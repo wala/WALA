@@ -123,8 +123,8 @@ public class LiveAnalysis {
 
       @Override
       public boolean equals(Object o) {
-        return (o instanceof BlockValueGenKillOperator)
-            && ((BlockValueGenKillOperator) o).block.equals(block);
+        return (o instanceof BlockValueGenKillOperator blockValueGenKillOperator)
+            && blockValueGenKillOperator.block.equals(block);
       }
 
       @Override

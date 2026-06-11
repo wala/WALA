@@ -49,8 +49,7 @@ public abstract class SyntheticClass implements IClass {
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
-    if (!(obj instanceof SyntheticClass)) return false;
-    final SyntheticClass other = (SyntheticClass) obj;
+    if (!(obj instanceof SyntheticClass other)) return false;
     if (!Objects.equals(T, other.T)) return false;
     if (!Objects.equals(cha, other.cha)) return false;
     return true;

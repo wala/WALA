@@ -93,8 +93,7 @@ public class AndroidContext implements Context {
     if (obj == null) {
       return false;
     }
-    if (obj instanceof AndroidContext) {
-      AndroidContext other = (AndroidContext) obj;
+    if (obj instanceof AndroidContext other) {
       if (this.aCtxT.equals(other.aCtxT)) {
         if (this.parent != null) {
           return this.parent.equals(other.parent);

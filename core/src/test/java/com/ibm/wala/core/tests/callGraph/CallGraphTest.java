@@ -390,8 +390,7 @@ public class CallGraphTest extends WalaTestCase {
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
     for (PointerKey pk : pointerAnalysis.getPointerKeys()) {
-      if (pk instanceof LocalPointerKey) {
-        LocalPointerKey lpk = (LocalPointerKey) pk;
+      if (pk instanceof LocalPointerKey lpk) {
         String className = lpk.getNode().getMethod().getDeclaringClass().getName().toString();
         String methodName = lpk.getNode().getMethod().getName().toString();
         ClassLoaderReference clr =

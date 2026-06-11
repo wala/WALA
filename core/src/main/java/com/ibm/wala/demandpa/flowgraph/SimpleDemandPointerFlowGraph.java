@@ -248,8 +248,8 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    */
   @Override
   public Iterator<Object> getSuccNodes(Object N) {
-    if (N instanceof StaticFieldKey) {
-      addNodesThatWriteToStaticField(((StaticFieldKey) N).getField());
+    if (N instanceof StaticFieldKey staticFieldKey) {
+      addNodesThatWriteToStaticField(staticFieldKey.getField());
     } else {
       IField f = getFieldDefs.get(N);
       if (f != null) {
@@ -431,15 +431,13 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     for (ProgramCounter peiLoc : peis) {
       SSAInstruction pei = ir.getPEI(peiLoc);
 
-      if (pei instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+      if (pei instanceof SSAAbstractInvokeInstruction s) {
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);
         addEdge(exceptionVar, e);
 
-      } else if (pei instanceof SSAAbstractThrowInstruction) {
-        SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+      } else if (pei instanceof SSAAbstractThrowInstruction s) {
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);

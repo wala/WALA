@@ -142,8 +142,7 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
               .getDeclaringClass()
               .getClassLoader()
               .equals(ClassLoaderReference.Application)) {
-            if (jnode.getMethod() instanceof ShrikeCTMethod) {
-              ShrikeCTMethod m = (ShrikeCTMethod) jnode.getMethod();
+            if (jnode.getMethod() instanceof ShrikeCTMethod m) {
               MutableIntSet jlines = IntSetUtil.make();
               for (SSAInstruction inst : jnode.getIR().getInstructions()) {
                 if (inst != null) {

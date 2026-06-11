@@ -34,8 +34,7 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
     if (obj == this) {
       return true;
     }
-    if (obj instanceof ReflectedFieldPointerKey) {
-      ReflectedFieldPointerKey other = (ReflectedFieldPointerKey) obj;
+    if (obj instanceof ReflectedFieldPointerKey other) {
       return getFieldIdentifier().equals(other.getFieldIdentifier())
           && getInstanceKey().equals(other.getInstanceKey());
     } else {

@@ -348,10 +348,10 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   @Override
   public Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk) {
     final CGNode callee;
-    if (formalPk instanceof LocalPointerKey) {
-      callee = ((LocalPointerKey) formalPk).getNode();
-    } else if (formalPk instanceof ReturnValueKey) {
-      callee = ((ReturnValueKey) formalPk).getNode();
+    if (formalPk instanceof LocalPointerKey localPointerKey) {
+      callee = localPointerKey.getNode();
+    } else if (formalPk instanceof ReturnValueKey returnValueKey) {
+      callee = returnValueKey.getNode();
     } else {
       throw new IllegalArgumentException("formalPk must represent a local");
     }

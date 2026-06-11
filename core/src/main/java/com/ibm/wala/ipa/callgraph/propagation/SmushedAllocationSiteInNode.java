@@ -32,8 +32,7 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof SmushedAllocationSiteInNode) {
-      SmushedAllocationSiteInNode other = (SmushedAllocationSiteInNode) obj;
+    if (obj instanceof SmushedAllocationSiteInNode other) {
       return getNode().equals(other.getNode()) && concreteType().equals(other.concreteType());
     } else {
       return false;

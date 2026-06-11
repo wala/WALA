@@ -35,8 +35,7 @@ public class ThisAssignmentChecker implements MethodData.Results {
       IInstruction[] instructions = info.getInstructions();
 
       for (IInstruction instr : instructions) {
-        if (instr instanceof StoreInstruction) {
-          StoreInstruction st = (StoreInstruction) instr;
+        if (instr instanceof StoreInstruction st) {
           if (st.getVarIndex() == 0) {
             assignmentToThis = true;
           }

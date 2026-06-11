@@ -58,8 +58,7 @@ public final class ComparisonInstruction extends Instruction implements ICompari
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ComparisonInstruction) {
-      ComparisonInstruction i = (ComparisonInstruction) o;
+    if (o instanceof ComparisonInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

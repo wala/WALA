@@ -152,7 +152,7 @@ public abstract class CAstRewriter<
       final Collection<Object> targetLabels = cfg.getTargetLabels(n);
       if (targetLabels != null)
         for (Object label : targetLabels)
-          if (label instanceof CAstNode) copyNodes((CAstNode) label, cfg, context, nodeMap);
+          if (label instanceof CAstNode cAstNode) copyNodes(cAstNode, cfg, context, nodeMap);
     }
     return children;
   }

@@ -96,8 +96,7 @@ public final class ConversionInstruction extends Instruction implements IConvers
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ConversionInstruction) {
-      ConversionInstruction i = (ConversionInstruction) o;
+    if (o instanceof ConversionInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

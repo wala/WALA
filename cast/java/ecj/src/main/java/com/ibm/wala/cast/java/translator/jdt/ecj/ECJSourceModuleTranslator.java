@@ -219,21 +219,19 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
         List<Module> modules = scope.getModules(cl);
 
         for (Module m : modules) {
-          if (m instanceof JarFileModule) {
-            JarFileModule jarFileModule = (JarFileModule) m;
+          if (m instanceof JarFileModule jarFileModule) {
 
             libs.add(jarFileModule.getAbsolutePath());
-          } else if (m instanceof JarStreamModule) {
+          } else if (m instanceof JarStreamModule jarStreamModule) {
             try {
               File F = File.createTempFile("tmp", "jar");
               F.deleteOnExit();
-              TemporaryFile.streamToFile(F, ((JarStreamModule) m));
+              TemporaryFile.streamToFile(F, jarStreamModule);
               libs.add(F.getAbsolutePath());
             } catch (IOException e) {
               assert false : e;
             }
-          } else if (m instanceof DirectoryTreeModule) {
-            DirectoryTreeModule directoryTreeModule = (DirectoryTreeModule) m;
+          } else if (m instanceof DirectoryTreeModule directoryTreeModule) {
 
             sources.add(directoryTreeModule.getPath());
           } else if (m instanceof JrtModule) {

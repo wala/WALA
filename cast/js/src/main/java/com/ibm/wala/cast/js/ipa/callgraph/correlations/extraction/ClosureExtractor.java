@@ -442,8 +442,8 @@ public class ClosureExtractor extends CAstRewriterExt {
     // for non-constant case labels, the case expressions appear as labels on CFG edges; rewrite
     // those as well
     for (Object label : cfg.getTargetLabels(node)) {
-      if (label instanceof CAstNode) {
-        copyNodes((CAstNode) label, cfg, new LabelPos(node, context), nodeMap);
+      if (label instanceof CAstNode cAstNode) {
+        copyNodes(cAstNode, cfg, new LabelPos(node, context), nodeMap);
       }
     }
 
@@ -520,9 +520,8 @@ public class ClosureExtractor extends CAstRewriterExt {
       CAstNode block = root.getChild(context.getStart());
       fun_body_stmts.addAll(block.getChildren());
     } else {
-      if (context.getRegion() instanceof TwoLevelExtractionRegion) {
+      if (context.getRegion() instanceof TwoLevelExtractionRegion tler) {
         CAstNode start = root.getChild(context.getStart());
-        TwoLevelExtractionRegion tler = (TwoLevelExtractionRegion) context.getRegion();
         if (tler.getEndInner() != -1)
           throw new UnimplementedError("Two-level extraction not fully implemented.");
         int i;

@@ -139,8 +139,7 @@ public class ContextSensitiveReachingDefs {
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       final IExplodedBasicBlock ebb = src.getDelegate();
       SSAInstruction instruction = ebb.getInstruction();
-      if (instruction instanceof SSAPutInstruction) {
-        final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+      if (instruction instanceof SSAPutInstruction putInstr) {
         if (putInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
@@ -243,8 +242,7 @@ public class ContextSensitiveReachingDefs {
       for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {
         IExplodedBasicBlock ebb = bb.getDelegate();
         SSAInstruction instruction = ebb.getInstruction();
-        if (instruction instanceof SSAPutInstruction) {
-          SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+        if (instruction instanceof SSAPutInstruction putInstr) {
           if (putInstr.isStatic()) {
             final CGNode cgNode = bb.getNode();
             Pair<CGNode, Integer> fact = Pair.make(cgNode, ebb.getFirstInstructionIndex());

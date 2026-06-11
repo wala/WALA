@@ -56,15 +56,14 @@ public class CgPanel extends JSplitPane {
             DefaultMutableTreeNode treeNode =
                 (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
             Object userObject = treeNode.getUserObject();
-            if (userObject instanceof CGNode) {
-              CGNode node = (CGNode) userObject;
+            if (userObject instanceof CGNode node) {
               IR ir1 = node.getIR();
               irViewer.setIR(ir1);
-            } else if (userObject instanceof CallSiteReference) {
+            } else if (userObject instanceof CallSiteReference callSiteReference) {
               CGNode parentNode =
                   (CGNode) ((DefaultMutableTreeNode) treeNode.getParent()).getUserObject();
               IR ir2 = parentNode.getIR();
-              irViewer.setIRAndPc(ir2, ((CallSiteReference) userObject).getProgramCounter());
+              irViewer.setIRAndPc(ir2, callSiteReference.getProgramCounter());
             }
           }
         });
@@ -110,8 +109,7 @@ public class CgPanel extends JSplitPane {
     if (treeNode.getChildCount() == 0) {
       List<DefaultMutableTreeNode> newChilds = new ArrayList<>();
       Object userObject = treeNode.getUserObject();
-      if (userObject instanceof CGNode) {
-        CGNode cgNode = (CGNode) userObject;
+      if (userObject instanceof CGNode cgNode) {
         for (CallSiteReference csr : Iterator2Iterable.make(cgNode.iterateCallSites())) {
           newChilds.add(new DefaultMutableTreeNode(csr));
         }

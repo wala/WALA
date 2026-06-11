@@ -25,8 +25,8 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
     if (op == CAstOperator.OP_ADD) {
       if (lhs instanceof String || rhs instanceof String) {
         return String.valueOf(lhs) + rhs;
-      } else if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() + ((Number) rhs).doubleValue();
+      } else if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() + number.doubleValue();
       }
     } else if (op == CAstOperator.OP_BIT_AND) {
 
@@ -42,42 +42,42 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
       }
 
     } else if (op == CAstOperator.OP_DIV) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() / ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() / number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_EQ) {
 
     } else if (op == CAstOperator.OP_GE) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() >= ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() >= number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_GT) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() > ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() > number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_LE) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() <= ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() <= number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_LSH) {
 
     } else if (op == CAstOperator.OP_LT) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() < ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() < number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_MOD) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() % ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() % number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_MUL) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() * ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() * number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_NE) {
@@ -97,8 +97,8 @@ public class JSConstantFoldingRewriter extends ConstantFoldingRewriter {
     } else if (op == CAstOperator.OP_STRICT_NE) {
 
     } else if (op == CAstOperator.OP_SUB) {
-      if (lhs instanceof Number && rhs instanceof Number) {
-        return ((Number) lhs).doubleValue() - ((Number) rhs).doubleValue();
+      if (lhs instanceof Number number1 && rhs instanceof Number number) {
+        return number1.doubleValue() - number.doubleValue();
       }
 
     } else if (op == CAstOperator.OP_URSH) {

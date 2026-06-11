@@ -634,8 +634,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int exc = reuseOrCreateException();
 
         BootstrapMethod bootstrap = null;
-        if (instruction instanceof InvokeDynamicInstruction) {
-          bootstrap = ((InvokeDynamicInstruction) instruction).getBootstrap();
+        if (instruction instanceof InvokeDynamicInstruction invokeDynamicInstruction) {
+          bootstrap = invokeDynamicInstruction.getBootstrap();
         }
 
         if (instruction.getPushedWordSize() > 0) {

@@ -1073,12 +1073,10 @@ public class SlicerTest {
     assertThat(inMain)
         .filteredOn(
             st -> {
-              if (st instanceof HeapReturnCaller) {
-                HeapReturnCaller hrc = (HeapReturnCaller) st;
+              if (st instanceof HeapReturnCaller hrc) {
                 if (hrc.getCall().getDeclaredTarget().getName().toString().equals("add")) {
                   PointerKey location = hrc.getLocation();
-                  if (location instanceof InstanceFieldKey) {
-                    InstanceFieldKey ifk = (InstanceFieldKey) location;
+                  if (location instanceof InstanceFieldKey ifk) {
                     return ifk.getField().getName().toString().equals("size");
                   }
                 }

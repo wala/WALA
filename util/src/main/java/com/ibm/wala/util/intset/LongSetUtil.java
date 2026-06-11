@@ -116,8 +116,8 @@ public class LongSetUtil {
     if (B == null) {
       throw new IllegalArgumentException("null B");
     }
-    if (A instanceof SparseLongSet && B instanceof SparseLongSet) {
-      return SparseLongSet.diff((SparseLongSet) A, (SparseLongSet) B);
+    if (A instanceof SparseLongSet longSet && B instanceof SparseLongSet sparseLongSet) {
+      return SparseLongSet.diff(longSet, sparseLongSet);
     } else {
       return defaultSlowDiff(A, B, factory);
     }
@@ -200,8 +200,7 @@ public class LongSetUtil {
     if (s == null) {
       throw new IllegalArgumentException("s == null");
     }
-    if (s instanceof SparseLongSet) {
-      SparseLongSet sis = (SparseLongSet) s;
+    if (s instanceof SparseLongSet sis) {
       return SparseLongSet.add(sis, j);
     } else {
       // really slow. optimize as needed.

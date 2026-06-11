@@ -756,8 +756,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   @Override
   public final boolean equals(Object o) {
-    if (o instanceof ConstantInstruction) {
-      ConstantInstruction i = (ConstantInstruction) o;
+    if (o instanceof ConstantInstruction i) {
       if (!i.getType().equals(getType())) {
         return false;
       }
@@ -801,8 +800,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   private static String quote(Object o) {
-    if (o instanceof String) {
-      String s = (String) o;
+    if (o instanceof String s) {
       StringBuilder buf = new StringBuilder("\"");
       int len = s.length();
       for (int i = 0; i < len; i++) {

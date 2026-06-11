@@ -88,8 +88,8 @@ public class BootstrapDumper {
         decoder.decode();
         IInstruction[] insts = decoder.getInstructions();
         for (IInstruction inst : insts) {
-          if (inst instanceof InvokeDynamicInstruction) {
-            CallSite target = ((InvokeDynamicInstruction) inst).bootstrap(cl);
+          if (inst instanceof InvokeDynamicInstruction invokeDynamicInstruction) {
+            CallSite target = invokeDynamicInstruction.bootstrap(cl);
             w.println(target.dynamicInvoker());
             w.println(target.getTarget());
             /*

@@ -80,8 +80,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof LoadInstruction) {
-      LoadInstruction i = (LoadInstruction) o;
+    if (o instanceof LoadInstruction i) {
       return i.index == index && i.opcode == opcode;
     } else {
       return false;

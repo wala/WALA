@@ -36,8 +36,7 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof UnaryOpInstruction) {
-      UnaryOpInstruction i = (UnaryOpInstruction) o;
+    if (o instanceof UnaryOpInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

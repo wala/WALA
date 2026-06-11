@@ -73,7 +73,9 @@ public class CAstPattern {
       Object o = get(name);
       return o == null
           ? Collections.emptyList()
-          : o instanceof CAstNode ? Collections.singletonList((CAstNode) o) : (List<CAstNode>) o;
+          : o instanceof CAstNode cAstNode
+              ? Collections.singletonList(cAstNode)
+              : (List<CAstNode>) o;
     }
 
     private void addAll(Segments other) {
@@ -307,8 +309,8 @@ public class CAstPattern {
         if ((value == null)
             ? tree.getKind() != kind
             : (tree.getKind() != CAstNode.CONSTANT
-                || (value instanceof Pattern
-                    ? !((Pattern) value).matcher(tree.getValue().toString()).matches()
+                || (value instanceof Pattern pattern
+                    ? !pattern.matcher(tree.getValue().toString()).matches()
                     : !value.equals(tree.getValue().toString())))) {
           if (DEBUG_MATCH) {
             System.err.println("match failed (b)");

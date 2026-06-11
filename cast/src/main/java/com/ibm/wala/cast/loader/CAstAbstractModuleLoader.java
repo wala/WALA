@@ -93,8 +93,8 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities);
 
   protected File getLocalFile(SourceModule M) throws IOException {
-    if (M instanceof SourceFileModule) {
-      return ((SourceFileModule) M).getFile();
+    if (M instanceof SourceFileModule sourceFileModule) {
+      return sourceFileModule.getFile();
     } else {
       File f = File.createTempFile("module", ".txt");
       f.deleteOnExit();

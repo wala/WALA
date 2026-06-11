@@ -57,8 +57,7 @@ public final class ConditionalBranchInstruction extends Instruction
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ConditionalBranchInstruction) {
-      ConditionalBranchInstruction i = (ConditionalBranchInstruction) o;
+    if (o instanceof ConditionalBranchInstruction i) {
       return i.opcode == opcode && i.label == label;
     } else {
       return false;

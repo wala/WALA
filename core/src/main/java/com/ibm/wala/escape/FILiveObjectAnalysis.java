@@ -130,8 +130,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
 
     for (Object p :
         Iterator2Iterable.make(DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik))) {
-      if (p instanceof LocalPointerKey) {
-        LocalPointerKey lpk = (LocalPointerKey) p;
+      if (p instanceof LocalPointerKey lpk) {
         if (lpk.getNode().equals(m)) {
           if (LocalLiveRangeAnalysis.isLive(lpk.getValueNumber(), instructionIndex, ir, du)) {
             return true;
@@ -154,14 +153,11 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
         liveEverywhere.add(ik);
         return Collections.emptySet();
       } else {
-        if (node instanceof AbstractLocalPointerKey) {
-          AbstractLocalPointerKey local = (AbstractLocalPointerKey) node;
+        if (node instanceof AbstractLocalPointerKey local) {
           localRootNodes.add(local.getNode());
-        } else if (node instanceof TypedPointerKey) {
-          TypedPointerKey t = (TypedPointerKey) node;
+        } else if (node instanceof TypedPointerKey t) {
           node = t.getBase();
-          if (node instanceof AbstractLocalPointerKey) {
-            AbstractLocalPointerKey local = (AbstractLocalPointerKey) node;
+          if (node instanceof AbstractLocalPointerKey local) {
             localRootNodes.add(local.getNode());
           } else {
             Assertions.UNREACHABLE(

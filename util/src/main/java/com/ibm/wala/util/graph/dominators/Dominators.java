@@ -71,8 +71,8 @@ public abstract class Dominators<T> {
   }
 
   public static <T> Dominators<T> make(Graph<T> G, T root) {
-    if (G instanceof NumberedGraph) {
-      return new NumberedDominators<>((NumberedGraph<T>) G, root);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDominators<>(ts, root);
     } else {
       return new GenericDominators<>(G, root);
     }

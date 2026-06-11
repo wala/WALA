@@ -96,8 +96,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof BehaviorKey) {
-        BehaviorKey<?> other = (BehaviorKey<?>) o;
+      if (o instanceof BehaviorKey<?> other) {
         return base.equals(other.base);
       } else {
         return false;

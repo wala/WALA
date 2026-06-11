@@ -163,8 +163,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseIntSet) {
-      SparseIntSet set = (SparseIntSet) that;
+    if (that instanceof SparseIntSet set) {
       if (set.elements != null) {
         // SJF: clone is performance problem. don't use it.
         // elements = set.elements.clone();
@@ -198,8 +197,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("null set");
     }
-    if (set instanceof SparseIntSet) {
-      intersectWith((SparseIntSet) set);
+    if (set instanceof SparseIntSet sparseIntSet) {
+      intersectWith(sparseIntSet);
     } else {
       int j = 0;
       for (int i = 0; i < size; i++)
@@ -294,8 +293,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof SparseIntSet) {
-      return addAll((SparseIntSet) set);
+    if (set instanceof SparseIntSet sparseIntSet) {
+      return addAll(sparseIntSet);
     } else {
       int oldSize = size;
       set.foreach(

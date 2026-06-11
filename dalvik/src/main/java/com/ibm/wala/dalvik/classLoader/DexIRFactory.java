@@ -33,7 +33,7 @@ public class DexIRFactory extends DefaultIRFactory {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
-    if (method instanceof DexIMethod) return new DexCFG((DexIMethod) method, C);
+    if (method instanceof DexIMethod dexIMethod) return new DexCFG(dexIMethod, C);
     return super.makeCFG(method, C);
   }
 
@@ -44,8 +44,7 @@ public class DexIRFactory extends DefaultIRFactory {
       throw new IllegalArgumentException("null method");
     }
 
-    if (!(_method instanceof DexIMethod)) return super.makeIR(_method, C, options);
-    final DexIMethod method = (DexIMethod) _method;
+    if (!(_method instanceof DexIMethod method)) return super.makeIR(_method, C, options);
 
     //      com.ibm.wala.shrikeBT.IInstruction[] instructions = null;
     //      try {

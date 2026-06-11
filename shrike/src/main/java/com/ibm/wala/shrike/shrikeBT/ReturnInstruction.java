@@ -45,8 +45,7 @@ public final class ReturnInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ReturnInstruction) {
-      ReturnInstruction i = (ReturnInstruction) o;
+    if (o instanceof ReturnInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

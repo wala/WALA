@@ -124,21 +124,21 @@ public class JsdtUtil {
                         try {
                           if (node.resolveBinding() != null) {
                             IJavaScriptElement elt = node.resolveBinding().getJavaElement();
-                            if (elt instanceof IFunction)
+                            if (elt instanceof IFunction iFunction)
                               try {
-                                MethodWrapper mw = ch.getCallerRoot((IFunction) elt);
+                                MethodWrapper mw = ch.getCallerRoot(iFunction);
                                 MethodWrapper[] calls = mw.getCalls(new NullProgressMonitor());
                                 if (calls != null && calls.length > 0) {
                                   System.err.println("calls: for " + elt);
                                   for (MethodWrapper call : calls) {
                                     System.err.println("calls: " + call.getMember());
-                                    if (!info.cg.containsNode((IFunction) elt)) {
-                                      info.cg.addNode((IFunction) elt);
+                                    if (!info.cg.containsNode(iFunction)) {
+                                      info.cg.addNode(iFunction);
                                     }
                                     if (!info.cg.containsNode(call.getMember())) {
                                       info.cg.addNode(call.getMember());
                                     }
-                                    info.cg.addEdge(call.getMember(), (IFunction) elt);
+                                    info.cg.addEdge(call.getMember(), iFunction);
                                   }
                                 }
                               } catch (Throwable e) {

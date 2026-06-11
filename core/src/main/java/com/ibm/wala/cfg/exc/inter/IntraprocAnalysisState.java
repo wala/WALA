@@ -97,9 +97,7 @@ final class IntraprocAnalysisState
       }
 
       // set nr. of parameters
-      if (block.getInstruction() instanceof SSAAbstractInvokeInstruction) {
-        final SSAAbstractInvokeInstruction instr =
-            (SSAAbstractInvokeInstruction) block.getInstruction();
+      if (block.getInstruction() instanceof SSAAbstractInvokeInstruction instr) {
         final int[] numbersOfParams = AnalysisUtil.getParameterNumbers(instr);
         this.numbersOfSsaVarsThatAreParemerters.put(block, numbersOfParams);
       } else {
