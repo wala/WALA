@@ -2024,9 +2024,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
     BiConsumer<IClass, InstanceKey[]> handleCallWithSpecificInstanceKeys =
-        (recv, v) -> {
-          handleCall(caller, recv, instruction, invs, null, v);
-        };
+        (recv, v) -> handleCall(caller, recv, instruction, invs, null, v);
     final InstanceKey[][] invariants = invs;
     new CrossProductRec(invariants, instruction, caller, handleCallWithSpecificInstanceKeys, null)
         .rec(0, 0);
