@@ -733,8 +733,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       }
 
     } else {
+      OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
       if (B.densePart == null) {
-        OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
         for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           newDensePart.clear(bits.next());
         }
@@ -743,7 +743,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
             MutableSparseIntSet.diff(A.sparsePart, B.sparsePart), newDensePart);
 
       } else {
-        OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
         newDensePart.andNot(B.densePart);
         for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           newDensePart.clear(bits.next());

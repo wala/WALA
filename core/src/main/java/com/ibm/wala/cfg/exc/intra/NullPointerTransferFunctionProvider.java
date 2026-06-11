@@ -361,12 +361,11 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
         // itself.
         noIdentity = true;
         transfer1 = NullPointerState.denullifyFunction(instruction.getReceiver());
-        transfer2 = NullPointerState.identityFunction();
       } else {
         noIdentity = false;
         transfer1 = NullPointerState.identityFunction();
-        transfer2 = NullPointerState.identityFunction();
       }
+      transfer2 = NullPointerState.identityFunction();
     }
 
     /* (non-Javadoc)
