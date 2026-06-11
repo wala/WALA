@@ -90,9 +90,9 @@ public class WelshPowellTest {
               new Integer[] {8, 1, 2, 3}
             });
     ColoredVertices<TypedNode<Integer>> colors = new WelshPowell<TypedNode<Integer>>().color(G);
-    System.err.println(colors.getColors());
-    assertColoring(G, colors.getColors(), true);
-    assertThat(colors.getNumColors()).isLessThanOrEqualTo(4);
+    System.err.println(colors.colors());
+    assertColoring(G, colors.colors(), true);
+    assertThat(colors.numColors()).isLessThanOrEqualTo(4);
   }
 
   @Test
@@ -112,8 +112,8 @@ public class WelshPowellTest {
               new String[] {"star5", "poly5", "star2", "star3"}
             });
     ColoredVertices<TypedNode<String>> colors = new WelshPowell<TypedNode<String>>().color(G);
-    System.err.println(colors.getColors());
-    assertColoring(G, colors.getColors(), true);
-    assertThat(colors.getNumColors()).isEqualTo(3);
+    System.err.println(colors.colors());
+    assertColoring(G, colors.colors(), true);
+    assertThat(colors.numColors()).isEqualTo(3);
   }
 }

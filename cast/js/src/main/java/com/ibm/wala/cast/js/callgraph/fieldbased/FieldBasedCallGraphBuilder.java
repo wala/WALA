@@ -112,31 +112,31 @@ public abstract class FieldBasedCallGraphBuilder {
   public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException;
 
   /** Full result of call graph computation */
-  public static class CallGraphResult {
+  public record CallGraphResult(
+      JSCallGraph callGraph, PointerAnalysis<ObjectVertex> pointerAnalysis, FlowGraph flowGraph) {
 
-    private final JSCallGraph callGraph;
-
-    private final PointerAnalysis<ObjectVertex> pointerAnalysis;
-
-    private final FlowGraph flowGraph;
-
-    public CallGraphResult(
-        JSCallGraph callGraph, PointerAnalysis<ObjectVertex> pointerAnalysis, FlowGraph flowGraph) {
-      this.callGraph = callGraph;
-      this.pointerAnalysis = pointerAnalysis;
-      this.flowGraph = flowGraph;
-    }
-
+    /**
+     * @deprecated Use {@link #callGraph()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public JSCallGraph getCallGraph() {
-      return callGraph;
+      return callGraph();
     }
 
+    /**
+     * @deprecated Use {@link #pointerAnalysis()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public PointerAnalysis<ObjectVertex> getPointerAnalysis() {
-      return pointerAnalysis;
+      return pointerAnalysis();
     }
 
+    /**
+     * @deprecated Use {@link #flowGraph()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public FlowGraph getFlowGraph() {
-      return flowGraph;
+      return flowGraph();
     }
   }
 
@@ -216,12 +216,12 @@ public abstract class FieldBasedCallGraphBuilder {
     for (Pair<CallVertex, FuncVertex> edge : edges) {
       CallVertex callVertex = edge.fst;
       FuncVertex targetVertex = edge.snd;
-      IClass kaller = callVertex.getCaller().getConcreteType();
+      IClass kaller = callVertex.getCaller().concreteType();
       CGNode caller =
           cg.findOrCreateNode(
               kaller.getMethod(AstMethodReference.fnSelector), Everywhere.EVERYWHERE);
       CallSiteReference site = callVertex.getSite();
-      IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.getConcreteType());
+      IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.concreteType());
       boolean isFunctionPrototypeCall =
           target != null
               && target
@@ -297,7 +297,7 @@ public abstract class FieldBasedCallGraphBuilder {
     for (FuncVertex f : reflectiveTargets) {
       IMethod reflectiveTgtMethod =
           targetSelector.getCalleeTarget(
-              functionPrototypeCallNode, reflectiveCallSite, f.getConcreteType());
+              functionPrototypeCallNode, reflectiveCallSite, f.concreteType());
       ret |=
           addEdgeToJSCallGraph(
               cg, reflectiveCallSite, reflectiveTgtMethod, functionPrototypeCallNode);

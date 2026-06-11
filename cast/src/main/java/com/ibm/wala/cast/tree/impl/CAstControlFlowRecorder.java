@@ -59,21 +59,10 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
    */
   private Collection<CAstNode> cachedMappedNodes = null;
 
-  private static class Key {
-    private final Object label;
+  private record Key(Object label, Object from) {
 
-    private final Object from;
-
-    Key(Object label, Object from) {
+    private Key {
       assert from != null;
-      this.from = from;
-      this.label = label;
-    }
-
-    @Override
-    public int hashCode() {
-      if (label != null) return from.hashCode() * label.hashCode();
-      else return from.hashCode();
     }
 
     @Override

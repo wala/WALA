@@ -89,7 +89,7 @@ public class FuncVertex extends Vertex implements ObjectVertex {
   }
 
   @Override
-  public IClass getConcreteType() {
+  public IClass concreteType() {
     return klass;
   }
 

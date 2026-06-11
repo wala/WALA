@@ -30,7 +30,7 @@ public class JavaScriptConstructorInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     if (node.getMethod() instanceof JavaScriptConstructor) {
       InstanceKey bk = base.getInstanceKeyForAllocation(node, allocation);
-      return new NormalAllocationInNode(node, allocation, bk.getConcreteType());
+      return new NormalAllocationInNode(node, allocation, bk.concreteType());
     } else {
       return base.getInstanceKeyForAllocation(node, allocation);
     }

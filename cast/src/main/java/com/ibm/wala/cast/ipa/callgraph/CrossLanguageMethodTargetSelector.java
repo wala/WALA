@@ -38,7 +38,7 @@ public class CrossLanguageMethodTargetSelector implements MethodTargetSelector {
   }
 
   private static Atom getLanguage(MethodReference target) {
-    return target.getDeclaringClass().getClassLoader().getLanguage();
+    return target.getDeclaringClass().getClassLoader().language();
   }
 
   private static Atom getLanguage(CallSiteReference site) {

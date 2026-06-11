@@ -84,7 +84,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
     Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies = new HashMap<>();
     ArrayList<InstanceKey> instanceKeys = new ArrayList<>(pa.getInstanceKeys());
     for (InstanceKey k : instanceKeys) {
-      if (k.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder")) {
+      if (k.concreteType().getName().toString().equals("Ljava/lang/StringBuilder")) {
         if (k instanceof AllocationSiteInNode) {
           AllocationSiteInNode as = (AllocationSiteInNode) k;
           if (as.getSite()
@@ -106,7 +106,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
     InstanceKeySite node;
     for (InstanceKey k : instanceKeys) {
       // create a node for each InstanceKey of type string
-      if (k.getConcreteType().getName().toString().equals("Ljava/lang/String")) {
+      if (k.concreteType().getName().toString().equals("Ljava/lang/String")) {
         if (k instanceof ConstantKey) {
           node =
               new ConstantString(

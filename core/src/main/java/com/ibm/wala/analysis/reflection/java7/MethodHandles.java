@@ -89,20 +89,7 @@ public class MethodHandles {
         }
       };
 
-  private static class HandlesItem<T> implements ContextItem {
-    private final T item;
-
-    public HandlesItem(T method) {
-      this.item = method;
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((item == null) ? 0 : item.hashCode());
-      return result;
-    }
+  private record HandlesItem<T>(T item) implements ContextItem {
 
     @Override
     public boolean equals(Object obj) {
@@ -160,14 +147,7 @@ public class MethodHandles {
     }
   }
 
-  private static class MethodContext implements Context {
-    private final Context base;
-    private final MethodReference method;
-
-    public MethodContext(Context base, MethodReference method) {
-      this.base = base;
-      this.method = method;
-    }
+  private record MethodContext(Context base, MethodReference method) implements Context {
 
     @Override
     public ContextItem get(ContextKey name) {
@@ -176,15 +156,6 @@ public class MethodHandles {
       } else {
         return base.get(name);
       }
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((base == null) ? 0 : base.hashCode());
-      result = prime * result + ((method == null) ? 0 : method.hashCode());
-      return result;
     }
 
     @Override
@@ -204,12 +175,7 @@ public class MethodHandles {
     }
   }
 
-  private static class ContextSelectorImpl implements ContextSelector {
-    private final ContextSelector base;
-
-    public ContextSelectorImpl(ContextSelector base) {
-      this.base = base;
-    }
+  private record ContextSelectorImpl(ContextSelector base) implements ContextSelector {
 
     @Override
     public Context getCalleeTarget(
@@ -225,7 +191,7 @@ public class MethodHandles {
           InstanceKey selfKey = actualParameters[0];
           if (selfKey instanceof ConstantKey
               && selfKey
-                  .getConcreteType()
+                  .concreteType()
                   .getReference()
                   .equals(TypeReference.JavaLangInvokeMethodHandle)) {
             MethodReference ref = ((IMethod) ((ConstantKey<?>) selfKey).getValue()).getReference();
@@ -243,9 +209,9 @@ public class MethodHandles {
           InstanceKey classKey = actualParameters[1];
           InstanceKey nameKey = actualParameters[2];
           if (classKey instanceof ConstantKey
-              && classKey.getConcreteType().getReference().equals(TypeReference.JavaLangClass)
+              && classKey.concreteType().getReference().equals(TypeReference.JavaLangClass)
               && nameKey instanceof ConstantKey
-              && nameKey.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
+              && nameKey.concreteType().getReference().equals(TypeReference.JavaLangString)) {
             return new FindContext(
                 baseContext,
                 ((IClass) ((ConstantKey<?>) classKey).getValue()).getReference(),

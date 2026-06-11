@@ -35,7 +35,15 @@ public interface InstanceKey extends ContextItem {
    * concrete type (modulo the fact that all arrays of references are considered concrete type
    * []Object;)
    */
-  IClass getConcreteType();
+  IClass concreteType();
+
+  /**
+   * @deprecated Use {@link #concreteType()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
+  default IClass getConcreteType() {
+    return concreteType();
+  }
 
   /**
    * Get the creation sites of {@code this}, i.e., the statements that may allocate objects

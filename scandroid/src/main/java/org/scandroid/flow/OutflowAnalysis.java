@@ -116,7 +116,7 @@ public class OutflowAnalysis {
     dests.add(dest);
   }
 
-  @SuppressWarnings({"unused", "unchecked"})
+  @SuppressWarnings("unused")
   private void processArgSinks(
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -170,7 +170,7 @@ public class OutflowAnalysis {
               if (elements != null) {
                 for (DomainElement de : elements) {
                   if (resultSet.contains(domain.getMappedIndex(de))) {
-                    taintTypeSet.add(de.taintSource);
+                    taintTypeSet.add(de.taintSource());
                   }
                 }
               }
@@ -179,7 +179,7 @@ public class OutflowAnalysis {
               for (InstanceKey ik : pa.getPointsToSet(lpkey)) {
                 for (DomainElement de : domain.getPossibleElements(new InstanceKeyElement(ik))) {
                   if (resultSet.contains(domain.getMappedIndex(de))) {
-                    taintTypeSet.add(de.taintSource);
+                    taintTypeSet.add(de.taintSource());
                   }
                 }
               }
@@ -197,7 +197,7 @@ public class OutflowAnalysis {
     }
   }
 
-  @SuppressWarnings({"unused", "unchecked"})
+  @SuppressWarnings("unused")
   private void processEntryArgs(
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -252,13 +252,14 @@ public class OutflowAnalysis {
 
             int mappedIndex = domain.getMappedIndex(de);
             if (flowResult.getResult(block).contains(mappedIndex)) {
-              addEdge(flowGraph, de.taintSource, new ParameterFlow<>(entryBlock, newArgNum, false));
+              addEdge(
+                  flowGraph, de.taintSource(), new ParameterFlow<>(entryBlock, newArgNum, false));
             }
           }
 
           int mappedIndex = domain.getMappedIndex(de);
           if (flowResult.getResult(entryBlock).contains(mappedIndex)) {
-            addEdge(flowGraph, de.taintSource, new ParameterFlow<>(entryBlock, newArgNum, false));
+            addEdge(flowGraph, de.taintSource(), new ParameterFlow<>(entryBlock, newArgNum, false));
           }
         }
         for (InstanceKey ik :
@@ -266,7 +267,8 @@ public class OutflowAnalysis {
           for (DomainElement de : domain.getPossibleElements(new InstanceKeyElement(ik))) {
             if (flowResult.getResult(entryBlock).contains(domain.getMappedIndex(de))) {
 
-              addEdge(flowGraph, de.taintSource, new ParameterFlow<>(entryBlock, newArgNum, false));
+              addEdge(
+                  flowGraph, de.taintSource(), new ParameterFlow<>(entryBlock, newArgNum, false));
             }
           }
         }
@@ -274,7 +276,7 @@ public class OutflowAnalysis {
     }
   }
 
-  @SuppressWarnings({"unused", "unchecked"})
+  @SuppressWarnings("unused")
   private void processEntryRets(
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -304,7 +306,7 @@ public class OutflowAnalysis {
         for (BasicBlockInContext<IExplodedBasicBlock> block : exitsForProcedure) {
           if (flowResult.getResult(block).contains(domain.getMappedIndex(de))) {
 
-            addEdge(flowGraph, de.taintSource, new ReturnFlow<>(block, false));
+            addEdge(flowGraph, de.taintSource(), new ReturnFlow<>(block, false));
           }
           // Iterator<BasicBlockInContext<E>> it =
           // graph.getPredNodes(block);
@@ -339,7 +341,7 @@ public class OutflowAnalysis {
               for (DomainElement ikElement :
                   domain.getPossibleElements(new InstanceKeyElement(ik))) {
                 if (flowResult.getResult(realBlock).contains(domain.getMappedIndex(ikElement))) {
-                  addEdge(flowGraph, ikElement.taintSource, new ReturnFlow<>(realBlock, false));
+                  addEdge(flowGraph, ikElement.taintSource(), new ReturnFlow<>(realBlock, false));
                 }
               }
             }

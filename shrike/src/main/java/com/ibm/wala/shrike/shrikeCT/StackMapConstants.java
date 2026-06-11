@@ -154,39 +154,43 @@ public class StackMapConstants {
     Item.ITEM_Uninitalized
   };
 
-  public static class StackMapFrame {
+  public record StackMapFrame(
+      int frameType, int offset, StackMapType[] localTypes, StackMapType[] stackTypes) {
 
     public StackMapFrame(StackMapFrame frame, int newOffset) {
       this(frame.frameType, newOffset, frame.localTypes, frame.stackTypes);
     }
 
-    public StackMapFrame(
-        int frameType, int offset, StackMapType[] localTypes, StackMapType[] stackTypes) {
-      this.frameType = frameType;
-      this.offset = offset;
-      this.localTypes = localTypes;
-      this.stackTypes = stackTypes;
-    }
-
-    private final int frameType;
-    private final int offset;
-    private final StackMapType[] localTypes;
-    private final StackMapType[] stackTypes;
-
+    /**
+     * @deprecated Use {@link #frameType()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public int getFrameType() {
-      return frameType;
+      return frameType();
     }
 
+    /**
+     * @deprecated Use {@link #offset()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public int getOffset() {
-      return offset;
+      return offset();
     }
 
+    /**
+     * @deprecated Use {@link #localTypes()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public StackMapType[] getLocalTypes() {
-      return localTypes;
+      return localTypes();
     }
 
+    /**
+     * @deprecated Use {@link #stackTypes()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public StackMapType[] getStackTypes() {
-      return stackTypes;
+      return stackTypes();
     }
 
     @Override

@@ -242,7 +242,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
             // Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
           }
         }
-        cl = cl.getParent();
+        cl = cl.parent();
       }
     }
 

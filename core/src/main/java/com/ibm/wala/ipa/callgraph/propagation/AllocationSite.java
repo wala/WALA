@@ -28,37 +28,32 @@ import java.util.Objects;
  * CGNode} that may carry some {@link Context}. This type is useful for a
  * context-<em>insensitive</em> heap abstraction.
  */
-public class AllocationSite implements InstanceKey {
-  private final NewSiteReference site;
-
-  private final IMethod method;
-
-  private final IClass concreteType;
-
-  public AllocationSite(IMethod method, NewSiteReference allocation, IClass type) {
-    this.site = allocation;
-    this.method = method;
-    this.concreteType = type;
-  }
+public record AllocationSite(IMethod method, NewSiteReference site, IClass concreteType)
+    implements InstanceKey {
 
   @Override
   public String toString() {
-    return "SITE{" + getMethod() + ':' + site + '}';
+    return "SITE{" + method() + ':' + site + '}';
   }
 
+  /**
+   * @deprecated Use {@link #site()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public NewSiteReference getSite() {
-    return site;
+    return site();
   }
 
+  /**
+   * @deprecated Use {@link #method()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public IMethod getMethod() {
-    return method;
+    return method();
   }
 
-  @Override
-  public IClass getConcreteType() {
-    return concreteType;
-  }
-
+  // intentional: omits concreteType so two allocation sites at the same
+  // program point are equal regardless of the inferred type
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -68,6 +63,7 @@ public class AllocationSite implements InstanceKey {
     return result;
   }
 
+  // intentional: omits concreteType
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;

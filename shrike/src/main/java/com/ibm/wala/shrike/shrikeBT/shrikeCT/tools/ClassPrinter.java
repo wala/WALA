@@ -299,7 +299,7 @@ public class ClassPrinter {
 
   private void printAnnotations(AnnotationsReader r) throws InvalidClassFileException {
     for (AnnotationAttribute annot : r.getAllAnnotations()) {
-      w.write("    Annotation type: " + annot.type + '\n');
+      w.write("    Annotation type: " + annot.type() + '\n');
     }
   }
 

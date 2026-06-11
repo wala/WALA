@@ -194,7 +194,7 @@ public class FlowGraph implements Iterable<Vertex> {
       private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<>(graph);
 
       private IR getIR(final IAnalysisCacheView cache, FuncVertex func) {
-        return cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector));
+        return cache.getIR(func.concreteType().getMethod(AstMethodReference.fnSelector));
       }
 
       private PointerKey propertyKey(String property, ObjectVertex o) {

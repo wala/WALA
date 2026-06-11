@@ -18,26 +18,24 @@ import java.util.Arrays;
  * This is a {@link ContextItem} that records n allocation sites, the 0th element represents the
  * most recently used receiver obj, which is an {@code AllocationSiteInNode}
  */
-public class AllocationString implements ContextItem {
-
-  private final AllocationSite[] allocationSites;
+public record AllocationString(AllocationSite[] allocationSites) implements ContextItem {
 
   public AllocationString(AllocationSite allocationSite) {
-    if (allocationSite == null) {
-      throw new IllegalArgumentException("null allocationSite");
-    }
-    allocationSites = new AllocationSite[] {allocationSite};
+    this(new AllocationSite[] {allocationSite});
   }
 
-  public AllocationString(AllocationSite[] allocationSites) {
+  public AllocationString {
     if (allocationSites == null) {
       throw new IllegalArgumentException("null allocationSites");
     }
-    this.allocationSites = allocationSites;
   }
 
+  /**
+   * @deprecated Use {@link #allocationSites()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public AllocationSite[] getAllocationSites() {
-    return allocationSites;
+    return allocationSites();
   }
 
   public int getLength() {

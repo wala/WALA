@@ -116,12 +116,7 @@ public class DFS {
   }
 
   /** Comparator class to order the nodes in the DFS according to the depth first order */
-  private static class DFSComparator<T> implements Comparator<T> {
-    private final Map<T, Integer> order;
-
-    DFSComparator(Map<T, Integer> order) {
-      this.order = order;
-    }
+  private record DFSComparator<T>(Map<T, Integer> order) implements Comparator<T> {
 
     @NullUnmarked
     @Override

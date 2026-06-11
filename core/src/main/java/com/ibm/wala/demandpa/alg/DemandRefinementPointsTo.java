@@ -645,25 +645,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    *
    * @author Manu Sridharan
    */
-  private static final class StoreEdge {
+  private record StoreEdge(PointerKeyAndState base, IField field, PointerKeyAndState val) {
     //
     // Represents statement of the form base.field = val
-
-    final PointerKeyAndState base;
-
-    final IField field;
-
-    final PointerKeyAndState val;
-
-    @Override
-    public int hashCode() {
-      final int PRIME = 31;
-      int result = 1;
-      result = PRIME * result + val.hashCode();
-      result = PRIME * result + field.hashCode();
-      result = PRIME * result + base.hashCode();
-      return result;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -676,41 +660,18 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (!base.equals(other.base)) return false;
       return true;
     }
-
-    public StoreEdge(
-        final PointerKeyAndState base, final IField field, final PointerKeyAndState val) {
-      this.base = base;
-      this.field = field;
-      this.val = val;
-    }
   }
 
   /**
    * Representation of a field read.
    *
    * @author Manu Sridharan
+   * @param base Represents statements of the form val = base.field
    */
-  private static final class LoadEdge {
-    // Represents statements of the form val = base.field
-    final PointerKeyAndState base;
-
-    final IField field;
-
-    final PointerKeyAndState val;
-
+  private record LoadEdge(PointerKeyAndState base, IField field, PointerKeyAndState val) {
     @Override
     public String toString() {
       return val + " := " + base + ", field " + field;
-    }
-
-    @Override
-    public int hashCode() {
-      final int PRIME = 31;
-      int result = 1;
-      result = PRIME * result + val.hashCode();
-      result = PRIME * result + field.hashCode();
-      result = PRIME * result + base.hashCode();
-      return result;
     }
 
     @Override
@@ -723,13 +684,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (!field.equals(other.field)) return false;
       if (!base.equals(other.base)) return false;
       return true;
-    }
-
-    public LoadEdge(
-        final PointerKeyAndState base, final IField field, final PointerKeyAndState val) {
-      this.base = base;
-      this.field = field;
-      this.val = val;
     }
   }
 
@@ -875,13 +829,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     private IntSet updateValsForFilter(IntSet vals, final TypeFilter typeFilter) {
       if (typeFilter instanceof SingleClassFilter) {
-        final IClass concreteType = ((SingleClassFilter) typeFilter).getConcreteType();
+        final IClass concreteType = ((SingleClassFilter) typeFilter).concreteType();
         final MutableIntSet tmp = intSetFactory.make();
         vals.foreach(
             x -> {
               InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              if (cha.isAssignableFrom(
-                  concreteType, ikAndState.getInstanceKey().getConcreteType())) {
+              if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().concreteType())) {
                 tmp.add(x);
               }
             });
@@ -892,7 +845,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             x -> {
               InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
               for (IClass t : ((MultipleClassesFilter) typeFilter).getConcreteTypes()) {
-                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
+                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().concreteType())) {
                   tmp.add(x);
                 }
               }
@@ -1083,7 +1036,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       for (InstanceKeyAndState ikAndState : p2set) {
         InstanceKey ik = ikAndState.getInstanceKey();
         IMethod targetMethod =
-            options.getMethodTargetSelector().getCalleeTarget(caller, call, ik.getConcreteType());
+            options.getMethodTargetSelector().getCalleeTarget(caller, call, ik.concreteType());
         if (targetMethod == null) {
           // NOTE: target method can be null because we don't
           // always have type filters
@@ -2111,9 +2064,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           for (InstanceKeyAndState ikAndState : thisPToSet) {
             InstanceKey ik = ikAndState.getInstanceKey();
             IMethod targetMethod =
-                options
-                    .getMethodTargetSelector()
-                    .getCalleeTarget(caller, call, ik.getConcreteType());
+                options.getMethodTargetSelector().getCalleeTarget(caller, call, ik.concreteType());
             if (targetMethod == null) {
               // NOTE: target method can be null because we don't
               // always have type filters
@@ -2412,7 +2363,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         private Collection<Pair<PointerKey, PointerKey>> getBaseAndStored(
             MemoryAccess fieldWrite, IField field) {
-          final CGNode node = fieldWrite.getNode();
+          final CGNode node = fieldWrite.node();
           // an optimization; if node is not represented in our constraint graph, then we could not
           // possibly
           // have discovered flow to the base pointer
@@ -2422,27 +2373,26 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           IR ir = node.getIR();
           final PointerKey base, stored;
           if (field == ArrayContents.v()) {
-            final SSAInstruction instruction =
-                ir.getInstructions()[fieldWrite.getInstructionIndex()];
+            final SSAInstruction instruction = ir.getInstructions()[fieldWrite.instructionIndex()];
             if (instruction == null) {
               return null;
             }
             if (instruction instanceof SSANewInstruction) {
               return DemandPointerFlowGraph.getInfoForNewMultiDim(
-                      (SSANewInstruction) instruction, heapModel, fieldWrite.getNode())
-                  .arrStoreInstrs;
+                      (SSANewInstruction) instruction, heapModel, fieldWrite.node())
+                  .arrStoreInstrs();
             }
             SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
-            base = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getArrayRef());
-            stored = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getValue());
+            base = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getArrayRef());
+            stored = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getValue());
           } else {
             SSAPutInstruction s =
-                (SSAPutInstruction) ir.getInstructions()[fieldWrite.getInstructionIndex()];
+                (SSAPutInstruction) ir.getInstructions()[fieldWrite.instructionIndex()];
             if (s == null) {
               return null;
             }
-            base = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getRef());
-            stored = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getVal());
+            base = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getRef());
+            stored = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getVal());
           }
           return Collections.singleton(Pair.make(base, stored));
         }

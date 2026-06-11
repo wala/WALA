@@ -119,10 +119,10 @@ public class CallFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowFun
      * IntSet.
      */
 
-    final Set<CodeElement> formals = paramArgsMap.get(de.codeElement);
+    final Set<CodeElement> formals = paramArgsMap.get(de.codeElement());
     if (null != formals) {
       for (CodeElement formal : formals) {
-        set.add(domain.getMappedIndex(new DomainElement(formal, de.taintSource)));
+        set.add(domain.getMappedIndex(new DomainElement(formal, de.taintSource())));
       }
     }
     return set;

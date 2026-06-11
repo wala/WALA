@@ -448,7 +448,7 @@ public class LocalPathEdges {
     if (paths.size() > 0) {
       for (IBinaryNaturalRelation R : paths) {
         for (IntPair p : R) {
-          result.add(p.getX());
+          result.add(p.x());
         }
       }
     }

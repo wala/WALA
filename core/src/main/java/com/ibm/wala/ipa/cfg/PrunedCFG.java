@@ -59,20 +59,9 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     return new PrunedCFG<>(cfg, filter);
   }
 
-  private static class FilteredCFGEdges<I, T extends IBasicBlock<I>>
+  private record FilteredCFGEdges<I, T extends IBasicBlock<I>>(
+      ControlFlowGraph<I, T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter)
       implements NumberedEdgeManager<T> {
-    private final ControlFlowGraph<I, T> cfg;
-
-    private final NumberedNodeManager<T> currentCFGNodes;
-
-    private final EdgeFilter<T> filter;
-
-    FilteredCFGEdges(
-        ControlFlowGraph<I, T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
-      this.cfg = cfg;
-      this.filter = filter;
-      this.currentCFGNodes = currentCFGNodes;
-    }
 
     public Iterator<T> getExceptionalSuccessors(final T N) {
       return new FilterIterator<>(
@@ -183,15 +172,8 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     }
   }
 
-  private static class FilteredNodes<T> implements NumberedNodeManager<T> {
-    private final NumberedNodeManager<T> nodes;
-
-    private final Set<T> subset;
-
-    FilteredNodes(NumberedNodeManager<T> nodes, Set<T> subset) {
-      this.nodes = nodes;
-      this.subset = subset;
-    }
+  private record FilteredNodes<T>(NumberedNodeManager<T> nodes, Set<T> subset)
+      implements NumberedNodeManager<T> {
 
     @Override
     public int getNumber(T N) {

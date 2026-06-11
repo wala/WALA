@@ -119,8 +119,8 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     } catch (IOException problem) {
       throw new UncheckedIOException(problem);
     }
-    final var apkFile = testParameters.getApkFile();
-    final var uncalled = testParameters.getUncalled();
+    final var apkFile = testParameters.apkFile();
+    final var uncalled = testParameters.uncalled();
 
     System.err.println("testing " + apkFile + "...");
     Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
@@ -175,22 +175,5 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return testParameters.build().sorted(Comparator.comparing(Named::getName));
   }
 
-  protected static class TestParameters {
-
-    private final Path apkFile;
-    private final Set<MethodReference> uncalled;
-
-    public TestParameters(final Path apkFile, Set<MethodReference> uncalled) {
-      this.apkFile = apkFile;
-      this.uncalled = uncalled;
-    }
-
-    public Path getApkFile() {
-      return apkFile;
-    }
-
-    public Set<MethodReference> getUncalled() {
-      return uncalled;
-    }
-  }
+  protected record TestParameters(Path apkFile, Set<MethodReference> uncalled) {}
 }

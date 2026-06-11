@@ -413,7 +413,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             assert ik instanceof ConcreteTypeKey
                 : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
-            IClass klass = ck.getType();
+            IClass klass = ck.type();
             if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
               system.newConstraint(
                   exceptionVar, getInstanceKeyForPEI(node, peiLoc, type, instanceKeyFactory));
@@ -541,7 +541,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (pi == params.length) {
         IClass recv = null;
         if (site.isDispatch()) {
-          recv = keys[0].getConcreteType();
+          recv = keys[0].concreteType();
         }
 
         handleCallWithSpecificInstanceKeys.accept(recv, keys);
@@ -770,7 +770,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (!representsNullType(instanceKey) && !(instanceKey instanceof ZeroLengthArrayInNode)) {
             system.findOrCreateIndexForInstanceKey(instanceKey);
             PointerKey p = getPointerKeyForArrayContents(instanceKey);
-            IClass contents = ((ArrayClass) instanceKey.getConcreteType()).getElementClass();
+            IClass contents = ((ArrayClass) instanceKey.concreteType()).getElementClass();
             if (p == null) {
             } else {
               if (contentsAreInvariant(symbolTable, du, value)) {
@@ -778,8 +778,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 InstanceKey[] vk = getInvariantContents(value);
                 for (InstanceKey element : vk) {
                   system.findOrCreateIndexForInstanceKey(element);
-                  if (element.getConcreteType() != null) {
-                    if (getClassHierarchy().isAssignableFrom(contents, element.getConcreteType())) {
+                  if (element.concreteType() != null) {
+                    if (getClassHierarchy().isAssignableFrom(contents, element.concreteType())) {
                       system.newConstraint(p, element);
                     }
                   }
@@ -858,14 +858,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             if (cls.isInterface()) {
               for (InstanceKey element : ik) {
                 system.findOrCreateIndexForInstanceKey(element);
-                if (getClassHierarchy().implementsInterface(element.getConcreteType(), cls)) {
+                if (getClassHierarchy().implementsInterface(element.concreteType(), cls)) {
                   system.newConstraint(result, element);
                 }
               }
             } else {
               for (InstanceKey element : ik) {
                 system.findOrCreateIndexForInstanceKey(element);
-                if (getClassHierarchy().isSubclassOf(element.getConcreteType(), cls)) {
+                if (getClassHierarchy().isSubclassOf(element.concreteType(), cls)) {
                   system.newConstraint(result, element);
                 }
               }
@@ -1186,7 +1186,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         return;
       }
       PointerKey def = getPointerKeyForLocal(instruction.getDef());
-      IClass klass = iKey.getConcreteType();
+      IClass klass = iKey.concreteType();
 
       if (DEBUG) {
         System.err.println(
@@ -1245,7 +1245,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 "   ik: "
                     + system.findOrCreateIndexForInstanceKey(ik)
                     + " concrete type "
-                    + ik.getConcreteType()
+                    + ik.concreteType()
                     + " is "
                     + ik);
             System.err.println("   klass:" + klass);
@@ -1379,7 +1379,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                   InstanceKey[] ik = getInvariantContents(val);
                   for (InstanceKey element : ik) {
                     boolean assignable =
-                        getClassHierarchy().isAssignableFrom(cls, element.getConcreteType());
+                        getClassHierarchy().isAssignableFrom(cls, element.concreteType());
                     if ((assignable && useFilter) || (!assignable && !useFilter)) {
                       system.newConstraint(dst, element);
                     }
@@ -1911,7 +1911,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           // for efficiency: assume that only call sites that reference
           // clone() might dispatch to clone methods
           if (call.getCallSite().getDeclaredTarget().getSelector().equals(cloneSelector)) {
-            IClass recv = (keys[0] != null) ? keys[0].getConcreteType() : null;
+            IClass recv = (keys[0] != null) ? keys[0].concreteType() : null;
             IMethod targetMethod =
                 getOptions()
                     .getMethodTargetSelector()
@@ -1926,7 +1926,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
           }
         }
-        CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].getConcreteType(), keys);
+        CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].concreteType(), keys);
         if (target == null) {
           // This indicates an error; I sure hope getTargetForCall
           // raised a warning about this!
@@ -2184,7 +2184,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   @SuppressWarnings("unused")
   private static boolean isRootType(FilteredPointerKey.TypeFilter filter) {
     if (filter instanceof FilteredPointerKey.SingleClassFilter) {
-      return isRootType(((FilteredPointerKey.SingleClassFilter) filter).getConcreteType());
+      return isRootType(((FilteredPointerKey.SingleClassFilter) filter).concreteType());
     } else {
       return false;
     }

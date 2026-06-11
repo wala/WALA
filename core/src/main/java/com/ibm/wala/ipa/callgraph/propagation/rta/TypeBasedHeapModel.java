@@ -243,10 +243,10 @@ public class TypeBasedHeapModel implements HeapModel {
     } else {
       if (result instanceof ConcreteTypeKey) {
         ConcreteTypeKey c = (ConcreteTypeKey) result;
-        if (c.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
+        if (c.concreteType().getReference().equals(TypeReference.JavaLangString)) {
           // a string constant;
           return pointerKeys.getFilteredPointerKeyForLocal(
-              node, valueNumber, new FilteredPointerKey.SingleClassFilter(c.getConcreteType()));
+              node, valueNumber, new FilteredPointerKey.SingleClassFilter(c.concreteType()));
         } else {
           Assertions.UNREACHABLE("need to handle " + result.getClass());
           return null;

@@ -63,20 +63,10 @@ import org.jspecify.annotations.NonNull;
  */
 public class DefaultInstantiationBehavior extends IInstantiationBehavior {
 
-  /* package-private */ static final class BehviourValue implements Serializable {
+  /* package-private */ record BehviourValue(
+      InstanceBehavior behaviour, Exactness exactness, BehviourValue cacheFrom)
+      implements Serializable {
     @Serial private static final long serialVersionUID = 190943987799306506L;
-    public final InstanceBehavior behaviour;
-    public final Exactness exactness;
-    public final BehviourValue cacheFrom;
-
-    public BehviourValue(
-        final InstanceBehavior behaviour,
-        final Exactness exactness,
-        final BehviourValue cacheFrom) {
-      this.behaviour = behaviour;
-      this.exactness = exactness;
-      this.cacheFrom = cacheFrom;
-    }
 
     /** If the value can be derived using an other mapping. */
     public boolean isCached() {
@@ -84,14 +74,11 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
     }
   }
 
-  /* package-private */ static final class BehaviorKey<T> implements Serializable {
+  /**
+   * @param base T is expected to be TypeName or Atom
+   */
+  /* package-private */ record BehaviorKey<T>(T base) implements Serializable {
     @Serial private static final long serialVersionUID = -1932639921432060660L;
-    // T is expected to be TypeName or Atom
-    final T base;
-
-    public BehaviorKey(T base) {
-      this.base = base;
-    }
 
     public static BehaviorKey<TypeName> mk(TypeName base) {
       return new BehaviorKey<>(base);
@@ -113,11 +100,6 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior {
       } else {
         return false;
       }
-    }
-
-    @Override
-    public int hashCode() {
-      return this.base.hashCode();
     }
 
     @Override

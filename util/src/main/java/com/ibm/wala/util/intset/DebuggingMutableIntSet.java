@@ -22,18 +22,10 @@ import org.jspecify.annotations.Nullable;
  * all operations on both of them and performing consistency checks at every step. The purpose of
  * this is debugging bitset implementations.
  */
-class DebuggingMutableIntSet implements MutableIntSet {
+record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondaryImpl)
+    implements MutableIntSet {
 
   @Serial private static final long serialVersionUID = 6879912730471879687L;
-
-  final MutableIntSet primaryImpl;
-
-  final MutableIntSet secondaryImpl;
-
-  DebuggingMutableIntSet(MutableIntSet p, MutableIntSet s) {
-    primaryImpl = p;
-    secondaryImpl = s;
-  }
 
   private void assertEquiv() {
     assert primaryImpl.sameValue(secondaryImpl);

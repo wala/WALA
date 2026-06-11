@@ -12,35 +12,39 @@ package com.ibm.wala.core.util.ssa;
 
 import com.ibm.wala.ssa.SSAInstruction;
 
-public class InstructionByIIndexWrapper<T extends SSAInstruction> {
-  private final T instruction;
-
+public record InstructionByIIndexWrapper<T extends SSAInstruction>(T instruction) {
+  // intentional: uses iIndex() instead of the instruction component so two
+  // distinct SSAInstruction objects with the same index are treated as equal
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + getInstruction().iIndex();
+    result = prime * result + instruction().iIndex();
     return result;
   }
 
+  // intentional: uses iIndex() instead of the instruction component
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
     if (getClass() != obj.getClass()) return false;
     InstructionByIIndexWrapper<?> other = (InstructionByIIndexWrapper<?>) obj;
-    if (getInstruction().iIndex() != other.getInstruction().iIndex()) return false;
+    if (instruction().iIndex() != other.instruction().iIndex()) return false;
     return true;
   }
 
+  /**
+   * @deprecated Use {@link #instruction()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public T getInstruction() {
-    return instruction;
+    return instruction();
   }
 
-  public InstructionByIIndexWrapper(T instruction) {
+  public InstructionByIIndexWrapper {
     if (instruction.iIndex() < 0) {
       throw new IllegalArgumentException("The given instruction, can not be identified by iindex.");
     }
-    this.instruction = instruction;
   }
 }

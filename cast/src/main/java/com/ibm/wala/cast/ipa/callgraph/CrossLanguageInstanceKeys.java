@@ -35,7 +35,7 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
   }
 
   private static Atom getLanguage(TypeReference type) {
-    return type.getClassLoader().getLanguage();
+    return type.getClassLoader().language();
   }
 
   private static Atom getLanguage(NewSiteReference site) {

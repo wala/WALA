@@ -634,7 +634,7 @@ public final class TypeReference implements Serializable {
 
   @Override
   public String toString() {
-    return "<" + classloader.getName() + ',' + name + '>';
+    return "<" + classloader.name() + ',' + name + '>';
   }
 
   public static TypeReference findOrCreateClass(
@@ -643,17 +643,11 @@ public final class TypeReference implements Serializable {
     return findOrCreate(loader, tn);
   }
 
-  private static class Key {
-    /** The initiating class loader */
-    private final ClassLoaderReference classloader;
-
-    /** The type name */
-    private final TypeName name;
-
-    Key(ClassLoaderReference classloader, TypeName name) {
-      this.classloader = classloader;
-      this.name = name;
-    }
+  /**
+   * @param classloader The initiating class loader
+   * @param name The type name
+   */
+  private record Key(ClassLoaderReference classloader, TypeName name) {
 
     @Override
     public final int hashCode() {

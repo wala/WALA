@@ -114,7 +114,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       if (ifk.getInstanceKey() instanceof ConstantKey) {
         ConstantKey<?> i = (ConstantKey<?>) ifk.getInstanceKey();
         if (i.getValue() instanceof String
-            && i.getConcreteType().getClassLoader().getLanguage().equals(Language.JAVA)) {
+            && i.concreteType().getClassLoader().getLanguage().equals(Language.JAVA)) {
           StringConstantCharArray contents = StringConstantCharArray.make((ConstantKey<String>) i);
           instanceKeys.add(contents);
           final Collection<InstanceKey> singleton = HashSetFactory.of(contents);
@@ -349,7 +349,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         OrdinalSet<InstanceKey> ep = getPointsToSet(e);
         for (InstanceKey ik : ep) {
           if (PropagationCallGraphBuilder.catches(
-              caughtTypes, ik.getConcreteType(), getCallGraph().getClassHierarchy())) {
+              caughtTypes, ik.concreteType(), getCallGraph().getClassHierarchy())) {
             S.add(instanceKeys.getMappedIndex(ik));
           }
         }
@@ -366,7 +366,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
                 SSAPropagationCallGraphBuilder.getInstanceKeyForPEI(
                     node, peiLoc, type, iKeyFactory);
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
-            IClass klass = ck.getType();
+            IClass klass = ck.type();
             if (PropagationCallGraphBuilder.catches(
                 caughtTypes, klass, getCallGraph().getClassHierarchy())) {
               S.add(
@@ -394,15 +394,13 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       } else {
         if (klass.isInterface()) {
           for (InstanceKey ik : rhsSet) {
-            if (getCallGraph()
-                .getClassHierarchy()
-                .implementsInterface(ik.getConcreteType(), klass)) {
+            if (getCallGraph().getClassHierarchy().implementsInterface(ik.concreteType(), klass)) {
               S.add(getInstanceKeyMapping().getMappedIndex(ik));
             }
           }
         } else {
           for (InstanceKey ik : rhsSet) {
-            if (getCallGraph().getClassHierarchy().isSubclassOf(ik.getConcreteType(), klass)) {
+            if (getCallGraph().getClassHierarchy().isSubclassOf(ik.concreteType(), klass)) {
               S.add(getInstanceKeyMapping().getMappedIndex(ik));
             }
           }

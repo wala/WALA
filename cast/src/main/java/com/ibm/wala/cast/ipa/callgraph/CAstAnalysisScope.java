@@ -109,7 +109,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   @Override
   public ClassLoaderReference getLoader(Atom name) {
-    assert name.equals(theLoader.getName());
+    assert name.equals(theLoader.name());
     return theLoader;
   }
 

@@ -87,10 +87,10 @@ public class StackMapTableWriter extends Element {
     int i = 1;
     int[] positions = new int[sm.size()];
     Iterator<StackMapFrame> sms = sm.iterator();
-    int position = sms.next().getOffset();
+    int position = sms.next().offset();
     positions[0] = oldToNew.get(position);
     while (sms.hasNext()) {
-      position += sms.next().getOffset() + 1;
+      position += sms.next().offset() + 1;
       positions[i++] = oldToNew.get(position);
     }
 
@@ -249,7 +249,7 @@ public class StackMapTableWriter extends Element {
         offset = position;
 
         if (reuseFrames != null) {
-          if (idx < reuseFrames.size() && reuseFrames.get(idx).getOffset() == frameOffset) {
+          if (idx < reuseFrames.size() && reuseFrames.get(idx).offset() == frameOffset) {
             frames.add(reuseFrames.get(idx++));
             continue;
           } else {

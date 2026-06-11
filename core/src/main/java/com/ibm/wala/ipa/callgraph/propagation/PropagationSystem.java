@@ -427,10 +427,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     } else {
 
       // also register that we have an instanceKey for the klass
-      assert value.getConcreteType() != null;
+      assert value.concreteType() != null;
 
-      if (!value.getConcreteType().getReference().equals(TypeReference.JavaLangObject)) {
-        registerInstanceOfClass(value.getConcreteType(), index);
+      if (!value.concreteType().getReference().equals(TypeReference.JavaLangObject)) {
+        registerInstanceOfClass(value.concreteType(), index);
       }
 
       // we'd better update the worklist appropriately

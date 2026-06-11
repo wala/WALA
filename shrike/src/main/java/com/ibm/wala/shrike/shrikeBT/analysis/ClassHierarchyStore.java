@@ -21,22 +21,8 @@ import java.util.Iterator;
 public final class ClassHierarchyStore implements ClassHierarchyProvider {
   private static final String[] noClasses = new String[0];
 
-  private static final class ClassInfo {
-    final boolean isInterface;
-
-    final boolean isFinal;
-
-    final String superClass;
-
-    final String[] superInterfaces;
-
-    ClassInfo(boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) {
-      this.isInterface = isInterface;
-      this.isFinal = isFinal;
-      this.superClass = superClass;
-      this.superInterfaces = superInterfaces;
-    }
-  }
+  private record ClassInfo(
+      boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) {}
 
   private final HashMap<String, ClassInfo> contents = new HashMap<>();
 

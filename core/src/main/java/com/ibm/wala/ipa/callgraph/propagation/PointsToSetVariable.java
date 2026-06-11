@@ -120,7 +120,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
     b.foreach(
         x -> {
           InstanceKey ik = instanceKeys.getMappedObject(x);
-          IClass concreteType = ik.getConcreteType();
+          IClass concreteType = ik.concreteType();
           if (!cha.isAssignableFrom(type, concreteType)) {
             System.err.println("BOOM");
             System.err.println(ir);

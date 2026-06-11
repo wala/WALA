@@ -128,7 +128,7 @@ public class AppModelMethod {
   public AppModelMethod(IClassHierarchy cha, AnalysisScope scope, AndroidSpecs specs) {
     this.cha = cha;
     this.scope = scope;
-    Language lang = scope.getLanguage(ClassLoaderReference.Application.getLanguage());
+    Language lang = scope.getLanguage(ClassLoaderReference.Application.language());
     insts = lang.instructionFactory();
 
     startMethod();
@@ -182,7 +182,7 @@ public class AppModelMethod {
         TypeReference.findOrCreate(
             ClassLoaderReference.Application, TypeName.string2TypeName(className));
     Atom mName = Atom.findOrCreateUnicodeAtom(methodName);
-    Language lang = scope.getLanguage(ClassLoaderReference.Application.getLanguage());
+    Language lang = scope.getLanguage(ClassLoaderReference.Application.language());
     Descriptor D = Descriptor.findOrCreateUTF8(lang, "()V");
     MethodReference mref = MethodReference.findOrCreate(governingClass, mName, D);
 
@@ -378,10 +378,7 @@ public class AppModelMethod {
         boolean foundValidCtor = false;
         for (IMethod im : klass.getAllMethods()) {
           if (im.getDeclaringClass().getName().toString().equals(klass.getName().toString())
-              && im.getSelector()
-                  .getName()
-                  .toString()
-                  .equals(MethodReference.initAtom.toString())) {
+              && im.getSelector().name().toString().equals(MethodReference.initAtom.toString())) {
             ctor = im;
             foundValidCtor = true;
             // found a default constructor that takes only the outer class as a parameter

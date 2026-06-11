@@ -366,7 +366,7 @@ public class AnalysisScope {
   public String toString() {
     StringBuilder result = new StringBuilder();
     for (ClassLoaderReference loader : loadersByName.values()) {
-      result.append(loader.getName());
+      result.append(loader.name());
       result.append('\n');
       for (Module m : getModules(loader)) {
         result.append(' ');
@@ -395,7 +395,7 @@ public class AnalysisScope {
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
       }
-      loaders.put(loader.getName().toString(), arr);
+      loaders.put(loader.name().toString(), arr);
     }
     res.put("Loaders", loaders);
     final var exclusions = getExclusions();
@@ -417,7 +417,7 @@ public class AnalysisScope {
       throw new IllegalArgumentException("null desc");
     }
     ClassLoaderReference clr = getLoader(loader);
-    Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.getLanguage()), desc);
+    Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.language()), desc);
     TypeReference type = TypeReference.findOrCreate(clr, TypeName.string2TypeName(klass));
     return MethodReference.findOrCreate(type, name, ddesc);
   }
@@ -507,9 +507,9 @@ public class AnalysisScope {
     List<String> moduleLines = new ArrayList<>();
     for (Map.Entry<ClassLoaderReference, List<Module>> e : moduleMap.entrySet()) {
       ClassLoaderReference lrReference = e.getKey();
-      String moduleLdr = lrReference.getName().toString();
-      String moduleLang = lrReference.getLanguage().toString();
-      assert Language.JAVA.getName().equals(lrReference.getLanguage())
+      String moduleLdr = lrReference.name().toString();
+      String moduleLang = lrReference.language().toString();
+      assert Language.JAVA.getName().equals(lrReference.language())
           : "Java language only is currently supported";
 
       for (Module m : e.getValue()) {
@@ -542,9 +542,9 @@ public class AnalysisScope {
     List<String> ldrImplLines = new ArrayList<>();
     for (Map.Entry<ClassLoaderReference, String> e : loaderImplByRef.entrySet()) {
       ClassLoaderReference lrReference = e.getKey();
-      String ldrName = lrReference.getName().toString();
-      String ldrLang = lrReference.getLanguage().toString();
-      assert Language.JAVA.getName().equals(lrReference.getLanguage())
+      String ldrName = lrReference.name().toString();
+      String ldrLang = lrReference.language().toString();
+      assert Language.JAVA.getName().equals(lrReference.language())
           : "Java language only is currently supported";
       String ldrImplName = e.getValue();
       String ldrImplDescrLine =

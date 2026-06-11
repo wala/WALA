@@ -238,7 +238,7 @@ public class DemandCastChecker {
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
           Predicate<InstanceKey> castPred =
               ik -> {
-                TypeReference ikTypeRef = ik.getConcreteType().getReference();
+                TypeReference ikTypeRef = ik.concreteType().getReference();
                 for (TypeReference t : declaredResultTypes) {
                   if (cha.isAssignableFrom(cha.lookupClass(t), cha.lookupClass(ikTypeRef))) {
                     return true;

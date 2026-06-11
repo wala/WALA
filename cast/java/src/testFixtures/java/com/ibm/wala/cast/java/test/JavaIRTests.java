@@ -506,7 +506,7 @@ public abstract class JavaIRTests extends IRTests {
             if (instr instanceof EnclosingObjectReference) {
               StringBuilder allIksBuilder = new StringBuilder();
               for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef()))) {
-                allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+                allIksBuilder.append(ik.concreteType().getName()).append(',');
               }
               // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
 
@@ -547,7 +547,7 @@ public abstract class JavaIRTests extends IRTests {
           if (instr instanceof EnclosingObjectReference) {
             StringBuilder allIksBuilder = new StringBuilder();
             for (InstanceKey ik : pa.getPointsToSet(new LocalPointerKey(n, instr.getDef()))) {
-              allIksBuilder.append(ik.getConcreteType().getName()).append(',');
+              allIksBuilder.append(ik.concreteType().getName()).append(',');
             }
             final String allIks = allIksBuilder.toString();
             assertThat(allIks)

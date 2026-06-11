@@ -74,16 +74,14 @@ public class ShortestPath<T> {
    * @return weight &gt; otherWeight
    */
   private boolean greaterThen(Weight weight, Weight otherWeight) {
-    return otherWeight.getType() == Type.NOT_SET
-        || this.comparator.compare(weight, otherWeight) > 0;
+    return otherWeight.type() == Type.NOT_SET || this.comparator.compare(weight, otherWeight) > 0;
   }
 
   /**
    * @return weight &lt; otherWeight
    */
   private boolean lessThen(Weight weight, Weight otherWeight) {
-    return otherWeight.getType() == Type.NOT_SET
-        || this.comparator.compare(weight, otherWeight) < 0;
+    return otherWeight.type() == Type.NOT_SET || this.comparator.compare(weight, otherWeight) < 0;
   }
 
   /**
@@ -100,7 +98,7 @@ public class ShortestPath<T> {
     for (final HyperNode<T> node : edge.getSource()) {
 
       final Weight nodeWeight = node.getWeight();
-      if (nodeWeight.getType() != Type.NOT_SET) {
+      if (nodeWeight.type() != Type.NOT_SET) {
 
         final Weight temp = edgeValue.newValue(nodeWeight);
         if (this.greaterThen(temp, newWeight)) {
@@ -138,7 +136,7 @@ public class ShortestPath<T> {
     for (final DirectedHyperEdge<T> edge : this.selectEdgesToIterate()) {
       final Weight maxOfSources = this.maxOfSources(edge);
 
-      if (maxOfSources.getType() != Type.NOT_SET) {
+      if (maxOfSources.type() != Type.NOT_SET) {
         this.updateDestinationsWithMin(edge, maxOfSources);
       }
     }

@@ -48,7 +48,7 @@ public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
    * @return the concrete type allocated
    */
   @Override
-  public IClass getConcreteType() {
+  public IClass concreteType() {
     return type;
   }
 

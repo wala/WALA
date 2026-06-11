@@ -56,8 +56,8 @@ public class StringConstantCharArray implements InstanceKey {
   }
 
   @Override
-  public IClass getConcreteType() {
-    return constant.getConcreteType().getClassHierarchy().lookupClass(TypeReference.CharArray);
+  public IClass concreteType() {
+    return constant.concreteType().getClassHierarchy().lookupClass(TypeReference.CharArray);
   }
 
   @Override

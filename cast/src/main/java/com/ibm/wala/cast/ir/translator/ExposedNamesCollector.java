@@ -45,18 +45,7 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
     return entity2WrittenNames;
   }
 
-  static class EntityContext implements CAstVisitor.Context {
-
-    private final CAstEntity top;
-
-    EntityContext(CAstEntity top) {
-      this.top = top;
-    }
-
-    @Override
-    public CAstEntity top() {
-      return top;
-    }
+  record EntityContext(CAstEntity top) implements CAstVisitor.Context {
 
     @Override
     public CAstSourcePositionMap getSourceMap() {

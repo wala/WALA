@@ -61,23 +61,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-public class MethodNamePattern {
-  private final String className;
-
-  private final String memberName;
-
-  private final String descriptor; // null = match any types
-
-  public MethodNamePattern(String c, String m, String d) {
-    className = c;
-    memberName = m;
-    descriptor = d;
-  }
+/**
+ * @param descriptor null = match any types
+ */
+public record MethodNamePattern(String className, String memberName, String descriptor) {
 
   public MethodNamePattern(String c, String m) {
-    className = c;
-    memberName = m;
-    descriptor = null;
+    this(c, m, null);
   }
 
   private Collection<IMethod> lookupMethods(IClass c) {
@@ -122,16 +112,33 @@ public class MethodNamePattern {
     return returnString + " - Descriptor: " + descriptor + ')';
   }
 
+  /**
+   * @deprecated Use {@link #descriptor()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public String getDescriptor() {
+    return descriptor();
+  }
+
+  @Override
+  public String descriptor() {
     return String.format("%s.%s%s", className, memberName, descriptor == null ? "" : descriptor);
   }
 
+  /**
+   * @deprecated Use {@link #className()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public String getClassName() {
-    return className;
+    return className();
   }
 
+  /**
+   * @deprecated Use {@link #memberName()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public String getMemberName() {
-    return memberName;
+    return memberName();
   }
 
   public static MethodNamePattern patternForReference(MethodReference methodRef)

@@ -109,7 +109,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public Atom getName() {
-    return getReference().getName();
+    return getReference().name();
   }
 
   @Override

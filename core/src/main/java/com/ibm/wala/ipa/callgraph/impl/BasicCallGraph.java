@@ -355,9 +355,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
         nmBuilder
             .append('/')
             .append(
-                ((InstanceKey) n.getContext().get(ContextKey.RECEIVER))
-                    .getConcreteType()
-                    .getName());
+                ((InstanceKey) n.getContext().get(ContextKey.RECEIVER)).concreteType().getName());
       } else if (n.getContext() instanceof JavaTypeContext) {
         nmBuilder
             .append('/')

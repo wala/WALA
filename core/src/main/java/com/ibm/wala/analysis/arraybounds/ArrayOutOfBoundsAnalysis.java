@@ -96,7 +96,7 @@ public class ArrayOutOfBoundsAnalysis {
 
       Weight weight = this.lowerBoundGraph.getVariableWeight(instruction.getIndex());
 
-      if (weight.getType() == Weight.Type.NUMBER && weight.getNumber() >= 0) {
+      if (weight.type() == Weight.Type.NUMBER && weight.number() >= 0) {
         this.addUnnecessaryCheck(instruction, UnnecessaryCheck.LOWER);
       }
     }
@@ -114,7 +114,7 @@ public class ArrayOutOfBoundsAnalysis {
         if (instruction.getArrayRef() == entry.getKey()) {
           Weight weight = this.upperBoundGraph.getVariableWeight(instruction.getIndex());
 
-          if (weight.getType() == Weight.Type.NUMBER && weight.getNumber() <= -1) {
+          if (weight.type() == Weight.Type.NUMBER && weight.number() <= -1) {
             this.addUnnecessaryCheck(instruction, UnnecessaryCheck.UPPER);
           }
         }

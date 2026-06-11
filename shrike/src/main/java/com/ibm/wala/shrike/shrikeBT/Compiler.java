@@ -1263,22 +1263,8 @@ public abstract class Compiler implements Constants {
     return r;
   }
 
-  private static class HelperPatch {
-    final int start;
-
-    final int length;
-
-    final Instruction[] code;
-
-    final ExceptionHandler[] handlers;
-
-    HelperPatch(int start, int length, Instruction[] code, ExceptionHandler[] handlers) {
-      this.start = start;
-      this.length = length;
-      this.code = code;
-      this.handlers = handlers;
-    }
-  }
+  private record HelperPatch(
+      int start, int length, Instruction[] code, ExceptionHandler[] handlers) {}
 
   private void addBackEdge(int from, int to) {
     int[] oldEdges = backEdges[from];

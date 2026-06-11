@@ -92,7 +92,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
 
   /** get type for F appropriate for use in a field name. */
   protected IClass getFieldNameType(InstanceKey F) {
-    return F.getConcreteType();
+    return F.concreteType();
   }
 
   /**
@@ -102,8 +102,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
     Object v = F.getValue();
     // FIXME: current only constant string are handled
-    if (I.getConcreteType().getClassLoader().getLanguage().modelConstant(v)) {
-      IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom(String.valueOf(v)));
+    if (I.concreteType().getClassLoader().getLanguage().modelConstant(v)) {
+      IField f = I.concreteType().getField(Atom.findOrCreateUnicodeAtom(String.valueOf(v)));
       if (f != null) {
         return getPointerKeyForInstanceField(I, f);
       }

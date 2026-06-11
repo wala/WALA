@@ -156,11 +156,11 @@ public class IntraproceduralExceptionAnalysis {
       Collection<FilteredException> filters = filter.filteredExceptions(throwingInstruction);
       for (FilteredException filter : filters) {
         if (filter.isSubclassFiltered()) {
-          for (IClass iclass : this.classHierarchy.computeSubClasses(filter.getException())) {
+          for (IClass iclass : this.classHierarchy.computeSubClasses(filter.exception())) {
             filtered.add(iclass.getReference());
           }
         } else {
-          filtered.add(filter.getException());
+          filtered.add(filter.exception());
         }
       }
       return filtered;
@@ -210,7 +210,7 @@ public class IntraproceduralExceptionAnalysis {
         Object next = it.next();
         if (next instanceof InstanceKey) {
           InstanceKey instanceKey = (InstanceKey) next;
-          IClass iclass = instanceKey.getConcreteType();
+          IClass iclass = instanceKey.concreteType();
           addTo.add(iclass.getReference());
         } else {
           throw new IllegalStateException(

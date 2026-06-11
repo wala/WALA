@@ -260,7 +260,7 @@ public class SimpleThreadEscapeAnalysis
     do {
       newKeys.clear();
       for (InstanceKey key : escapingInstanceKeys) {
-        IClass type = key.getConcreteType();
+        IClass type = key.concreteType();
         if (type.isReferenceType()) {
           if (type.isArrayClass()) {
             if (((ArrayClass) type).getElementClass() != null) {
@@ -296,7 +296,7 @@ public class SimpleThreadEscapeAnalysis
     //
     Set<IClass> escapingTypes = HashSetFactory.make();
     for (InstanceKey key : escapingInstanceKeys) {
-      escapingTypes.add(key.getConcreteType());
+      escapingTypes.add(key.concreteType());
     }
 
     return escapingTypes;

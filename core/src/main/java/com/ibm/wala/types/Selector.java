@@ -18,11 +18,7 @@ import com.ibm.wala.core.util.strings.Atom;
  *
  * <p>TODO: Canonicalize these?
  */
-public final class Selector {
-
-  private final Atom name;
-
-  private final Descriptor descriptor;
+public record Selector(Atom name, Descriptor descriptor) {
 
   public static Selector make(String selectorStr) {
     return make(Language.JAVA, selectorStr);
@@ -54,31 +50,23 @@ public final class Selector {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    // using instanceof is OK because Selector is final
-    if (obj instanceof Selector) {
-      Selector other = (Selector) obj;
-      return name.equals(other.name) && descriptor.equals(other.descriptor);
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return 19 * name.hashCode() + descriptor.hashCode();
-  }
-
-  @Override
   public String toString() {
     return name.toString() + descriptor;
   }
 
+  /**
+   * @deprecated Use {@link #descriptor()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public Descriptor getDescriptor() {
-    return descriptor;
+    return descriptor();
   }
 
+  /**
+   * @deprecated Use {@link #name()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public Atom getName() {
-    return name;
+    return name();
   }
 }

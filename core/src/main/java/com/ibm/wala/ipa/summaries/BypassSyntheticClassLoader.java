@@ -84,7 +84,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   @Override
   public String toString() {
-    return me.getName().toString();
+    return me.name().toString();
   }
 
   @Override
@@ -130,7 +130,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    */
   @Override
   public Atom getName() {
-    return me.getName();
+    return me.name();
   }
 
   /**

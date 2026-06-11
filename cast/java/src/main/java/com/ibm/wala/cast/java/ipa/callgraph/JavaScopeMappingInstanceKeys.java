@@ -41,7 +41,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
   }
 
   protected LexicalParent[] getParents(InstanceKey base) {
-    IClass cls = base.getConcreteType();
+    IClass cls = base.concreteType();
     if (isPossiblyLexicalClass(cls)) {
       Set<LexicalParent> result = HashSetFactory.make();
 

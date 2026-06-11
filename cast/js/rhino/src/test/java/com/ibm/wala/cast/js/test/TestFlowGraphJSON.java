@@ -84,7 +84,7 @@ public class TestFlowGraphJSON {
     CallGraphResult callGraphResult =
         util.buildCG(
             scriptURL, BuilderType.OPTIMISTIC_WORKLIST, null, false, DefaultSourceExtractor::new);
-    FlowGraph fg = callGraphResult.getFlowGraph();
+    FlowGraph fg = callGraphResult.flowGraph();
     String json = fg.toJSON();
     // Strip out character offsets, as they differ on Windows and make it hard to write assertions.
     json = json.replaceAll(":[0-9]+-[0-9]+", "");

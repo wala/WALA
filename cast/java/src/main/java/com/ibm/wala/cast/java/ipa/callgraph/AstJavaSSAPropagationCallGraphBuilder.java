@@ -227,7 +227,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       InstanceKey iKey = getInstanceKeyForAllocation(instruction.getNewSite());
 
       if (iKey != null) {
-        IClass klass = iKey.getConcreteType();
+        IClass klass = iKey.concreteType();
 
         // in the case of a AstJavaNewEnclosingInstruction (a new instruction like outer.new Bla()),
         // we may need to record the instance keys if the pointer key outer is invariant (and thus

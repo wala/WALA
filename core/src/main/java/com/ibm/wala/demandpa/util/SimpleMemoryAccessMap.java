@@ -419,11 +419,11 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     for (MemoryAccess m :
         Iterator2Iterable.make(
             new CompoundIterator<>(arrayReads.iterator(), arrayWrites.iterator()))) {
-      CGNode node = m.getNode();
+      CGNode node = m.node();
       IR ir = node.getIR();
       assert ir != null : "null IR for " + node + " but we have a memory access";
       SSAInstruction[] instructions = ir.getInstructions();
-      int instructionIndex = m.getInstructionIndex();
+      int instructionIndex = m.instructionIndex();
       assert instructionIndex >= 0 && instructionIndex < instructions.length
           : "instruction index "
               + instructionIndex
@@ -432,7 +432,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
               + ", which has "
               + instructions.length
               + " instructions";
-      SSAInstruction s = instructions[m.getInstructionIndex()];
+      SSAInstruction s = instructions[m.instructionIndex()];
       if (s == null) {
         // this is possible due to dead bytecodes
         continue;

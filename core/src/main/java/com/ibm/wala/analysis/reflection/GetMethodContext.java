@@ -89,7 +89,7 @@ public class GetMethodContext implements Context {
         return null;
       }
     } else if (name == ContextKey.PARAMETERS[1]) {
-      return new FilteredPointerKey.SingleClassFilter(this.name.getConcreteType());
+      return new FilteredPointerKey.SingleClassFilter(this.name.concreteType());
     } else {
       return null;
     }

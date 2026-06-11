@@ -91,9 +91,9 @@ final class PairBasedFlowFunction<E extends ISSABasicBlock> implements IUnaryFlo
     // instruction, which is what we want.
     set.add(d);
     for (UseDefPair udPair : useToDefList) {
-      CodeElement def = udPair.getDef();
+      CodeElement def = udPair.def();
 
-      if (def.equals(de.codeElement)) {
+      if (def.equals(de.codeElement())) {
         // this instruction redefined D, so we
         // do *not* pass it through - this conditional has
         // contradicted our assumption that D should be passed through,
@@ -108,12 +108,12 @@ final class PairBasedFlowFunction<E extends ISSABasicBlock> implements IUnaryFlo
     // other domain elements:
 
     for (UseDefPair udPair : useToDefList) {
-      CodeElement use = udPair.getUse();
+      CodeElement use = udPair.use();
 
-      if (use.equals(de.codeElement)) {
+      if (use.equals(de.codeElement())) {
         // ok, the d element flows to the def, so we add that def
         // and keep looking.
-        DomainElement newDE = new DomainElement(udPair.getDef(), de.taintSource);
+        DomainElement newDE = new DomainElement(udPair.def(), de.taintSource());
         set.add(domain.getMappedIndex(newDE));
       }
     }

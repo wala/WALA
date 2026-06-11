@@ -40,7 +40,7 @@ public class TargetMethodContextSelector implements ContextSelector {
       throw new IllegalArgumentException("R is null");
     }
 
-    final IMethod M = R[0].getConcreteType().getMethod(selector);
+    final IMethod M = R[0].concreteType().getMethod(selector);
 
     class MethodDispatchContext implements Context {
 

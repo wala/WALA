@@ -33,7 +33,7 @@ public class GetClassContextSelector implements ContextSelector {
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(GET_CLASS)) {
-      return new JavaTypeContext(new PointType(receiver[0].getConcreteType()));
+      return new JavaTypeContext(new PointType(receiver[0].concreteType()));
     }
     return null;
   }

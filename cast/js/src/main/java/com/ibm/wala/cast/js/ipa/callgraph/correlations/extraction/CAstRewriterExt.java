@@ -88,21 +88,10 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
   private final Map<CAstControlFlowMap, Set<CAstNode>> flow_to_delete = HashMapFactory.make();
 
   // information about an entity to add to the AST
-  private static class Entity {
-    private final CAstNode anchor;
-    private final CAstEntity me;
+  private record Entity(CAstNode anchor, CAstEntity me) {
 
-    public Entity(CAstNode anchor, CAstEntity me) {
+    private Entity {
       assert me != null;
-      this.anchor = anchor;
-      this.me = me;
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = prime + ((anchor == null) ? 0 : anchor.hashCode());
-      return prime * result + me.hashCode();
     }
   }
 

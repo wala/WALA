@@ -58,7 +58,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site is null");
     }
     assert site.getDeclaredType().isArrayType()
-        || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
+        || site.getDeclaredType().getClassLoader().language() != ClassLoaderReference.Java;
     this.result = result;
     this.site = site;
     this.params = params.clone();

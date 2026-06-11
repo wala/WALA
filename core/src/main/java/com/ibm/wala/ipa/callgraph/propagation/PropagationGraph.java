@@ -388,8 +388,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     @Override
     public AbstractStatement<?, ?> next() {
       IntPair p = innerDelegate.next();
-      int lhs = p.getX();
-      int rhs = p.getY();
+      int lhs = p.x();
+      int rhs = p.y();
       UnaryStatement<?> result =
           currentOperator.makeEquation(
               (PointsToSetVariable) delegateGraph.getNode(lhs),
