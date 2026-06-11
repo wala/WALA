@@ -2984,7 +2984,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // find the first non-block statement ant set-up the label map (useful for breaking many fors)
     ASTNode stmt = n.getBody();
-    while (stmt instanceof Block) stmt = (ASTNode) ((Block) stmt).statements().iterator().next();
+    while (stmt instanceof Block block) stmt = (ASTNode) block.statements().iterator().next();
 
     if (n.getParent() != null)
       // if not a synthetic node from a break/continue -- don't pollute namespace with label, we get
@@ -3107,7 +3107,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // SWITCH_DEFAULT
     // somewhere else
     // polyglot converts all labels to longs. why? who knows...
-    if (constant instanceof Character) constant = (long) ((Character) constant).charValue();
+    if (constant instanceof Character c) constant = (long) c.charValue();
     else if (constant instanceof Byte b) constant = b.longValue();
     else if (constant instanceof Integer integer) constant = integer.longValue();
     else if (constant instanceof Short i) constant = i.longValue();
@@ -3607,8 +3607,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ArrayList<CAstNode> inits = new ArrayList<>();
     for (int i = 0; i < n.initializers().size(); i++) {
       ASTNode init = (ASTNode) n.initializers().get(i);
-      if (init instanceof VariableDeclarationExpression) {
-        for (ASTNode o : (Iterable<ASTNode>) ((VariableDeclarationExpression) init).fragments())
+      if (init instanceof VariableDeclarationExpression varDeclExpr) {
+        for (ASTNode o : (Iterable<ASTNode>) varDeclExpr.fragments())
           inits.add(visitNode(o, context));
       } else inits.add(visitNode(init, context));
     }
