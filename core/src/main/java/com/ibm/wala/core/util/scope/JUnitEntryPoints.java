@@ -126,7 +126,7 @@ public class JUnitEntryPoints {
         }
       }
     }
-    return result::iterator;
+    return result;
   }
 
   private static boolean isTestEntryPoint(TypeName typeName) {
@@ -182,7 +182,7 @@ public class JUnitEntryPoints {
         }
       }
     }
-    return entryPts::iterator;
+    return entryPts;
   }
 
   /**

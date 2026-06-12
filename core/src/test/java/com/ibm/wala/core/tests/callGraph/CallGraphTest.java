@@ -308,7 +308,7 @@ public class CallGraphTest extends WalaTestCase {
         }
       }
     }
-    return result::iterator;
+    return result;
   }
 
   @Test
@@ -426,7 +426,7 @@ public class CallGraphTest extends WalaTestCase {
         result.add(new DefaultEntrypoint(m, cha));
       }
     }
-    return result::iterator;
+    return result;
   }
 
   public static void doCallGraphs(
