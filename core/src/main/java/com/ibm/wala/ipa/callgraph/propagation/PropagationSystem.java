@@ -864,11 +864,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     assert as.getLHS() == p;
-    if (as instanceof UnaryStatement) {
+    if (as instanceof UnaryStatement unaryStatement) {
       newStatement(
           pRef,
           (UnaryOperator<PointsToSetVariable>) as.getOperator(),
-          (PointsToSetVariable) ((UnaryStatement) as).getRightHandSide(),
+          (PointsToSetVariable) unaryStatement.getRightHandSide(),
           false,
           false);
     } else {

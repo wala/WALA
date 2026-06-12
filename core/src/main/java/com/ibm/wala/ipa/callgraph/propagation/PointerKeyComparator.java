@@ -129,9 +129,9 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   private int compareArrayKey(ArrayContentsKey key1, Object key2) {
-    if (key2 instanceof ArrayContentsKey) {
+    if (key2 instanceof ArrayContentsKey arrayContentsKey) {
       ArrayClass k1 = (ArrayClass) key1.getInstanceKey().concreteType();
-      ArrayClass k2 = (ArrayClass) ((ArrayContentsKey) key2).getInstanceKey().concreteType();
+      ArrayClass k2 = (ArrayClass) arrayContentsKey.getInstanceKey().concreteType();
       int d1 = k1.getDimensionality();
       int d2 = k2.getDimensionality();
       if (d1 != d2) {

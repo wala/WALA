@@ -135,8 +135,8 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
       final OrdinalSetMapping<InstanceKey> mapping,
       final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
     if (isOfType(ik, "Ljava/lang/String")) {
-      if (ik instanceof ConstantKey) {
-        final String value = (String) ((ConstantKey<?>) ik).getValue();
+      if (ik instanceof ConstantKey<?> constKey) {
+        final String value = (String) constKey.getValue();
         final InstanceKeySite node = new ConstantString(mapping.getMappedIndex(ik), value);
         addNode(node);
         nodeMap.put(ik, node);

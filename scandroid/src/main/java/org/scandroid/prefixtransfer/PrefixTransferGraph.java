@@ -106,11 +106,10 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
     for (InstanceKey k : instanceKeys) {
       // create a node for each InstanceKey of type string
       if (k.concreteType().getName().toString().equals("Ljava/lang/String")) {
-        if (k instanceof ConstantKey) {
+        if (k instanceof ConstantKey<?> constKey) {
           node =
               new ConstantString(
-                  pa.getInstanceKeyMapping().getMappedIndex(k),
-                  (String) ((ConstantKey<?>) k).getValue());
+                  pa.getInstanceKeyMapping().getMappedIndex(k), (String) constKey.getValue());
           addNode(node);
           nodeMap.put(k, node);
         } else if (k instanceof NormalAllocationInNode normalAllocationInNode) {
