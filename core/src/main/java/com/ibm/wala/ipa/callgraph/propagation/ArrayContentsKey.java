@@ -20,8 +20,7 @@ public final class ArrayContentsKey extends AbstractFieldPointerKey implements F
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof ArrayContentsKey) {
-      ArrayContentsKey other = (ArrayContentsKey) obj;
+    if (obj instanceof ArrayContentsKey other) {
       return instance.equals(other.instance);
     } else {
       return false;

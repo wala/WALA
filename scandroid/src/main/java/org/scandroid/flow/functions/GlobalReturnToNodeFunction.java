@@ -73,10 +73,9 @@ public class GlobalReturnToNodeFunction<E extends ISSABasicBlock> implements IUn
     this.domain = domain;
     this.ikMap = HashMapFactory.make();
     for (PointerKey pk : pa.getPointerKeys()) {
-      if (!(pk instanceof LocalPointerKey)) {
+      if (!(pk instanceof LocalPointerKey lpk)) {
         continue;
       }
-      LocalPointerKey lpk = (LocalPointerKey) pk;
       if (!lpk.getNode().equals(node)) {
         continue;
       }

@@ -29,10 +29,9 @@ public class AllocationStringContext implements Context {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof AllocationStringContext)) {
+    if (!(o instanceof AllocationStringContext that)) {
       return false;
     }
-    AllocationStringContext that = (AllocationStringContext) o;
     return allocationString.equals(that.allocationString);
   }
 

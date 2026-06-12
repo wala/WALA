@@ -88,11 +88,9 @@ public class SSAValue {
     public boolean equals(Object o) {
       if (o == null) {
         return false;
-      } else if (o instanceof TypeKey) {
-        TypeKey other = (TypeKey) o;
+      } else if (o instanceof TypeKey other) {
         return this.type.equals(other.type);
-      } else if (o instanceof WeaklyNamedKey) {
-        WeaklyNamedKey other = (WeaklyNamedKey) o;
+      } else if (o instanceof WeaklyNamedKey other) {
         return this.type.equals(other.type);
       } else {
         return false;
@@ -115,11 +113,9 @@ public class SSAValue {
     public boolean equals(Object o) {
       if (o == null) {
         return false;
-      } else if (o instanceof NamedKey) {
-        NamedKey other = (NamedKey) o;
+      } else if (o instanceof NamedKey other) {
         return (this.type.equals(other.type) && this.name.equals(other.name));
-      } else if (o instanceof TypeKey) {
-        TypeKey other = (TypeKey) o;
+      } else if (o instanceof TypeKey other) {
         return this.type.equals(other.type);
       } else {
         return false;
@@ -146,8 +142,7 @@ public class SSAValue {
     public boolean equals(Object o) {
       if (o == null) {
         return false;
-      } else if (o instanceof NamedKey) {
-        NamedKey other = (NamedKey) o;
+      } else if (o instanceof NamedKey other) {
         return (this.type.equals(other.type) && this.name.equals(other.name));
       } else {
         return false;
@@ -294,8 +289,8 @@ public class SSAValue {
    * @return the argument variableName to the constructor
    */
   public String getVariableName() {
-    if (this.key instanceof NamedKey) {
-      return ((NamedKey) this.key).name;
+    if (this.key instanceof NamedKey namedKey) {
+      return namedKey.name;
     } else {
       return null; // TODO: build a name?
     }
@@ -308,8 +303,7 @@ public class SSAValue {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof SSAValue) {
-      final SSAValue other = (SSAValue) o;
+    if (o instanceof SSAValue other) {
       return ((this.number == other.number)
           && this.mRef.equals(other.mRef)
           && this.type.equals(other.type));

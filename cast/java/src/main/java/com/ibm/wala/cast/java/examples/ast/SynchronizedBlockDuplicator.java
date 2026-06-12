@@ -74,10 +74,10 @@ public class SynchronizedBlockDuplicator
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof UnwindKey)
-          && ((UnwindKey) o).testDirection == testDirection
-          && ((UnwindKey) o).syncNode == syncNode
-          && Objects.equals(rest, ((UnwindKey) o).rest);
+      return (o instanceof UnwindKey unwindKey)
+          && unwindKey.testDirection == testDirection
+          && unwindKey.syncNode == syncNode
+          && Objects.equals(rest, unwindKey.rest);
     }
 
     @Override
@@ -157,8 +157,8 @@ public class SynchronizedBlockDuplicator
   }
 
   private static boolean contains(RewriteContext<UnwindKey> c, CAstNode n) {
-    if (c instanceof SyncContext) {
-      return ((SyncContext) c).containsNode(n);
+    if (c instanceof SyncContext syncContext) {
+      return syncContext.containsNode(n);
     } else {
       return false;
     }

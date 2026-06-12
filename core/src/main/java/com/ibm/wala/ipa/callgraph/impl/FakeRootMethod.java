@@ -69,6 +69,7 @@ public class FakeRootMethod extends AbstractRootMethod {
       throw new IllegalArgumentException("block is null");
     }
     IMethod m = block.getMethod();
-    return m instanceof FakeRootMethod && ((FakeRootMethod) m).isFakeRootMethod(m.getReference());
+    return m instanceof FakeRootMethod fakeRootMethod
+        && fakeRootMethod.isFakeRootMethod(m.getReference());
   }
 }

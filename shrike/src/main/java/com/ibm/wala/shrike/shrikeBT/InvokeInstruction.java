@@ -107,8 +107,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   @Override
   public final boolean equals(Object o) {
-    if (o instanceof InvokeInstruction) {
-      InvokeInstruction i = (InvokeInstruction) o;
+    if (o instanceof InvokeInstruction i) {
       return i.getMethodSignature().equals(getMethodSignature())
           && i.getClassType().equals(getClassType())
           && i.getMethodName().equals(getMethodName())

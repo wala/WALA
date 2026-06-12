@@ -104,10 +104,8 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     @SuppressWarnings("unchecked")
     public String getLabel(Object o) throws WalaException {
       T t = (T) o;
-      if (t instanceof BasicBlockInContext) {
-        BasicBlockInContext<?> bb = (BasicBlockInContext<?>) t;
-        if (bb.getDelegate() instanceof IExplodedBasicBlock) {
-          IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();
+      if (t instanceof BasicBlockInContext<?> bb) {
+        if (bb.getDelegate() instanceof IExplodedBasicBlock delegate) {
           final StringBuilder s =
               new StringBuilder(delegate.getNumber())
                   .append(' ')
@@ -132,8 +130,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     if (s == null) {
       return null;
     }
-    if (s instanceof SSAAbstractInvokeInstruction) {
-      SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
+    if (s instanceof SSAAbstractInvokeInstruction call) {
       String def = call.hasDef() ? call.getDef() + "=" : "";
       final StringBuilder result =
           new StringBuilder(def)
@@ -147,8 +144,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       }
       return result.toString();
     }
-    if (s instanceof SSAGetInstruction) {
-      SSAGetInstruction g = (SSAGetInstruction) s;
+    if (s instanceof SSAGetInstruction g) {
       String fieldName = g.getDeclaredField().getName().toString();
 
       StringBuilder result = new StringBuilder();

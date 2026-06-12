@@ -35,7 +35,7 @@ public class Pair<T, U> implements Serializable {
   @SuppressWarnings("rawtypes")
   @Override
   public boolean equals(Object o) {
-    return (o instanceof Pair) && check(fst, ((Pair) o).fst) && check(snd, ((Pair) o).snd);
+    return (o instanceof Pair pair) && check(fst, pair.fst) && check(snd, pair.snd);
   }
 
   private static int hc(Object o) {

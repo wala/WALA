@@ -419,15 +419,13 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       for (ProgramCounter peiLoc : peis) {
         SSAInstruction pei = ir.getPEI(peiLoc);
 
-        if (pei instanceof SSAAbstractInvokeInstruction) {
-          SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+        if (pei instanceof SSAAbstractInvokeInstruction s) {
           PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
           g.addNode(exceptionVar);
           g.addNode(e);
           g.addEdge(exceptionVar, e, AssignLabel.noFilter());
 
-        } else if (pei instanceof SSAAbstractThrowInstruction) {
-          SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+        } else if (pei instanceof SSAAbstractThrowInstruction s) {
           PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
           g.addNode(exceptionVar);
           g.addNode(e);

@@ -309,11 +309,10 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
         System.err.println("Visiting " + cInsts.length + " instructions");
       }
       for (int i = 0; i < cInsts.length; i++) {
-        if (cInsts[i] instanceof SSAAbstractInvokeInstruction) {
+        if (cInsts[i] instanceof SSAAbstractInvokeInstruction call) {
           if (DEBUG_LEVEL > 1) {
             System.err.println("Checking invoke instruction: " + cInsts[i]);
           }
-          SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cInsts[i];
           CallSiteReference site = call.getCallSite();
           assert site.getProgramCounter() == ccfg.getProgramCounter(i);
           if (cg.getPossibleTargets(caller, site).contains(n)) {

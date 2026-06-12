@@ -100,8 +100,8 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     IntIterator indices = caller.getIR().getCallInstructionIndices(site).intIterator();
     IMethod callerMethod = caller.getMethod();
     Position pos = null;
-    if (indices.hasNext() && callerMethod instanceof AstMethod) {
-      pos = ((AstMethod) callerMethod).getSourcePosition(indices.next());
+    if (indices.hasNext() && callerMethod instanceof AstMethod astMethod) {
+      pos = astMethod.getSourcePosition(indices.next());
     }
     System.err.println(
         "Detected improbable call to Function.prototype.call "

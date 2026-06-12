@@ -39,8 +39,7 @@ public class CAstValueImpl extends CAstImpl {
 
     @Override
     public boolean equals(Object o) {
-      if (!(o instanceof CAstNode)) return false;
-      final CAstNode otherNode = (CAstNode) o;
+      if (!(o instanceof CAstNode otherNode)) return false;
       if (kind != otherNode.getKind()) return false;
       if (!getChildren().equals(otherNode.getChildren())) return false;
       return true;
@@ -65,10 +64,8 @@ public class CAstValueImpl extends CAstImpl {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof CAstNode) {
-        return value == null
-            ? ((CAstNode) o).getValue() == null
-            : value.equals(((CAstNode) o).getValue());
+      if (o instanceof CAstNode cAstNode) {
+        return value == null ? cAstNode.getValue() == null : value.equals(cAstNode.getValue());
       } else {
         return false;
       }

@@ -374,8 +374,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       this.name = name;
       this.entityPosition = pos.getPosition(ast);
 
-      if (n instanceof FunctionNode) {
-        FunctionNode f = (FunctionNode) n;
+      if (n instanceof FunctionNode f) {
         namePosition = makePosition(f.getFunctionName());
         f.flattenSymbolTable(false);
         int i = 0;
@@ -551,8 +550,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           new RangePosition(
               url, line, n.getAbsolutePosition(), n.getAbsolutePosition() + n.getLength());
 
-      if (sourceModule instanceof MappedSourceModule) {
-        Position np = ((MappedSourceModule) sourceModule).getMapping().getIncludedPosition(pos);
+      if (sourceModule instanceof MappedSourceModule mappedSourceModule) {
+        Position np = mappedSourceModule.getMapping().getIncludedPosition(pos);
         if (np != null) {
           return np;
         }
@@ -942,8 +941,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           name = var.getString();
         } else {
           VariableDeclaration decl;
-          if (var instanceof LetNode) {
-            decl = ((LetNode) var).getVariables();
+          if (var instanceof LetNode nodes) {
+            decl = nodes.getVariables();
           } else {
             decl = (VariableDeclaration) var;
           }
@@ -1011,8 +1010,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
           name = var.getString();
         } else {
           VariableDeclaration decl;
-          if (var instanceof LetNode) {
-            decl = ((LetNode) var).getVariables();
+          if (var instanceof LetNode nodes) {
+            decl = nodes.getVariables();
           } else {
             decl = (VariableDeclaration) var;
           }
@@ -1179,8 +1178,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     private String getParentName(AstNode fn) {
       for (int i = 5; fn != null && i > 0; i--, fn = fn.getParent()) {
-        if (fn instanceof ObjectProperty) {
-          ObjectProperty prop = (ObjectProperty) fn;
+        if (fn instanceof ObjectProperty prop) {
           AstNode key = prop.getKey();
           if (key instanceof Name) {
             return key.getString();
@@ -1429,10 +1427,9 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
               ? makeBuiltinNew("Object")
               : handleNew(context, "Object", null)));
       for (AbstractObjectProperty abstractProp : props) {
-        if (!(abstractProp instanceof ObjectProperty)) {
+        if (!(abstractProp instanceof ObjectProperty prop)) {
           continue;
         }
-        final ObjectProperty prop = (ObjectProperty) abstractProp;
         final AstNode key = prop.getKey();
         args.add((key instanceof Name) ? Ast.makeConstant(key.getString()) : visit(key, context));
         args.add(visit(prop, context));
@@ -1687,8 +1684,8 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
         return Ast.makeNode(CAstNode.TYPE_OF, visit(node.getOperand(), arg));
       } else if (node.getType() == Token.DELPROP) {
         AstNode expr = node.getOperand();
-        if (expr instanceof FunctionCall) {
-          expr = ((FunctionCall) expr).getTarget();
+        if (expr instanceof FunctionCall nodes) {
+          expr = nodes.getTarget();
           assert expr instanceof PropertyGet;
         }
 

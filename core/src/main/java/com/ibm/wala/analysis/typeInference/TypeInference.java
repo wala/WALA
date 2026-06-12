@@ -166,8 +166,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
 
     for (SSAInstruction s : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
-      if (s instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
+      if (s instanceof SSAAbstractInvokeInstruction call) {
         TypeVariable v = getVariable(call.getException());
         Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
         if (defaultExceptions.isEmpty()) {
@@ -259,8 +258,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof DeclaredTypeOperator) {
-        DeclaredTypeOperator d = (DeclaredTypeOperator) o;
+      if (o instanceof DeclaredTypeOperator d) {
         return type.equals(d.type);
       } else {
         return false;
@@ -458,8 +456,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof GetElementType) {
-        GetElementType other = (GetElementType) o;
+      if (o instanceof GetElementType other) {
         return load.equals(other.load);
       } else {
         return false;

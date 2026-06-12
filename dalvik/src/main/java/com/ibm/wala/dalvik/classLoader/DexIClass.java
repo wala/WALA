@@ -243,8 +243,8 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final
     // if (this.getClass().equals(obj.getClass())) {
-    if (obj instanceof DexIClass) {
-      return getReference().equals(((DexIClass) obj).getReference());
+    if (obj instanceof DexIClass dexIClass) {
+      return getReference().equals(dexIClass.getReference());
     } else {
       return false;
     }

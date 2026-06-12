@@ -85,8 +85,8 @@ public class SparseIntSet implements IntSet {
     if (S == null) {
       throw new IllegalArgumentException("S == null");
     }
-    if (S instanceof SparseIntSet) {
-      cloneState((SparseIntSet) S);
+    if (S instanceof SparseIntSet sparseIntSet) {
+      cloneState(sparseIntSet);
     } else {
       elements = new int[S.size()];
       size = S.size();
@@ -159,14 +159,14 @@ public class SparseIntSet implements IntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseIntSet) {
-      return sameValueInternal((SparseIntSet) that);
+    if (that instanceof SparseIntSet sparseIntSet) {
+      return sameValueInternal(sparseIntSet);
     } else if (that instanceof BimodalMutableIntSet) {
       return that.sameValue(this);
     } else if (that instanceof BitVectorIntSet) {
       return that.sameValue(this);
-    } else if (that instanceof MutableSharedBitVectorIntSet) {
-      return sameValue(((MutableSharedBitVectorIntSet) that).makeSparseCopy());
+    } else if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
+      return sameValue(mutableSharedBitVectorIntSet.makeSparseCopy());
     } else {
       Assertions.UNREACHABLE(that.getClass().toString());
       return false;
@@ -342,12 +342,12 @@ public class SparseIntSet implements IntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseIntSet) {
+    if (that instanceof SparseIntSet sparseIntSet) {
       MutableSparseIntSet temp = MutableSparseIntSet.make(this);
-      temp.intersectWith((SparseIntSet) that);
+      temp.intersectWith(sparseIntSet);
       return temp;
-    } else if (that instanceof BitVectorIntSet) {
-      SparseIntSet s = ((BitVectorIntSet) that).toSparseIntSet();
+    } else if (that instanceof BitVectorIntSet bitVectorIntSet) {
+      SparseIntSet s = bitVectorIntSet.toSparseIntSet();
       MutableSparseIntSet temp = MutableSparseIntSet.make(this);
       temp.intersectWith(s);
       return temp;
@@ -469,10 +469,10 @@ public class SparseIntSet implements IntSet {
     if (that == null) {
       throw new IllegalArgumentException("null that");
     }
-    if (that instanceof SparseIntSet) {
-      return isSubsetInternal((SparseIntSet) that);
-    } else if (that instanceof BitVectorIntSet) {
-      return isSubsetInternal((BitVectorIntSet) that);
+    if (that instanceof SparseIntSet sparseIntSet) {
+      return isSubsetInternal(sparseIntSet);
+    } else if (that instanceof BitVectorIntSet bitVectorIntSet) {
+      return isSubsetInternal(bitVectorIntSet);
     } else {
       // really slow. optimize as needed.
       for (IntIterator it = intIterator(); it.hasNext(); ) {
@@ -495,8 +495,8 @@ public class SparseIntSet implements IntSet {
 
   @Override
   public boolean containsAny(IntSet set) {
-    if (set instanceof SparseIntSet) {
-      return containsAny((SparseIntSet) set);
+    if (set instanceof SparseIntSet sparseIntSet) {
+      return containsAny(sparseIntSet);
     } else if (set instanceof BimodalMutableIntSet) {
       return set.containsAny(this);
     } else {

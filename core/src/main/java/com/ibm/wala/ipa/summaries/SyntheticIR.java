@@ -101,8 +101,7 @@ public class SyntheticIR extends IR {
      * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back
      * and retrieve them now.
      */
-    if (cfg instanceof InducedCFG) {
-      InducedCFG icfg = (InducedCFG) cfg;
+    if (cfg instanceof InducedCFG icfg) {
       for (SSAPhiInstruction phi : icfg.getAllPhiInstructions()) {
         updateForInstruction(constants, symbolTable, phi);
       }

@@ -64,8 +64,7 @@ public class PrintIRs {
       if (m != null) {
         IR ir = factory.makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());
         System.out.println(ir);
-        if (m instanceof AstMethod) {
-          AstMethod astMethod = (AstMethod) m;
+        if (m instanceof AstMethod astMethod) {
           System.out.println(astMethod.getSourcePosition());
         }
         System.out.println("===================================================\n");

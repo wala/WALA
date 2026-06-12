@@ -50,13 +50,12 @@ public class JsPaPanel extends PaPanel {
     for (Object n : heapGraph) {
       if (heapGraph.getPredNodeCount(n) == 0) {
         if (n instanceof PointerKey) {
-          if (n instanceof ObjectPropertyCatalogKey) {
-            ObjectPropertyCatalogKey opck = (ObjectPropertyCatalogKey) n;
+          if (n instanceof ObjectPropertyCatalogKey opck) {
             InstanceKey instanceKey = opck.getObject();
             int instanceKeyId = instanceKeyMapping.getMappedIndex(instanceKey);
             mapUsingMutableMapping(instanceKeyIdToObjectPropertyCatalogKey, instanceKeyId, opck);
-          } else if (n instanceof AstGlobalPointerKey) {
-            globalsPointerKeys.add((AstGlobalPointerKey) n);
+          } else if (n instanceof AstGlobalPointerKey astGlobalPointerKey) {
+            globalsPointerKeys.add(astGlobalPointerKey);
           }
         } else {
           System.err.println("Non Pointer key root: " + n);

@@ -139,8 +139,8 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
       if (result == null) {
         return Collections.emptySet();
-      } else if (result instanceof CGNode) {
-        return Collections.singleton((CGNode) result);
+      } else if (result instanceof CGNode cgNode) {
+        return Collections.singleton(cgNode);
       } else {
         IntSet s = (IntSet) result;
         HashSet<CGNode> h = HashSetFactory.make(s.size());
@@ -156,8 +156,8 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
       if (t == null) {
         return null;
-      } else if (t instanceof CGNode) {
-        return SparseIntSet.singleton(getCallGraph().getNumber((CGNode) t));
+      } else if (t instanceof CGNode cgNode) {
+        return SparseIntSet.singleton(getCallGraph().getNumber(cgNode));
       } else {
         return (IntSet) t;
       }
@@ -199,12 +199,12 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
         getCallGraph().addEdge(this, tNode);
         return true;
       } else {
-        if (S instanceof CGNode) {
+        if (S instanceof CGNode cgNode) {
           if (S.equals(tNode)) {
             return false;
           } else {
             MutableSharedBitVectorIntSet s = new MutableSharedBitVectorIntSet();
-            s.add(getCallGraph().getNumber((CGNode) S));
+            s.add(getCallGraph().getNumber(cgNode));
             s.add(getCallGraph().getNumber(tNode));
             getCallGraph().addEdge(this, tNode);
             targets.set(pc, s);

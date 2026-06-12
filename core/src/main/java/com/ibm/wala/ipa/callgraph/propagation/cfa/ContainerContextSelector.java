@@ -215,8 +215,7 @@ public class ContainerContextSelector implements ContextSelector {
     if (result != null) {
       return result;
     } else {
-      if (receiver instanceof AllocationSiteInNode) {
-        AllocationSiteInNode a = (AllocationSiteInNode) receiver;
+      if (receiver instanceof AllocationSiteInNode a) {
         IMethod m = a.getNode().getMethod();
         return findRecursiveMatchingContext(m, C);
       } else {
@@ -238,10 +237,9 @@ public class ContainerContextSelector implements ContextSelector {
     }
     if (c.isA(ReceiverInstanceContext.class)) {
       InstanceKey receiver = (InstanceKey) c.get(ContextKey.RECEIVER);
-      if (!(receiver instanceof AllocationSiteInNode)) {
+      if (!(receiver instanceof AllocationSiteInNode i)) {
         return null;
       }
-      AllocationSiteInNode i = (AllocationSiteInNode) receiver;
       CGNode n = i.getNode();
       if (n.getMethod().equals(m)) {
         return n;
@@ -297,8 +295,7 @@ public class ContainerContextSelector implements ContextSelector {
       if (!delegate.isInteresting(receiver.concreteType())) {
         return false;
       }
-      if (receiver instanceof AllocationSiteInNode) {
-        AllocationSiteInNode I = (AllocationSiteInNode) receiver;
+      if (receiver instanceof AllocationSiteInNode I) {
         CGNode N = I.getNode();
         if (N.getContext().isA(ReceiverInstanceContext.class)) {
           return true;

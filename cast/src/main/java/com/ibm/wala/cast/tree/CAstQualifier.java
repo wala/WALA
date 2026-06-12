@@ -83,8 +83,7 @@ public class CAstQualifier {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof CAstQualifier)) return false;
-    CAstQualifier other = (CAstQualifier) o;
+    if (!(o instanceof CAstQualifier other)) return false;
     return other.fName.equals(fName) && (fBit == other.fBit);
   }
 

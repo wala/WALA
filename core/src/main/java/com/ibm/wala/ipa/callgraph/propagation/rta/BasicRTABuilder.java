@@ -205,8 +205,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof DispatchOperator) {
-        DispatchOperator other = (DispatchOperator) o;
+      if (o instanceof DispatchOperator other) {
         return caller.equals(other.caller) && site.equals(other.site);
       } else {
         return false;

@@ -212,9 +212,9 @@ public class FlowGraph implements Iterable<Vertex> {
         PropVertex proto = factory.makePropVertex("prototype");
         if (graph.containsNode(proto)) {
           for (Vertex p : Iterator2Iterable.make(graph.getPredNodes(proto))) {
-            if (p instanceof VarVertex) {
-              int rval = ((VarVertex) p).getValueNumber();
-              FuncVertex func = ((VarVertex) p).getFunction();
+            if (p instanceof VarVertex varVertex) {
+              int rval = varVertex.getValueNumber();
+              FuncVertex func = varVertex.getFunction();
               DefUse du = cache.getDefUse(getIR(cache, func));
               for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                 if (inst instanceof JavaScriptPropertyWrite) {
@@ -476,9 +476,9 @@ public class FlowGraph implements Iterable<Vertex> {
 
                 // edges from objects to properties assigned to them
                 for (Vertex p : Iterator2Iterable.make(dataflow.getPredNodes(property))) {
-                  if (p instanceof VarVertex) {
-                    int rval = ((VarVertex) p).getValueNumber();
-                    FuncVertex func = ((VarVertex) p).getFunction();
+                  if (p instanceof VarVertex varVertex) {
+                    int rval = varVertex.getValueNumber();
+                    FuncVertex func = varVertex.getFunction();
                     DefUse du = cache.getDefUse(getIR(cache, func));
                     for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                       if (inst instanceof JavaScriptPropertyWrite) {
@@ -540,9 +540,8 @@ public class FlowGraph implements Iterable<Vertex> {
                               ensureNode(get(PrototypeField.__proto__, o)));
                         }
                       }
-                    } else if (creation instanceof SSANewInstruction) {
-                      PointerKey proto =
-                          getCoreProto(((SSANewInstruction) creation).getConcreteType());
+                    } else if (creation instanceof SSANewInstruction ssaNewInstruction) {
+                      PointerKey proto = getCoreProto(ssaNewInstruction.getConcreteType());
                       if (proto != null) {
                         for (ObjectVertex f : getPointsToSet(proto)) {
                           for (ObjectVertex o :

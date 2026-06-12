@@ -177,8 +177,7 @@ public class ClassWriter implements ClassConstants {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof CWNAT) {
-        CWNAT r = (CWNAT) o;
+      if (o instanceof CWNAT r) {
         return r.n.equals(n) && r.t.equals(t);
       } else {
         return false;
@@ -211,8 +210,7 @@ public class ClassWriter implements ClassConstants {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof CWInvokeDynamic) {
-        CWInvokeDynamic r = (CWInvokeDynamic) o;
+      if (o instanceof CWInvokeDynamic r) {
         return r.b.equals(b) && r.n.equals(n) && r.t.equals(t);
       } else {
         return false;
@@ -775,8 +773,7 @@ public class ClassWriter implements ClassConstants {
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < newCPEntries.size(); i++) {
       Object o = newCPEntries.get(i);
-      if (o instanceof CWItem) {
-        CWItem item = (CWItem) o;
+      if (o instanceof CWItem item) {
         byte t = item.getType();
         int offset;
         switch (t) {
@@ -829,8 +826,7 @@ public class ClassWriter implements ClassConstants {
         }
         buf[offset] = t;
       } else {
-        if (o instanceof String) {
-          String s = (String) o;
+        if (o instanceof String s) {
           int slen = s.length();
 
           if (chars.length < slen) {
@@ -870,22 +866,22 @@ public class ClassWriter implements ClassConstants {
             throw new IllegalArgumentException("String too long: " + bytes + " bytes");
           }
           setUShort(buf, offset + 1, bytes);
-        } else if (o instanceof Integer) {
+        } else if (o instanceof Integer integer) {
           int offset = reserveBuf(5);
           buf[offset] = CONSTANT_Integer;
-          setInt(buf, offset + 1, (Integer) o);
-        } else if (o instanceof Long) {
+          setInt(buf, offset + 1, integer);
+        } else if (o instanceof Long l) {
           int offset = reserveBuf(9);
           buf[offset] = CONSTANT_Long;
-          setLong(buf, offset + 1, (Long) o);
-        } else if (o instanceof Float) {
+          setLong(buf, offset + 1, l);
+        } else if (o instanceof Float aFloat) {
           int offset = reserveBuf(5);
           buf[offset] = CONSTANT_Float;
-          setFloat(buf, offset + 1, (Float) o);
-        } else if (o instanceof Double) {
+          setFloat(buf, offset + 1, aFloat);
+        } else if (o instanceof Double v) {
           int offset = reserveBuf(9);
           buf[offset] = CONSTANT_Double;
-          setDouble(buf, offset + 1, (Double) o);
+          setDouble(buf, offset + 1, v);
         }
       }
     }

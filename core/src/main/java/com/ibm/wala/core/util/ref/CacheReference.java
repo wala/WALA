@@ -46,11 +46,11 @@ public final class CacheReference {
     }
     return switch (choice) {
       case SOFT -> {
-        if (!(reference instanceof SoftReference)) {
+        if (!(reference instanceof SoftReference<?> softReference)) {
           throw new IllegalArgumentException(
               "not ( reference instanceof java.lang.ref.SoftReference ) ");
         }
-        yield ((SoftReference<?>) reference).get();
+        yield softReference.get();
       }
       case WEAK -> ((WeakReference<?>) reference).get();
       case HARD -> reference;

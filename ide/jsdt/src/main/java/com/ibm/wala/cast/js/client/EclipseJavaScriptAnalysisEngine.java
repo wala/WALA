@@ -140,8 +140,8 @@ public class EclipseJavaScriptAnalysisEngine
 
     // we want the original including file, since that will be the "script"
     Position p = m.getSourcePosition();
-    while (p instanceof IncludedPosition) {
-      p = ((IncludedPosition) p).getIncludePosition();
+    while (p instanceof IncludedPosition includedPosition) {
+      p = includedPosition.getIncludePosition();
     }
 
     String fileName = p.getURL().getFile();
@@ -158,8 +158,8 @@ public class EclipseJavaScriptAnalysisEngine
 
     final Function<IMethod, Boolean> filter =
         object -> {
-          if (object instanceof AstMethod) {
-            return scripts.contains(getScriptName((AstMethod) object));
+          if (object instanceof AstMethod astMethod) {
+            return scripts.contains(getScriptName(astMethod));
           } else {
             return true;
           }

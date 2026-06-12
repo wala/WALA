@@ -31,9 +31,8 @@ public class InstanceFieldKey extends AbstractFieldPointerKey {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof InstanceFieldKey) {
+    if (obj instanceof InstanceFieldKey other) {
       if (obj.getClass().equals(getClass())) {
-        InstanceFieldKey other = (InstanceFieldKey) obj;
         return field.equals(other.field) && instance.equals(other.instance);
       } else {
         return false;

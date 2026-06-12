@@ -142,10 +142,9 @@ public abstract class AbstractPtrTest {
   public static PointerKey getParam(CGNode n, String methodName, HeapModel heapModel) {
     IR ir = n.getIR();
     for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
-      if (s instanceof SSAInvokeInstruction) {
-        SSAInvokeInstruction call = (SSAInvokeInstruction) s;
+      if (s instanceof SSAInvokeInstruction call) {
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
-          IntSet indices = ir.getCallInstructionIndices(((SSAInvokeInstruction) s).getCallSite());
+          IntSet indices = ir.getCallInstructionIndices(call.getCallSite());
           Assertions.productionAssertion(
               indices.size() == 1, "expected 1 but got " + indices.size());
           SSAInstruction callInstr = ir.getInstructions()[indices.intIterator().next()];

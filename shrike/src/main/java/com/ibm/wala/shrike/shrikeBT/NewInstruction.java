@@ -68,8 +68,7 @@ public final class NewInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof NewInstruction) {
-      NewInstruction i = (NewInstruction) o;
+    if (o instanceof NewInstruction i) {
       return i.type.equals(type) && i.arrayBoundsCount == arrayBoundsCount;
     } else {
       return false;

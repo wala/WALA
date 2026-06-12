@@ -213,8 +213,8 @@ public class CompareToZeroOneCFADriver {
     // if (key instanceof MultiNewArrayAllocationSiteKey) {
     // return true;
     // }
-    if (key instanceof InstanceKeyWithNode) {
-      CGNode node = ((InstanceKeyWithNode) key).getNode();
+    if (key instanceof InstanceKeyWithNode instanceKeyWithNode) {
+      CGNode node = instanceKeyWithNode.getNode();
       MethodReference methodRef = node.getMethod().getReference();
       if (methodRef
           .toString()

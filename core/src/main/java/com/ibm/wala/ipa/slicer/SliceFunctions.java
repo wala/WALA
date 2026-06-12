@@ -39,8 +39,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
         // this control dependence does not flow back to the caller.
       }
       case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
-        if (dest instanceof HeapStatement) {
-          HeapStatement hd = (HeapStatement) dest;
+        if (dest instanceof HeapStatement hd) {
           HeapStatement hs = (HeapStatement) src;
           if (hs.getLocation().equals(hd.getLocation())) {
             return IdentityFlowFunction.identity();

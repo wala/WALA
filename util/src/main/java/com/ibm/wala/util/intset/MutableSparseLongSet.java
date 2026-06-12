@@ -145,8 +145,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   @NullUnmarked
   @Override
   public void copySet(LongSet that) throws UnimplementedError {
-    if (that instanceof SparseLongSet) {
-      SparseLongSet set = (SparseLongSet) that;
+    if (that instanceof SparseLongSet set) {
       if (set.elements != null) {
         elements = set.elements.clone();
         size = set.size;
@@ -164,8 +163,8 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     if (set == null) {
       throw new IllegalArgumentException("null set");
     }
-    if (set instanceof SparseLongSet) {
-      intersectWith((SparseLongSet) set);
+    if (set instanceof SparseLongSet sparseLongSet) {
+      intersectWith(sparseLongSet);
     } else {
       int j = 0;
       for (int i = 0; i < size; i++) if (set.contains(elements[i])) elements[j++] = elements[i];
@@ -251,8 +250,8 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    */
   @Override
   public boolean addAll(LongSet set) throws UnimplementedError {
-    if (set instanceof SparseLongSet) {
-      return addAll((SparseLongSet) set);
+    if (set instanceof SparseLongSet sparseLongSet) {
+      return addAll(sparseLongSet);
     } else {
       Assertions.UNREACHABLE();
       return false;

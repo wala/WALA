@@ -324,8 +324,8 @@ public abstract class Decoder implements Constants {
         } else {
           for (int j = 0; j < size; j++) {
             instr = decoded.get(offset + j);
-            if (instr instanceof StoreInstruction
-                && ((StoreInstruction) instr).getVarIndex() == v) {
+            if (instr instanceof StoreInstruction storeInstruction
+                && storeInstruction.getVarIndex() == v) {
               return 0;
             }
 
@@ -365,12 +365,12 @@ public abstract class Decoder implements Constants {
       return 0;
     }
 
-    if (!(instr instanceof StoreInstruction)) {
+    if (!(instr instanceof StoreInstruction storeInstruction)) {
       throw new InvalidBytecodeException(
           "Subroutine at " + subAddr + " does not start with an astore or pop instruction");
     }
 
-    int localIndex = ((StoreInstruction) instr).getVarIndex();
+    int localIndex = storeInstruction.getVarIndex();
 
     do {
       subAddr++;
@@ -698,8 +698,7 @@ public abstract class Decoder implements Constants {
       throw new InvalidBytecodeException("Stack underflow");
     }
 
-    if (i instanceof DupInstruction) {
-      DupInstruction d = (DupInstruction) i;
+    if (i instanceof DupInstruction d) {
       int delta = d.getDelta();
       int size = d.getSize();
 
@@ -910,7 +909,7 @@ public abstract class Decoder implements Constants {
     // fix up branch targets within emitted subroutine
     for (int i = subStart; i < newCodeIndex; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof GotoInstruction && ((GotoInstruction) instr).getLabel() < 0) {
+      if (instr instanceof GotoInstruction gotoInstruction && gotoInstruction.getLabel() < 0) {
         // fix up 'ret' instruction to branch back to return address
         instructions[i] = GotoInstruction.make(callerMap[callSite] + 1);
       } else {

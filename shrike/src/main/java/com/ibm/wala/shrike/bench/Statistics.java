@@ -82,8 +82,7 @@ public class Statistics {
         int constructorCalls = 0;
         IInstruction[] instrs = d.getInstructions();
         for (IInstruction instr : instrs) {
-          if (instr instanceof InvokeInstruction) {
-            InvokeInstruction invoke = (InvokeInstruction) instr;
+          if (instr instanceof InvokeInstruction invoke) {
             if (invoke.getMethodName().equals("<init>")
                 && invoke.getClassType().equals(Util.makeType(className))) {
               constructorCalls++;

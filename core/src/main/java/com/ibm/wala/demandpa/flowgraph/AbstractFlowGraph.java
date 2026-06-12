@@ -291,21 +291,17 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (pk == null) {
       throw new IllegalArgumentException("null pk");
     }
-    if (pk instanceof LocalPointerKey) {
-      LocalPointerKey lpk = (LocalPointerKey) pk;
+    if (pk instanceof LocalPointerKey lpk) {
       return h.getPointerKeyForLocal(lpk.getNode(), lpk.getValueNumber());
-    } else if (pk instanceof ArrayContentsKey) {
-      ArrayContentsKey ack = (ArrayContentsKey) pk;
+    } else if (pk instanceof ArrayContentsKey ack) {
       InstanceKey ik = ack.getInstanceKey();
-      if (ik instanceof NormalAllocationInNode) {
-        NormalAllocationInNode nain = (NormalAllocationInNode) ik;
+      if (ik instanceof NormalAllocationInNode nain) {
         ik = h.getInstanceKeyForAllocation(nain.getNode(), nain.getSite());
       } else {
         assert false : "need to handle " + ik.getClass();
       }
       return h.getPointerKeyForArrayContents(ik);
-    } else if (pk instanceof ReturnValueKey) {
-      ReturnValueKey rvk = (ReturnValueKey) pk;
+    } else if (pk instanceof ReturnValueKey rvk) {
       return h.getPointerKeyForReturnValue(rvk.getNode());
     }
     throw new UnsupportedOperationException("need to handle " + pk.getClass());
@@ -355,14 +351,12 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         // TODO detect this earlier and don't keep it in the MemoryAccessMap
         continue;
       }
-      if (instruction instanceof SSAArrayStoreInstruction) {
-        SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
+      if (instruction instanceof SSAArrayStoreInstruction s) {
         PointerKey r = heapModel.getPointerKeyForLocal(node, s.getValue());
         written.add(r);
-      } else if (instruction instanceof SSANewInstruction) {
+      } else if (instruction instanceof SSANewInstruction ssaNewInstruction) {
         NewMultiDimInfo multiDimInfo =
-            DemandPointerFlowGraph.getInfoForNewMultiDim(
-                (SSANewInstruction) instruction, heapModel, node);
+            DemandPointerFlowGraph.getInfoForNewMultiDim(ssaNewInstruction, heapModel, node);
         for (Pair<PointerKey, PointerKey> arrStoreInstr : multiDimInfo.arrStoreInstrs()) {
           written.add(arrStoreInstr.snd);
         }
@@ -429,15 +423,13 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (ProgramCounter peiLoc : peis) {
       SSAInstruction pei = ir.getPEI(peiLoc);
 
-      if (pei instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+      if (pei instanceof SSAAbstractInvokeInstruction s) {
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);
         addEdge(exceptionVar, e, AssignLabel.noFilter());
 
-      } else if (pei instanceof SSAAbstractThrowInstruction) {
-        SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+      } else if (pei instanceof SSAAbstractThrowInstruction s) {
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);

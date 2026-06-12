@@ -149,8 +149,8 @@ public class CAstDumper {
           } else {
             buf.append(", ");
           }
-          if (label instanceof CAstNode)
-            buf.append("CAstNode@").append(labeller.addNode((CAstNode) label)).append(": ");
+          if (label instanceof CAstNode cAstNode)
+            buf.append("CAstNode@").append(labeller.addNode(cAstNode)).append(": ");
           else buf.append(label).append(": ");
           buf.append(labeller.addNode(target));
         }

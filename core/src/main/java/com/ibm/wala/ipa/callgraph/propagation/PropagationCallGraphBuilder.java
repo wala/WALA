@@ -497,8 +497,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     @Override
     public boolean equals(Object obj) {
       // instanceof is OK because this class is final
-      if (obj instanceof TypedPointerKey) {
-        TypedPointerKey other = (TypedPointerKey) obj;
+      if (obj instanceof TypedPointerKey other) {
         return type.equals(other.type) && base.equals(other.base);
       } else {
         return false;
@@ -1003,8 +1002,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof GetFieldOperator) {
-        GetFieldOperator other = (GetFieldOperator) o;
+      if (o instanceof GetFieldOperator other) {
         return getField().equals(other.getField()) && getFixedSet().equals(other.getFixedSet());
       } else {
         return false;
@@ -1200,8 +1198,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof InstancePutFieldOperator) {
-        InstancePutFieldOperator other = (InstancePutFieldOperator) o;
+      if (o instanceof InstancePutFieldOperator other) {
         return field.equals(other.field) && instance.equals(other.instance);
       } else {
         return false;
@@ -1281,8 +1278,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof InstanceArrayStoreOperator) {
-        InstanceArrayStoreOperator other = (InstanceArrayStoreOperator) o;
+      if (o instanceof InstanceArrayStoreOperator other) {
         return instance.equals(other.instance);
       } else {
         return false;

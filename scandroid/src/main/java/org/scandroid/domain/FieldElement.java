@@ -77,8 +77,7 @@ public class FieldElement extends CodeElement {
 
   @Override
   public boolean equals(Object other) {
-    if (other instanceof FieldElement) {
-      FieldElement otherFE = (FieldElement) other;
+    if (other instanceof FieldElement otherFE) {
       return object.equals(otherFE.object) && fieldRef.equals(otherFE.fieldRef);
     }
     return false;

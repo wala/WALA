@@ -59,8 +59,8 @@ class DualTreeCellRenderer implements TreeCellRenderer {
   }
 
   private TreeCellRenderer getTreeCellRenderer(Object value) {
-    if (value instanceof DefaultMutableTreeNode) {
-      value = ((DefaultMutableTreeNode) value).getUserObject();
+    if (value instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
+      value = defaultMutableTreeNode.getUserObject();
     }
     if (value instanceof PointerKey) {
       return pkTreeCellRenderer;

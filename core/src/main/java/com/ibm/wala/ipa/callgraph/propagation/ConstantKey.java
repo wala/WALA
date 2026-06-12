@@ -33,8 +33,7 @@ public final class ConstantKey<T> implements InstanceKey {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof ConstantKey) {
-      ConstantKey<?> other = (ConstantKey<?>) obj;
+    if (obj instanceof ConstantKey<?> other) {
       return valueClass.equals(other.valueClass) ? Objects.equals(value, other.value) : false;
     } else {
       return false;

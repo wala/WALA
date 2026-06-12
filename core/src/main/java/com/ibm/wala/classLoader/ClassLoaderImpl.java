@@ -458,15 +458,15 @@ public class ClassLoaderImpl implements IClassLoader {
     Set<ModuleEntry> sourceModuleEntries = HashSetFactory.make();
     for (Module archive : modules) {
       boolean isJMODType = false;
-      if (archive instanceof JarFileModule) {
-        JarFile jarFile = ((JarFileModule) archive).getJarFile();
+      if (archive instanceof JarFileModule fileModule) {
+        JarFile jarFile = fileModule.getJarFile();
         isJMODType = (jarFile != null) && jarFile.getName().endsWith(".jmod");
       }
       if (DEBUG_LEVEL > 0) {
         System.err.println("add archive: " + archive);
       }
       // byte[] jarFileContents = null;
-      if (OPTIMIZE_JAR_FILE_IO && archive instanceof JarFileModule) {
+      if (OPTIMIZE_JAR_FILE_IO && archive instanceof JarFileModule jarFileModule) {
         // if we have a jar file, we read the whole thing into memory and operate on that; enables
         // more
         // efficient sequential I/O
@@ -483,7 +483,7 @@ public class ClassLoaderImpl implements IClassLoader {
         // a JarFile.  Will leave this as is for now.  --MS
         // jarFileContents = archive instanceof JarFileModule ? getJarFileContents((JarFileModule)
         // archive) : null;
-        getJarFileContents((JarFileModule) archive);
+        getJarFileContents(jarFileModule);
       }
       Set<ModuleEntry> classFiles = getClassFiles(archive);
       removeClassFiles(classFiles, classModuleEntries);
@@ -515,8 +515,8 @@ public class ClassLoaderImpl implements IClassLoader {
       if (e.isModuleFile()) {
         result.putAll(getEntrySizes(e.asModule(), e.getName()));
       } else {
-        if (e instanceof JarFileEntry) {
-          curFileResult.put(e.getName(), ((JarFileEntry) e).getSize());
+        if (e instanceof JarFileEntry jarFileEntry) {
+          curFileResult.put(e.getName(), jarFileEntry.getSize());
         }
       }
     }

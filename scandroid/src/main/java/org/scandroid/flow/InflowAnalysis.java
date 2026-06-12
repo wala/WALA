@@ -163,11 +163,10 @@ public class InflowAnalysis {
     for (BasicBlockInContext<E> block : graph) {
 
       for (SSAInstruction inst : block) {
-        if (!(inst instanceof SSAInvokeInstruction)) {
+        if (!(inst instanceof SSAInvokeInstruction invInst)) {
           continue;
         }
 
-        SSAInvokeInstruction invInst = (SSAInvokeInstruction) inst;
         for (IMethod target : cha.getPossibleTargets(invInst.getDeclaredTarget())) {
           if (targets.contains(target)) {
             for (int i = 0; i < targetList.size(); i++) {
@@ -225,8 +224,8 @@ public class InflowAnalysis {
         processInputSource(ctx, taintMap, element, cg, graph, cha, pa);
       else if (element instanceof CallRetSourceSpec || element instanceof CallArgSourceSpec)
         ssAL.add(element);
-      else if (element instanceof StaticFieldSourceSpec) {
-        processStaticFieldSource(ctx, taintMap, (StaticFieldSourceSpec) element, cg, graph, pa);
+      else if (element instanceof StaticFieldSourceSpec staticFieldSourceSpec) {
+        processStaticFieldSource(ctx, taintMap, staticFieldSourceSpec, cg, graph, pa);
       } else throw new UnsupportedOperationException("Unrecognized SourceSpec");
     }
     if (!ssAL.isEmpty()) processFunctionCalls(ctx, taintMap, ssAL, graph, pa, cha, cg);

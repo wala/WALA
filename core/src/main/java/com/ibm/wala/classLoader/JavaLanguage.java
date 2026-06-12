@@ -576,8 +576,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       return TypeReference.JavaLangString;
     } else if (o instanceof ClassToken || o instanceof TypeReference) {
       return TypeReference.JavaLangClass;
-    } else if (o instanceof IMethod) {
-      IMethod m = (IMethod) o;
+    } else if (o instanceof IMethod m) {
       return m.isInit()
           ? TypeReference.JavaLangReflectConstructor
           : TypeReference.JavaLangReflectMethod;
@@ -766,11 +765,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   @Override
   public Object getMetadataToken(Object value) {
-    if (value instanceof ClassToken) {
+    if (value instanceof ClassToken classToken) {
       return ShrikeUtil.makeTypeReference(
-          ClassLoaderReference.Application, ((ClassToken) value).getTypeName());
-    } else if (value instanceof ReferenceToken) {
-      ReferenceToken tok = (ReferenceToken) value;
+          ClassLoaderReference.Application, classToken.getTypeName());
+    } else if (value instanceof ReferenceToken tok) {
       TypeReference cls =
           ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.className());
       return MethodReference.findOrCreate(

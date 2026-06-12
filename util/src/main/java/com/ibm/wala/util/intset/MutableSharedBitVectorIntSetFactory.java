@@ -33,12 +33,12 @@ public class MutableSharedBitVectorIntSetFactory
     if (x == null) {
       throw new IllegalArgumentException("x == null");
     }
-    if (x instanceof MutableSharedBitVectorIntSet) {
-      return new MutableSharedBitVectorIntSet((MutableSharedBitVectorIntSet) x);
-    } else if (x instanceof SparseIntSet) {
-      return new MutableSharedBitVectorIntSet((SparseIntSet) x);
-    } else if (x instanceof BitVectorIntSet) {
-      return new MutableSharedBitVectorIntSet((BitVectorIntSet) x);
+    if (x instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
+      return new MutableSharedBitVectorIntSet(mutableSharedBitVectorIntSet);
+    } else if (x instanceof SparseIntSet sparseIntSet) {
+      return new MutableSharedBitVectorIntSet(sparseIntSet);
+    } else if (x instanceof BitVectorIntSet bitVectorIntSet) {
+      return new MutableSharedBitVectorIntSet(bitVectorIntSet);
     } else if (x instanceof DebuggingMutableIntSet) {
       return new MutableSharedBitVectorIntSet(new SparseIntSet(x));
     } else {

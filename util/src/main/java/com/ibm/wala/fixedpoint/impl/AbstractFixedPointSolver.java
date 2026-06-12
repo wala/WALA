@@ -171,8 +171,8 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
       if (!workList.isEmpty()) {
         AbstractStatement<?, ?> s = workList.takeStatement();
         System.err.println("Peek      " + lineBreak(s.toString(), 132));
-        if (s instanceof VerboseAction) {
-          ((VerboseAction) s).performVerboseAction();
+        if (s instanceof VerboseAction verboseAction) {
+          verboseAction.performVerboseAction();
         }
         workList.insertStatement(s);
       }

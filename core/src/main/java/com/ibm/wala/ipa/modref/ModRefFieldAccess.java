@@ -115,8 +115,7 @@ public final class ModRefFieldAccess {
       }
 
       for (SSAInstruction instr : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
-        if (instr instanceof SSAGetInstruction) {
-          SSAGetInstruction get = (SSAGetInstruction) instr;
+        if (instr instanceof SSAGetInstruction get) {
           FieldReference fref = get.getDeclaredField();
           IField field = cg.getClassHierarchy().resolveField(fref);
           if (field != null) {
@@ -125,8 +124,7 @@ public final class ModRefFieldAccess {
               refsMap.computeIfAbsent(cls, absent -> new HashSet<>()).add(field);
             }
           }
-        } else if (instr instanceof SSAPutInstruction) {
-          SSAPutInstruction put = (SSAPutInstruction) instr;
+        } else if (instr instanceof SSAPutInstruction put) {
           FieldReference fput = put.getDeclaredField();
           IField field = cg.getClassHierarchy().resolveField(fput);
           if (field != null) {
@@ -149,8 +147,7 @@ public final class ModRefFieldAccess {
     final IR ir = node.getIR();
     if (ir != null) {
       for (SSAInstruction instr : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
-        if (instr instanceof SSAGetInstruction) {
-          SSAGetInstruction get = (SSAGetInstruction) instr;
+        if (instr instanceof SSAGetInstruction get) {
           FieldReference fref = get.getDeclaredField();
           IField field = cg.getClassHierarchy().resolveField(fref);
           if (field != null) {
@@ -159,8 +156,7 @@ public final class ModRefFieldAccess {
               trefsMap.computeIfAbsent(cls, absent -> new HashSet<>()).add(field);
             }
           }
-        } else if (instr instanceof SSAPutInstruction) {
-          SSAPutInstruction put = (SSAPutInstruction) instr;
+        } else if (instr instanceof SSAPutInstruction put) {
           FieldReference fput = put.getDeclaredField();
           IField field = cg.getClassHierarchy().resolveField(fput);
           if (field != null) {

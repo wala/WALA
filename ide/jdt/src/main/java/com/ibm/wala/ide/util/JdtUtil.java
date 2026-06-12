@@ -498,9 +498,9 @@ public class JdtUtil {
   /** Use the search engine to find all methods in a java element */
   public static Collection<IMethod> findMethods(IJavaElement elt) {
 
-    if (elt instanceof ICompilationUnit) {
+    if (elt instanceof ICompilationUnit iCompilationUnit) {
       Collection<IMethod> result = HashSetFactory.make();
-      for (IType type : getClasses((ICompilationUnit) elt)) {
+      for (IType type : getClasses(iCompilationUnit)) {
         try {
           result.addAll(Arrays.asList(type.getMethods()));
         } catch (JavaModelException e) {

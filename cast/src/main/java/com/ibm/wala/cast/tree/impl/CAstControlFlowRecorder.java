@@ -67,7 +67,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof Key) && from == ((Key) o).from && Objects.equals(label, ((Key) o).label);
+      return (o instanceof Key key) && from == key.from && Objects.equals(label, key.label);
     }
 
     @Override
@@ -126,8 +126,8 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     assert from != null;
     assert to != null;
 
-    assert !((from instanceof CAstNode)
-        && ((CAstNode) from).getKind() == CAstNode.GOTO
+    assert !((from instanceof CAstNode cAstNode)
+        && cAstNode.getKind() == CAstNode.GOTO
         && to == EXCEPTION_TO_EXIT);
 
     to = CAstToNode.getOrDefault(to, to);

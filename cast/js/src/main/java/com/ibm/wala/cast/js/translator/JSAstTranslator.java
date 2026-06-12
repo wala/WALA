@@ -324,8 +324,7 @@ public class JSAstTranslator extends AstTranslator {
             ((JSInstructionFactory) insts)
                 .PrototypeLookup(context.cfg().getCurrentInstruction(), x, x));
 
-    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
-      String field = (String) elt.getValue();
+    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String field) {
       // symtab needs to have this value
       context.currentScope().getConstantValue(field);
       context
@@ -366,8 +365,7 @@ public class JSAstTranslator extends AstTranslator {
       CAstNode rvalNode,
       int rval) {
     this.visit(elt, context, this);
-    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
-      String field = (String) elt.getValue();
+    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String field) {
       if (isPrologueScript(context) && "__proto__".equals(field)) {
         context
             .cfg()

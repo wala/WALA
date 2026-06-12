@@ -815,10 +815,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
     }
-    if (statement instanceof UnaryStatement) {
-      addStatement((UnaryStatement<PointsToSetVariable>) statement);
-    } else if (statement instanceof GeneralStatement) {
-      addStatement((GeneralStatement<PointsToSetVariable>) statement);
+    if (statement
+        instanceof UnaryStatement<PointsToSetVariable> pointsToSetVariableUnaryStatement) {
+      addStatement(pointsToSetVariableUnaryStatement);
+    } else if (statement
+        instanceof GeneralStatement<PointsToSetVariable> pointsToSetVariableGeneralStatement) {
+      addStatement(pointsToSetVariableGeneralStatement);
     } else {
       Assertions.UNREACHABLE("unexpected: " + statement.getClass());
     }

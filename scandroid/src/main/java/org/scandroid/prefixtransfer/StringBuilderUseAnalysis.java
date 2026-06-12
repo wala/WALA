@@ -110,8 +110,7 @@ public class StringBuilderUseAnalysis {
     CGNode nominatedNode = null;
 
     for (final PointerKey pk : pa.getPointerKeys()) {
-      if (pk instanceof LocalPointerKey) {
-        final LocalPointerKey lpk = (LocalPointerKey) pk;
+      if (pk instanceof LocalPointerKey lpk) {
         if (!lpk.getNode()
             .getMethod()
             .getReference()
@@ -281,8 +280,7 @@ public class StringBuilderUseAnalysis {
   }
 
   private static boolean isNonNullConstant(final InstanceKey ik) {
-    if (ik instanceof ConstantKey<?>) {
-      final ConstantKey<?> ck = (ConstantKey<?>) ik;
+    if (ik instanceof ConstantKey<?> ck) {
 
       return !"null".equals(ck.getValue().toString());
     }

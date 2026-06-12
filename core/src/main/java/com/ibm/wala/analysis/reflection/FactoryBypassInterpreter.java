@@ -412,11 +412,11 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           if (!typesAllocated.contains(ref)) {
             addStatementsForConcreteType(ref);
           }
-        } else if (T instanceof ConeType) {
+        } else if (T instanceof ConeType coneType) {
           if (DEBUG) {
             System.err.println(("Cone clause for " + T));
           }
-          if (((ConeType) T).isInterface()) {
+          if (coneType.isInterface()) {
             Set<IClass> implementors = T.getType().getClassHierarchy().getImplementors(ref);
             if (DEBUG) {
               System.err.println(("Implementors for " + T + ' ' + implementors));

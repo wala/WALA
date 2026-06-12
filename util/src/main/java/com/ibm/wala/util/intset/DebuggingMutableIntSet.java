@@ -132,8 +132,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
    */
   @Override
   public boolean containsAny(IntSet set) {
-    if (set instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
+    if (set instanceof DebuggingMutableIntSet db) {
       boolean ppr = primaryImpl.containsAny(db.primaryImpl);
       boolean ssr = secondaryImpl.containsAny(db.secondaryImpl);
 
@@ -155,8 +154,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
   @NullUnmarked
   @Override
   public @Nullable IntSet intersection(IntSet that) {
-    if (that instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
+    if (that instanceof DebuggingMutableIntSet db) {
       IntSet ppr = primaryImpl.intersection(db.primaryImpl);
       IntSet ssr = secondaryImpl.intersection(db.secondaryImpl);
 
@@ -186,8 +184,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
    */
   @Override
   public boolean sameValue(IntSet that) {
-    if (that instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
+    if (that instanceof DebuggingMutableIntSet db) {
       boolean ppr = primaryImpl.sameValue(db.primaryImpl);
       boolean ssr = secondaryImpl.sameValue(db.secondaryImpl);
 
@@ -205,8 +202,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
    */
   @Override
   public boolean isSubset(IntSet that) {
-    if (that instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
+    if (that instanceof DebuggingMutableIntSet db) {
       boolean ppr = primaryImpl.isSubset(db.primaryImpl);
       boolean ssr = secondaryImpl.isSubset(db.secondaryImpl);
 
@@ -222,8 +218,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
   /** Set the value of this to be the same as the value of set */
   @Override
   public void copySet(IntSet set) {
-    if (set instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
+    if (set instanceof DebuggingMutableIntSet db) {
       primaryImpl.copySet(db.primaryImpl);
       secondaryImpl.copySet(db.secondaryImpl);
 
@@ -240,8 +235,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
    */
   @Override
   public boolean addAll(IntSet set) {
-    if (set instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
+    if (set instanceof DebuggingMutableIntSet db) {
       int ps = primaryImpl.size();
       int ss = secondaryImpl.size();
       boolean ppr = primaryImpl.addAll(db.primaryImpl);
@@ -272,8 +266,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
   /** Intersect this with another set. */
   @Override
   public void intersectWith(IntSet set) {
-    if (set instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
+    if (set instanceof DebuggingMutableIntSet db) {
       primaryImpl.intersectWith(db.primaryImpl);
       secondaryImpl.intersectWith(db.secondaryImpl);
 
@@ -294,9 +287,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
   /** */
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
-    if (other instanceof DebuggingMutableIntSet && filter instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) other;
-      DebuggingMutableIntSet df = (DebuggingMutableIntSet) filter;
+    if (other instanceof DebuggingMutableIntSet db && filter instanceof DebuggingMutableIntSet df) {
       boolean pr = primaryImpl.addAllInIntersection(db.primaryImpl, df.primaryImpl);
       boolean sr = secondaryImpl.addAllInIntersection(db.secondaryImpl, df.secondaryImpl);
 

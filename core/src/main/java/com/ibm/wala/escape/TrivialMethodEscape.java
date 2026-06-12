@@ -105,8 +105,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
           // a pointer from the heap. give up.
           return true;
         } else {
-          if (p instanceof ReturnValueKey) {
-            ReturnValueKey rk = (ReturnValueKey) p;
+          if (p instanceof ReturnValueKey rk) {
             if (nodes.contains(rk.getNode())) {
               // some node representing method m returns the instance to its
               // caller

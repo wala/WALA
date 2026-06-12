@@ -27,8 +27,7 @@ public final class ZeroLengthArrayInNode extends AllocationSiteInNode {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof ZeroLengthArrayInNode) {
-      AllocationSiteInNode other = (AllocationSiteInNode) obj;
+    if (obj instanceof ZeroLengthArrayInNode other) {
       return getNode().equals(other.getNode()) && getSite().equals(other.getSite());
     } else {
       return false;

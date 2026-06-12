@@ -135,8 +135,7 @@ public class PaPanel extends JSplitPane {
                 (DefaultMutableTreeNode) newLeadSelectionPath.getLastPathComponent();
             Object userObject = treeNode.getUserObject();
             fullName.setText(userObject.toString());
-            if (userObject instanceof LocalPointerKey) {
-              LocalPointerKey lpk = (LocalPointerKey) userObject;
+            if (userObject instanceof LocalPointerKey lpk) {
               IR ir1 = lpk.getNode().getIR();
               SSAInstruction def = lpk.getNode().getDU().getDef(lpk.getValueNumber());
               int pc1 = IrViewer.NA;
@@ -150,21 +149,19 @@ public class PaPanel extends JSplitPane {
                 }
               }
               irViewer.setIRAndPc(ir1, pc1);
-            } else if (userObject instanceof InstanceFieldPointerKey) {
-              InstanceKey ik = ((InstanceFieldPointerKey) userObject).getInstanceKey();
-              if (ik instanceof NormalAllocationInNode) {
-                NormalAllocationInNode normalIk1 = (NormalAllocationInNode) ik;
+            } else if (userObject instanceof InstanceFieldPointerKey instanceFieldPointerKey) {
+              InstanceKey ik = instanceFieldPointerKey.getInstanceKey();
+              if (ik instanceof NormalAllocationInNode normalIk1) {
                 IR ir2 = normalIk1.getNode().getIR();
                 int pc2 = normalIk1.getSite().getProgramCounter();
                 irViewer.setIRAndPc(ir2, pc2);
               }
-            } else if (userObject instanceof NormalAllocationInNode) {
-              NormalAllocationInNode normalIk2 = (NormalAllocationInNode) userObject;
+            } else if (userObject instanceof NormalAllocationInNode normalIk2) {
               IR ir3 = normalIk2.getNode().getIR();
               int pc3 = normalIk2.getSite().getProgramCounter();
               irViewer.setIRAndPc(ir3, pc3);
-            } else if (userObject instanceof CGNode) {
-              irViewer.setIR(((CGNode) userObject).getIR());
+            } else if (userObject instanceof CGNode cgNode) {
+              irViewer.setIR(cgNode.getIR());
             }
           }
         });
@@ -176,16 +173,13 @@ public class PaPanel extends JSplitPane {
     for (Object n : heapGraph) {
       if (heapGraph.getPredNodeCount(n) == 0) { // considering only roots of the heap graph.
         if (n instanceof PointerKey) {
-          if (n instanceof LocalPointerKey) {
-            LocalPointerKey lpk = (LocalPointerKey) n;
+          if (n instanceof LocalPointerKey lpk) {
             int nodeId = lpk.getNode().getGraphNodeId();
             mapUsingMutableMapping(cgNodeIdToLocalPointers, nodeId, lpk);
-          } else if (n instanceof ReturnValueKey) {
-            ReturnValueKey rvk = (ReturnValueKey) n;
+          } else if (n instanceof ReturnValueKey rvk) {
             int nodeId = rvk.getNode().getGraphNodeId();
             mapUsingMutableMapping(cgNodeIdToReturnValue, nodeId, rvk);
-          } else if (n instanceof InstanceFieldPointerKey) {
-            InstanceFieldPointerKey ifpk = (InstanceFieldPointerKey) n;
+          } else if (n instanceof InstanceFieldPointerKey ifpk) {
             int instanceKeyId = instanceKeyMapping.getMappedIndex(ifpk.getInstanceKey());
             mapUsingMutableMapping(instanceKeyIdToInstanceFieldPointers, instanceKeyId, ifpk);
           }
@@ -229,14 +223,14 @@ public class PaPanel extends JSplitPane {
    */
   protected List<Object> getChildrenFor(Object node) {
     List<Object> ret = new ArrayList<>();
-    if (node instanceof InstanceKey) {
-      ret.addAll(getPointerKeysUnderInstanceKey((InstanceKey) node));
-    } else if (node instanceof PointerKey) {
-      for (InstanceKey ik : pa.getPointsToSet((PointerKey) node)) {
+    if (node instanceof InstanceKey instanceKey) {
+      ret.addAll(getPointerKeysUnderInstanceKey(instanceKey));
+    } else if (node instanceof PointerKey pointerKey) {
+      for (InstanceKey ik : pa.getPointsToSet(pointerKey)) {
         ret.add(ik);
       }
-    } else if (node instanceof CGNode) {
-      int nodeId = ((CGNode) node).getGraphNodeId();
+    } else if (node instanceof CGNode cgNode) {
+      int nodeId = cgNode.getGraphNodeId();
       ret.addAll(nonNullList(cgNodeIdToLocalPointers.getMappedObject(nodeId)));
       ret.addAll(nonNullList(cgNodeIdToReturnValue.getMappedObject(nodeId)));
     } else {

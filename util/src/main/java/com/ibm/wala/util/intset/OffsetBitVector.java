@@ -217,11 +217,10 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof OffsetBitVector) {
+    if (obj instanceof OffsetBitVector set) {
       if (this == obj) { // should help alias analysis
         return true;
       }
-      OffsetBitVector set = (OffsetBitVector) obj;
       return sameBits(set);
     }
     return false;

@@ -18,8 +18,7 @@ public abstract class AbstractSourcePosition implements Position {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof Position) {
-      Position p = (Position) o;
+    if (o instanceof Position p) {
       return getFirstLine() == p.getFirstLine()
           && getLastLine() == p.getLastLine()
           && getFirstCol() == p.getFirstCol()
@@ -41,8 +40,7 @@ public abstract class AbstractSourcePosition implements Position {
 
   @Override
   public int compareTo(SourcePosition o) {
-    if (o instanceof Position) {
-      Position p = (Position) o;
+    if (o instanceof Position p) {
       if (getFirstLine() != p.getFirstLine()) {
         return getFirstLine() - p.getFirstLine();
       } else if (getFirstCol() != p.getFirstCol()) {

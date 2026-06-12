@@ -53,8 +53,7 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
             (PartiallyBalancedTabulationProblem<T, P, F>) getProblem();
         IFlowFunction f = problem.getFunctionMap().getUnbalancedReturnFlowFunction(n, retSite);
         // for each fact that can be reached by the return flow ...
-        if (f instanceof IUnaryFlowFunction) {
-          IUnaryFlowFunction uf = (IUnaryFlowFunction) f;
+        if (f instanceof IUnaryFlowFunction uf) {
           IntSet facts = uf.getTargets(j);
           if (facts != null) {
             for (IntIterator it4 = facts.intIterator(); it4.hasNext(); ) {

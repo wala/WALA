@@ -159,8 +159,7 @@ public class FormalTypeParameter extends Signature {
    */
   public static FormalTypeParameter[] getTypeParameters(IClass klass)
       throws InvalidClassFileException {
-    if (klass instanceof ShrikeClass) {
-      ShrikeClass sc = (ShrikeClass) klass;
+    if (klass instanceof ShrikeClass sc) {
       if (sc.getClassSignature() == null) {
         return null;
       } else {
@@ -173,8 +172,7 @@ public class FormalTypeParameter extends Signature {
 
   public static FormalTypeParameter[] getTypeParameters(IMethod method)
       throws InvalidClassFileException {
-    if (method instanceof ShrikeCTMethod) {
-      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+    if (method instanceof ShrikeCTMethod sm) {
       if (sm.getMethodTypeSignature() == null) {
         return null;
       } else {

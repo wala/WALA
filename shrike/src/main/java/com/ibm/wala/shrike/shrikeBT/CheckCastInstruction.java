@@ -28,8 +28,7 @@ public final class CheckCastInstruction extends Instruction implements ITypeTest
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof CheckCastInstruction) {
-      CheckCastInstruction i = (CheckCastInstruction) o;
+    if (o instanceof CheckCastInstruction i) {
       return i.type.equals(type);
     } else {
       return false;

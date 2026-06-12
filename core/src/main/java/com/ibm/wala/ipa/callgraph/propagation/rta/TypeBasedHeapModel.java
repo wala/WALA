@@ -238,11 +238,10 @@ public class TypeBasedHeapModel implements HeapModel {
       // a null constant
       return null;
     }
-    if (result instanceof FilteredPointerKey) {
-      return (FilteredPointerKey) result;
+    if (result instanceof FilteredPointerKey filteredPointerKey) {
+      return filteredPointerKey;
     } else {
-      if (result instanceof ConcreteTypeKey) {
-        ConcreteTypeKey c = (ConcreteTypeKey) result;
+      if (result instanceof ConcreteTypeKey c) {
         if (c.concreteType().getReference().equals(TypeReference.JavaLangString)) {
           // a string constant;
           return pointerKeys.getFilteredPointerKeyForLocal(

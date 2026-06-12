@@ -257,8 +257,7 @@ public class ParameterAccessor {
      */
     @Override
     public boolean equals(final Object o) {
-      if (o instanceof Parameter) {
-        final Parameter other = (Parameter) o;
+      if (o instanceof Parameter other) {
         return (this.type.equals(other.type)
             && (this.number == other.number)
             && this.mRef.equals(other.mRef));

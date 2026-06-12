@@ -421,17 +421,17 @@ public class OutflowAnalysis {
   }
 
   private Set<ISinkPoint> calculateSinkPoints(SinkSpec sinkSpec) {
-    if (sinkSpec instanceof EntryArgSinkSpec) {
-      return calculateSinkPoints((EntryArgSinkSpec) sinkSpec);
+    if (sinkSpec instanceof EntryArgSinkSpec entryArgSinkSpec) {
+      return calculateSinkPoints(entryArgSinkSpec);
     }
-    if (sinkSpec instanceof CallArgSinkSpec) {
-      return calculateSinkPoints((CallArgSinkSpec) sinkSpec);
+    if (sinkSpec instanceof CallArgSinkSpec callArgSinkSpec) {
+      return calculateSinkPoints(callArgSinkSpec);
     }
-    if (sinkSpec instanceof EntryRetSinkSpec) {
-      return calculateSinkPoints((EntryRetSinkSpec) sinkSpec);
+    if (sinkSpec instanceof EntryRetSinkSpec entryRetSinkSpec) {
+      return calculateSinkPoints(entryRetSinkSpec);
     }
-    if (sinkSpec instanceof StaticFieldSinkSpec) {
-      return calculateSinkPoints((StaticFieldSinkSpec) sinkSpec);
+    if (sinkSpec instanceof StaticFieldSinkSpec staticFieldSinkSpec) {
+      return calculateSinkPoints(staticFieldSinkSpec);
     }
     throw new UnimplementedError();
   }
@@ -493,8 +493,7 @@ public class OutflowAnalysis {
                           graph.getICFG().getCFG(caller).getInstructions();
                       int invokeIndex = -1;
                       for (int i = 0; i < insts.length; i++) {
-                        if (insts[i] instanceof SSAInvokeInstruction) {
-                          SSAInvokeInstruction invokeInst2 = (SSAInvokeInstruction) insts[i];
+                        if (insts[i] instanceof SSAInvokeInstruction invokeInst2) {
                           if (invokeInst
                               .getDeclaredTarget()
                               .equals(invokeInst2.getDeclaredTarget())) {
@@ -547,9 +546,8 @@ public class OutflowAnalysis {
           // if that predecessor is a return instruction
           BasicBlockInContext<IExplodedBasicBlock> exitBlock = exitBlocks.next();
           final SSAInstruction inst = exitBlock.getDelegate().getInstruction();
-          if (inst instanceof SSAReturnInstruction) {
+          if (inst instanceof SSAReturnInstruction returnInst) {
             // add a sink point for the instruction
-            SSAReturnInstruction returnInst = (SSAReturnInstruction) inst;
             if (!returnInst.returnsVoid()) {
               final int ssaVal = returnInst.getResult();
               final ReturnFlow<IExplodedBasicBlock> sinkFlow = new ReturnFlow<>(exitBlock, false);

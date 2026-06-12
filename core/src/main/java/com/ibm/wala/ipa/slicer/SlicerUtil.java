@@ -37,8 +37,7 @@ public class SlicerUtil {
   public static Statement findCallTo(CGNode n, String methodName) {
     IR ir = n.getIR();
     for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
-      if (s instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
+      if (s instanceof SSAAbstractInvokeInstruction call) {
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
           IntSet indices = ir.getCallInstructionIndices(call.getCallSite());
           Assertions.productionAssertion(
@@ -198,8 +197,7 @@ public class SlicerUtil {
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAPutInstruction) {
-          SSAPutInstruction p = (SSAPutInstruction) ns.getInstruction();
+        if (ns.getInstruction() instanceof SSAPutInstruction p) {
           if (!p.isStatic()) {
             count++;
           }
@@ -227,8 +225,7 @@ public class SlicerUtil {
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAGetInstruction) {
-          SSAGetInstruction p = (SSAGetInstruction) ns.getInstruction();
+        if (ns.getInstruction() instanceof SSAGetInstruction p) {
           if (!p.isStatic()) {
             if (!applicationOnly || fromApplicationLoader(s)) {
               count++;
@@ -245,8 +242,7 @@ public class SlicerUtil {
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAPutInstruction) {
-          SSAPutInstruction p = (SSAPutInstruction) ns.getInstruction();
+        if (ns.getInstruction() instanceof SSAPutInstruction p) {
           if (p.isStatic()) {
             count++;
           }
@@ -261,8 +257,7 @@ public class SlicerUtil {
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
-        if (ns.getInstruction() instanceof SSAGetInstruction) {
-          SSAGetInstruction p = (SSAGetInstruction) ns.getInstruction();
+        if (ns.getInstruction() instanceof SSAGetInstruction p) {
           if (p.isStatic()) {
             count++;
           }

@@ -476,8 +476,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof SemiSparseMutableIntSet) {
-      SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
+    if (set instanceof SemiSparseMutableIntSet that) {
       sparsePart = MutableSparseIntSet.make(that.sparsePart);
       if (that.densePart == null) {
         densePart = null;
@@ -510,8 +509,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       throw new IllegalArgumentException("set == null");
     }
     boolean change = false;
-    if (set instanceof SemiSparseMutableIntSet) {
-      SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
+    if (set instanceof SemiSparseMutableIntSet that) {
 
       if (densePart == null) {
 

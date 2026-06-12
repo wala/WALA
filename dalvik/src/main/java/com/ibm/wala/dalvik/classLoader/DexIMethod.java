@@ -616,8 +616,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final.
     // if (this.getClass().equals(obj.getClass())) {
-    if (obj instanceof DexIMethod) {
-      DexIMethod that = (DexIMethod) obj;
+    if (obj instanceof DexIMethod that) {
       return (getDeclaringClass().equals(that.getDeclaringClass())
           && getReference().equals(that.getReference()));
     } else {
@@ -4296,22 +4295,22 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     ArrayList<CallSiteReference> cSites = new ArrayList<>();
     // XXX The call Sites in this method or to this method?!!!
     for (Instruction inst : instructions()) {
-      if (inst instanceof Invoke) {
+      if (inst instanceof Invoke invoke) {
         // Locate the Target
         MethodReference target =
             MethodReference.findOrCreate(
                 getDeclaringClass()
                     .getClassLoader()
                     .getReference(), // XXX: Is this the correct class loader?
-                ((Invoke) inst).clazzName,
-                ((Invoke) inst).methodName,
-                ((Invoke) inst).descriptor);
+                invoke.clazzName,
+                invoke.methodName,
+                invoke.descriptor);
 
         cSites.add(
             CallSiteReference.make(
                 inst.pc, // programCounter
                 target, // declaredTarget
-                ((Invoke) inst).getInvocationCode() // invocationCode
+                invoke.getInvocationCode() // invocationCode
                 ));
       }
     }
@@ -4325,13 +4324,13 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     }
     ArrayList<com.ibm.wala.types.FieldReference> fSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
-      if (inst instanceof GetField) {
+      if (inst instanceof GetField getField) {
         fSites.add(
             com.ibm.wala.types.FieldReference.findOrCreate(
                 getDeclaringClass().getClassLoader().getReference(),
-                ((GetField) inst).clazzName,
-                ((GetField) inst).fieldName,
-                ((GetField) inst).fieldType));
+                getField.clazzName,
+                getField.fieldName,
+                getField.fieldType));
       }
     }
     return fSites.iterator();
@@ -4344,13 +4343,13 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     }
     ArrayList<com.ibm.wala.types.FieldReference> fSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
-      if (inst instanceof PutField) {
+      if (inst instanceof PutField putField) {
         fSites.add(
             com.ibm.wala.types.FieldReference.findOrCreate(
                 getDeclaringClass().getClassLoader().getReference(),
-                ((PutField) inst).clazzName,
-                ((PutField) inst).fieldName,
-                ((PutField) inst).fieldType));
+                putField.clazzName,
+                putField.fieldName,
+                putField.fieldType));
       }
     }
     return fSites.iterator();
@@ -4363,8 +4362,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     }
     ArrayList<TypeReference> aSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
-      if (inst instanceof ArrayPut) {
-        aSites.add(((ArrayPut) inst).getType());
+      if (inst instanceof ArrayPut arrayPut) {
+        aSites.add(arrayPut.getType());
       }
     }
     return aSites.iterator();
@@ -4377,8 +4376,8 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
     }
     ArrayList<NewSiteReference> nSites = new ArrayList<>();
     for (Instruction inst : instructions()) {
-      if (inst instanceof New) {
-        nSites.add(((New) inst).newSiteRef);
+      if (inst instanceof New aNew) {
+        nSites.add(aNew.newSiteRef);
       }
     }
     return nSites;

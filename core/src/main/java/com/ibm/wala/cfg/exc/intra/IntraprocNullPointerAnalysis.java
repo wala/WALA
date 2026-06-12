@@ -241,8 +241,8 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     private boolean isOnlyNullPointerExc(SSAInstruction instr) {
       assert instr.isPEI();
 
-      if (instr instanceof SSAAbstractInvokeInstruction) {
-        return mState != null && !mState.throwsException((SSAAbstractInvokeInstruction) instr);
+      if (instr instanceof SSAAbstractInvokeInstruction ssaAbstractInvokeInstruction) {
+        return mState != null && !mState.throwsException(ssaAbstractInvokeInstruction);
       } else {
         Collection<TypeReference> exc = instr.getExceptionTypes();
         Set<TypeReference> myExcs = new HashSet<>(exc);
@@ -255,9 +255,9 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     private boolean noExceptions(SSAInstruction instr) {
       assert instr.isPEI();
 
-      if (instr instanceof SSAAbstractInvokeInstruction) {
-        assert ((SSAAbstractInvokeInstruction) instr).isStatic();
-        return mState != null && !mState.throwsException((SSAAbstractInvokeInstruction) instr);
+      if (instr instanceof SSAAbstractInvokeInstruction ssaAbstractInvokeInstruction) {
+        assert ssaAbstractInvokeInstruction.isStatic();
+        return mState != null && !mState.throwsException(ssaAbstractInvokeInstruction);
       } else {
         Collection<TypeReference> exc = instr.getExceptionTypes();
         Set<TypeReference> myExcs = new HashSet<>(exc);

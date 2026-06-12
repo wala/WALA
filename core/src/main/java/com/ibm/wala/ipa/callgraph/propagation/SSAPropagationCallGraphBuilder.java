@@ -373,8 +373,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("Add exceptions from pei " + pei);
       }
 
-      if (pei instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+      if (pei instanceof SSAAbstractInvokeInstruction s) {
         PointerKey e = getPointerKeyForLocal(node, s.getException());
 
         if (!SHORT_CIRCUIT_SINGLE_USES || !hasUniqueCatchBlock(s, ir)) {
@@ -383,8 +382,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         // System.err.println("SKIPPING ASSIGNMENTS TO " + exceptionVar + " FROM " +
         // e);
         // }
-      } else if (pei instanceof SSAAbstractThrowInstruction) {
-        SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+      } else if (pei instanceof SSAAbstractThrowInstruction s) {
         PointerKey e = getPointerKeyForLocal(node, s.getException());
 
         if (contentsAreInvariant(ir.getSymbolTable(), du, s.getException())) {
@@ -438,8 +436,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         ISSABasicBlock sb = it.next();
         return (!it.hasNext()
             && (sb.isExitBlock()
-                || ((sb instanceof ExceptionHandlerBasicBlock)
-                    && ((ExceptionHandlerBasicBlock) sb).getCatchInstruction() != null)));
+                || ((sb instanceof ExceptionHandlerBasicBlock ssaInstructions)
+                    && ssaInstructions.getCatchInstruction() != null)));
       }
     }
     return false;
@@ -1353,10 +1351,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           SSAInstruction cause = instruction.getCause();
           BasicBlock target = (BasicBlock) cfg.getNode(instruction.getSuccessor());
 
-          if ((cause instanceof SSAInstanceofInstruction)) {
+          if ((cause instanceof SSAInstanceofInstruction ssaInstanceofInstruction)) {
             int direction = booleanConstantTest(cond, cause.getDef());
             if (direction != 0) {
-              TypeReference type = ((SSAInstanceofInstruction) cause).getCheckedType();
+              TypeReference type = ssaInstanceofInstruction.getCheckedType();
               IClass cls = getClassHierarchy().lookupClass(type);
               if (cls == null) {
                 PointerKey dst = getPointerKeyForLocal(instruction.getDef());
@@ -2002,8 +2000,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // with reference equality
 
       // instanceof is OK because this class is final
-      if (o instanceof DispatchOperator) {
-        DispatchOperator other = (DispatchOperator) o;
+      if (o instanceof DispatchOperator other) {
         return node.equals(other.node)
             && call.equals(other.call)
             && Arrays.deepEquals(constParams, other.constParams);
@@ -2183,8 +2180,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   @SuppressWarnings("unused")
   private static boolean isRootType(FilteredPointerKey.TypeFilter filter) {
-    if (filter instanceof FilteredPointerKey.SingleClassFilter) {
-      return isRootType(((FilteredPointerKey.SingleClassFilter) filter).concreteType());
+    if (filter instanceof FilteredPointerKey.SingleClassFilter singleClassFilter) {
+      return isRootType(singleClassFilter.concreteType());
     } else {
       return false;
     }
@@ -2294,10 +2291,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     InstanceKey[] result;
     if (isConstantRef(symbolTable, valueNumber)) {
       Object x = symbolTable.getConstantValue(valueNumber);
-      if (x instanceof String) {
+      if (x instanceof String S) {
         // this is always the case in Java. use strong typing in the call to
         // getInstanceKeyForConstant.
-        String S = (String) x;
         TypeReference type =
             node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
         if (type == null) {

@@ -186,8 +186,8 @@ public class FlowGraphBuilder {
       this.flowgraph = flowgraph;
       this.factory = flowgraph.getVertexFactory();
       this.func = factory.makeFuncVertex(ir.getMethod().getDeclaringClass());
-      if (method instanceof AstMethod) {
-        this.lexicalInfo = ((AstMethod) method).lexicalInfo();
+      if (method instanceof AstMethod astMethod) {
+        this.lexicalInfo = astMethod.lexicalInfo();
         this.exposedVars = lexicalInfo.getAllExposedUses();
       } else {
         this.lexicalInfo = null;

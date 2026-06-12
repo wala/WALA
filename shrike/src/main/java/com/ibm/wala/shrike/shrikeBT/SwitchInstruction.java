@@ -104,8 +104,7 @@ public final class SwitchInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof SwitchInstruction) {
-      SwitchInstruction i = (SwitchInstruction) o;
+    if (o instanceof SwitchInstruction i) {
       return i.defaultLabel == defaultLabel && Arrays.equals(i.casesAndLabels, casesAndLabels);
     } else {
       return false;

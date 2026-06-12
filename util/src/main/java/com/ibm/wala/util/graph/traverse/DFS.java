@@ -136,8 +136,8 @@ public class DFS {
    * @return iterator of nodes of G in order of DFS discover time
    */
   public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G) {
-    if (G instanceof NumberedGraph) {
-      return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDFSDiscoverTimeIterator<>(ts);
     } else {
       return new SlowDFSDiscoverTimeIterator<>(G);
     }
@@ -153,8 +153,8 @@ public class DFS {
     if (roots == null) {
       throw new IllegalArgumentException("roots == null");
     }
-    if (G instanceof NumberedGraph) {
-      return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G, roots);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDFSDiscoverTimeIterator<>(ts, roots);
     } else {
       return new SlowDFSDiscoverTimeIterator<>(G, roots);
     }
@@ -168,8 +168,8 @@ public class DFS {
     if (G == null) {
       throw new IllegalArgumentException("G == null");
     }
-    if (G instanceof NumberedGraph) {
-      return new NumberedDFSDiscoverTimeIterator<>((NumberedGraph<T>) G, N);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDFSDiscoverTimeIterator<>(ts, N);
     } else {
       return new SlowDFSDiscoverTimeIterator<>(G, N);
     }
@@ -185,8 +185,8 @@ public class DFS {
     if (G == null) {
       throw new IllegalArgumentException("G == null");
     }
-    if (G instanceof NumberedGraph) {
-      return new NumberedDFSFinishTimeIterator<>((NumberedGraph<T>) G);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDFSFinishTimeIterator<>(ts);
     } else {
       return new SlowDFSFinishTimeIterator<>(G);
     }
@@ -202,8 +202,8 @@ public class DFS {
     if (ie == null) {
       throw new IllegalArgumentException("null ie");
     }
-    if (G instanceof NumberedGraph) {
-      return new NumberedDFSFinishTimeIterator<>((NumberedGraph<T>) G, ie);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDFSFinishTimeIterator<>(ts, ie);
     } else {
       return new SlowDFSFinishTimeIterator<>(G, ie);
     }

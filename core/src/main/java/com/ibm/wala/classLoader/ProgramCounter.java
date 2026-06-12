@@ -46,8 +46,7 @@ public class ProgramCounter {
    */
   @Override
   public boolean equals(Object obj) {
-    return (obj instanceof ProgramCounter)
-        && ((ProgramCounter) obj).programCounter == programCounter;
+    return (obj instanceof ProgramCounter counter) && counter.programCounter == programCounter;
   }
 
   @Override

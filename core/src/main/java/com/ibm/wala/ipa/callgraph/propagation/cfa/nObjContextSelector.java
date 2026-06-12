@@ -72,9 +72,8 @@ public class nObjContextSelector implements ContextSelector {
 
     if (site.isStatic()) {
       calleeContext = getCalleeTargetForStaticCall(caller, site, callee);
-    } else if (receiver instanceof AllocationSiteInNode) {
-      AllocationString allocationString =
-          assemblyReceiverAllocString((AllocationSiteInNode) receiver);
+    } else if (receiver instanceof AllocationSiteInNode allocationSiteInNode) {
+      AllocationString allocationString = assemblyReceiverAllocString(allocationSiteInNode);
       calleeContext = new AllocationStringContext(allocationString);
     }
 

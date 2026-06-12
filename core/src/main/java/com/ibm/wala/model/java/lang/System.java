@@ -16,40 +16,31 @@ public class System {
   /** A simple model of object-array copy. This is not completely correct. TODO: fix it. */
   @SuppressWarnings("ManualArrayCopy")
   static void arraycopy(Object src, Object dest) {
-    if (src instanceof Object[]) {
-      Object[] A = (Object[]) src;
+    if (src instanceof Object[] A) {
       Object[] B = (Object[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof int[]) {
-      int[] A = (int[]) src;
+    } else if (src instanceof int[] A) {
       int[] B = (int[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof char[]) {
-      char[] A = (char[]) src;
+    } else if (src instanceof char[] A) {
       char[] B = (char[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof short[]) {
-      short[] A = (short[]) src;
+    } else if (src instanceof short[] A) {
       short[] B = (short[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof long[]) {
-      long[] A = (long[]) src;
+    } else if (src instanceof long[] A) {
       long[] B = (long[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof byte[]) {
-      byte[] A = (byte[]) src;
+    } else if (src instanceof byte[] A) {
       byte[] B = (byte[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof double[]) {
-      double[] A = (double[]) src;
+    } else if (src instanceof double[] A) {
       double[] B = (double[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof boolean[]) {
-      boolean[] A = (boolean[]) src;
+    } else if (src instanceof boolean[] A) {
       boolean[] B = (boolean[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
-    } else if (src instanceof float[]) {
-      float[] A = (float[]) src;
+    } else if (src instanceof float[] A) {
       float[] B = (float[]) dest;
       for (int i = 0; i < A.length; i++) B[i] = A[i];
     } else {

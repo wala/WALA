@@ -26,8 +26,8 @@ public class ObjectPropertyCatalogKey extends AbstractPointerKey {
 
   @Override
   public boolean equals(Object x) {
-    return (x instanceof ObjectPropertyCatalogKey)
-        && ((ObjectPropertyCatalogKey) x).object.equals(object);
+    return (x instanceof ObjectPropertyCatalogKey objectPropertyCatalogKey)
+        && objectPropertyCatalogKey.object.equals(object);
   }
 
   @Override

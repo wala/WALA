@@ -83,13 +83,13 @@ public class IntSetUtil {
       return new BitVectorIntSet(set);
     } else if (set instanceof BimodalMutableIntSet) {
       return BimodalMutableIntSet.makeCopy(set);
-    } else if (set instanceof MutableSharedBitVectorIntSet) {
-      return new MutableSharedBitVectorIntSet((MutableSharedBitVectorIntSet) set);
-    } else if (set instanceof SemiSparseMutableIntSet) {
-      return new SemiSparseMutableIntSet((SemiSparseMutableIntSet) set);
-    } else if (set instanceof DebuggingMutableIntSet) {
-      MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet) set).primaryImpl());
-      MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet) set).secondaryImpl());
+    } else if (set instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
+      return new MutableSharedBitVectorIntSet(mutableSharedBitVectorIntSet);
+    } else if (set instanceof SemiSparseMutableIntSet semiSparseMutableIntSet) {
+      return new SemiSparseMutableIntSet(semiSparseMutableIntSet);
+    } else if (set instanceof DebuggingMutableIntSet debuggingMutableIntSet) {
+      MutableIntSet pCopy = makeMutableCopy(debuggingMutableIntSet.primaryImpl());
+      MutableIntSet sCopy = makeMutableCopy(debuggingMutableIntSet.secondaryImpl());
       return new DebuggingMutableIntSet(pCopy, sCopy);
     } else if (set instanceof EmptyIntSet) {
       return IntSetUtil.make();
@@ -140,10 +140,11 @@ public class IntSetUtil {
     if (B == null) {
       throw new IllegalArgumentException("null B");
     }
-    if (A instanceof SparseIntSet && B instanceof SparseIntSet) {
-      return SparseIntSet.diff((SparseIntSet) A, (SparseIntSet) B);
-    } else if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
-      return SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
+    if (A instanceof SparseIntSet intSet && B instanceof SparseIntSet sparseIntSet) {
+      return SparseIntSet.diff(intSet, sparseIntSet);
+    } else if (A instanceof SemiSparseMutableIntSet sparseMutableIntSet
+        && B instanceof SemiSparseMutableIntSet semiSparseMutableIntSet) {
+      return SemiSparseMutableIntSet.diff(sparseMutableIntSet, semiSparseMutableIntSet);
     } else {
       return defaultSlowDiff(A, B, factory);
     }
@@ -161,11 +162,12 @@ public class IntSetUtil {
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }
-    if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
+    if (A instanceof SemiSparseMutableIntSet sparseMutableIntSet
+        && B instanceof SemiSparseMutableIntSet semiSparseMutableIntSet) {
       if (DEBUG) {
         System.err.println("call SemiSparseMutableIntSet.removeAll");
       }
-      return ((SemiSparseMutableIntSet) A).removeAll((SemiSparseMutableIntSet) B);
+      return sparseMutableIntSet.removeAll(semiSparseMutableIntSet);
     } else {
       for (IntIterator it = B.intIterator(); it.hasNext(); ) {
         int I = it.next();
@@ -238,8 +240,7 @@ public class IntSetUtil {
     if (s == null) {
       throw new IllegalArgumentException("s == null");
     }
-    if (s instanceof SparseIntSet) {
-      SparseIntSet sis = (SparseIntSet) s;
+    if (s instanceof SparseIntSet sis) {
       return SparseIntSet.add(sis, j);
     } else {
       // really slow. optimize as needed.

@@ -234,8 +234,7 @@ public final class TypeName implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-      if (obj instanceof TypeNameKey) {
-        TypeNameKey other = (TypeNameKey) obj;
+      if (obj instanceof TypeNameKey other) {
         return className == other.className && packageName == other.packageName && dim == other.dim;
       } else {
         return false;

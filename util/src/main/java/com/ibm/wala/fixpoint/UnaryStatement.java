@@ -102,8 +102,7 @@ public abstract class UnaryStatement<T extends IVariable<T>>
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof UnaryStatement) {
-      UnaryStatement<?> other = (UnaryStatement<?>) o;
+    if (o instanceof UnaryStatement<?> other) {
 
       if (!getOperator().equals(other.getOperator())) {
         return false;

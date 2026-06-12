@@ -123,8 +123,7 @@ public class PDFViewUtil {
         result.append("           ").append(phi.toString(ir.getSymbolTable())).append("\\l");
       }
     }
-    if (bb instanceof ExceptionHandlerBasicBlock) {
-      ExceptionHandlerBasicBlock ebb = (ExceptionHandlerBasicBlock) bb;
+    if (bb instanceof ExceptionHandlerBasicBlock ebb) {
       SSAGetCaughtExceptionInstruction s = ebb.getCatchInstruction();
       if (s != null) {
         result.append("           ").append(s.toString(ir.getSymbolTable())).append("\\l");

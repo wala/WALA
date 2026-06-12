@@ -309,8 +309,8 @@ public abstract class TestPointerAnalyses {
 
             System.err.println("heap graph models instruction " + inst);
           }
-        } else if (inst instanceof AstGlobalWrite) {
-          String propName = ((AstGlobalWrite) inst).getGlobalName();
+        } else if (inst instanceof AstGlobalWrite astGlobalWrite) {
+          String propName = astGlobalWrite.getGlobalName();
           propName = propName.substring("global ".length());
           PointerKey propKey =
               fbPA.getHeapModel()
@@ -324,8 +324,8 @@ public abstract class TestPointerAnalyses {
           assertThatObject(hg).has(edge(GlobalVertex.instance(), propKey));
 
           System.err.println("heap graph models instruction " + inst);
-        } else if (inst instanceof JavaScriptInvoke) {
-          int vn = ((JavaScriptInvoke) inst).getReceiver();
+        } else if (inst instanceof JavaScriptInvoke javaScriptInvoke) {
+          int vn = javaScriptInvoke.getReceiver();
 
           Set<Pair<CGNode, NewSiteReference>> fbPrototypes =
               getFbPrototypes(fbPA, hg, fbCG, node, vn);

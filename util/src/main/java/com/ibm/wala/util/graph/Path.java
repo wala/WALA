@@ -54,8 +54,7 @@ public class Path extends SimpleIntVector {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Path) {
-      Path other = (Path) obj;
+    if (obj instanceof Path other) {
       if (size == other.size) {
         for (int i = 0; i < size; i++) {
           if (get(i) != other.get(i)) {

@@ -89,8 +89,8 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   @Override
   public boolean equals(Object o) {
     if (o instanceof FakeExceptionTypeBinding) return this == o;
-    if (o instanceof ITypeBinding)
-      return ((ITypeBinding) o).getBinaryName().equals(exceptionBinaryName);
+    if (o instanceof ITypeBinding iTypeBinding)
+      return iTypeBinding.getBinaryName().equals(exceptionBinaryName);
     return false;
   }
 

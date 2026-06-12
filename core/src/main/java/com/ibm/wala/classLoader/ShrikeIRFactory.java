@@ -77,8 +77,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
         DefUse du = new DefUse(this);
         for (int i = 0; i < newInstrs.length; i++) {
           SSAInstruction instr = newInstrs[i];
-          if (instr instanceof SSANewInstruction) {
-            SSANewInstruction newInstr = (SSANewInstruction) instr;
+          if (instr instanceof SSANewInstruction newInstr) {
             if (newInstr.getConcreteType().isArrayType()) {
               boolean isSafe = true;
               final int[] params = new int[newInstr.getNumberOfUses()];

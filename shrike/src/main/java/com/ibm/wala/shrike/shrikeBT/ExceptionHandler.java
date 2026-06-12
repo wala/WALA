@@ -87,8 +87,8 @@ public final class ExceptionHandler {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ExceptionHandler) {
-      return equals((ExceptionHandler) o);
+    if (o instanceof ExceptionHandler exceptionHandler) {
+      return equals(exceptionHandler);
     } else {
       return false;
     }

@@ -209,8 +209,7 @@ public class FloatingPointsTest extends WalaTestCase {
     for (int index = 0; index < instructions.length; index++) {
       IInstruction instruction = instructions[index];
       System.out.println(instruction);
-      if (instruction instanceof ConstantInstruction) {
-        ConstantInstruction constantInstruction = (ConstantInstruction) instruction;
+      if (instruction instanceof ConstantInstruction constantInstruction) {
         if (constantInstruction.getType().contentEquals(type)) {
           return index;
         }

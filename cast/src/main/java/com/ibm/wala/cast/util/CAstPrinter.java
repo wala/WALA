@@ -291,9 +291,7 @@ public class CAstPrinter {
         String[] names = e.getArgumentNames();
         CAstType type = e.getType();
         java.util.List<CAstType> types =
-            (type instanceof CAstType.Function)
-                ? ((CAstType.Function) type).getArgumentTypes()
-                : null;
+            (type instanceof CAstType.Function function) ? function.getArgumentTypes() : null;
         for (String name : names) {
           w.write("  " + name);
           if (types != null) {

@@ -97,8 +97,7 @@ public class MethodTypeSignature extends Signature {
    * @return {@link TypeSignature} for arguments, which includes information about generic types
    */
   public static TypeSignature[] getArguments(IMethod method) throws InvalidClassFileException {
-    if (method instanceof ShrikeCTMethod) {
-      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+    if (method instanceof ShrikeCTMethod sm) {
       if (sm.getMethodTypeSignature() == null) {
         return null;
       } else {
@@ -111,8 +110,7 @@ public class MethodTypeSignature extends Signature {
 
   public static MethodTypeSignature getMethodTypeSignature(IMethod method)
       throws InvalidClassFileException {
-    if (method instanceof ShrikeCTMethod) {
-      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+    if (method instanceof ShrikeCTMethod sm) {
       return sm.getMethodTypeSignature();
     } else {
       return null;

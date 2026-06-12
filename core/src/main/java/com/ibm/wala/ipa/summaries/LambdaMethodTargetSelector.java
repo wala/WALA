@@ -72,8 +72,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     IR ir = caller.getIR();
     if (ir.getCallInstructionIndices(site) != null) {
       SSAAbstractInvokeInstruction call = ir.getCalls(site)[0];
-      if (call instanceof SSAInvokeDynamicInstruction) {
-        SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction) call;
+      if (call instanceof SSAInvokeDynamicInstruction invoke) {
         BootstrapMethod bootstrap = invoke.getBootstrap();
         if (bootstrap.isBootstrapForJavaLambdas()) {
           IClassHierarchy cha = caller.getClassHierarchy();
@@ -110,8 +109,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     IR ir = caller.getIR();
     if (ir.getCallInstructionIndices(site) != null) {
       SSAAbstractInvokeInstruction call = ir.getCalls(site)[0];
-      if (call instanceof SSAInvokeDynamicInstruction) {
-        SSAInvokeDynamicInstruction invoke = (SSAInvokeDynamicInstruction) call;
+      if (call instanceof SSAInvokeDynamicInstruction invoke) {
         BootstrapMethod bootstrap = invoke.getBootstrap();
         return classSummaries.get(bootstrap);
       }

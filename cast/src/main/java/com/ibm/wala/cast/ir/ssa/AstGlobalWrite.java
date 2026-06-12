@@ -42,7 +42,8 @@ public class AstGlobalWrite extends SSAPutInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v instanceof AstInstructionVisitor) ((AstInstructionVisitor) v).visitAstGlobalWrite(this);
+    if (v instanceof AstInstructionVisitor astInstructionVisitor)
+      astInstructionVisitor.visitAstGlobalWrite(this);
   }
 
   @Override

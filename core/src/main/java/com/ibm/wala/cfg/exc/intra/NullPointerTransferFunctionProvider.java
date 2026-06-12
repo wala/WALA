@@ -73,10 +73,10 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     }
 
     if (instr == null && block.isCatchBlock()) {
-      if (block instanceof IExplodedBasicBlock) {
-        instr = ((IExplodedBasicBlock) block).getCatchInstruction();
-      } else if (block instanceof SSACFG.ExceptionHandlerBasicBlock) {
-        instr = ((SSACFG.ExceptionHandlerBasicBlock) block).getCatchInstruction();
+      if (block instanceof IExplodedBasicBlock instructions) {
+        instr = instructions.getCatchInstruction();
+      } else if (block instanceof SSACFG.ExceptionHandlerBasicBlock ssaInstructions) {
+        instr = ssaInstructions.getCatchInstruction();
       } else {
         throw new IllegalStateException(
             "Unable to get catch instruction from unknown ISSABasicBlock implementation.");
@@ -253,11 +253,10 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       int arg1 = instruction.getUse(0);
       int arg2 = instruction.getUse(1);
       IConditionalBranchInstruction.IOperator testOp = instruction.getOperator();
-      if (!(testOp instanceof IConditionalBranchInstruction.Operator)) {
+      if (!(testOp instanceof IConditionalBranchInstruction.Operator op)) {
         throw new IllegalStateException(
             "Conditional operator of unknown type: " + testOp.getClass());
       }
-      IConditionalBranchInstruction.Operator op = (IConditionalBranchInstruction.Operator) testOp;
 
       if (sym.isNullConstant(arg1)) {
         switch (op) {

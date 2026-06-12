@@ -26,8 +26,7 @@ public final class MonitorInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof MonitorInstruction) {
-      MonitorInstruction i = (MonitorInstruction) o;
+    if (o instanceof MonitorInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

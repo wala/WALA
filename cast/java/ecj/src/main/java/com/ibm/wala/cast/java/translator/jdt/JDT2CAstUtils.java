@@ -164,11 +164,12 @@ public class JDT2CAstUtils {
   public static ITypeBinding getDeclaringClassOfNode(ASTNode n) {
     ASTNode current = n;
     while (current != null) {
-      if (current instanceof TypeDeclaration) return ((TypeDeclaration) current).resolveBinding();
-      else if (current instanceof AnonymousClassDeclaration)
-        return ((AnonymousClassDeclaration) current).resolveBinding();
-      else if (current instanceof EnumDeclaration)
-        return ((EnumDeclaration) current).resolveBinding();
+      if (current instanceof TypeDeclaration typeDeclaration)
+        return typeDeclaration.resolveBinding();
+      else if (current instanceof AnonymousClassDeclaration anonymousClassDeclaration)
+        return anonymousClassDeclaration.resolveBinding();
+      else if (current instanceof EnumDeclaration enumDeclaration)
+        return enumDeclaration.resolveBinding();
       current = current.getParent();
     }
     Assertions.UNREACHABLE("Couldn't find declaring class of node");

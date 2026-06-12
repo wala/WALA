@@ -486,8 +486,7 @@ public class ExplodedControlFlowGraph
 
     @Override
     public Iterator<TypeReference> getCaughtExceptionTypes() {
-      if (original instanceof ExceptionHandlerBasicBlock) {
-        ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock) original;
+      if (original instanceof ExceptionHandlerBasicBlock eb) {
         return eb.getCaughtExceptionTypes();
       } else {
         return EmptyIterator.instance();
@@ -530,10 +529,9 @@ public class ExplodedControlFlowGraph
 
     @Override
     public SSAGetCaughtExceptionInstruction getCatchInstruction() {
-      if (!(original instanceof ExceptionHandlerBasicBlock)) {
+      if (!(original instanceof ExceptionHandlerBasicBlock e)) {
         throw new IllegalArgumentException("block does not represent an exception handler");
       }
-      ExceptionHandlerBasicBlock e = (ExceptionHandlerBasicBlock) original;
       return e.getCatchInstruction();
     }
 

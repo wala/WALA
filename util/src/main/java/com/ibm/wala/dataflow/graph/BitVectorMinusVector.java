@@ -60,8 +60,7 @@ public class BitVectorMinusVector extends UnaryOperator<BitVectorVariable> {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof BitVectorMinusVector) {
-      BitVectorMinusVector other = (BitVectorMinusVector) o;
+    if (o instanceof BitVectorMinusVector other) {
       return v.sameValue(other.v);
     } else {
       return false;

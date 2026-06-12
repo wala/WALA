@@ -290,8 +290,7 @@ public class HeapTracer {
     while (!scalarWorkList.isEmpty() || !arrayWorkList.isEmpty()) {
       if (!scalarWorkList.isEmpty()) {
         Object scalar = scalarWorkList.pop();
-        if (scalar instanceof Pair) {
-          Pair p = (Pair) scalar;
+        if (scalar instanceof Pair p) {
           traverseScalar(root, p.snd, p.fst, result, objectsVisited);
         } else {
           traverseScalar(root, scalar, null, result, objectsVisited);

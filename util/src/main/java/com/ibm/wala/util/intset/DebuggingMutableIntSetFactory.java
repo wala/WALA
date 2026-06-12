@@ -60,8 +60,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     if (x == null) {
       throw new IllegalArgumentException("null x");
     }
-    if (x instanceof DebuggingMutableIntSet) {
-      DebuggingMutableIntSet db = (DebuggingMutableIntSet) x;
+    if (x instanceof DebuggingMutableIntSet db) {
       MutableIntSet pr = primary.makeCopy(db.primaryImpl());
       MutableIntSet sr = secondary.makeCopy(db.secondaryImpl());
 

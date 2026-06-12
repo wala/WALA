@@ -75,8 +75,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
 
     @Override
     public boolean equals(Object obj) {
-      if (!(obj instanceof Edge)) return false;
-      Edge that = (Edge) obj;
+      if (!(obj instanceof Edge that)) return false;
       return this.from.equals(that.from)
           && Objects.equals(this.label, that.label)
           && this.to.equals(that.to);

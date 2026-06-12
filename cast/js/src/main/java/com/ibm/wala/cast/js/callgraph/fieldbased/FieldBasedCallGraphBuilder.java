@@ -95,7 +95,8 @@ public abstract class FieldBasedCallGraphBuilder {
       JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
     MethodTargetSelector result =
         new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
-    if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply()) {
+    if (options instanceof JSAnalysisOptions jsAnalysisOptions
+        && jsAnalysisOptions.handleCallApply()) {
       result =
           new JavaScriptFunctionApplyTargetSelector(
               new JavaScriptFunctionDotCallTargetSelector(result));
@@ -192,7 +193,8 @@ public abstract class FieldBasedCallGraphBuilder {
     cg.init();
 
     // setup context interpreters
-    if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply()) {
+    if (options instanceof JSAnalysisOptions jsAnalysisOptions
+        && jsAnalysisOptions.handleCallApply()) {
       interpreter =
           new DelegatingSSAContextInterpreter(
               new JavaScriptFunctionApplyContextInterpreter(options, cache), interpreter);
@@ -241,11 +243,9 @@ public abstract class FieldBasedCallGraphBuilder {
       } else {
         addEdgeToJSCallGraph(cg, site, target, caller);
 
-        if (target instanceof JavaScriptConstructor) {
+        if (target instanceof JavaScriptConstructor javaScriptConstructor) {
           IMethod fun =
-              ((JavaScriptConstructor) target)
-                  .constructedType()
-                  .getMethod(AstMethodReference.fnSelector);
+              javaScriptConstructor.constructedType().getMethod(AstMethodReference.fnSelector);
           CGNode ctorCaller = cg.findOrCreateNode(target, Everywhere.EVERYWHERE);
 
           CallSiteReference ref = null;
@@ -372,8 +372,8 @@ public abstract class FieldBasedCallGraphBuilder {
         result.add(Pair.make(callVertex, funcVertex));
         // add ReflectiveCall vertices for invocations of call and apply
         String fullName = funcVertex.getFullName();
-        if (options instanceof JSAnalysisOptions
-            && ((JSAnalysisOptions) options).handleCallApply()
+        if (options instanceof JSAnalysisOptions jsAnalysisOptions
+            && jsAnalysisOptions.handleCallApply()
             && (fullName.equals("Lprologue.js/Function_prototype_call")
                 || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
           JavaScriptInvoke invoke = callVertex.getInstruction();

@@ -88,12 +88,11 @@ public class RecursionBoundContextSelector implements ContextSelector {
           (SingleInstanceFilter) baseContext.get(ContextKey.PARAMETERS[i]);
       if (filter != null) {
         InstanceKey ik = filter.getInstance();
-        if (ik instanceof ScopeMappingInstanceKey) {
-          ik = ((ScopeMappingInstanceKey) ik).getBase();
+        if (ik instanceof ScopeMappingInstanceKey scopeMappingInstanceKey) {
+          ik = scopeMappingInstanceKey.getBase();
         }
-        if (ik instanceof InstanceKeyWithNode) {
-          if (exceedsRecursionBound(
-              ((InstanceKeyWithNode) ik).getNode().getContext(), curLevel + 1)) {
+        if (ik instanceof InstanceKeyWithNode instanceKeyWithNode) {
+          if (exceedsRecursionBound(instanceKeyWithNode.getNode().getContext(), curLevel + 1)) {
             return true;
           }
         }

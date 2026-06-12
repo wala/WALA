@@ -339,11 +339,13 @@ public class OfflineDynamicCallGraph {
                                           }
                                         }
                                         Dispatch mode = (Dispatch) inv.getInvocationCode();
-                                        if (inv instanceof InvokeDynamicInstruction) {
+                                        if (inv
+                                            instanceof
+                                            InvokeDynamicInstruction invokeDynamicInstruction) {
                                           InvokeDynamicInstruction inst =
                                               new InvokeDynamicInstruction(
-                                                  ((InvokeDynamicInstruction) inv).getOpcode(),
-                                                  ((InvokeDynamicInstruction) inv).getBootstrap(),
+                                                  invokeDynamicInstruction.getOpcode(),
+                                                  invokeDynamicInstruction.getBootstrap(),
                                                   inv.getMethodName(),
                                                   inv.getMethodSignature());
                                           w.emit(inst);

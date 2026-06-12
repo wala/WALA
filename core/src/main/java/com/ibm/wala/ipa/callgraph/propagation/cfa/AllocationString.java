@@ -47,10 +47,9 @@ public record AllocationString(AllocationSite[] allocationSites) implements Cont
     if (this == o) {
       return true;
     }
-    if (!(o instanceof AllocationString)) {
+    if (!(o instanceof AllocationString that)) {
       return false;
     }
-    AllocationString that = (AllocationString) o;
     return Arrays.equals(getAllocationSites(), that.getAllocationSites());
   }
 

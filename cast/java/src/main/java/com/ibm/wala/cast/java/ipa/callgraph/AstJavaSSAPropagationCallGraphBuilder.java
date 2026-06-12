@@ -86,9 +86,9 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof EnclosingObjectReferenceKey)
-          && ((EnclosingObjectReferenceKey) o).outer.equals(outer)
-          && ((EnclosingObjectReferenceKey) o).getInstanceKey().equals(getInstanceKey());
+      return (o instanceof EnclosingObjectReferenceKey enclosingObjectReferenceKey)
+          && enclosingObjectReferenceKey.outer.equals(outer)
+          && enclosingObjectReferenceKey.getInstanceKey().equals(getInstanceKey());
     }
   }
 
@@ -161,8 +161,8 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         final PointerKey lvalKey, final IClass cls, final PointerKey objKey) {
       SymbolTable symtab = ir.getSymbolTable();
       int objVal;
-      if (objKey instanceof LocalPointerKey) {
-        objVal = ((LocalPointerKey) objKey).getValueNumber();
+      if (objKey instanceof LocalPointerKey localPointerKey) {
+        objVal = localPointerKey.getValueNumber();
       } else {
         objVal = 0;
       }
@@ -234,16 +234,16 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         // implicit)
         InstanceKey[] enclosingInvariantKeys = null;
 
-        if (klass instanceof JavaClass) {
-          IClass enclosingClass =
-              ((JavaClass) klass).getEnclosingClass(); // the immediate enclosing class.
+        if (klass instanceof JavaClass javaClass) {
+          IClass enclosingClass = javaClass.getEnclosingClass(); // the immediate enclosing class.
           if (enclosingClass != null) {
 
             PointerKey objKey;
 
-            if (instruction instanceof AstJavaNewEnclosingInstruction) {
+            if (instruction
+                instanceof AstJavaNewEnclosingInstruction astJavaNewEnclosingInstruction) {
 
-              int enclosingVal = ((AstJavaNewEnclosingInstruction) instruction).getEnclosing();
+              int enclosingVal = astJavaNewEnclosingInstruction.getEnclosing();
               SymbolTable symtab = ir.getSymbolTable();
 
               // pk 'outer' is invariant, which means it's implicit, so can't add a constraint with

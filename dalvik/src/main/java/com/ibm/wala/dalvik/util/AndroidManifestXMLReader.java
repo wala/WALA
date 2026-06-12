@@ -584,8 +584,8 @@ public class AndroidManifestXMLReader {
                   "The currently parsed Action did not leave the required 'name' Attribute"
                       + " on the Stack! Attributes-Stack for name is: "
                       + attributesHistory.get(Attr.NAME));
-            } else if (oName instanceof String) {
-              names.add((String) oName);
+            } else if (oName instanceof String s) {
+              names.add(s);
             } else {
               throw new IllegalStateException(
                   "Unexpected Attribute type for name: " + oName.getClass());
@@ -594,8 +594,8 @@ public class AndroidManifestXMLReader {
             Object oUrl = attributesHistory.get(Attr.SCHEME).peek();
             if (oUrl == null) {
               // TODO
-            } else if (oUrl instanceof String) {
-              urls.add((String) oUrl);
+            } else if (oUrl instanceof String s) {
+              urls.add(s);
             } else {
               throw new IllegalStateException(
                   "Unexpected Attribute type for name: " + oUrl.getClass());
@@ -668,8 +668,8 @@ public class AndroidManifestXMLReader {
                   "The currently parsed Intent did not push a Valid intent to the "
                       + "Stack! Attributes-Stack for name is: "
                       + attributesHistory.get(Attr.NAME));
-            } else if (oIntent instanceof Intent) {
-              overrideTargets.add((Intent) oIntent);
+            } else if (oIntent instanceof Intent intent) {
+              overrideTargets.add(intent);
             } else {
               throw new IllegalStateException(
                   "Unexpected Attribute type for Intent: " + oIntent.getClass());

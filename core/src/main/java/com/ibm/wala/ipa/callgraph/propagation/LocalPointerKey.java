@@ -31,8 +31,7 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
 
   @Override
   public final boolean equals(Object obj) {
-    if (obj instanceof LocalPointerKey) {
-      LocalPointerKey other = (LocalPointerKey) obj;
+    if (obj instanceof LocalPointerKey other) {
       return node.equals(other.node) && valueNumber == other.valueNumber;
     } else {
       return false;

@@ -86,10 +86,9 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   /** Switch backing implementation from a SmallMap to a HashMap */
   private void transferBackingStore() {
-    if (!(backingStore instanceof SmallMap)) {
+    if (!(backingStore instanceof SmallMap<K, V> S)) {
       throw new IllegalStateException("invalid backingStore");
     }
-    SmallMap<K, V> S = (SmallMap<K, V>) backingStore;
     backingStore = HashMapFactory.make(2 * S.size());
     backingStore.putAll(S);
   }
