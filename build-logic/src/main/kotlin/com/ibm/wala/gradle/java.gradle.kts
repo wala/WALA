@@ -67,6 +67,7 @@ tasks.withType<JavaCompile>().configureEach {
           "AssertEqualsArgumentOrderChecker",
           "BadInstanceof",
           "FallThrough",
+          "FormatStringShouldUsePlaceholders",
           "FunctionalInterfaceClash",
           "IfChainToSwitch",
           "InstanceOfAndCastMatchWrongType",
