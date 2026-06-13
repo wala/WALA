@@ -50,12 +50,12 @@ public record AllocationString(AllocationSite[] allocationSites) implements Cont
     if (!(o instanceof AllocationString that)) {
       return false;
     }
-    return Arrays.equals(getAllocationSites(), that.getAllocationSites());
+    return Arrays.equals(allocationSites(), that.allocationSites());
   }
 
   @Override
   public int hashCode() {
-    return Arrays.hashCode(getAllocationSites());
+    return Arrays.hashCode(allocationSites());
   }
 
   @Override
