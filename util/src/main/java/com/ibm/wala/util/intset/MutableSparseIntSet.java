@@ -226,13 +226,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
     // some simple optimizations
     if (size == 1) {
-      if (that.contains(elements[0])) {
-        return;
-      } else {
+      if (!that.contains(elements[0])) {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
     if (that.size == 1) {
       if (contains(that.elements[0])) {
@@ -241,12 +239,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
         }
         size = 1;
         elements[0] = that.elements[0];
-        return;
       } else {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
 
     int[] ar = this.elements;
