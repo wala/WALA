@@ -139,7 +139,7 @@ public class ClassPrinter {
           throw new Error(e.getMessage());
         }
         if ((flags & val) != 0) {
-          if (buf.length() > 0) {
+          if (!buf.isEmpty()) {
             buf.append(' ');
           }
           buf.append(name.substring(4).toLowerCase());

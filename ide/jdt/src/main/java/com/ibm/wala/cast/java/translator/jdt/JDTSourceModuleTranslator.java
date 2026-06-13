@@ -138,7 +138,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       List<Module> modules = scope.getModules(cl);
 
       for (Module m : modules) {
-        if (buf.length() > 0) buf.append(File.pathSeparator);
+        if (!buf.isEmpty()) buf.append(File.pathSeparator);
         if (m instanceof JarFileModule jarFileModule) {
 
           buf.append(jarFileModule.getAbsolutePath());
