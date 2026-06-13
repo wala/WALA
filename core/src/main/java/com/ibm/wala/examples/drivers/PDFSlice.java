@@ -258,37 +258,36 @@ public class PDFSlice {
    * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
    */
   public static NodeDecorator<Statement> makeNodeDecorator() {
-    return s -> {
-      return switch (s.getKind()) {
-        case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
-          HeapStatement h = (HeapStatement) s;
-          yield s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-        }
-        case NORMAL -> {
-          NormalStatement n = (NormalStatement) s;
-          yield n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
-        }
-        case PARAM_CALLEE -> {
-          ParamCallee paramCallee = (ParamCallee) s;
-          yield s.getKind()
-              + " "
-              + paramCallee.getValueNumber()
-              + "\\n"
-              + s.getNode().getMethod().getName();
-        }
-        case PARAM_CALLER -> {
-          ParamCaller paramCaller = (ParamCaller) s;
-          yield s.getKind()
-              + " "
-              + paramCaller.getValueNumber()
-              + "\\n"
-              + s.getNode().getMethod().getName()
-              + "\\n"
-              + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
-        }
-        default -> s.toString();
-      };
-    };
+    return s ->
+        switch (s.getKind()) {
+          case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
+            HeapStatement h = (HeapStatement) s;
+            yield s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+          }
+          case NORMAL -> {
+            NormalStatement n = (NormalStatement) s;
+            yield n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
+          }
+          case PARAM_CALLEE -> {
+            ParamCallee paramCallee = (ParamCallee) s;
+            yield s.getKind()
+                + " "
+                + paramCallee.getValueNumber()
+                + "\\n"
+                + s.getNode().getMethod().getName();
+          }
+          case PARAM_CALLER -> {
+            ParamCaller paramCaller = (ParamCaller) s;
+            yield s.getKind()
+                + " "
+                + paramCaller.getValueNumber()
+                + "\\n"
+                + s.getNode().getMethod().getName()
+                + "\\n"
+                + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
+          }
+          default -> s.toString();
+        };
   }
 
   /**
