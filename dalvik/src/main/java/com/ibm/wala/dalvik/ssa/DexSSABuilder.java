@@ -1526,9 +1526,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
     public int[] allocateNewLocalsArray() {
       int[] result = new int[maxLocals];
-      for (int i = 0; i < maxLocals; i++) {
-        result[i] = OPTIMISTIC ? TOP : BOTTOM;
-      }
+      Arrays.fill(result, OPTIMISTIC ? TOP : BOTTOM);
       return result;
     }
 
