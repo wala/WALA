@@ -115,10 +115,7 @@ public class IntraproceduralExceptionAnalysis {
         }
 
         if (block.isCatchBlock()) {
-          Iterator<TypeReference> it = block.getCaughtExceptionTypes();
-          while (it.hasNext()) {
-            possiblyCaughtExceptions.add(it.next());
-          }
+          block.getCaughtExceptionTypes().forEachRemaining(possiblyCaughtExceptions::add);
         }
       }
     }
@@ -242,10 +239,7 @@ public class IntraproceduralExceptionAnalysis {
         ir.getControlFlowGraph().getExceptionalSuccessors(block);
     for (ISSABasicBlock succ : exceptionalSuccessors) {
       if (succ.isCatchBlock()) {
-        Iterator<TypeReference> it = succ.getCaughtExceptionTypes();
-        while (it.hasNext()) {
-          result.add(it.next());
-        }
+        succ.getCaughtExceptionTypes().forEachRemaining(result::add);
       }
     }
 

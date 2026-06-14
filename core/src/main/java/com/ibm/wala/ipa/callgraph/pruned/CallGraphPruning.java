@@ -118,10 +118,7 @@ public final class CallGraphPruning {
     while (i > 0) {
 
       for (CGNode n : A) {
-        Iterator<CGNode> it = cg.getSuccNodes(n);
-        while (it.hasNext()) {
-          B.add(it.next());
-        }
+        cg.getSuccNodes(n).forEachRemaining(B::add);
       }
 
       if (DEBUG) {

@@ -24,9 +24,7 @@ public class Iterator2Set<T> extends Iterator2Collection<T> implements Serializa
 
   protected Iterator2Set(Iterator<? extends T> i, Set<T> delegate) {
     this.delegate = delegate;
-    while (i.hasNext()) {
-      delegate.add(i.next());
-    }
+    i.forEachRemaining(delegate::add);
   }
 
   @Override

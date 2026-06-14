@@ -67,10 +67,7 @@ public class DFS {
       throw new IllegalArgumentException("C is null");
     }
     HashSet<T> result = HashSetFactory.make();
-    Iterator<T> dfs = iterateFinishTime(G, C.iterator());
-    while (dfs.hasNext()) {
-      result.add(dfs.next());
-    }
+    iterateFinishTime(G, C.iterator()).forEachRemaining(result::add);
     return result;
   }
 
@@ -86,10 +83,7 @@ public class DFS {
       throw new IllegalArgumentException("G == null");
     }
     HashSet<T> result = HashSetFactory.make();
-    Iterator<T> dfs = iterateFinishTime(G);
-    while (dfs.hasNext()) {
-      result.add(dfs.next());
-    }
+    iterateFinishTime(G).forEachRemaining(result::add);
     return result;
   }
 

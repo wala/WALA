@@ -334,9 +334,7 @@ public class Util {
       throw new IllegalArgumentException("Null x");
     }
     Set<T> y = HashSetFactory.make();
-    while (x.hasNext()) {
-      y.add(x.next());
-    }
+    x.forEachRemaining(y::add);
     return y;
   }
 

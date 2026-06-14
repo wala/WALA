@@ -29,9 +29,7 @@ public class ReverseIterator<T> implements Iterator<T> {
     if (other == null) {
       throw new IllegalArgumentException("other == null");
     }
-    while (other.hasNext()) {
-      list.add(other.next());
-    }
+    other.forEachRemaining(list::add);
     nextIndex = list.size() - 1;
   }
 
