@@ -179,7 +179,7 @@ public class Runtime {
     if (runtime.currentSite.get() != null) {
       synchronized (runtime) {
         if (runtime.output != null) {
-          runtime.output.printf("return from " + runtime.currentSite.get() + '\n');
+          runtime.output.printf("return from %s%n", runtime.currentSite.get());
           runtime.output.flush();
         }
       }
@@ -202,7 +202,7 @@ public class Runtime {
     //	  runtime.currentSite = klass + "\t" + method + "\t" + receiver;
     synchronized (runtime) {
       if (runtime.output != null) {
-        runtime.output.printf("call to " + runtime.currentSite.get() + '\n');
+        runtime.output.printf("call to %s%n", runtime.currentSite.get());
         runtime.output.flush();
       }
     }

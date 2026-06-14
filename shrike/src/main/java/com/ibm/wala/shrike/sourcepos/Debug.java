@@ -173,7 +173,7 @@ public final class Debug {
 
   private static void log(LogLevel level, String str, Object... obj) {
     if (OUT_STREAM != null && allowed.contains(level)) {
-      OUT_STREAM.format("[" + level + "] " + str, obj);
+      OUT_STREAM.format("[%s] %s".formatted(level, str), obj);
     }
   }
 
