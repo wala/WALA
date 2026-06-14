@@ -41,24 +41,34 @@ import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class JDTSourceLoaderImpl extends JavaSourceLoaderImpl {
   private final boolean dump;
+  private final SSAOptions ssaOptions;
 
   public JDTSourceLoaderImpl(
-      ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha) {
-    this(loaderRef, parent, cha, false);
+      ClassLoaderReference loaderRef,
+      IClassLoader parent,
+      IClassHierarchy cha,
+      SSAOptions ssaOptions) {
+    this(loaderRef, parent, cha, ssaOptions, false);
   }
 
   public JDTSourceLoaderImpl(
-      ClassLoaderReference loaderRef, IClassLoader parent, IClassHierarchy cha, boolean dump) {
+      ClassLoaderReference loaderRef,
+      IClassLoader parent,
+      IClassHierarchy cha,
+      SSAOptions ssaOptions,
+      boolean dump) {
     super(loaderRef, parent, cha);
     this.dump = dump;
+    this.ssaOptions = ssaOptions;
   }
 
   @Override
   protected SourceModuleTranslator getTranslator() {
-    return new JDTSourceModuleTranslator(cha.getScope(), this, dump);
+    return new JDTSourceModuleTranslator(cha.getScope(), this, ssaOptions, dump);
   }
 }

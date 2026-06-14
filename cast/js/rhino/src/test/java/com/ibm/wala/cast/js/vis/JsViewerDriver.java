@@ -62,7 +62,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
 
     JSCFABuilder builder =
         makeCGBuilder(
-            new WebPageLoaderFactory(translatorFactory),
+            new WebPageLoaderFactory(translatorFactory, SSAOptions.defaultOptions()),
             sources,
             CGBuilderType.ZERO_ONE_CFA,
             AstIRFactory.makeDefaultFactory());

@@ -7,14 +7,17 @@ import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 
 public class ECJClassLoaderFactory extends ClassLoaderFactoryImpl {
+  private final SSAOptions ssaOptions;
 
-  public ECJClassLoaderFactory(StringFilter exclusions) {
+  public ECJClassLoaderFactory(SSAOptions ssaOptions, StringFilter exclusions) {
     super(exclusions);
+    this.ssaOptions = ssaOptions;
   }
 
   // TODO remove code duplication with JDTClassLoaderFactory
@@ -37,6 +40,6 @@ public class ECJClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   protected JavaSourceLoaderImpl makeSourceLoader(
       ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent) {
-    return new ECJSourceLoaderImpl(classLoaderReference, parent, cha, false);
+    return new ECJSourceLoaderImpl(classLoaderReference, ssaOptions, parent, cha, false);
   }
 }

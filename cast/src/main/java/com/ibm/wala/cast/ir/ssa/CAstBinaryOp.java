@@ -22,6 +22,7 @@ public enum CAstBinaryOp implements IBinaryOpInstruction.IOperator {
   LE,
   STRICT_EQ,
   STRICT_NE,
+  INSTANCE_OF;
   POW;
 
   @Override

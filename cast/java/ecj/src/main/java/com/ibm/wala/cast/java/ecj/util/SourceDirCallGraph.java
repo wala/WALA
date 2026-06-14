@@ -64,7 +64,7 @@ public class SourceDirCallGraph {
   }
 
   protected ClassLoaderFactory getLoaderFactory(AnalysisScope scope) {
-    return new ECJClassLoaderFactory(scope.getExclusions());
+    return new ECJClassLoaderFactory(SSAOptions.defaultOptions(), scope.getExclusions());
   }
 
   public void doit(String[] args, Processor processor)

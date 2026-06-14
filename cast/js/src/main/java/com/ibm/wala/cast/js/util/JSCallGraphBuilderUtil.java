@@ -41,6 +41,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -241,7 +242,8 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
         builderType.extractCorrelatedPairs
             ? new CorrelatedPairExtractorFactory(translatorFactory, url)
             : null;
-    JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
+    JavaScriptLoaderFactory loaders =
+        new WebPageLoaderFactory(translatorFactory, preprocessor, SSAOptions.defaultOptions());
     SourceModule[] scriptsArray = makeHtmlScope(url, loaders, fExtractor, r);
 
     JSCFABuilder builder = makeCGBuilder(loaders, scriptsArray, builderType, irFactory);

@@ -44,20 +44,23 @@ import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 
 public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
   protected boolean dump;
+  private SSAOptions ssaOptions;
 
-  public JDTClassLoaderFactory(StringFilter exclusions) {
-    this(exclusions, false);
+  public JDTClassLoaderFactory(SSAOptions ssaOptions, StringFilter exclusions) {
+    this(ssaOptions, exclusions, false);
   }
 
-  public JDTClassLoaderFactory(StringFilter exclusions, boolean dump) {
+  public JDTClassLoaderFactory(SSAOptions ssaOptions, StringFilter exclusions, boolean dump) {
     super(exclusions);
     this.dump = dump;
+    this.ssaOptions = ssaOptions;
   }
 
   @Override
@@ -78,6 +81,6 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   protected JavaSourceLoaderImpl makeSourceLoader(
       ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent) {
-    return new JDTSourceLoaderImpl(classLoaderReference, parent, cha, dump);
+    return new JDTSourceLoaderImpl(classLoaderReference, parent, cha, ssaOptions, dump);
   }
 }
