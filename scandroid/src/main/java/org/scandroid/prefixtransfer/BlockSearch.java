@@ -51,7 +51,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
 
 public class BlockSearch {
@@ -68,10 +67,7 @@ public class BlockSearch {
   public ISSABasicBlock searchFromBlock(ISSABasicBlock b, Set<ISSABasicBlock> targets) {
     blockQueue.clear();
     location = 0;
-    Iterator<ISSABasicBlock> startNodes = cfg.getPredNodes(b);
-    while (startNodes.hasNext()) {
-      blockQueue.add(startNodes.next());
-    }
+    cfg.getPredNodes(b).forEachRemaining(blockQueue::add);
 
     ISSABasicBlock candidate = null;
     while (location < blockQueue.size()) {
@@ -86,10 +82,7 @@ public class BlockSearch {
           return null;
         }
       } else {
-        Iterator<ISSABasicBlock> predNodes = cfg.getPredNodes(current);
-        while (predNodes.hasNext()) {
-          blockQueue.add(predNodes.next());
-        }
+        cfg.getPredNodes(current).forEachRemaining(blockQueue::add);
       }
     }
     return candidate;
