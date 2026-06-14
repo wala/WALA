@@ -25,9 +25,7 @@ public class Iterator2List<T> extends Iterator2Collection<T> implements Serializ
 
   public Iterator2List(Iterator<? extends T> i, List<T> delegate) {
     this.delegate = delegate;
-    while (i.hasNext()) {
-      delegate.add(i.next());
-    }
+    i.forEachRemaining(delegate::add);
   }
 
   @Override

@@ -683,10 +683,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           for (InstanceKey functionKey : functionKeys) {
             system.findOrCreateIndexForInstanceKey(functionKey);
             ScopeMappingInstanceKey K = (ScopeMappingInstanceKey) functionKey;
-            Iterator<CGNode> x = K.getFunargNodes(definer);
-            while (x.hasNext()) {
-              result.add(x.next());
-            }
+            K.getFunargNodes(definer).forEachRemaining(result::add);
           }
         } else {
           PointsToSetVariable FV = system.findOrCreatePointsToSet(F);
@@ -696,10 +693,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                     ptr -> {
                       InstanceKey iKey = system.getInstanceKey(ptr);
                       if (iKey instanceof ScopeMappingInstanceKey K) {
-                        Iterator<CGNode> x = K.getFunargNodes(definer);
-                        while (x.hasNext()) {
-                          result.add(x.next());
-                        }
+                        K.getFunargNodes(definer).forEachRemaining(result::add);
                       } else {
                         // Assertions.UNREACHABLE("unexpected instance key " + iKey);
                       }
