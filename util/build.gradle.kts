@@ -10,6 +10,7 @@ dependencies {
   api(libs.json)
   api(libs.jspecify)
   compileOnly(libs.jetbrains.annotations)
+  implementation(libs.guava)
   javadocClasspath(projects.core)
   testFixturesApi(libs.assertj.core)
   testFixturesApi(libs.jspecify)

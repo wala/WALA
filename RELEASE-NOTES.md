@@ -19,6 +19,31 @@ exported API surfaces](https://jspecify.dev/docs/using/#gradle).
 
 ## API changes
 
+### `Iterator2List` and `Iterator2Set` deprecated for removal
+
+The classes `Iterator2List` and `Iterator2Set`, along with all their methods
+and constructors, are deprecated for removal.
+
+The static methods `Iterator2Collection.toList(Iterator)` and
+`Iterator2Collection.toSet(Iterator)` are retained but now return plain
+`List<T>` and `Set<T>` respectively instead of `Iterator2List<T>` and
+`Iterator2Set<T>` wrappers.
+
+**Effect for third-party consumers:**
+
+- Code that uses `Iterator2List<T>` or `Iterator2Set<T>` as variable types,
+  method parameters, or return types should be migrated to `List<T>` or
+  `Set<T>` instead.
+
+- Code that calls `Iterator2Collection.toList(...)` or
+  `Iterator2Collection.toSet(...)` continues to work, but may need to
+  update type declarations if they were explicitly typed as
+  `Iterator2List<T>` or `Iterator2Set<T>`.
+
+- The `:util` module now declares Guava as an `implementation`-scope
+  dependency. This Guava dependency is the same one already used by the `:cast`,
+  `:dalvik`, and `:scandroid` modules.
+
 ### `Language.getFakeRootMethod` no longer takes `AnalysisOptions`
 
 `Language.getFakeRootMethod(IClassHierarchy, IAnalysisCacheView)` is now the
