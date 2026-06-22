@@ -130,39 +130,37 @@ public class Runtime {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
 
-        {
-          //
-          // check for expected caller
-          //
-          boolean handled = false;
-          if (runtime.handleCallback != null) {
-            StackTraceElement[] stack = new Throwable().getStackTrace();
-            if (stack.length > 2) {
-              // frames: Runtime.execution(0), callee(1), caller(2)
-              StackTraceElement callerFrame = stack[2];
-              if (!callerFrame.getMethodName().startsWith("$")) {
-                if (!caller.contains(callerFrame.getMethodName())
-                    || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
-                  runtime.handleCallback.callback(stack, klass, method, receiver);
-                  handled = true;
-                }
+        //
+        // check for expected caller
+        //
+        boolean handled = false;
+        if (runtime.handleCallback != null) {
+          StackTraceElement[] stack = new Throwable().getStackTrace();
+          if (stack.length > 2) {
+            // frames: Runtime.execution(0), callee(1), caller(2)
+            StackTraceElement callerFrame = stack[2];
+            if (!callerFrame.getMethodName().startsWith("$")) {
+              if (!caller.contains(callerFrame.getMethodName())
+                  || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
+                runtime.handleCallback.callback(stack, klass, method, receiver);
+                handled = true;
               }
             }
           }
+        }
 
-          if (!handled) {
-            String line =
-                (method.contains("<clinit>") ? "clinit" : String.valueOf(caller))
-                    + '\t'
-                    + bashToDescriptor(klass)
-                    + '\t'
-                    + String.valueOf(method)
-                    + '\n';
-            synchronized (runtime) {
-              if (runtime.output != null) {
-                runtime.output.printf(line);
-                runtime.output.flush();
-              }
+        if (!handled) {
+          String line =
+              (method.contains("<clinit>") ? "clinit" : String.valueOf(caller))
+                  + '\t'
+                  + bashToDescriptor(klass)
+                  + '\t'
+                  + String.valueOf(method)
+                  + '\n';
+          synchronized (runtime) {
+            if (runtime.output != null) {
+              runtime.output.printf(line);
+              runtime.output.flush();
             }
           }
         }
