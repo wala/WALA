@@ -26,6 +26,7 @@ import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -106,13 +107,19 @@ public class BypassSyntheticClassLoader implements IClassLoader, SummaryClassShe
 
   @Override
   public IClass defineSummaryClassShell(TypeName name, TypeName superName) {
+    return defineSummaryClassShell(name, superName, Collections.emptyList());
+  }
+
+  @Override
+  public IClass defineSummaryClassShell(
+      TypeName name, TypeName superName, Collection<MethodSummary> methods) {
     IClass existing = lookupClass(name);
     if (existing != null) {
       return existing;
     }
     TypeReference type = TypeReference.findOrCreate(me, name);
     TypeReference superType = superName == null ? null : TypeReference.findOrCreate(me, superName);
-    IClass shell = new SummaryClassShell(type, cha, superType);
+    IClass shell = new SummaryClassShell(type, cha, superType, methods);
     registerClass(name, shell);
     return shell;
   }
