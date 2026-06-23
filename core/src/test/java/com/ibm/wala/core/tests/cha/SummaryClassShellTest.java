@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -51,6 +52,18 @@ public class SummaryClassShellTest extends WalaTestCase {
         <classloader name="Synthetic">
           <class name="Base" super="Ljava/lang/Object"/>
           <class name="NotAShell"/>
+        </classloader>
+      </summary-spec>
+      """;
+
+  /** A shell whose {@code <class>} declares a method, which the shell should expose. */
+  private static final String XML_WITH_METHOD =
+      """
+      <summary-spec>
+        <classloader name="Synthetic">
+          <class name="WithMethod" super="Ljava/lang/Object">
+            <method name="foo" descriptor="()V"/>
+          </class>
         </classloader>
       </summary-spec>
       """;
@@ -138,6 +151,28 @@ public class SummaryClassShellTest extends WalaTestCase {
     assertThat(base.isReferenceType()).isTrue();
     assertThat(base.getModifiers()).isZero();
     assertThat(base.toString()).contains("Base");
+  }
+
+  /** A shell exposes the methods declared by its {@code <class>} as its own declared methods. */
+  @Test
+  public void testShellExposesItsSummaryMethods() throws ClassHierarchyException, IOException {
+    AnalysisScope scope = scope();
+    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+    Util.addSummaryClassShells(
+        cha.getLoader(scope.getSyntheticLoader()), read(scope, XML_WITH_METHOD));
+
+    IClass shell =
+        cha.lookupClass(TypeReference.findOrCreate(scope.getSyntheticLoader(), "LWithMethod"));
+    assertThat(shell).isInstanceOf(SummaryClassShell.class);
+
+    Selector foo = Selector.make("foo()V");
+    IMethod method = shell.getMethod(foo);
+    assertThat(method).isNotNull();
+    assertThat(method.getSelector()).isEqualTo(foo);
+    assertThat(method.getDeclaringClass()).isSameAs(shell);
+    assertThat(shell.getDeclaredMethods()).singleElement().isSameAs(method);
+    // The materialized method is cached.
+    assertThat(shell.getMethod(foo)).isSameAs(method);
   }
 
   /** Registering a shell twice returns the same class, and a null super defaults to the root. */

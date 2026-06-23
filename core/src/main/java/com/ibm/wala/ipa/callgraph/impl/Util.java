@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
+import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummaryClassShellLoader;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -43,6 +44,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -52,8 +54,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -209,11 +214,21 @@ public class Util {
     if (!(loader instanceof SummaryClassShellLoader registrar)) {
       return;
     }
+    // Group method summaries by declaring class, so each shell can expose its own methods.
+    Map<TypeReference, List<MethodSummary>> methodsByClass = HashMapFactory.make();
+    for (MethodSummary method : summary.getSummaries().values()) {
+      methodsByClass
+          .computeIfAbsent(method.getMethod().getDeclaringClass(), k -> new ArrayList<>())
+          .add(method);
+    }
     for (Map.Entry<TypeReference, TypeReference> entry :
         summary.getClassSuperclasses().entrySet()) {
       TypeReference type = entry.getKey();
       if (type.getClassLoader().equals(loader.getReference())) {
-        registrar.defineSummaryClassShell(type.getName(), entry.getValue().getName());
+        registrar.defineSummaryClassShell(
+            type.getName(),
+            entry.getValue().getName(),
+            methodsByClass.getOrDefault(type, Collections.emptyList()));
       }
     }
   }
