@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
@@ -54,7 +55,7 @@ import java.util.List;
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public class BypassSyntheticClassLoader implements IClassLoader {
+public class BypassSyntheticClassLoader implements IClassLoader, SummaryClassShellLoader {
 
   private final ClassLoaderReference me;
 
@@ -101,6 +102,19 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   public void registerClass(TypeName className, IClass theClass) {
     cha.addClass(theClass);
     syntheticClasses.put(className, theClass);
+  }
+
+  @Override
+  public IClass defineSummaryClassShell(TypeName name, TypeName superName) {
+    IClass existing = lookupClass(name);
+    if (existing != null) {
+      return existing;
+    }
+    TypeReference type = TypeReference.findOrCreate(me, name);
+    TypeReference superType = superName == null ? null : TypeReference.findOrCreate(me, superName);
+    IClass shell = new SummaryClassShell(type, cha, superType);
+    registerClass(name, shell);
+    return shell;
   }
 
   /** Return the ClassLoaderReference for this class loader. */

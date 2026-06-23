@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
@@ -35,6 +36,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
+import com.ibm.wala.ipa.summaries.SummaryClassShellLoader;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -52,6 +54,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /** Call graph utilities */
@@ -180,6 +183,39 @@ public class Util {
             cha,
             cha.getLoader(cha.getScope().getLoader(Atom.findOrCreateUnicodeAtom("Synthetic"))));
     options.setSelector(cs);
+  }
+
+  /**
+   * Materialize class shells for the summary-modeled classes that opt in by declaring a superclass
+   * (see {@link XMLMethodSummaryReader#getClassSuperclasses()}), registering each into {@code
+   * loader} if it supports {@link SummaryClassShellLoader}. Only the classes whose declaring loader
+   * is {@code loader} are registered.
+   *
+   * <p>Call this before building the {@link IClassHierarchy} (and before translating source classes
+   * that subclass a summary-modeled type), so that those subclasses resolve their base at
+   * definition time rather than falling back to the language root. See <a
+   * href="https://github.com/wala/WALA/issues/1957">#1957</a>. Loaders that do not implement {@link
+   * SummaryClassShellLoader} are silently skipped.
+   *
+   * @throws IllegalArgumentException if {@code loader} or {@code summary} is null
+   */
+  public static void addSummaryClassShells(IClassLoader loader, XMLMethodSummaryReader summary) {
+    if (loader == null) {
+      throw new IllegalArgumentException("loader is null");
+    }
+    if (summary == null) {
+      throw new IllegalArgumentException("summary is null");
+    }
+    if (!(loader instanceof SummaryClassShellLoader registrar)) {
+      return;
+    }
+    for (Map.Entry<TypeReference, TypeReference> entry :
+        summary.getClassSuperclasses().entrySet()) {
+      TypeReference type = entry.getKey();
+      if (type.getClassLoader().equals(loader.getReference())) {
+        registrar.defineSummaryClassShell(type.getName(), entry.getValue().getName());
+      }
+    }
   }
 
   /**
