@@ -66,14 +66,15 @@ public class ECJJava17IRTest extends ECJIRTests {
                     (n) -> {
                       SymbolTable st = n.getIR().getSymbolTable();
                       for (int value : m.snd) {
-                        check:
-                        {
-                          for (int i = 1; i <= st.getMaxValueNumber(); i++) {
-                            if (st.isIntegerConstant(i) && st.getIntValue(i) == value) {
-                              System.err.println("found " + value + " in " + n);
-                              break check;
-                            }
+                        boolean found = false;
+                        for (int i = 1; i <= st.getMaxValueNumber(); i++) {
+                          if (st.isIntegerConstant(i) && st.getIntValue(i) == value) {
+                            System.err.println("found " + value + " in " + n);
+                            found = true;
+                            break;
                           }
+                        }
+                        if (!found) {
                           //noinspection ResultOfMethodCallIgnored
                           fail("cannot find %s in %s", value, n);
                         }

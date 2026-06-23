@@ -130,26 +130,26 @@ public class Runtime {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
 
-        checkValid:
-        {
-          //
-          // check for expected caller
-          //
-          if (runtime.handleCallback != null) {
-            StackTraceElement[] stack = new Throwable().getStackTrace();
-            if (stack.length > 2) {
-              // frames: Runtime.execution(0), callee(1), caller(2)
-              StackTraceElement callerFrame = stack[2];
-              if (!callerFrame.getMethodName().startsWith("$")) {
-                if (!caller.contains(callerFrame.getMethodName())
-                    || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
-                  runtime.handleCallback.callback(stack, klass, method, receiver);
-                  break checkValid;
-                }
+        //
+        // check for expected caller
+        //
+        boolean handled = false;
+        if (runtime.handleCallback != null) {
+          StackTraceElement[] stack = new Throwable().getStackTrace();
+          if (stack.length > 2) {
+            // frames: Runtime.execution(0), callee(1), caller(2)
+            StackTraceElement callerFrame = stack[2];
+            if (!callerFrame.getMethodName().startsWith("$")) {
+              if (!caller.contains(callerFrame.getMethodName())
+                  || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
+                runtime.handleCallback.callback(stack, klass, method, receiver);
+                handled = true;
               }
             }
           }
+        }
 
+        if (!handled) {
           String line =
               (method.contains("<clinit>") ? "clinit" : String.valueOf(caller))
                   + '\t'

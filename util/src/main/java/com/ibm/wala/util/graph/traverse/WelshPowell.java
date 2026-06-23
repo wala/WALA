@@ -108,20 +108,25 @@ public class WelshPowell<T> {
 
         for (T m : vertices) {
           if (colors[G.getNumber(m)] == -1) {
-            color_me:
-            {
-              for (T p : Iterator2Iterable.make(G.getPredNodes(m))) {
-                if (colors[G.getNumber(p)] == currentColor) {
-                  break color_me;
-                }
-              }
+            boolean canColor = true;
 
+            for (T p : Iterator2Iterable.make(G.getPredNodes(m))) {
+              if (colors[G.getNumber(p)] == currentColor) {
+                canColor = false;
+                break;
+              }
+            }
+
+            if (canColor) {
               for (T s : Iterator2Iterable.make(G.getSuccNodes(m))) {
                 if (colors[G.getNumber(s)] == currentColor) {
-                  break color_me;
+                  canColor = false;
+                  break;
                 }
               }
+            }
 
+            if (canColor) {
               colors[G.getNumber(m)] = currentColor;
               colored++;
 
