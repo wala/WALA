@@ -2,6 +2,7 @@ package com.ibm.wala.gradle
 
 import kotlin.io.path.Path
 import org.eclipse.jgit.api.Git
+import org.gradle.api.tasks.VerificationException
 
 /**
  * Validate `.gitignore` patterns and strict source/build separation.
@@ -37,24 +38,27 @@ abstract class CheckGitCleanlinessTask : DefaultTask() {
     val status = Git.open(projectDirectory.asFile).use { it.status().call() }
     if (!status.isClean) {
       ids.run {
-        sequenceOf(
-                addedId to status.added,
-                changedId to status.changed,
-                removedId to status.removed,
-                missingId to status.missing,
-                modifiedId to status.modified,
-                untrackedId to status.untracked,
-                conflictingId to status.conflicting,
-            )
-            .forEach { (id, files) ->
-              if (files.isNotEmpty()) {
-                problems.reporter.report(id) {
-                  severity(Severity.ERROR)
-                  files.sortedBy(::Path).forEach(::fileLocation)
+        val dirtyProblems =
+            sequenceOf(
+                    addedId to status.added,
+                    changedId to status.changed,
+                    removedId to status.removed,
+                    missingId to status.missing,
+                    modifiedId to status.modified,
+                    untrackedId to status.untracked,
+                    conflictingId to status.conflicting,
+                )
+                .filter { (_, files) -> files.isNotEmpty() }
+                .map { (id, files) ->
+                  problems.reporter.create(id) { files.sortedBy(::Path).forEach(::fileLocation) }
                 }
-              }
-            }
-        throw GradleException(dirtyProblemGroup.displayName)
+                .toList()
+        if (dirtyProblems.isNotEmpty()) {
+          throw problems.reporter.throwing(
+              VerificationException(dirtyProblemGroup.displayName),
+              dirtyProblems,
+          )
+        }
       }
     }
     logger.info("Git working directory is clean")
