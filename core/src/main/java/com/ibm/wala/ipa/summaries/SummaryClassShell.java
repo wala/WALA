@@ -132,7 +132,8 @@ public class SummaryClassShell extends SyntheticClass {
 
   @Override
   public int getModifiers() {
-    return 0;
+    // A shell has no meaningful modifiers; fail fast rather than return a misleading value.
+    throw new UnsupportedOperationException("summary class shell has no modifiers");
   }
 
   @Override

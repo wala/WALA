@@ -13,227 +13,72 @@ package com.ibm.wala.core.tests.cha;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
-import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
-import com.ibm.wala.types.Selector;
+import com.ibm.wala.ipa.summaries.SummaryClassShellLoader;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 /**
  * Characterizes the class-hierarchy ordering invariant behind <a
- * href="https://github.com/wala/WALA/issues/1957">#1957</a>: a source class that {@code extends} a
- * type modeled only by an XML method summary keeps that inheritance edge only if the summary class
- * exists <em>before</em> the subclass is added to the {@link ClassHierarchy}.
- *
- * <p>The {@link ClassHierarchy} snapshots each class's superclass at {@code addClass} time. So
- * registering a summary-modeled base <em>after</em> the subclass (as happens today, since {@code
- * Util.addBypassLogic(...)} materializes summary classes only after {@code buildClassHierarchy()})
- * leaves the subclass parented at {@code Object}. Registering the base <em>before</em> the
- * subclass, the remedy in #1957, preserves the edge. Both orderings are exercised below.
- *
- * <p>This models the class-hierarchy half of the bug. The loader-local <em>resolution</em> half,
- * which is what bites the CAst/Python front-end in practice, is covered by {@code
- * com.ibm.wala.cast.test.SummaryClassShellResolutionTest}.
+ * href="https://github.com/wala/WALA/issues/1957">#1957</a>: a summary class shell must exist
+ * before the subclass is added to the {@link ClassHierarchy} for the subclass-graph edge to be
+ * recorded. The hierarchy snapshots each class's superclass at {@code addClass} time, so
+ * registering a summary-modeled base after the subclass leaves the subclass graph without the edge.
  */
 public class SummaryClassSuperclassOrderingTest extends WalaTestCase {
 
-  /** Registering the summary-modeled base before the subclass preserves the inheritance edge. */
+  private static final TypeName BASE = TypeName.string2TypeName("LBase");
+  private static final TypeName SUB = TypeName.string2TypeName("LSub");
+  private static final TypeName OBJECT = TypeName.string2TypeName("Ljava/lang/Object");
+
+  private static SummaryClassShellLoader syntheticLoader(ClassHierarchy cha) {
+    return (SummaryClassShellLoader) cha.getLoader(cha.getScope().getSyntheticLoader());
+  }
+
+  private static ClassHierarchy makeHierarchy() throws ClassHierarchyException, IOException {
+    AnalysisScope scope =
+        CallGraphTestUtil.makeJ2SEAnalysisScope(
+            TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    return ClassHierarchyFactory.make(scope);
+  }
+
+  /** Registering the summary-modeled base before the subclass records the subclass-graph edge. */
   @Test
   public void testBaseRegisteredBeforeSubclass() throws ClassHierarchyException, IOException {
-    Fixture f = new Fixture();
+    ClassHierarchy cha = makeHierarchy();
+    SummaryClassShellLoader synthetic = syntheticLoader(cha);
 
-    f.registerBase();
-    f.registerSub();
+    IClass base = synthetic.defineSummaryClassShell(BASE, OBJECT);
+    IClass sub = synthetic.defineSummaryClassShell(SUB, BASE);
 
-    assertThat(f.sub().getSuperclass()).isSameAs(f.base());
-    assertThat(f.cha.getImmediateSubclasses(f.base())).contains(f.sub());
+    assertThat(sub.getSuperclass()).isSameAs(base);
+    assertThat(cha.getImmediateSubclasses(base)).contains(sub);
   }
 
   /**
-   * Registering the summary-modeled base after the subclass (the current ordering) loses the
-   * inheritance edge: the subclass falls back to {@code Object}.
+   * Registering the summary-modeled base after the subclass (the current ordering) leaves the
+   * subclass-graph snapshot stale: the base does not see the subclass.
    */
   @Test
   public void testBaseRegisteredAfterSubclass() throws ClassHierarchyException, IOException {
-    Fixture f = new Fixture();
+    ClassHierarchy cha = makeHierarchy();
+    SummaryClassShellLoader synthetic = syntheticLoader(cha);
 
-    f.registerSub();
-    f.registerBase();
+    // The subclass is added while its base does not yet exist, so the hierarchy snapshots it under
+    // the root.
+    IClass sub = synthetic.defineSummaryClassShell(SUB, BASE);
+    IClass base = synthetic.defineSummaryClassShell(BASE, OBJECT);
 
-    assertThat(f.sub().getSuperclass()).isSameAs(f.cha.getRootClass());
-    assertThat(f.cha.getImmediateSubclasses(f.base())).doesNotContain(f.sub());
-  }
-
-  /**
-   * Holds a hierarchy plus a summary-modeled {@code Base} and a {@code Sub extends Base}, both as
-   * synthetic classes registered through the {@link BypassSyntheticClassLoader}. {@code Sub} caches
-   * its superclass on first resolution, mirroring {@link
-   * com.ibm.wala.classLoader.BytecodeClass#getSuperclass()}.
-   */
-  private static final class Fixture {
-    final ClassHierarchy cha;
-    private final BypassSyntheticClassLoader synthetic;
-    private final SummaryClass base;
-    private final SummaryClass sub;
-    private final TypeReference baseRef;
-    private final TypeReference subRef;
-
-    Fixture() throws ClassHierarchyException, IOException {
-      AnalysisScope scope =
-          CallGraphTestUtil.makeJ2SEAnalysisScope(
-              TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-      cha = ClassHierarchyFactory.make(scope);
-      synthetic = (BypassSyntheticClassLoader) cha.getLoader(scope.getSyntheticLoader());
-      baseRef =
-          TypeReference.findOrCreate(scope.getSyntheticLoader(), TypeName.string2TypeName("LBase"));
-      subRef =
-          TypeReference.findOrCreate(scope.getSyntheticLoader(), TypeName.string2TypeName("LSub"));
-      base = new SummaryClass(baseRef, cha, null);
-      sub = new SummaryClass(subRef, cha, baseRef.getName());
-    }
-
-    void registerBase() {
-      synthetic.registerClass(baseRef.getName(), base);
-    }
-
-    void registerSub() {
-      synthetic.registerClass(subRef.getName(), sub);
-    }
-
-    IClass base() {
-      return base;
-    }
-
-    IClass sub() {
-      return cha.lookupClass(subRef);
-    }
-  }
-
-  /**
-   * A minimal {@link SyntheticClass} that resolves its superclass through its class loader and
-   * caches the first resolution, mirroring the contract of {@link
-   * com.ibm.wala.classLoader.BytecodeClass#getSuperclass()}.
-   */
-  private static final class SummaryClass extends SyntheticClass {
-
-    private final TypeName superName;
-
-    private boolean superclassComputed;
-    private IClass superClass;
-
-    SummaryClass(TypeReference type, ClassHierarchy cha, TypeName superName) {
-      super(type, cha);
-      this.superName = superName;
-    }
-
-    @Override
-    public IClass getSuperclass() {
-      if (!superclassComputed) {
-        superclassComputed = true;
-        IClassLoader loader = getClassLoader();
-        if (superName != null) {
-          superClass = loader.lookupClass(superName);
-        }
-        if (superClass == null) {
-          superClass = loader.lookupClass(TypeReference.JavaLangObject.getName());
-        }
-      }
-      return superClass;
-    }
-
-    @Override
-    public Collection<IClass> getDirectInterfaces() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<IClass> getAllImplementedInterfaces() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public IMethod getMethod(Selector selector) {
-      return null;
-    }
-
-    @Override
-    public IField getField(Atom name) {
-      return null;
-    }
-
-    @Override
-    public IMethod getClassInitializer() {
-      return null;
-    }
-
-    @Override
-    public Collection<? extends IMethod> getDeclaredMethods() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<IField> getDeclaredInstanceFields() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<IField> getDeclaredStaticFields() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<IField> getAllInstanceFields() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<IField> getAllStaticFields() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<IField> getAllFields() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public Collection<? extends IMethod> getAllMethods() {
-      return Collections.emptySet();
-    }
-
-    @Override
-    public boolean isReferenceType() {
-      return getReference().isReferenceType();
-    }
-
-    @Override
-    public boolean isPublic() {
-      return true;
-    }
-
-    @Override
-    public boolean isPrivate() {
-      return false;
-    }
-
-    @Override
-    public int getModifiers() {
-      return 0;
-    }
+    assertThat(cha.getImmediateSubclasses(base)).doesNotContain(sub);
+    // A SummaryClassShell resolves its superclass live, so the IClass itself self-heals to the base
+    // once it exists; it is the hierarchy snapshot, not the IClass, that stays stale.
+    assertThat(sub.getSuperclass()).isSameAs(base);
   }
 }

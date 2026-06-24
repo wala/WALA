@@ -76,7 +76,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
    * Set of TypeReferences for classes declared via a {@code <class>} element. These are the classes
    * the summary <em>models</em> (as opposed to the classes whose methods it merely overrides).
    */
-  private final HashSet<TypeReference> classes = HashSetFactory.make();
+  private final Set<TypeReference> classes = HashSetFactory.make();
 
   /**
    * Maps a class declared via {@code <class name="..." super="...">} to its declared superclass.
@@ -89,7 +89,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
    * href="https://github.com/wala/WALA/issues/1957">#1957</a>). Classes declared without a {@code
    * super} stay method-summary-only, exactly as before.
    */
-  private final HashMap<TypeReference, TypeReference> classSuperclasses = HashMapFactory.make();
+  private final Map<TypeReference, TypeReference> classSuperclasses = HashMapFactory.make();
 
   /** Set of Atoms that represent packages that can be ignored */
   private final HashSet<Atom> ignoredPackages = HashSetFactory.make();

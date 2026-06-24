@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -97,7 +96,8 @@ public class SummaryClassShellTest extends WalaTestCase {
     AnalysisScope scope = scope();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     XMLMethodSummaryReader reader = read(scope, XML);
-    IClassLoader synthetic = cha.getLoader(scope.getSyntheticLoader());
+    SummaryClassShellLoader synthetic =
+        (SummaryClassShellLoader) cha.getLoader(scope.getSyntheticLoader());
 
     Util.addSummaryClassShells(synthetic, reader);
 
@@ -116,7 +116,8 @@ public class SummaryClassShellTest extends WalaTestCase {
   public void testShellHasNoMembers() throws ClassHierarchyException, IOException {
     AnalysisScope scope = scope();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    Util.addSummaryClassShells(cha.getLoader(scope.getSyntheticLoader()), read(scope, XML));
+    Util.addSummaryClassShells(
+        (SummaryClassShellLoader) cha.getLoader(scope.getSyntheticLoader()), read(scope, XML));
 
     IClass base = cha.lookupClass(TypeReference.findOrCreate(scope.getSyntheticLoader(), "LBase"));
     assertThat(base).isInstanceOf(SummaryClassShell.class);
@@ -136,7 +137,7 @@ public class SummaryClassShellTest extends WalaTestCase {
     assertThat(base.isPublic()).isTrue();
     assertThat(base.isPrivate()).isFalse();
     assertThat(base.isReferenceType()).isTrue();
-    assertThat(base.getModifiers()).isZero();
+    assertThatThrownBy(base::getModifiers).isInstanceOf(UnsupportedOperationException.class);
     assertThat(base.toString()).contains("Base");
   }
 
@@ -160,7 +161,8 @@ public class SummaryClassShellTest extends WalaTestCase {
   public void testDriverRejectsNullArguments() throws ClassHierarchyException, IOException {
     AnalysisScope scope = scope();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    IClassLoader synthetic = cha.getLoader(scope.getSyntheticLoader());
+    SummaryClassShellLoader synthetic =
+        (SummaryClassShellLoader) cha.getLoader(scope.getSyntheticLoader());
     XMLMethodSummaryReader reader = read(scope, XML);
 
     assertThatThrownBy(() -> Util.addSummaryClassShells(null, reader))
@@ -169,26 +171,13 @@ public class SummaryClassShellTest extends WalaTestCase {
         .isInstanceOf(IllegalArgumentException.class);
   }
 
-  /** A loader that cannot introduce shells is silently skipped. */
-  @Test
-  public void testDriverSkipsLoaderWithoutCapability() throws ClassHierarchyException, IOException {
-    AnalysisScope scope = scope();
-    ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    // The primordial loader is a bytecode loader and does not implement SummaryClassShellLoader.
-    IClassLoader primordial = cha.getLoader(scope.getPrimordialLoader());
-
-    Util.addSummaryClassShells(primordial, read(scope, XML));
-
-    assertThat(cha.lookupClass(TypeReference.findOrCreate(scope.getSyntheticLoader(), "LBase")))
-        .isNull();
-  }
-
   /** Only classes whose declaring loader matches the target loader are registered. */
   @Test
   public void testDriverSkipsClassesFromOtherLoaders() throws ClassHierarchyException, IOException {
     AnalysisScope scope = scope();
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
-    IClassLoader synthetic = cha.getLoader(scope.getSyntheticLoader());
+    SummaryClassShellLoader synthetic =
+        (SummaryClassShellLoader) cha.getLoader(scope.getSyntheticLoader());
 
     // The summary declares its shell under the Primordial loader, not the Synthetic one.
     Util.addSummaryClassShells(synthetic, read(scope, XML_PRIMORDIAL));

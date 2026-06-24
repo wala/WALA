@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.summaries;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.types.TypeName;
 
 /**
@@ -26,10 +27,9 @@ import com.ibm.wala.types.TypeName;
  * eagerly, before the hierarchy is built. See <a
  * href="https://github.com/wala/WALA/issues/1957">#1957</a>.
  *
- * @see com.ibm.wala.ipa.callgraph.impl.Util#addSummaryClassShells(IClassLoader,
- *     XMLMethodSummaryReader)
+ * @see Util#addSummaryClassShells(SummaryClassShellLoader, XMLMethodSummaryReader)
  */
-public interface SummaryClassShellLoader {
+public interface SummaryClassShellLoader extends IClassLoader {
 
   /**
    * Register a shell {@link IClass} for a summary-modeled type, so that classes loaded by this

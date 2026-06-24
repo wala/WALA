@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
@@ -188,32 +187,28 @@ public class Util {
   /**
    * Materialize class shells for the summary-modeled classes that opt in by declaring a superclass
    * (see {@link XMLMethodSummaryReader#getClassSuperclasses()}), registering each into {@code
-   * loader} if it supports {@link SummaryClassShellLoader}. Only the classes whose declaring loader
-   * is {@code loader} are registered.
+   * loader}. Only the classes whose declaring loader is {@code loader} are registered.
    *
    * <p>Call this before building the {@link IClassHierarchy} (and before translating source classes
    * that subclass a summary-modeled type), so that those subclasses resolve their base at
    * definition time rather than falling back to the language root. See <a
-   * href="https://github.com/wala/WALA/issues/1957">#1957</a>. Loaders that do not implement {@link
-   * SummaryClassShellLoader} are silently skipped.
+   * href="https://github.com/wala/WALA/issues/1957">#1957</a>.
    *
    * @throws IllegalArgumentException if {@code loader} or {@code summary} is null
    */
-  public static void addSummaryClassShells(IClassLoader loader, XMLMethodSummaryReader summary) {
+  public static void addSummaryClassShells(
+      SummaryClassShellLoader loader, XMLMethodSummaryReader summary) {
     if (loader == null) {
       throw new IllegalArgumentException("loader is null");
     }
     if (summary == null) {
       throw new IllegalArgumentException("summary is null");
     }
-    if (!(loader instanceof SummaryClassShellLoader registrar)) {
-      return;
-    }
     for (Map.Entry<TypeReference, TypeReference> entry :
         summary.getClassSuperclasses().entrySet()) {
       TypeReference type = entry.getKey();
       if (type.getClassLoader().equals(loader.getReference())) {
-        registrar.defineSummaryClassShell(type.getName(), entry.getValue().getName());
+        loader.defineSummaryClassShell(type.getName(), entry.getValue().getName());
       }
     }
   }
