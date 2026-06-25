@@ -16,7 +16,7 @@ import java.io.IOException;
 public class HybridClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   private final JavaScriptTranslatorFactory jsTranslatorFactory;
-  private SSAOptions ssaOptions;
+  private final SSAOptions ssaOptions;
 
   public HybridClassLoaderFactory(
       JavaScriptTranslatorFactory jsTranslatorFactory,
