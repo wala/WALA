@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.ClassFileModule;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.JarStreamModule;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -85,7 +86,7 @@ public class AnalysisScope {
 
   /** Create an analysis scope initialized for analysis of Java */
   public static AnalysisScope createJavaAnalysisScope() {
-    AnalysisScope scope = new AnalysisScope(Collections.singleton(Language.JAVA));
+    AnalysisScope scope = new AnalysisScope(Collections.singleton(JavaLanguage.get()));
     scope.initForJava();
     return scope;
   }
@@ -509,7 +510,7 @@ public class AnalysisScope {
       ClassLoaderReference lrReference = e.getKey();
       String moduleLdr = lrReference.name().toString();
       String moduleLang = lrReference.language().toString();
-      assert Language.JAVA.getName().equals(lrReference.language())
+      assert JavaLanguage.get().getName().equals(lrReference.language())
           : "Java language only is currently supported";
 
       for (Module m : e.getValue()) {
@@ -544,7 +545,7 @@ public class AnalysisScope {
       ClassLoaderReference lrReference = e.getKey();
       String ldrName = lrReference.name().toString();
       String ldrLang = lrReference.language().toString();
-      assert Language.JAVA.getName().equals(lrReference.language())
+      assert JavaLanguage.get().getName().equals(lrReference.language())
           : "Java language only is currently supported";
       String ldrImplName = e.getValue();
       String ldrImplDescrLine =

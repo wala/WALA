@@ -598,7 +598,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
   @Override
   public Language getLanguage() {
-    return Language.JAVA;
+    return JavaLanguage.get();
   }
 
   @Override

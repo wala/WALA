@@ -23,7 +23,7 @@ import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -567,7 +567,7 @@ public abstract class JavaIRTests extends IRTests {
     TypeReference clsRef = TypeReference.findOrCreate(JavaSourceAnalysisScope.SOURCE, clsName);
 
     Atom nameAtom = Atom.findOrCreateUnicodeAtom(methodName);
-    Descriptor descr = Descriptor.findOrCreateUTF8(Language.JAVA, methodDescriptor);
+    Descriptor descr = Descriptor.findOrCreateUTF8(JavaLanguage.get(), methodDescriptor);
 
     return MethodReference.findOrCreate(clsRef, nameAtom, descr);
   }

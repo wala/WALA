@@ -12,7 +12,7 @@ package com.ibm.wala.cast.java.test;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
@@ -32,7 +32,7 @@ public abstract class SyncDuplicatorTests extends IRTests {
               TypeReference.findOrCreate(
                   JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LMonitor2")),
               Atom.findOrCreateUnicodeAtom("test"),
-              Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z")),
+              Descriptor.findOrCreateUTF8(JavaLanguage.get(), "(Ljava/lang/Object;)Z")),
           IInvokeInstruction.Dispatch.STATIC);
 
   @Test

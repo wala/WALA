@@ -2,6 +2,7 @@ package com.ibm.wala.cast.js.examples.hybrid;
 
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -11,7 +12,7 @@ import java.util.Set;
 public class HybridAnalysisScope extends AnalysisScope {
 
   private static final Set<Language> languages =
-      HashSetFactory.of(Language.JAVA, JavaScriptLoader.JS);
+      HashSetFactory.of(JavaLanguage.get(), JavaScriptLoader.JS);
 
   public HybridAnalysisScope() {
     super(languages);

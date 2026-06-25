@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.core.tests.callGraph;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -89,7 +89,7 @@ public class CallGraphTestUtil {
     }
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       String ignored = builder.getPointerAnalysis().toString();
@@ -112,7 +112,7 @@ public class CallGraphTestUtil {
     }
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeVanillaZeroOneCFABuilder(JavaLanguage.get(), options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {
@@ -135,7 +135,7 @@ public class CallGraphTestUtil {
     }
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       String ignored = builder.getPointerAnalysis().toString();
@@ -197,7 +197,7 @@ public class CallGraphTestUtil {
     }
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeNCFABuilder(n, Language.JAVA, options, cache, cha);
+        Util.makeNCFABuilder(n, JavaLanguage.get(), options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     if (CHECK_FOOTPRINT) {

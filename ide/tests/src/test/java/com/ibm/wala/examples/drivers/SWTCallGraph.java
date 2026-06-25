@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -114,7 +114,8 @@ public class SWTCallGraph {
       // build the call graph
       // //
       com.ibm.wala.ipa.callgraph.CallGraphBuilder<InstanceKey> builder =
-          Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha, null, null);
+          Util.makeZeroCFABuilder(
+              JavaLanguage.get(), options, new AnalysisCacheImpl(), cha, null, null);
       CallGraph cg = builder.makeCallGraph(options, null);
 
       System.out.println(CallGraphStats.getStats(cg));

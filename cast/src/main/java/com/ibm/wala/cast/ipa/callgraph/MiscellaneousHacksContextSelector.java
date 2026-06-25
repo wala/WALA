@@ -14,7 +14,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -72,7 +72,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
                   TypeReference.findOrCreate(
                       ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])),
                   Atom.findOrCreateUnicodeAtom(descr[1]),
-                  Descriptor.findOrCreateUTF8(Language.JAVA, descr[2]));
+                  Descriptor.findOrCreateUTF8(JavaLanguage.get(), descr[2]));
 
           methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
         }

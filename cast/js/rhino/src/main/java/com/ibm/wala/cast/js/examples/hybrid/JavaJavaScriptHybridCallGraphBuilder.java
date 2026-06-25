@@ -19,7 +19,7 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -54,7 +54,7 @@ public class JavaJavaScriptHybridCallGraphBuilder
     languageSelectors.put(
         JavaScriptTypes.jsName,
         new JavaScriptFunctionApplyContextSelector(new JavaScriptConstructorContextSelector(def)));
-    languageSelectors.put(Language.JAVA.getName(), def);
+    languageSelectors.put(JavaLanguage.get().getName(), def);
     setContextSelector(new CrossLanguageContextSelector(languageSelectors));
 
     Map<Atom, InstanceKeyFactory> instanceKeys = HashMapFactory.make();
@@ -67,7 +67,7 @@ public class JavaJavaScriptHybridCallGraphBuilder
                 new ZeroXInstanceKeys(
                     options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS))));
     instanceKeys.put(
-        Language.JAVA.getName(),
+        JavaLanguage.get().getName(),
         new ZeroXInstanceKeys(options, cha, contextInterpreter, ZeroXInstanceKeys.NONE));
     setInstanceKeys(new CrossLanguageInstanceKeys(instanceKeys));
   }

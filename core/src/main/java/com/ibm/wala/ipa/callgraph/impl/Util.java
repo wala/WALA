@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -849,7 +850,7 @@ public class Util {
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeNCFABuilder(n, Language.JAVA, options, cache, cha);
+    return makeNCFABuilder(n, JavaLanguage.get(), options, cache, cha);
   }
 
   /**
@@ -994,7 +995,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            Language.JAVA.getFakeRootMethod(cha, cache),
+            JavaLanguage.get().getFakeRootMethod(cha, cache),
             options,
             cache,
             appSelector,

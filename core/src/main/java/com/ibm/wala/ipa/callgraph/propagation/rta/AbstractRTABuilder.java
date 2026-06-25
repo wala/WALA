@@ -14,7 +14,7 @@ import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -102,7 +102,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter) {
     super(
-        Language.JAVA.getFakeRootMethod(cha, cache),
+        JavaLanguage.get().getFakeRootMethod(cha, cache),
         options,
         cache,
         new DefaultPointerKeyFactory());

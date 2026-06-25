@@ -18,6 +18,7 @@ import com.ibm.wala.cast.loader.CAstAbstractModuleLoader;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -95,7 +96,7 @@ public class SummaryClassShellResolutionTest {
 
     @Override
     public Language getLanguage() {
-      return Language.JAVA;
+      return JavaLanguage.get();
     }
 
     @Override
@@ -105,7 +106,7 @@ public class SummaryClassShellResolutionTest {
 
     @Override
     public SSAInstructionFactory getInstructionFactory() {
-      return Language.JAVA.instructionFactory();
+      return JavaLanguage.get().instructionFactory();
     }
 
     @Override

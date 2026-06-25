@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -157,7 +157,8 @@ public class PDFSlice {
           com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
       CallGraphBuilder<InstanceKey> builder =
-          Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+          Util.makeVanillaZeroOneCFABuilder(
+              JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);

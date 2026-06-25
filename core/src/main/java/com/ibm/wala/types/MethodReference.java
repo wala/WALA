@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.shrike.ShrikeUtil;
 import com.ibm.wala.core.util.strings.Atom;
@@ -24,7 +25,7 @@ public final class MethodReference extends MemberReference {
   public static final Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
   private static final Descriptor newInstanceDesc =
-      Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
+      Descriptor.findOrCreateUTF8(JavaLanguage.get(), "()Ljava/lang/Object;");
 
   public static final MethodReference JavaLangClassNewInstance =
       findOrCreate(TypeReference.JavaLangClass, newInstanceAtom, newInstanceDesc);
@@ -32,7 +33,7 @@ public final class MethodReference extends MemberReference {
   private static final Atom ctorNewInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
   private static final Descriptor ctorNewInstanceDesc =
-      Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/Object;)Ljava/lang/Object;");
+      Descriptor.findOrCreateUTF8(JavaLanguage.get(), "([Ljava/lang/Object;)Ljava/lang/Object;");
 
   public static final MemberReference JavaLangReflectCtorNewInstance =
       findOrCreate(
@@ -41,7 +42,7 @@ public final class MethodReference extends MemberReference {
   public static final Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
 
   private static final Descriptor forNameDesc =
-      Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/String;)Ljava/lang/Class;");
+      Descriptor.findOrCreateUTF8(JavaLanguage.get(), "(Ljava/lang/String;)Ljava/lang/Class;");
 
   public static final MethodReference JavaLangClassForName =
       findOrCreate(TypeReference.JavaLangClass, forNameAtom, forNameDesc);
@@ -49,7 +50,7 @@ public final class MethodReference extends MemberReference {
   public static final Atom initAtom = Atom.findOrCreateUnicodeAtom("<init>");
 
   public static final Descriptor defaultInitDesc =
-      Descriptor.findOrCreateUTF8(Language.JAVA, "()V");
+      Descriptor.findOrCreateUTF8(JavaLanguage.get(), "()V");
 
   public static final Selector initSelector = new Selector(initAtom, defaultInitDesc);
 
@@ -64,14 +65,14 @@ public final class MethodReference extends MemberReference {
   public static final Atom runAtom = Atom.findOrCreateUnicodeAtom("run");
 
   public static final Descriptor runDesc =
-      Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
+      Descriptor.findOrCreateUTF8(JavaLanguage.get(), "()Ljava/lang/Object;");
 
   public static final Selector runSelector = new Selector(runAtom, runDesc);
 
   public static final Atom equalsAtom = Atom.findOrCreateUnicodeAtom("equals");
 
   public static final Descriptor equalsDesc =
-      Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z");
+      Descriptor.findOrCreateUTF8(JavaLanguage.get(), "(Ljava/lang/Object;)Z");
 
   public static final Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
 
@@ -127,7 +128,7 @@ public final class MethodReference extends MemberReference {
 
   public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor)
       throws IllegalArgumentException {
-    return findOrCreate(Language.JAVA, t, methodName, descriptor);
+    return findOrCreate(JavaLanguage.get(), t, methodName, descriptor);
   }
 
   public static MethodReference findOrCreate(
@@ -140,7 +141,7 @@ public final class MethodReference extends MemberReference {
   public static MethodReference findOrCreate(
       ClassLoaderReference loader, String methodClass, String methodName, String methodSignature)
       throws IllegalArgumentException {
-    return findOrCreate(Language.JAVA, loader, methodClass, methodName, methodSignature);
+    return findOrCreate(JavaLanguage.get(), loader, methodClass, methodName, methodSignature);
   }
 
   public static MethodReference findOrCreate(

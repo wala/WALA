@@ -11,7 +11,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -43,7 +43,7 @@ public class Driver {
         JavaScriptLoader.JS.getName(),
         new JavaScriptConstructTargetSelector(
             cha, new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector())));
-    methodTargetSelectors.put(Language.JAVA.getName(), options.getMethodTargetSelector());
+    methodTargetSelectors.put(JavaLanguage.get().getName(), options.getMethodTargetSelector());
 
     options.setSelector(new CrossLanguageMethodTargetSelector(methodTargetSelectors));
   }
