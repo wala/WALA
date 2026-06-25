@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.core.util.strings.StringStuff;
@@ -59,7 +60,7 @@ public final class Descriptor {
   }
 
   public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
-    return findOrCreate(Language.JAVA, b);
+    return findOrCreate(JavaLanguage.get(), b);
   }
 
   /**
@@ -67,7 +68,7 @@ public final class Descriptor {
    * @return the canonical representative for this descriptor value
    */
   public static Descriptor findOrCreateUTF8(String s) throws IllegalArgumentException {
-    return findOrCreateUTF8(Language.JAVA, s);
+    return findOrCreateUTF8(JavaLanguage.get(), s);
   }
 
   /**

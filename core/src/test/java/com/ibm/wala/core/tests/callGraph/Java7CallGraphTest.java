@@ -14,7 +14,7 @@ package com.ibm.wala.core.tests.callGraph;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -102,7 +102,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     IAnalysisCacheView cache = new AnalysisCacheImpl();
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
 
     MethodHandles.analyzeMethodHandles(options, builder);
 

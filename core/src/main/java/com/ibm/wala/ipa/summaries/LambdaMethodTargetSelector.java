@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.summaries;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -148,7 +148,7 @@ public class LambdaMethodTargetSelector implements MethodTargetSelector {
     IClass lambda =
         classSummaries.computeIfAbsent(
             invoke.getBootstrap(), (b) -> LambdaSummaryClass.create(caller, invoke));
-    SSAInstructionFactory insts = Language.JAVA.instructionFactory();
+    SSAInstructionFactory insts = JavaLanguage.get().instructionFactory();
     // allocate an anonymous class object.
     // v is a value number beyond the value numbers used for the invokedynamic arguments
     int v = target.getNumberOfParameters() + 2;

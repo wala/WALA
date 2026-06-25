@@ -16,7 +16,7 @@ import static org.assertj.core.api.InstanceOfAssertFactories.iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.demandpa.AbstractPtrTest;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -227,7 +227,7 @@ public class CallGraphTest extends WalaTestCase {
             cha, "LstaticInit/TestSystemProperties");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeZeroCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options);
     assertThat(cg)
         .filteredOn(
@@ -386,7 +386,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
     for (PointerKey pk : pointerAnalysis.getPointerKeys()) {

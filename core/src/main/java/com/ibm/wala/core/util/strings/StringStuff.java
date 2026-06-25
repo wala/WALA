@@ -18,6 +18,7 @@ import static com.ibm.wala.types.TypeReference.ArrayTypeCode;
 import static com.ibm.wala.types.TypeReference.PointerTypeCode;
 import static com.ibm.wala.types.TypeReference.ReferenceTypeCode;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
@@ -113,7 +114,7 @@ public class StringStuff {
   }
 
   public static TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
-    return parseForReturnTypeName(Language.JAVA, ImmutableByteArray.make(desc));
+    return parseForReturnTypeName(JavaLanguage.get(), ImmutableByteArray.make(desc));
   }
 
   public static TypeName parseForReturnTypeName(Language l, String desc)
@@ -172,7 +173,7 @@ public class StringStuff {
 
   public static TypeName[] parseForParameterNames(String descriptor)
       throws IllegalArgumentException {
-    return parseForParameterNames(Language.JAVA, ImmutableByteArray.make(descriptor));
+    return parseForParameterNames(JavaLanguage.get(), ImmutableByteArray.make(descriptor));
   }
 
   public static TypeName[] parseForParameterNames(Language l, String descriptor)
@@ -478,7 +479,7 @@ public class StringStuff {
    */
   public static MethodReference makeMethodReference(String methodSig)
       throws IllegalArgumentException {
-    return makeMethodReference(Language.JAVA, methodSig);
+    return makeMethodReference(JavaLanguage.get(), methodSig);
   }
 
   public static MethodReference makeMethodReference(Language l, String methodSig)

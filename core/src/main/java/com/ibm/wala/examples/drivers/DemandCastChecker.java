@@ -32,7 +32,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.util.ProgressMaster;
@@ -168,9 +168,9 @@ public class DemandCastChecker {
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
-      builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+      builder = Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
-      heapModel = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha);
+      heapModel = Util.makeVanillaZeroOneCFABuilder(JavaLanguage.get(), options, cache, cha);
     } else {
       builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha);
       heapModel = (HeapModel) builder;

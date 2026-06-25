@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -96,7 +96,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   /** Mapping from TypeReference -&gt; IR TODO: Soft references? */
   private final Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
-  private final SSAInstructionFactory insts = Language.JAVA.instructionFactory();
+  private final SSAInstructionFactory insts = JavaLanguage.get().instructionFactory();
 
   @Override
   public IR getIR(CGNode node) {
