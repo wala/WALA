@@ -36,7 +36,7 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
     return singleton;
   }
 
-  private InstanceOfPiPolicy() {}
+  protected InstanceOfPiPolicy() {}
 
   @Override
   public Pair<Integer, SSAInstruction> getPi(
@@ -44,17 +44,21 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
       SSAInstruction def1,
       SSAInstruction def2,
       SymbolTable symbolTable) {
-    if (def1 instanceof SSAInstanceofInstruction) {
+    if (isInstanceOf(def1)) {
       if (symbolTable.isBooleanOrZeroOneConstant(cond.getUse(1))) {
         return Pair.make(def1.getUse(0), def1);
       }
     }
-    if (def2 instanceof SSAInstanceofInstruction) {
+    if (isInstanceOf(def2)) {
       if (symbolTable.isBooleanOrZeroOneConstant(cond.getUse(0))) {
         return Pair.make(def2.getUse(0), def2);
       }
     }
     return null;
+  }
+
+  protected boolean isInstanceOf(SSAInstruction def) {
+    return def instanceof SSAInstanceofInstruction;
   }
 
   @Override
