@@ -1,9 +1,7 @@
 package com.ibm.wala.shrike.instrumentation;
 
 import com.ibm.wala.shrike.shrikeCT.ClassReader;
-import com.ibm.wala.shrike.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.shrike.shrikeCT.SourceFileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -36,26 +34,15 @@ public class CodeScraper implements ClassFileTransformer {
       byte[] classfileBuffer)
       throws IllegalClassFormatException {
     try {
-      String sourceFile = null;
       ClassReader reader = new ClassReader(classfileBuffer);
-      AttrIterator attrs = new ClassReader.AttrIterator();
-      reader.initClassAttributeIterator(attrs);
-      for (; attrs.isValid(); attrs.advance()) {
-        if (attrs.getName().equals("SourceFile")) {
-          SourceFileReader file = new SourceFileReader(attrs);
-          int index = file.getSourceFileCPIndex();
-          sourceFile = reader.getCP().getCPUtf8(index);
+      try {
+        Path log = prefix.resolve(reader.getName() + ".class");
+        try (final OutputStream f = Files.newOutputStream(log)) {
+          f.write(classfileBuffer);
         }
+      } catch (IOException e) {
+        assert false : e;
       }
-      if (className == null || sourceFile == null || !sourceFile.endsWith("java") || true)
-        try {
-          Path log = prefix.resolve(reader.getName() + ".class");
-          try (final OutputStream f = Files.newOutputStream(log)) {
-            f.write(classfileBuffer);
-          }
-        } catch (IOException e) {
-          assert false : e;
-        }
 
       return classfileBuffer;
     } catch (InvalidClassFileException e1) {
