@@ -14,6 +14,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.types.TypeName;
+import java.util.Collection;
 
 /**
  * A capability, implemented by class loaders that can introduce "shell" classes for types modeled
@@ -42,4 +43,24 @@ public interface SummaryClassShellLoader extends IClassLoader {
    * @return the registered (or pre-existing) class
    */
   IClass defineSummaryClassShell(TypeName name, TypeName superName);
+
+  /**
+   * Register a shell {@link IClass} that also exposes the given method summaries as its own
+   * declared methods, so that a walk of the shell (e.g. when resolving an inherited method on a
+   * subclass) finds them. The method bodies are still bound late by the usual bypass mechanism;
+   * only the declarations need to exist on the shell.
+   *
+   * <p>The default implementation ignores {@code methods} and delegates to {@link
+   * #defineSummaryClassShell(TypeName, TypeName)}; implementations whose shells can carry methods
+   * (such as the {@link BypassSyntheticClassLoader}) override this.
+   *
+   * @param name the type to register a shell for
+   * @param superName the shell's superclass, or {@code null} for this loader's language root type
+   * @param methods summaries for the methods the shell should declare
+   * @return the registered (or pre-existing) class
+   */
+  default IClass defineSummaryClassShell(
+      TypeName name, TypeName superName, Collection<MethodSummary> methods) {
+    return defineSummaryClassShell(name, superName);
+  }
 }
