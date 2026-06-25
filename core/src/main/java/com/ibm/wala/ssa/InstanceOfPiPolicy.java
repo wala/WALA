@@ -44,12 +44,12 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
       SSAInstruction def1,
       SSAInstruction def2,
       SymbolTable symbolTable) {
-    if (isInstanceOf(def1)) {
+    if (isInstanceOfInstruction(def1)) {
       if (symbolTable.isBooleanOrZeroOneConstant(cond.getUse(1))) {
         return Pair.make(def1.getUse(0), def1);
       }
     }
-    if (isInstanceOf(def2)) {
+    if (isInstanceOfInstruction(def2)) {
       if (symbolTable.isBooleanOrZeroOneConstant(cond.getUse(0))) {
         return Pair.make(def2.getUse(0), def2);
       }
@@ -57,7 +57,7 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
     return null;
   }
 
-  protected boolean isInstanceOf(SSAInstruction def) {
+  protected boolean isInstanceOfInstruction(SSAInstruction def) {
     return def instanceof SSAInstanceofInstruction;
   }
 
