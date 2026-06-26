@@ -129,6 +129,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
+  @SuppressWarnings("UndefinedEquals")
   public boolean equals(Object o) {
     return getDelegate().equals(o);
   }
