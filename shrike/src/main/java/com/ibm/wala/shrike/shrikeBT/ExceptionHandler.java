@@ -73,6 +73,7 @@ public final class ExceptionHandler {
     return catchClass;
   }
 
+  @SuppressWarnings("NonOverridingEquals")
   public boolean equals(ExceptionHandler h) {
     if (h == null) {
       throw new IllegalArgumentException("h is null");
