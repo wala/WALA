@@ -275,6 +275,9 @@ public class AndroidModelParameterManager {
                   case FREE -> param.status = ValueStatus.ALLOCATED;
                   case FREE_INVALIDATED -> param.status = ValueStatus.INVALIDATED;
                   case FREE_CLOSED -> param.status = ValueStatus.CLOSED;
+                  default -> {
+                    // no change to `param.status`
+                  }
                 }
                 param.setInScope = currentScope;
                 //                    param.setBy = setBy;
