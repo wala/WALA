@@ -32,7 +32,7 @@ public class NullabilityUtil {
    *
    * @return a null reference
    */
-  @SuppressWarnings("NullAway")
+  @SuppressWarnings({"NullAway", "TypeParameterUnusedInFormals"})
   public static <T extends @Nullable Object> T uncheckedNull() {
     return null;
   }
