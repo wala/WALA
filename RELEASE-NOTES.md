@@ -2,6 +2,15 @@
 
 ## Dependency changes
 
+### `:core` and `:util` now declare Guava as `implementation`-scope dependencies
+
+Guava (`com.google.guava:guava`) is now declared as an `implementation`-scope
+dependency in the `:core` and `:util` subprojects.
+
+**Effect for third-party consumers:** The `:core` and `:util` modules now
+receive Guava on their runtime classpaths. This is the same Guava dependency
+already used by the `:cast`, `:dalvik`, and `:scandroid` modules.
+
 ### JSpecify 1.0.0 promoted to `api` scope project-wide
 
 JSpecify (`org.jspecify:jspecify:1.0.0`) is now declared as an `api`-scope
@@ -39,10 +48,6 @@ The static methods `Iterator2Collection.toList(Iterator)` and
   `Iterator2Collection.toSet(...)` continues to work, but may need to
   update type declarations if they were explicitly typed as
   `Iterator2List<T>` or `Iterator2Set<T>`.
-
-- The `:util` module now declares Guava as an `implementation`-scope
-  dependency. This Guava dependency is the same one already used by the `:cast`,
-  `:dalvik`, and `:scandroid` modules.
 
 ### `Language.getFakeRootMethod` no longer takes `AnalysisOptions`
 
