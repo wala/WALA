@@ -59,7 +59,7 @@ public class JavaScriptConstructorFunctions {
 
   private final IClassHierarchy cha;
 
-  private SSAOptions ssaOptions;
+  private final SSAOptions ssaOptions;
 
   public JavaScriptConstructorFunctions(IClassHierarchy cha, SSAOptions ssaOptions) {
     this.cha = cha;
