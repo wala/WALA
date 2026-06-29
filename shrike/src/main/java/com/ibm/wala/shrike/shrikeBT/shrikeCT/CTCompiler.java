@@ -117,7 +117,7 @@ public final class CTCompiler extends Compiler {
 
   @Override
   protected String createHelperMethod(boolean isStatic, String sig) {
-    long r = Math.abs(random.nextLong());
+    long r = random.nextLong(Long.MAX_VALUE);
     return "_helper_" + r;
   }
 }
