@@ -67,7 +67,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -75,14 +74,11 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
-import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Predicate;
 
 /**
@@ -96,17 +92,8 @@ public class DemandCastChecker {
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
   public static void main(String[] args) throws IllegalArgumentException, IOException {
-    try {
-      Properties p = new Properties();
-      p.putAll(WalaProperties.loadProperties());
-    } catch (WalaException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
-
     runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
     // runTestCase(TestConstants.HELLO_MAIN, TestConstants.HELLO, "Hello");
-
   }
 
   public static void runTestCase(String mainClass, String scopeFile, String benchName)
