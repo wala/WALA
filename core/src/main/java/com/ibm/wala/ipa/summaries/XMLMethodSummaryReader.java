@@ -956,7 +956,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       Map<Integer, @NonNull Atom> nameTable = HashMapFactory.make();
       for (Map.Entry<String, Integer> x : symbolTable.entrySet()) {
-        if (!x.getKey().startsWith("arg")) {
+        // Skip only the synthetic positional symbols ("arg0", "arg1", ...) seeded above, not
+        // legitimate parameter names that merely begin with "arg" (e.g. "args", "argv"). The old
+        // startsWith("arg") test discarded the latter, leaving such parameters unnamed so that
+        // keyword arguments could not bind to them by name.
+        if (!x.getKey().matches("arg\\d+")) {
           nameTable.put(x.getValue(), Atom.findOrCreateUnicodeAtom(x.getKey()));
         }
       }
