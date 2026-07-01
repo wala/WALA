@@ -20,6 +20,7 @@ val compileTestSubjectsJava =
 
 val testJar =
     tasks.register<Jar>("testJar") {
+      description = "Assemble test JAR archive"
       group = "build"
       archiveClassifier = "test"
       from(compileTestSubjectsJava)
@@ -56,6 +57,7 @@ val jLex =
 
 val downloadJLex =
     tasks.register<Sync>("downloadJLex") {
+      description = "Download JLex `Main.java` source"
       from(jLex) { eachFile { name = "Main.java" } }
       into(layout.buildDirectory.dir(name))
     }
@@ -69,4 +71,7 @@ testSubjects { java.srcDir(downloadJLex.map { it.destinationDir }) }
 //  com.ibm.wala.cast.java.test.JDTJava15IRTests tests
 //
 
-tasks.register("prepareMavenBuild") { dependsOn("eclipseClasspath", "eclipseProject") }
+tasks.register("prepareMavenBuild") {
+  description = "Prepare Eclipse project metadata for Maven-based tests"
+  dependsOn("eclipseClasspath", "eclipseProject")
+}

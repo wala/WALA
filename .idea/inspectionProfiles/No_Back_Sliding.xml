@@ -686,6 +686,7 @@
       <option name="reportMethodParameters" value="true" />
     </inspection_tool>
     <inspection_tool class="SyntaxError" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="TaskMissingDescription" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="ThisExpressionReferencesGlobalObjectJS" enabled="true" level="WARNING" enabled_by_default="true">
       <scope name="Eclipse Build Artifacts" level="WARNING" enabled="false" />
       <scope name="JavaScript Test Subjects" level="WARNING" enabled="false" />

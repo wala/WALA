@@ -71,6 +71,7 @@ application {
       if (isDebuggable && !isOptimized) {
         val checkSmokeMain =
             tasks.register<Exec>("checkSmokeMain") {
+              description = "Run the native smoke test executable"
               group = "verification"
 
               // main executable to run for test

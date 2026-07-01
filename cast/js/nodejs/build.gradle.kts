@@ -22,6 +22,7 @@ val downloadNodeJS =
 
 val unpackNodeJSLib =
     tasks.register<Sync>("unpackNodeJSLib") {
+      description = "Unpack Node.js library files"
       from({ tarTree(downloadNodeJS.singleFile) }) {
         include("*/lib/*.js")
         eachFile { path = name }

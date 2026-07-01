@@ -31,7 +31,10 @@ dependencies {
 }
 
 val createPackageList =
-    tasks.register<CreatePackageList>("createPackageList") { sourceSet(sourceSets.main.get()) }
+    tasks.register<CreatePackageList>("createPackageList") {
+      description = "Generate package list for Javadoc cross-reference"
+      sourceSet(sourceSets.main.get())
+    }
 
 val packageListDirectory =
     configurations.register("packageListDirectory") { isCanBeResolved = false }
@@ -53,6 +56,7 @@ val downloadAjaxslt =
 
 val unpackAjaxslt =
     tasks.register<Sync>("unpackAjaxslt") {
+      description = "Unpack AJAXSLT test resources"
       from({ tarTree(downloadAjaxslt.singleFile) })
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()
