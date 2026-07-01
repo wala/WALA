@@ -1210,17 +1210,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       this(mdast, null, type, entities, context, null, null, 0, annotations, null);
     }
 
-    // Constructor with appropriate arguments for lambda expression types
-    private ProcedureEntity(
-        CAstNode mdast,
-        ITypeBinding type,
-        Map<CAstNode, CAstEntity> entities,
-        MethodContext context,
-        ArrayList<CAstType> parameterTypes,
-        Set<CAstAnnotation> annotations) {
-      this(mdast, null, type, entities, context, parameterTypes, null, 0, annotations, null);
-    }
-
     private ProcedureEntity(
         CAstNode mdast,
         MethodDeclaration decl,

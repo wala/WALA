@@ -348,6 +348,7 @@ tasks.withType<JavaCompile>().configureEach {
           "UnsafeReflectiveConstructionCast",
           "UnsynchronizedOverridesSynchronized",
           "UnusedLabel",
+          "UnusedMethod",
           "UnusedNestedClass",
           "UnusedTypeParameter",
           "UnusedVariable",
@@ -403,7 +404,6 @@ tasks.withType<JavaCompile>().configureEach {
           "StringCaseLocaleUsage",
           "StringSplitter",
           "SuperCallToObjectMethod",
-          "UnusedMethod",
           "VariableNameSameAsType",
       )
 
