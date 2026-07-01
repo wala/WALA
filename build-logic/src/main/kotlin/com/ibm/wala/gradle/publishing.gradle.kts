@@ -17,6 +17,7 @@ val testFixturesJavadoc =
 
 val testFixturesJavadocJar =
     tasks.register<Jar>("testFixturesJavadocJar") {
+      description = "Assemble Javadoc JAR for test fixtures"
       archiveClassifier = "test-fixtures-javadoc"
       from(testFixturesJavadoc.map { it.destinationDir!! })
     }

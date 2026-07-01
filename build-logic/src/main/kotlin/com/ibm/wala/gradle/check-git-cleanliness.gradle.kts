@@ -96,5 +96,7 @@ abstract class CheckGitCleanlinessTask : DefaultTask() {
 }
 
 if (project == rootProject) {
-  tasks.register<CheckGitCleanlinessTask>("checkGitCleanliness")
+  tasks.register<CheckGitCleanlinessTask>("checkGitCleanliness") {
+    description = "Check that Git working directory is clean"
+  }
 }
