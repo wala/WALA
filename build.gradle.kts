@@ -115,6 +115,7 @@ node {
 
 val lintMarkdown =
     tasks.register<NpxTask>("lintMarkdown") {
+      description = "Lint Markdown files"
       group = "verification"
       command = "markdownlint-cli2@0.18.1"
       val markdownFiles = fileTree(".") { include("*.md") }
@@ -134,6 +135,7 @@ tasks.named("shellcheck") { group = "verification" }
 
 // install Java reformatter as git pre-commit hook
 tasks.register<Copy>("installGitHooks") {
+  description = "Install Git `pre-commit` hook for code reformatting"
   from("config/hooks/pre-commit-stub")
   rename { "pre-commit" }
   into(".git/hooks")

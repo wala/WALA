@@ -92,6 +92,7 @@ val kawa = adHocDownload(uri("https://ftpmirror.gnu.org/gnu/kawa"), "kawa", "zip
 
 val extractKawa =
     tasks.register<Sync>("extractKawa") {
+      description = "Extract `kawa.jar` from Kawa release"
       from({ zipTree(kawa.singleFile) })
       into(layout.buildDirectory.dir(name))
       include("*/lib/kawa.jar")
@@ -115,6 +116,7 @@ val kawaChess =
 
 val unpackKawaChess =
     tasks.register<Sync>("unpackKawaChess") {
+      description = "Unpack Kawa Chess source code"
       from({ zipTree(kawaChess.singleFile) })
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()
@@ -122,11 +124,13 @@ val unpackKawaChess =
 
 val compileKawaSchemeChessMain =
     tasks.register<CompileKawaScheme>("compileKawaSchemeChessMain") {
+      description = "Compile Kawa Chess main Scheme to Java bytecode"
       schemeFile = unpackKawaChess.map { it.destinationDir.resolve("main.scm") }
     }
 
 val buildChessJar =
     tasks.register<Jar>("buildChessJar") {
+      description = "Package Kawa Chess as `kawachess.jar`"
       from(compileKawaSchemeChessMain)
       destinationDirectory = layout.buildDirectory.dir(name)
       archiveFileName = "kawachess.jar"
@@ -140,11 +144,13 @@ val buildChessJar =
 
 val compileKawaSchemeTest =
     tasks.register<CompileKawaScheme>("compileKawaSchemeTest") {
+      description = "Compile Kawa test Scheme to Java bytecode"
       schemeFile = layout.projectDirectory.file("kawasrc/test.scm")
     }
 
 val buildKawaTestJar =
     tasks.register<Jar>("buildKawaTestJar") {
+      description = "Package Kawa test as `kawatest.jar`"
       from(compileKawaSchemeTest)
       destinationDirectory = layout.buildDirectory.dir(name)
       archiveFileName = "kawatest.jar"
@@ -166,6 +172,7 @@ val downloadBcel =
 
 val extractBcel =
     tasks.register<Sync>("extractBcel") {
+      description = "Extract BCEL JAR"
       from({ tarTree(downloadBcel.singleFile) })
       include("**/*.jar")
       into(layout.buildDirectory.dir(name))
@@ -184,6 +191,7 @@ dependencies { downloadJavaCup(libs.netbeans.java.cup) }
 
 val copyJavaCup =
     tasks.register<Sync>("copyJavaCup") {
+      description = "Stage `java-cup` JAR for test resources"
       from(downloadJavaCup)
       into(layout.buildDirectory.dir(name))
     }
@@ -199,6 +207,7 @@ dependencies { collectJLexFrom(project(":cast:java:test:data", "testJarConfig"))
 
 val collectJLex =
     tasks.register<Jar>("collectJLex") {
+      description = "Package JLex classes as `JLex.jar`"
       inputs.files(collectJLexFrom)
       from({ zipTree(collectJLexFrom.get().singleFile) })
       include("JLex/")
@@ -228,6 +237,7 @@ val downloadOcamlJava =
 // causes Gradle's native tar support to fail.
 val unpackOcamlJava =
     tasks.register<Exec>("unpackOcamlJava") {
+      description = "Unpack OCaml-Java distribution"
       inputs.files(downloadOcamlJava)
       executable = "tar"
       argumentProviders.add {
@@ -243,7 +253,7 @@ val unpackOcamlJava =
 
 val generateHelloHashJar =
     tasks.register<Exec>("generateHelloHashJar") {
-
+      description = "Compile OCaml `hello_hash` to Java bytecode JAR"
       // haven't been able to get `ocamljava.bat` to work on Windows yet
       val isWindows = project.extra["isWindows"] as Boolean
       onlyIf { !isWindows }
@@ -298,6 +308,7 @@ val generateHelloHashJar =
 
 val collectTestData =
     tasks.register<Jar>("collectTestData") {
+      description = "Package test subject classes as `com.ibm.wala.core.testdata` JAR"
       archiveFileName = "com.ibm.wala.core.testdata_1.0.0.jar"
       from(compileTestSubjectsJava)
       from("classes")
@@ -316,6 +327,7 @@ artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirec
 
 val collectTestDataAForDalvik =
     tasks.register<Jar>("collectTestDataAForDalvik") {
+      description = "Package test subject classes for Dalvik tests"
       archiveFileName = "com.ibm.wala.core.testdata_1.0.0a.jar"
       from(compileTestSubjectsJava)
       from("classes")
@@ -364,6 +376,7 @@ artifacts.add(testResources.name, sourceSets.test.map { it.resources.srcDirs.sin
 
 val testJar =
     tasks.register<Jar>("testJar") {
+      description = "Assemble test JAR archive"
       group = "build"
       archiveClassifier = "test"
       from(tasks.named("compileTestJava"))
