@@ -4,10 +4,8 @@
 
 ### Functionality changes
 
-WALA now requires a Java 17+. With this new requirement, WALA has
-internally adopted various new Java language features, including `switch`
-expressions and records. Beyond this change, there have been various cleanups
-and bug fixes.
+WALA now requires Java 17+ JVM to run, hence the bump to version 1.8.0.
+Beyond this change, there have been various cleanups and bug fixes.
 
 #### Key pull requests
 
