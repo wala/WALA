@@ -4,24 +4,36 @@
 
 ### Functionality changes
 
-WALA now requires a Java 17+.  With this new requirement, WALA has internally adopted various new
-Java language features, including `switch` expressions and records.  Beyond this change, there
-have been various cleanups and bug fixes.
+WALA now requires a Java 17+. With this new requirement, WALA has
+internally adopted various new Java language features, including `switch`
+expressions and records. Beyond this change, there have been various cleanups
+and bug fixes.
 
-Key pull requests
------------------
-* Require Java 17+ across all of WALA by @liblit in https://github.com/wala/WALA/pull/1904
-* perf(dominators): empty bucket while iterating in step 2 by @toxamin in https://github.com/wala/WALA/pull/1897
-* Gate PropagationSystem's implicit-key debug dump under `DEBUG` by @khatchad in https://github.com/wala/WALA/pull/1934
-* Deprecate the unused `options` parameter on `Language.getFakeRootMethod` by @khatchad in https://github.com/wala/WALA/pull/1933
-* Convert many classes to Java 16+ records by @liblit in https://github.com/wala/WALA/pull/1932
-* Deprecate `Iterator2List` and `Iterator2Set` by @liblit in https://github.com/wala/WALA/pull/1950
-* Register summary-modeled class shells before CHA build (#1957) by @khatchad in https://github.com/wala/WALA/pull/1958
-* Expose a summary class shell's own methods by @khatchad in https://github.com/wala/WALA/pull/1962
-* Fix `Language`/`JavaLanguage` initialization deadlock by @liblit in https://github.com/wala/WALA/pull/1966
-* Keep summary parameter names that begin with "arg" by @khatchad in https://github.com/wala/WALA/pull/1972
+#### Key pull requests
 
-**Full Changelog**: https://github.com/wala/WALA/compare/v1.7.2...v1.8.0
+* Require Java 17+ across all of WALA by @liblit in
+  [#1904](https://github.com/wala/WALA/pull/1904)
+* perf(dominators): empty bucket while iterating in step 2 by @toxamin in
+  [#1897](https://github.com/wala/WALA/pull/1897)
+* Gate PropagationSystem's implicit-key debug dump under `DEBUG` by @khatchad
+  in [#1934](https://github.com/wala/WALA/pull/1934)
+* Deprecate the unused `options` parameter on `Language.getFakeRootMethod` by
+  @khatchad in [#1933](https://github.com/wala/WALA/pull/1933)
+* Convert many classes to Java 16+ records by @liblit in
+  [#1932](https://github.com/wala/WALA/pull/1932)
+* Deprecate `Iterator2List` and `Iterator2Set` by @liblit in
+  [#1950](https://github.com/wala/WALA/pull/1950)
+* Register summary-modeled class shells before CHA build (#1957) by @khatchad
+  in [#1958](https://github.com/wala/WALA/pull/1958)
+* Expose a summary class shell's own methods by @khatchad in
+  [#1962](https://github.com/wala/WALA/pull/1962)
+* Fix `Language`/`JavaLanguage` initialization deadlock by @liblit in
+  [#1966](https://github.com/wala/WALA/pull/1966)
+* Keep summary parameter names that begin with "arg" by @khatchad in
+  [#1972](https://github.com/wala/WALA/pull/1972)
+
+**Full Changelog**:
+[v1.7.2...v1.8.0](https://github.com/wala/WALA/compare/v1.7.2...v1.8.0)
 
 ### Dependency changes
 
@@ -63,11 +75,11 @@ The static methods `Iterator2Collection.toList(Iterator)` and
 
 **Effect for third-party consumers:**
 
-- Code that uses `Iterator2List<T>` or `Iterator2Set<T>` as variable types,
+* Code that uses `Iterator2List<T>` or `Iterator2Set<T>` as variable types,
   method parameters, or return types should be migrated to `List<T>` or
   `Set<T>` instead.
 
-- Code that calls `Iterator2Collection.toList(...)` or
+* Code that calls `Iterator2Collection.toList(...)` or
   `Iterator2Collection.toSet(...)` continues to work, but may need to
   update type declarations if they were explicitly typed as
   `Iterator2List<T>` or `Iterator2Set<T>`.
