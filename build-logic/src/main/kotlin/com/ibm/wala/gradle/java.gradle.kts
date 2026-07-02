@@ -356,6 +356,7 @@ tasks.withType<JavaCompile>().configureEach {
           "URLEqualsHashCode",
           "UseBinds",
           "UseEnumSwitch",
+          "VariableNameSameAsType",
           "VoidUsed",
           "WaitNotInLoop",
           "WakelockReleasedDangerously",
@@ -404,7 +405,6 @@ tasks.withType<JavaCompile>().configureEach {
           "StringCaseLocaleUsage",
           "StringSplitter",
           "SuperCallToObjectMethod",
-          "VariableNameSameAsType",
       )
 
       // checks we do not intend to try to fix in the near-term:

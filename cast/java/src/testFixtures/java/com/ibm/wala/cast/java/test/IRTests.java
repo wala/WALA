@@ -338,8 +338,8 @@ public abstract class IRTests {
     }
 
     // Now check any assertions as to source mapping
-    for (IRAssertion IRAssertion : ca) {
-      IRAssertion.check(callGraph);
+    for (IRAssertion assertion : ca) {
+      assertion.check(callGraph);
     }
 
     return Pair.make(callGraph, builder);
