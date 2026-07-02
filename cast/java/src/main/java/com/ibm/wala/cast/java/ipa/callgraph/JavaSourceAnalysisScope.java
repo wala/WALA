@@ -13,6 +13,7 @@
  */
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -31,12 +32,12 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
           ClassLoaderReference.Application);
 
   public JavaSourceAnalysisScope() {
-    this(Collections.singleton(Language.JAVA));
+    this(Collections.singleton(JavaLanguage.get()));
   }
 
   protected void initCoreForJavaSource() {
     initCoreForJava();
-    loadersByName.put(SOURCE.getName(), SOURCE);
+    loadersByName.put(SOURCE.name(), SOURCE);
 
     setLoaderImpl(SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
   }

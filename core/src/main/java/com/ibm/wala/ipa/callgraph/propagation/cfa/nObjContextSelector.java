@@ -72,9 +72,8 @@ public class nObjContextSelector implements ContextSelector {
 
     if (site.isStatic()) {
       calleeContext = getCalleeTargetForStaticCall(caller, site, callee);
-    } else if (receiver instanceof AllocationSiteInNode) {
-      AllocationString allocationString =
-          assemblyReceiverAllocString((AllocationSiteInNode) receiver);
+    } else if (receiver instanceof AllocationSiteInNode allocationSiteInNode) {
+      AllocationString allocationString = assemblyReceiverAllocString(allocationSiteInNode);
       calleeContext = new AllocationStringContext(allocationString);
     }
 
@@ -86,7 +85,7 @@ public class nObjContextSelector implements ContextSelector {
     Context receiverHeapContext = receiver.getNode().getContext();
     AllocationSite receiverAllocSite =
         new AllocationSite(
-            receiver.getNode().getMethod(), receiver.getSite(), receiver.getConcreteType());
+            receiver.getNode().getMethod(), receiver.getSite(), receiver.concreteType());
 
     if (receiverHeapContext.get(ALLOCATION_STRING_KEY) != null) {
       AllocationString receiverAllocString =
@@ -95,7 +94,7 @@ public class nObjContextSelector implements ContextSelector {
       int siteLength = Math.min(n, receiverAllocString.getLength() + 1);
       AllocationSite[] sites = new AllocationSite[siteLength];
       sites[0] = receiverAllocSite;
-      System.arraycopy(receiverAllocString.getAllocationSites(), 0, sites, 1, siteLength - 1);
+      System.arraycopy(receiverAllocString.allocationSites(), 0, sites, 1, siteLength - 1);
       return new AllocationString(sites);
     } else {
       return new AllocationString(receiverAllocSite);

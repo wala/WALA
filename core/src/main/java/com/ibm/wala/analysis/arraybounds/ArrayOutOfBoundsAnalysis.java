@@ -36,15 +36,13 @@ public class ArrayOutOfBoundsAnalysis {
       if (set.contains(BOTH) || (set.contains(UPPER) && set.contains(LOWER))) {
         return BOTH;
       } else {
-        switch (set.size()) {
-          case 0:
-            return NONE;
-          case 1:
-            return set.iterator().next();
-          default:
-            throw new RuntimeException(
-                "Case that should not happen, this method is implemented wrong.");
-        }
+        return switch (set.size()) {
+          case 0 -> NONE;
+          case 1 -> set.iterator().next();
+          default ->
+              throw new RuntimeException(
+                  "Case that should not happen, this method is implemented wrong.");
+        };
       }
     }
   }
@@ -98,7 +96,7 @@ public class ArrayOutOfBoundsAnalysis {
 
       Weight weight = this.lowerBoundGraph.getVariableWeight(instruction.getIndex());
 
-      if (weight.getType() == Weight.Type.NUMBER && weight.getNumber() >= 0) {
+      if (weight.type() == Weight.Type.NUMBER && weight.number() >= 0) {
         this.addUnnecessaryCheck(instruction, UnnecessaryCheck.LOWER);
       }
     }
@@ -116,7 +114,7 @@ public class ArrayOutOfBoundsAnalysis {
         if (instruction.getArrayRef() == entry.getKey()) {
           Weight weight = this.upperBoundGraph.getVariableWeight(instruction.getIndex());
 
-          if (weight.getType() == Weight.Type.NUMBER && weight.getNumber() <= -1) {
+          if (weight.type() == Weight.Type.NUMBER && weight.number() <= -1) {
             this.addUnnecessaryCheck(instruction, UnnecessaryCheck.UPPER);
           }
         }

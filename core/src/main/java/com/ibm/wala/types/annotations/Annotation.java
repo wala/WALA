@@ -109,10 +109,10 @@ public class Annotation {
       ClassLoaderReference clRef, AnnotationAttribute[] allAnnotations) {
     Collection<Annotation> result = HashSetFactory.make();
     for (AnnotationAttribute annot : allAnnotations) {
-      String type = annot.type;
+      String type = annot.type();
       type = type.replaceAll(";", "");
       TypeReference t = TypeReference.findOrCreate(clRef, type);
-      result.add(makeWithNamed(t, annot.elementValues));
+      result.add(makeWithNamed(t, annot.elementValues()));
     }
     return result;
   }

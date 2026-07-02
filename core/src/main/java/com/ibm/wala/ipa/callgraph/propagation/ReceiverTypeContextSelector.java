@@ -34,7 +34,7 @@ public class ReceiverTypeContextSelector implements ContextSelector {
       if (receiver == null) {
         throw new IllegalArgumentException("receiver is null");
       }
-      PointType P = new PointType(receiver[0].getConcreteType());
+      PointType P = new PointType(receiver[0].concreteType());
       return new JavaTypeContext(P);
     }
   }

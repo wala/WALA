@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -24,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = 1479453398189400698L;
+  @Serial private static final long serialVersionUID = 1479453398189400698L;
 
   /** If forced to grow the backing array .. then by how much */
   private static final float EXPANSION_FACTOR = 1.5f;
@@ -162,8 +163,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseIntSet) {
-      SparseIntSet set = (SparseIntSet) that;
+    if (that instanceof SparseIntSet set) {
       if (set.elements != null) {
         // SJF: clone is performance problem. don't use it.
         // elements = set.elements.clone();
@@ -197,8 +197,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("null set");
     }
-    if (set instanceof SparseIntSet) {
-      intersectWith((SparseIntSet) set);
+    if (set instanceof SparseIntSet sparseIntSet) {
+      intersectWith(sparseIntSet);
     } else {
       int j = 0;
       for (int i = 0; i < size; i++)
@@ -226,13 +226,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
     // some simple optimizations
     if (size == 1) {
-      if (that.contains(elements[0])) {
-        return;
-      } else {
+      if (!that.contains(elements[0])) {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
     if (that.size == 1) {
       if (contains(that.elements[0])) {
@@ -241,12 +239,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
         }
         size = 1;
         elements[0] = that.elements[0];
-        return;
       } else {
         elements = null;
         size = 0;
-        return;
       }
+      return;
     }
 
     int[] ar = this.elements;
@@ -293,8 +290,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof SparseIntSet) {
-      return addAll((SparseIntSet) set);
+    if (set instanceof SparseIntSet sparseIntSet) {
+      return addAll(sparseIntSet);
     } else {
       int oldSize = size;
       set.foreach(

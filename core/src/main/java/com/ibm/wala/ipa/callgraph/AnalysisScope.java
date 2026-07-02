@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.ClassFileModule;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.JarStreamModule;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -85,7 +86,7 @@ public class AnalysisScope {
 
   /** Create an analysis scope initialized for analysis of Java */
   public static AnalysisScope createJavaAnalysisScope() {
-    AnalysisScope scope = new AnalysisScope(Collections.singleton(Language.JAVA));
+    AnalysisScope scope = new AnalysisScope(Collections.singleton(JavaLanguage.get()));
     scope.initForJava();
     return scope;
   }
@@ -366,7 +367,7 @@ public class AnalysisScope {
   public String toString() {
     StringBuilder result = new StringBuilder();
     for (ClassLoaderReference loader : loadersByName.values()) {
-      result.append(loader.getName());
+      result.append(loader.name());
       result.append('\n');
       for (Module m : getModules(loader)) {
         result.append(' ');
@@ -395,7 +396,7 @@ public class AnalysisScope {
       for (Module m : getModules(loader)) {
         arr.add(m.toString());
       }
-      loaders.put(loader.getName().toString(), arr);
+      loaders.put(loader.name().toString(), arr);
     }
     res.put("Loaders", loaders);
     final var exclusions = getExclusions();
@@ -417,7 +418,7 @@ public class AnalysisScope {
       throw new IllegalArgumentException("null desc");
     }
     ClassLoaderReference clr = getLoader(loader);
-    Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.getLanguage()), desc);
+    Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.language()), desc);
     TypeReference type = TypeReference.findOrCreate(clr, TypeName.string2TypeName(klass));
     return MethodReference.findOrCreate(type, name, ddesc);
   }
@@ -507,26 +508,26 @@ public class AnalysisScope {
     List<String> moduleLines = new ArrayList<>();
     for (Map.Entry<ClassLoaderReference, List<Module>> e : moduleMap.entrySet()) {
       ClassLoaderReference lrReference = e.getKey();
-      String moduleLdr = lrReference.getName().toString();
-      String moduleLang = lrReference.getLanguage().toString();
-      assert Language.JAVA.getName().equals(lrReference.getLanguage())
+      String moduleLdr = lrReference.name().toString();
+      String moduleLang = lrReference.language().toString();
+      assert JavaLanguage.get().getName().equals(lrReference.language())
           : "Java language only is currently supported";
 
       for (Module m : e.getValue()) {
         String moduleType;
         String modulePath;
-        if (m instanceof JarFileModule) {
+        if (m instanceof JarFileModule jarFileModule) {
           moduleType = "jarFile";
-          modulePath = ((JarFileModule) m).getAbsolutePath();
-        } else if (m instanceof BinaryDirectoryTreeModule) {
+          modulePath = jarFileModule.getAbsolutePath();
+        } else if (m instanceof BinaryDirectoryTreeModule binaryDirectoryTreeModule) {
           moduleType = "binaryDir";
-          modulePath = ((BinaryDirectoryTreeModule) m).getPath();
-        } else if (m instanceof SourceDirectoryTreeModule) {
+          modulePath = binaryDirectoryTreeModule.getPath();
+        } else if (m instanceof SourceDirectoryTreeModule sourceDirectoryTreeModule) {
           moduleType = "sourceDir";
-          modulePath = ((SourceDirectoryTreeModule) m).getPath();
-        } else if (m instanceof SourceFileModule) {
+          modulePath = sourceDirectoryTreeModule.getPath();
+        } else if (m instanceof SourceFileModule sourceFileModule) {
           moduleType = "sourceFile";
-          modulePath = ((SourceFileModule) m).getAbsolutePath();
+          modulePath = sourceFileModule.getAbsolutePath();
         } else {
           Assertions.UNREACHABLE("Module type isn't supported - " + m);
           continue;
@@ -542,9 +543,9 @@ public class AnalysisScope {
     List<String> ldrImplLines = new ArrayList<>();
     for (Map.Entry<ClassLoaderReference, String> e : loaderImplByRef.entrySet()) {
       ClassLoaderReference lrReference = e.getKey();
-      String ldrName = lrReference.getName().toString();
-      String ldrLang = lrReference.getLanguage().toString();
-      assert Language.JAVA.getName().equals(lrReference.getLanguage())
+      String ldrName = lrReference.name().toString();
+      String ldrLang = lrReference.language().toString();
+      assert JavaLanguage.get().getName().equals(lrReference.language())
           : "Java language only is currently supported";
       String ldrImplName = e.getValue();
       String ldrImplDescrLine =

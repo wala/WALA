@@ -35,7 +35,7 @@ package com.ibm.wala.demandpa.driver;
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.demandpa.TestInfo;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
@@ -147,7 +147,8 @@ public class CompareToZeroOneCFADriver {
   private static void doTests(final ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeVanillaZeroOneCFABuilder(
+            JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     final CallGraph oldCG = builder.makeCallGraph(options, null);
     final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
@@ -213,8 +214,8 @@ public class CompareToZeroOneCFADriver {
     // if (key instanceof MultiNewArrayAllocationSiteKey) {
     // return true;
     // }
-    if (key instanceof InstanceKeyWithNode) {
-      CGNode node = ((InstanceKeyWithNode) key).getNode();
+    if (key instanceof InstanceKeyWithNode instanceKeyWithNode) {
+      CGNode node = instanceKeyWithNode.getNode();
       MethodReference methodRef = node.getMethod().getReference();
       if (methodRef
           .toString()
@@ -228,7 +229,8 @@ public class CompareToZeroOneCFADriver {
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(
       AnalysisOptions options, ClassHierarchy cha, CallGraph cg, MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeVanillaZeroOneCFABuilder(
+            JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     // fullDemandPointsTo.setOnTheFly(true);
     // fullDemandPointsTo.setRefineFields(true);

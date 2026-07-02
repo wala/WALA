@@ -52,8 +52,7 @@ public class JSMethodInstructionVisitor extends JSAbstractInstructionVisitor {
     if (invoke.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
       int fn = invoke.getFunction();
       SSAInstruction fndef = du.getDef(fn);
-      if (fndef instanceof AstGlobalRead) {
-        AstGlobalRead agr = (AstGlobalRead) fndef;
+      if (fndef instanceof AstGlobalRead agr) {
         if (agr.getGlobalName().equals("global Function")) {
           if (invoke.getNumberOfPositionalParameters() != 2) {
             return false;

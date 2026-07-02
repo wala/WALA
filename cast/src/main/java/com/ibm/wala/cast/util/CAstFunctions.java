@@ -14,6 +14,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -38,7 +39,7 @@ public class CAstFunctions {
   public static Iterator<CAstNode> iterateNodes(final CAstNode tree) {
     return new DFSDiscoverTimeIterator<>() {
 
-      private static final long serialVersionUID = -627203481092871529L;
+      @Serial private static final long serialVersionUID = -627203481092871529L;
       private final Map<Object, Iterator<? extends CAstNode>> pendingChildren =
           HashMapFactory.make();
 

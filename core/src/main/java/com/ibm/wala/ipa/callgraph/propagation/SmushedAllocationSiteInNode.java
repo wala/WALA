@@ -32,9 +32,8 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof SmushedAllocationSiteInNode) {
-      SmushedAllocationSiteInNode other = (SmushedAllocationSiteInNode) obj;
-      return getNode().equals(other.getNode()) && getConcreteType().equals(other.getConcreteType());
+    if (obj instanceof SmushedAllocationSiteInNode other) {
+      return getNode().equals(other.getNode()) && concreteType().equals(other.concreteType());
     } else {
       return false;
     }
@@ -42,12 +41,12 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
 
   @Override
   public int hashCode() {
-    return getNode().hashCode() * 8293 + getConcreteType().hashCode();
+    return getNode().hashCode() * 8293 + concreteType().hashCode();
   }
 
   @Override
   public String toString() {
-    return "SMUSHED " + getNode() + " : " + getConcreteType();
+    return "SMUSHED " + getNode() + " : " + concreteType();
   }
 
   @Override
@@ -55,7 +54,7 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
     return new MapIterator<>(
         new FilterIterator<>(
             getNode().iterateNewSites(),
-            o -> o.getDeclaredType().equals(getConcreteType().getReference())),
+            o -> o.getDeclaredType().equals(concreteType().getReference())),
         object -> Pair.make(getNode(), object));
   }
 }

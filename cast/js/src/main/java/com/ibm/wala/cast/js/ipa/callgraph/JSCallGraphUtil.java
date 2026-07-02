@@ -259,16 +259,16 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
 
   public static String simulateToStringForPropertyNames(Object v) {
     // TODO this is very incomplete  --MS
-    if (v instanceof String) {
-      return (String) v;
-    } else if (v instanceof Double) {
+    if (v instanceof String s) {
+      return s;
+    } else if (v instanceof Double aDouble) {
       String result = v.toString();
-      if (Math.round((Double) v) == (Double) v) {
-        result = Long.toString(Math.round((Double) v));
+      if (Math.round(aDouble) == aDouble) {
+        result = Long.toString(Math.round(aDouble));
       }
       return result;
-    } else if (v instanceof Boolean) {
-      if ((Boolean) v) {
+    } else if (v instanceof Boolean b) {
+      if (b) {
         return "true";
       } else {
         return "false";

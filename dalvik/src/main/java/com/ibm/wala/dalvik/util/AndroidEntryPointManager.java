@@ -58,6 +58,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -740,5 +741,5 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
   }
 
   /** Last 8 digits encode the date. */
-  private static final long serialVersionUID = 8740020131212L;
+  @Serial private static final long serialVersionUID = 8740020131212L;
 }

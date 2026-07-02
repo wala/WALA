@@ -106,17 +106,12 @@ public class CAstDumper {
   }
 
   private boolean isTrivial(CAstNode node) {
-    switch (node.getKind()) {
-      case ASSIGN:
-        return node.getChild(0).getKind() == CAstNode.VAR && isTrivial(node.getChild(1));
-      case EMPTY:
-        return true;
-      case BLOCK_EXPR:
-      case BLOCK_STMT:
-        return getNonTrivialChildCount(node) == 0;
-      default:
-        return false;
-    }
+    return switch (node.getKind()) {
+      case ASSIGN -> node.getChild(0).getKind() == CAstNode.VAR && isTrivial(node.getChild(1));
+      case EMPTY -> true;
+      case BLOCK_EXPR, BLOCK_STMT -> getNonTrivialChildCount(node) == 0;
+      default -> false;
+    };
   }
 
   private int getNonTrivialChildCount(CAstNode node) {
@@ -154,8 +149,8 @@ public class CAstDumper {
           } else {
             buf.append(", ");
           }
-          if (label instanceof CAstNode)
-            buf.append("CAstNode@").append(labeller.addNode((CAstNode) label)).append(": ");
+          if (label instanceof CAstNode cAstNode)
+            buf.append("CAstNode@").append(labeller.addNode(cAstNode)).append(": ");
           else buf.append(label).append(": ");
           buf.append(labeller.addNode(target));
         }

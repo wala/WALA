@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -35,12 +36,15 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.LambdaMethodTargetSelector;
+import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.ipa.summaries.SummaryClassShellLoader;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -50,8 +54,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /** Call graph utilities */
@@ -183,6 +191,45 @@ public class Util {
   }
 
   /**
+   * Materialize class shells for the summary-modeled classes that opt in by declaring a superclass
+   * (see {@link XMLMethodSummaryReader#getClassSuperclasses()}), registering each into {@code
+   * loader}. Only the classes whose declaring loader is {@code loader} are registered.
+   *
+   * <p>Call this before building the {@link IClassHierarchy} (and before translating source classes
+   * that subclass a summary-modeled type), so that those subclasses resolve their base at
+   * definition time rather than falling back to the language root. See <a
+   * href="https://github.com/wala/WALA/issues/1957">#1957</a>.
+   *
+   * @throws IllegalArgumentException if {@code loader} or {@code summary} is null
+   */
+  public static void addSummaryClassShells(
+      SummaryClassShellLoader loader, XMLMethodSummaryReader summary) {
+    if (loader == null) {
+      throw new IllegalArgumentException("loader is null");
+    }
+    if (summary == null) {
+      throw new IllegalArgumentException("summary is null");
+    }
+    // Group method summaries by declaring class, so each shell can expose its own methods.
+    Map<TypeReference, List<MethodSummary>> methodsByClass = HashMapFactory.make();
+    for (MethodSummary method : summary.getSummaries().values()) {
+      methodsByClass
+          .computeIfAbsent(method.getMethod().getDeclaringClass(), k -> new ArrayList<>())
+          .add(method);
+    }
+    for (Map.Entry<TypeReference, TypeReference> entry :
+        summary.getClassSuperclasses().entrySet()) {
+      TypeReference type = entry.getKey();
+      if (type.getClassLoader().equals(loader.getReference())) {
+        loader.defineSummaryClassShell(
+            type.getName(),
+            entry.getValue().getName(),
+            methodsByClass.getOrDefault(type, Collections.emptyList()));
+      }
+    }
+  }
+
+  /**
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException if scope is null
    * @deprecated
@@ -223,7 +270,7 @@ public class Util {
         }
       }
     }
-    return result::iterator;
+    return result;
   }
 
   /**
@@ -334,9 +381,7 @@ public class Util {
       throw new IllegalArgumentException("Null x");
     }
     Set<T> y = HashSetFactory.make();
-    while (x.hasNext()) {
-      y.add(x.next());
-    }
+    x.forEachRemaining(y::add);
     return y;
   }
 
@@ -805,7 +850,7 @@ public class Util {
       IAnalysisCacheView cache,
       IClassHierarchy cha,
       @SuppressWarnings("unused") AnalysisScope scope) {
-    return makeNCFABuilder(n, Language.JAVA, options, cache, cha);
+    return makeNCFABuilder(n, JavaLanguage.get(), options, cache, cha);
   }
 
   /**
@@ -823,12 +868,7 @@ public class Util {
     SSAContextInterpreter appInterpreter = null;
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
-            n,
-            l.getFakeRootMethod(cha, options, cache),
-            options,
-            cache,
-            appSelector,
-            appInterpreter);
+            n, l.getFakeRootMethod(cha, cache), options, cache, appSelector, appInterpreter);
     // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
     result.setInstanceKeys(
         new ZeroXInstanceKeys(
@@ -955,7 +995,7 @@ public class Util {
     SSAPropagationCallGraphBuilder result =
         new nCFABuilder(
             n,
-            Language.JAVA.getFakeRootMethod(cha, options, cache),
+            JavaLanguage.get().getFakeRootMethod(cha, cache),
             options,
             cache,
             appSelector,

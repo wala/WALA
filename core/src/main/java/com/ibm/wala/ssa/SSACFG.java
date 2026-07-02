@@ -103,13 +103,13 @@ public class SSACFG
     this.method = method;
     assert method.getDeclaringClass() != null : "null declaring class for " + method;
     createBasicBlocks(cfg);
-    if (cfg instanceof InducedCFG) {
-      addPhisFromInducedCFG((InducedCFG) cfg);
-      addPisFromInducedCFG((InducedCFG) cfg);
+    if (cfg instanceof InducedCFG blocks) {
+      addPhisFromInducedCFG(blocks);
+      addPisFromInducedCFG(blocks);
     }
-    if (cfg instanceof BytecodeCFG) {
+    if (cfg instanceof BytecodeCFG bytecodeCFG) {
       recordExceptionTypes(
-          ((BytecodeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
+          bytecodeCFG.getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
     }
     this.instructions = instructions;
   }
@@ -158,7 +158,7 @@ public class SSACFG
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof SSACFG) && delegate.equals(((SSACFG) o).delegate);
+    return (o instanceof SSACFG issaBasicBlocks) && delegate.equals(issaBasicBlocks.delegate);
   }
 
   private void recordExceptionTypes(Set<ExceptionHandler> set, IClassLoader loader) {
@@ -233,18 +233,7 @@ public class SSACFG
 
   private final Map<RefPathKey, SSAPiInstruction> piInstructions = HashMapFactory.make(2);
 
-  private static class RefPathKey {
-    private final int n;
-
-    private final Object src;
-
-    private final Object path;
-
-    RefPathKey(int n, Object src, Object path) {
-      this.n = n;
-      this.src = src;
-      this.path = path;
-    }
+  private record RefPathKey(int n, Object src, Object path) {
 
     @Override
     public int hashCode() {
@@ -253,10 +242,10 @@ public class SSACFG
 
     @Override
     public boolean equals(Object x) {
-      return (x instanceof RefPathKey)
-          && n == ((RefPathKey) x).n
-          && src == ((RefPathKey) x).src
-          && path == ((RefPathKey) x).path;
+      return (x instanceof RefPathKey refPathKey)
+          && n == refPathKey.n
+          && src == refPathKey.src
+          && path == refPathKey.path;
     }
   }
 
@@ -597,8 +586,7 @@ public class SSACFG
 
     @Override
     public boolean equals(Object arg0) {
-      if (arg0 instanceof BasicBlock) {
-        BasicBlock b = (BasicBlock) arg0;
+      if (arg0 instanceof BasicBlock b) {
         if (getNumber() == b.getNumber()) {
           if (getMethod().equals(b.getMethod())) {
             return getGraph().equals(b.getGraph());

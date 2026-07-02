@@ -43,8 +43,8 @@ public class JSCallGraph extends AstCallGraph {
 
   public static class JSFakeRoot extends ScriptFakeRoot {
 
-    public JSFakeRoot(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-      super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options, cache);
+    public JSFakeRoot(IClassHierarchy cha, IAnalysisCacheView cache) {
+      super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, cache);
     }
 
     @Override
@@ -74,8 +74,7 @@ public class JSCallGraph extends AstCallGraph {
 
   @Override
   protected CGNode makeFakeRootNode() throws com.ibm.wala.util.CancelException {
-    return findOrCreateNode(
-        new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new JSFakeRoot(cha, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 
   @Override

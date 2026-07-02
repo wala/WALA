@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -18,7 +19,7 @@ import java.util.Objects;
 
 public class Pair<T, U> implements Serializable {
 
-  private static final long serialVersionUID = 1861211857872739247L;
+  @Serial private static final long serialVersionUID = 1861211857872739247L;
   public final T fst;
   public final U snd;
 
@@ -34,7 +35,7 @@ public class Pair<T, U> implements Serializable {
   @SuppressWarnings("rawtypes")
   @Override
   public boolean equals(Object o) {
-    return (o instanceof Pair) && check(fst, ((Pair) o).fst) && check(snd, ((Pair) o).snd);
+    return (o instanceof Pair pair) && check(fst, pair.fst) && check(snd, pair.snd);
   }
 
   private static int hc(Object o) {
@@ -57,16 +58,17 @@ public class Pair<T, U> implements Serializable {
 
       @Override
       public Object next() {
-        switch (nextFlag) {
-          case 1:
+        return switch (nextFlag) {
+          case 1 -> {
             nextFlag++;
-            return fst;
-          case 2:
+            yield fst;
+          }
+          case 2 -> {
             nextFlag = 0;
-            return snd;
-          default:
-            throw new NoSuchElementException();
-        }
+            yield snd;
+          }
+          default -> throw new NoSuchElementException();
+        };
       }
 
       @Override

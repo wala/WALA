@@ -25,8 +25,8 @@ public class AstGlobalPointerKey extends AbstractPointerKey {
 
   @Override
   public boolean equals(Object x) {
-    return (x instanceof AstGlobalPointerKey)
-        && ((AstGlobalPointerKey) x).globalName.equals(globalName);
+    return (x instanceof AstGlobalPointerKey astGlobalPointerKey)
+        && astGlobalPointerKey.globalName.equals(globalName);
   }
 
   @Override

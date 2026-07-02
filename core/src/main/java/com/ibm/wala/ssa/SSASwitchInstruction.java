@@ -47,14 +47,13 @@ public class SSASwitchInstruction extends SSAInstruction {
     StringBuilder result = new StringBuilder(iIndex() + ": switch ");
     result.append(getValueString(symbolTable, val));
     result.append(" [");
-    for (int i = 0; i < casesAndLabels.length - 1; i++) {
-      result.append(casesAndLabels[i]);
-      i++;
-      result.append("->");
-      result.append(casesAndLabels[i]);
-      if (i < casesAndLabels.length - 2) {
+    for (int i = 0; i < casesAndLabels.length - 1; i += 2) {
+      if (i > 0) {
         result.append(',');
       }
+      result.append(casesAndLabels[i]);
+      result.append("->");
+      result.append(casesAndLabels[i + 1]);
     }
     result.append("] default: ").append(defaultLabel);
     return result.toString();

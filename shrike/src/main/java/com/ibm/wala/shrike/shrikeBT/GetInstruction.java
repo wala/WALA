@@ -94,8 +94,7 @@ public class GetInstruction extends Instruction implements IGetInstruction {
 
   @Override
   public final boolean equals(Object o) {
-    if (o instanceof GetInstruction) {
-      GetInstruction i = (GetInstruction) o;
+    if (o instanceof GetInstruction i) {
       return i.getFieldType().equals(getFieldType())
           && i.getClassType().equals(getClassType())
           && i.getFieldName().equals(getFieldName())

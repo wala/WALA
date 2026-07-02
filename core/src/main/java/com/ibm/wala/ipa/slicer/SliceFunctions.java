@@ -30,20 +30,16 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
       throw new IllegalArgumentException("src is null");
     }
     switch (src.getKind()) {
-      case NORMAL_RET_CALLER:
-      case PARAM_CALLER:
-      case EXC_RET_CALLER:
       // uh oh. anything that flows into the missing function will be killed.
-      case NORMAL:
+      case NORMAL_RET_CALLER, PARAM_CALLER, EXC_RET_CALLER, NORMAL -> {
         // only control dependence flows into the missing function.
         // this control dependence does not flow back to the caller.
         return ReachabilityFunctions.KILL_FLOW;
-      case HEAP_PARAM_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case HEAP_RET_CALLEE:
-      case HEAP_RET_CALLER:
-        if (dest instanceof HeapStatement) {
-          HeapStatement hd = (HeapStatement) dest;
+        // only control dependence flows into the missing function.
+        // this control dependence does not flow back to the caller.
+      }
+      case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
+        if (dest instanceof HeapStatement hd) {
           HeapStatement hs = (HeapStatement) src;
           if (hs.getLocation().equals(hd.getLocation())) {
             return IdentityFlowFunction.identity();
@@ -53,9 +49,11 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
         } else {
           return ReachabilityFunctions.KILL_FLOW;
         }
-      default:
+      }
+      default -> {
         Assertions.UNREACHABLE(src.getKind().toString());
         return null;
+      }
     }
   }
 

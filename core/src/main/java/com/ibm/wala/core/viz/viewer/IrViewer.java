@@ -16,6 +16,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +31,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class IrViewer extends JPanel {
-  private static final long serialVersionUID = -5668847442988389016L;
+  @Serial private static final long serialVersionUID = -5668847442988389016L;
   private final JTextField methodName;
   private final DefaultListModel<String> irLineList = new DefaultListModel<>();
   private final JList<String> irLines;

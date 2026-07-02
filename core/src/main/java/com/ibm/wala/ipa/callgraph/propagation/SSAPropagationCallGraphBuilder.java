@@ -373,8 +373,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("Add exceptions from pei " + pei);
       }
 
-      if (pei instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+      if (pei instanceof SSAAbstractInvokeInstruction s) {
         PointerKey e = getPointerKeyForLocal(node, s.getException());
 
         if (!SHORT_CIRCUIT_SINGLE_USES || !hasUniqueCatchBlock(s, ir)) {
@@ -383,8 +382,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         // System.err.println("SKIPPING ASSIGNMENTS TO " + exceptionVar + " FROM " +
         // e);
         // }
-      } else if (pei instanceof SSAAbstractThrowInstruction) {
-        SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+      } else if (pei instanceof SSAAbstractThrowInstruction s) {
         PointerKey e = getPointerKeyForLocal(node, s.getException());
 
         if (contentsAreInvariant(ir.getSymbolTable(), du, s.getException())) {
@@ -413,7 +411,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             assert ik instanceof ConcreteTypeKey
                 : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
-            IClass klass = ck.getType();
+            IClass klass = ck.type();
             if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
               system.newConstraint(
                   exceptionVar, getInstanceKeyForPEI(node, peiLoc, type, instanceKeyFactory));
@@ -438,8 +436,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         ISSABasicBlock sb = it.next();
         return (!it.hasNext()
             && (sb.isExitBlock()
-                || ((sb instanceof ExceptionHandlerBasicBlock)
-                    && ((ExceptionHandlerBasicBlock) sb).getCatchInstruction() != null)));
+                || ((sb instanceof ExceptionHandlerBasicBlock ssaInstructions)
+                    && ssaInstructions.getCatchInstruction() != null)));
       }
     }
     return false;
@@ -541,7 +539,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (pi == params.length) {
         IClass recv = null;
         if (site.isDispatch()) {
-          recv = keys[0].getConcreteType();
+          recv = keys[0].concreteType();
         }
 
         handleCallWithSpecificInstanceKeys.accept(recv, keys);
@@ -770,7 +768,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (!representsNullType(instanceKey) && !(instanceKey instanceof ZeroLengthArrayInNode)) {
             system.findOrCreateIndexForInstanceKey(instanceKey);
             PointerKey p = getPointerKeyForArrayContents(instanceKey);
-            IClass contents = ((ArrayClass) instanceKey.getConcreteType()).getElementClass();
+            IClass contents = ((ArrayClass) instanceKey.concreteType()).getElementClass();
             if (p == null) {
             } else {
               if (contentsAreInvariant(symbolTable, du, value)) {
@@ -778,8 +776,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 InstanceKey[] vk = getInvariantContents(value);
                 for (InstanceKey element : vk) {
                   system.findOrCreateIndexForInstanceKey(element);
-                  if (element.getConcreteType() != null) {
-                    if (getClassHierarchy().isAssignableFrom(contents, element.getConcreteType())) {
+                  if (element.concreteType() != null) {
+                    if (getClassHierarchy().isAssignableFrom(contents, element.concreteType())) {
                       system.newConstraint(p, element);
                     }
                   }
@@ -858,14 +856,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             if (cls.isInterface()) {
               for (InstanceKey element : ik) {
                 system.findOrCreateIndexForInstanceKey(element);
-                if (getClassHierarchy().implementsInterface(element.getConcreteType(), cls)) {
+                if (getClassHierarchy().implementsInterface(element.concreteType(), cls)) {
                   system.newConstraint(result, element);
                 }
               }
             } else {
               for (InstanceKey element : ik) {
                 system.findOrCreateIndexForInstanceKey(element);
-                if (getClassHierarchy().isSubclassOf(element.getConcreteType(), cls)) {
+                if (getClassHierarchy().isSubclassOf(element.concreteType(), cls)) {
                   system.newConstraint(result, element);
                 }
               }
@@ -1186,7 +1184,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         return;
       }
       PointerKey def = getPointerKeyForLocal(instruction.getDef());
-      IClass klass = iKey.getConcreteType();
+      IClass klass = iKey.concreteType();
 
       if (DEBUG) {
         System.err.println(
@@ -1245,7 +1243,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 "   ik: "
                     + system.findOrCreateIndexForInstanceKey(ik)
                     + " concrete type "
-                    + ik.getConcreteType()
+                    + ik.concreteType()
                     + " is "
                     + ik);
             System.err.println("   klass:" + klass);
@@ -1353,10 +1351,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           SSAInstruction cause = instruction.getCause();
           BasicBlock target = (BasicBlock) cfg.getNode(instruction.getSuccessor());
 
-          if ((cause instanceof SSAInstanceofInstruction)) {
+          if ((cause instanceof SSAInstanceofInstruction ssaInstanceofInstruction)) {
             int direction = booleanConstantTest(cond, cause.getDef());
             if (direction != 0) {
-              TypeReference type = ((SSAInstanceofInstruction) cause).getCheckedType();
+              TypeReference type = ssaInstanceofInstruction.getCheckedType();
               IClass cls = getClassHierarchy().lookupClass(type);
               if (cls == null) {
                 PointerKey dst = getPointerKeyForLocal(instruction.getDef());
@@ -1379,7 +1377,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                   InstanceKey[] ik = getInvariantContents(val);
                   for (InstanceKey element : ik) {
                     boolean assignable =
-                        getClassHierarchy().isAssignableFrom(cls, element.getConcreteType());
+                        getClassHierarchy().isAssignableFrom(cls, element.concreteType());
                     if ((assignable && useFilter) || (!assignable && !useFilter)) {
                       system.newConstraint(dst, element);
                     }
@@ -1911,7 +1909,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           // for efficiency: assume that only call sites that reference
           // clone() might dispatch to clone methods
           if (call.getCallSite().getDeclaredTarget().getSelector().equals(cloneSelector)) {
-            IClass recv = (keys[0] != null) ? keys[0].getConcreteType() : null;
+            IClass recv = (keys[0] != null) ? keys[0].concreteType() : null;
             IMethod targetMethod =
                 getOptions()
                     .getMethodTargetSelector()
@@ -1926,7 +1924,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
           }
         }
-        CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].getConcreteType(), keys);
+        CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].concreteType(), keys);
         if (target == null) {
           // This indicates an error; I sure hope getTargetForCall
           // raised a warning about this!
@@ -2002,8 +2000,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // with reference equality
 
       // instanceof is OK because this class is final
-      if (o instanceof DispatchOperator) {
-        DispatchOperator other = (DispatchOperator) o;
+      if (o instanceof DispatchOperator other) {
         return node.equals(other.node)
             && call.equals(other.call)
             && Arrays.deepEquals(constParams, other.constParams);
@@ -2027,9 +2024,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // to take the invoke instruction as a parameter instead, since invs is
     // associated with the instruction
     BiConsumer<IClass, InstanceKey[]> handleCallWithSpecificInstanceKeys =
-        (recv, v) -> {
-          handleCall(caller, recv, instruction, invs, null, v);
-        };
+        (recv, v) -> handleCall(caller, recv, instruction, invs, null, v);
     final InstanceKey[][] invariants = invs;
     new CrossProductRec(invariants, instruction, caller, handleCallWithSpecificInstanceKeys, null)
         .rec(0, 0);
@@ -2183,8 +2178,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   @SuppressWarnings("unused")
   private static boolean isRootType(FilteredPointerKey.TypeFilter filter) {
-    if (filter instanceof FilteredPointerKey.SingleClassFilter) {
-      return isRootType(((FilteredPointerKey.SingleClassFilter) filter).getConcreteType());
+    if (filter instanceof FilteredPointerKey.SingleClassFilter singleClassFilter) {
+      return isRootType(singleClassFilter.concreteType());
     } else {
       return false;
     }
@@ -2294,10 +2289,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     InstanceKey[] result;
     if (isConstantRef(symbolTable, valueNumber)) {
       Object x = symbolTable.getConstantValue(valueNumber);
-      if (x instanceof String) {
+      if (x instanceof String S) {
         // this is always the case in Java. use strong typing in the call to
         // getInstanceKeyForConstant.
-        String S = (String) x;
         TypeReference type =
             node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
         if (type == null) {

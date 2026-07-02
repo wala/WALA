@@ -15,6 +15,7 @@ import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import java.io.Serial;
 import java.io.Serializable;
 import java.io.UTFDataFormatException;
 import java.util.Map;
@@ -35,7 +36,7 @@ public final class TypeName implements Serializable {
   public static final byte ElementBits = 3;
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654326L;
+  @Serial private static final long serialVersionUID = -3256390509887654326L;
 
   /** canonical mapping from TypeNameKey -&gt; TypeName */
   private static final Map<TypeNameKey, TypeName> map = HashMapFactory.make();
@@ -211,56 +212,33 @@ public final class TypeName implements Serializable {
   /**
    * A key into the dictionary; this is just like a type name, but uses value equality instead of
    * object equality.
+   *
+   * @param packageName The package, like "java/lang". null means the unnamed package.
+   * @param className The class name, like "Object" or "Z"
+   * @param dim Dimensionality: -1 => primitive 0 => class >0 => mask of levels of array, reference,
+   *     pointer
+   *     <p>When the mask is &gt; 0, it represents levels of type qualifiers (in C terminology) for
+   *     array, reference and pointer types. There is also a special mask for when the innermost
+   *     type is a primitive. The mask is a bitfield laid out in inverse dimension order.
+   *     <p>For instance, a single-dimension array is simply the value ArrayMask, padded with
+   *     leading zeros. A single-dimension array of primitives is {@code ArrayMask<<ElementBits |
+   *     PrimitiveMask}. An array of pointers to objects would be {@code (ArrayMask<<ElementBits) |
+   *     PointerMask}; an array of pointers to a primitive type would have the primitive mask on the
+   *     end: {@code ((ArrayMask<<ElementBits) | PointerMask)<<ElementBits | PrimitiveMask}
    */
-  private static final class TypeNameKey implements Serializable {
-    private static final long serialVersionUID = -8284030936836318929L;
-
-    /** The package, like "java/lang". null means the unnamed package. */
-    private final Atom packageName;
-
-    /** The class name, like "Object" or "Z" */
-    private final Atom className;
-
-    /**
-     * Dimensionality: -1 => primitive 0 => class >0 => mask of levels of array, reference, pointer
-     *
-     * <p>When the mask is &gt; 0, it represents levels of type qualifiers (in C terminology) for
-     * array, reference and pointer types. There is also a special mask for when the innermost type
-     * is a primitive. The mask is a bitfield laid out in inverse dimension order.
-     *
-     * <p>For instance, a single-dimension array is simply the value ArrayMask, padded with leading
-     * zeros. A single-dimension array of primitives is ArrayMask<<ElementBits | PrimitiveMask. An
-     * array of pointers to objects would be (ArrayMask<<ElementBits) | PointerMask; an array of
-     * pointers to a primitive type would have the primitive mask on the end:
-     * ((ArrayMask<<ElementBits) | PointerMask)<<ElementBits | PrimitiveMask
-     */
-    private final int dim;
+  private record TypeNameKey(Atom packageName, Atom className, int dim) implements Serializable {
+    @Serial private static final long serialVersionUID = -8284030936836318929L;
 
     /** This should be the only constructor */
-    private TypeNameKey(Atom packageName, Atom className, int dim) {
-      this.packageName = packageName;
-      this.className = className;
-      this.dim = dim;
-    }
+    private TypeNameKey {}
 
     @Override
     public boolean equals(Object obj) {
-      if (obj instanceof TypeNameKey) {
-        TypeNameKey other = (TypeNameKey) obj;
+      if (obj instanceof TypeNameKey other) {
         return className == other.className && packageName == other.packageName && dim == other.dim;
       } else {
         return false;
       }
-    }
-
-    /** TODO: cache for efficiency? */
-    @Override
-    public int hashCode() {
-      int result = className.hashCode() * 5009 + dim * 5011;
-      if (packageName != null) {
-        result += packageName.hashCode();
-      }
-      return result;
     }
 
     @Override
@@ -284,20 +262,15 @@ public final class TypeName implements Serializable {
             d != 0;
             d >>= ElementBits) {
           final int masked = d & ElementMask;
-          switch (masked) {
-            case ArrayMask:
-              result.append('[');
-              break;
-            case PointerMask:
-              result.append('*');
-              break;
-            case ReferenceMask:
-              result.append('&');
-              break;
-            default:
-              throw new UnsupportedOperationException(
-                  "unexpected masked type-name component " + masked);
-          }
+          result.append(
+              switch (masked) {
+                case ArrayMask -> '[';
+                case PointerMask -> '*';
+                case ReferenceMask -> '&';
+                default ->
+                    throw new UnsupportedOperationException(
+                        "unexpected masked type-name component " + masked);
+              });
         }
       }
       if (!isPrimitive) {

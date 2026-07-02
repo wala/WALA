@@ -15,7 +15,6 @@ package org.scandroid.util;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.viz.DotUtil;
 import com.ibm.wala.util.viz.NodeDecorator;
@@ -47,19 +46,12 @@ public class DexDotUtil extends DotUtil {
   //    }
 
   private static String outputTypeCmdLineParam() {
-    switch (outputType) {
-      case PS:
-        return "-Tps";
-      case EPS:
-        return "-Teps";
-      case SVG:
-        return "-Tsvg";
-      case PDF:
-        return "-Tpdf";
-      default:
-        Assertions.UNREACHABLE();
-        return null;
-    }
+    return switch (outputType) {
+      case PS -> "-Tps";
+      case EPS -> "-Teps";
+      case SVG -> "-Tsvg";
+      case PDF -> "-Tpdf";
+    };
   }
 
   /** Some versions of dot appear to croak on long labels. Reduce this if so. */

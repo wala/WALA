@@ -38,6 +38,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import java.io.Serial;
 import java.util.Collection;
 
 /**
@@ -66,7 +67,7 @@ public class ContextSensitiveReachingDefs {
   private static class ReachingDefsDomain extends MutableMapping<Pair<CGNode, Integer>>
       implements TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> {
 
-    private static final long serialVersionUID = 4014252274660361965L;
+    @Serial private static final long serialVersionUID = 4014252274660361965L;
 
     @Override
     public boolean hasPriorityOver(
@@ -138,8 +139,7 @@ public class ContextSensitiveReachingDefs {
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       final IExplodedBasicBlock ebb = src.getDelegate();
       SSAInstruction instruction = ebb.getInstruction();
-      if (instruction instanceof SSAPutInstruction) {
-        final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+      if (instruction instanceof SSAPutInstruction putInstr) {
         if (putInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
@@ -242,8 +242,7 @@ public class ContextSensitiveReachingDefs {
       for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {
         IExplodedBasicBlock ebb = bb.getDelegate();
         SSAInstruction instruction = ebb.getInstruction();
-        if (instruction instanceof SSAPutInstruction) {
-          SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+        if (instruction instanceof SSAPutInstruction putInstr) {
           if (putInstr.isStatic()) {
             final CGNode cgNode = bb.getNode();
             Pair<CGNode, Integer> fact = Pair.make(cgNode, ebb.getFirstInstructionIndex());

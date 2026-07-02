@@ -35,8 +35,7 @@ public class PointType extends TypeAbstraction {
     if (rhs == TOP) {
       return this;
     } else {
-      if (rhs instanceof PointType) {
-        PointType other = (PointType) rhs;
+      if (rhs instanceof PointType other) {
         if (type.equals(other.type)) {
           return this;
         } else if (type.isArrayClass() || other.type.isArrayClass()) {
@@ -46,8 +45,7 @@ public class PointType extends TypeAbstraction {
           return new ConeType(
               type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
         }
-      } else if (rhs instanceof ConeType) {
-        ConeType other = (ConeType) rhs;
+      } else if (rhs instanceof ConeType other) {
         if (type.equals(other.getType())) {
           // "this" and the cone type have the same underlying type, return the cone type
           return other;
@@ -92,10 +90,9 @@ public class PointType extends TypeAbstraction {
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof PointType)) {
+    if (!(obj instanceof PointType other)) {
       return false;
     }
-    PointType other = (PointType) obj;
     if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
       Assertions.UNREACHABLE("different chas " + this + ' ' + other);
     }

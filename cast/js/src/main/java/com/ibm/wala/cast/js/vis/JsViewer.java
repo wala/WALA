@@ -15,10 +15,11 @@ import com.ibm.wala.core.viz.viewer.WalaViewer;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import java.io.Serial;
 
 public class JsViewer extends WalaViewer {
 
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   public JsViewer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     super(cg, pa);

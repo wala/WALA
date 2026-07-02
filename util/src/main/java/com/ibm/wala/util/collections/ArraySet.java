@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Arrays;
@@ -51,12 +52,12 @@ import java.util.NoSuchElementException;
 public class ArraySet<T> extends AbstractSet<T> implements Serializable {
 
   /** */
-  private static final long serialVersionUID = -5842124218051589966L;
+  @Serial private static final long serialVersionUID = -5842124218051589966L;
 
   private static final ArraySet<?> EMPTY =
       new ArraySet<>(0, true) {
         /** */
-        private static final long serialVersionUID = -3094823386613798012L;
+        @Serial private static final long serialVersionUID = -3094823386613798012L;
 
         @Override
         /*

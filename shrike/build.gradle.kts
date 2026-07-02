@@ -5,4 +5,7 @@ plugins {
 
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
-dependencies { api(projects.util) }
+dependencies {
+  api(libs.jspecify)
+  api(projects.util)
+}

@@ -134,21 +134,28 @@ public class BootstrapMethodsReader extends AttributeReader {
                 int index = callArgumentIndex(i);
                 int t = callArgumentKind(i);
                 switch (t) {
-                  case ClassConstants.CONSTANT_Utf8:
+                  case ClassConstants.CONSTANT_Utf8 -> {
                     return cp.getCPUtf8(index);
-                  case ClassConstants.CONSTANT_Class:
+                  }
+                  case ClassConstants.CONSTANT_Class -> {
                     return cp.getCPClass(index);
-                  case ClassConstants.CONSTANT_String:
+                  }
+                  case ClassConstants.CONSTANT_String -> {
                     return cp.getCPString(index);
-                  case ClassConstants.CONSTANT_Integer:
+                  }
+                  case ClassConstants.CONSTANT_Integer -> {
                     return cp.getCPInt(index);
-                  case ClassConstants.CONSTANT_Float:
+                  }
+                  case ClassConstants.CONSTANT_Float -> {
                     return cp.getCPFloat(index);
-                  case ClassConstants.CONSTANT_Double:
+                  }
+                  case ClassConstants.CONSTANT_Double -> {
                     return cp.getCPDouble(index);
-                  case ClassConstants.CONSTANT_Long:
+                  }
+                  case ClassConstants.CONSTANT_Long -> {
                     return cp.getCPLong(index);
-                  case ClassConstants.CONSTANT_MethodHandle:
+                  }
+                  case ClassConstants.CONSTANT_MethodHandle -> {
                     String className = cp.getCPHandleClass(index);
                     String eltName = cp.getCPHandleName(index);
                     String eltDesc = cp.getCPHandleType(index);
@@ -161,10 +168,13 @@ public class BootstrapMethodsReader extends AttributeReader {
                     Lookup lk = MethodHandles.lookup().in(cls);
                     m.setAccessible(true);
                     return lk.unreflect(m);
-                  case ClassConstants.CONSTANT_MethodType:
+                  }
+                  case ClassConstants.CONSTANT_MethodType -> {
                     return MethodType.fromMethodDescriptorString(cp.getCPMethodType(index), cl);
-                  default:
+                  }
+                  default -> {
                     assert false : "invalid type " + t;
+                  }
                 }
               } catch (IllegalArgumentException
                   | IllegalAccessException

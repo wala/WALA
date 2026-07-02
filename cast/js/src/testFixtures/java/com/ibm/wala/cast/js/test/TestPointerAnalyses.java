@@ -191,7 +191,7 @@ public abstract class TestPointerAnalyses {
       CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());
       PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
 
-      test(filter, test, fbResult.getCallGraph(), fbResult.getPointerAnalysis(), propCG, propPA);
+      test(filter, test, fbResult.callGraph(), fbResult.pointerAnalysis(), propCG, propPA);
     }
   }
 
@@ -214,7 +214,7 @@ public abstract class TestPointerAnalyses {
       CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());
       PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
 
-      test(filter, test, fbResult.getCallGraph(), fbResult.getPointerAnalysis(), propCG, propPA);
+      test(filter, test, fbResult.callGraph(), fbResult.pointerAnalysis(), propCG, propPA);
 
     } finally {
       JSSourceExtractor.USE_TEMP_NAME = save;
@@ -294,7 +294,7 @@ public abstract class TestPointerAnalyses {
                           o,
                           new AstDynamicField(
                               false,
-                              o.getConcreteType(),
+                              o.concreteType(),
                               Atom.findOrCreateUnicodeAtom(p),
                               JavaScriptTypes.Root));
               assertThatObject(hg).has(edge(o, propKey));
@@ -309,8 +309,8 @@ public abstract class TestPointerAnalyses {
 
             System.err.println("heap graph models instruction " + inst);
           }
-        } else if (inst instanceof AstGlobalWrite) {
-          String propName = ((AstGlobalWrite) inst).getGlobalName();
+        } else if (inst instanceof AstGlobalWrite astGlobalWrite) {
+          String propName = astGlobalWrite.getGlobalName();
           propName = propName.substring("global ".length());
           PointerKey propKey =
               fbPA.getHeapModel()
@@ -324,8 +324,8 @@ public abstract class TestPointerAnalyses {
           assertThatObject(hg).has(edge(GlobalVertex.instance(), propKey));
 
           System.err.println("heap graph models instruction " + inst);
-        } else if (inst instanceof JavaScriptInvoke) {
-          int vn = ((JavaScriptInvoke) inst).getReceiver();
+        } else if (inst instanceof JavaScriptInvoke javaScriptInvoke) {
+          int vn = javaScriptInvoke.getReceiver();
 
           Set<Pair<CGNode, NewSiteReference>> fbPrototypes =
               getFbPrototypes(fbPA, hg, fbCG, node, vn);
@@ -349,15 +349,15 @@ public abstract class TestPointerAnalyses {
                     k,
                     new AstDynamicField(
                         false,
-                        k.getConcreteType(),
+                        k.concreteType(),
                         Atom.findOrCreateUnicodeAtom(f),
                         JavaScriptTypes.Root));
         if (!hg.containsNode(pointerKeyForInstanceField)) {
           dump = true;
-          System.err.println("no " + f + " for " + k + "(" + k.getConcreteType() + ")");
+          System.err.println("no " + f + " for " + k + "(" + k.concreteType() + ")");
         } else if (!hg.getSuccNodes(pointerKeyForInstanceField).hasNext()) {
           dump = true;
-          System.err.println("empty " + f + " for " + k + "(" + k.getConcreteType() + ")");
+          System.err.println("empty " + f + " for " + k + "(" + k.concreteType() + ")");
         }
         if (dump) {
           for (Pair<CGNode, NewSiteReference> cs :

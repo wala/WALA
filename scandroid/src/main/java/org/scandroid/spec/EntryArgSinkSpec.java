@@ -79,6 +79,6 @@ public class EntryArgSinkSpec extends SinkSpec {
   @Override
   public String toString() {
     return String.format(
-        "EntryArgSinkSpec(%s,%s)", namePattern.getDescriptor(), Arrays.toString(argNums));
+        "EntryArgSinkSpec(%s,%s)", namePattern.descriptor(), Arrays.toString(argNums));
   }
 }

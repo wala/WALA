@@ -76,8 +76,7 @@ public abstract class AbstractJavaAnalysisAction
           @Override
           protected IStatus run(IProgressMonitor monitor) {
             for (Object object : Iterator2Iterable.make((Iterator<?>) selection.iterator())) {
-              if (object instanceof IJavaElement) {
-                IJavaElement e = (IJavaElement) object;
+              if (object instanceof IJavaElement e) {
                 IJavaProject jp = e.getJavaProject();
                 try {
                   projectPaths.add(JavaEclipseProjectPath.make(jp, scopeType));
@@ -103,10 +102,10 @@ public abstract class AbstractJavaAnalysisAction
       IStatus result = job.getResult();
       if (result.getSeverity() == IStatus.ERROR) {
         Throwable exception = result.getException();
-        if (exception instanceof IOException) {
-          throw (IOException) exception;
-        } else if (exception instanceof RuntimeException) {
-          throw (RuntimeException) exception;
+        if (exception instanceof IOException ioException) {
+          throw ioException;
+        } else if (exception instanceof RuntimeException runtimeException) {
+          throw runtimeException;
         }
       }
     } catch (InterruptedException e) {
@@ -121,8 +120,7 @@ public abstract class AbstractJavaAnalysisAction
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<IJavaProject> projects = HashSetFactory.make();
     for (Object object : Iterator2Iterable.make((Iterator<?>) selection.iterator())) {
-      if (object instanceof IJavaElement) {
-        IJavaElement e = (IJavaElement) object;
+      if (object instanceof IJavaElement e) {
         IJavaProject jp = e.getJavaProject();
         projects.add(jp);
       } else {

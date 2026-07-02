@@ -73,6 +73,7 @@ public final class ExceptionHandler {
     return catchClass;
   }
 
+  @SuppressWarnings("NonOverridingEquals")
   public boolean equals(ExceptionHandler h) {
     if (h == null) {
       throw new IllegalArgumentException("h is null");
@@ -87,8 +88,8 @@ public final class ExceptionHandler {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ExceptionHandler) {
-      return equals((ExceptionHandler) o);
+    if (o instanceof ExceptionHandler exceptionHandler) {
+      return equals(exceptionHandler);
     } else {
       return false;
     }

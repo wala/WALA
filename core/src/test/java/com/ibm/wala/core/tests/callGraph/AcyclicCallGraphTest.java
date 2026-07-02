@@ -47,8 +47,8 @@ public class AcyclicCallGraphTest extends WalaTestCase {
 
     Map<CGNode, Set<CGNode>> cgBackEdges = HashMapFactory.make();
     for (IntPair p : backEdges) {
-      CGNode src = cg.getNode(p.getX());
-      cgBackEdges.computeIfAbsent(src, absent -> make()).add(cg.getNode(p.getY()));
+      CGNode src = cg.getNode(p.x());
+      cgBackEdges.computeIfAbsent(src, absent -> make()).add(cg.getNode(p.y()));
     }
 
     PrunedCallGraph pcg =

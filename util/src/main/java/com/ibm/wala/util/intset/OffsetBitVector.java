@@ -10,12 +10,13 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.util.Arrays;
 
 /** */
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
-  private static final long serialVersionUID = -5846568678514886375L;
+  @Serial private static final long serialVersionUID = -5846568678514886375L;
   int offset;
 
   private static int wordDiff(int offset1, int offset2) {
@@ -216,11 +217,10 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof OffsetBitVector) {
+    if (obj instanceof OffsetBitVector set) {
       if (this == obj) { // should help alias analysis
         return true;
       }
-      OffsetBitVector set = (OffsetBitVector) obj;
       return sameBits(set);
     }
     return false;

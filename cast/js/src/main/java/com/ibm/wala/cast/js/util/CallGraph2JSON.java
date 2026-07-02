@@ -145,8 +145,7 @@ public class CallGraph2JSON {
   private String getContextString(Context context) {
     if (context.equals(Everywhere.EVERYWHERE)) {
       return "";
-    } else if (context instanceof CallStringContext) {
-      CallStringContext cs = (CallStringContext) context;
+    } else if (context instanceof CallStringContext cs) {
       CallString callString = (CallString) cs.get(CallStringContextSelector.CALL_STRING);
       CallSiteReference csRef = callString.getCallSiteRefs()[0];
       IMethod callerMethod = callString.getMethods()[0];

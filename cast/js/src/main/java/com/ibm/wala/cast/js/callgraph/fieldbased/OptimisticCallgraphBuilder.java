@@ -49,7 +49,8 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
       boolean supportFullPointerAnalysis) {
     super(cha, options, iAnalysisCacheView, supportFullPointerAnalysis);
     handleCallApply =
-        options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply();
+        options instanceof JSAnalysisOptions jsAnalysisOptions
+            && jsAnalysisOptions.handleCallApply();
   }
 
   @Override

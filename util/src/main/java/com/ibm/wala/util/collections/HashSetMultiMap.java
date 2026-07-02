@@ -37,12 +37,13 @@
  */
 package com.ibm.wala.util.collections;
 
+import java.io.Serial;
 import java.util.Set;
 
 public class HashSetMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
   /** */
-  private static final long serialVersionUID = 1699856257459175263L;
+  @Serial private static final long serialVersionUID = 1699856257459175263L;
 
   public HashSetMultiMap() {
     super(false);

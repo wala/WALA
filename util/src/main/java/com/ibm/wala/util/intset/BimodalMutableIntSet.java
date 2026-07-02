@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -21,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class BimodalMutableIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = 7332332295529936562L;
+  @Serial private static final long serialVersionUID = 7332332295529936562L;
   MutableIntSet impl;
 
   @Override
@@ -29,16 +30,16 @@ public class BimodalMutableIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("null set");
     }
-    if (set instanceof BimodalMutableIntSet) {
-      impl = IntSetUtil.makeMutableCopy(((BimodalMutableIntSet) set).impl);
+    if (set instanceof BimodalMutableIntSet bimodalMutableIntSet) {
+      impl = IntSetUtil.makeMutableCopy(bimodalMutableIntSet.impl);
     } else if (sameRepresentation(impl, set)) {
       // V and other.V use the same representation. update in place.
       impl.copySet(set);
     } else if (set instanceof BitVectorIntSet || set instanceof SparseIntSet) {
       // other.V has a different representation. make a new copy
       impl = IntSetUtil.makeMutableCopy(set);
-    } else if (set instanceof MutableSharedBitVectorIntSet) {
-      impl = IntSetUtil.makeMutableCopy(((MutableSharedBitVectorIntSet) set).makeSparseCopy());
+    } else if (set instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
+      impl = IntSetUtil.makeMutableCopy(mutableSharedBitVectorIntSet.makeSparseCopy());
     } else {
       Assertions.UNREACHABLE("Unexpected type " + set.getClass());
     }
@@ -136,8 +137,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("null set");
     }
-    if (set instanceof BimodalMutableIntSet) {
-      BimodalMutableIntSet that = (BimodalMutableIntSet) set;
+    if (set instanceof BimodalMutableIntSet that) {
       impl.intersectWith(that.impl);
     } else {
       Assertions.UNREACHABLE();
@@ -158,8 +158,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   @NullUnmarked
   @Override
   public @Nullable IntSet intersection(IntSet that) throws UnimplementedError {
-    if (that instanceof BimodalMutableIntSet) {
-      BimodalMutableIntSet b = (BimodalMutableIntSet) that;
+    if (that instanceof BimodalMutableIntSet b) {
       return impl.intersection(b.impl);
     } else if (that instanceof BitVectorIntSet) {
       return impl.intersection(that);
@@ -235,14 +234,12 @@ public class BimodalMutableIntSet implements MutableIntSet {
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }
-    if (B instanceof BimodalMutableIntSet) {
-      BimodalMutableIntSet that = (BimodalMutableIntSet) B;
+    if (B instanceof BimodalMutableIntSet that) {
       BimodalMutableIntSet result = new BimodalMutableIntSet();
       result.impl = IntSetUtil.makeMutableCopy(that.impl);
       return result;
-    } else if (B instanceof MutableSharedBitVectorIntSet) {
+    } else if (B instanceof MutableSharedBitVectorIntSet s) {
       BimodalMutableIntSet result = new BimodalMutableIntSet();
-      MutableSharedBitVectorIntSet s = (MutableSharedBitVectorIntSet) B;
       result.impl = IntSetUtil.makeMutableCopy(s.makeSparseCopy());
       assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
       return result;
@@ -294,8 +291,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof BimodalMutableIntSet) {
-      BimodalMutableIntSet b = (BimodalMutableIntSet) that;
+    if (that instanceof BimodalMutableIntSet b) {
       return impl.isSubset(b.impl);
     } else {
       // slow!
@@ -323,8 +319,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof BimodalMutableIntSet) {
-      BimodalMutableIntSet b = (BimodalMutableIntSet) that;
+    if (that instanceof BimodalMutableIntSet b) {
       return impl.containsAny(b.impl);
     } else if (that instanceof SparseIntSet) {
       return impl.containsAny(that);

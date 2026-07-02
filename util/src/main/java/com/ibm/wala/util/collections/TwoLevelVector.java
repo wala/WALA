@@ -12,6 +12,7 @@ package com.ibm.wala.util.collections;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.math.Logs;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
@@ -21,7 +22,7 @@ import org.jspecify.annotations.Nullable;
 /** An {@link IVector} implementation which delegates to pages of int vectors. */
 public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, Serializable {
 
-  private static final long serialVersionUID = -835376054736611070L;
+  @Serial private static final long serialVersionUID = -835376054736611070L;
 
   private static final int PAGE_SIZE = 4096;
 

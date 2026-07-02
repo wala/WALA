@@ -186,8 +186,8 @@ public class FlowGraphBuilder {
       this.flowgraph = flowgraph;
       this.factory = flowgraph.getVertexFactory();
       this.func = factory.makeFuncVertex(ir.getMethod().getDeclaringClass());
-      if (method instanceof AstMethod) {
-        this.lexicalInfo = ((AstMethod) method).lexicalInfo();
+      if (method instanceof AstMethod astMethod) {
+        this.lexicalInfo = astMethod.lexicalInfo();
         this.exposedVars = lexicalInfo.getAllExposedUses();
       } else {
         this.lexicalInfo = null;
@@ -265,8 +265,8 @@ public class FlowGraphBuilder {
     @Override
     public void visitAstLexicalWrite(AstLexicalWrite lw) {
       for (Access acc : lw.getAccesses()) {
-        Vertex v = factory.makeVarVertex(func, acc.valueNumber),
-            w = factory.makeLexicalAccessVertex(acc.variableDefiner, acc.variableName);
+        Vertex v = factory.makeVarVertex(func, acc.valueNumber()),
+            w = factory.makeLexicalAccessVertex(acc.variableDefiner(), acc.variableName());
         flowgraph.addEdge(v, w);
       }
     }
@@ -315,10 +315,10 @@ public class FlowGraphBuilder {
     @Override
     public void visitAstLexicalRead(AstLexicalRead lr) {
       for (Access acc : lr.getAccesses()) {
-        Vertex v = factory.makeLexicalAccessVertex(acc.variableDefiner, acc.variableName),
-            w = factory.makeVarVertex(func, acc.valueNumber);
+        Vertex v = factory.makeLexicalAccessVertex(acc.variableDefiner(), acc.variableName()),
+            w = factory.makeVarVertex(func, acc.valueNumber());
         flowgraph.addEdge(v, w);
-        handleLexicalDef(acc.valueNumber);
+        handleLexicalDef(acc.valueNumber());
       }
     }
 

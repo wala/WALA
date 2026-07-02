@@ -44,8 +44,7 @@ public class TestCond {
     arr[0] = new B();
     arr[1] = new A();
     Object x = arr[0];
-    if (x instanceof B) {
-      B b = (B) x;
+    if (x instanceof B b) {
       DemandPATestUtil.testThisVar(b);
     }
   }

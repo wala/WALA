@@ -116,7 +116,7 @@ public class OutflowAnalysis {
     dests.add(dest);
   }
 
-  @SuppressWarnings({"unused", "unchecked"})
+  @SuppressWarnings("unused")
   private void processArgSinks(
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -170,7 +170,7 @@ public class OutflowAnalysis {
               if (elements != null) {
                 for (DomainElement de : elements) {
                   if (resultSet.contains(domain.getMappedIndex(de))) {
-                    taintTypeSet.add(de.taintSource);
+                    taintTypeSet.add(de.taintSource());
                   }
                 }
               }
@@ -179,7 +179,7 @@ public class OutflowAnalysis {
               for (InstanceKey ik : pa.getPointsToSet(lpkey)) {
                 for (DomainElement de : domain.getPossibleElements(new InstanceKeyElement(ik))) {
                   if (resultSet.contains(domain.getMappedIndex(de))) {
-                    taintTypeSet.add(de.taintSource);
+                    taintTypeSet.add(de.taintSource());
                   }
                 }
               }
@@ -197,7 +197,7 @@ public class OutflowAnalysis {
     }
   }
 
-  @SuppressWarnings({"unused", "unchecked"})
+  @SuppressWarnings("unused")
   private void processEntryArgs(
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -252,13 +252,14 @@ public class OutflowAnalysis {
 
             int mappedIndex = domain.getMappedIndex(de);
             if (flowResult.getResult(block).contains(mappedIndex)) {
-              addEdge(flowGraph, de.taintSource, new ParameterFlow<>(entryBlock, newArgNum, false));
+              addEdge(
+                  flowGraph, de.taintSource(), new ParameterFlow<>(entryBlock, newArgNum, false));
             }
           }
 
           int mappedIndex = domain.getMappedIndex(de);
           if (flowResult.getResult(entryBlock).contains(mappedIndex)) {
-            addEdge(flowGraph, de.taintSource, new ParameterFlow<>(entryBlock, newArgNum, false));
+            addEdge(flowGraph, de.taintSource(), new ParameterFlow<>(entryBlock, newArgNum, false));
           }
         }
         for (InstanceKey ik :
@@ -266,7 +267,8 @@ public class OutflowAnalysis {
           for (DomainElement de : domain.getPossibleElements(new InstanceKeyElement(ik))) {
             if (flowResult.getResult(entryBlock).contains(domain.getMappedIndex(de))) {
 
-              addEdge(flowGraph, de.taintSource, new ParameterFlow<>(entryBlock, newArgNum, false));
+              addEdge(
+                  flowGraph, de.taintSource(), new ParameterFlow<>(entryBlock, newArgNum, false));
             }
           }
         }
@@ -274,7 +276,7 @@ public class OutflowAnalysis {
     }
   }
 
-  @SuppressWarnings({"unused", "unchecked"})
+  @SuppressWarnings("unused")
   private void processEntryRets(
       TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
       IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -304,7 +306,7 @@ public class OutflowAnalysis {
         for (BasicBlockInContext<IExplodedBasicBlock> block : exitsForProcedure) {
           if (flowResult.getResult(block).contains(domain.getMappedIndex(de))) {
 
-            addEdge(flowGraph, de.taintSource, new ReturnFlow<>(block, false));
+            addEdge(flowGraph, de.taintSource(), new ReturnFlow<>(block, false));
           }
           // Iterator<BasicBlockInContext<E>> it =
           // graph.getPredNodes(block);
@@ -339,7 +341,7 @@ public class OutflowAnalysis {
               for (DomainElement ikElement :
                   domain.getPossibleElements(new InstanceKeyElement(ik))) {
                 if (flowResult.getResult(realBlock).contains(domain.getMappedIndex(ikElement))) {
-                  addEdge(flowGraph, ikElement.taintSource, new ReturnFlow<>(realBlock, false));
+                  addEdge(flowGraph, ikElement.taintSource(), new ReturnFlow<>(realBlock, false));
                 }
               }
             }
@@ -419,17 +421,17 @@ public class OutflowAnalysis {
   }
 
   private Set<ISinkPoint> calculateSinkPoints(SinkSpec sinkSpec) {
-    if (sinkSpec instanceof EntryArgSinkSpec) {
-      return calculateSinkPoints((EntryArgSinkSpec) sinkSpec);
+    if (sinkSpec instanceof EntryArgSinkSpec entryArgSinkSpec) {
+      return calculateSinkPoints(entryArgSinkSpec);
     }
-    if (sinkSpec instanceof CallArgSinkSpec) {
-      return calculateSinkPoints((CallArgSinkSpec) sinkSpec);
+    if (sinkSpec instanceof CallArgSinkSpec callArgSinkSpec) {
+      return calculateSinkPoints(callArgSinkSpec);
     }
-    if (sinkSpec instanceof EntryRetSinkSpec) {
-      return calculateSinkPoints((EntryRetSinkSpec) sinkSpec);
+    if (sinkSpec instanceof EntryRetSinkSpec entryRetSinkSpec) {
+      return calculateSinkPoints(entryRetSinkSpec);
     }
-    if (sinkSpec instanceof StaticFieldSinkSpec) {
-      return calculateSinkPoints((StaticFieldSinkSpec) sinkSpec);
+    if (sinkSpec instanceof StaticFieldSinkSpec staticFieldSinkSpec) {
+      return calculateSinkPoints(staticFieldSinkSpec);
     }
     throw new UnimplementedError();
   }
@@ -491,8 +493,7 @@ public class OutflowAnalysis {
                           graph.getICFG().getCFG(caller).getInstructions();
                       int invokeIndex = -1;
                       for (int i = 0; i < insts.length; i++) {
-                        if (insts[i] instanceof SSAInvokeInstruction) {
-                          SSAInvokeInstruction invokeInst2 = (SSAInvokeInstruction) insts[i];
+                        if (insts[i] instanceof SSAInvokeInstruction invokeInst2) {
                           if (invokeInst
                               .getDeclaredTarget()
                               .equals(invokeInst2.getDeclaredTarget())) {
@@ -545,9 +546,8 @@ public class OutflowAnalysis {
           // if that predecessor is a return instruction
           BasicBlockInContext<IExplodedBasicBlock> exitBlock = exitBlocks.next();
           final SSAInstruction inst = exitBlock.getDelegate().getInstruction();
-          if (inst instanceof SSAReturnInstruction) {
+          if (inst instanceof SSAReturnInstruction returnInst) {
             // add a sink point for the instruction
-            SSAReturnInstruction returnInst = (SSAReturnInstruction) inst;
             if (!returnInst.returnsVoid()) {
               final int ssaVal = returnInst.getResult();
               final ReturnFlow<IExplodedBasicBlock> sinkFlow = new ReturnFlow<>(exitBlock, false);

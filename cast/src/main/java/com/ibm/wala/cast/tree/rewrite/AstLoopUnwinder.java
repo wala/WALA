@@ -45,9 +45,9 @@ public class AstLoopUnwinder
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof UnwindKey)
-          && ((UnwindKey) o).iteration == iteration
-          && Objects.equals(rest, ((UnwindKey) o).rest);
+      return (o instanceof UnwindKey unwindKey)
+          && unwindKey.iteration == iteration
+          && Objects.equals(rest, unwindKey.rest);
     }
 
     @Override
@@ -81,14 +81,8 @@ public class AstLoopUnwinder
     }
   }
 
-  private static class LoopContext implements RewriteContext<UnwindKey> {
-    private final CAstRewriter.RewriteContext<UnwindKey> parent;
-    private final int iteration;
-
-    private LoopContext(int iteration, RewriteContext<UnwindKey> parent) {
-      this.iteration = iteration;
-      this.parent = parent;
-    }
+  private record LoopContext(int iteration, RewriteContext<UnwindKey> parent)
+      implements RewriteContext<UnwindKey> {
 
     @Override
     public UnwindKey key() {

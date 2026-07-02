@@ -23,6 +23,7 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -70,8 +71,8 @@ public abstract class Dominators<T> {
   }
 
   public static <T> Dominators<T> make(Graph<T> G, T root) {
-    if (G instanceof NumberedGraph) {
-      return new NumberedDominators<>((NumberedGraph<T>) G, root);
+    if (G instanceof NumberedGraph<T> ts) {
+      return new NumberedDominators<>(ts, root);
     } else {
       return new GenericDominators<>(G, root);
     }
@@ -236,7 +237,7 @@ public abstract class Dominators<T> {
 
     DFSDiscoverTimeIterator<T> dfs =
         new SlowDFSDiscoverTimeIterator<>(G, root) {
-          private static final long serialVersionUID = 88831771771711L;
+          @Serial private static final long serialVersionUID = 88831771771711L;
 
           @Override
           protected void visitEdge(T from, T to) {
@@ -299,6 +300,9 @@ public abstract class Dominators<T> {
       Iterator<T> bucketEnum = iterateBucket(getParent(node));
       while (bucketEnum.hasNext()) {
         T node2 = bucketEnum.next();
+        // LT paper step 3: "delete v from bucket(parent(w))".
+        // Otherwise siblings with the same parent reprocess old bucket entries.
+        bucketEnum.remove();
 
         // u = EVAL(node2)
         T u = EVAL(node2);

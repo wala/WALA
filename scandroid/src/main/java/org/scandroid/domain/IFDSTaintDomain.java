@@ -75,7 +75,8 @@ public class IFDSTaintDomain<E extends ISSABasicBlock>
   }
 
   private void index(DomainElement e) {
-    Set<DomainElement> elements = elementIndex.computeIfAbsent(e.codeElement, k -> new HashSet<>());
+    Set<DomainElement> elements =
+        elementIndex.computeIfAbsent(e.codeElement(), k -> new HashSet<>());
     elements.add(e);
   }
 
@@ -96,11 +97,10 @@ public class IFDSTaintDomain<E extends ISSABasicBlock>
 
   @Override
   public synchronized int getMappedIndex(final Object o) {
-    if (!(o instanceof DomainElement)) {
+    if (!(o instanceof DomainElement de)) {
       throw new IllegalArgumentException(o.getClass().getCanonicalName());
     }
 
-    final DomainElement de = (DomainElement) o;
     final Integer i = table.get(de);
 
     return (i == null ? add(de) : i);

@@ -42,33 +42,35 @@ public class InterfaceAnalyzer {
   public static void main(String[] args) throws Exception {
     OfflineInstrumenter instrumenter = new OfflineInstrumenter();
 
-    try (final Writer w = new BufferedWriter(new OutputStreamWriter(System.out))) {
+    // Do not manage `w` using `try`-with-resources: we don't want to close `System.out`.
+    final Writer w = new BufferedWriter(new OutputStreamWriter(System.out));
 
-      instrumenter.parseStandardArgs(args);
+    instrumenter.parseStandardArgs(args);
 
-      instrumenter.beginTraversal();
-      ClassInstrumenter ci;
-      while ((ci = instrumenter.nextClass()) != null) {
-        doClass(ci.getReader());
-      }
-      instrumenter.close();
-
-      w.write("Type\t# Total\t# Method\t# Public Method\t# Public Method as Foreign\n");
-      for (Map.Entry<String, TypeStats> entry : typeStats.entrySet()) {
-        TypeStats t = entry.getValue();
-        w.write(
-            entry.getKey()
-                + '\t'
-                + t.totalOccurrences
-                + '\t'
-                + t.methodOccurrences
-                + '\t'
-                + t.publicMethodOccurrences
-                + '\t'
-                + t.foreignPublicMethodOccurrences
-                + '\n');
-      }
+    instrumenter.beginTraversal();
+    ClassInstrumenter ci;
+    while ((ci = instrumenter.nextClass()) != null) {
+      doClass(ci.getReader());
     }
+    instrumenter.close();
+
+    w.write("Type\t# Total\t# Method\t# Public Method\t# Public Method as Foreign\n");
+    for (Map.Entry<String, TypeStats> entry : typeStats.entrySet()) {
+      TypeStats t = entry.getValue();
+      w.write(
+          entry.getKey()
+              + '\t'
+              + t.totalOccurrences
+              + '\t'
+              + t.methodOccurrences
+              + '\t'
+              + t.publicMethodOccurrences
+              + '\t'
+              + t.foreignPublicMethodOccurrences
+              + '\n');
+    }
+
+    w.flush();
   }
 
   static int methodUID = 0;

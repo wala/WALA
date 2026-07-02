@@ -9,6 +9,7 @@ plugins {
 
 dependencies {
   api(libs.jericho.html)
+  api(libs.jspecify)
   api(projects.cast) { because("public class JSCallGraphUtil extends class CAstCallGraphUtil") }
   api(projects.core)
   api(projects.util)
@@ -22,6 +23,7 @@ dependencies {
   testFixturesApi(projects.util)
   testFixturesApi(testFixtures(projects.cast))
   testFixturesImplementation(libs.assertj.core)
+  testFixturesImplementation(libs.jetbrains.annotations)
   testFixturesImplementation(testFixtures(projects.util))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
@@ -29,7 +31,10 @@ dependencies {
 }
 
 val createPackageList =
-    tasks.register<CreatePackageList>("createPackageList") { sourceSet(sourceSets.main.get()) }
+    tasks.register<CreatePackageList>("createPackageList") {
+      description = "Generate package list for Javadoc cross-reference"
+      sourceSet(sourceSets.main.get())
+    }
 
 val packageListDirectory =
     configurations.register("packageListDirectory") { isCanBeResolved = false }
@@ -51,6 +56,7 @@ val downloadAjaxslt =
 
 val unpackAjaxslt =
     tasks.register<Sync>("unpackAjaxslt") {
+      description = "Unpack AJAXSLT test resources"
       from({ tarTree(downloadAjaxslt.singleFile) })
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()

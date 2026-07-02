@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -164,18 +163,20 @@ public class JDT2CAstUtils {
   public static ITypeBinding getDeclaringClassOfNode(ASTNode n) {
     ASTNode current = n;
     while (current != null) {
-      if (current instanceof TypeDeclaration) return ((TypeDeclaration) current).resolveBinding();
-      else if (current instanceof AnonymousClassDeclaration)
-        return ((AnonymousClassDeclaration) current).resolveBinding();
-      else if (current instanceof EnumDeclaration)
-        return ((EnumDeclaration) current).resolveBinding();
+      if (current instanceof TypeDeclaration typeDeclaration)
+        return typeDeclaration.resolveBinding();
+      else if (current instanceof AnonymousClassDeclaration anonymousClassDeclaration)
+        return anonymousClassDeclaration.resolveBinding();
+      else if (current instanceof EnumDeclaration enumDeclaration)
+        return enumDeclaration.resolveBinding();
       current = current.getParent();
     }
     Assertions.UNREACHABLE("Couldn't find declaring class of node");
     return null;
   }
 
-  private static final Map<ITypeBinding, @NonNull Integer> ids = new IdentityHashMap<>();
+  private static final IdentityHashMap<ITypeBinding, @NonNull Integer> ids =
+      new IdentityHashMap<>();
 
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();

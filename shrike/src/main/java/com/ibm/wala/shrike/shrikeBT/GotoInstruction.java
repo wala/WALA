@@ -65,8 +65,7 @@ public final class GotoInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof GotoInstruction) {
-      GotoInstruction i = (GotoInstruction) o;
+    if (o instanceof GotoInstruction i) {
       return i.label == label;
     } else {
       return false;

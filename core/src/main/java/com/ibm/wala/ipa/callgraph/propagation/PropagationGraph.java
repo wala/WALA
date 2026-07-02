@@ -388,8 +388,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     @Override
     public AbstractStatement<?, ?> next() {
       IntPair p = innerDelegate.next();
-      int lhs = p.getX();
-      int rhs = p.getY();
+      int lhs = p.x();
+      int rhs = p.y();
       UnaryStatement<?> result =
           currentOperator.makeEquation(
               (PointsToSetVariable) delegateGraph.getNode(lhs),
@@ -815,10 +815,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
     }
-    if (statement instanceof UnaryStatement) {
-      addStatement((UnaryStatement<PointsToSetVariable>) statement);
-    } else if (statement instanceof GeneralStatement) {
-      addStatement((GeneralStatement<PointsToSetVariable>) statement);
+    if (statement
+        instanceof UnaryStatement<PointsToSetVariable> pointsToSetVariableUnaryStatement) {
+      addStatement(pointsToSetVariableUnaryStatement);
+    } else if (statement
+        instanceof GeneralStatement<PointsToSetVariable> pointsToSetVariableGeneralStatement) {
+      addStatement(pointsToSetVariableGeneralStatement);
     } else {
       Assertions.UNREACHABLE("unexpected: " + statement.getClass());
     }

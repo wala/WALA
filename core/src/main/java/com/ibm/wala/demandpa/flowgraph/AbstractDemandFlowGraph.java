@@ -60,6 +60,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -69,7 +70,7 @@ import java.util.Set;
 /** A graph representing program flow, constructed method-by-method on demand */
 public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /** */
-  private static final long serialVersionUID = 1L;
+  @Serial private static final long serialVersionUID = 1L;
 
   private static final boolean DEBUG = false;
 
@@ -347,10 +348,10 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   @Override
   public Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk) {
     final CGNode callee;
-    if (formalPk instanceof LocalPointerKey) {
-      callee = ((LocalPointerKey) formalPk).getNode();
-    } else if (formalPk instanceof ReturnValueKey) {
-      callee = ((ReturnValueKey) formalPk).getNode();
+    if (formalPk instanceof LocalPointerKey localPointerKey) {
+      callee = localPointerKey.getNode();
+    } else if (formalPk instanceof ReturnValueKey returnValueKey) {
+      callee = returnValueKey.getNode();
     } else {
       throw new IllegalArgumentException("formalPk must represent a local");
     }

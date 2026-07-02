@@ -116,25 +116,23 @@ public class FormalTypeParameter extends Signature {
     do {
       assert (s.charAt(result) == ':');
       switch (s.charAt(++result)) {
-        case TypeReference.ClassTypeCode:
-          {
-            int depth = 0;
-            while (s.charAt(result) != ';' || depth > 0) {
-              if (s.charAt(result) == '<') {
-                depth++;
-              }
-              if (s.charAt(result) == '>') {
-                depth--;
-              }
-              result++;
+        case TypeReference.ClassTypeCode -> {
+          int depth = 0;
+          while (s.charAt(result) != ';' || depth > 0) {
+            if (s.charAt(result) == '<') {
+              depth++;
+            }
+            if (s.charAt(result) == '>') {
+              depth--;
             }
             result++;
-            break;
           }
-        case ':':
-          break;
-        default:
+          result++;
+        }
+        case ':' -> {}
+        default -> {
           assert false : "bad type signature list " + s + ' ' + (result - 1);
+        }
       }
     } while (s.charAt(result) == ':');
     return result;
@@ -161,8 +159,7 @@ public class FormalTypeParameter extends Signature {
    */
   public static FormalTypeParameter[] getTypeParameters(IClass klass)
       throws InvalidClassFileException {
-    if (klass instanceof ShrikeClass) {
-      ShrikeClass sc = (ShrikeClass) klass;
+    if (klass instanceof ShrikeClass sc) {
       if (sc.getClassSignature() == null) {
         return null;
       } else {
@@ -175,8 +172,7 @@ public class FormalTypeParameter extends Signature {
 
   public static FormalTypeParameter[] getTypeParameters(IMethod method)
       throws InvalidClassFileException {
-    if (method instanceof ShrikeCTMethod) {
-      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+    if (method instanceof ShrikeCTMethod sm) {
       if (sm.getMethodTypeSignature() == null) {
         return null;
       } else {

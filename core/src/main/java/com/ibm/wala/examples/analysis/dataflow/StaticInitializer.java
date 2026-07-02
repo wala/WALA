@@ -40,6 +40,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class StaticInitializer {
   private static class InitializerDomain extends MutableMapping<IClass>
       implements TabulationDomain<IClass, BasicBlockInContext<IExplodedBasicBlock>> {
 
-    private static final long serialVersionUID = -1897766113586243833L;
+    @Serial private static final long serialVersionUID = -1897766113586243833L;
 
     @Override
     public boolean hasPriorityOver(
@@ -141,8 +142,7 @@ public class StaticInitializer {
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       final IExplodedBasicBlock ebb = src.getDelegate();
       SSAInstruction instruction = ebb.getInstruction();
-      if (instruction instanceof SSAPutInstruction) {
-        final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+      if (instruction instanceof SSAPutInstruction putInstr) {
         if (putInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
@@ -172,8 +172,7 @@ public class StaticInitializer {
             }
           };
         }
-      } else if (instruction instanceof SSAGetInstruction) {
-        final SSAGetInstruction getInstr = (SSAGetInstruction) instruction;
+      } else if (instruction instanceof SSAGetInstruction getInstr) {
         if (getInstr.isStatic()) { // Auf konstante �berpr�fen
           return new IUnaryFlowFunction() {
 
@@ -200,8 +199,7 @@ public class StaticInitializer {
             }
           };
         }
-      } else if (instruction instanceof SSANewInstruction) {
-        final SSANewInstruction newInstr = (SSANewInstruction) instruction;
+      } else if (instruction instanceof SSANewInstruction newInstr) {
         return new IUnaryFlowFunction() {
 
           @Override
@@ -225,8 +223,7 @@ public class StaticInitializer {
           }
         };
 
-      } else if (instruction instanceof SSAInvokeInstruction) {
-        final SSAInvokeInstruction invInstr = (SSAInvokeInstruction) instruction;
+      } else if (instruction instanceof SSAInvokeInstruction invInstr) {
         if (invInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
@@ -311,8 +308,7 @@ public class StaticInitializer {
       for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {
         IExplodedBasicBlock ebb = bb.getDelegate();
         SSAInstruction instruction = ebb.getInstruction();
-        if (instruction instanceof SSAPutInstruction) {
-          SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+        if (instruction instanceof SSAPutInstruction putInstr) {
           if (putInstr.isStatic()) {
             final CGNode cgNode = bb.getNode();
             IClass fact = cha.lookupClass(putInstr.getDeclaredField().getDeclaringClass());
@@ -321,8 +317,7 @@ public class StaticInitializer {
             // note that the fact number used for the source of this path edge doesn't really matter
             result.add(PathEdge.createPathEdge(fakeEntry, factNum, bb, factNum));
           }
-        } else if (instruction instanceof SSAGetInstruction) {
-          SSAGetInstruction getInstr = (SSAGetInstruction) instruction;
+        } else if (instruction instanceof SSAGetInstruction getInstr) {
           if (getInstr.isStatic()) {
             final CGNode cgNode = bb.getNode();
             IClass fact = cha.lookupClass(getInstr.getDeclaredField().getDeclaringClass());
@@ -331,16 +326,14 @@ public class StaticInitializer {
             // note that the fact number used for the source of this path edge doesn't really matter
             result.add(PathEdge.createPathEdge(fakeEntry, factNum, bb, factNum));
           }
-        } else if (instruction instanceof SSANewInstruction) {
-          SSANewInstruction newInstr = (SSANewInstruction) instruction;
+        } else if (instruction instanceof SSANewInstruction newInstr) {
           final CGNode cgNode = bb.getNode();
           IClass fact = cha.lookupClass(newInstr.getConcreteType());
           int factNum = domain.add(fact);
           BasicBlockInContext<IExplodedBasicBlock> fakeEntry = getFakeEntry(cgNode);
           // note that the fact number used for the source of this path edge doesn't really matter
           result.add(PathEdge.createPathEdge(fakeEntry, factNum, bb, factNum));
-        } else if (instruction instanceof SSAInvokeInstruction) {
-          SSAInvokeInstruction invInstr = (SSAInvokeInstruction) instruction;
+        } else if (instruction instanceof SSAInvokeInstruction invInstr) {
           if (invInstr.isStatic()) {
             final CGNode cgNode = bb.getNode();
             IClass fact = cha.lookupClass(invInstr.getDeclaredTarget().getDeclaringClass());

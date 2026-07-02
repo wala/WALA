@@ -29,7 +29,7 @@ public class VoidLambda {
   
   public int doit() {
     VoidLambda hack = this;
-    Consumer<Integer> x = (i) -> { hack.var = new Obj(i); };
+    Consumer<Integer> x = (i) -> hack.var = new Obj(i);
     x.accept(0);
     return var.getX();
   }

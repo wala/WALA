@@ -53,8 +53,7 @@ public abstract class LanguageImpl implements Language {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof LanguageImpl)) return false;
-    LanguageImpl other = (LanguageImpl) o;
+    if (!(o instanceof LanguageImpl other)) return false;
 
     return getName().equals(other.getName());
   }

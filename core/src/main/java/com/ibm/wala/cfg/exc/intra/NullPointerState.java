@@ -201,8 +201,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof NullPointerState) {
-      NullPointerState other = (NullPointerState) obj;
+    if (obj instanceof NullPointerState other) {
       assert vars.length == other.vars.length;
 
       for (int i = 0; i < vars.length; i++) {
@@ -225,22 +224,13 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   public String toString() {
     StringBuilder buf = new StringBuilder("<");
     for (State var : vars) {
-      switch (var) {
-        case BOTH:
-          buf.append('*');
-          break;
-        case NOT_NULL:
-          buf.append('1');
-          break;
-        case NULL:
-          buf.append('0');
-          break;
-        case UNKNOWN:
-          buf.append('?');
-          break;
-        default:
-          throw new IllegalStateException();
-      }
+      buf.append(
+          switch (var) {
+            case BOTH -> '*';
+            case NOT_NULL -> '1';
+            case NULL -> '0';
+            case UNKNOWN -> '?';
+          });
     }
     buf.append('>');
 
@@ -332,8 +322,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
         return true;
       }
 
-      if (o instanceof PhiValueMeet) {
-        PhiValueMeet other = (PhiValueMeet) o;
+      if (o instanceof PhiValueMeet other) {
         if (varNum == other.varNum && fromVars.length == other.fromVars.length) {
           for (int i = 0; i < fromVars.length; i++) {
             if (fromVars[i] != other.fromVars[i]) {
@@ -406,7 +395,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public boolean equals(Object o) {
-      return o instanceof NullifyFunction && ((NullifyFunction) o).varNum == varNum;
+      return o instanceof NullifyFunction nullifyFunction && nullifyFunction.varNum == varNum;
     }
 
     /* (non-Javadoc)
@@ -459,7 +448,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
      */
     @Override
     public boolean equals(Object o) {
-      return o instanceof DenullifyFunction && ((DenullifyFunction) o).varNum == varNum;
+      return o instanceof DenullifyFunction denullifyFunction && denullifyFunction.varNum == varNum;
     }
 
     /* (non-Javadoc)

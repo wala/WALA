@@ -9,6 +9,7 @@ val extraTestResources = configurations.register("extraTestResources") { isCanBe
 
 dependencies {
   extraTestResources(project(":cast:js", "testResources"))
+  api(libs.jspecify)
   api(libs.rhino)
   api(projects.cast)
   api(projects.cast.js)
@@ -23,6 +24,7 @@ dependencies {
   testFixturesImplementation(projects.core)
   testImplementation(libs.assertj.core)
   testImplementation(libs.gson)
+  testImplementation(libs.jetbrains.annotations)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.cast.js))
 }

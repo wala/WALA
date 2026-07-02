@@ -83,8 +83,8 @@ public class SparseLongSet implements LongSet {
     if (S == null) {
       throw new IllegalArgumentException("S == null");
     }
-    if (S instanceof SparseLongSet) {
-      cloneState((SparseLongSet) S);
+    if (S instanceof SparseLongSet sparseLongSet) {
+      cloneState(sparseLongSet);
     } else {
       elements = new long[S.size()];
       size = S.size();
@@ -158,8 +158,8 @@ public class SparseLongSet implements LongSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseLongSet) {
-      return sameValueInternal((SparseLongSet) that);
+    if (that instanceof SparseLongSet sparseLongSet) {
+      return sameValueInternal(sparseLongSet);
     } else {
       Assertions.UNREACHABLE(that.getClass().toString());
       return false;
@@ -339,9 +339,9 @@ public class SparseLongSet implements LongSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseLongSet) {
+    if (that instanceof SparseLongSet sparseLongSet) {
       MutableSparseLongSet temp = MutableSparseLongSet.make(this);
-      temp.intersectWith((SparseLongSet) that);
+      temp.intersectWith(sparseLongSet);
       return temp;
     } else {
       Assertions.UNREACHABLE("Unexpected: " + that.getClass());
@@ -442,8 +442,8 @@ public class SparseLongSet implements LongSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof SparseLongSet) {
-      return isSubsetInternal((SparseLongSet) that);
+    if (that instanceof SparseLongSet sparseLongSet) {
+      return isSubsetInternal(sparseLongSet);
     } else {
       Assertions.UNREACHABLE("Unexpected type " + that.getClass());
       return false;
@@ -458,8 +458,8 @@ public class SparseLongSet implements LongSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof SparseLongSet) {
-      return containsAny((SparseLongSet) set);
+    if (set instanceof SparseLongSet sparseLongSet) {
+      return containsAny(sparseLongSet);
     } else {
       for (int i = 0; i < size; i++) {
         if (set.contains(elements[i])) {

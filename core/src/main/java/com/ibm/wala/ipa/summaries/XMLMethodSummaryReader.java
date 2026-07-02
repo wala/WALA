@@ -72,6 +72,25 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   /** Set of TypeReferences that are marked as "allocatable" */
   private final HashSet<TypeReference> allocatable = HashSetFactory.make();
 
+  /**
+   * Set of TypeReferences for classes declared via a {@code <class>} element. These are the classes
+   * the summary <em>models</em> (as opposed to the classes whose methods it merely overrides).
+   */
+  private final Set<TypeReference> classes = HashSetFactory.make();
+
+  /**
+   * Maps a class declared via {@code <class name="..." super="...">} to its declared superclass.
+   * Only classes that declare a {@code super} appear here: declaring a superclass opts the class in
+   * to being materialized as a standalone class shell, positioned in the hierarchy at the given
+   * superclass. A front-end (or {@link com.ibm.wala.ipa.callgraph.impl.Util#addSummaryClassShells})
+   * may register these shells into the corresponding scope loader before the {@link
+   * com.ibm.wala.ipa.cha.IClassHierarchy} is built, so that source classes subclassing a
+   * summary-modeled type can resolve their base at definition time (see <a
+   * href="https://github.com/wala/WALA/issues/1957">#1957</a>). Classes declared without a {@code
+   * super} stay method-summary-only, exactly as before.
+   */
+  private final Map<TypeReference, TypeReference> classSuperclasses = HashMapFactory.make();
+
   /** Set of Atoms that represent packages that can be ignored */
   private final HashSet<Atom> ignoredPackages = HashSetFactory.make();
 
@@ -164,6 +183,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private static final String A_ALLOCATABLE = "allocatable";
 
+  private static final String A_SUPER = "super";
+
   private static final String A_REF = "ref";
 
   private static final String A_INDEX = "index";
@@ -226,6 +247,27 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   }
 
   /**
+   * @return Set of TypeReferences for classes declared via a {@code <class>} element, i.e. the
+   *     classes this summary models. The declaring class loader of each {@link TypeReference} is
+   *     the one named by the enclosing {@code <classloader>} element.
+   */
+  public Set<TypeReference> getClasses() {
+    return classes;
+  }
+
+  /**
+   * @return a map from each class declared via {@code <class name="..." super="...">} to its
+   *     declared superclass. Declaring a {@code super} opts the class in to being materialized as a
+   *     standalone class shell, positioned at that superclass; classes declared without a {@code
+   *     super} are method-summary-only and do not appear here. See {@link
+   *     com.ibm.wala.ipa.callgraph.impl.Util#addSummaryClassShells} and <a
+   *     href="https://github.com/wala/WALA/issues/1957">#1957</a>.
+   */
+  public Map<TypeReference, TypeReference> getClassSuperclasses() {
+    return classSuperclasses;
+  }
+
+  /**
    * @return Set of Atoms representing ignorable packages
    */
   public Set<Atom> getIgnoredPackages() {
@@ -266,79 +308,57 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Invalid element: " + qName);
       }
       switch (element) {
-        case E_CLASSLOADER:
-          {
-            String clName = atts.getValue(A_NAME);
-            governingLoader = classLoaderName2Ref(clName);
-          }
-          break;
-        case E_METHOD:
+        case E_CLASSLOADER -> {
+          String clName = atts.getValue(A_NAME);
+          governingLoader = classLoaderName2Ref(clName);
+        }
+        case E_METHOD -> {
           String mname = atts.getValue(A_NAME);
           if (mname.equals(A_WILDCARD)) {
             Assertions.UNREACHABLE("Wildcards not currently implemented.");
           } else {
             startMethod(atts);
           }
-          break;
-        case E_CLASS:
+        }
+        case E_CLASS -> {
           String cname = atts.getValue(A_NAME);
           if (cname.equals(A_WILDCARD)) {
             Assertions.UNREACHABLE("Wildcards not currently implemented");
           } else {
             startClass(cname, atts);
           }
-          break;
-        case E_PACKAGE:
+        }
+        case E_PACKAGE -> {
           governingPackage = Atom.findOrCreateUnicodeAtom(atts.getValue(A_NAME));
           String ignore = atts.getValue(A_IGNORE);
           if (ignore != null && ignore.equals(V_TRUE)) {
             ignoredPackages.add(governingPackage);
           }
-          break;
-        case E_CALL:
-          processCallSite(atts);
-          break;
-        case E_NEW:
-          processAllocation(atts);
-          break;
-        case E_PUTSTATIC:
-          processPutStatic(atts);
-          break;
-        case E_PUTFIELD:
-          processPutField(atts);
-          break;
-        case E_GETFIELD:
-          processGetField(atts);
-          break;
-        case E_ATHROW:
-          processAthrow(atts);
-          break;
-        case E_AASTORE:
-          processAastore(atts);
-          break;
-        case E_AALOAD:
-          processAaload(atts);
-          break;
-        case E_RETURN:
-          processReturn(atts);
-          break;
-        case E_POISON:
-          processPoison(atts);
-          break;
-        case E_CONSTANT:
-          processConstant(atts);
-          break;
-        case E_SUMMARY_SPEC:
-          break;
-        default:
-          Assertions.UNREACHABLE("Unexpected element: " + name);
-          break;
+        }
+        case E_CALL -> processCallSite(atts);
+        case E_NEW -> processAllocation(atts);
+        case E_PUTSTATIC -> processPutStatic(atts);
+        case E_PUTFIELD -> processPutField(atts);
+        case E_GETFIELD -> processGetField(atts);
+        case E_ATHROW -> processAthrow(atts);
+        case E_AASTORE -> processAastore(atts);
+        case E_AALOAD -> processAaload(atts);
+        case E_RETURN -> processReturn(atts);
+        case E_POISON -> processPoison(atts);
+        case E_CONSTANT -> processConstant(atts);
+        case E_SUMMARY_SPEC -> {}
+        default -> Assertions.UNREACHABLE("Unexpected element: " + name);
       }
     }
 
     private void startClass(String cname, Attributes atts) {
       String clName = governingPackage == null ? 'L' + cname : "L" + governingPackage + '/' + cname;
       governingClass = className2Ref(clName);
+      classes.add(governingClass);
+      String superString = atts.getValue(A_SUPER);
+      if (superString != null) {
+        classSuperclasses.put(governingClass, className2Ref(superString));
+      }
       String allocString = atts.getValue(A_ALLOCATABLE);
       if (allocString != null) {
         Assertions.productionAssertion(allocString.equals("true"));
@@ -357,38 +377,29 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Invalid element: " + name);
       }
       switch (element) {
-        case E_CLASSLOADER:
-          governingLoader = null;
-          break;
-        case E_METHOD:
+        case E_CLASSLOADER -> governingLoader = null;
+        case E_METHOD -> {
           if (governingMethod != null) {
             checkReturnValue(governingMethod);
           }
           governingMethod = null;
           symbolTable = null;
-          break;
-        case E_CLASS:
-          governingClass = null;
-          break;
-        case E_PACKAGE:
-          governingPackage = null;
-          break;
-        case E_CALL:
-        case E_GETFIELD:
-        case E_NEW:
-        case E_POISON:
-        case E_PUTSTATIC:
-        case E_PUTFIELD:
-        case E_AALOAD:
-        case E_AASTORE:
-        case E_ATHROW:
-        case E_SUMMARY_SPEC:
-        case E_RETURN:
-        case E_CONSTANT:
-          break;
-        default:
-          Assertions.UNREACHABLE("Unexpected element: " + name);
-          break;
+        }
+        case E_CLASS -> governingClass = null;
+        case E_PACKAGE -> governingPackage = null;
+        case E_CALL,
+            E_GETFIELD,
+            E_NEW,
+            E_POISON,
+            E_PUTSTATIC,
+            E_PUTFIELD,
+            E_AALOAD,
+            E_AASTORE,
+            E_ATHROW,
+            E_SUMMARY_SPEC,
+            E_RETURN,
+            E_CONSTANT -> {}
+        default -> Assertions.UNREACHABLE("Unexpected element: " + name);
       }
     }
 
@@ -420,45 +431,44 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       TypeReference type =
           TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
       Atom nm = Atom.findOrCreateAsciiAtom(nameString);
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
       MethodReference ref = MethodReference.findOrCreate(type, nm, D);
       CallSiteReference site = null;
       int nParams = ref.getNumberOfParameters();
       switch (typeString) {
-        case "virtual":
+        case "virtual" -> {
           site =
               CallSiteReference.make(
                   governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.VIRTUAL);
           nParams++;
-          break;
-        case "special":
+        }
+        case "special" -> {
           site =
               CallSiteReference.make(
                   governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.SPECIAL);
           nParams++;
-          break;
-        case "interface":
+        }
+        case "interface" -> {
           site =
               CallSiteReference.make(
                   governingMethod.getNumberOfStatements(),
                   ref,
                   IInvokeInstruction.Dispatch.INTERFACE);
           nParams++;
-          break;
-        case "static":
-          site =
-              CallSiteReference.make(
-                  governingMethod.getNumberOfStatements(), ref, IInvokeInstruction.Dispatch.STATIC);
-          break;
-        default:
-          Assertions.UNREACHABLE("Invalid call type " + typeString);
-          break;
+        }
+        case "static" ->
+            site =
+                CallSiteReference.make(
+                    governingMethod.getNumberOfStatements(),
+                    ref,
+                    IInvokeInstruction.Dispatch.STATIC);
+        default -> Assertions.UNREACHABLE("Invalid call type " + typeString);
       }
 
       String paramCount = atts.getValue(A_NUM_ARGS);
@@ -515,7 +525,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a new allocation site. */
     private void processAllocation(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the concrete type allocated
@@ -562,7 +572,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating an Athrow */
     private void processAthrow(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // get the value thrown
@@ -582,7 +592,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a putfield. */
     private void processGetField(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the field written
@@ -627,7 +637,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a putfield. */
     private void processPutField(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the field written
@@ -669,7 +679,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a putstatic. */
     private void processPutStatic(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       // deduce the field written
@@ -702,7 +712,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating an Aastore */
     private void processAastore(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       String R = atts.getValue(A_REF);
@@ -746,7 +756,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     /** Process an element indicating an Aaload */
     private void processAaload(Attributes atts) {
       // <aaload def="foo" ref="arg1" index="the-answer" />
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       String R = atts.getValue(A_REF);
@@ -795,7 +805,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
     /** Process an element indicating a return statement. */
     private void processReturn(Attributes atts) {
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       SSAInstructionFactory insts = lang.instructionFactory();
 
       if (governingMethod.getReturnType() != null) {
@@ -861,18 +871,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       governingMethod.addPoison(reason);
       String level = atts.getValue(A_LEVEL);
       switch (level) {
-        case "severe":
-          governingMethod.setPoisonLevel(Warning.SEVERE);
-          break;
-        case "moderate":
-          governingMethod.setPoisonLevel(Warning.MODERATE);
-          break;
-        case "mild":
-          governingMethod.setPoisonLevel(Warning.MILD);
-          break;
-        default:
-          Assertions.UNREACHABLE("Unexpected level: " + level);
-          break;
+        case "severe" -> governingMethod.setPoisonLevel(Warning.SEVERE);
+        case "moderate" -> governingMethod.setPoisonLevel(Warning.MODERATE);
+        case "mild" -> governingMethod.setPoisonLevel(Warning.MILD);
+        default -> Assertions.UNREACHABLE("Unexpected level: " + level);
       }
     }
 
@@ -886,7 +888,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       Atom mName = Atom.findOrCreateUnicodeAtom(methodName);
       String descString = atts.getValue(A_DESCRIPTOR);
-      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Language lang = scope.getLanguage(governingLoader.language());
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
 
       MethodReference ref = MethodReference.findOrCreate(governingClass, mName, D);
@@ -895,15 +897,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String staticString = atts.getValue(A_STATIC);
       if (staticString != null) {
         switch (staticString) {
-          case "true":
-            isStatic = true;
-            break;
-          case "false":
-            isStatic = false;
-            break;
-          default:
-            Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
-            break;
+          case "true" -> isStatic = true;
+          case "false" -> isStatic = false;
+          default ->
+              Assertions.UNREACHABLE("Invalid attribute value " + A_STATIC + ": " + staticString);
         }
       }
 
@@ -932,15 +929,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String factoryString = atts.getValue(A_FACTORY);
       if (factoryString != null) {
         switch (factoryString) {
-          case "true":
-            governingMethod.setFactory(true);
-            break;
-          case "false":
-            governingMethod.setFactory(false);
-            break;
-          default:
-            Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
-            break;
+          case "true" -> governingMethod.setFactory(true);
+          case "false" -> governingMethod.setFactory(false);
+          default ->
+              Assertions.UNREACHABLE("Invalid attribute value " + A_FACTORY + ": " + factoryString);
         }
       }
 
@@ -964,7 +956,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       Map<Integer, @NonNull Atom> nameTable = HashMapFactory.make();
       for (Map.Entry<String, Integer> x : symbolTable.entrySet()) {
-        if (!x.getKey().startsWith("arg")) {
+        // Skip only the synthetic positional symbols ("arg0", "arg1", ...) seeded above, not
+        // legitimate parameter names that merely begin with "arg" (e.g. "args", "argv"). The old
+        // startsWith("arg") test discarded the latter, leaving such parameters unnamed so that
+        // keyword arguments could not bind to them by name.
+        if (!x.getKey().matches("arg\\d+")) {
           nameTable.put(x.getValue(), Atom.findOrCreateUnicodeAtom(x.getKey()));
         }
       }

@@ -46,8 +46,8 @@ public class ReferenceCleanser {
   }
 
   public static void registerCache(IAnalysisCacheView cache) {
-    if (cache instanceof AnalysisCacheImpl) {
-      ReferenceCleanser.cache = new WeakReference<>((AnalysisCacheImpl) cache);
+    if (cache instanceof AnalysisCacheImpl analysisCache) {
+      ReferenceCleanser.cache = new WeakReference<>(analysisCache);
     }
   }
 
@@ -75,14 +75,13 @@ public class ReferenceCleanser {
     IClassHierarchy cha = getClassHierarchy();
     if (cha != null) {
       for (IClass klass : cha) {
-        if (klass instanceof ShrikeClass) {
-          ShrikeClass c = (ShrikeClass) klass;
+        if (klass instanceof ShrikeClass c) {
           c.clearSoftCaches();
         } else {
           if (klass.getDeclaredMethods() != null) {
             for (IMethod m : klass.getDeclaredMethods()) {
-              if (m instanceof ShrikeCTMethod) {
-                ((ShrikeCTMethod) m).clearCaches();
+              if (m instanceof ShrikeCTMethod shrikeCTMethod) {
+                shrikeCTMethod.clearCaches();
               }
             }
           }

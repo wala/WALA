@@ -23,7 +23,7 @@ public class CreationSiteVertex extends Vertex implements ObjectVertex {
   }
 
   @Override
-  public IClass getConcreteType() {
+  public IClass concreteType() {
     return node.getClassHierarchy().lookupClass(createdType);
   }
 

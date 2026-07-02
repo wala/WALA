@@ -20,11 +20,13 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.StringFilter;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +56,7 @@ import java.util.List;
  *
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public class BypassSyntheticClassLoader implements IClassLoader {
+public class BypassSyntheticClassLoader implements IClassLoader, SummaryClassShellLoader {
 
   private final ClassLoaderReference me;
 
@@ -84,7 +86,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   @Override
   public String toString() {
-    return me.getName().toString();
+    return me.name().toString();
   }
 
   @Override
@@ -101,6 +103,25 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   public void registerClass(TypeName className, IClass theClass) {
     cha.addClass(theClass);
     syntheticClasses.put(className, theClass);
+  }
+
+  @Override
+  public IClass defineSummaryClassShell(TypeName name, TypeName superName) {
+    return defineSummaryClassShell(name, superName, Collections.emptyList());
+  }
+
+  @Override
+  public IClass defineSummaryClassShell(
+      TypeName name, TypeName superName, Collection<MethodSummary> methods) {
+    IClass existing = lookupClass(name);
+    if (existing != null) {
+      return existing;
+    }
+    TypeReference type = TypeReference.findOrCreate(me, name);
+    TypeReference superType = superName == null ? null : TypeReference.findOrCreate(me, superName);
+    IClass shell = new SummaryClassShell(type, cha, superType, methods);
+    registerClass(name, shell);
+    return shell;
   }
 
   /** Return the ClassLoaderReference for this class loader. */
@@ -130,7 +151,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    */
   @Override
   public Atom getName() {
-    return me.getName();
+    return me.name();
   }
 
   /**

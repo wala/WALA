@@ -94,8 +94,7 @@ public class PutInstruction extends Instruction implements IPutInstruction {
 
   @Override
   public final boolean equals(Object o) {
-    if (o instanceof PutInstruction) {
-      PutInstruction i = (PutInstruction) o;
+    if (o instanceof PutInstruction i) {
       return i.getFieldType().equals(getFieldType())
           && i.getClassType().equals(getClassType())
           && i.getFieldName().equals(getFieldName())

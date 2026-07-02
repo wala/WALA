@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.cast.java.translator.jdt.ecj;
 
+import com.google.common.collect.ImmutableList;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
@@ -91,7 +92,9 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
    * JrtModule} entries instead of jar or jmod paths.
    */
   private record ClassPath(
-      String[] sources, String[] libs, boolean includeRunningVMBootclasspath) {}
+      ImmutableList<String> sources,
+      ImmutableList<String> libs,
+      boolean includeRunningVMBootclasspath) {}
 
   protected static class ECJJavaToCAstTranslator extends JDTJava2CAstTranslator<Position> {
     public ECJJavaToCAstTranslator(
@@ -185,8 +188,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
 
   protected boolean dump;
   protected ECJSourceLoaderImpl sourceLoader;
-  private final String[] sources;
-  private final String[] libs;
+  private final ImmutableList<String> sources;
+  private final ImmutableList<String> libs;
   private final boolean includeRunningVMBootclasspath;
   private final StringFilter exclusions;
   private final SSAOptions ssaOptions;
@@ -211,8 +214,8 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   private static ClassPath computeClassPath(AnalysisScope scope) {
-    List<String> sources = new ArrayList<>();
-    List<String> libs = new ArrayList<>();
+    ImmutableList.Builder<String> sources = ImmutableList.builder();
+    ImmutableList.Builder<String> libs = ImmutableList.builder();
     boolean includeRunningVMBootclasspath = false;
     for (ClassLoaderReference cl : scope.getLoaders()) {
 
@@ -220,21 +223,19 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
         List<Module> modules = scope.getModules(cl);
 
         for (Module m : modules) {
-          if (m instanceof JarFileModule) {
-            JarFileModule jarFileModule = (JarFileModule) m;
+          if (m instanceof JarFileModule jarFileModule) {
 
             libs.add(jarFileModule.getAbsolutePath());
-          } else if (m instanceof JarStreamModule) {
+          } else if (m instanceof JarStreamModule jarStreamModule) {
             try {
               File F = File.createTempFile("tmp", "jar");
               F.deleteOnExit();
-              TemporaryFile.streamToFile(F, ((JarStreamModule) m));
+              TemporaryFile.streamToFile(F, jarStreamModule);
               libs.add(F.getAbsolutePath());
             } catch (IOException e) {
               assert false : e;
             }
-          } else if (m instanceof DirectoryTreeModule) {
-            DirectoryTreeModule directoryTreeModule = (DirectoryTreeModule) m;
+          } else if (m instanceof DirectoryTreeModule directoryTreeModule) {
 
             sources.add(directoryTreeModule.getPath());
           } else if (m instanceof JrtModule) {
@@ -243,12 +244,11 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
             // Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
           }
         }
-        cl = cl.getParent();
+        cl = cl.parent();
       }
     }
 
-    return new ClassPath(
-        sources.toArray(new String[0]), libs.toArray(new String[0]), includeRunningVMBootclasspath);
+    return new ClassPath(sources.build(), libs.build(), includeRunningVMBootclasspath);
   }
 
   /*
@@ -271,7 +271,11 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
     @SuppressWarnings("deprecation")
     final ASTParser parser = ASTParser.newParser(AST.JLS8);
     parser.setResolveBindings(true);
-    parser.setEnvironment(libs, this.sources, null, includeRunningVMBootclasspath);
+    parser.setEnvironment(
+        libs.toArray(String[]::new),
+        this.sources.toArray(String[]::new),
+        null,
+        includeRunningVMBootclasspath);
     Hashtable<String, String> options = JavaCore.getOptions();
     options.put(JavaCore.COMPILER_SOURCE, "11");
     parser.setCompilerOptions(options);

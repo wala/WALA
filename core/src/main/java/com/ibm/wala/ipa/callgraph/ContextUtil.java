@@ -32,10 +32,10 @@ public class ContextUtil {
     if (item == null) {
       return null;
     } else {
-      if (item instanceof PointType) {
-        return ((PointType) item).getIClass();
-      } else if (item instanceof InstanceKey) {
-        return ((InstanceKey) item).getConcreteType();
+      if (item instanceof PointType pointType) {
+        return pointType.getIClass();
+      } else if (item instanceof InstanceKey instanceKey) {
+        return instanceKey.concreteType();
       } else {
         Assertions.UNREACHABLE("Unexpected: " + item.getClass());
         return null;

@@ -10,13 +10,15 @@
  */
 package com.ibm.wala.shrike.shrikeCT;
 
+import java.io.Serial;
+
 /**
  * This exception is thrown when we detect that the incoming class file data was not a valid class
  * file.
  */
 public class InvalidClassFileException extends Exception {
 
-  private static final long serialVersionUID = -6224203694783674259L;
+  @Serial private static final long serialVersionUID = -6224203694783674259L;
 
   private final int offset;
 

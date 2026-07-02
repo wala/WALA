@@ -72,7 +72,6 @@ public class LocalSinkPoint implements ISinkPoint {
     this.sinkFlow = sinkFlow;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public Set<FlowType<IExplodedBasicBlock>> findSources(
       CGAnalysisContext<IExplodedBasicBlock> ctx,
@@ -94,7 +93,7 @@ public class LocalSinkPoint implements ISinkPoint {
     for (CodeElement elt : elts) {
       for (DomainElement de : domain.getPossibleElements(elt)) {
         if (flowResult.getResult(block).contains(domain.getMappedIndex(de))) {
-          sources.add(de.taintSource);
+          sources.add(de.taintSource());
         }
       }
     }

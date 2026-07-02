@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -42,7 +42,6 @@ import com.ibm.wala.ipa.slicer.SlicerUtil;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
@@ -158,7 +157,8 @@ public class PDFSlice {
           com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
       CallGraphBuilder<InstanceKey> builder =
-          Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+          Util.makeVanillaZeroOneCFABuilder(
+              JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options, null);
@@ -233,8 +233,7 @@ public class PDFSlice {
     if (s.getKind() == Kind.NORMAL) {
       NormalStatement n = (NormalStatement) s;
       SSAInstruction st = n.getInstruction();
-      if (st instanceof SSAInvokeInstruction) {
-        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) st;
+      if (st instanceof SSAInvokeInstruction call) {
         if (call.getCallSite().getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
           throw new IllegalArgumentException(
               "this driver computes forward slices from the return value of calls.\n"
@@ -260,42 +259,36 @@ public class PDFSlice {
    * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
    */
   public static NodeDecorator<Statement> makeNodeDecorator() {
-    return s -> {
-      switch (s.getKind()) {
-        case HEAP_PARAM_CALLEE:
-        case HEAP_PARAM_CALLER:
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
-          HeapStatement h = (HeapStatement) s;
-          return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-        case NORMAL:
-          NormalStatement n = (NormalStatement) s;
-          return n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
-        case PARAM_CALLEE:
-          ParamCallee paramCallee = (ParamCallee) s;
-          return s.getKind()
-              + " "
-              + paramCallee.getValueNumber()
-              + "\\n"
-              + s.getNode().getMethod().getName();
-        case PARAM_CALLER:
-          ParamCaller paramCaller = (ParamCaller) s;
-          return s.getKind()
-              + " "
-              + paramCaller.getValueNumber()
-              + "\\n"
-              + s.getNode().getMethod().getName()
-              + "\\n"
-              + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
-        case EXC_RET_CALLEE:
-        case EXC_RET_CALLER:
-        case NORMAL_RET_CALLEE:
-        case NORMAL_RET_CALLER:
-        case PHI:
-        default:
-          return s.toString();
-      }
-    };
+    return s ->
+        switch (s.getKind()) {
+          case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
+            HeapStatement h = (HeapStatement) s;
+            yield s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+          }
+          case NORMAL -> {
+            NormalStatement n = (NormalStatement) s;
+            yield n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
+          }
+          case PARAM_CALLEE -> {
+            ParamCallee paramCallee = (ParamCallee) s;
+            yield s.getKind()
+                + " "
+                + paramCallee.getValueNumber()
+                + "\\n"
+                + s.getNode().getMethod().getName();
+          }
+          case PARAM_CALLER -> {
+            ParamCaller paramCaller = (ParamCaller) s;
+            yield s.getKind()
+                + " "
+                + paramCaller.getValueNumber()
+                + "\\n"
+                + s.getNode().getMethod().getName()
+                + "\\n"
+                + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
+          }
+          default -> s.toString();
+        };
   }
 
   /**

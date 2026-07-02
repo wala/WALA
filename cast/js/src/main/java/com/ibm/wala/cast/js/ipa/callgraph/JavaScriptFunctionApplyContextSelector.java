@@ -125,7 +125,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
           InstanceKey argsList = receiver[3];
           if (argsList != null
               && argsList
-                  .getConcreteType()
+                  .concreteType()
                   .equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
             isNonNullArray = true;
           }

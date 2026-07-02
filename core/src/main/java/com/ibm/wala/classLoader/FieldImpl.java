@@ -95,8 +95,7 @@ public final class FieldImpl implements IField {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof FieldImpl) {
-      FieldImpl other = (FieldImpl) obj;
+    if (obj instanceof FieldImpl other) {
       return fieldRef.equals(other.fieldRef) && declaringClass.equals(other.declaringClass);
     } else {
       return false;

@@ -33,6 +33,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -410,24 +411,14 @@ public class LambdaSummaryClass extends SyntheticClass {
   }
 
   private static Dispatch getDispatchForMethodHandleKind(int kind) {
-    Dispatch code;
-    switch (kind) {
-      case REF_INVOKEVIRTUAL:
-        code = Dispatch.VIRTUAL;
-        break;
-      case REF_INVOKESTATIC:
-        code = Dispatch.STATIC;
-        break;
-      case REF_INVOKESPECIAL:
-      case REF_NEWINVOKESPECIAL:
-        code = Dispatch.SPECIAL;
-        break;
-      case REF_INVOKEINTERFACE:
-        code = Dispatch.INTERFACE;
-        break;
-      default:
-        throw new Error("unexpected dynamic invoke type " + kind);
-    }
+    Dispatch code =
+        switch (kind) {
+          case REF_INVOKEVIRTUAL -> Dispatch.VIRTUAL;
+          case REF_INVOKESTATIC -> Dispatch.STATIC;
+          case REF_INVOKESPECIAL, REF_NEWINVOKESPECIAL -> Dispatch.SPECIAL;
+          case REF_INVOKEINTERFACE -> Dispatch.INTERFACE;
+          default -> throw new Error("unexpected dynamic invoke type " + kind);
+        };
     return code;
   }
 
@@ -457,7 +448,7 @@ public class LambdaSummaryClass extends SyntheticClass {
    */
   static class UnresolvedLambdaBodyException extends RuntimeException {
 
-    private static final long serialVersionUID = -6504849409929928820L;
+    @Serial private static final long serialVersionUID = -6504849409929928820L;
 
     public UnresolvedLambdaBodyException(String s) {
       super(s);

@@ -88,23 +88,14 @@ public class ArrayGet extends Instruction {
   }
 
   public static TypeReference getType(Type type) {
-    switch (type) {
-      case t_int:
-        return TypeReference.Int;
-      case t_wide:
-        return TypeReference.Long;
-      case t_boolean:
-        return TypeReference.Boolean;
-      case t_byte:
-        return TypeReference.Byte;
-      case t_char:
-        return TypeReference.Char;
-      case t_object:
-        return TypeReference.JavaLangObject;
-      case t_short:
-        return TypeReference.Short;
-      default:
-        return null;
-    }
+    return switch (type) {
+      case t_int -> TypeReference.Int;
+      case t_wide -> TypeReference.Long;
+      case t_boolean -> TypeReference.Boolean;
+      case t_byte -> TypeReference.Byte;
+      case t_char -> TypeReference.Char;
+      case t_object -> TypeReference.JavaLangObject;
+      case t_short -> TypeReference.Short;
+    };
   }
 }

@@ -15,6 +15,7 @@ walaEclipseMavenCentral.implementation(
 val runSourceDirectory = configurations.register("runSourceDirectory") { isCanBeConsumed = false }
 
 dependencies {
+  api(libs.jspecify)
   implementation(libs.eclipse.ecj)
   implementation(projects.cast)
   implementation(projects.cast.java)

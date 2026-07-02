@@ -78,8 +78,8 @@ public class ReturnFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowF
 
     DomainElement de = domain.getMappedObject(d1);
     // if the domain element is a return element, propagate its taint
-    if (de.codeElement instanceof ReturnElement) {
-      return SparseIntSet.singleton(domain.getMappedIndex(new DomainElement(ce, de.taintSource)));
+    if (de.codeElement() instanceof ReturnElement) {
+      return SparseIntSet.singleton(domain.getMappedIndex(new DomainElement(ce, de.taintSource())));
     }
     return TaintTransferFunctions.EMPTY_SET;
   }

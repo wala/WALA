@@ -120,8 +120,7 @@ public class ClassSignature extends Signature {
    * @return the class signature, or null if none
    */
   public static ClassSignature getClassSignature(IClass klass) throws InvalidClassFileException {
-    if (klass instanceof ShrikeClass) {
-      ShrikeClass sc = (ShrikeClass) klass;
+    if (klass instanceof ShrikeClass sc) {
       return sc.getClassSignature();
     } else {
       return null;

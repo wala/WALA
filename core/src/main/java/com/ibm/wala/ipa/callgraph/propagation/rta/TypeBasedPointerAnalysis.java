@@ -146,26 +146,21 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   }
 
   private IClass inferType(PointerKey key) {
-    if (key instanceof LocalPointerKeyWithFilter) {
-      LocalPointerKeyWithFilter lpk = (LocalPointerKeyWithFilter) key;
+    if (key instanceof LocalPointerKeyWithFilter lpk) {
       FilteredPointerKey.TypeFilter filter = lpk.getTypeFilter();
       assert filter instanceof FilteredPointerKey.SingleClassFilter;
-      return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
-    } else if (key instanceof StaticFieldKey) {
-      StaticFieldKey s = (StaticFieldKey) key;
+      return ((FilteredPointerKey.SingleClassFilter) filter).concreteType();
+    } else if (key instanceof StaticFieldKey s) {
       return getCallGraph().getClassHierarchy().lookupClass(s.getField().getFieldTypeReference());
-    } else if (key instanceof InstanceFieldKey) {
-      InstanceFieldKey i = (InstanceFieldKey) key;
+    } else if (key instanceof InstanceFieldKey i) {
       return getCallGraph().getClassHierarchy().lookupClass(i.getField().getFieldTypeReference());
-    } else if (key instanceof ArrayContentsKey) {
-      ArrayContentsKey i = (ArrayContentsKey) key;
+    } else if (key instanceof ArrayContentsKey i) {
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
       assert filter instanceof FilteredPointerKey.SingleClassFilter;
-      return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
+      return ((FilteredPointerKey.SingleClassFilter) filter).concreteType();
     } else if (key instanceof ExceptionReturnValueKey) {
       return getCallGraph().getClassHierarchy().lookupClass(TypeReference.JavaLangException);
-    } else if (key instanceof ReturnValueKey) {
-      ReturnValueKey r = (ReturnValueKey) key;
+    } else if (key instanceof ReturnValueKey r) {
       return getCallGraph()
           .getClassHierarchy()
           .lookupClass(r.getNode().getMethod().getReturnType());

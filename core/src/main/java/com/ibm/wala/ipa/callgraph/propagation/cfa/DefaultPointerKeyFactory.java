@@ -70,7 +70,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     }
 
     IField resolveAgain =
-        I.getConcreteType().getField(field.getName(), field.getFieldTypeReference().getName());
+        I.concreteType().getField(field.getName(), field.getFieldTypeReference().getName());
     if (resolveAgain != null) {
       field = resolveAgain;
     }

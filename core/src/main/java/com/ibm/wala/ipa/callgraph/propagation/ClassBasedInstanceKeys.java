@@ -134,23 +134,23 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     IClass cls = cha.lookupClass(objType);
     assert cls != null : objType;
 
-    if (obj instanceof TypeReference) {
-      IClass klass = cha.lookupClass((TypeReference) obj);
+    if (obj instanceof TypeReference typeReference) {
+      IClass klass = cha.lookupClass(typeReference);
       if (klass == null) {
         return new ConcreteTypeKey(cls);
       } else {
         // return the IClass itself, wrapped as a constant!
         return new ConstantKey<>(klass, cls);
       }
-    } else if (obj instanceof MethodReference) {
-      IMethod m = cha.resolveMethod((MethodReference) obj);
+    } else if (obj instanceof MethodReference methodReference) {
+      IMethod m = cha.resolveMethod(methodReference);
       if (m == null) {
         return new ConcreteTypeKey(cls);
       } else {
         return new ConstantKey<>(m, cls);
       }
-    } else if (obj instanceof Descriptor) {
-      return new ConstantKey<>((Descriptor) obj, cls);
+    } else if (obj instanceof Descriptor descriptor) {
+      return new ConstantKey<>(descriptor, cls);
     } else {
       // other cases
       throw new Error();

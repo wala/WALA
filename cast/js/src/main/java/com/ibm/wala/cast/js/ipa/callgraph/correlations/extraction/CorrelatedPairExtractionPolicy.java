@@ -99,8 +99,8 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     final Set<ChildPos> endNodes;
     if (corr instanceof ReadWriteCorrelation) {
       endNodes = findNodesAtPos(CAstNode.ASSIGN, endPos, entity);
-    } else if (corr instanceof EscapeCorrelation) {
-      int arity = ((EscapeCorrelation) corr).getNumberOfArguments();
+    } else if (corr instanceof EscapeCorrelation escapeCorrelation) {
+      int arity = escapeCorrelation.getNumberOfArguments();
       endNodes = findNodesAtPos(CAstNode.CALL, endPos, entity);
       for (Iterator<ChildPos> iter = endNodes.iterator(); iter.hasNext(); ) {
         CAstNode candidate = iter.next().getChild();

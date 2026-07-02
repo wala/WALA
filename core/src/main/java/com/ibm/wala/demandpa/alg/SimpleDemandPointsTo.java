@@ -100,8 +100,8 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
     Collection<InstanceKey> keys = HashSetFactory.make();
     while (dfs.hasNext()) {
       Object o = dfs.next();
-      if (o instanceof InstanceKey) {
-        keys.add((InstanceKey) o);
+      if (o instanceof InstanceKey instanceKey) {
+        keys.add(instanceKey);
       }
     }
 

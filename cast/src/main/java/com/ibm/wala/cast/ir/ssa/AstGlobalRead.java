@@ -42,7 +42,8 @@ public class AstGlobalRead extends SSAGetInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v instanceof AstInstructionVisitor) ((AstInstructionVisitor) v).visitAstGlobalRead(this);
+    if (v instanceof AstInstructionVisitor astInstructionVisitor)
+      astInstructionVisitor.visitAstGlobalRead(this);
   }
 
   @Override

@@ -75,6 +75,7 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -193,7 +194,7 @@ public class FlowGraph implements Iterable<Vertex> {
       private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<>(graph);
 
       private IR getIR(final IAnalysisCacheView cache, FuncVertex func) {
-        return cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector));
+        return cache.getIR(func.concreteType().getMethod(AstMethodReference.fnSelector));
       }
 
       private PointerKey propertyKey(String property, ObjectVertex o) {
@@ -211,9 +212,9 @@ public class FlowGraph implements Iterable<Vertex> {
         PropVertex proto = factory.makePropVertex("prototype");
         if (graph.containsNode(proto)) {
           for (Vertex p : Iterator2Iterable.make(graph.getPredNodes(proto))) {
-            if (p instanceof VarVertex) {
-              int rval = ((VarVertex) p).getValueNumber();
-              FuncVertex func = ((VarVertex) p).getFunction();
+            if (p instanceof VarVertex varVertex) {
+              int rval = varVertex.getValueNumber();
+              FuncVertex func = varVertex.getFunction();
               DefUse du = cache.getDefUse(getIR(cache, func));
               for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                 if (inst instanceof JavaScriptPropertyWrite) {
@@ -437,7 +438,7 @@ public class FlowGraph implements Iterable<Vertex> {
           class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object>
               implements HeapGraph<ObjectVertex> {
 
-            private static final long serialVersionUID = -3544629644808422215L;
+            @Serial private static final long serialVersionUID = -3544629644808422215L;
 
             private <X> X ensureNode(X n) {
               if (!containsNode(n)) {
@@ -475,9 +476,9 @@ public class FlowGraph implements Iterable<Vertex> {
 
                 // edges from objects to properties assigned to them
                 for (Vertex p : Iterator2Iterable.make(dataflow.getPredNodes(property))) {
-                  if (p instanceof VarVertex) {
-                    int rval = ((VarVertex) p).getValueNumber();
-                    FuncVertex func = ((VarVertex) p).getFunction();
+                  if (p instanceof VarVertex varVertex) {
+                    int rval = varVertex.getValueNumber();
+                    FuncVertex func = varVertex.getFunction();
                     DefUse du = cache.getDefUse(getIR(cache, func));
                     for (SSAInstruction inst : Iterator2Iterable.make(du.getUses(rval))) {
                       if (inst instanceof JavaScriptPropertyWrite) {
@@ -539,9 +540,8 @@ public class FlowGraph implements Iterable<Vertex> {
                               ensureNode(get(PrototypeField.__proto__, o)));
                         }
                       }
-                    } else if (creation instanceof SSANewInstruction) {
-                      PointerKey proto =
-                          getCoreProto(((SSANewInstruction) creation).getConcreteType());
+                    } else if (creation instanceof SSANewInstruction ssaNewInstruction) {
+                      PointerKey proto = getCoreProto(ssaNewInstruction.getConcreteType());
                       if (proto != null) {
                         for (ObjectVertex f : getPointsToSet(proto)) {
                           for (ObjectVertex o :

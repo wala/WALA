@@ -430,7 +430,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private static boolean isInterface(AbstractTypeDeclaration decl) {
     return decl instanceof AnnotationTypeDeclaration
-        || (decl instanceof TypeDeclaration && ((TypeDeclaration) decl).isInterface());
+        || (decl instanceof TypeDeclaration typeDeclaration && typeDeclaration.isInterface());
   }
 
   private CAstEntity visitTypeDecl(AbstractTypeDeclaration n, WalkContext context) {
@@ -476,12 +476,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     for (BodyDeclaration decl : bodyDecls) {
-      if (decl instanceof Initializer) {
-        Initializer initializer = (Initializer) decl;
+      if (decl instanceof Initializer initializer) {
         boolean isStatic = ((initializer.getModifiers() & Modifier.STATIC) != 0);
         (isStatic ? staticInits : inits).add(initializer);
-      } else if (decl instanceof FieldDeclaration) {
-        FieldDeclaration fd = (FieldDeclaration) decl;
+      } else if (decl instanceof FieldDeclaration fd) {
 
         for (VariableDeclarationFragment frag :
             (Iterable<VariableDeclarationFragment>) fd.fragments()) {
@@ -501,8 +499,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     }
 
     for (BodyDeclaration decl : bodyDecls) {
-      if (decl instanceof FieldDeclaration) {
-        FieldDeclaration fieldDecl = (FieldDeclaration) decl;
+      if (decl instanceof FieldDeclaration fieldDecl) {
         Collection<CAstQualifier> quals =
             JDT2CAstUtils.mapModifiersToQualifiers(fieldDecl.getModifiers(), false, false);
         for (VariableDeclarationFragment fieldFrag :
@@ -521,8 +518,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
         }
       } else if (decl instanceof Initializer) {
         // Initializers are inserted into constructors when making constructors.
-      } else if (decl instanceof MethodDeclaration) {
-        MethodDeclaration metDecl = (MethodDeclaration) decl;
+      } else if (decl instanceof MethodDeclaration metDecl) {
 
         if (typeBinding.isEnum() && metDecl.isConstructor())
           memberEntities.add(
@@ -544,8 +540,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                         metDecl, metDecl.resolveBinding(), overridden, context));
           }
         }
-      } else if (decl instanceof AbstractTypeDeclaration) {
-        memberEntities.add(visit((AbstractTypeDeclaration) decl, context));
+      } else if (decl instanceof AbstractTypeDeclaration abstractTypeDeclaration) {
+        memberEntities.add(visit(abstractTypeDeclaration, context));
       } else if (decl instanceof AnnotationTypeMemberDeclaration) {
         // TODO: need to decide what to do with these
       } else {
@@ -1214,17 +1210,6 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       this(mdast, null, type, entities, context, null, null, 0, annotations, null);
     }
 
-    // Constructor with appropriate arguments for lambda expression types
-    private ProcedureEntity(
-        CAstNode mdast,
-        ITypeBinding type,
-        Map<CAstNode, CAstEntity> entities,
-        MethodContext context,
-        ArrayList<CAstType> parameterTypes,
-        Set<CAstAnnotation> annotations) {
-      this(mdast, null, type, entities, context, parameterTypes, null, 0, annotations, null);
-    }
-
     private ProcedureEntity(
         CAstNode mdast,
         MethodDeclaration decl,
@@ -1438,11 +1423,10 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private CAstNode visitFieldInitNode(ASTNode node, WalkContext context) {
     // there are gathered by createClassDeclaration and can only be of two types:
-    if (node instanceof Initializer) {
-      return visitNode(((Initializer) node).getBody(), context);
-    } else if (node instanceof VariableDeclarationFragment) {
-      VariableDeclarationFragment f =
-          (VariableDeclarationFragment) node; // this is guaranteed to have an initializer
+    if (node instanceof Initializer initializer) {
+      return visitNode(initializer.getBody(), context);
+    } else if (node instanceof VariableDeclarationFragment f) {
+      // this is guaranteed to have an initializer
 
       // Generate CAST node for the initializer (init())
       // Type targetType = f.memberInstance().container();
@@ -1466,8 +1450,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       CAstNode rhsNode = visitNode(init, context);
       return makeNode(context, fFactory, f, CAstNode.ASSIGN, lhsNode, rhsNode);
 
-    } else if (node instanceof EnumConstantDeclaration) {
-      return createEnumConstantDeclarationInit((EnumConstantDeclaration) node, context);
+    } else if (node instanceof EnumConstantDeclaration enumConstantDeclaration) {
+      return createEnumConstantDeclarationInit(enumConstantDeclaration, context);
     } else {
       Assertions.UNREACHABLE("invalid init node gathered by createClassDeclaration");
       return null;
@@ -1823,7 +1807,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // rest of args
     for (Object arg : arguments) {
       argNodes.add(
-          (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context));
+          (arg instanceof CAstNode cAstNode) ? cAstNode : visitNode((Expression) arg, context));
     }
     callNode = makeNode(context, fFactory, nn, CAstNode.CALL, argNodes);
     context.cfg().map(nn, callNode);
@@ -2056,14 +2040,14 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
             || lastArgType.isSubTypeCompatible(methodBinding.getParameterTypes()[nFormals - 1]))) {
       for (Object arg : arguments)
         children.add(
-            (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context));
+            (arg instanceof CAstNode cAstNode) ? cAstNode : visitNode((Expression) arg, context));
     } else {
       assert nActuals >= (nFormals - 1) && methodBinding.isVarargs()
           : "Invalid number of parameters for constructor call";
       for (int i = 0; i < nFormals - 1; i++) {
         Object arg = arguments.get(i);
         children.add(
-            (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context));
+            (arg instanceof CAstNode cAstNode) ? cAstNode : visitNode((Expression) arg, context));
       }
 
       final int numSubargs = nActuals - nFormals + 2;
@@ -2082,7 +2066,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       for (int j = 1; j < numSubargs; j++) {
         Object arg = arguments.get(j + nFormals - 2);
         subargs.add(
-            (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context));
+            (arg instanceof CAstNode cAstNode) ? cAstNode : visitNode((Expression) arg, context));
       }
       children.add(makeNode(context, fFactory, (ASTNode) null, CAstNode.ARRAY_LITERAL, subargs));
     }
@@ -2169,8 +2153,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // left.target),ASSIGN(OBJECT_REF(temp,y),BINARY_EXPR(CAST(OBJECT_REF(Temp,y)),RIGHT)))))
     // yeah, I know, it's cheating, LOCAL SCOPE / DECL STMT inside an expression ... will it work?
 
-    while (left instanceof ParenthesizedExpression)
-      left = ((ParenthesizedExpression) left).getExpression();
+    while (left instanceof ParenthesizedExpression parenthesizedExpression)
+      left = parenthesizedExpression.getExpression();
     assert left instanceof FieldAccess : "Cast in assign pre-op but no field access?!";
 
     FieldAccess field = (FieldAccess) left;
@@ -2566,8 +2550,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // "package.Class" is a QualifiedName, but also is "Class.staticField"
     // only handle if it's a "Class.staticField" ("Field" in polyglot AST)
 
-    if (n.resolveBinding() instanceof IVariableBinding) {
-      IVariableBinding binding = (IVariableBinding) n.resolveBinding();
+    if (n.resolveBinding() instanceof IVariableBinding binding) {
       assert binding.isField() : "Non-field variable QualifiedName!";
 
       // if field access is static, visitNode(n.getQualifier()) will come back here
@@ -2939,31 +2922,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       CAstNode zero;
       ITypeBinding type = n.getOperand().resolveTypeBinding();
       switch (type.getBinaryName()) {
-        case "C":
-          zero = fFactory.makeConstant((char) 0);
-          break;
-        case "B":
-          zero = fFactory.makeConstant((byte) 0);
-          break;
-        case "S":
-          zero = fFactory.makeConstant((short) 0);
-          break;
-        case "I":
-          zero = fFactory.makeConstant(0);
-          break;
-        case "J":
-          zero = fFactory.makeConstant(0L);
-          break;
-        case "F":
-          zero = fFactory.makeConstant(0.0);
-          break;
-        case "D":
-          zero = fFactory.makeConstant(0.0D);
-          break;
-        default:
+        case "C" -> zero = fFactory.makeConstant((char) 0);
+        case "B" -> zero = fFactory.makeConstant((byte) 0);
+        case "S" -> zero = fFactory.makeConstant((short) 0);
+        case "I" -> zero = fFactory.makeConstant(0);
+        case "J" -> zero = fFactory.makeConstant(0L);
+        case "F" -> zero = fFactory.makeConstant(0.0);
+        case "D" -> zero = fFactory.makeConstant(0.0D);
+        default -> {
           zero = null;
           assert false : "unexpected type " + type.getBinaryName();
-          break;
+        }
       }
       return makeNode(
           context,
@@ -3004,7 +2973,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // find the first non-block statement ant set-up the label map (useful for breaking many fors)
     ASTNode stmt = n.getBody();
-    while (stmt instanceof Block) stmt = (ASTNode) ((Block) stmt).statements().iterator().next();
+    while (stmt instanceof Block block) stmt = (ASTNode) block.statements().iterator().next();
 
     if (n.getParent() != null)
       // if not a synthetic node from a break/continue -- don't pollute namespace with label, we get
@@ -3127,16 +3096,16 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // SWITCH_DEFAULT
     // somewhere else
     // polyglot converts all labels to longs. why? who knows...
-    if (constant instanceof Character) constant = (long) ((Character) constant).charValue();
-    else if (constant instanceof Byte) constant = ((Byte) constant).longValue();
-    else if (constant instanceof Integer) constant = ((Integer) constant).longValue();
-    else if (constant instanceof Short) constant = ((Short) constant).longValue();
+    if (constant instanceof Character c) constant = (long) c.charValue();
+    else if (constant instanceof Byte b) constant = b.longValue();
+    else if (constant instanceof Integer integer) constant = integer.longValue();
+    else if (constant instanceof Short i) constant = i.longValue();
 
     if (constant != null) {
       return fFactory.makeConstant(constant);
-    } else if (expr instanceof SimpleName) {
+    } else if (expr instanceof SimpleName simpleName) {
       // enum constant
-      return visit((SimpleName) expr, context);
+      return visit(simpleName, context);
     } else {
       Assertions.UNREACHABLE("null constant for non-enum switch case!");
       return null;
@@ -3169,8 +3138,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // First compute the control flow edges for the various case labels
     for (Statement se : cases) {
-      if (se instanceof SwitchCase) {
-        SwitchCase c = (SwitchCase) se;
+      if (se instanceof SwitchCase c) {
 
         if (c.isDefault()) context.cfg().add(n, c, CAstControlFlowMap.SWITCH_DEFAULT);
         else context.cfg().add(n, c, getSwitchCaseConstant(c, context));
@@ -3628,8 +3596,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     ArrayList<CAstNode> inits = new ArrayList<>();
     for (int i = 0; i < n.initializers().size(); i++) {
       ASTNode init = (ASTNode) n.initializers().get(i);
-      if (init instanceof VariableDeclarationExpression) {
-        for (ASTNode o : (Iterable<ASTNode>) ((VariableDeclarationExpression) init).fragments())
+      if (init instanceof VariableDeclarationExpression varDeclExpr) {
+        for (ASTNode o : (Iterable<ASTNode>) varDeclExpr.fragments())
           inits.add(visitNode(o, context));
       } else inits.add(visitNode(init, context));
     }
@@ -3685,12 +3653,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
       List<CAstNode> fb = new ArrayList<>();
       for (Object x : resources) {
-        if (x instanceof VariableDeclarationExpression) {
-          for (Object y : ((VariableDeclarationExpression) x).fragments()) {
-            if (y instanceof VariableDeclarationFragment) {
+        if (x instanceof VariableDeclarationExpression variableDeclarationExpression) {
+          for (Object y : variableDeclarationExpression.fragments()) {
+            if (y instanceof VariableDeclarationFragment variableDeclarationFragment) {
               ITypeBinding object = ast.resolveWellKnownType("java.lang.Object");
               IMethodBinding m = null;
-              ITypeBinding me = ((VariableDeclarationFragment) y).resolveBinding().getType();
+              ITypeBinding me = variableDeclarationFragment.resolveBinding().getType();
               outer:
               while (!object.equals(me)) {
                 for (IMethodBinding ourmet : me.getDeclaredMethods())
@@ -3706,7 +3674,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
                   fFactory.makeNode(
                       CAstNode.VAR,
                       fFactory.makeConstant(
-                          ((VariableDeclarationFragment) y).resolveBinding().getName()));
+                          variableDeclarationFragment.resolveBinding().getName()));
               fb.add(createMethodInvocation(n, m, target, Collections.emptyList(), context));
             }
           }
@@ -3938,8 +3906,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     // handling of compilationunit in translate()
     if (n instanceof TypeDeclaration) {
       return visitTypeDecl(n, context);
-    } else if (n instanceof EnumDeclaration) {
-      return visit((EnumDeclaration) n, context);
+    } else if (n instanceof EnumDeclaration enumDeclaration) {
+      return visit(enumDeclaration, context);
     } else if (n instanceof AnnotationTypeDeclaration) {
       return visitTypeDecl(n, context);
     } else {
@@ -3952,106 +3920,106 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private CAstNode visitNode(ASTNode n, WalkContext context) {
     if (n == null) return makeNode(context, fFactory, null, CAstNode.EMPTY);
 
-    if (n instanceof ArrayAccess) {
-      return visit((ArrayAccess) n, context);
-    } else if (n instanceof ArrayCreation) {
-      return visit((ArrayCreation) n, context);
-    } else if (n instanceof ArrayInitializer) {
-      return visit((ArrayInitializer) n, context);
-    } else if (n instanceof AssertStatement) {
-      return visit((AssertStatement) n, context);
-    } else if (n instanceof Assignment) {
-      return visit((Assignment) n, context);
-    } else if (n instanceof Block) {
-      return visit((Block) n, context);
-    } else if (n instanceof BooleanLiteral) {
-      return visit((BooleanLiteral) n);
-    } else if (n instanceof BreakStatement) {
-      return visit((BreakStatement) n, context);
-    } else if (n instanceof CastExpression) {
-      return visit((CastExpression) n, context);
-    } else if (n instanceof CatchClause) {
-      return visit((CatchClause) n, context);
-    } else if (n instanceof CharacterLiteral) {
-      return visit((CharacterLiteral) n);
-    } else if (n instanceof ClassInstanceCreation) {
-      return visit((ClassInstanceCreation) n, context);
-    } else if (n instanceof ConditionalExpression) {
-      return visit((ConditionalExpression) n, context);
-    } else if (n instanceof ConstructorInvocation) {
-      return visit((ConstructorInvocation) n, context);
-    } else if (n instanceof ContinueStatement) {
-      return visit((ContinueStatement) n, context);
-    } else if (n instanceof DoStatement) {
-      return visit((DoStatement) n, context);
-    } else if (n instanceof EmptyStatement) {
-      return visit((EmptyStatement) n, context);
-    } else if (n instanceof EnhancedForStatement) {
-      return visit((EnhancedForStatement) n, context);
-    } else if (n instanceof ExpressionStatement) {
-      return visit((ExpressionStatement) n, context);
-    } else if (n instanceof FieldAccess) {
-      return visit((FieldAccess) n, context);
-    } else if (n instanceof ForStatement) {
-      return visit((ForStatement) n, context);
-    } else if (n instanceof IfStatement) {
-      return visit((IfStatement) n, context);
-    } else if (n instanceof InfixExpression) {
-      return visit((InfixExpression) n, context);
-    } else if (n instanceof InstanceofExpression) {
-      return visit((InstanceofExpression) n, context);
-    } else if (n instanceof LabeledStatement) {
-      return visit((LabeledStatement) n, context);
-    } else if (n instanceof MethodInvocation) {
-      return visit((MethodInvocation) n, context);
-    } else if (n instanceof NumberLiteral) {
-      return visit((NumberLiteral) n, context);
+    if (n instanceof ArrayAccess arrayAccess) {
+      return visit(arrayAccess, context);
+    } else if (n instanceof ArrayCreation arrayCreation) {
+      return visit(arrayCreation, context);
+    } else if (n instanceof ArrayInitializer arrayInitializer) {
+      return visit(arrayInitializer, context);
+    } else if (n instanceof AssertStatement assertStatement) {
+      return visit(assertStatement, context);
+    } else if (n instanceof Assignment assignment) {
+      return visit(assignment, context);
+    } else if (n instanceof Block block) {
+      return visit(block, context);
+    } else if (n instanceof BooleanLiteral booleanLiteral) {
+      return visit(booleanLiteral);
+    } else if (n instanceof BreakStatement breakStatement) {
+      return visit(breakStatement, context);
+    } else if (n instanceof CastExpression castExpression) {
+      return visit(castExpression, context);
+    } else if (n instanceof CatchClause catchClause) {
+      return visit(catchClause, context);
+    } else if (n instanceof CharacterLiteral characterLiteral) {
+      return visit(characterLiteral);
+    } else if (n instanceof ClassInstanceCreation classInstanceCreation) {
+      return visit(classInstanceCreation, context);
+    } else if (n instanceof ConditionalExpression conditionalExpression) {
+      return visit(conditionalExpression, context);
+    } else if (n instanceof ConstructorInvocation constructorInvocation) {
+      return visit(constructorInvocation, context);
+    } else if (n instanceof ContinueStatement continueStatement) {
+      return visit(continueStatement, context);
+    } else if (n instanceof DoStatement doStatement) {
+      return visit(doStatement, context);
+    } else if (n instanceof EmptyStatement emptyStatement) {
+      return visit(emptyStatement, context);
+    } else if (n instanceof EnhancedForStatement enhancedForStatement) {
+      return visit(enhancedForStatement, context);
+    } else if (n instanceof ExpressionStatement expressionStatement) {
+      return visit(expressionStatement, context);
+    } else if (n instanceof FieldAccess fieldAccess) {
+      return visit(fieldAccess, context);
+    } else if (n instanceof ForStatement forStatement) {
+      return visit(forStatement, context);
+    } else if (n instanceof IfStatement ifStatement) {
+      return visit(ifStatement, context);
+    } else if (n instanceof InfixExpression infixExpression) {
+      return visit(infixExpression, context);
+    } else if (n instanceof InstanceofExpression instanceofExpression) {
+      return visit(instanceofExpression, context);
+    } else if (n instanceof LabeledStatement labeledStatement) {
+      return visit(labeledStatement, context);
+    } else if (n instanceof MethodInvocation methodInvocation) {
+      return visit(methodInvocation, context);
+    } else if (n instanceof NumberLiteral numberLiteral) {
+      return visit(numberLiteral, context);
     } else if (n instanceof NullLiteral) {
       return visit();
-    } else if (n instanceof ParenthesizedExpression) {
-      return visit((ParenthesizedExpression) n, context);
-    } else if (n instanceof PostfixExpression) {
-      return visit((PostfixExpression) n, context);
-    } else if (n instanceof PrefixExpression) {
-      return visit((PrefixExpression) n, context);
-    } else if (n instanceof QualifiedName) {
-      return visit((QualifiedName) n, context);
-    } else if (n instanceof ReturnStatement) {
-      return visit((ReturnStatement) n, context);
-    } else if (n instanceof SimpleName) {
-      return visit((SimpleName) n, context);
-    } else if (n instanceof StringLiteral) {
-      return visit((StringLiteral) n, context);
-    } else if (n instanceof SuperConstructorInvocation) {
-      return visit((SuperConstructorInvocation) n, context);
-    } else if (n instanceof SuperFieldAccess) {
-      return visit((SuperFieldAccess) n, context);
-    } else if (n instanceof SuperMethodInvocation) {
-      return visit((SuperMethodInvocation) n, context);
-    } else if (n instanceof SynchronizedStatement) {
-      return visit((SynchronizedStatement) n, context);
-    } else if (n instanceof SwitchStatement) {
-      return visit((SwitchStatement) n, context);
-    } else if (n instanceof SwitchCase) {
-      return visit((SwitchCase) n, context);
-    } else if (n instanceof ThisExpression) {
-      return visit((ThisExpression) n, context);
-    } else if (n instanceof TypeLiteral) {
-      return visit((TypeLiteral) n, context);
-    } else if (n instanceof ThrowStatement) {
-      return visit((ThrowStatement) n, context);
-    } else if (n instanceof TryStatement) {
-      return visit((TryStatement) n, context);
-    } else if (n instanceof TypeDeclarationStatement) {
-      return visit((TypeDeclarationStatement) n, context);
-    } else if (n instanceof VariableDeclarationExpression) {
-      return visit((VariableDeclarationExpression) n, context);
-    } else if (n instanceof VariableDeclarationFragment) {
-      return visit((VariableDeclarationFragment) n, context);
-    } else if (n instanceof WhileStatement) {
-      return visit((WhileStatement) n, context);
-    } else if (n instanceof LambdaExpression) {
-      return visit((LambdaExpression) n, context);
+    } else if (n instanceof ParenthesizedExpression parenthesizedExpression) {
+      return visit(parenthesizedExpression, context);
+    } else if (n instanceof PostfixExpression postfixExpression) {
+      return visit(postfixExpression, context);
+    } else if (n instanceof PrefixExpression prefixExpression) {
+      return visit(prefixExpression, context);
+    } else if (n instanceof QualifiedName qualifiedName) {
+      return visit(qualifiedName, context);
+    } else if (n instanceof ReturnStatement returnStatement) {
+      return visit(returnStatement, context);
+    } else if (n instanceof SimpleName simpleName) {
+      return visit(simpleName, context);
+    } else if (n instanceof StringLiteral stringLiteral) {
+      return visit(stringLiteral, context);
+    } else if (n instanceof SuperConstructorInvocation superConstructorInvocation) {
+      return visit(superConstructorInvocation, context);
+    } else if (n instanceof SuperFieldAccess superFieldAccess) {
+      return visit(superFieldAccess, context);
+    } else if (n instanceof SuperMethodInvocation superMethodInvocation) {
+      return visit(superMethodInvocation, context);
+    } else if (n instanceof SynchronizedStatement synchronizedStatement) {
+      return visit(synchronizedStatement, context);
+    } else if (n instanceof SwitchStatement switchStatement) {
+      return visit(switchStatement, context);
+    } else if (n instanceof SwitchCase switchCase) {
+      return visit(switchCase, context);
+    } else if (n instanceof ThisExpression thisExpression) {
+      return visit(thisExpression, context);
+    } else if (n instanceof TypeLiteral typeLiteral) {
+      return visit(typeLiteral, context);
+    } else if (n instanceof ThrowStatement throwStatement) {
+      return visit(throwStatement, context);
+    } else if (n instanceof TryStatement tryStatement) {
+      return visit(tryStatement, context);
+    } else if (n instanceof TypeDeclarationStatement typeDeclarationStatement) {
+      return visit(typeDeclarationStatement, context);
+    } else if (n instanceof VariableDeclarationExpression variableDeclarationExpression) {
+      return visit(variableDeclarationExpression, context);
+    } else if (n instanceof VariableDeclarationFragment variableDeclarationFragment) {
+      return visit(variableDeclarationFragment, context);
+    } else if (n instanceof WhileStatement whileStatement) {
+      return visit(whileStatement, context);
+    } else if (n instanceof LambdaExpression lambdaExpression) {
+      return visit(lambdaExpression, context);
     }
 
     // VariableDeclarationStatement handled as special case (returns multiple statements)
@@ -4062,8 +4030,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private void visitNodeOrNodes(ASTNode n, WalkContext context, Collection<CAstNode> coll) {
-    if (n instanceof VariableDeclarationStatement)
-      coll.addAll(visit((VariableDeclarationStatement) n, context));
+    if (n instanceof VariableDeclarationStatement variableDeclarationStatement)
+      coll.addAll(visit(variableDeclarationStatement, context));
     else coll.add(visitNode(n, context));
   }
 
@@ -4815,17 +4783,13 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       fakeCtor.parameters().add(svd);
 
       // the type
-      switch (i) {
-        case 1:
-          paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
-          break;
-        case 2:
-          paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")));
-          break;
-        default:
-          paramTypes.add(fTypeDict.getCAstTypeFor(ctor.getParameterTypes()[i - 3]));
-          break;
-      }
+      paramTypes.add(
+          fTypeDict.getCAstTypeFor(
+              switch (i) {
+                case 1 -> ast.resolveWellKnownType("java.lang.String");
+                case 2 -> ast.resolveWellKnownType("int");
+                default -> ctor.getParameterTypes()[i - 3];
+              }));
     }
 
     // PART IIb: create the statements in the constructor

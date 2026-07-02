@@ -5,7 +5,7 @@ import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.strings.Atom;
@@ -52,14 +52,13 @@ public class ECJTestComments extends IRTests {
           TypeReference.findOrCreate(
               JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LComments")),
           Atom.findOrCreateUnicodeAtom("main"),
-          Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/String;)V"));
+          Descriptor.findOrCreateUTF8(JavaLanguage.get(), "([Ljava/lang/String;)V"));
 
   @Test
   public void testComments() throws IllegalArgumentException, CancelException, IOException {
     Pair<CallGraph, CallGraphBuilder<? super InstanceKey>> result = runTest("Comments");
     for (CGNode node : result.fst.getNodes(testMethod)) {
-      if (node.getMethod() instanceof AstMethod) {
-        AstMethod m = (AstMethod) node.getMethod();
+      if (node.getMethod() instanceof AstMethod m) {
         DebuggingInformation dbg = m.debugInfo();
         for (SSAInstruction inst : node.getIR().getInstructions()) {
           System.err.println("leading for " + inst.toString(node.getIR().getSymbolTable()));

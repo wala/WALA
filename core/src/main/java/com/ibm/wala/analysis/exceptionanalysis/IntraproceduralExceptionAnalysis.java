@@ -115,10 +115,7 @@ public class IntraproceduralExceptionAnalysis {
         }
 
         if (block.isCatchBlock()) {
-          Iterator<TypeReference> it = block.getCaughtExceptionTypes();
-          while (it.hasNext()) {
-            possiblyCaughtExceptions.add(it.next());
-          }
+          block.getCaughtExceptionTypes().forEachRemaining(possiblyCaughtExceptions::add);
         }
       }
     }
@@ -156,11 +153,11 @@ public class IntraproceduralExceptionAnalysis {
       Collection<FilteredException> filters = filter.filteredExceptions(throwingInstruction);
       for (FilteredException filter : filters) {
         if (filter.isSubclassFiltered()) {
-          for (IClass iclass : this.classHierarchy.computeSubClasses(filter.getException())) {
+          for (IClass iclass : this.classHierarchy.computeSubClasses(filter.exception())) {
             filtered.add(iclass.getReference());
           }
         } else {
-          filtered.add(filter.getException());
+          filtered.add(filter.exception());
         }
       }
       return filtered;
@@ -208,9 +205,8 @@ public class IntraproceduralExceptionAnalysis {
       Iterator<Object> it = pointerAnalysis.getHeapGraph().getSuccNodes(pointerKey);
       while (it.hasNext()) {
         Object next = it.next();
-        if (next instanceof InstanceKey) {
-          InstanceKey instanceKey = (InstanceKey) next;
-          IClass iclass = instanceKey.getConcreteType();
+        if (next instanceof InstanceKey instanceKey) {
+          IClass iclass = instanceKey.concreteType();
           addTo.add(iclass.getReference());
         } else {
           throw new IllegalStateException(
@@ -243,10 +239,7 @@ public class IntraproceduralExceptionAnalysis {
         ir.getControlFlowGraph().getExceptionalSuccessors(block);
     for (ISSABasicBlock succ : exceptionalSuccessors) {
       if (succ.isCatchBlock()) {
-        Iterator<TypeReference> it = succ.getCaughtExceptionTypes();
-        while (it.hasNext()) {
-          result.add(it.next());
-        }
+        succ.getCaughtExceptionTypes().forEachRemaining(result::add);
       }
     }
 

@@ -336,8 +336,7 @@ public abstract class Compiler implements Constants {
         throw new IllegalArgumentException("Stack underflow in intermediate code, at offset " + i);
       }
 
-      if (instr instanceof DupInstruction) {
-        DupInstruction d = (DupInstruction) instr;
+      if (instr instanceof DupInstruction d) {
         int size = d.getSize();
         int delta = d.getDelta();
 
@@ -414,7 +413,7 @@ public abstract class Compiler implements Constants {
     computeStackWordsAt(0, 0, new byte[instructions.length * 2], new boolean[instructions.length]);
   }
 
-  abstract static class Patch {
+  private abstract static class Patch {
     final int instrStart;
 
     final int instrOffset;
@@ -430,7 +429,7 @@ public abstract class Compiler implements Constants {
     abstract boolean apply();
   }
 
-  class ShortPatch extends Patch {
+  private class ShortPatch extends Patch {
     ShortPatch(int instrStart, int instrOffset, int targetLabel) {
       super(instrStart, instrOffset, targetLabel);
     }
@@ -447,7 +446,7 @@ public abstract class Compiler implements Constants {
     }
   }
 
-  class IntPatch extends Patch {
+  private class IntPatch extends Patch {
     IntPatch(int instrStart, int instrOffset, int targetLabel) {
       super(instrStart, instrOffset, targetLabel);
     }
@@ -591,8 +590,8 @@ public abstract class Compiler implements Constants {
 
         switch (opcode) {
           case OP_iconst_0:
-            if (inBasicBlock(i, 2) && instructions[i + 1] instanceof ConditionalBranchInstruction) {
-              ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
+            if (inBasicBlock(i, 2)
+                && instructions[i + 1] instanceof ConditionalBranchInstruction cbr) {
               if (cbr.getType().equals(TYPE_int)) {
                 code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifeq);
                 fallToConditional = true;
@@ -607,8 +606,7 @@ public abstract class Compiler implements Constants {
           case OP_aconst_null:
             if (!fallToConditional
                 && inBasicBlock(i, 2)
-                && instructions[i + 1] instanceof ConditionalBranchInstruction) {
-              ConditionalBranchInstruction cbr = (ConditionalBranchInstruction) instructions[i + 1];
+                && instructions[i + 1] instanceof ConditionalBranchInstruction cbr) {
               if (cbr.getType().equals(TYPE_Object)) {
                 code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifnull);
                 fallToConditional = true;
@@ -747,40 +745,29 @@ public abstract class Compiler implements Constants {
                 cpIndex = ci.getCPIndex();
               } else {
                 String t = instr.getPushedType(null);
-                switch (t) {
-                  case TYPE_int:
-                    cpIndex =
-                        allocateConstantPoolInteger(
-                            ((ConstantInstruction.ConstInt) instr).getIntValue());
-                    break;
-                  case TYPE_String:
-                    cpIndex =
-                        allocateConstantPoolString(
-                            (String) ((ConstantInstruction.ConstString) instr).getValue());
-                    break;
-                  case TYPE_Class:
-                    cpIndex =
-                        allocateConstantPoolClassType(
-                            ((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue())
-                                .getTypeName());
-                    break;
-                  case TYPE_MethodType:
-                    cpIndex =
-                        allocateConstantPoolMethodType(
-                            ((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
-                    break;
-                  case TYPE_MethodHandle:
-                    cpIndex =
-                        allocateConstantPoolMethodHandle(
-                            ((ReferenceToken)
-                                ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
-                    break;
-                  default:
-                    cpIndex =
-                        allocateConstantPoolFloat(
-                            ((ConstantInstruction.ConstFloat) instr).getFloatValue());
-                    break;
-                }
+                cpIndex =
+                    switch (t) {
+                      case TYPE_int ->
+                          allocateConstantPoolInteger(
+                              ((ConstantInstruction.ConstInt) instr).getIntValue());
+                      case TYPE_String ->
+                          allocateConstantPoolString(
+                              (String) ((ConstantInstruction.ConstString) instr).getValue());
+                      case TYPE_Class ->
+                          allocateConstantPoolClassType(
+                              ((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue())
+                                  .getTypeName());
+                      case TYPE_MethodType ->
+                          allocateConstantPoolMethodType(
+                              ((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
+                      case TYPE_MethodHandle ->
+                          allocateConstantPoolMethodHandle(
+                              ((ReferenceToken)
+                                  ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
+                      default ->
+                          allocateConstantPoolFloat(
+                              ((ConstantInstruction.ConstFloat) instr).getFloatValue());
+                    };
               }
 
               if (cpIndex < 256) {
@@ -824,14 +811,10 @@ public abstract class Compiler implements Constants {
             {
               if (inBasicBlock(i, 4)) {
                 // try to generate an OP_iinc
-                if (instructions[i + 1] instanceof ConstantInstruction.ConstInt
-                    && instructions[i + 2] instanceof BinaryOpInstruction
-                    && instructions[i + 3] instanceof StoreInstruction) {
+                if (instructions[i + 1] instanceof ConstantInstruction.ConstInt i1
+                    && instructions[i + 2] instanceof BinaryOpInstruction i2
+                    && instructions[i + 3] instanceof StoreInstruction i3) {
                   LoadInstruction i0 = (LoadInstruction) instr;
-                  ConstantInstruction.ConstInt i1 =
-                      (ConstantInstruction.ConstInt) instructions[i + 1];
-                  BinaryOpInstruction i2 = (BinaryOpInstruction) instructions[i + 2];
-                  StoreInstruction i3 = (StoreInstruction) instructions[i + 3];
 
                   int c = i1.getIntValue();
                   int v = i0.getVarIndex();
@@ -1126,8 +1109,7 @@ public abstract class Compiler implements Constants {
                 "Stack underflow in intermediate code, at offset " + startI);
           }
 
-          if (instr instanceof DupInstruction) {
-            DupInstruction d = (DupInstruction) instr;
+          if (instr instanceof DupInstruction d) {
             int size = d.getSize();
             int delta = d.getDelta();
 
@@ -1274,22 +1256,8 @@ public abstract class Compiler implements Constants {
     return r;
   }
 
-  static class HelperPatch {
-    final int start;
-
-    final int length;
-
-    final Instruction[] code;
-
-    final ExceptionHandler[] handlers;
-
-    HelperPatch(int start, int length, Instruction[] code, ExceptionHandler[] handlers) {
-      this.start = start;
-      this.length = length;
-      this.code = code;
-      this.handlers = handlers;
-    }
-  }
+  private record HelperPatch(
+      int start, int length, Instruction[] code, ExceptionHandler[] handlers) {}
 
   private void addBackEdge(int from, int to) {
     int[] oldEdges = backEdges[from];
@@ -1332,7 +1300,8 @@ public abstract class Compiler implements Constants {
       }
 
       IInstruction instr = instructions[instruction];
-      if (instr instanceof StoreInstruction && ((StoreInstruction) instr).getVarIndex() == index) {
+      if (instr instanceof StoreInstruction storeInstruction
+          && storeInstruction.getVarIndex() == index) {
         break;
       }
 
@@ -1384,8 +1353,8 @@ public abstract class Compiler implements Constants {
 
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof LoadInstruction) {
-        addLiveVar(i, ((LoadInstruction) instr).getVarIndex());
+      if (instr instanceof LoadInstruction loadInstruction) {
+        addLiveVar(i, loadInstruction.getVarIndex());
       }
     }
   }
@@ -1686,8 +1655,8 @@ public abstract class Compiler implements Constants {
       int secondDef = -1;
       for (int i = start; i < start + len; i++) {
         IInstruction instr = instructions[i];
-        if (instr instanceof StoreInstruction) {
-          int l = ((StoreInstruction) instr).getVarIndex();
+        if (instr instanceof StoreInstruction storeInstruction) {
+          int l = storeInstruction.getVarIndex();
           if (liveAtEnd.get(l) && l != localDefed) {
             if (localDefed < 0) {
               localDefed = l;
@@ -1789,7 +1758,6 @@ public abstract class Compiler implements Constants {
     }
 
     for (HelperPatch p : patches) {
-      System.arraycopy(p.code, 0, instructions, p.start, p.code.length);
       for (int j = 0; j < p.length; j++) {
         int index = j + p.start;
         if (j < p.code.length) {

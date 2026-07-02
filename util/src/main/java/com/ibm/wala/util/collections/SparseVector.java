@@ -14,6 +14,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class SparseVector<T extends @Nullable Object> implements IVector<T>, Serializable {
 
-  private static final long serialVersionUID = -6220164684358954867L;
+  @Serial private static final long serialVersionUID = -6220164684358954867L;
 
   private static final int DEF_INITIAL_SIZE = 5;
 

@@ -92,8 +92,7 @@ public class ImmutableStack<T> implements Iterable<T> {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o instanceof ImmutableStack) {
-      ImmutableStack other = (ImmutableStack) o;
+    if (o instanceof ImmutableStack other) {
       return Arrays.equals(entries, other.entries);
     }
     return false;

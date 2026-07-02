@@ -93,9 +93,7 @@ public class BFSPathFinder<T> {
       throw new IllegalArgumentException("targets is null");
     }
     final Set<T> ts = HashSetFactory.make();
-    while (targets.hasNext()) {
-      ts.add(targets.next());
-    }
+    targets.forEachRemaining(ts::add);
 
     this.G = G;
     this.roots = new NonNullSingletonIterator<>(src);

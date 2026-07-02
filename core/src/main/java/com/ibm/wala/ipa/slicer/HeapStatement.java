@@ -63,8 +63,7 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is OK because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof HeapParamCaller) {
-        HeapParamCaller other = (HeapParamCaller) obj;
+      if (obj instanceof HeapParamCaller other) {
         return getNode().equals(other.getNode())
             && getLocation().equals(other.getLocation())
             && callIndex == other.callIndex;
@@ -92,8 +91,7 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof HeapParamCallee) {
-        HeapParamCallee other = (HeapParamCallee) obj;
+      if (obj instanceof HeapParamCallee other) {
         return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation());
       } else {
         return false;
@@ -143,8 +141,7 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof HeapReturnCaller) {
-        HeapReturnCaller other = (HeapReturnCaller) obj;
+      if (obj instanceof HeapReturnCaller other) {
         return getNode().equals(other.getNode())
             && getLocation().equals(other.getLocation())
             && callIndex == other.callIndex;
@@ -172,8 +169,7 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof HeapReturnCallee) {
-        HeapReturnCallee other = (HeapReturnCallee) obj;
+      if (obj instanceof HeapReturnCallee other) {
         return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation());
       } else {
         return false;

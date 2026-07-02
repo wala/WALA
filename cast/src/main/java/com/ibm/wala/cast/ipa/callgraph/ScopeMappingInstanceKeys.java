@@ -83,8 +83,8 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     @Override
-    public IClass getConcreteType() {
-      return base.getConcreteType();
+    public IClass concreteType() {
+      return base.concreteType();
     }
 
     /** get the CGNode representing the lexical parent of {@link #creator} with name definer */
@@ -104,11 +104,12 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         } else {
           PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
           for (InstanceKey funcPtr : builder.getPointerAnalysis().getPointsToSet(funcKey)) {
-            if (!history.contains(funcPtr) && funcPtr instanceof ScopeMappingInstanceKey) {
+            if (!history.contains(funcPtr)
+                && funcPtr instanceof ScopeMappingInstanceKey scopeMappingInstanceKey) {
               history.add(funcPtr);
               result =
                   new CompoundIterator<>(
-                      result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name, history));
+                      result, scopeMappingInstanceKey.getFunargNodes(name, history));
             }
           }
         }
@@ -123,9 +124,9 @@ public abstract class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof ScopeMappingInstanceKey)
-          && ((ScopeMappingInstanceKey) o).base.equals(base)
-          && ((ScopeMappingInstanceKey) o).creator.equals(creator);
+      return (o instanceof ScopeMappingInstanceKey scopeMappingInstanceKey)
+          && scopeMappingInstanceKey.base.equals(base)
+          && scopeMappingInstanceKey.creator.equals(creator);
     }
 
     @Override

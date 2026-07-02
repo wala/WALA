@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
@@ -22,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class BitVectorIntSet implements MutableIntSet {
 
-  private static final long serialVersionUID = 7477243071826223843L;
+  @Serial private static final long serialVersionUID = 7477243071826223843L;
 
   // population count of -1 means needs to be computed again.
   private int populationCount = 0;
@@ -59,16 +60,14 @@ public final class BitVectorIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof BitVectorIntSet) {
-      BitVectorIntSet S = (BitVectorIntSet) set;
+    if (set instanceof BitVectorIntSet S) {
       bitVector = new BitVector(S.bitVector);
       populationCount = S.populationCount;
-    } else if (set instanceof MutableSharedBitVectorIntSet) {
-      BitVectorIntSet S = ((MutableSharedBitVectorIntSet) set).makeDenseCopy();
+    } else if (set instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
+      BitVectorIntSet S = mutableSharedBitVectorIntSet.makeDenseCopy();
       bitVector = new BitVector(S.bitVector);
       populationCount = S.populationCount;
-    } else if (set instanceof SparseIntSet) {
-      SparseIntSet s = (SparseIntSet) set;
+    } else if (set instanceof SparseIntSet s) {
       if (s.size == 0) {
         populationCount = 0;
         bitVector = new BitVector(0);
@@ -79,8 +78,8 @@ public final class BitVectorIntSet implements MutableIntSet {
           bitVector.set(s.elements[i]);
         }
       }
-    } else if (set instanceof BimodalMutableIntSet) {
-      IntSet backing = ((BimodalMutableIntSet) set).getBackingStore();
+    } else if (set instanceof BimodalMutableIntSet bimodalMutableIntSet) {
+      IntSet backing = bimodalMutableIntSet.getBackingStore();
       copySet(backing);
     } else {
       bitVector.clearAll();
@@ -93,8 +92,8 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   @Override
   public boolean addAll(@Nullable IntSet set) {
-    if (set instanceof BitVectorIntSet) {
-      BitVector B = ((BitVectorIntSet) set).bitVector;
+    if (set instanceof BitVectorIntSet bitVectorIntSet) {
+      BitVector B = bitVectorIntSet.bitVector;
       int delta = bitVector.orWithDelta(B);
       populationCount += delta;
       populationCount = (populationCount == (delta + UNDEFINED)) ? UNDEFINED : populationCount;
@@ -115,8 +114,8 @@ public final class BitVectorIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof BitVectorIntSet) {
-      BitVector B = ((BitVectorIntSet) set).bitVector;
+    if (set instanceof BitVectorIntSet bitVectorIntSet) {
+      BitVector B = bitVectorIntSet.bitVector;
       bitVector.or(B);
       populationCount = UNDEFINED;
     } else {
@@ -258,8 +257,8 @@ public final class BitVectorIntSet implements MutableIntSet {
    */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
-    if (X instanceof BitVectorIntSet) {
-      fastForeachExcluding((BitVectorIntSet) X, action);
+    if (X instanceof BitVectorIntSet bitVectorIntSet) {
+      fastForeachExcluding(bitVectorIntSet, action);
     } else {
       slowForeachExcluding(X, action);
     }
@@ -344,15 +343,14 @@ public final class BitVectorIntSet implements MutableIntSet {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
     }
-    if (that instanceof BitVectorIntSet) {
-      BitVectorIntSet b = (BitVectorIntSet) that;
+    if (that instanceof BitVectorIntSet b) {
       return bitVector.sameBits(b.bitVector);
     } else if (that instanceof BimodalMutableIntSet) {
       return that.sameValue(this);
-    } else if (that instanceof SparseIntSet) {
-      return sameValueInternal((SparseIntSet) that);
-    } else if (that instanceof MutableSharedBitVectorIntSet) {
-      return sameValue(((MutableSharedBitVectorIntSet) that).makeDenseCopy());
+    } else if (that instanceof SparseIntSet sparseIntSet) {
+      return sameValueInternal(sparseIntSet);
+    } else if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
+      return sameValue(mutableSharedBitVectorIntSet.makeDenseCopy());
     } else {
       Assertions.UNREACHABLE("unexpected argument type " + that.getClass());
       return false;
@@ -381,10 +379,10 @@ public final class BitVectorIntSet implements MutableIntSet {
   @NullUnmarked
   @Override
   public boolean isSubset(@Nullable IntSet that) {
-    if (that instanceof BitVectorIntSet) {
-      return bitVector.isSubset(((BitVectorIntSet) that).bitVector);
-    } else if (that instanceof SparseIntSet) {
-      return isSubsetInternal((SparseIntSet) that);
+    if (that instanceof BitVectorIntSet bitVectorIntSet) {
+      return bitVector.isSubset(bitVectorIntSet.bitVector);
+    } else if (that instanceof SparseIntSet sparseIntSet) {
+      return isSubsetInternal(sparseIntSet);
     } else {
       // really slow. optimize as needed.
       for (IntIterator it = intIterator(); it.hasNext(); ) {
@@ -435,8 +433,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof BitVectorIntSet) {
-      BitVectorIntSet b = (BitVectorIntSet) set;
+    if (set instanceof BitVectorIntSet b) {
       return !bitVector.intersectionEmpty(b.bitVector);
     } else {
       // TODO: optimize

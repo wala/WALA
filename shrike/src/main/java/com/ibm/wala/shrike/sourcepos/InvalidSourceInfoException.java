@@ -17,6 +17,8 @@
 
 package com.ibm.wala.shrike.sourcepos;
 
+import java.io.Serial;
+
 /**
  * An {@code InvalidSourceInfoException} is thrown if {@code SourceInfo} could not be initialized.
  * Reasons are an invalid bytecode and a missing CharacterRangeTable.
@@ -26,7 +28,7 @@ package com.ibm.wala.shrike.sourcepos;
  */
 public class InvalidSourceInfoException extends Exception {
 
-  private static final long serialVersionUID = -5895195422989965097L;
+  @Serial private static final long serialVersionUID = -5895195422989965097L;
 
   /** Creates a new instance of {@code InvalidSourceInfoException} without detail message. */
   public InvalidSourceInfoException() {}

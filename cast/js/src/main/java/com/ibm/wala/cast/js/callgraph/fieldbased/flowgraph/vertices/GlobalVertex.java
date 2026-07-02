@@ -19,7 +19,7 @@ public class GlobalVertex extends Vertex implements ObjectVertex {
   }
 
   @Override
-  public IClass getConcreteType() {
+  public IClass concreteType() {
     return null;
   }
 

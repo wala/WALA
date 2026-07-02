@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -35,7 +36,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       SSAContextInterpreter appContextInterpreter,
       int instancePolicy) {
 
-    super(l.getFakeRootMethod(cha, options, cache), options, cache, new DefaultPointerKeyFactory());
+    super(l.getFakeRootMethod(cha, cache), options, cache, new DefaultPointerKeyFactory());
 
     ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector =
@@ -98,7 +99,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       Util.addBypassLogic(options, cl, xmlFile, cha);
     }
 
-    return new ZeroXCFABuilder(Language.JAVA, cha, options, cache, null, null, instancePolicy);
+    return new ZeroXCFABuilder(JavaLanguage.get(), cha, options, cache, null, null, instancePolicy);
   }
 
   public static ZeroXCFABuilder make(

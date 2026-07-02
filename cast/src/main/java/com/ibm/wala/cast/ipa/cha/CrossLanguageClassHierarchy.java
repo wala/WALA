@@ -76,7 +76,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   }
 
   private IClassHierarchy getHierarchy(ClassLoaderReference loader) {
-    return getHierarchy(loader.getLanguage());
+    return getHierarchy(loader.language());
   }
 
   private IClassHierarchy getHierarchy(IClass cls) {

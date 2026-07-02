@@ -263,10 +263,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   private Pair<PointsToResult, Collection<InstanceKeyAndState>> getPointsToWithStates(
       PointerKey pk, Predicate<InstanceKey> ikeyPred) {
-    if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
+    if (!(pk instanceof LocalPointerKey queriedPk)) {
       throw new IllegalArgumentException("only locals for now");
     }
-    LocalPointerKey queriedPk = (LocalPointerKey) pk;
     if (DEBUG) {
       System.err.println("answering query for " + pk);
     }
@@ -414,10 +413,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   public PointsToResult pointsToPassesPred(
       PointerKey pk, Predicate<InstanceKey> ikeyPred, PointerAnalysis<InstanceKey> pa)
       throws IllegalArgumentException {
-    if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
+    if (!(pk instanceof LocalPointerKey queriedPk)) {
       throw new IllegalArgumentException("only locals for now");
     }
-    LocalPointerKey queriedPk = (LocalPointerKey) pk;
     if (DEBUG) {
       System.err.println("answering query for " + pk);
     }
@@ -645,25 +643,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    *
    * @author Manu Sridharan
    */
-  private static final class StoreEdge {
+  private record StoreEdge(PointerKeyAndState base, IField field, PointerKeyAndState val) {
     //
     // Represents statement of the form base.field = val
-
-    final PointerKeyAndState base;
-
-    final IField field;
-
-    final PointerKeyAndState val;
-
-    @Override
-    public int hashCode() {
-      final int PRIME = 31;
-      int result = 1;
-      result = PRIME * result + val.hashCode();
-      result = PRIME * result + field.hashCode();
-      result = PRIME * result + base.hashCode();
-      return result;
-    }
 
     @Override
     public boolean equals(Object obj) {
@@ -676,41 +658,18 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (!base.equals(other.base)) return false;
       return true;
     }
-
-    public StoreEdge(
-        final PointerKeyAndState base, final IField field, final PointerKeyAndState val) {
-      this.base = base;
-      this.field = field;
-      this.val = val;
-    }
   }
 
   /**
    * Representation of a field read.
    *
    * @author Manu Sridharan
+   * @param base Represents statements of the form val = base.field
    */
-  private static final class LoadEdge {
-    // Represents statements of the form val = base.field
-    final PointerKeyAndState base;
-
-    final IField field;
-
-    final PointerKeyAndState val;
-
+  private record LoadEdge(PointerKeyAndState base, IField field, PointerKeyAndState val) {
     @Override
     public String toString() {
       return val + " := " + base + ", field " + field;
-    }
-
-    @Override
-    public int hashCode() {
-      final int PRIME = 31;
-      int result = 1;
-      result = PRIME * result + val.hashCode();
-      result = PRIME * result + field.hashCode();
-      result = PRIME * result + base.hashCode();
-      return result;
     }
 
     @Override
@@ -723,13 +682,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (!field.equals(other.field)) return false;
       if (!base.equals(other.base)) return false;
       return true;
-    }
-
-    public LoadEdge(
-        final PointerKeyAndState base, final IField field, final PointerKeyAndState val) {
-      this.base = base;
-      this.field = field;
-      this.val = val;
     }
   }
 
@@ -848,15 +800,15 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         IntSet vals,
         IFlowLabel label) {
       final PointerKey pk = pkAndState.getPointerKey();
-      if (pk instanceof FilteredPointerKey) {
+      if (pk instanceof FilteredPointerKey filteredPointerKey) {
         if (DEBUG) {
           System.err.println("handling filtered pointer key " + pk);
         }
-        final TypeFilter typeFilter = ((FilteredPointerKey) pk).getTypeFilter();
+        final TypeFilter typeFilter = filteredPointerKey.getTypeFilter();
         vals = updateValsForFilter(vals, typeFilter);
       }
-      if (label instanceof IFlowLabelWithFilter) {
-        TypeFilter typeFilter = ((IFlowLabelWithFilter) label).getFilter();
+      if (label instanceof IFlowLabelWithFilter iFlowLabelWithFilter) {
+        TypeFilter typeFilter = iFlowLabelWithFilter.getFilter();
         if (typeFilter != null) {
           vals = updateValsForFilter(vals, typeFilter);
         }
@@ -874,32 +826,31 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     private IntSet updateValsForFilter(IntSet vals, final TypeFilter typeFilter) {
-      if (typeFilter instanceof SingleClassFilter) {
-        final IClass concreteType = ((SingleClassFilter) typeFilter).getConcreteType();
+      if (typeFilter instanceof SingleClassFilter singleClassFilter) {
+        final IClass concreteType = singleClassFilter.concreteType();
         final MutableIntSet tmp = intSetFactory.make();
         vals.foreach(
             x -> {
               InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              if (cha.isAssignableFrom(
-                  concreteType, ikAndState.getInstanceKey().getConcreteType())) {
+              if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().concreteType())) {
                 tmp.add(x);
               }
             });
         vals = tmp;
-      } else if (typeFilter instanceof MultipleClassesFilter) {
+      } else if (typeFilter instanceof MultipleClassesFilter multipleClassesFilter) {
         final MutableIntSet tmp = intSetFactory.make();
         vals.foreach(
             x -> {
               InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              for (IClass t : ((MultipleClassesFilter) typeFilter).getConcreteTypes()) {
-                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
+              for (IClass t : multipleClassesFilter.getConcreteTypes()) {
+                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().concreteType())) {
                   tmp.add(x);
                 }
               }
             });
         vals = tmp;
-      } else if (typeFilter instanceof SingleInstanceFilter) {
-        final InstanceKey theOnlyInstanceKey = ((SingleInstanceFilter) typeFilter).getInstance();
+      } else if (typeFilter instanceof SingleInstanceFilter singleInstanceFilter) {
+        final InstanceKey theOnlyInstanceKey = singleInstanceFilter.getInstance();
         final MutableIntSet tmp = intSetFactory.make();
         vals.foreach(
             x -> {
@@ -1083,7 +1034,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       for (InstanceKeyAndState ikAndState : p2set) {
         InstanceKey ik = ikAndState.getInstanceKey();
         IMethod targetMethod =
-            options.getMethodTargetSelector().getCalleeTarget(caller, call, ik.getConcreteType());
+            options.getMethodTargetSelector().getCalleeTarget(caller, call, ik.concreteType());
         if (targetMethod == null) {
           // NOTE: target method can be null because we don't
           // always have type filters
@@ -1191,8 +1142,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG) System.err.println("init " + curPkAndState);
-        assert !(curPk instanceof LocalPointerKey)
-            || g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
+        assert !(curPk instanceof LocalPointerKey localPointerKey)
+            || g.hasSubgraphForNode(localPointerKey.getNode());
         // if (curPk instanceof LocalPointerKey) {
         // Collection<InstanceKey> constantVals =
         // getConstantVals((LocalPointerKey) curPk);
@@ -1279,8 +1230,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private void handleForwInterproc(
         final PointerKeyAndState curPkAndState, final CopyHandler handler) {
       PointerKey curPk = curPkAndState.getPointerKey();
-      if (curPk instanceof LocalPointerKey) {
-        final LocalPointerKey localPk = (LocalPointerKey) curPk;
+      if (curPk instanceof LocalPointerKey localPk) {
         if (g.isParam(localPk)) {
           // System.err.println("at param");
           final CGNode callee = localPk.getNode();
@@ -1586,8 +1536,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       final PointerKey curPk = curPkAndState.getPointerKey();
       final State curState = curPkAndState.getState();
       // interprocedural edges
-      if (curPk instanceof ReturnValueKey) {
-        final ReturnValueKey returnKey = (ReturnValueKey) curPk;
+      if (curPk instanceof ReturnValueKey returnKey) {
         if (DEBUG) {
           System.err.println("return value");
         }
@@ -1660,8 +1609,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               });
         }
       }
-      if (curPk instanceof LocalPointerKey) {
-        LocalPointerKey localPk = (LocalPointerKey) curPk;
+      if (curPk instanceof LocalPointerKey localPk) {
         CGNode caller = localPk.getNode();
         // from actual parameter to callee
         for (SSAAbstractInvokeInstruction callInstr :
@@ -2086,8 +2034,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
 
       private boolean graphContainsNode(PointerKey pointerKey) {
-        if (pointerKey instanceof LocalPointerKey) {
-          LocalPointerKey lpk = (LocalPointerKey) pointerKey;
+        if (pointerKey instanceof LocalPointerKey lpk) {
           return g.hasSubgraphForNode(lpk.getNode());
         }
         return true;
@@ -2111,9 +2058,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           for (InstanceKeyAndState ikAndState : thisPToSet) {
             InstanceKey ik = ikAndState.getInstanceKey();
             IMethod targetMethod =
-                options
-                    .getMethodTargetSelector()
-                    .getCalleeTarget(caller, call, ik.getConcreteType());
+                options.getMethodTargetSelector().getCalleeTarget(caller, call, ik.concreteType());
             if (targetMethod == null) {
               // NOTE: target method can be null because we don't
               // always have type filters
@@ -2128,8 +2073,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       public void handleTopLevelForwInterproc(PointerKeyAndState curPkAndState) {
         PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
-        if (curPk instanceof LocalPointerKey) {
-          final LocalPointerKey localPk = (LocalPointerKey) curPk;
+        if (curPk instanceof LocalPointerKey localPk) {
           if (g.isParam(localPk)) {
             // System.err.println("at param");
             final CGNode callee = localPk.getNode();
@@ -2256,8 +2200,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       private OrdinalSet<InstanceKeyAndState> getPToSetFromComputer(
           final PointsToComputer ptoComputer, PointerKeyAndState pointerKeyAndState) {
         // make sure relevant constraints have been added
-        if (pointerKeyAndState.getPointerKey() instanceof LocalPointerKey) {
-          LocalPointerKey lpk = (LocalPointerKey) pointerKeyAndState.getPointerKey();
+        if (pointerKeyAndState.getPointerKey() instanceof LocalPointerKey lpk) {
           g.addSubgraphForNode(lpk.getNode());
         }
         // add pointerKeyAndState to init worklist
@@ -2312,8 +2255,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
     final Helper h = new Helper();
     PointerKeyAndState initPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
-    if (pk instanceof LocalPointerKey) {
-      g.addSubgraphForNode(((LocalPointerKey) pk).getNode());
+    if (pk instanceof LocalPointerKey localPointerKey) {
+      g.addSubgraphForNode(localPointerKey.getNode());
     }
     h.propagate(initPkAndState);
     while (!worklist.isEmpty()) {
@@ -2412,7 +2355,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         private Collection<Pair<PointerKey, PointerKey>> getBaseAndStored(
             MemoryAccess fieldWrite, IField field) {
-          final CGNode node = fieldWrite.getNode();
+          final CGNode node = fieldWrite.node();
           // an optimization; if node is not represented in our constraint graph, then we could not
           // possibly
           // have discovered flow to the base pointer
@@ -2422,27 +2365,26 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           IR ir = node.getIR();
           final PointerKey base, stored;
           if (field == ArrayContents.v()) {
-            final SSAInstruction instruction =
-                ir.getInstructions()[fieldWrite.getInstructionIndex()];
+            final SSAInstruction instruction = ir.getInstructions()[fieldWrite.instructionIndex()];
             if (instruction == null) {
               return null;
             }
-            if (instruction instanceof SSANewInstruction) {
+            if (instruction instanceof SSANewInstruction ssaNewInstruction) {
               return DemandPointerFlowGraph.getInfoForNewMultiDim(
-                      (SSANewInstruction) instruction, heapModel, fieldWrite.getNode())
-                  .arrStoreInstrs;
+                      ssaNewInstruction, heapModel, fieldWrite.node())
+                  .arrStoreInstrs();
             }
             SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
-            base = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getArrayRef());
-            stored = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getValue());
+            base = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getArrayRef());
+            stored = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getValue());
           } else {
             SSAPutInstruction s =
-                (SSAPutInstruction) ir.getInstructions()[fieldWrite.getInstructionIndex()];
+                (SSAPutInstruction) ir.getInstructions()[fieldWrite.instructionIndex()];
             if (s == null) {
               return null;
             }
-            base = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getRef());
-            stored = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getVal());
+            base = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getRef());
+            stored = heapModel.getPointerKeyForLocal(fieldWrite.node(), s.getVal());
           }
           return Collections.singleton(Pair.make(base, stored));
         }

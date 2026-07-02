@@ -500,8 +500,7 @@ public abstract class OfflineInstrumenterBase {
     makeOutputJar();
     for (Input in : inputs) {
       if (!in.isClass()) {
-        if (in instanceof JarInput) {
-          JarInput jin = (JarInput) in;
+        if (in instanceof JarInput jin) {
           ZipEntry entry = jin.getEntry();
           try (final InputStream s = jin.open()) {
             ZipEntry newEntry = new ZipEntry(entry.getName());

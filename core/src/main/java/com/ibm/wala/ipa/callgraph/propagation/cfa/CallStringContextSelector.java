@@ -51,10 +51,10 @@ public abstract class CallStringContextSelector implements ContextSelector {
 
     @Override
     public boolean equals(Object o) {
-      return o instanceof Context
-          && ((Context) o).isA(CallStringContextPair.class)
-          && ((Context) o).get(CALL_STRING).equals(cs)
-          && ((Context) o).get(BASE).equals(base);
+      return o instanceof Context context
+          && context.isA(CallStringContextPair.class)
+          && context.get(CALL_STRING).equals(cs)
+          && context.get(BASE).equals(base);
     }
 
     @Override

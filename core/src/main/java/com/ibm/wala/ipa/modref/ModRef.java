@@ -116,8 +116,8 @@ public class ModRef<T extends InstanceKey> {
 
   public ExtendedHeapModel makeHeapModel(PointerAnalysis<T> pa) {
     HeapModel heapModel = pa.getHeapModel();
-    if (heapModel instanceof ExtendedHeapModel) {
-      return (ExtendedHeapModel) heapModel;
+    if (heapModel instanceof ExtendedHeapModel extendedHeapModel) {
+      return extendedHeapModel;
     } else {
       return new DelegatingExtendedHeapModel(heapModel);
     }
@@ -298,7 +298,7 @@ public class ModRef<T extends InstanceKey> {
           // allocation of a scalar "writes" all fields in the scalar
           InstanceKey i = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
           if (i != null) {
-            IClass type = i.getConcreteType();
+            IClass type = i.concreteType();
             for (IField f : type.getAllInstanceFields()) {
               PointerKey pk = h.getPointerKeyForInstanceField(i, f);
               assert pk != null;

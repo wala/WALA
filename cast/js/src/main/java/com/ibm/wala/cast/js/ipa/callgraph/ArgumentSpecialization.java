@@ -194,10 +194,9 @@ public class ArgumentSpecialization {
 
     @Override
     public IR makeIR(final IMethod method, Context context, SSAOptions options) {
-      if (method instanceof Retranslatable) {
+      if (method instanceof Retranslatable m) {
         @SuppressWarnings("unchecked")
         final Value<Integer> v = (Value<Integer>) context.get(ArgumentCountContext.ARGUMENT_COUNT);
-        final Retranslatable m = (Retranslatable) method;
         if (v != null) {
           final JavaScriptLoader myLoader =
               (JavaScriptLoader) method.getDeclaringClass().getClassLoader();
@@ -217,9 +216,9 @@ public class ArgumentSpecialization {
             private CAstNode handleArgumentRef(CAstNode n) {
               Object x = n.getValue();
               if (x != null) {
-                if (x instanceof Number
-                    && ((Number) x).intValue() < v.getValue() - WALA_FUNCTION_AND_THIS_ARGS) {
-                  int arg = ((Number) x).intValue() + WALA_FUNCTION_AND_THIS_ARGS;
+                if (x instanceof Number number
+                    && number.intValue() < v.getValue() - WALA_FUNCTION_AND_THIS_ARGS) {
+                  int arg = number.intValue() + WALA_FUNCTION_AND_THIS_ARGS;
                   if (arg < e.getArgumentCount()) {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(e.getArgumentNames()[arg]));
                   } else {

@@ -62,10 +62,13 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="zulu-17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="zulu-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="TaskProjectConfiguration">
     <server type="GitHub" url="https://github.com" />
+  </component>
+  <component name="com.github.lipiridi.spotless.applier.ui.settings.ModuleSettingsState">
+    <option name="applyOnRootProject" value="true" />
   </component>
 </project>

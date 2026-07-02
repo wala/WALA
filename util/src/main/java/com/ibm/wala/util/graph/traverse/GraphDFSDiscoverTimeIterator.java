@@ -12,11 +12,12 @@ package com.ibm.wala.util.graph.traverse;
 
 import com.ibm.wala.util.graph.Graph;
 import com.uber.nullaway.annotations.Initializer;
+import java.io.Serial;
 import java.util.Iterator;
 
 abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T> {
 
-  private static final long serialVersionUID = -5673397879499010863L;
+  @Serial private static final long serialVersionUID = -5673397879499010863L;
 
   /** the graph being searched */
   private Graph<T> G;

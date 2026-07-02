@@ -100,9 +100,9 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof UseRecord)
-          && instructionIndex == ((UseRecord) o).instructionIndex
-          && useNumber == ((UseRecord) o).useNumber;
+      return (o instanceof UseRecord useRecord)
+          && instructionIndex == useRecord.instructionIndex
+          && useNumber == useRecord.useNumber;
     }
   }
 
@@ -143,10 +143,10 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof PhiUseRecord)
-          && BBnumber == ((PhiUseRecord) o).BBnumber
-          && phiNumber == ((PhiUseRecord) o).phiNumber
-          && useNumber == ((PhiUseRecord) o).useNumber;
+      return (o instanceof PhiUseRecord phiUseRecord)
+          && BBnumber == phiUseRecord.BBnumber
+          && phiNumber == phiUseRecord.phiNumber
+          && useNumber == phiUseRecord.useNumber;
     }
   }
 
@@ -192,8 +192,8 @@ public class SSAConversion extends AbstractSSAConversion {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof CopyPropagationRecord)
-          && instructionIndex == ((CopyPropagationRecord) o).instructionIndex;
+      return (o instanceof CopyPropagationRecord copyPropagationRecord)
+          && instructionIndex == copyPropagationRecord.instructionIndex;
     }
 
     private CopyPropagationRecord(int instructionIndex, int rhs) {
@@ -265,8 +265,7 @@ public class SSAConversion extends AbstractSSAConversion {
             ("recreating assignment at " + instructionIndex + " as " + lhs + " = " + rhs));
 
       for (Object x : renamedUses) {
-        if (x instanceof UseRecord) {
-          UseRecord use = (UseRecord) x;
+        if (x instanceof UseRecord use) {
           int idx = use.instructionIndex;
           SSAInstruction inst = instructions[idx];
 

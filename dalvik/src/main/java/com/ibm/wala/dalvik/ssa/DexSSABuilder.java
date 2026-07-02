@@ -415,7 +415,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     }
 
     /** Update the machine state to account for an instruction */
-    class NodeVisitor extends BasicRegisterMachineVisitor {
+    private class NodeVisitor extends BasicRegisterMachineVisitor {
       private final SSACFG cfg;
 
       public NodeVisitor(SSACFG cfg) {
@@ -560,12 +560,12 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         Literal lit = instruction.oper2;
 
         int val2;
-        if (lit instanceof Literal.IntLiteral)
-          val2 = symbolTable.getConstant(((Literal.IntLiteral) lit).value);
-        else if (lit instanceof Literal.LongLiteral)
-          val2 = symbolTable.getConstant(((Literal.LongLiteral) lit).value);
-        else if (lit instanceof Literal.DoubleLiteral)
-          val2 = symbolTable.getConstant(((Literal.DoubleLiteral) lit).value);
+        if (lit instanceof Literal.IntLiteral intLiteral)
+          val2 = symbolTable.getConstant(intLiteral.value);
+        else if (lit instanceof Literal.LongLiteral longLiteral)
+          val2 = symbolTable.getConstant(longLiteral.value);
+        else if (lit instanceof Literal.DoubleLiteral doubleLiteral)
+          val2 = symbolTable.getConstant(doubleLiteral.value);
         else val2 = symbolTable.getConstant(((Literal.FloatLiteral) lit).value);
 
         int val1 = workingState.getLocal(instruction.oper1);
@@ -630,8 +630,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
       @Override
       public void visitBranch(Branch instruction) {
-        if (instruction instanceof Branch.BinaryBranch) {
-          Branch.BinaryBranch bbranch = (Branch.BinaryBranch) instruction;
+        if (instruction instanceof Branch.BinaryBranch bbranch) {
           int val2 = workingState.getLocal(bbranch.oper2);
           int val1 = workingState.getLocal(bbranch.oper1);
           //                  int val2 = workingState.pop();
@@ -641,8 +640,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
           emitInstruction(
               insts.ConditionalBranchInstruction(
                   getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2, -1));
-        } else if (instruction instanceof Branch.UnaryBranch) {
-          Branch.UnaryBranch ubranch = (Branch.UnaryBranch) instruction;
+        } else if (instruction instanceof Branch.UnaryBranch ubranch) {
           int val2 = symbolTable.getConstant(0);
           int val1 = workingState.getLocal(ubranch.oper1);
           TypeReference t = TypeReference.Int;
@@ -661,8 +659,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       public void visitConstant(Constant instruction) {
         int dest = instruction.destination;
         int symbol = 0;
-        if (instruction instanceof Constant.ClassConstant) {
-          Constant.ClassConstant constInst = (Constant.ClassConstant) instruction;
+        if (instruction instanceof Constant.ClassConstant constInst) {
 
           // TODO: change to a symbol that represents the given IClass
           //                  symbol =
@@ -674,12 +671,12 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
               insts.LoadMetadataInstruction(
                   getCurrentInstructionIndex(), symbol, TypeReference.JavaLangClass, typeRef);
           emitInstruction(s);
-        } else if (instruction instanceof Constant.IntConstant) {
-          symbol = symbolTable.getConstant(((Constant.IntConstant) instruction).value);
-        } else if (instruction instanceof Constant.LongConstant) {
-          symbol = symbolTable.getConstant(((Constant.LongConstant) instruction).value);
-        } else if (instruction instanceof Constant.StringConstant) {
-          symbol = symbolTable.getConstant(((Constant.StringConstant) instruction).value);
+        } else if (instruction instanceof Constant.IntConstant intConstant) {
+          symbol = symbolTable.getConstant(intConstant.value);
+        } else if (instruction instanceof Constant.LongConstant longConstant) {
+          symbol = symbolTable.getConstant(longConstant.value);
+        } else if (instruction instanceof Constant.StringConstant stringConstant) {
+          symbol = symbolTable.getConstant(stringConstant.value);
         } else {
           Assertions.UNREACHABLE("unexpected constant instruction " + instruction);
         }
@@ -744,8 +741,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 loader, instruction.clazzName, instruction.fieldName, instruction.fieldType);
         // TODO: what is isAddressOf()?
         // shouldn't matter, java doesn't allow isAddressOf()
-        if (instruction instanceof GetField.GetInstanceField) {
-          int instance = workingState.getLocal(((GetField.GetInstanceField) instruction).instance);
+        if (instruction instanceof GetField.GetInstanceField getInstanceField) {
+          int instance = workingState.getLocal(getInstanceField.instance);
           emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, instance, f));
         } else if (instruction instanceof GetField.GetStaticField) {
           emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, f));
@@ -1019,9 +1016,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         if (instruction instanceof PutField.PutStaticField) {
           //              if (instruction.isStatic()) {
           emitInstruction(insts.PutInstruction(getCurrentInstructionIndex(), value, f));
-        } else if (instruction instanceof PutField.PutInstanceField) {
+        } else if (instruction instanceof PutField.PutInstanceField putInstanceField) {
           //              } else {
-          int ref = workingState.getLocal(((PutField.PutInstanceField) instruction).instance);
+          int ref = workingState.getLocal(putInstanceField.instance);
           //                  int ref = workingState.pop();
           emitInstruction(insts.PutInstruction(getCurrentInstructionIndex(), ref, value, f));
         } else {
@@ -1034,9 +1031,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
        */
       @Override
       public void visitReturn(Return instruction) {
-        if (instruction instanceof Return.ReturnDouble) {
+        if (instruction instanceof Return.ReturnDouble retD) {
           // TODO: figure out how to return a double
-          Return.ReturnDouble retD = (Return.ReturnDouble) instruction;
           int result = workingState.getLocal(retD.source1);
           //                  boolean isPrimitive = symbolTable.isLongConstant(result) ||
           // symbolTable.isDoubleConstant(result);
@@ -1045,8 +1041,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
               insts.ReturnInstruction(getCurrentInstructionIndex(), result, isPrimitive));
           //                  throw new UnsupportedOperationException("can't yet support returning
           // doubles");
-        } else if (instruction instanceof Return.ReturnSingle) {
-          Return.ReturnSingle retS = (Return.ReturnSingle) instruction;
+        } else if (instruction instanceof Return.ReturnSingle retS) {
           int result = workingState.getLocal(retS.source);
           // TODO: figure out if this is primitive or not
           // boolean isPrimitive = false;
@@ -1183,74 +1178,75 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
           TypeReference fromType, toType;
           boolean overflows = false;
           // TODO: figure out if any of these can overflow
-          switch (instruction.op) {
-            case DOUBLETOLONG:
-              fromType = TypeReference.Double;
-              toType = TypeReference.Long;
-              break;
-            case DOUBLETOFLOAT:
-              fromType = TypeReference.Double;
-              toType = TypeReference.Float;
-              break;
-            case INTTOBYTE:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Byte;
-              break;
-            case INTTOCHAR:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Char;
-              break;
-            case INTTOSHORT:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Short;
-              break;
-            case DOUBLETOINT:
-              fromType = TypeReference.Double;
-              toType = TypeReference.Int;
-              break;
-            case FLOATTODOUBLE:
-              fromType = TypeReference.Float;
-              toType = TypeReference.Double;
-              break;
-            case FLOATTOLONG:
-              fromType = TypeReference.Float;
-              toType = TypeReference.Long;
-              break;
-            case FLOATTOINT:
-              fromType = TypeReference.Float;
-              toType = TypeReference.Int;
-              break;
-            case LONGTODOUBLE:
-              fromType = TypeReference.Long;
-              toType = TypeReference.Double;
-              break;
-            case LONGTOFLOAT:
-              fromType = TypeReference.Long;
-              toType = TypeReference.Float;
-              break;
-            case LONGTOINT:
-              fromType = TypeReference.Long;
-              toType = TypeReference.Int;
-              break;
-            case INTTODOUBLE:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Double;
-              break;
-            case INTTOFLOAT:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Float;
-              break;
-            case INTTOLONG:
-              fromType = TypeReference.Int;
-              toType = TypeReference.Long;
-              break;
-            default:
-              throw new IllegalArgumentException(
-                  "unknown conversion type "
-                      + instruction.op
-                      + " in unary instruction: "
-                      + instruction);
-          }
+          toType =
+              switch (instruction.op) {
+                case DOUBLETOLONG -> {
+                  fromType = TypeReference.Double;
+                  yield TypeReference.Long;
+                }
+                case DOUBLETOFLOAT -> {
+                  fromType = TypeReference.Double;
+                  yield TypeReference.Float;
+                }
+                case INTTOBYTE -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Byte;
+                }
+                case INTTOCHAR -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Char;
+                }
+                case INTTOSHORT -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Short;
+                }
+                case DOUBLETOINT -> {
+                  fromType = TypeReference.Double;
+                  yield TypeReference.Int;
+                }
+                case FLOATTODOUBLE -> {
+                  fromType = TypeReference.Float;
+                  yield TypeReference.Double;
+                }
+                case FLOATTOLONG -> {
+                  fromType = TypeReference.Float;
+                  yield TypeReference.Long;
+                }
+                case FLOATTOINT -> {
+                  fromType = TypeReference.Float;
+                  yield TypeReference.Int;
+                }
+                case LONGTODOUBLE -> {
+                  fromType = TypeReference.Long;
+                  yield TypeReference.Double;
+                }
+                case LONGTOFLOAT -> {
+                  fromType = TypeReference.Long;
+                  yield TypeReference.Float;
+                }
+                case LONGTOINT -> {
+                  fromType = TypeReference.Long;
+                  yield TypeReference.Int;
+                }
+                case INTTODOUBLE -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Double;
+                }
+                case INTTOFLOAT -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Float;
+                }
+                case INTTOLONG -> {
+                  fromType = TypeReference.Int;
+                  yield TypeReference.Long;
+                }
+                default ->
+                    throw new IllegalArgumentException(
+                        "unknown conversion type "
+                            + instruction.op
+                            + " in unary instruction: "
+                            + instruction);
+              };
           int dest = instruction.destination;
           int result = reuseOrCreateDef();
           setLocal(dest, result);
@@ -1388,7 +1384,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       }
     }
 
-    class EdgeVisitor extends Visitor {
+    private class EdgeVisitor extends Visitor {
 
       @Override
       public void visitInvoke(Invoke instruction) {
@@ -1432,35 +1428,23 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
   /**
    * A logical mapping from &lt;pc, valueNumber&gt; -&gt; local number Note: make sure this class
    * remains static: this persists as part of the IR!!
+   *
+   * @param localStoreMap Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a
+   *     range at pc p where value number vn corresponds to local L
+   * @param block2LocalState For each basic block i and local j, block2LocalState[i][j] gives the
+   *     contents of local j at the start of block i
+   * @param maxLocals maximum number of locals used at any program point
    */
-  private static class SSA2LocalMap implements com.ibm.wala.ssa.IR.SSA2LocalMap {
-
-    private final DexCFG dexCFG;
-
-    /**
-     * Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a range at pc p where
-     * value number vn corresponds to local L
-     */
-    private final IntPair[] localStoreMap;
-
-    /**
-     * For each basic block i and local j, block2LocalState[i][j] gives the contents of local j at
-     * the start of block i
-     */
-    private final int[][] block2LocalState;
-
-    /** maximum number of locals used at any program point */
-    private final int maxLocals;
+  private record SSA2LocalMap(
+      DexCFG dexCFG, IntPair[] localStoreMap, int[][] block2LocalState, int maxLocals)
+      implements IR.SSA2LocalMap {
 
     /**
      * @param nInstructions number of instructions in the bytecode for this method
      * @param nBlocks number of basic blocks in the CFG
      */
     SSA2LocalMap(DexCFG dexCfg, int nInstructions, int nBlocks, int maxLocals) {
-      dexCFG = dexCfg;
-      localStoreMap = new IntPair[nInstructions];
-      block2LocalState = new int[nBlocks][];
-      this.maxLocals = maxLocals;
+      this(dexCfg, new IntPair[nInstructions], new int[nBlocks][], maxLocals);
     }
 
     /**
@@ -1534,7 +1518,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       for (int i = firstInstruction; i <= pc; i++) {
         if (localStoreMap[i] != null) {
           IntPair p = localStoreMap[i];
-          locals[p.getY()] = p.getX();
+          locals[p.y()] = p.x();
         }
       }
       return extractIndices(locals, vn);
@@ -1542,9 +1526,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
     public int[] allocateNewLocalsArray() {
       int[] result = new int[maxLocals];
-      for (int i = 0; i < maxLocals; i++) {
-        result[i] = OPTIMISTIC ? TOP : BOTTOM;
-      }
+      Arrays.fill(result, OPTIMISTIC ? TOP : BOTTOM);
       return result;
     }
 

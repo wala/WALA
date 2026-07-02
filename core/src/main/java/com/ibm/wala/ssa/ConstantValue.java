@@ -61,7 +61,7 @@ public class ConstantValue implements Value {
    * @return true iff this constant is "zero"
    */
   public boolean isZeroConstant() {
-    return ((constant instanceof Number) && (((Number) constant).intValue() == 0));
+    return ((constant instanceof Number number) && (number.intValue() == 0));
   }
 
   /**
@@ -76,7 +76,7 @@ public class ConstantValue implements Value {
    * @return true iff this constant is "one"
    */
   public boolean isOneConstant() {
-    return ((constant instanceof Number) && (((Number) constant).intValue() == 1));
+    return ((constant instanceof Number number) && (number.intValue() == 1));
   }
 
   @Override

@@ -65,8 +65,7 @@ public final class StoreInstruction extends Instruction implements IStoreInstruc
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof StoreInstruction) {
-      StoreInstruction i = (StoreInstruction) o;
+    if (o instanceof StoreInstruction i) {
       return i.index == index && i.opcode == opcode;
     } else {
       return false;

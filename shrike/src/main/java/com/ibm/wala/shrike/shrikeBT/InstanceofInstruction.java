@@ -28,8 +28,7 @@ public final class InstanceofInstruction extends Instruction implements IInstanc
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof InstanceofInstruction) {
-      InstanceofInstruction i = (InstanceofInstruction) o;
+    if (o instanceof InstanceofInstruction i) {
       return i.type.equals(type);
     } else {
       return false;

@@ -86,10 +86,9 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
 
   /** Switch backing implementation from a SmallMap to a HashMap */
   private void transferBackingStore() {
-    if (!(backingStore instanceof SmallMap)) {
+    if (!(backingStore instanceof SmallMap<K, V> S)) {
       throw new IllegalStateException("invalid backingStore");
     }
-    SmallMap<K, V> S = (SmallMap<K, V>) backingStore;
     backingStore = HashMapFactory.make(2 * S.size());
     backingStore.putAll(S);
   }
@@ -103,7 +102,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
     if (t == null) {
       throw new IllegalArgumentException("null t");
@@ -140,13 +138,11 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Set<K> keySet() {
     return (backingStore == null) ? Collections.emptySet() : backingStore.keySet();
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Collection<V> values() {
     return (backingStore == null) ? Collections.emptySet() : backingStore.values();
   }
@@ -155,7 +151,6 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
    * @throws UnimplementedError if the backingStore implementation does
    */
   @Override
-  @SuppressWarnings("unchecked")
   public Set<Map.Entry<K, V>> entrySet() {
     return (backingStore == null) ? Collections.emptySet() : backingStore.entrySet();
   }

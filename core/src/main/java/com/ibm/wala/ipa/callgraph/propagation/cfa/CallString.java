@@ -63,8 +63,7 @@ public class CallString implements ContextItem {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof CallString) {
-      CallString oc = (CallString) o;
+    if (o instanceof CallString oc) {
       if (oc.sites.length == sites.length) {
         for (int i = 0; i < sites.length; i++) {
           if (!(sites[i].equals(oc.sites[i]) && methods[i].equals(oc.methods[i]))) {

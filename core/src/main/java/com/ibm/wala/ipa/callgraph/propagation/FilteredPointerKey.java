@@ -32,31 +32,19 @@ public interface FilteredPointerKey extends PointerKey {
     boolean isRootFilter();
   }
 
-  class SingleClassFilter implements TypeFilter {
-    private final IClass concreteType;
-
-    public SingleClassFilter(IClass concreteType) {
-      this.concreteType = concreteType;
-    }
+  record SingleClassFilter(IClass concreteType) implements TypeFilter {
 
     @Override
     public String toString() {
       return "SingleClassFilter: " + concreteType;
     }
 
+    /**
+     * @deprecated Use {@link #concreteType()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public IClass getConcreteType() {
-      return concreteType;
-    }
-
-    @Override
-    public int hashCode() {
-      return concreteType.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return (o instanceof SingleClassFilter)
-          && ((SingleClassFilter) o).getConcreteType().equals(concreteType);
+      return concreteType();
     }
 
     @Override
@@ -106,11 +94,9 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      if (!(o instanceof MultipleClassesFilter)) {
+      if (!(o instanceof MultipleClassesFilter f)) {
         return false;
       }
-
-      MultipleClassesFilter f = (MultipleClassesFilter) o;
 
       if (concreteType.length != f.concreteType.length) {
         return false;
@@ -185,8 +171,8 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof SingleInstanceFilter)
-          && ((SingleInstanceFilter) o).getInstance().equals(concreteType);
+      return (o instanceof SingleInstanceFilter singleInstanceFilter)
+          && singleInstanceFilter.getInstance().equals(concreteType);
     }
 
     @Override
@@ -242,8 +228,8 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof TargetMethodFilter)
-          && ((TargetMethodFilter) o).getMethod().equals(targetMethod);
+      return (o instanceof TargetMethodFilter targetMethodFilter)
+          && targetMethodFilter.getMethod().equals(targetMethod);
     }
 
     private class UpdateAction implements IntSetAction {
@@ -264,7 +250,7 @@ public interface FilteredPointerKey extends PointerKey {
       @Override
       public void act(int i) {
         InstanceKey I = system.getInstanceKey(i);
-        IClass C = I.getConcreteType();
+        IClass C = I.concreteType();
         if ((C.getMethod(targetMethod.getSelector()) == targetMethod) == sense) {
           if (L.add(i)) {
             result = true;

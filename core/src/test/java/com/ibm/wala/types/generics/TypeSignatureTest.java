@@ -53,8 +53,7 @@ public class TypeSignatureTest {
     ClassHierarchy cha = ClassHierarchyFactory.make(scope);
     for (IClass klass : cha) {
       for (IMethod m : klass.getDeclaredMethods()) {
-        if (m instanceof ShrikeCTMethod) {
-          ShrikeCTMethod method = (ShrikeCTMethod) m;
+        if (m instanceof ShrikeCTMethod method) {
           MethodTypeSignature methodTypeSignature = method.getMethodTypeSignature();
           if (methodTypeSignature != null) {
             String typeSigStr = methodTypeSignature.toString();

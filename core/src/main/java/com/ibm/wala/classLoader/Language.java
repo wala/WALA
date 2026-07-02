@@ -42,8 +42,14 @@ import java.util.Set;
  */
 public interface Language {
 
-  /** The canonical {@link Language} implementation for Java */
-  JavaLanguage JAVA = new JavaLanguage();
+  /**
+   * The canonical {@code Language} implementation for Java
+   *
+   * @deprecated Use {@link JavaLanguage#get()} instead.
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
+  @SuppressWarnings("ClassInitializationDeadlock")
+  JavaLanguage JAVA = JavaLanguage.get();
 
   /** What is the name of the language? */
   Atom getName();
@@ -131,8 +137,19 @@ public interface Language {
   /** do MethodReference objects have declared parameter types? */
   boolean methodsHaveDeclaredParameterTypes();
 
-  AbstractRootMethod getFakeRootMethod(
-      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache);
+  AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, IAnalysisCacheView cache);
+
+  /**
+   * @deprecated Use {@link #getFakeRootMethod(IClassHierarchy, IAnalysisCacheView)}; the {@code
+   *     options} parameter is unused.
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
+  default AbstractRootMethod getFakeRootMethod(
+      IClassHierarchy cha,
+      @SuppressWarnings("unused") AnalysisOptions options,
+      IAnalysisCacheView cache) {
+    return getFakeRootMethod(cha, cache);
+  }
 
   InducedCFG makeInducedCFG(SSAInstruction[] instructions, IMethod method, Context context);
 

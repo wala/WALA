@@ -21,12 +21,14 @@ val platformsVersion = "android-28"
 
 val unpackAndroidSdkInstaller =
     tasks.register<Sync>("unpackAndroidSdkInstaller") {
+      description = "Unpack Android SDK command-line tools"
       from({ zipTree(downloadAndroidSdk.singleFile) })
       into(layout.buildDirectory.dir(name))
     }
 
 val installAndroidSdk =
     tasks.register<Exec>("installAndroidSdk") {
+      description = "Install Android SDK platform"
       inputs.files(unpackAndroidSdkInstaller)
       val sdkManager =
           unpackAndroidSdkInstaller
@@ -78,6 +80,7 @@ eclipse { synchronizationTasks(installAndroidSdk) }
 
 dependencies {
   api(libs.dexlib2)
+  api(libs.jspecify)
   api(projects.core)
   api(projects.shrike)
   api(projects.util)
@@ -110,6 +113,7 @@ val downloadDroidBench =
 
 val unpackDroidBench =
     tasks.register<Sync>("unpackDroidBench") {
+      description = "Unpack DroidBench benchmark APKs"
       from({ zipTree(downloadDroidBench.singleFile) }) { include("*/apk/**") }
       into(layout.buildDirectory.dir("DroidBench"))
       dropTopDirectory()
@@ -134,6 +138,7 @@ val downloadAndroidSdk = run {
 
 val extractSampleCup =
     tasks.register<Sync>("extractSampleCup") {
+      description = "Extract `sample.cup` grammar file"
       from({ zipTree(sampleCupSources.get().singleFile) })
       into(layout.buildDirectory.file(name))
       include("parser.cup")

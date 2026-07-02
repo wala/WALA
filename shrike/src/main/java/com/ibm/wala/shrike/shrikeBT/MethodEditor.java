@@ -99,22 +99,7 @@ public final class MethodEditor {
   private int nextLabel;
 
   /** This patch lets us stuff an exception handler into the code. */
-  private static class HandlerPatch {
-    final HandlerPatch next;
-
-    final String catchClass;
-
-    final int label;
-
-    final Patch patch;
-
-    HandlerPatch(HandlerPatch next, String catchClass, int label, Patch patch) {
-      this.next = next;
-      this.catchClass = catchClass;
-      this.label = label;
-      this.patch = patch;
-    }
-  }
+  private record HandlerPatch(HandlerPatch next, String catchClass, int label, Patch patch) {}
 
   /**
    * Build an editor for the given method. This editor will write back its changes to the method
@@ -157,18 +142,14 @@ public final class MethodEditor {
   }
 
   private static String getStateMessage(int state) {
-    switch (state) {
-      case BEFORE_PASS:
-        return "This operation can only be performed before or after an editing pass";
-      case DURING_PASS:
-        return "This operation can only be performed during an editing pass";
-      case EMITTING_CODE:
-        return "This operation can only be performed while applying patches and emitting code";
-      case BEFORE_END_PASS:
-        return "This operation can only be performed after applying patches";
-      default:
-        return "This operation cannot be performed in this state";
-    }
+    return switch (state) {
+      case BEFORE_PASS -> "This operation can only be performed before or after an editing pass";
+      case DURING_PASS -> "This operation can only be performed during an editing pass";
+      case EMITTING_CODE ->
+          "This operation can only be performed while applying patches and emitting code";
+      case BEFORE_END_PASS -> "This operation can only be performed after applying patches";
+      default -> "This operation cannot be performed in this state";
+    };
   }
 
   /**

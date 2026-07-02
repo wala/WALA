@@ -15,6 +15,7 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.graph.traverse.BFSIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
+import java.io.Serial;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -176,7 +177,7 @@ public class GraphIntegrity {
 
   public static class UnsoundGraphException extends Exception {
 
-    private static final long serialVersionUID = 1503478788521696930L;
+    @Serial private static final long serialVersionUID = 1503478788521696930L;
 
     public UnsoundGraphException() {}
 

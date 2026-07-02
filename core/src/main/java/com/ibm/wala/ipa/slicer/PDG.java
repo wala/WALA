@@ -62,6 +62,7 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -445,92 +446,81 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
 
     for (Statement s : this) {
       switch (s.getKind()) {
-        case NORMAL:
-        case CATCH:
-        case PI:
-        case PHI:
-          {
-            SSAInstruction statement = statement2SSAInstruction(instructions, s);
-            // note that data dependencies from invoke instructions will pass
-            // interprocedurally
-            if (!(statement instanceof SSAAbstractInvokeInstruction)) {
-              if (dOptions.isTerminateAtCast() && (statement instanceof SSACheckCastInstruction)) {
-                break;
-              }
-              if (dOptions.isTerminateAtCast() && (statement instanceof SSAInstanceofInstruction)) {
-                break;
-              }
-              // add edges from this statement to every use of the def of this
-              // statement
-              for (int i = 0; i < statement.getNumberOfDefs(); i++) {
-                int def = statement.getDef(i);
-                for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def))) {
-                  if (dOptions.isIgnoreBasePtrs()) {
-                    if (use instanceof SSANewInstruction) {
-                      // cut out array length parameters
-                      continue;
-                    }
-                    if (hasBasePointer(use)) {
-                      int base = getBasePointer(use);
-                      if (def == base) {
-                        // skip the edge to the base pointer
-                        continue;
-                      }
-                      if (use instanceof SSAArrayReferenceInstruction) {
-                        SSAArrayReferenceInstruction arr = (SSAArrayReferenceInstruction) use;
-                        if (def == arr.getIndex()) {
-                          // skip the edge to the array index
-                          continue;
-                        }
-                      }
-                    }
-                  }
-                  Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
-                  delegate.addEdge(s, u, Dependency.DATA_DEP);
-                }
-              }
+        case NORMAL, CATCH, PI, PHI -> {
+          SSAInstruction statement = statement2SSAInstruction(instructions, s);
+          // note that data dependencies from invoke instructions will pass
+          // interprocedurally
+          if (!(statement instanceof SSAAbstractInvokeInstruction)) {
+            if (dOptions.isTerminateAtCast() && (statement instanceof SSACheckCastInstruction)) {
+              break;
             }
-            break;
-          }
-        case EXC_RET_CALLER:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-          {
-            assert !dOptions.isIgnoreExceptions() || !s.getKind().equals(Kind.EXC_RET_CALLER);
-
-            ValueNumberCarrier a = (ValueNumberCarrier) s;
-            for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(a.getValueNumber()))) {
-              if (dOptions.isIgnoreBasePtrs()) {
-                if (use instanceof SSANewInstruction) {
-                  // cut out array length parameters
-                  continue;
-                }
-                if (hasBasePointer(use)) {
-                  int base = getBasePointer(use);
-                  if (a.getValueNumber() == base) {
-                    // skip the edge to the base pointer
+            if (dOptions.isTerminateAtCast() && (statement instanceof SSAInstanceofInstruction)) {
+              break;
+            }
+            // add edges from this statement to every use of the def of this
+            // statement
+            for (int i = 0; i < statement.getNumberOfDefs(); i++) {
+              int def = statement.getDef(i);
+              for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(def))) {
+                if (dOptions.isIgnoreBasePtrs()) {
+                  if (use instanceof SSANewInstruction) {
+                    // cut out array length parameters
                     continue;
                   }
-                  if (use instanceof SSAArrayReferenceInstruction) {
-                    SSAArrayReferenceInstruction arr = (SSAArrayReferenceInstruction) use;
-                    if (a.getValueNumber() == arr.getIndex()) {
-                      // skip the edge to the array index
+                  if (hasBasePointer(use)) {
+                    int base = getBasePointer(use);
+                    if (def == base) {
+                      // skip the edge to the base pointer
                       continue;
+                    }
+                    if (use instanceof SSAArrayReferenceInstruction arr) {
+                      if (def == arr.getIndex()) {
+                        // skip the edge to the array index
+                        continue;
+                      }
                     }
                   }
                 }
+                Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
+                delegate.addEdge(s, u, Dependency.DATA_DEP);
               }
-              Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
-              delegate.addEdge(s, u, Dependency.DATA_DEP);
             }
-            break;
           }
-        case NORMAL_RET_CALLEE:
+        }
+        case EXC_RET_CALLER, NORMAL_RET_CALLER, PARAM_CALLEE -> {
+          assert !dOptions.isIgnoreExceptions() || !s.getKind().equals(Kind.EXC_RET_CALLER);
+
+          ValueNumberCarrier a = (ValueNumberCarrier) s;
+          for (SSAInstruction use : Iterator2Iterable.make(DU.getUses(a.getValueNumber()))) {
+            if (dOptions.isIgnoreBasePtrs()) {
+              if (use instanceof SSANewInstruction) {
+                // cut out array length parameters
+                continue;
+              }
+              if (hasBasePointer(use)) {
+                int base = getBasePointer(use);
+                if (a.getValueNumber() == base) {
+                  // skip the edge to the base pointer
+                  continue;
+                }
+                if (use instanceof SSAArrayReferenceInstruction arr) {
+                  if (a.getValueNumber() == arr.getIndex()) {
+                    // skip the edge to the array index
+                    continue;
+                  }
+                }
+              }
+            }
+            Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
+            delegate.addEdge(s, u, Dependency.DATA_DEP);
+          }
+        }
+        case NORMAL_RET_CALLEE -> {
           for (NormalStatement ret : computeReturnStatements(ir)) {
             delegate.addEdge(ret, s, Dependency.DATA_DEP);
           }
-          break;
-        case EXC_RET_CALLEE:
+        }
+        case EXC_RET_CALLEE -> {
           if (dOptions.isIgnoreExceptions()) {
             Assertions.UNREACHABLE();
           }
@@ -550,70 +540,57 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
               delegate.addEdge(new NormalStatement(node, index), s, Dependency.DATA_DEP);
             }
           }
-          break;
-        case PARAM_CALLER:
-          {
-            ParamCaller pac = (ParamCaller) s;
-            int vn = pac.getValueNumber();
-            // note that if the caller is the fake root method and the parameter
-            // type is primitive,
-            // it's possible to have a value number of -1. If so, just ignore it.
-            if (vn > -1) {
-              if (ir.getSymbolTable().isParameter(vn)) {
-                Statement a = new ParamCallee(node, vn);
-                delegate.addEdge(a, pac, Dependency.DATA_DEP);
-              } else {
-                SSAInstruction d = DU.getDef(vn);
-                if (dOptions.isTerminateAtCast() && (d instanceof SSACheckCastInstruction)) {
-                  break;
-                }
-                if (d != null) {
-                  if (d instanceof SSAAbstractInvokeInstruction) {
-                    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
-                    if (vn == call.getException()) {
-                      if (!dOptions.isIgnoreExceptions()) {
-                        Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
-                        delegate.addEdge(st, pac, Dependency.DATA_DEP);
-                      }
-                    } else {
-                      Statement st = new NormalReturnCaller(node, instructionIndices.get(d));
+        }
+        case PARAM_CALLER -> {
+          ParamCaller pac = (ParamCaller) s;
+          int vn = pac.getValueNumber();
+          // note that if the caller is the fake root method and the parameter
+          // type is primitive,
+          // it's possible to have a value number of -1. If so, just ignore it.
+          if (vn > -1) {
+            if (ir.getSymbolTable().isParameter(vn)) {
+              Statement a = new ParamCallee(node, vn);
+              delegate.addEdge(a, pac, Dependency.DATA_DEP);
+            } else {
+              SSAInstruction d = DU.getDef(vn);
+              if (dOptions.isTerminateAtCast() && (d instanceof SSACheckCastInstruction)) {
+                break;
+              }
+              if (d != null) {
+                if (d instanceof SSAAbstractInvokeInstruction call) {
+                  if (vn == call.getException()) {
+                    if (!dOptions.isIgnoreExceptions()) {
+                      Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
                       delegate.addEdge(st, pac, Dependency.DATA_DEP);
                     }
                   } else {
-                    Statement ds = ssaInstruction2Statement(d, ir, instructionIndices);
-                    delegate.addEdge(ds, pac, Dependency.DATA_DEP);
+                    Statement st = new NormalReturnCaller(node, instructionIndices.get(d));
+                    delegate.addEdge(st, pac, Dependency.DATA_DEP);
                   }
+                } else {
+                  Statement ds = ssaInstruction2Statement(d, ir, instructionIndices);
+                  delegate.addEdge(ds, pac, Dependency.DATA_DEP);
                 }
               }
             }
           }
-          break;
-
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
-        case HEAP_PARAM_CALLER:
-        case HEAP_PARAM_CALLEE:
-        case METHOD_ENTRY:
-        case METHOD_EXIT:
+        }
+        case HEAP_RET_CALLEE,
+            HEAP_RET_CALLER,
+            HEAP_PARAM_CALLER,
+            HEAP_PARAM_CALLEE,
+            METHOD_ENTRY,
+            METHOD_EXIT -> {
           // do nothing
-          break;
-        default:
-          Assertions.UNREACHABLE(s.toString());
-          break;
+        }
       }
     }
   }
 
-  private static class SingletonSet implements StringFilter {
+  private record SingletonSet(TypeReference t) implements StringFilter {
 
     /* Serial version */
-    private static final long serialVersionUID = -672435219867965584L;
-
-    private final TypeReference t;
-
-    SingletonSet(TypeReference t) {
-      this.t = t;
-    }
+    @Serial private static final long serialVersionUID = -672435219867965584L;
 
     @Override
     public boolean test(String klassName) {
@@ -626,16 +603,10 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     }
   }
 
-  private static class SetComplement implements StringFilter {
+  private record SetComplement(StringFilter set) implements StringFilter {
 
     /* Serial version */
-    private static final long serialVersionUID = -7873800088647368431L;
-
-    private final StringFilter set;
-
-    SetComplement(StringFilter set) {
-      this.set = set;
-    }
+    @Serial private static final long serialVersionUID = -7873800088647368431L;
 
     static SetComplement complement(StringFilter set) {
       return new SetComplement(set);
@@ -683,8 +654,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     // irrelevant.
     Predicate<Statement> f =
         o -> {
-          if (o instanceof HeapStatement) {
-            HeapStatement h = (HeapStatement) o;
+          if (o instanceof HeapStatement h) {
             return h.getLocation().equals(pk);
           } else {
             return true;
@@ -706,53 +676,37 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
 
     for (Map.Entry<Statement, OrdinalSet<Statement>> entry : heapReachingDefs.entrySet()) {
       switch (entry.getKey().getKind()) {
-        case NORMAL:
-        case CATCH:
-        case PHI:
-        case PI:
-          {
-            OrdinalSet<Statement> defs = entry.getValue();
-            if (defs != null) {
-              for (Statement def : defs) {
-                delegate.addEdge(def, entry.getKey(), Dependency.HEAP_DATA_DEP);
-              }
+        case NORMAL, CATCH, PHI, PI -> {
+          OrdinalSet<Statement> defs = entry.getValue();
+          if (defs != null) {
+            for (Statement def : defs) {
+              delegate.addEdge(def, entry.getKey(), Dependency.HEAP_DATA_DEP);
             }
           }
-          break;
-        case EXC_RET_CALLER:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case NORMAL_RET_CALLEE:
-        case PARAM_CALLER:
-        case EXC_RET_CALLEE:
-          break;
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
-        case HEAP_PARAM_CALLER:
-          {
-            OrdinalSet<Statement> defs = entry.getValue();
-            if (defs != null) {
-              for (Statement def : defs) {
-                delegate.addEdge(def, entry.getKey(), Dependency.DATA_DEP);
-              }
+        }
+        case EXC_RET_CALLER,
+            NORMAL_RET_CALLER,
+            PARAM_CALLEE,
+            NORMAL_RET_CALLEE,
+            PARAM_CALLER,
+            EXC_RET_CALLEE -> {}
+        case HEAP_RET_CALLEE, HEAP_RET_CALLER, HEAP_PARAM_CALLER -> {
+          OrdinalSet<Statement> defs = entry.getValue();
+          if (defs != null) {
+            for (Statement def : defs) {
+              delegate.addEdge(def, entry.getKey(), Dependency.DATA_DEP);
             }
-            break;
           }
-        case HEAP_PARAM_CALLEE:
-        case METHOD_ENTRY:
-        case METHOD_EXIT:
+        }
+        case HEAP_PARAM_CALLEE, METHOD_ENTRY, METHOD_EXIT -> {
           // do nothing .. there are no incoming edges
-          break;
-        default:
-          Assertions.UNREACHABLE(entry.getKey().toString());
-          break;
+        }
       }
     }
   }
 
   private static boolean hasBasePointer(SSAInstruction use) {
-    if (use instanceof SSAFieldAccessInstruction) {
-      SSAFieldAccessInstruction f = (SSAFieldAccessInstruction) use;
+    if (use instanceof SSAFieldAccessInstruction f) {
       return !f.isStatic();
     } else if (use instanceof SSAArrayReferenceInstruction) {
       return true;
@@ -764,14 +718,11 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   }
 
   private static int getBasePointer(SSAInstruction use) {
-    if (use instanceof SSAFieldAccessInstruction) {
-      SSAFieldAccessInstruction f = (SSAFieldAccessInstruction) use;
+    if (use instanceof SSAFieldAccessInstruction f) {
       return f.getRef();
-    } else if (use instanceof SSAArrayReferenceInstruction) {
-      SSAArrayReferenceInstruction a = (SSAArrayReferenceInstruction) use;
+    } else if (use instanceof SSAArrayReferenceInstruction a) {
       return a.getArrayRef();
-    } else if (use instanceof SSAArrayLengthInstruction) {
-      SSAArrayLengthInstruction s = (SSAArrayLengthInstruction) use;
+    } else if (use instanceof SSAArrayLengthInstruction s) {
       return s.getArrayRef();
     } else {
       Assertions.UNREACHABLE("BOOM");
@@ -785,8 +736,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   private Collection<NormalStatement> computeReturnStatements(final IR ir) {
     Predicate<Statement> filter =
         o -> {
-          if (o instanceof NormalStatement) {
-            NormalStatement s = (NormalStatement) o;
+          if (o instanceof NormalStatement s) {
             SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
             return st instanceof SSAReturnInstruction;
           } else {
@@ -829,14 +779,12 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     if (s == null) {
       throw new IllegalArgumentException("null s");
     }
-    if (s instanceof SSAPhiInstruction) {
-      SSAPhiInstruction phi = (SSAPhiInstruction) s;
+    if (s instanceof SSAPhiInstruction phi) {
       return new PhiStatement(node, phi);
-    } else if (s instanceof SSAPiInstruction) {
-      SSAPiInstruction pi = (SSAPiInstruction) s;
+    } else if (s instanceof SSAPiInstruction pi) {
       return new PiStatement(node, pi);
-    } else if (s instanceof SSAGetCaughtExceptionInstruction) {
-      return new GetCaughtExceptionStatement(node, ((SSAGetCaughtExceptionInstruction) s));
+    } else if (s instanceof SSAGetCaughtExceptionInstruction ssaGetCaughtExceptionInstruction) {
+      return new GetCaughtExceptionStatement(node, ssaGetCaughtExceptionInstruction);
     } else {
       Integer x = instructionIndices.get(s);
       if (x == null) {
@@ -868,24 +816,23 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       SSAInstruction[] instructions, Statement s) {
     SSAInstruction statement = null;
     switch (s.getKind()) {
-      case NORMAL:
+      case NORMAL -> {
         NormalStatement n = (NormalStatement) s;
         statement = instructions[n.getInstructionIndex()];
-        break;
-      case PHI:
+      }
+      case PHI -> {
         PhiStatement p = (PhiStatement) s;
         statement = p.getPhi();
-        break;
-      case PI:
+      }
+      case PI -> {
         PiStatement ps = (PiStatement) s;
         statement = ps.getPi();
-        break;
-      case CATCH:
+      }
+      case CATCH -> {
         GetCaughtExceptionStatement g = (GetCaughtExceptionStatement) s;
         statement = g.getInstruction();
-        break;
-      default:
-        Assertions.UNREACHABLE(s.toString());
+      }
+      default -> Assertions.UNREACHABLE(s.toString());
     }
     return statement;
   }
@@ -963,13 +910,12 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   private void createSpecialStatements(IR ir) {
     // create a node for instructions which do not correspond to bytecode
     for (SSAInstruction s : Iterator2Iterable.make(ir.iterateAllInstructions())) {
-      if (s instanceof SSAPhiInstruction) {
-        delegate.addNode(new PhiStatement(node, (SSAPhiInstruction) s));
-      } else if (s instanceof SSAGetCaughtExceptionInstruction) {
-        delegate.addNode(
-            new GetCaughtExceptionStatement(node, (SSAGetCaughtExceptionInstruction) s));
-      } else if (s instanceof SSAPiInstruction) {
-        delegate.addNode(new PiStatement(node, (SSAPiInstruction) s));
+      if (s instanceof SSAPhiInstruction ssaPhiInstruction) {
+        delegate.addNode(new PhiStatement(node, ssaPhiInstruction));
+      } else if (s instanceof SSAGetCaughtExceptionInstruction ssaGetCaughtExceptionInstruction) {
+        delegate.addNode(new GetCaughtExceptionStatement(node, ssaGetCaughtExceptionInstruction));
+      } else if (s instanceof SSAPiInstruction ssaPiInstruction) {
+        delegate.addNode(new PiStatement(node, ssaPiInstruction));
       }
     }
   }
@@ -988,8 +934,8 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
       if (s != null) {
         final NormalStatement statement = new NormalStatement(node, i);
         delegate.addNode(statement);
-        if (s instanceof SSAAbstractInvokeInstruction) {
-          callSite2Statement.put(((SSAAbstractInvokeInstruction) s).getCallSite(), statement);
+        if (s instanceof SSAAbstractInvokeInstruction ssaAbstractInvokeInstruction) {
+          callSite2Statement.put(ssaAbstractInvokeInstruction.getCallSite(), statement);
           addParamPassingStatements(i, ref, ir);
         }
       }
@@ -1115,7 +1061,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
 
   private void computeIncomingHeapDependencies(Statement N) {
     switch (N.getKind()) {
-      case NORMAL:
+      case NORMAL -> {
         NormalStatement st = (NormalStatement) N;
         if (!(ignoreAllocHeapDefs && st.getInstruction() instanceof SSANewInstruction)) {
           Collection<PointerKey> ref =
@@ -1124,22 +1070,20 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
             createHeapDataDependenceEdges(pk);
           }
         }
-        break;
-      case HEAP_PARAM_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case HEAP_RET_CALLEE:
-      case HEAP_RET_CALLER:
+      }
+      case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
         HeapStatement h = (HeapStatement) N;
         createHeapDataDependenceEdges(h.getLocation());
-        break;
-      default:
+      }
+      default -> {
         // do nothing
+      }
     }
   }
 
   private void computeOutgoingHeapDependencies(Statement N) {
     switch (N.getKind()) {
-      case NORMAL:
+      case NORMAL -> {
         NormalStatement st = (NormalStatement) N;
         if (!(ignoreAllocHeapDefs && st.getInstruction() instanceof SSANewInstruction)) {
           Collection<PointerKey> mod =
@@ -1148,16 +1092,14 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
             createHeapDataDependenceEdges(pk);
           }
         }
-        break;
-      case HEAP_PARAM_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case HEAP_RET_CALLEE:
-      case HEAP_RET_CALLER:
+      }
+      case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
         HeapStatement h = (HeapStatement) N;
         createHeapDataDependenceEdges(h.getLocation());
-        break;
-      default:
+      }
+      default -> {
         // do nothing
+      }
     }
   }
 

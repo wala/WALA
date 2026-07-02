@@ -67,7 +67,7 @@ public class CallToReturnFunction<E extends ISSABasicBlock> implements IUnaryFlo
       set.add(d);
     } else {
       DomainElement de = domain.getMappedObject(d);
-      if (de.codeElement instanceof LocalElement || de.codeElement instanceof ReturnElement) {
+      if (de.codeElement() instanceof LocalElement || de.codeElement() instanceof ReturnElement) {
         set.add(d);
       } else {
 

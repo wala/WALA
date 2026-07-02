@@ -86,7 +86,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof ShrikeCFG) && getMethod().equals(((ShrikeCFG) o).getMethod());
+    return (o instanceof ShrikeCFG basicBlocks) && getMethod().equals(basicBlocks.getMethod());
   }
 
   @Override
@@ -270,8 +270,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
             IClassLoader loader = getMethod().getDeclaringClass().getClassLoader();
             BytecodeLanguage l = (BytecodeLanguage) loader.getLanguage();
             exceptionTypes = l.getImplicitExceptionTypes(last);
-            if (last instanceof IInvokeInstruction) {
-              IInvokeInstruction call = (IInvokeInstruction) last;
+            if (last instanceof IInvokeInstruction call) {
               exceptionTypes = HashSetFactory.make(exceptionTypes);
               MethodReference target =
                   MethodReference.findOrCreate(
@@ -484,9 +483,9 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof BasicBlock)
-          && ((BasicBlock) o).getMethod().equals(getMethod())
-          && ((BasicBlock) o).getNumber() == getNumber();
+      return (o instanceof BasicBlock iInstructions)
+          && iInstructions.getMethod().equals(getMethod())
+          && iInstructions.getNumber() == getNumber();
     }
 
     @Override

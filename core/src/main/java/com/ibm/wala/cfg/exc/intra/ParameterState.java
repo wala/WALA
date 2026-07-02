@@ -67,24 +67,24 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     State prev = params.get(varNum);
     if (prev != null) {
       switch (prev) {
-        case UNKNOWN:
+        case UNKNOWN -> {
           if (state != State.UNKNOWN) {
             throw new IllegalArgumentException("Try to set " + prev + " to " + state);
           }
-          break;
-        case NULL:
+        }
+        case NULL -> {
           if (!(state == State.BOTH || state == State.NULL)) {
             throw new IllegalArgumentException("Try to set " + prev + " to " + state);
           }
-          break;
-        case NOT_NULL:
+        }
+        case NOT_NULL -> {
           if (!(state == State.BOTH || state == State.NOT_NULL)) {
             throw new IllegalArgumentException("Try to set " + prev + " to " + state);
           }
-          break;
-        default:
-          throw new UnsupportedOperationException(
-              String.format("unexpected previous state %s", prev));
+        }
+        default ->
+            throw new UnsupportedOperationException(
+                String.format("unexpected previous state %s", prev));
       }
     }
     params.put(varNum, state);
@@ -120,22 +120,13 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     Set<Entry<Integer, State>> paramsSet = params.entrySet();
 
     for (Entry<Integer, State> param : paramsSet) {
-      switch (param.getValue()) {
-        case BOTH:
-          buf.append('*');
-          break;
-        case NOT_NULL:
-          buf.append('1');
-          break;
-        case NULL:
-          buf.append('0');
-          break;
-        case UNKNOWN:
-          buf.append('?');
-          break;
-        default:
-          throw new IllegalStateException();
-      }
+      buf.append(
+          switch (param.getValue()) {
+            case BOTH -> '*';
+            case NOT_NULL -> '1';
+            case NULL -> '0';
+            case UNKNOWN -> '?';
+          });
     }
     buf.append('>');
 

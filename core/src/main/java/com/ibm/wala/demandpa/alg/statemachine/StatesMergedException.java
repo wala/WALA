@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg.statemachine;
 
+import java.io.Serial;
+
 /**
  * Exception thrown when a state machine needs to merge states and treat them as equivalent. For
  * example, a state machine for context sensitivity may throw this exception in its {@link
@@ -47,5 +49,5 @@ package com.ibm.wala.demandpa.alg.statemachine;
  */
 public class StatesMergedException extends RuntimeException {
 
-  private static final long serialVersionUID = 7769961571949421524L;
+  @Serial private static final long serialVersionUID = 7769961571949421524L;
 }

@@ -15,6 +15,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +31,7 @@ import org.jspecify.annotations.Nullable;
  * be changed by overriding the getConnected method.
  */
 public class DFSPathFinder<T> extends ArrayList<T> {
-  private static final long serialVersionUID = 9939900773328288L;
+  @Serial private static final long serialVersionUID = 9939900773328288L;
 
   /** The graph to search */
   protected final Graph<T> G;

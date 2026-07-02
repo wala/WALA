@@ -108,15 +108,13 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
     }
 
     for (final PointerKey pk : pa.getPointerKeys()) {
-      if (pk instanceof LocalPointerKey) {
-        final LocalPointerKey lpk = (LocalPointerKey) pk;
+      if (pk instanceof LocalPointerKey lpk) {
         handleUriWitAppendPath(lpk, pa, mapping, unresolvedDependencies);
       }
     }
 
     for (final InstanceKey ik : instanceKeys) {
-      if (ik instanceof NormalAllocationInNode) {
-        final NormalAllocationInNode naik = (NormalAllocationInNode) ik;
+      if (ik instanceof NormalAllocationInNode naik) {
         handleUriParse(naik, pa, mapping, unresolvedDependencies);
         handleUriWitAppendPath(naik, pa, mapping, unresolvedDependencies);
       }
@@ -137,13 +135,12 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
       final OrdinalSetMapping<InstanceKey> mapping,
       final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
     if (isOfType(ik, "Ljava/lang/String")) {
-      if (ik instanceof ConstantKey) {
-        final String value = (String) ((ConstantKey<?>) ik).getValue();
+      if (ik instanceof ConstantKey<?> constKey) {
+        final String value = (String) constKey.getValue();
         final InstanceKeySite node = new ConstantString(mapping.getMappedIndex(ik), value);
         addNode(node);
         nodeMap.put(ik, node);
-      } else if (ik instanceof NormalAllocationInNode) {
-        final NormalAllocationInNode nain = (NormalAllocationInNode) ik;
+      } else if (ik instanceof NormalAllocationInNode nain) {
         handleStringBuilderToString(nain, mapping, unresolvedDependencies);
       }
     }
@@ -152,8 +149,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
   private void handleStringBuilder(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa) {
 
     if (isOfType(ik, "Ljava/lang/StringBuilder")) {
-      if (ik instanceof AllocationSiteInNode) {
-        final AllocationSiteInNode as = (AllocationSiteInNode) ik;
+      if (ik instanceof AllocationSiteInNode as) {
         if (isApplicationCode(as.getSite().getDeclaredType())) {
           final StringBuilderUseAnalysis sbua;
           try {
@@ -439,7 +435,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
   }
 
   private static boolean isOfType(final InstanceKey ik, final String typeName) {
-    return typeName.equals(ik.getConcreteType().getName().toString());
+    return typeName.equals(ik.concreteType().getName().toString());
   }
 
   private static boolean hasSignature(final CGNode n, final String signature) {

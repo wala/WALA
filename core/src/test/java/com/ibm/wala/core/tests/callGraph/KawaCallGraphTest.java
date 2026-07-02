@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ResourceJarFileModule;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
@@ -149,7 +149,7 @@ public class KawaCallGraphTest extends DynamicCallGraphTestBase {
     options.setUseConstantSpecificKeys(true);
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
 
     MethodHandles.analyzeMethodHandles(options, builder);
 

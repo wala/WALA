@@ -10,7 +10,7 @@ val compileTestSubjectsJava =
     tasks.named<JavaCompile>("compileTestSubjectsJava") {
       options.run {
         // No need to run Error Prone on our analysis test inputs
-        errorprone.isEnabled = false
+        errorprone.enabled = false
         // Some code in the test data is written in a deliberately bad style, so allow warnings
         compilerArgs.remove("-Werror")
         compilerArgs.add("-nowarn")
@@ -20,6 +20,7 @@ val compileTestSubjectsJava =
 
 val testJar =
     tasks.register<Jar>("testJar") {
+      description = "Assemble test JAR archive"
       group = "build"
       archiveClassifier = "test"
       from(compileTestSubjectsJava)
@@ -37,10 +38,10 @@ artifacts {
   add(testJavaSourceDirectory.name, testSubjects.map { it.java.srcDirs.first() })
 }
 
-// exclude since various tests make assertions based on
-// source positions in the test inputs.  to auto-format
+// Exclude since various tests make assertions based on
+// source positions in the test inputs.  To auto-format
 // we also need to update the test assertions
-spotless { java { targetExclude("**/*") } }
+spotless { java { target(files()) } }
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -56,6 +57,7 @@ val jLex =
 
 val downloadJLex =
     tasks.register<Sync>("downloadJLex") {
+      description = "Download JLex `Main.java` source"
       from(jLex) { eachFile { name = "Main.java" } }
       into(layout.buildDirectory.dir(name))
     }
@@ -69,10 +71,7 @@ testSubjects { java.srcDir(downloadJLex.map { it.destinationDir }) }
 //  com.ibm.wala.cast.java.test.JDTJava15IRTests tests
 //
 
-tasks.register("prepareMavenBuild") { dependsOn("eclipseClasspath", "eclipseProject") }
-
-// On JDK 17, deprecation errors in ECJ cannot be disabled when compiling JLex code.  So, we disable
-// the ECJ task on JDK 17+.
-if (JavaVersion.current() >= JavaVersion.VERSION_17) {
-  tasks.named("compileTestJavaUsingEcj") { enabled = false }
+tasks.register("prepareMavenBuild") {
+  description = "Prepare Eclipse project metadata for Maven-based tests"
+  dependsOn("eclipseClasspath", "eclipseProject")
 }

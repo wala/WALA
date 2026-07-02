@@ -32,8 +32,7 @@ public final class PopInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof PopInstruction) {
-      PopInstruction i = (PopInstruction) o;
+    if (o instanceof PopInstruction i) {
       return i.size == size;
     } else {
       return false;

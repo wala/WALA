@@ -393,10 +393,9 @@ public abstract class IRTests {
           CGNode node = nodeIter.next();
           IR ir = node.getIR();
           System.err.println(ir);
-          if (builder instanceof SSAPropagationCallGraphBuilder) {
-            PointerAnalysis<InstanceKey> pa =
-                ((SSAPropagationCallGraphBuilder) builder).getPointerAnalysis();
-            PointerKeyFactory f = ((SSAPropagationCallGraphBuilder) builder).getPointerKeyFactory();
+          if (builder instanceof SSAPropagationCallGraphBuilder ssaPropagationCallGraphBuilder) {
+            PointerAnalysis<InstanceKey> pa = ssaPropagationCallGraphBuilder.getPointerAnalysis();
+            PointerKeyFactory f = ssaPropagationCallGraphBuilder.getPointerKeyFactory();
             for (int vn = 1; vn <= ir.getSymbolTable().getMaxValueNumber(); vn++) {
               OrdinalSet<InstanceKey> ps = pa.getPointsToSet(f.getPointerKeyForLocal(node, vn));
               if (!ps.isEmpty()) {

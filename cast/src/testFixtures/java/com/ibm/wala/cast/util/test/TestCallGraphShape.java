@@ -83,8 +83,7 @@ public abstract class TestCallGraphShape {
     for (final var dat : assertionData) {
       final var function = dat.function;
       for (CGNode N : getNodes(CG, function)) {
-        if (N.getMethod() instanceof AstMethod) {
-          AstMethod M = (AstMethod) N.getMethod();
+        if (N.getMethod() instanceof AstMethod M) {
           SSAInstruction[] insts = N.getIR().getInstructions();
           insts:
           for (int i = 0; i < insts.length; i++) {
@@ -170,8 +169,8 @@ public abstract class TestCallGraphShape {
       check_target:
       for (int j = 0; j < assertionDatum.targets.length; j++) {
         Iterator<CGNode> srcs =
-            (assertionDatum.source instanceof String)
-                ? getNodes(CG, (String) assertionDatum.source).iterator()
+            (assertionDatum.source instanceof String s)
+                ? getNodes(CG, s).iterator()
                 : new NonNullSingletonIterator<>(CG.getFakeRootNode());
 
         assertThat(srcs).as("cannot find %s", assertionDatum.source).hasNext();

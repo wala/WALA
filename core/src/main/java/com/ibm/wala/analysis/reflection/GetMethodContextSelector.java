@@ -116,8 +116,7 @@ public class GetMethodContextSelector implements ContextSelector {
    * return that value. Otherwise, return {@code null}.
    */
   private static IClass getTypeConstant(InstanceKey instance) {
-    if (instance instanceof ConstantKey) {
-      ConstantKey<?> c = (ConstantKey<?>) instance;
+    if (instance instanceof ConstantKey<?> c) {
       if (c.getValue() instanceof IClass) {
         return (IClass) c.getValue();
       }

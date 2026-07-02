@@ -34,6 +34,7 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.SummaryClassShellLoader;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
@@ -61,7 +62,8 @@ import java.util.Set;
  * abstract class loader that performs CAst and IR generation for relevant entities in a list of
  * {@link Module}s. Subclasses provide the CAst / IR translators appropriate for the language.
  */
-public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
+public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader
+    implements SummaryClassShellLoader {
 
   private static final boolean DEBUG = false;
 
@@ -93,8 +95,8 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities);
 
   protected File getLocalFile(SourceModule M) throws IOException {
-    if (M instanceof SourceFileModule) {
-      return ((SourceFileModule) M).getFile();
+    if (M instanceof SourceFileModule sourceFileModule) {
+      return sourceFileModule.getFile();
     } else {
       File f = File.createTempFile("module", ".txt");
       f.deleteOnExit();
@@ -392,6 +394,36 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
         return getDeclaringClass().getClassLoader().getLanguage().getRootType();
       }
     }
+  }
+
+  /**
+   * Register a "shell" {@link IClass} for a summary-modeled type, so that source classes loaded by
+   * this loader can resolve it as a superclass at definition time.
+   *
+   * <p>A CAst class resolves its superclass through this loader's own type map ({@link
+   * #lookupClass(TypeName)}, {@link CoreClass#getSuperclass()}), which is loader-local and does not
+   * consult the {@link IClassHierarchy} or parent loaders. When a framework base type is modeled
+   * only by an XML method summary, the corresponding class is materialized into the {@link
+   * com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader} only after the class hierarchy is built,
+   * which is too late, and in the wrong loader, for a source subclass to pick up the inheritance
+   * edge. Registering a shell here, before the hierarchy is built, closes that gap (see <a
+   * href="https://github.com/wala/WALA/issues/1957">#1957</a>).
+   *
+   * <p>Idempotent: if a class is already registered under {@code name}, it is returned unchanged.
+   *
+   * @param name the type to register a shell for
+   * @param superName the shell's superclass, or {@code null} for this loader's language root type
+   * @return the registered (or pre-existing) class
+   */
+  @Override
+  public IClass defineSummaryClassShell(TypeName name, TypeName superName) {
+    IClass existing = lookupClass(name);
+    if (existing != null) {
+      return existing;
+    }
+    TypeName actualSuperName =
+        superName == null ? getLanguage().getRootType().getName() : superName;
+    return new CoreClass(name, actualSuperName, this, null);
   }
 
   public class CoreClass extends AstDynamicPropertyClass {

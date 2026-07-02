@@ -83,7 +83,10 @@ public class Runtime {
 
     try {
       handleCallback =
-          (Policy) Class.forName(policyClassName).getDeclaredConstructor().newInstance();
+          Class.forName(policyClassName)
+              .asSubclass(Policy.class)
+              .getDeclaredConstructor()
+              .newInstance();
     } catch (InstantiationException
         | IllegalAccessException
         | ClassNotFoundException
@@ -130,26 +133,26 @@ public class Runtime {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
 
-        checkValid:
-        {
-          //
-          // check for expected caller
-          //
-          if (runtime.handleCallback != null) {
-            StackTraceElement[] stack = new Throwable().getStackTrace();
-            if (stack.length > 2) {
-              // frames: Runtime.execution(0), callee(1), caller(2)
-              StackTraceElement callerFrame = stack[2];
-              if (!callerFrame.getMethodName().startsWith("$")) {
-                if (!caller.contains(callerFrame.getMethodName())
-                    || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
-                  runtime.handleCallback.callback(stack, klass, method, receiver);
-                  break checkValid;
-                }
+        //
+        // check for expected caller
+        //
+        boolean handled = false;
+        if (runtime.handleCallback != null) {
+          StackTraceElement[] stack = new Throwable().getStackTrace();
+          if (stack.length > 2) {
+            // frames: Runtime.execution(0), callee(1), caller(2)
+            StackTraceElement callerFrame = stack[2];
+            if (!callerFrame.getMethodName().startsWith("$")) {
+              if (!caller.contains(callerFrame.getMethodName())
+                  || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
+                runtime.handleCallback.callback(stack, klass, method, receiver);
+                handled = true;
               }
             }
           }
+        }
 
+        if (!handled) {
           String line =
               (method.contains("<clinit>") ? "clinit" : String.valueOf(caller))
                   + '\t'
@@ -179,7 +182,7 @@ public class Runtime {
     if (runtime.currentSite.get() != null) {
       synchronized (runtime) {
         if (runtime.output != null) {
-          runtime.output.printf("return from " + runtime.currentSite.get() + '\n');
+          runtime.output.printf("return from %s%n", runtime.currentSite.get());
           runtime.output.flush();
         }
       }
@@ -202,7 +205,7 @@ public class Runtime {
     //	  runtime.currentSite = klass + "\t" + method + "\t" + receiver;
     synchronized (runtime) {
       if (runtime.output != null) {
-        runtime.output.printf("call to " + runtime.currentSite.get() + '\n');
+        runtime.output.printf("call to %s%n", runtime.currentSite.get());
         runtime.output.flush();
       }
     }

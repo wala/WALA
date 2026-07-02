@@ -71,8 +71,7 @@ public class LexicalModRef {
     IR ir = n.getIR();
     if (ir != null) {
       for (SSAInstruction instr : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
-        if (instr instanceof AstLexicalRead) {
-          AstLexicalRead read = (AstLexicalRead) instr;
+        if (instr instanceof AstLexicalRead read) {
           for (Access a : read.getAccesses()) {
             Pair<String, String> nameAndDefiner = a.getName();
             result.addAll(getNodeNamePairsForAccess(n, nameAndDefiner));
@@ -88,8 +87,7 @@ public class LexicalModRef {
     IR ir = n.getIR();
     if (ir != null) {
       for (SSAInstruction instr : Iterator2Iterable.make(ir.iterateNormalInstructions())) {
-        if (instr instanceof AstLexicalWrite) {
-          AstLexicalWrite write = (AstLexicalWrite) instr;
+        if (instr instanceof AstLexicalWrite write) {
           for (Access a : write.getAccesses()) {
             Pair<String, String> nameAndDefiner = a.getName();
             result.addAll(getNodeNamePairsForAccess(n, nameAndDefiner));
@@ -108,8 +106,7 @@ public class LexicalModRef {
     OrdinalSet<InstanceKey> functionValues =
         pa.getPointsToSet(pa.getHeapModel().getPointerKeyForLocal(n, 1));
     for (InstanceKey ik : functionValues) {
-      if (ik instanceof ScopeMappingInstanceKey) {
-        ScopeMappingInstanceKey smik = (ScopeMappingInstanceKey) ik;
+      if (ik instanceof ScopeMappingInstanceKey smik) {
         for (CGNode definerNode : Iterator2Iterable.make(smik.getFunargNodes(nameAndDefiner))) {
           result.add(Pair.make(definerNode, nameAndDefiner.fst));
         }

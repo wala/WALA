@@ -103,19 +103,16 @@ public class CallGraphMapUtil {
       InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
       throws UnimplementedError, NullPointerException {
     InstanceKey ret = null;
-    if (ik instanceof InstanceKeyWithNode) {
-      CGNode oldCGNode = ((InstanceKeyWithNode) ik).getNode();
+    if (ik instanceof InstanceKeyWithNode instanceKeyWithNode) {
+      CGNode oldCGNode = instanceKeyWithNode.getNode();
       CGNode newCGNode = mapCGNode(oldCGNode, fromCG, toCG);
       if (newCGNode == null) {
         return null;
       }
-      if (ik instanceof AllocationSiteInNode) {
+      if (ik instanceof AllocationSiteInNode allocationSiteInNode) {
         if (ik instanceof NormalAllocationInNode) {
-          ret =
-              heapModel.getInstanceKeyForAllocation(
-                  newCGNode, ((AllocationSiteInNode) ik).getSite());
-        } else if (ik instanceof MultiNewArrayInNode) {
-          MultiNewArrayInNode mnik = (MultiNewArrayInNode) ik;
+          ret = heapModel.getInstanceKeyForAllocation(newCGNode, allocationSiteInNode.getSite());
+        } else if (ik instanceof MultiNewArrayInNode mnik) {
 
           ret = heapModel.getInstanceKeyForMultiNewArray(newCGNode, mnik.getSite(), mnik.getDim());
         } else {
@@ -138,14 +135,14 @@ public class CallGraphMapUtil {
       PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
       throws UnimplementedError {
     PointerKey ret = null;
-    if (pk instanceof AbstractLocalPointerKey) {
-      CGNode oldCGNode = ((AbstractLocalPointerKey) pk).getNode();
+    if (pk instanceof AbstractLocalPointerKey abstractLocalPointerKey) {
+      CGNode oldCGNode = abstractLocalPointerKey.getNode();
       CGNode newCGNode = mapCGNode(oldCGNode, fromCG, toCG);
       if (newCGNode == null) {
         return null;
       }
-      if (pk instanceof LocalPointerKey) {
-        ret = heapModel.getPointerKeyForLocal(newCGNode, ((LocalPointerKey) pk).getValueNumber());
+      if (pk instanceof LocalPointerKey localPointerKey) {
+        ret = heapModel.getPointerKeyForLocal(newCGNode, localPointerKey.getValueNumber());
       } else if (pk instanceof ReturnValueKey) {
         // NOTE: must check for ExceptionReturnValueKey first,
         // since its a subclass if ReturnValueKey

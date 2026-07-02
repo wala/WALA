@@ -52,10 +52,10 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
     options.compilerArgumentProviders.run {
       add {
         listOf(
-            "--release",
-            options.release.get().toString(),
             "-properties",
             jdtPrefs.toString(),
+            "--release",
+            options.release.get().toString(),
             "-classpath",
             classpath.filter(File::exists).asPath,
             "-d",

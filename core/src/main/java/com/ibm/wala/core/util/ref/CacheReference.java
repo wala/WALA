@@ -28,17 +28,15 @@ public final class CacheReference {
 
   public static Object make(final Object referent) {
 
-    switch (choice) {
-      case SOFT:
-        return new SoftReference<>(referent);
-      case WEAK:
-        return new WeakReference<>(referent);
-      case HARD:
-        return referent;
-      default:
+    return switch (choice) {
+      case SOFT -> new SoftReference<>(referent);
+      case WEAK -> new WeakReference<>(referent);
+      case HARD -> referent;
+      default -> {
         Assertions.UNREACHABLE();
-        return null;
-    }
+        yield null;
+      }
+    };
   }
 
   public static Object get(final Object reference) throws IllegalArgumentException {
@@ -46,20 +44,20 @@ public final class CacheReference {
     if (reference == null) {
       return null;
     }
-    switch (choice) {
-      case SOFT:
-        if (!(reference instanceof java.lang.ref.SoftReference)) {
+    return switch (choice) {
+      case SOFT -> {
+        if (!(reference instanceof SoftReference<?> softReference)) {
           throw new IllegalArgumentException(
               "not ( reference instanceof java.lang.ref.SoftReference ) ");
         }
-        return ((SoftReference<?>) reference).get();
-      case WEAK:
-        return ((WeakReference<?>) reference).get();
-      case HARD:
-        return reference;
-      default:
+        yield softReference.get();
+      }
+      case WEAK -> ((WeakReference<?>) reference).get();
+      case HARD -> reference;
+      default -> {
         Assertions.UNREACHABLE();
-        return null;
-    }
+        yield null;
+      }
+    };
   }
 }

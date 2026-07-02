@@ -42,8 +42,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
 
   @Override
   public boolean containsKey(Object key) {
-    if (key instanceof SSAInstruction) {
-      SSAInstruction instruction = (SSAInstruction) key;
+    if (key instanceof SSAInstruction instruction) {
       if (instruction.iIndex() >= 0) {
         return map.containsKey(new InstructionByIIndexWrapper<>(instruction));
       }
@@ -58,8 +57,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
 
   @Override
   public T get(Object key) {
-    if (key instanceof SSAInstruction) {
-      SSAInstruction instruction = (SSAInstruction) key;
+    if (key instanceof SSAInstruction instruction) {
       if (instruction.iIndex() >= 0) {
         return map.get(new InstructionByIIndexWrapper<>(instruction));
       }
@@ -74,8 +72,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
 
   @Override
   public T remove(Object key) {
-    if (key instanceof SSAInstruction) {
-      SSAInstruction instruction = (SSAInstruction) key;
+    if (key instanceof SSAInstruction instruction) {
       if (instruction.iIndex() >= 0) {
         return map.remove(new InstructionByIIndexWrapper<>(instruction));
       }
@@ -99,7 +96,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
   public Set<Instruction> keySet() {
     Set<Instruction> result = new LinkedHashSet<>();
     for (InstructionByIIndexWrapper<Instruction> wrapper : map.keySet()) {
-      result.add(wrapper.getInstruction());
+      result.add(wrapper.instruction());
     }
 
     return result;
@@ -115,8 +112,7 @@ public class InstructionByIIndexMap<Instruction extends SSAInstruction, T>
     Set<java.util.Map.Entry<Instruction, T>> result = new LinkedHashSet<>();
     for (java.util.Map.Entry<InstructionByIIndexWrapper<Instruction>, T> entry : map.entrySet()) {
       result.add(
-          new AbstractMap.SimpleImmutableEntry<>(
-              entry.getKey().getInstruction(), entry.getValue()));
+          new AbstractMap.SimpleImmutableEntry<>(entry.getKey().instruction(), entry.getValue()));
     }
 
     return result;

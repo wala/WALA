@@ -6,7 +6,7 @@ package com.ibm.wala.analysis.arraybounds.hypergraph.weight;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
-public class Weight {
+public record Weight(Type type, int number) {
   public enum Type {
     NUMBER,
     NOT_SET,
@@ -18,17 +18,8 @@ public class Weight {
 
   public static final Weight ZERO = new Weight(Type.NUMBER, 0);
 
-  private final Type type;
-  private final int number;
-
   public Weight(int number) {
-    this.type = Type.NUMBER;
-    this.number = number;
-  }
-
-  public Weight(Type type, int number) {
-    this.type = type;
-    this.number = number;
+    this(Type.NUMBER, number);
   }
 
   /**
@@ -39,9 +30,9 @@ public class Weight {
    */
   public Weight add(Weight other) {
     final Weight result;
-    if (this.getType() == Type.NUMBER) {
-      if (other.getType() == Type.NUMBER) {
-        result = new Weight(Type.NUMBER, this.getNumber() + other.getNumber());
+    if (this.type() == Type.NUMBER) {
+      if (other.type() == Type.NUMBER) {
+        result = new Weight(Type.NUMBER, this.number() + other.number());
       } else {
         result = other;
       }
@@ -52,42 +43,20 @@ public class Weight {
     return result;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final Weight other = (Weight) obj;
-    if (this.number != other.number) {
-      return false;
-    }
-    if (this.type != other.type) {
-      return false;
-    }
-    return true;
-  }
-
+  /**
+   * @deprecated Use {@link #number()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public int getNumber() {
-    return this.number;
+    return number();
   }
 
+  /**
+   * @deprecated Use {@link #type()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public Type getType() {
-    return this.type;
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + this.number;
-    result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
-    return result;
+    return type();
   }
 
   @Override

@@ -89,20 +89,7 @@ public class MethodHandles {
         }
       };
 
-  private static class HandlesItem<T> implements ContextItem {
-    private final T item;
-
-    public HandlesItem(T method) {
-      this.item = method;
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((item == null) ? 0 : item.hashCode());
-      return result;
-    }
+  private record HandlesItem<T>(T item) implements ContextItem {
 
     @Override
     public boolean equals(Object obj) {
@@ -160,14 +147,7 @@ public class MethodHandles {
     }
   }
 
-  private static class MethodContext implements Context {
-    private final Context base;
-    private final MethodReference method;
-
-    public MethodContext(Context base, MethodReference method) {
-      this.base = base;
-      this.method = method;
-    }
+  private record MethodContext(Context base, MethodReference method) implements Context {
 
     @Override
     public ContextItem get(ContextKey name) {
@@ -176,15 +156,6 @@ public class MethodHandles {
       } else {
         return base.get(name);
       }
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((base == null) ? 0 : base.hashCode());
-      result = prime * result + ((method == null) ? 0 : method.hashCode());
-      return result;
     }
 
     @Override
@@ -204,12 +175,7 @@ public class MethodHandles {
     }
   }
 
-  private static class ContextSelectorImpl implements ContextSelector {
-    private final ContextSelector base;
-
-    public ContextSelectorImpl(ContextSelector base) {
-      this.base = base;
-    }
+  private record ContextSelectorImpl(ContextSelector base) implements ContextSelector {
 
     @Override
     public Context getCalleeTarget(
@@ -223,12 +189,12 @@ public class MethodHandles {
               .equals(TypeReference.JavaLangInvokeMethodHandle.getName())) {
         if (actualParameters != null && actualParameters.length > 0) {
           InstanceKey selfKey = actualParameters[0];
-          if (selfKey instanceof ConstantKey
+          if (selfKey instanceof ConstantKey<?> constKey
               && selfKey
-                  .getConcreteType()
+                  .concreteType()
                   .getReference()
                   .equals(TypeReference.JavaLangInvokeMethodHandle)) {
-            MethodReference ref = ((IMethod) ((ConstantKey<?>) selfKey).getValue()).getReference();
+            MethodReference ref = ((IMethod) constKey.getValue()).getReference();
             return new MethodContext(baseContext, ref);
           }
         }
@@ -242,14 +208,14 @@ public class MethodHandles {
         if (actualParameters != null && actualParameters.length > 2) {
           InstanceKey classKey = actualParameters[1];
           InstanceKey nameKey = actualParameters[2];
-          if (classKey instanceof ConstantKey
-              && classKey.getConcreteType().getReference().equals(TypeReference.JavaLangClass)
-              && nameKey instanceof ConstantKey
-              && nameKey.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
+          if (classKey instanceof ConstantKey<?> classConstKey
+              && classKey.concreteType().getReference().equals(TypeReference.JavaLangClass)
+              && nameKey instanceof ConstantKey<?> nameConstKey
+              && nameKey.concreteType().getReference().equals(TypeReference.JavaLangString)) {
             return new FindContext(
                 baseContext,
-                ((IClass) ((ConstantKey<?>) classKey).getValue()).getReference(),
-                (String) ((ConstantKey<?>) nameKey).getValue());
+                ((IClass) classConstKey.getValue()).getReference(),
+                (String) nameConstKey.getValue());
           }
         }
       }
@@ -482,68 +448,64 @@ public class MethodHandles {
                 if (isInvoke(key)) {
                   String name = key.getMethod().getName().toString();
                   switch (name) {
-                    case "invokeWithArguments":
-                      {
-                        int nargs = ref.getNumberOfParameters();
-                        int[] params = new int[nargs];
+                    case "invokeWithArguments" -> {
+                      int nargs = ref.getNumberOfParameters();
+                      int[] params = new int[nargs];
+                      for (int i = 0; i < nargs; i++) {
+                        code.addConstant(i + nargs + 3, new ConstantValue(i));
+                        code.addStatement(
+                            insts.ArrayLoadInstruction(
+                                code.getNumberOfStatements(),
+                                i + 3,
+                                1,
+                                i + nargs + 3,
+                                TypeReference.JavaLangObject));
+                        params[i] = i + 3;
+                      }
+                      CallSiteReference site =
+                          CallSiteReference.make(
+                              nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
+                      code.addStatement(
+                          insts.InvokeInstruction(
+                              code.getNumberOfStatements(),
+                              2 * nargs + 3,
+                              params,
+                              2 * nargs + 4,
+                              site,
+                              null));
+                      code.addStatement(
+                          insts.ReturnInstruction(
+                              code.getNumberOfStatements(), 2 * nargs + 3, false));
+                    }
+                    case "invokeExact" -> {
+                      int nargs = key.getMethod().getReference().getNumberOfParameters();
+                      int[] params = new int[nargs];
+                      if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
                         for (int i = 0; i < nargs; i++) {
-                          code.addConstant(i + nargs + 3, new ConstantValue(i));
-                          code.addStatement(
-                              insts.ArrayLoadInstruction(
-                                  code.getNumberOfStatements(),
-                                  i + 3,
-                                  1,
-                                  i + nargs + 3,
-                                  TypeReference.JavaLangObject));
-                          params[i] = i + 3;
+                          params[i] = i + 2;
                         }
                         CallSiteReference site =
                             CallSiteReference.make(
-                                nargs + 1, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
-                        code.addStatement(
-                            insts.InvokeInstruction(
-                                code.getNumberOfStatements(),
-                                2 * nargs + 3,
-                                params,
-                                2 * nargs + 4,
-                                site,
-                                null));
-                        code.addStatement(
-                            insts.ReturnInstruction(
-                                code.getNumberOfStatements(), 2 * nargs + 3, false));
-                        break;
-                      }
-                    case "invokeExact":
-                      {
-                        int nargs = key.getMethod().getReference().getNumberOfParameters();
-                        int[] params = new int[nargs];
-                        if (nargs == ref.getNumberOfParameters() + (isStatic ? 0 : 1)) {
-                          for (int i = 0; i < nargs; i++) {
-                            params[i] = i + 2;
-                          }
-                          CallSiteReference site =
-                              CallSiteReference.make(
-                                  0, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
-                          if (isVoid) {
-                            code.addStatement(
-                                insts.InvokeInstruction(
-                                    code.getNumberOfStatements(), params, nargs + 2, site, null));
-                          } else {
-                            code.addStatement(
-                                insts.InvokeInstruction(
-                                    code.getNumberOfStatements(),
-                                    nargs + 2,
-                                    params,
-                                    nargs + 3,
-                                    site,
-                                    null));
-                            code.addStatement(
-                                insts.ReturnInstruction(
-                                    code.getNumberOfStatements(), nargs + 2, false));
-                          }
+                                0, ref, isStatic ? Dispatch.STATIC : Dispatch.SPECIAL);
+                        if (isVoid) {
+                          code.addStatement(
+                              insts.InvokeInstruction(
+                                  code.getNumberOfStatements(), params, nargs + 2, site, null));
+                        } else {
+                          code.addStatement(
+                              insts.InvokeInstruction(
+                                  code.getNumberOfStatements(),
+                                  nargs + 2,
+                                  params,
+                                  nargs + 3,
+                                  site,
+                                  null));
+                          code.addStatement(
+                              insts.ReturnInstruction(
+                                  code.getNumberOfStatements(), nargs + 2, false));
                         }
-                        break;
                       }
+                    }
                   }
                 } else {
                   assert isType(key);

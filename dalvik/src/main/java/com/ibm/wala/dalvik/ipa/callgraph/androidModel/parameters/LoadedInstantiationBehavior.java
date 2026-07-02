@@ -47,6 +47,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,20 +64,10 @@ import org.jspecify.annotations.NonNull;
  */
 public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
-  private static final class BehviourValue implements Serializable {
-    private static final long serialVersionUID = -7558845015122601212L;
-    public final InstanceBehavior behaviour;
-    public final Exactness exactness;
-    public final BehviourValue cacheFrom;
-
-    public BehviourValue(
-        final InstanceBehavior behaviour,
-        final Exactness exactness,
-        final BehviourValue cacheFrom) {
-      this.behaviour = behaviour;
-      this.exactness = exactness;
-      this.cacheFrom = cacheFrom;
-    }
+  private record BehviourValue(
+      InstanceBehavior behaviour, Exactness exactness, BehviourValue cacheFrom)
+      implements Serializable {
+    @Serial private static final long serialVersionUID = -7558845015122601212L;
 
     @Override
     public String toString() {
@@ -89,15 +80,11 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
   }
 
-  private static final class BehaviorKey<T> implements Serializable {
-    private static final long serialVersionUID = 73530;
-
-    // T is expected to be TypeName or Atom
-    final T base;
-
-    public BehaviorKey(T base) {
-      this.base = base;
-    }
+  /**
+   * @param base T is expected to be TypeName or Atom
+   */
+  private record BehaviorKey<T>(T base) implements Serializable {
+    @Serial private static final long serialVersionUID = 73530;
 
     public static BehaviorKey<TypeName> mk(TypeName base) {
       return new BehaviorKey<>(base);
@@ -109,17 +96,11 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof BehaviorKey) {
-        BehaviorKey<?> other = (BehaviorKey<?>) o;
+      if (o instanceof BehaviorKey<?> other) {
         return base.equals(other.base);
       } else {
         return false;
       }
-    }
-
-    @Override
-    public int hashCode() {
-      return this.base.hashCode();
     }
 
     @Override
@@ -290,11 +271,12 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
   //
 
   /** The last eight digits encode the date. */
-  private static final long serialVersionUID = 810020131212L;
+  @Serial private static final long serialVersionUID = 810020131212L;
 
   /** Including the cache may be useful to get all seen types. */
   public transient boolean serializationIncludesCache = true;
 
+  @Serial
   private void writeObject(java.io.ObjectOutputStream stream) throws IOException {
     if (this.serializationIncludesCache) {
       stream.writeObject(this.behaviours);
@@ -310,6 +292,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
   }
 
+  @Serial
   @SuppressWarnings("unchecked")
   private void readObject(java.io.ObjectInputStream stream)
       throws IOException, ClassNotFoundException {

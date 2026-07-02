@@ -25,8 +25,8 @@ public class TransitivePrototypeKey extends AbstractFieldPointerKey {
 
   @Override
   public boolean equals(Object x) {
-    return (x instanceof TransitivePrototypeKey)
-        && ((TransitivePrototypeKey) x).getInstanceKey().equals(getInstanceKey());
+    return (x instanceof TransitivePrototypeKey transitivePrototypeKey)
+        && transitivePrototypeKey.getInstanceKey().equals(getInstanceKey());
   }
 
   @Override

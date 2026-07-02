@@ -1,5 +1,6 @@
 package com.ibm.wala.util.nullability;
 
+import java.io.Serial;
 import org.jspecify.annotations.Nullable;
 
 /** Utility methods for targeted suppressions of NullAway warnings. */
@@ -8,7 +9,7 @@ public class NullabilityUtil {
   /** Exception thrown when a {@link #castToNonNull(Object)} call fails. */
   public static class CastToNonNullFailedException extends RuntimeException {
 
-    private static final long serialVersionUID = -4118612881206393972L;
+    @Serial private static final long serialVersionUID = -4118612881206393972L;
   }
 
   /**
@@ -31,7 +32,7 @@ public class NullabilityUtil {
    *
    * @return a null reference
    */
-  @SuppressWarnings("NullAway")
+  @SuppressWarnings({"NullAway", "TypeParameterUnusedInFormals"})
   public static <T extends @Nullable Object> T uncheckedNull() {
     return null;
   }

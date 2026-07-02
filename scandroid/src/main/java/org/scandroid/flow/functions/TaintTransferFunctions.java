@@ -72,11 +72,12 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.SparseIntSet;
+import java.io.Serial;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.DomainElement;
 import org.scandroid.domain.FieldElement;
@@ -93,7 +94,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
   // Java, you need type aliases.
   private static class BlockPair<E extends ISSABasicBlock>
       extends Pair<BasicBlockInContext<E>, BasicBlockInContext<E>> {
-    private static final long serialVersionUID = 6838579950051954781L;
+    @Serial private static final long serialVersionUID = 6838579950051954781L;
 
     protected BlockPair(BasicBlockInContext<E> fst, BasicBlockInContext<E> snd) {
       super(fst, snd);
@@ -126,7 +127,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     this.callFlowFunctions =
         CacheBuilder.newBuilder()
             .maximumSize(10000)
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(Duration.ofMinutes(10))
             .build(
                 new CacheLoader<>() {
                   @Override
@@ -137,7 +138,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     this.normalFlowFunctions =
         CacheBuilder.newBuilder()
             .maximumSize(10000)
-            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .expireAfterWrite(Duration.ofMinutes(10))
             .build(
                 new CacheLoader<>() {
                   @Override
@@ -167,10 +168,10 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
       return IDENTITY_FN;
     }
 
-    if (srcInst instanceof SSAInvokeInstruction) {
+    if (srcInst instanceof SSAInvokeInstruction ssaInvokeInstruction) {
       // build list of actual parameter code elements, and return a
       // function
-      final int numParams = ((SSAInvokeInstruction) srcInst).getNumberOfPositionalParameters();
+      final int numParams = ssaInvokeInstruction.getNumberOfPositionalParameters();
       List<CodeElement> actualParams = new ArrayList<>(numParams);
       for (int i = 0; i < numParams; i++) {
         actualParams.add(i, new LocalElement(srcInst.getUse(i)));
@@ -253,8 +254,8 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     // special case for static field gets so we can introduce new taints for
     // them
     if (taintStaticFields
-        && inst instanceof SSAGetInstruction
-        && ((SSAGetInstruction) inst).isStatic()) {
+        && inst instanceof SSAGetInstruction ssaGetInstruction
+        && ssaGetInstruction.isStatic()) {
       return makeStaticFieldTaints(dest, inst, flowFunction);
     }
 
@@ -307,7 +308,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
   public IFlowFunction getReturnFlowFunction(
       BasicBlockInContext<E> call, BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
     final SSAInstruction inst = call.getLastInstruction();
-    if (!(inst instanceof SSAInvokeInstruction)) {
+    if (!(inst instanceof SSAInvokeInstruction invoke)) {
       // if we don't have an invoke, just punt and hope the necessary
       // information is already in global elements
 
@@ -316,8 +317,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
 
     // we always need to process the destination instruction
     final IUnaryFlowFunction flowFromDest = getNormalFlowFunction(null, dest);
-
-    final SSAInvokeInstruction invoke = (SSAInvokeInstruction) inst;
 
     if (invoke.getNumberOfReturnValues() == 0) {
       // no return values, just propagate global information
@@ -346,14 +345,13 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
       return elts;
     }
 
-    if (inst instanceof SSAPutInstruction) {
-      final Set<CodeElement> fieldAccessCodeElts =
-          getFieldAccessCodeElts(node, (SSAPutInstruction) inst);
+    if (inst instanceof SSAPutInstruction ssaPutInstruction) {
+      final Set<CodeElement> fieldAccessCodeElts = getFieldAccessCodeElts(node, ssaPutInstruction);
       elts.addAll(fieldAccessCodeElts);
     }
 
-    if (inst instanceof SSAArrayStoreInstruction) {
-      elts.addAll(getArrayRefCodeElts(node, (SSAArrayStoreInstruction) inst));
+    if (inst instanceof SSAArrayStoreInstruction ssaArrayStoreInstruction) {
+      elts.addAll(getArrayRefCodeElts(node, ssaArrayStoreInstruction));
     }
 
     for (int i = 0; i < defNo; i++) {
@@ -369,12 +367,12 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     int useNo = inst.getNumberOfUses();
     Set<CodeElement> elts = HashSetFactory.make();
 
-    if (inst instanceof SSAGetInstruction) {
-      elts.addAll(getFieldAccessCodeElts(node, (SSAGetInstruction) inst));
+    if (inst instanceof SSAGetInstruction ssaGetInstruction) {
+      elts.addAll(getFieldAccessCodeElts(node, ssaGetInstruction));
     }
 
-    if (inst instanceof SSAArrayLoadInstruction) {
-      elts.addAll(getArrayRefCodeElts(node, (SSAArrayLoadInstruction) inst));
+    if (inst instanceof SSAArrayLoadInstruction ssaArrayLoadInstruction) {
+      elts.addAll(getArrayRefCodeElts(node, ssaArrayLoadInstruction));
     }
 
     for (int i = 0; i < useNo; i++) {

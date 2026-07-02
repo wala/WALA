@@ -304,7 +304,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
       InstanceKey ik = iks.pop();
 
       elts.add(new InstanceKeyElement(ik));
-      final IClass clazz = ik.getConcreteType();
+      final IClass clazz = ik.concreteType();
       final TypeReference typeRef = clazz.getReference();
       // If an array, recur down into the structure
       if (typeRef.isArrayType()) {

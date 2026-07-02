@@ -10,13 +10,15 @@
  */
 package com.ibm.wala.util;
 
+import java.io.Serial;
+
 /**
  * An exception for when work is canceled in eclipse. This version forces every API that uses it to
  * declare it. Use {@code CancelRuntimeException} to avoid the need to declare a cancel exception.
  */
 public class CancelException extends Exception {
 
-  private static final long serialVersionUID = 3728159810629412928L;
+  @Serial private static final long serialVersionUID = 3728159810629412928L;
 
   protected CancelException(String msg) {
     super(msg);

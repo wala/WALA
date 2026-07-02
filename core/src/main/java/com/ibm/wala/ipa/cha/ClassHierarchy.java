@@ -174,10 +174,10 @@ public class ClassHierarchy implements IClassHierarchy {
       }
     } catch (NoSuperclassFoundException e) {
       if (!superClassHandling.equals(MissingSuperClassHandling.NONE)
-          && klass instanceof BytecodeClass) {
+          && klass instanceof BytecodeClass<?> bytecodeClass) {
         if (superClassHandling.equals(MissingSuperClassHandling.PHANTOM)) {
           // create a phantom superclass.  add it and the root class to the result
-          IClass phantom = getPhantomSuperclass((BytecodeClass<?>) klass);
+          IClass phantom = getPhantomSuperclass(bytecodeClass);
           result.add(phantom);
         }
         result.add(getRootClass());
@@ -254,7 +254,7 @@ public class ClassHierarchy implements IClassHierarchy {
     try {
       int numLoaders = 0;
       for (ClassLoaderReference ref : scope.getLoaders()) {
-        if (langNames.contains(ref.getLanguage())) {
+        if (langNames.contains(ref.language())) {
           numLoaders++;
         }
       }
@@ -272,7 +272,7 @@ public class ClassHierarchy implements IClassHierarchy {
           }
         }
 
-        if (langNames.contains(ref.getLanguage())) {
+        if (langNames.contains(ref.language())) {
           IClassLoader icl = factory.getLoader(ref, this, scope);
           loaders[idx++] = icl;
 
@@ -883,7 +883,7 @@ public class ClassHierarchy implements IClassHierarchy {
     /* END Custom change: remember unresolved classes */
     ClassLoaderReference loader = a.getClassLoader();
 
-    ClassLoaderReference parent = loader.getParent();
+    ClassLoaderReference parent = loader.parent();
     // first delegate lookup to the parent loader.
     if (parent != null) {
       TypeReference p = TypeReference.findOrCreate(parent, a.getName());

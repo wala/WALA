@@ -40,7 +40,7 @@ public class TargetMethodContextSelector implements ContextSelector {
       throw new IllegalArgumentException("R is null");
     }
 
-    final IMethod M = R[0].getConcreteType().getMethod(selector);
+    final IMethod M = R[0].concreteType().getMethod(selector);
 
     class MethodDispatchContext implements Context {
 
@@ -67,9 +67,9 @@ public class TargetMethodContextSelector implements ContextSelector {
 
       @Override
       public boolean equals(Object o) {
-        return (o instanceof Context)
-            && ((Context) o).isA(MethodDispatchContext.class)
-            && ((Context) o).get(ContextKey.TARGET).equals(M);
+        return (o instanceof Context context)
+            && context.isA(MethodDispatchContext.class)
+            && context.get(ContextKey.TARGET).equals(M);
       }
     }
 

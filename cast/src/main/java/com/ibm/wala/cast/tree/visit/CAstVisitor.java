@@ -180,82 +180,67 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 
     if (visitor.enterEntity(n, context, visitor)) return;
     switch (n.getKind()) {
-      case CAstEntity.FILE_ENTITY:
-        {
-          C fileContext = visitor.makeFileContext(context, n);
-          if (visitor.visitFileEntity(n, context, fileContext, visitor)) break;
-          visitor.visitScopedEntities(n, n.getAllScopedEntities(), fileContext, visitor);
-          visitor.leaveFileEntity(n, context, fileContext, visitor);
-          break;
+      case CAstEntity.FILE_ENTITY -> {
+        C fileContext = visitor.makeFileContext(context, n);
+        if (visitor.visitFileEntity(n, context, fileContext, visitor)) break;
+        visitor.visitScopedEntities(n, n.getAllScopedEntities(), fileContext, visitor);
+        visitor.leaveFileEntity(n, context, fileContext, visitor);
+      }
+      case CAstEntity.FIELD_ENTITY -> {
+        if (visitor.visitFieldEntity(n, context, visitor)) break;
+        visitor.leaveFieldEntity(n, context, visitor);
+      }
+      case CAstEntity.GLOBAL_ENTITY -> {
+        if (visitor.visitGlobalEntity(n, context, visitor)) break;
+        visitor.leaveGlobalEntity(n, context, visitor);
+      }
+      case CAstEntity.TYPE_ENTITY -> {
+        C typeContext = visitor.makeTypeContext(context, n);
+        if (visitor.visitTypeEntity(n, context, typeContext, visitor)) break;
+        visitor.visitScopedEntities(n, n.getAllScopedEntities(), typeContext, visitor);
+        visitor.leaveTypeEntity(n, context, typeContext, visitor);
+      }
+      case CAstEntity.FUNCTION_ENTITY -> {
+        for (CAstNode dflt : n.getArgumentDefaults()) {
+          visitor.visit(dflt, getCodeContext(context), visitor);
+          visitor.visitScopedEntities(
+              context.top(), context.top().getScopedEntities(dflt), context, visitor);
         }
-      case CAstEntity.FIELD_ENTITY:
-        {
-          if (visitor.visitFieldEntity(n, context, visitor)) break;
-          visitor.leaveFieldEntity(n, context, visitor);
-          break;
+        C codeContext = visitor.makeCodeContext(context, n);
+        if (visitor.visitFunctionEntity(n, context, codeContext, visitor)) break;
+        // visit the AST if any
+        if (n.getAST() != null) visitor.visit(n.getAST(), codeContext, visitor);
+        // XXX: there may be code that needs to go in here
+        // process any remaining scoped children
+        visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
+        visitor.leaveFunctionEntity(n, context, codeContext, visitor);
+      }
+      case CAstEntity.MACRO_ENTITY -> {
+        C codeContext = visitor.makeCodeContext(context, n);
+        if (visitor.visitMacroEntity(n, context, codeContext, visitor)) break;
+        // visit the AST if any
+        if (n.getAST() != null) visitor.visit(n.getAST(), codeContext, visitor);
+        // XXX: there may be code that needs to go in here
+        // process any remaining scoped children
+        visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
+        visitor.leaveMacroEntity(n, context, codeContext, visitor);
+      }
+      case CAstEntity.SCRIPT_ENTITY -> {
+        C codeContext = visitor.makeCodeContext(context, n);
+        if (visitor.visitScriptEntity(n, context, codeContext, visitor)) break;
+        // visit the AST if any
+        if (n.getAST() != null) visitor.visit(n.getAST(), codeContext, visitor);
+        // XXX: there may be code that needs to go in here
+        // process any remaining scoped children
+        visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
+        visitor.leaveScriptEntity(n, context, codeContext, visitor);
+      }
+      default -> {
+        if (!visitor.doVisitEntity(n, context, visitor)) {
+          System.err.println(("No handler for entity " + n.getName()));
+          Assertions.UNREACHABLE("cannot handle entity of kind" + n.getKind());
         }
-      case CAstEntity.GLOBAL_ENTITY:
-        {
-          if (visitor.visitGlobalEntity(n, context, visitor)) break;
-          visitor.leaveGlobalEntity(n, context, visitor);
-          break;
-        }
-      case CAstEntity.TYPE_ENTITY:
-        {
-          C typeContext = visitor.makeTypeContext(context, n);
-          if (visitor.visitTypeEntity(n, context, typeContext, visitor)) break;
-          visitor.visitScopedEntities(n, n.getAllScopedEntities(), typeContext, visitor);
-          visitor.leaveTypeEntity(n, context, typeContext, visitor);
-          break;
-        }
-      case CAstEntity.FUNCTION_ENTITY:
-        {
-          for (CAstNode dflt : n.getArgumentDefaults()) {
-            visitor.visit(dflt, getCodeContext(context), visitor);
-            visitor.visitScopedEntities(
-                context.top(), context.top().getScopedEntities(dflt), context, visitor);
-          }
-          C codeContext = visitor.makeCodeContext(context, n);
-          if (visitor.visitFunctionEntity(n, context, codeContext, visitor)) break;
-          // visit the AST if any
-          if (n.getAST() != null) visitor.visit(n.getAST(), codeContext, visitor);
-          // XXX: there may be code that needs to go in here
-          // process any remaining scoped children
-          visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
-          visitor.leaveFunctionEntity(n, context, codeContext, visitor);
-          break;
-        }
-      case CAstEntity.MACRO_ENTITY:
-        {
-          C codeContext = visitor.makeCodeContext(context, n);
-          if (visitor.visitMacroEntity(n, context, codeContext, visitor)) break;
-          // visit the AST if any
-          if (n.getAST() != null) visitor.visit(n.getAST(), codeContext, visitor);
-          // XXX: there may be code that needs to go in here
-          // process any remaining scoped children
-          visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
-          visitor.leaveMacroEntity(n, context, codeContext, visitor);
-          break;
-        }
-      case CAstEntity.SCRIPT_ENTITY:
-        {
-          C codeContext = visitor.makeCodeContext(context, n);
-          if (visitor.visitScriptEntity(n, context, codeContext, visitor)) break;
-          // visit the AST if any
-          if (n.getAST() != null) visitor.visit(n.getAST(), codeContext, visitor);
-          // XXX: there may be code that needs to go in here
-          // process any remaining scoped children
-          visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
-          visitor.leaveScriptEntity(n, context, codeContext, visitor);
-          break;
-        }
-      default:
-        {
-          if (!visitor.doVisitEntity(n, context, visitor)) {
-            System.err.println(("No handler for entity " + n.getName()));
-            Assertions.UNREACHABLE("cannot handle entity of kind" + n.getKind());
-          }
-        }
+      }
     }
     visitor.postProcessEntity(n, context, visitor);
 
@@ -533,477 +518,320 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 
     int NT = n.getKind();
     switch (NT) {
-      case CAstNode.FUNCTION_EXPR:
-        {
-          if (visitor.visitFunctionExpr(n, context, visitor)) break;
-          visitor.leaveFunctionExpr(n, context, visitor);
+      case CAstNode.FUNCTION_EXPR -> {
+        if (visitor.visitFunctionExpr(n, context, visitor)) break;
+        visitor.leaveFunctionExpr(n, context, visitor);
+      }
+      case CAstNode.FUNCTION_STMT -> {
+        if (visitor.visitFunctionStmt(n, context, visitor)) break;
+        visitor.leaveFunctionStmt(n, context, visitor);
+      }
+      case CAstNode.CLASS_STMT -> {
+        if (visitor.visitClassStmt(n, context, visitor)) break;
+        visitor.leaveClassStmt(n, context, visitor);
+      }
+      case CAstNode.LOCAL_SCOPE -> {
+        if (visitor.visitLocalScope(n, context, visitor)) break;
+        C localContext = visitor.makeLocalContext(context, n);
+        visitor.visit(n.getChild(0), localContext, visitor);
+        visitor.leaveLocalScope(n, context, visitor);
+      }
+      case CAstNode.SPECIAL_PARENT_SCOPE -> {
+        if (visitor.visitSpecialParentScope(n, context, visitor)) break;
+        C localContext = visitor.makeSpecialParentContext(context, n);
+        visitor.visit(n.getChild(1), localContext, visitor);
+        visitor.leaveSpecialParentScope(n, context, visitor);
+      }
+      case CAstNode.BLOCK_EXPR -> {
+        if (visitor.visitBlockExpr(n, context, visitor)) break;
+        visitor.visitAllChildren(n, context, visitor);
+        visitor.leaveBlockExpr(n, context, visitor);
+      }
+      case CAstNode.BLOCK_STMT -> {
+        if (visitor.visitBlockStmt(n, context, visitor)) break;
+        visitor.visitAllChildren(n, context, visitor);
+        visitor.leaveBlockStmt(n, context, visitor);
+      }
+      case CAstNode.LOOP -> {
+        if (visitor.visitLoop(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveLoopHeader(n, context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveLoop(n, context, visitor);
+      }
+      case CAstNode.FORIN_LOOP -> {
+        if (visitor.visitForIn(n, context, visitor)) {
           break;
         }
-
-      case CAstNode.FUNCTION_STMT:
-        {
-          if (visitor.visitFunctionStmt(n, context, visitor)) break;
-          visitor.leaveFunctionStmt(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.CLASS_STMT:
-        {
-          if (visitor.visitClassStmt(n, context, visitor)) break;
-          visitor.leaveClassStmt(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.LOCAL_SCOPE:
-        {
-          if (visitor.visitLocalScope(n, context, visitor)) break;
-          C localContext = visitor.makeLocalContext(context, n);
-          visitor.visit(n.getChild(0), localContext, visitor);
-          visitor.leaveLocalScope(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.SPECIAL_PARENT_SCOPE:
-        {
-          if (visitor.visitSpecialParentScope(n, context, visitor)) break;
-          C localContext = visitor.makeSpecialParentContext(context, n);
-          visitor.visit(n.getChild(1), localContext, visitor);
-          visitor.leaveSpecialParentScope(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.BLOCK_EXPR:
-        {
-          if (visitor.visitBlockExpr(n, context, visitor)) break;
-          visitor.visitAllChildren(n, context, visitor);
-          visitor.leaveBlockExpr(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.BLOCK_STMT:
-        {
-          if (visitor.visitBlockStmt(n, context, visitor)) break;
-          visitor.visitAllChildren(n, context, visitor);
-          visitor.leaveBlockStmt(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.LOOP:
-        {
-          if (visitor.visitLoop(n, context, visitor)) break;
+        visitor.leaveForIn(n, context, visitor);
+      }
+      case CAstNode.GET_CAUGHT_EXCEPTION -> {
+        if (visitor.visitGetCaughtException(n, context, visitor)) break;
+        visitor.leaveGetCaughtException(n, context, visitor);
+      }
+      case CAstNode.THIS -> {
+        if (visitor.visitThis(n, context, visitor)) break;
+        visitor.leaveThis(n, context, visitor);
+      }
+      case CAstNode.SUPER -> {
+        if (visitor.visitSuper(n, context, visitor)) break;
+        visitor.leaveSuper(n, context, visitor);
+      }
+      case CAstNode.CALL -> {
+        if (visitor.visitCall(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.visitChildren(n, 2, context, visitor);
+        visitor.leaveCall(n, context, visitor);
+      }
+      case CAstNode.VAR -> {
+        if (visitor.visitVar(n, context, visitor)) break;
+        visitor.leaveVar(n, context, visitor);
+      }
+      case CAstNode.CONSTANT -> {
+        if (visitor.visitConstant(n, context, visitor)) break;
+        visitor.leaveConstant(n, context, visitor);
+      }
+      case CAstNode.BINARY_EXPR -> {
+        if (visitor.visitBinaryExpr(n, context, visitor)) break;
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.visit(n.getChild(2), context, visitor);
+        visitor.leaveBinaryExpr(n, context, visitor);
+      }
+      case CAstNode.UNARY_EXPR -> {
+        if (visitor.visitUnaryExpr(n, context, visitor)) break;
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveUnaryExpr(n, context, visitor);
+      }
+      case CAstNode.ARRAY_LENGTH -> {
+        if (visitor.visitArrayLength(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveArrayLength(n, context, visitor);
+      }
+      case CAstNode.ARRAY_REF -> {
+        if (visitor.visitArrayRef(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.visitChildren(n, 2, context, visitor);
+        visitor.leaveArrayRef(n, context, visitor);
+      }
+      case CAstNode.DECL_STMT -> {
+        if (visitor.visitDeclStmt(n, context, visitor)) break;
+        if (n.getChildCount() == 2) visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveDeclStmt(n, context, visitor);
+      }
+      case CAstNode.RETURN -> {
+        if (visitor.visitReturn(n, context, visitor)) break;
+        if (n.getChildCount() > 0) visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveReturn(n, context, visitor);
+      }
+      case CAstNode.IFGOTO -> {
+        if (visitor.visitIfgoto(n, context, visitor)) break;
+        if (n.getChildCount() == 1) {
           visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveLoopHeader(n, context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveLoop(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.FORIN_LOOP:
-        {
-          if (visitor.visitForIn(n, context, visitor)) {
-            break;
-          }
-          visitor.leaveForIn(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.GET_CAUGHT_EXCEPTION:
-        {
-          if (visitor.visitGetCaughtException(n, context, visitor)) break;
-          visitor.leaveGetCaughtException(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.THIS:
-        {
-          if (visitor.visitThis(n, context, visitor)) break;
-          visitor.leaveThis(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.SUPER:
-        {
-          if (visitor.visitSuper(n, context, visitor)) break;
-          visitor.leaveSuper(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.CALL:
-        {
-          if (visitor.visitCall(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.visitChildren(n, 2, context, visitor);
-          visitor.leaveCall(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.VAR:
-        {
-          if (visitor.visitVar(n, context, visitor)) break;
-          visitor.leaveVar(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.CONSTANT:
-        {
-          if (visitor.visitConstant(n, context, visitor)) break;
-          visitor.leaveConstant(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.BINARY_EXPR:
-        {
-          if (visitor.visitBinaryExpr(n, context, visitor)) break;
+        } else if (n.getChildCount() == 3) {
           visitor.visit(n.getChild(1), context, visitor);
           visitor.visit(n.getChild(2), context, visitor);
-          visitor.leaveBinaryExpr(n, context, visitor);
-          break;
+        } else {
+          Assertions.UNREACHABLE();
         }
 
-      case CAstNode.UNARY_EXPR:
-        {
-          if (visitor.visitUnaryExpr(n, context, visitor)) break;
+        visitor.leaveIfgoto(n, context, visitor);
+      }
+      case CAstNode.GOTO -> {
+        if (visitor.visitGoto(n, context, visitor)) break;
+        visitor.leaveGoto(n, context, visitor);
+      }
+      case CAstNode.LABEL_STMT -> {
+        if (visitor.visitLabelStmt(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        if (n.getChildCount() == 2) visitor.visit(n.getChild(1), context, visitor);
+        else assert n.getChildCount() < 2;
+        visitor.leaveLabelStmt(n, context, visitor);
+      }
+      case CAstNode.IF_STMT -> {
+        if (visitor.visitIfStmt(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveIfStmtCondition(n, context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveIfStmtTrueClause(n, context, visitor);
+        if (n.getChildCount() == 3) visitor.visit(n.getChild(2), context, visitor);
+        visitor.leaveIfStmt(n, context, visitor);
+      }
+      case CAstNode.IF_EXPR -> {
+        if (visitor.visitIfExpr(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveIfExprCondition(n, context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveIfExprTrueClause(n, context, visitor);
+        if (n.getChildCount() == 3) visitor.visit(n.getChild(2), context, visitor);
+        visitor.leaveIfExpr(n, context, visitor);
+      }
+      case CAstNode.NEW_ENCLOSING, CAstNode.NEW -> {
+        if (visitor.visitNew(n, context, visitor)) break;
+
+        visitChildren(n, 1, context, visitor);
+
+        visitor.leaveNew(n, context, visitor);
+      }
+      case CAstNode.OBJECT_LITERAL -> {
+        if (visitor.visitObjectLiteral(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        for (int i = 1; i < n.getChildCount(); i += 2) {
+          visitor.visit(n.getChild(i), context, visitor);
+          visitor.visit(n.getChild(i + 1), context, visitor);
+          visitor.leaveObjectLiteralFieldInit(n, i, context, visitor);
+        }
+        visitor.leaveObjectLiteral(n, context, visitor);
+      }
+      case CAstNode.ARRAY_LITERAL -> {
+        if (visitor.visitArrayLiteral(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveArrayLiteralObject(n, context, visitor);
+        for (int i = 1; i < n.getChildCount(); i++) {
+          visitor.visit(n.getChild(i), context, visitor);
+          visitor.leaveArrayLiteralInitElement(n, i, context, visitor);
+        }
+        visitor.leaveArrayLiteral(n, context, visitor);
+      }
+      case CAstNode.OBJECT_REF -> {
+        if (visitor.visitObjectRef(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveObjectRef(n, context, visitor);
+      }
+      case CAstNode.ASSIGN, CAstNode.ASSIGN_PRE_OP, CAstNode.ASSIGN_POST_OP -> {
+        if (visitor.visitAssign(n, context, visitor)) break;
+        visitor.visit(n.getChild(1), context, visitor);
+        // TODO: is this correct?
+        if (visitor.visitAssignNodes(n.getChild(0), context, n.getChild(1), n, visitor)) break;
+        visitor.leaveAssign(n, context, visitor);
+      }
+      case CAstNode.SWITCH -> {
+        if (visitor.visitSwitch(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveSwitchValue(n, context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveSwitch(n, context, visitor);
+      }
+      case CAstNode.THROW -> {
+        if (visitor.visitThrow(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveThrow(n, context, visitor);
+      }
+      case CAstNode.CATCH -> {
+        if (visitor.visitCatch(n, context, visitor)) break;
+        visitor.visitChildren(n, 1, context, visitor);
+        visitor.leaveCatch(n, context, visitor);
+      }
+      case CAstNode.UNWIND -> {
+        if (visitor.visitUnwind(n, context, visitor)) break;
+        C unwindContext = visitor.makeUnwindContext(context, n.getChild(1), visitor);
+        visitor.visit(n.getChild(0), unwindContext, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveUnwind(n, context, visitor);
+      }
+      case CAstNode.TRY -> {
+        if (visitor.visitTry(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveTryBlock(n, context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveTry(n, context, visitor);
+      }
+      case CAstNode.EMPTY -> {
+        if (visitor.visitEmpty(n, context, visitor)) break;
+        visitor.leaveEmpty(n, context, visitor);
+      }
+      case CAstNode.PRIMITIVE -> {
+        if (visitor.visitPrimitive(n, context, visitor)) break;
+        visitor.visitAllChildren(n, context, visitor);
+        visitor.leavePrimitive(n, context, visitor);
+      }
+      case CAstNode.VOID -> {
+        if (visitor.visitVoid(n, context, visitor)) break;
+        visitor.leaveVoid(n, context, visitor);
+      }
+      case CAstNode.CAST -> {
+        if (visitor.visitCast(n, context, visitor)) break;
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveCast(n, context, visitor);
+      }
+      case CAstNode.INSTANCEOF -> {
+        if (visitor.visitInstanceOf(n, context, visitor)) break;
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveInstanceOf(n, context, visitor);
+      }
+      case CAstNode.ASSERT -> {
+        if (visitor.visitAssert(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveAssert(n, context, visitor);
+      }
+      case CAstNode.EACH_ELEMENT_GET -> {
+        if (visitor.visitEachElementGet(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveEachElementGet(n, context, visitor);
+      }
+      case CAstNode.EACH_ELEMENT_HAS_NEXT -> {
+        if (visitor.visitEachElementHasNext(n, context, visitor)) break;
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.visit(n.getChild(1), context, visitor);
+        visitor.leaveEachElementHasNext(n, context, visitor);
+      }
+      case CAstNode.TYPE_LITERAL_EXPR -> {
+        if (visitor.visitTypeLiteralExpr(n, context, visitor)) {
+          break;
+        }
+        visitor.visit(n.getChild(0), context, visitor);
+        visitor.leaveTypeLiteralExpr(n, context, visitor);
+      }
+      case CAstNode.IS_DEFINED_EXPR -> {
+        if (visitor.visitIsDefinedExpr(n, context, visitor)) {
+          break;
+        }
+        visitor.visit(n.getChild(0), context, visitor);
+        if (n.getChildCount() == 2) {
           visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveUnaryExpr(n, context, visitor);
+        }
+        visitor.leaveIsDefinedExpr(n, context, visitor);
+      }
+      case CAstNode.INCLUDE -> {
+        if (visitor.visitInclude(n, context, visitor)) {
           break;
         }
-
-      case CAstNode.ARRAY_LENGTH:
-        {
-          if (visitor.visitArrayLength(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveArrayLength(n, context, visitor);
+        visitor.leaveInclude(n, context, visitor);
+      }
+      case CAstNode.MACRO_VAR -> {
+        if (visitor.visitMacroVar(n, context, visitor)) {
           break;
         }
-
-      case CAstNode.ARRAY_REF:
-        {
-          if (visitor.visitArrayRef(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.visitChildren(n, 2, context, visitor);
-          visitor.leaveArrayRef(n, context, visitor);
+        visitor.leaveMacroVar(n, context, visitor);
+      }
+      case CAstNode.ECHO -> {
+        if (visitor.visitEcho(n, context, visitor)) {
           break;
         }
-
-      case CAstNode.DECL_STMT:
-        {
-          if (visitor.visitDeclStmt(n, context, visitor)) break;
-          if (n.getChildCount() == 2) visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveDeclStmt(n, context, visitor);
+        visitAllChildren(n, context, visitor);
+        visitor.leaveEcho(n, context, visitor);
+      }
+      case CAstNode.RETURN_WITHOUT_BRANCH -> {
+        if (visitor.visitYield(n, context, visitor)) {
           break;
         }
-
-      case CAstNode.RETURN:
-        {
-          if (visitor.visitReturn(n, context, visitor)) break;
-          if (n.getChildCount() > 0) visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveReturn(n, context, visitor);
+        visitAllChildren(n, context, visitor);
+        visitor.leaveYield(n, context, visitor);
+      }
+      case CAstNode.EXPR_STMT -> {
+        if (visitor.visitExprStmt(n, context, visitor)) {
           break;
         }
-
-      case CAstNode.IFGOTO:
-        {
-          if (visitor.visitIfgoto(n, context, visitor)) break;
-          if (n.getChildCount() == 1) {
-            visitor.visit(n.getChild(0), context, visitor);
-          } else if (n.getChildCount() == 3) {
-            visitor.visit(n.getChild(1), context, visitor);
-            visitor.visit(n.getChild(2), context, visitor);
-          } else {
-            Assertions.UNREACHABLE();
-          }
-
-          visitor.leaveIfgoto(n, context, visitor);
-          break;
+        visitAllChildren(n, context, visitor);
+        visitor.leaveExprStmt(n, context, visitor);
+      }
+      default -> {
+        if (!visitor.doVisit(n, context, visitor)) {
+          System.err.println(
+              ("looking at unhandled " + n + '(' + NT + ')' + " of " + n.getClass()));
+          Assertions.UNREACHABLE("cannot handle node of kind " + NT);
         }
-
-      case CAstNode.GOTO:
-        {
-          if (visitor.visitGoto(n, context, visitor)) break;
-          visitor.leaveGoto(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.LABEL_STMT:
-        {
-          if (visitor.visitLabelStmt(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          if (n.getChildCount() == 2) visitor.visit(n.getChild(1), context, visitor);
-          else assert n.getChildCount() < 2;
-          visitor.leaveLabelStmt(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.IF_STMT:
-        {
-          if (visitor.visitIfStmt(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveIfStmtCondition(n, context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveIfStmtTrueClause(n, context, visitor);
-          if (n.getChildCount() == 3) visitor.visit(n.getChild(2), context, visitor);
-          visitor.leaveIfStmt(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.IF_EXPR:
-        {
-          if (visitor.visitIfExpr(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveIfExprCondition(n, context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveIfExprTrueClause(n, context, visitor);
-          if (n.getChildCount() == 3) visitor.visit(n.getChild(2), context, visitor);
-          visitor.leaveIfExpr(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.NEW_ENCLOSING:
-      case CAstNode.NEW:
-        {
-          if (visitor.visitNew(n, context, visitor)) break;
-
-          visitChildren(n, 1, context, visitor);
-
-          visitor.leaveNew(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.OBJECT_LITERAL:
-        {
-          if (visitor.visitObjectLiteral(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          for (int i = 1; i < n.getChildCount(); i += 2) {
-            visitor.visit(n.getChild(i), context, visitor);
-            visitor.visit(n.getChild(i + 1), context, visitor);
-            visitor.leaveObjectLiteralFieldInit(n, i, context, visitor);
-          }
-          visitor.leaveObjectLiteral(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.ARRAY_LITERAL:
-        {
-          if (visitor.visitArrayLiteral(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveArrayLiteralObject(n, context, visitor);
-          for (int i = 1; i < n.getChildCount(); i++) {
-            visitor.visit(n.getChild(i), context, visitor);
-            visitor.leaveArrayLiteralInitElement(n, i, context, visitor);
-          }
-          visitor.leaveArrayLiteral(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.OBJECT_REF:
-        {
-          if (visitor.visitObjectRef(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveObjectRef(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.ASSIGN:
-      case CAstNode.ASSIGN_PRE_OP:
-      case CAstNode.ASSIGN_POST_OP:
-        {
-          if (visitor.visitAssign(n, context, visitor)) break;
-          visitor.visit(n.getChild(1), context, visitor);
-          // TODO: is this correct?
-          if (visitor.visitAssignNodes(n.getChild(0), context, n.getChild(1), n, visitor)) break;
-          visitor.leaveAssign(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.SWITCH:
-        {
-          if (visitor.visitSwitch(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveSwitchValue(n, context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveSwitch(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.THROW:
-        {
-          if (visitor.visitThrow(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveThrow(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.CATCH:
-        {
-          if (visitor.visitCatch(n, context, visitor)) break;
-          visitor.visitChildren(n, 1, context, visitor);
-          visitor.leaveCatch(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.UNWIND:
-        {
-          if (visitor.visitUnwind(n, context, visitor)) break;
-          C unwindContext = visitor.makeUnwindContext(context, n.getChild(1), visitor);
-          visitor.visit(n.getChild(0), unwindContext, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveUnwind(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.TRY:
-        {
-          if (visitor.visitTry(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveTryBlock(n, context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveTry(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.EMPTY:
-        {
-          if (visitor.visitEmpty(n, context, visitor)) break;
-          visitor.leaveEmpty(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.PRIMITIVE:
-        {
-          if (visitor.visitPrimitive(n, context, visitor)) break;
-          visitor.visitAllChildren(n, context, visitor);
-          visitor.leavePrimitive(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.VOID:
-        {
-          if (visitor.visitVoid(n, context, visitor)) break;
-          visitor.leaveVoid(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.CAST:
-        {
-          if (visitor.visitCast(n, context, visitor)) break;
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveCast(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.INSTANCEOF:
-        {
-          if (visitor.visitInstanceOf(n, context, visitor)) break;
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveInstanceOf(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.ASSERT:
-        {
-          if (visitor.visitAssert(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveAssert(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.EACH_ELEMENT_GET:
-        {
-          if (visitor.visitEachElementGet(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveEachElementGet(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.EACH_ELEMENT_HAS_NEXT:
-        {
-          if (visitor.visitEachElementHasNext(n, context, visitor)) break;
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.visit(n.getChild(1), context, visitor);
-          visitor.leaveEachElementHasNext(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.TYPE_LITERAL_EXPR:
-        {
-          if (visitor.visitTypeLiteralExpr(n, context, visitor)) {
-            break;
-          }
-          visitor.visit(n.getChild(0), context, visitor);
-          visitor.leaveTypeLiteralExpr(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.IS_DEFINED_EXPR:
-        {
-          if (visitor.visitIsDefinedExpr(n, context, visitor)) {
-            break;
-          }
-          visitor.visit(n.getChild(0), context, visitor);
-          if (n.getChildCount() == 2) {
-            visitor.visit(n.getChild(1), context, visitor);
-          }
-          visitor.leaveIsDefinedExpr(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.INCLUDE:
-        {
-          if (visitor.visitInclude(n, context, visitor)) {
-            break;
-          }
-          visitor.leaveInclude(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.MACRO_VAR:
-        {
-          if (visitor.visitMacroVar(n, context, visitor)) {
-            break;
-          }
-          visitor.leaveMacroVar(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.ECHO:
-        {
-          if (visitor.visitEcho(n, context, visitor)) {
-            break;
-          }
-          visitAllChildren(n, context, visitor);
-          visitor.leaveEcho(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.RETURN_WITHOUT_BRANCH:
-        {
-          if (visitor.visitYield(n, context, visitor)) {
-            break;
-          }
-          visitAllChildren(n, context, visitor);
-          visitor.leaveYield(n, context, visitor);
-          break;
-        }
-
-      case CAstNode.EXPR_STMT:
-        {
-          if (visitor.visitExprStmt(n, context, visitor)) {
-            break;
-          }
-          visitAllChildren(n, context, visitor);
-          visitor.leaveExprStmt(n, context, visitor);
-          break;
-        }
-
-      default:
-        {
-          if (!visitor.doVisit(n, context, visitor)) {
-            System.err.println(
-                ("looking at unhandled " + n + '(' + NT + ')' + " of " + n.getClass()));
-            Assertions.UNREACHABLE("cannot handle node of kind " + NT);
-          }
-        }
+      }
     }
 
     if (context != null) {
@@ -1059,78 +887,58 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     boolean assign = NT == CAstNode.ASSIGN;
     boolean preOp = NT == CAstNode.ASSIGN_PRE_OP;
     switch (n.getKind()) {
-      case CAstNode.ARRAY_REF:
-        {
-          if (doVisitArrayRefNode(n, v, a, assign, preOp, context, visitor)) {
-            return true;
+      case CAstNode.ARRAY_REF -> {
+        if (doVisitArrayRefNode(n, v, a, assign, preOp, context, visitor)) {
+          return true;
+        }
+      }
+      case CAstNode.OBJECT_REF -> {
+        if (assign
+            ? visitor.visitObjectRefAssign(n, v, a, context, visitor)
+            : visitor.visitObjectRefAssignOp(n, v, a, preOp, context, visitor)) return true;
+        visitor.visit(n.getChild(0), context, visitor);
+        if (assign) visitor.leaveObjectRefAssign(n, v, a, context, visitor);
+        else visitor.leaveObjectRefAssignOp(n, v, a, preOp, context, visitor);
+      }
+      case CAstNode.BLOCK_EXPR -> {
+        if (assign
+            ? visitor.visitBlockExprAssign(n, v, a, context, visitor)
+            : visitor.visitBlockExprAssignOp(n, v, a, preOp, context, visitor)) return true;
+        // FIXME: is it correct to ignore all the other children?
+        if (visitor.visitAssignNodes(n.getChild(n.getChildCount() - 1), context, v, a, visitor))
+          return true;
+        if (assign) visitor.leaveBlockExprAssign(n, v, a, context, visitor);
+        else visitor.leaveBlockExprAssignOp(n, v, a, preOp, context, visitor);
+      }
+      case CAstNode.VAR -> {
+        if (assign
+            ? visitor.visitVarAssign(n, v, a, context, visitor)
+            : visitor.visitVarAssignOp(n, v, a, preOp, context, visitor)) return true;
+        if (assign) visitor.leaveVarAssign(n, v, a, context, visitor);
+        else visitor.leaveVarAssignOp(n, v, a, preOp, context, visitor);
+      }
+      case CAstNode.ARRAY_LITERAL -> {
+        assert assign;
+        if (visitor.visitArrayLiteralAssign(n, v, a, context, visitor)) return true;
+        visitor.leaveArrayLiteralAssign(n, v, a, context, visitor);
+      }
+      case CAstNode.OBJECT_LITERAL -> {
+        assert assign;
+        for (int i = 1; i < n.getChildCount(); i += 2) {
+          visitor.visit(n.getChild(i), context, visitor);
+        }
+        if (visitor.visitObjectLiteralAssign(n, v, a, context, visitor)) return true;
+        visitor.leaveObjectLiteralAssign(n, v, a, context, visitor);
+      }
+      default -> {
+        if (!visitor.doVisitAssignNodes(n, context, a, v, visitor)) {
+          if (DEBUG) {
+            System.err.println(("cannot handle assign to kind " + n.getKind()));
           }
-
-          break;
+          throw new UnsupportedOperationException(
+              "cannot handle assignment: " + CAstPrinter.print(a, context.getSourceMap()));
         }
-
-      case CAstNode.OBJECT_REF:
-        {
-          if (assign
-              ? visitor.visitObjectRefAssign(n, v, a, context, visitor)
-              : visitor.visitObjectRefAssignOp(n, v, a, preOp, context, visitor)) return true;
-          visitor.visit(n.getChild(0), context, visitor);
-          if (assign) visitor.leaveObjectRefAssign(n, v, a, context, visitor);
-          else visitor.leaveObjectRefAssignOp(n, v, a, preOp, context, visitor);
-          break;
-        }
-
-      case CAstNode.BLOCK_EXPR:
-        {
-          if (assign
-              ? visitor.visitBlockExprAssign(n, v, a, context, visitor)
-              : visitor.visitBlockExprAssignOp(n, v, a, preOp, context, visitor)) return true;
-          // FIXME: is it correct to ignore all the other children?
-          if (visitor.visitAssignNodes(n.getChild(n.getChildCount() - 1), context, v, a, visitor))
-            return true;
-          if (assign) visitor.leaveBlockExprAssign(n, v, a, context, visitor);
-          else visitor.leaveBlockExprAssignOp(n, v, a, preOp, context, visitor);
-          break;
-        }
-
-      case CAstNode.VAR:
-        {
-          if (assign
-              ? visitor.visitVarAssign(n, v, a, context, visitor)
-              : visitor.visitVarAssignOp(n, v, a, preOp, context, visitor)) return true;
-          if (assign) visitor.leaveVarAssign(n, v, a, context, visitor);
-          else visitor.leaveVarAssignOp(n, v, a, preOp, context, visitor);
-          break;
-        }
-
-      case CAstNode.ARRAY_LITERAL:
-        {
-          assert assign;
-          if (visitor.visitArrayLiteralAssign(n, v, a, context, visitor)) return true;
-          visitor.leaveArrayLiteralAssign(n, v, a, context, visitor);
-          break;
-        }
-
-      case CAstNode.OBJECT_LITERAL:
-        {
-          assert assign;
-          for (int i = 1; i < n.getChildCount(); i += 2) {
-            visitor.visit(n.getChild(i), context, visitor);
-          }
-          if (visitor.visitObjectLiteralAssign(n, v, a, context, visitor)) return true;
-          visitor.leaveObjectLiteralAssign(n, v, a, context, visitor);
-          break;
-        }
-
-      default:
-        {
-          if (!visitor.doVisitAssignNodes(n, context, a, v, visitor)) {
-            if (DEBUG) {
-              System.err.println(("cannot handle assign to kind " + n.getKind()));
-            }
-            throw new UnsupportedOperationException(
-                "cannot handle assignment: " + CAstPrinter.print(a, context.getSourceMap()));
-          }
-        }
+      }
     }
     return false;
   }

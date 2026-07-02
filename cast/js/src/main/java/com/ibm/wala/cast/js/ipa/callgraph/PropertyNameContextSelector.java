@@ -115,14 +115,12 @@ public class PropertyNameContextSelector implements ContextSelector {
   private final int index;
 
   private void collectValues(DefUse du, SSAInstruction inst, MutableIntSet values) {
-    if (inst instanceof SSAGetInstruction) {
-      SSAGetInstruction g = (SSAGetInstruction) inst;
+    if (inst instanceof SSAGetInstruction g) {
       values.add(g.getRef());
       if (g.getRef() != -1) {
         collectValues(du, du.getDef(g.getRef()), values);
       }
-    } else if (inst instanceof AbstractReflectiveGet) {
-      AbstractReflectiveGet g = (AbstractReflectiveGet) inst;
+    } else if (inst instanceof AbstractReflectiveGet g) {
       values.add(g.getObjectRef());
       collectValues(du, du.getDef(g.getObjectRef()), values);
       values.add(g.getMemberRef());
@@ -175,14 +173,12 @@ public class PropertyNameContextSelector implements ContextSelector {
     boolean usedAsPropertyName = false, usedAsSomethingElse = false;
     DefUse du = cache.getDefUse(cache.getIR(method));
     for (SSAInstruction use : Iterator2Iterable.make(du.getUses(index + 1))) {
-      if (use instanceof ReflectiveMemberAccess) {
-        ReflectiveMemberAccess rma = (ReflectiveMemberAccess) use;
+      if (use instanceof ReflectiveMemberAccess rma) {
         if (rma.getMemberRef() == index + 1) {
           usedAsPropertyName = true;
           continue;
         }
-      } else if (use instanceof AstIsDefinedInstruction) {
-        AstIsDefinedInstruction aidi = (AstIsDefinedInstruction) use;
+      } else if (use instanceof AstIsDefinedInstruction aidi) {
         if (aidi.getNumberOfUses() > 1 && aidi.getUse(1) == index + 1) {
           usedAsPropertyName = true;
           continue;

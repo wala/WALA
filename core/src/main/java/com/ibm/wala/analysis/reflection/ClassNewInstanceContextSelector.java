@@ -48,8 +48,7 @@ class ClassNewInstanceContextSelector implements ContextSelector {
   }
 
   private static boolean isTypeConstant(InstanceKey instance) {
-    if (instance instanceof ConstantKey) {
-      ConstantKey<?> c = (ConstantKey<?>) instance;
+    if (instance instanceof ConstantKey<?> c) {
       if (c.getValue() instanceof IClass) {
         return true;
       }

@@ -271,8 +271,8 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
       // TODO MissingSuperClassHandling.Phantom needs to be implemented
-      if (cha instanceof ClassHierarchy
-          && ((ClassHierarchy) cha)
+      if (cha instanceof ClassHierarchy iClasses
+          && iClasses
               .getSuperClassHandling()
               .equals(ClassHierarchy.MissingSuperClassHandling.ROOT)) {
         superClass = loader.lookupClass(loader.getLanguage().getRootType().getName());
@@ -399,7 +399,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
     // check parent, caching if found
     if (!selector.equals(MethodReference.clinitSelector)
-        && !selector.getName().equals(MethodReference.initAtom)) {
+        && !selector.name().equals(MethodReference.initAtom)) {
       IClass superclass = getSuperclass();
       if (superclass != null) {
         IMethod inherit = superclass.getMethod(selector);

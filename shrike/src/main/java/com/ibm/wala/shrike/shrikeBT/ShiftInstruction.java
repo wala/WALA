@@ -44,8 +44,7 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ShiftInstruction) {
-      ShiftInstruction i = (ShiftInstruction) o;
+    if (o instanceof ShiftInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

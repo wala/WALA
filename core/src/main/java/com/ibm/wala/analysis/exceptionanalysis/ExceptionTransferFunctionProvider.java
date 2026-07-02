@@ -64,6 +64,7 @@ public class ExceptionTransferFunctionProvider
   }
 
   @Override
+  @SuppressWarnings("OverridingMethodInconsistentArgumentNamesChecker")
   public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(CGNode dst, CGNode src) {
     /*
      * Note, that dst and src are swapped. For the data-flow-analysis we use

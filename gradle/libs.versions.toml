@@ -1,36 +1,36 @@
 [versions]
-com-uber-nullaway = "0.13.4"
+com-uber-nullaway = "0.13.6"
 #noinspection UnusedVersionCatalogEntry
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 #noinspection UnusedVersionCatalogEntry
-google-java-format = "1.28.0"
+google-java-format = "1.35.0"
 ktfmt = "0.59"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"
-ant = "org.apache.ant:ant:1.10.15"
+ant = "org.apache.ant:ant:1.10.17"
 assertj-core = "org.assertj:assertj-core:3.27.7"
 commons-cli = "commons-cli:commons-cli:1.11.0"
-commons-io = "commons-io:commons-io:2.21.0"
+commons-io = "commons-io:commons-io:2.22.0"
 dexlib2 = "org.smali:dexlib2:2.5.2"
-eclipse-ecj = "org.eclipse.jdt:ecj:3.44.0"
-eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.24.0"
+eclipse-ecj = "org.eclipse.jdt:ecj:3.46.0"
+eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.24.200"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
-errorprone-core = "com.google.errorprone:error_prone_core:2.49.0"
-gson = "com.google.code.gson:gson:2.13.2"
-guava = "com.google.guava:guava:33.5.0-jre"
+errorprone-core = "com.google.errorprone:error_prone_core:2.50.0"
+gson = "com.google.code.gson:gson:2.14.0"
+guava = "com.google.guava:guava:33.6.0-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
 java_cup = "java_cup:java_cup:0.9e"
 jericho-html = "net.htmlparser.jericho:jericho-html:3.4"
-jetbrains-annotations = "org.jetbrains:annotations:26.0.2-1"
+jetbrains-annotations = "org.jetbrains:annotations:26.1.0"
 jgit = "org.netbeans.external:org-eclipse-jgit:RELEASE190"
-json = "org.json:json:20251224"
-json-unit-assertj = "net.javacrumbs.json-unit:json-unit-assertj:2.40.1"
+json = "org.json:json:20260522"
+json-unit-assertj = "net.javacrumbs.json-unit:json-unit-assertj:5.1.2"
 jspecify = "org.jspecify:jspecify:1.0.0"
-junit-bom = "org.junit:junit-bom:5.14.2"
+junit-bom = "org.junit:junit-bom:6.1.0"
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
 #noinspection UnusedVersionCatalogEntry
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
@@ -45,18 +45,18 @@ nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "com-uber-null
 #noinspection UnusedVersionCatalogEntry
 nullaway-annotations = { module = "com.uber.nullaway:nullaway-annotations", version.ref = "com-uber-nullaway" }
 osgi-framework = "org.osgi:org.osgi.framework:1.10.0"
-rhino = "org.mozilla:rhino:1.8.1"
-slf4j-api = "org.slf4j:slf4j-api:2.0.17"
+rhino = "org.mozilla:rhino:1.9.1"
+slf4j-api = "org.slf4j:slf4j-api:2.0.18"
 
 [plugins]
-dependency-analysis = "com.autonomousapps.dependency-analysis:3.5.1"
+dependency-analysis = "com.autonomousapps.dependency-analysis:3.14.1"
 eclipse-mavencentral = "com.diffplug.eclipse.mavencentral:4.4.1"
-errorprone = "net.ltgt.errorprone:4.4.0"
+errorprone = "net.ltgt.errorprone:5.1.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
 maven-publish = "com.vanniktech.maven.publish:0.36.0"
 node = "com.github.node-gradle.node:7.1.0"
-shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.0"
-spotless = "com.diffplug.spotless:8.0.0"
+shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.1"
+spotless = "com.diffplug.spotless:8.6.0"
 task-tree = "com.dorongold.task-tree:4.0.1"
-version-catalog-update = "nl.littlerobots.version-catalog-update:1.0.1"
-versions = "com.github.ben-manes.versions:0.53.0"
+version-catalog-update = "nl.littlerobots.version-catalog-update:1.1.0"
+versions = "com.github.ben-manes.versions:0.54.0"

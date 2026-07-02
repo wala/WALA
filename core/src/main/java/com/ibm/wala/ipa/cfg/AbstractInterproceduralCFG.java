@@ -31,6 +31,7 @@ import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
+import java.io.Serial;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Function;
@@ -57,7 +58,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
   /** Graph implementation we delegate to. */
   private final NumberedGraph<BasicBlockInContext<T>> g =
       new SlowSparseNumberedGraph<>(2) {
-        private static final long serialVersionUID = 1L;
+        @Serial private static final long serialVersionUID = 1L;
 
         @Override
         protected String nodeString(BasicBlockInContext<T> n, boolean forEdge) {
@@ -308,11 +309,10 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
         System.err.println("Visiting " + cInsts.length + " instructions");
       }
       for (int i = 0; i < cInsts.length; i++) {
-        if (cInsts[i] instanceof SSAAbstractInvokeInstruction) {
+        if (cInsts[i] instanceof SSAAbstractInvokeInstruction call) {
           if (DEBUG_LEVEL > 1) {
             System.err.println("Checking invoke instruction: " + cInsts[i]);
           }
-          SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cInsts[i];
           CallSiteReference site = call.getCallSite();
           assert site.getProgramCounter() == ccfg.getProgramCounter(i);
           if (cg.getPossibleTargets(caller, site).contains(n)) {

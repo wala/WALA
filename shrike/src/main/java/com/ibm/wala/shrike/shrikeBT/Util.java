@@ -48,27 +48,20 @@ public final class Util {
    * @return the JVM "stack word size" for the given JVM type, looking at index 'index'
    */
   static byte getWordSize(String s, int index) {
-    switch (s.charAt(index)) {
-      case 'V':
-        return 0;
-      case 'J':
-      case 'D':
-        return 2;
-      default:
-        return 1;
-    }
+    return switch (s.charAt(index)) {
+      case 'V' -> 0;
+      case 'J', 'D' -> 2;
+      default -> 1;
+    };
   }
 
   /** Computes the character length of the internal JVM type given by s.substring(i). */
   private static int getTypeLength(String s, int i) {
-    switch (s.charAt(i)) {
-      case 'L':
-        return s.indexOf(';', i) - i + 1;
-      case '[':
-        return getTypeLength(s, i + 1) + 1;
-      default:
-        return 1;
-    }
+    return switch (s.charAt(i)) {
+      case 'L' -> s.indexOf(';', i) - i + 1;
+      case '[' -> getTypeLength(s, i + 1) + 1;
+      default -> 1;
+    };
   }
 
   /**
@@ -288,15 +281,10 @@ public final class Util {
     if (t == null || t.isEmpty()) {
       throw new IllegalArgumentException("invalid t: " + t);
     }
-    switch (t.charAt(0)) {
-      case 'Z':
-      case 'C':
-      case 'B':
-      case 'S':
-        return "I";
-      default:
-        return t;
-    }
+    return switch (t.charAt(0)) {
+      case 'Z', 'C', 'B', 'S' -> "I";
+      default -> t;
+    };
   }
 
   /** Compute the type "array of t". */
@@ -311,12 +299,10 @@ public final class Util {
     if (t == null || t.isEmpty()) {
       return false;
     } else {
-      switch (t.charAt(0)) {
-        case '[':
-          return true;
-        default:
-          return false;
-      }
+      return switch (t.charAt(0)) {
+        case '[' -> true;
+        default -> false;
+      };
     }
   }
 
@@ -327,13 +313,10 @@ public final class Util {
     if (t == null || t.isEmpty()) {
       return false;
     } else {
-      switch (t.charAt(0)) {
-        case 'L':
-        case '[':
-          return false;
-        default:
-          return true;
-      }
+      return switch (t.charAt(0)) {
+        case 'L', '[' -> false;
+        default -> true;
+      };
     }
   }
 

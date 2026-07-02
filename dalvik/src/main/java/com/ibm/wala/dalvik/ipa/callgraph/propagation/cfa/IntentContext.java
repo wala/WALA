@@ -94,8 +94,7 @@ public class IntentContext implements Context {
     if (obj == null) {
       return false;
     }
-    if (obj instanceof IntentContext) {
-      IntentContext other = (IntentContext) obj;
+    if (obj instanceof IntentContext other) {
       if (this.intent.equals(other.intent)) {
         if (this.parent != null) {
           return this.parent.equals(other.parent);

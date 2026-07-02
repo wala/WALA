@@ -48,14 +48,14 @@ public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys
 
   protected LexicalParent[] getParents(InstanceKey base) {
     DynamicMethodObject function =
-        (DynamicMethodObject) base.getConcreteType().getMethod(AstMethodReference.fnSelector);
+        (DynamicMethodObject) base.concreteType().getMethod(AstMethodReference.fnSelector);
 
     return function == null ? new LexicalParent[0] : function.getParents();
   }
 
   @Override
   protected boolean needsScopeMappingKey(InstanceKey base) {
-    return cha.isSubclassOf(base.getConcreteType(), codeBody) && getParents(base).length > 0;
+    return cha.isSubclassOf(base.concreteType(), codeBody) && getParents(base).length > 0;
   }
 
   @Override

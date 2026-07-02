@@ -23,8 +23,8 @@ public class CompositeFileMapping implements FileMapping {
   }
 
   private void addMapping(FileMapping fm) {
-    if (fm instanceof CompositeFileMapping) {
-      mappings.addAll(((CompositeFileMapping) fm).mappings);
+    if (fm instanceof CompositeFileMapping compositeFileMapping) {
+      mappings.addAll(compositeFileMapping.mappings);
     } else {
       mappings.add(fm);
     }

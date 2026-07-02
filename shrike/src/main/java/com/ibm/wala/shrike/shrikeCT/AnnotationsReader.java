@@ -15,7 +15,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * This class reads Annotations attributes, e.g., RuntimeInvisibleAnnotations.
@@ -72,52 +71,24 @@ public class AnnotationsReader extends AttributeReader {
   /**
    * Represents a constant argument to an annotation. Class arguments (e.g., {@code Foo.class}) are
    * also represented with this type, with the value being the String class name.
+   *
+   * @param val the constant value
    */
-  public static class ConstantElementValue implements ElementValue {
-
-    /** the constant value */
-    public final Object val;
-
-    public ConstantElementValue(Object val) {
-      this.val = val;
-    }
+  public record ConstantElementValue(Object val) implements ElementValue {
 
     @Override
     public String toString() {
       return String.valueOf(val);
     }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((val == null) ? 0 : val.hashCode());
-      return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null) return false;
-      if (getClass() != obj.getClass()) return false;
-      if (!Objects.equals(val, ((ConstantElementValue) obj).val)) return false;
-      return true;
-    }
   }
 
-  /** Represents enum constant annotation arguments. */
-  public static class EnumElementValue implements ElementValue {
-
-    /** the name of the enum type */
-    public final String enumType;
-
-    /** the enum value */
-    public final String enumVal;
-
-    public EnumElementValue(String enumType, String enumVal) {
-      this.enumType = enumType;
-      this.enumVal = enumVal;
-    }
+  /**
+   * Represents enum constant annotation arguments.
+   *
+   * @param enumType the name of the enum type
+   * @param enumVal the enum value
+   */
+  public record EnumElementValue(String enumType, String enumVal) implements ElementValue {
 
     @Override
     public String toString() {
@@ -125,15 +96,12 @@ public class AnnotationsReader extends AttributeReader {
     }
   }
 
-  /** represents an annotation argument that itself is an array of arguments */
-  public static class ArrayElementValue implements ElementValue {
-
-    /** the values contained in the array */
-    public final ElementValue[] vals;
-
-    public ArrayElementValue(ElementValue[] vals) {
-      this.vals = vals;
-    }
+  /**
+   * represents an annotation argument that itself is an array of arguments
+   *
+   * @param vals the values contained in the array
+   */
+  public record ArrayElementValue(ElementValue[] vals) implements ElementValue {
 
     @Override
     public String toString() {
@@ -248,19 +216,12 @@ public class AnnotationsReader extends AttributeReader {
    * See the JVM specification section 4.7.16 for details.
    *
    * <p>This class implements {@link ElementValue} to handle nested annotations.
+   *
+   * @param type the type of the annotation
+   * @param elementValues the arguments to the annotation
    */
-  public static class AnnotationAttribute implements ElementValue {
-
-    /** the type of the annotation */
-    public final String type;
-
-    /** the arguments to the annotation */
-    public final Map<String, ElementValue> elementValues;
-
-    public AnnotationAttribute(String type, Map<String, ElementValue> elementValues) {
-      this.type = type;
-      this.elementValues = elementValues;
-    }
+  public record AnnotationAttribute(String type, Map<String, ElementValue> elementValues)
+      implements ElementValue {
 
     @Override
     public String toString() {
@@ -298,27 +259,30 @@ public class AnnotationsReader extends AttributeReader {
     // meaning of this short depends on the tag
     int nextShort = cr.getUShort(offset + 1);
     switch (tag) {
-      case 'B':
-      case 'C':
-      case 'I':
-      case 'S':
-      case 'Z':
+      case 'B', 'C', 'I', 'S', 'Z' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPInt(nextShort)), 3);
-      case 'J':
+      }
+      case 'J' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPLong(nextShort)), 3);
-      case 'D':
+      }
+      case 'D' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPDouble(nextShort)), 3);
-      case 'F':
+      }
+      case 'F' -> {
         return Pair.make(new ConstantElementValue(cr.getCP().getCPFloat(nextShort)), 3);
-      case 's': // string
-      case 'c': // class; just represent as a constant element with the type name
-        return Pair.make(new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)), 3);
-      case 'e': // enum
+      } // string
+      case 's', 'c' -> {
+        return Pair.make(
+            new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)),
+            3); // class; just represent as a constant element with the type name
+      }
+      case 'e' -> {
         return Pair.make(
             new EnumElementValue(
                 cr.getCP().getCPUtf8(nextShort), cr.getCP().getCPUtf8(cr.getUShort(offset + 3))),
-            5);
-      case '[': // array
+            5); // enum
+      }
+      case '[' -> {
         @SuppressWarnings("UnnecessaryLocalVariable")
         int numValues = nextShort;
         int numArrayBytes = 3; // start with 3 for the tag and num_values bytes
@@ -333,13 +297,17 @@ public class AnnotationsReader extends AttributeReader {
           numArrayBytes += arrayElemValueAndSize.snd;
         }
         return Pair.make(new ArrayElementValue(vals), numArrayBytes);
-      case '@': // annotation
+      }
+      case '@' -> {
         Pair<AnnotationAttribute, Integer> attributeAndSize = getAttributeAndSize(offset + 1);
         // add 1 to size for the tag
         return Pair.make(attributeAndSize.fst, attributeAndSize.snd + 1);
-      default:
+        // add 1 to size for the tag
+      }
+      default -> {
         assert false;
         return null;
+      }
     }
   }
 

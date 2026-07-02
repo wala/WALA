@@ -37,8 +37,7 @@ public final class ArrayStoreInstruction extends Instruction implements IArraySt
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ArrayStoreInstruction) {
-      ArrayStoreInstruction i = (ArrayStoreInstruction) o;
+    if (o instanceof ArrayStoreInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

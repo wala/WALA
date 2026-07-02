@@ -11,16 +11,22 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.core.util.strings.Atom;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
  * Defines the meta-information that identifies a class loader. This is effectively a "name" for a
  * class loader.
+ *
+ * @param name A String which identifies this loader
+ * @param language A String which identifies the language for this loader
+ * @param parent This class loader's parent
  */
-public class ClassLoaderReference implements Serializable {
+public record ClassLoaderReference(Atom name, Atom language, ClassLoaderReference parent)
+    implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654325L;
+  @Serial private static final long serialVersionUID = -3256390509887654325L;
 
   /** Canonical name for the Java language */
   public static final Atom Java = Atom.findOrCreateUnicodeAtom("Java");
@@ -37,46 +43,38 @@ public class ClassLoaderReference implements Serializable {
   public static final ClassLoaderReference Application =
       new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"), Java, Extension);
 
-  /** A String which identifies this loader */
-  private final Atom name;
-
-  /** A String which identifies the language for this loader */
-  private final Atom language;
-
-  /** This class loader's parent */
-  private final ClassLoaderReference parent;
-
-  public ClassLoaderReference(Atom name, Atom language, ClassLoaderReference parent) {
+  public ClassLoaderReference {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
     }
-    this.name = name;
-    this.language = language;
-    this.parent = parent;
   }
 
   /**
-   * @return the name of this class loader
+   * @deprecated Use {@link #name()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public Atom getName() {
-    return name;
+    return name();
   }
 
   /**
-   * @return the name of the language this class loader belongs to
+   * @deprecated Use {@link #language()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public Atom getLanguage() {
-    return language;
+    return language();
   }
 
   /**
-   * @return the parent of this loader in the loader hierarchy, or null if none
+   * @deprecated Use {@link #parent()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public ClassLoaderReference getParent() {
-    return parent;
+    return parent();
   }
 
-  /** Note: names for class loader references must be unique. */
+  // intentional: names for class loader references are unique, so equality is
+  // name-based only (ignoring language and parent)
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -90,6 +88,7 @@ public class ClassLoaderReference implements Serializable {
     }
   }
 
+  // intentional: name-based only
   @Override
   public int hashCode() {
     return name.hashCode();

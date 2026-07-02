@@ -56,45 +56,41 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
   public Iterator<? extends Statement> getCallSites(
       Statement r, PDG<? extends InstanceKey> callee) {
     switch (r.getKind()) {
-      case EXC_RET_CALLER:
-        {
-          ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
-          SSAAbstractInvokeInstruction call = n.getInstruction();
-          PDG<?> pdg = getProcOf(r);
-          return pdg.getCallStatements(call).iterator();
-        }
-      case NORMAL_RET_CALLER:
-        {
-          NormalReturnCaller n = (NormalReturnCaller) r;
-          SSAAbstractInvokeInstruction call = n.getInstruction();
-          PDG<?> pdg = getProcOf(r);
-          return pdg.getCallStatements(call).iterator();
-        }
-      case HEAP_RET_CALLER:
-        {
-          HeapStatement.HeapReturnCaller n = (HeapStatement.HeapReturnCaller) r;
-          SSAAbstractInvokeInstruction call = n.getCall();
-          PDG<?> pdg = getProcOf(r);
-          return pdg.getCallStatements(call).iterator();
-        }
-      default:
+      case EXC_RET_CALLER -> {
+        ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
+        SSAAbstractInvokeInstruction call = n.getInstruction();
+        PDG<?> pdg = getProcOf(r);
+        return pdg.getCallStatements(call).iterator();
+      }
+      case NORMAL_RET_CALLER -> {
+        NormalReturnCaller n = (NormalReturnCaller) r;
+        SSAAbstractInvokeInstruction call = n.getInstruction();
+        PDG<?> pdg = getProcOf(r);
+        return pdg.getCallStatements(call).iterator();
+      }
+      case HEAP_RET_CALLER -> {
+        HeapStatement.HeapReturnCaller n = (HeapStatement.HeapReturnCaller) r;
+        SSAAbstractInvokeInstruction call = n.getCall();
+        PDG<?> pdg = getProcOf(r);
+        return pdg.getCallStatements(call).iterator();
+      }
+      default -> {
         Assertions.UNREACHABLE(r.getKind().toString());
         return null;
+      }
     }
   }
 
   @Override
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
-    switch (call.getKind()) {
-      case NORMAL:
-        return new FilterIterator<>(getSuccNodes(call), this::isEntry);
-      case PARAM_CALLER:
-      case HEAP_PARAM_CALLER:
-        return getSuccNodes(call);
-      default:
+    return switch (call.getKind()) {
+      case NORMAL -> new FilterIterator<>(getSuccNodes(call), this::isEntry);
+      case PARAM_CALLER, HEAP_PARAM_CALLER -> getSuccNodes(call);
+      default -> {
         Assertions.UNREACHABLE(call.getKind().toString());
-        return null;
-    }
+        yield null;
+      }
+    };
   }
 
   @Override
@@ -156,143 +152,133 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
   public Iterator<? extends Statement> getReturnSites(
       Statement call, PDG<? extends InstanceKey> callee) {
     switch (call.getKind()) {
-      case PARAM_CALLER:
-        {
-          ParamCaller n = (ParamCaller) call;
-          SSAAbstractInvokeInstruction st = n.getInstruction();
-          PDG<?> pdg = getProcOf(call);
-          return pdg.getCallerReturnStatements(st).iterator();
-        }
-      case HEAP_PARAM_CALLER:
-        {
-          HeapStatement.HeapParamCaller n = (HeapStatement.HeapParamCaller) call;
-          SSAAbstractInvokeInstruction st = n.getCall();
-          PDG<?> pdg = getProcOf(call);
-          return pdg.getCallerReturnStatements(st).iterator();
-        }
-      case NORMAL:
-        {
-          NormalStatement n = (NormalStatement) call;
-          SSAAbstractInvokeInstruction st = (SSAAbstractInvokeInstruction) n.getInstruction();
-          PDG<?> pdg = getProcOf(call);
-          return pdg.getCallerReturnStatements(st).iterator();
-        }
-      default:
+      case PARAM_CALLER -> {
+        ParamCaller n = (ParamCaller) call;
+        SSAAbstractInvokeInstruction st = n.getInstruction();
+        PDG<?> pdg = getProcOf(call);
+        return pdg.getCallerReturnStatements(st).iterator();
+      }
+      case HEAP_PARAM_CALLER -> {
+        HeapStatement.HeapParamCaller n = (HeapStatement.HeapParamCaller) call;
+        SSAAbstractInvokeInstruction st = n.getCall();
+        PDG<?> pdg = getProcOf(call);
+        return pdg.getCallerReturnStatements(st).iterator();
+      }
+      case NORMAL -> {
+        NormalStatement n = (NormalStatement) call;
+        SSAAbstractInvokeInstruction st = (SSAAbstractInvokeInstruction) n.getInstruction();
+        PDG<?> pdg = getProcOf(call);
+        return pdg.getCallerReturnStatements(st).iterator();
+      }
+      default -> {
         Assertions.UNREACHABLE(call.getKind().toString());
         return null;
+      }
     }
   }
 
   @Override
   public boolean isCall(Statement n) {
     switch (n.getKind()) {
-      case EXC_RET_CALLEE:
-      case EXC_RET_CALLER:
-      case HEAP_PARAM_CALLEE:
-      case NORMAL_RET_CALLEE:
-      case NORMAL_RET_CALLER:
-      case PARAM_CALLEE:
-      case PHI:
-      case HEAP_RET_CALLEE:
-      case HEAP_RET_CALLER:
-      case METHOD_ENTRY:
-      case METHOD_EXIT:
-      case CATCH:
-      case PI:
+      case EXC_RET_CALLEE,
+          EXC_RET_CALLER,
+          HEAP_PARAM_CALLEE,
+          NORMAL_RET_CALLEE,
+          NORMAL_RET_CALLER,
+          PARAM_CALLEE,
+          PHI,
+          HEAP_RET_CALLEE,
+          HEAP_RET_CALLER,
+          METHOD_ENTRY,
+          METHOD_EXIT,
+          CATCH,
+          PI -> {
         return false;
-      case HEAP_PARAM_CALLER:
-      case PARAM_CALLER:
+      }
+      case HEAP_PARAM_CALLER, PARAM_CALLER -> {
         return true;
-      case NORMAL:
+      }
+      case NORMAL -> {
         if (sdg.getCOptions().isIgnoreInterproc()) {
           return false;
         } else {
           NormalStatement s = (NormalStatement) n;
           return s.getInstruction() instanceof SSAAbstractInvokeInstruction;
         }
-      default:
+      }
+      default -> {
         Assertions.UNREACHABLE(n.getKind() + " " + n);
         return false;
+      }
     }
   }
 
   @Override
   public boolean isEntry(Statement n) {
-    switch (n.getKind()) {
-      case PARAM_CALLEE:
-      case HEAP_PARAM_CALLEE:
-      case METHOD_ENTRY:
-        return true;
-      case PHI:
-      case PI:
-      case NORMAL_RET_CALLER:
-      case PARAM_CALLER:
-      case HEAP_RET_CALLER:
-      case NORMAL:
-      case EXC_RET_CALLEE:
-      case EXC_RET_CALLER:
-      case HEAP_PARAM_CALLER:
-      case HEAP_RET_CALLEE:
-      case NORMAL_RET_CALLEE:
-      case CATCH:
-        return false;
-      default:
+    return switch (n.getKind()) {
+      case PARAM_CALLEE, HEAP_PARAM_CALLEE, METHOD_ENTRY -> true;
+      case PHI,
+          PI,
+          NORMAL_RET_CALLER,
+          PARAM_CALLER,
+          HEAP_RET_CALLER,
+          NORMAL,
+          EXC_RET_CALLEE,
+          EXC_RET_CALLER,
+          HEAP_PARAM_CALLER,
+          HEAP_RET_CALLEE,
+          NORMAL_RET_CALLEE,
+          CATCH ->
+          false;
+      default -> {
         Assertions.UNREACHABLE(n.toString());
-        return false;
-    }
+        yield false;
+      }
+    };
   }
 
   @Override
   public boolean isExit(Statement n) {
-    switch (n.getKind()) {
-      case PARAM_CALLEE:
-      case HEAP_PARAM_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case PHI:
-      case PI:
-      case NORMAL_RET_CALLER:
-      case PARAM_CALLER:
-      case HEAP_RET_CALLER:
-      case NORMAL:
-      case EXC_RET_CALLER:
-      case METHOD_ENTRY:
-      case CATCH:
-        return false;
-      case HEAP_RET_CALLEE:
-      case EXC_RET_CALLEE:
-      case NORMAL_RET_CALLEE:
-      case METHOD_EXIT:
-        return true;
-      default:
-        Assertions.UNREACHABLE(n.toString());
-        return false;
-    }
+    return switch (n.getKind()) {
+      case PARAM_CALLEE,
+          HEAP_PARAM_CALLEE,
+          HEAP_PARAM_CALLER,
+          PHI,
+          PI,
+          NORMAL_RET_CALLER,
+          PARAM_CALLER,
+          HEAP_RET_CALLER,
+          NORMAL,
+          EXC_RET_CALLER,
+          METHOD_ENTRY,
+          CATCH ->
+          false;
+      case HEAP_RET_CALLEE, EXC_RET_CALLEE, NORMAL_RET_CALLEE, METHOD_EXIT -> true;
+    };
   }
 
   @Override
   public boolean isReturn(Statement n) {
-    switch (n.getKind()) {
-      case EXC_RET_CALLER:
-      case NORMAL_RET_CALLER:
-      case HEAP_RET_CALLER:
-        return true;
-      case EXC_RET_CALLEE:
-      case HEAP_PARAM_CALLEE:
-      case HEAP_PARAM_CALLER:
-      case HEAP_RET_CALLEE:
-      case NORMAL:
-      case NORMAL_RET_CALLEE:
-      case PARAM_CALLEE:
-      case PARAM_CALLER:
-      case PHI:
-      case PI:
-      case METHOD_ENTRY:
-      case CATCH:
-        return false;
-      default:
+    return switch (n.getKind()) {
+      case EXC_RET_CALLER, NORMAL_RET_CALLER, HEAP_RET_CALLER -> true;
+      case EXC_RET_CALLEE,
+          HEAP_PARAM_CALLEE,
+          HEAP_PARAM_CALLER,
+          HEAP_RET_CALLEE,
+          NORMAL,
+          NORMAL_RET_CALLEE,
+          PARAM_CALLEE,
+          PARAM_CALLER,
+          PHI,
+          PI,
+          METHOD_ENTRY,
+          CATCH ->
+          false;
+      default -> {
         Assertions.UNREACHABLE(n.getKind().toString());
-        return false;
-    }
+        yield false;
+      }
+    };
   }
 
   @Override

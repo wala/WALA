@@ -11,62 +11,35 @@
 package com.ibm.wala.demandpa.util;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import java.util.Objects;
 
 /**
  * * represents a single static occurrence of a memory access (i.e., an access to a field or to the
  * contents of an array) in the code
  *
  * @author sfink
+ * @param instructionIndex index of the field access instruction in a shrikeBt or SSA instruction
+ *     array
  */
-public class MemoryAccess {
-
-  private final CGNode node;
-
-  /** index of the field access instruction in a shrikeBt or SSA instruction array */
-  private final int instructionIndex;
-
-  public MemoryAccess(int index, CGNode node) {
-    instructionIndex = index;
-    this.node = node;
-  }
+public record MemoryAccess(int instructionIndex, CGNode node) {
 
   /**
-   * @return Returns the instructionIndex.
+   * @deprecated Use {@link #instructionIndex()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public int getInstructionIndex() {
-    return instructionIndex;
+    return instructionIndex();
   }
 
   @Override
   public String toString() {
-    return "MemAccess: " + getNode() + ':' + getInstructionIndex();
+    return "MemAccess: " + node() + ':' + instructionIndex();
   }
 
   /**
-   * @return Returns the node.
+   * @deprecated Use {@link #node()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public CGNode getNode() {
-    return node;
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + instructionIndex;
-    result = prime * result + ((node == null) ? 0 : node.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-    MemoryAccess other = (MemoryAccess) obj;
-    if (instructionIndex != other.instructionIndex) return false;
-    if (!Objects.equals(node, other.node)) return false;
-    return true;
+    return node();
   }
 }

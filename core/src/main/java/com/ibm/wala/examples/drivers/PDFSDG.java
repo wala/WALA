@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.core.util.io.FileProvider;
@@ -125,7 +125,7 @@ public class PDFSDG {
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
       CallGraphBuilder<InstanceKey> builder =
-          Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+          Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
       CallGraph cg = builder.makeCallGraph(options, null);
       final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
       SDG<?> sdg = new SDG<>(cg, pointerAnalysis, dOptions, cOptions);
@@ -176,26 +176,14 @@ public class PDFSDG {
   }
 
   private static NodeDecorator<Statement> makeNodeDecorator() {
-    return s -> {
-      switch (s.getKind()) {
-        case HEAP_PARAM_CALLEE:
-        case HEAP_PARAM_CALLER:
-        case HEAP_RET_CALLEE:
-        case HEAP_RET_CALLER:
-          HeapStatement h = (HeapStatement) s;
-          return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
-        case EXC_RET_CALLEE:
-        case EXC_RET_CALLER:
-        case NORMAL:
-        case NORMAL_RET_CALLEE:
-        case NORMAL_RET_CALLER:
-        case PARAM_CALLEE:
-        case PARAM_CALLER:
-        case PHI:
-        default:
-          return s.toString();
-      }
-    };
+    return s ->
+        switch (s.getKind()) {
+          case HEAP_PARAM_CALLEE, HEAP_PARAM_CALLER, HEAP_RET_CALLEE, HEAP_RET_CALLER -> {
+            HeapStatement h = (HeapStatement) s;
+            yield s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
+          }
+          default -> s.toString();
+        };
   }
 
   /**

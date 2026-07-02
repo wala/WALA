@@ -17,6 +17,8 @@
 
 package com.ibm.wala.shrike.sourcepos;
 
+import java.io.Serial;
+
 /**
  * An exception for invalid ranges.
  *
@@ -25,7 +27,7 @@ package com.ibm.wala.shrike.sourcepos;
  */
 class InvalidRangeException extends Exception {
 
-  private static final long serialVersionUID = 3534258510796557967L;
+  @Serial private static final long serialVersionUID = 3534258510796557967L;
 
   /** possible causes for this exception */
   enum Cause {

@@ -21,6 +21,7 @@ import com.ibm.wala.shrike.shrikeBT.PopInstruction;
 import com.ibm.wala.shrike.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrike.shrikeBT.Util;
 import com.ibm.wala.shrike.shrikeBT.info.LocalAllocator;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.BitSet;
 
@@ -75,7 +76,7 @@ public final class MethodOptimizer {
   }
 
   public static class UnoptimizableCodeException extends Exception {
-    private static final long serialVersionUID = 2543170335674010642L;
+    @Serial private static final long serialVersionUID = 2543170335674010642L;
 
     public UnoptimizableCodeException(String s) {
       super(s);
@@ -187,8 +188,7 @@ public final class MethodOptimizer {
       if (stackSize < 0) {
         throw new UnoptimizableCodeException("Stack underflow at " + instruction);
       }
-      if (instr instanceof DupInstruction) {
-        DupInstruction d = (DupInstruction) instr;
+      if (instr instanceof DupInstruction d) {
         stackSize += d.getSize() + d.getPoppedCount();
       } else if (instr.getPushedType(null) != null) {
         stackSize++;
@@ -213,8 +213,7 @@ public final class MethodOptimizer {
   }
 
   private static boolean instructionKillsVar(IInstruction instr, int v) {
-    if (instr instanceof StoreInstruction) {
-      StoreInstruction st = (StoreInstruction) instr;
+    if (instr instanceof StoreInstruction st) {
       return st.getVarIndex() == v
           || (Util.getWordSize(st.getType()) == 2 && st.getVarIndex() + 1 == v);
     } else {
@@ -225,8 +224,8 @@ public final class MethodOptimizer {
   private void forwardDups() {
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof DupInstruction
-          && ((DupInstruction) instr).getDelta() == 0
+      if (instr instanceof DupInstruction dupInstruction
+          && dupInstruction.getDelta() == 0
           && uniqueStackDefLocations[i][0] >= 0
           && instructions[uniqueStackDefLocations[i][0]] instanceof LoadInstruction) {
         int source = uniqueStackDefLocations[i][0];
@@ -269,11 +268,10 @@ public final class MethodOptimizer {
   private void pushBackLocalStores() {
     for (int i = 0; i < instructions.length; i++) {
       IInstruction instr = instructions[i];
-      if (instr instanceof StoreInstruction
+      if (instr instanceof StoreInstruction s
           && uniqueStackDefLocations[i][0] >= 0
           && uniqueStackDefLocations[i][0] != i - 1
           && uniqueStackUseLocations[uniqueStackDefLocations[i][0]] == i) {
-        final StoreInstruction s = (StoreInstruction) instr;
         int source = uniqueStackDefLocations[i][0];
 
         // Check if the path from source to i contains anything killing the
@@ -341,8 +339,7 @@ public final class MethodOptimizer {
     }
 
     for (int i = 0; i < instructions.length; i++) {
-      if (instructions[i] instanceof DupInstruction) {
-        DupInstruction d = (DupInstruction) instructions[i];
+      if (instructions[i] instanceof DupInstruction d) {
         for (int j = 0; j < 2 * d.getSize() + d.getDelta(); j++) {
           followStackDef(abstractStacks, i, i + 1, stackSizes[i + 1] - 1 - j);
         }

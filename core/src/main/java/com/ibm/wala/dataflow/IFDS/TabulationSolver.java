@@ -644,9 +644,10 @@ public class TabulationSolver<T, P, F> {
                           d2 -> {
                             assert curSummaryEdge == null : "curSummaryEdge should be null here";
                             curSummaryEdge = PathEdge.createPathEdge(calleeEntry, d1, exit, d2);
-                            if (retf instanceof IBinaryReturnFlowFunction) {
+                            if (retf
+                                instanceof IBinaryReturnFlowFunction iBinaryReturnFlowFunction) {
                               final IntSet D51 =
-                                  computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
+                                  computeBinaryFlow(edge.d2, d2, iBinaryReturnFlowFunction);
                               if (D51 != null) {
                                 D51.foreach(
                                     d5 -> {
@@ -889,10 +890,9 @@ public class TabulationSolver<T, P, F> {
 
       Comparator<Object> c =
           (o1, o2) -> {
-            if (!(o1 instanceof IBasicBlock)) {
+            if (!(o1 instanceof IBasicBlock<?> bb1)) {
               return -1;
             }
-            IBasicBlock<?> bb1 = (IBasicBlock<?>) o1;
             IBasicBlock<?> bb2 = (IBasicBlock<?>) o2;
             return bb1.getNumber() - bb2.getNumber();
           };

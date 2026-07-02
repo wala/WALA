@@ -53,7 +53,7 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   protected int compareInstanceKeys(InstanceKey k1, InstanceKey k2) {
-    return compareConcreteTypes(k1.getConcreteType(), k2.getConcreteType());
+    return compareConcreteTypes(k1.concreteType(), k2.concreteType());
   }
 
   protected int compareFields(IField if1, IField if2) {
@@ -67,13 +67,13 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   private static int compareLocalKey(LocalPointerKey key1, Object key2) {
-    if (key2 instanceof LocalPointerKey) {
+    if (key2 instanceof LocalPointerKey localPointerKey) {
       int l1 = key1.getValueNumber();
-      int l2 = ((LocalPointerKey) key2).getValueNumber();
+      int l2 = localPointerKey.getValueNumber();
       if (l1 != l2) return l1 - l2;
       else {
         int n1 = key1.getNode().getGraphNodeId();
-        int n2 = ((LocalPointerKey) key2).getNode().getGraphNodeId();
+        int n2 = localPointerKey.getNode().getGraphNodeId();
         if (n1 != n2) return n1 - n2;
         else {
           assert key1.equals(key2);
@@ -84,9 +84,9 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   private static int compareReturnValueKey(ReturnValueKey key1, Object key2) {
-    if (key2 instanceof ReturnValueKey) {
+    if (key2 instanceof ReturnValueKey returnValueKey) {
       int n1 = key1.getNode().getGraphNodeId();
-      int n2 = ((ReturnValueKey) key2).getNode().getGraphNodeId();
+      int n2 = returnValueKey.getNode().getGraphNodeId();
       if (n1 != n2) return n1 - n2;
       else {
         assert key1.equals(key2);
@@ -96,9 +96,9 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   private static int compareExceptionKey(ExceptionReturnValueKey key1, Object key2) {
-    if (key2 instanceof ExceptionReturnValueKey) {
+    if (key2 instanceof ExceptionReturnValueKey exceptionReturnValueKey) {
       int n1 = key1.getNode().getGraphNodeId();
-      int n2 = ((ExceptionReturnValueKey) key2).getNode().getGraphNodeId();
+      int n2 = exceptionReturnValueKey.getNode().getGraphNodeId();
       if (n1 != n2) return n1 - n2;
       else {
         assert key1.equals(key2);
@@ -108,31 +108,30 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   }
 
   private int compareFieldKey(InstanceFieldKey key1, Object key2) {
-    if (key2 instanceof InstanceFieldKey) {
-      int r1 =
-          compareInstanceKeys(key1.getInstanceKey(), ((InstanceFieldKey) key2).getInstanceKey());
+    if (key2 instanceof InstanceFieldKey instanceFieldKey) {
+      int r1 = compareInstanceKeys(key1.getInstanceKey(), instanceFieldKey.getInstanceKey());
       if (r1 != 0) return r1;
       else {
-        return compareFields(key1.getField(), ((InstanceFieldKey) key2).getField());
+        return compareFields(key1.getField(), instanceFieldKey.getField());
       }
     } else return -1;
   }
 
   private int compareStaticKey(StaticFieldKey key1, Object key2) {
-    if (key2 instanceof StaticFieldKey) {
+    if (key2 instanceof StaticFieldKey staticFieldKey) {
       int n1 = cha.getNumber(key1.getField().getDeclaringClass());
-      int n2 = cha.getNumber(((StaticFieldKey) key2).getField().getDeclaringClass());
+      int n2 = cha.getNumber(staticFieldKey.getField().getDeclaringClass());
       if (n1 != n2) return n1 - n2;
       else {
-        return compareFields(key1.getField(), ((StaticFieldKey) key2).getField());
+        return compareFields(key1.getField(), staticFieldKey.getField());
       }
     } else return -1;
   }
 
   private int compareArrayKey(ArrayContentsKey key1, Object key2) {
-    if (key2 instanceof ArrayContentsKey) {
-      ArrayClass k1 = (ArrayClass) key1.getInstanceKey().getConcreteType();
-      ArrayClass k2 = (ArrayClass) ((ArrayContentsKey) key2).getInstanceKey().getConcreteType();
+    if (key2 instanceof ArrayContentsKey arrayContentsKey) {
+      ArrayClass k1 = (ArrayClass) key1.getInstanceKey().concreteType();
+      ArrayClass k2 = (ArrayClass) arrayContentsKey.getInstanceKey().concreteType();
       int d1 = k1.getDimensionality();
       int d2 = k2.getDimensionality();
       if (d1 != d2) {
@@ -154,45 +153,45 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
   @Override
   public int compare(PointerKey key1, PointerKey key2) {
     if (key1 == key2) return 0;
-    else if (key1 instanceof LocalPointerKey) {
-      return compareLocalKey((LocalPointerKey) key1, key2);
-    } else if (key2 instanceof LocalPointerKey) {
-      return -1 * compareLocalKey((LocalPointerKey) key2, key1);
+    else if (key1 instanceof LocalPointerKey pointerKey) {
+      return compareLocalKey(pointerKey, key2);
+    } else if (key2 instanceof LocalPointerKey localPointerKey) {
+      return -1 * compareLocalKey(localPointerKey, key1);
     }
 
     // at this point, neither key is local
-    else if (key1 instanceof ExceptionReturnValueKey) {
-      return compareExceptionKey((ExceptionReturnValueKey) key1, key2);
-    } else if (key2 instanceof ExceptionReturnValueKey) {
-      return -1 * compareExceptionKey((ExceptionReturnValueKey) key2, key1);
+    else if (key1 instanceof ExceptionReturnValueKey exceptionReturnValueKey1) {
+      return compareExceptionKey(exceptionReturnValueKey1, key2);
+    } else if (key2 instanceof ExceptionReturnValueKey exceptionReturnValueKey) {
+      return -1 * compareExceptionKey(exceptionReturnValueKey, key1);
     }
 
     // at this point, neither key is local or expretval
-    else if (key1 instanceof ReturnValueKey) {
-      return compareReturnValueKey((ReturnValueKey) key1, key2);
-    } else if (key2 instanceof ReturnValueKey) {
-      return -1 * compareReturnValueKey((ReturnValueKey) key2, key1);
+    else if (key1 instanceof ReturnValueKey valueKey) {
+      return compareReturnValueKey(valueKey, key2);
+    } else if (key2 instanceof ReturnValueKey returnValueKey) {
+      return -1 * compareReturnValueKey(returnValueKey, key1);
     }
 
     // at this point, neither key is local or retval, expretval
-    else if (key1 instanceof InstanceFieldKey) {
-      return compareFieldKey((InstanceFieldKey) key1, key2);
-    } else if (key2 instanceof InstanceFieldKey) {
-      return -1 * compareFieldKey((InstanceFieldKey) key2, key1);
+    else if (key1 instanceof InstanceFieldKey key) {
+      return compareFieldKey(key, key2);
+    } else if (key2 instanceof InstanceFieldKey instanceFieldKey) {
+      return -1 * compareFieldKey(instanceFieldKey, key1);
     }
 
     // at this point, neither key is local or retval, expretval, field
-    else if (key1 instanceof StaticFieldKey) {
-      return compareStaticKey((StaticFieldKey) key1, key2);
-    } else if (key2 instanceof StaticFieldKey) {
-      return -1 * compareStaticKey((StaticFieldKey) key2, key1);
+    else if (key1 instanceof StaticFieldKey fieldKey) {
+      return compareStaticKey(fieldKey, key2);
+    } else if (key2 instanceof StaticFieldKey staticFieldKey) {
+      return -1 * compareStaticKey(staticFieldKey, key1);
     }
 
     // at this point, neither key is local or retval, expretval, field, static
-    else if (key1 instanceof ArrayContentsKey) {
-      return compareArrayKey((ArrayContentsKey) key1, key2);
-    } else if (key2 instanceof ArrayContentsKey) {
-      return -1 * compareArrayKey((ArrayContentsKey) key2, key1);
+    else if (key1 instanceof ArrayContentsKey contentsKey) {
+      return compareArrayKey(contentsKey, key2);
+    } else if (key2 instanceof ArrayContentsKey arrayContentsKey) {
+      return -1 * compareArrayKey(arrayContentsKey, key1);
     } else {
       return compareOtherKeys(key1, key2);
     }
@@ -206,7 +205,8 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
 
   @Override
   public boolean equals(Object o) {
-    return (o instanceof PointerKeyComparator) && ((PointerKeyComparator) o).cha.equals(cha);
+    return (o instanceof PointerKeyComparator pointerKeyComparator)
+        && pointerKeyComparator.cha.equals(cha);
   }
 
   @Override

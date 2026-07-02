@@ -135,14 +135,7 @@ public class JerichoHtmlParser implements IHtmlParser {
   /**
    * @author danielk Inner class does the actual traversal of the HTML using recursion
    */
-  private static class Parser {
-    private final IHtmlCallback handler;
-    private final String fileName;
-
-    public Parser(IHtmlCallback handler, String fileName) {
-      this.handler = handler;
-      this.fileName = fileName;
-    }
+  private record Parser(IHtmlCallback handler, String fileName) {
 
     private void parse(Element root) {
       JerichoTag tag = new JerichoTag(root, fileName);

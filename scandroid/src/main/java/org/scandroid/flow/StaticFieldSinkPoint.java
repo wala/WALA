@@ -79,7 +79,6 @@ public class StaticFieldSinkPoint implements ISinkPoint {
    * CGAnalysisContext, com.ibm.wala.dataflow.IFDS.TabulationResult,
    * org.scandroid.domain.IFDSTaintDomain)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public Set<FlowType<IExplodedBasicBlock>> findSources(
       CGAnalysisContext<IExplodedBasicBlock> ctx,
@@ -89,9 +88,9 @@ public class StaticFieldSinkPoint implements ISinkPoint {
 
     for (DomainElement de :
         domain.getPossibleElements(new StaticFieldElement(field.getReference()))) {
-      if (!(de.taintSource instanceof StaticFieldFlow<?>)
+      if (!(de.taintSource() instanceof StaticFieldFlow<?>)
           && flowResult.getResult(block).contains(domain.getMappedIndex(de))) {
-        sources.add(de.taintSource);
+        sources.add(de.taintSource());
       }
     }
 

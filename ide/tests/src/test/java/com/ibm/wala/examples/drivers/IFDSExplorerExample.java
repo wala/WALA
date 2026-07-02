@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
@@ -61,7 +61,7 @@ public class IFDSExplorerExample {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, cache, cha);
+        Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, cache, cha);
     System.out.println("building CG");
     CallGraph cg = builder.makeCallGraph(options, null);
     System.out.println("done with CG");

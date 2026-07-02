@@ -109,7 +109,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public Atom getName() {
-    return getReference().getName();
+    return getReference().name();
   }
 
   @Override
@@ -119,10 +119,10 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   @Override
   public String getSourceFileName(IMethod method, int bcOffset) {
-    if (!(method instanceof AstMethod)) {
+    if (!(method instanceof AstMethod astMethod)) {
       return null;
     }
-    Position pos = ((AstMethod) method).getSourcePosition(bcOffset);
+    Position pos = astMethod.getSourcePosition(bcOffset);
     if (null == pos) {
       return null;
     }

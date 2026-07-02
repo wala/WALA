@@ -50,10 +50,8 @@ public final class NewInstruction extends Instruction {
       short opcode;
 
       switch (arrayBoundsCount) {
-        case 0:
-          opcode = OP_new;
-          break;
-        case 1:
+        case 0 -> opcode = OP_new;
+        case 1 -> {
           char ch = type.charAt(1);
           if (ch != 'L' && ch != '[') {
             // array of primitive type
@@ -61,10 +59,8 @@ public final class NewInstruction extends Instruction {
           } else {
             opcode = OP_anewarray;
           }
-          break;
-        default:
-          opcode = OP_multianewarray;
-          break;
+        }
+        default -> opcode = OP_multianewarray;
       }
       return new NewInstruction(opcode, type, (short) arrayBoundsCount);
     }
@@ -72,8 +68,7 @@ public final class NewInstruction extends Instruction {
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof NewInstruction) {
-      NewInstruction i = (NewInstruction) o;
+    if (o instanceof NewInstruction i) {
       return i.type.equals(type) && i.arrayBoundsCount == arrayBoundsCount;
     } else {
       return false;

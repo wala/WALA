@@ -14,7 +14,7 @@ import static com.ibm.wala.util.intset.IntSetAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -159,7 +159,7 @@ public class DataflowTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(cg);
     ContextInsensitiveReachingDefs reachingDefs = new ContextInsensitiveReachingDefs(icfg, cha);
@@ -199,7 +199,7 @@ public class DataflowTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder<InstanceKey> builder =
-        Util.makeZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
     ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg);
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>>

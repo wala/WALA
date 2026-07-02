@@ -65,8 +65,7 @@ public final class BinaryOpInstruction extends Instruction implements IBinaryOpI
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof BinaryOpInstruction) {
-      BinaryOpInstruction i = (BinaryOpInstruction) o;
+    if (o instanceof BinaryOpInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;

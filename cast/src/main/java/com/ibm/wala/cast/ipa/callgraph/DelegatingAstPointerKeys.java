@@ -78,8 +78,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
     List<PointerKey> result = new ArrayList<>();
 
-    if (F instanceof ConstantKey) {
-      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey<?>) F);
+    if (F instanceof ConstantKey<?> constantKey) {
+      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, constantKey);
       if (ifk != null) {
         result.add(ifk);
       }
@@ -92,7 +92,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
 
   /** get type for F appropriate for use in a field name. */
   protected IClass getFieldNameType(InstanceKey F) {
-    return F.getConcreteType();
+    return F.concreteType();
   }
 
   /**
@@ -102,8 +102,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey<?> F) {
     Object v = F.getValue();
     // FIXME: current only constant string are handled
-    if (I.getConcreteType().getClassLoader().getLanguage().modelConstant(v)) {
-      IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom(String.valueOf(v)));
+    if (I.concreteType().getClassLoader().getLanguage().modelConstant(v)) {
+      IField f = I.concreteType().getField(Atom.findOrCreateUnicodeAtom(String.valueOf(v)));
       if (f != null) {
         return getPointerKeyForInstanceField(I, f);
       }
@@ -113,8 +113,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
 
   @Override
   public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
-    if (F instanceof ConstantKey) {
-      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey<?>) F);
+    if (F instanceof ConstantKey<?> constantKey) {
+      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, constantKey);
       if (ifk != null) {
         return new NonNullSingletonIterator<>(ifk);
       }

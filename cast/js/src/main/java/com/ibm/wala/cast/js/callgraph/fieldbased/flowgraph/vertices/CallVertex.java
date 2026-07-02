@@ -68,7 +68,7 @@ public class CallVertex extends Vertex {
 
   @Override
   public String toSourceLevelString(IAnalysisCacheView cache) {
-    IClass concreteType = func.getConcreteType();
+    IClass concreteType = func.concreteType();
     AstMethod method = (AstMethod) concreteType.getMethod(AstMethodReference.fnSelector);
     return "Callee(" + method.getSourcePosition(site.getProgramCounter()).prettyPrint() + ")";
   }

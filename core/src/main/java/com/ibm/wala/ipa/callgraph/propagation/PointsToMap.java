@@ -91,9 +91,9 @@ public class PointsToMap {
     int repI = uf.find(i);
     PointsToSetVariable result = (PointsToSetVariable) pointsToSets.get(repI);
     if (result != null
-        && p instanceof FilteredPointerKey
+        && p instanceof FilteredPointerKey filteredPointerKey
         && !(result.getPointerKey() instanceof FilteredPointerKey)) {
-      upgradeToFilter(result, ((FilteredPointerKey) p).getTypeFilter());
+      upgradeToFilter(result, filteredPointerKey.getTypeFilter());
     }
     return result;
   }
@@ -251,10 +251,8 @@ public class PointsToMap {
   }
 
   private void upgradeTypeFilter(PointsToSetVariable src, PointsToSetVariable dest) {
-    if (src.getPointerKey() instanceof FilteredPointerKey) {
-      FilteredPointerKey fpk = (FilteredPointerKey) src.getPointerKey();
-      if (dest.getPointerKey() instanceof FilteredPointerKey) {
-        FilteredPointerKey fp = (FilteredPointerKey) dest.getPointerKey();
+    if (src.getPointerKey() instanceof FilteredPointerKey fpk) {
+      if (dest.getPointerKey() instanceof FilteredPointerKey fp) {
         if (!fp.getTypeFilter().equals(fpk.getTypeFilter())) {
           Assertions.UNREACHABLE("src " + fpk.getTypeFilter() + " dest " + fp.getTypeFilter());
         }
@@ -265,14 +263,12 @@ public class PointsToMap {
   }
 
   private void upgradeToFilter(PointsToSetVariable p, FilteredPointerKey.TypeFilter typeFilter) {
-    if (p.getPointerKey() instanceof LocalPointerKey) {
-      LocalPointerKey lpk = (LocalPointerKey) p.getPointerKey();
+    if (p.getPointerKey() instanceof LocalPointerKey lpk) {
       LocalPointerKeyWithFilter f =
           new LocalPointerKeyWithFilter(lpk.getNode(), lpk.getValueNumber(), typeFilter);
       p.setPointerKey(f);
       pointerKeys.replace(lpk, f);
-    } else if (p.getPointerKey() instanceof ReturnValueKey) {
-      ReturnValueKey r = (ReturnValueKey) p.getPointerKey();
+    } else if (p.getPointerKey() instanceof ReturnValueKey r) {
       ReturnValueKeyWithFilter f = new ReturnValueKeyWithFilter(r.getNode(), typeFilter);
       p.setPointerKey(f);
       pointerKeys.replace(r, f);

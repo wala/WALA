@@ -112,53 +112,43 @@ public class UnaryOperation extends Instruction {
   }
 
   public boolean isConversion() {
-    switch (op) {
-      case DOUBLETOLONG:
-      case DOUBLETOFLOAT:
-      case INTTOBYTE:
-      case INTTOCHAR:
-      case INTTOSHORT:
-      case DOUBLETOINT:
-      case FLOATTODOUBLE:
-      case FLOATTOLONG:
-      case FLOATTOINT:
-      case LONGTODOUBLE:
-      case LONGTOFLOAT:
-      case LONGTOINT:
-      case INTTODOUBLE:
-      case INTTOFLOAT:
-      case INTTOLONG:
-        return true;
-      default:
-        return false;
-    }
+    return switch (op) {
+      case DOUBLETOLONG,
+          DOUBLETOFLOAT,
+          INTTOBYTE,
+          INTTOCHAR,
+          INTTOSHORT,
+          DOUBLETOINT,
+          FLOATTODOUBLE,
+          FLOATTOLONG,
+          FLOATTOINT,
+          LONGTODOUBLE,
+          LONGTOFLOAT,
+          LONGTOINT,
+          INTTODOUBLE,
+          INTTOFLOAT,
+          INTTOLONG ->
+          true;
+      default -> false;
+    };
   }
 
   public boolean isMove() {
-    switch (op) {
-      case MOVE:
-      case MOVE_WIDE:
-        return true;
-      default:
-        return false;
-    }
+    return switch (op) {
+      case MOVE, MOVE_WIDE -> true;
+      default -> false;
+    };
   }
 
   public IOperator getOperator() {
-    switch (op) {
+    return switch (op) {
       // SSA unary ops
-      case NOT:
-      case NOTLONG:
-      case NOTINT:
-        return DalvikUnaryOp.BITNOT;
-      case NEGINT:
-      case NEGDOUBLE:
-      case NEGFLOAT:
-      case NEGLONG:
-        return IUnaryOpInstruction.Operator.NEG;
-      default:
+      case NOT, NOTLONG, NOTINT -> DalvikUnaryOp.BITNOT;
+      case NEGINT, NEGDOUBLE, NEGFLOAT, NEGLONG -> IUnaryOpInstruction.Operator.NEG;
+      default -> {
         Assertions.UNREACHABLE();
-        return null;
-    }
+        yield null;
+      }
+    };
   }
 }

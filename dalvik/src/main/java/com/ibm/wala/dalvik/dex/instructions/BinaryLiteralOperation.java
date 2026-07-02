@@ -126,115 +126,66 @@ public class BinaryLiteralOperation extends Instruction {
   }
 
   public IBinaryOpInstruction.IOperator getOperator() {
-    switch (op) {
-      case CMPL_FLOAT:
-      case CMPL_DOUBLE:
-      case CMPL_LONG:
-      case CMPL_INT:
-        return DalvikBinaryOp.LT;
-      case CMPG_FLOAT:
-      case CMPG_DOUBLE:
-      case CMPG_LONG:
-      case CMPG_INT:
-        return DalvikBinaryOp.GT;
-      case ADD_INT:
-      case ADD_LONG:
-      case ADD_DOUBLE:
-      case ADD_FLOAT:
-        return IBinaryOpInstruction.Operator.ADD;
-      case RSUB_INT:
-      case RSUB_LONG:
-      case RSUB_DOUBLE:
-      case RSUB_FLOAT:
-        return IBinaryOpInstruction.Operator.SUB;
-      case MUL_INT:
-      case MUL_LONG:
-      case MUL_DOUBLE:
-      case MUL_FLOAT:
-        return IBinaryOpInstruction.Operator.MUL;
-      case DIV_INT:
-      case DIV_LONG:
-      case DIV_DOUBLE:
-      case DIV_FLOAT:
-        return IBinaryOpInstruction.Operator.DIV;
-      case REM_INT:
-      case REM_LONG:
-      case REM_DOUBLE:
-      case REM_FLOAT:
-        return IBinaryOpInstruction.Operator.REM;
-      case AND_INT:
-      case AND_LONG:
-        return IBinaryOpInstruction.Operator.AND;
-      case OR_INT:
-      case OR_LONG:
-        return IBinaryOpInstruction.Operator.OR;
-      case XOR_INT:
-      case XOR_LONG:
-        return IBinaryOpInstruction.Operator.XOR;
-      case SHL_INT:
-      case SHL_LONG:
-        return IShiftInstruction.Operator.SHL;
-      case SHR_INT:
-      case SHR_LONG:
-        return IShiftInstruction.Operator.SHR;
-      case USHR_INT:
-      case USHR_LONG:
-        return IShiftInstruction.Operator.USHR;
-      default:
-        return null;
-    }
+    return switch (op) {
+      case CMPL_FLOAT, CMPL_DOUBLE, CMPL_LONG, CMPL_INT -> DalvikBinaryOp.LT;
+      case CMPG_FLOAT, CMPG_DOUBLE, CMPG_LONG, CMPG_INT -> DalvikBinaryOp.GT;
+      case ADD_INT, ADD_LONG, ADD_DOUBLE, ADD_FLOAT -> IBinaryOpInstruction.Operator.ADD;
+      case RSUB_INT, RSUB_LONG, RSUB_DOUBLE, RSUB_FLOAT -> IBinaryOpInstruction.Operator.SUB;
+      case MUL_INT, MUL_LONG, MUL_DOUBLE, MUL_FLOAT -> IBinaryOpInstruction.Operator.MUL;
+      case DIV_INT, DIV_LONG, DIV_DOUBLE, DIV_FLOAT -> IBinaryOpInstruction.Operator.DIV;
+      case REM_INT, REM_LONG, REM_DOUBLE, REM_FLOAT -> IBinaryOpInstruction.Operator.REM;
+      case AND_INT, AND_LONG -> IBinaryOpInstruction.Operator.AND;
+      case OR_INT, OR_LONG -> IBinaryOpInstruction.Operator.OR;
+      case XOR_INT, XOR_LONG -> IBinaryOpInstruction.Operator.XOR;
+      case SHL_INT, SHL_LONG -> IShiftInstruction.Operator.SHL;
+      case SHR_INT, SHR_LONG -> IShiftInstruction.Operator.SHR;
+      case USHR_INT, USHR_LONG -> IShiftInstruction.Operator.USHR;
+    };
   }
 
   public boolean isFloat() {
-    switch (op) {
-      case CMPL_FLOAT:
-      case CMPG_FLOAT:
-      case CMPL_DOUBLE:
-      case CMPG_DOUBLE:
-      case ADD_FLOAT:
-      case RSUB_FLOAT:
-      case MUL_FLOAT:
-      case DIV_FLOAT:
-      case REM_FLOAT:
-      case ADD_DOUBLE:
-      case RSUB_DOUBLE:
-      case MUL_DOUBLE:
-      case DIV_DOUBLE:
-      case REM_DOUBLE:
-        return true;
-      default:
-        return false;
-    }
+    return switch (op) {
+      case CMPL_FLOAT,
+          CMPG_FLOAT,
+          CMPL_DOUBLE,
+          CMPG_DOUBLE,
+          ADD_FLOAT,
+          RSUB_FLOAT,
+          MUL_FLOAT,
+          DIV_FLOAT,
+          REM_FLOAT,
+          ADD_DOUBLE,
+          RSUB_DOUBLE,
+          MUL_DOUBLE,
+          DIV_DOUBLE,
+          REM_DOUBLE ->
+          true;
+      default -> false;
+    };
   }
 
   public boolean isUnsigned() {
-    switch (op) {
-      case AND_INT:
-      case OR_INT:
-      case XOR_INT:
-      case SHL_INT:
-      case USHR_INT:
-      case AND_LONG:
-      case OR_LONG:
-      case XOR_LONG:
-      case SHL_LONG:
-      case USHR_LONG:
-        return true;
-      default:
-        return false;
-    }
+    return switch (op) {
+      case AND_INT,
+          OR_INT,
+          XOR_INT,
+          SHL_INT,
+          USHR_INT,
+          AND_LONG,
+          OR_LONG,
+          XOR_LONG,
+          SHL_LONG,
+          USHR_LONG ->
+          true;
+      default -> false;
+    };
   }
 
   public boolean isSub() {
-    switch (op) {
-      case RSUB_DOUBLE:
-      case RSUB_FLOAT:
-      case RSUB_INT:
-      case RSUB_LONG:
-        return true;
-      default:
-        return false;
-    }
+    return switch (op) {
+      case RSUB_DOUBLE, RSUB_FLOAT, RSUB_INT, RSUB_LONG -> true;
+      default -> false;
+    };
   }
 
   @Override

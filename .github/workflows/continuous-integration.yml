@@ -55,14 +55,16 @@ jobs:
       - name: Choose extra Linux-only Gradle tasks
         run: echo OS_SPECIFIC_GRADLE_TASKS='publishAllPublicationsToFakeRemoteRepository shellcheck' >> $GITHUB_ENV
         if: runner.os == 'Linux'
+      - name: Prepare to run under XVFB
+        run: echo XVFB_RUN=xvfb-run >> $GITHUB_ENV
+        if: runner.os == 'Linux'
       - name: Build and test using Gradle
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: >-
-            ./gradlew
-            --scan
-            --console=colored "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
-            aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }} checkGitCleanliness
+        run: >-
+          ${{ env.XVFB_RUN }}
+          ./gradlew
+          --scan
+          --console=colored "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
+          aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }} checkGitCleanliness
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
@@ -76,7 +78,7 @@ jobs:
         run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         if: github.repository == 'wala/WALA'
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: ./code-coverage-report/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
           token: ${{ secrets.WALA_MAIN_CODECOV_TOKEN }}

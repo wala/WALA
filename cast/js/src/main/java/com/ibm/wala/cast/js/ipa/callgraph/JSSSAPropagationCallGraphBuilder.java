@@ -396,10 +396,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   public JSConstraintVisitor makeVisitor(CGNode node) {
     if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
       final IMethod method = node.getMethod();
-      if (method instanceof AstMethod) {
+      if (method instanceof AstMethod astMethod) {
         System.err.println("\n\nNode: " + node);
         final IR ir = node.getIR();
-        System.err.println("Position: " + getSomePositionForMethod(ir, (AstMethod) method));
+        System.err.println("Position: " + getSomePositionForMethod(ir, astMethod));
         // System.err.println(ir);
       }
     }
@@ -587,11 +587,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
                 @Override
                 public boolean equals(Object o) {
-                  return o instanceof FieldValueDispatch
-                      && ((FieldValueDispatch) o).getNode().equals(node)
-                      && ((FieldValueDispatch) o).getInstruction() == instruction
-                      && ((FieldValueDispatch) o).getProperty().equals(fieldKey)
-                      && ((FieldValueDispatch) o).getReceiver().equals(receiverType);
+                  return o instanceof FieldValueDispatch fieldValueDispatch
+                      && fieldValueDispatch.getNode().equals(node)
+                      && fieldValueDispatch.getInstruction() == instruction
+                      && fieldValueDispatch.getProperty().equals(fieldKey)
+                      && fieldValueDispatch.getReceiver().equals(receiverType);
                 }
 
                 @Override
@@ -672,9 +672,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
           @Override
           public boolean equals(Object o) {
-            return o instanceof ReceiverForDispatchOp
-                && ((ReceiverForDispatchOp) o).getInstruction() == getInstruction()
-                && ((ReceiverForDispatchOp) o).getNode() == getNode();
+            return o instanceof ReceiverForDispatchOp receiverForDispatchOp
+                && receiverForDispatchOp.getInstruction() == getInstruction()
+                && receiverForDispatchOp.getNode() == getNode();
           }
 
           @Override
@@ -727,8 +727,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         @Override
         public boolean equals(Object o) {
-          if (o instanceof BinaryOperator) {
-            BinaryOperator op = (BinaryOperator) o;
+          if (o instanceof BinaryOperator op) {
             return op.getNode().equals(getNode())
                 && op.getInstruction().getUse(0) == getInstruction().getUse(0)
                 && op.getInstruction().getUse(1) == getInstruction().getUse(1)
@@ -756,7 +755,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         private boolean isStringConstant(InstanceKey k) {
           return (k instanceof ConstantKey)
-              && k.getConcreteType().getReference().equals(JavaScriptTypes.String);
+              && k.concreteType().getReference().equals(JavaScriptTypes.String);
         }
 
         private boolean addKey(InstanceKey k) {
@@ -854,12 +853,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         protected boolean handleBinaryOperatorArgs(InstanceKey left, InstanceKey right) {
           Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
-          if (l.isStringType(left.getConcreteType().getReference())
-              || l.isStringType(right.getConcreteType().getReference())) {
+          if (l.isStringType(left.concreteType().getReference())
+              || l.isStringType(right.concreteType().getReference())) {
             return addKey(
                 new ConcreteTypeKey(node.getClassHierarchy().lookupClass(l.getStringType())));
-          } else if (isNumberType(l, left.getConcreteType().getReference())
-              && isNumberType(l, right.getConcreteType().getReference())) {
+          } else if (isNumberType(l, left.concreteType().getReference())
+              && isNumberType(l, right.concreteType().getReference())) {
             if (left instanceof ConstantKey && right instanceof ConstantKey) {
               return addKey(
                   new ConcreteTypeKey(

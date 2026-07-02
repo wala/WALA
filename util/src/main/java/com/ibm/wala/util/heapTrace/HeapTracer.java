@@ -290,8 +290,7 @@ public class HeapTracer {
     while (!scalarWorkList.isEmpty() || !arrayWorkList.isEmpty()) {
       if (!scalarWorkList.isEmpty()) {
         Object scalar = scalarWorkList.pop();
-        if (scalar instanceof Pair) {
-          Pair p = (Pair) scalar;
+        if (scalar instanceof Pair p) {
           traverseScalar(root, p.snd, p.fst, result, objectsVisited);
         } else {
           traverseScalar(root, scalar, null, result, objectsVisited);
@@ -537,7 +536,7 @@ public class HeapTracer {
    * @author sfink
    *     <p>Statistics about objects reached from a single root
    */
-  class Demographics {
+  private class Demographics {
     /** mapping: Object (key) -&gt; Integer (number of instances in a partition) */
     private final HashMap<Object, Integer> instanceCount = HashMapFactory.make();
 

@@ -23,10 +23,10 @@ walaEclipseMavenCentral {
 }
 
 dependencies {
+  api(libs.jspecify)
   api(libs.osgi.framework)
   api(projects.core)
   api(projects.util)
-  implementation(libs.jspecify)
 }
 
 dependencyAnalysis.issues {
@@ -36,7 +36,10 @@ dependencyAnalysis.issues {
         "org.osgi.framework.BundleContext",
     )
   }
-  onIncorrectConfiguration { exclude("org.eclipse.pde:org.eclipse.pde.core") }
+  onIncorrectConfiguration {
+    exclude(libs.jspecify)
+    exclude("org.eclipse.pde:org.eclipse.pde.core")
+  }
   onUsedTransitiveDependencies {
     exclude(
         "org.eclipse.platform:org.eclipse.swt.cocoa.macosx.aarch64",

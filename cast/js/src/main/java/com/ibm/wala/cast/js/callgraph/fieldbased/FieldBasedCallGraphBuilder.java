@@ -95,7 +95,8 @@ public abstract class FieldBasedCallGraphBuilder {
       JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
     MethodTargetSelector result =
         new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
-    if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply()) {
+    if (options instanceof JSAnalysisOptions jsAnalysisOptions
+        && jsAnalysisOptions.handleCallApply()) {
       result =
           new JavaScriptFunctionApplyTargetSelector(
               new JavaScriptFunctionDotCallTargetSelector(result));
@@ -112,31 +113,31 @@ public abstract class FieldBasedCallGraphBuilder {
   public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException;
 
   /** Full result of call graph computation */
-  public static class CallGraphResult {
+  public record CallGraphResult(
+      JSCallGraph callGraph, PointerAnalysis<ObjectVertex> pointerAnalysis, FlowGraph flowGraph) {
 
-    private final JSCallGraph callGraph;
-
-    private final PointerAnalysis<ObjectVertex> pointerAnalysis;
-
-    private final FlowGraph flowGraph;
-
-    public CallGraphResult(
-        JSCallGraph callGraph, PointerAnalysis<ObjectVertex> pointerAnalysis, FlowGraph flowGraph) {
-      this.callGraph = callGraph;
-      this.pointerAnalysis = pointerAnalysis;
-      this.flowGraph = flowGraph;
-    }
-
+    /**
+     * @deprecated Use {@link #callGraph()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public JSCallGraph getCallGraph() {
-      return callGraph;
+      return callGraph();
     }
 
+    /**
+     * @deprecated Use {@link #pointerAnalysis()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public PointerAnalysis<ObjectVertex> getPointerAnalysis() {
-      return pointerAnalysis;
+      return pointerAnalysis();
     }
 
+    /**
+     * @deprecated Use {@link #flowGraph()} instead
+     */
+    @Deprecated(forRemoval = true, since = "1.8.0")
     public FlowGraph getFlowGraph() {
-      return flowGraph;
+      return flowGraph();
     }
   }
 
@@ -188,11 +189,12 @@ public abstract class FieldBasedCallGraphBuilder {
       throws CancelException {
     // set up call graph
     final JSCallGraph cg =
-        new JSCallGraph(JavaScriptLoader.JS.getFakeRootMethod(cha, options, cache), options, cache);
+        new JSCallGraph(JavaScriptLoader.JS.getFakeRootMethod(cha, cache), options, cache);
     cg.init();
 
     // setup context interpreters
-    if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions) options).handleCallApply()) {
+    if (options instanceof JSAnalysisOptions jsAnalysisOptions
+        && jsAnalysisOptions.handleCallApply()) {
       interpreter =
           new DelegatingSSAContextInterpreter(
               new JavaScriptFunctionApplyContextInterpreter(options, cache), interpreter);
@@ -216,12 +218,12 @@ public abstract class FieldBasedCallGraphBuilder {
     for (Pair<CallVertex, FuncVertex> edge : edges) {
       CallVertex callVertex = edge.fst;
       FuncVertex targetVertex = edge.snd;
-      IClass kaller = callVertex.getCaller().getConcreteType();
+      IClass kaller = callVertex.getCaller().concreteType();
       CGNode caller =
           cg.findOrCreateNode(
               kaller.getMethod(AstMethodReference.fnSelector), Everywhere.EVERYWHERE);
       CallSiteReference site = callVertex.getSite();
-      IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.getConcreteType());
+      IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.concreteType());
       boolean isFunctionPrototypeCall =
           target != null
               && target
@@ -241,11 +243,9 @@ public abstract class FieldBasedCallGraphBuilder {
       } else {
         addEdgeToJSCallGraph(cg, site, target, caller);
 
-        if (target instanceof JavaScriptConstructor) {
+        if (target instanceof JavaScriptConstructor javaScriptConstructor) {
           IMethod fun =
-              ((JavaScriptConstructor) target)
-                  .constructedType()
-                  .getMethod(AstMethodReference.fnSelector);
+              javaScriptConstructor.constructedType().getMethod(AstMethodReference.fnSelector);
           CGNode ctorCaller = cg.findOrCreateNode(target, Everywhere.EVERYWHERE);
 
           CallSiteReference ref = null;
@@ -297,7 +297,7 @@ public abstract class FieldBasedCallGraphBuilder {
     for (FuncVertex f : reflectiveTargets) {
       IMethod reflectiveTgtMethod =
           targetSelector.getCalleeTarget(
-              functionPrototypeCallNode, reflectiveCallSite, f.getConcreteType());
+              functionPrototypeCallNode, reflectiveCallSite, f.concreteType());
       ret |=
           addEdgeToJSCallGraph(
               cg, reflectiveCallSite, reflectiveTgtMethod, functionPrototypeCallNode);
@@ -372,8 +372,8 @@ public abstract class FieldBasedCallGraphBuilder {
         result.add(Pair.make(callVertex, funcVertex));
         // add ReflectiveCall vertices for invocations of call and apply
         String fullName = funcVertex.getFullName();
-        if (options instanceof JSAnalysisOptions
-            && ((JSAnalysisOptions) options).handleCallApply()
+        if (options instanceof JSAnalysisOptions jsAnalysisOptions
+            && jsAnalysisOptions.handleCallApply()
             && (fullName.equals("Lprologue.js/Function_prototype_call")
                 || fullName.equals("Lprologue.js/Function_prototype_apply"))) {
           JavaScriptInvoke invoke = callVertex.getInstruction();

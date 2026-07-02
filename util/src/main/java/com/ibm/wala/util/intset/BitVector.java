@@ -10,12 +10,13 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.util.Arrays;
 
 /** */
 public class BitVector extends BitVectorBase<BitVector> {
 
-  private static final long serialVersionUID = 9087259335807761617L;
+  @Serial private static final long serialVersionUID = 9087259335807761617L;
 
   private static final int MAX_BITS = Integer.MAX_VALUE / 4;
 
@@ -362,11 +363,10 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof BitVector) {
+    if (obj instanceof BitVector set) {
       if (this == obj) { // should help alias analysis
         return true;
       }
-      BitVector set = (BitVector) obj;
       return sameBits(set);
     }
     return false;

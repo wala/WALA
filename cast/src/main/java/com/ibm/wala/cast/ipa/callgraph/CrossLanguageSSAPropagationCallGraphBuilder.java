@@ -65,7 +65,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder
   }
 
   protected static Atom getLanguage(CGNode node) {
-    return node.getMethod().getReference().getDeclaringClass().getClassLoader().getLanguage();
+    return node.getMethod().getReference().getDeclaringClass().getClassLoader().language();
   }
 
   @Override

@@ -32,7 +32,7 @@
  */
 package com.ibm.wala.examples.drivers;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.util.ProgressMaster;
@@ -67,7 +67,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -75,14 +74,11 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
-import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Predicate;
 
 /**
@@ -96,17 +92,8 @@ public class DemandCastChecker {
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
   public static void main(String[] args) throws IllegalArgumentException, IOException {
-    try {
-      Properties p = new Properties();
-      p.putAll(WalaProperties.loadProperties());
-    } catch (WalaException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
-
     runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
     // runTestCase(TestConstants.HELLO_MAIN, TestConstants.HELLO, "Hello");
-
   }
 
   public static void runTestCase(String mainClass, String scopeFile, String benchName)
@@ -168,9 +155,9 @@ public class DemandCastChecker {
     final IAnalysisCacheView cache = new AnalysisCacheImpl();
     CallGraphBuilder<InstanceKey> builder;
     if (CHEAP_CG) {
-      builder = Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+      builder = Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
-      heapModel = Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, cache, cha);
+      heapModel = Util.makeVanillaZeroOneCFABuilder(JavaLanguage.get(), options, cache, cha);
     } else {
       builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha);
       heapModel = (HeapModel) builder;
@@ -219,8 +206,7 @@ public class DemandCastChecker {
       SSAInstruction[] instrs = ir.getInstructions();
       for (SSAInstruction instruction : instrs) {
         if ((long) numSafe + numMightFail > MAX_CASTS) break outer;
-        if (instruction instanceof SSACheckCastInstruction) {
-          SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
+        if (instruction instanceof SSACheckCastInstruction castInstr) {
           final TypeReference[] declaredResultTypes = castInstr.getDeclaredResultTypes();
 
           boolean primOnly = true;
@@ -238,7 +224,7 @@ public class DemandCastChecker {
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
           Predicate<InstanceKey> castPred =
               ik -> {
-                TypeReference ikTypeRef = ik.getConcreteType().getReference();
+                TypeReference ikTypeRef = ik.concreteType().getReference();
                 for (TypeReference t : declaredResultTypes) {
                   if (cha.isAssignableFrom(cha.lookupClass(t), cha.lookupClass(ikTypeRef))) {
                     return true;
@@ -254,16 +240,15 @@ public class DemandCastChecker {
           final FieldRefinePolicy fieldRefinePolicy =
               dmp.getRefinementPolicy().getFieldRefinePolicy();
           switch (queryResult.fst) {
-            case SUCCESS:
+            case SUCCESS -> {
               System.err.println("SAFE: " + castInstr + " in " + node.getMethod());
-              if (fieldRefinePolicy instanceof ManualFieldPolicy) {
-                ManualFieldPolicy hackedFieldPolicy = (ManualFieldPolicy) fieldRefinePolicy;
+              if (fieldRefinePolicy instanceof ManualFieldPolicy hackedFieldPolicy) {
                 System.err.println(hackedFieldPolicy.getHistory());
               }
               System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
               numSafe++;
-              break;
-            case NO_MORE_REFINE:
+            }
+            case NO_MORE_REFINE -> {
               if (queryResult.snd != null) {
                 System.err.println(
                     "MIGHT FAIL: no more refinement possible for "
@@ -276,15 +261,13 @@ public class DemandCastChecker {
               }
               failing.add(Pair.make(node, castInstr));
               numMightFail++;
-              break;
-            case BUDGET_EXCEEDED:
+            }
+            case BUDGET_EXCEEDED -> {
               System.err.println(
                   "MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
               failing.add(Pair.make(node, castInstr));
               numMightFail++;
-              break;
-            default:
-              Assertions.UNREACHABLE();
+            }
           }
         }
       }

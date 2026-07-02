@@ -40,48 +40,30 @@ package com.ibm.wala.demandpa.flowgraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
-public class PointerKeyAndCallSite {
+public record PointerKeyAndCallSite(PointerKey key, CallSiteReference callSiteRef) {
 
-  private final PointerKey key;
-
-  private final CallSiteReference callSiteRef;
-
-  public PointerKeyAndCallSite(final PointerKey key, final CallSiteReference callSiteRef) {
+  public PointerKeyAndCallSite {
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }
     if (callSiteRef == null) {
       throw new IllegalArgumentException("null callSiteRef");
     }
-    this.key = key;
-    this.callSiteRef = callSiteRef;
   }
 
+  /**
+   * @deprecated Use {@link #callSiteRef()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public CallSiteReference getCallSiteRef() {
-    return callSiteRef;
+    return callSiteRef();
   }
 
+  /**
+   * @deprecated Use {@link #key()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public PointerKey getKey() {
-    return key;
-  }
-
-  @Override
-  public int hashCode() {
-    final int PRIME = 31;
-    int result = 1;
-    result = PRIME * result + callSiteRef.hashCode();
-    result = PRIME * result + key.hashCode();
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
-    final PointerKeyAndCallSite other = (PointerKeyAndCallSite) obj;
-    if (!callSiteRef.equals(other.callSiteRef)) return false;
-    if (!key.equals(other.key)) return false;
-    return true;
+    return key();
   }
 }

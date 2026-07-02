@@ -12,11 +12,12 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
+import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
-  private static final long serialVersionUID = 8647721176321526013L;
+  @Serial private static final long serialVersionUID = 8647721176321526013L;
 
   private static final boolean DEBUG = true;
 
@@ -69,8 +70,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   private void fixAfterSparseInsert() {
     if (sparsePart.size() % FIX_SPARSE_MOD == FIX_SPARSE_MOD - 1
-        && (densePart == null
-            || (densePart != null && sparsePart.size() > FIX_SPARSE_RATIO * densePart.getSize()))) {
+        && (densePart == null || sparsePart.size() > FIX_SPARSE_RATIO * densePart.getSize())) {
       assert assertDisjoint() : this.toString();
 
       if (densePart == null) {
@@ -476,8 +476,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
     }
-    if (set instanceof SemiSparseMutableIntSet) {
-      SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
+    if (set instanceof SemiSparseMutableIntSet that) {
       sparsePart = MutableSparseIntSet.make(that.sparsePart);
       if (that.densePart == null) {
         densePart = null;
@@ -510,8 +509,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       throw new IllegalArgumentException("set == null");
     }
     boolean change = false;
-    if (set instanceof SemiSparseMutableIntSet) {
-      SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
+    if (set instanceof SemiSparseMutableIntSet that) {
 
       if (densePart == null) {
 
@@ -735,8 +733,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       }
 
     } else {
+      OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
       if (B.densePart == null) {
-        OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
         for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           newDensePart.clear(bits.next());
         }
@@ -745,7 +743,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
             MutableSparseIntSet.diff(A.sparsePart, B.sparsePart), newDensePart);
 
       } else {
-        OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
         newDensePart.andNot(B.densePart);
         for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
           newDensePart.clear(bits.next());

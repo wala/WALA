@@ -49,13 +49,11 @@ public final class ClassHierarchy {
         } else {
           AnalysisResult v = checkSuperinterfacesContain(hierarchy, iface, t2, visited);
           switch (v) {
-            case YES:
+            case YES -> {
               return YES;
-            case MAYBE:
-              r = MAYBE;
-              break;
-            case NO:
-              break;
+            }
+            case MAYBE -> r = MAYBE;
+            case NO -> {}
           }
         }
       }
@@ -90,13 +88,11 @@ public final class ClassHierarchy {
       for (c = t1; c != null; c = hierarchy.getSuperClass(c)) {
         AnalysisResult v = checkSuperinterfacesContain(hierarchy, c, t2, visited);
         switch (v) {
-          case YES:
+          case YES -> {
             return YES;
-          case MAYBE:
-            r = MAYBE;
-            break;
-          case NO:
-            break;
+          }
+          case MAYBE -> r = MAYBE;
+          case NO -> {}
         }
       }
     }
@@ -124,13 +120,11 @@ public final class ClassHierarchy {
         } else {
           AnalysisResult v = checkSubtypesContain(hierarchy, subtype, t2, visited);
           switch (v) {
-            case YES:
+            case YES -> {
               return YES;
-            case MAYBE:
-              r = MAYBE;
-              break;
-            case NO:
-              break;
+            }
+            case MAYBE -> r = MAYBE;
+            case NO -> {}
           }
         }
       }
@@ -167,30 +161,23 @@ public final class ClassHierarchy {
     } else if (t1.equals(Constants.TYPE_unknown) || t2.equals(Constants.TYPE_unknown)) {
       return MAYBE;
     } else {
-      switch (t1.charAt(0)) {
-        case 'L':
-          if (t1.equals(Constants.TYPE_null)) {
-            return YES;
-          } else if (t2.startsWith("[")) {
-            return NO;
-          } else if (hierarchy == null) {
-            return MAYBE;
-          } else {
-            return checkSubtypeOfHierarchy(hierarchy, t1, t2);
-          }
-        case '[':
-          if (t2.equals(Constants.TYPE_Object)
-              || t2.equals("Ljava/io/Serializable;")
-              || t2.equals("Ljava/lang/Cloneable;")) {
-            return YES;
-          } else if (t2.startsWith("[")) {
-            return isSubtypeOf(hierarchy, t1.substring(1), t2.substring(1));
-          } else {
-            return NO;
-          }
-        default:
-          return NO;
-      }
+      return switch (t1.charAt(0)) {
+        case 'L' ->
+            t1.equals(Constants.TYPE_null)
+                ? YES
+                : t2.startsWith("[")
+                    ? NO
+                    : hierarchy == null ? MAYBE : checkSubtypeOfHierarchy(hierarchy, t1, t2);
+        case '[' ->
+            t2.equals(Constants.TYPE_Object)
+                    || t2.equals("Ljava/io/Serializable;")
+                    || t2.equals("Ljava/lang/Cloneable;")
+                ? YES
+                : t2.startsWith("[")
+                    ? isSubtypeOf(hierarchy, t1.substring(1), t2.substring(1))
+                    : NO;
+        default -> NO;
+      };
     }
   }
 
@@ -340,15 +327,12 @@ public final class ClassHierarchy {
       }
     }
 
-    switch (t2SupersSize) {
-      case 1:
-        return t2Supers.iterator().next();
-      case 0:
-        return Constants.TYPE_Object;
-      default:
-        return Constants.TYPE_unknown; // some non-representable combination of
+    return switch (t2SupersSize) {
+      case 1 -> t2Supers.iterator().next();
+      case 0 -> Constants.TYPE_Object;
+      default -> Constants.TYPE_unknown; // some non-representable combination of
         // class and interfaces
-    }
+    };
   }
 
   /**
@@ -375,7 +359,7 @@ public final class ClassHierarchy {
       }
 
       switch (t1.charAt(0)) {
-        case 'L':
+        case 'L' -> {
           // two non-array types
           // if either one is constant null, return the other one
           if (t1.equals(Constants.TYPE_null)) {
@@ -388,33 +372,35 @@ public final class ClassHierarchy {
           } else {
             return findCommonSupertypeHierarchy(hierarchy, t1, t2);
           }
-        case '[':
-          {
-            char ch2 = t2.charAt(0);
-            switch (ch2) {
-              case '[':
-                char ch1_1 = t1.charAt(1);
-                if (ch1_1 == '[' || ch1_1 == 'L') {
-                  return '[' + findCommonSupertype(hierarchy, t1.substring(1), t2.substring(1));
-                } else {
-                  return Constants.TYPE_Object;
-                }
-              case 'L':
-                switch (t2) {
-                  case Constants.TYPE_null:
-                    return t1;
-                  case "Ljava/io/Serializable;":
-                  case "Ljava/lang/Cloneable;":
-                    return t2;
-                  default:
-                    return Constants.TYPE_Object;
-                }
-              default:
-                return null;
+          // two non-array types
+          // if either one is constant null, return the other one
+        }
+        case '[' -> {
+          char ch2 = t2.charAt(0);
+          switch (ch2) {
+            case '[' -> {
+              char ch1_1 = t1.charAt(1);
+              if (ch1_1 == '[' || ch1_1 == 'L') {
+                return '[' + findCommonSupertype(hierarchy, t1.substring(1), t2.substring(1));
+              } else {
+                return Constants.TYPE_Object;
+              }
+            }
+            case 'L' -> {
+              return switch (t2) {
+                case Constants.TYPE_null -> t1;
+                case "Ljava/io/Serializable;", "Ljava/lang/Cloneable;" -> t2;
+                default -> Constants.TYPE_Object;
+              };
+            }
+            default -> {
+              return null;
             }
           }
-        default:
+        }
+        default -> {
           return null;
+        }
       }
     }
   }

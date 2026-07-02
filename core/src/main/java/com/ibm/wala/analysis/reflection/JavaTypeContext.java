@@ -16,22 +16,19 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleClassFilter;
 
 /**
  * Implements a Context which corresponds to a given type abstraction. Thus, this maps the name
- * "TYPE" to a JavaTypeAbstraction. TODO This context maps {@link
- * com.ibm.wala.ipa.callgraph.ContextKey#RECEIVER} to a {@link TypeAbstraction}.
+ * "TYPE" to a JavaTypeAbstraction. TODO This context maps {@link ContextKey#RECEIVER} to a {@link
+ * TypeAbstraction}.
  */
-public class JavaTypeContext implements Context {
+public record JavaTypeContext(TypeAbstraction type) implements Context {
 
-  private final TypeAbstraction type;
-
-  public JavaTypeContext(TypeAbstraction type) {
+  public JavaTypeContext {
     if (type == null) {
       throw new IllegalArgumentException("null type");
     }
-    this.type = type;
   }
 
   @Override
@@ -39,9 +36,9 @@ public class JavaTypeContext implements Context {
     if (name == ContextKey.RECEIVER) {
       return type;
     } else if (name == ContextKey.PARAMETERS[0]) {
-      if (type instanceof PointType) {
-        IClass cls = ((PointType) type).getIClass();
-        return new FilteredPointerKey.SingleClassFilter(cls);
+      if (type instanceof PointType pointType) {
+        IClass cls = pointType.getIClass();
+        return new SingleClassFilter(cls);
       } else {
         return null;
       }
@@ -55,25 +52,11 @@ public class JavaTypeContext implements Context {
     return "JavaTypeContext<" + type + '>';
   }
 
-  @Override
-  public int hashCode() {
-    return 6367 * type.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass().equals(obj.getClass())) {
-      JavaTypeContext other = (JavaTypeContext) obj;
-      return type.equals(other.type);
-    } else {
-      return false;
-    }
-  }
-
+  /**
+   * @deprecated Use {@link #type()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public TypeAbstraction getType() {
-    return type;
+    return type();
   }
 }

@@ -20,8 +20,7 @@ public final class ArrayContentsKey extends AbstractFieldPointerKey implements F
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof ArrayContentsKey) {
-      ArrayContentsKey other = (ArrayContentsKey) obj;
+    if (obj instanceof ArrayContentsKey other) {
       return instance.equals(other.instance);
     } else {
       return false;
@@ -40,6 +39,6 @@ public final class ArrayContentsKey extends AbstractFieldPointerKey implements F
 
   @Override
   public TypeFilter getTypeFilter() {
-    return new SingleClassFilter(((ArrayClass) instance.getConcreteType()).getElementClass());
+    return new SingleClassFilter(((ArrayClass) instance.concreteType()).getElementClass());
   }
 }

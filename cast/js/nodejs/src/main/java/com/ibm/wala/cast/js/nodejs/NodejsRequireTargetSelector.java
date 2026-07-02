@@ -107,11 +107,8 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
           }
 
           String className = 'L' + sourceModule.getClassName() + "/nodejsModule";
-          if (sourceModule instanceof NodejsRequiredSourceModule
-              && ((NodejsRequiredSourceModule) sourceModule)
-                  .getFile()
-                  .toString()
-                  .endsWith(".json")) {
+          if (sourceModule instanceof NodejsRequiredSourceModule nodejsRequiredSourceModule
+              && nodejsRequiredSourceModule.getFile().toString().endsWith(".json")) {
             className = 'L' + sourceModule.getClassName() + "/jsonModule";
           }
 
@@ -153,10 +150,10 @@ public class NodejsRequireTargetSelector implements MethodTargetSelector {
     OrdinalSet<InstanceKey> instanceKeys = pointerAnalysis.getPointsToSet(pk);
 
     for (InstanceKey instanceKey : instanceKeys) {
-      if (instanceKey instanceof ConstantKey<?>) {
-        Object value = ((ConstantKey<?>) instanceKey).getValue();
-        if (value instanceof String) {
-          set.add((String) value);
+      if (instanceKey instanceof ConstantKey<?> constantKey) {
+        Object value = constantKey.getValue();
+        if (value instanceof String s) {
+          set.add(s);
         } else {
           System.err.println("NodejsRequireTargetSelector: Unexpected value: " + value);
           return HashSetFactory.make();

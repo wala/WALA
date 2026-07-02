@@ -25,6 +25,7 @@ import com.ibm.wala.shrike.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrike.shrikeBT.SwapInstruction;
 import com.ibm.wala.shrike.shrikeBT.Util;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -372,8 +373,8 @@ public class Analyzer {
       stackSizes[i] = size;
 
       IInstruction instr = instructions[i];
-      if (instr instanceof DupInstruction) {
-        size += ((DupInstruction) instr).getSize();
+      if (instr instanceof DupInstruction dupInstruction) {
+        size += dupInstruction.getSize();
       } else if (instr instanceof SwapInstruction) {
       } else {
         size -= instr.getPoppedCount();
@@ -401,7 +402,7 @@ public class Analyzer {
   /** This exception is thrown by verify() when it fails. */
   public static final class FailureException extends Exception {
 
-    private static final long serialVersionUID = -7663520961403117526L;
+    @Serial private static final long serialVersionUID = -7663520961403117526L;
 
     private final int offset;
 
@@ -672,8 +673,7 @@ public class Analyzer {
           }
         }
 
-        if (instr instanceof DupInstruction) {
-          DupInstruction d = (DupInstruction) instr;
+        if (instr instanceof DupInstruction d) {
           int size = d.getSize();
 
           System.arraycopy(curStack, popped, curStack, popped + size, curStackSize - popped);
@@ -700,8 +700,8 @@ public class Analyzer {
             curStackSize -= popped;
 
             if (varTypes != null) {
-              if (instr instanceof IStoreInstruction) {
-                int local = ((IStoreInstruction) instr).getVarIndex();
+              if (instr instanceof IStoreInstruction iStoreInstruction) {
+                int local = iStoreInstruction.getVarIndex();
                 if (Constants.TYPE_null.equals(curLocals[local])) {
                   for (int idx : new int[] {i, i + 1}) {
                     int bc = instToBC[idx];
@@ -785,10 +785,10 @@ public class Analyzer {
   private void computeMaxLocals() {
     maxLocals = locals[0].length;
     for (IInstruction instr : instructions) {
-      if (instr instanceof LoadInstruction) {
-        maxLocals = Math.max(maxLocals, ((LoadInstruction) instr).getVarIndex() + 1);
-      } else if (instr instanceof StoreInstruction) {
-        maxLocals = Math.max(maxLocals, ((StoreInstruction) instr).getVarIndex() + 1);
+      if (instr instanceof LoadInstruction loadInstruction) {
+        maxLocals = Math.max(maxLocals, loadInstruction.getVarIndex() + 1);
+      } else if (instr instanceof StoreInstruction storeInstruction) {
+        maxLocals = Math.max(maxLocals, storeInstruction.getVarIndex() + 1);
       }
     }
   }

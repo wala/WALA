@@ -253,8 +253,7 @@ public class CodeScanner {
     final HashSet<TypeReference> result = HashSetFactory.make(10);
     for (SSAInstruction statement : statements) {
       if (statement != null) {
-        if (statement instanceof SSACheckCastInstruction) {
-          SSACheckCastInstruction c = (SSACheckCastInstruction) statement;
+        if (statement instanceof SSACheckCastInstruction c) {
           result.addAll(Arrays.asList(c.getDeclaredResultTypes()));
         }
       }

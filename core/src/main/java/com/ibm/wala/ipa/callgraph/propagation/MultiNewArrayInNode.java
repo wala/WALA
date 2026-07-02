@@ -50,8 +50,7 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof MultiNewArrayInNode) {
-      MultiNewArrayInNode other = (MultiNewArrayInNode) obj;
+    if (obj instanceof MultiNewArrayInNode other) {
       return (dim == other.dim
           && getNode().equals(other.getNode())
           && getSite().equals(other.getSite()));

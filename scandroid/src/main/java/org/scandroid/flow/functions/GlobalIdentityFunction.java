@@ -70,7 +70,7 @@ public class GlobalIdentityFunction<E extends ISSABasicBlock> implements IUnaryF
     }
 
     DomainElement de = domain.getMappedObject(d1);
-    if (de.codeElement instanceof LocalElement) {
+    if (de.codeElement() instanceof LocalElement) {
       // if the query domain element is a local, then it is /not/ passed through.
 
       return TaintTransferFunctions.EMPTY_SET;

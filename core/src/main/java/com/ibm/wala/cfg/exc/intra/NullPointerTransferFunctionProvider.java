@@ -73,10 +73,10 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     }
 
     if (instr == null && block.isCatchBlock()) {
-      if (block instanceof IExplodedBasicBlock) {
-        instr = ((IExplodedBasicBlock) block).getCatchInstruction();
-      } else if (block instanceof SSACFG.ExceptionHandlerBasicBlock) {
-        instr = ((SSACFG.ExceptionHandlerBasicBlock) block).getCatchInstruction();
+      if (block instanceof IExplodedBasicBlock instructions) {
+        instr = instructions.getCatchInstruction();
+      } else if (block instanceof SSACFG.ExceptionHandlerBasicBlock ssaInstructions) {
+        instr = ssaInstructions.getCatchInstruction();
       } else {
         throw new IllegalStateException(
             "Unable to get catch instruction from unknown ISSABasicBlock implementation.");
@@ -253,41 +253,38 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       int arg1 = instruction.getUse(0);
       int arg2 = instruction.getUse(1);
       IConditionalBranchInstruction.IOperator testOp = instruction.getOperator();
-      if (!(testOp instanceof IConditionalBranchInstruction.Operator)) {
+      if (!(testOp instanceof IConditionalBranchInstruction.Operator op)) {
         throw new IllegalStateException(
             "Conditional operator of unknown type: " + testOp.getClass());
       }
-      IConditionalBranchInstruction.Operator op = (IConditionalBranchInstruction.Operator) testOp;
 
       if (sym.isNullConstant(arg1)) {
         switch (op) {
-          case EQ:
+          case EQ -> {
             noIdentity = true;
             transfer1 = NullPointerState.nullifyFunction(arg2);
             transfer2 = NullPointerState.denullifyFunction(arg2);
-            break;
-          case NE:
+          }
+          case NE -> {
             noIdentity = true;
             transfer1 = NullPointerState.denullifyFunction(arg2);
             transfer2 = NullPointerState.nullifyFunction(arg2);
-            break;
-          default:
-            throw new IllegalStateException("Comparision to a null constant using " + op);
+          }
+          default -> throw new IllegalStateException("Comparision to a null constant using " + op);
         }
       } else if (sym.isNullConstant(arg2)) {
         switch (op) {
-          case EQ:
+          case EQ -> {
             noIdentity = true;
             transfer1 = NullPointerState.nullifyFunction(arg1);
             transfer2 = NullPointerState.denullifyFunction(arg1);
-            break;
-          case NE:
+          }
+          case NE -> {
             noIdentity = true;
             transfer1 = NullPointerState.denullifyFunction(arg1);
             transfer2 = NullPointerState.nullifyFunction(arg1);
-            break;
-          default:
-            throw new IllegalStateException("Comparision to a null constant using " + op);
+          }
+          default -> throw new IllegalStateException("Comparision to a null constant using " + op);
         }
       } else {
         noIdentity = false;
@@ -364,12 +361,11 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
         // itself.
         noIdentity = true;
         transfer1 = NullPointerState.denullifyFunction(instruction.getReceiver());
-        transfer2 = NullPointerState.identityFunction();
       } else {
         noIdentity = false;
         transfer1 = NullPointerState.identityFunction();
-        transfer2 = NullPointerState.identityFunction();
       }
+      transfer2 = NullPointerState.identityFunction();
     }
 
     /* (non-Javadoc)

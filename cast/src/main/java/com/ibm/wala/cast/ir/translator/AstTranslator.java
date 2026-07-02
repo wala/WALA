@@ -835,13 +835,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof UnwindState) {
-        if (((UnwindState) o).unwindAst != unwindAst) return false;
-        if (((UnwindState) o).astVisitor != astVisitor) return false;
+      if (o instanceof UnwindState unwindState) {
+        if (unwindState.unwindAst != unwindAst) return false;
+        if (unwindState.astVisitor != astVisitor) return false;
         if (getParent() == null) {
-          return ((UnwindState) o).getParent() == null;
+          return unwindState.getParent() == null;
         } else {
-          return getParent().equals(((UnwindState) o).getParent());
+          return getParent().equals(unwindState.getParent());
         }
       }
 
@@ -1475,8 +1475,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (liveBlocks.contains(block)) {
           List<SSAInstruction> bi = block.instructions();
           for (SSAInstruction inst : bi) {
-            if (inst instanceof SSAGetCaughtExceptionInstruction) {
-              SSAGetCaughtExceptionInstruction ci = (SSAGetCaughtExceptionInstruction) inst;
+            if (inst instanceof SSAGetCaughtExceptionInstruction ci) {
               if (ci.getBasicBlockNumber() != block.getNumber()) {
                 inst = insts.GetCaughtExceptionInstruction(x, block.getNumber(), ci.getException());
               }
@@ -1497,7 +1496,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               if (getExceptionalSuccessors(block).isEmpty()) {
                 addExceptionalEdge(block, exit());
               }
-            } else if (inst instanceof SSAConditionalBranchInstruction) {
+            } else if (inst instanceof SSAConditionalBranchInstruction branch) {
               Iterator<PreBasicBlock> succs = this.getNormalSuccessors(block).iterator();
               assert succs.hasNext();
               int target;
@@ -1512,7 +1511,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               } else {
                 target = t1;
               }
-              SSAConditionalBranchInstruction branch = (SSAConditionalBranchInstruction) inst;
               inst =
                   insts.ConditionalBranchInstruction(
                       x,
@@ -1552,7 +1550,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public boolean equals(Object o) {
-      return (o instanceof AstCFG) && functionName.equals(((AstCFG) o).functionName);
+      return (o instanceof AstCFG preBasicBlocks)
+          && functionName.equals(preBasicBlocks.functionName);
     }
 
     @Override
@@ -1813,24 +1812,24 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public int getConstantValue(Object o) {
-      if (o instanceof Integer) {
-        return getUnderlyingSymtab().getConstant((Integer) o);
-      } else if (o instanceof Float) {
-        return getUnderlyingSymtab().getConstant((Float) o);
-      } else if (o instanceof Double) {
-        return getUnderlyingSymtab().getConstant((Double) o);
-      } else if (o instanceof Long) {
-        return getUnderlyingSymtab().getConstant((Long) o);
-      } else if (o instanceof String) {
-        return getUnderlyingSymtab().getConstant((String) o);
-      } else if (o instanceof Boolean) {
-        return getUnderlyingSymtab().getConstant((Boolean) o);
-      } else if (o instanceof Character) {
-        return getUnderlyingSymtab().getConstant((Character) o);
-      } else if (o instanceof Byte) {
-        return getUnderlyingSymtab().getConstant((Byte) o);
-      } else if (o instanceof Short) {
-        return getUnderlyingSymtab().getConstant((Short) o);
+      if (o instanceof Integer integer) {
+        return getUnderlyingSymtab().getConstant(integer);
+      } else if (o instanceof Float aFloat) {
+        return getUnderlyingSymtab().getConstant(aFloat);
+      } else if (o instanceof Double v) {
+        return getUnderlyingSymtab().getConstant(v);
+      } else if (o instanceof Long l) {
+        return getUnderlyingSymtab().getConstant(l);
+      } else if (o instanceof String s) {
+        return getUnderlyingSymtab().getConstant(s);
+      } else if (o instanceof Boolean aBoolean) {
+        return getUnderlyingSymtab().getConstant(aBoolean);
+      } else if (o instanceof Character c) {
+        return getUnderlyingSymtab().getConstant(c);
+      } else if (o instanceof Byte b) {
+        return getUnderlyingSymtab().getConstant(b);
+      } else if (o instanceof Short i) {
+        return getUnderlyingSymtab().getConstant(i);
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -3162,8 +3161,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (accesses != null) {
         Set<String> parents = new LinkedHashSet<>();
         for (Access AC : accesses) {
-          if (AC.variableDefiner != null) {
-            parents.add(AC.variableDefiner);
+          if (AC.variableDefiner() != null) {
+            parents.add(AC.variableDefiner());
           }
         }
         scopingParents = parents.toArray(new String[0]);
@@ -4193,7 +4192,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveIfgoto(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int currentInstruction = context.cfg().currentInstruction;
     switch (n.getChildCount()) {
-      case 1:
+      case 1 -> {
         CAstNode arg = n.getChild(0);
         context
             .cfg()
@@ -4206,8 +4205,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                     context.currentScope().getConstantValue(0),
                     -1));
         context.cfg().noteOperands(currentInstruction, context.getSourceMap().getPosition(arg));
-        break;
-      case 3:
+      }
+      case 3 -> {
         CAstNode op = n.getChild(0);
         CAstNode leftExpr = n.getChild(1);
         CAstNode rightExpr = n.getChild(2);
@@ -4227,9 +4226,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
                 currentInstruction,
                 context.getSourceMap().getPosition(leftExpr),
                 context.getSourceMap().getPosition(rightExpr));
-        break;
-      default:
-        Assertions.UNREACHABLE();
+      }
+      default -> Assertions.UNREACHABLE();
     }
 
     context.cfg().addPreNode(n, context.getUnwindState());
@@ -4689,8 +4687,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (context.getValue(xn) != -1) {
           if (context.currentScope().isConstant(context.getValue(xn))) {
             Object val = context.currentScope().getConstantObject(context.getValue(xn));
-            if (val instanceof Number) {
-              Number num = (Number) val;
+            if (val instanceof Number num) {
               if (num.intValue() == num.doubleValue()) {
                 continue;
               }
@@ -4919,8 +4916,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   private void setType(WalkContext context, CAstNode n, CAstType caughtType) {
-    if (caughtType instanceof CAstType.Union) {
-      for (CAstType type : ((CAstType.Union) caughtType).getConstituents()) {
+    if (caughtType instanceof CAstType.Union union) {
+      for (CAstType type : union.getConstituents()) {
         setType(context, n, type);
       }
     } else {
@@ -4967,17 +4964,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     PreBasicBlock endOfTry = context.cfg().getCurrentBlock();
 
     if (!hasIncomingEdges(n.getChild(1), context)) {
-      if (loader instanceof CAstAbstractLoader) {
-        ((CAstAbstractLoader) loader)
-            .addMessage(
-                context.getModule(),
-                new Warning(Warning.MILD) {
-                  @Override
-                  public String getMsg() {
-                    return "Dead catch block at "
-                        + getPosition(context.getSourceMap(), n.getChild(1));
-                  }
-                });
+      if (loader instanceof CAstAbstractLoader cAstAbstractLoader) {
+        cAstAbstractLoader.addMessage(
+            context.getModule(),
+            new Warning(Warning.MILD) {
+              @Override
+              public String getMsg() {
+                return "Dead catch block at " + getPosition(context.getSourceMap(), n.getChild(1));
+              }
+            });
       }
       return true;
     }
@@ -5453,8 +5448,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode f) {
-    if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
-      String field = (String) f.getValue();
+    if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String field) {
 
       FieldReference fieldRef =
           FieldReference.findOrCreate(

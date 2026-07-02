@@ -252,8 +252,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
   }
 
   private int[] computeSuccNodeNumbers(Object N, NumberedNodeManager<Object> nodeManager) {
-    if (N instanceof PointerKey) {
-      PointerKey P = (PointerKey) N;
+    if (N instanceof PointerKey P) {
       OrdinalSet<T> S = getPointerAnalysis().getPointsToSet(P);
       int[] result = new int[S.size()];
       int i = 0;
@@ -262,9 +261,8 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
         i++;
       }
       return result;
-    } else if (N instanceof InstanceKey) {
-      InstanceKey I = (InstanceKey) N;
-      TypeReference T = I.getConcreteType().getReference();
+    } else if (N instanceof InstanceKey I) {
+      TypeReference T = I.concreteType().getReference();
 
       assert T != null : "null concrete type from " + I.getClass();
       if (T.isArrayType()) {
@@ -275,7 +273,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
           return new int[] {nodeManager.getNumber(p)};
         }
       } else {
-        IClass klass = I.getConcreteType();
+        IClass klass = I.concreteType();
         assert klass != null : "null klass for type " + T;
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
         for (IField f : klass.getAllInstanceFields()) {
@@ -340,8 +338,8 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
     ArrayList<LocalPointerKey> list = new ArrayList<>();
     for (Object n : nodeManager) {
-      if (n instanceof LocalPointerKey) {
-        list.add((LocalPointerKey) n);
+      if (n instanceof LocalPointerKey localPointerKey) {
+        list.add(localPointerKey);
       }
     }
     Object[] arr = list.toArray();

@@ -12,7 +12,7 @@ package com.ibm.wala.core.tests.callGraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.core.util.strings.Atom;
@@ -70,7 +70,7 @@ public class CPATest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     SSAPropagationCallGraphBuilder builder =
-        Util.makeZeroCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeZeroCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     builder.setContextSelector(new CPAContextSelector(builder.getContextSelector()));
     CallGraph cg = builder.makeCallGraph(options, null);
 

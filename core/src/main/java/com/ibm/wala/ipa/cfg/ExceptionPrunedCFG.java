@@ -16,12 +16,8 @@ import com.ibm.wala.cfg.IBasicBlock;
 /** A view of a CFG that ignores exceptional edges */
 public class ExceptionPrunedCFG {
 
-  private static class ExceptionEdgePruner<I, T extends IBasicBlock<I>> implements EdgeFilter<T> {
-    private final ControlFlowGraph<I, T> cfg;
-
-    ExceptionEdgePruner(ControlFlowGraph<I, T> cfg) {
-      this.cfg = cfg;
-    }
+  private record ExceptionEdgePruner<I, T extends IBasicBlock<I>>(ControlFlowGraph<I, T> cfg)
+      implements EdgeFilter<T> {
 
     @Override
     public boolean hasNormalEdge(T src, T dst) {

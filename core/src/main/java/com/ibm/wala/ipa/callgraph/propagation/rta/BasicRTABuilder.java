@@ -72,7 +72,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
       Selector selector = M.getReference().getSelector();
       PointerKey sKey = getKeyForSelector(selector);
       if (DEBUG) {
-        System.err.println(("Add constraint: " + selector + " U= " + iKey.getConcreteType()));
+        System.err.println(("Add constraint: " + selector + " U= " + iKey.concreteType()));
       }
       system.newConstraint(sKey, iKey);
     }
@@ -151,7 +151,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
             InstanceKey iKey = system.getInstanceKey(ptr);
 
             CGNode target =
-                getTargetForCall(caller, site, iKey.getConcreteType(), new InstanceKey[] {iKey});
+                getTargetForCall(caller, site, iKey.concreteType(), new InstanceKey[] {iKey});
             if (target == null) {
               // This indicates an error; I sure hope getTargetForCall
               // raised a warning about this!
@@ -205,8 +205,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof DispatchOperator) {
-        DispatchOperator other = (DispatchOperator) o;
+      if (o instanceof DispatchOperator other) {
         return caller.equals(other.caller) && site.equals(other.site);
       } else {
         return false;

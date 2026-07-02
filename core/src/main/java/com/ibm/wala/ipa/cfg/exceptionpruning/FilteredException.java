@@ -7,26 +7,18 @@ import com.ibm.wala.types.TypeReference;
  *
  * @author Stephan Gocht {@code <stephan@gobro.de>}
  */
-public class FilteredException {
+public record FilteredException(TypeReference exception, boolean isSubclassFiltered) {
   public static final boolean FILTER_SUBCLASSES = true;
-  private final TypeReference exception;
-
-  private final boolean isSubclassFiltered;
 
   public FilteredException(TypeReference exception) {
     this(exception, false);
   }
 
-  public FilteredException(TypeReference exception, boolean isSubclassFiltered) {
-    this.exception = exception;
-    this.isSubclassFiltered = isSubclassFiltered;
-  }
-
+  /**
+   * @deprecated Use {@link #exception()} instead
+   */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public TypeReference getException() {
-    return this.exception;
-  }
-
-  public boolean isSubclassFiltered() {
-    return this.isSubclassFiltered;
+    return exception();
   }
 }

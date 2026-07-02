@@ -215,22 +215,15 @@ public class ClosureExtractor extends CAstRewriterExt {
       CAstControlFlowMap cfg,
       NodePos context,
       Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
-    switch (root.getKind()) {
-      case OPERATOR:
-        return root;
-      case CONSTANT:
-        return copyConstant(root, context, nodeMap);
-      case BLOCK_STMT:
-        return copyBlock(root, cfg, context, nodeMap);
-      case RETURN:
-        return copyReturn(root, cfg, context, nodeMap);
-      case VAR:
-        return copyVar(root, cfg, context, nodeMap);
-      case GOTO:
-        return copyGoto(root, cfg, context, nodeMap);
-      default:
-        return copyNode(root, cfg, context, nodeMap);
-    }
+    return switch (root.getKind()) {
+      case OPERATOR -> root;
+      case CONSTANT -> copyConstant(root, context, nodeMap);
+      case BLOCK_STMT -> copyBlock(root, cfg, context, nodeMap);
+      case RETURN -> copyReturn(root, cfg, context, nodeMap);
+      case VAR -> copyVar(root, cfg, context, nodeMap);
+      case GOTO -> copyGoto(root, cfg, context, nodeMap);
+      default -> copyNode(root, cfg, context, nodeMap);
+    };
   }
 
   /* Constants are not affected by the rewriting, they are just copied. */
@@ -449,8 +442,8 @@ public class ClosureExtractor extends CAstRewriterExt {
     // for non-constant case labels, the case expressions appear as labels on CFG edges; rewrite
     // those as well
     for (Object label : cfg.getTargetLabels(node)) {
-      if (label instanceof CAstNode) {
-        copyNodes((CAstNode) label, cfg, new LabelPos(node, context), nodeMap);
+      if (label instanceof CAstNode cAstNode) {
+        copyNodes(cAstNode, cfg, new LabelPos(node, context), nodeMap);
       }
     }
 
@@ -527,9 +520,8 @@ public class ClosureExtractor extends CAstRewriterExt {
       CAstNode block = root.getChild(context.getStart());
       fun_body_stmts.addAll(block.getChildren());
     } else {
-      if (context.getRegion() instanceof TwoLevelExtractionRegion) {
+      if (context.getRegion() instanceof TwoLevelExtractionRegion tler) {
         CAstNode start = root.getChild(context.getStart());
-        TwoLevelExtractionRegion tler = (TwoLevelExtractionRegion) context.getRegion();
         if (tler.getEndInner() != -1)
           throw new UnimplementedError("Two-level extraction not fully implemented.");
         int i;
@@ -936,15 +928,17 @@ public class ClosureExtractor extends CAstRewriterExt {
   // determine whether the given subtree contains no unstructured control flow and calls
   private boolean noJumpsAndNoCalls(CAstNode node) {
     switch (node.getKind()) {
-      case CAstNode.BREAK:
-      case CAstNode.CONTINUE:
-      case CAstNode.GOTO:
-      case CAstNode.RETURN:
-      case CAstNode.CALL:
-      case CAstNode.NEW:
+      case CAstNode.BREAK,
+          CAstNode.CONTINUE,
+          CAstNode.GOTO,
+          CAstNode.RETURN,
+          CAstNode.CALL,
+          CAstNode.NEW -> {
         return false;
-      default:
+      }
+      default -> {
         // fall through to generic handlers below
+      }
     }
     for (CAstNode child : node.getChildren()) if (!noJumpsAndNoCalls(child)) return false;
     return true;

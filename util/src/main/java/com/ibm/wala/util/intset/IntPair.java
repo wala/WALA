@@ -11,46 +11,22 @@
 package com.ibm.wala.util.intset;
 
 /** A pair of ints. Note that an IntPair has value semantics. */
-public class IntPair {
-  final int x;
-
-  final int y;
-
-  public IntPair(int x, int y) {
-    this.x = x;
-    this.y = y;
-  }
+public record IntPair(int x, int y) {
 
   /**
-   * @return Returns the x.
+   * @deprecated Use {@link #x()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public int getX() {
-    return x;
+    return x();
   }
 
   /**
-   * @return Returns the y.
+   * @deprecated Use {@link #y()} instead
    */
+  @Deprecated(forRemoval = true, since = "1.8.0")
   public int getY() {
-    return y;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (obj.getClass() == this.getClass()) {
-      IntPair p = (IntPair) obj;
-      return p.getX() == x && p.getY() == y;
-    }
-
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return 8377 * x + y;
+    return y();
   }
 
   @Override

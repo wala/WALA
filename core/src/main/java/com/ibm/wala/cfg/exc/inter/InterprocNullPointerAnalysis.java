@@ -244,18 +244,7 @@ public final class InterprocNullPointerAnalysis {
    *
    * @author Markus Herhoffer &lt;markus.herhoffer@student.kit.edu&gt;
    */
-  private static class CallGraphFilter {
-    private final Set<Atom> filter;
-
-    /**
-     * Filter for CallGraphs
-     *
-     * @param filterSet the MethodReferences to be filtered out
-     */
-    private CallGraphFilter(HashSet<Atom> filterSet) {
-      this.filter = filterSet;
-    }
-
+  private record CallGraphFilter(Set<Atom> filter) {
     /**
      * filters a CallGraph
      *

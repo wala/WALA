@@ -377,7 +377,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
 
     /** Update the machine state to account for an instruction */
-    class NodeVisitor extends BasicStackMachineVisitor {
+    private class NodeVisitor extends BasicStackMachineVisitor {
 
       /**
        * @see
@@ -634,8 +634,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int exc = reuseOrCreateException();
 
         BootstrapMethod bootstrap = null;
-        if (instruction instanceof InvokeDynamicInstruction) {
-          bootstrap = ((InvokeDynamicInstruction) instruction).getBootstrap();
+        if (instruction instanceof InvokeDynamicInstruction invokeDynamicInstruction) {
+          bootstrap = invokeDynamicInstruction.getBootstrap();
         }
 
         if (instruction.getPushedWordSize() > 0) {
@@ -965,7 +965,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
     }
 
-    class EdgeVisitor extends com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor {
+    private class EdgeVisitor extends com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor {
 
       @Override
       public void visitInvoke(IInvokeInstruction instruction) {
@@ -1009,31 +1009,22 @@ public class SSABuilder extends AbstractIntStackMachine {
   /**
    * A logical mapping from &lt;pc, valueNumber&gt; -&gt; local number Note: make sure this class
    * remains static: this persists as part of the IR!!
+   *
+   * @param localStoreMap Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a
+   *     range at pc p where value number vn corresponds to local L
+   * @param block2LocalState For each basic block i and local j, block2LocalState[i][j] gives the
+   *     contents of local j at the start of block i
    */
-  private static class SSA2LocalMap implements com.ibm.wala.ssa.IR.SSA2LocalMap {
-
-    private final ShrikeCFG shrikeCFG;
-
-    /**
-     * Mapping Integer -&gt; IntPair where p maps to (vn,L) iff we've started a range at pc p where
-     * value number vn corresponds to local L
-     */
-    private final IntPair[] localStoreMap;
-
-    /**
-     * For each basic block i and local j, block2LocalState[i][j] gives the contents of local j at
-     * the start of block i
-     */
-    private final int[][] block2LocalState;
+  private record SSA2LocalMap(
+      ShrikeCFG shrikeCFG, IntPair[] localStoreMap, int[][] block2LocalState)
+      implements IR.SSA2LocalMap {
 
     /**
      * @param nInstructions number of instructions in the bytecode for this method
      * @param nBlocks number of basic blocks in the CFG
      */
     SSA2LocalMap(ShrikeCFG shrikeCfg, int nInstructions, int nBlocks) {
-      shrikeCFG = shrikeCfg;
-      localStoreMap = new IntPair[nInstructions];
-      block2LocalState = new int[nBlocks][];
+      this(shrikeCfg, new IntPair[nInstructions], new int[nBlocks][]);
     }
 
     /**
@@ -1120,7 +1111,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       for (int i = firstInstruction; i <= pc; i++) {
         if (localStoreMap[i] != null) {
           IntPair p = localStoreMap[i];
-          locals = setLocal(locals, p.getY(), p.getX());
+          locals = setLocal(locals, p.y(), p.x());
         }
       }
       return locals == null ? null : extractIndices(locals, vn);

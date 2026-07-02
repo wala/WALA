@@ -151,10 +151,7 @@ public class ReflectionTest extends WalaTestCase {
     Set<CGNode> newInstanceNodes = cg.getNodes(mr);
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : newInstanceNodes) {
-      Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
-      while (succNodesIter.hasNext()) {
-        succNodes.add(succNodesIter.next());
-      }
+      cg.getSuccNodes(newInstanceNode).forEachRemaining(succNodes::add);
     }
     TypeReference extraneousTR =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect3$Hash");
@@ -186,10 +183,7 @@ public class ReflectionTest extends WalaTestCase {
     Set<CGNode> newInstanceNodes = cg.getNodes(mr);
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : newInstanceNodes) {
-      Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
-      while (succNodesIter.hasNext()) {
-        succNodes.add(succNodesIter.next());
-      }
+      cg.getSuccNodes(newInstanceNode).forEachRemaining(succNodes::add);
     }
     TypeReference extraneousTR =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/io/FilePermission");
@@ -220,10 +214,7 @@ public class ReflectionTest extends WalaTestCase {
     Set<CGNode> newInstanceNodes = cg.getNodes(mr);
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : newInstanceNodes) {
-      Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
-      while (succNodesIter.hasNext()) {
-        succNodes.add(succNodesIter.next());
-      }
+      cg.getSuccNodes(newInstanceNode).forEachRemaining(succNodes::add);
     }
     TypeReference extraneousTR =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect5$A");
@@ -252,10 +243,7 @@ public class ReflectionTest extends WalaTestCase {
     Set<CGNode> newInstanceNodes = cg.getNodes(mr);
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : newInstanceNodes) {
-      Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
-      while (succNodesIter.hasNext()) {
-        succNodes.add(succNodesIter.next());
-      }
+      cg.getSuccNodes(newInstanceNode).forEachRemaining(succNodes::add);
     }
     TypeReference extraneousTR =
         TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect6$A");
@@ -341,10 +329,7 @@ public class ReflectionTest extends WalaTestCase {
   private static Collection<CGNode> getSuccNodes(CallGraph cg, Collection<CGNode> nodes) {
     Set<CGNode> succNodes = HashSetFactory.make();
     for (CGNode newInstanceNode : nodes) {
-      Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
-      while (succNodesIter.hasNext()) {
-        succNodes.add(succNodesIter.next());
-      }
+      cg.getSuccNodes(newInstanceNode).forEachRemaining(succNodes::add);
     }
     return succNodes;
   }

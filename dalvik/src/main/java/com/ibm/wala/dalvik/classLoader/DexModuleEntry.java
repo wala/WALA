@@ -158,10 +158,10 @@ public class DexModuleEntry implements ModuleEntry {
     if (obj == null) {
       return false;
     }
-    if (!(obj instanceof DexModuleEntry)) {
+    if (!(obj instanceof DexModuleEntry dexModuleEntry)) {
       return false;
     }
-    if (!Objects.equals(className, ((DexModuleEntry) obj).className)) return false;
+    if (!Objects.equals(className, dexModuleEntry.className)) return false;
     return true;
   }
 }

@@ -389,64 +389,44 @@ public class JdtUtil {
       int i = 1;
       while (true) {
         switch (d.charAt(i++)) {
-          case TypeReference.VoidTypeCode:
-            sigs.add(TypeReference.VoidName.toString());
-            continue;
-          case TypeReference.BooleanTypeCode:
-            sigs.add(TypeReference.BooleanName.toString());
-            continue;
-          case TypeReference.ByteTypeCode:
-            sigs.add(TypeReference.ByteName.toString());
-            continue;
-          case TypeReference.ShortTypeCode:
-            sigs.add(TypeReference.ShortName.toString());
-            continue;
-          case TypeReference.IntTypeCode:
-            sigs.add(TypeReference.IntName.toString());
-            continue;
-          case TypeReference.LongTypeCode:
-            sigs.add(TypeReference.LongName.toString());
-            continue;
-          case TypeReference.FloatTypeCode:
-            sigs.add(TypeReference.FloatName.toString());
-            continue;
-          case TypeReference.DoubleTypeCode:
-            sigs.add(TypeReference.DoubleName.toString());
-            continue;
-          case TypeReference.CharTypeCode:
-            sigs.add(TypeReference.CharName.toString());
-            continue;
-          case TypeReference.ArrayTypeCode:
-            {
-              int off = i - 1;
-              while (d.charAt(i) == TypeReference.ArrayTypeCode) {
-                ++i;
-              }
-              if (d.charAt(i++) == TypeReference.ClassTypeCode) {
-                while (d.charAt(i++) != ';')
-                  ;
-                sigs.add(d.substring(off, i).replaceAll("/", "."));
-              } else {
-                sigs.add(d.substring(off, i));
-              }
-              continue;
+          case TypeReference.VoidTypeCode -> sigs.add(TypeReference.VoidName.toString());
+          case TypeReference.BooleanTypeCode -> sigs.add(TypeReference.BooleanName.toString());
+          case TypeReference.ByteTypeCode -> sigs.add(TypeReference.ByteName.toString());
+          case TypeReference.ShortTypeCode -> sigs.add(TypeReference.ShortName.toString());
+          case TypeReference.IntTypeCode -> sigs.add(TypeReference.IntName.toString());
+          case TypeReference.LongTypeCode -> sigs.add(TypeReference.LongName.toString());
+          case TypeReference.FloatTypeCode -> sigs.add(TypeReference.FloatName.toString());
+          case TypeReference.DoubleTypeCode -> sigs.add(TypeReference.DoubleName.toString());
+          case TypeReference.CharTypeCode -> sigs.add(TypeReference.CharName.toString());
+          case TypeReference.ArrayTypeCode -> {
+            int off = i - 1;
+            while (d.charAt(i) == TypeReference.ArrayTypeCode) {
+              ++i;
             }
-          case (byte) ')': // end of parameter list
-            return toArray(sigs);
-          default:
-            {
-              // a class
-              int off = i - 1;
-              char c;
-              do {
-                c = d.charAt(i++);
-              } while (c != ',' && c != ')');
-              sigs.add('L' + d.substring(off, i - 1) + ';');
+            if (d.charAt(i++) == TypeReference.ClassTypeCode) {
+              while (d.charAt(i++) != ';')
+                ;
+              sigs.add(d.substring(off, i).replaceAll("/", "."));
+            } else {
+              sigs.add(d.substring(off, i));
+            }
+          }
+          case (byte) ')' -> {
+            return toArray(sigs); // end of parameter list
+          }
+          default -> {
+            // a class
+            int off = i - 1;
+            char c;
+            do {
+              c = d.charAt(i++);
+            } while (c != ',' && c != ')');
+            sigs.add('L' + d.substring(off, i - 1) + ';');
 
-              if (c == ')') {
-                return toArray(sigs);
-              }
+            if (c == ')') {
+              return toArray(sigs);
             }
+          }
         }
       }
     } catch (StringIndexOutOfBoundsException e) {
@@ -518,9 +498,9 @@ public class JdtUtil {
   /** Use the search engine to find all methods in a java element */
   public static Collection<IMethod> findMethods(IJavaElement elt) {
 
-    if (elt instanceof ICompilationUnit) {
+    if (elt instanceof ICompilationUnit iCompilationUnit) {
       Collection<IMethod> result = HashSetFactory.make();
-      for (IType type : getClasses((ICompilationUnit) elt)) {
+      for (IType type : getClasses(iCompilationUnit)) {
         try {
           result.addAll(Arrays.asList(type.getMethods()));
         } catch (JavaModelException e) {

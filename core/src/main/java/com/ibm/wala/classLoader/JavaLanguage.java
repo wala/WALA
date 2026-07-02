@@ -17,7 +17,6 @@ import com.ibm.wala.core.util.shrike.Exceptions.MethodResolutionFailure;
 import com.ibm.wala.core.util.shrike.ShrikeUtil;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.warnings.Warnings;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
@@ -577,8 +576,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       return TypeReference.JavaLangString;
     } else if (o instanceof ClassToken || o instanceof TypeReference) {
       return TypeReference.JavaLangClass;
-    } else if (o instanceof IMethod) {
-      IMethod m = (IMethod) o;
+    } else if (o instanceof IMethod m) {
       return m.isInit()
           ? TypeReference.JavaLangReflectConstructor
           : TypeReference.JavaLangReflectMethod;
@@ -666,62 +664,49 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
-    switch (((Instruction) pei).getOpcode()) {
-      case OP_iaload:
-      case OP_laload:
-      case OP_faload:
-      case OP_daload:
-      case OP_aaload:
-      case OP_baload:
-      case OP_caload:
-      case OP_saload:
-      case OP_iastore:
-      case OP_lastore:
-      case OP_fastore:
-      case OP_dastore:
-      case OP_bastore:
-      case OP_castore:
-      case OP_sastore:
-        return getArrayAccessExceptions();
-      case OP_aastore:
-        return getAaStoreExceptions();
-      case OP_getfield:
-      case OP_putfield:
-      case OP_invokevirtual:
-      case OP_invokespecial:
-      case OP_invokeinterface:
-      case OP_monitorenter:
-      case OP_monitorexit:
+    return switch (((Instruction) pei).getOpcode()) {
+      case OP_iaload,
+          OP_laload,
+          OP_faload,
+          OP_daload,
+          OP_aaload,
+          OP_baload,
+          OP_caload,
+          OP_saload,
+          OP_iastore,
+          OP_lastore,
+          OP_fastore,
+          OP_dastore,
+          OP_bastore,
+          OP_castore,
+          OP_sastore ->
+          getArrayAccessExceptions();
+      case OP_aastore -> getAaStoreExceptions();
       // we're currently ignoring MonitorStateExceptions, since J2EE stuff
       // should be
       // logically single-threaded
-      case OP_athrow:
-      // N.B: the caller must handle the explicitly-thrown exception
-      case OP_arraylength:
-        return getNullPointerException();
-      case OP_idiv:
-      case OP_irem:
-      case OP_ldiv:
-      case OP_lrem:
-        return getArithmeticException();
-      case OP_new:
-        return newScalarExceptions;
-      case OP_newarray:
-      case OP_anewarray:
-      case OP_multianewarray:
-        return newArrayExceptions;
-      case OP_checkcast:
-        return getClassCastException();
-      case OP_ldc_w:
-        if (((ConstantInstruction) pei).getType().equals(TYPE_Class))
-          return getClassNotFoundException();
-        else return null;
-      case OP_getstatic:
-      case OP_putstatic:
-        return getExceptionInInitializerError();
-      default:
-        return Collections.emptySet();
-    }
+      // N.B: for `OP_athrow`, the caller must handle the explicitly-thrown exception
+      case OP_getfield,
+          OP_putfield,
+          OP_invokevirtual,
+          OP_invokespecial,
+          OP_invokeinterface,
+          OP_monitorenter,
+          OP_monitorexit,
+          OP_athrow,
+          OP_arraylength ->
+          getNullPointerException();
+      case OP_idiv, OP_irem, OP_ldiv, OP_lrem -> getArithmeticException();
+      case OP_new -> newScalarExceptions;
+      case OP_newarray, OP_anewarray, OP_multianewarray -> newArrayExceptions;
+      case OP_checkcast -> getClassCastException();
+      case OP_ldc_w ->
+          ((ConstantInstruction) pei).getType().equals(TYPE_Class)
+              ? getClassNotFoundException()
+              : null;
+      case OP_getstatic, OP_putstatic -> getExceptionInInitializerError();
+      default -> Collections.emptySet();
+    };
   }
 
   @Override
@@ -780,18 +765,17 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   @Override
   public Object getMetadataToken(Object value) {
-    if (value instanceof ClassToken) {
+    if (value instanceof ClassToken classToken) {
       return ShrikeUtil.makeTypeReference(
-          ClassLoaderReference.Application, ((ClassToken) value).getTypeName());
-    } else if (value instanceof ReferenceToken) {
-      ReferenceToken tok = (ReferenceToken) value;
+          ClassLoaderReference.Application, classToken.getTypeName());
+    } else if (value instanceof ReferenceToken tok) {
       TypeReference cls =
-          ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.getClassName());
+          ShrikeUtil.makeTypeReference(ClassLoaderReference.Application, 'L' + tok.className());
       return MethodReference.findOrCreate(
           cls,
           new Selector(
-              Atom.findOrCreateUnicodeAtom(tok.getElementName()),
-              Descriptor.findOrCreateUTF8(tok.getDescriptor())));
+              Atom.findOrCreateUnicodeAtom(tok.elementName()),
+              Descriptor.findOrCreateUTF8(tok.descriptor())));
     } else if (value instanceof MethodHandle || value instanceof MethodType) {
       return value;
     } else {
@@ -812,6 +796,21 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
   static {
     JavaPrimitiveType.init();
+  }
+
+  /**
+   * Initialization-on-demand holder idiom for lazy, thread-safe singleton initialization.
+   *
+   * <p>The JVM serializes class loading, so {@link Holder} is not loaded until {@link #get()} is
+   * first called, and {@link #INSTANCE} is safely published with no runtime synchronization.
+   */
+  private static class Holder {
+    static final JavaLanguage INSTANCE = new JavaLanguage();
+  }
+
+  /** The canonical {@link Language} implementation for Java */
+  public static JavaLanguage get() {
+    return Holder.INSTANCE;
   }
 
   @Override
@@ -837,8 +836,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   }
 
   @Override
-  public AbstractRootMethod getFakeRootMethod(
-      IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
+  public AbstractRootMethod getFakeRootMethod(IClassHierarchy cha, IAnalysisCacheView cache) {
     return new FakeRootMethod(new FakeRootClass(ClassLoaderReference.Primordial, cha), cache);
   }
 

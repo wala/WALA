@@ -34,7 +34,7 @@ package com.ibm.wala.demandpa.driver;
 
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.demandpa.TestInfo;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
@@ -161,7 +161,8 @@ public class TestAgainstSimpleDriver {
   private static IDemandPointerAnalysis makeDemandPointerAnalysis(
       AnalysisOptions options, ClassHierarchy cha, CallGraph cg, MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder =
-        Util.makeVanillaZeroOneCFABuilder(Language.JAVA, options, new AnalysisCacheImpl(), cha);
+        Util.makeVanillaZeroOneCFABuilder(
+            JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
     DemandRefinementPointsTo fullDemandPointsTo =
         DemandRefinementPointsTo.makeWithDefaultFlowGraph(

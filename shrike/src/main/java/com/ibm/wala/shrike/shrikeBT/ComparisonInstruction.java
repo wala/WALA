@@ -33,15 +33,15 @@ public final class ComparisonInstruction extends Instruction implements ICompari
       throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     switch (t) {
-      case TYPE_long_index:
+      case TYPE_long_index -> {
         if (operator != Operator.CMP) {
           throw new IllegalArgumentException(
               "Operator " + operator + " is not a valid comparison operator for longs");
         } else {
           return preallocatedLCMP;
         }
-      case TYPE_float_index:
-      case TYPE_double_index:
+      }
+      case TYPE_float_index, TYPE_double_index -> {
         if (operator == Operator.CMP) {
           throw new IllegalArgumentException(
               "Operator "
@@ -51,15 +51,14 @@ public final class ComparisonInstruction extends Instruction implements ICompari
           return preallocatedFloatingCompares[
               (operator.ordinal() - Operator.CMPL.ordinal()) + (t - TYPE_float_index) * 2];
         }
-      default:
-        throw new IllegalArgumentException("Type " + type + " cannot be compared");
+      }
+      default -> throw new IllegalArgumentException("Type " + type + " cannot be compared");
     }
   }
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof ComparisonInstruction) {
-      ComparisonInstruction i = (ComparisonInstruction) o;
+    if (o instanceof ComparisonInstruction i) {
       return i.opcode == opcode;
     } else {
       return false;
@@ -71,34 +70,22 @@ public final class ComparisonInstruction extends Instruction implements ICompari
    */
   @Override
   public Operator getOperator() {
-    switch (opcode) {
-      case OP_lcmp:
-        return Operator.CMP;
-      case OP_fcmpl:
-      case OP_dcmpl:
-        return Operator.CMPL;
-      case OP_dcmpg:
-      case OP_fcmpg:
-        return Operator.CMPG;
-      default:
-        throw new Error("Unknown opcode");
-    }
+    return switch (opcode) {
+      case OP_lcmp -> Operator.CMP;
+      case OP_fcmpl, OP_dcmpl -> Operator.CMPL;
+      case OP_dcmpg, OP_fcmpg -> Operator.CMPG;
+      default -> throw new Error("Unknown opcode");
+    };
   }
 
   @Override
   public String getType() {
-    switch (opcode) {
-      case OP_lcmp:
-        return TYPE_long;
-      case OP_fcmpg:
-      case OP_fcmpl:
-        return TYPE_float;
-      case OP_dcmpl:
-      case OP_dcmpg:
-        return TYPE_double;
-      default:
-        throw new Error("Unknown opcode");
-    }
+    return switch (opcode) {
+      case OP_lcmp -> TYPE_long;
+      case OP_fcmpg, OP_fcmpl -> TYPE_float;
+      case OP_dcmpl, OP_dcmpg -> TYPE_double;
+      default -> throw new Error("Unknown opcode");
+    };
   }
 
   @Override

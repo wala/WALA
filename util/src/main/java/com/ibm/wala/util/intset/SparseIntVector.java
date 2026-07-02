@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -21,7 +22,7 @@ import java.util.Arrays;
  */
 public class SparseIntVector implements IntVector, Serializable {
 
-  private static final long serialVersionUID = -2428993854689991888L;
+  @Serial private static final long serialVersionUID = -2428993854689991888L;
   private static final int INITIAL_SIZE = 5;
   private final double EXPANSION = 1.5;
   int maxIndex = -1;

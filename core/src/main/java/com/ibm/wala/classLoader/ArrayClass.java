@@ -261,8 +261,7 @@ public class ArrayClass implements IClass, Constants {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof ArrayClass) {
-      ArrayClass other = (ArrayClass) obj;
+    if (obj instanceof ArrayClass other) {
       return loader.equals(other.loader) && type.equals(other.type);
     } else {
       return false;

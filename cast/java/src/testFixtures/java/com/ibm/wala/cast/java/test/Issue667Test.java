@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -35,7 +35,7 @@ public abstract class Issue667Test extends IRTests {
             TypeReference.findOrCreate(
                 JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LDominanceFrontierCase")),
             Atom.findOrCreateUnicodeAtom("convert"),
-            Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Integer;)I"));
+            Descriptor.findOrCreateUTF8(JavaLanguage.get(), "(Ljava/lang/Integer;)I"));
     result
         .fst
         .getNodes(cm)

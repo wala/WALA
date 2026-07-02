@@ -131,7 +131,7 @@ public class IntentContextSelector implements ContextSelector {
         for (InstanceKey actualParameter : actualParameters) {
           if (actualParameter == null) {
             // do nothing
-          } else if (actualParameter.getConcreteType().getName().equals(AndroidTypes.IntentName)) {
+          } else if (actualParameter.concreteType().getName().equals(AndroidTypes.IntentName)) {
             if (!intents.contains(actualParameter)) {
               logger.error("Unable to resolve Intent called from {}", caller.getMethod());
               logger.error("Search Key: {} hash: {}", actualParameter, actualParameter.hashCode());
@@ -164,8 +164,8 @@ public class IntentContextSelector implements ContextSelector {
 
       final Intent intent;
       { // Extract target-Service as intent
-        if (param instanceof ConstantKey) {
-          final String target = (String) ((ConstantKey<?>) param).getValue();
+        if (param instanceof ConstantKey<?> constKey) {
+          final String target = (String) constKey.getValue();
           intent =
               new Intent(target) {
                 @Override
@@ -206,11 +206,11 @@ public class IntentContextSelector implements ContextSelector {
       final InstanceKey actionKey;
       { // fetch actionKey, uriKey
         switch (callee.getNumberOfParameters()) {
-          case 1:
+          case 1 -> {
             logger.debug("Handling Intent()");
             actionKey = null;
-            break;
-          case 2:
+          }
+          case 2 -> {
             if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;)V"))) {
               logger.debug("Handling Intent(String action)");
               actionKey = actualParameters[1];
@@ -229,8 +229,8 @@ public class IntentContextSelector implements ContextSelector {
               logger.error("No handling implemented for: {}", callee);
               actionKey = null;
             }
-            break;
-          case 3:
+          }
+          case 3 -> {
             if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;)V"))) {
               logger.debug("Handling Intent(String action, Uri uri)");
               // TODO: Use Information of the URI...
@@ -244,8 +244,8 @@ public class IntentContextSelector implements ContextSelector {
               logger.error("No handling implemented for: {}", callee);
               actionKey = null;
             }
-            break;
-          case 5:
+          }
+          case 5 -> {
             if (calleeSel.equals(
                 Selector.make(
                     "<init>(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V"))) {
@@ -256,10 +256,11 @@ public class IntentContextSelector implements ContextSelector {
               logger.error("No handling implemented for: {}", callee);
               actionKey = null;
             }
-            break;
-          default:
+          }
+          default -> {
             logger.error("Can't extract Info from Intent-Constructor: {} (not implemented)", site);
             actionKey = null;
+          }
         }
       } // of fetch actionKey
 
@@ -427,24 +428,26 @@ public class IntentContextSelector implements ContextSelector {
       // Intent(String action, Uri uri, Context packageContext, Class<?> cls)
 
       // Select all params;
-      switch (numArgs) {
-        case 0:
-          return EmptyIntSet.instance;
-        case 1:
-          return IntSetUtil.make(new int[] {0, 1});
-        case 2:
+      return switch (numArgs) {
+        case 0 -> EmptyIntSet.instance;
+        case 1 -> IntSetUtil.make(new int[] {0, 1});
+        case 2 -> {
           logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
-          return IntSetUtil.make(new int[] {0, 1, 2});
-        case 3:
+          yield IntSetUtil.make(new int[] {0, 1, 2});
+        }
+        case 3 -> {
           logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
-          return IntSetUtil.make(new int[] {0, 1, 2, 3});
-        case 4:
+          yield IntSetUtil.make(new int[] {0, 1, 2, 3});
+        }
+        case 4 -> {
           logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
-          return IntSetUtil.make(new int[] {0, 1, 2, 3, 4});
-        default:
+          yield IntSetUtil.make(new int[] {0, 1, 2, 3, 4});
+        }
+        default -> {
           logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
-          return IntSetUtil.make(new int[] {0, 1, 2, 3, 4, 5});
-      }
+          yield IntSetUtil.make(new int[] {0, 1, 2, 3, 4, 5});
+        }
+      };
     } else if (site.isSpecial()
         && target.getDeclaringClass().getName().equals(AndroidTypes.IntentSenderName)) {
 

@@ -65,8 +65,7 @@ public abstract class NullaryStatement<T extends IVariable<T>>
 
   @Override
   public boolean equals(Object o) {
-    if (o instanceof NullaryStatement) {
-      NullaryStatement<?> other = (NullaryStatement<?>) o;
+    if (o instanceof NullaryStatement<?> other) {
 
       if (!getOperator().equals(other.getOperator())) {
         return false;

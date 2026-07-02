@@ -142,18 +142,16 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       List<Module> modules = scope.getModules(cl);
 
       for (Module m : modules) {
-        if (buf.length() > 0) buf.append(File.pathSeparator);
-        if (m instanceof JarFileModule) {
-          JarFileModule jarFileModule = (JarFileModule) m;
+        if (!buf.isEmpty()) buf.append(File.pathSeparator);
+        if (m instanceof JarFileModule jarFileModule) {
 
           buf.append(jarFileModule.getAbsolutePath());
-        } else if (m instanceof DirectoryTreeModule) {
-          DirectoryTreeModule directoryTreeModule = (DirectoryTreeModule) m;
+        } else if (m instanceof DirectoryTreeModule directoryTreeModule) {
 
           buf.append(directoryTreeModule.getPath());
         } else Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
       }
-      cl = cl.getParent();
+      cl = cl.parent();
     }
   }
 

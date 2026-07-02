@@ -139,7 +139,7 @@ public class ClassPrinter {
           throw new Error(e.getMessage());
         }
         if ((flags & val) != 0) {
-          if (buf.length() > 0) {
+          if (!buf.isEmpty()) {
             buf.append(' ');
           }
           buf.append(name.substring(4).toLowerCase());
@@ -299,49 +299,36 @@ public class ClassPrinter {
 
   private void printAnnotations(AnnotationsReader r) throws InvalidClassFileException {
     for (AnnotationAttribute annot : r.getAllAnnotations()) {
-      w.write("    Annotation type: " + annot.type + '\n');
+      w.write("    Annotation type: " + annot.type() + '\n');
     }
   }
 
   private static String getCPItemString(ConstantPoolParser cp, int i)
       throws InvalidClassFileException {
     int t = cp.getItemType(i);
-    switch (t) {
-      case ClassConstants.CONSTANT_Utf8:
-        return "Utf8 " + quoteString(cp.getCPUtf8(i));
-      case ClassConstants.CONSTANT_Class:
-        return "Class " + cp.getCPClass(i);
-      case ClassConstants.CONSTANT_String:
-        return "String " + quoteString(cp.getCPString(i));
-      case ClassConstants.CONSTANT_Integer:
-        return "Integer " + cp.getCPInt(i);
-      case ClassConstants.CONSTANT_Float:
-        return "Float " + cp.getCPFloat(i);
-      case ClassConstants.CONSTANT_Double:
-        return "Double " + cp.getCPDouble(i);
-      case ClassConstants.CONSTANT_Long:
-        return "Long " + cp.getCPLong(i);
-      case ClassConstants.CONSTANT_MethodRef:
-        return "Method "
-            + cp.getCPRefClass(i)
-            + ' '
-            + cp.getCPRefName(i)
-            + ' '
-            + cp.getCPRefType(i);
-      case ClassConstants.CONSTANT_FieldRef:
-        return "Field " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
-      case ClassConstants.CONSTANT_InterfaceMethodRef:
-        return "InterfaceMethod "
-            + cp.getCPRefClass(i)
-            + ' '
-            + cp.getCPRefName(i)
-            + ' '
-            + cp.getCPRefType(i);
-      case ClassConstants.CONSTANT_NameAndType:
-        return "NameAndType " + cp.getCPNATType(i) + ' ' + cp.getCPNATName(i);
-      default:
-        return "Unknown type " + t;
-    }
+    return switch (t) {
+      case ClassConstants.CONSTANT_Utf8 -> "Utf8 " + quoteString(cp.getCPUtf8(i));
+      case ClassConstants.CONSTANT_Class -> "Class " + cp.getCPClass(i);
+      case ClassConstants.CONSTANT_String -> "String " + quoteString(cp.getCPString(i));
+      case ClassConstants.CONSTANT_Integer -> "Integer " + cp.getCPInt(i);
+      case ClassConstants.CONSTANT_Float -> "Float " + cp.getCPFloat(i);
+      case ClassConstants.CONSTANT_Double -> "Double " + cp.getCPDouble(i);
+      case ClassConstants.CONSTANT_Long -> "Long " + cp.getCPLong(i);
+      case ClassConstants.CONSTANT_MethodRef ->
+          "Method " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
+      case ClassConstants.CONSTANT_FieldRef ->
+          "Field " + cp.getCPRefClass(i) + ' ' + cp.getCPRefName(i) + ' ' + cp.getCPRefType(i);
+      case ClassConstants.CONSTANT_InterfaceMethodRef ->
+          "InterfaceMethod "
+              + cp.getCPRefClass(i)
+              + ' '
+              + cp.getCPRefName(i)
+              + ' '
+              + cp.getCPRefType(i);
+      case ClassConstants.CONSTANT_NameAndType ->
+          "NameAndType " + cp.getCPNATType(i) + ' ' + cp.getCPNATName(i);
+      default -> "Unknown type " + t;
+    };
   }
 
   private static String quoteString(String string) {
@@ -350,22 +337,12 @@ public class ClassPrinter {
     for (int i = 0; i < string.length(); i++) {
       char ch = string.charAt(i);
       switch (ch) {
-        case '\r':
-          buf.append("\\r");
-          break;
-        case '\n':
-          buf.append("\\n");
-          break;
-        case '\\':
-          buf.append("\\\\");
-          break;
-        case '\t':
-          buf.append("\\t");
-          break;
-        case '\"':
-          buf.append("\\\"");
-          break;
-        default:
+        case '\r' -> buf.append("\\r");
+        case '\n' -> buf.append("\\n");
+        case '\\' -> buf.append("\\\\");
+        case '\t' -> buf.append("\\t");
+        case '\"' -> buf.append("\\\"");
+        default -> {
           if (ch >= 32 && ch <= 127) {
             buf.append(ch);
           } else {
@@ -374,6 +351,7 @@ public class ClassPrinter {
             buf.append("0".repeat(4 - h.length()));
             buf.append(h);
           }
+        }
       }
     }
     buf.append('"');

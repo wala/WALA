@@ -35,15 +35,13 @@ public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
       SSAInstruction def2,
       SymbolTable symbolTable) {
     final List<Pair<Integer, SSAInstruction>> pis = this.getPis(cond, def1, def2, symbolTable);
-    switch (pis.size()) {
-      case 0:
-        return null;
-      case 1:
-        return pis.get(0);
-      default:
-        throw new IllegalArgumentException(
-            "getPi was called but pi nodes should be inserted for more than one variable. Use getPis instead.");
-    }
+    return switch (pis.size()) {
+      case 0 -> null;
+      case 1 -> pis.get(0);
+      default ->
+          throw new IllegalArgumentException(
+              "getPi was called but pi nodes should be inserted for more than one variable. Use getPis instead.");
+    };
   }
 
   @Override

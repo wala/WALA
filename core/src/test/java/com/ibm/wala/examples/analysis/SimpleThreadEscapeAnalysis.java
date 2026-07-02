@@ -17,7 +17,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -90,7 +90,7 @@ public class SimpleThreadEscapeAnalysis
   @Override
   protected CallGraphBuilder<InstanceKey> getCallGraphBuilder(
       IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
-    return Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+    return Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
   }
 
   /**
@@ -260,7 +260,7 @@ public class SimpleThreadEscapeAnalysis
     do {
       newKeys.clear();
       for (InstanceKey key : escapingInstanceKeys) {
-        IClass type = key.getConcreteType();
+        IClass type = key.concreteType();
         if (type.isReferenceType()) {
           if (type.isArrayClass()) {
             if (((ArrayClass) type).getElementClass() != null) {
@@ -296,7 +296,7 @@ public class SimpleThreadEscapeAnalysis
     //
     Set<IClass> escapingTypes = HashSetFactory.make();
     for (InstanceKey key : escapingInstanceKeys) {
-      escapingTypes.add(key.getConcreteType());
+      escapingTypes.add(key.concreteType());
     }
 
     return escapingTypes;

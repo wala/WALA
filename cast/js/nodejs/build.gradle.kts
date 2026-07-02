@@ -3,6 +3,7 @@ import com.ibm.wala.gradle.adHocDownload
 plugins { id("com.ibm.wala.gradle.java") }
 
 dependencies {
+  api(libs.jspecify)
   api(projects.cast.js) {
     because("public class NodejsCallGraphBuilderUtil extends class JSCallGraphUtil")
   }
@@ -21,6 +22,7 @@ val downloadNodeJS =
 
 val unpackNodeJSLib =
     tasks.register<Sync>("unpackNodeJSLib") {
+      description = "Unpack Node.js library files"
       from({ tarTree(downloadNodeJS.singleFile) }) {
         include("*/lib/*.js")
         eachFile { path = name }

@@ -11,6 +11,7 @@
 package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.util.CancelException;
+import java.io.Serial;
 
 /**
  * A {@link CancelException} thrown during tabulation; holds a pointer to a partial {@link
@@ -19,7 +20,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class TabulationCancelException extends CancelException {
 
-  private static final long serialVersionUID = 4073189707860241945L;
+  @Serial private static final long serialVersionUID = 4073189707860241945L;
   private final TabulationSolver<?, ?, ?>.Result result;
 
   protected TabulationCancelException(Exception cause, TabulationSolver<?, ?, ?>.Result r) {
