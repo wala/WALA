@@ -16,26 +16,31 @@ import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 
 /** Creates the single {@link IClassLoader class loader} used for JavaScript. */
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
   protected final JavaScriptTranslatorFactory translatorFactory;
   protected final CAstRewriterFactory<?, ?> preprocessor;
+  protected SSAOptions ssaOptions;
 
-  public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory) {
-    this(factory, null);
+  public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory, SSAOptions ssaOptions) {
+    this(factory, ssaOptions, null);
   }
 
   public JavaScriptLoaderFactory(
-      JavaScriptTranslatorFactory factory, CAstRewriterFactory<?, ?> preprocessor) {
+      JavaScriptTranslatorFactory factory,
+      SSAOptions ssaOptions,
+      CAstRewriterFactory<?, ?> preprocessor) {
     this.translatorFactory = factory;
     this.preprocessor = preprocessor;
+    this.ssaOptions = ssaOptions;
   }
 
   @Override
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
-    return new JavaScriptLoader(cha, translatorFactory, preprocessor);
+    return new JavaScriptLoader(cha, ssaOptions, translatorFactory, preprocessor);
   }
 
   @Override

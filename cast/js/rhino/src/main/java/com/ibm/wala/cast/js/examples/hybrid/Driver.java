@@ -42,7 +42,9 @@ public class Driver {
     methodTargetSelectors.put(
         JavaScriptLoader.JS.getName(),
         new JavaScriptConstructTargetSelector(
-            cha, new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector())));
+            cha,
+            new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()),
+            options.getSSAOptions()));
     methodTargetSelectors.put(JavaLanguage.get().getName(), options.getMethodTargetSelector());
 
     options.setSelector(new CrossLanguageMethodTargetSelector(methodTargetSelectors));
