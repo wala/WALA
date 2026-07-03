@@ -344,9 +344,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       // single closure object is known statically) and its points-to set is implicitly
       // represented, so registering a side effect is both unnecessary and disallowed. See
       // https://github.com/wala/WALA/issues/1990.
-      SymbolTable symtab = node.getIR().getSymbolTable();
-      DefUse du = getBuilder().getCFAContextInterpreter().getDU(node);
-      if (!contentsAreInvariant(symtab, du, 1)) {
+      if (!contentsAreInvariant(ir.getSymbolTable(), du, 1)) {
         system.newSideEffect(op, getPointerKeyForLocal(1));
       }
     }
