@@ -251,6 +251,28 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "recursive_lexical.js");
   }
 
+  private static final List<GraphAssertion> assertionsForClosuresSharedNode =
+      List.of(
+          new GraphAssertion("suffix:step", new String[] {"suffix:early"}),
+          new GraphAssertion("suffix:step", new String[] {"suffix:late"}));
+
+  /**
+   * Two closures of {@code step} whose captured {@code target}s differ must both wire their
+   * environments even when the second closure reaches the (shared) call graph node after its
+   * constraints were first generated; see https://github.com/wala/WALA/issues/1990.
+   */
+  @Test
+  public void testClosuresSharedNode()
+      throws IOException, IllegalArgumentException, CancelException, WalaException {
+    CallGraph CG =
+        JSCallGraphBuilderUtil.makeScriptCG(
+            "tests",
+            "closures_shared_node.js",
+            JSCallGraphBuilderUtil.CGBuilderType.ONE_CFA,
+            getClass().getClassLoader());
+    verifyGraphAssertions(CG, assertionsForClosuresSharedNode);
+  }
+
   private static final List<GraphAssertion> assertionsForLexicalMultiple =
       List.of(
           new GraphAssertion(ROOT, new String[] {"lexical_multiple_calls.js"}),
