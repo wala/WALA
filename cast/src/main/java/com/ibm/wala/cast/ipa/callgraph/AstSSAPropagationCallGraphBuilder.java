@@ -340,8 +340,15 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       // node (e.g. under call-string context truncation), a closure arriving after the initial
       // resolution would otherwise never get its frame wired. The operator's constraint additions
       // are idempotent, and its equals()/hashCode() let the fixpoint system de-duplicate
-      // registrations. See https://github.com/wala/WALA/issues/1990.
-      system.newSideEffect(op, getPointerKeyForLocal(1));
+      // registrations. When v1's contents are invariant, the snapshot is already complete (the
+      // single closure object is known statically) and its points-to set is implicitly
+      // represented, so registering a side effect is both unnecessary and disallowed. See
+      // https://github.com/wala/WALA/issues/1990.
+      SymbolTable symtab = node.getIR().getSymbolTable();
+      DefUse du = getBuilder().getCFAContextInterpreter().getDU(node);
+      if (!contentsAreInvariant(symtab, du, 1)) {
+        system.newSideEffect(op, getPointerKeyForLocal(1));
+      }
     }
 
     @Override
