@@ -116,10 +116,13 @@ public class NodeImplToStringTest {
         Proxy.newProxyInstance(
             NodeImplToStringTest.class.getClassLoader(),
             new Class<?>[] {IMethod.class},
-            (proxy, m, args) -> {
-              if (m.getName().equals("toString")) return "fakeMethod()";
-              return defaultValue(m.getReturnType());
-            });
+            (proxy, m, args) ->
+                switch (m.getName()) {
+                  case "toString" -> "fakeMethod()";
+                  case "equals" -> proxy == args[0];
+                  case "hashCode" -> System.identityHashCode(proxy);
+                  default -> defaultValue(m.getReturnType());
+                });
   }
 
   /**
@@ -139,17 +142,25 @@ public class NodeImplToStringTest {
                   case "getMethod" -> fakeMethod();
                   case "getGraphNodeId" -> 0;
                   case "equals" -> proxy == args[0];
-                  case "hashCode" -> 0;
+                  case "hashCode" -> System.identityHashCode(proxy);
                   default -> defaultValue(m.getReturnType());
                 });
   }
 
   /**
-   * Returns a type-appropriate default for an unstubbed proxy method: {@code false}, 0, or null.
+   * Returns a type-appropriate default for an unstubbed proxy method: the zero value for any
+   * primitive return type (so the proxy never returns {@code null} where unboxing is expected), and
+   * {@code null} for reference and {@code void} returns.
    */
   private static Object defaultValue(Class<?> returnType) {
     if (returnType == boolean.class) return false;
+    if (returnType == char.class) return '\0';
+    if (returnType == byte.class) return (byte) 0;
+    if (returnType == short.class) return (short) 0;
     if (returnType == int.class) return 0;
+    if (returnType == long.class) return 0L;
+    if (returnType == float.class) return 0f;
+    if (returnType == double.class) return 0d;
     return null;
   }
 }
