@@ -37,6 +37,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.graph.traverse.DFS;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -188,11 +189,29 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     public abstract int hashCode();
 
     /**
+     * Tracks the nodes whose {@link #toString()} is in progress on the current thread. Cyclic
+     * context structures (e.g. a closure whose context transitively references this same node) would
+     * otherwise cause {@code toString()} to recurse without bound and exhaust the heap. See <a
+     * href="https://github.com/wala/WALA/issues/1992">issue #1992</a>.
+     */
+    private static final ThreadLocal<Set<CGNode>> renderingInProgress =
+        ThreadLocal.withInitial(() -> Collections.newSetFromMap(new IdentityHashMap<>()));
+
+    /**
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-      return "Node: " + method.toString() + " Context: " + context.toString();
+      Set<CGNode> inProgress = renderingInProgress.get();
+      if (!inProgress.add(this)) {
+        // Re-entered while already rendering this node: break the cycle with a shallow render.
+        return "Node: " + method.toString() + " Context: ...";
+      }
+      try {
+        return "Node: " + method.toString() + " Context: " + context.toString();
+      } finally {
+        inProgress.remove(this);
+      }
     }
 
     @Override
