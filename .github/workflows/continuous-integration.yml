@@ -78,7 +78,7 @@ jobs:
         run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         if: github.repository == 'wala/WALA'
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           files: ./code-coverage-report/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
           token: ${{ secrets.WALA_MAIN_CODECOV_TOKEN }}

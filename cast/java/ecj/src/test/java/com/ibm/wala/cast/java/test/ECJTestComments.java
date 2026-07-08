@@ -5,7 +5,7 @@ import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.util.strings.Atom;
@@ -35,7 +35,7 @@ public class ECJTestComments extends IRTests {
   protected AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, ?> getAnalysisEngine(
       final String[] mainClassDescriptors, Collection<Path> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine =
-        new ECJJavaSourceAnalysisEngine() {
+        new ECJJavaSourceAnalysisEngine(getSSAOptions()) {
           @Override
           protected Iterable<Entrypoint> makeDefaultEntrypoints(IClassHierarchy cha) {
             return Util.makeMainEntrypoints(
@@ -52,7 +52,7 @@ public class ECJTestComments extends IRTests {
           TypeReference.findOrCreate(
               JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LComments")),
           Atom.findOrCreateUnicodeAtom("main"),
-          Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/String;)V"));
+          Descriptor.findOrCreateUTF8(JavaLanguage.get(), "([Ljava/lang/String;)V"));
 
   @Test
   public void testComments() throws IllegalArgumentException, CancelException, IOException {

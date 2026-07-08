@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.types;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
 
@@ -21,7 +22,7 @@ import com.ibm.wala.core.util.strings.Atom;
 public record Selector(Atom name, Descriptor descriptor) {
 
   public static Selector make(String selectorStr) {
-    return make(Language.JAVA, selectorStr);
+    return make(JavaLanguage.get(), selectorStr);
   }
 
   public static Selector make(Language l, String selectorStr) {

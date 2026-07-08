@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.callgraph.cha;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -318,7 +318,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
    */
   private AbstractRootMethod getOrCreateFakeRootMethod() {
     if (fakeRootMethod == null) {
-      fakeRootMethod = Language.JAVA.getFakeRootMethod(cha, cache);
+      fakeRootMethod = JavaLanguage.get().getFakeRootMethod(cha, cache);
     }
     return fakeRootMethod;
   }

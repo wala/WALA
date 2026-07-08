@@ -30,6 +30,7 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
 
     JSCFABuilder builder =
         makeCGBuilder(
-            new WebPageLoaderFactory(translatorFactory),
+            new WebPageLoaderFactory(translatorFactory, SSAOptions.defaultOptions()),
             sources,
             CGBuilderType.ZERO_ONE_CFA,
             AstIRFactory.makeDefaultFactory());

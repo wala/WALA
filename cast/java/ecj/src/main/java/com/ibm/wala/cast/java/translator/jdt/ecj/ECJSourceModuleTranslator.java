@@ -52,6 +52,7 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.java11.JrtModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.StringFilter;
@@ -191,14 +192,17 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   private final ImmutableList<String> libs;
   private final boolean includeRunningVMBootclasspath;
   private final StringFilter exclusions;
+  private final SSAOptions ssaOptions;
 
-  public ECJSourceModuleTranslator(AnalysisScope scope, ECJSourceLoaderImpl sourceLoader) {
-    this(scope, sourceLoader, false);
+  public ECJSourceModuleTranslator(
+      AnalysisScope scope, SSAOptions options, ECJSourceLoaderImpl sourceLoader) {
+    this(scope, options, sourceLoader, false);
   }
 
   public ECJSourceModuleTranslator(
-      AnalysisScope scope, ECJSourceLoaderImpl sourceLoader, boolean dump) {
+      AnalysisScope scope, SSAOptions ssaOptions, ECJSourceLoaderImpl sourceLoader, boolean dump) {
     this.sourceLoader = sourceLoader;
+    this.ssaOptions = ssaOptions;
     this.dump = dump;
 
     ClassPath paths = computeClassPath(scope);
@@ -280,7 +284,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   protected Java2IRTranslator makeIRTranslator() {
-    return new Java2IRTranslator(sourceLoader, exclusions);
+    return new Java2IRTranslator(sourceLoader, ssaOptions, exclusions);
   }
 
   protected JDTJava2CAstTranslator<Position> makeCAstTranslator(

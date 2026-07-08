@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
@@ -21,7 +21,7 @@ public class AstJavaCFABuilder extends AstJavaSSAPropagationCallGraphBuilder {
 
   public AstJavaCFABuilder(IClassHierarchy cha, AnalysisOptions options, IAnalysisCacheView cache) {
     super(
-        Language.JAVA.getFakeRootMethod(cha, cache),
+        JavaLanguage.get().getFakeRootMethod(cha, cache),
         options,
         cache,
         new DefaultPointerKeyFactory());

@@ -72,6 +72,25 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   /** Set of TypeReferences that are marked as "allocatable" */
   private final HashSet<TypeReference> allocatable = HashSetFactory.make();
 
+  /**
+   * Set of TypeReferences for classes declared via a {@code <class>} element. These are the classes
+   * the summary <em>models</em> (as opposed to the classes whose methods it merely overrides).
+   */
+  private final Set<TypeReference> classes = HashSetFactory.make();
+
+  /**
+   * Maps a class declared via {@code <class name="..." super="...">} to its declared superclass.
+   * Only classes that declare a {@code super} appear here: declaring a superclass opts the class in
+   * to being materialized as a standalone class shell, positioned in the hierarchy at the given
+   * superclass. A front-end (or {@link com.ibm.wala.ipa.callgraph.impl.Util#addSummaryClassShells})
+   * may register these shells into the corresponding scope loader before the {@link
+   * com.ibm.wala.ipa.cha.IClassHierarchy} is built, so that source classes subclassing a
+   * summary-modeled type can resolve their base at definition time (see <a
+   * href="https://github.com/wala/WALA/issues/1957">#1957</a>). Classes declared without a {@code
+   * super} stay method-summary-only, exactly as before.
+   */
+  private final Map<TypeReference, TypeReference> classSuperclasses = HashMapFactory.make();
+
   /** Set of Atoms that represent packages that can be ignored */
   private final HashSet<Atom> ignoredPackages = HashSetFactory.make();
 
@@ -164,6 +183,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private static final String A_ALLOCATABLE = "allocatable";
 
+  private static final String A_SUPER = "super";
+
   private static final String A_REF = "ref";
 
   private static final String A_INDEX = "index";
@@ -223,6 +244,27 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
    */
   public Set<TypeReference> getAllocatableClasses() {
     return allocatable;
+  }
+
+  /**
+   * @return Set of TypeReferences for classes declared via a {@code <class>} element, i.e. the
+   *     classes this summary models. The declaring class loader of each {@link TypeReference} is
+   *     the one named by the enclosing {@code <classloader>} element.
+   */
+  public Set<TypeReference> getClasses() {
+    return classes;
+  }
+
+  /**
+   * @return a map from each class declared via {@code <class name="..." super="...">} to its
+   *     declared superclass. Declaring a {@code super} opts the class in to being materialized as a
+   *     standalone class shell, positioned at that superclass; classes declared without a {@code
+   *     super} are method-summary-only and do not appear here. See {@link
+   *     com.ibm.wala.ipa.callgraph.impl.Util#addSummaryClassShells} and <a
+   *     href="https://github.com/wala/WALA/issues/1957">#1957</a>.
+   */
+  public Map<TypeReference, TypeReference> getClassSuperclasses() {
+    return classSuperclasses;
   }
 
   /**
@@ -312,6 +354,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     private void startClass(String cname, Attributes atts) {
       String clName = governingPackage == null ? 'L' + cname : "L" + governingPackage + '/' + cname;
       governingClass = className2Ref(clName);
+      classes.add(governingClass);
+      String superString = atts.getValue(A_SUPER);
+      if (superString != null) {
+        classSuperclasses.put(governingClass, className2Ref(superString));
+      }
       String allocString = atts.getValue(A_ALLOCATABLE);
       if (allocString != null) {
         Assertions.productionAssertion(allocString.equals("true"));
@@ -909,7 +956,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       Map<Integer, @NonNull Atom> nameTable = HashMapFactory.make();
       for (Map.Entry<String, Integer> x : symbolTable.entrySet()) {
-        if (!x.getKey().startsWith("arg")) {
+        // Skip only the synthetic positional symbols ("arg0", "arg1", ...) seeded above, not
+        // legitimate parameter names that merely begin with "arg" (e.g. "args", "argv"). The old
+        // startsWith("arg") test discarded the latter, leaving such parameters unnamed so that
+        // keyword arguments could not bind to them by name.
+        if (!x.getKey().matches("arg\\d+")) {
           nameTable.put(x.getValue(), Atom.findOrCreateUnicodeAtom(x.getKey()));
         }
       }

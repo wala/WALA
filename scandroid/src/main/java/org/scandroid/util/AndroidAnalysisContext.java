@@ -41,7 +41,7 @@ package org.scandroid.util;
 
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.warnings.Warnings;
@@ -139,7 +139,7 @@ public class AndroidAnalysisContext {
     addBypassLogic(options, scope, summariesStream, cha, extraSummary);
 
     return ZeroXCFABuilder.make(
-        Language.JAVA,
+        JavaLanguage.get(),
         cha,
         options,
         cache,
@@ -177,7 +177,7 @@ public class AndroidAnalysisContext {
     }
 
     return ZeroXCFABuilder.make(
-        Language.JAVA,
+        JavaLanguage.get(),
         cha,
         options,
         cache,

@@ -10,7 +10,7 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
@@ -40,7 +40,7 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
       int instancePolicy) {
 
     super(
-        Language.JAVA,
+        JavaLanguage.get(),
         cha,
         options,
         cache,

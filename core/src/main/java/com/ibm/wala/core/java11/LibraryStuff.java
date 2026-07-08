@@ -2,7 +2,7 @@ package com.ibm.wala.core.java11;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisCacheImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -47,7 +47,7 @@ public class LibraryStuff {
       IAnalysisCacheView cache = new AnalysisCacheImpl();
 
       SSAPropagationCallGraphBuilder builder =
-          Util.makeZeroCFABuilder(Language.JAVA, options, cache, cha);
+          Util.makeZeroCFABuilder(JavaLanguage.get(), options, cache, cha);
       CallGraph cg = builder.makeCallGraph(options, new NullProgressMonitor());
 
       System.err.println(cg);

@@ -332,13 +332,21 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           .getPointerKeysForReflectedFieldWrite(I, F);
     }
 
-    private static void visitLexical(final LexicalOperator op) {
+    private void visitLexical(final LexicalOperator op) {
       op.doLexicalPointerKeys();
-      // I have no idea what the code below does, but commenting it out doesn't
-      // break any regression tests. --MS
-      // if (! checkLexicalInstruction(instruction)) {
-      // system.newSideEffect(op, getPointerKeyForLocal(1));
-      // }
+      // Re-resolve the lexical access whenever a new closure function object reaches this node's
+      // function value (v1): doLexicalPointerKeys() finds the access's defining frames from the
+      // current points-to set of v1, so when distinct closures of the same function share this
+      // node (e.g. under call-string context truncation), a closure arriving after the initial
+      // resolution would otherwise never get its frame wired. The operator's constraint additions
+      // are idempotent, and its equals()/hashCode() let the fixpoint system de-duplicate
+      // registrations. When v1's contents are invariant, the snapshot is already complete (the
+      // single closure object is known statically) and its points-to set is implicitly
+      // represented, so registering a side effect is both unnecessary and disallowed. See
+      // https://github.com/wala/WALA/issues/1990.
+      if (!contentsAreInvariant(ir.getSymbolTable(), du, 1)) {
+        system.newSideEffect(op, getPointerKeyForLocal(1));
+      }
     }
 
     @Override

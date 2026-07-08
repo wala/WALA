@@ -16,8 +16,9 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.Map;
@@ -117,7 +118,7 @@ public final class Debug {
   }
 
   public static void logTime() {
-    Date date = new Date();
+    LocalDate date = LocalDate.now(ZoneId.systemDefault());
     log(LogLevel.INFO, "Current time: " + date + '\n');
   }
 

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
@@ -54,7 +54,7 @@ public class MultiNewArrayTest extends WalaTestCase {
             TypeReference.findOrCreate(
                 ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
     assertThat(klass).isNotNull();
-    IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
+    IMethod m = klass.getMethod(Selector.make(JavaLanguage.get(), "testNewMultiArray()V"));
     assertThat(m).isNotNull();
     IAnalysisCacheView cache = new AnalysisCacheImpl();
     IR ir = cache.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());

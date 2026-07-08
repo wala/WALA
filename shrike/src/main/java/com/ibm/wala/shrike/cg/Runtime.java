@@ -83,7 +83,10 @@ public class Runtime {
 
     try {
       handleCallback =
-          (Policy) Class.forName(policyClassName).getDeclaredConstructor().newInstance();
+          Class.forName(policyClassName)
+              .asSubclass(Policy.class)
+              .getDeclaredConstructor()
+              .newInstance();
     } catch (InstantiationException
         | IllegalAccessException
         | ClassNotFoundException

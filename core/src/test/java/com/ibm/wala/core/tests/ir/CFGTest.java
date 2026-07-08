@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThatObject;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.core.util.strings.StringStuff;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -58,7 +58,7 @@ public abstract class CFGTest extends WalaTestCase {
   /** Build an IR, then check integrity on two flavors of CFG */
   private void doMethod(String methodSig) {
     try {
-      MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, methodSig);
+      MethodReference mr = StringStuff.makeMethodReference(JavaLanguage.get(), methodSig);
 
       IMethod m = cha.resolveMethod(mr);
       if (m == null) {

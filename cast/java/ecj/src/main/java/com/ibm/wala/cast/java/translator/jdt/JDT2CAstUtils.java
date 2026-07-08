@@ -45,7 +45,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -176,7 +175,8 @@ public class JDT2CAstUtils {
     return null;
   }
 
-  private static final Map<ITypeBinding, @NonNull Integer> ids = new IdentityHashMap<>();
+  private static final IdentityHashMap<ITypeBinding, @NonNull Integer> ids =
+      new IdentityHashMap<>();
 
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();

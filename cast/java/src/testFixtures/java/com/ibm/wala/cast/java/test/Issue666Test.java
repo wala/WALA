@@ -3,7 +3,7 @@ package com.ibm.wala.cast.java.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.types.Descriptor;
@@ -35,7 +35,7 @@ public abstract class Issue666Test extends IRTests {
             TypeReference.findOrCreate(
                 JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LPeekErrorCase")),
             Atom.findOrCreateUnicodeAtom("start"),
-            Descriptor.findOrCreateUTF8(Language.JAVA, "()V"));
+            Descriptor.findOrCreateUTF8(JavaLanguage.get(), "()V"));
 
     assertThat(cm).isNotNull();
   }

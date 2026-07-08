@@ -798,6 +798,21 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     JavaPrimitiveType.init();
   }
 
+  /**
+   * Initialization-on-demand holder idiom for lazy, thread-safe singleton initialization.
+   *
+   * <p>The JVM serializes class loading, so {@link Holder} is not loaded until {@link #get()} is
+   * first called, and {@link #INSTANCE} is safely published with no runtime synchronization.
+   */
+  private static class Holder {
+    static final JavaLanguage INSTANCE = new JavaLanguage();
+  }
+
+  /** The canonical {@link Language} implementation for Java */
+  public static JavaLanguage get() {
+    return Holder.INSTANCE;
+  }
+
   @Override
   @SuppressWarnings("static-access")
   public PrimitiveType getPrimitive(TypeReference reference) {

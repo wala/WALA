@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -112,7 +112,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     if (key instanceof InstanceFieldKey ifk) {
       if (ifk.getInstanceKey() instanceof ConstantKey<?> i) {
         if (i.getValue() instanceof String
-            && i.concreteType().getClassLoader().getLanguage().equals(Language.JAVA)) {
+            && i.concreteType().getClassLoader().getLanguage().equals(JavaLanguage.get())) {
           StringConstantCharArray contents = StringConstantCharArray.make((ConstantKey<String>) i);
           instanceKeys.add(contents);
           final Collection<InstanceKey> singleton = HashSetFactory.of(contents);
