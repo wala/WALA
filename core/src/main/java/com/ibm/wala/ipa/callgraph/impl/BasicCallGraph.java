@@ -194,7 +194,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
      * would otherwise cause {@code toString()} to recurse without bound and exhaust the heap. See
      * <a href="https://github.com/wala/WALA/issues/1992">issue #1992</a>.
      */
-    private static final ThreadLocal<Set<CGNode>> renderingInProgress =
+    private static final ThreadLocal<Set<CGNode>> RENDERING_IN_PROGRESS =
         ThreadLocal.withInitial(() -> Collections.newSetFromMap(new IdentityHashMap<>()));
 
     /**
@@ -202,7 +202,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
      */
     @Override
     public String toString() {
-      Set<CGNode> inProgress = renderingInProgress.get();
+      Set<CGNode> inProgress = RENDERING_IN_PROGRESS.get();
       if (!inProgress.add(this)) {
         // Re-entered while already rendering this node: break the cycle with a shallow render.
         return "Node: " + method.toString() + " Context: ...";

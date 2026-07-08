@@ -107,6 +107,10 @@ public class NodeImplToStringTest {
         "render should be bounded, was " + rendered.length() + " chars");
   }
 
+  /**
+   * A stub {@link IMethod} that renders as {@code fakeMethod()} and returns default values for
+   * every other call, enough to stand in for the method of a {@link BasicCallGraph.NodeImpl}.
+   */
   private static IMethod fakeMethod() {
     return (IMethod)
         Proxy.newProxyInstance(
@@ -118,6 +122,12 @@ public class NodeImplToStringTest {
             });
   }
 
+  /**
+   * A stub {@link CGNode} whose {@code toString()} delegates to {@code holder[0]}, the node under
+   * test. Used as the caller of the node's {@link CallerContext} so that rendering the node's
+   * context loops back to the node itself, closing the cycle. The back-edge is resolved through
+   * {@code holder} because the node does not yet exist when its (final) context is constructed.
+   */
   private static CGNode fakeCaller(CGNode[] holder) {
     return (CGNode)
         Proxy.newProxyInstance(
@@ -134,6 +144,9 @@ public class NodeImplToStringTest {
                 });
   }
 
+  /**
+   * Returns a type-appropriate default for an unstubbed proxy method: {@code false}, 0, or null.
+   */
   private static Object defaultValue(Class<?> returnType) {
     if (returnType == boolean.class) return false;
     if (returnType == int.class) return 0;
