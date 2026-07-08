@@ -190,9 +190,9 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
 
     /**
      * Tracks the nodes whose {@link #toString()} is in progress on the current thread. Cyclic
-     * context structures (e.g. a closure whose context transitively references this same node) would
-     * otherwise cause {@code toString()} to recurse without bound and exhaust the heap. See <a
-     * href="https://github.com/wala/WALA/issues/1992">issue #1992</a>.
+     * context structures (e.g. a closure whose context transitively references this same node)
+     * would otherwise cause {@code toString()} to recurse without bound and exhaust the heap. See
+     * <a href="https://github.com/wala/WALA/issues/1992">issue #1992</a>.
      */
     private static final ThreadLocal<Set<CGNode>> renderingInProgress =
         ThreadLocal.withInitial(() -> Collections.newSetFromMap(new IdentityHashMap<>()));
