@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import com.google.common.collect.Sets;
 import com.ibm.wala.analysis.reflection.JavaTypeContext;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -37,7 +38,6 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.graph.traverse.DFS;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -195,7 +195,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
      * <a href="https://github.com/wala/WALA/issues/1992">issue #1992</a>.
      */
     private static final ThreadLocal<Set<CGNode>> RENDERING_IN_PROGRESS =
-        ThreadLocal.withInitial(() -> Collections.newSetFromMap(new IdentityHashMap<>()));
+        ThreadLocal.withInitial(Sets::newIdentityHashSet);
 
     /**
      * @see java.lang.Object#toString()
@@ -205,10 +205,10 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       Set<CGNode> inProgress = RENDERING_IN_PROGRESS.get();
       if (!inProgress.add(this)) {
         // Re-entered while already rendering this node: break the cycle with a shallow render.
-        return "Node: " + method.toString() + " Context: ...";
+        return "Node: " + method + " Context: ...";
       }
       try {
-        return "Node: " + method.toString() + " Context: " + context.toString();
+        return "Node: " + method + " Context: " + context;
       } finally {
         inProgress.remove(this);
       }
