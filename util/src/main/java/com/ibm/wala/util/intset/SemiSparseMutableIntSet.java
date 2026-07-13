@@ -227,17 +227,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
 
         assert assertDisjoint()
-            : this
-                + ", densePart.length()="
-                + densePart.length()
-                + ", newOffset="
-                + newOffset
-                + ", newLength="
-                + newLength
-                + ", newCount="
-                + newCount
-                + ", moveCount="
-                + moveCount;
+            : "%s, densePart.length()=%d, newOffset=%d, newLength=%d, newCount=%d, moveCount=%d"
+                .formatted(this, densePart.length(), newOffset, newLength, newCount, moveCount);
       }
     }
   }

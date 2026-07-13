@@ -37,8 +37,7 @@ public class TryWithResourcesStatement {
         float price = rs.getFloat("PRICE");
         int sales = rs.getInt("SALES");
         int total = rs.getInt("TOTAL");
-        System.out.println(
-            coffeeName + ", " + supplierID + ", " + price + ", " + sales + ", " + total);
+        System.out.printf("%s, %d, %s, %d, %d%n", coffeeName, supplierID, price, sales, total);
       }
 
       rs.close();

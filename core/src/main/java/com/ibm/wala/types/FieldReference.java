@@ -85,15 +85,12 @@ public final class FieldReference extends MemberReference {
 
   @Override
   public String toString() {
-    return "< "
-        + getDeclaringClass().getClassLoader().name()
-        + ", "
-        + getDeclaringClass().getName()
-        + ", "
-        + getName()
-        + ", "
-        + fieldType
-        + " >";
+    return "< %s, %s, %s, %s >"
+        .formatted(
+            getDeclaringClass().getClassLoader().name(),
+            getDeclaringClass().getName(),
+            getName(),
+            fieldType);
   }
 
   /** An identifier/selector for fields. */

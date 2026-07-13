@@ -69,15 +69,8 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
   public int size() {
     if (primaryImpl.size() != secondaryImpl.size()) {
       assert primaryImpl.size() == secondaryImpl.size()
-          : "size "
-              + primaryImpl.size()
-              + " of "
-              + primaryImpl
-              + " differs from "
-              + "size "
-              + secondaryImpl.size()
-              + " of "
-              + secondaryImpl;
+          : "size %d of %s differs from size %d of %s"
+              .formatted(primaryImpl.size(), primaryImpl, secondaryImpl.size(), secondaryImpl);
     }
 
     return primaryImpl.size();
@@ -101,18 +94,8 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
 
     if (pr != sr) {
       assert pr == sr
-          : "adding "
-              + i
-              + " to "
-              + primaryImpl
-              + " returns "
-              + pr
-              + ", but adding "
-              + i
-              + " to "
-              + secondaryImpl
-              + " returns "
-              + sr;
+          : "adding %d to %s returns %s, but adding %d to %s returns %s"
+              .formatted(i, primaryImpl, pr, i, secondaryImpl, sr);
     }
 
     return pr;
@@ -242,16 +225,9 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
       boolean ssr = secondaryImpl.addAll(db.secondaryImpl);
 
       if (ppr != ssr) {
-        System.err.println(
-            "ppr was "
-                + ppr
-                + " (should be "
-                + (ps != primaryImpl.size())
-                + ") but ssr was "
-                + ssr
-                + " (should be "
-                + (ss != secondaryImpl.size())
-                + ')');
+        System.err.printf(
+            "ppr was %s (should be %s) but ssr was %s (should be %s)%n",
+            ppr, ps != primaryImpl.size(), ssr, ss != secondaryImpl.size());
         System.err.println("adding " + set + " to " + this + " failed");
         Assertions.UNREACHABLE();
       }

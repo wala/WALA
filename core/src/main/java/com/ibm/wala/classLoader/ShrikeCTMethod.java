@@ -212,7 +212,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 
     @Override
     public String toString() {
-      return fileName + '(' + firstLine + ',' + firstCol + '-' + lastLine + ',' + lastCol + ')';
+      return "%s(%d,%d-%d,%d)".formatted(fileName, firstLine, firstCol, lastLine, lastCol);
     }
   }
 

@@ -65,15 +65,8 @@ public abstract class AbstractSourcePosition implements Position {
     String pos;
     if (getFirstCol() != -1) {
       pos =
-          "["
-              + getFirstLine()
-              + ':'
-              + getFirstCol()
-              + "] -> ["
-              + getLastLine()
-              + ':'
-              + getLastCol()
-              + ']';
+          "[%d:%d] -> [%d:%d]"
+              .formatted(getFirstLine(), getFirstCol(), getLastLine(), getLastCol());
     } else if (getFirstOffset() != -1) {
       pos = "[" + getFirstOffset() + "->" + getLastOffset() + "] (line " + getFirstLine() + ')';
     } else {

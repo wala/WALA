@@ -444,24 +444,12 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
       if ((newType == Intent.IntentType.UNKNOWN_TARGET)
           && (oriType != Intent.IntentType.UNKNOWN_TARGET)) {
         throw new IllegalArgumentException(
-            "You are lowering information on the Intent-Target of the "
-                + "Intent "
-                + original
-                + " from "
-                + oriType
-                + " to "
-                + newType
-                + ". Use registerIntentForce()"
-                + "If you are sure you want to do this!");
+            "You are lowering information on the Intent-Target of the Intent %s from %s to %s. Use registerIntentForce()If you are sure you want to do this!"
+                .formatted(original, oriType, newType));
       } else if (oriType != newType) {
         throw new IllegalArgumentException(
-            "You are changing the Intents target to a contradicting one! "
-                + newType
-                + "(new) is incompatible to "
-                + oriType
-                + "(before). On Intent "
-                + intent
-                + ". Use registerIntentForce() if you are sure you want to do this!");
+            "You are changing the Intents target to a contradicting one! %s(new) is incompatible to %s(before). On Intent %s. Use registerIntentForce() if you are sure you want to do this!"
+                .formatted(newType, oriType, intent));
       }
 
       // TODO: Add actual target to the Intent and compare these?
@@ -547,24 +535,12 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
       if ((newType == Intent.IntentType.UNKNOWN_TARGET)
           && (oriType != Intent.IntentType.UNKNOWN_TARGET)) {
         throw new IllegalArgumentException(
-            "You are lowering information on the Intent-Target of the "
-                + "Intent "
-                + original
-                + " from "
-                + oriType
-                + " to "
-                + newType
-                + ". Use setOverrideForce()"
-                + "If you are sure you want to do this!");
+            "You are lowering information on the Intent-Target of the Intent %s from %s to %s. Use setOverrideForce()If you are sure you want to do this!"
+                .formatted(original, oriType, newType));
       } else if (oriType != newType) {
         throw new IllegalArgumentException(
-            "You are changing the Intents target to a contradicting one! "
-                + newType
-                + "(new) is incompatible to "
-                + oriType
-                + "(before). On Intent "
-                + to
-                + ". Use setOverrideForce() if you are sure you want to do this!");
+            "You are changing the Intents target to a contradicting one! %s(new) is incompatible to %s(before). On Intent %s. Use setOverrideForce() if you are sure you want to do this!"
+                .formatted(newType, oriType, to));
       }
 
       // TODO: Check resolvable Target is not overridden with unresolvable one

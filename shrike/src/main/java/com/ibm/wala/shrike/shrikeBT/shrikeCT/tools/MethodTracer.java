@@ -126,16 +126,13 @@ public class MethodTracer {
           for (int k = 0; k < ins.length; k++) {
             if (ins[k] instanceof InvokeInstruction instr) {
               final String msg =
-                  "Call from "
-                      + Util.makeClass('L' + ci.getReader().getName() + ';')
-                      + '.'
-                      + ci.getReader().getMethodName(i)
-                      + ':'
-                      + k
-                      + " to target "
-                      + Util.makeClass(instr.getClassType())
-                      + '.'
-                      + instr.getMethodName();
+                  "Call from %s.%s:%d to target %s.%s"
+                      .formatted(
+                          Util.makeClass('L' + ci.getReader().getName() + ';'),
+                          ci.getReader().getMethodName(i),
+                          k,
+                          Util.makeClass(instr.getClassType()),
+                          instr.getMethodName());
               me.insertBefore(
                   k,
                   new MethodEditor.Patch() {

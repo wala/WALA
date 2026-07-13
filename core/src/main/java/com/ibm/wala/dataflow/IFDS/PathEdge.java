@@ -43,7 +43,7 @@ public final class PathEdge<T> {
 
   @Override
   public String toString() {
-    return '<' + entry.toString() + ',' + d1 + "> -> <" + target + ',' + d2 + '>';
+    return "<%s,%d> -> <%s,%d>".formatted(entry.toString(), d1, target, d2);
   }
 
   @Override

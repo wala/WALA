@@ -347,15 +347,8 @@ public class TypeSafeInstructionFactory {
         aParams[i] = givenParam.getNumber();
         if (!isAssignableFrom(givenParam.getType(), targetParam.getType())) {
           throw new IllegalArgumentException(
-              "Parameter "
-                  + i
-                  + " is not assignable from\n\t"
-                  + givenParam
-                  + " to\n\t"
-                  + targetParam
-                  + "\nin call "
-                  + site
-                  + "\n---------");
+              "Parameter %d is not assignable from\n\t%s to\n\t%s\nin call %s\n---------"
+                  .formatted(i, givenParam, targetParam, site));
         }
       }
     } else {

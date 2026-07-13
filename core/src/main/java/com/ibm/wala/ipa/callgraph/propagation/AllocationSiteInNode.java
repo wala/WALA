@@ -35,15 +35,12 @@ public abstract class AllocationSiteInNode extends AbstractTypeInNode {
 
   @Override
   public String toString() {
-    return "SITE_IN_NODE{"
-        + getNode().getMethod()
-        + ':'
-        + concreteType().getName().toUnicodeString()
-        + ':'
-        + this.getSite()
-        + " in "
-        + getNode().getContext()
-        + '}';
+    return "SITE_IN_NODE{%s:%s:%s in %s}"
+        .formatted(
+            getNode().getMethod(),
+            concreteType().getName().toUnicodeString(),
+            this.getSite(),
+            getNode().getContext());
   }
 
   /**

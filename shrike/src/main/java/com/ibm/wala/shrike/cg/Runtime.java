@@ -201,7 +201,7 @@ public class Runtime {
             ? "BLOB"
             : runtime.callStacks.get().peek().split("\t")[1];
     runtime.currentSite.set(
-        callerClass + '\t' + callerMethod + '\t' + klass + '\t' + method + '\t' + receiver);
+        "%s\t%s\t%s\t%s\t%s".formatted(callerClass, callerMethod, klass, method, receiver));
     //	  runtime.currentSite = klass + "\t" + method + "\t" + receiver;
     synchronized (runtime) {
       if (runtime.output != null) {

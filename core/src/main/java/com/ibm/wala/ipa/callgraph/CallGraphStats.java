@@ -81,15 +81,8 @@ public class CallGraphStats {
 
     @Override
     public String toString() {
-      return "Call graph stats:\n  Nodes: "
-          + nNodes
-          + "\n  Edges: "
-          + nEdges
-          + "\n  Methods: "
-          + nMethods
-          + "\n  Bytecode Bytes: "
-          + bytecodeBytes
-          + '\n';
+      return "Call graph stats:\n  Nodes: %d\n  Edges: %d\n  Methods: %d\n  Bytecode Bytes: %d\n"
+          .formatted(nNodes, nEdges, nMethods, bytecodeBytes);
     }
   }
 

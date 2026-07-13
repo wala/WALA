@@ -116,17 +116,8 @@ public class SSAValueManager {
 
     @Override
     public String toString() {
-      return "<Managed "
-          + this.value
-          + " key=\""
-          + this.key
-          + "\" status=\""
-          + this.status
-          + " setIn=\""
-          + this.setInScope
-          + "\" setBy=\""
-          + this.setBy
-          + "\" />";
+      return "<Managed %s key=\"%s\" status=\"%s setIn=\"%d\" setBy=\"%s\" />"
+          .formatted(this.value, this.key, this.status, this.setInScope, this.setBy);
     }
   }
 
