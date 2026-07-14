@@ -139,15 +139,9 @@ public class PutInstruction extends Instruction implements IPutInstruction {
 
   @Override
   public final String toString() {
-    return "Put("
-        + getFieldType()
-        + ','
-        + (isStatic() ? "STATIC" : "NONSTATIC")
-        + ','
-        + getClassType()
-        + ','
-        + getFieldName()
-        + ')';
+    return "Put(%s,%s,%s,%s)"
+        .formatted(
+            getFieldType(), isStatic() ? "STATIC" : "NONSTATIC", getClassType(), getFieldName());
   }
 
   @Override

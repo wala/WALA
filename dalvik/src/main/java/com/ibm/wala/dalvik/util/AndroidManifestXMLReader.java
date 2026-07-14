@@ -680,15 +680,8 @@ public class AndroidManifestXMLReader {
           current.getHandler().popAttributes();
         } else {
           throw new IllegalStateException(
-              "In "
-                  + self
-                  + ": Tag "
-                  + current
-                  + " not allowed in Context "
-                  + parserStack
-                  + "\n\t"
-                  + "Allowed Tags: "
-                  + allowedTags);
+              "In %s: Tag %s not allowed in Context %s\n\tAllowed Tags: %s"
+                  .formatted(self, current, parserStack, allowedTags));
         }
       }
 

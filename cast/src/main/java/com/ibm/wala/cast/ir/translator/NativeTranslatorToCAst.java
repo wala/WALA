@@ -78,18 +78,11 @@ public abstract class NativeTranslatorToCAst extends NativeBridge implements Tra
       public String toString() {
         String urlString = sourceURL.toString();
         if (urlString.lastIndexOf(File.separator) == -1)
-          return "[" + fl + ':' + fc + "]->[" + ll + ':' + lc + ']';
+          return "[%d:%d]->[%d:%d]".formatted(fl, fc, ll, lc);
         else
-          return urlString.substring(urlString.lastIndexOf(File.separator) + 1)
-              + "@["
-              + fl
-              + ':'
-              + fc
-              + "]->["
-              + ll
-              + ':'
-              + lc
-              + ']';
+          return "%s@[%d:%d]->[%d:%d]"
+              .formatted(
+                  urlString.substring(urlString.lastIndexOf(File.separator) + 1), fl, fc, ll, lc);
       }
 
       @Override

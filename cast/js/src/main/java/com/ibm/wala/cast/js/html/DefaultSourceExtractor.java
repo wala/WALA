@@ -169,16 +169,8 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
       // like: ; to be used as attributes now.
       if (attr.length() >= 2 && attr.startsWith("on")) {
         printlnIndented(
-            varName
-                + '.'
-                + attr
-                + " = function "
-                + tag.getName().toLowerCase()
-                + '_'
-                + attr
-                + "(event) {"
-                + value
-                + "};",
+            "%s.%s = function %s_%s(event) {%s};"
+                .formatted(varName, attr, tag.getName().toLowerCase(), attr, value),
             tag);
         writeEntrypoint(
             varName2 + '.' + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
@@ -192,7 +184,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
           attr = attr.toLowerCase();
         }
 
-        printlnIndented(varName + "['" + attr + "'] = " + quote + value + quote + ';', tag);
+        printlnIndented("%s['%s'] = %s%s%s;".formatted(varName, attr, quote, value, quote), tag);
       }
     }
 

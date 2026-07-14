@@ -58,16 +58,13 @@ public class InterfaceAnalyzer {
     for (Map.Entry<String, TypeStats> entry : typeStats.entrySet()) {
       TypeStats t = entry.getValue();
       w.write(
-          entry.getKey()
-              + '\t'
-              + t.totalOccurrences
-              + '\t'
-              + t.methodOccurrences
-              + '\t'
-              + t.publicMethodOccurrences
-              + '\t'
-              + t.foreignPublicMethodOccurrences
-              + '\n');
+          "%s\t%d\t%d\t%d\t%d\n"
+              .formatted(
+                  entry.getKey(),
+                  t.totalOccurrences,
+                  t.methodOccurrences,
+                  t.publicMethodOccurrences,
+                  t.foreignPublicMethodOccurrences));
     }
 
     w.flush();

@@ -174,15 +174,12 @@ public class ClassPrinter {
         w.write("    exception handlers:\n");
         for (int e = 0; e < rawHandlers.length; e += 4) {
           w.write(
-              "      "
-                  + rawHandlers[e]
-                  + " to "
-                  + rawHandlers[e + 1]
-                  + " catch "
-                  + getClassName(cr, rawHandlers[e + 3])
-                  + " at "
-                  + rawHandlers[e + 2]
-                  + '\n');
+              "      %d to %d catch %s at %d\n"
+                  .formatted(
+                      rawHandlers[e],
+                      rawHandlers[e + 1],
+                      getClassName(cr, rawHandlers[e + 3]),
+                      rawHandlers[e + 2]));
         }
 
         ClassReader.AttrIterator codeAttrs = new ClassReader.AttrIterator();

@@ -938,15 +938,13 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     public byte evaluate(PointsToSetVariable ref) {
       if (DEBUG_GET) {
         String S =
-            "EVAL GetField "
-                + getField()
-                + ' '
-                + getFixedSet().getPointerKey()
-                + ' '
-                + ref.getPointerKey()
-                + getFixedSet()
-                + ' '
-                + ref;
+            "EVAL GetField %s %s %s%s %s"
+                .formatted(
+                    getField(),
+                    getFixedSet().getPointerKey(),
+                    ref.getPointerKey(),
+                    getFixedSet(),
+                    ref);
         System.err.println(S);
       }
 
@@ -1050,15 +1048,13 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
     public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_PUT) {
         String S =
-            "EVAL PutField "
-                + getField()
-                + ' '
-                + getFixedSet().getPointerKey()
-                + ' '
-                + rhs.getPointerKey()
-                + getFixedSet()
-                + ' '
-                + rhs;
+            "EVAL PutField %s %s %s%s %s"
+                .formatted(
+                    getField(),
+                    getFixedSet().getPointerKey(),
+                    rhs.getPointerKey(),
+                    getFixedSet(),
+                    rhs);
         System.err.println(S);
       }
 

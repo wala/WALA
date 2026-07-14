@@ -184,15 +184,9 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   @Override
   public final String toString() {
-    return "Invoke("
-        + getInvocationModeString()
-        + ','
-        + getClassType()
-        + ','
-        + getMethodName()
-        + ','
-        + getMethodSignature()
-        + ')';
+    return "Invoke(%s,%s,%s,%s)"
+        .formatted(
+            getInvocationModeString(), getClassType(), getMethodName(), getMethodSignature());
   }
 
   @Override

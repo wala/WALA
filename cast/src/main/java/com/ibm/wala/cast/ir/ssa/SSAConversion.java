@@ -198,38 +198,25 @@ public class SSAConversion extends AbstractSSAConversion {
 
     private CopyPropagationRecord(int instructionIndex, int rhs) {
       if (DEBUG_UNDO)
-        System.err.println(
-            ("new copy record for instruction #" + instructionIndex + ", rhs value is " + rhs));
+        System.err.printf(
+            "new copy record for instruction #%d, rhs value is %d%n", instructionIndex, rhs);
       this.rhs = rhs;
       this.instructionIndex = instructionIndex;
     }
 
     private void addChild(CopyPropagationRecord rec) {
       if (DEBUG_UNDO)
-        System.err.println(
-            ("("
-                + rec.instructionIndex
-                + ','
-                + rec.rhs
-                + ") is a child of ("
-                + instructionIndex
-                + ','
-                + rhs
-                + ')'));
+        System.err.printf(
+            "(%d,%d) is a child of (%d,%d)%n",
+            rec.instructionIndex, rec.rhs, instructionIndex, rhs);
       childRecords.add(rec);
     }
 
     private void addUse(int instructionIndex, int use) {
       if (DEBUG_UNDO)
-        System.err.println(
-            ("propagated use of ("
-                + this.instructionIndex
-                + ','
-                + this.rhs
-                + ") at use #"
-                + use
-                + " of instruction #"
-                + instructionIndex));
+        System.err.printf(
+            "propagated use of (%d,%d) at use #%d of instruction #%d%n",
+            this.instructionIndex, this.rhs, use, instructionIndex);
       UseRecord rec = new UseRecord(instructionIndex, use);
       copyPropagationMap.put(rec, this);
       renamedUses.add(rec);
@@ -261,8 +248,7 @@ public class SSAConversion extends AbstractSSAConversion {
       instructions[instructionIndex] = new AssignInstruction(instructionIndex, lhs, rhs);
 
       if (DEBUG_UNDO)
-        System.err.println(
-            ("recreating assignment at " + instructionIndex + " as " + lhs + " = " + rhs));
+        System.err.printf("recreating assignment at %d as %d = %d%n", instructionIndex, lhs, rhs);
 
       for (Object x : renamedUses) {
         if (x instanceof UseRecord use) {
@@ -270,8 +256,7 @@ public class SSAConversion extends AbstractSSAConversion {
           SSAInstruction inst = instructions[idx];
 
           if (DEBUG_UNDO)
-            System.err.println(
-                ("Changing use #" + use.useNumber + " of inst #" + idx + " to val " + lhs));
+            System.err.printf("Changing use #%d of inst #%d to val %d%n", use.useNumber, idx, lhs);
 
           if (use.useNumber >= 0) {
             instructions[idx] = undo(inst, use.useNumber, lhs);
@@ -347,7 +332,7 @@ public class SSAConversion extends AbstractSSAConversion {
     private void undoCopyPropagation(int instructionIndex, int useNumber) {
 
       if (DEBUG_UNDO)
-        System.err.println(("undoing for use #" + useNumber + " of inst #" + instructionIndex));
+        System.err.printf("undoing for use #%d of inst #%d%n", useNumber, instructionIndex);
 
       UseRecord use = new UseRecord(instructionIndex, useNumber);
       CopyPropagationRecord copyPropagationRecord = copyPropagationMap.get(use);
@@ -457,7 +442,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
     SSAPhiInstruction phi = new SSAPhiInstruction(SSAInstruction.NO_INDEX, value, params);
 
-    if (DEBUG) System.err.println(("Placing " + phi + " at " + Y));
+    if (DEBUG) System.err.printf("Placing %s at %s%n", phi, Y);
 
     addPhi(Y, phi);
   }
@@ -725,10 +710,10 @@ public class SSAConversion extends AbstractSSAConversion {
   public static SSAInformation convert(
       AstMethod M, final AstIRFactory.AstIR ir, SSAOptions options, final IntSet values) {
     if (DEBUG) {
-      System.err.println(("starting conversion for " + values));
+      System.err.printf("starting conversion for %s%n", values);
       System.err.println(ir);
     }
-    if (DEBUG_UNDO) System.err.println((">>> starting " + ir.getMethod()));
+    if (DEBUG_UNDO) System.err.printf(">>> starting %s%n", ir.getMethod());
     SSAConversion ssa =
         new SSAConversion(M, ir, options) {
           final int limit = ir.getSymbolTable().getMaxValueNumber();
@@ -739,7 +724,7 @@ public class SSAConversion extends AbstractSSAConversion {
           }
         };
     ssa.perform();
-    if (DEBUG_UNDO) System.err.println(("<<< done " + ir.getMethod()));
+    if (DEBUG_UNDO) System.err.printf("<<< done %s%n", ir.getMethod());
     return ssa.getComputedLocalMap();
   }
 }

@@ -74,16 +74,8 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
 
   @Override
   public String toString() {
-    return super.toString()
-        + ", graphInput: "
-        + graphInput
-        + ", rootsInput: "
-        + rootsInput
-        + ", NodeDecoratorInput: "
-        + nodeDecoratorInput
-        + ", popUpActions: "
-        + popUpActions
-        + ')';
+    return "%s, graphInput: %s, rootsInput: %s, NodeDecoratorInput: %s, popUpActions: %s)"
+        .formatted(super.toString(), graphInput, rootsInput, nodeDecoratorInput, popUpActions);
   }
 
   public void run() throws WalaException {

@@ -130,13 +130,8 @@ public class ParameterAccessor {
 
     @Override
     public String toString() {
-      return "<ParameterKey no="
-          + this.paramNo
-          + " type="
-          + this.type
-          + " name=\""
-          + this.name
-          + "\" />";
+      return "<ParameterKey no=%d type=%s name=\"%s\" />"
+          .formatted(this.paramNo, this.type, this.name);
     }
   }
 
@@ -191,49 +186,41 @@ public class ParameterAccessor {
       // If type was null the call to super failed
       if ((number < 1) && (basedOn == BasedOn.METHOD_REFERENCE)) {
         throw new IllegalArgumentException(
-            "The first accessible SSA-Value of a MethodReference is 1 but the "
-                + "Value-Number given is "
-                + number);
+            "The first accessible SSA-Value of a MethodReference is 1 but the Value-Number given is %d"
+                .formatted(number));
       }
       if ((number < 0) && (basedOn == BasedOn.IMETHOD)) {
         throw new IllegalArgumentException(
-            "The first accessible SSA-Value of an IMethod is 0 but the "
-                + "Value-Number given is "
-                + number);
+            "The first accessible SSA-Value of an IMethod is 0 but the Value-Number given is %d"
+                .formatted(number));
       }
       if ((disp == ParameterDisposition.PARAM)
           && (number + descriptorOffset > mRef.getNumberOfParameters())) {
         throw new IllegalArgumentException(
-            "The SSA-Value "
-                + number
-                + " (with added offset "
-                + descriptorOffset
-                + ") is beyond the number of Arguments ("
-                + mRef.getNumberOfParameters()
-                + ") of the Method "
-                + mRef.getName()
-                + '\n'
-                + mRef.getSignature());
+            "The SSA-Value %d (with added offset %d) is beyond the number of Arguments (%d) of the Method %s\n%s"
+                .formatted(
+                    number,
+                    descriptorOffset,
+                    mRef.getNumberOfParameters(),
+                    mRef.getName(),
+                    mRef.getSignature()));
       }
       if ((disp == ParameterDisposition.THIS)
           && (basedOn == BasedOn.METHOD_REFERENCE)
           && (number != 1)) {
         throw new IllegalArgumentException(
-            "The implicit this-pointer of a MethodReference is located at SSA-Value 1. "
-                + "The SSA-Value given is "
-                + number);
+            "The implicit this-pointer of a MethodReference is located at SSA-Value 1. The SSA-Value given is %d"
+                .formatted(number));
       }
       if ((disp == ParameterDisposition.THIS) && (basedOn == BasedOn.IMETHOD) && (number != 0)) {
         throw new IllegalArgumentException(
-            "The implicit this-pointer of an IMethod is located at SSA-Value 0. "
-                + "The SSA-Value given is "
-                + number);
+            "The implicit this-pointer of an IMethod is located at SSA-Value 0. The SSA-Value given is %d"
+                .formatted(number));
       }
       if ((descriptorOffset < -2) || (descriptorOffset > 1)) {
         throw new IllegalArgumentException(
-            "The descriptor-offset given is not within its expected bounds: "
-                + "-1 (for a method without implicit this-pointer) to 1. The given offset is "
-                + descriptorOffset);
+            "The descriptor-offset given is not within its expected bounds: -1 (for a method without implicit this-pointer) to 1. The given offset is %d"
+                .formatted(descriptorOffset));
       }
 
       this.disp = disp;
@@ -279,47 +266,26 @@ public class ParameterAccessor {
     public String toString() {
       return switch (this.disp) {
         case THIS ->
-            "Implicit this-parameter of "
-                + this.mRef.getName()
-                + " as "
-                + this.type
-                + " accessible using "
-                + "SSA-Value "
-                + this.number;
+            "Implicit this-parameter of %s as %s accessible using SSA-Value %d"
+                .formatted(this.mRef.getName(), this.type, this.number);
         case PARAM ->
             this.key instanceof NamedKey
-                ? "Parameter "
-                    + getNumberInDescriptor()
-                    + " \""
-                    + getVariableName()
-                    + "\" of "
-                    + this.mRef.getName()
-                    + " is "
-                    + this.type
-                    + " accessible using SSA-Value "
-                    + this.number
-                : "Parameter "
-                    + getNumberInDescriptor()
-                    + " of "
-                    + this.mRef.getName()
-                    + " is "
-                    + this.type
-                    + " accessible using SSA-Value "
-                    + this.number;
+                ? "Parameter %d \"%s\" of %s is %s accessible using SSA-Value %d"
+                    .formatted(
+                        getNumberInDescriptor(),
+                        getVariableName(),
+                        this.mRef.getName(),
+                        this.type,
+                        this.number)
+                : "Parameter %d of %s is %s accessible using SSA-Value %d"
+                    .formatted(
+                        getNumberInDescriptor(), this.mRef.getName(), this.type, this.number);
         case RETURN ->
-            "Return Value of "
-                + this.mRef.getName()
-                + " as "
-                + this.type
-                + " accessible using SSA-Value "
-                + this.number;
+            "Return Value of %s as %s accessible using SSA-Value %d"
+                .formatted(this.mRef.getName(), this.type, this.number);
         case NEW ->
-            "New instance of "
-                + this.type
-                + " accessible in "
-                + this.mRef.getName()
-                + " using number "
-                + this.number;
+            "New instance of %s accessible in %s using number %d"
+                .formatted(this.type, this.mRef.getName(), this.number);
       };
     }
   }
@@ -428,11 +394,8 @@ public class ParameterAccessor {
         final boolean tmpStatic = it.next().isStatic();
         if (testStatic != tmpStatic) {
           throw new IllegalStateException(
-              "The ClassHierarchy knows multiple ("
-                  + targets.size()
-                  + ") targets for "
-                  + mRef
-                  + ". The targets contradict themselves if they have an implicit this!");
+              "The ClassHierarchy knows multiple (%d) targets for %s. The targets contradict themselves if they have an implicit this!"
+                  .formatted(targets.size(), mRef));
         }
       }
       hasImplicitThis = !testStatic;
@@ -571,12 +534,8 @@ public class ParameterAccessor {
     }
     if ((no < 0) || (no > this.numberOfParameters)) {
       throw new ArrayIndexOutOfBoundsException(
-          "The given number ("
-              + no
-              + ") was not within bounds (1 to "
-              + this.numberOfParameters
-              + ") when accessing a parameter of "
-              + this);
+          "The given number (%d) was not within bounds (1 to %d) when accessing a parameter of %s"
+              .formatted(no, this.numberOfParameters, this));
     }
 
     return switch (this.base) {
@@ -689,10 +648,8 @@ public class ParameterAccessor {
         try {
           if (!isSubclassOf(this.method.getParameterType(self), asType, cha)) {
             throw new IllegalArgumentException(
-                "Class "
-                    + asType
-                    + " is not a super-class of "
-                    + this.method.getParameterType(self));
+                "Class %s is not a super-class of %s"
+                    .formatted(asType, this.method.getParameterType(self)));
           }
         } catch (ClassLookupException e) {
           // Can't test assume all fits
@@ -817,14 +774,13 @@ public class ParameterAccessor {
   public int firstInSelector() {
     if (this.numberOfParameters == 0) {
       throw new IllegalArgumentException(
-          "The method "
-              + Objects.requireNonNullElseGet(method, mRef::toString)
-              + " has no explicit parameters.");
+          "The method %s has no explicit parameters."
+              .formatted(Objects.requireNonNullElseGet(method, mRef::toString)));
     }
     if (this.implicitThis > 1) {
       throw new IllegalStateException(
-          "An internal error in ParameterAccessor locating the implicit this pointer occurred! Invalid: "
-              + this.implicitThis);
+          "An internal error in ParameterAccessor locating the implicit this pointer occurred! Invalid: %d"
+              .formatted(this.implicitThis));
     }
 
     switch (this.base) {
@@ -1230,16 +1186,8 @@ public class ParameterAccessor {
     }
     if (target.getNumberOfParameters() != args.size()) {
       throw new IllegalArgumentException(
-          "Number of arguments mismatch: "
-              + args.size()
-              + " given on a method that "
-              + "needs "
-              + target.getNumberOfParameters()
-              + " arguments. Arguments given were "
-              + args
-              + " for a static "
-              + "call to "
-              + target);
+          "Number of arguments mismatch: %d given on a method that needs %d arguments. Arguments given were %s for a static call to %s"
+              .formatted(args.size(), target.getNumberOfParameters(), args, target));
     }
 
     int[] params = new int[args.size()];
@@ -1262,33 +1210,14 @@ public class ParameterAccessor {
       } else {
         if (cha == null) {
           throw new IllegalArgumentException(
-              "Parameter "
-                  + i
-                  + " ("
-                  + param
-                  + ") of the Arguments list "
-                  + "is not equal to param "
-                  + i
-                  + " ( "
-                  + target.getParameter(i)
-                  + ") of "
-                  + target
-                  + "and no ClassHierarchy was given to test assignability");
+              "Parameter %d (%s) of the Arguments list is not equal to param %d ( %s) of %sand no ClassHierarchy was given to test assignability"
+                  .formatted(i, param, i, target.getParameter(i), target));
         } else if (isAssignable(param, target.getParameter(i), cha)) {
           params[i] = param.getNumber();
         } else {
           throw new IllegalArgumentException(
-              "Parameter "
-                  + i
-                  + " ("
-                  + param
-                  + ") of the Arguments list "
-                  + "is not assignable to param "
-                  + i
-                  + " ( "
-                  + target.getParameter(i)
-                  + ") of "
-                  + target);
+              "Parameter %d (%s) of the Arguments list is not assignable to param %d ( %s) of %s"
+                  .formatted(i, param, i, target.getParameter(i), target));
         }
       }
     }
@@ -1370,16 +1299,8 @@ public class ParameterAccessor {
     }
     if (target.getNumberOfParameters() != args.size() + 1) { // TODO: Verify
       throw new IllegalArgumentException(
-          "Number of arguments mismatch: "
-              + args.size()
-              + " given on a method that "
-              + "needs "
-              + target.getNumberOfParameters()
-              + " arguments. Arguments given were "
-              + args
-              + " for a static "
-              + "call to "
-              + target);
+          "Number of arguments mismatch: %d given on a method that needs %d arguments. Arguments given were %s for a static call to %s"
+              .formatted(args.size(), target.getNumberOfParameters(), args, target));
     }
 
     int[] params = new int[args.size() + 1];
@@ -1400,33 +1321,14 @@ public class ParameterAccessor {
       } else {
         if (cha == null) {
           throw new IllegalArgumentException(
-              "Parameter "
-                  + i
-                  + " ("
-                  + param
-                  + ") of the Arguments list "
-                  + "is not equal to param "
-                  + i
-                  + " ( "
-                  + target.getParameter(i)
-                  + ") of "
-                  + target
-                  + "and no ClassHierarchy was given to test assignability");
+              "Parameter %d (%s) of the Arguments list is not equal to param %d ( %s) of %sand no ClassHierarchy was given to test assignability"
+                  .formatted(i, param, i, target.getParameter(i), target));
         } else if (isAssignable(param, target.getParameter(i), cha)) {
           params[i] = param.getNumber();
         } else {
           throw new IllegalArgumentException(
-              "Parameter "
-                  + i
-                  + " ("
-                  + param
-                  + ") of the Arguments list "
-                  + "is not assignable to param "
-                  + i
-                  + " ( "
-                  + target.getParameter(i)
-                  + ") of "
-                  + target);
+              "Parameter %d (%s) of the Arguments list is not assignable to param %d ( %s) of %s"
+                  .formatted(i, param, i, target.getParameter(i), target));
         }
       }
     }
@@ -1623,12 +1525,9 @@ public class ParameterAccessor {
     } // of final Parameter param : calleeParams
 
     if (assigned.size() != calleeParams.size()) {
-      System.err.println(
-          "Assigned "
-              + assigned.size()
-              + " params to a method taking "
-              + calleeParams.size()
-              + " params!");
+      System.err.printf(
+          "Assigned %d params to a method taking %d params!%n",
+          assigned.size(), calleeParams.size());
       System.err.println("The call takes the parameters");
       for (Parameter param : calleeParams) {
         System.err.println("\t" + param);
