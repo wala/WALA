@@ -11,4 +11,6 @@ dependencies {
   implementation(libs.guava)
   implementation(projects.dalvik)
   implementation(projects.shrike)
+  testImplementation(libs.junit.jupiter.api)
+  testImplementation(libs.assertj.core)
 }
