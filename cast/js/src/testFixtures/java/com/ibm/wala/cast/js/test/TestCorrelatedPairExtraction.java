@@ -662,44 +662,59 @@ public abstract class TestCorrelatedPairExtraction {
   @Test
   public void test24() {
     testRewriter(
-        "function extend(dest, src) {"
-            + "  for(var p in src) {"
-            + "    arguments[0][p] = src[p];"
-            + "  }"
-            + "}",
-        "function extend(dest, src) {"
-            + "  for(var p in src) {"
-            + "    arguments[0][p] = src[p];"
-            + "  }"
-            + "}");
+        """
+            function extend(dest, src) {
+              for(var p in src) {
+                arguments[0][p] = src[p];
+              }
+            }""",
+        """
+            function extend(dest, src) {
+              for(var p in src) {
+                arguments[0][p] = src[p];
+              }
+            }""");
   }
 
   @Test
   public void test25() {
     testRewriter(
-        "function eachProp(obj, func) {"
-            + "   var prop;"
-            + "   for (prop in obj) {"
-            + "     if (hasProp(obj, prop)) {"
-            + "       if (func(obj[prop], prop)) {"
-            + "         break;"
-            + "       }"
-            + "      }"
-            + "  }"
-            + "}",
-        "function eachProp(obj, func) {"
-            + "   var prop;"
-            + "   for (prop in obj) {"
-            + "     if (hasProp(obj, prop)) {"
-            + "       re$ = (function _forin_body_0 (prop) { if (func(obj[prop], prop)) { return { type: \"goto\", target: 0 }; } })(prop);"
-            + "       if (re$) {"
-            + "         if (re$.type == \"goto\") {"
-            + "           if (re$.target == 0)"
-            + "             break;"
-            + "         }"
-            + "       }"
-            + "      }"
-            + "  }"
-            + "}");
+        """
+            function eachProp(obj, func) {
+               var prop;
+               for (prop in obj) {
+                 if (hasProp(obj, prop)) {
+                   if (func(obj[prop], prop)) {
+                     break;
+                   }
+                  }
+              }
+            }""",
+        """
+            function eachProp(obj, func) {
+               var prop;
+               for (prop in obj) {
+                 if (hasProp(obj, prop)) {
+                   if (func(obj[prop], prop)) {
+                     break;
+                   }
+                  }
+              }
+            }""",
+        """
+            function eachProp(obj, func) {
+               var prop;
+               for (prop in obj) {
+                 if (hasProp(obj, prop)) {
+                   re$ = (function _forin_body_0 (prop) { if (func(obj[prop], prop)) { return { type: "goto", target: 0 }; } })(prop);
+                   if (re$) {
+                     if (re$.type == "goto") {
+                       if (re$.target == 0)
+                         break;
+                     }
+                   }
+                  }
+              }
+            }""");
   }
 }
