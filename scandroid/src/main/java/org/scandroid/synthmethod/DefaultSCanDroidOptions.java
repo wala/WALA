@@ -39,13 +39,48 @@
  */
 package org.scandroid.synthmethod;
 
+import com.google.common.collect.ImmutableMap;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import java.io.File;
 import java.net.URI;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.scandroid.util.ISCanDroidOptions;
 
 public abstract class DefaultSCanDroidOptions implements ISCanDroidOptions {
+
+  /**
+   * Holder for lazily-initialized accessors map.
+   *
+   * <p>This pattern ensures the map is only created when first accessed, thereby avoiding
+   * initialization overhead for clients that don't use {@link #dumpString(ISCanDroidOptions)}.
+   */
+  private static class AccessorsHolder {
+    static final ImmutableMap<String, Function<ISCanDroidOptions, Object>> ACCESSORS_BY_NAME =
+        ImmutableMap.ofEntries(
+            Map.entry("pdfCG", ISCanDroidOptions::pdfCG),
+            Map.entry("pdfPartialCG", ISCanDroidOptions::pdfPartialCG),
+            Map.entry("pdfOneLevelCG", ISCanDroidOptions::pdfOneLevelCG),
+            Map.entry("systemToApkCG", ISCanDroidOptions::systemToApkCG),
+            Map.entry("stdoutCG", ISCanDroidOptions::stdoutCG),
+            Map.entry("includeLibrary", ISCanDroidOptions::includeLibrary),
+            Map.entry("separateEntries", ISCanDroidOptions::separateEntries),
+            Map.entry("ifdsExplorer", ISCanDroidOptions::ifdsExplorer),
+            Map.entry("addMainEntrypoints", ISCanDroidOptions::addMainEntrypoints),
+            Map.entry("useThreadRunMain", ISCanDroidOptions::useThreadRunMain),
+            Map.entry("stringPrefixAnalysis", ISCanDroidOptions::stringPrefixAnalysis),
+            Map.entry("testCGBuilder", ISCanDroidOptions::testCGBuilder),
+            Map.entry("useDefaultPolicy", ISCanDroidOptions::useDefaultPolicy),
+            Map.entry("getClasspath", ISCanDroidOptions::getClasspath),
+            Map.entry("getFilename", ISCanDroidOptions::getFilename),
+            Map.entry("getAndroidLibrary", ISCanDroidOptions::getAndroidLibrary),
+            Map.entry("getReflectionOptions", ISCanDroidOptions::getReflectionOptions),
+            Map.entry("getSummariesURI", ISCanDroidOptions::getSummariesURI),
+            Map.entry("classHierarchyWarnings", ISCanDroidOptions::classHierarchyWarnings),
+            Map.entry("cgBuilderWarnings", ISCanDroidOptions::cgBuilderWarnings));
+  }
 
   @Override
   public boolean pdfCG() {
@@ -155,47 +190,18 @@ public abstract class DefaultSCanDroidOptions implements ISCanDroidOptions {
     return false;
   }
 
+  /**
+   * Returns a string representation of the given options with all attributes listed.
+   *
+   * @param options the options to format
+   * @return a string like "DefaultSCanDroidOptions [pdfCG()=false, pdfPartialCG()=false, ...]"
+   */
   public static String dumpString(ISCanDroidOptions options) {
-    return "DefaultSCanDroidOptions [pdfCG()="
-        + options.pdfCG()
-        + ", pdfPartialCG()="
-        + options.pdfPartialCG()
-        + ", pdfOneLevelCG()="
-        + options.pdfOneLevelCG()
-        + ", systemToApkCG()="
-        + options.systemToApkCG()
-        + ", stdoutCG()="
-        + options.stdoutCG()
-        + ", includeLibrary()="
-        + options.includeLibrary()
-        + ", separateEntries()="
-        + options.separateEntries()
-        + ", ifdsExplorer()="
-        + options.ifdsExplorer()
-        + ", addMainEntrypoints()="
-        + options.addMainEntrypoints()
-        + ", useThreadRunMain()="
-        + options.useThreadRunMain()
-        + ", stringPrefixAnalysis()="
-        + options.stringPrefixAnalysis()
-        + ", testCGBuilder()="
-        + options.testCGBuilder()
-        + ", useDefaultPolicy()="
-        + options.useDefaultPolicy()
-        + ", getClasspath()="
-        + options.getClasspath()
-        + ", getFilename()="
-        + options.getFilename()
-        + ", getAndroidLibrary()="
-        + options.getAndroidLibrary()
-        + ", getReflectionOptions()="
-        + options.getReflectionOptions()
-        + ", getSummariesURI()="
-        + options.getSummariesURI()
-        + ", classHierarchyWarnings()="
-        + options.classHierarchyWarnings()
-        + ", cgBuilderWarnings()="
-        + options.cgBuilderWarnings()
-        + ']';
+    return AccessorsHolder.ACCESSORS_BY_NAME.entrySet().stream()
+        .map(
+            namedAccessor ->
+                "%s()=%s"
+                    .formatted(namedAccessor.getKey(), namedAccessor.getValue().apply(options)))
+        .collect(Collectors.joining(", ", "DefaultSCanDroidOptions [", "]"));
   }
 }
