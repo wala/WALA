@@ -167,7 +167,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor {
         ITag tag, String attr, String value, String varName, String varName2) {
       // There should probably be more checking to see what the attributes are since we allow things
       // like: ; to be used as attributes now.
-      if (attr.length() >= 2 && attr.startsWith("on")) {
+      if (attr.startsWith("on")) {
         printlnIndented(
             "%s.%s = function %s_%s(event) {%s};"
                 .formatted(varName, attr, tag.getName().toLowerCase(), attr, value),
