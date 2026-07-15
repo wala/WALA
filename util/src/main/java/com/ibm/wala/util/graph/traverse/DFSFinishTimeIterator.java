@@ -10,8 +10,11 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.uber.nullaway.annotations.Initializer;
@@ -62,11 +65,11 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     return (!empty() || (theNextElement != null && getPendingChildren(theNextElement) == null));
   }
 
-  abstract @Nullable Iterator<T> getPendingChildren(@Nullable T n);
+  abstract @Nullable Iterator<T> getPendingChildren(T n);
 
-  abstract void setPendingChildren(@Nullable T v, Iterator<T> iterator);
+  abstract void setPendingChildren(T v, Iterator<T> iterator);
 
-  private void push(@Nullable T elt) {
+  private void push(T elt) {
     add(elt);
   }
 
@@ -86,12 +89,12 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    * @return the next graph node in finishing time order.
    */
   @Override
-  public @Nullable T next() throws NoSuchElementException {
+  public T next() throws NoSuchElementException {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
     if (empty()) {
-      T v = theNextElement;
+      T v = requireNonNull(theNextElement);
       setPendingChildren(v, getConnected(v));
       push(v);
     }
@@ -113,13 +116,13 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
       setPendingChildren(v, EmptyIterator.instance());
 
       // no more children to visit: finished this vertex
-      while (getPendingChildren(theNextElement) != null && roots.hasNext()) {
+      while (getPendingChildren(requireNonNull(theNextElement)) != null && roots.hasNext()) {
         theNextElement = roots.next();
       }
 
       return pop();
     }
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -128,7 +131,7 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
    * @param n the node of which to get the out edges
    * @return the out edges
    */
-  protected Iterator<T> getConnected(@Nullable T n) {
+  protected Iterator<T> getConnected(T n) {
     return G.getSuccNodes(n);
   }
 

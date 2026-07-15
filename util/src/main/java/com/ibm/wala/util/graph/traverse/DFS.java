@@ -48,7 +48,7 @@ public class DFS {
         new SlowDFSFinishTimeIterator<>(G, C.iterator()) {
 
           @Override
-          protected Iterator<T> getConnected(@Nullable T n) {
+          protected Iterator<T> getConnected(T n) {
             return new FilterIterator<>(G.getSuccNodes(n), filter);
           }
         };
