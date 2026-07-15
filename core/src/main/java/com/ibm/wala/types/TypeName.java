@@ -294,8 +294,7 @@ public final class TypeName implements Serializable {
         return result.toString();
       } catch (UTFDataFormatException e) {
         e.printStackTrace();
-        Assertions.UNREACHABLE();
-        return null;
+        return Assertions.UNREACHABLE();
       }
     }
   }

@@ -68,8 +68,7 @@ public abstract class JavaScriptAnalysisEngine<I extends InstanceKey>
       return setClassHierarchy(
           SeqClassHierarchyFactory.make(getScope(), loaderFactory, JavaScriptLoader.JS));
     } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE(e.toString());
-      return null;
+      return Assertions.UNREACHABLE(e.toString());
     }
   }
 

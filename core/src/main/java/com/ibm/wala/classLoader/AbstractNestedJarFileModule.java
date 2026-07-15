@@ -169,8 +169,7 @@ public abstract class AbstractNestedJarFileModule implements Module {
 
     @Override
     public Module asModule() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override

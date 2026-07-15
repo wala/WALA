@@ -227,8 +227,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
           SSAOptions.defaultOptions(),
           constants);
     }
-    Assertions.UNREACHABLE("Unexpected method " + method);
-    return null;
+    return Assertions.UNREACHABLE("Unexpected method " + method);
   }
 
   /* END Custom change: caching */

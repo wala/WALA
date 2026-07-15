@@ -822,9 +822,8 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       Set<IClass> superA;
       superA = getSuperclasses(a);
-      Assertions.UNREACHABLE(
+      return Assertions.UNREACHABLE(
           "getLeastCommonSuperclass " + tempA + ' ' + b + ": " + superA + ", " + superB);
-      return null;
     }
   }
 
@@ -1161,8 +1160,7 @@ public class ClassHierarchy implements IClassHierarchy {
         return loader;
       }
     }
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

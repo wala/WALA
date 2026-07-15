@@ -37,8 +37,7 @@ public class ContextUtil {
       } else if (item instanceof InstanceKey instanceKey) {
         return instanceKey.concreteType();
       } else {
-        Assertions.UNREACHABLE("Unexpected: " + item.getClass());
-        return null;
+        return Assertions.UNREACHABLE("Unexpected: " + item.getClass());
       }
     }
   }

@@ -120,15 +120,14 @@ public class LocalLiveRangeAnalysis {
       Assertions.UNREACHABLE();
     }
     for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
-      SSACFG.BasicBlock b = (SSACFG.BasicBlock) issaBasicBlock;
+      BasicBlock b = (BasicBlock) issaBasicBlock;
       for (SSAInstruction x : b) {
         if (s.equals(x)) {
           return b;
         }
       }
     }
-    Assertions.UNREACHABLE("no block for " + s + " in IR " + ir);
-    return null;
+    return Assertions.UNREACHABLE("no block for " + s + " in IR " + ir);
   }
 
   /**
@@ -138,12 +137,11 @@ public class LocalLiveRangeAnalysis {
    */
   private static ISSABasicBlock findBlock(IR ir, int i) {
     for (ISSABasicBlock issaBasicBlock : ir.getControlFlowGraph()) {
-      SSACFG.BasicBlock b = (SSACFG.BasicBlock) issaBasicBlock;
+      BasicBlock b = (BasicBlock) issaBasicBlock;
       if (i >= b.getFirstInstructionIndex() && i <= b.getLastInstructionIndex()) {
         return b;
       }
     }
-    Assertions.UNREACHABLE("no block for " + i + " in IR " + ir);
-    return null;
+    return Assertions.UNREACHABLE("no block for " + i + " in IR " + ir);
   }
 }

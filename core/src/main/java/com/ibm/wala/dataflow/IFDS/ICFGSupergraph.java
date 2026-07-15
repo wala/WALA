@@ -122,8 +122,7 @@ public class ICFGSupergraph
   }
 
   public BasicBlockInContext<IExplodedBasicBlock> getMainEntry() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -134,8 +133,7 @@ public class ICFGSupergraph
 
   @Override
   public int getNumberOfBlocks(CGNode procedure) {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -281,8 +279,7 @@ public class ICFGSupergraph
 
   @Override
   public Iterator<BasicBlockInContext<IExplodedBasicBlock>> iterateNodes(IntSet s) {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

@@ -104,8 +104,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
           SSAOptions.defaultOptions(),
           constants);
     }
-    Assertions.UNREACHABLE("Unexpected method " + node);
-    return null;
+    return Assertions.UNREACHABLE("Unexpected method " + node);
   }
 
   @Override

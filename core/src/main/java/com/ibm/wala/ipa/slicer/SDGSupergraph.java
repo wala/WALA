@@ -37,19 +37,16 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
 
   @Override
   public Graph<PDG<? extends InstanceKey>> getProcedureGraph() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   public Object[] getEntry() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public byte classifyEdge(Statement src, Statement dest) {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -75,8 +72,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
         return pdg.getCallStatements(call).iterator();
       }
       default -> {
-        Assertions.UNREACHABLE(r.getKind().toString());
-        return null;
+        return Assertions.UNREACHABLE(r.getKind().toString());
       }
     }
   }
@@ -127,15 +123,13 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
     if (!backward) {
       return EmptyIterator.instance();
     } else {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
   @Override
   public int getNumberOfBlocks(PDG<? extends InstanceKey> procedure) {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -171,8 +165,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
         return pdg.getCallerReturnStatements(st).iterator();
       }
       default -> {
-        Assertions.UNREACHABLE(call.getKind().toString());
-        return null;
+        return Assertions.UNREACHABLE(call.getKind().toString());
       }
     }
   }
@@ -207,8 +200,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
         }
       }
       default -> {
-        Assertions.UNREACHABLE(n.getKind() + " " + n);
-        return false;
+        return Assertions.UNREACHABLE(n.getKind() + " " + n);
       }
     }
   }
@@ -298,8 +290,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
 
   @Override
   public int getNumberOfNodes() {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -324,8 +315,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
 
   @Override
   public int getPredNodeCount(Statement N) {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -335,8 +325,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
 
   @Override
   public int getSuccNodeCount(Statement N) {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -386,8 +375,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG<? extends InstanceKey>
 
   @Override
   public Iterator<Statement> iterateNodes(IntSet s) {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

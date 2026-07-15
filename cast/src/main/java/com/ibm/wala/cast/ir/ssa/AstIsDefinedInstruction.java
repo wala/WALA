@@ -108,8 +108,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
           + getValueString(symbolTable, fieldVal)
           + ')';
     } else {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -157,8 +156,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
     } else if (j == 1 && fieldVal != -1) {
       return fieldVal;
     } else {
-      Assertions.UNREACHABLE();
-      return -1;
+      return Assertions.UNREACHABLE();
     }
   }
 

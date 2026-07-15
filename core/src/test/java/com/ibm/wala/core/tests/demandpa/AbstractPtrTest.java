@@ -108,8 +108,7 @@ public abstract class AbstractPtrTest {
         return n;
       }
     }
-    Assertions.UNREACHABLE("failed to find method");
-    return null;
+    return Assertions.UNREACHABLE("failed to find method");
   }
 
   public static CGNode findStaticMethod(CallGraph cg, Atom name, Descriptor args) {
@@ -120,8 +119,7 @@ public abstract class AbstractPtrTest {
         return n;
       }
     }
-    Assertions.UNREACHABLE("failed to find method");
-    return null;
+    return Assertions.UNREACHABLE("failed to find method");
   }
 
   public static CGNode findInstanceMethod(
@@ -135,8 +133,7 @@ public abstract class AbstractPtrTest {
         return n;
       }
     }
-    Assertions.UNREACHABLE("failed to find method");
-    return null;
+    return Assertions.UNREACHABLE("failed to find method");
   }
 
   public static PointerKey getParam(CGNode n, String methodName, HeapModel heapModel) {
@@ -154,8 +151,7 @@ public abstract class AbstractPtrTest {
         }
       }
     }
-    Assertions.UNREACHABLE("failed to find call to " + methodName + " in " + n);
-    return null;
+    return Assertions.UNREACHABLE("failed to find call to " + methodName + " in " + n);
   }
 
   protected void doFlowsToSizeTest(String mainClass, int size)

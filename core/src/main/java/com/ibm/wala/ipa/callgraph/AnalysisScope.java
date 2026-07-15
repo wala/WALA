@@ -467,8 +467,7 @@ public class AnalysisScope {
       }
       return result;
     } catch (java.io.IOException e) {
-      Assertions.UNREACHABLE("error getting rt.jar manifest!");
-      return null;
+      return Assertions.UNREACHABLE("error getting rt.jar manifest!");
     }
   }
 

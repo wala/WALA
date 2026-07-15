@@ -428,8 +428,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public String getSignature() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -495,8 +494,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
 
     @Override
     public Collection<CAstQualifier> getQualifiers() {
-      Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
-      return null;
+      return Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
     }
 
     @Override

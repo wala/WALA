@@ -105,8 +105,7 @@ public class JarFileModule implements Module {
       return bb;
     } catch (IOException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

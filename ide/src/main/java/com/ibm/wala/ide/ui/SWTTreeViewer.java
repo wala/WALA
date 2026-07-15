@@ -240,8 +240,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       @Override
       public Object getParent(Object element) {
         // TODO Auto-generated method stub
-        Assertions.UNREACHABLE();
-        return null;
+        return Assertions.UNREACHABLE();
       }
 
       /*
@@ -275,8 +274,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
           return (d == null) ? super.getText(element) : d.getLabel(element);
         } catch (WalaException e) {
           e.printStackTrace();
-          Assertions.UNREACHABLE();
-          return null;
+          return Assertions.UNREACHABLE();
         }
       }
     }

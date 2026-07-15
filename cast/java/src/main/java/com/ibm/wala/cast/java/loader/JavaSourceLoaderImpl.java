@@ -339,13 +339,11 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     public int getMaxLocals() {
-      Assertions.UNREACHABLE("AbstractJavaMethod.getMaxLocals() called");
-      return 0;
+      return Assertions.UNREACHABLE("AbstractJavaMethod.getMaxLocals() called");
     }
 
     public int getMaxStackHeight() {
-      Assertions.UNREACHABLE("AbstractJavaMethod.getMaxStackHeight() called");
-      return 0;
+      return Assertions.UNREACHABLE("AbstractJavaMethod.getMaxStackHeight() called");
     }
 
     @Override
@@ -418,14 +416,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public String getLocalVariableName(int bcIndex, int localNumber) {
-      Assertions.UNREACHABLE("AbstractJavaMethod.getLocalVariableName() called");
-      return null;
+      return Assertions.UNREACHABLE("AbstractJavaMethod.getLocalVariableName() called");
     }
 
     @Override
     public boolean hasLocalVariableTable() {
-      Assertions.UNREACHABLE("AbstractJavaMethod.hasLocalVariableTable() called");
-      return false;
+      return Assertions.UNREACHABLE("AbstractJavaMethod.hasLocalVariableTable() called");
     }
 
     @Override

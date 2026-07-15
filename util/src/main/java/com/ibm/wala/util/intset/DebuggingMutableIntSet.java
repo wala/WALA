@@ -124,8 +124,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
       }
       return ppr;
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -145,8 +144,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
 
       return ppr;
     } else {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -175,8 +173,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
 
       return ppr;
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -193,8 +190,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
 
       return ppr;
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -234,8 +230,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
 
       return ppr;
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -271,8 +266,7 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
 
       return pr;
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 

@@ -82,8 +82,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public boolean isAssignmentCompatible(ITypeBinding variableType) {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
@@ -103,189 +102,158 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public ITypeBinding createArrayType(int dimension) {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding createArrayType");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding createArrayType");
   }
 
   @Override
   public String getBinaryName() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getBound() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getComponentType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public IVariableBinding[] getDeclaredFields() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public IMethodBinding[] getDeclaredMethods() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @SuppressWarnings("deprecation")
   @Override
   public int getDeclaredModifiers() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return 0;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding[] getDeclaredTypes() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getDeclaringClass() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public IMethodBinding getDeclaringMethod() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public int getDimensions() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return 0;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getElementType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getErasure() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding[] getInterfaces() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public int getModifiers() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return 0;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public String getName() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public IPackageBinding getPackage() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public String getQualifiedName() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getSuperclass() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding[] getTypeArguments() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding[] getTypeBounds() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getTypeDeclaration() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding[] getTypeParameters() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getWildcard() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isAnnotation() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isAnonymous() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isArray() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isCapture() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isCastCompatible(ITypeBinding type) {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isClass() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isEnum() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   /**
@@ -300,68 +268,57 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public boolean isFromSource() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isGenericType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isInterface() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   // add @Override here once Eclipse Mars is no longer supported
   public boolean isIntersectionType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isLocal() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isMember() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isNested() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isNullType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isParameterizedType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isPrimitive() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isRawType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
@@ -384,56 +341,47 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public boolean isTopLevel() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isTypeVariable() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isUpperbound() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isWildcardType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public IAnnotationBinding[] getAnnotations() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public IJavaElement getJavaElement() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public String getKey() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public int getKind() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return 0;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isDeprecated() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
@@ -443,40 +391,34 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   @Override
   public boolean isRecovered() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public boolean isSynthetic() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return false;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public ITypeBinding getGenericTypeOfWildcardType() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   @Override
   public int getRank() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return 0;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   // do not put @Override here, to avoid breaking compilation on Juno
   @Override
   public IMethodBinding getFunctionalInterfaceMethod() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   // do not put @Override here, to avoid breaking compilation on Juno
   @Override
   public IAnnotationBinding[] getTypeAnnotations() {
-    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
-    return null;
+    return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
   // do not put @Override here, to avoid breaking compilation on older Eclipse versions

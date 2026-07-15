@@ -85,19 +85,18 @@ public class JDT2CAstUtils {
   }
 
   public static CAstOperator mapAssignOperator(Operator op) {
-    if (op == Assignment.Operator.PLUS_ASSIGN) return CAstOperator.OP_ADD;
-    else if (op == Assignment.Operator.BIT_AND_ASSIGN) return CAstOperator.OP_BIT_AND;
-    else if (op == Assignment.Operator.BIT_OR_ASSIGN) return CAstOperator.OP_BIT_OR;
-    else if (op == Assignment.Operator.BIT_XOR_ASSIGN) return CAstOperator.OP_BIT_XOR;
-    else if (op == Assignment.Operator.DIVIDE_ASSIGN) return CAstOperator.OP_DIV;
-    else if (op == Assignment.Operator.REMAINDER_ASSIGN) return CAstOperator.OP_MOD;
-    else if (op == Assignment.Operator.TIMES_ASSIGN) return CAstOperator.OP_MUL;
-    else if (op == Assignment.Operator.LEFT_SHIFT_ASSIGN) return CAstOperator.OP_LSH;
-    else if (op == Assignment.Operator.RIGHT_SHIFT_SIGNED_ASSIGN) return CAstOperator.OP_RSH;
-    else if (op == Assignment.Operator.MINUS_ASSIGN) return CAstOperator.OP_SUB;
-    else if (op == Assignment.Operator.RIGHT_SHIFT_UNSIGNED_ASSIGN) return CAstOperator.OP_URSH;
-    Assertions.UNREACHABLE("Unknown assignment operator");
-    return null;
+    if (op == Operator.PLUS_ASSIGN) return CAstOperator.OP_ADD;
+    else if (op == Operator.BIT_AND_ASSIGN) return CAstOperator.OP_BIT_AND;
+    else if (op == Operator.BIT_OR_ASSIGN) return CAstOperator.OP_BIT_OR;
+    else if (op == Operator.BIT_XOR_ASSIGN) return CAstOperator.OP_BIT_XOR;
+    else if (op == Operator.DIVIDE_ASSIGN) return CAstOperator.OP_DIV;
+    else if (op == Operator.REMAINDER_ASSIGN) return CAstOperator.OP_MOD;
+    else if (op == Operator.TIMES_ASSIGN) return CAstOperator.OP_MUL;
+    else if (op == Operator.LEFT_SHIFT_ASSIGN) return CAstOperator.OP_LSH;
+    else if (op == Operator.RIGHT_SHIFT_SIGNED_ASSIGN) return CAstOperator.OP_RSH;
+    else if (op == Operator.MINUS_ASSIGN) return CAstOperator.OP_SUB;
+    else if (op == Operator.RIGHT_SHIFT_UNSIGNED_ASSIGN) return CAstOperator.OP_URSH;
+    return Assertions.UNREACHABLE("Unknown assignment operator");
   }
 
   protected static CAstOperator mapBinaryOpcode(InfixExpression.Operator operator) {
@@ -125,9 +124,8 @@ public class JDT2CAstUtils {
     if (operator == InfixExpression.Operator.RIGHT_SHIFT_SIGNED) return CAstOperator.OP_RSH;
     if (operator == InfixExpression.Operator.MINUS) return CAstOperator.OP_SUB;
     if (operator == InfixExpression.Operator.RIGHT_SHIFT_UNSIGNED) return CAstOperator.OP_URSH;
-    Assertions.UNREACHABLE(
+    return Assertions.UNREACHABLE(
         "Java2CAstTranslator.JavaTranslatingVisitorImpl.mapBinaryOpcode(): unrecognized binary operator.");
-    return null;
   }
 
   /**
@@ -171,8 +169,7 @@ public class JDT2CAstUtils {
         return enumDeclaration.resolveBinding();
       current = current.getParent();
     }
-    Assertions.UNREACHABLE("Couldn't find declaring class of node");
-    return null;
+    return Assertions.UNREACHABLE("Couldn't find declaring class of node");
   }
 
   private static final IdentityHashMap<ITypeBinding, @NonNull Integer> ids =
@@ -214,22 +211,20 @@ public class JDT2CAstUtils {
   }
 
   public static InfixExpression.Operator mapAssignOperatorToInfixOperator(Assignment.Operator op) {
-    if (op == Assignment.Operator.PLUS_ASSIGN) return InfixExpression.Operator.PLUS;
-    else if (op == Assignment.Operator.BIT_AND_ASSIGN) return InfixExpression.Operator.AND;
-    else if (op == Assignment.Operator.BIT_OR_ASSIGN) return InfixExpression.Operator.OR;
-    else if (op == Assignment.Operator.BIT_XOR_ASSIGN) return InfixExpression.Operator.XOR;
-    else if (op == Assignment.Operator.DIVIDE_ASSIGN) return InfixExpression.Operator.DIVIDE;
-    else if (op == Assignment.Operator.REMAINDER_ASSIGN) return InfixExpression.Operator.REMAINDER;
-    else if (op == Assignment.Operator.TIMES_ASSIGN) return InfixExpression.Operator.TIMES;
-    else if (op == Assignment.Operator.LEFT_SHIFT_ASSIGN)
-      return InfixExpression.Operator.LEFT_SHIFT;
-    else if (op == Assignment.Operator.RIGHT_SHIFT_SIGNED_ASSIGN)
+    if (op == Operator.PLUS_ASSIGN) return InfixExpression.Operator.PLUS;
+    else if (op == Operator.BIT_AND_ASSIGN) return InfixExpression.Operator.AND;
+    else if (op == Operator.BIT_OR_ASSIGN) return InfixExpression.Operator.OR;
+    else if (op == Operator.BIT_XOR_ASSIGN) return InfixExpression.Operator.XOR;
+    else if (op == Operator.DIVIDE_ASSIGN) return InfixExpression.Operator.DIVIDE;
+    else if (op == Operator.REMAINDER_ASSIGN) return InfixExpression.Operator.REMAINDER;
+    else if (op == Operator.TIMES_ASSIGN) return InfixExpression.Operator.TIMES;
+    else if (op == Operator.LEFT_SHIFT_ASSIGN) return InfixExpression.Operator.LEFT_SHIFT;
+    else if (op == Operator.RIGHT_SHIFT_SIGNED_ASSIGN)
       return InfixExpression.Operator.RIGHT_SHIFT_SIGNED;
-    else if (op == Assignment.Operator.MINUS_ASSIGN) return InfixExpression.Operator.MINUS;
-    else if (op == Assignment.Operator.RIGHT_SHIFT_UNSIGNED_ASSIGN)
+    else if (op == Operator.MINUS_ASSIGN) return InfixExpression.Operator.MINUS;
+    else if (op == Operator.RIGHT_SHIFT_UNSIGNED_ASSIGN)
       return InfixExpression.Operator.RIGHT_SHIFT_UNSIGNED;
-    Assertions.UNREACHABLE("Unknown assignment operator");
-    return null;
+    return Assertions.UNREACHABLE("Unknown assignment operator");
   }
 
   private static void getMethodInClassOrSuperclass(

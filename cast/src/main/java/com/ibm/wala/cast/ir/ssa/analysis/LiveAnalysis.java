@@ -234,8 +234,7 @@ public class LiveAnalysis {
                   @Override
                   public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(
                       ISSABasicBlock s, ISSABasicBlock d) {
-                    Assertions.UNREACHABLE();
-                    return null;
+                    return Assertions.UNREACHABLE();
                   }
 
                   /** Live analysis uses 'union' as 'meet operator' */

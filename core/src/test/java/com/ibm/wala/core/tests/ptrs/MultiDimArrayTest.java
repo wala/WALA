@@ -76,7 +76,6 @@ public class MultiDimArrayTest extends WalaTestCase {
         return n;
       }
     }
-    Assertions.UNREACHABLE("Unexpected: failed to find doNothing node");
-    return null;
+    return Assertions.UNREACHABLE("Unexpected: failed to find doNothing node");
   }
 }

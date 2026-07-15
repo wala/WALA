@@ -331,8 +331,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       Descriptor D = Descriptor.findOrCreate(declaringClass.getClassLoader().getLanguage(), desc);
       return MethodReference.findOrCreate(declaringClass.getReference(), name, D);
     } catch (InvalidClassFileException e) {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -761,8 +760,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
                   loader, TypeName.findOrCreate(ImmutableByteArray.make('L' + strings[i]))));
       return result;
     } catch (InvalidClassFileException e) {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

@@ -26,8 +26,7 @@ public abstract class AstConsumeInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions.UNREACHABLE();
-    return -1;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

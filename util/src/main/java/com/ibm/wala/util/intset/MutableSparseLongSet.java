@@ -253,8 +253,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     if (set instanceof SparseLongSet sparseLongSet) {
       return addAll(sparseLongSet);
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 

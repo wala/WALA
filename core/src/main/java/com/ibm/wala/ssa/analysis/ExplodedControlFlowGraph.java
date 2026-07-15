@@ -443,8 +443,7 @@ public class ExplodedControlFlowGraph
 
   @Override
   public Iterator<IExplodedBasicBlock> iterateNodes(IntSet s) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -458,8 +457,7 @@ public class ExplodedControlFlowGraph
 
   @Override
   public IntSet getSuccNodeNumbers(IExplodedBasicBlock node) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**

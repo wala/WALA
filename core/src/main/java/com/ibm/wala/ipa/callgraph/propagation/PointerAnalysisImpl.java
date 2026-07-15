@@ -225,17 +225,16 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
           if (v.pointsToSet != null) {
             return v.pointsToSet;
           } else {
-            Assertions.UNREACHABLE("saw " + key + ": time to implement for " + def.getClass());
-            return null;
+            return Assertions.UNREACHABLE(
+                "saw " + key + ": time to implement for " + def.getClass());
           }
         } else {
-          Assertions.UNREACHABLE("unexpected null def for " + key);
-          return null;
+          return Assertions.UNREACHABLE("unexpected null def for " + key);
         }
       }
     } else {
-      Assertions.UNREACHABLE("unexpected implicit key " + key + " that's not a local pointer key");
-      return null;
+      return Assertions.UNREACHABLE(
+          "unexpected implicit key " + key + " that's not a local pointer key");
     }
   }
 
@@ -411,8 +410,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     if (lpk.getValueNumber() == exc) {
       return computeImplicitExceptionsForCall(node, call);
     } else {
-      Assertions.UNREACHABLE("time to implement me.");
-      return null;
+      return Assertions.UNREACHABLE("time to implement me.");
     }
   }
 

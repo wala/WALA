@@ -85,14 +85,12 @@ public class CISDG implements ISDG {
 
   @Override
   public boolean equals(Object obj) {
-    Assertions.UNREACHABLE();
-    return noHeap.equals(obj);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public ControlDependenceOptions getCOptions() {
-    Assertions.UNREACHABLE();
-    return noHeap.getCOptions();
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -102,8 +100,7 @@ public class CISDG implements ISDG {
 
   @Override
   public Statement getNode(int number) {
-    Assertions.UNREACHABLE();
-    return noHeap.getNode(number);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -118,8 +115,7 @@ public class CISDG implements ISDG {
 
   @Override
   public PDG<InstanceKey> getPDG(CGNode node) {
-    Assertions.UNREACHABLE();
-    return noHeap.getPDG(node);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -129,8 +125,7 @@ public class CISDG implements ISDG {
 
   @Override
   public IntSet getPredNodeNumbers(Statement node) {
-    Assertions.UNREACHABLE();
-    return noHeap.getPredNodeNumbers(node);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -159,8 +154,7 @@ public class CISDG implements ISDG {
 
   @Override
   public IntSet getSuccNodeNumbers(Statement node) {
-    Assertions.UNREACHABLE();
-    return noHeap.getSuccNodeNumbers(node);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -184,20 +178,17 @@ public class CISDG implements ISDG {
 
   @Override
   public boolean hasEdge(Statement src, Statement dst) {
-    Assertions.UNREACHABLE();
-    return noHeap.hasEdge(src, dst);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public int hashCode() {
-    Assertions.UNREACHABLE();
-    return noHeap.hashCode();
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public Iterator<? extends Statement> iterateLazyNodes() {
-    Assertions.UNREACHABLE();
-    return noHeap.iterateLazyNodes();
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -212,8 +203,7 @@ public class CISDG implements ISDG {
 
   @Override
   public Iterator<Statement> iterateNodes(IntSet s) {
-    Assertions.UNREACHABLE();
-    return noHeap.iterateNodes(s);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -254,8 +244,7 @@ public class CISDG implements ISDG {
 
   @Override
   public String toString() {
-    Assertions.UNREACHABLE();
-    return noHeap.toString();
+    return Assertions.UNREACHABLE();
   }
 
   @Override

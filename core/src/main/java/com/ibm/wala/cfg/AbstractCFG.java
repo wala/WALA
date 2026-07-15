@@ -635,8 +635,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public IntSet getPredNodeNumbers(T node) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /*

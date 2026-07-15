@@ -374,9 +374,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-      Assertions.UNREACHABLE(
+      return Assertions.UNREACHABLE(
           "Non-AST-bearing entity (ClassEntity) asked for scoped entities related to a given AST node");
-      return null;
     }
 
     @Override
@@ -720,8 +719,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     for (IMethodBinding met : superClass.getDeclaredMethods()) {
       if (met.isConstructor() && met.getParameterTypes().length == 0) return met;
     }
-    Assertions.UNREACHABLE("Couldn't find default ctor");
-    return null;
+    return Assertions.UNREACHABLE("Couldn't find default ctor");
   }
 
   /**
@@ -1453,8 +1451,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (node instanceof EnumConstantDeclaration enumConstantDeclaration) {
       return createEnumConstantDeclarationInit(enumConstantDeclaration, context);
     } else {
-      Assertions.UNREACHABLE("invalid init node gathered by createClassDeclaration");
-      return null;
+      return Assertions.UNREACHABLE("invalid init node gathered by createClassDeclaration");
     }
   }
 
@@ -2395,9 +2392,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       current = current.getDeclaringClass();
     }
 
-    Assertions.UNREACHABLE(
+    return Assertions.UNREACHABLE(
         "Couldn't find field in class or enclosing class or superclasses of these");
-    return null;
   }
 
   /**
@@ -3107,8 +3103,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       // enum constant
       return visit(simpleName, context);
     } else {
-      Assertions.UNREACHABLE("null constant for non-enum switch case!");
-      return null;
+      return Assertions.UNREACHABLE("null constant for non-enum switch case!");
     }
   }
 
@@ -3911,8 +3906,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
     } else if (n instanceof AnnotationTypeDeclaration) {
       return visitTypeDecl(n, context);
     } else {
-      Assertions.UNREACHABLE("Unhandled type declaration type");
-      return null;
+      return Assertions.UNREACHABLE("Unhandled type declaration type");
     }
   }
 
@@ -4024,9 +4018,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     // VariableDeclarationStatement handled as special case (returns multiple statements)
 
-    Assertions.UNREACHABLE("Unhandled JDT node type " + n.getClass().getCanonicalName());
-
-    return null;
+    return Assertions.UNREACHABLE("Unhandled JDT node type " + n.getClass().getCanonicalName());
   }
 
   private void visitNodeOrNodes(ASTNode n, WalkContext context, Collection<CAstNode> coll) {
@@ -4070,8 +4062,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public String getSignature() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -4096,9 +4087,8 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-      Assertions.UNREACHABLE(
+      return Assertions.UNREACHABLE(
           "CompilationUnitEntity asked for AST-related entities, but it has no AST.");
-      return null;
     }
 
     @Override
@@ -4108,14 +4098,12 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public CAstControlFlowMap getControlFlow() {
-      Assertions.UNREACHABLE("CompilationUnitEntity.getControlFlow()");
-      return null;
+      return Assertions.UNREACHABLE("CompilationUnitEntity.getControlFlow()");
     }
 
     @Override
     public CAstSourcePositionMap getSourceMap() {
-      Assertions.UNREACHABLE("CompilationUnitEntity.getSourceMap()");
-      return null;
+      return Assertions.UNREACHABLE("CompilationUnitEntity.getSourceMap()");
     }
 
     @Override
@@ -4125,8 +4113,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public CAstNodeTypeMap getNodeTypeMap() {
-      Assertions.UNREACHABLE("CompilationUnitEntity.getNodeTypeMap()");
-      return null;
+      return Assertions.UNREACHABLE("CompilationUnitEntity.getNodeTypeMap()");
     }
 
     @Override
@@ -4136,8 +4123,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
     @Override
     public CAstType getType() {
-      Assertions.UNREACHABLE("CompilationUnitEntity.getType()");
-      return null;
+      return Assertions.UNREACHABLE("CompilationUnitEntity.getType()");
     }
 
     @Override
@@ -4204,20 +4190,17 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
       implements WalkContext {
     @Override
     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
-      Assertions.UNREACHABLE("RootContext.getCatchTargets()");
-      return null;
+      return Assertions.UNREACHABLE("RootContext.getCatchTargets()");
     }
 
     @Override
     public Map<ASTNode, String> getLabelMap() {
-      Assertions.UNREACHABLE("RootContext.getLabelMap()");
-      return null;
+      return Assertions.UNREACHABLE("RootContext.getLabelMap()");
     }
 
     @Override
     public boolean needLValue() {
-      Assertions.UNREACHABLE("Rootcontext.needLValue()");
-      return false;
+      return Assertions.UNREACHABLE("Rootcontext.needLValue()");
     }
   }
 

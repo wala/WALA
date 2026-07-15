@@ -50,8 +50,7 @@ public class CallGraphSearchUtil {
         return n;
       }
     }
-    Assertions.UNREACHABLE("failed to find method " + name);
-    return null;
+    return Assertions.UNREACHABLE("failed to find method " + name);
   }
 
   /**
@@ -70,7 +69,6 @@ public class CallGraphSearchUtil {
       }
     }
     System.err.println("call graph " + cg);
-    Assertions.UNREACHABLE("failed to find method " + name);
-    return null;
+    return Assertions.UNREACHABLE("failed to find method " + name);
   }
 }

@@ -78,8 +78,7 @@ public abstract class FileModule implements Module, ModuleEntry {
       return new FileInputStream(file);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE("could not read " + file);
-      return null;
+      return Assertions.UNREACHABLE("could not read " + file);
     }
   }
 
@@ -97,8 +96,7 @@ public abstract class FileModule implements Module, ModuleEntry {
 
   @Override
   public Module asModule() throws UnimplementedError {
-    Assertions.UNREACHABLE("implement me");
-    return null;
+    return Assertions.UNREACHABLE("implement me");
   }
 
   @Override

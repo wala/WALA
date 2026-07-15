@@ -140,8 +140,7 @@ public class GraphDataflowTest extends WalaTestCase {
 
           @Override
           public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
-            Assertions.UNREACHABLE();
-            return null;
+            return Assertions.UNREACHABLE();
           }
 
           @Override

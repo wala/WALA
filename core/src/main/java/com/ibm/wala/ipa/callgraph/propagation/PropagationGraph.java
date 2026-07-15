@@ -917,8 +917,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     public boolean containsNode(PointsToSetVariable N) {
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
 
     /**
@@ -1064,8 +1063,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     protected NumberedEdgeManager<PointsToSetVariable> getEdgeManager() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

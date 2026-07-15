@@ -132,8 +132,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   @Override
   public IClass getRootClass() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

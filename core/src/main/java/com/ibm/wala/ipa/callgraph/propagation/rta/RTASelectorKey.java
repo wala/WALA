@@ -53,7 +53,6 @@ public class RTASelectorKey implements PointerKey {
    * @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter()
    */
   public IClass getTypeFilter() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 }

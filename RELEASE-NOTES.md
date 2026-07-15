@@ -1,5 +1,36 @@
 # WALA Release Notes
 
+## Version 1.9.0
+
+### Functionality changes
+
+#### `Assertions.UNREACHABLE` now returns a generic type
+
+The `Assertions.UNREACHABLE()`, `Assertions.UNREACHABLE(String)`, and
+`Assertions.UNREACHABLE(Object)` methods now return a generic type `<T>`
+instead of `void`. This allows callers to write `return Assertions.UNREACHABLE(…)`
+in methods that return a value, eliminating the previously required pattern of
+calling `Assertions.UNREACHABLE()` followed by a separate `return null;` (or
+similar unreachable-`return` statement).
+
+**Effect for third-party consumers:**
+
+* Existing call sites that previously wrote:
+
+  ```java
+  Assertions.UNREACHABLE("message");
+  return null;
+  ```
+
+  can now be simplified to:
+
+  ```java
+  return Assertions.UNREACHABLE("message");
+  ```
+
+* Existing call sites that just call `Assertions.UNREACHABLE()` as a
+  statement without a following `return` continue to work unchanged.
+
 ## Version 1.8.0
 
 ### Functionality changes

@@ -143,8 +143,7 @@ public class Util {
       }
     }
 
-    Assertions.UNREACHABLE();
-    return -1;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -195,7 +194,6 @@ public class Util {
       }
       i++;
     }
-    Assertions.UNREACHABLE("Invalid: a must be a predecessor of b! " + a + ' ' + b);
-    return -1;
+    return Assertions.UNREACHABLE("Invalid: a must be a predecessor of b! " + a + ' ' + b);
   }
 }

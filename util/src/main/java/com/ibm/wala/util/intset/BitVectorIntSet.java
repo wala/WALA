@@ -352,8 +352,7 @@ public final class BitVectorIntSet implements MutableIntSet {
     } else if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       return sameValue(mutableSharedBitVectorIntSet.makeDenseCopy());
     } else {
-      Assertions.UNREACHABLE("unexpected argument type " + that.getClass());
-      return false;
+      return Assertions.UNREACHABLE("unexpected argument type " + that.getClass());
     }
   }
 

@@ -67,38 +67,32 @@ public class ArrayContents implements IField {
 
   @Override
   public TypeReference getFieldTypeReference() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public boolean isFinal() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public boolean isPrivate() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public boolean isProtected() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public boolean isPublic() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public boolean isStatic() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -108,8 +102,7 @@ public class ArrayContents implements IField {
 
   @Override
   public Atom getName() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -124,8 +117,7 @@ public class ArrayContents implements IField {
 
   @Override
   public ClassHierarchy getClassHierarchy() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

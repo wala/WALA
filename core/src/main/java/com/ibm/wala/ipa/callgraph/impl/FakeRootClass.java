@@ -190,8 +190,7 @@ public class FakeRootClass extends SyntheticClass {
    */
   @Override
   public IMethod getClassInitializer() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**

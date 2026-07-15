@@ -88,8 +88,7 @@ public class PDFSDG {
         return result;
       }
     }
-    Assertions.UNREACHABLE("unknown data datapendence option: " + d);
-    return null;
+    return Assertions.UNREACHABLE("unknown data datapendence option: " + d);
   }
 
   public static ControlDependenceOptions getControlDependenceOptions(Properties p) {
@@ -99,8 +98,7 @@ public class PDFSDG {
         return result;
       }
     }
-    Assertions.UNREACHABLE("unknown control datapendence option: " + d);
-    return null;
+    return Assertions.UNREACHABLE("unknown control datapendence option: " + d);
   }
 
   /**

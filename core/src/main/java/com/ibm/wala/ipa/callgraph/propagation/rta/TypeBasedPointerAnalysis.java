@@ -165,8 +165,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
           .getClassHierarchy()
           .lookupClass(r.getNode().getMethod().getReturnType());
     } else {
-      Assertions.UNREACHABLE("inferType " + key.getClass());
-      return null;
+      return Assertions.UNREACHABLE("inferType " + key.getClass());
     }
   }
 

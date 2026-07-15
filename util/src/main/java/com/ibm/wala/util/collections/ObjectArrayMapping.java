@@ -74,8 +74,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
 
   @Override
   public int add(Object o) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
