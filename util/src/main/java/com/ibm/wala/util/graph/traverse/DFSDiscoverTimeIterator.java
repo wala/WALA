@@ -17,7 +17,9 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.uber.nullaway.annotations.Initializer;
 import java.io.Serial;
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.jspecify.annotations.NullUnmarked;
@@ -29,12 +31,15 @@ import org.jspecify.annotations.Nullable;
  * the graph nodes to define the graph, but this behavior can be changed by overriding the
  * getConnected method.
  */
-public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
+public abstract class DFSDiscoverTimeIterator<T> implements Iterator<T>, Serializable {
 
-  @Serial private static final long serialVersionUID = 4238700455408861924L;
+  @Serial private static final long serialVersionUID = -1850999264325071965L;
 
   /** an enumeration of all nodes to search from */
   private Iterator<? extends T> roots;
+
+  /** Stack of nodes being explored during depth-first traversal. */
+  private final Deque<T> stack = new ArrayDeque<>();
 
   /** subclass constructors must call this! */
   @Initializer
@@ -139,20 +144,18 @@ public abstract class DFSDiscoverTimeIterator<T> extends ArrayList<T> implements
   }
 
   private boolean empty() {
-    return size() == 0;
+    return stack.isEmpty();
   }
 
   private void push(T elt) {
-    add(elt);
+    stack.push(elt);
   }
 
   private T peek() {
-    return get(size() - 1);
+    return stack.peek();
   }
 
   private T pop() {
-    T e = get(size() - 1);
-    remove(size() - 1);
-    return e;
+    return stack.pop();
   }
 }

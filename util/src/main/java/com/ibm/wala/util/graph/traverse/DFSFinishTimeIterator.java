@@ -19,7 +19,9 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.uber.nullaway.annotations.Initializer;
 import java.io.Serial;
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
@@ -30,9 +32,9 @@ import org.jspecify.annotations.Nullable;
  * nodes to define the graph, but this behavior can be changed by overriding the getConnected
  * method.
  */
-public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements Iterator<T> {
+public abstract class DFSFinishTimeIterator<T> implements Iterator<T>, Serializable {
 
-  @Serial private static final long serialVersionUID = 8440061593631309429L;
+  @Serial private static final long serialVersionUID = -194067966176702166L;
 
   /** the current next element in finishing time order */
   private @Nullable T theNextElement;
@@ -43,6 +45,9 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   /** The governing graph. */
   private Graph<T> G;
 
+  /** Stack of nodes being explored during depth-first traversal. */
+  private final Deque<T> stack = new ArrayDeque<>();
+
   /** Subclasses must call this in the constructor! */
   @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
@@ -51,8 +56,8 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
     if (roots.hasNext()) theNextElement = roots.next();
   }
 
-  private boolean empty() {
-    return size() == 0;
+  boolean empty() {
+    return stack.isEmpty();
   }
 
   /**
@@ -70,17 +75,15 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
   abstract void setPendingChildren(T v, Iterator<T> iterator);
 
   private void push(T elt) {
-    add(elt);
+    stack.push(elt);
   }
 
   private T peek() {
-    return get(size() - 1);
+    return stack.peek();
   }
 
   private T pop() {
-    T e = get(size() - 1);
-    remove(size() - 1);
-    return e;
+    return stack.pop();
   }
 
   /**
