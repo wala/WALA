@@ -126,8 +126,7 @@ public class CallGraphTest extends WalaTestCase {
             TestConstants.BCEL_JRT, CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
 
-  @Test
-  public void testJLex()
+  void runTestJLex()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope =
         CallGraphTestUtil.makeJ2SEAnalysisScope(
@@ -138,6 +137,12 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     doCallGraphs(options, new AnalysisCacheImpl(), cha);
+  }
+
+  @Test
+  public void testJLex()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    runTestJLex();
   }
 
   @Test

@@ -35,7 +35,7 @@ public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCall
   @Override
   @Test
   public void testPage2() throws IllegalArgumentException, CancelException, WalaException {
-    super.testPage2();
+    super.runTestPage2();
   }
 
   @Disabled("Jericho parser is unable to parse this test's HTML input")

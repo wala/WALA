@@ -44,7 +44,7 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
     MutableIntSetFactory<?> save = IntSetUtil.getDefaultIntSetFactory();
     try {
       IntSetUtil.setDefaultIntSetFactory(new DebuggingMutableIntSetFactory(p, s));
-      graphTest.testJLex();
+      graphTest.runTestJLex();
     } finally {
       IntSetUtil.setDefaultIntSetFactory(save);
     }
