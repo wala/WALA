@@ -259,7 +259,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
     return (MachineState) solver.getIn(bb);
   }
 
-  private class MeetOperator extends AbstractMeetOperator<MachineState> {
+  private static class MeetOperator extends AbstractMeetOperator<MachineState> {
 
     private final Meeter meeter;
 
