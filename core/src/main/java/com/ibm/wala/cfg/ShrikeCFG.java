@@ -248,6 +248,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
      *
      * @param last the last instruction in a basic block.
      */
+    @SuppressWarnings("ObjectToString")
     private void addExceptionalEdges(IInstruction last) {
       IClassHierarchy cha = getMethod().getClassHierarchy();
       if (last.isPEI()) {
