@@ -45,7 +45,7 @@ public class Assertions {
    * @throws UnimplementedError unconditionally
    */
   @Contract(" -> fail")
-  @SuppressWarnings("TypeParameterUnusedInFormals")
+  @SuppressWarnings({"DoNotCallSuggester", "TypeParameterUnusedInFormals"})
   public static <T> T UNREACHABLE() {
     throw new UnimplementedError();
   }
@@ -56,7 +56,7 @@ public class Assertions {
    * @throws UnimplementedError unconditionally
    */
   @Contract("_ -> fail")
-  @SuppressWarnings("TypeParameterUnusedInFormals")
+  @SuppressWarnings({"DoNotCallSuggester", "TypeParameterUnusedInFormals"})
   public static <T> T UNREACHABLE(String string) {
     throw new UnimplementedError(string);
   }
@@ -67,7 +67,7 @@ public class Assertions {
    * @throws UnimplementedError unconditionally
    */
   @Contract("_ -> fail")
-  @SuppressWarnings("TypeParameterUnusedInFormals")
+  @SuppressWarnings({"DoNotCallSuggester", "TypeParameterUnusedInFormals"})
   public static <T> T UNREACHABLE(Object o) {
     return UNREACHABLE(o == null ? "" : o.toString());
   }
