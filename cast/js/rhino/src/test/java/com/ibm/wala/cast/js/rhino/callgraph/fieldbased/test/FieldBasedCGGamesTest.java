@@ -66,6 +66,7 @@ public class FieldBasedCGGamesTest extends AbstractFieldBasedTest {
     runTest(url, List.of(), BuilderType.OPTIMISTIC);
   }
 
+  @Disabled("DNS fails to resolve `www.inmensia.com`")
   @Test
   public void testMinesweeper() throws IOException, WalaException, CancelException {
     URL url = getUrl("http://www.inmensia.com/files/minesweeper1.0.html");
