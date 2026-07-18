@@ -16,8 +16,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.SequenceInputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -76,27 +79,9 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
 
   @Override
   public InputStream getInputStream() {
-    return new InputStream() {
-      private int index = 0;
-      private InputStream currentStream;
-
-      @Override
-      public int read() throws IOException {
-        if (currentStream == null) {
-          if (index < constituents.length) {
-            currentStream = constituents[index++].getInputStream();
-          } else {
-            return -1;
-          }
-        }
-        int b = currentStream.read();
-        if (b == -1) {
-          currentStream = null;
-          return read();
-        }
-        return b;
-      }
-    };
+    return new SequenceInputStream(
+        Collections.enumeration(
+            Arrays.stream(constituents).map(SourceModule::getInputStream).toList()));
   }
 
   public class Reader extends java.io.Reader {
