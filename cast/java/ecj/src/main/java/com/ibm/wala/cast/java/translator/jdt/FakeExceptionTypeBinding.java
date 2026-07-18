@@ -256,12 +256,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
-  /**
-   * This overrides a method introduced in recent versions of the {@code ITypeBinding} interface to
-   * handle records. We omit the {@code @Override} annotation to allow building against earlier
-   * versions of {@code org.eclipse.jdt.core}, where {@code ITypeBinding} does not contain this
-   * method.
-   */
+  @Override
   public boolean isRecord() {
     return false;
   }
@@ -281,7 +276,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
-  // add @Override here once Eclipse Mars is no longer supported
+  @Override
   public boolean isIntersectionType() {
     return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
@@ -421,7 +416,7 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
   }
 
-  // do not put @Override here, to avoid breaking compilation on older Eclipse versions
+  @Override
   public IBinding getDeclaringMember() {
     // TODO Auto-generated method stub
     return null;
