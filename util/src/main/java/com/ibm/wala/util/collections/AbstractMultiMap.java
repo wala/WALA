@@ -110,7 +110,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
   }
 
   @Override
-  public Set<V> removeAll(K key) {
+  public @Nullable Set<V> removeAll(K key) {
     return map.remove(key);
   }
 

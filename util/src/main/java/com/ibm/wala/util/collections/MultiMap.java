@@ -39,6 +39,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 public interface MultiMap<K, V> {
 
@@ -59,7 +60,7 @@ public interface MultiMap<K, V> {
 
   boolean putAll(K key, Collection<? extends V> vals);
 
-  Set<V> removeAll(K key);
+  @Nullable Set<V> removeAll(K key);
 
   void clear();
 
