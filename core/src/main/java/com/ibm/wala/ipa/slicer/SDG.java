@@ -240,8 +240,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
 
     @Override
     public Iterator<Statement> iterateNodes(IntSet s) {
-      Assertions.UNREACHABLE();
-      return super.iterateNodes(s);
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -438,8 +437,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
           return result.iterator();
         }
         default -> {
-          Assertions.UNREACHABLE(N.getKind().toString());
-          return null;
+          return Assertions.UNREACHABLE(N.getKind().toString());
         }
       }
     }
@@ -598,8 +596,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
           return result.iterator();
         }
         default -> {
-          Assertions.UNREACHABLE(N.getKind().toString());
-          return null;
+          return Assertions.UNREACHABLE(N.getKind().toString());
         }
       }
     }
@@ -771,8 +768,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
           }
         }
         default -> {
-          Assertions.UNREACHABLE(src.getKind());
-          return Collections.emptySet();
+          return Assertions.UNREACHABLE(src.getKind());
         }
       }
     }

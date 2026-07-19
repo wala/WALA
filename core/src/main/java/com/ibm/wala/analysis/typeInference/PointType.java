@@ -67,8 +67,7 @@ public class PointType extends TypeAbstraction {
         // TODO: avoid the allocation
         return other.meet(new ConeType(this.getType()));
       } else {
-        Assertions.UNREACHABLE("Unexpected type: " + rhs.getClass());
-        return null;
+        return Assertions.UNREACHABLE("Unexpected type: " + rhs.getClass());
       }
     }
   }

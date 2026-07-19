@@ -225,8 +225,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
                 @Override
                 public boolean hasEdge(Object src, Object dst) {
-                  Assertions.UNREACHABLE();
-                  return false;
+                  return Assertions.UNREACHABLE();
                 }
               };
 
@@ -287,8 +286,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
         return result.toIntArray();
       }
     } else {
-      Assertions.UNREACHABLE("Unexpected type: " + N.getClass());
-      return null;
+      return Assertions.UNREACHABLE("Unexpected type: " + N.getClass());
     }
   }
 
@@ -484,8 +482,7 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
   @Override
   public boolean hasEdge(Object from, Object to) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -538,13 +535,11 @@ public class BasicHeapGraph<T extends InstanceKey> extends HeapGraphImpl<T> {
 
   @Override
   public IntSet getSuccNodeNumbers(Object node) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 }

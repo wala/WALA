@@ -95,8 +95,7 @@ public class TypeVariableSignature extends TypeSignature {
       return -1;
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return -1;
+      return Assertions.UNREACHABLE();
     }
   }
 }

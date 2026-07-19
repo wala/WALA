@@ -205,8 +205,7 @@ public abstract class UTF8Convert {
       return fromUTF8(s.b);
     } catch (UTFDataFormatException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 }

@@ -114,11 +114,10 @@ public class JDTIdentityMapper {
     else if (type.isTypeVariable()) {
       return typeToTypeID(JDT2CAstUtils.getTypesVariablesBase(type, fAst));
     }
-    Assertions.UNREACHABLE(
+    return Assertions.UNREACHABLE(
         "typeToTypeID() encountered the type "
             + type
             + " that is neither primitive, array, nor class!");
-    return null;
   }
 
   public String anonLocalTypeToTypeID(ITypeBinding type) {

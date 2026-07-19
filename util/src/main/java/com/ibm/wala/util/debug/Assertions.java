@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.debug;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * WALA-specific assertion checking.
  *
@@ -42,7 +44,9 @@ public class Assertions {
    *
    * @throws UnimplementedError unconditionally
    */
-  public static void UNREACHABLE() {
+  @Contract(" -> fail")
+  @SuppressWarnings("TypeParameterUnusedInFormals")
+  public static <T> T UNREACHABLE() {
     throw new UnimplementedError();
   }
 
@@ -51,7 +55,9 @@ public class Assertions {
    *
    * @throws UnimplementedError unconditionally
    */
-  public static void UNREACHABLE(String string) {
+  @Contract("_ -> fail")
+  @SuppressWarnings("TypeParameterUnusedInFormals")
+  public static <T> T UNREACHABLE(String string) {
     throw new UnimplementedError(string);
   }
 
@@ -60,7 +66,9 @@ public class Assertions {
    *
    * @throws UnimplementedError unconditionally
    */
-  public static void UNREACHABLE(Object o) {
-    throw new UnimplementedError(o == null ? "" : o.toString());
+  @Contract("_ -> fail")
+  @SuppressWarnings("TypeParameterUnusedInFormals")
+  public static <T> T UNREACHABLE(Object o) {
+    return UNREACHABLE(o == null ? "" : o.toString());
   }
 }

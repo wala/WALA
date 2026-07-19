@@ -68,8 +68,7 @@ public class HeadlessUtil {
         return result;
       }
     }
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   public interface EclipseCompiler<Unit> {

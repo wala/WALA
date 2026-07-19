@@ -52,7 +52,6 @@ public class CompoundIntIterator implements IntIterator {
 
   @Override
   public int hashCode() throws UnimplementedError {
-    Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
-    return 0;
+    return Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
   }
 }

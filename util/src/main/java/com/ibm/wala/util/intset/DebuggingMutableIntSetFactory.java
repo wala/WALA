@@ -70,8 +70,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
 
       return new DebuggingMutableIntSet(pr, sr);
     } else {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

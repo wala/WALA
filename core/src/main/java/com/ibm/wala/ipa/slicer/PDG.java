@@ -725,8 +725,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
     } else if (use instanceof SSAArrayLengthInstruction s) {
       return s.getArrayRef();
     } else {
-      Assertions.UNREACHABLE("BOOM");
-      return -1;
+      return Assertions.UNREACHABLE("BOOM");
     }
   }
 
@@ -1046,8 +1045,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   @Override
   public int getPredNodeCount(Statement N) throws UnimplementedError {
     populate();
-    Assertions.UNREACHABLE();
-    return delegate.getPredNodeCount(N);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -1106,8 +1104,7 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
   @Override
   public int getSuccNodeCount(Statement N) throws UnimplementedError {
     populate();
-    Assertions.UNREACHABLE();
-    return delegate.getSuccNodeCount(N);
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -1209,20 +1206,17 @@ public class PDG<T extends InstanceKey> implements NumberedLabeledGraph<Statemen
 
   @Override
   public Iterator<Statement> iterateNodes(IntSet s) {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public IntSet getPredNodeNumbers(Statement node) {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public IntSet getSuccNodeNumbers(Statement node) {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

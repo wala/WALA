@@ -377,13 +377,11 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader
     }
 
     public int getMaxLocals() {
-      Assertions.UNREACHABLE();
-      return -1;
+      return Assertions.UNREACHABLE();
     }
 
     public int getMaxStackHeight() {
-      Assertions.UNREACHABLE();
-      return -1;
+      return Assertions.UNREACHABLE();
     }
 
     @Override

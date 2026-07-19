@@ -44,8 +44,7 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    Assertions.UNREACHABLE("unimplemented");
-    return null;
+    return Assertions.UNREACHABLE("unimplemented");
   }
 
   @Override

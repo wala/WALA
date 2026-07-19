@@ -37,8 +37,7 @@ public class SSALoadIndirectInstruction extends SSAAbstractUnaryInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    Assertions.UNREACHABLE("not implemented");
-    return null;
+    return Assertions.UNREACHABLE("not implemented");
   }
 
   @Override

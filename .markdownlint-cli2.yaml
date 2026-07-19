@@ -2,3 +2,6 @@ $schema: https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/sch
 noBanner: true
 noProgress: true
 showFound: false
+config:
+  no-duplicate-heading:
+    siblings_only: true

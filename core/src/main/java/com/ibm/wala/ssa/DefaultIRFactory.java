@@ -44,8 +44,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
       final IBytecodeMethod<IInstruction> castMethod = (IBytecodeMethod<IInstruction>) method;
       return shrikeFactory.makeCFG(castMethod);
     } else {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -61,8 +60,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
       final IBytecodeMethod<IInstruction> castMethod = (IBytecodeMethod<IInstruction>) method;
       return shrikeFactory.makeIR(castMethod, c, options);
     } else {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

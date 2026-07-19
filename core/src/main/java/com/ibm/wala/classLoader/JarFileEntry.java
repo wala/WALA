@@ -46,8 +46,7 @@ public class JarFileEntry implements ModuleEntry {
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

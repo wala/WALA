@@ -46,8 +46,7 @@ public class SlicerUtil {
         }
       }
     }
-    Assertions.UNREACHABLE("failed to find call to " + methodName + " in " + n);
-    return null;
+    return Assertions.UNREACHABLE("failed to find call to " + methodName + " in " + n);
   }
 
   /**
@@ -65,8 +64,7 @@ public class SlicerUtil {
         return new NormalStatement(n, i);
       }
     }
-    Assertions.UNREACHABLE("failed to find allocation in " + n);
-    return null;
+    return Assertions.UNREACHABLE("failed to find allocation in " + n);
   }
 
   public static void dumpSlice(Collection<Statement> slice) {

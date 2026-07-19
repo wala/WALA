@@ -93,8 +93,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     if (klass != null) {
       return new ConeType(klass);
     }
-    Assertions.UNREACHABLE(type.toString());
-    return null;
+    return Assertions.UNREACHABLE(type.toString());
   }
 
   /** A warning when we expect excessive pollution from a factory method */

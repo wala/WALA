@@ -168,8 +168,7 @@ public class SparseIntSet implements IntSet {
     } else if (that instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
       return sameValue(mutableSharedBitVectorIntSet.makeSparseCopy());
     } else {
-      Assertions.UNREACHABLE(that.getClass().toString());
-      return false;
+      return Assertions.UNREACHABLE(that.getClass().toString());
     }
   }
 

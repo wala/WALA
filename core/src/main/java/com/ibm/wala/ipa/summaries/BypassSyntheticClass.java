@@ -190,8 +190,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    */
   @Override
   public int getModifiers() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -207,8 +206,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    */
   @Override
   public Collection<IClass> getDirectInterfaces() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**

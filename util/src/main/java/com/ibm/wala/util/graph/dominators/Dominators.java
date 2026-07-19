@@ -199,8 +199,7 @@ public abstract class Dominators<T> {
             @Override
             public boolean hasEdge(@Nullable Object src, @Nullable Object dst) {
               // TODO Auto-generated method stub
-              Assertions.UNREACHABLE();
-              return false;
+              return Assertions.UNREACHABLE();
             }
           };
     };

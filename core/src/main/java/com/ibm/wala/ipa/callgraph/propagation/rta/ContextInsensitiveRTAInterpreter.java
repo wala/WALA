@@ -47,8 +47,7 @@ public abstract class ContextInsensitiveRTAInterpreter
       return CodeScanner.getNewSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -61,8 +60,7 @@ public abstract class ContextInsensitiveRTAInterpreter
       return CodeScanner.getFieldsRead(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -75,8 +73,7 @@ public abstract class ContextInsensitiveRTAInterpreter
       return CodeScanner.getFieldsWritten(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

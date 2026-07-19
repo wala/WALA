@@ -255,14 +255,12 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     @Override
     public boolean containsKey(Object key) {
-      Assertions.UNREACHABLE();
-      return delegate.containsKey(key);
+      return Assertions.UNREACHABLE();
     }
 
     @Override
     public boolean containsValue(Object value) {
-      Assertions.UNREACHABLE();
-      return delegate.containsValue(value);
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -272,8 +270,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     @Override
     public boolean equals(Object o) {
-      Assertions.UNREACHABLE();
-      return delegate.equals(o);
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -283,14 +280,12 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     @Override
     public int hashCode() {
-      Assertions.UNREACHABLE();
-      return delegate.hashCode();
+      return Assertions.UNREACHABLE();
     }
 
     @Override
     public boolean isEmpty() {
-      Assertions.UNREACHABLE();
-      return delegate.isEmpty();
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -300,8 +295,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     @Override
     public OrdinalSet<Statement> put(Statement key, OrdinalSet<Statement> value) {
-      Assertions.UNREACHABLE();
-      return delegate.put(key, value);
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -312,20 +306,17 @@ public class HeapReachingDefs<T extends InstanceKey> {
 
     @Override
     public OrdinalSet<Statement> remove(Object key) {
-      Assertions.UNREACHABLE();
-      return delegate.remove(key);
+      return Assertions.UNREACHABLE();
     }
 
     @Override
     public int size() {
-      Assertions.UNREACHABLE();
-      return delegate.size();
+      return Assertions.UNREACHABLE();
     }
 
     @Override
     public Collection<OrdinalSet<Statement>> values() {
-      Assertions.UNREACHABLE();
-      return delegate.values();
+      return Assertions.UNREACHABLE();
     }
 
     /** For a statement s, compute the set of statements that may def the heap value read by s. */
@@ -425,8 +416,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
           return OrdinalSet.empty();
         }
         default -> {
-          Assertions.UNREACHABLE(s.getKind().toString());
-          return null;
+          return Assertions.UNREACHABLE(s.getKind().toString());
         }
       }
     }

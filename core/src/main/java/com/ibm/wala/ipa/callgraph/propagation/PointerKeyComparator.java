@@ -199,8 +199,7 @@ public class PointerKeyComparator implements Comparator<PointerKey> {
 
   protected int compareOtherKeys(Object key1, Object key2) {
     System.err.println("Cannot compare " + key1 + " and " + key2);
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

@@ -295,8 +295,7 @@ public class TypeAnnotationsReader extends AnnotationsReader {
         return Pair.make(new TypeArgumentTarget(offset, type_argument_index), 3);
       }
       default -> {
-        Assertions.UNREACHABLE();
-        return null;
+        return Assertions.UNREACHABLE();
       }
     }
   }

@@ -59,8 +59,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
     @Override
     public T top() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override
@@ -70,14 +69,12 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
     @Override
     public List<CAstNode> getNameDecls() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override
     public CAstNode getCatchTarget() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override
