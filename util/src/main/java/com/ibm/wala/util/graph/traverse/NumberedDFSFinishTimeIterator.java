@@ -64,7 +64,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   }
 
   @Override
-  @Nullable Iterator<T> getPendingChildren(@Nullable T n) {
+  @Nullable Iterator<T> getPendingChildren(T n) {
     int number = G.getNumber(n);
     if (number >= pendingChildren.length) {
       // the graph is probably growing as we traverse
@@ -79,7 +79,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
 
   /** Method setPendingChildren. */
   @Override
-  void setPendingChildren(@Nullable T v, Iterator<T> iterator) {
+  void setPendingChildren(T v, Iterator<T> iterator) {
     pendingChildren[G.getNumber(v)] = iterator;
   }
 }
