@@ -41,6 +41,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -48,6 +49,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -517,18 +519,7 @@ public class JavaScriptConstructorFunctions {
 
                 @Override
                 public InputStream getInputStream() {
-                  return new InputStream() {
-                    private int i = 0;
-
-                    @Override
-                    public int read() throws IOException {
-                      if (i >= fun.length()) {
-                        return -1;
-                      } else {
-                        return fun.codePointAt(i++);
-                      }
-                    }
-                  };
+                  return new ByteArrayInputStream(fun.toString().getBytes(StandardCharsets.UTF_8));
                 }
 
                 @Override

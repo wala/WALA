@@ -42,6 +42,7 @@ import org.xml.sax.SAXException;
 public class NuValidatorHtmlParser implements IHtmlParser {
 
   @Override
+  @SuppressWarnings("InputStreamSlowMultibyteRead")
   public void parse(
       final URL url, final Reader reader, final IHtmlCallback handler, final String fileName) {
     URL xx = null;
