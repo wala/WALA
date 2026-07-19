@@ -783,8 +783,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
 
   @Override
   public Iterator<BasicBlockInContext<T>> iterateNodes(IntSet s) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

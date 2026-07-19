@@ -305,8 +305,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
           return getClassReader().getCP().getCPUtf8(nameIndex);
         } catch (InvalidClassFileException e) {
           e.printStackTrace();
-          Assertions.UNREACHABLE();
-          return null;
+          return Assertions.UNREACHABLE();
         }
       }
     }
@@ -330,8 +329,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return false;
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 

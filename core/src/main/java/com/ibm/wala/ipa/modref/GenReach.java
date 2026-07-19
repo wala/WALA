@@ -94,8 +94,7 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
     @Override
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(T src, T dst) {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 }

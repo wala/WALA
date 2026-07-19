@@ -37,7 +37,6 @@ public abstract class UnaryOperator<T extends IVariable<T>> extends AbstractOper
   @Override
   public byte evaluate(T lhs, T[] rhs) throws UnimplementedError {
     // this should never be called. Use the other, more efficient form.
-    Assertions.UNREACHABLE();
-    return 0;
+    return Assertions.UNREACHABLE();
   }
 }

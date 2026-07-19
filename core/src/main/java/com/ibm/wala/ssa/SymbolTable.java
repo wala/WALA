@@ -458,8 +458,7 @@ public class SymbolTable implements Cloneable {
       nt.copy = true;
       return nt;
     } catch (CloneNotSupportedException e) {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 }

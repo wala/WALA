@@ -237,8 +237,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return CodeScanner.getFieldsRead(m).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -252,8 +251,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return CodeScanner.getFieldsWritten(m).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -278,8 +276,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return CodeScanner.getCaughtExceptions(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -292,8 +289,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return CodeScanner.hasObjectArrayLoad(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -306,8 +302,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return CodeScanner.hasObjectArrayStore(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return false;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -320,8 +315,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return CodeScanner.iterateCastTypes(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

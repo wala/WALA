@@ -91,8 +91,7 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    Assertions.UNREACHABLE("not yet implemented.  to be nuked");
-    return null;
+    return Assertions.UNREACHABLE("not yet implemented.  to be nuked");
   }
 
   @Override

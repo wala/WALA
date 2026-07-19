@@ -41,8 +41,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
       if (con instanceof JarURLConnection jarURLConnection) return jarURLConnection.getEntryName();
       else return new FileProvider().filePathFromURL(url);
     } catch (IOException e) {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 
@@ -63,8 +62,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
 
   @Override
   public Module asModule() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

@@ -319,8 +319,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
 
   @Override
   public Iterator<T> iterateNodes(IntSet s) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -330,7 +329,6 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
 
   @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 }

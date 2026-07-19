@@ -325,7 +325,6 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
   @Override
   public GlobalObjectKey getGlobalObject(Atom language) {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 }

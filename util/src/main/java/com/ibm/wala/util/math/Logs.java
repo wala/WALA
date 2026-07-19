@@ -71,8 +71,7 @@ public class Logs {
       }
       test <<= 1;
     }
-    Assertions.UNREACHABLE();
-    return -1;
+    return Assertions.UNREACHABLE();
   }
 
   /** Binary log: finds the smallest power k such that 2^k &gt;= n */

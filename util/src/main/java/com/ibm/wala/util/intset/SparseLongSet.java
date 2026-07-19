@@ -161,8 +161,7 @@ public class SparseLongSet implements LongSet {
     if (that instanceof SparseLongSet sparseLongSet) {
       return sameValueInternal(sparseLongSet);
     } else {
-      Assertions.UNREACHABLE(that.getClass().toString());
-      return false;
+      return Assertions.UNREACHABLE(that.getClass().toString());
     }
   }
 
@@ -344,8 +343,7 @@ public class SparseLongSet implements LongSet {
       temp.intersectWith(sparseLongSet);
       return temp;
     } else {
-      Assertions.UNREACHABLE("Unexpected: " + that.getClass());
-      return null;
+      return Assertions.UNREACHABLE("Unexpected: " + that.getClass());
     }
   }
 
@@ -445,8 +443,7 @@ public class SparseLongSet implements LongSet {
     if (that instanceof SparseLongSet sparseLongSet) {
       return isSubsetInternal(sparseLongSet);
     } else {
-      Assertions.UNREACHABLE("Unexpected type " + that.getClass());
-      return false;
+      return Assertions.UNREACHABLE("Unexpected type " + that.getClass());
     }
   }
 

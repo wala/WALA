@@ -198,8 +198,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       return reader.get();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

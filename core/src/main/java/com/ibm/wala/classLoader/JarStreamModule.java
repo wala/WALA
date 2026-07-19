@@ -165,8 +165,7 @@ public class JarStreamModule extends JarInputStream implements Module {
 
     @Override
     public Module asModule() {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
 
     @Override

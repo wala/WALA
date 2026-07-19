@@ -34,8 +34,7 @@ public class ContextInsensitiveCHAContextInterpreter implements CHAContextInterp
       return CodeScanner.getCallSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     }
   }
 

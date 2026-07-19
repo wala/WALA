@@ -2960,20 +2960,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public CAstControlFlowMap getControlFlow() {
-      Assertions.UNREACHABLE("TypeContext.getControlFlow()");
-      return null;
+      return Assertions.UNREACHABLE("TypeContext.getControlFlow()");
     }
 
     @Override
     public IncipientCFG cfg() {
-      Assertions.UNREACHABLE("TypeContext.cfg()");
-      return null;
+      return Assertions.UNREACHABLE("TypeContext.cfg()");
     }
 
     @Override
     public UnwindState getUnwindState() {
-      Assertions.UNREACHABLE("TypeContext.getUnwindState()");
-      return null;
+      return Assertions.UNREACHABLE("TypeContext.getUnwindState()");
     }
   }
 
@@ -3341,8 +3338,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_INSTANCE_OF) return CAstBinaryOp.INSTANCE_OF;
     else if (op == CAstOperator.OP_POW) return CAstBinaryOp.POW;
     else {
-      Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
-      return null;
+      return Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
     }
   }
 

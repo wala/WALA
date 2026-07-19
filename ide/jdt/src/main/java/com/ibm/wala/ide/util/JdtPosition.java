@@ -71,8 +71,7 @@ public final class JdtPosition implements Position {
     try {
       return URI.create("file:" + path).toURL();
     } catch (MalformedURLException e) {
-      Assertions.UNREACHABLE(e.toString());
-      return null;
+      return Assertions.UNREACHABLE(e.toString());
     }
   }
 

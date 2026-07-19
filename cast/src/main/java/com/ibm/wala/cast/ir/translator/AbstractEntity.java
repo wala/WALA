@@ -37,8 +37,7 @@ public abstract class AbstractEntity implements CAstEntity {
 
   @Override
   public String getSignature() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

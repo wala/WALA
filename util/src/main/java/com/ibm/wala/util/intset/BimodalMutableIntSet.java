@@ -163,8 +163,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     } else if (that instanceof BitVectorIntSet) {
       return impl.intersection(that);
     } else {
-      Assertions.UNREACHABLE("Unexpected: " + that);
-      return null;
+      return Assertions.UNREACHABLE("Unexpected: " + that);
     }
   }
 
@@ -326,8 +325,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     } else if (that instanceof BitVectorIntSet) {
       return impl.containsAny(that);
     } else {
-      Assertions.UNREACHABLE("unsupported " + that.getClass());
-      return false;
+      return Assertions.UNREACHABLE("unsupported " + that.getClass());
     }
   }
 

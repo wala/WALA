@@ -207,22 +207,19 @@ public class TypeBasedHeapModel implements HeapModel {
   }
 
   public String getStringConstantForInstanceKey() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type)
       throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType)
       throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -247,12 +244,10 @@ public class TypeBasedHeapModel implements HeapModel {
           return pointerKeys.getFilteredPointerKeyForLocal(
               node, valueNumber, new FilteredPointerKey.SingleClassFilter(c.concreteType()));
         } else {
-          Assertions.UNREACHABLE("need to handle " + result.getClass());
-          return null;
+          return Assertions.UNREACHABLE("need to handle " + result.getClass());
         }
       } else {
-        Assertions.UNREACHABLE("need to handle " + result.getClass());
-        return null;
+        return Assertions.UNREACHABLE("need to handle " + result.getClass());
       }
     }
   }
@@ -261,8 +256,7 @@ public class TypeBasedHeapModel implements HeapModel {
   public FilteredPointerKey getFilteredPointerKeyForLocal(
       CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter)
       throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

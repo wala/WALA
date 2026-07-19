@@ -78,8 +78,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
         return n;
       }
     }
-    Assertions.UNREACHABLE("Unexpected: failed to find " + methodName + " node");
-    return null;
+    return Assertions.UNREACHABLE("Unexpected: failed to find " + methodName + " node");
   }
 
   private static Condition<PointerAnalysis<InstanceKey>> mayAliased(

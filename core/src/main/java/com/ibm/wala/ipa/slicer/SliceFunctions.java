@@ -51,8 +51,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
         }
       }
       default -> {
-        Assertions.UNREACHABLE(src.getKind().toString());
-        return null;
+        return Assertions.UNREACHABLE(src.getKind().toString());
       }
     }
   }

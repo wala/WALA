@@ -1494,8 +1494,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         }
       } catch (Exception e) {
         e.printStackTrace();
-        Assertions.UNREACHABLE();
-        return null;
+        return Assertions.UNREACHABLE();
       }
     }
 

@@ -144,9 +144,8 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected boolean defineType(CAstEntity type, WalkContext wc) {
-    Assertions.UNREACHABLE(
+    return Assertions.UNREACHABLE(
         "JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
-    return false;
   }
 
   @Override

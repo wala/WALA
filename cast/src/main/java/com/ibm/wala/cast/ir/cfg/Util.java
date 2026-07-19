@@ -24,7 +24,6 @@ public class Util {
       ++i;
     }
 
-    Assertions.UNREACHABLE();
-    return -1;
+    return Assertions.UNREACHABLE();
   }
 }

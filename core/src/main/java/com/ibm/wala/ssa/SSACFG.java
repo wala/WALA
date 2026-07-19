@@ -1085,8 +1085,7 @@ public class SSACFG
 
   @Override
   public IntSet getPredNodeNumbers(ISSABasicBlock node) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /** A warning for when we fail to resolve the type for a checkcast */

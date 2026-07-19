@@ -51,8 +51,7 @@ public class ConeType extends TypeAbstraction {
     } else if (rhs instanceof PrimitiveType) {
       return TOP;
     } else {
-      Assertions.UNREACHABLE("unexpected type " + rhs.getClass());
-      return null;
+      return Assertions.UNREACHABLE("unexpected type " + rhs.getClass());
     }
   }
 

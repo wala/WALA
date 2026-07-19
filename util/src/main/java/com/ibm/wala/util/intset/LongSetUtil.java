@@ -71,8 +71,7 @@ public class LongSetUtil {
     if (set instanceof SparseLongSet) {
       return MutableSparseLongSet.make(set);
     } else {
-      Assertions.UNREACHABLE(set.getClass().toString());
-      return null;
+      return Assertions.UNREACHABLE(set.getClass().toString());
     }
   }
 

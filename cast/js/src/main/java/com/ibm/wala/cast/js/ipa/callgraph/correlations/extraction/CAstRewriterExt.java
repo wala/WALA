@@ -160,8 +160,7 @@ public abstract class CAstRewriterExt extends CAstRewriter<NodePos, NoKey> {
       CAstControlFlowMap orig,
       CAstSourcePositionMap src) {
     if (oldTarget == CAstControlFlowMap.EXCEPTION_TO_EXIT) return oldTarget;
-    Assertions.UNREACHABLE();
-    return super.flowOutTo(nodeMap, oldSource, label, oldTarget, orig, src);
+    return Assertions.UNREACHABLE();
   }
 
   @Override

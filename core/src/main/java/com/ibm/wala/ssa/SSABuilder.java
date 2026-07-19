@@ -984,8 +984,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         return shrikeCFG.getMethod().getInstructions();
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
-        Assertions.UNREACHABLE();
-        return null;
+        return Assertions.UNREACHABLE();
       }
     }
   }
@@ -1068,8 +1067,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         }
       } catch (Exception e) {
         e.printStackTrace();
-        Assertions.UNREACHABLE();
-        return null;
+        return Assertions.UNREACHABLE();
       }
     }
 

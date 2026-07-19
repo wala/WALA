@@ -104,8 +104,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   // ask this question when parsing Java code
   @Override
   protected boolean treatGlobalsAsLexicallyScoped() {
-    Assertions.UNREACHABLE();
-    return false;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

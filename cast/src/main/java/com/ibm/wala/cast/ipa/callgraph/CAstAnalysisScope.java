@@ -53,8 +53,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   @Override
   public ClassLoaderReference getPrimordialLoader() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -64,8 +63,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   @Override
   public ClassLoaderReference getExtensionLoader() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -75,8 +73,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   @Override
   public ClassLoaderReference getApplicationLoader() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**
@@ -84,8 +81,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   @Override
   public ArrayClassLoader getArrayClassLoader() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   /**

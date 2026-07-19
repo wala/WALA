@@ -189,8 +189,7 @@ public class ArrayClass implements IClass, Constants {
 
   @Override
   public Collection<IField> getDeclaredStaticFields() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -255,8 +254,7 @@ public class ArrayClass implements IClass, Constants {
   @Override
   public Collection<IClass> getDirectInterfaces() throws UnimplementedError {
     // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -270,14 +268,12 @@ public class ArrayClass implements IClass, Constants {
 
   @Override
   public Collection<IField> getAllInstanceFields() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
   public Collection<IField> getAllStaticFields() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override
@@ -289,8 +285,7 @@ public class ArrayClass implements IClass, Constants {
 
   @Override
   public Collection<IField> getAllFields() {
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   @Override

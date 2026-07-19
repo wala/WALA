@@ -371,11 +371,9 @@ public class CAstPattern {
     try {
       return new Parser(patternString).parse();
     } catch (NoSuchFieldException e) {
-      Assertions.UNREACHABLE("no such kind in pattern: " + e.getMessage());
-      return null;
+      return Assertions.UNREACHABLE("no such kind in pattern: " + e.getMessage());
     } catch (IllegalAccessException e) {
-      Assertions.UNREACHABLE("internal error in CAstPattern" + e);
-      return null;
+      return Assertions.UNREACHABLE("internal error in CAstPattern" + e);
     }
   }
 

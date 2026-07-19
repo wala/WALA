@@ -14,6 +14,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.shrike.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction.Dispatch;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -152,13 +153,12 @@ public abstract class CallSiteReference extends ProgramCounter
   }
 
   protected String getInvocationString(IInvokeInstruction.IDispatch invocationCode) {
-    if (invocationCode == IInvokeInstruction.Dispatch.STATIC) return "static";
-    if (invocationCode == IInvokeInstruction.Dispatch.SPECIAL) return "special";
-    if (invocationCode == IInvokeInstruction.Dispatch.VIRTUAL) return "virtual";
-    if (invocationCode == IInvokeInstruction.Dispatch.INTERFACE) return "interface";
+    if (invocationCode == Dispatch.STATIC) return "static";
+    if (invocationCode == Dispatch.SPECIAL) return "special";
+    if (invocationCode == Dispatch.VIRTUAL) return "virtual";
+    if (invocationCode == Dispatch.INTERFACE) return "interface";
 
-    Assertions.UNREACHABLE();
-    return null;
+    return Assertions.UNREACHABLE();
   }
 
   public String getInvocationString() {

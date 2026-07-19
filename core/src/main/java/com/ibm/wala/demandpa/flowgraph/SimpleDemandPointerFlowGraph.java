@@ -186,8 +186,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     if (node instanceof StaticFieldKey) {
-      Assertions.UNREACHABLE();
-      return null;
+      return Assertions.UNREACHABLE();
     } else {
       return super.getPredNodeNumbers(node);
     }
@@ -211,8 +210,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   @Override
   public int getPredNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
-      Assertions.UNREACHABLE();
-      return -1;
+      return Assertions.UNREACHABLE();
     } else {
       return super.getPredNodeCount(N);
     }
@@ -236,8 +234,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   @Override
   public int getSuccNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
-      Assertions.UNREACHABLE();
-      return -1;
+      return Assertions.UNREACHABLE();
     } else {
       return super.getSuccNodeCount(N);
     }

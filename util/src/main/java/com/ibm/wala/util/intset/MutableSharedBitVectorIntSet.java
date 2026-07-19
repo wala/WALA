@@ -345,8 +345,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else if (that instanceof SemiSparseMutableIntSet) {
       return that.sameValue(this);
     } else {
-      Assertions.UNREACHABLE("unexpected class " + that.getClass());
-      return false;
+      return Assertions.UNREACHABLE("unexpected class " + that.getClass());
     }
   }
 
@@ -434,8 +433,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       } else {
         /* sharedPart != null , privatePart != null */
         if (that.sharedPart == null) {
-          Assertions.UNREACHABLE();
-          return false;
+          return Assertions.UNREACHABLE();
         } else {
           /* that.sharedPart != null */
           if (that.privatePart == null) {

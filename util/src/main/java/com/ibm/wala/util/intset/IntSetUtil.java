@@ -94,8 +94,7 @@ public class IntSetUtil {
     } else if (set instanceof EmptyIntSet) {
       return IntSetUtil.make();
     } else {
-      Assertions.UNREACHABLE(set.getClass().toString());
-      return null;
+      return Assertions.UNREACHABLE(set.getClass().toString());
     }
   }
 
