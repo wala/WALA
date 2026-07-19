@@ -94,6 +94,8 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
       throw new NoSuchElementException();
     }
     if (empty()) {
+      // When the stack is empty, `hasNext()` can only return `true` if `theNextElement != null`,
+      // per the second disjunct of the `hasNext()` condition.
       T v = requireNonNull(theNextElement);
       setPendingChildren(v, getConnected(v));
       push(v);
@@ -115,7 +117,10 @@ public abstract class DFSFinishTimeIterator<T> extends ArrayList<T> implements I
       // the following saves space by allowing the original iterator to be GCed
       setPendingChildren(v, EmptyIterator.instance());
 
-      // no more children to visit: finished this vertex
+      // No more children to visit: finished this vertex. Since `hasNext()` was verified at entry
+      // and the stack is non-empty here, `theNextElement` must have been set by `init()` or by a
+      // prior iteration of this same `while` loop, where `roots.next()` returns non-`null` because
+      // `roots.hasNext()` was checked.
       while (getPendingChildren(requireNonNull(theNextElement)) != null && roots.hasNext()) {
         theNextElement = roots.next();
       }
