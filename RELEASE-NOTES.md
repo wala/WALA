@@ -4,6 +4,11 @@
 
 ### Functionality changes
 
+#### `MultiMap.removeAll` now returns an empty set when the key is not present
+
+Previously, `MultiMap.removeAll(k)` would return `null` when `k` was not a key in the multi-map.
+Now, it returns an empty set, which is more consistent and safer.
+
 #### `Assertions.UNREACHABLE` now returns a generic type
 
 The `Assertions.UNREACHABLE()`, `Assertions.UNREACHABLE(String)`, and
