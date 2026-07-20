@@ -318,12 +318,12 @@ public abstract class Launcher {
   }
 
   @NullUnmarked
-  public @Nullable byte[] getStdOut() {
+  public byte @Nullable [] getStdOut() {
     return stdOut;
   }
 
   @NullUnmarked
-  public @Nullable byte[] getStderr() {
+  public byte @Nullable [] getStderr() {
     return stdErr;
   }
 
@@ -336,7 +336,7 @@ public abstract class Launcher {
   }
 
   @NullUnmarked
-  public @Nullable byte[] getInput() {
+  public byte @Nullable [] getInput() {
     return input;
   }
 
