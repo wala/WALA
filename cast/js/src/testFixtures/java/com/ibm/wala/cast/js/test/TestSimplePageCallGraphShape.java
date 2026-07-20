@@ -68,11 +68,15 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
           new GraphAssertion(ROOT, new String[] {"page2.html"}),
           new GraphAssertion("page2.html", new String[] {"page2.html/__WINDOW_MAIN__"}));
 
-  @Test
-  public void testPage2() throws IllegalArgumentException, CancelException, WalaException {
+  protected void runTestPage2() throws IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page2.html");
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage2);
+  }
+
+  @Test
+  public void testPage2() throws IllegalArgumentException, CancelException, WalaException {
+    runTestPage2();
   }
 
   private static final List<GraphAssertion> assertionsForPage11 =
