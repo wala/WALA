@@ -392,7 +392,6 @@ tasks.withType<JavaCompile>().configureEach {
           "IterableAndIterator",
           "JUnitMethodInvoked",
           "MixedMutabilityReturnType",
-          "MultipleUnaryOperatorsInMethodCall",
           "MutablePublicArray",
           "NonApiType",
           "NonCanonicalType",
@@ -411,6 +410,9 @@ tasks.withType<JavaCompile>().configureEach {
 
       // Just too many of these; proper Javadoc would be a great long-term goal
       disable("MissingSummary")
+
+      // WALA uses Java, not C.  Evaluation order for argument lists is well-specified.
+      disable("MultipleUnaryOperatorsInMethodCall")
 
       // WALA has many optimizations involving using == to check reference equality.  They
       // may be unnecessary on modern JITs, but fixing these issues requires subtle changes
