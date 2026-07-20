@@ -247,7 +247,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     return solver.getIn(bb);
   }
 
-  private class MeetOperator extends AbstractMeetOperator<MachineState> {
+  private static class MeetOperator extends AbstractMeetOperator<MachineState> {
 
     private final Meeter meeter;
 

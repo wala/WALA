@@ -2637,7 +2637,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Scope getGlobalScope();
   }
 
-  private abstract class DelegatingContext implements WalkContext {
+  private abstract static class DelegatingContext implements WalkContext {
     private final WalkContext parent;
 
     DelegatingContext(WalkContext parent) {
@@ -2756,7 +2756,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  private class FileContext extends DelegatingContext {
+  private static class FileContext extends DelegatingContext {
     private final String fUnitName;
 
     public FileContext(WalkContext parent, String unitName) {
@@ -2770,7 +2770,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  private class UnwindContext extends DelegatingContext {
+  private static class UnwindContext extends DelegatingContext {
     private final UnwindState state;
 
     UnwindContext(CAstNode unwindNode, WalkContext parent, CAstVisitor<WalkContext> visitor) {
@@ -2974,7 +2974,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  private class LocalContext extends DelegatingContext {
+  private static class LocalContext extends DelegatingContext {
     private final Scope localScope;
 
     LocalContext(WalkContext parent, Scope localScope) {
