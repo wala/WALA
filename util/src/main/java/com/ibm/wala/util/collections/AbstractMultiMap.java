@@ -111,7 +111,8 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
   @Override
   public Set<V> removeAll(K key) {
-    return map.remove(key);
+    Set<V> result = map.remove(key);
+    return result != null ? result : Collections.emptySet();
   }
 
   /*

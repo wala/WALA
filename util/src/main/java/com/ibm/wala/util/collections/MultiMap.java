@@ -59,6 +59,10 @@ public interface MultiMap<K, V> {
 
   boolean putAll(K key, Collection<? extends V> vals);
 
+  /**
+   * Returns the set associated with {@code key}, or an empty set if {@code key} is not a key in
+   * this multi-map.
+   */
   Set<V> removeAll(K key);
 
   void clear();
