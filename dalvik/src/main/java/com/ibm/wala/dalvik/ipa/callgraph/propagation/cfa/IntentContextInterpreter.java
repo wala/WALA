@@ -120,14 +120,9 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
     } else {
       final Set<AndroidComponent> possibleTargets =
           intentStarters.getInfo(method.getReference()).getComponentsPossible();
-      if (possibleTargets.size() == 1) {
-        final Iterator<AndroidComponent> it = possibleTargets.iterator();
-        return it.next();
-      } else {
-        // TODO: Go interactive and ask user?
-        final Iterator<AndroidComponent> it = possibleTargets.iterator();
-        return it.next();
-      }
+      // TODO: if possibleTargets.size() > 1, then go interactive and ask user?
+      final Iterator<AndroidComponent> it = possibleTargets.iterator();
+      return it.next();
     }
   }
 
