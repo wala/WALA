@@ -41,18 +41,17 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.io.input.CharSequenceReader;
+import org.apache.commons.io.input.ReaderInputStream;
 import org.jspecify.annotations.NonNull;
 
 public class JavaScriptConstructorFunctions {
@@ -518,8 +517,12 @@ public class JavaScriptConstructorFunctions {
                 }
 
                 @Override
+                @SuppressWarnings("resource")
                 public InputStream getInputStream() {
-                  return new ByteArrayInputStream(fun.toString().getBytes(StandardCharsets.UTF_8));
+                  // `ReaderInputStream` takes ownership of the underlying `Reader`.  Therefore, if
+                  // whoever called `getInputStream()` eventually closes the returned `InputStream`,
+                  // then that will also close the `Reader` that `getInputReader()` provided.
+                  return ReaderInputStream.builder().setReader(getInputReader()).getUnchecked();
                 }
 
                 @Override
@@ -549,7 +552,7 @@ public class JavaScriptConstructorFunctions {
 
                 @Override
                 public Reader getInputReader() {
-                  return new StringReader(fun.toString());
+                  return new CharSequenceReader(fun);
                 }
 
                 @Override
