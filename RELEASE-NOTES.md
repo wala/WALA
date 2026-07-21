@@ -37,6 +37,26 @@ similar unreachable-`return` statement).
 * Existing call sites that just call `Assertions.UNREACHABLE()` as a
   statement without a following `return` continue to work unchanged.
 
+#### `DFSDiscoverTimeIterator` and `DFSFinishTimeIterator` no longer extend `ArrayList`
+
+`DFSDiscoverTimeIterator<T>` and `DFSFinishTimeIterator<T>` previously
+extended `ArrayList<T>` (in addition to implementing `Iterator<T>`). They
+now implement only `Iterator<T>` and `Serializable`, backed by an internal
+stack instead of the inherited `ArrayList` storage.
+
+**Effect for third-party consumers:**
+
+* Code that called `ArrayList` or `List` methods on instances of these
+  types (e.g. `size()`, `get()`, `contains()`, `add()`) will no longer
+  compile.
+
+* Code that declared variables, parameters, or return types as
+  `ArrayList<T>` or `List<T>` referencing these iterators will need to be
+  updated to use `Iterator<T>` instead.
+
+* Code that only consumed these types via the `Iterator<T>` interface
+  (`hasNext()`, `next()`, `forEachRemaining()`) is unaffected.
+
 ## Version 1.8.0
 
 ### Functionality changes

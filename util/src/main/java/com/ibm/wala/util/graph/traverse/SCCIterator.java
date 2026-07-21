@@ -65,7 +65,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
     T v = rev.next();
     currentSCC.add(v);
 
-    while (rev.hasNext() && !rev.isEmpty()) {
+    while (rev.hasNext() && !rev.empty()) {
       currentSCC.add(rev.next());
     }
 
