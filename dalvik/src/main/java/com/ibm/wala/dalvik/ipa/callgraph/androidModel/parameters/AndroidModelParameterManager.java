@@ -527,8 +527,8 @@ public class AndroidModelParameterManager {
 
     List<ManagedParameter> managedParameters = seenTypes.get(type);
     return managedParameters == null
-        || managedParameters.size() <= 1 /* TODO INCORRECT may all be UNALLOCATED */
-            && managedParameters.get(0).status == ValueStatus.UNALLOCATED;
+        || (managedParameters.size() <= 1 /* TODO INCORRECT may all be UNALLOCATED */
+            && managedParameters.get(0).status == ValueStatus.UNALLOCATED);
   }
 
   /**

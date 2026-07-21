@@ -96,6 +96,6 @@ public final class CRTFlags {
    * @return whether the flags are valid.
    */
   private boolean isFlagValid() {
-    return 0 < flags && flags < 2 << flagNames.length - 1;
+    return 0 < flags && flags < 2 << (flagNames.length - 1);
   }
 }
