@@ -519,7 +519,9 @@ public class JavaScriptConstructorFunctions {
                 @Override
                 @SuppressWarnings("resource")
                 public InputStream getInputStream() {
-                  // No leak here: `ReaderInputStream.close()` closes the underlying `Reader`.
+                  // `ReaderInputStream` takes ownership of the underlying `Reader`.  Therefore, if
+                  // whoever called `getInputStream()` eventually closes the returned `InputStream`,
+                  // then that will also close the `Reader` that `getInputReader()` provided.
                   return ReaderInputStream.builder().setReader(getInputReader()).getUnchecked();
                 }
 
