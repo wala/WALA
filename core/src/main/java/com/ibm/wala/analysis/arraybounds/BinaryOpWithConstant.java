@@ -36,7 +36,7 @@ public class BinaryOpWithConstant {
       final IOperator op = instruction.getOperator();
 
       if (constantPos != -1) {
-        if (op == Operator.ADD || op == Operator.SUB && constantPos == 1) {
+        if (op == Operator.ADD || (op == Operator.SUB && constantPos == 1)) {
           result = new BinaryOpWithConstant(op, other, value, instruction.getDef());
         }
       }

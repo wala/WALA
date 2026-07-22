@@ -113,10 +113,10 @@ class ReflectiveInvocationSelector implements ContextSelector {
   private static boolean mayUnderstand(IMethod targetMethod, InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE)
-          || isConstructorConstant(instance)
+          || (isConstructorConstant(instance)
               && targetMethod
                   .getReference()
-                  .equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {
+                  .equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE))) {
         return true;
       }
     }
