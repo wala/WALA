@@ -29,6 +29,7 @@ public interface CAstType {
 
   interface Reference extends CAstType {}
 
+  @SuppressWarnings("AvoidCommonTypeNames")
   interface Class extends Reference {
     boolean isInterface();
 

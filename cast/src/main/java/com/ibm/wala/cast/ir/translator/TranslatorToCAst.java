@@ -38,6 +38,7 @@ public interface TranslatorToCAst {
   <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(
       CAstRewriterFactory<C, K> factory, boolean prepend);
 
+  @SuppressWarnings("AvoidCommonTypeNames")
   class Error extends WalaException {
     @Serial private static final long serialVersionUID = -8440950320425119751L;
     public final Set<Warning> warning;

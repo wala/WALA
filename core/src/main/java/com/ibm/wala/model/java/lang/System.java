@@ -11,6 +11,7 @@
 package com.ibm.wala.model.java.lang;
 
 /** A synthetic model of java.lang.System native methods. */
+@SuppressWarnings("AvoidCommonTypeNames")
 public class System {
 
   /** A simple model of object-array copy. This is not completely correct. TODO: fix it. */
