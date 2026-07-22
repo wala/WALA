@@ -121,6 +121,13 @@ patient](#external-dependencies-patience-is-a-virtue) during the
 initial project open, especially if you have a slow network
 connection.
 
+By default, WALA is configured to use a project SDK named "temurin-25".
+If you have the [Eclipse Temurin](https://adoptium.net/temurin)
+distribution of JDK 25 installed locally, this should work by default.
+If not, you can either install Temurin 25, or update the Project Structure
+settings to use a different SDK.  This may lead to modifications in the
+`.idea/misc.xml` file committed to source control.
+
 #### Benign Warning About Non-Managed Maven Project
 
 Each time you open the WALA project, IntelliJ IDEA may report
