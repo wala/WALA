@@ -488,7 +488,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   }
 
   @Deprecated(forRemoval = true, since = "1.7.2")
-  public class ReturnDefUse extends DefUse {
+  private class ReturnDefUse extends DefUse {
     CodeElement callSet;
     Set<CodeElement> receivers = new HashSet<>();
 

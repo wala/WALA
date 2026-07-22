@@ -997,7 +997,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
   }
 
-  public SSA2LocalMap getLocalMap() {
+  public IR.SSA2LocalMap getLocalMap() {
     return localMap;
   }
 

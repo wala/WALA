@@ -1417,7 +1417,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     }
   }
 
-  public SSA2LocalMap getLocalMap() {
+  public IR.SSA2LocalMap getLocalMap() {
     return localMap;
   }
 

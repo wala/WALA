@@ -2812,7 +2812,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  public class CodeEntityContext extends EntityContext {
+  private class CodeEntityContext extends EntityContext {
     private final Scope topEntityScope;
 
     private final Set<Scope> allEntityScopes;
@@ -2952,7 +2952,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  protected final class TypeContext extends EntityContext {
+  private final class TypeContext extends EntityContext {
 
     private TypeContext(WalkContext parent, CAstEntity n) {
       super(parent, n);
