@@ -11,6 +11,7 @@
 package com.ibm.wala.model.java.lang;
 
 /** A synthetic model of single-threaded behavior */
+@SuppressWarnings("AvoidCommonTypeNames")
 public class Thread {
 
   @SuppressWarnings("InstantiatingAThreadWithDefaultRunMethod")

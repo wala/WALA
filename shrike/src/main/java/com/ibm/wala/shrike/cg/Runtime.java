@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.zip.GZIPOutputStream;
 
+@SuppressWarnings("AvoidCommonTypeNames")
 public class Runtime {
   public interface Policy {
     void callback(StackTraceElement[] stack, String klass, String method, Object receiver);
