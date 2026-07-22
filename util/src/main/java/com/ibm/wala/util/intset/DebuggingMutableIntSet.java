@@ -92,11 +92,9 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
     boolean pr = primaryImpl.add(i);
     boolean sr = secondaryImpl.add(i);
 
-    if (pr != sr) {
-      assert pr == sr
-          : "adding %d to %s returns %s, but adding %d to %s returns %s"
-              .formatted(i, primaryImpl, pr, i, secondaryImpl, sr);
-    }
+    assert pr == sr
+        : "adding %d to %s returns %s, but adding %d to %s returns %s"
+            .formatted(i, primaryImpl, pr, i, secondaryImpl, sr);
 
     return pr;
   }
@@ -119,9 +117,8 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
       boolean ppr = primaryImpl.containsAny(db.primaryImpl);
       boolean ssr = secondaryImpl.containsAny(db.secondaryImpl);
 
-      if (ppr != ssr) {
-        assert ppr == ssr : "containsAny " + this + ' ' + set + ' ' + ppr + ' ' + ssr;
-      }
+      assert ppr == ssr : "containsAny " + this + ' ' + set + ' ' + ppr + ' ' + ssr;
+
       return ppr;
     } else {
       return Assertions.UNREACHABLE();

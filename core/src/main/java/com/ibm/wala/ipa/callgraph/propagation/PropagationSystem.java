@@ -272,7 +272,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
         }
         FilteredPointerKey fpk = (FilteredPointerKey) pk;
         assert fpk != null;
-        assert key != null;
         if (fpk.getTypeFilter() == null) {
           Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
         }

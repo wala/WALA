@@ -418,11 +418,10 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     MutableSparseIntSet s = MutableSparseIntSet.makeEmpty();
     for (InstanceKey element : ik) {
       int index = instanceKeys.getMappedIndex(element);
-      if (index != -1) {
-        s.add(index);
-      } else {
-        assert index != -1 : "instance " + element + " not mapped!";
+      if (index == -1) {
+        throw new IllegalStateException("instance " + element + " not mapped!");
       }
+      s.add(index);
     }
     return new OrdinalSet<>(s, instanceKeys);
   }

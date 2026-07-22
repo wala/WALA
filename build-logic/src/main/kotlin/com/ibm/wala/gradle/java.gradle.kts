@@ -62,6 +62,7 @@ tasks.withType<JavaCompile>().configureEach {
       // warning-level checks upgraded to error, since we've fixed all the warnings
       error(
           "AddressSelection",
+          "AlreadyChecked",
           "AnnotateFormatMethod",
           "AnnotateFormatMethod",
           "AnnotationPosition",
@@ -376,7 +377,6 @@ tasks.withType<JavaCompile>().configureEach {
       // warning-level checks that are enabled by default, but which we violate one or more times
       disable(
           "AlmostJavadoc",
-          "AlreadyChecked",
           "AmbiguousMethodReference",
           "ArrayRecordComponent",
           "AssignmentExpression",

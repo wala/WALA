@@ -40,7 +40,6 @@ public abstract class TypeSignature extends Signature {
     if (s.isEmpty()) {
       throw new IllegalArgumentException("illegal empty string s");
     }
-    assert !s.isEmpty();
     return switch (s.charAt(0)) {
       case TypeReference.VoidTypeCode -> BaseType.VOID;
       case TypeReference.BooleanTypeCode -> BaseType.BOOLEAN;
