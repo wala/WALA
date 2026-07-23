@@ -275,7 +275,7 @@ public final class TypeName implements Serializable {
       }
       if (!isPrimitive) {
         result.append('L');
-      } else if (packageName != null && isPrimitive) {
+      } else if (packageName != null) {
         result.append('P');
       }
     }
