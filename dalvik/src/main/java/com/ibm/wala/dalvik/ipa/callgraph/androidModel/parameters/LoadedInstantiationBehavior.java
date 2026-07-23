@@ -238,7 +238,6 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     return behaviours.get(typeK).exactness;
   }
 
-  /** */
   @Override
   public InstanceBehavior getDafultBehavior() {
     return Objects.requireNonNullElse(defaultBehavior, InstanceBehavior.REUSE);

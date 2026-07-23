@@ -179,9 +179,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         TypeReference.findOrCreate(getClassLoader().getReference(), TypeName.findOrCreate(name));
   }
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final

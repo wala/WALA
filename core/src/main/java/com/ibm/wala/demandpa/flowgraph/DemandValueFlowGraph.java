@@ -93,7 +93,6 @@ import java.util.Set;
  */
 public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
-  /** */
   @Serial private static final long serialVersionUID = 1L;
 
   public DemandValueFlowGraph(
@@ -329,11 +328,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.wala.Instruction.Visitor#visitThrow(com.ibm.wala.ThrowInstruction)
-     */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // don't do anything: we handle exceptional edges

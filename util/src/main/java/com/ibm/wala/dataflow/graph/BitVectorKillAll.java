@@ -26,9 +26,6 @@ public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
 
   private BitVectorKillAll() {}
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
-   */
   @Override
   @NullUnmarked
   public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs) {
@@ -41,25 +38,16 @@ public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     return this == o;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#hashCode()
-   */
   @Override
   public int hashCode() {
     return 12423958;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#toString()
-   */
   @Override
   public String toString() {
     return "KillAll";

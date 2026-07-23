@@ -13,7 +13,6 @@ package com.ibm.wala.util.intset;
 import java.io.Serial;
 import java.util.Arrays;
 
-/** */
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
   @Serial private static final long serialVersionUID = -5846568678514886375L;
@@ -311,7 +310,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     return true;
   }
 
-  /*
+  /**
    * @param other @return true iff this is a subset of other
    */
   @Override

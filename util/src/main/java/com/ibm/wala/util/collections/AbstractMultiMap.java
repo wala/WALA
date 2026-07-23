@@ -47,7 +47,6 @@ import org.jspecify.annotations.Nullable;
 
 abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
 
-  /** */
   @Serial private static final long serialVersionUID = 4064901973301954076L;
 
   protected final Map<K, Set<V>> map = HashMapFactory.make();
@@ -78,11 +77,6 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
     return ret;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#put(K, V)
-   */
   @Override
   public boolean put(K key, @Nullable V val) {
     Set<V> vals = map.get(key);
@@ -93,11 +87,6 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
     return vals.add(val);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#remove(K, V)
-   */
   @Override
   public boolean remove(K key, V val) {
     Set<V> elems = map.get(key);
@@ -115,31 +104,16 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
     return result != null ? result : Collections.emptySet();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#keys()
-   */
   @Override
   public Set<K> keySet() {
     return map.keySet();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#containsKey(java.lang.Object)
-   */
   @Override
   public boolean containsKey(K key) {
     return map.containsKey(key);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#size()
-   */
   @Override
   public int size() {
     int ret = 0;
@@ -149,21 +123,11 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
     return ret;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#toString()
-   */
   @Override
   public String toString() {
     return map.toString();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see AAA.util.MultiMap#putAll(K, java.util.Set)
-   */
   @Override
   public boolean putAll(K key, Collection<? extends V> vals) {
     Set<V> edges = map.get(key);

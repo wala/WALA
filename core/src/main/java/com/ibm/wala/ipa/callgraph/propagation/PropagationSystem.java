@@ -696,7 +696,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return flowGraph.getFlowGraphIncludingImplicitConstraints();
   }
 
-  /** */
   public void revertToPreTransitive() {
     pointsToMap.revertToPreTransitive();
   }

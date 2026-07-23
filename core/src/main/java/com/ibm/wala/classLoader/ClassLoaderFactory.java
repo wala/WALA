@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import java.io.IOException;
 
-/** */
 public interface ClassLoaderFactory {
 
   /**

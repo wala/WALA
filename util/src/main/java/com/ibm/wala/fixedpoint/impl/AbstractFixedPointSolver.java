@@ -471,7 +471,6 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
     evaluationsAtLastOrdering = nEvaluated;
   }
 
-  /** */
   public void orderStatements() {
 
     if (nextOrderNumber > minSizeForTopSort) {

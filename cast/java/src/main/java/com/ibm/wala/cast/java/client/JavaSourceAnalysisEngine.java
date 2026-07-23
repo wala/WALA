@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-/** */
 public abstract class JavaSourceAnalysisEngine
     extends AbstractAnalysisEngine<InstanceKey, CallGraphBuilder<InstanceKey>, Void> {
 

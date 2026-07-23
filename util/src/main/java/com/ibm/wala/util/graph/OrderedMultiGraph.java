@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.graph;
 
-/** */
 public interface OrderedMultiGraph<T> extends Graph<T> {
 
   /** get the ith successor of a node */

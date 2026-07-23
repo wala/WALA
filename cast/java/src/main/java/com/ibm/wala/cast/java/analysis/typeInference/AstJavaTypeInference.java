@@ -164,21 +164,11 @@ public class AstJavaTypeInference extends AstTypeInference {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 71292;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return o != null && o.getClass().equals(getClass());

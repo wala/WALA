@@ -13,7 +13,6 @@ package com.ibm.wala.util.intset;
 import java.io.Serial;
 import java.util.Arrays;
 
-/** */
 public class BitVector extends BitVectorBase<BitVector> {
 
   @Serial private static final long serialVersionUID = 9087259335807761617L;

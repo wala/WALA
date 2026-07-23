@@ -65,11 +65,6 @@ public class ReturnFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowF
     this.ce = new LocalElement(def);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction#getTargets(int)
-   */
   @Override
   public IntSet getTargets(int d1) {
     if (0 == d1) {

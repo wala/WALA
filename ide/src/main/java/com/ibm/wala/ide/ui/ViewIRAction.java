@@ -65,7 +65,6 @@ public class ViewIRAction<P> extends Action {
   }
 
   /**
-   * @see org.eclipse.jface.action.IAction#run()
    * @throws IllegalStateException if the viewer is not running
    */
   @Override

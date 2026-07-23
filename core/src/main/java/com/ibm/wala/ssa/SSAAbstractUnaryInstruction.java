@@ -11,7 +11,6 @@
 
 package com.ibm.wala.ssa;
 
-/** */
 public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
   protected final int result;

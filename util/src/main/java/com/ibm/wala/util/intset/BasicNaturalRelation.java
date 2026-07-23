@@ -376,9 +376,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
     delegateStore.set(x, null);
   }
 
-  /**
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
   @Override
   public void performVerboseAction() {
     if (VERBOSE) {

@@ -109,7 +109,6 @@ public class CAstAnalysisScope extends AnalysisScope {
     return theLoader;
   }
 
-  /** */
   @Override
   public Collection<ClassLoaderReference> getLoaders() {
     return Collections.singleton(theLoader);

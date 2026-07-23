@@ -36,7 +36,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   private @Nullable BitVectorIntSet sharedPart;
 
-  /** */
   public MutableSharedBitVectorIntSet() {}
 
   /**
@@ -110,7 +109,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /** */
   private void checkIntegrity() {
     assert privatePart == null || !privatePart.isEmpty();
     //noinspection AssertWithSideEffects
@@ -120,7 +118,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /** */
   private void checkOverflow() {
 
     if (PARANOID) {
@@ -147,9 +144,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#contains(int)
-   */
   @Override
   public boolean contains(int i) {
     if (privatePart != null && privatePart.contains(i)) {
@@ -161,9 +155,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return false;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public IntSet intersection(IntSet that) {
     if (that == null) {
@@ -190,9 +181,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public IntSet union(IntSet that) {
     MutableSharedBitVectorIntSet temp = new MutableSharedBitVectorIntSet();
@@ -215,17 +203,11 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#isEmpty()
-   */
   @Override
   public boolean isEmpty() {
     return privatePart == null && sharedPart == null;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#size()
-   */
   @Override
   public int size() {
     int result = 0;
@@ -234,9 +216,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return result;
   }
 
-  /**
-   * @see IntSet#intIterator()
-   */
   @Override
   public IntIterator intIterator() {
     if (privatePart == null) {
@@ -248,9 +227,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
-   */
   @Override
   public void foreach(IntSetAction action) {
     if (privatePart != null) {
@@ -261,10 +237,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
-   *     com.ibm.wala.util.intset.IntSetAction)
-   */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (X instanceof MutableSharedBitVectorIntSet mutableSharedBitVectorIntSet) {
@@ -311,9 +283,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#max()
-   */
   @Override
   public int max() {
     int result = -1;
@@ -326,9 +295,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
@@ -455,9 +421,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean isSubset(IntSet that) {
     if (that == null) {
@@ -926,7 +889,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /** */
   BitVectorIntSet makeDenseCopy() {
     if (privatePart == null) {
       if (sharedPart == null) {
@@ -949,9 +911,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return sharedPart != null;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean containsAny(IntSet set) {
     if (set instanceof MutableSharedBitVectorIntSet other) {
@@ -984,14 +943,12 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return addAllInIntersectionGeneral(other, filter);
   }
 
-  /** */
   private boolean addAllInIntersectionGeneral(IntSet other, IntSet filter) {
     BitVectorIntSet o = new BitVectorIntSet(other);
     o.intersectWith(filter);
     return addAll(o);
   }
 
-  /** */
   private boolean addAllInIntersectionInternal(MutableSharedBitVectorIntSet other, IntSet filter) {
     if (other.sharedPart == null) {
       if (other.privatePart == null) {

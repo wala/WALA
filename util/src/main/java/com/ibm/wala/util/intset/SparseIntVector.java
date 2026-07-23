@@ -48,11 +48,7 @@ public class SparseIntVector implements IntVector, Serializable {
     }
   }
 
-  /*
-   * TODO: this can be optimized
-   *
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
+  /** TODO: this can be optimized */
   @Override
   public void set(int x, int value) {
     maxIndex = Math.max(maxIndex, x);

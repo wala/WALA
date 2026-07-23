@@ -55,9 +55,6 @@ public class FallbackContextInterpreter implements SSAContextInterpreter {
     this.shrikeCI = shrikeCI;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node.getMethod() instanceof SyntheticMethod || node.getMethod() instanceof ShrikeCTMethod) {
@@ -72,25 +69,16 @@ public class FallbackContextInterpreter implements SSAContextInterpreter {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     return shrikeCI.iterateFieldsRead(node);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     return shrikeCI.iterateFieldsWritten(node);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.cha.CHAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (node.getMethod() instanceof SyntheticMethod || node.getMethod() instanceof ShrikeCTMethod) {
@@ -105,25 +93,16 @@ public class FallbackContextInterpreter implements SSAContextInterpreter {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return shrikeCI.recordFactoryType(node, klass);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.cha.CHAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public boolean understands(CGNode node) {
     return true;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public IR getIR(CGNode node) {
     return shrikeCI.getIR(node);
@@ -134,25 +113,16 @@ public class FallbackContextInterpreter implements SSAContextInterpreter {
     return getIR(node);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getDU(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public DefUse getDU(CGNode node) {
     return shrikeCI.getDU(node);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public int getNumberOfStatements(CGNode node) {
     return shrikeCI.getNumberOfStatements(node);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) {
     return shrikeCI.getCFG(n);

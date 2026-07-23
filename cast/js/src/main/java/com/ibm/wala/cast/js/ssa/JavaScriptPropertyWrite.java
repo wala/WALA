@@ -20,10 +20,6 @@ public class JavaScriptPropertyWrite extends AstPropertyWrite {
     super(iindex, objectRef, memberRef, value);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
-   */
   @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();

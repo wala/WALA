@@ -82,9 +82,6 @@ public class SyntheticMethod implements IMethod {
     return method.getSelector().equals(MethodReference.initSelector);
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isStatic()
-   */
   @Override
   public boolean isStatic() {
     return isStatic;
@@ -179,10 +176,8 @@ public class SyntheticMethod implements IMethod {
     throw new UnsupportedOperationException();
   }
 
-  /*
+  /**
    * TODO: why isn't this abstract?
-   *
-   * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
    *
    * @throws UnsupportedOperationException unconditionally
    */
@@ -190,11 +185,7 @@ public class SyntheticMethod implements IMethod {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * TODO: why isn't this abstract?
-   *
-   * @see com.ibm.wala.classLoader.IMethod#getMaxStackHeight()
-   */
+  /** TODO: why isn't this abstract? */
   public int getMaxStackHeight() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

@@ -552,17 +552,11 @@ public class SSACFG
       return stackSlotPhis != null || localPhis != null;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.INodeWithNumber#getGraphNodeId()
-     */
     @Override
     public int getGraphNodeId() {
       return number;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.INodeWithNumber#setGraphNodeId(int)
-     */
     @Override
     public void setGraphNodeId(int number) {
       // TODO Auto-generated method stub
@@ -611,17 +605,11 @@ public class SSACFG
       return delegate.getNode(getNumber()).hashCode() * 6271;
     }
 
-    /**
-     * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
-     */
     @Override
     public boolean isExitBlock() {
       return this == SSACFG.this.exit();
     }
 
-    /**
-     * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
-     */
     @Override
     public boolean isEntryBlock() {
       return this == SSACFG.this.entry();
@@ -768,25 +756,16 @@ public class SSACFG
     return b.getNumber();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
-   */
   @Override
   public BasicBlock getNode(int number) {
     return basicBlocks[number];
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
-   */
   @Override
   public int getMaxNumber() {
     return basicBlocks.length - 1;
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#iterator()
-   */
   @Override
   public Iterator<ISSABasicBlock> iterator() {
     return Arrays.<ISSABasicBlock>asList(basicBlocks).iterator();
@@ -797,17 +776,11 @@ public class SSACFG
     return Arrays.stream(basicBlocks);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
   @Override
   public int getNumberOfNodes() {
     return delegate.getNumberOfNodes();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#getPredNodes(Object)
-   */
   @Override
   public Iterator<ISSABasicBlock> getPredNodes(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -835,9 +808,6 @@ public class SSACFG
     };
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#getPredNodeCount(Object)
-   */
   @Override
   public int getPredNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -847,9 +817,6 @@ public class SSACFG
     return delegate.getPredNodeCount(n);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#getSuccNodes(Object)
-   */
   @Override
   public Iterator<ISSABasicBlock> getSuccNodes(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -877,9 +844,6 @@ public class SSACFG
     };
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#getSuccNodeCount(Object)
-   */
   @Override
   public int getSuccNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
@@ -889,9 +853,6 @@ public class SSACFG
     return delegate.getSuccNodeCount(n);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NumberedGraph#addNode(Object)
-   */
   @Override
   public void addNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -908,9 +869,6 @@ public class SSACFG
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object)
-   */
   @Override
   public void removeAllIncidentEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -924,9 +882,6 @@ public class SSACFG
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#removeNode(Object)
-   */
   @Override
   public void removeNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -938,9 +893,6 @@ public class SSACFG
     return delegate.getProgramCounter(index);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#containsNode(Object)
-   */
   @Override
   public boolean containsNode(ISSABasicBlock N) {
     if (N instanceof BasicBlock) {
@@ -1051,9 +1003,6 @@ public class SSACFG
     return c;
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public Iterator<ISSABasicBlock> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<>(s, this);

@@ -46,7 +46,6 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
     return primaryImpl.contains(i);
   }
 
-  /** */
   @Override
   public boolean isEmpty() {
     if (primaryImpl.isEmpty() != secondaryImpl.isEmpty()) {
@@ -64,7 +63,6 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
     return primaryImpl.isEmpty();
   }
 
-  /** */
   @Override
   public int size() {
     if (primaryImpl.size() != secondaryImpl.size()) {
@@ -145,9 +143,6 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public IntSet union(IntSet that) {
     MutableSparseIntSet temp = new MutableSparseIntSet();
@@ -252,7 +247,6 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
     }
   }
 
-  /** */
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other instanceof DebuggingMutableIntSet db && filter instanceof DebuggingMutableIntSet df) {
@@ -267,9 +261,6 @@ record DebuggingMutableIntSet(MutableIntSet primaryImpl, MutableIntSet secondary
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#intIterator()
-   */
   @Override
   public IntIterator intIterator() {
     MutableSparseIntSet bits = MutableSparseIntSet.makeEmpty();

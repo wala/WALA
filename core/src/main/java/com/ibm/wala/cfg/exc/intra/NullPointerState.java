@@ -123,9 +123,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
     return vars[varNum] == State.NULL;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
-   */
   @Override
   public void copyState(NullPointerState v) {
     assert v.vars.length == vars.length;
@@ -241,17 +238,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
     private static final StateMeet INSTANCE = new StateMeet();
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return o instanceof StateMeet;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable[])
-     */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState[] rhs) {
       boolean changed = false;
@@ -264,17 +255,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 4711;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#toString()
-     */
     @Override
     public String toString() {
       return "NullPointerStateMeet";
@@ -313,9 +298,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o == this) {
@@ -337,17 +319,11 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       return false;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 11000 + varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#toString()
-     */
     @Override
     public String toString() {
       StringBuilder str = new StringBuilder("PhiValueMeet(" + varNum + ", [");
@@ -371,9 +347,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       this.varNum = varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
-     */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       byte state = FixedPointConstants.NOT_CHANGED;
@@ -390,25 +363,16 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       return state;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return o instanceof NullifyFunction nullifyFunction && nullifyFunction.varNum == varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 47000 + varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#toString()
-     */
     @Override
     public String toString() {
       return "Nullify(" + varNum + ')';
@@ -424,9 +388,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       this.varNum = varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
-     */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       byte state = FixedPointConstants.NOT_CHANGED;
@@ -443,25 +404,16 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       return state;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return o instanceof DenullifyFunction denullifyFunction && denullifyFunction.varNum == varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#hashCode()
-     */
     @Override
     public int hashCode() {
       return -47000 - varNum;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#toString()
-     */
     @Override
     public String toString() {
       return "Denullify(" + varNum + ')';
@@ -472,9 +424,6 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 
     private static final IdentityFunction INSTANCE = new IdentityFunction();
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.UnaryOperator#evaluate(com.ibm.wala.fixpoint.IVariable, com.ibm.wala.fixpoint.IVariable)
-     */
     @Override
     public byte evaluate(NullPointerState lhs, NullPointerState rhs) {
       if (lhs.equals(rhs)) {
@@ -485,25 +434,16 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
       }
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return o instanceof IdentityFunction;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 8911;
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.fixedpoint.impl.AbstractOperator#toString()
-     */
     @Override
     public String toString() {
       return "Id";

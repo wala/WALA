@@ -180,9 +180,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return heapModel;
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object)
-   */
   @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     if (node instanceof StaticFieldKey) {
@@ -192,9 +189,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.AbstractNumberedGraph#getSuccNodeNumbers(java.lang.Object)
-   */
   @Override
   public IntSet getSuccNodeNumbers(Object node) throws IllegalArgumentException {
     if (node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
@@ -204,9 +198,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return super.getSuccNodeNumbers(node);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object)
-   */
   @Override
   public int getPredNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
@@ -216,9 +207,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.AbstractGraph#getPredNodes(java.lang.Object)
-   */
   @Override
   public Iterator<Object> getPredNodes(Object N) throws IllegalArgumentException {
     if (N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
@@ -228,9 +216,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     return super.getPredNodes(N);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object)
-   */
   @Override
   public int getSuccNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
@@ -240,9 +225,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.AbstractGraph#getSuccNodes(java.lang.Object)
-   */
   @Override
   public Iterator<Object> getSuccNodes(Object N) {
     if (N instanceof StaticFieldKey staticFieldKey) {
@@ -361,11 +343,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ibm.wala.util.graph.AbstractGraph#hasEdge(java.lang.Object, java.lang.Object)
-   */
   public boolean hasEdge(PointerKey src, PointerKey dst) {
     // TODO Auto-generated method stub
     return super.hasEdge(src, dst);
@@ -579,11 +556,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       this.du = du;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.domo.ssa.SSAArrayLoadInstruction)
-     */
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       // skip arrays of primitive type
@@ -623,11 +595,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.domo.ssa.SSAArrayStoreInstruction)
-     */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // Assertions.UNREACHABLE();
@@ -716,11 +683,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.domo.ssa.SSACheckCastInstruction)
-     */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       Set<IClass> types = HashSetFactory.make();
@@ -784,11 +746,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.domo.ssa.SSAReturnInstruction)
-     */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
@@ -817,11 +774,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitGet(com.ibm.domo.ssa.SSAGetInstruction)
-     */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
       visitGetInternal(
@@ -900,11 +852,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitPut(com.ibm.domo.ssa.PutInstruction)
-     */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
       visitPutInternal(
@@ -1020,11 +967,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitNew(com.ibm.domo.ssa.NewInstruction)
-     */
     @Override
     public void visitNew(SSANewInstruction instruction) {
 
@@ -1089,11 +1031,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitThrow(com.ibm.domo.ssa.ThrowInstruction)
-     */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // Assertions.UNREACHABLE();
@@ -1101,11 +1038,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // in a separate pass
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.domo.ssa.GetCaughtExceptionInstruction)
-     */
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       List<ProgramCounter> peis =
@@ -1149,11 +1081,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     // }
     // }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitPi(com.ibm.domo.ssa.SSAPiInstruction)
-     */
     @Override
     public void visitPi(SSAPiInstruction instruction) {
       Assertions.UNREACHABLE();
@@ -1278,11 +1205,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   // this.x = x;
   // }
   //
-  // /*
-  // * (non-Javadoc)
-  // *
-  // * @see java.lang.Object#equals(java.lang.Object)
-  // */
   // public boolean equals(Object obj) {
   // if (obj instanceof FieldExpression) {
   // FieldExpression other = (FieldExpression) obj;
@@ -1292,11 +1214,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   // }
   // }
   //
-  // /*
-  // * (non-Javadoc)
-  // *
-  // * @see java.lang.Object#hashCode()
-  // */
   // public int hashCode() {
   // return x.hashCode() + 4729 * f.hashCode();
   // }

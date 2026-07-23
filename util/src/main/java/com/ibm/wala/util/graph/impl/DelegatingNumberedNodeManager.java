@@ -63,9 +63,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     return maxNumber;
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#iterator()
-   */
   @Override
   public Iterator<T> iterator() {
     final @Nullable INodeWithNumber[] arr = nodes;
@@ -116,9 +113,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     return Arrays.stream(nodes).filter(Objects::nonNull).map(node -> (T) node);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
   @Override
   public int getNumberOfNodes() {
     return numberOfNodes;
@@ -128,7 +122,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
    * If N.getNumber() == -1, then set N.number and insert this node in the graph. Use with extreme
    * care.
    *
-   * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    * @throws IllegalArgumentException if n is null
    */
   @Override
@@ -161,9 +154,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#removeNode(Object)
-   */
   @Override
   public void removeNode(T n) {
     if (n == null) {
@@ -192,9 +182,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
     return result.toString();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(Object)
-   */
   @Override
   public boolean containsNode(@Nullable T n) {
     if (n == null) {

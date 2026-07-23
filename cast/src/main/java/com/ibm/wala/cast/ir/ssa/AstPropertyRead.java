@@ -24,11 +24,6 @@ public abstract class AstPropertyRead extends AbstractReflectiveGet {
     return true;
   }
 
-  /**
-   * /* (non-Javadoc)
-   *
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(com.ibm.wala.ssa.SSAInstruction.IVisitor)
-   */
   @Override
   public void visit(IVisitor v) {
     assert v instanceof AstInstructionVisitor;

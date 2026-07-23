@@ -16,7 +16,6 @@ import com.ibm.wala.util.intset.BitVector;
 import java.util.ArrayList;
 import java.util.Map;
 
-/** */
 public class Table<T> {
 
   // table is implemented as an ArrayList of rows. Each row is a SimpleVector<T>.

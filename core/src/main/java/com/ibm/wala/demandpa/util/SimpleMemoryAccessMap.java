@@ -246,11 +246,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.shrikeBT.Instruction.Visitor#visitArrayLoad(com.ibm.shrikeBT.ArrayLoadInstruction)
-     */
     @Override
     public void visitArrayLoad(IArrayLoadInstruction instruction) {
       if (!includePrimOps) {
@@ -263,11 +258,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       arrayReads.add(new MemoryAccess(instructionIndex, node));
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.shrikeBT.Instruction.Visitor#visitArrayStore(com.ibm.shrikeBT.ArrayStoreInstruction)
-     */
     @Override
     public void visitArrayStore(IArrayStoreInstruction instruction) {
       if (!includePrimOps) {
@@ -283,11 +273,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       arrayWrites.add(new MemoryAccess(instructionIndex, node));
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.shrikeBT.Instruction.Visitor#visitGet(com.ibm.shrikeBT.GetInstruction)
-     */
     @Override
     public void visitGet(IGetInstruction instruction) {
       FieldReference fr =
@@ -308,11 +293,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       s.add(fa);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.shrikeBT.Instruction.Visitor#visitPut(com.ibm.shrikeBT.PutInstruction)
-     */
     @Override
     public void visitPut(IPutInstruction instruction) {
       FieldReference fr =

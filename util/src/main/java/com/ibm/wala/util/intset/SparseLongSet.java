@@ -100,11 +100,7 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /**
-   * Does this set contain value x?
-   *
-   * @see com.ibm.wala.util.intset.IntSet#contains(int)
-   */
+  /** Does this set contain value x? */
   @Override
   public final boolean contains(long x) {
     if (elements == null) {
@@ -329,9 +325,6 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public @Nullable LongSet intersection(LongSet that)
       throws IllegalArgumentException, UnimplementedError {
@@ -432,9 +425,6 @@ public class SparseLongSet implements LongSet {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean isSubset(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
@@ -447,9 +437,6 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean containsAny(LongSet set) {
     if (set == null) {

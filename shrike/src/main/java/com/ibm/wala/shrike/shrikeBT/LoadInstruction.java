@@ -102,11 +102,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
     return false;
   }
 
-  /**
-   * Java does not permit this.
-   *
-   * @see com.ibm.wala.shrike.shrikeBT.IMemoryOperation#isAddressOf()
-   */
+  /** Java does not permit this. */
   @Override
   public boolean isAddressOf() {
     return false;

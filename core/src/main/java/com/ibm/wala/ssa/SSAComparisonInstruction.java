@@ -22,7 +22,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   private final IComparisonInstruction.Operator operator;
 
-  /** */
   public SSAComparisonInstruction(
       int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
     super(iindex);

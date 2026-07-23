@@ -12,7 +12,6 @@ package com.ibm.wala.util.intset;
 
 import java.util.TreeSet;
 
-/** */
 public class SemiSparseMutableIntSetFactory
     implements MutableIntSetFactory<SemiSparseMutableIntSet> {
 

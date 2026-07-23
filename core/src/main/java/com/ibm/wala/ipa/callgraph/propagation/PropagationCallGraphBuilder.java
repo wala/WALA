@@ -1329,19 +1329,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return "InverseFilter";
     }
 
-    /**
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     @Override
     public boolean isComplex() {
       return false;
     }
 
-    /*
-     * simply check if rhs contains a malleable.
-     *
-     * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable, com.ibm.wala.dataflow.IVariable)
-     */
+    /** simply check if rhs contains a malleable. */
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
 

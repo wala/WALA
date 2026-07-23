@@ -86,9 +86,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     return instr;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
-   */
   @Override
   public UnaryOperator<NullPointerState> getEdgeTransferFunction(T src, T dst) {
     SSAInstruction instr = getRelevantInstruction(src);
@@ -126,17 +123,11 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     return NullPointerState.identityFunction();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getMeetOperator()
-   */
   @Override
   public AbstractMeetOperator<NullPointerState> getMeetOperator() {
     return meet;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getNodeTransferFunction(java.lang.Object)
-   */
   @Override
   public UnaryOperator<NullPointerState> getNodeTransferFunction(final T node) {
     final ArrayList<UnaryOperator<NullPointerState>> phiTransferFunctions = new ArrayList<>(1);
@@ -152,17 +143,11 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#hasEdgeTransferFunctions()
-   */
   @Override
   public boolean hasEdgeTransferFunctions() {
     return true;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#hasNodeTransferFunctions()
-   */
   @Override
   public boolean hasNodeTransferFunctions() {
     return true;
@@ -185,9 +170,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       this.sym = ir.getSymbolTable();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitArrayLength(com.ibm.wala.ssa.SSAArrayLengthInstruction)
-     */
     @Override
     public void visitArrayLength(SSAArrayLengthInstruction instruction) {
       noIdentity = true;
@@ -195,9 +177,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.nullifyFunction(instruction.getArrayRef());
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitArrayLoad(com.ibm.wala.ssa.SSAArrayLoadInstruction)
-     */
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       noIdentity = true;
@@ -205,9 +184,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.nullifyFunction(instruction.getArrayRef());
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitArrayStore(com.ibm.wala.ssa.SSAArrayStoreInstruction)
-     */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       noIdentity = true;
@@ -215,9 +191,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.nullifyFunction(instruction.getArrayRef());
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitBinaryOp(com.ibm.wala.ssa.SSABinaryOpInstruction)
-     */
     @Override
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       noIdentity = false;
@@ -225,9 +198,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
-     */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       noIdentity = false;
@@ -235,9 +205,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitComparison(com.ibm.wala.ssa.SSAComparisonInstruction)
-     */
     @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
       noIdentity = false;
@@ -245,9 +212,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitConditionalBranch(com.ibm.wala.ssa.SSAConditionalBranchInstruction)
-     */
     @Override
     public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
       int arg1 = instruction.getUse(0);
@@ -293,9 +257,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       }
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitConversion(com.ibm.wala.ssa.SSAConversionInstruction)
-     */
     @Override
     public void visitConversion(SSAConversionInstruction instruction) {
       noIdentity = false;
@@ -303,9 +264,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitGet(com.ibm.wala.ssa.SSAGetInstruction)
-     */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
       if (!instruction.isStatic()) {
@@ -320,9 +278,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       }
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitGetCaughtException(com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction)
-     */
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       noIdentity = false;
@@ -330,9 +285,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitGoto(com.ibm.wala.ssa.SSAGotoInstruction)
-     */
     @Override
     public void visitGoto(SSAGotoInstruction instruction) {
       noIdentity = false;
@@ -340,9 +292,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitInstanceof(com.ibm.wala.ssa.SSAInstanceofInstruction)
-     */
     @Override
     public void visitInstanceof(SSAInstanceofInstruction instruction) {
       noIdentity = false;
@@ -350,9 +299,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitInvoke(com.ibm.wala.ssa.SSAInvokeInstruction)
-     */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
       if (!instruction.isStatic()) {
@@ -368,9 +314,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitLoadMetadata(com.ibm.wala.ssa.SSALoadMetadataInstruction)
-     */
     @Override
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       noIdentity = false;
@@ -378,9 +321,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitMonitor(com.ibm.wala.ssa.SSAMonitorInstruction)
-     */
     @Override
     public void visitMonitor(SSAMonitorInstruction instruction) {
       // when no exception is raised on a synchronized statement, the monitor is not null. Otherwise
@@ -392,9 +332,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitNew(com.ibm.wala.ssa.SSANewInstruction)
-     */
     @Override
     public void visitNew(SSANewInstruction instruction) {
       /*
@@ -406,9 +343,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.nullifyFunction(instruction.getDef());
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitPhi(com.ibm.wala.ssa.SSAPhiInstruction)
-     */
     @Override
     public void visitPhi(SSAPhiInstruction instruction) {
       noIdentity = true;
@@ -420,9 +354,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitPi(com.ibm.wala.ssa.SSAPiInstruction)
-     */
     @Override
     public void visitPi(SSAPiInstruction instruction) {
       noIdentity = false;
@@ -430,9 +361,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitPut(com.ibm.wala.ssa.SSAPutInstruction)
-     */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
       if (!instruction.isStatic()) {
@@ -447,9 +375,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       }
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitReturn(com.ibm.wala.ssa.SSAReturnInstruction)
-     */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       noIdentity = false;
@@ -457,9 +382,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitSwitch(com.ibm.wala.ssa.SSASwitchInstruction)
-     */
     @Override
     public void visitSwitch(SSASwitchInstruction instruction) {
       noIdentity = false;
@@ -467,9 +389,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitThrow(com.ibm.wala.ssa.SSAThrowInstruction)
-     */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       noIdentity = false;
@@ -477,9 +396,6 @@ class NullPointerTransferFunctionProvider<T extends ISSABasicBlock>
       transfer2 = NullPointerState.identityFunction();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.ssa.SSAInstruction.IVisitor#visitUnaryOp(com.ibm.wala.ssa.SSAUnaryOpInstruction)
-     */
     @Override
     public void visitUnaryOp(SSAUnaryOpInstruction instruction) {
       noIdentity = false;

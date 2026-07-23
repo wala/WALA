@@ -125,9 +125,6 @@ public class MutableMapping<T extends @Nullable Object>
     return result.toString();
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
-   */
   @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();

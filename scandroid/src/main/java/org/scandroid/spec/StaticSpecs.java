@@ -63,17 +63,11 @@ public class StaticSpecs implements ISpecs {
     this.fields = collectFields();
   }
 
-  /* (non-Javadoc)
-   * @see org.scandroid.spec.ISpecs#getEntrypointSpecs()
-   */
   @Override
   public MethodNamePattern[] getEntrypointSpecs() {
     return new MethodNamePattern[0];
   }
 
-  /* (non-Javadoc)
-   * @see org.scandroid.spec.ISpecs#getSourceSpecs()
-   */
   @Override
   public SourceSpec[] getSourceSpecs() {
     //		List<SourceSpec> specs = Lists.newArrayList();
@@ -98,9 +92,6 @@ public class StaticSpecs implements ISpecs {
     return fields;
   }
 
-  /* (non-Javadoc)
-   * @see org.scandroid.spec.ISpecs#getSinkSpecs()
-   */
   @Override
   public SinkSpec[] getSinkSpecs() {
     List<SinkSpec> specs = new ArrayList<>();

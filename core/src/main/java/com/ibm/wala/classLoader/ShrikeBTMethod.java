@@ -686,7 +686,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /** */
   public IInstruction[] getInstructions() throws InvalidClassFileException {
     if (getBCInfo().decoder == null) {
       return null;
@@ -823,11 +822,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   @Override
   public abstract String getLocalVariableName(int bcIndex, int localNumber);
 
-  /*
-   * TODO: cache for efficiency?
-   *
-   * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
-   */
+  /** TODO: cache for efficiency? */
   @Override
   public abstract boolean hasLocalVariableTable();
 

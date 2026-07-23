@@ -146,17 +146,11 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       }
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
-     */
     @Override
     protected NumberedNodeManager<INodeWithNumber> getNodeManager() {
       return nodeManager;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
-     */
     @Override
     protected NumberedEdgeManager<INodeWithNumber> getEdgeManager() {
       return edgeManager;
@@ -445,57 +439,36 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    */
   private class VariableGraphView extends AbstractNumberedGraph<PointsToSetVariable> {
 
-    /**
-     * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
-     */
     @Override
     public void removeNodeAndEdges(PointsToSetVariable N) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#iterator()
-     */
     @Override
     public Iterator<PointsToSetVariable> iterator() {
       return getVariables();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
-     */
     @Override
     public int getNumberOfNodes() {
       return delegateGraph.getVarCount();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
-     */
     @Override
     public void addNode(PointsToSetVariable n) {
       assert containsNode(n);
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
-     */
     @Override
     public void removeNode(PointsToSetVariable n) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
-     */
     @Override
     public boolean containsNode(PointsToSetVariable N) {
       return delegateGraph.containsNode(N);
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
-     */
     @Override
     public Iterator<PointsToSetVariable> getPredNodes(PointsToSetVariable v) {
       final Iterator<AbstractStatement<PointsToSetVariable, ?>> eqs = getStatementsThatDef(v);
@@ -534,9 +507,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       };
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
-     */
     @Override
     public int getPredNodeCount(PointsToSetVariable v) {
       int result = 0;
@@ -551,9 +521,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return result;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
-     */
     @Override
     public Iterator<PointsToSetVariable> getSuccNodes(PointsToSetVariable v) {
       final Iterator<AbstractStatement> eqs = getStatementsThatUse(v);
@@ -592,9 +559,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       };
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
-     */
     @Override
     public int getSuccNodeCount(PointsToSetVariable v) {
       int result = 0;
@@ -607,34 +571,22 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return result;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void addEdge(PointsToSetVariable src, PointsToSetVariable dst) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
-     */
     @Override
     public void removeAllIncidentEdges(PointsToSetVariable node) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
-     */
     @Override
     @SuppressWarnings("unchecked")
     protected NumberedNodeManager getNodeManager() {
       return nodeManager;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
-     */
     @Override
     @SuppressWarnings("unchecked")
     protected NumberedEdgeManager getEdgeManager() {
@@ -872,57 +824,36 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
     abstract boolean isInteresting(AbstractStatement<?, ?> eq);
 
-    /**
-     * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
-     */
     @Override
     public void removeNodeAndEdges(PointsToSetVariable N) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#iterator()
-     */
     @Override
     public Iterator<PointsToSetVariable> iterator() {
       return getVariables();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
-     */
     @Override
     public int getNumberOfNodes() {
       return delegateGraph.getVarCount();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
-     */
     @Override
     public void addNode(PointsToSetVariable n) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
-     */
     @Override
     public void removeNode(PointsToSetVariable n) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
-     */
     @Override
     public boolean containsNode(PointsToSetVariable N) {
       return Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
-     */
     @Override
     public Iterator<PointsToSetVariable> getPredNodes(PointsToSetVariable v) {
       final Iterator<AbstractStatement<PointsToSetVariable, ?>> eqs = getStatementsThatDef(v);
@@ -962,9 +893,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       };
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
-     */
     @Override
     public int getPredNodeCount(PointsToSetVariable v) {
       int result = 0;
@@ -976,9 +904,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return result;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
-     */
     @Override
     public Iterator<PointsToSetVariable> getSuccNodes(PointsToSetVariable v) {
       final Iterator<AbstractStatement> eqs = getStatementsThatUse(v);
@@ -1019,9 +944,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       };
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
-     */
     @Override
     public int getSuccNodeCount(PointsToSetVariable v) {
       int result = 0;
@@ -1033,34 +955,22 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return result;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void addEdge(PointsToSetVariable src, PointsToSetVariable dst) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
-     */
     @Override
     public void removeAllIncidentEdges(PointsToSetVariable node) {
       Assertions.UNREACHABLE();
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
-     */
     @Override
     @SuppressWarnings("unchecked")
     protected NumberedNodeManager getNodeManager() {
       return nodeManager;
     }
 
-    /**
-     * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
-     */
     @Override
     protected NumberedEdgeManager<PointsToSetVariable> getEdgeManager() {
       return Assertions.UNREACHABLE();

@@ -53,9 +53,6 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     }
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitGet(this);
@@ -93,9 +90,6 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return isStatic() ? 0 : 1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j == 0 && getRef() != -1;
@@ -107,9 +101,6 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
     return result * 2371 + 6521;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

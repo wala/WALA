@@ -8,7 +8,6 @@ import java.util.List;
 
 public abstract class RandomGraph<T> extends SlowSparseNumberedGraph<T> {
 
-  /** */
   @Serial private static final long serialVersionUID = 5950736619507540953L;
 
   protected abstract T makeNode(int i);
@@ -34,7 +33,6 @@ public abstract class RandomGraph<T> extends SlowSparseNumberedGraph<T> {
 
   public static class IntegerRandomGraph extends RandomGraph<Integer> {
 
-    /** */
     @Serial private static final long serialVersionUID = -4216451570756483022L;
 
     @Override

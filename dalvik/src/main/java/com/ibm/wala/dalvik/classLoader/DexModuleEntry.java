@@ -74,64 +74,36 @@ public class DexModuleEntry implements ModuleEntry {
     return classDefItem;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
-   */
   @Override
   public Module asModule() {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
-   */
   @Override
   public String getClassName() {
     return className;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
-   */
   @Override
   public InputStream getInputStream() {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#getName()
-   */
   @Override
   public String getName() {
     return className;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
-   */
   @Override
   public boolean isClassFile() {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
-   */
   @Override
   public boolean isModuleFile() {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
-   */
   @Override
   public boolean isSourceFile() {
     return false;

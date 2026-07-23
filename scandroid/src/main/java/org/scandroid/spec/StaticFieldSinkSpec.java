@@ -66,9 +66,6 @@ public class StaticFieldSinkSpec extends SinkSpec {
     this.method = method;
   }
 
-  /* (non-Javadoc)
-   * @see org.scandroid.spec.SinkSpec#getFlowType(com.ibm.wala.ipa.cfg.BasicBlockInContext)
-   */
   @Override
   public <E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
       BasicBlockInContext<E> block) {

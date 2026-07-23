@@ -50,7 +50,6 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException if v is null
    */
   @Override

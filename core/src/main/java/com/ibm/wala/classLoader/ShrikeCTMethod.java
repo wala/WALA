@@ -311,11 +311,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
   }
 
-  /*
-   * TODO: cache for efficiency?
-   *
-   * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
-   */
+  /** TODO: cache for efficiency? */
   @Override
   public boolean hasLocalVariableTable() {
     try {

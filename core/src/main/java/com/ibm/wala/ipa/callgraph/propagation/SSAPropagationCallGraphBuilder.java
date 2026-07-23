@@ -24,7 +24,6 @@ import com.ibm.wala.core.util.ref.ReferenceCleanser;
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.fixpoint.AbstractOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -1791,9 +1790,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
-    /**
-     * @see com.ibm.wala.fixpoint.UnaryOperator#evaluate(IVariable, IVariable)
-     */
     @Override
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;

@@ -69,9 +69,6 @@ public class StaticFieldFlow<E extends ISSABasicBlock> extends FlowType<E> {
     return field;
   }
 
-  /* (non-Javadoc)
-   * @see org.scandroid.flow.types.FlowType#visit(org.scandroid.flow.types.FlowType.FlowTypeVisitor)
-   */
   @Override
   public <R> R visit(FlowTypeVisitor<E, R> v) {
     return v.visitStaticFieldFlow(this);

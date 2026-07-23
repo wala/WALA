@@ -54,12 +54,10 @@ public class LiveAnalysis {
     BitVector getLiveBefore(int instr);
   }
 
-  /** */
   public static Result perform(IR ir) {
     return perform(ir.getControlFlowGraph(), ir.getSymbolTable());
   }
 
-  /** */
   public static Result perform(
       final ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, final SymbolTable symtab) {
     return perform(cfg, symtab, new BitVector());

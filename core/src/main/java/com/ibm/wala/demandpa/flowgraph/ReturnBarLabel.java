@@ -39,7 +39,6 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
-/** */
 public class ReturnBarLabel extends CallLabel {
 
   private ReturnBarLabel(CallerSiteContext callSite) {

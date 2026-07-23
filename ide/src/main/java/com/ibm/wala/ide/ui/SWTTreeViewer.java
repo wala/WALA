@@ -176,9 +176,6 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
       }
     }
 
-    /**
-     * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected Control createContents(Composite parent) {
       treeViewer = new TreeViewer(parent);
@@ -203,26 +200,16 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
      */
     private class GraphContentProvider implements ITreeContentProvider {
 
-      /*
-       * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-       */
       @Override
       public void dispose() {
         // do nothing for now
       }
 
-      /*
-       * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
-       *      java.lang.Object, java.lang.Object)
-       */
       @Override
       public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         // for now do nothing, since we're not dealing with listeners
       }
 
-      /*
-       * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-       */
       @Override
       public Object[] getChildren(Object parentElement) {
 
@@ -234,26 +221,17 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
         return result;
       }
 
-      /*
-       * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-       */
       @Override
       public Object getParent(Object element) {
         // TODO Auto-generated method stub
         return Assertions.UNREACHABLE();
       }
 
-      /*
-       * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-       */
       @Override
       public boolean hasChildren(Object element) {
         return graph.getSuccNodeCount((T) element) > 0;
       }
 
-      /*
-       * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-       */
       @Override
       public Object[] getElements(Object inputElement) {
         Collection<?> roots = getRootsInput();

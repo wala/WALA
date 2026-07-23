@@ -50,13 +50,11 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
     return result.toString();
   }
 
-  /** */
   @Override
   public void start(byte category) {
     stopwatch[category].start();
   }
 
-  /** */
   @Override
   public void stop(byte category) {
     stopwatch[category].stop();

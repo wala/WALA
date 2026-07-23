@@ -68,9 +68,6 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     map.add(n);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#removeNode(Object)
-   */
   @Override
   public void removeNode(T n) {
     map.deleteMappedObject(n);
@@ -87,9 +84,6 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Seria
     return result.toString();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(Object)
-   */
   @Override
   public boolean containsNode(@Nullable T N) {
     return getNumber(N) != -1;

@@ -64,11 +64,6 @@ public class ConstantFlowFunction<E extends ISSABasicBlock> implements IUnaryFlo
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction#getTargets(int)
-   */
   @Override
   public IntSet getTargets(int d1) {
     return 0 == d1 ? result : SparseIntSet.singleton(d1);

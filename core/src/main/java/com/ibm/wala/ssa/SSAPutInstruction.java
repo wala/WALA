@@ -54,7 +54,6 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException if v is null
    */
   @Override
@@ -65,17 +64,11 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     v.visitPut(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return isStatic() ? 1 : 2;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert j == 0 || (!isStatic() && j == 1);
@@ -91,9 +84,6 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
     return val * 9929 ^ 2063;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
-   */
   @Override
   public boolean isFallThrough() {
     return true;

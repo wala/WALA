@@ -176,15 +176,9 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       return method;
     }
 
-    /**
-     * @see java.lang.Object#equals(Object)
-     */
     @Override
     public abstract boolean equals(Object obj);
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public abstract int hashCode();
 
@@ -197,9 +191,6 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     private static final ThreadLocal<Set<CGNode>> RENDERING_IN_PROGRESS =
         ThreadLocal.withInitial(Sets::newIdentityHashSet);
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       Set<CGNode> inProgress = RENDERING_IN_PROGRESS.get();
@@ -317,21 +308,13 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     return interpreter;
   }
 
-  /**
-   * We override this since this class supports remove() on nodes, but the superclass doesn't.
-   *
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
+  /** We override this since this class supports remove() on nodes, but the superclass doesn't. */
   @Override
   public int getNumberOfNodes() {
     return nodes.size();
   }
 
-  /**
-   * We override this since this class supports remove() on nodes, but the superclass doesn't.
-   *
-   * @see com.ibm.wala.util.graph.Graph#iterator()
-   */
+  /** We override this since this class supports remove() on nodes, but the superclass doesn't. */
   @Override
   public Iterator<CGNode> iterator() {
     return nodes.values().iterator();

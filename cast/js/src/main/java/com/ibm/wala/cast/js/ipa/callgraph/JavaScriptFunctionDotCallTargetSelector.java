@@ -66,14 +66,6 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     this.base = base;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see
-   * com.ibm.wala.ipa.callgraph.MethodTargetSelector#getCalleeTarget(com.ibm
-   * .wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference,
-   * com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IMethod method = receiver.getMethod(AstMethodReference.fnSelector);

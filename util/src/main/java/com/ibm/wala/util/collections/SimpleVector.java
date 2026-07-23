@@ -27,9 +27,6 @@ public class SimpleVector<T> implements IVector<T> {
 
   int maxIndex = -1;
 
-  /**
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
@@ -44,9 +41,6 @@ public class SimpleVector<T> implements IVector<T> {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
   @Override
   public void set(int x, @Nullable T value) {
     if (x < 0) {

@@ -41,7 +41,6 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     this.addAll(s);
   }
 
-  /** */
   public ParanoidHashSet() {
     hcFreq = HashMapFactory.make();
   }
@@ -52,7 +51,6 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   }
 
   /**
-   * @see java.util.Collection#add(java.lang.Object)
    * @throws UnimplementedError if there's a bad hash code problem
    */
   @Override

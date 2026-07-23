@@ -94,7 +94,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
         Everywhere.EVERYWHERE);
   }
 
-  /** */
   @Override
   public CGNode findOrCreateNode(IMethod method, Context context) throws CancelException {
     if (method == null) {
@@ -321,9 +320,6 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
     }
   }
 
-  /**
-   * @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy()
-   */
   @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;

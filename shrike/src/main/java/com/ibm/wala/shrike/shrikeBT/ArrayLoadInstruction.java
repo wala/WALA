@@ -102,11 +102,7 @@ public final class ArrayLoadInstruction extends Instruction implements IArrayLoa
     return true;
   }
 
-  /**
-   * Java bytecode does not permit this.
-   *
-   * @see com.ibm.wala.shrike.shrikeBT.IMemoryOperation#isAddressOf()
-   */
+  /** Java bytecode does not permit this. */
   @Override
   public boolean isAddressOf() {
     return false;

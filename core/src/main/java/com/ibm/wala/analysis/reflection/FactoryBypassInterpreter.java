@@ -129,9 +129,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return m.allInstructions.size();
   }
 
-  /**
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(CGNode)
-   */
   @Override
   public boolean understands(CGNode node) {
     if (node == null) {
@@ -567,8 +564,6 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
      * Two specialized methods can be different, even if they represent the same source method. So,
      * revert to object identity for testing equality. TODO: this is non-optimal; could try to
      * re-use specialized methods that have the same context.
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object obj) {

@@ -60,7 +60,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   public MutableSparseLongSet() {}
 
-  /** */
   @NullUnmarked
   @Override
   public void remove(long value) {

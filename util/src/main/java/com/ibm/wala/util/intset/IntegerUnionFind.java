@@ -121,7 +121,6 @@ public class IntegerUnionFind {
     return root;
   }
 
-  /** */
   public int size() {
     return parent.length - 1;
   }

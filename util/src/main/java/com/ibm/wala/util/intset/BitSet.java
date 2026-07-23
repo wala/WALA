@@ -211,7 +211,6 @@ public final class BitSet<T> {
     vector.and(BitVector.not(other.vector));
   }
 
-  /** */
   public boolean isEmpty() {
     return size() == 0;
   }

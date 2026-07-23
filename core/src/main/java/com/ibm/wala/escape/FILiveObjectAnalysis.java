@@ -52,7 +52,6 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   /** A hack for now .. since right now the intraprocedural analysis is expensive */
   private final boolean expensiveIntraproceduralAnalysis;
 
-  /** */
   public FILiveObjectAnalysis(
       CallGraph callGraph, HeapGraph<?> heapGraph, boolean expensiveIntraproceduralAnalysis) {
     this.callGraph = callGraph;
