@@ -41,7 +41,6 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
   /** The variable for each edge, when edge transfers requested (indexed by Pair(src, dst)) */
   private final Map<Object, V> edge2Var = HashMapFactory.make();
 
-  /** */
   public DataflowSolver(IKilldallFramework<T, V> problem) {
     // tune the implementation for common case of 2 uses for each
     // dataflow def

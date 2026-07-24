@@ -49,11 +49,7 @@ public class SparseLongIntVector {
     }
   }
 
-  /*
-   * TODO: this can be optimized
-   *
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
+  /** TODO: this can be optimized */
   public void set(long x, int value) {
     int index = indices.getIndex(x);
     if (index == -1) {

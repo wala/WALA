@@ -16,7 +16,6 @@ import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/** */
 public class NumberedNodeIterator<T> implements Iterator<T> {
   final IntIterator numbers;
 

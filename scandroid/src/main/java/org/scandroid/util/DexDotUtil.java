@@ -57,7 +57,6 @@ public class DexDotUtil extends DotUtil {
   /** Some versions of dot appear to croak on long labels. Reduce this if so. */
   private static final int MAX_LABEL_LENGTH = Integer.MAX_VALUE;
 
-  /** */
   public static <T> void dotify(
       Graph<T> g, NodeDecorator<T> labels, String dotFile, String outputFile, String dotExe)
       throws WalaException {

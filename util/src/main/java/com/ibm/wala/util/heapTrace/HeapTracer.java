@@ -586,10 +586,6 @@ public class HeapTracer {
 
     /** compares two keys based on the total size of the heap traced from that key */
     private class SizeComparator implements Comparator<Object> {
-      /*
-       * @see java.util.Comparator#compare(java.lang.Object,
-       * java.lang.Object)
-       */
       @NullUnmarked
       @Override
       public int compare(Object o1, Object o2) {
@@ -677,10 +673,6 @@ public class HeapTracer {
 
     /** compares two keys based on the total size of the heap traced from that key */
     private class SizeComparator implements Comparator<Field> {
-      /*
-       * @see java.util.Comparator#compare(java.lang.Object,
-       * java.lang.Object)
-       */
       @NullUnmarked
       @Override
       public int compare(Field o1, Field o2) {

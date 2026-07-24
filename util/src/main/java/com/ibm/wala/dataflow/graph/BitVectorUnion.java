@@ -23,9 +23,6 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
 
   private BitVectorUnion() {}
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "UNION";
@@ -41,10 +38,6 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
     return (o instanceof BitVectorUnion);
   }
 
-  /**
-   * @see com.ibm.wala.fixpoint.AbstractOperator#evaluate(com.ibm.wala.fixpoint.IVariable,
-   *     com.ibm.wala.fixpoint.IVariable[])
-   */
   @Override
   public byte evaluate(BitVectorVariable lhs, BitVectorVariable[] rhs)
       throws IllegalArgumentException {

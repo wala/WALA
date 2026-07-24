@@ -36,17 +36,11 @@ public class SummarizedMethod extends SyntheticMethod {
     }
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isNative()
-   */
   @Override
   public boolean isNative() {
     return summary.isNative();
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isAbstract()
-   */
   @Override
   public boolean isAbstract() {
     return false;
@@ -87,25 +81,16 @@ public class SummarizedMethod extends SyntheticMethod {
         summary.getConstants());
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
-   */
   @Override
   public int getNumberOfParameters() {
     return summary.getNumberOfParameters();
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#isStatic()
-   */
   @Override
   public boolean isStatic() {
     return summary.isStatic();
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
-   */
   @Override
   public TypeReference getParameterType(int i) {
     return summary.getParameterType(i);

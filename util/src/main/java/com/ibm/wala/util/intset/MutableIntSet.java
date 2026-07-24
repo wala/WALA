@@ -46,6 +46,5 @@ public interface MutableIntSet extends IntSet {
   /** Intersect this with another set. */
   void intersectWith(IntSet set);
 
-  /** */
   boolean addAllInIntersection(IntSet other, IntSet filter);
 }

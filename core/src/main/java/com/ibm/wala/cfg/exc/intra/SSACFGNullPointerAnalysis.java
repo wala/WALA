@@ -50,9 +50,6 @@ public class SSACFGNullPointerAnalysis
     return intra.getNumberOfDeletedEdges();
   }
 
-  /* (non-Javadoc)
-   * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getPruned()
-   */
   @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG() {
     if (intra == null) {
@@ -62,9 +59,6 @@ public class SSACFGNullPointerAnalysis
     return intra.getPrunedCFG();
   }
 
-  /* (non-Javadoc)
-   * @see edu.kit.ipd.wala.ExceptionPrunedCFGAnalysis#hasExceptions()
-   */
   @Override
   public boolean hasExceptions() {
     if (intra == null) {

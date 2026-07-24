@@ -61,19 +61,11 @@ public class AssignBarLabel implements IFlowLabelWithFilter {
     return new AssignBarLabel(filter);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see demandGraph.IFlowLabel#bar()
-   */
   @Override
   public AssignLabel bar() {
     return (this == noFilter) ? AssignLabel.noFilter() : AssignLabel.make(filter);
   }
 
-  /*
-   * (non-Javadoc)
-   * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor, java.lang.Object)
-   */
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {

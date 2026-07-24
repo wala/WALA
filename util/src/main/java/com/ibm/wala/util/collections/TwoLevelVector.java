@@ -34,9 +34,6 @@ public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, S
 
   private int maxPage = -1;
 
-  /**
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @NullUnmarked
   @Override
   public @Nullable T get(int x) {
@@ -63,11 +60,7 @@ public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, S
     return x >> LOG_PAGE_SIZE;
   }
 
-  /*
-   * TODO: this can be optimized
-   *
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
+  /** TODO: this can be optimized */
   @Override
   public void set(int x, T value) {
     if (x < 0) {
@@ -101,9 +94,6 @@ public class TwoLevelVector<T extends @Nullable Object> implements IVector<T>, S
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
   @Override
   public void performVerboseAction() {
     // do nothing;

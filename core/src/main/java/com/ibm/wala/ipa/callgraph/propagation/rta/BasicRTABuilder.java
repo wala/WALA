@@ -213,11 +213,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     }
   }
 
-  /*
-   * @see
-   * com.ibm.wala.ipa.callgraph.propagation.rta.AbstractRTABuilder#makeDispatchOperator(com.ibm.wala.classLoader.CallSiteReference,
-   * com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   protected UnaryOperator<PointsToSetVariable> makeDispatchOperator(
       CallSiteReference site, CGNode node) {

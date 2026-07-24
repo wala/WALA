@@ -87,11 +87,6 @@ public class CallFlowFunction<E extends ISSABasicBlock> implements IUnaryFlowFun
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction#getTargets(int)
-   */
   @Override
   public IntSet getTargets(int d1) {
     if (0 == d1) {

@@ -297,10 +297,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     /** A mapping from String (variable name) -&gt; Integer (local number) */
     private Map<String, @NonNull Integer> symbolTable = null;
 
-    /**
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String,
-     *     java.lang.String, org.xml.sax.Attributes)
-     */
     @Override
     public void startElement(String uri, String name, String qName, Attributes atts) {
       Integer element = elementMap.get(qName);
@@ -366,10 +362,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       }
     }
 
-    /**
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String,
-     *     java.lang.String)
-     */
     @Override
     public void endElement(String uri, String name, String qName) {
       Integer element = elementMap.get(qName);

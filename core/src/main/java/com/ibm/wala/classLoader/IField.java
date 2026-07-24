@@ -13,7 +13,6 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
-/** */
 public interface IField extends IMember {
 
   /**

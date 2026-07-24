@@ -42,18 +42,12 @@ import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.shrike.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrike.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrike.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrike.shrikeBT.IGetInstruction;
-import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrike.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrike.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrike.shrikeBT.MonitorInstruction;
-import com.ibm.wala.shrike.shrikeBT.NewInstruction;
-import com.ibm.wala.shrike.shrikeBT.SwitchInstruction;
-import com.ibm.wala.shrike.shrikeBT.ThrowInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -908,9 +902,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         throw new UnimplementedError();
       }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitConstant(ConstantInstruction)
-       */
       @Override
       public void visitConstant(Constant instruction) {
         // TODO
@@ -971,9 +962,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              }
       //          }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInstanceof
-       */
       @Override
       public void visitInstanceof(InstanceOf instruction) {
         // TODO
@@ -982,9 +970,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         throw new UnimplementedError();
       }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction)
-       */
       @Override
       public void visitInvoke(Invoke instruction) {
         // TODO
@@ -999,9 +984,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         //              }
       }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction)
-       */
       @Override
       public void visitMonitor(Monitor instruction) {
         // TODO
@@ -1021,9 +1003,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              workingState.setLocal(index, workingState.pop());
       //          }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction)
-       */
       @Override
       public void visitNew(New instruction) {
         // TODO
@@ -1059,9 +1038,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
       //              workingState.swap();
       //          }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction)
-       */
       @Override
       public void visitSwitch(Switch instruction) {
         // TODO
@@ -1069,9 +1045,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         throw new UnimplementedError();
       }
 
-      /**
-       * @see com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction)
-       */
       @Override
       public void visitThrow(Throw instruction) {
         // TODO

@@ -72,13 +72,6 @@ public class StaticFieldSinkPoint implements ISinkPoint {
     this.flow = new StaticFieldFlow<>(block, field, false);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.scandroid.flow.ISinkPoint#findSources(org.scandroid.util.
-   * CGAnalysisContext, com.ibm.wala.dataflow.IFDS.TabulationResult,
-   * org.scandroid.domain.IFDSTaintDomain)
-   */
   @Override
   public Set<FlowType<IExplodedBasicBlock>> findSources(
       CGAnalysisContext<IExplodedBasicBlock> ctx,
@@ -97,11 +90,6 @@ public class StaticFieldSinkPoint implements ISinkPoint {
     return sources;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.scandroid.flow.ISinkPoint#getFlow()
-   */
   @Override
   public FlowType<IExplodedBasicBlock> getFlow() {
     return flow;

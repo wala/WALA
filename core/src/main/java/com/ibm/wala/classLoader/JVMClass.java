@@ -51,25 +51,16 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     return ((modifiers & Constants.ACC_INTERFACE) != 0);
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
   @Override
   public boolean isAbstract() {
     return ((modifiers & Constants.ACC_ABSTRACT) != 0);
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IClass#isSynthetic()
-   */
   @Override
   public boolean isSynthetic() {
     return ((modifiers & Constants.ACC_SYNTHETIC) != 0);
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
-   */
   @Override
   public IMethod getClassInitializer() {
     try {

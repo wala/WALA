@@ -144,10 +144,6 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
     return function;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
-   */
   @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();

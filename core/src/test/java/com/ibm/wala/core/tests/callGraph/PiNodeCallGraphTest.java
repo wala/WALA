@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-/** */
 public class PiNodeCallGraphTest extends WalaTestCase {
 
   public static void main(String[] args) {

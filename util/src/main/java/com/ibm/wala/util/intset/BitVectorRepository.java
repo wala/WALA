@@ -86,14 +86,12 @@ public class BitVectorRepository {
     return bv;
   }
 
-  /** */
   private static void reportStats() {
     double percent = 100.0 * hits / queries;
     System.err.println(("BitVectorRepository: queries " + queries + " hits " + percent));
     System.err.println(("                     entries " + countEntries()));
   }
 
-  /** */
   private static int countEntries() {
     int result = 0;
     for (LinkedList<WeakReference<BitVectorIntSet>> l : buckets.values()) {

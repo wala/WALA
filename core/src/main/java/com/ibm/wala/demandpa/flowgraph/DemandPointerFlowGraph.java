@@ -54,14 +54,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrike.shrikeBT.IGetInstruction;
-import com.ibm.wala.shrike.shrikeBT.IInstruction.Visitor;
-import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrike.shrikeBT.IPutInstruction;
-import com.ibm.wala.shrike.shrikeBT.ITypeTestInstruction;
-import com.ibm.wala.shrike.shrikeBT.NewInstruction;
-import com.ibm.wala.shrike.shrikeBT.ReturnInstruction;
-import com.ibm.wala.shrike.shrikeBT.ThrowInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -98,7 +90,6 @@ import java.util.Set;
  */
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
-  /** */
   @Serial private static final long serialVersionUID = 1L;
 
   public DemandPointerFlowGraph(
@@ -188,9 +179,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
     }
 
-    /**
-     * @see Visitor#visitArrayStore(com.ibm.wala.shrike.shrikeBT.IArrayStoreInstruction)
-     */
     @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // Assertions.UNREACHABLE();
@@ -207,9 +195,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
     }
 
-    /**
-     * @see Visitor#visitCheckCast(ITypeTestInstruction)
-     */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       Set<IClass> types = HashSetFactory.make();
@@ -232,9 +217,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addEdge(result, value, AssignLabel.make(filter));
     }
 
-    /**
-     * @see Visitor#visitReturn(ReturnInstruction)
-     */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
@@ -248,9 +230,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /**
-     * @see Visitor#visitGet(IGetInstruction)
-     */
     @Override
     public void visitGet(SSAGetInstruction instruction) {
       visitGetInternal(
@@ -287,9 +266,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /**
-     * @see Visitor#visitPut(IPutInstruction)
-     */
     @Override
     public void visitPut(SSAPutInstruction instruction) {
       visitPutInternal(
@@ -324,9 +300,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /**
-     * @see Visitor#visitInvoke(IInvokeInstruction)
-     */
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
@@ -352,9 +325,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       // callDefs.put(exc, instruction);
     }
 
-    /**
-     * @see Visitor#visitNew(NewInstruction)
-     */
     @Override
     public void visitNew(SSANewInstruction instruction) {
 
@@ -383,9 +353,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /**
-     * @see Visitor#visitThrow(ThrowInstruction)
-     */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // don't do anything: we handle exceptional edges
@@ -459,11 +426,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitPi(com.ibm.domo.ssa.SSAPiInstruction)
-     */
     @Override
     public void visitPi(SSAPiInstruction instruction) {
       // for now, ignore condition and just treat it as a copy

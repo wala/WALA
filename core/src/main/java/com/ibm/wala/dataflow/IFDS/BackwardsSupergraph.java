@@ -121,9 +121,6 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return delegate.getProcOf(n);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
-   */
   @Override
   public void removeNodeAndEdges(Object N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -139,57 +136,36 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return delegate.stream();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
-   */
   @Override
   public int getNumberOfNodes() {
     return delegate.getNumberOfNodes();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
-   */
   @Override
   public void addNode(Object n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
-   */
   @Override
   public void removeNode(Object n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
-   */
   @Override
   public boolean containsNode(T N) {
     return delegate.containsNode(N);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
-   */
   @Override
   public Iterator<T> getPredNodes(T N) {
     return delegate.getSuccNodes(N);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
-   */
   @Override
   public int getPredNodeCount(T N) {
     return delegate.getSuccNodeCount(N);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
-   */
   @Override
   public Iterator<T> getSuccNodes(T N) {
     return delegate.getPredNodes(N);
@@ -200,17 +176,11 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return delegate.hasEdge(dst, src);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
-   */
   @Override
   public int getSuccNodeCount(T N) {
     return delegate.getPredNodeCount(N);
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
-   */
   @Override
   public void addEdge(Object src, Object dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -221,9 +191,6 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object)
-   */
   @Override
   public void removeAllIncidentEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();

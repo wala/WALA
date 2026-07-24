@@ -69,9 +69,6 @@ public class ArrayFill extends Instruction {
     this.type = type;
   }
 
-  /* (non-Javadoc)
-   * @see wala.dex.instructions.Instruction#visit(wala.dex.instructions.Instruction.Visitor)
-   */
   @Override
   public void visit(Visitor visitor) {
     visitor.visitArrayFill(this);

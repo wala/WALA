@@ -313,34 +313,22 @@ public class Slicer {
       f = new SliceFunctions();
     }
 
-    /**
-     * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getDomain()
-     */
     @Override
     public TabulationDomain<Object, Statement> getDomain() {
       // a dummy
       return new UnorderedDomain<>();
     }
 
-    /**
-     * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getFunctionMap()
-     */
     @Override
     public IPartiallyBalancedFlowFunctions<Statement> getFunctionMap() {
       return f;
     }
 
-    /**
-     * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getMergeFunction()
-     */
     @Override
     public IMergeFunction getMergeFunction() {
       return null;
     }
 
-    /**
-     * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getSupergraph()
-     */
     @Override
     public ISupergraph<Statement, PDG<?>> getSupergraph() {
       return supergraph;

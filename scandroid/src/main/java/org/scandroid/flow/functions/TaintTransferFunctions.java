@@ -280,29 +280,23 @@ public class TaintTransferFunctions<E extends ISSABasicBlock>
     return compose(flowFunction, newTaints);
   }
 
-  /*
+  /**
    * The usual arguments:
    *
-   * call: the invoke instruction that took us into this method
+   * <p>call: the invoke instruction that took us into this method
    *
-   * src: a block that's the postdominator of this method, usually with no
-   * instructions
+   * <p>src: a block that's the postdominator of this method, usually with no instructions
    *
-   * dest: whatever instruction followed the invoke instruction in call
+   * <p>dest: whatever instruction followed the invoke instruction in call
    *
-   * What we want to accomplish:
+   * <p>What we want to accomplish:
    *
-   * 1. Map taints from the value being returned to a LocalElement in the
-   * caller's context
+   * <p>1. Map taints from the value being returned to a LocalElement in the caller's context
    *
-   * 2. Pass through any global information that the callee may have changed
+   * <p>2. Pass through any global information that the callee may have changed
    *
-   * 3. Process ins/outs of dest block as well (it will never be the dest of a
+   * <p>3. Process ins/outs of dest block as well (it will never be the dest of a
    * NormalFlowFunction)
-   *
-   * @see
-   * com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java
-   * .lang.Object, java.lang.Object, java.lang.Object)
    */
   @Override
   public IFlowFunction getReturnFlowFunction(

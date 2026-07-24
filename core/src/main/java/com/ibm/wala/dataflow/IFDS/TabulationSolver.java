@@ -275,7 +275,6 @@ public class TabulationSolver<T, P, F> {
     }
   }
 
-  /** */
   protected final void performVerboseAction() {
     verboseCounter++;
     if (verboseCounter % VERBOSE_INTERVAL == 0) {

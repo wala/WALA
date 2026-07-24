@@ -23,9 +23,6 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> {
 
   private BooleanUnion() {}
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "UNION";

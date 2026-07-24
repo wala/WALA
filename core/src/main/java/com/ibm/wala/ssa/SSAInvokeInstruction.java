@@ -14,7 +14,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrike.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 
-/** */
 public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
   protected final int result;
@@ -78,7 +77,6 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException if v is null
    */
   @Override
@@ -89,9 +87,6 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     v.visitInvoke(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     if (params == null) {
@@ -121,9 +116,6 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     assert params != null : "Invalid getUse: " + j + " , null params " + this;

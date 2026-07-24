@@ -144,17 +144,11 @@ public class BimodalMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#contains(int)
-   */
   @Override
   public boolean contains(int i) {
     return impl.contains(i);
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
-   */
   @NullUnmarked
   @Override
   public @Nullable IntSet intersection(IntSet that) throws UnimplementedError {
@@ -167,9 +161,6 @@ public class BimodalMutableIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public IntSet union(IntSet that) {
     BimodalMutableIntSet temp = new BimodalMutableIntSet();
@@ -179,50 +170,31 @@ public class BimodalMutableIntSet implements MutableIntSet {
     return temp;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#isEmpty()
-   */
   @Override
   public boolean isEmpty() {
     return impl.isEmpty();
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#size()
-   */
   @Override
   public int size() {
     return impl.size();
   }
 
-  /**
-   * @see IntSet#intIterator()
-   */
   @Override
   public IntIterator intIterator() {
     return impl.intIterator();
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
-   */
   @Override
   public void foreach(IntSetAction action) {
     impl.foreach(action);
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
-   *     com.ibm.wala.util.intset.IntSetAction)
-   */
   @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     impl.foreachExcluding(X, action);
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#max()
-   */
   @Override
   public int max() throws IllegalStateException {
     return impl.max();
@@ -274,17 +246,11 @@ public class BimodalMutableIntSet implements MutableIntSet {
     assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean sameValue(IntSet that) {
     return impl.sameValue(that);
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#isSubset(IntSet)
-   */
   @Override
   public boolean isSubset(IntSet that) throws IllegalArgumentException {
     if (that == null) {
@@ -310,9 +276,6 @@ public class BimodalMutableIntSet implements MutableIntSet {
     return impl.toString();
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean containsAny(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {

@@ -78,9 +78,6 @@ public class StaticFieldSourceSpec extends SourceSpec {
     argNums = null;
   }
 
-  /* (non-Javadoc)
-   * @see org.scandroid.spec.SourceSpec#addDomainElements(java.util.Map, com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.cfg.BasicBlockInContext, com.ibm.wala.ssa.SSAInvokeInstruction, int[], com.ibm.wala.dataflow.IFDS.ISupergraph, com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis, com.ibm.wala.ipa.callgraph.CallGraph)
-   */
   @Override
   public <E extends ISSABasicBlock> void addDomainElements(
       CGAnalysisContext<E> ctx,

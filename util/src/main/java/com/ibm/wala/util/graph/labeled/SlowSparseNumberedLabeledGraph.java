@@ -59,7 +59,6 @@ import org.jspecify.annotations.Nullable;
 public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U>
     implements Serializable {
 
-  /** */
   @Serial private static final long serialVersionUID = -6929183520814732209L;
 
   /**

@@ -92,7 +92,6 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     return heapModel;
   }
 
-  /** */
   protected void incrementNumNodesTraversed() {
     if (numNodesTraversed > traversalBudget) {
       throw new BudgetExceededException();

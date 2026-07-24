@@ -168,11 +168,6 @@ public class DexFileModule implements Module {
     return f;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see com.ibm.wala.classLoader.Module#getEntries()
-   */
   @Override
   public Iterator<ModuleEntry> getEntries() {
     return entries.iterator();

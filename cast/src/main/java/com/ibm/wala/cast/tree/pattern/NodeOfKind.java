@@ -28,9 +28,6 @@ public class NodeOfKind implements NodePattern {
     this.children = children.clone();
   }
 
-  /* (non-Javadoc)
-   * @see pattern.NodePattern#matches(com.ibm.wala.cast.tree.CAstNode)
-   */
   @Override
   public boolean matches(CAstNode node) {
     if (node == null || node.getKind() != kind || node.getChildCount() != children.length)

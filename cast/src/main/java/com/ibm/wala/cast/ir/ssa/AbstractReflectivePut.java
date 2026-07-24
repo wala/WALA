@@ -33,17 +33,11 @@ public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
     return super.toString(symbolTable) + " = " + getValueString(symbolTable, value);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
   @Override
   public int getDef() {
     return -1;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 3;

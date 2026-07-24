@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.util.intset;
 
-/** */
 public interface MutableLongSet extends LongSet {
 
   /** Set the value of this to be the same as the value of set */

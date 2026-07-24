@@ -19,9 +19,6 @@ public class JavaScriptPropertyRead extends AstPropertyRead {
     super(iindex, result, objectRef, memberRef);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
-   */
   @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();

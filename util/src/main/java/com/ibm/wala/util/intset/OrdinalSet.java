@@ -156,7 +156,6 @@ public class OrdinalSet<T> implements Iterable<T> {
     return Iterator2Collection.toSet(iterator()).toString();
   }
 
-  /** */
   public SparseIntSet makeSparseCopy() {
     return (S == null) ? new SparseIntSet() : new SparseIntSet(S);
   }

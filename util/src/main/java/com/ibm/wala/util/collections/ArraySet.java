@@ -51,12 +51,10 @@ import java.util.NoSuchElementException;
  */
 public class ArraySet<T> extends AbstractSet<T> implements Serializable {
 
-  /** */
   @Serial private static final long serialVersionUID = -5842124218051589966L;
 
   private static final ArraySet<?> EMPTY =
       new ArraySet<>(0, true) {
-        /** */
         @Serial private static final long serialVersionUID = -3094823386613798012L;
 
         @Override
@@ -210,9 +208,6 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
     _curIndex = 0;
   }
 
-  /**
-   * @see java.util.Set#iterator()
-   */
   @Override
   public Iterator<T> iterator() {
     return new ArraySetIterator();

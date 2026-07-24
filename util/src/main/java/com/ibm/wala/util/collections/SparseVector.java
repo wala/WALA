@@ -51,9 +51,6 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
     indices = new TunedMutableSparseIntSet(initialSize, expansion);
   }
 
-  /**
-   * @see com.ibm.wala.util.intset.IntVector#get(int)
-   */
   @NullUnmarked
   @Override
   public T get(int x) {
@@ -61,11 +58,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
     return index == -1 ? null : data[index];
   }
 
-  /**
-   * TODO: this can be optimized
-   *
-   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
-   */
+  /** TODO: this can be optimized */
   @Override
   public void set(int x, T value) {
     int index = indices.getIndex(x);
@@ -86,9 +79,6 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
     }
   }
 
-  /**
-   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
-   */
   @Override
   public void performVerboseAction() {
     System.err.println((getClass() + " stats: "));

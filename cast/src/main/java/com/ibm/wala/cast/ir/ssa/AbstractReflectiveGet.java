@@ -51,9 +51,6 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
     return result;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 2;

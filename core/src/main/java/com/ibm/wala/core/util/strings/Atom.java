@@ -345,11 +345,7 @@ public final class Atom implements Serializable {
     return hash;
   }
 
-  /*
-   * These are canonical
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+  /** These are canonical */
   @Override
   public boolean equals(Object obj) {
     return this == obj;

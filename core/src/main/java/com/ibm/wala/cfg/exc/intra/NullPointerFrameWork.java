@@ -55,17 +55,11 @@ public class NullPointerFrameWork<T extends ISSABasicBlock>
     this.transferFunct = new NullPointerTransferFunctionProvider<>(cfg, ir);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
-   */
   @Override
   public Graph<T> getFlowGraph() {
     return flow;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionProvider()
-   */
   @Override
   public NullPointerTransferFunctionProvider<T> getTransferFunctionProvider() {
     return transferFunct;

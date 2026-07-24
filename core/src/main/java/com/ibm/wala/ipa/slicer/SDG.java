@@ -143,11 +143,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     this.heapExclude = heapExclude;
   }
 
-  /**
-   * Use this with care. This forces eager construction of the SDG, and SDGs can be big.
-   *
-   * @see com.ibm.wala.util.graph.AbstractGraph#toString()
-   */
+  /** Use this with care. This forces eager construction of the SDG, and SDGs can be big. */
   @Override
   public String toString() {
     eagerConstruction();

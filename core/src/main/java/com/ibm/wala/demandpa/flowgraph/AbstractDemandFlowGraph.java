@@ -69,7 +69,6 @@ import java.util.Set;
 
 /** A graph representing program flow, constructed method-by-method on demand */
 public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
-  /** */
   @Serial private static final long serialVersionUID = 1L;
 
   private static final boolean DEBUG = false;

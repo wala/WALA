@@ -39,11 +39,6 @@ class InterprocMethodState extends MethodState {
     this.cg = cg;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see edu.kit.ipd.wala.intra.MethodState#throwsException(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   @Override
   public boolean throwsException(final SSAAbstractInvokeInstruction node) {
     for (final CGNode called : cg.getPossibleTargets(method, node.getCallSite())) {

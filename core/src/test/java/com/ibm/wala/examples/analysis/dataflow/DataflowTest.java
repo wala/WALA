@@ -102,11 +102,6 @@ public class DataflowTest extends WalaTestCase {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see junit.framework.TestCase#tearDown()
-   */
   @AfterAll
   public static void afterClass() throws Exception {
     scope = null;

@@ -62,7 +62,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     size = 0;
   }
 
-  /** */
   @NullUnmarked
   @Override
   public boolean remove(int value) {
@@ -92,7 +91,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     return false;
   }
 
-  /** */
   public int getInitialNonEmptySize() {
     return INITIAL_NONEMPTY_SIZE;
   }
@@ -440,11 +438,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * @see
-   * com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala
-   * .util.intset.IntSet, com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other == null) {

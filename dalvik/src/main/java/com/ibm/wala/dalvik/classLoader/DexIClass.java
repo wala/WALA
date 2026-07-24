@@ -184,36 +184,21 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return classDef;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.IClass#isPublic()
-   */
   @Override
   public boolean isPublic() {
     return (modifiers & PUBLIC.getValue()) != 0;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.IClass#isPrivate()
-   */
   @Override
   public boolean isPrivate() {
     return (modifiers & PRIVATE.getValue()) != 0;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.IClass#isInterface()
-   */
   @Override
   public boolean isInterface() {
     return (modifiers & INTERFACE.getValue()) != 0;
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IClass#isAbstract()
-   */
   @Override
   public boolean isAbstract() {
     return (modifiers & ABSTRACT.getValue()) != 0;
@@ -227,18 +212,11 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return (modifiers & SYNTHETIC.getValue()) != 0;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.IClass#getModifiers()
-   */
   @Override
   public int getModifiers() throws UnsupportedOperationException {
     return modifiers;
   }
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final
@@ -309,10 +287,6 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.BytecodeClass#computeDeclaredMethods()
-   */
   @Override
   protected IMethod[] computeDeclaredMethods() {
     ArrayList<IMethod> methodsAL = new ArrayList<>();
@@ -362,10 +336,6 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     return methods;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
-   */
   @Override
   public IMethod getClassInitializer() {
     if (methods == null) {

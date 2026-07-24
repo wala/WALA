@@ -41,17 +41,11 @@ public class NullPointerSolver<B extends ISSABasicBlock>
     this.ir = ir;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.DataflowSolver#makeEdgeVariable(java.lang.Object, java.lang.Object)
-   */
   @Override
   protected NullPointerState makeEdgeVariable(B src, B dst) {
     return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.graph.DataflowSolver#makeNodeVariable(java.lang.Object, boolean)
-   */
   @Override
   protected NullPointerState makeNodeVariable(B n, boolean IN) {
     if (IN && n.equals(entry)) {

@@ -17,10 +17,6 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     super(iindex, exception);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(com.ibm.wala.ssa.SSAInstructionFactory, int[],
-   *     int[])
-   */
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses)
       throws IllegalArgumentException {
@@ -30,9 +26,6 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     return insts.ThrowInstruction(iIndex(), uses == null ? getException() : uses[0]);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   */
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitThrow(this);

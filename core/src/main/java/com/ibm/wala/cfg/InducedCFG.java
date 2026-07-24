@@ -586,9 +586,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       return 1153 * getGraphNodeId() + getMethod().hashCode();
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "BB[Induced]" + getNumber() + " - " + getMethod().getSignature();
@@ -649,8 +646,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
   /**
    * Since this CFG is synthetic, for now we assume the instruction index is the same as the program
    * counter
-   *
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
   @Override
   public int getProgramCounter(int index) {

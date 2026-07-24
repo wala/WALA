@@ -47,7 +47,6 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException if v is null
    */
   @Override
@@ -58,9 +57,6 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     v.visitArrayStore(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
   @Override
   public int getNumberOfUses() {
     return 3;
@@ -70,9 +66,6 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     return value;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     if (j == 2) return value;

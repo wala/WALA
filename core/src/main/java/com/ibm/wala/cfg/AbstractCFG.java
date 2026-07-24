@@ -510,17 +510,11 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     Assertions.UNREACHABLE();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#removeNode(Object)
-   */
   @Override
   public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NodeManager#containsNode(Object)
-   */
   @Override
   public boolean containsNode(T N) {
     return nodeManager.containsNode(N);
@@ -563,9 +557,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return method;
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(Object)
-   */
   @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
@@ -591,9 +582,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
     return Iterator2Collection.toSet(iterateNormalSuccessors(b.getNumber()));
   }
 
-  /**
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
-   */
   @Override
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<>(s, this);
