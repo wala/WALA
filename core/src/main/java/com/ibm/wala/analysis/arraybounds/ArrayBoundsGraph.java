@@ -5,7 +5,6 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperGraph;
 import com.ibm.wala.analysis.arraybounds.hypergraph.HyperNode;
 import com.ibm.wala.analysis.arraybounds.hypergraph.SoftFinalHyperNode;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
-import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.AdditiveEdgeWeight;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeight;
 import com.ibm.wala.util.collections.Pair;
@@ -131,7 +130,7 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
     if (value == 0) {
       weight = Weight.ZERO;
     } else {
-      weight = new Weight(Type.NUMBER, value);
+      weight = new Weight(Weight.Type.NUMBER, value);
     }
 
     final EdgeWeight edgeWeight = new AdditiveEdgeWeight(weight);

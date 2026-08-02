@@ -1,6 +1,5 @@
 package com.ibm.wala.analysis.arraybounds.hypergraph.weight;
 
-import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 import java.util.Comparator;
 
 /**
@@ -15,20 +14,20 @@ public class NormalOrder implements Comparator<Weight> {
   public int compare(Weight o1, Weight o2) {
     final int result;
 
-    if (o1.type() == Type.NOT_SET || o2.type() == Type.NOT_SET) {
+    if (o1.type() == Weight.Type.NOT_SET || o2.type() == Weight.Type.NOT_SET) {
       throw new IllegalArgumentException("Tried to compare weights, which are not set yet.");
     }
 
     if (o1.type() == o2.type()) {
-      if (o1.type() == Type.NUMBER) {
+      if (o1.type() == Weight.Type.NUMBER) {
         result = o1.number() - o2.number();
       } else {
         result = 0;
       }
     } else {
-      if (o1.type() == Type.UNLIMITED) {
+      if (o1.type() == Weight.Type.UNLIMITED) {
         result = -1;
-      } else if (o2.type() == Type.UNLIMITED) {
+      } else if (o2.type() == Weight.Type.UNLIMITED) {
         result = 1;
       } else {
         throw new IllegalArgumentException("Programming error, expected no cases to be left.");

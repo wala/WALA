@@ -49,7 +49,6 @@
 package com.ibm.wala.dalvik.dex.instructions;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
-import com.ibm.wala.dalvik.dex.instructions.ArrayGet.Type;
 import com.ibm.wala.types.TypeReference;
 import org.jf.dexlib2.Opcode;
 
@@ -58,10 +57,10 @@ public class ArrayPut extends Instruction {
   public final int array;
   public final int source;
   public final int offset;
-  public final Type type;
+  public final ArrayGet.Type type;
 
   public ArrayPut(
-      int pc, int source, int array, int offset, Type type, Opcode op, DexIMethod method) {
+      int pc, int source, int array, int offset, ArrayGet.Type type, Opcode op, DexIMethod method) {
     super(pc, op, method);
     this.source = source;
     this.array = array;
