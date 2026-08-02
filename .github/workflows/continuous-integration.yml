@@ -9,6 +9,8 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
+permissions:
+  contents: read
 jobs:
   build_gradle:
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
@@ -59,11 +61,11 @@ jobs:
         if: runner.os == 'Linux'
       - name: Build and test using Gradle
         run: >-
-          ${{ env.XVFB_RUN }}
+          $XVFB_RUN
           ./gradlew
           --scan
           --console=colored "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
-          aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }} checkGitCleanliness
+          aggregatedJavadocs javadoc build $OS_SPECIFIC_GRADLE_TASKS checkGitCleanliness
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
