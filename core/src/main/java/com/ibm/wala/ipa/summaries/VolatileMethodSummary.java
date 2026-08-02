@@ -86,7 +86,7 @@ public class VolatileMethodSummary {
 
   /** Placeholder for Reserved slots. */
   private static final class Reserved extends SSAInstruction {
-    public Reserved() {
+    private Reserved() {
       super(SSAInstruction.NO_INDEX);
     }
 

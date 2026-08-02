@@ -254,7 +254,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
     }
 
     /** get the node with the given number if it already exists. Use with extreme care. */
-    public Statement getNodeLazy(int number) {
+    private Statement getNodeLazy(int number) {
       return super.getNode(number);
     }
 
@@ -622,7 +622,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       return !getEdgeLabels(src, dst).isEmpty();
     }
 
-    public Set<? extends Dependency> getEdgeLabels(Statement src, Statement dst) {
+    private Set<? extends Dependency> getEdgeLabels(Statement src, Statement dst) {
       addPDGStatementNodes(src.getNode());
       addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {

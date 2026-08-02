@@ -280,7 +280,7 @@ public final class TypeName implements Serializable {
       }
     }
 
-    public String toUnicodeString() {
+    private String toUnicodeString() {
       try {
         StringBuilder result = new StringBuilder();
         toStringPrefix(result);

@@ -106,11 +106,11 @@ public class ClassWriter implements ClassConstants {
   }
 
   private static class CWRef extends CWItem {
-    protected final String c;
+    final String c;
 
-    protected final String n;
+    final String n;
 
-    protected final String t;
+    final String t;
 
     private final byte type;
 
@@ -160,7 +160,7 @@ public class ClassWriter implements ClassConstants {
       return super.equals(o) && ((CWHandle) o).kind == kind;
     }
 
-    public byte getKind() {
+    private byte getKind() {
       return kind;
     }
   }

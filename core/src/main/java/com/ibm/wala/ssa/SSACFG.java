@@ -1055,7 +1055,7 @@ public class SSACFG
       return getClass() + " : " + type + ' ' + method;
     }
 
-    public static ExceptionLoadFailure create(TypeReference type, IMethod method) {
+    private static ExceptionLoadFailure create(TypeReference type, IMethod method) {
       return new ExceptionLoadFailure(type, method);
     }
   }

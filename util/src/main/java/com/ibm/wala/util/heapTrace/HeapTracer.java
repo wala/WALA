@@ -553,7 +553,7 @@ public class HeapTracer {
      * @param key a name for the heap partition to which o belongs
      * @param o the object to register
      */
-    public void registerObject(Object key, Object o) {
+    private void registerObject(Object key, Object o) {
       Integer I = instanceCount.get(key);
       int newCount = (I == null) ? 1 : I + 1;
       instanceCount.put(key, newCount);
@@ -598,14 +598,14 @@ public class HeapTracer {
     /**
      * @return Returns the totalSize.
      */
-    public int getTotalSize() {
+    private int getTotalSize() {
       return totalSize;
     }
 
     /**
      * @return Returns the totalInstances.
      */
-    public int getTotalInstances() {
+    private int getTotalInstances() {
       return totalInstances;
     }
   }

@@ -2759,7 +2759,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   private static class FileContext extends DelegatingContext {
     private final String fUnitName;
 
-    public FileContext(WalkContext parent, String unitName) {
+    private FileContext(WalkContext parent, String unitName) {
       super(parent);
       fUnitName = unitName;
     }
@@ -2785,9 +2785,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   private abstract class EntityContext extends DelegatingContext {
-    protected final CAstEntity topNode;
+    final CAstEntity topNode;
 
-    protected final String name;
+    private final String name;
 
     EntityContext(WalkContext parent, CAstEntity s) {
       super(parent);
@@ -2833,7 +2833,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
      */
     private final Map<CAstNode, @NonNull Integer> results = new LinkedHashMap<>();
 
-    public CodeEntityContext(WalkContext parent, Scope entityScope, CAstEntity s) {
+    private CodeEntityContext(WalkContext parent, Scope entityScope, CAstEntity s) {
       super(parent, s);
 
       this.topEntityScope = entityScope;

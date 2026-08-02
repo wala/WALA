@@ -351,7 +351,7 @@ public class ClassLoaderImpl implements IClassLoader {
       return getClass() + " : " + className;
     }
 
-    public static MultipleImplementationsWarning create(String className) {
+    private static MultipleImplementationsWarning create(String className) {
       return new MultipleImplementationsWarning(className);
     }
   }
@@ -371,7 +371,7 @@ public class ClassLoaderImpl implements IClassLoader {
       return getClass() + " : " + className;
     }
 
-    public static InvalidClassFile create(String className) {
+    private static InvalidClassFile create(String className) {
       return new InvalidClassFile(className);
     }
   }

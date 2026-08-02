@@ -196,7 +196,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
       return getClass() + " : " + className;
     }
 
-    public static MultipleDexImplementationsWarning create(String className) {
+    private static MultipleDexImplementationsWarning create(String className) {
       return new MultipleDexImplementationsWarning(className);
     }
   }
@@ -216,7 +216,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
       return getClass() + " : " + className;
     }
 
-    public static InvalidDexFile create(String className) {
+    private static InvalidDexFile create(String className) {
       return new InvalidDexFile(className);
     }
   }

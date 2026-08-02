@@ -73,7 +73,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   private class CHANode extends NodeImpl {
 
-    protected CHANode(IMethod method, Context C) {
+    private CHANode(IMethod method, Context C) {
       super(method, C);
     }
 
@@ -283,7 +283,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   private class CHARootNode extends CHANode {
     private final Set<CallSiteReference> calls = HashSetFactory.make();
 
-    protected CHARootNode(IMethod method, Context C) {
+    private CHARootNode(IMethod method, Context C) {
       super(method, C);
     }
 
@@ -395,7 +395,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
 
   private class CHACallGraphEdgeManager extends ExplicitPredecessorsEdgeManager {
 
-    protected CHACallGraphEdgeManager() {
+    private CHACallGraphEdgeManager() {
       super(CHACallGraph.this);
     }
 

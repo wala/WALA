@@ -137,8 +137,8 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
   }
 
   private static class UseDefSetPair {
-    public Set<CodeElement> uses = HashSetFactory.make();
-    public Set<CodeElement> defs = HashSetFactory.make();
+    private Set<CodeElement> uses = HashSetFactory.make();
+    private Set<CodeElement> defs = HashSetFactory.make();
   }
 
   private class DefUse implements IUnaryFlowFunction {
@@ -147,7 +147,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
 
     private final BasicBlockInContext<E> bb;
 
-    public DefUse(final BasicBlockInContext<E> inBlock) {
+    private DefUse(final BasicBlockInContext<E> inBlock) {
 
       this.bb = inBlock;
 
@@ -492,7 +492,7 @@ public class IFDSTaintFlowFunctionProvider<E extends ISSABasicBlock>
     CodeElement callSet;
     Set<CodeElement> receivers = new HashSet<>();
 
-    public ReturnDefUse(BasicBlockInContext<E> dest, BasicBlockInContext<E> call) {
+    private ReturnDefUse(BasicBlockInContext<E> dest, BasicBlockInContext<E> call) {
       super(dest);
 
       // TODO: look into exception handling through getDef(1)

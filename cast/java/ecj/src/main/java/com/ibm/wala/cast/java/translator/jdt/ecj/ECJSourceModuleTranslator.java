@@ -161,7 +161,7 @@ public class ECJSourceModuleTranslator implements SourceModuleTranslator {
   private final class ECJAstToIR extends FileASTRequestor {
     private final Map<String, ModuleEntry> sourceMap;
 
-    public ECJAstToIR(Map<String, ModuleEntry> sourceMap) {
+    private ECJAstToIR(Map<String, ModuleEntry> sourceMap) {
       this.sourceMap = sourceMap;
     }
 

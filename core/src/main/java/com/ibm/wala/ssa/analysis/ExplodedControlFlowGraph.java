@@ -469,13 +469,13 @@ public class ExplodedControlFlowGraph
 
     private final ISSABasicBlock original;
 
-    public ExplodedBasicBlock(int instructionIndex, ISSABasicBlock original) {
+    private ExplodedBasicBlock(int instructionIndex, ISSABasicBlock original) {
       this.instructionIndex = instructionIndex;
       this.original = original;
     }
 
     @SuppressWarnings("unused")
-    public ExplodedControlFlowGraph getExplodedCFG() {
+    private ExplodedControlFlowGraph getExplodedCFG() {
       return ExplodedControlFlowGraph.this;
     }
 

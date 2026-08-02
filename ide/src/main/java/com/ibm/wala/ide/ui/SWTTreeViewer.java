@@ -168,7 +168,7 @@ public class SWTTreeViewer<T> extends AbstractJFaceRunner {
     /** JFace component implementing the tree viewer */
     private TreeViewer treeViewer;
 
-    public GraphViewer(Graph<T> graph) throws WalaException {
+    private GraphViewer(Graph<T> graph) throws WalaException {
       super(null);
       this.graph = graph;
       if (graph == null) {

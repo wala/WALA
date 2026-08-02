@@ -133,13 +133,13 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       Assertions.UNREACHABLE("Don't call me");
     }
 
-    public void addEquation(AbstractStatement<PointsToSetVariable, ?> eq) {
+    private void addEquation(AbstractStatement<PointsToSetVariable, ?> eq) {
       assert !containsStatement(eq);
       equationCount++;
       super.addNode(eq);
     }
 
-    public void addVariable(PointsToSetVariable v) {
+    private void addVariable(PointsToSetVariable v) {
       if (!containsVariable(v)) {
         varCount++;
         super.addNode(v);
@@ -156,11 +156,11 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return edgeManager;
     }
 
-    protected int getEquationCount() {
+    private int getEquationCount() {
       return equationCount;
     }
 
-    protected int getVarCount() {
+    private int getVarCount() {
       return varCount;
     }
   }

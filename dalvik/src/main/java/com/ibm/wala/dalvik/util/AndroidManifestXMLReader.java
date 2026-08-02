@@ -290,7 +290,7 @@ public class AndroidManifestXMLReader {
     }
 
     /** The class that takes action on this tag. */
-    public ParserItem getHandler() {
+    private ParserItem getHandler() {
       if (this.item == null) {
         System.err.println("Requested non existing handler for: " + this);
       }
@@ -298,7 +298,7 @@ public class AndroidManifestXMLReader {
     }
 
     /** The Tags that may appear as a child of this Tag. */
-    public Set<Tag> getAllowedSubTags() {
+    private Set<Tag> getAllowedSubTags() {
       if (this.allowedSubTagsHolder == null) {
         return null;
       } else if (this.allowedSubTags == null) {
@@ -316,18 +316,18 @@ public class AndroidManifestXMLReader {
      *
      * <p>The handling Item has to pop them after it has evaluated them else it gets a big mess.
      */
-    public Set<Attr> getRelevantAttributes() {
+    private Set<Attr> getRelevantAttributes() {
       return Collections.unmodifiableSet(this.relevantAttributes);
     }
 
     /** The given Attr is in {@link #getRelevantAttributes()}. */
-    public boolean isRelevant(Attr attr) {
+    private boolean isRelevant(Attr attr) {
       return relevantAttributes.contains(attr);
     }
 
     /** All Tags in this Enum but UNIMPORTANT are relevant. */
     @SuppressWarnings("unused")
-    public boolean isRelevant() {
+    private boolean isRelevant() {
       return (this != Tag.UNIMPORTANT);
     }
 
@@ -339,7 +339,7 @@ public class AndroidManifestXMLReader {
      *
      * <p>Matching is case insensitive of course.
      */
-    public static Tag fromString(String tag) {
+    private static Tag fromString(String tag) {
       tag = tag.toLowerCase();
 
       return reverseMap.getOrDefault(tag, Tag.UNIMPORTANT);
@@ -347,7 +347,7 @@ public class AndroidManifestXMLReader {
 
     /** The Tag appears in the XML File using this name. */
     @SuppressWarnings("unused")
-    public String getName() {
+    private String getName() {
       return this.tagName;
     }
   }
@@ -379,11 +379,11 @@ public class AndroidManifestXMLReader {
     }
 
     @SuppressWarnings("unused")
-    public boolean isRelevantIn(Tag tag) {
+    private boolean isRelevantIn(Tag tag) {
       return tag.isRelevant(this);
     }
 
-    public String getName() {
+    private String getName() {
       return this.attrName;
     }
   }
@@ -425,21 +425,21 @@ public class AndroidManifestXMLReader {
    * surprising results! You should mark all of them as final to be sure.
    */
   private abstract static class ParserItem {
-    protected Tag self;
+    Tag self;
 
     /**
      * Set the Tag this ParserItem-Instance is an Handler for.
      *
      * <p>This may only be set once!
      */
-    public void setSelf(Tag self) {
+    private void setSelf(Tag self) {
       if (this.self != null) {
         throw new IllegalStateException("Self can only be set once!");
       }
       this.self = self;
     }
 
-    public ParserItem() {}
+    private ParserItem() {}
 
     /**
      * Remember attributes to the tag.
@@ -448,7 +448,7 @@ public class AndroidManifestXMLReader {
      *
      * <p>Leave Parser-Stack alone! This is called by SAXHandler only!
      */
-    public void enter(Attributes saxAttrs) {
+    void enter(Attributes saxAttrs) {
       for (Attr relevant : self.getRelevantAttributes()) {
         String attr = saxAttrs.getValue(relevant.getName());
         if (attr == null) {
@@ -466,7 +466,7 @@ public class AndroidManifestXMLReader {
      *
      * <p>This is called by the consuming ParserItem.
      */
-    public void popAttributes() {
+    private void popAttributes() {
       for (Attr relevant : self.getRelevantAttributes()) {
         try {
           logger.debug(
@@ -497,7 +497,7 @@ public class AndroidManifestXMLReader {
      * <p>Do this by popping them, but leave self on the stack! For each Item popped call its
      * popAttributes()!
      */
-    public void leave() {
+    void leave() {
       while (parserStack.peek() != self) {
         final Set<Tag> allowedSubTags = self.getAllowedSubTags();
         Tag subTag = parserStack.pop();
@@ -720,7 +720,7 @@ public class AndroidManifestXMLReader {
   private static class SAXHandler extends DefaultHandler {
     private int unimportantDepth = 0;
 
-    public SAXHandler() {
+    private SAXHandler() {
       parserStack.push(Tag.ROOT);
     }
 

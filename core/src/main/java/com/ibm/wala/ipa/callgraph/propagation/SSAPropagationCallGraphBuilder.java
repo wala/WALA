@@ -534,7 +534,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.keys = new InstanceKey[params.length];
     }
 
-    protected void rec(final int pi, final int rhsi) {
+    private void rec(final int pi, final int rhsi) {
       if (pi == params.length) {
         IClass recv = null;
         if (site.isDispatch()) {
@@ -2361,7 +2361,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return getClass() + " : " + type;
     }
 
-    public static CheckcastFailure create(TypeReference type) {
+    private static CheckcastFailure create(TypeReference type) {
       return new CheckcastFailure(type);
     }
   }
@@ -2384,7 +2384,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return getClass() + " : " + field;
     }
 
-    public static FieldResolutionFailure create(FieldReference field) {
+    private static FieldResolutionFailure create(FieldReference field) {
       return new FieldResolutionFailure(field);
     }
   }

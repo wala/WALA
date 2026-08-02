@@ -113,11 +113,11 @@ public class AndroidModelParameterManager {
 
   /** Representing a ssa-number - thus a version of an instance to a type. */
   private static class ManagedParameter {
-    public ValueStatus status = ValueStatus.UNUSED;
-    public TypeReference type = null;
-    public int ssa = -1;
+    private ValueStatus status = ValueStatus.UNUSED;
+    private TypeReference type = null;
+    private int ssa = -1;
     //        public SSAInstruction setBy = null;
-    public int setInScope = -1;
+    private int setInScope = -1;
   }
 
   /** The main data-structure of the management */

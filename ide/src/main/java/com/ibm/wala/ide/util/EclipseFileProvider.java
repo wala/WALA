@@ -56,7 +56,7 @@ public class EclipseFileProvider extends FileProvider {
     private static Object workspaceRoot = null;
     private static Method workspaceRoot_getFile = null;
 
-    public static Module getJarFileModule(String fileName) {
+    private static Module getJarFileModule(String fileName) {
       // Using reflection to enable this code to be built without the
       // org.eclipse.core.resources bundle
       //

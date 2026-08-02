@@ -241,7 +241,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
 
     private final Language l;
 
-    public NoOpSummary(Language l, MethodReference method, boolean isStatic) {
+    private NoOpSummary(Language l, MethodReference method, boolean isStatic) {
       super(method);
       setStatic(isStatic);
       this.l = l;

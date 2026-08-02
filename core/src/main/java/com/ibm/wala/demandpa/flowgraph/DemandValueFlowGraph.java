@@ -126,18 +126,18 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
   private class AllValsStatementVisitor extends Visitor implements FlowStatementVisitor {
 
     /** The node whose statements we are currently traversing */
-    protected final CGNode node;
+    private final CGNode node;
 
     /** The governing IR */
-    protected final IR ir;
+    private final IR ir;
 
     /** The basic block currently being processed */
     private ISSABasicBlock basicBlock;
 
     /** Governing symbol table */
-    protected final SymbolTable symbolTable;
+    private final SymbolTable symbolTable;
 
-    public AllValsStatementVisitor(CGNode node) {
+    private AllValsStatementVisitor(CGNode node) {
       this.node = node;
       this.ir = node.getIR();
       this.symbolTable = ir.getSymbolTable();
@@ -213,7 +213,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
           instruction.getDeclaredField());
     }
 
-    protected void visitGetInternal(int lval, int ref, boolean isStatic, FieldReference field) {
+    private void visitGetInternal(int lval, int ref, boolean isStatic, FieldReference field) {
 
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
@@ -246,7 +246,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
           instruction.getDeclaredField());
     }
 
-    public void visitPutInternal(int rval, int ref, boolean isStatic, FieldReference field) {
+    private void visitPutInternal(int rval, int ref, boolean isStatic, FieldReference field) {
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
         return;
@@ -397,7 +397,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       handleNonHeapInstruction(instruction);
     }
 
-    public ISSABasicBlock getBasicBlock() {
+    private ISSABasicBlock getBasicBlock() {
       return basicBlock;
     }
 

@@ -70,7 +70,7 @@ public abstract class NativeTranslatorToCAst extends NativeBridge implements Tra
         return sourceURL;
       }
 
-      public InputStream getInputStream() throws IOException {
+      private InputStream getInputStream() throws IOException {
         return new FileInputStream(sourceFileName);
       }
 

@@ -174,7 +174,7 @@ public class RhinoToAstTranslator implements TranslatorToCAst {
       extends JavaScriptTranslatorToCAst.MemberDestructuringContext<WalkContext, Node>
       implements WalkContext {
 
-    protected MemberDestructuringContext(
+    private MemberDestructuringContext(
         WalkContext parent, Node initialBaseFor, int operationIndex) {
       super(parent, initialBaseFor, operationIndex);
     }

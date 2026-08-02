@@ -235,7 +235,7 @@ public class MethodHandles {
     private final MethodTargetSelector base;
     private final Map<MethodReference, @NonNull SyntheticMethod> impls = HashMapFactory.make();
 
-    public InvokeExactTargetSelector(MethodTargetSelector base) {
+    private InvokeExactTargetSelector(MethodTargetSelector base) {
       this.base = base;
     }
 
@@ -307,14 +307,14 @@ public class MethodHandles {
   }
 
   private abstract static class HandlersContextInterpreterImpl implements SSAContextInterpreter {
-    protected final Map<CGNode, @NonNull SoftReference<IR>> irs = HashMapFactory.make();
+    final Map<CGNode, @NonNull SoftReference<IR>> irs = HashMapFactory.make();
 
     @Override
     public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
       return getIR(node).iterateNewSites();
     }
 
-    public Iterator<FieldReference> iterateFields(CGNode node, Predicate<SSAInstruction> filter) {
+    private Iterator<FieldReference> iterateFields(CGNode node, Predicate<SSAInstruction> filter) {
       return new MapIterator<>(
           new FilterIterator<>(getIR(node).iterateNormalInstructions(), filter),
           object -> ((SSAFieldAccessInstruction) object).getDeclaredField());

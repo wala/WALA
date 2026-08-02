@@ -32,7 +32,7 @@ public class RunBuilder {
       throws IOException, WalaException, IllegalArgumentException, CancelException {
 
     class CAstRhinoNewTranslator extends RewritingTranslatorToCAst {
-      public CAstRhinoNewTranslator(ModuleEntry m, boolean replicateForDoLoops) {
+      private CAstRhinoNewTranslator(ModuleEntry m, boolean replicateForDoLoops) {
         super(
             m, new RhinoToAstTranslator(new CAstImpl(), m, m.getName(), replicateForDoLoops, true));
       }

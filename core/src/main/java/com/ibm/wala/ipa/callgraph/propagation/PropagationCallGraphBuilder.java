@@ -276,7 +276,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return getClass() + " : " + entrypoint;
     }
 
-    public static EntrypointResolutionWarning create(Entrypoint entrypoint) {
+    private static EntrypointResolutionWarning create(Entrypoint entrypoint) {
       return new EntrypointResolutionWarning(entrypoint);
     }
   }
@@ -465,7 +465,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       return getClass() + " : " + t;
     }
 
-    public static ExceptionLookupFailure create(TypeReference t) {
+    private static ExceptionLookupFailure create(TypeReference t) {
       return new ExceptionLookupFailure(t);
     }
   }

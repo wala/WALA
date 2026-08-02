@@ -103,13 +103,13 @@ public class SSAValueManager {
   public String breadCrumb = "";
 
   private static class Managed<T extends SSAValue> {
-    public ValueStatus status = ValueStatus.UNUSED;
-    public SSAInstruction setBy = null;
-    public int setInScope = -1;
-    public final VariableKey key;
-    public final T value;
+    private ValueStatus status = ValueStatus.UNUSED;
+    private SSAInstruction setBy = null;
+    private int setInScope = -1;
+    private final VariableKey key;
+    private final T value;
 
-    public Managed(final T value, final VariableKey key) {
+    private Managed(final T value, final VariableKey key) {
       this.value = value;
       this.key = key;
     }

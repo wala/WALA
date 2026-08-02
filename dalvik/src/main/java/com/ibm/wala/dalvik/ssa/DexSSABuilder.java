@@ -343,7 +343,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
     final SSAPiNodePolicy piNodePolicy;
 
-    public SymbolicPropagator(
+    private SymbolicPropagator(
         DexCFG dexCFG, SSAInstruction[] instructions, SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
       super(dexCFG);
       this.piNodePolicy = piNodePolicy;
@@ -411,7 +411,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     private class NodeVisitor extends BasicRegisterMachineVisitor {
       private final SSACFG cfg;
 
-      public NodeVisitor(SSACFG cfg) {
+      private NodeVisitor(SSACFG cfg) {
         this.cfg = cfg;
       }
 
@@ -599,7 +599,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         }
       }
 
-      protected void setLocal(int dest, int result) {
+      private void setLocal(int dest, int result) {
         assert result <= symbolTable.getMaxValueNumber();
         workingState.setLocal(dest, result);
       }
@@ -1486,7 +1486,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
       return extractIndices(locals, vn);
     }
 
-    public int[] allocateNewLocalsArray() {
+    private int[] allocateNewLocalsArray() {
       int[] result = new int[maxLocals];
       Arrays.fill(result, OPTIMISTIC ? TOP : BOTTOM);
       return result;

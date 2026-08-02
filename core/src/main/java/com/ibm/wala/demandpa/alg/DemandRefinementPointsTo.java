@@ -2070,7 +2070,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         return result;
       }
 
-      public void handleTopLevelForwInterproc(PointerKeyAndState curPkAndState) {
+      private void handleTopLevelForwInterproc(PointerKeyAndState curPkAndState) {
         PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (curPk instanceof LocalPointerKey localPk) {

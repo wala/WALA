@@ -143,7 +143,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
      * record that variable (n1, in1) is the same as variable (n2,in2), where (x,true) = IN(X) and
      * (x,false) = OUT(X)
      */
-    public void union(@Nullable Object n1, @Nullable Object n2) {
+    private void union(@Nullable Object n1, @Nullable Object n2) {
       assert n1 != null;
       assert n2 != null;
       int x = map.getMappedIndex(n1);
@@ -152,23 +152,23 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
       didSomething = true;
     }
 
-    public int size() {
+    private int size() {
       return map.getSize();
     }
 
-    public int find(int i) {
+    private int find(int i) {
       return uf.find(i);
     }
 
-    public boolean isIn(int i) {
+    private boolean isIn(int i) {
       return i < node2In.size();
     }
 
-    public boolean isOut(int i) {
+    private boolean isOut(int i) {
       return !isIn(i) && i < (node2In.size() + node2Out.size());
     }
 
-    public Object getKey(int i) {
+    private Object getKey(int i) {
       return allKeys[i];
     }
   }

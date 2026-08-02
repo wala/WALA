@@ -160,7 +160,7 @@ public class FlowGraphBuilder {
    */
   private class FlowGraphSSAVisitor extends JSMethodInstructionVisitor {
     // index of the instruction currently visited; -1 if the instruction isn't a normal instruction
-    public int instructionIndex = -1;
+    private int instructionIndex = -1;
 
     // flow graph being built
     private final FlowGraph flowgraph;
@@ -180,7 +180,7 @@ public class FlowGraphBuilder {
     // the function vertex corresponding to the current function
     private final FuncVertex func;
 
-    public FlowGraphSSAVisitor(IR ir, FlowGraph flowgraph) {
+    private FlowGraphSSAVisitor(IR ir, FlowGraph flowgraph) {
       super(ir.getMethod(), ir.getSymbolTable(), cache.getDefUse(ir));
       this.ir = ir;
       this.flowgraph = flowgraph;

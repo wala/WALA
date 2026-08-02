@@ -105,8 +105,8 @@ public class AppModelMethod {
   private final Map<TypeReference, TypeReference> aClassToTR = new HashMap<>();
 
   private static class MethodParams {
-    public IMethod im;
-    public int[] params;
+    private IMethod im;
+    private int[] params;
 
     private MethodParams(IMethod method) {
       im = method;

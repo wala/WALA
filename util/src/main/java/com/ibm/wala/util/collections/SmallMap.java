@@ -275,6 +275,6 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
       }
     }
 
-    protected abstract E getItemInSlot(int slot);
+    abstract E getItemInSlot(int slot);
   }
 }

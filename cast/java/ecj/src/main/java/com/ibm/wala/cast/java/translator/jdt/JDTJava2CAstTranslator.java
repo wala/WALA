@@ -4206,7 +4206,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
 
   private static class AssignmentContext extends DelegatingContext {
 
-    protected AssignmentContext(WalkContext parent) {
+    private AssignmentContext(WalkContext parent) {
       super(parent);
     }
 
@@ -4259,7 +4259,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   }
 
   private static class BreakContext extends DelegatingContext {
-    protected final String label;
+    final String label;
 
     private final ASTNode breakTo;
 
@@ -4278,7 +4278,7 @@ public abstract class JDTJava2CAstTranslator<T extends Position> {
   private static class LoopContext extends BreakContext {
     private final ASTNode continueTo;
 
-    protected LoopContext(WalkContext parent, String label, ASTNode breakTo, ASTNode continueTo) {
+    private LoopContext(WalkContext parent, String label, ASTNode breakTo, ASTNode continueTo) {
       super(parent, label, breakTo);
       this.continueTo = continueTo;
     }

@@ -1261,7 +1261,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return getClass() + " : " + klass + ' ' + message;
     }
 
-    public static ClassExclusion create(TypeReference klass, String message) {
+    private static ClassExclusion create(TypeReference klass, String message) {
       return new ClassExclusion(klass, message);
     }
   }
