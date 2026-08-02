@@ -31,9 +31,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out WALA sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
       - name: 'Set up JDKs'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           # Install all the JDK versions we use in the matrix.  We do JDK 26 last to use that
           # to run Gradle.
@@ -44,7 +46,7 @@ jobs:
             26
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
         with:
           build-scan-publish: true
           build-scan-terms-of-use-url: https://gradle.com/terms-of-service
@@ -64,7 +66,7 @@ jobs:
           aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }} checkGitCleanliness
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: Test results for JDK ${{ matrix.java }} on ${{ matrix.os }}
           path: |
@@ -75,7 +77,7 @@ jobs:
         run: ./gradlew testCodeCoverageReport "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
         if: github.repository == 'wala/WALA'
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: ./code-coverage-report/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
           token: ${{ secrets.WALA_MAIN_CODECOV_TOKEN }}
@@ -85,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Upload event file
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: Event file
           path: ${{ github.event_path }}
@@ -98,14 +100,16 @@ jobs:
       JDK_VERSION: 26
     steps:
       - name: 'Check out repository'
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
       - name: 'Set up JDK'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           java-version: ${{ env.JDK_VERSION }}
           distribution: 'zulu'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
       - name: 'Generate latest docs'
         env:
           GITHUB_TOKEN: ${{ secrets.WALA_BOT_GH_TOKEN }}
