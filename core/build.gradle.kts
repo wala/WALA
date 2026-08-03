@@ -88,7 +88,7 @@ interface GenerateHelloHashServices {
 //  download and extract kawa 3.0 "kawa.jar"
 //
 
-val kawa = adHocDownload(uri("https://ftpmirror.gnu.org/gnu/kawa"), "kawa", "zip", "3.0")
+val kawa = adHocDownload(uri("https://ftp.gnu.org/pub/gnu/kawa"), "kawa", "zip", "3.0")
 
 val extractKawa =
     tasks.register<Sync>("extractKawa") {
