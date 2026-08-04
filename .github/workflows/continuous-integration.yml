@@ -60,12 +60,13 @@ jobs:
         run: echo XVFB_RUN=xvfb-run >> $GITHUB_ENV
         if: runner.os == 'Linux'
       - name: Build and test using Gradle
+        shell: sh
         run: >-
-          ${{ env.XVFB_RUN }}
+          ${XVFB_RUN}
           ./gradlew
           --scan
           --console=colored "-Pcom.ibm.wala.jdk-version=${{ matrix.java }}"
-          aggregatedJavadocs javadoc build ${{ env.OS_SPECIFIC_GRADLE_TASKS }} checkGitCleanliness
+          aggregatedJavadocs javadoc build ${OS_SPECIFIC_GRADLE_TASKS} checkGitCleanliness
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
