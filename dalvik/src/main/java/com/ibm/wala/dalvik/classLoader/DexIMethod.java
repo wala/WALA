@@ -72,7 +72,6 @@ import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.dalvik.dex.instructions.ArrayFill;
 import com.ibm.wala.dalvik.dex.instructions.ArrayGet;
-import com.ibm.wala.dalvik.dex.instructions.ArrayGet.Type;
 import com.ibm.wala.dalvik.dex.instructions.ArrayLength;
 import com.ibm.wala.dalvik.dex.instructions.ArrayPut;
 import com.ibm.wala.dalvik.dex.instructions.BinaryLiteralOperation;
@@ -1503,7 +1502,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_int,
+                    ArrayGet.Type.t_int,
                     inst.getOpcode(),
                     this));
         case AGET_WIDE ->
@@ -1513,7 +1512,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_wide,
+                    ArrayGet.Type.t_wide,
                     inst.getOpcode(),
                     this));
         case AGET_OBJECT ->
@@ -1523,7 +1522,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_object,
+                    ArrayGet.Type.t_object,
                     inst.getOpcode(),
                     this));
         case AGET_BOOLEAN ->
@@ -1533,7 +1532,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_boolean,
+                    ArrayGet.Type.t_boolean,
                     inst.getOpcode(),
                     this));
         case AGET_BYTE ->
@@ -1543,7 +1542,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_byte,
+                    ArrayGet.Type.t_byte,
                     inst.getOpcode(),
                     this));
         case AGET_CHAR ->
@@ -1553,7 +1552,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_char,
+                    ArrayGet.Type.t_char,
                     inst.getOpcode(),
                     this));
         case AGET_SHORT ->
@@ -1563,7 +1562,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_short,
+                    ArrayGet.Type.t_short,
                     inst.getOpcode(),
                     this));
         case APUT ->
@@ -1573,7 +1572,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_int,
+                    ArrayGet.Type.t_int,
                     inst.getOpcode(),
                     this));
         case APUT_WIDE ->
@@ -1583,7 +1582,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_wide,
+                    ArrayGet.Type.t_wide,
                     inst.getOpcode(),
                     this));
         case APUT_OBJECT ->
@@ -1593,7 +1592,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_object,
+                    ArrayGet.Type.t_object,
                     inst.getOpcode(),
                     this));
         case APUT_BOOLEAN ->
@@ -1603,7 +1602,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_boolean,
+                    ArrayGet.Type.t_boolean,
                     inst.getOpcode(),
                     this));
         case APUT_BYTE ->
@@ -1613,7 +1612,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_byte,
+                    ArrayGet.Type.t_byte,
                     inst.getOpcode(),
                     this));
         case APUT_CHAR ->
@@ -1623,7 +1622,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_char,
+                    ArrayGet.Type.t_char,
                     inst.getOpcode(),
                     this));
         case APUT_SHORT ->
@@ -1633,7 +1632,7 @@ public class DexIMethod implements IBytecodeMethod<Instruction> {
                     ((Instruction23x) inst).getRegisterA(),
                     ((Instruction23x) inst).getRegisterB(),
                     ((Instruction23x) inst).getRegisterC(),
-                    Type.t_short,
+                    ArrayGet.Type.t_short,
                     inst.getOpcode(),
                     this));
         case IGET, IGET_WIDE, IGET_OBJECT, IGET_BOOLEAN, IGET_BYTE, IGET_CHAR, IGET_SHORT -> {

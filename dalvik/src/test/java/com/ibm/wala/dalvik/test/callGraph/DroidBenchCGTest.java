@@ -38,7 +38,6 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
 import org.junit.jupiter.api.Named;
 
 public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
@@ -154,7 +153,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
   protected static Stream<Named<TestParameters>> generateData(final String filter) {
     final Path droidBenchRoot = getDroidBenchRoot();
-    final Builder<Named<TestParameters>> testParameters = Stream.builder();
+    final Stream.Builder<Named<TestParameters>> testParameters = Stream.builder();
     final var apkRoot = droidBenchRoot.resolve("apk");
     FileUtil.recurseFiles(
         f -> {
