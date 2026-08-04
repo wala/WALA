@@ -154,11 +154,11 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
     private int instructionIndex;
 
-    public SSAMemoryAccessVisitor(CGNode n) {
+    private SSAMemoryAccessVisitor(CGNode n) {
       this.node = n;
     }
 
-    public void setInstructionIndex(int i) {
+    private void setInstructionIndex(int i) {
       this.instructionIndex = i;
     }
 
@@ -225,12 +225,12 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
     final CGNode node;
 
-    public MemoryAccessVisitor(ClassLoaderReference loader, CGNode node) {
+    private MemoryAccessVisitor(ClassLoaderReference loader, CGNode node) {
       this.loader = loader;
       this.node = node;
     }
 
-    protected void setInstructionIndex(int instructionIndex) {
+    private void setInstructionIndex(int instructionIndex) {
       this.instructionIndex = instructionIndex;
     }
 

@@ -147,7 +147,7 @@ public final class Descriptor {
       return hashCode;
     }
 
-    public int computeHashCode() {
+    private int computeHashCode() {
       int result = returnType.hashCode() * 5309;
       if (parameters != null) {
         for (int i = 0; i < parameters.length; i++) {
@@ -197,7 +197,7 @@ public final class Descriptor {
       return result.toString();
     }
 
-    public String toUnicodeString() {
+    private String toUnicodeString() {
       StringBuilder result = new StringBuilder();
       result.append('(');
       if (parameters != null) {

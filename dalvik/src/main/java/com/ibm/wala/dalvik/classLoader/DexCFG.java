@@ -686,7 +686,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
       return getClass() + " : " + T;
     }
 
-    public static FailedExceptionResolutionWarning create(TypeReference T) {
+    private static FailedExceptionResolutionWarning create(TypeReference T) {
       return new FailedExceptionResolutionWarning(T);
     }
   }

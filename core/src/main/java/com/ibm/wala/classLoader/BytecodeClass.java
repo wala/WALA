@@ -117,7 +117,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       return getClass() + " : " + className;
     }
 
-    public static ClassNotFoundWarning create(ImmutableByteArray className) {
+    private static ClassNotFoundWarning create(ImmutableByteArray className) {
       return new ClassNotFoundWarning(className);
     }
   }

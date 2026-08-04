@@ -851,7 +851,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           return l.isDoubleType(t) || l.isFloatType(t) || l.isIntType(t) || l.isLongType(t);
         }
 
-        protected boolean handleBinaryOperatorArgs(InstanceKey left, InstanceKey right) {
+        private boolean handleBinaryOperatorArgs(InstanceKey left, InstanceKey right) {
           Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
           if (l.isStringType(left.concreteType().getReference())
               || l.isStringType(right.concreteType().getReference())) {

@@ -527,7 +527,7 @@ public class HeapReachingDefs<T extends InstanceKey> {
      */
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
-    public RD(
+    private RD(
         CGNode node,
         ExplodedControlFlowGraph cfg,
         PointerAnalysis<T> pa2,

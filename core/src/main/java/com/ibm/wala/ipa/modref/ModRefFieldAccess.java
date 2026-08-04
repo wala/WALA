@@ -41,7 +41,7 @@ public final class ModRefFieldAccess {
     private Map<IClass, Set<IField>> mods;
     private Map<IClass, Set<IField>> refs;
 
-    public TwoMaps(Map<IClass, Set<IField>> mods, Map<IClass, Set<IField>> refs) {
+    private TwoMaps(Map<IClass, Set<IField>> mods, Map<IClass, Set<IField>> refs) {
       this.mods = mods;
       this.refs = refs;
       if (mods == null) {
@@ -52,11 +52,11 @@ public final class ModRefFieldAccess {
       }
     }
 
-    public Map<IClass, Set<IField>> getMods() {
+    private Map<IClass, Set<IField>> getMods() {
       return mods;
     }
 
-    public Map<IClass, Set<IField>> getRefs() {
+    private Map<IClass, Set<IField>> getRefs() {
       return refs;
     }
   }

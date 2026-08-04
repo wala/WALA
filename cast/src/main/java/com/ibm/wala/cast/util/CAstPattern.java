@@ -460,7 +460,7 @@ public class CAstPattern {
       }
     }
 
-    public CAstPattern parse() throws NoSuchFieldException, IllegalAccessException {
+    private CAstPattern parse() throws NoSuchFieldException, IllegalAccessException {
       if (DEBUG_PARSER) {
         System.err.println(("parsing " + patternString.substring(start)));
       }

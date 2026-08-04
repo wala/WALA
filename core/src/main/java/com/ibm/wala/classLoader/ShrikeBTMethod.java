@@ -576,7 +576,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     private final BytecodeInfo info;
 
-    public SimpleVisitor(BytecodeInfo info) {
+    private SimpleVisitor(BytecodeInfo info) {
       this.info = info;
     }
 
@@ -601,11 +601,11 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     private int instructionIndex;
 
-    public void setInstructionIndex(int i) {
+    private void setInstructionIndex(int i) {
       instructionIndex = i;
     }
 
-    public int getProgramCounter() {
+    private int getProgramCounter() {
       return info.pcMap[instructionIndex];
     }
 

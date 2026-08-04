@@ -625,7 +625,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         return NOT_CHANGED;
       }
 
-      protected abstract void action(PointerKey lexicalKey, int vn);
+      abstract void action(PointerKey lexicalKey, int vn);
 
       @Override
       public String toString() {
@@ -773,7 +773,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             super(name);
           }
 
-          public CGNode getDefiningNode() {
+          private CGNode getDefiningNode() {
             return definingNode;
           }
 

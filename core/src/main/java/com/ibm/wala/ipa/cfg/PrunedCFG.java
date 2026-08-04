@@ -63,25 +63,25 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
       ControlFlowGraph<I, T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter)
       implements NumberedEdgeManager<T> {
 
-    public Iterator<T> getExceptionalSuccessors(final T N) {
+    private Iterator<T> getExceptionalSuccessors(final T N) {
       return new FilterIterator<>(
           cfg.getExceptionalSuccessors(N).iterator(),
           o -> currentCFGNodes.containsNode(o) && filter.hasExceptionalEdge(N, o));
     }
 
-    public Iterator<T> getNormalSuccessors(final T N) {
+    private Iterator<T> getNormalSuccessors(final T N) {
       return new FilterIterator<>(
           cfg.getNormalSuccessors(N).iterator(),
           o -> currentCFGNodes.containsNode(o) && filter.hasNormalEdge(N, o));
     }
 
-    public Iterator<T> getExceptionalPredecessors(final T N) {
+    private Iterator<T> getExceptionalPredecessors(final T N) {
       return new FilterIterator<>(
           cfg.getExceptionalPredecessors(N).iterator(),
           o -> currentCFGNodes.containsNode(o) && filter.hasExceptionalEdge(o, N));
     }
 
-    public Iterator<T> getNormalPredecessors(final T N) {
+    private Iterator<T> getNormalPredecessors(final T N) {
       return new FilterIterator<>(
           cfg.getNormalPredecessors(N).iterator(),
           o -> currentCFGNodes.containsNode(o) && filter.hasNormalEdge(o, N));

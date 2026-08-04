@@ -298,7 +298,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     final SSAPiNodePolicy piNodePolicy;
 
-    public SymbolicPropagator(
+    private SymbolicPropagator(
         ShrikeCFG shrikeCFG,
         SSAInstruction[] instructions,
         SymbolTable symbolTable,
@@ -1022,7 +1022,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
     }
 
-    public int[] allocateNewLocalsArray(int maxLocals) {
+    private int[] allocateNewLocalsArray(int maxLocals) {
       int[] result = new int[maxLocals];
       Arrays.fill(result, OPTIMISTIC ? TOP : BOTTOM);
       return result;

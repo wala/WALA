@@ -211,7 +211,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     private NullPointerState currentState;
     private T currentBlock;
 
-    public void work(T bb) {
+    private void work(T bb) {
       if (bb == null) {
         throw new IllegalArgumentException("Null not allowed");
       } else if (!cfg.containsNode(bb)) {
@@ -229,7 +229,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
       }
     }
 
-    public Graph<T> getNegativeCFG() {
+    private Graph<T> getNegativeCFG() {
       return deleted;
     }
 

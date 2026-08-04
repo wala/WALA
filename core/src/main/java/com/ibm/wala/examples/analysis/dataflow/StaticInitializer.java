@@ -86,7 +86,7 @@ public class StaticInitializer {
 
     private final InitializerDomain domain;
 
-    protected InitializerFlowFunctions(InitializerDomain domain) {
+    private InitializerFlowFunctions(InitializerDomain domain) {
       this.domain = domain;
     }
 

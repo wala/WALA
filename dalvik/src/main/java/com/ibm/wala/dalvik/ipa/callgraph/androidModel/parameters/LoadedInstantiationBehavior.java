@@ -75,7 +75,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
     }
 
     /** If the value can be derived using an other mapping. */
-    public boolean isCached() {
+    private boolean isCached() {
       return this.cacheFrom != null;
     }
   }
@@ -86,11 +86,11 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior {
   private record BehaviorKey<T>(T base) implements Serializable {
     @Serial private static final long serialVersionUID = 73530;
 
-    public static BehaviorKey<TypeName> mk(TypeName base) {
+    private static BehaviorKey<TypeName> mk(TypeName base) {
       return new BehaviorKey<>(base);
     }
 
-    public static BehaviorKey<Atom> mk(Atom base) {
+    private static BehaviorKey<Atom> mk(Atom base) {
       return new BehaviorKey<>(base);
     }
 

@@ -355,7 +355,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       return getClass() + " : " + t;
     }
 
-    public static AllocationFailure create(TypeReference t) {
+    private static AllocationFailure create(TypeReference t) {
       return new AllocationFailure(t);
     }
   }
@@ -426,7 +426,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         return result.iterator();
       }
 
-      public Iterator<SSAInstruction> getInvokeStatements() {
+      private Iterator<SSAInstruction> getInvokeStatements() {
         ArrayList<SSAInstruction> result = new ArrayList<>();
         SSAInstruction[] statements = getStatements();
         for (SSAInstruction statement : statements) {

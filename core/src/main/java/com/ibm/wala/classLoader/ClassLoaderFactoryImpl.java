@@ -145,7 +145,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
       return getClass() + " : " + impl;
     }
 
-    public static InvalidClassLoaderImplementation create(String impl) {
+    private static InvalidClassLoaderImplementation create(String impl) {
       return new InvalidClassLoaderImplementation(impl);
     }
   }

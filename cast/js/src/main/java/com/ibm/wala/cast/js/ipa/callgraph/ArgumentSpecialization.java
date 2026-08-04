@@ -205,7 +205,7 @@ public class ArgumentSpecialization {
             private final CAstEntity e;
             private final Map<String, @NonNull CAstNode> argRefs = HashMapFactory.make();
 
-            public FixedArgumentsRewriter(CAst Ast) {
+            private FixedArgumentsRewriter(CAst Ast) {
               super(Ast, new NonCopyingContext(), false);
               this.e = m.getEntity();
               for (Segments s : CAstPattern.findAll(destructuredAccessPattern, m.getEntity())) {
@@ -283,7 +283,7 @@ public class ArgumentSpecialization {
 
           class ArgumentativeTranslator extends JSAstTranslator {
 
-            public ArgumentativeTranslator(JavaScriptLoader loader) {
+            private ArgumentativeTranslator(JavaScriptLoader loader) {
               super(loader, options);
             }
 

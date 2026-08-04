@@ -547,7 +547,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock>
       return getClass() + " : " + T;
     }
 
-    public static FailedExceptionResolutionWarning create(TypeReference T) {
+    private static FailedExceptionResolutionWarning create(TypeReference T) {
       return new FailedExceptionResolutionWarning(T);
     }
   }

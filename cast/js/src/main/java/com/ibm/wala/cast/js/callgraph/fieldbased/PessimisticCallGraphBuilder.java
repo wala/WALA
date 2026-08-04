@@ -81,7 +81,8 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
     private final VertexFactory factory;
     private final FuncVertex caller;
 
-    public LocalCallSSAVisitor(IMethod method, SymbolTable symtab, DefUse du, FlowGraph flowgraph) {
+    private LocalCallSSAVisitor(
+        IMethod method, SymbolTable symtab, DefUse du, FlowGraph flowgraph) {
       super(method, symtab, du);
       this.flowgraph = flowgraph;
       this.factory = flowgraph.getVertexFactory();
