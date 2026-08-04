@@ -19,12 +19,12 @@ jobs:
       actions: read
     steps:
       - name: Download and extract artifacts
-        uses: dawidd6/action-download-artifact@246dbf436b23d7c49e21a7ab8204ca9ecd1fe615
+        uses: dawidd6/action-download-artifact@bf251b5aa9c2f7eeb574a96ee720e24f801b7c11
         with:
           run_id: ${{ github.event.workflow_run.id }}
           path: artifacts
       - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3 # v2.24.0
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
           event_file: artifacts/Event file/event.json
