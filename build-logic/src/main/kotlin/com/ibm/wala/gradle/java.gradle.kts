@@ -433,6 +433,7 @@ eclipse.synchronizationTasks("processTestResources")
 
 tasks.named<Test>("test") {
   useJUnitPlatform()
+  enableAssertions = true
 
   include("**/*Test.class")
   include("**/*TestCase.class")
