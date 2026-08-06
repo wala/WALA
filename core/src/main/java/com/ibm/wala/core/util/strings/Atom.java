@@ -10,12 +10,11 @@
  */
 package com.ibm.wala.core.util.strings;
 
-import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An utf8-encoded byte string.
@@ -36,11 +35,24 @@ public final class Atom implements Serializable {
   /* Serial version */
   @Serial private static final long serialVersionUID = -3256390509887654329L;
 
+  /** Initial capacity of {@code table}. Must be a power of two. */
+  private static final int INITIAL_CAPACITY = 64;
+
+  /** Guards insertion, resizing, and the dictionary reset used by unit tests. */
+  private static final Object LOCK = new Object();
+
+  /** Number of interned atoms, guarded by {@code LOCK}. */
+  private static int size;
+
   /**
-   * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
-   * Atoms are.
+   * Canonical {@link Atom}s are stored in this open-addressed table, indexed by their cached hash.
+   *
+   * <p>Lookups are lock-free: finding an {@link Atom} in a published table is authoritative, and a
+   * miss falls back to an insertion path that re-checks under {@code LOCK}. A table is never
+   * mutated after it is published by a resize; entries are only ever added in place or the whole
+   * table replaced, so a lock-free reader always sees a consistent snapshot.
    */
-  private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  private static volatile Atom[] table = new Atom[INITIAL_CAPACITY];
 
   /** The utf8 value this atom represents */
   private final byte[] val;
@@ -115,6 +127,9 @@ public final class Atom implements Serializable {
     if (off + len < 0) {
       throw new IllegalArgumentException("off + len is too big: " + off + " + " + len);
     }
+    if (off == 0 && len == utf8.length) {
+      return findOrCreate(utf8);
+    }
     byte[] val = new byte[len];
     for (int i = 0; i < len; ++i) {
       val[i] = utf8[off++];
@@ -122,21 +137,19 @@ public final class Atom implements Serializable {
     return findOrCreate(val);
   }
 
-  public static synchronized @NonNull Atom findOrCreate(byte[] bytes) {
+  public static @NonNull Atom findOrCreate(byte[] bytes) {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes is null");
     }
-    AtomKey key = new AtomKey(bytes);
-    Atom val = dictionary.get(key);
-    if (val != null) {
-      return val;
+    final int hash = hash(bytes);
+    final @Nullable Atom hit = lookup(table, bytes, hash);
+    if (hit != null) {
+      return hit;
     }
-    val = new Atom(key);
-    dictionary.put(key, val);
-    return val;
+    return intern(bytes, hash);
   }
 
-  public static synchronized Atom findOrCreate(ImmutableByteArray b) {
+  public static Atom findOrCreate(ImmutableByteArray b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -154,11 +167,94 @@ public final class Atom implements Serializable {
    *     release.
    */
   @Deprecated(since = "1.9.0")
-  public static synchronized Atom findOrCreate(ImmutableByteArray b, int start, int length) {
+  public static Atom findOrCreate(ImmutableByteArray b, int start, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     return findOrCreate(b.b, start, length);
+  }
+
+  /**
+   * Computes the hash of {@code bytes}. The result is cached on each interned {@link Atom}, so a
+   * single pass over the bytes is all that interning requires.
+   */
+  private static int hash(byte[] bytes) {
+    int tmp = 99989;
+    for (int i = bytes.length; --i >= 0; ) {
+      tmp = 99991 * tmp + bytes[i];
+    }
+    return tmp;
+  }
+
+  /**
+   * Probes {@code t} for the atom whose bytes equal {@code bytes}, or returns {@code null} if there
+   * is none. {@code hash} must be the hash of {@code bytes} as computed by the interning machinery.
+   */
+  private static @Nullable Atom lookup(Atom[] t, byte[] bytes, int hash) {
+    int idx = spread(hash) & (t.length - 1);
+    while (true) {
+      final Atom candidate = t[idx];
+      if (candidate == null) {
+        return null;
+      }
+      if (candidate.hash == hash && bytesEqual(candidate.val, bytes)) {
+        return candidate;
+      }
+      idx = (idx + 1) & (t.length - 1);
+    }
+  }
+
+  /**
+   * Mixes a hash to spread consecutive hashes across distinct buckets of the power-of-two table.
+   */
+  private static int spread(int h) {
+    return h * 0x9E3779B1;
+  }
+
+  private static boolean bytesEqual(byte[] a, byte[] b) {
+    return a == b || Arrays.equals(a, b);
+  }
+
+  /**
+   * Inserts a newly interned atom into the table, resizing first if necessary. Callers must have
+   * established that {@code bytes} is not yet interned.
+   */
+  private static Atom intern(byte[] bytes, int hash) {
+    synchronized (LOCK) {
+      Atom[] t = table;
+      final @Nullable Atom hit = lookup(t, bytes, hash);
+      if (hit != null) {
+        return hit;
+      }
+      if (size + 1 > t.length - (t.length >> 2)) {
+        t = resize(t);
+        table = t;
+      }
+      final Atom atom = new Atom(bytes, hash);
+      int idx = spread(hash) & (t.length - 1);
+      while (t[idx] != null) {
+        idx = (idx + 1) & (t.length - 1);
+      }
+      t[idx] = atom;
+      size++;
+      return atom;
+    }
+  }
+
+  /** Rehashes the contents of {@code old} into a table of twice the capacity. */
+  private static Atom[] resize(Atom[] old) {
+    final Atom[] fresh = new Atom[old.length << 1];
+    final int mask = fresh.length - 1;
+    for (final Atom a : old) {
+      if (a != null) {
+        int idx = spread(a.hash) & mask;
+        while (fresh[idx] != null) {
+          idx = (idx + 1) & mask;
+        }
+        fresh[idx] = a;
+      }
+    }
+    return fresh;
   }
 
   /**
@@ -175,8 +271,11 @@ public final class Atom implements Serializable {
    * concurrently with application code, because the interning invariant cannot be restored until
    * the affected content is interned again. Do not call this method from production code.
    */
-  static synchronized void resetDictionaryForTesting() {
-    dictionary.clear();
+  static void resetDictionaryForTesting() {
+    synchronized (LOCK) {
+      table = new Atom[INITIAL_CAPACITY];
+      size = 0;
+    }
   }
 
   /** Return printable representation of "this" atom. Does not correctly handle UTF8 translation. */
@@ -298,9 +397,9 @@ public final class Atom implements Serializable {
   }
 
   /** Create atom from given utf8 sequence. */
-  private Atom(AtomKey key) {
-    this.val = key.val;
-    this.hash = key.hash;
+  private Atom(byte[] val, int hash) {
+    this.val = val;
+    this.hash = hash;
   }
 
   /**
@@ -364,56 +463,6 @@ public final class Atom implements Serializable {
       return findOrCreate(val, i, val.length - i);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalStateException("not an array: " + this, e);
-    }
-  }
-
-  /** key for the dictionary. */
-  private static final class AtomKey {
-    /** The utf8 value this atom key represents */
-    private final byte[] val;
-
-    /** Cached hash code for this atom key. */
-    private final int hash;
-
-    /** Create atom from given utf8 sequence. */
-    private AtomKey(byte[] utf8) {
-      int tmp = 99989;
-      for (int i = utf8.length; --i >= 0; ) {
-        tmp = 99991 * tmp + utf8[i];
-      }
-      this.val = utf8;
-      this.hash = tmp;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-
-      assert (other != null && this.getClass().equals(other.getClass()));
-      if (this == other) {
-        return true;
-      }
-
-      AtomKey that = (AtomKey) other;
-      if (hash != that.hash) return false;
-      if (val.length != that.val.length) return false;
-      for (int i = 0; i < val.length; i++) {
-        if (val[i] != that.val[i]) return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
-     */
-    @Override
-    public String toString() {
-      return new String(val);
-    }
-
-    @Override
-    public int hashCode() {
-      return hash;
     }
   }
 
