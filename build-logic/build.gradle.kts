@@ -17,6 +17,7 @@ dependencies {
   implementation(libs.jgit)
   implementation(libs.plugins.eclipse.mavencentral.asDependency())
   implementation(libs.plugins.errorprone.asDependency())
+  implementation(libs.plugins.jmh.asDependency())
   implementation(libs.plugins.maven.publish.asDependency())
   implementation(libs.plugins.spotless.asDependency())
 }

@@ -11,6 +11,7 @@ import org.gradle.plugins.ide.eclipse.model.Classpath
 
 plugins {
   id("com.ibm.wala.gradle.java")
+  id("com.ibm.wala.gradle.jmh")
   id("com.ibm.wala.gradle.operating-system")
   id("com.ibm.wala.gradle.publishing")
   id("com.ibm.wala.gradle.test-subjects")

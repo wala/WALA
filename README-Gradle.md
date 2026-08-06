@@ -218,6 +218,31 @@ by shortening each camel-case-delimited word in its name.  For
 example, the `processTestResources` task can probably be abbreviated
 as `procTeRes` or even `pTR`.
 
+#### JMH Microbenchmarks
+
+[JMH](https://github.com/openjdk/jmh) microbenchmarks are kept alongside
+the unit tests for the code they benchmark, under `src/jmh/java` in the
+relevant sub-project.  For example, the `Atom` microbenchmarks live in
+`core/src/jmh/java/com/ibm/wala/core/util/strings/AtomBenchmark.java`.
+
+Run all microbenchmarks of a sub-project with the `jmh` task.  For
+example:
+
+```shell
+./gradlew :core:jmh
+```
+
+These benchmarks are intended for detecting performance regressions,
+not for measuring absolute performance.  To compare two versions of the
+code, run the `jmh` task, change the code under test, then run it again
+and compare.  The `jmh` task prints human-readable results to the
+console and writes machine-readable results to
+`<subproject>/build/results/jmh/results.json` for a given `<subproject>`.
+Results can be unstable on noisy machines, so consider running a single
+benchmark with more forks and iterations for more trustworthy comparisons,
+e.g. by editing the `@Fork`, `@Warmup`, and `@Measurement` annotations in
+the benchmark source.
+
 #### Useful Command-Line Flags
 
 Among Gradle’s command-line flags, I have found the following
