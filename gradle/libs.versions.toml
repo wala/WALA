@@ -5,6 +5,8 @@ eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
 #noinspection UnusedVersionCatalogEntry
 google-java-format = "1.35.0"
+#noinspection UnusedVersionCatalogEntry
+jmh = "1.37"
 ktfmt = "0.59"
 
 [libraries]
@@ -53,6 +55,7 @@ dependency-analysis = "com.autonomousapps.dependency-analysis:3.14.1"
 eclipse-mavencentral = "com.diffplug.eclipse.mavencentral:4.4.1"
 errorprone = "net.ltgt.errorprone:5.1.0"
 file-lister = "all.shared.gradle.file-lister:1.0.2"
+jmh = "me.champeau.jmh:0.7.3"
 maven-publish = "com.vanniktech.maven.publish:0.36.0"
 node = "com.github.node-gradle.node:7.1.0"
 shellcheck = "com.felipefzdz.gradle.shellcheck:1.5.1"

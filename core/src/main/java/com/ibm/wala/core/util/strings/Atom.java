@@ -142,6 +142,24 @@ public final class Atom implements Serializable {
     return findOrCreate(b.b, start, length);
   }
 
+  /**
+   * Clears the interning dictionary. <strong>For use only by unit tests and benchmarks.</strong>
+   *
+   * <p>After this method returns, the dictionary is empty, so any subsequent call to an interning
+   * factory ({@link #findOrCreate(byte[])}, {@link #findOrCreateUnicodeAtom(String)}, {@link
+   * #left(int)}, and the like) returns a newly created {@link Atom} that is not identical to any
+   * previously returned {@link Atom} for the same content. All previously returned {@link Atom}
+   * instances remain valid and usable; only the "one canonical instance per content" interning
+   * invariant is broken.
+   *
+   * <p>This method is synchronized with the interning factories, but it is still not safe to call
+   * concurrently with application code, because the interning invariant cannot be restored until
+   * the affected content is interned again. Do not call this method from production code.
+   */
+  static synchronized void resetDictionaryForTesting() {
+    dictionary.clear();
+  }
+
   /** Return printable representation of "this" atom. Does not correctly handle UTF8 translation. */
   @Override
   public String toString() {
