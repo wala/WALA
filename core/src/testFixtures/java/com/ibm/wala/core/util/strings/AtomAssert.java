@@ -10,6 +10,7 @@ import org.assertj.core.api.AbstractObjectAssert;
  * Custom {@link org.assertj.core.api.Assertions} assertions for {@link Atom} instances, for use in
  * WALA's own tests.
  */
+@SuppressWarnings("deprecation")
 public class AtomAssert extends AbstractObjectAssert<AtomAssert, Atom> {
 
   public AtomAssert(final Atom actual) {

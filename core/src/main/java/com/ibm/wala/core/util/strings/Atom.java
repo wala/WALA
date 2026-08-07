@@ -25,6 +25,11 @@ import org.jspecify.annotations.NonNull;
  *
  * <p>Atoms are used to represent names, descriptors, and string literals appearing in a class's
  * constant pool.
+ *
+ * <p>Some of {@link Atom}'s methods are deprecated. They are not used within WALA itself except by
+ * correctness tests, and we do not believe they are used anywhere outside of WALA. If you do use
+ * them outside of WALA, please <a href="https://github.com/wala/WALA/issues/new">let the WALA
+ * maintainers know</a> so that we don't remove them in the future.
  */
 public final class Atom implements Serializable {
 
@@ -76,7 +81,10 @@ public final class Atom implements Serializable {
    * @param utf8 atom value, as utf8 encoded bytes
    * @return atom
    * @throws IllegalArgumentException if utf8 is null
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public static Atom findOrCreateUtf8Atom(byte[] utf8) {
     if (utf8 == null) {
       throw new IllegalArgumentException("utf8 is null");
@@ -135,6 +143,17 @@ public final class Atom implements Serializable {
     return findOrCreate(b.b);
   }
 
+  /**
+   * Find or create an atom from {@code b[start]} of length {@code length}.
+   *
+   * @param b the immutable byte array
+   * @param start the offset of the first byte
+   * @param length the number of bytes
+   * @return atom
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public static synchronized Atom findOrCreate(ImmutableByteArray b, int start, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -171,7 +190,13 @@ public final class Atom implements Serializable {
     return UTF8Convert.fromUTF8(val);
   }
 
-  /** New Atom containing first count bytes */
+  /**
+   * New Atom containing first count bytes.
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public Atom left(int count) {
     return findOrCreate(val, 0, count);
   }
@@ -200,7 +225,10 @@ public final class Atom implements Serializable {
    * descriptor - something like "I" or "Ljava/lang/Object;"
    *
    * @return array descriptor - something like "[I" or "[Ljava/lang/Object;"
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public Atom arrayDescriptorFromElementDescriptor() {
     byte[] sig = new byte[1 + val.length];
     sig[0] = (byte) '[';
@@ -211,7 +239,11 @@ public final class Atom implements Serializable {
   /**
    * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with
    * '&lt;' for future use. At present, only &lt;init&gt; and &lt;clinit&gt; are used.
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public boolean isReservedMemberName() {
     if (length() == 0) {
       return false;
@@ -219,7 +251,13 @@ public final class Atom implements Serializable {
     return val[0] == '<';
   }
 
-  /** Is "this" atom a class descriptor? */
+  /**
+   * Is "this" atom a class descriptor?
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public boolean isClassDescriptor() {
     if (length() == 0) {
       return false;
@@ -227,7 +265,13 @@ public final class Atom implements Serializable {
     return val[0] == 'L';
   }
 
-  /** Is "this" atom an array descriptor? */
+  /**
+   * Is "this" atom an array descriptor?
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public boolean isArrayDescriptor() {
     if (length() == 0) {
       return false;
@@ -235,7 +279,13 @@ public final class Atom implements Serializable {
     return val[0] == '[';
   }
 
-  /** Is "this" atom a method descriptor? */
+  /**
+   * Is "this" atom a method descriptor?
+   *
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public boolean isMethodDescriptor() throws IllegalArgumentException {
     if (length() == 0) {
       return false;
@@ -258,7 +308,10 @@ public final class Atom implements Serializable {
    * descriptor - something like "[I"
    *
    * @return array element descriptor - something like "I"
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public Atom parseForArrayElementDescriptor() throws IllegalArgumentException {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
@@ -272,7 +325,10 @@ public final class Atom implements Serializable {
    *
    * @return dimensionality - something like "1" or "2"
    * @throws IllegalStateException if this Atom does not represent an array
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public int parseForArrayDimensionality() throws IllegalArgumentException {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
@@ -292,7 +348,10 @@ public final class Atom implements Serializable {
    * Return the innermost element type reference for an array
    *
    * @throws IllegalStateException if this Atom does not represent an array descriptor
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public Atom parseForInnermostArrayElementDescriptor() throws IllegalArgumentException {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
@@ -384,7 +443,10 @@ public final class Atom implements Serializable {
 
   /**
    * @return true iff this atom contains the specified byte
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
    */
+  @Deprecated(since = "1.9.0")
   public boolean contains(byte b) {
     for (byte element : val) {
       if (element == b) {
@@ -410,6 +472,16 @@ public final class Atom implements Serializable {
     return findOrCreate(val);
   }
 
+  /**
+   * Concatenate a byte with an immutable byte array to form an atom.
+   *
+   * @param c the leading byte
+   * @param b the following bytes
+   * @return atom
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public static Atom concat(byte c, ImmutableByteArray b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -428,6 +500,15 @@ public final class Atom implements Serializable {
     return findOrCreate(val);
   }
 
+  /**
+   * Is the given immutable byte array an array descriptor?
+   *
+   * @param b the immutable byte array
+   * @return true iff the first byte is '['
+   * @deprecated This method is used only by WALA's own unit tests. It may be removed in a future
+   *     release.
+   */
+  @Deprecated(since = "1.9.0")
   public static boolean isArrayDescriptor(ImmutableByteArray b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");

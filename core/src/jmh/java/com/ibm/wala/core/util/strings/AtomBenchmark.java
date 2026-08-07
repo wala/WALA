@@ -58,8 +58,7 @@ public class AtomBenchmark {
 
   /**
    * A representative mix of names and descriptors, pre-interned exactly once, plus the raw inputs
-   * used to create them and the atoms derived from them by slicing, concatenation, and descriptor
-   * parsing.
+   * used to create them and the atoms derived from them by slicing and concatenation.
    */
   @State(Scope.Thread)
   public static class AtomFixture {
@@ -67,10 +66,7 @@ public class AtomBenchmark {
     private Atom[] atoms;
     private byte[][] byteArrays;
     private String[] strings;
-    private ImmutableByteArray[] immutableByteArrays;
     private Atom[] prefixes;
-    private Atom[] arrayDescriptors;
-    private Atom[] elementDescriptors;
     private Atom[] leftConcats;
     private Atom[] rightConcats;
     private int next;
@@ -98,49 +94,27 @@ public class AtomBenchmark {
       atoms = new Atom[descriptors.size()];
       byteArrays = new byte[descriptors.size()][];
       strings = new String[descriptors.size()];
-      immutableByteArrays = new ImmutableByteArray[descriptors.size()];
       prefixes = new Atom[descriptors.size()];
       for (int i = 0; i < descriptors.size(); i++) {
         strings[i] = descriptors.get(i);
         byteArrays[i] = strings[i].getBytes(StandardCharsets.UTF_8);
-        immutableByteArrays[i] = ImmutableByteArray.make(strings[i]);
         atoms[i] = Atom.findOrCreate(byteArrays[i]);
-        prefixes[i] = atoms[i].left(Math.min(4, atoms[i].length()));
+        prefixes[i] = Atom.findOrCreate(byteArrays[i], 0, Math.min(4, atoms[i].length()));
       }
 
-      final List<Atom> arrays = new ArrayList<>();
-      final List<Atom> elements = new ArrayList<>();
       final List<Atom> concatLeft = new ArrayList<>();
       final List<Atom> concatRight = new ArrayList<>();
       for (int i = 0; i < atoms.length; i++) {
-        final Atom atom = atoms[i];
-        final Atom other = atoms[(i + 1) % atoms.length];
-        if (atom.isArrayDescriptor()) {
-          arrays.add(atom);
-        } else {
-          elements.add(atom);
-        }
-        concatLeft.add(atom);
-        concatRight.add(other);
+        concatLeft.add(atoms[i]);
+        concatRight.add(atoms[(i + 1) % atoms.length]);
       }
-      arrayDescriptors = arrays.toArray(new Atom[0]);
-      elementDescriptors = elements.toArray(new Atom[0]);
       leftConcats = concatLeft.toArray(new Atom[0]);
       rightConcats = concatRight.toArray(new Atom[0]);
 
-      // Pre-intern everything the concatenation and descriptor benchmarks derive, so that those
-      // benchmarks measure the steady-state "hit" path with a fixed-size dictionary.
+      // Pre-intern everything the concatenation benchmark derives, so that that benchmark measures
+      // the steady-state "hit" path with a fixed-size dictionary.
       for (int i = 0; i < atoms.length; i++) {
-        Atom.concat((byte) '(', immutableByteArrays[i]);
         Atom.concat(atoms[i], atoms[(i + 1) % atoms.length]);
-      }
-      for (final Atom element : elementDescriptors) {
-        element.arrayDescriptorFromElementDescriptor();
-      }
-      for (final Atom array : arrayDescriptors) {
-        array.parseForArrayElementDescriptor();
-        array.parseForInnermostArrayElementDescriptor();
-        array.parseForArrayDimensionality();
       }
     }
 
@@ -164,16 +138,6 @@ public class AtomBenchmark {
     /** Returns the next fixture string, cycling. */
     public String nextString() {
       return strings[nextIndex() % strings.length];
-    }
-
-    /** Returns the next fixture array descriptor, cycling. */
-    public Atom nextArrayDescriptor() {
-      return arrayDescriptors[nextIndex() % arrayDescriptors.length];
-    }
-
-    /** Returns the next fixture array-element descriptor, cycling. */
-    public Atom nextElementDescriptor() {
-      return elementDescriptors[nextIndex() % elementDescriptors.length];
     }
   }
 
@@ -242,13 +206,6 @@ public class AtomBenchmark {
     return Atom.findOrCreate(bytes, 0, bytes.length);
   }
 
-  /** Creates the leading half of an already-interned {@link Atom}. */
-  @Benchmark
-  public Atom left(AtomFixture fixture) {
-    final Atom atom = fixture.nextAtom();
-    return atom.left(atom.length() / 2);
-  }
-
   /** Creates the trailing half of an already-interned {@link Atom}. */
   @Benchmark
   public Atom right(AtomFixture fixture) {
@@ -270,14 +227,6 @@ public class AtomBenchmark {
     return Atom.concat(
         fixture.leftConcats[index % fixture.leftConcats.length],
         fixture.rightConcats[index % fixture.rightConcats.length]);
-  }
-
-  /** Prepends a byte to an {@link ImmutableByteArray} to form an already-interned {@link Atom}. */
-  @Benchmark
-  public Atom concatByteAndImmutableByteArray(AtomFixture fixture) {
-    final ImmutableByteArray bytes =
-        fixture.immutableByteArrays[fixture.nextIndex() % fixture.immutableByteArrays.length];
-    return Atom.concat((byte) '(', bytes);
   }
 
   /** Decodes an {@link Atom}'s bytes to a Unicode string. */
@@ -307,12 +256,6 @@ public class AtomBenchmark {
 
   /** Searches an {@link Atom} for a byte that is usually absent. */
   @Benchmark
-  public boolean contains(AtomFixture fixture) {
-    return fixture.nextAtom().contains((byte) 'a');
-  }
-
-  /** Searches an {@link Atom} for a byte that is usually absent. */
-  @Benchmark
   public int rIndex(AtomFixture fixture) {
     return fixture.nextAtom().rIndex((byte) 'a');
   }
@@ -321,40 +264,6 @@ public class AtomBenchmark {
   @Benchmark
   public int atomHashCode(AtomFixture fixture) {
     return fixture.nextAtom().hashCode();
-  }
-
-  /** Applies the single-byte descriptor predicates to an {@link Atom}. */
-  @Benchmark
-  public void descriptorPredicates(AtomFixture fixture, Blackhole blackhole) {
-    final Atom atom = fixture.nextAtom();
-    blackhole.consume(atom.isClassDescriptor());
-    blackhole.consume(atom.isArrayDescriptor());
-    blackhole.consume(atom.isMethodDescriptor());
-    blackhole.consume(atom.isReservedMemberName());
-  }
-
-  /** Strips one {@code [} from an already-interned array descriptor. */
-  @Benchmark
-  public Atom parseForArrayElementDescriptor(AtomFixture fixture) {
-    return fixture.nextArrayDescriptor().parseForArrayElementDescriptor();
-  }
-
-  /** Strips all {@code [}s from an already-interned array descriptor. */
-  @Benchmark
-  public Atom parseForInnermostArrayElementDescriptor(AtomFixture fixture) {
-    return fixture.nextArrayDescriptor().parseForInnermostArrayElementDescriptor();
-  }
-
-  /** Counts the leading {@code [}s of an already-interned array descriptor. */
-  @Benchmark
-  public int parseForArrayDimensionality(AtomFixture fixture) {
-    return fixture.nextArrayDescriptor().parseForArrayDimensionality();
-  }
-
-  /** Turns an already-interned element descriptor into its already-interned array descriptor. */
-  @Benchmark
-  public Atom arrayDescriptorFromElementDescriptor(AtomFixture fixture) {
-    return fixture.nextElementDescriptor().arrayDescriptorFromElementDescriptor();
   }
 
   /** Interns a fresh pool of genuinely new {@link Atom}s. */
