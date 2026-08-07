@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests of the {@link Atom} class. */
-@SuppressWarnings("UnnecessaryUnicodeEscape")
+@SuppressWarnings({"UnnecessaryUnicodeEscape", "deprecation"})
 public final class AtomTest {
 
   // --- Factories

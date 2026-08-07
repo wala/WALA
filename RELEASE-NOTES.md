@@ -57,6 +57,33 @@ stack instead of the inherited `ArrayList` storage.
 * Code that only consumed these types via the `Iterator<T>` interface
   (`hasNext()`, `next()`, `forEachRemaining()`) is unaffected.
 
+#### Fourteen `Atom` methods deprecated
+
+The following methods of `com.ibm.wala.core.util.strings.Atom` are now
+deprecated (with `@Deprecated(since = "1.9.0")`). They are no longer used
+anywhere within WALA itself except by correctness tests, and we do not believe
+they are used anywhere outside WALA:
+
+* `arrayDescriptorFromElementDescriptor()`
+* `concat(byte, ImmutableByteArray)`
+* `contains(byte)`
+* `findOrCreate(ImmutableByteArray, int, int)`
+* `findOrCreateUtf8Atom(byte[])`
+* `isArrayDescriptor()`
+* `isArrayDescriptor(ImmutableByteArray)`
+* `isClassDescriptor()`
+* `isMethodDescriptor()`
+* `isReservedMemberName()`
+* `left(int)`
+* `parseForArrayDimensionality()`
+* `parseForArrayElementDescriptor()`
+* `parseForInnermostArrayElementDescriptor()`
+
+**Effect for third-party consumers:** if you do use any of these methods
+outside WALA, please [let the WALA maintainers
+know](https://github.com/wala/WALA/issues/new) so that we don't remove them in a
+future release.
+
 ## Version 1.8.0
 
 ### Functionality changes
