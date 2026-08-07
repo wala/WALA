@@ -127,13 +127,7 @@ public final class Atom implements Serializable {
       throw new IllegalArgumentException("bytes is null");
     }
     AtomKey key = new AtomKey(bytes);
-    Atom val = dictionary.get(key);
-    if (val != null) {
-      return val;
-    }
-    val = new Atom(key);
-    dictionary.put(key, val);
-    return val;
+    return dictionary.computeIfAbsent(key, Atom::new);
   }
 
   public static synchronized Atom findOrCreate(ImmutableByteArray b) {
