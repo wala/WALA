@@ -57,6 +57,7 @@ dependencies {
   compileOnly(libs.jetbrains.annotations)
   implementation(libs.gson)
   implementation(libs.guava)
+  implementation(libs.jctools)
   testCompileOnly(libs.jetbrains.annotations)
   testFixturesApi(libs.assertj.core)
   testFixturesApi(libs.junit.jupiter.api)

@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.core.util.strings;
 
-import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReferenceArray;
+import org.jctools.maps.NonBlockingHashMap;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -39,8 +39,44 @@ public final class Atom implements Serializable {
   /**
    * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
    * Atoms are.
+   *
+   * <p>A lock-free map, so the common "already interned" lookup path needs no locks or
+   * synchronization.
    */
-  private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  private static final NonBlockingHashMap<AtomKey, Atom> dictionary = new NonBlockingHashMap<>();
+
+  /**
+   * Number of slots in the {@link #cache}; must be a power of two. Each slot caches the most recent
+   * interned {@link Atom} whose content hash indexes that slot, so the common "already interned"
+   * lookup usually avoids the dictionary entirely.
+   */
+  private static final int CACHE_SIZE = 1 << 14;
+
+  /** Mask applied to a content hash to index the {@link #cache}. */
+  private static final int CACHE_MASK = CACHE_SIZE - 1;
+
+  /**
+   * A direct-mapped cache of recently interned {@link Atom}s, keyed by content hash. Slots are read
+   * and written atomically so that entries are safely published to concurrent readers.
+   *
+   * <p>This cache is only an accelerator. It never decides correctness: a slot is trusted only when
+   * the cached {@link Atom}'s hash and content match the lookup key, so a stale, racy, or evicted
+   * entry merely falls through to the {@link #dictionary}.
+   */
+  private static final AtomicReferenceArray<Atom> cache = new AtomicReferenceArray<>(CACHE_SIZE);
+
+  /** Computes the polynomial hash that interned {@link Atom}s cache and that keys the cache. */
+  private static int hash(byte[] bytes) {
+    int tmp = 99989;
+    for (int i = bytes.length; --i >= 0; ) {
+      tmp = 99991 * tmp + bytes[i];
+    }
+    return tmp;
+  }
+
+  private static boolean bytesEqual(byte[] a, byte[] b) {
+    return a == b || Arrays.equals(a, b);
+  }
 
   /** The utf8 value this atom represents */
   private final byte[] val;
@@ -115,6 +151,9 @@ public final class Atom implements Serializable {
     if (off + len < 0) {
       throw new IllegalArgumentException("off + len is too big: " + off + " + " + len);
     }
+    if (off == 0 && len == utf8.length) {
+      return findOrCreate(utf8);
+    }
     byte[] val = new byte[len];
     for (int i = 0; i < len; ++i) {
       val[i] = utf8[off++];
@@ -122,21 +161,29 @@ public final class Atom implements Serializable {
     return findOrCreate(val);
   }
 
-  public static synchronized @NonNull Atom findOrCreate(byte[] bytes) {
+  public static @NonNull Atom findOrCreate(byte[] bytes) {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes is null");
     }
-    AtomKey key = new AtomKey(bytes);
-    Atom val = dictionary.get(key);
+    final int hash = hash(bytes);
+    final int slot = hash & CACHE_MASK;
+    final Atom cached = cache.get(slot);
+    if (cached != null && cached.hash == hash && bytesEqual(cached.val, bytes)) {
+      return cached;
+    }
+    final AtomKey key = new AtomKey(bytes, hash);
+    final Atom val = dictionary.get(key);
     if (val != null) {
       return val;
     }
-    val = new Atom(key);
-    dictionary.put(key, val);
-    return val;
+    final Atom fresh = new Atom(key);
+    final Atom existing = dictionary.putIfAbsent(key, fresh);
+    final Atom winner = existing != null ? existing : fresh;
+    cache.set(slot, winner);
+    return winner;
   }
 
-  public static synchronized Atom findOrCreate(ImmutableByteArray b) {
+  public static Atom findOrCreate(ImmutableByteArray b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -154,7 +201,7 @@ public final class Atom implements Serializable {
    *     release.
    */
   @Deprecated(since = "1.9.0")
-  public static synchronized Atom findOrCreate(ImmutableByteArray b, int start, int length) {
+  public static Atom findOrCreate(ImmutableByteArray b, int start, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -171,12 +218,16 @@ public final class Atom implements Serializable {
    * instances remain valid and usable; only the "one canonical instance per content" interning
    * invariant is broken.
    *
-   * <p>This method is synchronized with the interning factories, but it is still not safe to call
-   * concurrently with application code, because the interning invariant cannot be restored until
-   * the affected content is interned again. Do not call this method from production code.
+   * <p>This method is safe to call only between other uses of the interning factories: it is still
+   * not safe to call concurrently with application code, because the interning invariant cannot be
+   * restored until the affected content is interned again. Do not call this method from production
+   * code.
    */
-  static synchronized void resetDictionaryForTesting() {
+  static void resetDictionaryForTesting() {
     dictionary.clear();
+    for (int i = 0; i < CACHE_SIZE; i++) {
+      cache.set(i, null);
+    }
   }
 
   /** Return printable representation of "this" atom. Does not correctly handle UTF8 translation. */
@@ -369,6 +420,7 @@ public final class Atom implements Serializable {
 
   /** key for the dictionary. */
   private static final class AtomKey {
+
     /** The utf8 value this atom key represents */
     private final byte[] val;
 
@@ -376,39 +428,20 @@ public final class Atom implements Serializable {
     private final int hash;
 
     /** Create atom from given utf8 sequence. */
-    private AtomKey(byte[] utf8) {
-      int tmp = 99989;
-      for (int i = utf8.length; --i >= 0; ) {
-        tmp = 99991 * tmp + utf8[i];
-      }
+    private AtomKey(byte[] utf8, int hash) {
       this.val = utf8;
-      this.hash = tmp;
+      this.hash = hash;
     }
 
     @Override
     public boolean equals(Object other) {
-
-      assert (other != null && this.getClass().equals(other.getClass()));
       if (this == other) {
         return true;
       }
-
-      AtomKey that = (AtomKey) other;
-      if (hash != that.hash) return false;
-      if (val.length != that.val.length) return false;
-      for (int i = 0; i < val.length; i++) {
-        if (val[i] != that.val[i]) return false;
+      if (!(other instanceof AtomKey that)) {
+        return false;
       }
-
-      return true;
-    }
-
-    /**
-     * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
-     */
-    @Override
-    public String toString() {
-      return new String(val);
+      return hash == that.hash && Arrays.equals(val, that.val);
     }
 
     @Override
