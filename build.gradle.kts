@@ -18,7 +18,6 @@ plugins {
   alias(libs.plugins.file.lister)
   alias(libs.plugins.node)
   alias(libs.plugins.shellcheck)
-  alias(libs.plugins.task.tree)
   alias(libs.plugins.version.catalog.update)
   alias(libs.plugins.versions)
   id("com.ibm.wala.gradle.check-git-cleanliness")
