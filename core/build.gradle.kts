@@ -55,6 +55,7 @@ dependencies {
   }
   api(projects.util) { because("public interface CallGraph extends interface NumberedGraph") }
   compileOnly(libs.jetbrains.annotations)
+  implementation(libs.fastutil)
   implementation(libs.gson)
   implementation(libs.guava)
   testCompileOnly(libs.jetbrains.annotations)
