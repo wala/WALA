@@ -10,11 +10,11 @@
  */
 package com.ibm.wala.core.util.strings;
 
-import com.ibm.wala.util.collections.HashMapFactory;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -37,15 +37,15 @@ public final class Atom implements Serializable {
   @Serial private static final long serialVersionUID = -3256390509887654329L;
 
   /**
-   * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
-   * Atoms are.
+   * Used to canonicalize Atoms. Since {@code Atom} has value-based {@link #equals(Object)} and
+   * {@link #hashCode()}, interning returns the single canonical {@link Atom} for any given content.
    */
-  private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  private static Interner<Atom> interner = Interners.newStrongInterner();
 
   /** The utf8 value this atom represents */
   private final byte[] val;
 
-  /** Cached hash code for this atom key. */
+  /** Cached hash code for this atom. */
   private final int hash;
 
   /**
@@ -126,14 +126,7 @@ public final class Atom implements Serializable {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes is null");
     }
-    AtomKey key = new AtomKey(bytes);
-    Atom val = dictionary.get(key);
-    if (val != null) {
-      return val;
-    }
-    val = new Atom(key);
-    dictionary.put(key, val);
-    return val;
+    return interner.intern(new Atom(bytes));
   }
 
   public static synchronized Atom findOrCreate(ImmutableByteArray b) {
@@ -176,7 +169,7 @@ public final class Atom implements Serializable {
    * the affected content is interned again. Do not call this method from production code.
    */
   static synchronized void resetDictionaryForTesting() {
-    dictionary.clear();
+    interner = Interners.newStrongInterner();
   }
 
   /** Return printable representation of "this" atom. Does not correctly handle UTF8 translation. */
@@ -298,9 +291,13 @@ public final class Atom implements Serializable {
   }
 
   /** Create atom from given utf8 sequence. */
-  private Atom(AtomKey key) {
-    this.val = key.val;
-    this.hash = key.hash;
+  private Atom(byte[] utf8) {
+    int tmp = 99989;
+    for (int i = utf8.length; --i >= 0; ) {
+      tmp = 99991 * tmp + utf8[i];
+    }
+    this.val = utf8;
+    this.hash = tmp;
   }
 
   /**
@@ -367,65 +364,37 @@ public final class Atom implements Serializable {
     }
   }
 
-  /** key for the dictionary. */
-  private static final class AtomKey {
-    /** The utf8 value this atom key represents */
-    private final byte[] val;
-
-    /** Cached hash code for this atom key. */
-    private final int hash;
-
-    /** Create atom from given utf8 sequence. */
-    private AtomKey(byte[] utf8) {
-      int tmp = 99989;
-      for (int i = utf8.length; --i >= 0; ) {
-        tmp = 99991 * tmp + utf8[i];
-      }
-      this.val = utf8;
-      this.hash = tmp;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-
-      assert (other != null && this.getClass().equals(other.getClass()));
-      if (this == other) {
-        return true;
-      }
-
-      AtomKey that = (AtomKey) other;
-      if (hash != that.hash) return false;
-      if (val.length != that.val.length) return false;
-      for (int i = 0; i < val.length; i++) {
-        if (val[i] != that.val[i]) return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
-     */
-    @Override
-    public String toString() {
-      return new String(val);
-    }
-
-    @Override
-    public int hashCode() {
-      return hash;
-    }
-  }
-
   @Override
   public int hashCode() {
     return hash;
   }
 
-  /** These are canonical */
+  /**
+   * Compare atoms by content, rather than by reference. Interning normally ensures that any two
+   * {@code Atom}s with equal content are the same instance, in which case this method is equivalent
+   * to reference equality. It also correctly distinguishes atoms whose content differs even when
+   * their cached hash codes collide.
+   */
   @Override
   public boolean equals(Object obj) {
-    return this == obj;
+    if (this == obj) {
+      return true;
+    }
+    if (!(obj instanceof Atom that)) {
+      return false;
+    }
+    if (hash != that.hash) {
+      return false;
+    }
+    if (val.length != that.val.length) {
+      return false;
+    }
+    for (int i = 0; i < val.length; i++) {
+      if (val[i] != that.val[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /** return an array of bytes representing the utf8 characters in this */
