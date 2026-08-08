@@ -11,15 +11,13 @@ val isSnapshot = "SNAPSHOT" in version as String
 val java = extensions.getByType<JavaPluginExtension>()
 
 val testFixturesJavadoc =
-    tasks.named<Javadoc>("testFixturesJavadoc") {
-      destinationDir = java.docsDir.get().dir(name).asFile
-    }
+    tasks.named<Javadoc>("testFixturesJavadoc") { destinationDirectory = java.docsDir.dir(name) }
 
 val testFixturesJavadocJar =
     tasks.register<Jar>("testFixturesJavadocJar") {
       description = "Assemble Javadoc JAR for test fixtures"
       archiveClassifier = "test-fixtures-javadoc"
-      from(testFixturesJavadoc.map { it.destinationDir!! })
+      from(testFixturesJavadoc)
     }
 
 mavenPublishing {
