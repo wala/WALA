@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.core.util.io.FileSuffixes;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
@@ -23,6 +25,13 @@ public class SourceURLModule extends AbstractURLModule implements SourceModule {
   @Override
   public boolean isClassFile() {
     return false;
+  }
+
+  @Override
+  public String getClassName() {
+    // For a JAR resource, the entry name is the logical name of the source file, e.g.
+    // `hello/Hello.java`.  For any other URL it is a pathname, possibly absolute.
+    return FileSuffixes.stripSuffix(getName()).replace(File.separator.charAt(0), '/');
   }
 
   @Override

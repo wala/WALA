@@ -84,6 +84,18 @@ outside WALA, please [let the WALA maintainers
 know](https://github.com/wala/WALA/issues/new) so that we don't remove them in a
 future release.
 
+#### Analysis scope files may reference classes and sources packaged in JARs
+
+In an analysis scope file, `classFile` and `sourceFile` entries previously
+could only name files that exist on the filesystem.  They now also work when
+the named class or source file is a classpath resource, including a resource
+packaged inside a JAR.  For example, an entry such as
+`Application,Java,classFile,hello/Hello.class` now resolves
+`hello/Hello.class` via the classloader, whether it is an unpacked file or an
+entry of `hello.jar`.  This is particularly useful when running an analysis
+from a single executable JAR whose supporting classes and sources are
+included as entries.
+
 ## Version 1.8.0
 
 ### Functionality changes

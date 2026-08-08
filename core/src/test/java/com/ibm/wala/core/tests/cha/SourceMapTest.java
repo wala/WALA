@@ -23,7 +23,14 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
 import com.ibm.wala.types.TypeReference;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
 import org.junit.jupiter.api.Test;
 
 /** A test of support for source file mapping */
@@ -47,6 +54,44 @@ public class SourceMapTest extends WalaTestCase {
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
     assertThat(sourceFile).isNotNull();
+  }
+
+  @Test
+  public void testHelloFromJar() throws ClassHierarchyException, IOException {
+
+    // Copy the `hello` test subject into a temporary JAR, so that the scope file's `classFile` and
+    // `sourceFile` entries must resolve `hello/Hello.class` and `hello/Hello.java` as entries of
+    // that JAR rather than as unpacked files on the filesystem.
+    File jar = createJarContaining("hello/Hello.class", "hello/Hello.java");
+    try (URLClassLoader jarLoader =
+        new URLClassLoader(new URL[] {jar.toURI().toURL()}, MY_CLASSLOADER)) {
+      AnalysisScope scope =
+          AnalysisScopeReader.instance.readJavaScope(TestConstants.HELLO, null, jarLoader);
+      ClassHierarchy cha = ClassHierarchyFactory.make(scope);
+      TypeReference t =
+          TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
+      IClass klass = cha.lookupClass(t);
+      assertThat(klass).isNotNull();
+      String sourceFile = klass.getSourceFileName();
+      System.err.println("Source file: " + sourceFile);
+      assertThat(sourceFile).isNotNull();
+    }
+  }
+
+  private static File createJarContaining(String... entries) throws IOException {
+    File jar = File.createTempFile("wala-source-map-test", ".jar");
+    jar.deleteOnExit();
+    try (JarOutputStream out = new JarOutputStream(new FileOutputStream(jar))) {
+      for (String entry : entries) {
+        try (InputStream in = MY_CLASSLOADER.getResourceAsStream(entry)) {
+          assertThat(in).as("classpath resource %s", entry).isNotNull();
+          out.putNextEntry(new JarEntry(entry));
+          in.transferTo(out);
+          out.closeEntry();
+        }
+      }
+    }
+    return jar;
   }
 
   @Test

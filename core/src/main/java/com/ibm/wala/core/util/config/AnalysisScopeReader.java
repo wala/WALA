@@ -14,6 +14,7 @@ import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassFileURLModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -196,9 +197,9 @@ public class AnalysisScopeReader {
     String entryPathname = tokens.nextToken();
     FileProvider fp = new FileProvider();
     if ("classFile".equals(entryType)) {
-      File cf = fp.getFile(entryPathname, javaLoader);
+      URL cf = fp.getURLFromClassLoader(entryPathname, javaLoader);
       try {
-        scope.addClassFileToScope(walaLoader, cf);
+        scope.addToScope(walaLoader, new ClassFileURLModule(cf));
       } catch (InvalidClassFileException e) {
         Assertions.UNREACHABLE(e.toString());
       }
@@ -211,8 +212,8 @@ public class AnalysisScopeReader {
         Assertions.UNREACHABLE(e.toString());
       }
     } else if ("sourceFile".equals(entryType)) {
-      File sf = fp.getFile(entryPathname, javaLoader);
-      scope.addSourceFileToScope(walaLoader, sf, entryPathname);
+      URL sf = fp.getURLFromClassLoader(entryPathname, javaLoader);
+      scope.addToScope(walaLoader, new SourceURLModule(sf));
     } else if ("binaryDir".equals(entryType)) {
       File bd = fp.getFile(entryPathname, javaLoader);
       assert bd.isDirectory();
