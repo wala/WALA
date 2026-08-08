@@ -210,6 +210,8 @@
       <w>lushr</w>
       <w>lval</w>
       <w>lxor</w>
+      <w>macrobenchmark</w>
+      <w>macrobenchmarks</w>
       <w>markdownlint</w>
       <w>mavencentral</w>
       <w>meeted</w>

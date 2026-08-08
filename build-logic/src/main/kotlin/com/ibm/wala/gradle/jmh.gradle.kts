@@ -1,6 +1,6 @@
 package com.ibm.wala.gradle
 
-// Build configuration for subprojects that include JMH microbenchmarks.
+// Build configuration for subprojects that include JMH benchmarks.
 
 import net.ltgt.gradle.errorprone.errorprone
 
@@ -10,7 +10,6 @@ plugins {
 }
 
 jmh {
-  includeTests = false
   jmhVersion = catalogVersion("jmh")
   resultFormat = "JSON"
 }
