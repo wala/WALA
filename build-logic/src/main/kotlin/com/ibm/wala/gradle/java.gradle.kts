@@ -487,10 +487,15 @@ if (providers.gradleProperty("excludeSlowTests").isPresent) {
   tasks.named<Test>("test") { useJUnitPlatform { excludeTags("slow") } }
 }
 
-val ecjCompileTaskProviders =
-    sourceSets.map { sourceSet -> JavaCompileUsingEcj.withSourceSet(project, sourceSet) }
+private val ecjCompileTasksProvider = objects.listProperty<JavaCompileUsingEcj>()
 
-tasks.named("check") { dependsOn(ecjCompileTaskProviders) }
+sourceSets.configureEach {
+  // Register ECJ compilation for every source set, including those created after this plugin
+  // applies (e.g., `jmh` and `testSubjects`).
+  ecjCompileTasksProvider.add(JavaCompileUsingEcj.withSourceSet(project, this))
+}
+
+tasks.named("check") { dependsOn(ecjCompileTasksProvider) }
 
 tasks.withType<JavaCompile>().configureEach {
   options.run {
