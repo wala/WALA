@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -74,6 +75,40 @@ public class FileProvider {
 
   public File getFile(String fileName, ClassLoader loader) throws IOException {
     return getFileFromClassLoader(fileName, loader);
+  }
+
+  /**
+   * Returns the URL of the given file name, which may be either a classpath resource or a plain
+   * filesystem path.
+   *
+   * <p>The {@link ClassLoader} is searched first, so that a resource packaged inside a JAR is found
+   * even though it has no real filesystem path. If no such resource exists, {@code fileName} is
+   * instead treated as a pathname relative to the current working directory.
+   *
+   * @return the URL of the given file name
+   * @throws FileNotFoundException if {@code fileName} is neither a classpath resource nor an
+   *     existing filesystem path
+   */
+  public URL getURLFromClassLoader(String fileName, ClassLoader loader)
+      throws FileNotFoundException, MalformedURLException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
+    if (loader == null) {
+      throw new IllegalArgumentException("null loader");
+    }
+    URL url = loader.getResource(fileName);
+    if (DEBUG_LEVEL > 0) {
+      System.err.println("FileProvider got url: " + url + " for " + fileName);
+    }
+    if (url != null) {
+      return url;
+    }
+    File f = new File(fileName);
+    if (f.exists()) {
+      return f.toURI().toURL();
+    }
+    throw new FileNotFoundException(fileName);
   }
 
   public File getFileFromClassLoader(String fileName, ClassLoader loader)
