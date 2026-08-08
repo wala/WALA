@@ -248,7 +248,7 @@ val unpackOcamlJava =
         )
       }
       val outputDir = layout.buildDirectory.dir(name)
-      workingDir(outputDir)
+      workingDirectory = outputDir
       outputs.dir(outputDir)
     }
 
@@ -275,8 +275,8 @@ val generateHelloHashJar =
       // `ocamljava` script to compile OCaml to Java bytecode
       executable(
           unpackOcamlJava
-              .map {
-                it.workingDir.resolve(
+              .flatMap {
+                it.workingDirectory.file(
                     "ocamljava-$ocamlJavaVersion/bin/ocamljava${if (isWindows) ".bat" else ""}"
                 )
               }

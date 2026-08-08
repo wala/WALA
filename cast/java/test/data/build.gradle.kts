@@ -62,7 +62,7 @@ val downloadJLex =
       into(layout.buildDirectory.dir(name))
     }
 
-testSubjects { java.srcDir(downloadJLex.map { it.destinationDir }) }
+testSubjects { java.srcDir(downloadJLex) }
 
 ////////////////////////////////////////////////////////////////////////
 //

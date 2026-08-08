@@ -77,7 +77,7 @@ dependencies {
 tasks.register<Javadoc>("aggregatedJavadocs") {
   description = "Generate javadocs from all child projects as if they were a single project"
   group = "Documentation"
-  destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
+  destinationDirectory = layout.buildDirectory.dir("docs/javadoc")
   title = "${project.name} $version API"
   (options as StandardJavadocDocletOptions).author(true)
   classpath = files(aggregatedJavadocClasspathExtras, aggregatedJavadocRuntimeElements)
