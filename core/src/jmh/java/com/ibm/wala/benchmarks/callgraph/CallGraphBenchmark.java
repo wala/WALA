@@ -16,10 +16,10 @@ import org.openjdk.jmh.annotations.Warmup;
 /**
  * JMH macrobenchmarks that perform large-scale, end-to-end WALA analyses.
  *
- * <p>Unlike the microbenchmarks under {@code core/src/jmh/java}, which measure tightly-scoped
- * operations in isolation, each macrobenchmark here runs a complete analysis task just as a real
- * WALA user or a unit test would. The first such task, {@link #testHelloAllEntrypoints()}, is
- * exactly the work of {@link CallGraphTest#testHelloAllEntrypoints}.
+ * <p>Unlike the microbenchmarks, which measure tightly-scoped operations in isolation, each
+ * macrobenchmark here runs a complete analysis task just as a real WALA user or a unit test would.
+ * The first such task, {@link #testHelloAllEntrypoints()}, is exactly the work of {@link
+ * CallGraphTest#testHelloAllEntrypoints}.
  *
  * <p>Because these tasks take seconds rather than microseconds, they use the {@link
  * Mode#SingleShotTime single-shot time mode}, in which each iteration is a single invocation. Run

@@ -253,18 +253,11 @@ WALA user or a unit test would.  For example,
 `core/src/jmh/java/com/ibm/wala/benchmarks/callgraph/CallGraphBenchmark.java`
 reuses `CallGraphTest.testHelloAllEntrypoints()` verbatim as its workload.
 Because these tasks take seconds rather than microseconds, they use JMH’s
-single-shot time mode, in which each iteration is a single invocation.
-
-Run all `core` benchmarks (micro and macro) with the `jmh` task:
-
-```shell
-./gradlew :core:jmh
-```
-
-As with the microbenchmarks, results are printed to the console and written
-to `core/build/results/jmh/results.json`.  Expect the macrobenchmarks to
-take several seconds per iteration, so consider limiting the warmup and
-measurement iteration counts while developing a new benchmark.
+single-shot time mode, in which each iteration is a single invocation.  The
+`jmh` task described above runs these macrobenchmarks alongside the
+microbenchmarks.  Expect them to take several seconds per iteration, so
+consider limiting the warmup and measurement iteration counts while
+developing a new benchmark.
 
 #### Useful Command-Line Flags
 
