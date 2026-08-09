@@ -42,15 +42,25 @@ import org.openjdk.jmh.infra.Blackhole;
  * interns a bounded fresh pool of content for each measurement iteration, resetting the dictionary
  * first so that every iteration starts from the same empty state.
  *
+ * <p>Even so, the per-operation cost is not steady from the very first iterations: in repeated runs
+ * the per-operation time only settles to its steady state after roughly eight or more iterations in
+ * each fork. {@link #findOrCreateMiss} therefore uses more warmup and measurement iterations than
+ * the class default.
+ *
  * <p>Run with {@code ./gradlew :core:jmh}. Results are written to {@code core/build/results/jmh/}.
- * Increase the fork count (e.g., by changing the {@code @Fork} annotations or passing {@code -f} on
- * the JMH command line) for more precise numbers.
+ * These settings trade total run time for precision, so that they can detect relative regressions:
+ * each method runs in three forks, with three one-second warmup iterations and three one-second
+ * measurement iterations. A single fork is measurably noisier (the per-fork mean is stable, but
+ * between-fork variance dominates for several methods), so three forks cut the reported error from
+ * up to ~10% down to ~1-2%. A few methods with idiosyncratic noise get their own overrides; see
+ * their Javadoc. Pass {@code -f}, {@code -wi}, {@code -i}, and similar JMH command-line flags for
+ * one-off adjustments.
  */
 @BenchmarkMode(Mode.Throughput)
+@Fork(3)
+@Measurement(iterations = 3, time = 1)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 5, time = 1)
-@Fork(1)
+@Warmup(iterations = 3, time = 1)
 public class AtomBenchmark {
 
   /** Number of distinct, never-before-interned byte arrays in each miss-benchmark iteration. */
@@ -174,8 +184,14 @@ public class AtomBenchmark {
     }
   }
 
-  /** Looks up an already-interned {@link Atom} from its bytes. */
+  /**
+   * Looks up an already-interned {@link Atom} from its bytes.
+   *
+   * <p>One more fork than the class default, because this benchmark's mean has drifted more between
+   * forks than the other microbenchmarks in repeated runs.
+   */
   @Benchmark
+  @Fork(4)
   public Atom findOrCreateFromByteArray(AtomFixture fixture) {
     return Atom.findOrCreate(fixture.nextByteArray());
   }
@@ -220,8 +236,14 @@ public class AtomBenchmark {
     return fixture.atoms[index].startsWith(fixture.prefixes[index]);
   }
 
-  /** Concatenates two already-interned {@link Atom}s to an already-interned result. */
+  /**
+   * Concatenates two already-interned {@link Atom}s to an already-interned result.
+   *
+   * <p>One more fork than the class default, because this benchmark's mean has drifted more between
+   * forks than the other microbenchmarks in repeated runs.
+   */
   @Benchmark
+  @Fork(4)
   public Atom concatAtoms(AtomFixture fixture) {
     final int index = fixture.nextIndex();
     return Atom.concat(
@@ -260,8 +282,15 @@ public class AtomBenchmark {
     return fixture.nextAtom().rIndex((byte) 'a');
   }
 
-  /** Reads an {@link Atom}'s cached hash code. */
+  /**
+   * Reads an {@link Atom}'s cached hash code.
+   *
+   * <p>More measurement iterations than the class default, because this benchmark's throughput
+   * periodically dips (apparently GC-related) even after warmup, and extra iterations average those
+   * dips out.
+   */
   @Benchmark
+  @Measurement(iterations = 6, time = 1)
   public int atomHashCode(AtomFixture fixture) {
     return fixture.nextAtom().hashCode();
   }
@@ -269,9 +298,9 @@ public class AtomBenchmark {
   /** Interns a fresh pool of genuinely new {@link Atom}s. */
   @Benchmark
   @BenchmarkMode(Mode.SingleShotTime)
-  @Warmup(iterations = 3)
-  @Measurement(iterations = 3)
+  @Measurement(iterations = 10)
   @OperationsPerInvocation(MISS_POOL_SIZE)
+  @Warmup(iterations = 10)
   public void findOrCreateMiss(FreshBytes freshBytes, Blackhole blackhole) {
     for (final byte[] bytes : freshBytes.pool) {
       blackhole.consume(Atom.findOrCreate(bytes));
