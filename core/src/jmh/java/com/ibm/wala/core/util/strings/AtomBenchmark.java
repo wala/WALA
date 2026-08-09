@@ -286,8 +286,9 @@ public class AtomBenchmark {
    * Reads an {@link Atom}'s cached hash code.
    *
    * <p>More measurement iterations than the class default, because this benchmark's throughput
-   * periodically dips (apparently GC-related) even after warmup, and extra iterations average those
-   * dips out.
+   * periodically dips (for an unidentified reason, possibly an OS or scheduler transient; the hot
+   * path allocates nothing, so GC is unlikely) even after warmup, and extra iterations average
+   * those dips out.
    */
   @Benchmark
   @Measurement(iterations = 6, time = 1)
