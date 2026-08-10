@@ -28,7 +28,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.IAnalysisCacheView;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -50,6 +49,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.PatternsFilter;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,10 +82,9 @@ public class DataflowTest extends WalaTestCase {
     "sun/swing",
   };
 
-  @BeforeAll
-  public static void beforeClass() throws Exception {
-
-    scope =
+  /** Read the test analysis scope with the {@link #EXCLUSIONS} applied. */
+  private static AnalysisScope makeScope() throws IOException {
+    AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             TestConstants.WALA_TESTDATA, null, DataflowTest.class.getClassLoader());
 
@@ -95,6 +94,12 @@ public class DataflowTest extends WalaTestCase {
     scope.setExclusions(
         new PatternsFilter(
             Arrays.stream(EXCLUSIONS).map(exclusion -> Pattern.quote(exclusion) + "/.*")));
+    return scope;
+  }
+
+  @BeforeAll
+  public static void beforeClass() throws Exception {
+    scope = makeScope();
     try {
       cha = ClassHierarchyFactory.make(scope);
     } catch (ClassHierarchyException e) {
@@ -146,9 +151,27 @@ public class DataflowTest extends WalaTestCase {
     }
   }
 
-  @Test
-  public void testContextInsensitive()
-      throws IllegalArgumentException, CallGraphBuilderCancelException {
+  /**
+   * The analysis state that {@link #testContextInsensitive} builds before running the reaching
+   * definitions analysis, assembled by {@link #prepareTestContextInsensitive()}.
+   */
+  public record TestContextInsensitiveAnalysis(
+      CallGraph callGraph, IClassHierarchy classHierarchy) {}
+
+  /** The result of the {@link #computeTestContextInsensitive} analysis phase. */
+  public record TestContextInsensitiveResult(
+      ExplodedInterproceduralCFG icfg,
+      BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver,
+      ContextInsensitiveReachingDefs reachingDefs) {}
+
+  /**
+   * Phase one of {@link #testContextInsensitive}: compute everything needed before running the
+   * analysis.
+   */
+  public static TestContextInsensitiveAnalysis prepareTestContextInsensitive()
+      throws IllegalArgumentException, ClassHierarchyException, CancelException, IOException {
+    AnalysisScope scope = makeScope();
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -156,10 +179,25 @@ public class DataflowTest extends WalaTestCase {
     CallGraphBuilder<InstanceKey> builder =
         Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
-    ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(cg);
-    ContextInsensitiveReachingDefs reachingDefs = new ContextInsensitiveReachingDefs(icfg, cha);
+    return new TestContextInsensitiveAnalysis(cg, cha);
+  }
+
+  /** Phase two of {@link #testContextInsensitive}: run the reaching definitions analysis. */
+  public static TestContextInsensitiveResult computeTestContextInsensitive(
+      TestContextInsensitiveAnalysis analysis) {
+    ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(analysis.callGraph());
+    ContextInsensitiveReachingDefs reachingDefs =
+        new ContextInsensitiveReachingDefs(icfg, analysis.classHierarchy());
     BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = reachingDefs.analyze();
-    assertThat(icfg)
+    return new TestContextInsensitiveResult(icfg, solver, reachingDefs);
+  }
+
+  @Test
+  public void testContextInsensitive()
+      throws IllegalArgumentException, ClassHierarchyException, CancelException, IOException {
+    TestContextInsensitiveAnalysis analysis = prepareTestContextInsensitive();
+    TestContextInsensitiveResult result = computeTestContextInsensitive(analysis);
+    assertThat(result.icfg())
         .filteredOn(
             bb ->
                 bb.getNode().toString().contains("testInterproc")
@@ -167,12 +205,13 @@ public class DataflowTest extends WalaTestCase {
         .singleElement()
         .satisfies(
             bb -> {
-              IntSet solution = solver.getOut(bb).getValue();
+              IntSet solution = result.solver().getOut(bb).getValue();
               IntIterator intIterator = solution.intIterator();
               List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
               while (intIterator.hasNext()) {
                 int next = intIterator.next();
-                final Pair<CGNode, Integer> def = reachingDefs.getNodeAndInstrForNumber(next);
+                final Pair<CGNode, Integer> def =
+                    result.reachingDefs().getNodeAndInstrForNumber(next);
                 if (def.fst
                     .getMethod()
                     .getDeclaringClass()
@@ -187,8 +226,26 @@ public class DataflowTest extends WalaTestCase {
             });
   }
 
-  @Test
-  public void testContextSensitive() throws IllegalArgumentException, CancelException {
+  /**
+   * The analysis state that {@link #testContextSensitive} builds before running the reaching
+   * definitions analysis, assembled by {@link #prepareTestContextSensitive()}.
+   */
+  public record TestContextSensitiveAnalysis(CallGraph callGraph) {}
+
+  /** The result of the {@link #computeTestContextSensitive} analysis phase. */
+  public record TestContextSensitiveResult(
+      TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>>
+          result,
+      ContextSensitiveReachingDefs reachingDefs) {}
+
+  /**
+   * Phase one of {@link #testContextSensitive}: compute everything needed before running the
+   * analysis.
+   */
+  public static TestContextSensitiveAnalysis prepareTestContextSensitive()
+      throws IllegalArgumentException, ClassHierarchyException, CancelException, IOException {
+    AnalysisScope scope = makeScope();
+    IClassHierarchy cha = ClassHierarchyFactory.make(scope);
     Iterable<Entrypoint> entrypoints =
         com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(cha, "Ldataflow/StaticDataflow");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -196,11 +253,26 @@ public class DataflowTest extends WalaTestCase {
     CallGraphBuilder<InstanceKey> builder =
         Util.makeZeroOneCFABuilder(JavaLanguage.get(), options, new AnalysisCacheImpl(), cha);
     CallGraph cg = builder.makeCallGraph(options, null);
-    ContextSensitiveReachingDefs reachingDefs = new ContextSensitiveReachingDefs(cg);
+    return new TestContextSensitiveAnalysis(cg);
+  }
+
+  /** Phase two of {@link #testContextSensitive}: run the reaching definitions analysis. */
+  public static TestContextSensitiveResult computeTestContextSensitive(
+      TestContextSensitiveAnalysis analysis) {
+    ContextSensitiveReachingDefs reachingDefs =
+        new ContextSensitiveReachingDefs(analysis.callGraph());
     TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>>
         result = reachingDefs.analyze();
+    return new TestContextSensitiveResult(result, reachingDefs);
+  }
+
+  @Test
+  public void testContextSensitive()
+      throws IllegalArgumentException, ClassHierarchyException, CancelException, IOException {
+    TestContextSensitiveAnalysis analysis = prepareTestContextSensitive();
+    TestContextSensitiveResult result = computeTestContextSensitive(analysis);
     ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph =
-        reachingDefs.getSupergraph();
+        result.reachingDefs().getSupergraph();
     assertThat(supergraph)
         .filteredOn(
             bb ->
@@ -209,12 +281,13 @@ public class DataflowTest extends WalaTestCase {
         .singleElement()
         .satisfies(
             bb -> {
-              IntSet solution = result.getResult(bb);
+              IntSet solution = result.result().getResult(bb);
               IntIterator intIterator = solution.intIterator();
               List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<>();
               while (intIterator.hasNext()) {
                 int next = intIterator.next();
-                final Pair<CGNode, Integer> def = reachingDefs.getDomain().getMappedObject(next);
+                final Pair<CGNode, Integer> def =
+                    result.reachingDefs().getDomain().getMappedObject(next);
                 if (def.fst
                     .getMethod()
                     .getDeclaringClass()

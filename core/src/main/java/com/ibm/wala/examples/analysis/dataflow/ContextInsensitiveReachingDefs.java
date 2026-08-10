@@ -62,7 +62,7 @@ public class ContextInsensitiveReachingDefs {
    */
   private final Map<IField, BitVector> staticField2DefStatements = HashMapFactory.make();
 
-  private static final boolean VERBOSE = true;
+  private static final boolean VERBOSE = false;
 
   public ContextInsensitiveReachingDefs(ExplodedInterproceduralCFG icfg, IClassHierarchy cha) {
     this.icfg = icfg;
