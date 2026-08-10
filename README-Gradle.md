@@ -243,6 +243,22 @@ benchmark with more forks and iterations for more trustworthy comparisons,
 e.g. by editing the `@Fork`, `@Warmup`, and `@Measurement` annotations in
 the benchmark source.
 
+#### JMH Macrobenchmarks
+
+A few larger-scale, end-to-end tasks live alongside the microbenchmarks in
+`core/src/jmh/java`, under the `com.ibm.wala.benchmarks` package.  Unlike
+the microbenchmarks above, which measure tightly-scoped operations in
+isolation, each macrobenchmark runs a complete analysis task just as a real
+WALA user or a unit test would.  For example,
+`core/src/jmh/java/com/ibm/wala/benchmarks/callgraph/CallGraphBenchmark.java`
+reuses `CallGraphTest.testHelloAllEntrypoints()` verbatim as its workload.
+Because these tasks take seconds rather than microseconds, they use JMH’s
+single-shot time mode, in which each iteration is a single invocation.  The
+`jmh` task described above runs these macrobenchmarks alongside the
+microbenchmarks.  Expect them to take several seconds per iteration, so
+consider limiting the warmup and measurement iteration counts while
+developing a new benchmark.
+
 #### Useful Command-Line Flags
 
 Among Gradle’s command-line flags, I have found the following
