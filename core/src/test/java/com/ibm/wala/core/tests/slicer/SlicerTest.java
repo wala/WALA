@@ -1003,8 +1003,18 @@ public class SlicerTest {
     SlicerUtil.dumpSlice(slice);
   }
 
-  @Test
-  public void testList()
+  /**
+   * The analysis state that {@link #testList} computes before slicing, built by {@link
+   * #prepareTestList()}.
+   */
+  public record TestListAnalysis(
+      CallGraph callGraph,
+      PointerAnalysis<InstanceKey> pointerAnalysis,
+      NormalReturnCaller sliceRoot,
+      CGNode main) {}
+
+  /** Phase one of {@link #testList}: compute everything needed before computing the slice. */
+  public static TestListAnalysis prepareTestList()
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
 
@@ -1021,19 +1031,31 @@ public class SlicerTest {
 
     NormalStatement getCall = (NormalStatement) SlicerUtil.findCallTo(main, "get");
     // we need a NormalReturnCaller statement to slice from the return value
-    NormalReturnCaller nrc = new NormalReturnCaller(main, getCall.getInstructionIndex());
+    NormalReturnCaller sliceRoot = new NormalReturnCaller(main, getCall.getInstructionIndex());
 
-    final PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
-    Collection<Statement> slice =
-        Slicer.computeBackwardSlice(
-            nrc,
-            cg,
-            pointerAnalysis,
-            DataDependenceOptions.FULL,
-            ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    return new TestListAnalysis(cg, builder.getPointerAnalysis(), sliceRoot, main);
+  }
+
+  /** Phase two of {@link #testList}: compute the backward slice using {@code analysis}. */
+  public static Collection<Statement> computeTestListSlice(TestListAnalysis analysis)
+      throws IllegalArgumentException, CancelException {
+    return Slicer.computeBackwardSlice(
+        analysis.sliceRoot(),
+        analysis.callGraph(),
+        analysis.pointerAnalysis(),
+        DataDependenceOptions.FULL,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+  }
+
+  @Test
+  public void testList()
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    TestListAnalysis analysis = prepareTestList();
+    Collection<Statement> slice = computeTestListSlice(analysis);
+
     List<Statement> normalsInMain =
         slice.stream()
-            .filter(s -> s instanceof NormalStatement && s.getNode().equals(main))
+            .filter(s -> s instanceof NormalStatement && s.getNode().equals(analysis.main()))
             .peek(System.err::println)
             .collect(Collectors.toList());
     assertThat(normalsInMain).hasSize(5);
