@@ -10,7 +10,6 @@
  */
 package com.ibm.wala.core.util.strings;
 
-import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -40,7 +39,7 @@ public final class Atom implements Serializable {
    * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
    * Atoms are.
    */
-  private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  private static final HashMap<AtomKey, Atom> dictionary = new HashMap<>();
 
   /** The utf8 value this atom represents */
   private final byte[] val;
