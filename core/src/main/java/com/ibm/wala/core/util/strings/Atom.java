@@ -10,11 +10,10 @@
  */
 package com.ibm.wala.core.util.strings;
 
-import com.ibm.wala.util.collections.HashMapFactory;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.HashMap;
+import org.jctools.maps.NonBlockingHashMap;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -39,8 +38,11 @@ public final class Atom implements Serializable {
   /**
    * Used to canonicalize Atoms, a mapping from AtomKey -&gt; Atom. AtomKeys are not canonical, but
    * Atoms are.
+   *
+   * <p>A lock-free map, so the common "already interned" lookup path needs no locks or
+   * synchronization.
    */
-  private static final HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  private static final NonBlockingHashMap<AtomKey, Atom> dictionary = new NonBlockingHashMap<>();
 
   /** The utf8 value this atom represents */
   private final byte[] val;
@@ -122,7 +124,7 @@ public final class Atom implements Serializable {
     return findOrCreate(val);
   }
 
-  public static synchronized @NonNull Atom findOrCreate(byte[] bytes) {
+  public static @NonNull Atom findOrCreate(byte[] bytes) {
     if (bytes == null) {
       throw new IllegalArgumentException("bytes is null");
     }
@@ -132,11 +134,11 @@ public final class Atom implements Serializable {
       return val;
     }
     val = new Atom(key);
-    dictionary.put(key, val);
-    return val;
+    Atom existing = dictionary.putIfAbsent(key, val);
+    return existing != null ? existing : val;
   }
 
-  public static synchronized Atom findOrCreate(ImmutableByteArray b) {
+  public static Atom findOrCreate(ImmutableByteArray b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -154,7 +156,7 @@ public final class Atom implements Serializable {
    *     release.
    */
   @Deprecated(since = "1.9.0")
-  public static synchronized Atom findOrCreate(ImmutableByteArray b, int start, int length) {
+  public static Atom findOrCreate(ImmutableByteArray b, int start, int length) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -171,11 +173,12 @@ public final class Atom implements Serializable {
    * instances remain valid and usable; only the "one canonical instance per content" interning
    * invariant is broken.
    *
-   * <p>This method is synchronized with the interning factories, but it is still not safe to call
-   * concurrently with application code, because the interning invariant cannot be restored until
-   * the affected content is interned again. Do not call this method from production code.
+   * <p>This method is safe to call only between other uses of the interning factories. It is still
+   * not safe to call concurrently with application code, because the interning invariant cannot be
+   * restored until the affected content is interned again. Do not call this method from production
+   * code.
    */
-  static synchronized void resetDictionaryForTesting() {
+  static void resetDictionaryForTesting() {
     dictionary.clear();
   }
 
@@ -394,21 +397,7 @@ public final class Atom implements Serializable {
       }
 
       AtomKey that = (AtomKey) other;
-      if (hash != that.hash) return false;
-      if (val.length != that.val.length) return false;
-      for (int i = 0; i < val.length; i++) {
-        if (val[i] != that.val[i]) return false;
-      }
-
-      return true;
-    }
-
-    /**
-     * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
-     */
-    @Override
-    public String toString() {
-      return new String(val);
+      return hash == that.hash && Arrays.equals(val, that.val);
     }
 
     @Override

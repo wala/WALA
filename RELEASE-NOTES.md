@@ -96,6 +96,35 @@ entry of `hello.jar`.  This is particularly useful when running an analysis
 from a single executable JAR whose supporting classes and sources are
 included as entries.
 
+#### `Atom` interning is now lock-free
+
+The `Atom` interning dictionary now uses a JCTools `NonBlockingHashMap`
+instead of a plain `HashMap`. The interning factories `findOrCreate(byte[])`,
+`findOrCreate(ImmutableByteArray)`, and the deprecated
+`findOrCreate(ImmutableByteArray, int, int)`, along with
+`resetDictionaryForTesting()`, are no longer `synchronized`. The common
+"already interned" lookup path is now lock-free, and when two threads race to
+intern the same content, `putIfAbsent` ensures that only one canonical `Atom`
+instance survives.
+
+**Effect for third-party consumers:** No API changes: `Atom` interning still
+guarantees one canonical instance per content, comparable with `==`, and
+remains thread-safe. Concurrent interning no longer contends on a class-level
+monitor.
+
+### Dependency changes
+
+#### `:core` now depends on `jctools-core`
+
+The `:core` module now declares `org.jctools:jctools-core:4.0.6` as an
+`implementation`-scope dependency. JCTools provides the lock-free
+`NonBlockingHashMap` used by `Atom` interning.
+
+**Effect for third-party consumers:** The `:core` module now receives
+`jctools-core` on its runtime classpath. Consumers who run WALA from a
+manually assembled classpath must include `jctools-core` on it, or `Atom`
+interning will fail at runtime with a `NoClassDefFoundError`.
+
 ## Version 1.8.0
 
 ### Functionality changes
