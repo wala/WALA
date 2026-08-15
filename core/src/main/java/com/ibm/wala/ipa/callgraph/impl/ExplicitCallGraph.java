@@ -129,8 +129,17 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
     private WeakReference<IR> ir = new WeakReference<>(null);
     private WeakReference<DefUse> du = new WeakReference<>(null);
 
+    /**
+     * Cached value of {@link #hashCode()}. Safe to cache: {@link #getMethod()} and {@link
+     * #getContext()} are fixed for the lifetime of a node, and nodes are canonical per (method,
+     * context) pair. Computing this eagerly (rather than lazily) is safe because every node has a
+     * non-null method (enforced by {@link ExplicitCallGraph#findOrCreateNode}).
+     */
+    private final int cachedHashCode;
+
     protected ExplicitNode(IMethod method, Context C) {
       super(method, C);
+      this.cachedHashCode = getMethod().hashCode() * 8681 + getContext().hashCode();
     }
 
     protected Set<CGNode> getPossibleTargets(CallSiteReference site) {
@@ -258,8 +267,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
     @Override
     public int hashCode() {
-      // TODO: cache?
-      return getMethod().hashCode() * 8681 + getContext().hashCode();
+      return cachedHashCode;
     }
 
     protected MutableSharedBitVectorIntSet getAllTargetNumbers() {
