@@ -116,11 +116,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
       } else if (value == max()) {
         return false;
       } else {
-        for (insert = 0; insert < size; insert++) {
-          if (elements[insert] >= value) {
-            break;
-          }
-        }
+        insert = IntSetUtil.binarySearchInsertionPoint(elements, value, 0, size - 1);
       }
       if (insert < size && elements[insert] == value) {
         return false;

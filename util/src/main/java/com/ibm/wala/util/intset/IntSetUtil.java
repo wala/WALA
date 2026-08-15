@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import java.util.Arrays;
 import java.util.Set;
 import org.jspecify.annotations.NullUnmarked;
 
@@ -199,19 +200,31 @@ public class IntSetUtil {
     if (high > data.length - 1) {
       high = data.length - 1;
     }
-    if (low <= high) {
-      int mid = (low + high) / 2;
-      int midValue = data[mid];
-      if (midValue == key) {
-        return mid;
-      } else if (midValue > key) {
-        return binarySearch(data, key, low, mid - 1);
-      } else {
-        return binarySearch(data, key, mid + 1, high);
-      }
-    } else {
-      return -1;
+    int result = Arrays.binarySearch(data, low, high + 1, key);
+    return result >= 0 ? result : -1;
+  }
+
+  /**
+   * Find the insertion point for a key in a sorted array.
+   *
+   * @return index where key is found (if present), or the index where it should be inserted to
+   *     maintain sorted order (if not present)
+   */
+  public static int binarySearchInsertionPoint(int[] data, int key, int low, int high) {
+    if (data == null) {
+      throw new IllegalArgumentException("null array");
     }
+    if (data.length == 0) {
+      return 0;
+    }
+    if (low <= high && (low < 0 || high < 0)) {
+      throw new IllegalArgumentException("can't search negative indices " + low + ' ' + high);
+    }
+    if (high > data.length - 1) {
+      high = data.length - 1;
+    }
+    int result = Arrays.binarySearch(data, low, high + 1, key);
+    return result >= 0 ? result : -(result + 1);
   }
 
   /**
