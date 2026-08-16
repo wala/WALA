@@ -28,10 +28,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   @Serial private static final long serialVersionUID = 1479453398189400698L;
 
   /** If forced to grow the backing array .. then by how much */
-  private static final float EXPANSION_FACTOR = 1.5f;
+  private static final float EXPANSION_FACTOR = 2;
 
   /** Default initial size for a backing array with one element */
-  private static final int INITIAL_NONEMPTY_SIZE = 2;
+  private static final int INITIAL_NONEMPTY_SIZE = 4;
 
   /** a debug flag, used to trap when a set gets large */
   private static final boolean DEBUG_LARGE = false;
