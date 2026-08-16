@@ -330,7 +330,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
     return true;
   }
 
-  protected class Statement extends GeneralStatement<T> {
+  protected final class Statement extends GeneralStatement<T> {
 
     public Statement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
       super(lhs, operator, op1, op2, op3);

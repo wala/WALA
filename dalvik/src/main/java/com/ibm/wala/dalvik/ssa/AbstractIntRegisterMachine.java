@@ -524,7 +524,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
   }
 
   /** Representation of the state of the JVM stack machine at some program point. */
-  public class MachineState extends AbstractVariable<MachineState> {
+  public final class MachineState extends AbstractVariable<MachineState> {
     private int[] stack;
 
     private int[] locals;

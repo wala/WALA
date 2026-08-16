@@ -16,7 +16,7 @@ import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
-public class SemiSparseMutableIntSet implements MutableIntSet {
+public final class SemiSparseMutableIntSet implements MutableIntSet {
   @Serial private static final long serialVersionUID = 8647721176321526013L;
 
   private static final boolean DEBUG = true;
@@ -325,7 +325,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    */
   @Override
   public IntIterator intIterator() {
-    class DensePartIterator implements IntIterator {
+    final class DensePartIterator implements IntIterator {
       private int i = -1;
 
       @NullUnmarked

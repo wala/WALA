@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  * The shared bit vector implementation described by [Heintze 1999] TODO: much optimization
  * possible.
  */
-public class MutableSharedBitVectorIntSet implements MutableIntSet {
+public final class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   @Serial private static final long serialVersionUID = -6630888692508092370L;
 

@@ -23,7 +23,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /** Representation of a points-to set during an andersen-style analysis. */
-public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
+public final class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   /** if set, emits a warning whenever a points-to set grows bigger than {@link #SIZE_THRESHOLD} */
   public static final boolean CRY_ABOUT_BIG_POINTSTO_SETS = false;
 

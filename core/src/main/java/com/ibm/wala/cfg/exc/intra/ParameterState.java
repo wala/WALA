@@ -23,7 +23,7 @@ import java.util.Set;
  *
  * @author markus
  */
-public class ParameterState extends AbstractVariable<ParameterState> {
+public final class ParameterState extends AbstractVariable<ParameterState> {
   /*
    * Inital state is UNKNOWN.
    * Lattice: BOTH < { NULL, NOT_NULL } < UNKNOWN

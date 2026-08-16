@@ -23,7 +23,7 @@ import java.util.Collection;
  *
  * @author Juergen Graf &lt;graf@kit.edu&gt;
  */
-public class NullPointerState extends AbstractVariable<NullPointerState> {
+public final class NullPointerState extends AbstractVariable<NullPointerState> {
 
   /*
    * Inital state is UNKNOWN.

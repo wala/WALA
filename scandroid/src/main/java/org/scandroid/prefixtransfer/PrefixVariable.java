@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 
-public class PrefixVariable extends AbstractVariable<PrefixVariable> {
+public final class PrefixVariable extends AbstractVariable<PrefixVariable> {
 
   // map instance keys to their prefixes
   public HashMap<Integer, String> knownPrefixes = new HashMap<>();

@@ -11,7 +11,7 @@
 package com.ibm.wala.fixpoint;
 
 /** An implementation of UnaryStatement that carries its operator explicitly */
-public class BasicUnaryStatement<T extends IVariable<T>> extends UnaryStatement<T> {
+public final class BasicUnaryStatement<T extends IVariable<T>> extends UnaryStatement<T> {
 
   private final UnaryOperator<T> operator;
 

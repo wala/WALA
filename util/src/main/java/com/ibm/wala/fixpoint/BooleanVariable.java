@@ -11,7 +11,7 @@
 package com.ibm.wala.fixpoint;
 
 /** A boolean variable for dataflow analysis. */
-public class BooleanVariable extends AbstractVariable<BooleanVariable> {
+public final class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   private boolean B;
 

@@ -112,6 +112,39 @@ guarantees one canonical instance per content, comparable with `==`, and
 remains thread-safe. Concurrent interning no longer contends on a class-level
 monitor.
 
+#### Many fixpoint-iteration and int-set types are now `final`
+
+A number of heavily used fixpoint-iteration and `int`-set types are now
+`final` where subclassing was never intended.  This includes
+`BitVectorVariable`, `BooleanVariable`, machine states, points-to-set
+variables, etc.  Marking these hot types as `final` gives the JIT more
+freedom for devirtualization and inlining along the dataflow/fixpoint fast
+path, yielding measurable performance improvements in WALA's own
+benchmarks.
+
+**Effect for third-party consumers:** There is no behavioral change, but the
+affected classes can no longer be subclassed.  If you have subclassed any of
+these types, you will need to restructure your code. The affected types include:
+
+* `com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine.MachineState`
+* `com.ibm.wala.cfg.exc.intra.NullPointerState`
+* `com.ibm.wala.cfg.exc.intra.ParameterState`
+* `com.ibm.wala.dalvik.analysis.typeInference.DalvikTypeVariable`
+* `com.ibm.wala.dalvik.ssa.AbstractIntRegisterMachine.MachineState`
+* `com.ibm.wala.fixedpoint.impl.AbstractFixedPointSolver.Statement`
+* `com.ibm.wala.fixedpoint.impl.BasicNullaryStatement`
+* `com.ibm.wala.fixpoint.BasicUnaryStatement`
+* `com.ibm.wala.fixpoint.BitVectorVariable`
+* `com.ibm.wala.fixpoint.BooleanVariable`
+* `com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable`
+* `com.ibm.wala.util.collections.CompoundIntIterator`
+* `com.ibm.wala.util.intset.BimodalMutableIntSet`
+* `com.ibm.wala.util.intset.EmptyIntSet`
+* `com.ibm.wala.util.intset.MutableSharedBitVectorIntSet`
+* `com.ibm.wala.util.intset.SemiSparseMutableIntSet`
+* `com.ibm.wala.util.intset.TunedMutableSparseIntSet`
+* `org.scandroid.prefixtransfer.PrefixVariable`
+
 ### Dependency changes
 
 #### `:core` now depends on `jctools-core`

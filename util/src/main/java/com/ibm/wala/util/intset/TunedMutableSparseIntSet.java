@@ -18,7 +18,7 @@ import java.io.Serial;
  * @see #getInitialNonEmptySize()
  * @see #getExpansionFactor()
  */
-public class TunedMutableSparseIntSet extends MutableSparseIntSet {
+public final class TunedMutableSparseIntSet extends MutableSparseIntSet {
 
   @Serial private static final long serialVersionUID = -1559172158241923881L;
 

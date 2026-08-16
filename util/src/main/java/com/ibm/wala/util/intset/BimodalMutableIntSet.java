@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  * An implementation of {@link MutableIntSet} that delegates to either a {@link MutableSparseIntSet}
  * or a {@link BitVectorIntSet}
  */
-public class BimodalMutableIntSet implements MutableIntSet {
+public final class BimodalMutableIntSet implements MutableIntSet {
 
   @Serial private static final long serialVersionUID = 7332332295529936562L;
   MutableIntSet impl;

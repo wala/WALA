@@ -13,7 +13,7 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.IVariable;
 
 /** An implementation of NullaryStep that carries its operator explicitly */
-public class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatement<T> {
+public final class BasicNullaryStatement<T extends IVariable<T>> extends NullaryStatement<T> {
 
   /** The operator in the equation */
   private final NullaryOperator<T> operator;
