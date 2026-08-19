@@ -238,10 +238,14 @@ code, run the `jmh` task, change the code under test, then run it again
 and compare.  The `jmh` task prints human-readable results to the
 console and writes machine-readable results to
 `<subproject>/build/results/jmh/results.json` for a given `<subproject>`.
-Results can be unstable on noisy machines, so consider running a single
-benchmark with more forks and iterations for more trustworthy comparisons,
-e.g. by editing the `@Fork`, `@Warmup`, and `@Measurement` annotations in
-the benchmark source.
+Setting the `jmhResultsFileNameIncludesGitHash` Gradle property (e.g., with
+`-PjmhResultsFileNameIncludesGitHash`) appends the current Git commit hash
+to the results file name, writing to
+`<subproject>/build/results/jmh/results-<git-hash>.json`.  Results can be
+unstable on noisy machines, so consider running a single benchmark with
+more forks and iterations for more trustworthy comparisons, e.g. by
+editing the `@Fork`, `@Warmup`, and `@Measurement` annotations in the
+benchmark source.
 
 #### JMH Macrobenchmarks
 
@@ -308,4 +312,5 @@ other.
 <!--
 LocalWords:  processTestResources pre classpath gradlew mvn
 LocalWords:  javadoc buildship issuecomment
+LocalWords:  jmhResultsFileNameIncludesGitHash
 -->
