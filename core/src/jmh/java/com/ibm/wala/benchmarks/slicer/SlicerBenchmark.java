@@ -42,14 +42,14 @@ import org.openjdk.jmh.annotations.Warmup;
  * roughly 40ms after five warmup invocations to a stable 28.6ms only after roughly sixty. The
  * {@code @Warmup(iterations = 60)} setting absorbs that entire ramp, so the
  * {@code @Measurement(iterations = 10)} measured invocations in each fork are steady and
- * independent. Together with {@code @Fork(4)} — four independent JVMs, so that no single JVM's JIT
+ * independent. Together with {@code @Fork(5)} — five independent JVMs, so that no single JVM's JIT
  * decisions dominate the reported error — this benchmark is reproducible to within about 1.5%,
  * tight enough to track relative changes in runtime.
  *
  * <p>Run with {@code ./gradlew :core:jmh}.
  */
 @BenchmarkMode(Mode.SingleShotTime)
-@Fork(4)
+@Fork(5)
 @Measurement(iterations = 10)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)

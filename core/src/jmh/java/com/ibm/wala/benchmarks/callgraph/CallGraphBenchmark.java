@@ -28,14 +28,14 @@ import org.openjdk.jmh.annotations.Warmup;
  * <p>The benchmark is stable to roughly one percent across forks, but with only a single fork and a
  * handful of iterations JMH reports a wildly inflated error: its printed margin is {@code t(n-1,
  * 99.9%) x} the standard error, and with {@code n = 3} that t-multiplier is about 32. Each fork is
- * therefore treated as one independent sample, and four forks (with two measured invocations each)
+ * therefore treated as one independent sample, and six forks (with six measured invocations each)
  * give a printed error that is small enough to track relative changes in runtime.
  */
 @BenchmarkMode(Mode.SingleShotTime)
-@Fork(4)
-@Measurement(iterations = 2)
+@Fork(6)
+@Measurement(iterations = 6)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 1)
+@Warmup(iterations = 3)
 public class CallGraphBenchmark {
 
   /**

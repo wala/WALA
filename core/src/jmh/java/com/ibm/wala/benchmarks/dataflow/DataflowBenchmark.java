@@ -42,17 +42,14 @@ import org.openjdk.jmh.annotations.Warmup;
  *
  * <p>These are sub-millisecond analyses, so a single invocation is noisy (allocation and GC jitter
  * are on the same scale as the work itself). The {@code @Warmup} of 60 iterations covers the JIT
- * ramp, which extends well past 30 iterations, and the {@code @Measurement} of 20 iterations across
- * 4 forks averages the noise down to a per-run error of roughly {@code 5-9%}. Repeated runs agree
- * with each other within that noise: e.g. the context-insensitive mean reproduced at {@code 0.255}
- * and {@code 0.250} ms and the context-sensitive mean at {@code 0.236} and {@code 0.224} ms across
- * two consecutive runs.
+ * ramp, which extends well past 30 iterations, and the {@code @Measurement} of 40 iterations across
+ * 6 forks averages the noise down.
  *
  * <p>Run with {@code ./gradlew :core:jmh}.
  */
 @BenchmarkMode(Mode.SingleShotTime)
-@Fork(4)
-@Measurement(iterations = 20)
+@Fork(6)
+@Measurement(iterations = 40)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Thread)
 @Warmup(iterations = 60)

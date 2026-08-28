@@ -49,18 +49,17 @@ import org.openjdk.jmh.infra.Blackhole;
  *
  * <p>Run with {@code ./gradlew :core:jmh}. Results are written to {@code core/build/results/jmh/}.
  * These settings trade total run time for precision, so that they can detect relative regressions:
- * each method runs in three forks, with three one-second warmup iterations and three one-second
+ * each method runs in four forks, with five one-second warmup iterations and five one-second
  * measurement iterations. A single fork is measurably noisier (the per-fork mean is stable, but
- * between-fork variance dominates for several methods), so three forks cut the reported error from
- * up to ~10% down to ~1-2%. A few methods with idiosyncratic noise get their own overrides; see
- * their Javadoc. Pass {@code -f}, {@code -wi}, {@code -i}, and similar JMH command-line flags for
- * one-off adjustments.
+ * between-fork variance dominates for several methods), so four forks reduce the reported error. A
+ * few methods with idiosyncratic noise get their own overrides; see their Javadoc. Pass {@code -f},
+ * {@code -wi}, {@code -i}, and similar JMH command-line flags for one-off adjustments.
  */
 @BenchmarkMode(Mode.Throughput)
-@Fork(3)
-@Measurement(iterations = 3, time = 1)
+@Fork(4)
+@Measurement(iterations = 5, time = 1)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-@Warmup(iterations = 3, time = 1)
+@Warmup(iterations = 5, time = 1)
 public class AtomBenchmark {
 
   /** Number of distinct, never-before-interned byte arrays in each miss-benchmark iteration. */
@@ -184,20 +183,15 @@ public class AtomBenchmark {
     }
   }
 
-  /**
-   * Looks up an already-interned {@link Atom} from its bytes.
-   *
-   * <p>One more fork than the class default, because this benchmark's mean has drifted more between
-   * forks than the other microbenchmarks in repeated runs.
-   */
+  /** Looks up an already-interned {@link Atom} from its bytes. */
   @Benchmark
-  @Fork(4)
   public Atom findOrCreateFromByteArray(AtomFixture fixture) {
     return Atom.findOrCreate(fixture.nextByteArray());
   }
 
   /** Looks up an already-interned {@link Atom} from a freshly copied byte array. */
   @Benchmark
+  @Measurement(iterations = 6, time = 1)
   public Atom findOrCreateFromFreshByteArray(AtomFixture fixture) {
     final byte[] original = fixture.nextByteArray();
     return Atom.findOrCreate(Arrays.copyOf(original, original.length));
@@ -217,6 +211,7 @@ public class AtomBenchmark {
 
   /** Looks up an already-interned {@link Atom} from a whole byte-array slice. */
   @Benchmark
+  @Measurement(iterations = 6, time = 1)
   public Atom findOrCreateFromByteArraySlice(AtomFixture fixture) {
     final byte[] bytes = fixture.nextByteArray();
     return Atom.findOrCreate(bytes, 0, bytes.length);
@@ -224,6 +219,7 @@ public class AtomBenchmark {
 
   /** Creates the trailing half of an already-interned {@link Atom}. */
   @Benchmark
+  @Measurement(iterations = 6, time = 1)
   public Atom right(AtomFixture fixture) {
     final Atom atom = fixture.nextAtom();
     return atom.right(atom.length() / 2);
@@ -236,14 +232,8 @@ public class AtomBenchmark {
     return fixture.atoms[index].startsWith(fixture.prefixes[index]);
   }
 
-  /**
-   * Concatenates two already-interned {@link Atom}s to an already-interned result.
-   *
-   * <p>One more fork than the class default, because this benchmark's mean has drifted more between
-   * forks than the other microbenchmarks in repeated runs.
-   */
+  /** Concatenates two already-interned {@link Atom}s to an already-interned result. */
   @Benchmark
-  @Fork(4)
   public Atom concatAtoms(AtomFixture fixture) {
     final int index = fixture.nextIndex();
     return Atom.concat(
@@ -271,6 +261,7 @@ public class AtomBenchmark {
 
   /** Reads one byte from an {@link Atom}. */
   @Benchmark
+  @Measurement(iterations = 6, time = 1)
   public byte getVal(AtomFixture fixture) {
     final Atom atom = fixture.nextAtom();
     return atom.getVal(atom.length() / 2);
@@ -278,6 +269,7 @@ public class AtomBenchmark {
 
   /** Searches an {@link Atom} for a byte that is usually absent. */
   @Benchmark
+  @Measurement(iterations = 6, time = 1)
   public int rIndex(AtomFixture fixture) {
     return fixture.nextAtom().rIndex((byte) 'a');
   }
@@ -299,9 +291,9 @@ public class AtomBenchmark {
   /** Interns a fresh pool of genuinely new {@link Atom}s. */
   @Benchmark
   @BenchmarkMode(Mode.SingleShotTime)
-  @Measurement(iterations = 10)
+  @Measurement(iterations = 20)
   @OperationsPerInvocation(MISS_POOL_SIZE)
-  @Warmup(iterations = 10)
+  @Warmup(iterations = 20)
   public void findOrCreateMiss(FreshBytes freshBytes, Blackhole blackhole) {
     for (final byte[] bytes : freshBytes.pool) {
       blackhole.consume(Atom.findOrCreate(bytes));
