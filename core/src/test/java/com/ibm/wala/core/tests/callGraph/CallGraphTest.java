@@ -434,6 +434,39 @@ public class CallGraphTest extends WalaTestCase {
     return result;
   }
 
+  /**
+   * The five call graphs computed by {@link #doCallGraphs}, in build order: RTA, 0-CFA, 0-1-CFA,
+   * 0-Container-CFA, and 0-1-Container-CFA.
+   */
+  public record AllApplicationCallGraphs(
+      CallGraph rta,
+      CallGraph zeroCFA,
+      CallGraph zeroOneCFA,
+      CallGraph zeroContainerCFA,
+      CallGraph zeroOneContainerCFA) {}
+
+  /**
+   * Builds the five call graphs that {@link #doCallGraphs} computes, sharing {@code cache} across
+   * all phases exactly as the real pipeline does.
+   *
+   * <p>No verification (graph-integrity checks, squashing, or stat printing) is performed here, so
+   * benchmarks can time precisely this analysis without test-harness overhead.
+   */
+  public static AllApplicationCallGraphs buildAllCallGraphs(
+      AnalysisOptions options,
+      IAnalysisCacheView cache,
+      IClassHierarchy cha,
+      boolean testPAToString)
+      throws IllegalArgumentException, CancelException {
+    CallGraph rta = CallGraphTestUtil.buildRTA(options, cache, cha);
+    CallGraph zeroCFA = CallGraphTestUtil.buildZeroCFA(options, cache, cha, testPAToString);
+    CallGraph zeroOneCFA = CallGraphTestUtil.buildZeroOneCFA(options, cache, cha, testPAToString);
+    CallGraph zeroContainerCFA = CallGraphTestUtil.buildZeroContainerCFA(options, cache, cha);
+    CallGraph zeroOneContainerCFA = CallGraphTestUtil.buildZeroOneContainerCFA(options, cache, cha);
+    return new AllApplicationCallGraphs(
+        rta, zeroCFA, zeroOneCFA, zeroContainerCFA, zeroOneContainerCFA);
+  }
+
   public static void doCallGraphs(
       AnalysisOptions options, IAnalysisCacheView cache, IClassHierarchy cha)
       throws IllegalArgumentException, CancelException {
@@ -447,11 +480,12 @@ public class CallGraphTest extends WalaTestCase {
       IClassHierarchy cha,
       boolean testPAToString)
       throws IllegalArgumentException, CancelException {
+    AllApplicationCallGraphs graphs = buildAllCallGraphs(options, cache, cha, testPAToString);
 
     // ///////////////
     // // RTA /////
     // ///////////////
-    final CallGraph rta = CallGraphTestUtil.buildRTA(options, cache, cha);
+    final CallGraph rta = graphs.rta();
     assertThatCode(() -> GraphIntegrity.check(rta)).doesNotThrowAnyException();
 
     Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(rta);
@@ -462,12 +496,10 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-CFA /////
     // ///////////////
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cache, cha, testPAToString);
-
     // FIXME: annoying special cases caused by clone2assign mean using
     // the rta graph for proper graph subset checking does not work.
     // (note that all the other such checks do use proper graph subset)
-    Graph<MethodReference> squashZero = checkCallGraph(cg, null, "0-CFA");
+    Graph<MethodReference> squashZero = checkCallGraph(graphs.zeroCFA(), null, "0-CFA");
 
     // test Pretransitive 0-CFA
     // not currently supported
@@ -483,24 +515,23 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-1-CFA ///
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroOneCFA(options, cache, cha, testPAToString);
-    Graph<MethodReference> squashZeroOne = checkCallGraph(cg, squashZero, "0-1-CFA");
+    Graph<MethodReference> squashZeroOne =
+        checkCallGraph(graphs.zeroOneCFA(), squashZero, "0-1-CFA");
 
     // ///////////////////////////////////////////////////
     // // 0-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    cg = CallGraphTestUtil.buildZeroContainerCFA(options, cache, cha);
-    Graph<MethodReference> squashZeroContainer = checkCallGraph(cg, squashZero, "0-Container-CFA");
+    Graph<MethodReference> squashZeroContainer =
+        checkCallGraph(graphs.zeroContainerCFA(), squashZero, "0-Container-CFA");
 
     // ///////////////////////////////////////////////////
     // // 0-1-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cache, cha);
-    checkCallGraph(cg, squashZeroContainer, "0-1-Container-CFA");
-    checkCallGraph(cg, squashZeroOne, "0-1-Container-CFA");
+    checkCallGraph(graphs.zeroOneContainerCFA(), squashZeroContainer, "0-1-Container-CFA");
+    checkCallGraph(graphs.zeroOneContainerCFA(), squashZeroOne, "0-1-Container-CFA");
 
     // test ICFG
-    checkICFG(cg);
+    checkICFG(graphs.zeroOneContainerCFA());
     // /////////////
     // // 1-CFA ///
     // /////////////
