@@ -34,7 +34,7 @@ public class GetCaughtExceptionStatement extends Statement {
     }
     if (getClass().equals(obj.getClass())) {
       GetCaughtExceptionStatement other = (GetCaughtExceptionStatement) obj;
-      return getNode().equals(other.getNode()) && st.equals(other.st);
+      return getNode().equals(other.getNode()) && st.getException() == other.st.getException();
     } else {
       return false;
     }
