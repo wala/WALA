@@ -22,7 +22,7 @@ val platformsVersion = "android-28"
 val unpackAndroidSdkInstaller =
     tasks.register<Sync>("unpackAndroidSdkInstaller") {
       description = "Unpack Android SDK command-line tools"
-      from({ zipTree(downloadAndroidSdk.singleFile) })
+      from(zipTree(downloadAndroidSdk))
       into(layout.buildDirectory.dir(name))
     }
 
@@ -114,7 +114,7 @@ val downloadDroidBench =
 val unpackDroidBench =
     tasks.register<Sync>("unpackDroidBench") {
       description = "Unpack DroidBench benchmark APKs"
-      from({ zipTree(downloadDroidBench.singleFile) }) { include("*/apk/**") }
+      from(zipTree(downloadDroidBench)) { include("*/apk/**") }
       into(layout.buildDirectory.dir("DroidBench"))
       dropTopDirectory()
     }

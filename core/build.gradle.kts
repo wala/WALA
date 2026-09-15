@@ -95,7 +95,7 @@ val kawa = adHocDownload(uri("https://ftp.gnu.org/pub/gnu/kawa"), "kawa", "zip",
 val extractKawa =
     tasks.register<Sync>("extractKawa") {
       description = "Extract `kawa.jar` from Kawa release"
-      from({ zipTree(kawa.singleFile) })
+      from(zipTree(kawa))
       into(layout.buildDirectory.dir(name))
       include("*/lib/kawa.jar")
       eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
@@ -119,7 +119,7 @@ val kawaChess =
 val unpackKawaChess =
     tasks.register<Sync>("unpackKawaChess") {
       description = "Unpack Kawa Chess source code"
-      from({ zipTree(kawaChess.singleFile) })
+      from(zipTree(kawaChess))
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()
     }
@@ -175,7 +175,7 @@ val downloadBcel =
 val extractBcel =
     tasks.register<Sync>("extractBcel") {
       description = "Extract BCEL JAR"
-      from({ tarTree(downloadBcel.singleFile) })
+      from(tarTree(downloadBcel))
       include("**/*.jar")
       into(layout.buildDirectory.dir(name))
       eachFile { relativePath = RelativePath.parse(!isDirectory, relativePath.lastName) }
@@ -234,7 +234,7 @@ val downloadOcamlJava =
         "bin",
     )
 
-// Ideally this would be a `Sync` task using `from({ tarTree(downloadOcamlJava.singleFile) })`.
+// Ideally this would be a `Sync` task using `from(tarTree(downloadOcamlJava))`.
 // However, this specific tar archive contains a member with a leading slash, and that apparently
 // causes Gradle's native tar support to fail.
 val unpackOcamlJava =

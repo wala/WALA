@@ -57,7 +57,7 @@ val downloadAjaxslt =
 val unpackAjaxslt =
     tasks.register<Sync>("unpackAjaxslt") {
       description = "Unpack AJAXSLT test resources"
-      from({ tarTree(downloadAjaxslt.singleFile) })
+      from(tarTree(downloadAjaxslt))
       into(layout.buildDirectory.dir(name))
       dropTopDirectory()
     }
