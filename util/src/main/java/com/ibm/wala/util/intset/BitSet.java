@@ -13,7 +13,13 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Iterator;
 
-/** A bit set is a set of elements, each of which corresponds to a unique integer from [0,MAX]. */
+/**
+ * A bit set is a set of elements, each of which corresponds to a unique integer from [0,MAX].
+ *
+ * @deprecated Use an {@link IntSet} such as {@link MutableSparseIntSet} or {@link BitVectorIntSet}
+ *     together with an {@link OrdinalSetMapping} instead. This class has no known use within WALA.
+ */
+@Deprecated(since = "1.9.0")
 public final class BitSet<T> {
 
   /** The backing bit vector that determines set membership. */
