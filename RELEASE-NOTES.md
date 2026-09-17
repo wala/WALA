@@ -84,6 +84,19 @@ outside WALA, please [let the WALA maintainers
 know](https://github.com/wala/WALA/issues/new) so that we don't remove them in a
 future release.
 
+#### `com.ibm.wala.util.intset.BitSet` deprecated
+
+`com.ibm.wala.util.intset.BitSet<T>` is now deprecated, marked
+`@Deprecated(since = "1.9.0")`. The class has not been used anywhere within
+WALA since WALA moved from Subversion to Git in April 2012, and we do not
+believe it is used anywhere outside WALA. Use an `IntSet`
+type such as `MutableSparseIntSet` or `BitVectorIntSet`, or the read-only
+`OrdinalSet<T>`, together with an `OrdinalSetMapping<T>` instead.
+
+**Effect for third-party consumers:** if you do use `BitSet<T>` outside WALA,
+please [let the WALA maintainers know](https://github.com/wala/WALA/issues/new)
+so that we don't remove it in a future release.
+
 #### Analysis scope files may reference classes and sources packaged in JARs
 
 In an analysis scope file, `classFile` and `sourceFile` entries previously
