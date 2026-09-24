@@ -32,7 +32,7 @@ val installAndroidSdk =
       inputs.files(unpackAndroidSdkInstaller)
       val sdkManager =
           unpackAndroidSdkInstaller
-              .map { it.destinationDir.resolve("cmdline-tools/bin/sdkmanager") }
+              .flatMap { it.destinationDirectory.file("cmdline-tools/bin/sdkmanager") }
               .valueToString
 
       val destinationDir = layout.buildDirectory.dir(name).valueToString

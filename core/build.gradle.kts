@@ -127,7 +127,7 @@ val unpackKawaChess =
 val compileKawaSchemeChessMain =
     tasks.register<CompileKawaScheme>("compileKawaSchemeChessMain") {
       description = "Compile Kawa Chess main Scheme to Java bytecode"
-      schemeFile = unpackKawaChess.map { it.destinationDir.resolve("main.scm") }
+      schemeFile = unpackKawaChess.flatMap { it.destinationDirectory.file("main.scm") }
     }
 
 val buildChessJar =

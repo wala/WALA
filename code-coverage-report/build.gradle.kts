@@ -7,4 +7,4 @@ plugins {
   id("jacoco-report-aggregation")
 }
 
-forEachJavaProject(dependencies::jacocoAggregation)
+forEachJavaProject { dependencies.jacocoAggregation(dependencies.project(it.path)) }
