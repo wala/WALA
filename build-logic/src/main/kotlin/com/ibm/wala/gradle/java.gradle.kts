@@ -18,7 +18,7 @@ plugins {
   id("net.ltgt.errorprone")
 }
 
-jacoco.toolVersion = "0.8.14"
+jacoco.toolVersion = "0.8.15"
 
 repositories {
   mavenCentral()
@@ -51,7 +51,7 @@ dependencies {
 
 tasks.withType<JavaCompile>().configureEach {
   // Always compile with a recent JDK version, to get the latest bug fixes in the compiler toolchain
-  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(26) }
+  javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(27) }
   // Generate JDK 17 bytecodes; that is the minimum version supported by WALA
   options.run {
     isDeprecation = true
