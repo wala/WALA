@@ -157,11 +157,7 @@ public class BitVectorRepository {
   }
 
   private static int countEntries() {
-    int result = 0;
-    for (List<Entry> l : buckets.values()) {
-      // don't worry about cleared WeakReferences; count will be rough
-      result += l.size();
-    }
-    return result;
+    // don't worry about cleared WeakReferences; count will be rough
+    return buckets.values().stream().mapToInt(List::size).sum();
   }
 }
