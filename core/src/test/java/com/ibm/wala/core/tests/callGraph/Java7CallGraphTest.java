@@ -56,6 +56,10 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
   @TempDir private Path temporaryDirectory;
 
+  /**
+   * Runs in a child JVM with a fresh tracer. Its caller has no injected call-site hooks, so the
+   * second constructor entry must discard the frame left by the first, exceptional entry.
+   */
   public static class ConstructorReentryProbe {
     private static class FailsOnce {
       FailsOnce(boolean fail) {
@@ -67,6 +71,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
       }
     }
 
+    /** Calls the same constructor twice at the same stack depth, first with an exceptional exit. */
     public static void main(String[] args) {
       Runtime.execution(
           ConstructorReentryProbe.class.getName(), "main([Ljava/lang/String;)V", Runtime.NULL_TAG);
