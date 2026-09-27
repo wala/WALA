@@ -128,7 +128,7 @@ public class OfflineDynamicCallGraph {
             return Class.forName(
                 type.substring(1, type.length() - 1).replace('/', '.'),
                 false,
-                OfflineDynamicCallGraph.class.getClassLoader());
+                ClassLoader.getPlatformClassLoader());
           } catch (ClassNotFoundException | LinkageError e) {
             return null;
           }

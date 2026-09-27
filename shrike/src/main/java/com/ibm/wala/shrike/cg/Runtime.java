@@ -47,6 +47,18 @@ public class Runtime {
     }
   }
 
+  private static final StackWalker stackWalker = StackWalker.getInstance();
+
+  private static StackTraceElement[] fullStackTrace() {
+    // Drop this helper's frame so Runtime.execution/termination/addToCallStack is at index 0.
+    return stackWalker.walk(
+        frames ->
+            frames
+                .skip(1)
+                .map(StackWalker.StackFrame::toStackTraceElement)
+                .toArray(StackTraceElement[]::new));
+  }
+
   private static final Runtime runtime =
       new Runtime(
           System.getProperty("dynamicCGFile"),
@@ -154,8 +166,13 @@ public class Runtime {
 
   public static void execution(String klass, String method, Object receiver) {
     StackTraceElement[] stack = new Throwable().getStackTrace();
-    // The method at stack[1] is entering now, so it cannot own an existing frame.
-    runtime.discardExitedConstructors(stack, 2);
+    boolean isConstructor = "<init>".equals(stack[1].getMethodName());
+    StackTraceElement[] fullStack = null;
+    if (isConstructor || runtime.callStacks.get().peek().isConstructor()) {
+      fullStack = fullStackTrace();
+      // The method at fullStack[1] is entering now, so it cannot own an existing frame.
+      runtime.discardExitedConstructors(fullStack, 2);
+    }
     runtime.currentSite.remove();
     if (runtime.filter == null || !runtime.filter.test(bashToDescriptor(klass))) {
       if (runtime.output != null) {
@@ -205,13 +222,13 @@ public class Runtime {
                 bashToDescriptor(klass) + '\t' + method,
                 stack[1].getClassName(),
                 stack[1].getMethodName(),
-                stack.length - 2));
+                isConstructor ? fullStack.length - 2 : -1));
   }
 
   @SuppressWarnings("unused")
   public static void termination(String klass, String method, Object receiver, boolean exception) {
     if (runtime.callStacks.get().peek().isConstructor()) {
-      runtime.discardExitedConstructors(new Throwable().getStackTrace(), 1);
+      runtime.discardExitedConstructors(fullStackTrace(), 1);
     }
     runtime.callStacks.get().pop();
   }
@@ -231,7 +248,7 @@ public class Runtime {
 
   public static void addToCallStack(String klass, String method, Object receiver) {
     if (runtime.callStacks.get().peek().isConstructor()) {
-      runtime.discardExitedConstructors(new Throwable().getStackTrace(), 1);
+      runtime.discardExitedConstructors(fullStackTrace(), 1);
     }
     String callerClass =
         runtime.callStacks.get().isEmpty()

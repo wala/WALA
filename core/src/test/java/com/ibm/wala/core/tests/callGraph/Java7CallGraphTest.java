@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.jar.JarEntry;
@@ -89,6 +90,40 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     }
   }
 
+  /** Keeps a constructor active while an untraced recursion exceeds the Throwable trace limit. */
+  public static class DeepConstructorProbe {
+    private static class Tracked {
+      Tracked() {
+        Runtime.execution(Tracked.class.getName(), "<init>()V", Runtime.NULL_TAG);
+        descend(40);
+        marker();
+        Runtime.termination(Tracked.class.getName(), "<init>()V", Runtime.NULL_TAG, false);
+      }
+
+      private void descend(int remaining) {
+        if (remaining > 0) {
+          descend(remaining - 1);
+        } else {
+          if (new Throwable().getStackTrace().length != 16) {
+            throw new AssertionError("Throwable stack trace was not capped at 16 frames");
+          }
+          Runtime.execution(Tracked.class.getName(), "descend(I)V", this);
+          Runtime.termination(Tracked.class.getName(), "descend(I)V", this, false);
+        }
+      }
+
+      private void marker() {
+        Runtime.execution(Tracked.class.getName(), "marker()V", this);
+        Runtime.termination(Tracked.class.getName(), "marker()V", this, false);
+      }
+    }
+
+    /** Runs with a low Throwable trace limit in a child JVM. */
+    public static void main(String[] args) {
+      new Tracked();
+    }
+  }
+
   @Override
   protected Path getTemporaryDirectory() {
     return temporaryDirectory;
@@ -96,27 +131,39 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
   @Test
   public void testConstructorReentryAfterException() throws IOException, InterruptedException {
-    Process process =
-        new ProcessBuilder(
-                Path.of(
-                        System.getProperty("java.home"),
-                        "bin",
-                        PlatformUtil.onWindows() ? "java.exe" : "java")
-                    .toString(),
-                "-Xverify:all",
-                "-DdynamicCGFile=" + getDynamicCGLocation(),
-                "-cp",
-                System.getProperty("java.class.path"),
-                ConstructorReentryProbe.class.getName())
-            .redirectErrorStream(true)
-            .start();
-    String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-    assertThat(process.waitFor()).as(output).isZero();
-
+    List<String> lines = runProbe(ConstructorReentryProbe.class);
     String caller = ConstructorReentryProbe.class.getName().replace('.', '/');
     String callee = ConstructorReentryProbe.FailsOnce.class.getName().replace('.', '/');
     String edge = caller + "\tmain([Ljava/lang/String;)V\t" + callee + "\t<init>(Z)V";
-    assertThat(traceLines()).filteredOn(edge::equals).hasSize(2);
+    assertThat(lines).filteredOn(edge::equals).hasSize(2);
+  }
+
+  @Test
+  public void testConstructorAtTruncatedStackDepth() throws IOException, InterruptedException {
+    List<String> lines = runProbe(DeepConstructorProbe.class, "-XX:MaxJavaStackTraceDepth=16");
+    String owner = DeepConstructorProbe.Tracked.class.getName().replace('.', '/');
+    assertThat(lines).contains(owner + "\t<init>()V\t" + owner + "\tmarker()V");
+  }
+
+  private List<String> runProbe(Class<?> probe, String... jvmArgs)
+      throws IOException, InterruptedException {
+    List<String> command = new ArrayList<>();
+    command.add(
+        Path.of(
+                System.getProperty("java.home"),
+                "bin",
+                PlatformUtil.onWindows() ? "java.exe" : "java")
+            .toString());
+    command.add("-Xverify:all");
+    command.addAll(List.of(jvmArgs));
+    command.add("-DdynamicCGFile=" + getDynamicCGLocation());
+    command.add("-cp");
+    command.add(System.getProperty("java.class.path"));
+    command.add(probe.getName());
+    Process process = new ProcessBuilder(command).redirectErrorStream(true).start();
+    String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    assertThat(process.waitFor()).as(output).isZero();
+    return traceLines();
   }
 
   private List<String> traceLines() throws IOException {
