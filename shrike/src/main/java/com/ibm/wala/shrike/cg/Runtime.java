@@ -63,10 +63,10 @@ public class Runtime {
       return "<init>".equals(methodName);
     }
 
-    boolean isActive(StackTraceElement[] stack) {
-      // Count from the bottom so nested calls in a constructor do not change its position.
+    boolean isActive(StackTraceElement[] stack, int firstActiveIndex) {
+      // Count from the bottom so nested calls do not change the constructor's position.
       int index = stack.length - 1 - depth;
-      return index >= 0
+      return index >= firstActiveIndex
           && index < stack.length
           && className.equals(stack[index].getClassName())
           && methodName.equals(stack[index].getMethodName());
@@ -81,11 +81,11 @@ public class Runtime {
             return callStack;
           });
 
-  private void discardExitedConstructors(StackTraceElement[] stack) {
+  private void discardExitedConstructors(StackTraceElement[] stack, int firstActiveIndex) {
     // A verified constructor cannot catch failure of its initializing super/this call.
     // Remove its entry once that constructor has unwound and tracing resumes.
     ArrayDeque<CallFrame> frames = callStacks.get();
-    while (frames.peek().isConstructor() && !frames.peek().isActive(stack)) {
+    while (frames.peek().isConstructor() && !frames.peek().isActive(stack, firstActiveIndex)) {
       frames.pop();
     }
   }
@@ -154,7 +154,8 @@ public class Runtime {
 
   public static void execution(String klass, String method, Object receiver) {
     StackTraceElement[] stack = new Throwable().getStackTrace();
-    runtime.discardExitedConstructors(stack);
+    // The method at stack[1] is entering now, so it cannot own an existing frame.
+    runtime.discardExitedConstructors(stack, 2);
     runtime.currentSite.remove();
     if (runtime.filter == null || !runtime.filter.test(bashToDescriptor(klass))) {
       if (runtime.output != null) {
@@ -210,7 +211,7 @@ public class Runtime {
   @SuppressWarnings("unused")
   public static void termination(String klass, String method, Object receiver, boolean exception) {
     if (runtime.callStacks.get().peek().isConstructor()) {
-      runtime.discardExitedConstructors(new Throwable().getStackTrace());
+      runtime.discardExitedConstructors(new Throwable().getStackTrace(), 1);
     }
     runtime.callStacks.get().pop();
   }
@@ -230,7 +231,7 @@ public class Runtime {
 
   public static void addToCallStack(String klass, String method, Object receiver) {
     if (runtime.callStacks.get().peek().isConstructor()) {
-      runtime.discardExitedConstructors(new Throwable().getStackTrace());
+      runtime.discardExitedConstructors(new Throwable().getStackTrace(), 1);
     }
     String callerClass =
         runtime.callStacks.get().isEmpty()

@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyFactory;
+import com.ibm.wala.shrike.cg.Runtime;
 import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -55,9 +56,69 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
 
   @TempDir private Path temporaryDirectory;
 
+  public static class ConstructorReentryProbe {
+    private static class FailsOnce {
+      FailsOnce(boolean fail) {
+        Runtime.execution(FailsOnce.class.getName(), "<init>(Z)V", Runtime.NULL_TAG);
+        if (fail) {
+          throw new IllegalStateException();
+        }
+        Runtime.termination(FailsOnce.class.getName(), "<init>(Z)V", Runtime.NULL_TAG, false);
+      }
+    }
+
+    public static void main(String[] args) {
+      Runtime.execution(
+          ConstructorReentryProbe.class.getName(), "main([Ljava/lang/String;)V", Runtime.NULL_TAG);
+      try {
+        new FailsOnce(true);
+      } catch (IllegalStateException expected) {
+        // Reenter the same constructor from the same stack depth.
+      }
+      new FailsOnce(false);
+      Runtime.termination(
+          ConstructorReentryProbe.class.getName(),
+          "main([Ljava/lang/String;)V",
+          Runtime.NULL_TAG,
+          false);
+    }
+  }
+
   @Override
   protected Path getTemporaryDirectory() {
     return temporaryDirectory;
+  }
+
+  @Test
+  public void testConstructorReentryAfterException() throws IOException, InterruptedException {
+    Process process =
+        new ProcessBuilder(
+                Path.of(
+                        System.getProperty("java.home"),
+                        "bin",
+                        PlatformUtil.onWindows() ? "java.exe" : "java")
+                    .toString(),
+                "-Xverify:all",
+                "-DdynamicCGFile=" + getDynamicCGLocation(),
+                "-cp",
+                System.getProperty("java.class.path"),
+                ConstructorReentryProbe.class.getName())
+            .redirectErrorStream(true)
+            .start();
+    String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    assertThat(process.waitFor()).as(output).isZero();
+
+    String caller = ConstructorReentryProbe.class.getName().replace('.', '/');
+    String callee = ConstructorReentryProbe.FailsOnce.class.getName().replace('.', '/');
+    String edge = caller + "\tmain([Ljava/lang/String;)V\t" + callee + "\t<init>(Z)V";
+    assertThat(traceLines()).filteredOn(edge::equals).hasSize(2);
+  }
+
+  private List<String> traceLines() throws IOException {
+    try (GZIPInputStream trace =
+        new GZIPInputStream(Files.newInputStream(getDynamicCGLocation()))) {
+      return new String(trace.readAllBytes(), StandardCharsets.UTF_8).lines().toList();
+    }
   }
 
   @Test
@@ -84,12 +145,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     instrument(subjectJar.toString());
     run("dynamicCG.ConstructorExceptionTrace", null);
 
-    List<String> lines;
-    try (GZIPInputStream trace =
-        new GZIPInputStream(Files.newInputStream(getDynamicCGLocation()))) {
-      lines = new String(trace.readAllBytes(), StandardCharsets.UTF_8).lines().toList();
-    }
-    assertThat(lines)
+    assertThat(traceLines())
         .contains(
             "dynamicCG/ConstructorExceptionTrace$FailBefore\t<init>()V\t"
                 + "dynamicCG/ConstructorExceptionTrace$FailingBase\t<init>()V",
