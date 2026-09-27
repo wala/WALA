@@ -11,6 +11,7 @@
 
 package com.ibm.wala.core.tests.callGraph;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
@@ -35,8 +36,16 @@ import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.io.TemporaryFile;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.zip.GZIPInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
@@ -49,6 +58,47 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
   @Override
   protected Path getTemporaryDirectory() {
     return temporaryDirectory;
+  }
+
+  @Test
+  public void testConstructorExceptionalExits()
+      throws IOException,
+          ClassNotFoundException,
+          InvalidClassFileException,
+          FailureException,
+          InterruptedException {
+    String classFile = "dynamicCG/ConstructorExceptionTrace";
+    Path subjectJar = temporaryDirectory.resolve("constructor-exception-trace.jar");
+    try (JarOutputStream jar = new JarOutputStream(Files.newOutputStream(subjectJar))) {
+      for (String suffix : List.of("", "$FailingBase", "$FailBefore", "$FailAfter")) {
+        String entry = classFile + suffix + ".class";
+        jar.putNextEntry(new JarEntry(entry));
+        try (InputStream in =
+            Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(entry))) {
+          in.transferTo(jar);
+        }
+        jar.closeEntry();
+      }
+    }
+
+    instrument(subjectJar.toString());
+    run("dynamicCG.ConstructorExceptionTrace", null);
+
+    List<String> lines;
+    try (GZIPInputStream trace =
+        new GZIPInputStream(Files.newInputStream(getDynamicCGLocation()))) {
+      lines = new String(trace.readAllBytes(), StandardCharsets.UTF_8).lines().toList();
+    }
+    assertThat(lines)
+        .contains(
+            "dynamicCG/ConstructorExceptionTrace$FailBefore\t<init>()V\t"
+                + "dynamicCG/ConstructorExceptionTrace$FailingBase\t<init>()V",
+            "dynamicCG/ConstructorExceptionTrace\tmain([Ljava/lang/String;)V\t"
+                + "dynamicCG/ConstructorExceptionTrace\tafterFailBefore()V",
+            "dynamicCG/ConstructorExceptionTrace\tmain([Ljava/lang/String;)V\t"
+                + "dynamicCG/ConstructorExceptionTrace\tafterFailAfter()V",
+            "dynamicCG/ConstructorExceptionTrace\tmain([Ljava/lang/String;)V\t"
+                + "dynamicCG/ConstructorExceptionTrace\tafterCaughtReturn()V");
   }
 
   @Test

@@ -58,13 +58,37 @@ public class Runtime {
   private Policy handleCallback;
   private final ThreadLocal<String> currentSite = new ThreadLocal<>();
 
-  private final ThreadLocal<ArrayDeque<String>> callStacks =
+  private record CallFrame(String name, String className, String methodName, int depth) {
+    boolean isConstructor() {
+      return "<init>".equals(methodName);
+    }
+
+    boolean isActive(StackTraceElement[] stack) {
+      // Count from the bottom so nested calls in a constructor do not change its position.
+      int index = stack.length - 1 - depth;
+      return index >= 0
+          && index < stack.length
+          && className.equals(stack[index].getClassName())
+          && methodName.equals(stack[index].getMethodName());
+    }
+  }
+
+  private final ThreadLocal<ArrayDeque<CallFrame>> callStacks =
       ThreadLocal.withInitial(
           () -> {
-            ArrayDeque<String> callStack = new ArrayDeque<>();
-            callStack.push("root");
+            ArrayDeque<CallFrame> callStack = new ArrayDeque<>();
+            callStack.push(new CallFrame("root", null, null, -1));
             return callStack;
           });
+
+  private void discardExitedConstructors(StackTraceElement[] stack) {
+    // A verified constructor cannot catch failure of its initializing super/this call.
+    // Remove its entry once that constructor has unwound and tracing resumes.
+    ArrayDeque<CallFrame> frames = callStacks.get();
+    while (frames.peek().isConstructor() && !frames.peek().isActive(stack)) {
+      frames.pop();
+    }
+  }
 
   private Runtime(String fileName, String filterFileName, String policyClassName) {
     try (final FileInputStream in = new FileInputStream(filterFileName)) {
@@ -129,17 +153,18 @@ public class Runtime {
   }
 
   public static void execution(String klass, String method, Object receiver) {
+    StackTraceElement[] stack = new Throwable().getStackTrace();
+    runtime.discardExitedConstructors(stack);
     runtime.currentSite.remove();
     if (runtime.filter == null || !runtime.filter.test(bashToDescriptor(klass))) {
       if (runtime.output != null) {
-        String caller = runtime.callStacks.get().peek();
+        String caller = runtime.callStacks.get().peek().name();
 
         //
         // check for expected caller
         //
         boolean handled = false;
         if (runtime.handleCallback != null) {
-          StackTraceElement[] stack = new Throwable().getStackTrace();
           if (stack.length > 2) {
             // frames: Runtime.execution(0), callee(1), caller(2)
             StackTraceElement callerFrame = stack[2];
@@ -171,11 +196,22 @@ public class Runtime {
       }
     }
 
-    runtime.callStacks.get().push(bashToDescriptor(klass) + '\t' + method);
+    runtime
+        .callStacks
+        .get()
+        .push(
+            new CallFrame(
+                bashToDescriptor(klass) + '\t' + method,
+                stack[1].getClassName(),
+                stack[1].getMethodName(),
+                stack.length - 2));
   }
 
   @SuppressWarnings("unused")
   public static void termination(String klass, String method, Object receiver, boolean exception) {
+    if (runtime.callStacks.get().peek().isConstructor()) {
+      runtime.discardExitedConstructors(new Throwable().getStackTrace());
+    }
     runtime.callStacks.get().pop();
   }
 
@@ -193,14 +229,17 @@ public class Runtime {
   }
 
   public static void addToCallStack(String klass, String method, Object receiver) {
+    if (runtime.callStacks.get().peek().isConstructor()) {
+      runtime.discardExitedConstructors(new Throwable().getStackTrace());
+    }
     String callerClass =
         runtime.callStacks.get().isEmpty()
             ? "BLOB"
-            : runtime.callStacks.get().peek().split("\t")[0];
+            : runtime.callStacks.get().peek().name().split("\t")[0];
     String callerMethod =
         runtime.callStacks.get().isEmpty()
             ? "BLOB"
-            : runtime.callStacks.get().peek().split("\t")[1];
+            : runtime.callStacks.get().peek().name().split("\t")[1];
     runtime.currentSite.set(
         "%s\t%s\t%s\t%s\t%s".formatted(callerClass, callerMethod, klass, method, receiver));
     //	  runtime.currentSite = klass + "\t" + method + "\t" + receiver;

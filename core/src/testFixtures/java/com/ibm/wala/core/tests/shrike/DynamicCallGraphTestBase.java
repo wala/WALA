@@ -57,6 +57,10 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
 
   protected abstract java.nio.file.Path getTemporaryDirectory();
 
+  protected java.nio.file.Path getDynamicCGLocation() {
+    return cgLocation;
+  }
+
   @BeforeEach
   protected void createTemporaryFiles() throws IOException {
     final var temporaryDirectory = getTemporaryDirectory();
@@ -117,8 +121,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
                 + instrumentedJarLocation));
     childJvm.setClassname(mainClass);
 
-    String jvmArgs =
-        "-noverify -Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
+    String jvmArgs = "-Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
     if (exclusionsFile != null) {
       File tmpFile =
           TemporaryFile.urlToFile(

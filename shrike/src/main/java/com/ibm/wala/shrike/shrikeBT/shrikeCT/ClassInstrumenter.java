@@ -30,12 +30,9 @@ import com.ibm.wala.shrike.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrike.shrikeCT.LineNumberTableWriter;
 import com.ibm.wala.shrike.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrike.shrikeCT.LocalVariableTableWriter;
-import com.ibm.wala.shrike.shrikeCT.StackMapConstants.StackMapFrame;
-import com.ibm.wala.shrike.shrikeCT.StackMapTableReader;
 import com.ibm.wala.shrike.shrikeCT.StackMapTableWriter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class provides a convenient way to instrument every method in a class. It assumes you are
@@ -432,8 +429,6 @@ public final class ClassInstrumenter {
       }
       if (oldCode.getClassReader().getMajorVersion() > 50) {
         try {
-          List<StackMapFrame> sm = StackMapTableReader.readStackMap(oldCode);
-
           String[][] varTypes = null;
           int[] newToOld = output.getNewBytecodesToOldBytecodes();
           int[][] vars = LocalVariableTableReader.makeVarMap(oldCode);
@@ -452,11 +447,10 @@ public final class ClassInstrumenter {
             }
           }
 
-          stacks = new StackMapTableWriter(w, md, output, cha, varTypes, sm);
+          stacks = new StackMapTableWriter(w, md, output, cha, varTypes);
           codeAttrCount++;
         } catch (IOException | FailureException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          throw new IllegalStateException("Failed to generate stack map table", e);
         }
       }
     }
