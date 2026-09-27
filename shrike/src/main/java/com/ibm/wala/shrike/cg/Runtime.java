@@ -165,13 +165,11 @@ public class Runtime {
   }
 
   public static void execution(String klass, String method, Object receiver) {
-    StackTraceElement[] stack = new Throwable().getStackTrace();
+    StackTraceElement[] stack = fullStackTrace();
     boolean isConstructor = "<init>".equals(stack[1].getMethodName());
-    StackTraceElement[] fullStack = null;
     if (isConstructor || runtime.callStacks.get().peek().isConstructor()) {
-      fullStack = fullStackTrace();
-      // The method at fullStack[1] is entering now, so it cannot own an existing frame.
-      runtime.discardExitedConstructors(fullStack, 2);
+      // The method at stack[1] is entering now, so it cannot own an existing frame.
+      runtime.discardExitedConstructors(stack, 2);
     }
     runtime.currentSite.remove();
     if (runtime.filter == null || !runtime.filter.test(bashToDescriptor(klass))) {
@@ -189,7 +187,9 @@ public class Runtime {
             if (!callerFrame.getMethodName().startsWith("$")) {
               if (!caller.contains(callerFrame.getMethodName())
                   || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
-                runtime.handleCallback.callback(stack, klass, method, receiver);
+                StackTraceElement[] callbackStack = new Throwable().getStackTrace();
+                runtime.handleCallback.callback(
+                    callbackStack.length > 2 ? callbackStack : stack, klass, method, receiver);
                 handled = true;
               }
             }
@@ -222,7 +222,7 @@ public class Runtime {
                 bashToDescriptor(klass) + '\t' + method,
                 stack[1].getClassName(),
                 stack[1].getMethodName(),
-                isConstructor ? fullStack.length - 2 : -1));
+                isConstructor ? stack.length - 2 : -1));
   }
 
   @SuppressWarnings("unused")

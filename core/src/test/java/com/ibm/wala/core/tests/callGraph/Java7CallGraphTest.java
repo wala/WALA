@@ -124,6 +124,35 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     }
   }
 
+  /** Exercises ordinary calls and callback detection with a one-frame Throwable trace. */
+  public static class SingleFrameTraceProbe {
+    /** Runs with {@code -XX:MaxJavaStackTraceDepth=1} in a child JVM. */
+    public static void main(String[] args) {
+      if (new Throwable().getStackTrace().length != 1) {
+        throw new AssertionError("Throwable stack trace was not capped at one frame");
+      }
+      Runtime.execution(
+          SingleFrameTraceProbe.class.getName(), "main([Ljava/lang/String;)V", Runtime.NULL_TAG);
+      target();
+      untraced();
+      Runtime.termination(
+          SingleFrameTraceProbe.class.getName(),
+          "main([Ljava/lang/String;)V",
+          Runtime.NULL_TAG,
+          false);
+    }
+
+    private static void untraced() {
+      target();
+    }
+
+    private static void target() {
+      Runtime.execution(SingleFrameTraceProbe.class.getName(), "target()V", Runtime.NULL_TAG);
+      Runtime.termination(
+          SingleFrameTraceProbe.class.getName(), "target()V", Runtime.NULL_TAG, false);
+    }
+  }
+
   @Override
   protected Path getTemporaryDirectory() {
     return temporaryDirectory;
@@ -143,6 +172,16 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     List<String> lines = runProbe(DeepConstructorProbe.class, "-XX:MaxJavaStackTraceDepth=16");
     String owner = DeepConstructorProbe.Tracked.class.getName().replace('.', '/');
     assertThat(lines).contains(owner + "\t<init>()V\t" + owner + "\tmarker()V");
+  }
+
+  @Test
+  public void testSingleFrameThrowableTrace() throws IOException, InterruptedException {
+    List<String> lines = runProbe(SingleFrameTraceProbe.class, "-XX:MaxJavaStackTraceDepth=1");
+    String owner = SingleFrameTraceProbe.class.getName().replace('.', '/');
+    assertThat(lines)
+        .contains(
+            owner + "\tmain([Ljava/lang/String;)V\t" + owner + "\ttarget()V",
+            "callbacks\t" + owner + "\ttarget()V");
   }
 
   private List<String> runProbe(Class<?> probe, String... jvmArgs)
