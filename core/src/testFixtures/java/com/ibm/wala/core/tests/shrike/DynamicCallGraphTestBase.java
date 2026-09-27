@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,6 +57,10 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   private java.nio.file.Path cgLocation;
 
   protected abstract java.nio.file.Path getTemporaryDirectory();
+
+  protected java.nio.file.Path getDynamicCGLocation() {
+    return cgLocation;
+  }
 
   @BeforeEach
   protected void createTemporaryFiles() throws IOException {
@@ -117,8 +122,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
                 + instrumentedJarLocation));
     childJvm.setClassname(mainClass);
 
-    String jvmArgs =
-        "-noverify -Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
+    String jvmArgs = "-Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
     if (exclusionsFile != null) {
       File tmpFile =
           TemporaryFile.urlToFile(
@@ -140,8 +144,13 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     childJvm.init();
     final var commandLine = childJvm.getCommandLine();
     System.err.println(commandLine);
-    Process x = Runtime.getRuntime().exec(commandLine.getCommandline(), null, new File("build"));
-    x.waitFor();
+    Process x =
+        new ProcessBuilder(commandLine.getCommandline())
+            .directory(new File("build"))
+            .redirectErrorStream(true)
+            .start();
+    String output = new String(x.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+    assertThat(x.waitFor()).as(output).isZero();
 
     assertThat(cgLocation).exists();
   }

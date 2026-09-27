@@ -12,6 +12,8 @@ package com.ibm.wala.shrike.shrikeBT.shrikeCT;
 
 import com.ibm.wala.shrike.shrikeBT.Constants;
 import com.ibm.wala.shrike.shrikeBT.MethodData;
+import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrike.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrike.shrikeBT.analysis.ClassHierarchyStore;
 import com.ibm.wala.shrike.shrikeCT.ClassReader;
 import com.ibm.wala.shrike.shrikeCT.ClassWriter;
@@ -19,6 +21,8 @@ import com.ibm.wala.shrike.shrikeCT.ClassWriter.Element;
 import com.ibm.wala.shrike.shrikeCT.CodeWriter;
 import com.ibm.wala.shrike.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrike.shrikeCT.LineNumberTableWriter;
+import com.ibm.wala.shrike.shrikeCT.StackMapTableWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -60,6 +64,20 @@ public class CTUtils {
    */
   public static void compileAndAddMethodToClassWriter(
       MethodData md, ClassWriter classWriter, ClassWriter.Element rawLines) {
+    try {
+      compileAndAddMethodToClassWriter(md, classWriter, rawLines, null);
+    } catch (FailureException | IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  /** Compile a method with stack map frames for a class file that requires them. */
+  public static void compileAndAddMethodToClassWriter(
+      MethodData md,
+      ClassWriter classWriter,
+      ClassWriter.Element rawLines,
+      ClassHierarchyProvider hierarchy)
+      throws FailureException, IOException {
     if (classWriter == null) {
       throw new IllegalArgumentException("classWriter is null");
     }
@@ -92,7 +110,15 @@ public class CTUtils {
       lines = new LineNumberTableWriter(classWriter);
       lines.setRawTable(rawTable);
     }
-    code.setAttributes(new ClassWriter.Element[] {rawLines == null ? lines : rawLines});
+    ClassWriter.Element lineNumbers = rawLines == null ? lines : rawLines;
+    if (hierarchy == null) {
+      code.setAttributes(new ClassWriter.Element[] {lineNumbers});
+    } else {
+      code.setAttributes(
+          new ClassWriter.Element[] {
+            lineNumbers, new StackMapTableWriter(classWriter, md, output, hierarchy, null)
+          });
+    }
     Element[] elements = {code};
     // System.out.println("Name:"+md.getName()+" Sig:"+md.getSignature());
     classWriter.addMethod(md.getAccess(), md.getName(), md.getSignature(), elements);
