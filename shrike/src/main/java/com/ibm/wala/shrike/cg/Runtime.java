@@ -47,6 +47,18 @@ public class Runtime {
     }
   }
 
+  private static final StackWalker stackWalker = StackWalker.getInstance();
+
+  private static StackTraceElement[] fullStackTrace() {
+    // Drop this helper's frame so Runtime.execution/termination/addToCallStack is at index 0.
+    return stackWalker.walk(
+        frames ->
+            frames
+                .skip(1)
+                .map(StackWalker.StackFrame::toStackTraceElement)
+                .toArray(StackTraceElement[]::new));
+  }
+
   private static final Runtime runtime =
       new Runtime(
           System.getProperty("dynamicCGFile"),
@@ -58,13 +70,37 @@ public class Runtime {
   private Policy handleCallback;
   private final ThreadLocal<String> currentSite = new ThreadLocal<>();
 
-  private final ThreadLocal<ArrayDeque<String>> callStacks =
+  private record CallFrame(String name, String className, String methodName, int depth) {
+    boolean isConstructor() {
+      return "<init>".equals(methodName);
+    }
+
+    boolean isActive(StackTraceElement[] stack, int firstActiveIndex) {
+      // Count from the bottom so nested calls do not change the constructor's position.
+      int index = stack.length - 1 - depth;
+      return index >= firstActiveIndex
+          && index < stack.length
+          && className.equals(stack[index].getClassName())
+          && methodName.equals(stack[index].getMethodName());
+    }
+  }
+
+  private final ThreadLocal<ArrayDeque<CallFrame>> callStacks =
       ThreadLocal.withInitial(
           () -> {
-            ArrayDeque<String> callStack = new ArrayDeque<>();
-            callStack.push("root");
+            ArrayDeque<CallFrame> callStack = new ArrayDeque<>();
+            callStack.push(new CallFrame("root", null, null, -1));
             return callStack;
           });
+
+  private void discardExitedConstructors(StackTraceElement[] stack, int firstActiveIndex) {
+    // A verified constructor cannot catch failure of its initializing super/this call.
+    // Remove its entry once that constructor has unwound and tracing resumes.
+    ArrayDeque<CallFrame> frames = callStacks.get();
+    while (frames.peek().isConstructor() && !frames.peek().isActive(stack, firstActiveIndex)) {
+      frames.pop();
+    }
+  }
 
   private Runtime(String fileName, String filterFileName, String policyClassName) {
     try (final FileInputStream in = new FileInputStream(filterFileName)) {
@@ -129,24 +165,31 @@ public class Runtime {
   }
 
   public static void execution(String klass, String method, Object receiver) {
+    StackTraceElement[] stack = fullStackTrace();
+    boolean isConstructor = "<init>".equals(stack[1].getMethodName());
+    if (isConstructor || runtime.callStacks.get().peek().isConstructor()) {
+      // The method at stack[1] is entering now, so it cannot own an existing frame.
+      runtime.discardExitedConstructors(stack, 2);
+    }
     runtime.currentSite.remove();
     if (runtime.filter == null || !runtime.filter.test(bashToDescriptor(klass))) {
       if (runtime.output != null) {
-        String caller = runtime.callStacks.get().peek();
+        String caller = runtime.callStacks.get().peek().name();
 
         //
         // check for expected caller
         //
         boolean handled = false;
         if (runtime.handleCallback != null) {
-          StackTraceElement[] stack = new Throwable().getStackTrace();
           if (stack.length > 2) {
             // frames: Runtime.execution(0), callee(1), caller(2)
             StackTraceElement callerFrame = stack[2];
             if (!callerFrame.getMethodName().startsWith("$")) {
               if (!caller.contains(callerFrame.getMethodName())
                   || !caller.contains(bashToDescriptor(callerFrame.getClassName()))) {
-                runtime.handleCallback.callback(stack, klass, method, receiver);
+                StackTraceElement[] callbackStack = new Throwable().getStackTrace();
+                runtime.handleCallback.callback(
+                    callbackStack.length > 2 ? callbackStack : stack, klass, method, receiver);
                 handled = true;
               }
             }
@@ -171,11 +214,22 @@ public class Runtime {
       }
     }
 
-    runtime.callStacks.get().push(bashToDescriptor(klass) + '\t' + method);
+    runtime
+        .callStacks
+        .get()
+        .push(
+            new CallFrame(
+                bashToDescriptor(klass) + '\t' + method,
+                stack[1].getClassName(),
+                stack[1].getMethodName(),
+                isConstructor ? stack.length - 2 : -1));
   }
 
   @SuppressWarnings("unused")
   public static void termination(String klass, String method, Object receiver, boolean exception) {
+    if (runtime.callStacks.get().peek().isConstructor()) {
+      runtime.discardExitedConstructors(fullStackTrace(), 1);
+    }
     runtime.callStacks.get().pop();
   }
 
@@ -193,14 +247,17 @@ public class Runtime {
   }
 
   public static void addToCallStack(String klass, String method, Object receiver) {
+    if (runtime.callStacks.get().peek().isConstructor()) {
+      runtime.discardExitedConstructors(fullStackTrace(), 1);
+    }
     String callerClass =
         runtime.callStacks.get().isEmpty()
             ? "BLOB"
-            : runtime.callStacks.get().peek().split("\t")[0];
+            : runtime.callStacks.get().peek().name().split("\t")[0];
     String callerMethod =
         runtime.callStacks.get().isEmpty()
             ? "BLOB"
-            : runtime.callStacks.get().peek().split("\t")[1];
+            : runtime.callStacks.get().peek().name().split("\t")[1];
     runtime.currentSite.set(
         "%s\t%s\t%s\t%s\t%s".formatted(callerClass, callerMethod, klass, method, receiver));
     //	  runtime.currentSite = klass + "\t" + method + "\t" + receiver;

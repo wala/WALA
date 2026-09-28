@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.shrike.cg;
 
+import com.ibm.wala.shrike.shrikeBT.AnalysisResult;
 import com.ibm.wala.shrike.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrike.shrikeBT.Constants;
 import com.ibm.wala.shrike.shrikeBT.Disassembler;
@@ -25,6 +26,7 @@ import com.ibm.wala.shrike.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrike.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrike.shrikeBT.Util;
 import com.ibm.wala.shrike.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrike.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrike.shrikeBT.analysis.ClassHierarchyStore;
 import com.ibm.wala.shrike.shrikeBT.analysis.Verifier;
 import com.ibm.wala.shrike.shrikeBT.shrikeCT.CTUtils;
@@ -107,13 +109,75 @@ public class OfflineDynamicCallGraph {
   private static boolean patchCalls = true;
   private static final boolean extractCalls = true;
   private static boolean extractDynamicCalls = false;
-  private static boolean extractConstructors = true;
 
   private static Class<?> runtime = Runtime.class;
 
   private static StringFilter filter;
 
   private static final ClassHierarchyStore cha = new ClassHierarchyStore();
+
+  // Input JARs contain application classes, but stack map computation also needs the hierarchy
+  // of JDK classes used by those methods (for example, IOException and Throwable).
+  private static final ClassHierarchyProvider hierarchy =
+      new ClassHierarchyProvider() {
+        private Class<?> runtimeClass(String type) {
+          if (!type.startsWith("L") || !type.endsWith(";")) {
+            return null;
+          }
+          try {
+            return Class.forName(
+                type.substring(1, type.length() - 1).replace('/', '.'),
+                false,
+                ClassLoader.getPlatformClassLoader());
+          } catch (ClassNotFoundException | LinkageError e) {
+            return null;
+          }
+        }
+
+        private String typeName(Class<?> type) {
+          return 'L' + type.getName().replace('.', '/') + ';';
+        }
+
+        @Override
+        public String getSuperClass(String type) {
+          if (cha.containsClass(type)) {
+            return cha.getSuperClass(type);
+          }
+          Class<?> runtime = runtimeClass(type);
+          return runtime == null || runtime.getSuperclass() == null
+              ? null
+              : typeName(runtime.getSuperclass());
+        }
+
+        @Override
+        public String[] getSuperInterfaces(String type) {
+          if (cha.containsClass(type)) {
+            return cha.getSuperInterfaces(type);
+          }
+          Class<?> runtime = runtimeClass(type);
+          return runtime == null
+              ? null
+              : java.util.Arrays.stream(runtime.getInterfaces())
+                  .map(this::typeName)
+                  .toArray(String[]::new);
+        }
+
+        @Override
+        public String[] getSubClasses(String type) {
+          return cha.containsClass(type) ? cha.getSubClasses(type) : null;
+        }
+
+        @Override
+        public AnalysisResult isInterface(String type) {
+          if (cha.containsClass(type)) {
+            return cha.isInterface(type);
+          }
+          Class<?> runtime = runtimeClass(type);
+          return runtime == null
+              ? AnalysisResult.MAYBE
+              : runtime.isInterface() ? AnalysisResult.YES : AnalysisResult.NO;
+        }
+      };
 
   public static void main(String[] args)
       throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
@@ -134,8 +198,6 @@ public class OfflineDynamicCallGraph {
           patchCalls = true;
         } else if ("--extract-dynamic-calls".equals(args[i])) {
           extractDynamicCalls = true;
-        } else if ("--extract-constructors".equals(args[i])) {
-          extractConstructors = true;
         } else if ("--rt-jar".equals(args[i])) {
           System.err.println("using " + args[i + 1] + " as stdlib");
           OfflineInstrumenter libReader = new OfflineInstrumenter();
@@ -156,7 +218,7 @@ public class OfflineDynamicCallGraph {
         CTUtils.addClassToHierarchy(cha, ci.getReader());
       }
 
-      instrumenter.setClassHierarchyProvider(cha);
+      instrumenter.setClassHierarchyProvider(hierarchy);
 
       instrumenter.beginTraversal();
       while ((ci = instrumenter.nextClass()) != null) {
@@ -209,7 +271,6 @@ public class OfflineDynamicCallGraph {
 
         if (verify) {
           Verifier v = new Verifier(d);
-          // v.setClassHierarchy(cha);
           v.verify();
         }
 
@@ -222,27 +283,27 @@ public class OfflineDynamicCallGraph {
         final boolean nonStatic = !java.lang.reflect.Modifier.isStatic(r.getMethodAccessFlags(m));
 
         if (patchExits) {
-          me.addMethodExceptionHandler(
-              null,
-              new MethodEditor.Patch() {
-                @Override
-                public void emitTo(Output w) {
-                  w.emit(ConstantInstruction.makeString(theClass));
-                  w.emit(ConstantInstruction.makeString(theMethod));
-                  // if (nonStatic)
-                  //  w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-                  // else
-                  w.emit(Util.makeGet(runtime, "NULL_TAG"));
-                  // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-                  w.emit(ConstantInstruction.make(1)); // true
-                  w.emit(
-                      Util.makeInvoke(
-                          runtime,
-                          "termination",
-                          new Class[] {String.class, String.class, Object.class, boolean.class}));
-                  w.emit(ThrowInstruction.make(false));
-                }
-              });
+          // A handler spanning the super/this call cannot have a valid stack map frame:
+          // local 0 changes from uninitializedThis to the initialized class type.
+          if (!isConstructor) {
+            me.addMethodExceptionHandler(
+                null,
+                new MethodEditor.Patch() {
+                  @Override
+                  public void emitTo(Output w) {
+                    w.emit(ConstantInstruction.makeString(theClass));
+                    w.emit(ConstantInstruction.makeString(theMethod));
+                    w.emit(Util.makeGet(runtime, "NULL_TAG"));
+                    w.emit(ConstantInstruction.make(1)); // true
+                    w.emit(
+                        Util.makeInvoke(
+                            runtime,
+                            "termination",
+                            new Class[] {String.class, String.class, Object.class, boolean.class}));
+                    w.emit(ThrowInstruction.make(false));
+                  }
+                });
+          }
 
           me.visitInstructions(
               new MethodEditor.Visitor() {
@@ -278,7 +339,13 @@ public class OfflineDynamicCallGraph {
                 new AddTracingToInvokes() {
                   @Override
                   public void visitInvoke(final IInvokeInstruction inv) {
-                    if ((!extractConstructors && inv.getMethodName().equals("<init>"))
+                    // A constructor's super/this call can still have an uninitialized receiver.
+                    // Its method entry records the edge without a call-site handler here.
+                    if (isConstructor && inv.getMethodName().equals("<init>")) {
+                      return;
+                    }
+                    // An uninitialized receiver cannot be passed to a static trampoline.
+                    if (inv.getMethodName().equals("<init>")
                         || (r.getAccessFlags() & Constants.ACC_INTERFACE) != 0
                         || (!extractDynamicCalls && inv instanceof InvokeDynamicInstruction)) {
                       super.visitInvoke(inv);
@@ -287,12 +354,16 @@ public class OfflineDynamicCallGraph {
                           new MethodEditor.Patch() {
                             @Override
                             public void emitTo(final Output w) {
+                              // An invokespecial receiver must be assignable to the class that
+                              // contains the trampoline, even when the target is a superclass.
+                              final String receiverType =
+                                  inv.getInvocationCode() == Dispatch.SPECIAL
+                                      ? 'L' + theClass + ';'
+                                      : inv.getClassType();
                               final String methodSignature =
                                   inv.getInvocationCode().hasImplicitThis()
                                           && !(inv instanceof InvokeDynamicInstruction)
-                                      ? '('
-                                          + inv.getClassType()
-                                          + inv.getMethodSignature().substring(1)
+                                      ? '(' + receiverType + inv.getMethodSignature().substring(1)
                                       : inv.getMethodSignature();
                               Object key;
                               if (inv instanceof InvokeDynamicInstruction) {
@@ -300,8 +371,10 @@ public class OfflineDynamicCallGraph {
                               } else {
                                 key =
                                     Pair.make(
-                                        inv.getClassType(),
-                                        Pair.make(inv.getMethodName(), methodSignature));
+                                        inv.getInvocationCode(),
+                                        Pair.make(
+                                            inv.getClassType(),
+                                            Pair.make(inv.getMethodName(), methodSignature)));
                               }
 
                               if (!methods.containsKey(key)) {
@@ -427,7 +500,7 @@ public class OfflineDynamicCallGraph {
           w.flush();
         }
 
-        if (verify && !extractConstructors) {
+        if (verify) {
           Verifier v = new Verifier(d);
           // v.setClassHierarchy(cha);
           v.verify();
@@ -480,7 +553,11 @@ public class OfflineDynamicCallGraph {
 
       if (patchCalls && extractCalls) {
         for (MethodData trampoline : methods.values()) {
-          CTUtils.compileAndAddMethodToClassWriter(trampoline, cw, null);
+          if (r.getMajorVersion() > 50) {
+            CTUtils.compileAndAddMethodToClassWriter(trampoline, cw, null, hierarchy);
+          } else {
+            CTUtils.compileAndAddMethodToClassWriter(trampoline, cw, null);
+          }
         }
       }
 
