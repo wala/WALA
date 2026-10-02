@@ -28,7 +28,7 @@ jobs:
           - os: ubuntu-latest
             java: 25
           - os: ubuntu-latest
-            java: 26
+            java: 27
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
@@ -39,13 +39,13 @@ jobs:
       - name: 'Set up JDKs'
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
-          # Install all the JDK versions we use in the matrix.  We do JDK 26 last to use that
+          # Install all the JDK versions we use in the matrix.  We do JDK 27 last to use that
           # to run Gradle.
           java-version: |
             17
             21
             25
-            26
+            27
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
@@ -100,7 +100,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'wala/WALA' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
-      JDK_VERSION: 26
+      JDK_VERSION: 27
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
