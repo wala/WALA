@@ -74,21 +74,26 @@ public class Logs {
     return Assertions.UNREACHABLE();
   }
 
-  /** Binary log: finds the smallest power k such that 2^k &gt;= n */
+  /**
+   * Binary log: finds the smallest power k such that 2^k >= n
+   *
+   * <p>Written as a closed form rather than a loop. The obvious loop, {@code while ((1 << k) < n)},
+   * does not terminate once n exceeds 2^30: a shift distance of 32 or more is taken modulo 32, so
+   * {@code 1 << 32} is 1 again and the loop cycles forever. The guard covers n &lt;= 1, where n - 1
+   * is 0 or negative and would carry the wrong number of leading zeros.
+   */
   public static int binaryLogUp(int n) {
-    int k = 0;
-    while ((1 << k) < n) {
-      k++;
-    }
-    return k;
+    return n <= 1 ? 0 : Integer.SIZE - Integer.numberOfLeadingZeros(n - 1);
   }
 
-  /** Binary log: finds the smallest power k such that 2^k &gt;= n */
+  /**
+   * Binary log: finds the smallest power k such that 2^k >= n
+   *
+   * <p>The same closed form as {@linkplain #binaryLogUp(int) the int overload}, and for the same
+   * reason: {@code 1L << k} repeats with a period of 64 once k reaches 64, so a loop written that
+   * way never terminates for n > 2^62.
+   */
   public static int binaryLogUp(long n) {
-    int k = 0;
-    while ((1L << k) < n) {
-      k++;
-    }
-    return k;
+    return n <= 1 ? 0 : Long.SIZE - Long.numberOfLeadingZeros(n - 1);
   }
 }
