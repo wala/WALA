@@ -52,16 +52,10 @@ public class Bits {
     return (val == 0 || val == -1);
   }
 
-  /**
-   * Return the number of ones in the binary representation of an integer. Hank Warren's Hacker's
-   * Delight algorithm
-   */
+  /** Return the number of ones in the binary representation of an integer. */
   public static int populationCount(int value) {
-    int result = ((value & 0xAAAAAAAA) >>> 1) + (value & 0x55555555);
-    result = ((result & 0xCCCCCCCC) >>> 2) + (result & 0x33333333);
-    result = ((result & 0xF0F0F0F0) >>> 4) + (result & 0x0F0F0F0F);
-    result = ((result & 0xFF00FF00) >>> 8) + (result & 0x00FF00FF);
-    result = ((result & 0xFFFF0000) >>> 16) + (result & 0x0000FFFF);
-    return result;
+    // `Integer.bitCount` JIT-optimizes to a single instruction on x86-64. That outperforms clever
+    // bit-twiddling such as Hank Warren's Hacker's Delight SWAR sequence.
+    return Integer.bitCount(value);
   }
 }
