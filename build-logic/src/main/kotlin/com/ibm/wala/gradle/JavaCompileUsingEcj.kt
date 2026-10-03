@@ -16,7 +16,6 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.assign
-import org.gradle.kotlin.dsl.named
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.ExecOperations
 import org.gradle.work.InputChanges
@@ -82,11 +81,10 @@ abstract class JavaCompileUsingEcj : JavaCompile() {
   }
 
   fun setSourceSet(sourceSet: SourceSet) {
-    // Imitate most of the behavior of the standard compilation task for the given sourceSet.
-    val standardCompileTaskName = sourceSet.getCompileTaskName("java")
-    val standardCompileTask = project.tasks.named<JavaCompile>(standardCompileTaskName).get()
-    classpath = standardCompileTask.classpath
-    source = standardCompileTask.source
+    // Imitate most of the behavior of the standard compilation task for the given sourceSet,
+    // without realizing the sibling task (which would defeat configuration avoidance).
+    classpath = sourceSet.compileClasspath
+    source(sourceSet.java)
 
     // However, put generated class files in a different build directory to avoid conflict.
     val destinationSubdir = "ecjClasses/${sourceSet.java.name}/${sourceSet.name}"

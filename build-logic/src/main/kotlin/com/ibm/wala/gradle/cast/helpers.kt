@@ -78,8 +78,14 @@ fun CppBinary.addJvmLibrary(project: Project) {
  */
 fun Provider<out AbstractLinkTask>.addRpaths() {
   configure {
-    if (!targetPlatform.get().operatingSystem.isWindows) {
-      linkerArgs.addAll(project.provider { libs.map { "-Wl,-rpath,${it.parentFile}" } })
-    }
+    linkerArgs.addAll(
+        project.provider {
+          if (!targetPlatform.get().operatingSystem.isWindows) {
+            libs.map { "-Wl,-rpath,${it.parentFile}" }
+          } else {
+            emptyList()
+          }
+        }
+    )
   }
 }
