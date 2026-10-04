@@ -33,7 +33,7 @@ dependencies {
 val createPackageList =
     tasks.register<CreatePackageList>("createPackageList") {
       description = "Generate package list for Javadoc cross-reference"
-      sourceSet(sourceSets.main.get())
+      sourceRoots.from(sourceSets.main.map { it.java.srcDirs })
     }
 
 val packageListDirectory =

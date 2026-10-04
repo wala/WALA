@@ -13,10 +13,13 @@ tasks.withType<Javadoc>().configureEach {
   with(options as StandardJavadocDocletOptions) {
     addBooleanOption("Xdoclint:all,-missing", true)
     encoding = "UTF-8"
-    links(
-        "https://docs.oracle.com/en/java/javase/${javadocTool.get().metadata.languageVersion}/docs/api/"
-    )
     quiet()
     tags!!.add("apiNote:a:API Note:")
   }
+
+  val javadocLink =
+      javadocTool.map {
+        "https://docs.oracle.com/en/java/javase/${it.metadata.languageVersion}/docs/api/"
+      }
+  doFirst { with(options as StandardJavadocDocletOptions) { links(javadocLink.get()) } }
 }

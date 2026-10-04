@@ -1,49 +1,61 @@
 package com.ibm.wala.gradle
 
-import java.io.File
-import java.nio.file.Path
-import java.util.*
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.CacheableTask
-import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.IgnoreEmptyDirectories
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 
 /** Create a Javadoc-style `package-list` file. */
 @CacheableTask
-open class CreatePackageList : DefaultTask() {
+abstract class CreatePackageList : DefaultTask() {
 
-  @get:OutputDirectory
-  val packageListDirectory: DirectoryProperty =
-      project.objects.directoryProperty().convention(project.layout.buildDirectory.dir(name))
+  /**
+   * The directory containing the `package-list` file to write. Defaults to this task's build
+   * directory.
+   */
+  @get:OutputDirectory abstract val packageListDirectory: DirectoryProperty
 
-  private var sourceFileSubdirectories: SortedSet<Path>? = null
+  /**
+   * Java source roots to scan for packages. Wired as a lazy file collection, so nothing is resolved
+   * at configuration time.
+   */
+  @get:IgnoreEmptyDirectories
+  @get:InputFiles
+  @get:PathSensitive(PathSensitivity.RELATIVE)
+  abstract val sourceRoots: ConfigurableFileCollection
 
-  /** Serializable representation of subdirs suitable for cache indexing. */
-  @Input fun getSourceFileSubdirectories() = sourceFileSubdirectories!!.map(Path::toString)
-
-  fun sourceSet(sourceSet: SourceSet) {
-    // gather source subdirs relative to each source root
-    sourceFileSubdirectories =
-        sourceSet.java.srcDirTrees
-            .asSequence()
-            .flatMap { sourceDirectoryTree ->
-              val sourceRoot = sourceDirectoryTree.dir.toPath()
-              project.files(sourceDirectoryTree).map { source ->
-                val javaSourceFilePath = source.toPath()
-                val parentPath = javaSourceFilePath.parent
-                sourceRoot.relativize(parentPath)
-              }
-            }
-            .toSortedSet()
+  init {
+    packageListDirectory.convention(project.layout.buildDirectory.dir(name))
   }
 
+  /**
+   * Generates a Javadoc-style `package-list` file containing the fully qualified names of all
+   * packages found within the configured source roots. Scans each root directory for Java source
+   * files, extracts their parent directory paths as dot-separated package names, deduplicates and
+   * sorts them alphabetically, and writes the result to the output `package-list` file.
+   */
   @TaskAction
-  fun create() =
-      // relative subdirs as dot-delimited qualified Java package names, one per line
-      packageListDirectory.get().file("package-list").asFile.printWriter().use { out ->
-        getSourceFileSubdirectories().forEach { out.println(it.replace(File.separator, ".")) }
-      }
+  fun create() {
+    packageListDirectory.get().file("package-list").asFile.printWriter().use { out ->
+      sourceRoots.files
+          .asSequence()
+          .flatMap { root ->
+            root
+                .walkTopDown()
+                .filter { it.isFile && it.extension == "java" }
+                .map { it.parentFile.relativeTo(root).invariantSeparatorsPath }
+                .filter { it.isNotEmpty() }
+          }
+          .map { it.replace('/', '.') }
+          .distinct()
+          .sorted()
+          .forEach(out::println)
+    }
+  }
 }
