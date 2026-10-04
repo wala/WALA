@@ -309,6 +309,46 @@ avoiding `~/.m2`, each WALA-based project can be its own composite
 build, with its own WALA subtree, and no project interferes with any
 other.
 
+##### Consuming WALA Test Fixtures from a Composite Build
+
+WALA publishes test fixtures as a separate variant (a
+`test-fixtures` classifier JAR for Maven consumers).  A composite
+consumer selects them with `testFixtures(…)` rather than a plain
+`implementation(…)` dependency, which sees only the main classes:
+
+```kotlin
+// settings.gradle.kts
+includeBuild("/path/to/wala") {
+  dependencySubstitution {
+    // WALA subprojects publish as com.ibm.wala:com.ibm.wala.<name>,
+    // but their project group is `wala`, so automatic substitution
+    // does not kick in and the mapping must be spelled out.
+    substitute(module("com.ibm.wala:com.ibm.wala.core")).using(project(":core"))
+  }
+}
+```
+
+```kotlin
+// app/build.gradle.kts
+dependencies {
+  // Managed versions come from the JUnit BOM; without the platform
+  // line below, fixture dependencies resolve version-less and fail.
+  testImplementation(platform("org.junit:junit-bom:6.1.0"))
+  testImplementation(testFixtures("com.ibm.wala:com.ibm.wala.core:1.9.0-SNAPSHOT"))
+}
+```
+
+Maven consumers use the equivalent classifier coordinate instead:
+
+```xml
+<dependency>
+  <groupId>com.ibm.wala</groupId>
+  <artifactId>com.ibm.wala.core</artifactId>
+  <version>1.9.0-SNAPSHOT</version>
+  <classifier>test-fixtures</classifier>
+</dependency>
+```
+
 <!--
 LocalWords:  processTestResources pre classpath gradlew mvn
 LocalWords:  javadoc buildship issuecomment
