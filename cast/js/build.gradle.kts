@@ -1,6 +1,14 @@
 import com.ibm.wala.gradle.CreatePackageList
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.DOCUMENTATION
+import org.gradle.api.attributes.Category.LIBRARY
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.DocsType.DOCS_TYPE_ATTRIBUTE
+import org.gradle.api.attributes.DocsType.JAVADOC
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
+import org.gradle.api.attributes.LibraryElements.RESOURCES
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -37,10 +45,22 @@ val createPackageList =
     }
 
 val packageListDirectory =
-    configurations.register("packageListDirectory") { isCanBeResolved = false }
+    configurations.register("packageListDirectory") {
+      isCanBeResolved = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES))
+      }
+    }
 
 val javadocDestinationDirectory =
-    configurations.register("javadocDestinationDirectory") { isCanBeResolved = false }
+    configurations.register("javadocDestinationDirectory") {
+      isCanBeResolved = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(DOCUMENTATION))
+        attribute(DOCS_TYPE_ATTRIBUTE, named(JAVADOC))
+      }
+    }
 
 tasks.named<Test>("test") { maxHeapSize = "800M" }
 
@@ -65,7 +85,14 @@ val unpackAjaxslt =
 val processTestResources =
     tasks.named<Copy>("processTestResources") { from(unpackAjaxslt) { into("ajaxslt") } }
 
-val testResources = configurations.register("testResources") { isCanBeResolved = false }
+val testResources =
+    configurations.register("testResources") {
+      isCanBeResolved = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES))
+      }
+    }
 
 artifacts {
   add(javadocDestinationDirectory.name, tasks.javadoc)

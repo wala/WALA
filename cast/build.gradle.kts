@@ -1,3 +1,11 @@
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.DOCUMENTATION
+import org.gradle.api.attributes.Category.LIBRARY
+import org.gradle.api.attributes.DocsType.DOCS_TYPE_ATTRIBUTE
+import org.gradle.api.attributes.DocsType.JAVADOC
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
+import org.gradle.api.attributes.LibraryElements.RESOURCES
+import org.gradle.api.attributes.Usage.C_PLUS_PLUS_API
 import org.gradle.api.attributes.Usage.NATIVE_RUNTIME
 import org.gradle.api.attributes.Usage.USAGE_ATTRIBUTE
 import org.gradle.language.cpp.CppBinary.OPTIMIZED_ATTRIBUTE
@@ -20,10 +28,22 @@ val castCastSharedLibrary =
     }
 
 val castJsJavadocDestinationDirectory =
-    configurations.register("castJsJavadocDestinationDirectory") { isCanBeConsumed = false }
+    configurations.register("castJsJavadocDestinationDirectory") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(DOCUMENTATION))
+        attribute(DOCS_TYPE_ATTRIBUTE, named(JAVADOC))
+      }
+    }
 
 val castJsPackageListDirectory =
-    configurations.register("castJsPackageListDirectory") { isCanBeConsumed = false }
+    configurations.register("castJsPackageListDirectory") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES))
+      }
+    }
 
 val xlatorTestSharedLibrary =
     configurations.register("xlatorTestSharedLibrary") {
@@ -44,9 +64,9 @@ dependencies {
   api(projects.shrike)
   api(projects.util)
   implementation(libs.commons.io)
-  castJsJavadocDestinationDirectory(project(":cast:js", "javadocDestinationDirectory"))
+  castJsJavadocDestinationDirectory(project(":cast:js"))
   castCastSharedLibrary(projects.cast.cast)
-  castJsPackageListDirectory(project(":cast:js", "packageListDirectory"))
+  castJsPackageListDirectory(project(":cast:js"))
   javadocClasspath(projects.cast.js)
   testFixturesApi(libs.junit.jupiter.api)
   testFixturesApi(projects.core)
@@ -59,7 +79,14 @@ dependencies {
   xlatorTestSharedLibrary(projects.cast.xlatorTest)
 }
 
-val castHeaderDirectory = configurations.register("castHeaderDirectory") { isCanBeResolved = false }
+val castHeaderDirectory =
+    configurations.register("castHeaderDirectory") {
+      isCanBeResolved = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(USAGE_ATTRIBUTE, named(C_PLUS_PLUS_API))
+      }
+    }
 
 artifacts.add(
     castHeaderDirectory.name,

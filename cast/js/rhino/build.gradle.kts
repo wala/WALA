@@ -1,3 +1,7 @@
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
+import org.gradle.api.attributes.LibraryElements.RESOURCES
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
@@ -5,10 +9,17 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
+val extraTestResources =
+    configurations.register("extraTestResources") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES))
+      }
+    }
 
 dependencies {
-  extraTestResources(project(":cast:js", "testResources"))
+  extraTestResources(project(":cast:js"))
   api(libs.jspecify)
   api(libs.rhino)
   api(projects.cast)

@@ -1,4 +1,8 @@
 import com.ibm.wala.gradle.logToFile
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.DOCUMENTATION
+import org.gradle.api.attributes.DocsType.DOCS_TYPE_ATTRIBUTE
+import org.gradle.api.attributes.DocsType.SOURCES
 
 plugins {
   application
@@ -12,7 +16,14 @@ walaEclipseMavenCentral.implementation(
     "org.eclipse.jdt.core",
 )
 
-val runSourceDirectory = configurations.register("runSourceDirectory") { isCanBeConsumed = false }
+val runSourceDirectory =
+    configurations.register("runSourceDirectory") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(DOCUMENTATION))
+        attribute(DOCS_TYPE_ATTRIBUTE, named(SOURCES))
+      }
+    }
 
 dependencies {
   api(libs.jspecify)
@@ -22,7 +33,7 @@ dependencies {
   implementation(projects.core)
   implementation(projects.shrike)
   implementation(projects.util)
-  runSourceDirectory(project(":cast:java:test:data", "testJavaSourceDirectory"))
+  runSourceDirectory(project(":cast:java:test:data"))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
