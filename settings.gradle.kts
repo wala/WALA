@@ -6,6 +6,8 @@ pluginManagement {
       settings.rootDir.resolve("foojay-resolver-convention-version.txt").readText().trim()
 }
 
+// Version catalog from `libs.versions.toml`is unavailable in a settings `buildscript` block:
+// <https://github.com/gradle/gradle/issues/36437>.
 buildscript { dependencies.classpath("com.diffplug.spotless:spotless-lib-extra:4.6.1") }
 
 plugins {
