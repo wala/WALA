@@ -18,8 +18,6 @@ import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.VerificationType.MAIN_SOURCES
 import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
-buildscript { dependencies.classpath(libs.commons.io) }
-
 plugins {
   idea
   java
