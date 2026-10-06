@@ -9,8 +9,6 @@ import com.ibm.wala.gradle.forEachJavaProject
 import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion.VERSION_21
 
-buildscript { dependencies.classpath(libs.commons.io) }
-
 plugins {
   idea
   java
