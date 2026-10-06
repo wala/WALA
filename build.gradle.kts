@@ -30,12 +30,8 @@ plugins {
   id("com.ibm.wala.gradle.check-git-cleanliness")
   id("com.ibm.wala.gradle.eclipse-maven-central")
   id("com.ibm.wala.gradle.javadoc")
-  id("com.ibm.wala.gradle.maven-eclipse-jsdt")
   id("com.ibm.wala.gradle.project")
 }
-
-// to get the google-java-format jar and dependencies
-repositories.mavenCentral()
 
 JavaVersion.current().let {
   val minimumRequired = VERSION_21
