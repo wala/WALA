@@ -20,12 +20,6 @@ plugins {
 
 jacoco.toolVersion = "0.8.15"
 
-repositories {
-  mavenCentral()
-  // to get r8
-  maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
-}
-
 java.toolchain {
   languageVersion = JavaLanguageVersion.of(property("com.ibm.wala.jdk-version") as String)
 }

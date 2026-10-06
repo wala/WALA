@@ -7,7 +7,12 @@ plugins {
   id("com.diffplug.spotless")
 }
 
-repositories.mavenCentral()
+repositories {
+  mavenCentral()
+  maven("https://artifacts.alfresco.com/nexus/content/repositories/public/").content {
+    includeGroup("org.eclipse.wst.jsdt")
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////
 //

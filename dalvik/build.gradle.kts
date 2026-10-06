@@ -109,6 +109,10 @@ val installAndroidSdk =
 
 eclipse { synchronizationTasks(installAndroidSdk) }
 
+repositories.maven("https://storage.googleapis.com/r8-releases/raw").content {
+  includeGroup("com.android.tools")
+}
+
 dependencies {
   api(libs.dexlib2)
   api(libs.jspecify)
