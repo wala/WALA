@@ -1,5 +1,14 @@
 import com.ibm.wala.gradle.adHocDownload
 import net.ltgt.gradle.errorprone.errorprone
+import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
+import org.gradle.api.attributes.Bundling.EXTERNAL
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.DOCUMENTATION
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.DocsType.DOCS_TYPE_ATTRIBUTE
+import org.gradle.api.attributes.DocsType.SOURCES
+import org.gradle.api.attributes.LibraryElements.JAR
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -26,10 +35,25 @@ val testJar =
       from(compileTestSubjectsJava)
     }
 
-val testJarConfig = configurations.register("testJarConfig") { isCanBeResolved = false }
+val testJarConfig =
+    configurations.register("testJarConfig") {
+      isCanBeResolved = false
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EXTERNAL))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 val testJavaSourceDirectory =
-    configurations.register("testJavaSourceDirectory") { isCanBeResolved = false }
+    configurations.register("testJavaSourceDirectory") {
+      isCanBeResolved = false
+      // Java sources as analysis inputs, typed per Gradle's own sourcesElements convention.
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(DOCUMENTATION))
+        attribute(DOCS_TYPE_ATTRIBUTE, named(SOURCES))
+      }
+    }
 
 val testSubjects = sourceSets.named("testSubjects")
 

@@ -8,6 +8,15 @@ import com.github.gradle.node.npm.task.NpxTask
 import com.ibm.wala.gradle.forEachJavaProject
 import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion.VERSION_21
+import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
+import org.gradle.api.attributes.Bundling.EXTERNAL
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.LIBRARY
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.LibraryElements.JAR
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
+import org.gradle.api.attributes.VerificationType.MAIN_SOURCES
+import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
 buildscript { dependencies.classpath(libs.commons.io) }
 
@@ -58,13 +67,35 @@ version = property("VERSION_NAME") as String
 //
 
 val aggregatedJavadocClasspathExtras =
-    configurations.register("aggregatedJavadocClasspathExtras") { isCanBeConsumed = false }
+    configurations.register("aggregatedJavadocClasspathExtras") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 val aggregatedJavadocRuntimeElements =
-    configurations.register("aggregatedJavadocRuntimeElements") { isCanBeConsumed = false }
+    configurations.register("aggregatedJavadocRuntimeElements") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 val aggregatedJavadocSource =
-    configurations.register("aggregatedJavadocSource") { isCanBeConsumed = false }
+    configurations.register("aggregatedJavadocSource") {
+      isCanBeConsumed = false
+      // Source dirs only: transitive dependencies would inherit these attributes and fail
+      // against external modules, which declare no verification variants.
+      isTransitive = false
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EXTERNAL))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(VERIFICATION_TYPE_ATTRIBUTE, named(MAIN_SOURCES))
+      }
+    }
 
 dependencies {
   // Some `compileOnly` dependencies are needed during Javadoc generation but are not included in

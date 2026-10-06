@@ -1,3 +1,10 @@
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.LIBRARY
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.LibraryElements.CLASSES
+import org.gradle.api.attributes.LibraryElements.JAR
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
+import org.gradle.api.attributes.LibraryElements.RESOURCES
 import org.gradle.api.attributes.VerificationType.MAIN_SOURCES
 import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
@@ -25,9 +32,20 @@ val coreTestDataJar =
     configurations.register("coreTestDataJar") {
       isCanBeConsumed = false
       isTransitive = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
     }
 
-val coreTestResources = configurations.register("coreTestResources") { isCanBeConsumed = false }
+val coreTestResources =
+    configurations.register("coreTestResources") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES))
+      }
+    }
 
 val coreMainSource =
     configurations.register("coreMainSource") {
@@ -39,13 +57,19 @@ val ifdsExplorerExampleClasspath =
     configurations.register("ifdsExplorerExampleClasspath") {
       isCanBeConsumed = false
       isTransitive = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(CLASSES))
+      }
     }
 
 dependencies {
   coreMainSource(project(":core"))
   coreTestDataJar(projects.core)
-  coreTestResources(project(":core", "testResources"))
+  coreTestResources(project(":core"))
   ifdsExplorerExampleClasspath(sourceSets.test.map { it.runtimeClasspath })
+  // Keeps its explicit configuration name: this merges plain files with a project variant,
+  // which no single attribute request can express.
   ifdsExplorerExampleClasspath(project(":core", "collectTestDataJar"))
   testFixturesImplementation(libs.assertj.core)
   testFixturesImplementation(libs.eclipse.osgi)

@@ -2,6 +2,14 @@ import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
 import com.ibm.wala.gradle.useCurrentJavaHome
 import com.ibm.wala.gradle.valueToString
+import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
+import org.gradle.api.attributes.Bundling.EMBEDDED
+import org.gradle.api.attributes.Bundling.EXTERNAL
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.LIBRARY
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.LibraryElements.JAR
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -9,11 +17,34 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
-val coreTestJar = configurations.register("coreTestJar") { isCanBeConsumed = false }
+val coreTestJar =
+    configurations.register("coreTestJar") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EXTERNAL))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
-val extraTestResources = configurations.register("extraTestResources") { isCanBeConsumed = false }
+val extraTestResources =
+    configurations.register("extraTestResources") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EMBEDDED))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
-val sampleCupSources = configurations.register("sampleCupSources") { isCanBeConsumed = false }
+val sampleCupSources =
+    configurations.register("sampleCupSources") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 val isWindows = extra["isWindows"] as Boolean
 
@@ -87,8 +118,8 @@ dependencies {
 
   compileOnly(libs.jetbrains.annotations)
 
-  coreTestJar(project(":core", "testJarConfig"))
-  extraTestResources(project(":core", "dalvikTestResources"))
+  coreTestJar(project(":core"))
+  extraTestResources(project(":core"))
 
   implementation(libs.slf4j.api)
   implementation(libs.guava)

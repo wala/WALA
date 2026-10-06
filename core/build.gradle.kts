@@ -5,6 +5,16 @@ import com.ibm.wala.gradle.dropTopDirectory
 import com.ibm.wala.gradle.useCurrentJavaHome
 import com.ibm.wala.gradle.valueToString
 import kotlin.io.resolve
+import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
+import org.gradle.api.attributes.Bundling.EMBEDDED
+import org.gradle.api.attributes.Bundling.EXTERNAL
+import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
+import org.gradle.api.attributes.Category.LIBRARY
+import org.gradle.api.attributes.Category.VERIFICATION
+import org.gradle.api.attributes.LibraryElements.CLASSES
+import org.gradle.api.attributes.LibraryElements.JAR
+import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
+import org.gradle.api.attributes.LibraryElements.RESOURCES
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
@@ -187,7 +197,14 @@ val extractBcel =
 //  download "java-cup-11a-RELEASE290.jar"
 //
 
-val downloadJavaCup = configurations.create("downloadJavaCup") { isCanBeConsumed = false }
+val downloadJavaCup =
+    configurations.create("downloadJavaCup") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 dependencies { downloadJavaCup(libs.netbeans.java.cup) }
 
@@ -203,9 +220,17 @@ val copyJavaCup =
 //  collect "JLex.jar"
 //
 
-val collectJLexFrom = configurations.register("collectJLexFrom") { isCanBeConsumed = false }
+val collectJLexFrom =
+    configurations.register("collectJLexFrom") {
+      isCanBeConsumed = false
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EXTERNAL))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
-dependencies { collectJLexFrom(project(":cast:java:test:data", "testJarConfig")) }
+dependencies { collectJLexFrom(project(":cast:java:test:data")) }
 
 val collectJLex =
     tasks.register<Jar>("collectJLex") {
@@ -320,7 +345,14 @@ val collectTestData =
       destinationDirectory = layout.buildDirectory.dir(name)
     }
 
-val collectTestDataJar = configurations.register("collectTestDataJar") { isCanBeResolved = false }
+val collectTestDataJar =
+    configurations.register("collectTestDataJar") {
+      isCanBeResolved = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(CLASSES))
+      }
+    }
 
 artifacts.add(collectTestDataJar.name, collectTestData.map { it.destinationDirectory })
 
@@ -372,7 +404,14 @@ tasks.named<Test>("test") {
   outputs.file(layout.buildDirectory.file("report"))
 }
 
-val testResources = configurations.register("testResources") { isCanBeResolved = false }
+val testResources =
+    configurations.register("testResources") {
+      isCanBeResolved = false
+      attributes {
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(RESOURCES))
+      }
+    }
 
 artifacts.add(testResources.name, sourceSets.test.map { it.resources.srcDirs.single() })
 
@@ -386,11 +425,30 @@ val testJar =
       from(tasks.named("compileTestJava"))
     }
 
-val testJarConfig = configurations.register("testJarConfig") { isCanBeResolved = false }
+val testJarConfig =
+    configurations.register("testJarConfig") {
+      isCanBeResolved = false
+      // Test classes for downstream test inputs, not a library: VERIFICATION excludes the
+      // Java plugin's LIBRARY variants, and Bundling tells our own classes (EXTERNAL deps)
+      // apart from repackaged third-party content (EMBEDDED, see dalvikTestResources below).
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EXTERNAL))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 artifacts.add(testJarConfig.name, testJar)
 
-val dalvikTestResources = configurations.register("dalvikTestResources") { isCanBeResolved = false }
+val dalvikTestResources =
+    configurations.register("dalvikTestResources") {
+      isCanBeResolved = false
+      attributes {
+        attribute(BUNDLING_ATTRIBUTE, named(EMBEDDED))
+        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
+        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
+      }
+    }
 
 listOf(
         collectJLex,
