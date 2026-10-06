@@ -227,11 +227,13 @@ val ocamlJavaVersion = "2.0-alpha3"
 @Suppress("HttpUrlsUsage")
 val downloadOcamlJava =
     adHocDownload(
+        // `www.ocamljava.org` serves no valid TLS certificate
         uri("http://www.ocamljava.org/files/distrib"),
         "ocamljava",
         "tar.gz",
         ocamlJavaVersion,
         "bin",
+        sha256 = "2a9971535fbf4fb7dc4b8e80878e7cafb217b7a74aaf69b5973421896ab723e8",
     )
 
 // Ideally this would be a `Sync` task using `from(tarTree(downloadOcamlJava))`.

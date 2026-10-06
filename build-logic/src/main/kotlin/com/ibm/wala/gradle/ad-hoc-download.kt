@@ -1,6 +1,11 @@
 package com.ibm.wala.gradle
 
+import java.io.File
+import java.io.OutputStream.nullOutputStream
 import java.net.URI
+import java.security.DigestOutputStream
+import java.security.MessageDigest.getInstance
+import kotlin.io.inputStream
 import org.gradle.api.Project
 import org.gradle.api.file.RegularFile
 import org.gradle.api.provider.Provider
@@ -28,6 +33,9 @@ import org.gradle.api.provider.Provider
  * @param classifier Optional classifier for the artifact (becomes `[classifier]` in
  *   [the Ivy URL pattern](https://ant.apache.org/ivy/history/master/concept.html#patterns) if
  *   provided)
+ * @param sha256 Expected SHA-256 hex digest of the downloaded file. When non-null the digest is
+ *   verified on first use and a mismatch fails the build. Required when `uri` uses cleartext HTTP;
+ *   optional over HTTPS.
  * @return A provider that yields the single downloaded file
  */
 @Suppress("KDocUnresolvedReference")
@@ -37,12 +45,20 @@ fun Project.adHocDownload(
     ext: String,
     version: String? = null,
     classifier: String? = null,
+    sha256: String? = null,
 ): Provider<RegularFile> {
+
+  val isInsecureProtocol = uri.scheme == "http"
+  if (isInsecureProtocol) {
+    require(sha256 != null) {
+      "adHocDownload($uri): a cleartext download requires a pinned SHA-256 checksum as a tamper guard."
+    }
+  }
 
   repositories.exclusiveContent {
     forRepository {
       repositories.ivy {
-        isAllowInsecureProtocol = true
+        isAllowInsecureProtocol = isInsecureProtocol
         url = uri
         patternLayout { artifact("/[artifact](-[revision])(-[classifier])(.[ext])") }
         metadataSources { artifact() }
@@ -51,18 +67,36 @@ fun Project.adHocDownload(
     filter { includeVersion(uri.authority, name, version ?: "") }
   }
 
-  return layout.projectDirectory.file(
-      provider {
-        configurations
-            .detachedConfiguration(
-                this.dependencies.create(
-                    "${uri.authority}:$name${version.segment}${classifier.segment}@$ext"
+  return layout.projectDirectory
+      .file(
+          provider {
+            configurations
+                .detachedConfiguration(
+                    this.dependencies.create(
+                        "${uri.authority}:$name${version.segment}${classifier.segment}@$ext"
+                    )
                 )
-            )
-            .singleFile
-            .absolutePath
+                .singleFile
+                .absolutePath
+          }
+      )
+      .map { file ->
+        sha256?.let { verifySha256(file.asFile, it, "$uri/$name") }
+        file
       }
-  )
+}
+
+private fun verifySha256(file: File, expectedHex: String, label: String) {
+  val digest = getInstance("SHA-256")
+  file.inputStream().use { fileInputStream ->
+    DigestOutputStream(nullOutputStream(), digest).use { digestOutputStream ->
+      fileInputStream.copyTo(digestOutputStream)
+    }
+  }
+  val actualHex = digest.digest().joinToString("") { "%02x".format(it) }
+  require(actualHex.equals(expectedHex, ignoreCase = true)) {
+    "Checksum mismatch for $label ($file): expected SHA-256 $expectedHex but was $actualHex. Refusing to use a corrupted or untrustworthy build input."
+  }
 }
 
 private val String?.segment
