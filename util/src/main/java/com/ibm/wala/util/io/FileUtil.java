@@ -9,24 +9,26 @@
  */
 package com.ibm.wala.util.io;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import com.google.common.io.MoreFiles;
 import com.ibm.wala.util.collections.HashSetFactory;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.intellij.lang.annotations.Language;
 import org.jspecify.annotations.Nullable;
 
@@ -53,43 +55,30 @@ public class FileUtil {
   }
 
   private static Collection<File> listFiles(File directory, boolean recurse, @Nullable Pattern p) {
-    File[] files = directory.listFiles();
-    if (files == null) {
-      return Collections.emptyList();
+    try (Stream<Path> paths = Files.walk(directory.toPath(), recurse ? Integer.MAX_VALUE : 1)) {
+      return paths
+          .skip(1) // Files.walk yields the root itself, which callers never expect
+          .map(Path::toFile)
+          .filter(f -> p == null || p.matcher(f.getAbsolutePath()).matches())
+          .collect(Collectors.toCollection(HashSetFactory::make));
+    } catch (IOException e) {
+      throw new UncheckedIOException("failed to list " + directory, e);
     }
-    HashSet<File> result = HashSetFactory.make();
-    for (File file : files) {
-      if (p == null || p.matcher(file.getAbsolutePath()).matches()) {
-        result.add(file);
-      }
-      if (recurse && file.isDirectory()) {
-        result.addAll(listFiles(file, recurse, p));
-      }
-    }
-    return result;
   }
 
   /**
-   * <a href="http://bugs.sun.com/view_bug.do?bug_id=4724038">This may be a resource leak.</a>
+   * Copies a file from the specified source path to the destination path, replacing the destination
+   * if it already exists.
    *
-   * <p>We may have to reconsider using nio for this, or apply one of the horrible workarounds
-   * listed in the bug report above.
+   * @param srcFileName the path of the source file
+   * @param destFileName the path of the destination file
+   * @throws IOException if an I/O error occurs during the copy operation
    */
   public static void copy(String srcFileName, String destFileName) throws IOException {
-    if (srcFileName == null) {
-      throw new IllegalArgumentException("srcFileName is null");
-    }
-    if (destFileName == null) {
-      throw new IllegalArgumentException("destFileName is null");
-    }
-    try (final FileInputStream srcStream = new FileInputStream(srcFileName);
-        final FileOutputStream dstStream = new FileOutputStream(destFileName);
-        final FileChannel src = srcStream.getChannel();
-        final FileChannel dest = dstStream.getChannel()) {
-      long n = src.size();
-      MappedByteBuffer buf = src.map(FileChannel.MapMode.READ_ONLY, 0, n);
-      dest.write(buf);
-    }
+    checkArgument(srcFileName != null, "srcFileName is null");
+    checkArgument(destFileName != null, "destFileName is null");
+    Files.copy(
+        Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.REPLACE_EXISTING);
   }
 
   /**
@@ -98,28 +87,12 @@ public class FileUtil {
    * @throws IOException if there's a problem deleting some file
    */
   public static void deleteContents(String directory) throws IOException {
-    File f = new File(directory);
-    if (!f.exists()) {
-      return;
-    }
-    if (!f.isDirectory()) {
-      throw new IOException(directory + " is not a vaid directory");
-    }
-    for (String s : f.list()) {
-      deleteRecursively(new File(f, s));
-    }
-  }
-
-  private static void deleteRecursively(File f) throws IOException {
-    if (f.isDirectory()) {
-      for (String s : f.list()) {
-        deleteRecursively(new File(f, s));
-      }
-    }
-
-    boolean b = f.delete();
-    if (!b) {
-      throw new IOException("failed to delete " + f);
+    Path path = Paths.get(directory);
+    if (Files.exists(path)) {
+      // Do not pass ALLOW_INSECURE: when the platform offers SecureDirectoryStream, Guava
+      // deletes via the secure path, and without that it fails rather than deleting
+      // files that a concurrent symlink swap could move outside the directory.
+      MoreFiles.deleteDirectoryContents(path);
     }
   }
 
@@ -128,54 +101,34 @@ public class FileUtil {
    * file if one exists.
    */
   public static FileOutputStream createFile(String fileName) throws IOException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null file");
-    }
-    File f = new File(fileName);
-    if (f.getParentFile() != null && !f.getParentFile().exists()) {
-      boolean result = f.getParentFile().mkdirs();
-      if (!result) {
-        throw new IOException("failed to create " + f.getParentFile());
-      }
-    }
-    Files.deleteIfExists(f.toPath());
-    boolean result = f.createNewFile();
-    if (!result) {
-      throw new IOException("failed to create " + f);
-    }
-    return new FileOutputStream(f);
+    checkArgument(fileName != null, "null file");
+    Path path = Paths.get(fileName);
+    MoreFiles.createParentDirectories(path);
+    Files.deleteIfExists(path);
+    // createFile fails rather than clobbering, so no TOCTOU window on a concurrent create
+    return new FileOutputStream(Files.createFile(path).toFile());
   }
 
   /** read fully the contents of s and return a byte array holding the result */
   public static byte[] readBytes(InputStream s) throws IOException {
-    if (s == null) {
-      throw new IllegalArgumentException("null s");
-    }
-    try (final ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-      byte[] b = new byte[1024];
-      int n = s.read(b);
-      while (n != -1) {
-        out.write(b, 0, n);
-        n = s.read(b);
-      }
-      return out.toByteArray();
-    }
+    checkArgument(s != null, "null s");
+    return s.readAllBytes();
   }
 
   /** write string s into file f */
   public static void writeFile(File f, String content) throws IOException {
-    try (final Writer fw = Files.newBufferedWriter(f.toPath(), StandardCharsets.UTF_8)) {
-      fw.append(content);
-    }
+    Files.writeString(f.toPath(), content, StandardCharsets.UTF_8);
   }
 
   public static void recurseFiles(Consumer<File> action, final Predicate<File> filter, File top) {
-    if (top.isDirectory()) {
-      for (File f : top.listFiles(file -> filter.test(file) || file.isDirectory())) {
-        recurseFiles(action, filter, f);
-      }
-    } else {
+    if (!top.isDirectory()) {
       action.accept(top);
+      return;
+    }
+    try (Stream<Path> paths = Files.walk(top.toPath())) {
+      paths.map(Path::toFile).filter(f -> !f.isDirectory() && filter.test(f)).forEach(action);
+    } catch (IOException e) {
+      throw new UncheckedIOException("failed to walk " + top, e);
     }
   }
 }
