@@ -5,6 +5,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA IDE"
+
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 walaEclipseMavenCentral {

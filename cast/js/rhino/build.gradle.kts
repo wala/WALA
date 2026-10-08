@@ -9,6 +9,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA CAst JavaScript Rhino"
+
 val extraTestResources =
     configurations.register("extraTestResources") {
       isCanBeConsumed = false

@@ -16,6 +16,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA Cast"
+
 eclipse.project.natures("org.eclipse.pde.PluginNature")
 
 val castCastSharedLibrary =

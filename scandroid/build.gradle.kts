@@ -3,6 +3,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA Scandroid"
+
 dependencies {
   api(libs.jspecify)
   api(projects.core)

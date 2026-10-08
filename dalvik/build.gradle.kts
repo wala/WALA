@@ -17,6 +17,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA Dalvik"
+
 val coreTestJar =
     configurations.register("coreTestJar") {
       isCanBeConsumed = false

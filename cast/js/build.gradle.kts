@@ -15,6 +15,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA CAst JavaScript"
+
 dependencies {
   api(libs.jericho.html)
   api(libs.jspecify)

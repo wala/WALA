@@ -8,6 +8,9 @@ plugins {
 
 val isSnapshot = "SNAPSHOT" in version as String
 
+// Make per-project publishing settings available as `project.walaPublishing`.
+val walaPublishing = extensions.create<WalaPublishingExtension>("walaPublishing")
+
 val java = extensions.getByType<JavaPluginExtension>()
 
 val testFixturesJavadoc =
@@ -26,7 +29,7 @@ mavenPublishing {
   signAllPublications()
 
   pom {
-    name = property("POM_NAME") as String
+    name = walaPublishing.pomName
     description = "T. J. Watson Libraries for Analysis"
     inceptionYear = "2006"
     url = "https://github.com/wala/WALA"
