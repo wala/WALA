@@ -158,6 +158,72 @@ these types, you will need to restructure your code. The affected types include:
 * `com.ibm.wala.util.intset.TunedMutableSparseIntSet`
 * `org.scandroid.prefixtransfer.PrefixVariable`
 
+#### `FileUtil` rewritten in terms of NIO and Guava file APIs
+
+The methods of `com.ibm.wala.util.io.FileUtil` have been reimplemented on top
+of `java.nio.file.Files` and Guava's `MoreFiles`, replacing hand-written
+buffering, recursion, and whole-file memory mapping. All public signatures are
+unchanged.
+
+The headline fix is `copy`. The old implementation memory-mapped the entire
+source file and wrote the resulting `MappedByteBuffer` to the destination. That
+mapping was never unmapped, so on Windows the source file stayed locked and
+delete/truncate operations against it failed until the mapping was released.
+This defect is
+[JDK-4724038](https://bugs.openjdk.org/browse/jdk-4724038), reported on
+2002-07-31 and closed as "Won't Fix" on 2023-12-06. `copy` now delegates to
+`Files.copy`, which never creates a mapping and therefore never holds the source
+open, and which uses the JDK's native copy (`copy_file_range`, `sendfile`, or
+`clonefile` where the platform offers them) with constant memory use regardless
+of file size.
+
+Other changes, all bug fixes rather than performance work:
+
+* `deleteContents` no longer follows symbolic links. It previously recursed
+  into symlinked directories because `File.isDirectory()` follows links, which
+  meant it deleted the *contents* of whatever a symlink pointed at, and looped
+  forever on a symlink cycle. It now delegates to Guava's
+  `MoreFiles.deleteDirectoryContents`, which removes the link itself and cannot
+  recurse indefinitely.
+* `deleteContents` no longer throws `NullPointerException` when a directory
+  cannot be listed, and no longer throws `IOException` naming the offending
+  path when the argument is not a directory; the latter is now a
+  `NotDirectoryException`, which is still an `IOException`.
+* `listFiles` and `recurseFiles` no longer silently treat an unlistable
+  directory as an empty one. Previously a directory that could not be read
+  contributed no entries and no error, so for example
+  `WalaProperties.getJars()` could return a quietly incomplete classpath; both
+  now throw `UncheckedIOException`.
+* `listFiles` and `recurseFiles` no longer follow symlinked directories while
+  recursing.
+
+The remaining methods were simplified without behavioral changes:
+
+* `readBytes` uses `InputStream.readAllBytes()`,
+* `writeFile` uses `Files.writeString`,
+* `createFile` uses `MoreFiles.createParentDirectories` / `Files.createFile`, and
+* `recurseFiles` uses `Files.walk`.
+
+**Effect for third-party consumers:** `deleteContents` deletes as much as it
+can and reports every failure at the end as one `IOException` with the
+individual failures as suppressed exceptions, where it previously stopped at
+the first error. It also relies on `SecureDirectoryStream` where the platform
+provides one, so a directory swapped for a symlink between the check and the
+read cannot redirect the delete outside the tree. On a file system that
+supports symlinks but not `SecureDirectoryStream`, it now throws
+`InsecureRecursiveDeleteException` rather than deleting, since `FileUtil` does
+not opt out of that check.
+
+`copy` additionally differs from the old implementation in two edge cases, both
+of which are improvements. If the source names a directory, it now creates an
+empty directory at the destination where it previously threw `IOException`. If
+source and destination are the same file, it is now a no-op, where it previously
+truncated the file. Callers that relied on either old failure mode should check
+explicitly.
+
+`readBytes` retains the same ~2 GB limit, since both it and `readAllBytes` are
+bounded by the maximum size of a Java array.
+
 ### Dependency changes
 
 #### `:core` now depends on `jctools-core`
