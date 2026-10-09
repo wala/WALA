@@ -27,6 +27,8 @@ plugins {
   id("com.ibm.wala.gradle.test-subjects")
 }
 
+walaPublishing.pomName = "WALA Core"
+
 eclipse {
   project.natures("org.eclipse.pde.PluginNature")
   classpath.file.whenMerged {

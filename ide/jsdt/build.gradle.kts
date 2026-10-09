@@ -4,6 +4,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA IDE JSDT"
+
 walaEclipseMavenCentral.api(
     "org.eclipse.core.resources",
     "org.eclipse.core.runtime",

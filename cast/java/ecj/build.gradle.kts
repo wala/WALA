@@ -11,6 +11,8 @@ plugins {
   id("com.ibm.wala.gradle.publishing")
 }
 
+walaPublishing.pomName = "WALA CAst Java ECJ"
+
 walaEclipseMavenCentral.implementation(
     "org.eclipse.equinox.common",
     "org.eclipse.jdt.core",
