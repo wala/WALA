@@ -25,6 +25,7 @@ rootProject.name = "wala"
 includeBuild("build-logic")
 
 include(
+    "aggregated-javadoc",
     "cast",
     "cast:smoke_main",
     "cast:xlator_test",

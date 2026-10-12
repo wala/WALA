@@ -5,22 +5,11 @@
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.github.gradle.node.npm.task.NpxTask
-import com.ibm.wala.gradle.forEachJavaProject
 import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion.VERSION_21
-import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
-import org.gradle.api.attributes.Bundling.EXTERNAL
-import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
-import org.gradle.api.attributes.Category.LIBRARY
-import org.gradle.api.attributes.Category.VERIFICATION
-import org.gradle.api.attributes.LibraryElements.JAR
-import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
-import org.gradle.api.attributes.VerificationType.MAIN_SOURCES
-import org.gradle.api.attributes.VerificationType.VERIFICATION_TYPE_ATTRIBUTE
 
 plugins {
   idea
-  java
   alias(libs.plugins.dependency.analysis)
   alias(libs.plugins.file.lister)
   alias(libs.plugins.node)
@@ -28,8 +17,6 @@ plugins {
   alias(libs.plugins.version.catalog.update)
   alias(libs.plugins.versions)
   id("com.ibm.wala.gradle.check-git-cleanliness")
-  id("com.ibm.wala.gradle.eclipse-maven-central")
-  id("com.ibm.wala.gradle.javadoc")
   id("com.ibm.wala.gradle.project")
 }
 
@@ -54,65 +41,6 @@ tasks.named<Wrapper>("wrapper") { distributionType = Wrapper.DistributionType.AL
 group = name
 
 version = property("VERSION_NAME") as String
-
-///////////////////////////////////////////////////////////////////////
-//
-//  Javadoc documentation
-//
-
-val aggregatedJavadocClasspathExtras =
-    configurations.register("aggregatedJavadocClasspathExtras") {
-      isCanBeConsumed = false
-      attributes {
-        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
-        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
-      }
-    }
-
-val aggregatedJavadocRuntimeElements =
-    configurations.register("aggregatedJavadocRuntimeElements") {
-      isCanBeConsumed = false
-      attributes {
-        attribute(CATEGORY_ATTRIBUTE, named(LIBRARY))
-        attribute(LIBRARY_ELEMENTS_ATTRIBUTE, named(JAR))
-      }
-    }
-
-val aggregatedJavadocSource =
-    configurations.register("aggregatedJavadocSource") {
-      isCanBeConsumed = false
-      // Source dirs only: transitive dependencies would inherit these attributes and fail
-      // against external modules, which declare no verification variants.
-      isTransitive = false
-      attributes {
-        attribute(BUNDLING_ATTRIBUTE, named(EXTERNAL))
-        attribute(CATEGORY_ATTRIBUTE, named(VERIFICATION))
-        attribute(VERIFICATION_TYPE_ATTRIBUTE, named(MAIN_SOURCES))
-      }
-    }
-
-dependencies {
-  // Some `compileOnly` dependencies are needed during Javadoc generation but are not included in
-  // `aggregatedJavadocRuntimeElements`.
-  aggregatedJavadocClasspathExtras(libs.jetbrains.annotations)
-  aggregatedJavadocClasspathExtras(libs.nullaway.annotations)
-
-  forEachJavaProject {
-    aggregatedJavadocRuntimeElements(project(it.path, "runtimeElements"))
-    aggregatedJavadocSource(project(it.path, "mainSourceElements"))
-  }
-}
-
-tasks.register<Javadoc>("aggregatedJavadocs") {
-  description = "Generate javadocs from all child projects as if they were a single project"
-  group = "Documentation"
-  destinationDirectory = layout.buildDirectory.dir("docs/javadoc")
-  title = "${project.name} $version API"
-  (options as StandardJavadocDocletOptions).author(true)
-  classpath = files(aggregatedJavadocClasspathExtras, aggregatedJavadocRuntimeElements)
-  source(aggregatedJavadocSource)
-  include("**/*.java")
-}
 
 ////////////////////////////////////////////////////////////////////////
 //
