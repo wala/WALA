@@ -2,7 +2,6 @@ import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
-import com.ibm.wala.gradle.useCurrentJavaHome
 import com.ibm.wala.gradle.valueToString
 import kotlin.io.resolve
 import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
@@ -282,12 +281,30 @@ val unpackOcamlJava =
       outputs.dir(outputDir)
     }
 
+// OCaml-Java expects its standard library at the absolute path `/ocamljava-<version>/lib/ocaml`,
+// which does not exist on any machine we build on.  On Unix, the compiler happens to find
+// `ocamlrun.jar` relative to its own JAR instead; on Windows it cannot, and compilation fails with
+// `unable to open archive ("\\ocamljava-<version>\\lib\\ocaml\\ocamlrun.jar")`.  Extracting the
+// standard library to a real directory and pointing `OCAMLLIB` at it sidesteps that hardcoded path
+// entirely, so the compiler behaves the same on every platform.
+val extractOcamlLibFiles =
+    tasks.register<Sync>("extractOcamlLibFiles") {
+      description = "Extract OCaml standard library files for OCaml-Java"
+      from(
+          zipTree(
+              unpackOcamlJava.map {
+                it.workingDirectory.file("ocamljava-$ocamlJavaVersion/lib/ocaml-lib-files.jar")
+              }
+          )
+      )
+      include("ocamljava-$ocamlJavaVersion/lib/ocaml/**")
+      includeEmptyDirs = false
+      destinationDirectory = layout.buildDirectory.dir(name)
+    }
+
 val generateHelloHashJar =
-    tasks.register<Exec>("generateHelloHashJar") {
+    tasks.register<JavaExec>("generateHelloHashJar") {
       description = "Compile OCaml `hello_hash` to Java bytecode JAR"
-      // haven't been able to get `ocamljava.bat` to work on Windows yet
-      val isWindows = project.extra["isWindows"] as Boolean
-      onlyIf { !isWindows }
 
       // OCaml source file to compile to Java bytecode
       val ocamlSource = file("ocaml/hello_hash.ml")
@@ -297,24 +314,41 @@ val generateHelloHashJar =
       val jarTarget = layout.buildDirectory.file("hello_hash.jar")
       outputs.file(jarTarget)
       outputs.cacheIf { true }
-      argumentProviders.add { listOf("-o", jarTarget.get().toString()) }
 
       // unpacked OCaml-Java distribution
       inputs.files(unpackOcamlJava)
 
-      // `ocamljava` script to compile OCaml to Java bytecode
-      executable(
-          unpackOcamlJava
-              .flatMap {
-                it.workingDirectory.file(
-                    "ocamljava-$ocamlJavaVersion/bin/ocamljava${if (isWindows) ".bat" else ""}"
-                )
-              }
-              .valueToString
-      )
+      // extracted OCaml standard library
+      inputs.files(extractOcamlLibFiles)
 
-      // use same JVM that is being used to run Gradle itself
-      useCurrentJavaHome()
+      // `ocamljava` JAR to compile OCaml to Java bytecode; its manifest declares a `Class-Path`
+      // entry for `ocaml-lib-files.jar`, which the JVM resolves relative to the JAR itself
+      val ocamlJavaJar =
+          unpackOcamlJava.flatMap {
+            it.workingDirectory.file("ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
+          }
+      inputs.file(ocamlJavaJar)
+      classpath(ocamlJavaJar)
+      mainClass = "ocaml.compilers.ocamljavaMain"
+
+      // the compiler requires a deep stack
+      jvmArgs("-Xss8M")
+
+      argumentProviders.add { listOf("-o", jarTarget.get().toString()) }
+
+      // tell the compiler where its standard library actually lives
+      environment(
+          "OCAMLLIB",
+          extractOcamlLibFiles
+              .map {
+                layout.buildDirectory
+                    .dir("extractOcamlLibFiles/ocamljava-$ocamlJavaVersion/lib/ocaml")
+                    .get()
+                    .asFile
+                    .path
+              }
+              .valueToString,
+      )
 
       objects.newInstance<GenerateHelloHashServices>().run {
 
