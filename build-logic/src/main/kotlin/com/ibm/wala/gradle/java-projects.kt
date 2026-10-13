@@ -24,6 +24,7 @@ val Project.isJavaProject
   get() =
       when (path) {
         ":",
+        ":aggregated-javadoc",
         ":cast:cast",
         ":cast:java:test",
         ":cast:js:html",

@@ -30,7 +30,7 @@ abstract class CheckGitCleanlinessTask : DefaultTask() {
     onlyIf { projectDirectory.file(".git").asFile.isDirectory }
 
     // Run after high-level tasks whose subtasks might modify files in the working directory.
-    mustRunAfter("test", "check", "build")
+    mustRunAfter("check", "build")
   }
 
   @TaskAction
