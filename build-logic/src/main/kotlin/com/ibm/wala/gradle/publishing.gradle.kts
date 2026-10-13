@@ -6,7 +6,7 @@ plugins {
   id("com.vanniktech.maven.publish")
 }
 
-val isSnapshot = "SNAPSHOT" in version as String
+val isSnapshot = providers.provider { "SNAPSHOT" in version as String }
 
 // Make per-project publishing settings available as `project.walaPublishing`.
 val walaPublishing = extensions.create<WalaPublishingExtension>("walaPublishing")
@@ -127,7 +127,7 @@ publishing {
 
 signing.setRequired {
   // Signatures are a hard requirement if publishing a non-snapshot to Maven Central.
-  !isSnapshot &&
+  !isSnapshot.get() &&
       gradle.taskGraph.allTasks.any {
         it is PublishToMavenRepository && it.name.endsWith("ToMavenCentralRepository")
       }
