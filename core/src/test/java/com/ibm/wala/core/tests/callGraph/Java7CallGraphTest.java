@@ -12,7 +12,6 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import com.ibm.wala.analysis.reflection.java7.MethodHandles;
 import com.ibm.wala.classLoader.JavaLanguage;
@@ -49,8 +48,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.GZIPInputStream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
@@ -249,9 +246,6 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
   }
 
   @Test
-  @DisabledOnOs(
-      value = OS.WINDOWS,
-      disabledReason = "haven't been able to get `ocamljava.bat` to work on Windows yet")
   public void testOcamlHelloHash()
       throws ClassHierarchyException,
           IllegalArgumentException,
@@ -262,13 +256,7 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
           FailureException,
           SecurityException,
           InterruptedException {
-    // Known to be broken on Windows, but not intentionally so.  Please fix if you know how!
-    // <https://github.com/wala/WALA/issues/608>
-    assumeFalse(PlatformUtil.onWindows());
-
-    if (!"True".equals(System.getenv("APPVEYOR"))) {
-      testOCamlJar("hello_hash.jar");
-    }
+    testOCamlJar("hello_hash.jar");
   }
 
   private void testOCamlJar(String jarFile, String... args)
