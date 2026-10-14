@@ -1,8 +1,10 @@
 import com.ibm.wala.gradle.cast.addJvmLibrary
 import com.ibm.wala.gradle.cast.addRpaths
 import com.ibm.wala.gradle.cast.configure
+import com.ibm.wala.gradle.cast.resolveJvmRuntimeDirectories
 import com.ibm.wala.gradle.logToFile
 import com.ibm.wala.gradle.valueToString
+import java.io.File
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
 import org.gradle.api.attributes.Usage.JAVA_RUNTIME
@@ -74,14 +76,40 @@ application {
               description = "Run the native smoke test executable"
               group = "verification"
 
-              // Known to be broken on Windows, but not intentionally so.  Please fix if you
-              // know how!  <https://github.com/wala/WALA/issues/608>
-              val targetPlatformProvider = targetPlatform
-              onlyIf { !targetPlatformProvider.get().operatingSystem.isWindows }
-
               // main executable to run for test
               inputs.file(linkedFile)
               executable(linkedFile.valueToString)
+
+              // The Windows loader has no analogue of an rpath: it searches only the directory
+              // holding the executable, then `PATH`.  Nothing copies `cast.dll` beside
+              // `smoke_main.exe`, and the `jvm.dll` behind the `jvm.lib` we link against lives in
+              // yet another directory, so the executable would not even start.  Name all of them
+              // on `PATH`.  Elsewhere `addRpaths` already encodes these locations, so
+              // `resolveJvmRuntimeDirectories` yields nothing; prepending the linked libraries
+              // there is inert, as neither the macOS nor the Linux loader consults `PATH` for
+              // shared libraries.
+              val jvmRuntimeDirectories =
+                  providers.provider {
+                    resolveJvmRuntimeDirectories(
+                        File(providers.systemProperty("java.home").get()),
+                        targetMachine.operatingSystemFamily.name,
+                    )
+                  }
+              // the parent directory of each shared library we link against, such as `cast.dll`
+              val linkedLibraryDirectories =
+                  providers.provider { libs.map { library -> library.parentFile } }
+              val inheritedPath = providers.environmentVariable("PATH")
+              val searchPath =
+                  providers.provider {
+                    listOf(
+                            files(jvmRuntimeDirectories, linkedLibraryDirectories).asPath,
+                            inheritedPath.orNull,
+                        )
+                        .filterNot { it.isNullOrEmpty() }
+                        .joinToString(File.pathSeparator)
+                  }
+              inputs.files(jvmRuntimeDirectories, linkedLibraryDirectories)
+              environment("PATH", searchPath.valueToString)
 
               // xlator Java bytecode + implementation of native methods
               inputs.files(libxlatorTestConfig)
@@ -96,7 +124,7 @@ application {
               inputs.files(smokeMainExtraPathElements)
               pathElements.from(smokeMainExtraPathElements)
 
-              // all combined as a colon-delimited path list
+              // all combined as a path list delimited by the platform's separator
               argumentProviders.add { listOf(pathElements.asPath) }
 
               // log output to file, although we don"t validate it

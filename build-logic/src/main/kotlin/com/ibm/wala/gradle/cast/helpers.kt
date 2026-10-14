@@ -53,6 +53,39 @@ private fun resolveJvmLibrary(javaHome: File, osFamilyName: String): File {
       )
 }
 
+/**
+ * Locates the directories under the given JDK [javaHome] that must additionally be visible at
+ * runtime for the JVM shared library to be loaded, or an empty list where none are needed.
+ *
+ * Callers put these on `PATH`; that is only necessary where the platform offers no equivalent of an
+ * rpath. See [addRpaths] for the macOS and Linux story, where the rpaths already encode these
+ * locations and this yields nothing.
+ *
+ * On Windows this is *not* the location of the library that [resolveJvmLibrary] links against: the
+ * `jvm.lib` import library sits in `lib`, whereas the `jvm.dll` it stands for lives in `bin/server`
+ * — and `jvm.dll` in turn depends on `java.dll`, which lives in `bin`. Hence a list rather than a
+ * single directory.
+ *
+ * @param javaHome the JDK home directory to probe
+ * @param osFamilyName the name of the [OperatingSystemFamily] to probe for
+ * @return the existing runtime directories, in the order they should be searched; empty if the
+ *   platform needs none
+ * @throws TaskInstantiationException if a platform needs them and none of the candidates exist
+ */
+fun resolveJvmRuntimeDirectories(javaHome: File, osFamilyName: String): List<File> {
+  if (osFamilyName != OperatingSystemFamily.WINDOWS) return emptyList()
+
+  val subdirs = listOf("bin/server", "bin")
+  return subdirs
+      .map { javaHome.resolve(it) }
+      .filter(File::isDirectory)
+      .ifEmpty {
+        throw TaskInstantiationException(
+            "could not locate a JVM runtime directory under JDK home $javaHome; probed $subdirs"
+        )
+      }
+}
+
 fun CppBinary.addJvmLibrary(project: Project) {
   val osFamilyName = targetMachine.operatingSystemFamily.name
 
