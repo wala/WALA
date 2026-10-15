@@ -148,10 +148,14 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
     checkForLexicalAccess(c, (String) n.getChild(0).getValue(), true);
   }
 
+  /**
+   * Visits the children of a node kind {@link CAstVisitor} has no case for. The node itself is
+   * assumed not to declare or access names, but its children may, or may nest functions that do.
+   *
+   * @return {@code true}, since every such node is handled
+   */
   @Override
   protected boolean doVisit(CAstNode n, EntityContext context, CAstVisitor<EntityContext> visitor) {
-    // assume unknown node types don't do anything relevant to exposed names themselves, but visit
-    // their children, which may declare or access names or nest functions that do
     visitor.visitAllChildren(n, context, visitor);
     return true;
   }

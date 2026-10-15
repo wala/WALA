@@ -22,16 +22,28 @@ public class TestExposedNamesCollector {
   /** A node kind that {@link com.ibm.wala.cast.tree.visit.CAstVisitor} has no case for. */
   private static final int CUSTOM_KIND = CAstNode.SUB_LANGUAGE_BASE + 1;
 
+  /** Factory for the nodes of the test ASTs. */
   private final CAst ast = new CAstImpl();
 
+  /** A code entity whose AST and scoped entities a test sets directly. */
   private static class TestEntity extends AbstractCodeEntity {
 
+    /** The entity's kind, e.g., {@link CAstEntity#FUNCTION_ENTITY}. */
     private final int kind;
 
+    /** The entity's name. */
     private final String name;
 
+    /** The names of the entity's arguments. */
     private final String[] argumentNames;
 
+    /**
+     * Creates an entity with no AST.
+     *
+     * @param kind the entity's kind, e.g., {@link CAstEntity#FUNCTION_ENTITY}
+     * @param name the entity's name
+     * @param argumentNames the names of the entity's arguments
+     */
     TestEntity(int kind, String name, String[] argumentNames) {
       super(CAstType.DYNAMIC);
       this.kind = kind;
