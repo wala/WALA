@@ -150,8 +150,9 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
 
   @Override
   protected boolean doVisit(CAstNode n, EntityContext context, CAstVisitor<EntityContext> visitor) {
-    // assume unknown node types don't do anything relevant to exposed names.
-    // override if this is untrue
+    // Assume unknown node types don't do anything relevant to exposed names themselves, but visit
+    // their children, which may declare or access names or nest functions that do.
+    visitor.visitAllChildren(n, context, visitor);
     return true;
   }
 
