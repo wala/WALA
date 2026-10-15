@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToIR;
+import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
 import com.ibm.wala.cast.loader.CAstAbstractModuleLoader;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -43,10 +44,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests that an {@code AstDynamicPropertyClass} can be queried from several threads at once.
+ * Tests that an {@link AstDynamicPropertyClass} can be queried from several threads at once.
  *
  * <p>Looking up a field name that a dynamic-property class does not declare creates the field, in
- * the topmost class of its hierarchy. So {@code getField} writes the same map that {@code
+ * the topmost class of its hierarchy. So {@link AstDynamicPropertyClass#getField(Atom) getField}
+ * writes the same map that {@link AstDynamicPropertyClass#getDeclaredInstanceFields()
  * getDeclaredInstanceFields} iterates, and a lookup on any class in the hierarchy can modify the
  * root's map while another thread iterates it.
  */
