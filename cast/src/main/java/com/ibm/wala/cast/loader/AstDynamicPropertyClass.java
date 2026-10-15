@@ -18,8 +18,8 @@ import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AstDynamicPropertyClass extends AstClass {
   private final TypeReference defaultDescriptor;
@@ -31,7 +31,9 @@ public abstract class AstDynamicPropertyClass extends AstClass {
       short modifiers,
       Map<Selector, IMethod> declaredMethods,
       TypeReference defaultDescriptor) {
-    super(sourcePosition, typeName, loader, modifiers, new HashMap<>(), declaredMethods);
+    // Concurrent because getField creates fields on lookup, so a query can write the map another
+    // thread is iterating.
+    super(sourcePosition, typeName, loader, modifiers, new ConcurrentHashMap<>(), declaredMethods);
     this.defaultDescriptor = defaultDescriptor;
   }
 
@@ -44,10 +46,9 @@ public abstract class AstDynamicPropertyClass extends AstClass {
     } else if (getSuperclass() != null && (x = getSuperclass().getField(name)) != null) {
       return x;
     } else {
-      final boolean isStatic = isStaticField(name);
-      AstDynamicField newField = new AstDynamicField(isStatic, this, name, defaultDescriptor);
-      declaredFields.put(name, newField);
-      return newField;
+      // Atomic, so concurrent lookups of the same new name all return the same field.
+      return declaredFields.computeIfAbsent(
+          name, n -> new AstDynamicField(isStaticField(n), this, n, defaultDescriptor));
     }
   }
 
