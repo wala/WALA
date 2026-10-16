@@ -1,4 +1,5 @@
 [versions]
+android-platforms = "android-28"
 com-uber-nullaway = "0.14.2"
 #noinspection UnusedVersionCatalogEntry
 eclipse = "4.30.0"
@@ -8,6 +9,7 @@ google-java-format = "1.35.0"
 #noinspection UnusedVersionCatalogEntry
 jmh = "1.37"
 ktfmt = "0.59"
+ocaml-java = "2.0-alpha3"
 
 [libraries]
 android-tools = "com.android.tools:r8:8.2.46"

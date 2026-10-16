@@ -50,7 +50,8 @@ val sampleCupSources =
 
 val isWindows = extra["isWindows"] as Boolean
 
-val platformsVersion = "android-28"
+@Suppress("RemoveUnnecessaryParentheses")
+val platformsVersion = (libs.versions.android.platforms).valueToString
 
 val unpackAndroidSdkInstaller =
     tasks.register<Sync>("unpackAndroidSdkInstaller") {
@@ -63,6 +64,8 @@ val installAndroidSdk =
     tasks.register<Exec>("installAndroidSdk") {
       description = "Install Android SDK platform"
       inputs.files(unpackAndroidSdkInstaller)
+      // the task's output is cacheable, so the platform version it installs is an input
+      inputs.property("platformsVersion", platformsVersion)
       val sdkManager =
           unpackAndroidSdkInstaller
               .flatMap { it.destinationDirectory.file("cmdline-tools/bin/sdkmanager") }
