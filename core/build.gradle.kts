@@ -248,7 +248,8 @@ val collectJLex =
 //  generate "hello_hash.jar"
 //
 
-val ocamlJavaVersion = "2.0-alpha3"
+@Suppress("RemoveUnnecessaryParentheses")
+val ocamlJavaVersion = (libs.versions.ocaml.java).valueToString
 
 @Suppress("HttpUrlsUsage")
 val downloadOcamlJava =
@@ -257,7 +258,8 @@ val downloadOcamlJava =
         uri("http://www.ocamljava.org/files/distrib"),
         "ocamljava",
         "tar.gz",
-        ocamlJavaVersion,
+        // `adHocDownload` needs the literal version to configure its `includeVersion` filter
+        ocamlJavaVersion.get(),
         "bin",
         sha256 = "2a9971535fbf4fb7dc4b8e80878e7cafb217b7a74aaf69b5973421896ab723e8",
     )
