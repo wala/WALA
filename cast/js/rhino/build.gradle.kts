@@ -1,8 +1,8 @@
+import com.ibm.wala.gradle.showEachResult
 import org.gradle.api.attributes.Category.CATEGORY_ATTRIBUTE
 import org.gradle.api.attributes.Category.VERIFICATION
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
   id("com.ibm.wala.gradle.java")
@@ -46,11 +46,7 @@ tasks.named<Copy>("processTestResources") { from(extraTestResources) }
 
 tasks.named<Test>("test") {
   maxHeapSize = "800M"
-
-  testLogging {
-    exceptionFormat = TestExceptionFormat.FULL
-    events("passed", "skipped", "failed")
-  }
+  showEachResult()
 
   if (
       providers.gradleProperty("excludeRequiresInternetTests").isPresent ||
