@@ -2,6 +2,7 @@ import com.ibm.wala.gradle.CompileKawaScheme
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
+import com.ibm.wala.gradle.showEachResult
 import com.ibm.wala.gradle.valueToString
 import kotlin.io.resolve
 import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
@@ -14,7 +15,6 @@ import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.JAR
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
 
@@ -430,10 +430,7 @@ tasks.named<Test>("test") {
   maxHeapSize = "2000M"
   systemProperty("com.ibm.wala.junit.profile", "short")
   classpath += files(sourceSets.test.map { it.output.classesDirs })
-  testLogging {
-    exceptionFormat = TestExceptionFormat.FULL
-    events("passed", "skipped", "failed")
-  }
+  showEachResult()
   // temporarily turn off some tests on JDK 11+: https://github.com/wala/WALA/issues/963
   exclude("**/cha/LibraryVersionTest.class")
 
