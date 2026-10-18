@@ -19,6 +19,7 @@ dependencies {
   implementation(libs.plugins.errorprone.asDependency())
   implementation(libs.plugins.jmh.asDependency())
   implementation(libs.plugins.maven.publish.asDependency())
+  implementation(libs.plugins.node.asDependency())
   implementation(libs.plugins.spotless.asDependency())
 }
 

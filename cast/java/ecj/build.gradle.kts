@@ -55,7 +55,6 @@ val run =
 
       // log output to file, although we don"t validate it
       logToFile(name)
-      outputs.cacheIf { true }
     }
 
 // ensure the command-line driver for running ECJ works
