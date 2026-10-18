@@ -1,7 +1,6 @@
+import com.ibm.wala.gradle.InstallAndroidSdk
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
-import com.ibm.wala.gradle.useCurrentJavaHome
-import com.ibm.wala.gradle.valueToString
 import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
 import org.gradle.api.attributes.Bundling.EMBEDDED
 import org.gradle.api.attributes.Bundling.EXTERNAL
@@ -51,7 +50,7 @@ val sampleCupSources =
 val isWindows = extra["isWindows"] as Boolean
 
 @Suppress("RemoveUnnecessaryParentheses")
-val platformsVersion = (libs.versions.android.platforms).valueToString
+val catalogPlatformsVersion = libs.versions.android.platforms
 
 val unpackAndroidSdkInstaller =
     tasks.register<Sync>("unpackAndroidSdkInstaller") {
@@ -61,55 +60,9 @@ val unpackAndroidSdkInstaller =
     }
 
 val installAndroidSdk =
-    tasks.register<Exec>("installAndroidSdk") {
-      description = "Install Android SDK platform"
-      inputs.files(unpackAndroidSdkInstaller)
-      // the task's output is cacheable, so the platform version it installs is an input
-      inputs.property("platformsVersion", platformsVersion)
-      val sdkManager =
-          unpackAndroidSdkInstaller
-              .flatMap { it.destinationDirectory.file("cmdline-tools/bin/sdkmanager") }
-              .valueToString
-
-      val destinationDir = layout.buildDirectory.dir(name).valueToString
-      outputs.run {
-        dir(destinationDir)
-        cacheIf { true }
-      }
-
-      // Running the Android SDK manager requires that `$JAVA_HOME` be set.
-      useCurrentJavaHome()
-
-      data class Details(
-          val shell: String,
-          val shellFlags: String,
-          val yes: String,
-          val semicolon: String,
-          val discard: String,
-      )
-      (if (isWindows)
-              Details(
-                  "PowerShell",
-                  "-Command",
-                  "echo y",
-                  "`;",
-                  "\$null",
-              )
-          else
-              Details(
-                  "sh",
-                  "-ceu",
-                  "yes 2>/dev/null",
-                  "\\;",
-                  "/dev/null",
-              ))
-          .run {
-            commandLine(
-                shell,
-                shellFlags,
-                "$yes | $sdkManager --sdk_root=$destinationDir platforms$semicolon$platformsVersion >$discard",
-            )
-          }
+    tasks.register<InstallAndroidSdk>("installAndroidSdk") {
+      sdkCommandLineTools = unpackAndroidSdkInstaller.flatMap { it.destinationDirectory }
+      platformsVersion = catalogPlatformsVersion
     }
 
 eclipse { synchronizationTasks(installAndroidSdk) }
@@ -199,8 +152,8 @@ tasks.named<Copy>("processTestResources") {
   from(extraTestResources)
   from({ zipTree(coreTestJar.get().singleFile) })
   from(
-      installAndroidSdk.map {
-        "${it.outputs.files.singleFile}/platforms/$platformsVersion/android.jar"
+      installAndroidSdk.zip(catalogPlatformsVersion) { sdk, version ->
+        "${sdk.outputs.files.singleFile}/platforms/$version/android.jar"
       }
   )
 }

@@ -4,7 +4,7 @@
 //
 
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import com.github.gradle.node.npm.task.NpxTask
+import com.ibm.wala.gradle.LintMarkdown
 import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion.VERSION_21
 
@@ -69,21 +69,7 @@ node {
   version = "24.14.0"
 }
 
-val lintMarkdown =
-    tasks.register<NpxTask>("lintMarkdown") {
-      description = "Lint Markdown files"
-      group = "verification"
-      command = "markdownlint-cli2@0.18.1"
-      val markdownFiles = fileTree(".") { include("*.md") }
-      inputs.files(markdownFiles)
-      inputs.file(".markdownlint-cli2.yaml")
-      args = markdownFiles.map { it.path }
-      outputs.run {
-        file(layout.buildDirectory.file("$name.stamp"))
-        cacheIf { true }
-      }
-      doLast { outputs.files.singleFile.createNewFile() }
-    }
+val lintMarkdown = tasks.register<LintMarkdown>("lintMarkdown")
 
 tasks.named("check") { dependsOn("buildHealth", lintMarkdown) }
 

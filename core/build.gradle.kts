@@ -1,10 +1,10 @@
 import com.ibm.wala.gradle.CompileKawaScheme
+import com.ibm.wala.gradle.GenerateHelloHashJar
 import com.ibm.wala.gradle.JavaCompileUsingEcj
 import com.ibm.wala.gradle.adHocDownload
 import com.ibm.wala.gradle.dropTopDirectory
 import com.ibm.wala.gradle.showEachResult
 import com.ibm.wala.gradle.valueToString
-import kotlin.io.resolve
 import org.gradle.api.attributes.Bundling.BUNDLING_ATTRIBUTE
 import org.gradle.api.attributes.Bundling.EMBEDDED
 import org.gradle.api.attributes.Bundling.EXTERNAL
@@ -88,12 +88,6 @@ dependencies {
   // to allow writing test subject classes that use JUnit annotations
   "testSubjectsImplementation"(libs.junit.jupiter.api)
   "testSubjectsImplementation"(platform(libs.junit.bom))
-}
-
-// Injected services used by `generateHelloHash` task.
-interface GenerateHelloHashServices {
-  @get:Inject val archive: ArchiveOperations
-  @get:Inject val fileSystem: FileSystemOperations
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -305,67 +299,10 @@ val extractOcamlLibFiles =
     }
 
 val generateHelloHashJar =
-    tasks.register<JavaExec>("generateHelloHashJar") {
-      description = "Compile OCaml `hello_hash` to Java bytecode JAR"
-
-      // OCaml source file to compile to Java bytecode
-      val ocamlSource = file("ocaml/hello_hash.ml")
-      inputs.file(ocamlSource)
-
-      // generated JAR archive that will contain compiled OCaml code
-      val jarTarget = layout.buildDirectory.file("hello_hash.jar")
-      outputs.file(jarTarget)
-      outputs.cacheIf { true }
-
-      // unpacked OCaml-Java distribution
-      inputs.files(unpackOcamlJava)
-
-      // extracted OCaml standard library
-      inputs.files(extractOcamlLibFiles)
-
-      // `ocamljava` JAR to compile OCaml to Java bytecode; its manifest declares a `Class-Path`
-      // entry for `ocaml-lib-files.jar`, which the JVM resolves relative to the JAR itself
-      val ocamlJavaJar =
-          unpackOcamlJava.flatMap {
-            it.workingDirectory.file("ocamljava-$ocamlJavaVersion/lib/ocamljava.jar")
-          }
-      inputs.file(ocamlJavaJar)
-      classpath(ocamlJavaJar)
-      mainClass = "ocaml.compilers.ocamljavaMain"
-
-      // the compiler requires a deep stack
-      jvmArgs("-Xss8M")
-
-      argumentProviders.add { listOf("-o", jarTarget.get().toString()) }
-
-      // tell the compiler where its standard library actually lives
-      environment(
-          "OCAMLLIB",
-          extractOcamlLibFiles
-              .map {
-                layout.buildDirectory
-                    .dir("extractOcamlLibFiles/ocamljava-$ocamlJavaVersion/lib/ocaml")
-                    .get()
-                    .asFile
-                    .path
-              }
-              .valueToString,
-      )
-
-      objects.newInstance<GenerateHelloHashServices>().run {
-
-        // avoid polluting source directory with `hello_hash.{cmi,cmj,jo}` files
-        doFirst {
-          fileSystem.copy {
-            from(ocamlSource)
-            into(temporaryDir)
-          }
-        }
-        argumentProviders.add { listOf(temporaryDir.resolve(ocamlSource.name).toString()) }
-
-        // validate generated JAR: `ocamljava` always "succeeds", even if something went wrong
-        doLast { check(!archive.zipTree(jarTarget).isEmpty) }
-      }
+    tasks.register<GenerateHelloHashJar>("generateHelloHashJar") {
+      ocamlJavaVersion = libs.versions.ocaml.java
+      ocamlJavaHome = unpackOcamlJava.flatMap { it.workingDirectory }
+      ocamlLibFilesRoot = extractOcamlLibFiles.flatMap { it.destinationDirectory }
     }
 
 ////////////////////////////////////////////////////////////////////////
