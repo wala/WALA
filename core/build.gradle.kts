@@ -15,6 +15,9 @@ import org.gradle.api.attributes.LibraryElements.CLASSES
 import org.gradle.api.attributes.LibraryElements.JAR
 import org.gradle.api.attributes.LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE
 import org.gradle.api.attributes.LibraryElements.RESOURCES
+import org.gradle.api.plugins.JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME
+import org.gradle.api.plugins.JavaPlugin.PROCESS_TEST_RESOURCES_TASK_NAME
+import org.gradle.api.plugins.JavaPlugin.TEST_TASK_NAME
 import org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry
 import org.gradle.plugins.ide.eclipse.model.Classpath
 
@@ -40,22 +43,22 @@ eclipse {
   }
 }
 
-val compileTestSubjectsJava = tasks.named("compileTestSubjectsJava")
+val testSubjects = sourceSets["testSubjects"]
 
-tasks {
-  named<JavaCompile>("compileTestSubjectsJava") { options.isDeprecation = false }
+val compileTestSubjectsJava = tasks.named<JavaCompile>(testSubjects.compileJavaTaskName)
 
-  named<JavaCompileUsingEcj>("compileTestSubjectsJavaUsingEcj") {
-    options.compilerArgumentProviders.add {
-      listOf(
-          "-warn:none",
-          "-err:-serial",
-          "-err:-unchecked",
-          "-err:-unusedLocal",
-          "-err:-unusedParam",
-          "-err:-unusedThrown",
-      )
-    }
+compileTestSubjectsJava { options.isDeprecation = false }
+
+tasks.named<JavaCompileUsingEcj>(testSubjects.getCompileTaskName("javaUsingEcj")) {
+  options.compilerArgumentProviders.add {
+    listOf(
+        "-warn:none",
+        "-err:-serial",
+        "-err:-unchecked",
+        "-err:-unusedLocal",
+        "-err:-unusedParam",
+        "-err:-unusedThrown",
+    )
   }
 }
 
@@ -82,9 +85,9 @@ dependencies {
   testImplementation(libs.jspecify)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(testFixtures(projects.util))
-  testRuntimeOnly(sourceSets["testSubjects"].output.classesDirs)
+  testRuntimeOnly(testSubjects.output.classesDirs)
   // add the testSubjects source files to enable SourceMapTest to pass
-  testRuntimeOnly(files(sourceSets["testSubjects"].java.srcDirs))
+  testRuntimeOnly(files(testSubjects.java.srcDirs))
   // to allow writing test subject classes that use JUnit annotations
   "testSubjectsImplementation"(libs.junit.jupiter.api)
   "testSubjectsImplementation"(platform(libs.junit.bom))
@@ -352,7 +355,7 @@ val collectTestDataAForDalvik =
 
 ////////////////////////////////////////////////////////////////////////
 
-tasks.named<Copy>("processTestResources") {
+tasks.named<Copy>(PROCESS_TEST_RESOURCES_TASK_NAME) {
   from(
       buildChessJar,
       buildKawaTestJar,
@@ -365,7 +368,7 @@ tasks.named<Copy>("processTestResources") {
   )
 }
 
-tasks.named<Test>("test") {
+tasks.named<Test>(TEST_TASK_NAME) {
   maxHeapSize = "2000M"
   systemProperty("com.ibm.wala.junit.profile", "short")
   classpath += files(sourceSets.test.map { it.output.classesDirs })
@@ -394,7 +397,7 @@ val testJar =
       description = "Assemble test JAR archive"
       group = "build"
       archiveClassifier = "test"
-      from(tasks.named("compileTestJava"))
+      from(tasks.named(COMPILE_TEST_JAVA_TASK_NAME))
     }
 
 val testJarConfig =

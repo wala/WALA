@@ -3,10 +3,12 @@
 //  plugin configuration must precede everything else
 //
 
+import com.autonomousapps.tasks.BuildHealthTask
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import com.ibm.wala.gradle.LintMarkdown
 import org.gradle.api.GradleException
 import org.gradle.api.JavaVersion.VERSION_21
+import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
 
 plugins {
   idea
@@ -71,7 +73,7 @@ node {
 
 val lintMarkdown = tasks.register<LintMarkdown>("lintMarkdown")
 
-tasks.named("check") { dependsOn("buildHealth", lintMarkdown) }
+tasks.named(CHECK_TASK_NAME) { dependsOn(tasks.withType<BuildHealthTask>(), lintMarkdown) }
 
 tasks.named("shellcheck") { group = "verification" }
 
@@ -90,7 +92,7 @@ tasks.register<Copy>("installGitHooks") {
   }
 }
 
-listOf("check", "spotlessCheck", "spotlessApply").forEach {
+listOf(CHECK_TASK_NAME, "spotlessCheck", "spotlessApply").forEach {
   tasks.named(it) { dependsOn(gradle.includedBuild("build-logic").task(":$it")) }
 }
 
