@@ -1,6 +1,5 @@
 [versions]
 android-platforms = "android-28"
-com-uber-nullaway = "0.14.2"
 #noinspection UnusedVersionCatalogEntry
 eclipse = "4.30.0"
 eclipse-wst-jsdt = "1.0.201.v2010012803"
@@ -9,10 +8,10 @@ google-java-format = "1.35.0"
 #noinspection UnusedVersionCatalogEntry
 jmh = "1.37"
 ktfmt = "0.59"
+nullaway = "0.14.2"
 ocaml-java = "2.0-alpha3"
 
 [libraries]
-android-tools = "com.android.tools:r8:8.2.46"
 ant = "org.apache.ant:ant:1.10.18"
 assertj-core = "org.assertj:assertj-core:3.27.7"
 commons-cli = "commons-cli:commons-cli:1.11.0"
@@ -27,7 +26,7 @@ errorprone-core = "com.google.errorprone:error_prone_core:2.50.0"
 gson = "com.google.code.gson:gson:2.14.0"
 guava = "com.google.guava:guava:33.7.2-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"
-java_cup = "java_cup:java_cup:0.9e"
+javaCup = "java_cup:java_cup:0.9e"
 jctools = "org.jctools:jctools-core:4.0.7"
 jericho-html = "net.htmlparser.jericho:jericho-html:3.4"
 jetbrains-annotations = "org.jetbrains:annotations:26.1.0"
@@ -46,10 +45,11 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine" }
 netbeans-java-cup = "org.netbeans.external:java-cup-11a:RELEASE290"
 #noinspection UnusedVersionCatalogEntry
-nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "com-uber-nullaway" }
+nullaway = { module = "com.uber.nullaway:nullaway", version.ref = "nullaway" }
 #noinspection UnusedVersionCatalogEntry
-nullaway-annotations = { module = "com.uber.nullaway:nullaway-annotations", version.ref = "com-uber-nullaway" }
+nullaway-annotations = { module = "com.uber.nullaway:nullaway-annotations", version.ref = "nullaway" }
 osgi-framework = "org.osgi:org.osgi.framework:1.10.0"
+r8 = "com.android.tools:r8:8.2.46"
 rhino = "org.mozilla:rhino:1.9.1"
 slf4j-api = "org.slf4j:slf4j-api:2.0.20"
 

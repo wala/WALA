@@ -86,9 +86,9 @@ dependencies {
   implementation(libs.slf4j.api)
   implementation(libs.guava)
 
-  sampleCupSources(libs.java.cup.map { "$it:sources" })
+  sampleCupSources(libs.javaCup.map { "$it:sources" })
 
-  testImplementation(libs.android.tools)
+  testImplementation(libs.r8)
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
