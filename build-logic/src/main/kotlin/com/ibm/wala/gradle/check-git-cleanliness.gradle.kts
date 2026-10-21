@@ -3,6 +3,8 @@ package com.ibm.wala.gradle
 import kotlin.io.path.Path
 import org.eclipse.jgit.api.Git
 import org.gradle.api.tasks.VerificationException
+import org.gradle.language.base.plugins.LifecycleBasePlugin.BUILD_TASK_NAME
+import org.gradle.language.base.plugins.LifecycleBasePlugin.CHECK_TASK_NAME
 
 /**
  * Validate `.gitignore` patterns and strict source/build separation.
@@ -30,7 +32,7 @@ abstract class CheckGitCleanlinessTask : DefaultTask() {
     onlyIf { projectDirectory.file(".git").asFile.isDirectory }
 
     // Run after high-level tasks whose subtasks might modify files in the working directory.
-    mustRunAfter("check", "build")
+    mustRunAfter(CHECK_TASK_NAME, BUILD_TASK_NAME)
   }
 
   @TaskAction

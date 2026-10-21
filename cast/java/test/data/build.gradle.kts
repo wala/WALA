@@ -16,7 +16,7 @@ plugins {
 }
 
 val compileTestSubjectsJava =
-    tasks.named<JavaCompile>("compileTestSubjectsJava") {
+    tasks.named<JavaCompile>(sourceSets["testSubjects"].compileJavaTaskName) {
       options.run {
         // No need to run Error Prone on our analysis test inputs
         errorprone.enabled = false

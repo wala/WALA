@@ -13,7 +13,7 @@ plugins { id("com.ibm.wala.gradle.java") }
 val testSubjects = sourceSets.create("testSubjects")
 
 tasks {
-  named<JavaCompile>("compileTestSubjectsJava") {
+  named<JavaCompile>(testSubjects.compileJavaTaskName) {
     // No need to run Error Prone on our analysis test inputs
     options.errorprone.enabled = false
   }
