@@ -31,10 +31,6 @@ JavaVersion.current().let {
   }
 }
 
-// `gradle-wrapper.properties` has a `distributionSha256Sum` for the `-all` zip;
-// the wrapper task default `BIN` type would otherwise produce a mismatched URL.
-tasks.named<Wrapper>("wrapper") { distributionType = Wrapper.DistributionType.ALL }
-
 ////////////////////////////////////////////////////////////////////////
 //
 //  common Java setup shared by multiple projects
