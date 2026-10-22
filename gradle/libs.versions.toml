@@ -8,7 +8,7 @@ google-java-format = "1.35.0"
 #noinspection UnusedVersionCatalogEntry
 jmh = "1.37"
 ktfmt = "0.59"
-nullaway = "0.14.2"
+nullaway = "0.14.3"
 ocaml-java = "2.0-alpha3"
 
 [libraries]
