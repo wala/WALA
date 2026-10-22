@@ -10,6 +10,7 @@
 /libraries/*.xml
 /modules.xml
 /other.xml
+/pyLspTools.xml
 /shelf/
 /tasks.xml
 /uiDesigner.xml
