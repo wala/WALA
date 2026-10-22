@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "skills": {
+    "gradle-best-practices": {
+      "source": "gradle/gradle-skills",
+      "ref": "1.1.0",
+      "sourceType": "github",
+      "skillPath": "skills/gradle-best-practices/SKILL.md",
+      "computedHash": "b09ae5efef7d30c7c2802026db580ef727aba1e08c610810fe4daa9464b2328d"
+    },
+    "gradle-wrapper-upgrade": {
+      "source": "gradle/gradle-skills",
+      "ref": "1.1.0",
+      "sourceType": "github",
+      "skillPath": "skills/gradle-wrapper-upgrade/SKILL.md",
+      "computedHash": "fe67a0ec5f69c05d4e4e9ed354e9460b511491a8d823a664579c871bc95f5df7"
+    }
+  }
+}

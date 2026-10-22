@@ -37,6 +37,61 @@ If your code fails check 2, you can run `./gradlew spotlessApply` to
 automatically format it.  The CI job runs `./gradlew build` and will
 fail if any of these additional checks fail.
 
+Agent Skills
+------------
+
+Some agent skills that help with Gradle are fetched from the Gradle
+project, so that they are available to whichever agent you happen to use.
+They are not tracked by Git.  What is tracked is `skills-lock.json`,
+which records where the skills came from and pins the upstream release
+they were taken from.
+
+After you clone the repository, fetch the skills:
+
+    ./refresh-agent-skills.sh
+
+The skills are installed in "project" scope: the canonical copy of each
+skill lands in `.agents/skills/`, and the refresh script links it into
+`.claude/skills/`, so that there is only ever one copy to maintain and
+every agent sees the same skills.  Agents like Junie load skills
+directly from `.agent/` and `.agents/`, so they need no links.  Those
+directories are ignored by Git.
+
+The fetch also happens on its own in a devcontainer.  Elsewhere it
+happens after a checkout, once the Git hooks are installed:
+
+    ./gradlew installGitHooks
+
+The `skills` command line tool writes `skills-lock.json`, and it is the
+only thing that should write it.
+
+To move the pin to a newer upstream release, install the skills at the
+new release with the `skills` command line tool:
+
+    npx --yes skills@1.7.4 add gradle/gradle-skills#1.2.0 --yes \
+      --agent claude-code
+
+That fetches every skill in that release and rewrites
+`skills-lock.json` to record it.  Run `./refresh-agent-skills.sh` once
+afterwards, so that the skills on disk are the ones that the new pin
+calls for.  Commit the resulting change to `skills-lock.json`; that one
+file is the whole change.
+
+To give the skills to another agent, add its skills directory to the
+`AGENT_SKILL_DIRS` list in `refresh-agent-skills.sh` and re-run the
+script.  The `skills` command line tool knows that agent by a different
+name, which the command above needs.
+
+On Windows, where symbolic links generally are not available, the
+refresh script makes directory junctions instead of them.  Nothing is
+tracked, so there is nothing to commit either way; the junctions are
+simply left in place, like the symbolic links are elsewhere.
+
+These skills come from the Gradle project and are licensed under the
+Apache License, Version 2.0.  Each skill records its license in the
+front matter of its `SKILL.md` file.  You may obtain a copy of the
+license at <https://www.apache.org/licenses/LICENSE-2.0>.
+
 DOs and DON'Ts
 --------------
 

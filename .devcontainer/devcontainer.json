@@ -2,8 +2,10 @@
   "name": "Java",
   "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/java:1": {}
+    "ghcr.io/devcontainers/features/java:1": {},
+    "ghcr.io/devcontainers/features/node:1": {}
   },
+  "postCreateCommand": "bash ./refresh-agent-skills.sh || echo 'Could not fetch the agent skills; run ./refresh-agent-skills.sh when you have network access.'",
   "customizations": {
     "jetbrains": {
       "backend": "IntelliJ",

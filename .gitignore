@@ -4,7 +4,10 @@
 .classpath
 .DS_Store
 .project
-bin/
+/.agents/skills/
+/.claude/settings.local.json
+/.claude/skills/
 /.gradle/
 /.vscode/settings.json
+bin/
 build/
