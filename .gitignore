@@ -4,7 +4,11 @@
 .classpath
 .DS_Store
 .project
-bin/
+/.agents/skills/
+/apm_modules/
+/.claude/settings.local.json
+/.claude/skills/
 /.gradle/
 /.vscode/settings.json
+bin/
 build/

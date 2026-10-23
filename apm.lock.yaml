@@ -1,0 +1,747 @@
+lockfile_version: '2'
+apm_version: 0.34.0
+dependencies:
+- repo_url: gradle/gradle-skills
+  name: gradle-best-practices
+  host: github.com
+  resolved_commit: 00b7790139dff32063976f98334b2a2301b50a9d
+  resolved_ref: 1.1.0
+  version: 1.1.0
+  virtual_path: skills/gradle-best-practices
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/gradle-best-practices
+  - .agents/skills/gradle-best-practices/SKILL.md
+  - .agents/skills/gradle-best-practices/metadata.json
+  - .agents/skills/gradle-best-practices/references/dependencies.md
+  - .agents/skills/gradle-best-practices/references/detection.md
+  - .agents/skills/gradle-best-practices/references/fixes/apply_exclusions_narrowly.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_after_evaluate.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_computations_in_configuration_phase.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_depends_on.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_duplicate_dependencies.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_eager_file_collection_apis.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_empty_projects.md
+  - .agents/skills/gradle-best-practices/references/fixes/avoid_provider_get_outside_task_action.md
+  - .agents/skills/gradle-best-practices/references/fixes/build-published-artifacts-securely.md
+  - .agents/skills/gradle-best-practices/references/fixes/builds_should_be_reproducible.md
+  - .agents/skills/gradle-best-practices/references/fixes/consider_use_of_incubating_apis_carefully.md
+  - .agents/skills/gradle-best-practices/references/fixes/default_path_sensitivities.md
+  - .agents/skills/gradle-best-practices/references/fixes/do_not_use_gradle_properties_in_subprojects.md
+  - .agents/skills/gradle-best-practices/references/fixes/do_not_use_internal_apis.md
+  - .agents/skills/gradle-best-practices/references/fixes/dont_access_project_instance_inside_task.md
+  - .agents/skills/gradle-best-practices/references/fixes/dont_assume_plugin_order.md
+  - .agents/skills/gradle-best-practices/references/fixes/dont_depend_on_kotlin_stdlib.md
+  - .agents/skills/gradle-best-practices/references/fixes/dont_hardcode_task_names.md
+  - .agents/skills/gradle-best-practices/references/fixes/dont_resolve_configurations_before_task_execution.md
+  - .agents/skills/gradle-best-practices/references/fixes/favor_collection_properties.md
+  - .agents/skills/gradle-best-practices/references/fixes/favor_composite_builds.md
+  - .agents/skills/gradle-best-practices/references/fixes/group_describe_tasks.md
+  - .agents/skills/gradle-best-practices/references/fixes/map_versus_flatmap.md
+  - .agents/skills/gradle-best-practices/references/fixes/modularize_builds.md
+  - .agents/skills/gradle-best-practices/references/fixes/name_version_catalog_entries.md
+  - .agents/skills/gradle-best-practices/references/fixes/name_your_root_project.md
+  - .agents/skills/gradle-best-practices/references/fixes/no_source_in_root.md
+  - .agents/skills/gradle-best-practices/references/fixes/obtain_loggers_via_logging_get_logger.md
+  - .agents/skills/gradle-best-practices/references/fixes/prefer_bin_distribution.md
+  - .agents/skills/gradle-best-practices/references/fixes/run_gradle_on_external_projects.md
+  - .agents/skills/gradle-best-practices/references/fixes/set_up_repositories_in_settings.md
+  - .agents/skills/gradle-best-practices/references/fixes/single-gav-string.md
+  - .agents/skills/gradle-best-practices/references/fixes/test_custom_types_with_testkit.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_attributes_on_configurations.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_build_cache.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_cacheability_annotations.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_configuration_cache.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_content_filtering.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_convention_plugins.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_kotlin_dsl.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_latest_minor_versions.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_the_gradle_properties_file.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_the_plugins_block.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_unique_output_files_and_directories.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_utf8_encoding.md
+  - .agents/skills/gradle-best-practices/references/fixes/use_version_catalogs.md
+  - .agents/skills/gradle-best-practices/references/fixes/validate_gradle_checksum.md
+  - .agents/skills/gradle-best-practices/references/fixes/validate_wrapper_checksum.md
+  - .agents/skills/gradle-best-practices/references/general.md
+  - .agents/skills/gradle-best-practices/references/index.md
+  - .agents/skills/gradle-best-practices/references/performance.md
+  - .agents/skills/gradle-best-practices/references/security.md
+  - .agents/skills/gradle-best-practices/references/structuring-builds.md
+  - .agents/skills/gradle-best-practices/references/tasks.md
+  - .agents/skills/gradle-best-practices/references/testing.md
+  deployed_file_hashes:
+    .agents/skills/gradle-best-practices/SKILL.md: sha256:f03755a84004d59beb91e4219f866da84efa39f0a4da518ffaa8decdb74d6f52
+    .agents/skills/gradle-best-practices/metadata.json: sha256:215bf6761fe1d4a478e20a8d8fb4a342e0fc7662a6c7227bc6ada7c353642c5a
+    .agents/skills/gradle-best-practices/references/dependencies.md: sha256:4bbcbb8b4dca05249e1907ed56328bce204ddea0fb7b2dca663c5dc5dbe8af15
+    .agents/skills/gradle-best-practices/references/detection.md: sha256:3ae9f9299e52c961b657b1e7c7bb71fb6998e24cbef45ce31e47e546482fa6c3
+    .agents/skills/gradle-best-practices/references/fixes/apply_exclusions_narrowly.md: sha256:ed068516d919d0d690f9db165a4fc3deef85095c3e77de571c7d9c6d90d0cb31
+    .agents/skills/gradle-best-practices/references/fixes/avoid_after_evaluate.md: sha256:ae8bd99dded03e83523029a71bebab1d0c70af4cfb9fdffae7ae1a572fdbf991
+    .agents/skills/gradle-best-practices/references/fixes/avoid_computations_in_configuration_phase.md: sha256:5c1b8e63ef7f9cbcb97adc52089aaa2dd2aee0f1f1e10d14908e5ef545ac897c
+    .agents/skills/gradle-best-practices/references/fixes/avoid_depends_on.md: sha256:55da004a94e5718d8a4ca68c1e3babd6ba18e450a657b11ae900d63d4635b5dc
+    .agents/skills/gradle-best-practices/references/fixes/avoid_duplicate_dependencies.md: sha256:7e6dae61e8cf304373873a89422c84b4426617deb3e42686eb4a76187d564df3
+    .agents/skills/gradle-best-practices/references/fixes/avoid_eager_file_collection_apis.md: sha256:c7bfdae7e4d5d7e3f1b845eac3539222581ee223f0036ac34a49345c0867bf55
+    .agents/skills/gradle-best-practices/references/fixes/avoid_empty_projects.md: sha256:3122e701deeb89cec2910787185ad6a42b3b7f6387c090e9a02e9ce2d0a8529c
+    .agents/skills/gradle-best-practices/references/fixes/avoid_provider_get_outside_task_action.md: sha256:2caf0297d2efb887f5499f3856fc161dafa311850276c5aed6467b15a7228ed9
+    .agents/skills/gradle-best-practices/references/fixes/build-published-artifacts-securely.md: sha256:0becb800eb3b33ac7c2ba6f0a452fcd42e7f10dd04f6aefb5d9781b5f9c5c248
+    .agents/skills/gradle-best-practices/references/fixes/builds_should_be_reproducible.md: sha256:85a8aa17b7734f7a40f91a1700daa8dbdde4d509c8a7340f23fad8c85e2b8714
+    .agents/skills/gradle-best-practices/references/fixes/consider_use_of_incubating_apis_carefully.md: sha256:f98f28c507d381139125dd66b2b24d014f69b3ceb22ef5cada29947c26c4acad
+    .agents/skills/gradle-best-practices/references/fixes/default_path_sensitivities.md: sha256:f64e0b0e4d93ec36f8cebb049ca108ea69c62fa36c7182404cad9379b40faedc
+    .agents/skills/gradle-best-practices/references/fixes/do_not_use_gradle_properties_in_subprojects.md: sha256:4503a114e4b394c19a52403716e99e25329261e06ddddf67b385bd45a8d0ffa5
+    .agents/skills/gradle-best-practices/references/fixes/do_not_use_internal_apis.md: sha256:141f6ef1906f4e01e91a14d2983b37680a6f1b0332f3f8e3dba844ebea0fea86
+    .agents/skills/gradle-best-practices/references/fixes/dont_access_project_instance_inside_task.md: sha256:8894ec05f3d9319c24d0ee216da558e03b266c48e2b12a1d2194c2b445ffc97f
+    .agents/skills/gradle-best-practices/references/fixes/dont_assume_plugin_order.md: sha256:d1e47eda43070a720ab2b0683f823f4cff153881fe65301dbba4eefda2e67d12
+    .agents/skills/gradle-best-practices/references/fixes/dont_depend_on_kotlin_stdlib.md: sha256:e38f1483b3f6461c1decfd1e898b5760429b8a6932e338ed064c009e00376ed0
+    .agents/skills/gradle-best-practices/references/fixes/dont_hardcode_task_names.md: sha256:7555bf5bbf4dda3879b6a62e28df4c9f8042582cd84a7aa3e011042ae67f4a99
+    .agents/skills/gradle-best-practices/references/fixes/dont_resolve_configurations_before_task_execution.md: sha256:318158a148e47e28a7b810e62cba0f4c900c09ac5f947f53222068f6b391ccad
+    .agents/skills/gradle-best-practices/references/fixes/favor_collection_properties.md: sha256:44c84348210abb11f6bd7aa89c6bea87125b1e301deb0094428866a7e8869dc4
+    .agents/skills/gradle-best-practices/references/fixes/favor_composite_builds.md: sha256:a698df834ba6360d107ec722455e537830cc7a867045fe684b07b686d200831a
+    .agents/skills/gradle-best-practices/references/fixes/group_describe_tasks.md: sha256:c1eb006037197ba69abd10e9569b01db359f6debb680143e49d3dfb259da957d
+    .agents/skills/gradle-best-practices/references/fixes/map_versus_flatmap.md: sha256:c574767b7c199c81c7c1f57b8bff32edd4866ec84a7a525f758f21c396a82424
+    .agents/skills/gradle-best-practices/references/fixes/modularize_builds.md: sha256:7f7ea9bf6d30ea9206d27359224dde98193b59e735d58e91bc7b1d8879687295
+    .agents/skills/gradle-best-practices/references/fixes/name_version_catalog_entries.md: sha256:106e93c5fedd03ea5f0783bc6aa6a4902258b916974ed8a1ff7b2f6872a8137a
+    .agents/skills/gradle-best-practices/references/fixes/name_your_root_project.md: sha256:e5fb7ea6ed4dd4ab955964968571792cb29a3fc10fa00594fc5006cd3910b3fc
+    .agents/skills/gradle-best-practices/references/fixes/no_source_in_root.md: sha256:6d46e3e7ea22d4633d40a38ae84068b7af92a894b34be27bf436b2da4fe0ab45
+    .agents/skills/gradle-best-practices/references/fixes/obtain_loggers_via_logging_get_logger.md: sha256:928c64ecf992d5e9315e5233173b6216583df15311e1cc765071656a08382d40
+    .agents/skills/gradle-best-practices/references/fixes/prefer_bin_distribution.md: sha256:1fd22f013dae32f3c093fa3ca5f47f3db4bbcd4982372cdefe16c5ec38c0ce62
+    .agents/skills/gradle-best-practices/references/fixes/run_gradle_on_external_projects.md: sha256:e4f68a260987cf8a66274351303670a19669010e6d554115b8a2e8be73f6372c
+    .agents/skills/gradle-best-practices/references/fixes/set_up_repositories_in_settings.md: sha256:c6d205bbf21cb0321b8223959b98328a00867ae7fb7d0ab448062bfda480f24b
+    .agents/skills/gradle-best-practices/references/fixes/single-gav-string.md: sha256:035d39afee6d76f6a721d30e36e2f229638bf9e588d67749347d92eb066796d4
+    .agents/skills/gradle-best-practices/references/fixes/test_custom_types_with_testkit.md: sha256:7db40fe7ccc8830324a7b3bb30d94fddc82e69fdf93afc936a618ec6b897505e
+    .agents/skills/gradle-best-practices/references/fixes/use_attributes_on_configurations.md: sha256:69ea0dda2e136c00fac31401483ad18d9e9a2e09ff5363f62e8efe5946319b15
+    .agents/skills/gradle-best-practices/references/fixes/use_build_cache.md: sha256:fee20ce1052915584496b28acd9038eafe8b90888dfcead67a3f0b9081d28413
+    .agents/skills/gradle-best-practices/references/fixes/use_cacheability_annotations.md: sha256:c14d2e1cbce43647edb8846d778d3093ae904cc4796a06f76a57ff37c1576f7a
+    .agents/skills/gradle-best-practices/references/fixes/use_configuration_cache.md: sha256:ee5007793986ddb6837cd2d0a034c26ff2fcf6ad579c2caad5c6e408ff453364
+    .agents/skills/gradle-best-practices/references/fixes/use_content_filtering.md: sha256:2a74a390d76737d50ede0b2f90b2acb8cd2296948b68e82f21d6dfc4df8b7d03
+    .agents/skills/gradle-best-practices/references/fixes/use_convention_plugins.md: sha256:de0a1f4de0a39a0f6eda51fcce5443dc86fc8133d343e4c2f6c5041e32c02c88
+    .agents/skills/gradle-best-practices/references/fixes/use_kotlin_dsl.md: sha256:3b64c040a412f9c11cdc1870e1b8c10cc575fcfa0d1703d9478eed624375ad07
+    .agents/skills/gradle-best-practices/references/fixes/use_latest_minor_versions.md: sha256:73e9926aadabe4f1b193eff8904a8e375945e9ebffb4dae0de97a98b57510807
+    .agents/skills/gradle-best-practices/references/fixes/use_the_gradle_properties_file.md: sha256:f8c96b8916ac529e2a5a04974ffd758a8c24ad885bf2e60f9d2e6efa4c4dd15a
+    .agents/skills/gradle-best-practices/references/fixes/use_the_plugins_block.md: sha256:d86f8f3aa6ddf5343b9e936f32aeb2b484947bb739e00b018fa15987275aaeb4
+    .agents/skills/gradle-best-practices/references/fixes/use_unique_output_files_and_directories.md: sha256:323c20a07810a64d33cd615540fe74a0204066c21691948fbc4c55b8ed8a7b5e
+    .agents/skills/gradle-best-practices/references/fixes/use_utf8_encoding.md: sha256:5ebd20f3e84b73c8e44e85dae1de5f951c212fb024cd078ff2206777236017cf
+    .agents/skills/gradle-best-practices/references/fixes/use_version_catalogs.md: sha256:b2ec316e1486f6a229ebf885b1d589881d375dd433abf5b33596db589dd0cbda
+    .agents/skills/gradle-best-practices/references/fixes/validate_gradle_checksum.md: sha256:40188c66cf5ba0ae3443defca7d8ff3d094b2f5b7e4cc45d449ebe2ccd53705e
+    .agents/skills/gradle-best-practices/references/fixes/validate_wrapper_checksum.md: sha256:f810c2c91549ae671ba8f28bdc0415e567c64150faf30b3939a5d944118dc4eb
+    .agents/skills/gradle-best-practices/references/general.md: sha256:a1a9128ee2c806914b27bdc1902e746da3df0bd28b8e459e4778842c33d986f6
+    .agents/skills/gradle-best-practices/references/index.md: sha256:4b2aad927eefea0dfefc24dc391c45cee42dff6a265fee12d42a368e3386b150
+    .agents/skills/gradle-best-practices/references/performance.md: sha256:f11f721e83c37cac0f1bce6b425cc5b1970a9b6a5455cc0b9f7296cf0693d37d
+    .agents/skills/gradle-best-practices/references/security.md: sha256:84b0cfe822ba358eb236a2bda3c86816a85e527aa7308bd9c1638448617d5bb0
+    .agents/skills/gradle-best-practices/references/structuring-builds.md: sha256:b03f775ebd51cfa283209048f70a85c6eee62c37226ab18b19aa4de72703ab9f
+    .agents/skills/gradle-best-practices/references/tasks.md: sha256:c3df1025dfa3820636729856f9dbd6d1e6af1e96959843e61f11ad8461d6d02f
+    .agents/skills/gradle-best-practices/references/testing.md: sha256:1436d025d85b426631b8f29633950938c13cb79d1be7404e72c52e01a0026d55
+  content_hash: sha256:a3e1ebe44cdf0dee55f7faaf602502c53b75a22bd95dadf6a4ff42a8c16f89a1
+  constraint: 1.1.0
+  resolved_tag: 1.1.0
+  resolved_at: '2026-10-22T23:28:30+00:00'
+- repo_url: gradle/gradle-skills
+  name: gradle-wrapper-upgrade
+  host: github.com
+  resolved_commit: 00b7790139dff32063976f98334b2a2301b50a9d
+  resolved_ref: gradle-wrapper-upgrade-v1.1.0
+  version: 1.1.0
+  virtual_path: skills/gradle-wrapper-upgrade
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/gradle-wrapper-upgrade
+  - .agents/skills/gradle-wrapper-upgrade/SKILL.md
+  - .agents/skills/gradle-wrapper-upgrade/metadata.json
+  - .agents/skills/gradle-wrapper-upgrade/references/rollback.md
+  - .agents/skills/gradle-wrapper-upgrade/references/snapshot.md
+  deployed_file_hashes:
+    .agents/skills/gradle-wrapper-upgrade/SKILL.md: sha256:d979349cd37635632b2e9ebc968674baaca42cb31b6cd91ccce3373f53db76f7
+    .agents/skills/gradle-wrapper-upgrade/metadata.json: sha256:442b7183522f6fc445276557c2db077d76229085858ab6911c610789be3b4313
+    .agents/skills/gradle-wrapper-upgrade/references/rollback.md: sha256:a0a96f5588172c06e6008a7831aeb6bdcd304a535134f13fafe2fa3f82cd96ca
+    .agents/skills/gradle-wrapper-upgrade/references/snapshot.md: sha256:766117870a0f7e7a2bb3567ab5c08991b5a02481f5c008a882545493340d75cc
+  content_hash: sha256:a5d44493cc6d1421c65d2df3deef7862825853af511edf2bef40fda8bdbd5b93
+  constraint: 1.1.0
+  resolved_tag: gradle-wrapper-upgrade-v1.1.0
+  resolved_at: '2026-10-22T23:28:30+00:00'
+deployments:
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: null
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:f03755a84004d59beb91e4219f866da84efa39f0a4da518ffaa8decdb74d6f52
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/metadata.json
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:215bf6761fe1d4a478e20a8d8fb4a342e0fc7662a6c7227bc6ada7c353642c5a
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/dependencies.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:4bbcbb8b4dca05249e1907ed56328bce204ddea0fb7b2dca663c5dc5dbe8af15
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/detection.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:3ae9f9299e52c961b657b1e7c7bb71fb6998e24cbef45ce31e47e546482fa6c3
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/apply_exclusions_narrowly.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:ed068516d919d0d690f9db165a4fc3deef85095c3e77de571c7d9c6d90d0cb31
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_after_evaluate.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:ae8bd99dded03e83523029a71bebab1d0c70af4cfb9fdffae7ae1a572fdbf991
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_computations_in_configuration_phase.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:5c1b8e63ef7f9cbcb97adc52089aaa2dd2aee0f1f1e10d14908e5ef545ac897c
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_depends_on.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:55da004a94e5718d8a4ca68c1e3babd6ba18e450a657b11ae900d63d4635b5dc
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_duplicate_dependencies.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:7e6dae61e8cf304373873a89422c84b4426617deb3e42686eb4a76187d564df3
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_eager_file_collection_apis.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:c7bfdae7e4d5d7e3f1b845eac3539222581ee223f0036ac34a49345c0867bf55
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_empty_projects.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:3122e701deeb89cec2910787185ad6a42b3b7f6387c090e9a02e9ce2d0a8529c
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/avoid_provider_get_outside_task_action.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:2caf0297d2efb887f5499f3856fc161dafa311850276c5aed6467b15a7228ed9
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/build-published-artifacts-securely.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:0becb800eb3b33ac7c2ba6f0a452fcd42e7f10dd04f6aefb5d9781b5f9c5c248
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/builds_should_be_reproducible.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:85a8aa17b7734f7a40f91a1700daa8dbdde4d509c8a7340f23fad8c85e2b8714
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/consider_use_of_incubating_apis_carefully.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:f98f28c507d381139125dd66b2b24d014f69b3ceb22ef5cada29947c26c4acad
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/default_path_sensitivities.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:f64e0b0e4d93ec36f8cebb049ca108ea69c62fa36c7182404cad9379b40faedc
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/do_not_use_gradle_properties_in_subprojects.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:4503a114e4b394c19a52403716e99e25329261e06ddddf67b385bd45a8d0ffa5
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/do_not_use_internal_apis.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:141f6ef1906f4e01e91a14d2983b37680a6f1b0332f3f8e3dba844ebea0fea86
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/dont_access_project_instance_inside_task.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:8894ec05f3d9319c24d0ee216da558e03b266c48e2b12a1d2194c2b445ffc97f
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/dont_assume_plugin_order.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:d1e47eda43070a720ab2b0683f823f4cff153881fe65301dbba4eefda2e67d12
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/dont_depend_on_kotlin_stdlib.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:e38f1483b3f6461c1decfd1e898b5760429b8a6932e338ed064c009e00376ed0
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/dont_hardcode_task_names.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:7555bf5bbf4dda3879b6a62e28df4c9f8042582cd84a7aa3e011042ae67f4a99
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/dont_resolve_configurations_before_task_execution.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:318158a148e47e28a7b810e62cba0f4c900c09ac5f947f53222068f6b391ccad
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/favor_collection_properties.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:44c84348210abb11f6bd7aa89c6bea87125b1e301deb0094428866a7e8869dc4
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/favor_composite_builds.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:a698df834ba6360d107ec722455e537830cc7a867045fe684b07b686d200831a
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/group_describe_tasks.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:c1eb006037197ba69abd10e9569b01db359f6debb680143e49d3dfb259da957d
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/map_versus_flatmap.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:c574767b7c199c81c7c1f57b8bff32edd4866ec84a7a525f758f21c396a82424
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/modularize_builds.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:7f7ea9bf6d30ea9206d27359224dde98193b59e735d58e91bc7b1d8879687295
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/name_version_catalog_entries.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:106e93c5fedd03ea5f0783bc6aa6a4902258b916974ed8a1ff7b2f6872a8137a
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/name_your_root_project.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:e5fb7ea6ed4dd4ab955964968571792cb29a3fc10fa00594fc5006cd3910b3fc
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/no_source_in_root.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:6d46e3e7ea22d4633d40a38ae84068b7af92a894b34be27bf436b2da4fe0ab45
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/obtain_loggers_via_logging_get_logger.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:928c64ecf992d5e9315e5233173b6216583df15311e1cc765071656a08382d40
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/prefer_bin_distribution.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:1fd22f013dae32f3c093fa3ca5f47f3db4bbcd4982372cdefe16c5ec38c0ce62
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/run_gradle_on_external_projects.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:e4f68a260987cf8a66274351303670a19669010e6d554115b8a2e8be73f6372c
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/set_up_repositories_in_settings.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:c6d205bbf21cb0321b8223959b98328a00867ae7fb7d0ab448062bfda480f24b
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/single-gav-string.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:035d39afee6d76f6a721d30e36e2f229638bf9e588d67749347d92eb066796d4
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/test_custom_types_with_testkit.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:7db40fe7ccc8830324a7b3bb30d94fddc82e69fdf93afc936a618ec6b897505e
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_attributes_on_configurations.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:69ea0dda2e136c00fac31401483ad18d9e9a2e09ff5363f62e8efe5946319b15
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_build_cache.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:fee20ce1052915584496b28acd9038eafe8b90888dfcead67a3f0b9081d28413
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_cacheability_annotations.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:c14d2e1cbce43647edb8846d778d3093ae904cc4796a06f76a57ff37c1576f7a
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_configuration_cache.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:ee5007793986ddb6837cd2d0a034c26ff2fcf6ad579c2caad5c6e408ff453364
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_content_filtering.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:2a74a390d76737d50ede0b2f90b2acb8cd2296948b68e82f21d6dfc4df8b7d03
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_convention_plugins.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:de0a1f4de0a39a0f6eda51fcce5443dc86fc8133d343e4c2f6c5041e32c02c88
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_kotlin_dsl.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:3b64c040a412f9c11cdc1870e1b8c10cc575fcfa0d1703d9478eed624375ad07
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_latest_minor_versions.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:73e9926aadabe4f1b193eff8904a8e375945e9ebffb4dae0de97a98b57510807
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_the_gradle_properties_file.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:f8c96b8916ac529e2a5a04974ffd758a8c24ad885bf2e60f9d2e6efa4c4dd15a
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_the_plugins_block.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:d86f8f3aa6ddf5343b9e936f32aeb2b484947bb739e00b018fa15987275aaeb4
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_unique_output_files_and_directories.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:323c20a07810a64d33cd615540fe74a0204066c21691948fbc4c55b8ed8a7b5e
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_utf8_encoding.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:5ebd20f3e84b73c8e44e85dae1de5f951c212fb024cd078ff2206777236017cf
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/use_version_catalogs.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:b2ec316e1486f6a229ebf885b1d589881d375dd433abf5b33596db589dd0cbda
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/validate_gradle_checksum.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:40188c66cf5ba0ae3443defca7d8ff3d094b2f5b7e4cc45d449ebe2ccd53705e
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/fixes/validate_wrapper_checksum.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:f810c2c91549ae671ba8f28bdc0415e567c64150faf30b3939a5d944118dc4eb
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/general.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:a1a9128ee2c806914b27bdc1902e746da3df0bd28b8e459e4778842c33d986f6
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/index.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:4b2aad927eefea0dfefc24dc391c45cee42dff6a265fee12d42a368e3386b150
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/performance.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:f11f721e83c37cac0f1bce6b425cc5b1970a9b6a5455cc0b9f7296cf0693d37d
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/security.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:84b0cfe822ba358eb236a2bda3c86816a85e527aa7308bd9c1638448617d5bb0
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/structuring-builds.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:b03f775ebd51cfa283209048f70a85c6eee62c37226ab18b19aa4de72703ab9f
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/tasks.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:c3df1025dfa3820636729856f9dbd6d1e6af1e96959843e61f11ad8461d6d02f
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-best-practices/references/testing.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-best-practices
+  active_owner: gradle/gradle-skills/skills/gradle-best-practices
+  content_hash: sha256:1436d025d85b426631b8f29633950938c13cb79d1be7404e72c52e01a0026d55
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-wrapper-upgrade
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  active_owner: gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  content_hash: null
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-wrapper-upgrade/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  active_owner: gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  content_hash: sha256:d979349cd37635632b2e9ebc968674baaca42cb31b6cd91ccce3373f53db76f7
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-wrapper-upgrade/metadata.json
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  active_owner: gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  content_hash: sha256:442b7183522f6fc445276557c2db077d76229085858ab6911c610789be3b4313
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-wrapper-upgrade/references/rollback.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  active_owner: gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  content_hash: sha256:a0a96f5588172c06e6008a7831aeb6bdcd304a535134f13fafe2fa3f82cd96ca
+- kind: project-relative
+  target: agent-skills
+  value: .agents/skills/gradle-wrapper-upgrade/references/snapshot.md
+  runtime: null
+  scope: project
+  owners:
+  - gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  active_owner: gradle/gradle-skills/skills/gradle-wrapper-upgrade
+  content_hash: sha256:766117870a0f7e7a2bb3567ab5c08991b5a02481f5c008a882545493340d75cc

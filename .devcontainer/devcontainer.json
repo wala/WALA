@@ -2,8 +2,10 @@
   "name": "Java",
   "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
   "features": {
-    "ghcr.io/devcontainers/features/java:1": {}
+    "ghcr.io/devcontainers/features/java:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
   },
+  "postCreateCommand": "pip3 install apm-cli==0.34.0 || echo 'Could not install apm; the agent skills cannot be fetched.'; bash ./refresh-agent-skills.sh || echo 'Could not fetch the agent skills; run ./refresh-agent-skills.sh when you have network access.'",
   "customizations": {
     "jetbrains": {
       "backend": "IntelliJ",

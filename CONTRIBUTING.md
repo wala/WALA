@@ -37,6 +37,66 @@ If your code fails check 2, you can run `./gradlew spotlessApply` to
 automatically format it.  The CI job runs `./gradlew build` and will
 fail if any of these additional checks fail.
 
+Agent Skills
+------------
+
+Some agent skills that help with Gradle are fetched from the Gradle
+project, so that they are available to whichever agent you happen to use.
+They are not tracked by Git.  What is tracked is `apm.yml`, which
+declares where the skills come from, and `apm.lock.yaml`, which pins the
+exact upstream commit of each skill and the hash of every deployed file.
+
+The skills are managed by [APM](https://aka.ms/apm) (the Agent Package
+Manager), which reads those two files, fetches what the lock file pins,
+and deploys each skill.  Install the `apm` command line tool first:
+
+    brew install apm
+
+After you clone the repository, fetch the skills:
+
+    ./refresh-agent-skills.sh
+
+The skills are installed in "project" scope: APM deploys the canonical
+copy of each skill into `.agents/skills/`, and the refresh script links
+it into `.claude/skills/`, so that there is only ever one copy to
+maintain and every agent sees the same skills.  Agents like Junie load
+skills directly from `.agent/` and `.agents/`, so they need no links.
+Those directories are ignored by Git.
+
+The fetch also happens on its own in a devcontainer.  Elsewhere it
+happens after a checkout, once the Git hooks are installed:
+
+    ./gradlew installGitHooks
+
+`apm.lock.yaml` is written by APM, and it is the only thing that should
+write it.
+
+To move the pin to a newer upstream release, change the `ref` in
+`apm.yml` to the release you want, and let APM re-resolve it:
+
+    apm update
+
+That rewrites `apm.lock.yaml` to record the new commit and the new
+hashes.  Run `./refresh-agent-skills.sh` once afterwards, so that the
+skills on disk are the ones that the new pin calls for.  Commit the
+resulting changes to `apm.yml` and `apm.lock.yaml`; those two files are
+the whole change.
+
+To give the skills to another agent, add its skills directory to the
+`AGENT_SKILL_DIRS` list in `refresh-agent-skills.sh` and re-run the
+script.  APM has a target for most agents; when it does not, the script
+links the canonical copy into that agent's directory.
+
+On Windows, where symbolic links generally are not available, the
+refresh script makes directory junctions instead of them.  Nothing is
+tracked, so there is nothing to commit either way; the junctions are
+simply left in place, like the symbolic links are elsewhere.
+
+These skills come from the Gradle project and are licensed under the
+Apache License, Version 2.0.  Each skill records its license in the
+front matter of its `SKILL.md` file.  You may obtain a copy of the
+license at <https://www.apache.org/licenses/LICENSE-2.0>.
+
 DOs and DON'Ts
 --------------
 

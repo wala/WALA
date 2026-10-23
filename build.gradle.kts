@@ -74,10 +74,11 @@ tasks.named(CHECK_TASK_NAME) { dependsOn(tasks.withType<BuildHealthTask>(), lint
 tasks.named("shellcheck") { group = "verification" }
 
 // install Java reformatter as git pre-commit hook
+// and the agent skills fetcher as git post-checkout hook
 tasks.register<Copy>("installGitHooks") {
-  description = "Install Git `pre-commit` hook for code reformatting"
-  from("config/hooks/pre-commit-stub")
-  rename { "pre-commit" }
+  description = "Install the Git `pre-commit` and `post-checkout` hooks"
+  from("config/hooks/pre-commit-stub") { rename { "pre-commit" } }
+  from("config/hooks/post-checkout-stub") { rename { "post-checkout" } }
   destinationDirectory = layout.projectDirectory.dir(".git/hooks")
   filePermissions {
     listOf(user, group, other).forEach {
