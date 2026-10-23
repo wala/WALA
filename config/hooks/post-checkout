@@ -1,0 +1,23 @@
+#!/bin/bash -e
+
+# Do our best to make sure we are running in bash *without* posix compatibility
+# enabled.  This is needed to detect old and buggy versions of our
+# post-checkout-stub script
+if [ -z "${BASH}" ] || [ -n "${POSIXLY_CORRECT}" ]; then
+  echo "Your git post-checkout script is outdated." >&2
+  echo "Please re-run \`./gradlew installGitHooks\` to get the latest script," >&2
+  echo "or run \`rm .git/hooks/post-checkout\` to disable the post-checkout hook." >&2
+  exit 0
+fi
+
+REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
+REFRESH_SCRIPT="${REPO_ROOT_DIR}/refresh-agent-skills.sh"
+
+# The skills are fetched only when they are missing or stale, so that this
+# is cheap enough to run after every checkout.
+if [ -f "$REFRESH_SCRIPT" ]; then
+  if ! bash "$REFRESH_SCRIPT" --if-missing; then
+    echo "warning: could not fetch the agent skills;" >&2
+    echo "run ./refresh-agent-skills.sh when you have network access." >&2
+  fi
+fi

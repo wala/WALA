@@ -1,0 +1,35 @@
+# The APM (Agent Package Manager) manifest for this repository.
+#
+# APM fetches the agent skills that this repository depends on, and
+# deploys them into the cross-tool `.agents/skills/` directory.  The
+# refresh script links that canonical copy into each agent's own skills
+# directory.  See CONTRIBUTING.md for the details.
+#
+# `apm.lock.yaml` pins what this manifest asks for: it records the exact
+# upstream commit of each skill and the hash of every deployed file.  It
+# is the only thing that should write that file.
+name: wala
+# The version of this manifest, not of the WALA release.
+version: 1.0.0
+description: Agent context for the WALA project.
+# Deploy the skills to the cross-tool `.agents/skills/` directory.  The
+# refresh script links them from there into each agent's own directory,
+# so that there is only ever one copy of a skill to maintain.
+targets:
+  - agent-skills
+includes: auto
+dependencies:
+  apm:
+    # The Gradle skills, from the Gradle project.
+    #
+    # Each skill is named by its own `path` within that repository, rather
+    # than depending on the repository as a whole.  The repository as a
+    # whole is an Agent Plugin, which APM deploys only to the Copilot
+    # target; a skill on its own deploys to any target.  The `ref` is the
+    # upstream release that both skills come from.
+    - git: https://github.com/gradle/gradle-skills.git
+      ref: 1.1.0
+      path: skills/gradle-best-practices
+    - git: https://github.com/gradle/gradle-skills.git
+      ref: 1.1.0
+      path: skills/gradle-wrapper-upgrade
