@@ -35,7 +35,7 @@ dependencies {
   implementation(projects.core)
   implementation(projects.shrike)
   implementation(projects.util)
-  runSourceDirectory(project(":cast:java:test:data"))
+  runSourceDirectory(project(":cast:java:test-data"))
   testImplementation(libs.assertj.core)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)
@@ -63,5 +63,5 @@ tasks.named("check") { dependsOn(run) }
 tasks.named<Test>("test") { maxHeapSize = "1200M" }
 
 tasks.named<Copy>("processTestResources") {
-  from(project(":cast:java:test:data").projectDir.resolve("src/testSubjects/java"))
+  from(project(":cast:java:test-data").projectDir.resolve("src/testSubjects/java"))
 }
