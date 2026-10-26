@@ -228,7 +228,7 @@ val collectJLexFrom =
       }
     }
 
-dependencies { collectJLexFrom(project(":cast:java:test:data")) }
+dependencies { collectJLexFrom(project(":cast:java:test-data")) }
 
 val collectJLex =
     tasks.register<Jar>("collectJLex") {

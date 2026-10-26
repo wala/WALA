@@ -26,8 +26,6 @@ val Project.isJavaProject
         ":",
         ":aggregated-javadoc",
         ":cast:cast",
-        ":cast:java:test",
-        ":cast:js:html",
         ":cast:smoke_main",
         ":cast:xlator_test",
         -> false
