@@ -188,6 +188,50 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
+  /**
+   * Builds a class hierarchy for the given language. Intended for subclasses, such as language
+   * front ends that need to refine subtype queries; other clients should use {@link
+   * ClassHierarchyFactory}.
+   */
+  protected ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      Language language,
+      IProgressMonitor progressMonitor,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, language, progressMonitor, new ConcurrentHashMap<>(), superClassHandling);
+  }
+
+  /**
+   * Builds a class hierarchy for all languages in the given scope. Intended for subclasses, such as
+   * language front ends that need to refine subtype queries; other clients should use {@link
+   * ClassHierarchyFactory}.
+   */
+  protected ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      IProgressMonitor progressMonitor,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, progressMonitor, new ConcurrentHashMap<>(), superClassHandling);
+  }
+
+  /**
+   * Builds a class hierarchy for the given languages. Intended for subclasses, such as language
+   * front ends that need to refine subtype queries; other clients should use {@link
+   * ClassHierarchyFactory}.
+   */
+  protected ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      Collection<Language> languages,
+      IProgressMonitor progressMonitor,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, languages, progressMonitor, new ConcurrentHashMap<>(), superClassHandling);
+  }
+
   ClassHierarchy(
       AnalysisScope scope,
       ClassLoaderFactory factory,
