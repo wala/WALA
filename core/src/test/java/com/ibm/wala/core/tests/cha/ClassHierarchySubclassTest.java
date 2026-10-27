@@ -27,22 +27,49 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
   /** Treats {@code java.lang.String} as a subclass of {@code java.lang.Thread}. */
   private static class RefinedClassHierarchy extends ClassHierarchy {
 
+    /**
+     * Builds a refined hierarchy for all languages in the given scope.
+     *
+     * @param scope the analysis scope whose classes populate the hierarchy
+     * @param factory the factory that creates the class loaders for {@code scope}
+     * @throws ClassHierarchyException if the hierarchy cannot be built
+     */
     RefinedClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory)
         throws ClassHierarchyException {
       super(scope, factory, null, MissingSuperClassHandling.NONE);
     }
 
+    /**
+     * Builds a refined hierarchy for the given language.
+     *
+     * @param scope the analysis scope whose classes populate the hierarchy
+     * @param factory the factory that creates the class loaders for {@code scope}
+     * @param language the language whose classes the hierarchy contains
+     * @throws ClassHierarchyException if the hierarchy cannot be built
+     */
     RefinedClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language)
         throws ClassHierarchyException {
       super(scope, factory, language, null, MissingSuperClassHandling.NONE);
     }
 
+    /**
+     * Builds a refined hierarchy for the given languages.
+     *
+     * @param scope the analysis scope whose classes populate the hierarchy
+     * @param factory the factory that creates the class loaders for {@code scope}
+     * @param languages the languages whose classes the hierarchy contains
+     * @throws ClassHierarchyException if the hierarchy cannot be built
+     */
     RefinedClassHierarchy(
         AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages)
         throws ClassHierarchyException {
       super(scope, factory, languages, null, MissingSuperClassHandling.NONE);
     }
 
+    /**
+     * Also reports {@code java.lang.String} as a subclass of {@code java.lang.Thread}, and
+     * otherwise defers to {@link ClassHierarchy#isSubclassOf(IClass, IClass)}.
+     */
     @Override
     public boolean isSubclassOf(IClass c, IClass t) {
       return (c.getReference().equals(TypeReference.JavaLangString)
@@ -51,6 +78,12 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     }
   }
 
+  /**
+   * Reads the Java analysis scope for the WALA test data.
+   *
+   * @return the analysis scope
+   * @throws IOException if the scope or its exclusions file cannot be read
+   */
   private static AnalysisScope makeScope() throws IOException {
     return AnalysisScopeReader.instance.readJavaScope(
         TestConstants.WALA_TESTDATA,
@@ -58,6 +91,11 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
         ClassHierarchySubclassTest.class.getClassLoader());
   }
 
+  /**
+   * Asserts that {@code cha} applies both the refined and the inherited subtype relations.
+   *
+   * @param cha the class hierarchy to check
+   */
   private static void assertRefined(ClassHierarchy cha) {
     IClass string = cha.lookupClass(TypeReference.JavaLangString);
     IClass thread = cha.lookupClass(TypeReference.JavaLangThread);
@@ -67,6 +105,7 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     assertThat(cha.isSubclassOf(thread, string)).isFalse();
   }
 
+  /** Tests the protected constructor that builds a hierarchy for all languages in the scope. */
   @Test
   public void testSubclassForScopeLanguages() throws IOException, ClassHierarchyException {
     AnalysisScope scope = makeScope();
@@ -76,6 +115,7 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     assertRefined(cha);
   }
 
+  /** Tests the protected constructor that builds a hierarchy for a single language. */
   @Test
   public void testSubclassForLanguage() throws IOException, ClassHierarchyException {
     AnalysisScope scope = makeScope();
@@ -86,6 +126,7 @@ public class ClassHierarchySubclassTest extends WalaTestCase {
     assertRefined(cha);
   }
 
+  /** Tests the protected constructor that builds a hierarchy for a collection of languages. */
   @Test
   public void testSubclassForLanguages() throws IOException, ClassHierarchyException {
     AnalysisScope scope = makeScope();
