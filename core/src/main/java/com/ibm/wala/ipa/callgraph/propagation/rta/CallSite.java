@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.Selector;
@@ -23,12 +25,8 @@ public final class CallSite extends Pair<CallSiteReference, CGNode> {
 
   public CallSite(CallSiteReference site, CGNode node) {
     super(site, node);
-    if (site == null) {
-      throw new IllegalArgumentException("null site");
-    }
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
+    checkArgument(site != null, "null site");
+    checkArgument(node != null, "null node");
   }
 
   public CGNode getNode() {

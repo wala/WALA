@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
@@ -43,9 +45,7 @@ public class OrdinalSet<T> implements Iterable<T> {
   }
 
   public boolean containsAny(OrdinalSet<T> that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null that");
-    }
+    checkArgument(that != null, "null that");
     if (S == null || that.S == null) {
       return false;
     }
@@ -90,9 +90,7 @@ public class OrdinalSet<T> implements Iterable<T> {
    * @throws IllegalArgumentException if A is null
    */
   public static <T> OrdinalSet<T> intersect(OrdinalSet<T> A, OrdinalSet<T> B) {
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
-    }
+    checkArgument(A != null, "A is null");
     if (!A.isEmpty() && !B.isEmpty()) {
       assert A.mapping.equals(B.mapping);
     }
@@ -131,12 +129,8 @@ public class OrdinalSet<T> implements Iterable<T> {
    * @throws IllegalArgumentException iff A or B is null
    */
   public static <T> OrdinalSet<T> unify(OrdinalSet<T> A, OrdinalSet<T> B) {
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B is null");
-    }
+    checkArgument(A != null, "A is null");
+    checkArgument(B != null, "B is null");
     if (A.size() != 0 && B.size() != 0) {
       assert A.mapping.equals(B.mapping);
     }
@@ -197,12 +191,8 @@ public class OrdinalSet<T> implements Iterable<T> {
    * @throws IllegalArgumentException if c is null
    */
   public static <T> OrdinalSet<T> toOrdinalSet(Collection<T> c, OrdinalSetMapping<T> m) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(c != null, "c is null");
+    checkArgument(m != null, "m is null");
     MutableSparseIntSet s = MutableSparseIntSet.makeEmpty();
     for (T t : c) {
       int index = m.getMappedIndex(t);

@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
@@ -71,9 +73,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
       PointerKey val,
       IFlowLabel label,
       StateMachine.State state) {
-    if (field == null) {
-      throw new IllegalArgumentException("null field");
-    }
+    checkArgument(field != null, "null field");
     if (field == ArrayContents.v()) {
       return true;
     } else {

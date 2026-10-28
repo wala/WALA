@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.typeInference;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
@@ -25,9 +27,7 @@ public class ConeType extends TypeAbstraction {
    * @throws IllegalArgumentException if type is null
    */
   public ConeType(IClass type) {
-    if (type == null) {
-      throw new IllegalArgumentException("type is null");
-    }
+    checkArgument(type != null, "type is null");
     assert type.getReference().isReferenceType() : type;
     this.type = type;
   }

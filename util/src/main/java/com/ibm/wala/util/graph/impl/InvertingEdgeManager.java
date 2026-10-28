@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
 import org.jspecify.annotations.Nullable;
@@ -20,9 +22,7 @@ public class InvertingEdgeManager<T> implements EdgeManager<T> {
   private final EdgeManager<T> original;
 
   public InvertingEdgeManager(EdgeManager<T> original) {
-    if (original == null) {
-      throw new IllegalArgumentException("original is null");
-    }
+    checkArgument(original != null, "original is null");
     this.original = original;
   }
 

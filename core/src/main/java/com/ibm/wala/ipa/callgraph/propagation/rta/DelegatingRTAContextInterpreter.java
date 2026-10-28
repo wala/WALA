@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -27,9 +29,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
   public DelegatingRTAContextInterpreter(RTAContextInterpreter A, RTAContextInterpreter B) {
     this.A = A;
     this.B = B;
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(B != null, "null B");
   }
 
   @Override

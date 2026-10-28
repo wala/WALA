@@ -38,6 +38,8 @@
  */
 package com.ibm.wala.dalvik.dex.util.config;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -62,9 +64,7 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
   /* END Custom change: Fixes in AndroidAnalysisScope */
   public static AnalysisScope makeAndroidBinaryAnalysisScope(URI classPath, String exclusionsFile)
       throws IOException {
-    if (classPath == null) {
-      throw new IllegalArgumentException("classPath null");
-    }
+    checkArgument(classPath != null, "classPath null");
     AnalysisScope scope =
         AnalysisScopeReader.instance.readJavaScope(
             BASIC_FILE, new File(exclusionsFile), WALA_CLASSLOADER);

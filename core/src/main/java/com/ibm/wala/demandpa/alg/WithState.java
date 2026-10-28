@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine.State;
 import java.util.Objects;
 
@@ -50,12 +52,8 @@ public abstract class WithState<T> {
   private final int hc;
 
   public WithState(final T wrapped, final State state) {
-    if (wrapped == null) {
-      throw new IllegalArgumentException("null wrapped");
-    }
-    if (state == null) {
-      throw new IllegalArgumentException("null state");
-    }
+    checkArgument(wrapped != null, "null wrapped");
+    checkArgument(state != null, "null state");
     this.wrapped = wrapped;
     this.state = state;
     this.hc = 31 * state.hashCode() + wrapped.hashCode();

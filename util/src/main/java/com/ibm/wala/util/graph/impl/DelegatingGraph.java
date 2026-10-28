@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.Graph;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -21,9 +23,7 @@ public class DelegatingGraph<T> implements Graph<T> {
   private final Graph<T> delegate;
 
   public DelegatingGraph(Graph<T> delegate) {
-    if (delegate == null) {
-      throw new IllegalArgumentException("delegate is null");
-    }
+    checkArgument(delegate != null, "delegate is null");
     this.delegate = delegate;
   }
 

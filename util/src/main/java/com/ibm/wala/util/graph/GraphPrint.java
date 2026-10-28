@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
@@ -17,9 +19,7 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 public class GraphPrint {
 
   public static <T> String genericToString(Graph<T> G) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     SlowSparseNumberedGraph<T> sg = SlowSparseNumberedGraph.make();
     for (T name : G) {
       sg.addNode(name);

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -32,21 +34,13 @@ public class ClassTypeSignature extends TypeSignature {
 
   ClassTypeSignature(String s) throws IllegalArgumentException {
     super(s);
-    if (s.isEmpty()) {
-      throw new IllegalArgumentException();
-    }
-    if (s.charAt(0) != 'L') {
-      throw new IllegalArgumentException(s);
-    }
-    if (s.charAt(s.length() - 1) != ';') {
-      throw new IllegalArgumentException(s);
-    }
+    checkArgument(!s.isEmpty());
+    checkArgument(s.charAt(0) == 'L', s);
+    checkArgument(s.charAt(s.length() - 1) == ';', s);
   }
 
   public static ClassTypeSignature makeClassTypeSig(String s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     return new ClassTypeSignature(s);
   }
 
@@ -120,12 +114,8 @@ public class ClassTypeSignature extends TypeSignature {
   }
 
   public static IClass lookupClass(IClassHierarchy cha, ClassTypeSignature sig) {
-    if (sig == null) {
-      throw new IllegalArgumentException("sig is null");
-    }
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(sig != null, "sig is null");
+    checkArgument(cha != null, "cha is null");
     TypeReference t =
         TypeReference.findOrCreate(ClassLoaderReference.Application, sig.getRawName());
     return cha.lookupClass(t);

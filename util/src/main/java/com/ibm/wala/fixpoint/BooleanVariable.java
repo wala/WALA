@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixpoint;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** A boolean variable for dataflow analysis. */
 public final class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
@@ -26,16 +28,12 @@ public final class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   @Override
   public void copyState(BooleanVariable other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other null");
-    }
+    checkArgument(other != null, "other null");
     B = other.B;
   }
 
   public boolean sameValue(BooleanVariable other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     return B == other.B;
   }
 
@@ -55,9 +53,7 @@ public final class BooleanVariable extends AbstractVariable<BooleanVariable> {
    * @throws IllegalArgumentException if other is null
    */
   public void or(BooleanVariable other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     B = B || other.B;
   }
 

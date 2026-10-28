@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -372,9 +374,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    */
   public ControlFlowGraph<SSAInstruction, T> getCFG(BasicBlockInContext<T> B)
       throws IllegalArgumentException {
-    if (B == null) {
-      throw new IllegalArgumentException("B == null");
-    }
+    checkArgument(B != null, "B == null");
     return getCFG(getCGNode(B));
   }
 
@@ -383,9 +383,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    * @throws IllegalArgumentException if B == null
    */
   public CGNode getCGNode(BasicBlockInContext<T> B) throws IllegalArgumentException {
-    if (B == null) {
-      throw new IllegalArgumentException("B == null");
-    }
+    checkArgument(B != null, "B == null");
     return B.getNode();
   }
 
@@ -653,9 +651,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    * @throws IllegalArgumentException if B is null
    */
   public Set<CGNode> getCallTargets(BasicBlockInContext<T> B) {
-    if (B == null) {
-      throw new IllegalArgumentException("B is null");
-    }
+    checkArgument(B != null, "B is null");
     ControlFlowGraph<SSAInstruction, T> cfg = getCFG(B);
     return getCallTargets(B, cfg, getCGNode(B));
   }
@@ -784,9 +780,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    * @throws IllegalArgumentException if bb is null
    */
   public Iterator<BasicBlockInContext<T>> getReturnSites(BasicBlockInContext<T> callBlock) {
-    if (callBlock == null) {
-      throw new IllegalArgumentException("bb is null");
-    }
+    checkArgument(callBlock != null, "bb is null");
     final CGNode node = callBlock.getNode();
 
     // a successor node is a return site if it is in the same
@@ -802,9 +796,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
    */
   public Iterator<BasicBlockInContext<T>> getCallSites(
       BasicBlockInContext<T> returnBlock, final CGNode callee) {
-    if (returnBlock == null) {
-      throw new IllegalArgumentException("bb is null");
-    }
+    checkArgument(returnBlock != null, "bb is null");
     final ControlFlowGraph<SSAInstruction, T> cfg = getCFG(returnBlock);
     Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate());
     final CGNode node = returnBlock.getNode();
@@ -832,9 +824,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock>
   private final Predicate<BasicBlockInContext<T>> isCall = this::hasCall;
 
   public boolean isReturn(BasicBlockInContext<T> bb) throws IllegalArgumentException {
-    if (bb == null) {
-      throw new IllegalArgumentException("bb == null");
-    }
+    checkArgument(bb != null, "bb == null");
     ControlFlowGraph<SSAInstruction, T> cfg = getCFG(bb);
     for (T b : Iterator2Iterable.make(cfg.getPredNodes(bb.getDelegate()))) {
       if (hasCall(new BasicBlockInContext<>(bb.getNode(), b))) {

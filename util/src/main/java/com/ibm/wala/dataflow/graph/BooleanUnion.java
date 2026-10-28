@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BooleanVariable;
 import org.jspecify.annotations.Nullable;
 
@@ -41,9 +43,7 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> {
 
   @Override
   public byte evaluate(BooleanVariable lhs, BooleanVariable[] rhs) throws NullPointerException {
-    if (rhs == null) {
-      throw new IllegalArgumentException("null rhs");
-    }
+    checkArgument(rhs != null, "null rhs");
     BooleanVariable U = new BooleanVariable();
     U.copyState(lhs);
     for (BooleanVariable R : rhs) {

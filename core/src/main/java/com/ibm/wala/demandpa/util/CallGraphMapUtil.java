@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -74,9 +76,7 @@ public class CallGraphMapUtil {
    */
   public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG)
       throws IllegalArgumentException {
-    if (fromCG == null) {
-      throw new IllegalArgumentException("fromCG == null");
-    }
+    checkArgument(fromCG != null, "fromCG == null");
     if (orig == fromCG.getFakeRootNode()) {
       return toCG.getFakeRootNode();
     } else {

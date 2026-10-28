@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.warnings.Warning;
 import com.ibm.wala.core.util.warnings.Warnings;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -50,9 +52,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   public IClassLoader getLoader(
       ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope)
       throws IOException {
-    if (classLoaderReference == null) {
-      throw new IllegalArgumentException("null classLoaderReference");
-    }
+    checkArgument(classLoaderReference != null, "null classLoaderReference");
     IClassLoader result = map.get(classLoaderReference);
     if (result == null) {
       ClassLoaderReference parentRef = classLoaderReference.parent();

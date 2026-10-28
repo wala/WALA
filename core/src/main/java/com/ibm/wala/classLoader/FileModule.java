@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -27,9 +29,7 @@ public abstract class FileModule implements Module, ModuleEntry {
   private final Module container;
 
   public FileModule(File f, Module container) throws IllegalArgumentException {
-    if (f == null) {
-      throw new IllegalArgumentException("f is null");
-    }
+    checkArgument(f != null, "f is null");
     this.file = f;
     this.container = container;
     if (!f.exists()) {

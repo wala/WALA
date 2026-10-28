@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 
 import com.ibm.wala.util.collections.IVector;
@@ -78,12 +79,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
   public BasicNaturalRelation(byte[] implementation, byte vectorImpl)
       throws IllegalArgumentException {
 
-    if (implementation == null) {
-      throw new IllegalArgumentException("implementation is null");
-    }
-    if (implementation.length == 0) {
-      throw new IllegalArgumentException("implementation.length == 0");
-    }
+    checkArgument(implementation != null, "implementation is null");
+    checkArgument(implementation.length != 0, "implementation.length == 0");
     smallStore = new IntVector[implementation.length];
     for (int i = 0; i < implementation.length; i++) {
       smallStore[i] =
@@ -313,9 +310,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation, Seria
 
   @Override
   public int getRelatedCount(int x) throws IllegalArgumentException {
-    if (x < 0) {
-      throw new IllegalArgumentException("x must be greater than zero");
-    }
+    checkArgument(x >= 0, "x must be greater than zero");
     if (!anyRelated(x)) {
       return 0;
     } else {

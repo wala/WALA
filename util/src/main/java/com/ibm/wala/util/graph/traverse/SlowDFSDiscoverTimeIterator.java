@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
@@ -49,9 +51,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @param nodes the set of nodes from which to start searching
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G, Iterator<T> nodes) {
-    if (nodes == null) {
-      throw new IllegalArgumentException("null nodes");
-    }
+    checkArgument(nodes != null, "null nodes");
     init(G, nodes);
   }
 
@@ -61,9 +61,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @throws NullPointerException if G is null
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G) throws NullPointerException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     init(G, G.iterator());
   }
 

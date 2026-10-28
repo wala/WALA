@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.processes;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -86,9 +88,7 @@ public abstract class Launcher {
    */
   protected Process spawnProcess(@Nullable String cmd)
       throws IllegalArgumentException, IOException {
-    if (cmd == null) {
-      throw new IllegalArgumentException("cmd cannot be null");
-    }
+    checkArgument(cmd != null, "cmd cannot be null");
     if (logger != null) {
       logger.info("spawning process " + cmd);
     }
@@ -102,9 +102,7 @@ public abstract class Launcher {
    * @return an object representing the process
    */
   protected Process spawnProcess(String[] cmd) throws IllegalArgumentException, IOException {
-    if (cmd == null) {
-      throw new IllegalArgumentException("cmd cannot be null");
-    }
+    checkArgument(cmd != null, "cmd cannot be null");
     if (logger != null) {
       logger.info("spawning process " + Arrays.toString(cmd));
     }

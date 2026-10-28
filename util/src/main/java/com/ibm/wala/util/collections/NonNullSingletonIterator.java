@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.jspecify.annotations.Nullable;
@@ -26,9 +28,7 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
    * @param o the single object in this collection, must be non-null
    */
   public NonNullSingletonIterator(@Nullable T o) {
-    if (o == null) {
-      throw new IllegalArgumentException("o is null");
-    }
+    checkArgument(o != null, "o is null");
     this.it = o;
   }
 

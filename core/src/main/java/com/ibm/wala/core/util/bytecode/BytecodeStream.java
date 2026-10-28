@@ -11,6 +11,8 @@
 
 package com.ibm.wala.core.util.bytecode;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrike.shrikeBT.BytecodeConstants;
@@ -40,12 +42,8 @@ public class BytecodeStream implements BytecodeConstants {
    * @throws IllegalArgumentException if m is null
    */
   public BytecodeStream(IMethod m, byte[] bc) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
-    if (bc == null) {
-      throw new IllegalArgumentException("bc is null");
-    }
+    checkArgument(m != null, "m is null");
+    checkArgument(bc != null, "bc is null");
     method = m;
     declaringClass = m.getDeclaringClass();
     bcodes = bc;

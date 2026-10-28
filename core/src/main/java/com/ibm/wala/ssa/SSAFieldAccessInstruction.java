@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -26,9 +28,7 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
     super(iindex);
     this.field = field;
     this.ref = ref;
-    if (field == null) {
-      throw new IllegalArgumentException("field cannot be null");
-    }
+    checkArgument(field != null, "field cannot be null");
   }
 
   public TypeReference getDeclaredFieldType() {

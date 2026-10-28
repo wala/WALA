@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -37,9 +39,7 @@ public class ArrayIterator<T> implements Iterator<T> {
    * @param start the first array index to return
    */
   public ArrayIterator(T[] elts, int start) {
-    if (elts == null) {
-      throw new IllegalArgumentException("null elts");
-    }
+    checkArgument(elts != null, "null elts");
     if (start < 0 || start > elts.length) {
       throw new IllegalArgumentException(
           "invalid start: " + start + ", arrray length " + elts.length);
@@ -54,9 +54,7 @@ public class ArrayIterator<T> implements Iterator<T> {
    * @param start the first array index to return
    */
   public ArrayIterator(T[] elts, int start, int last) {
-    if (elts == null) {
-      throw new IllegalArgumentException("null elts");
-    }
+    checkArgument(elts != null, "null elts");
     if (start < 0) {
       throw new IllegalArgumentException("illegal start: " + start);
     }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.shrike.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -26,12 +28,8 @@ public class Util {
    */
   public static SSAInstruction getLastInstruction(
       ControlFlowGraph<? extends SSAInstruction, ?> cfg, IBasicBlock<?> b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
-    if (cfg == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(b != null, "b is null");
+    checkArgument(cfg != null, "G is null");
     return cfg.getInstructions()[b.getLastInstructionIndex()];
   }
 
@@ -51,12 +49,8 @@ public class Util {
    * Given that b falls through to the next basic block, what basic block does it fall through to?
    */
   public static <I, T extends IBasicBlock<I>> T getFallThruBlock(ControlFlowGraph<I, T> G, T b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(b != null, "b is null");
+    checkArgument(G != null, "G is null");
     return G.getBlockForInstruction(b.getLastInstructionIndex() + 1);
   }
 
@@ -66,9 +60,7 @@ public class Util {
    */
   public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getNotTakenSuccessor(
       ControlFlowGraph<I, T> G, T b) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (!endsWithConditionalBranch(G, b)) {
       throw new IllegalArgumentException(b.toString() + " does not end with a conditional branch");
     }
@@ -81,9 +73,7 @@ public class Util {
    */
   public static <I extends SSAInstruction, T extends IBasicBlock<I>> T getTakenSuccessor(
       ControlFlowGraph<I, T> G, T b) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (!endsWithConditionalBranch(G, b)) {
       throw new IllegalArgumentException(b.toString() + " does not end with a conditional branch");
     }
@@ -119,9 +109,7 @@ public class Util {
    */
   public static <I extends SSAInstruction, T extends IBasicBlock<I>> boolean isSwitchDefault(
       ControlFlowGraph<I, T> G, T b, T s) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     assert endsWithSwitch(G, b);
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     assert G.getBlockForInstruction(sw.getDefault()) != null;
@@ -178,15 +166,9 @@ public class Util {
    * instruction.
    */
   public static <I, T extends IBasicBlock<I>> int whichPred(ControlFlowGraph<I, T> cfg, T a, T b) {
-    if (cfg == null) {
-      throw new IllegalArgumentException("cfg is null");
-    }
-    if (a == null) {
-      throw new IllegalArgumentException("a is null");
-    }
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(cfg != null, "cfg is null");
+    checkArgument(a != null, "a is null");
+    checkArgument(b != null, "b is null");
     int i = 0;
     for (T p : Iterator2Iterable.make(cfg.getPredNodes(b))) {
       if (p.equals(a)) {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import org.jspecify.annotations.Nullable;
 
@@ -42,12 +44,8 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> {
   @Override
   public byte evaluate(BitVectorVariable lhs, BitVectorVariable[] rhs)
       throws IllegalArgumentException {
-    if (lhs == null) {
-      throw new IllegalArgumentException("null lhs");
-    }
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs == null");
-    }
+    checkArgument(lhs != null, "null lhs");
+    checkArgument(rhs != null, "rhs == null");
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
     for (BitVectorVariable R : rhs) {

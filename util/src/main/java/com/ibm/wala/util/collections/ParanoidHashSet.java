@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.io.Serial;
 import java.util.Collection;
@@ -55,9 +57,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
    */
   @Override
   public boolean add(T arg0) {
-    if (arg0 == null) {
-      throw new IllegalArgumentException("arg0 is null");
-    }
+    checkArgument(arg0 != null, "arg0 is null");
 
     ParanoidHashMap.assertOverridesHashCode(arg0);
     boolean result = super.add(arg0);

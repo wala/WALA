@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.TreeSet;
 
 public class SemiSparseMutableIntSetFactory
@@ -20,9 +22,7 @@ public class SemiSparseMutableIntSetFactory
    */
   @Override
   public SemiSparseMutableIntSet make(int[] set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     if (set.length == 0) {
       return make();
     } else {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -76,9 +78,7 @@ public class BypassSyntheticClassLoader implements IClassLoader, SummaryClassShe
    */
   public BypassSyntheticClassLoader(
       ClassLoaderReference me, IClassLoader parent, StringFilter exclusions, IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("null cha");
-    }
+    checkArgument(cha != null, "null cha");
     this.me = me;
     this.cha = cha;
     this.parent = parent;
@@ -184,9 +184,7 @@ public class BypassSyntheticClassLoader implements IClassLoader, SummaryClassShe
 
   @Override
   public void removeAll(Collection<IClass> toRemove) {
-    if (toRemove == null) {
-      throw new IllegalArgumentException("toRemove is null");
-    }
+    checkArgument(toRemove != null, "toRemove is null");
     for (IClass c : toRemove) {
       syntheticClasses.remove(c.getName());
     }

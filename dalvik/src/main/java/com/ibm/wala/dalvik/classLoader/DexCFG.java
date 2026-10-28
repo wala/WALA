@@ -12,6 +12,8 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -63,9 +65,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
   protected DexCFG(DexIMethod method, Context context) throws IllegalArgumentException {
     super(method);
-    if (method == null) {
-      throw new IllegalArgumentException("method cannot be null");
-    }
+    checkArgument(method != null, "method cannot be null");
     this.dexMethod = method;
     this.context = context;
     this.hashBase = method.hashCode() * 9967;
@@ -406,9 +406,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
      * @throws IllegalArgumentException if pei is null
      */
     public Collection<TypeReference> getImplicitExceptionTypes(Instruction pei) {
-      if (pei == null) {
-        throw new IllegalArgumentException("pei is null");
-      }
+      checkArgument(pei != null, "pei is null");
       return switch (pei.getOpcode()) {
         // TODO: Make sure all the important cases and exceptions are covered.
         //      case OP_iaload:

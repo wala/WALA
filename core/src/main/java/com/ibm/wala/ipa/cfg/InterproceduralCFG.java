@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -40,9 +42,7 @@ public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBloc
   @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n)
       throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("n == null");
-    }
+    checkArgument(n != null, "n == null");
     if (n.getIR() == null) {
       return null;
     }

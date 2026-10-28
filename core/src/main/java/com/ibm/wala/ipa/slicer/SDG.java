@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -130,9 +132,7 @@ public class SDG<T extends InstanceKey> extends AbstractNumberedGraph<Statement>
       ControlDependenceOptions cOptions,
       HeapExclusions heapExclude)
       throws IllegalArgumentException {
-    if (dOptions == null) {
-      throw new IllegalArgumentException("dOptions must not be null");
-    }
+    checkArgument(dOptions != null, "dOptions must not be null");
     this.modRef = modRef;
     this.cg = cg;
     this.pa = pa;

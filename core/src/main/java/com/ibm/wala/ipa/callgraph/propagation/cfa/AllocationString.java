@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSite;
 import java.util.Arrays;
@@ -25,9 +27,7 @@ public record AllocationString(AllocationSite[] allocationSites) implements Cont
   }
 
   public AllocationString {
-    if (allocationSites == null) {
-      throw new IllegalArgumentException("null allocationSites");
-    }
+    checkArgument(allocationSites != null, "null allocationSites");
   }
 
   /**

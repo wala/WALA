@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.strings.Atom;
 import java.io.Serial;
 import java.io.Serializable;
@@ -44,9 +46,7 @@ public record ClassLoaderReference(Atom name, Atom language, ClassLoaderReferenc
       new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"), Java, Extension);
 
   public ClassLoaderReference {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
   }
 
   /**

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import java.io.Serial;
 import org.jspecify.annotations.NullUnmarked;
@@ -50,9 +52,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   private MutableSparseIntSet(int initialCapacity) throws IllegalArgumentException {
     super(new int[initialCapacity]);
     size = 0;
-    if (initialCapacity <= 0) {
-      throw new IllegalArgumentException("initialCapacity must be positive");
-    }
+    checkArgument(initialCapacity > 0, "initialCapacity must be positive");
   }
 
   protected MutableSparseIntSet() {}
@@ -154,9 +154,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   @Override
   @SuppressWarnings("unused")
   public void copySet(@Nullable IntSet that) throws IllegalArgumentException {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof SparseIntSet set) {
       if (set.elements != null) {
         // SJF: clone is performance problem. don't use it.
@@ -188,9 +186,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   @Override
   public void intersectWith(IntSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (set instanceof SparseIntSet sparseIntSet) {
       intersectWith(sparseIntSet);
     } else {
@@ -205,9 +201,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   @NullUnmarked
   public void intersectWith(SparseIntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(that != null, "null set");
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {
@@ -281,9 +275,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   @Override
   @SuppressWarnings("unused")
   public boolean addAll(IntSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof SparseIntSet sparseIntSet) {
       return addAll(sparseIntSet);
     } else {
@@ -306,9 +298,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * @return true iff this set changes
    */
   public boolean addAll(@Nullable SparseIntSet that) {
-    if (that == null) {
-      throw new IllegalArgumentException("null that");
-    }
+    checkArgument(that != null, "null that");
     if (this.isEmpty()) {
       copySet(that);
       return !that.isEmpty();
@@ -395,9 +385,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   public void removeAll(BitVectorIntSet v) {
-    if (v == null) {
-      throw new IllegalArgumentException("null v");
-    }
+    checkArgument(v != null, "null v");
     int ai = 0;
     for (int i = 0; i < size; i++) {
       if (!v.contains(elements[i])) {
@@ -408,9 +396,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   public <T extends BitVectorBase<T>> void removeAll(T v) {
-    if (v == null) {
-      throw new IllegalArgumentException("null v");
-    }
+    checkArgument(v != null, "null v");
     int ai = 0;
     for (int i = 0; i < size; i++) {
       if (!v.get(elements[i])) {
@@ -426,9 +412,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * @throws IllegalArgumentException if set is null
    */
   public void removeAll(MutableSparseIntSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     for (IntIterator it = set.intIterator(); it.hasNext(); ) {
       remove(it.next());
     }
@@ -436,12 +420,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
-    if (filter == null) {
-      throw new IllegalArgumentException("invalid filter");
-    }
+    checkArgument(other != null, "other is null");
+    checkArgument(filter != null, "invalid filter");
     // a hack. TODO: better algorithm
     if (other.size() < 5) {
       boolean result = false;

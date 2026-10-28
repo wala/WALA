@@ -42,6 +42,8 @@
 */
 package com.ibm.wala.core.util.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.errorprone.annotations.FormatMethod;
 import com.ibm.wala.core.util.ssa.SSAValue.NamedKey;
 import com.ibm.wala.core.util.ssa.SSAValue.VariableKey;
@@ -160,9 +162,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type is null or ssaValue is zero or negative
    */
   public void setAllocation(SSAValue value, SSAInstruction setBy) {
-    if (value == null) {
-      throw new IllegalArgumentException("The SSA-Variable may not be null");
-    }
+    checkArgument(value != null, "The SSA-Variable may not be null");
 
     seenTypes.compute(
         value.key,
@@ -217,9 +217,7 @@ public class SSAValueManager {
    * @throws IllegalStateException if you forgot to close some Phis
    */
   public void setPhi(final SSAValue value, SSAInstruction setBy) {
-    if (value == null) {
-      throw new IllegalArgumentException("The SSA-Variable may not be null.");
-    }
+    checkArgument(value != null, "The SSA-Variable may not be null.");
 
     boolean didPhi = false;
 
@@ -285,12 +283,8 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type is null
    */
   public SSAValue getFree(TypeReference type, VariableKey key) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
+    checkArgument(key != null, "The argument key may not be null");
 
     final SSAValue var = new SSAValue(nextLocal++, type, this.forMethod, key);
     final Managed<SSAValue> param = new Managed<>(var, key);
@@ -314,12 +308,8 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type is null
    */
   public SSAValue getUnallocated(TypeReference type, VariableKey key) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
+    checkArgument(key != null, "The argument key may not be null");
 
     List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
     if (managedList != null) {
@@ -377,9 +367,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public SSAValue getCurrent(VariableKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     Managed<? extends SSAValue> candidate = null;
 
@@ -425,9 +413,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public SSAValue getSuper(VariableKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     final SSAValue cand;
     currentScope--;
@@ -445,9 +431,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public List<SSAValue> getAllForPhi(VariableKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     List<SSAValue> ret = new ArrayList<>();
 
@@ -479,9 +463,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if key is null
    */
   public boolean isSeen(VariableKey key, boolean withSuper) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     if (withSuper) {
       return seenTypes.containsKey(key);
@@ -515,9 +497,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type is null
    */
   public boolean needsAllocation(VariableKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
     return managedList == null
@@ -536,9 +516,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type is null or has not been seen before
    */
   public boolean needsPhi(VariableKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     boolean seenLive = false;
 
@@ -575,9 +553,7 @@ public class SSAValueManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public void invalidate(VariableKey key) {
-    if (key == null) {
-      throw new IllegalArgumentException("The argument key may not be null");
-    }
+    checkArgument(key != null, "The argument key may not be null");
 
     List<Managed<? extends SSAValue>> managedList = seenTypes.get(key);
     if (managedList != null) {

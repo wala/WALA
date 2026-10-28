@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.dataflow.IFDS.IFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IPartiallyBalancedFlowFunctions;
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
@@ -26,9 +28,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
 
   @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Statement src, Statement dest) {
-    if (src == null) {
-      throw new IllegalArgumentException("src is null");
-    }
+    checkArgument(src != null, "src is null");
     switch (src.getKind()) {
       // uh oh. anything that flows into the missing function will be killed.
       case NORMAL_RET_CALLER, PARAM_CALLER, EXC_RET_CALLER, NORMAL -> {

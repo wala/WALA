@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.dominators;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -59,14 +61,10 @@ public abstract class Dominators<T> {
    */
   @SuppressWarnings("unchecked")
   public Dominators(Graph<T> G, T root) throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     this.G = G;
     this.root = root;
-    if (G.getNumberOfNodes() == 0) {
-      throw new IllegalArgumentException("G has no nodes");
-    }
+    checkArgument(G.getNumberOfNodes() != 0, "G has no nodes");
     this.vertex = (T[]) new Object[G.getNumberOfNodes() + 1];
   }
 

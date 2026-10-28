@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.typeInference;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -88,9 +90,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
   private boolean solved = false;
 
   protected TypeInference(IR ir, boolean doPrimitives) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     this.language = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     this.cha = ir.getMethod().getDeclaringClass().getClassHierarchy();
     this.ir = ir;

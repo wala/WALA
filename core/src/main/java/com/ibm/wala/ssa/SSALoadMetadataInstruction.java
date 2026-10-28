@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -37,9 +39,7 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
     this.lval = lval;
     this.token = token;
     this.entityType = entityType;
-    if (token == null) {
-      throw new IllegalArgumentException("null typeRef");
-    }
+    checkArgument(token != null, "null typeRef");
   }
 
   @Override
@@ -58,9 +58,7 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitLoadMetadata(this);
   }
 

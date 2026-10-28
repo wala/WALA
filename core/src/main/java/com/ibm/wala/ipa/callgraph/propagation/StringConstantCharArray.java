@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -32,9 +34,7 @@ public class StringConstantCharArray implements InstanceKey {
   }
 
   public static StringConstantCharArray make(ConstantKey<String> constant) {
-    if (constant == null) {
-      throw new IllegalArgumentException("null constant");
-    }
+    checkArgument(constant != null, "null constant");
     return new StringConstantCharArray(constant);
   }
 

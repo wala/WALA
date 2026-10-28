@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -29,9 +31,7 @@ import java.util.Iterator;
 public record ConcreteTypeKey(IClass type) implements InstanceKey {
 
   public ConcreteTypeKey {
-    if (type == null) {
-      throw new IllegalArgumentException("type is null");
-    }
+    checkArgument(type != null, "type is null");
     if (type.isInterface()) {
       Assertions.UNREACHABLE("unexpected interface: " + type);
     }
@@ -62,9 +62,7 @@ public record ConcreteTypeKey(IClass type) implements InstanceKey {
    * @throws IllegalArgumentException if pei is null
    */
   public static InstanceKey[] getInstanceKeysForPEI(SSAInstruction pei, IClassHierarchy cha) {
-    if (pei == null) {
-      throw new IllegalArgumentException("pei is null");
-    }
+    checkArgument(pei != null, "pei is null");
     Collection<TypeReference> types = pei.getExceptionTypes();
     // TODO: institute a cache?
     if (types == null) {

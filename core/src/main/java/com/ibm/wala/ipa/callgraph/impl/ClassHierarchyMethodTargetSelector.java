@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -46,9 +48,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference call, IClass receiver) {
 
-    if (call == null) {
-      throw new IllegalArgumentException("call is null");
-    }
+    checkArgument(call != null, "call is null");
     IClass klass;
     TypeReference targetType = call.getDeclaredTarget().getDeclaringClass();
 

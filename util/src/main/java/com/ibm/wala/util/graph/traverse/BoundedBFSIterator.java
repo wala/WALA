@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -56,9 +58,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
    * @throws IllegalArgumentException if G is null
    */
   public BoundedBFSIterator(Graph<T> G, T N, int k) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (k < 0) {
       throw new IllegalArgumentException("invalid k : " + k);
     }
@@ -76,9 +76,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
    * @throws IllegalArgumentException if G is null
    */
   public BoundedBFSIterator(Graph<T> G, Iterator<? extends T> nodes, int k) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (k < 0) {
       throw new IllegalArgumentException("invalid k: " + k);
     }

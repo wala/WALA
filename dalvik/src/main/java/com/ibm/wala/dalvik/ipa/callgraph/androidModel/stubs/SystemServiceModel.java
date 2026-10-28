@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.util.ssa.ParameterAccessor;
 import com.ibm.wala.core.util.ssa.SSAValue;
@@ -101,10 +103,8 @@ public class SystemServiceModel extends AndroidModel {
       Atom target) {
     super(cha, options, cache);
 
-    if (target == null) {
-      throw new IllegalArgumentException(
-          "The target requested to create an SystemServiceModel for was null");
-    }
+    checkArgument(
+        target != null, "The target requested to create an SystemServiceModel for was null");
     String sName = target.toString();
     String cName = Character.toUpperCase(sName.charAt(0)) + sName.substring(1);
     this.name = Atom.findOrCreateAsciiAtom("startSystemService" + cName);

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer.thin;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -63,9 +65,7 @@ public class CISlicer {
       DataDependenceOptions dOptions,
       ControlDependenceOptions cOptions)
       throws IllegalArgumentException {
-    if (dOptions == null) {
-      throw new IllegalArgumentException("dOptions == null");
-    }
+    checkArgument(dOptions != null, "dOptions == null");
     if (dOptions.equals(DataDependenceOptions.NO_BASE_PTRS)
         || dOptions.equals(DataDependenceOptions.FULL)) {
       throw new IllegalArgumentException("Heap data dependencies requested in CISlicer!");
@@ -106,9 +106,7 @@ public class CISlicer {
   /** Compute the set of pointer keys each statement refs */
   public static Map<Statement, Set<PointerKey>> scanForRef(
       SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa) {
-    if (sdg == null) {
-      throw new IllegalArgumentException("null sdg");
-    }
+    checkArgument(sdg != null, "null sdg");
     return scanForRef(sdg, pa, ModRef.make());
   }
 
@@ -127,9 +125,7 @@ public class CISlicer {
       PointerAnalysis<InstanceKey> pa,
       boolean ignoreAllocHeapDefs,
       ModRef<InstanceKey> modRef) {
-    if (pa == null) {
-      throw new IllegalArgumentException("null pa");
-    }
+    checkArgument(pa != null, "null pa");
     ExtendedHeapModel h = modRef.makeHeapModel(pa);
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (CGNode n : sdg.getCallGraph()) {
@@ -156,9 +152,7 @@ public class CISlicer {
    */
   public static Map<Statement, Set<PointerKey>> scanForRef(
       SDG<InstanceKey> sdg, PointerAnalysis<InstanceKey> pa, ModRef<InstanceKey> modRef) {
-    if (pa == null) {
-      throw new IllegalArgumentException("null pa");
-    }
+    checkArgument(pa != null, "null pa");
     ExtendedHeapModel h = modRef.makeHeapModel(pa);
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (CGNode n : sdg.getCallGraph()) {

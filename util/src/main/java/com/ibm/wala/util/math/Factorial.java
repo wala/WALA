@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.util.math;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.math.BigInteger;
 
 /** Factorial utilities */
@@ -51,9 +53,7 @@ public class Factorial {
 
   /** Factorial */
   public static BigInteger fact(BigInteger n) {
-    if (n == null) {
-      throw new IllegalArgumentException("n is null");
-    }
+    checkArgument(n != null, "n is null");
     BigInteger result = BigInteger.ONE;
     for (BigInteger i = BigInteger.ONE; i.compareTo(n) <= 0; i = i.add(BigInteger.ONE)) {
       result = result.multiply(i);

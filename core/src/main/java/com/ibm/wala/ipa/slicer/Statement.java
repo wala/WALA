@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import java.util.Objects;
 
@@ -37,9 +39,7 @@ public abstract class Statement {
   private final CGNode node;
 
   public Statement(final CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
+    checkArgument(node != null, "null node");
     this.node = node;
   }
 

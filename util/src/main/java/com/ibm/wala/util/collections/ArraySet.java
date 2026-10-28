@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.AbstractSet;
@@ -129,9 +131,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   }
 
   public boolean addAll(ArraySet<T> other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     boolean ret = false;
     for (int i = 0; i < other.size(); i++) {
       boolean added = add(other.get(i));
@@ -149,9 +149,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   }
 
   public boolean intersects(ArraySet<T> other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     for (int i = 0; i < other.size(); i++) {
       if (contains(other.get(i))) return true;
     }
@@ -159,9 +157,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   }
 
   public void forall(ObjectVisitor<T> visitor) {
-    if (visitor == null) {
-      throw new IllegalArgumentException("null visitor");
-    }
+    checkArgument(visitor != null, "null visitor");
     for (int i = 0; i < _curIndex; i++) {
       visitor.visit(_elems[i]);
     }
@@ -243,9 +239,7 @@ public class ArraySet<T> extends AbstractSet<T> implements Serializable {
   }
 
   public static <T> ArraySet<T> make(Collection<T> other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     return new ArraySet<>(other);
   }
 }

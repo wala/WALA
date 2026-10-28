@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.Arrays;
@@ -75,9 +77,7 @@ public class IntSetUtil {
   @NullUnmarked
   public static MutableIntSet makeMutableCopy(IntSet set)
       throws IllegalArgumentException, UnimplementedError {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof SparseIntSet) {
       return MutableSparseIntSet.make(set);
     } else if (set instanceof BitVectorIntSet) {
@@ -101,12 +101,8 @@ public class IntSetUtil {
 
   /** Compute the asymmetric difference of two sets, a \ b. */
   public static IntSet diff(IntSet A, IntSet B) {
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
     return diff(A, B, IntSetUtil.getDefaultIntSetFactory());
   }
 
@@ -131,15 +127,9 @@ public class IntSetUtil {
 
   /** Compute the asymmetric difference of two sets, a \ b. */
   public static IntSet diff(IntSet A, IntSet B, MutableIntSetFactory<?> factory) {
-    if (factory == null) {
-      throw new IllegalArgumentException("null factory");
-    }
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(factory != null, "null factory");
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
     if (A instanceof SparseIntSet intSet && B instanceof SparseIntSet sparseIntSet) {
       return SparseIntSet.diff(intSet, sparseIntSet);
     } else if (A instanceof SemiSparseMutableIntSet sparseMutableIntSet
@@ -156,12 +146,8 @@ public class IntSetUtil {
    * @throws IllegalArgumentException if B == null
    */
   public static MutableIntSet removeAll(MutableIntSet A, IntSet B) throws IllegalArgumentException {
-    if (A == null) {
-      throw new IllegalArgumentException("A == null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B == null");
-    }
+    checkArgument(A != null, "A == null");
+    checkArgument(B != null, "B == null");
     if (A instanceof SemiSparseMutableIntSet sparseMutableIntSet
         && B instanceof SemiSparseMutableIntSet semiSparseMutableIntSet) {
       if (DEBUG) {
@@ -188,9 +174,7 @@ public class IntSetUtil {
    */
   public static int binarySearch(int[] data, int key, int low, int high)
       throws IllegalArgumentException {
-    if (data == null) {
-      throw new IllegalArgumentException("null array");
-    }
+    checkArgument(data != null, "null array");
     if (data.length == 0) {
       return -1;
     }
@@ -211,9 +195,7 @@ public class IntSetUtil {
    *     maintain sorted order (if not present)
    */
   public static int binarySearchInsertionPoint(int[] data, int key, int low, int high) {
-    if (data == null) {
-      throw new IllegalArgumentException("null array");
-    }
+    checkArgument(data != null, "null array");
     if (data.length == 0) {
       return 0;
     }
@@ -238,9 +220,7 @@ public class IntSetUtil {
    * @param defaultIntSetFactory The defaultIntSetFactory to set.
    */
   public static void setDefaultIntSetFactory(MutableIntSetFactory<?> defaultIntSetFactory) {
-    if (defaultIntSetFactory == null) {
-      throw new IllegalArgumentException("null defaultIntSetFactory");
-    }
+    checkArgument(defaultIntSetFactory != null, "null defaultIntSetFactory");
     IntSetUtil.defaultIntSetFactory = defaultIntSetFactory;
   }
 
@@ -249,9 +229,7 @@ public class IntSetUtil {
    * @throws IllegalArgumentException if s == null
    */
   public static IntSet add(IntSet s, int j) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s == null");
-    }
+    checkArgument(s != null, "s == null");
     if (s instanceof SparseIntSet sis) {
       return SparseIntSet.add(sis, j);
     } else {

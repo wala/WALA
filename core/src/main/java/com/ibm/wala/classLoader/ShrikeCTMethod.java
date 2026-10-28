@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ShrikeClass.GetReader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrike.shrikeBT.Decoder;
@@ -55,9 +57,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   public ShrikeCTMethod(IClass klass, int index) {
 
     super(klass);
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     this.shrikeMethodIndex = index;
     this.cha = klass.getClassHierarchy();
   }

@@ -48,6 +48,8 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.ArraySetMultiMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -151,17 +153,13 @@ public class SparseNumberedLabeledEdgeManager<T, U>
       final NumberedNodeManager<T> nodeManager, U defaultLabel) {
     this.defaultLabel = defaultLabel;
     this.nodeManager = nodeManager;
-    if (nodeManager == null) {
-      throw new IllegalArgumentException("null nodeManager");
-    }
+    checkArgument(nodeManager != null, "null nodeManager");
   }
 
   public SparseNumberedLabeledEdgeManager(final NumberedNodeManager<T> nodeManager) {
     this.defaultLabel = null;
     this.nodeManager = nodeManager;
-    if (nodeManager == null) {
-      throw new IllegalArgumentException("null nodeManager");
-    }
+    checkArgument(nodeManager != null, "null nodeManager");
   }
 
   @Override

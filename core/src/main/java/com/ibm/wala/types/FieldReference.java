@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.shrike.ShrikeUtil;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -38,9 +40,7 @@ public final class FieldReference extends MemberReference {
    */
   public static synchronized FieldReference findOrCreate(
       TypeReference tref, Atom mn, TypeReference fieldType) {
-    if (tref == null) {
-      throw new IllegalArgumentException("null tref");
-    }
+    checkArgument(tref != null, "null tref");
     Key key = new Key(tref, mn, fieldType);
 
     FieldReference val = dictionary.get(key);

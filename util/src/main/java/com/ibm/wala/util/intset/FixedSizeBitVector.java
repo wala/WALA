@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.Serial;
 import java.util.Arrays;
 import org.jspecify.annotations.Nullable;
@@ -54,9 +56,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @throws IllegalArgumentException if s is null
    */
   public FixedSizeBitVector(FixedSizeBitVector s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     bits = new int[s.bits.length];
     this.nbits = s.nbits;
     copyBits(s);
@@ -138,9 +138,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @param set the bit set to be ANDed with
    */
   public void and(FixedSizeBitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     if (this == set) {
       return;
     }
@@ -164,9 +162,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @throws IllegalArgumentException if set == null
    */
   public void or(FixedSizeBitVector set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (this == set) { // should help alias analysis
       return;
     }
@@ -183,9 +179,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    */
   public static FixedSizeBitVector or(FixedSizeBitVector b1, FixedSizeBitVector b2)
       throws IllegalArgumentException {
-    if (b2 == null) {
-      throw new IllegalArgumentException("b2 == null");
-    }
+    checkArgument(b2 != null, "b2 == null");
     FixedSizeBitVector b = new FixedSizeBitVector(b1);
     b.or(b2);
     return b;
@@ -198,9 +192,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @throws IllegalArgumentException if set is null
    */
   public void xor(FixedSizeBitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     int setLength = set.bits.length;
     for (int i = setLength; i-- > 0; ) {
       bits[i] ^= set.bits[i];
@@ -213,9 +205,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @param other the set to check intersection with
    */
   public boolean intersectionEmpty(FixedSizeBitVector other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     int n = bits.length;
     for (int i = n; i-- > 0; ) {
       if ((bits[i] & other.bits[i]) != 0) return false;
@@ -230,9 +220,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @throws IllegalArgumentException if set is null
    */
   public void copyBits(FixedSizeBitVector set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     int setLength = set.bits.length;
     for (int i = setLength; i-- > 0; ) {
       bits[i] = set.bits[i];

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -64,9 +66,7 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    */
   @Override
   public void push(Iterator<? extends T> elements) throws IllegalArgumentException {
-    if (elements == null) {
-      throw new IllegalArgumentException("elements == null");
-    }
+    checkArgument(elements != null, "elements == null");
     while (elements.hasNext()) {
       T element = elements.next();
       if (wasInQueue.add(element)) {

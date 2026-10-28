@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.util.ssa.SSAValueManager;
 import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
@@ -314,11 +316,10 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * @throws IllegalArgumentException if the abstractAndroidModel is null
    */
   public void setModelBehavior(Class<? extends AbstractAndroidModel> abstractAndroidModel) {
-    if (abstractAndroidModel == null) {
-      throw new IllegalArgumentException(
-          "abstractAndroidModel may not be null. Use SequentialAndroidModel "
-              + "if no special handling shall be inserted.");
-    }
+    checkArgument(
+        abstractAndroidModel != null,
+        "abstractAndroidModel may not be null. Use SequentialAndroidModel "
+            + "if no special handling shall be inserted.");
     this.abstractAndroidModel = abstractAndroidModel;
   }
 
@@ -340,9 +341,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    *     packages differ. Or if the given package is null.
    */
   public void setPackage(@Language("jvm-class-name") String pack) {
-    if (pack == null) {
-      throw new IllegalArgumentException("Setting the package to null is disallowed.");
-    }
+    checkArgument(pack != null, "Setting the package to null is disallowed.");
     if ((!pack.startsWith("L") || pack.contains("."))) {
       pack = StringStuff.deployment2CanonicalTypeString(pack);
     }
@@ -464,9 +463,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * that is possibly incompatible with the information originally set.
    */
   public void registerIntentForce(Intent intent) {
-    if (intent == null) {
-      throw new IllegalArgumentException("The given Intent is null");
-    }
+    checkArgument(intent != null, "The given Intent is null");
 
     logger.info("Register Intent {}", intent);
     // Looks a bit weired but works as Intents are only matched based on their action and uri
@@ -495,17 +492,12 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * @throws IllegalArgumentException if you override an Intent with itself
    */
   public void setOverride(Intent from, Intent to) {
-    if (from == null) {
-      throw new IllegalArgumentException("The Intent given as 'from' is null");
-    }
-    if (to == null) {
-      throw new IllegalArgumentException("The Intent given as 'to' is null");
-    }
-    if (from.equals(to)) {
-      throw new IllegalArgumentException(
-          "You cannot override an Intent with itself! If you want to "
-              + "alter Information on an Intent use registerIntent (you may register it multiple times).");
-    }
+    checkArgument(from != null, "The Intent given as 'from' is null");
+    checkArgument(to != null, "The Intent given as 'to' is null");
+    checkArgument(
+        !from.equals(to),
+        "You cannot override an Intent with itself! If you want to "
+            + "alter Information on an Intent use registerIntent (you may register it multiple times).");
 
     Intent ori = overrideIntents.get(from);
     if (ori != null) {
@@ -582,12 +574,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
    * <p>See {@link #setOverride(Intent, Intent)}.
    */
   public void setOverrideForce(Intent from, Intent to) {
-    if (from == null) {
-      throw new IllegalArgumentException("The Intent given as 'from' is null");
-    }
-    if (to == null) {
-      throw new IllegalArgumentException("The Intent given as 'to' is null");
-    }
+    checkArgument(from != null, "The Intent given as 'from' is null");
+    checkArgument(to != null, "The Intent given as 'to' is null");
 
     logger.info("Override Intent {} to {}", from, to);
     overrideIntents.put(from, to);

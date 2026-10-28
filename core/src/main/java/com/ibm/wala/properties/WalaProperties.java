@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.properties;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
@@ -146,12 +148,8 @@ public final class WalaProperties {
 
   public static Properties loadPropertiesFromFile(ClassLoader loader, String fileName)
       throws IOException {
-    if (loader == null) {
-      throw new IllegalArgumentException("loader is null");
-    }
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
+    checkArgument(loader != null, "loader is null");
+    checkArgument(fileName != null, "null fileName");
     try (final InputStream propertyStream = loader.getResourceAsStream(fileName)) {
       if (propertyStream == null) {
         // create default properties

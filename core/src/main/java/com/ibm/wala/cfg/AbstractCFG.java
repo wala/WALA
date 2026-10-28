@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrike.shrikeBT.Constants;
 import com.ibm.wala.util.collections.CompoundIterator;
@@ -114,9 +116,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public int getPredNodeCount(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     if (N.equals(exit())) {
       // TODO: cache if necessary
       FixedSizeBitVector x = FixedSizeBitVector.or(normalToExit, exceptionalToExit);
@@ -137,9 +137,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
   }
 
   public int getNumberOfNormalIn(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     assert !N.equals(exit());
     int number = getNumber(N);
     int xtra = 0;
@@ -152,9 +150,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
   }
 
   public int getNumberOfExceptionalIn(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     assert !N.equals(exit());
     return exceptionalEdgeManager.getPredNodeCount(N);
   }
@@ -203,9 +199,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public Iterator<T> getPredNodes(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     if (N.equals(exit())) {
       return new FilterIterator<>(
           iterator(),
@@ -247,9 +241,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public int getSuccNodeCount(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     if (N.equals(exit())) {
       return 0;
     }
@@ -423,9 +415,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public boolean hasEdge(T src, T dst) {
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
-    }
+    checkArgument(dst != null, "dst is null");
     int x = getNumber(src);
     if (dst.equals(exit())) {
       return normalToExit.get(x) || exceptionalToExit.get(x);
@@ -436,9 +426,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
   }
 
   public boolean hasExceptionalEdge(T src, T dst) {
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
-    }
+    checkArgument(dst != null, "dst is null");
     int x = getNumber(src);
     if (dst.equals(exit())) {
       return exceptionalToExit.get(x);
@@ -447,9 +435,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
   }
 
   public boolean hasNormalEdge(T src, T dst) {
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
-    }
+    checkArgument(dst != null, "dst is null");
     int x = getNumber(src);
     if (dst.equals(exit())) {
       return normalToExit.get(x);
@@ -463,12 +449,8 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
    * @throws IllegalArgumentException if src or dst is null
    */
   public void addNormalEdge(T src, T dst) {
-    if (src == null) {
-      throw new IllegalArgumentException("src is null");
-    }
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
-    }
+    checkArgument(src != null, "src is null");
+    checkArgument(dst != null, "dst is null");
     if (dst.equals(exit())) {
       normalToExit.set(getNumber(src));
     } else if (getNumber(dst) == (getNumber(src) + 1)) {
@@ -482,9 +464,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
    * @throws IllegalArgumentException if dst is null
    */
   public void addExceptionalEdge(T src, T dst) {
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
-    }
+    checkArgument(dst != null, "dst is null");
     if (dst.equals(exit())) {
       exceptionalToExit.set(getNumber(src));
     } else {
@@ -564,9 +544,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public List<T> getExceptionalSuccessors(T b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     List<T> result = new ArrayList<>();
     for (T s : Iterator2Iterable.make(iterateExceptionalSuccessors(b.getNumber()))) {
       result.add(s);
@@ -576,9 +554,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public Collection<T> getNormalSuccessors(T b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     return Iterator2Collection.toSet(iterateNormalSuccessors(b.getNumber()));
   }
 
@@ -607,17 +583,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>>
 
   @Override
   public Collection<T> getExceptionalPredecessors(T b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     return Iterator2Collection.toSet(iterateExceptionalPredecessors(b));
   }
 
   @Override
   public Collection<T> getNormalPredecessors(T b) {
-    if (b == null) {
-      throw new IllegalArgumentException("b is null");
-    }
+    checkArgument(b != null, "b is null");
     return Iterator2Collection.toSet(iterateNormalPredecessors(b));
   }
 

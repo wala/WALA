@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ssa.SSAInstruction;
 
 public record InstructionByIIndexWrapper<T extends SSAInstruction>(T instruction) {
@@ -43,8 +45,7 @@ public record InstructionByIIndexWrapper<T extends SSAInstruction>(T instruction
   }
 
   public InstructionByIIndexWrapper {
-    if (instruction.iIndex() < 0) {
-      throw new IllegalArgumentException("The given instruction, can not be identified by iindex.");
-    }
+    checkArgument(
+        instruction.iIndex() >= 0, "The given instruction, can not be identified by iindex.");
   }
 }

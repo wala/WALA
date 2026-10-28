@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -33,9 +35,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
    * @throws IllegalArgumentException if method == null
    */
   protected TypeReference[][] makeParameterTypes(IMethod method) throws IllegalArgumentException {
-    if (method == null) {
-      throw new IllegalArgumentException("method == null");
-    }
+    checkArgument(method != null, "method == null");
     TypeReference[][] result = new TypeReference[method.getNumberOfParameters()][];
     for (int i = 0; i < result.length; i++) {
       TypeReference t = method.getParameterType(i);

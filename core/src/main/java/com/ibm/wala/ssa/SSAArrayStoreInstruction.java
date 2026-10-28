@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.TypeReference;
 
 /** SSA instruction representing an array store. */
@@ -51,9 +53,7 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
    */
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitArrayStore(this);
   }
 

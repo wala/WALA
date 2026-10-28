@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -35,9 +37,7 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
       final IClassHierarchy cha,
       Function<IClass, Boolean> isApplicationClass) {
 
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
+    checkArgument(cha != null, "cha is null");
     for (IClass klass : cha) {
       if (!klass.isInterface()) {
         if (isApplicationClass.apply(klass)) {

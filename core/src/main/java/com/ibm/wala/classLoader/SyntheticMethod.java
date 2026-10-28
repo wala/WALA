@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.core.util.bytecode.BytecodeStream;
 import com.ibm.wala.core.util.strings.Atom;
@@ -50,9 +52,7 @@ public class SyntheticMethod implements IMethod {
 
   public SyntheticMethod(
       MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     this.method = method;
     this.resolvedMethod = null;
     this.declaringClass = declaringClass;
@@ -62,9 +62,7 @@ public class SyntheticMethod implements IMethod {
 
   public SyntheticMethod(
       IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     this.resolvedMethod = method;
     this.method = resolvedMethod.getReference();
     this.declaringClass = declaringClass;

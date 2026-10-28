@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.ReverseIterator;
 import com.ibm.wala.util.graph.Graph;
@@ -43,9 +45,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    * given set of nodes.
    */
   public SCCIterator(Graph<T> G, @Nullable Iterator<T> nodes) {
-    if (G == null) {
-      throw new IllegalArgumentException("G cannot be null");
-    }
+    checkArgument(G != null, "G cannot be null");
     Iterator<T> reverseFinishTime = ReverseIterator.reverse(DFS.iterateFinishTime(G, nodes));
 
     rev = DFS.iterateFinishTime(GraphInverter.invert(G), reverseFinishTime);

@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -27,9 +29,7 @@ public class DefaultEntrypoint extends Entrypoint {
   public DefaultEntrypoint(IMethod method, IClassHierarchy cha) {
 
     super(method);
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(method != null, "method is null");
     this.cha = cha;
     paramTypes = makeParameterTypes(method);
     assert paramTypes != null : method.toString();
@@ -37,9 +37,7 @@ public class DefaultEntrypoint extends Entrypoint {
 
   public DefaultEntrypoint(MethodReference method, IClassHierarchy cha) {
     super(method, cha);
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(method != null, "method is null");
     this.cha = cha;
     paramTypes = makeParameterTypes(getMethod());
     assert paramTypes != null : method.toString();

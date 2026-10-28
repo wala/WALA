@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.Graph;
 import com.uber.nullaway.annotations.Initializer;
 import java.io.Serial;
@@ -24,9 +26,7 @@ abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T
 
   @Initializer
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     this.G = G;
     super.init(nodes);
   }

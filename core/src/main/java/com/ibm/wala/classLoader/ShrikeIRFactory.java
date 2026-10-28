@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.shrike.shrikeBT.IInstruction;
@@ -43,9 +45,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod<IInstruction>>
   public IR makeIR(final IBytecodeMethod<IInstruction> method, Context C, final SSAOptions options)
       throws IllegalArgumentException {
 
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     final com.ibm.wala.shrike.shrikeBT.IInstruction[] shrikeInstructions;
     try {
       shrikeInstructions = method.getInstructions();

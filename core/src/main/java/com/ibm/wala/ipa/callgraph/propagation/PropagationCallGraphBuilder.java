@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.IllegalArgumentExceptionContext;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -149,12 +151,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
       AnalysisOptions options,
       IAnalysisCacheView cache,
       PointerKeyFactory pointerKeyFactory) {
-    if (abstractRootMethod == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(abstractRootMethod != null, "cha is null");
+    checkArgument(options != null, "options is null");
     assert cache != null;
     this.cha = abstractRootMethod.getClassHierarchy();
     this.options = options;
@@ -196,9 +194,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   @Override
   public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor)
       throws IllegalArgumentException, CallGraphBuilderCancelException {
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    checkArgument(options != null, "options is null");
     system = makeSystem(options);
 
     if (DEBUG_GENERAL) {
@@ -372,12 +368,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * @throws IllegalArgumentException if field is null
    */
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
-    if (field == null) {
-      throw new IllegalArgumentException("field is null");
-    }
-    if (I == null) {
-      throw new IllegalArgumentException("I is null");
-    }
+    checkArgument(field != null, "field is null");
+    checkArgument(I != null, "I is null");
     IClass t = field.getDeclaringClass();
     IClass C = I.concreteType();
     if (!(C instanceof SyntheticClass)) {
@@ -398,9 +390,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * @throws IllegalArgumentException if I is null
    */
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
-    if (I == null) {
-      throw new IllegalArgumentException("I is null");
-    }
+    checkArgument(I != null, "I is null");
     IClass C = I.concreteType();
     assert C.isArrayClass() : "illegal arguments: " + I;
     return pointerKeyFactory.getPointerKeyForArrayContents(I);
@@ -526,9 +516,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
    * @throws IllegalArgumentException if catchClasses is null
    */
   public static boolean catches(Set<IClass> catchClasses, IClass klass, IClassHierarchy cha) {
-    if (catchClasses == null) {
-      throw new IllegalArgumentException("catchClasses is null");
-    }
+    checkArgument(catchClasses != null, "catchClasses is null");
     // quick shortcut
     if (catchClasses.size() == 1) {
       IClass c = catchClasses.iterator().next();
@@ -545,9 +533,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder<In
   }
 
   public static boolean representsNullType(InstanceKey key) throws IllegalArgumentException {
-    if (key == null) {
-      throw new IllegalArgumentException("key == null");
-    }
+    checkArgument(key != null, "key == null");
     IClass cls = key.concreteType();
     Language L = cls.getClassLoader().getLanguage();
     return L.isNullType(cls.getReference());

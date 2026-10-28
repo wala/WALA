@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.alg.statemachine.StatesMergedException;
@@ -219,13 +221,11 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
   @Override
   public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
-    if (prevState == null) {
-      throw new IllegalArgumentException("prevState == null");
-    }
-    if (!(prevState instanceof CallStack prevStack)) {
-      throw new IllegalArgumentException(
-          "not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
-    }
+    checkArgument(prevState != null, "prevState == null");
+    checkArgument(
+        prevState instanceof CallStack,
+        "not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
+    CallStack prevStack = (CallStack) prevState;
     if (!prevStack.isEmpty() && recursionHandler.isRecursive(prevStack.peek())) {
       // I don't think this is possible anymore
       assert false;

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa.analysis;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
@@ -36,9 +38,7 @@ public class DeadAssignmentElimination {
    * @throws IllegalArgumentException if ir is null
    */
   public static void perform(IR ir) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     DefUse DU = new DefUse(ir);
     DeadValueSystem system = new DeadValueSystem(ir, DU);
     try {

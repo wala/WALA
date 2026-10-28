@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.util.strings.Atom;
@@ -26,9 +28,7 @@ public record Selector(Atom name, Descriptor descriptor) {
   }
 
   public static Selector make(Language l, String selectorStr) {
-    if (selectorStr == null) {
-      throw new IllegalArgumentException("null selectorStr");
-    }
+    checkArgument(selectorStr != null, "null selectorStr");
     try {
       String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
       String desc = selectorStr.substring(selectorStr.indexOf('('));
@@ -42,12 +42,8 @@ public record Selector(Atom name, Descriptor descriptor) {
   public Selector(Atom name, Descriptor descriptor) {
     this.name = name;
     this.descriptor = descriptor;
-    if (name == null) {
-      throw new IllegalArgumentException("null name");
-    }
-    if (descriptor == null) {
-      throw new IllegalArgumentException("null descriptor");
-    }
+    checkArgument(name != null, "null name");
+    checkArgument(descriptor != null, "null descriptor");
   }
 
   @Override

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
@@ -83,16 +85,12 @@ public class FormalTypeParameter extends Signature {
   }
 
   private static String parseForId(String s) throws IllegalArgumentException {
-    if (s.indexOf(':') == -1) {
-      throw new IllegalArgumentException(s);
-    }
+    checkArgument(s.indexOf(':') != -1, s);
     return s.substring(0, s.indexOf(':'));
   }
 
   public static FormalTypeParameter make(String string) throws IllegalArgumentException {
-    if (string == null) {
-      throw new IllegalArgumentException("string is null");
-    }
+    checkArgument(string != null, "string is null");
     return new FormalTypeParameter(string);
   }
 

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.Pair;
 import java.util.Collections;
 import java.util.List;
@@ -44,12 +46,8 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
       SSAInstruction def1,
       SSAInstruction def2,
       SymbolTable symbolTable) {
-    if (symbolTable == null) {
-      throw new IllegalArgumentException("null symbolTable");
-    }
-    if (cond == null) {
-      throw new IllegalArgumentException("null cond");
-    }
+    checkArgument(symbolTable != null, "null symbolTable");
+    checkArgument(cond != null, "null cond");
     if (symbolTable.isNullConstant(cond.getUse(1))) {
       return Pair.make(cond.getUse(0), cond);
     }

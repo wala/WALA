@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import java.util.Objects;
 
@@ -84,9 +86,7 @@ public class PutFieldBarLabel implements IFlowLabel {
 
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
-    if (v == null) {
-      throw new IllegalArgumentException("v == null");
-    }
+    checkArgument(v != null, "v == null");
     v.visitPutFieldBar(this, dst);
   }
 

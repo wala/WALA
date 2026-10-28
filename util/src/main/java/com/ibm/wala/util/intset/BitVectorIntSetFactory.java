@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.TreeSet;
 
 public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorIntSet> {
@@ -19,9 +21,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
    */
   @Override
   public BitVectorIntSet make(int[] set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     if (set.length == 0) {
       return new BitVectorIntSet();
     } else {
@@ -50,9 +50,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
 
   @Override
   public BitVectorIntSet makeCopy(IntSet x) throws IllegalArgumentException {
-    if (x == null) {
-      throw new IllegalArgumentException("x == null");
-    }
+    checkArgument(x != null, "x == null");
     return new BitVectorIntSet(x);
   }
 

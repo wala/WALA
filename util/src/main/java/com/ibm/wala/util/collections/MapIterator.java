@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,9 +24,7 @@ public class MapIterator<X, Y> implements Iterator<Y> {
   final Function<X, Y> f;
 
   public MapIterator(Iterator<? extends X> i, Function<X, Y> f) {
-    if (i == null) {
-      throw new IllegalArgumentException("null i");
-    }
+    checkArgument(i != null, "null i");
     this.i = i;
     this.f = f;
   }

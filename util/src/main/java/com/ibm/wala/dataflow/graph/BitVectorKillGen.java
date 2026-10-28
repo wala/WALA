@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
@@ -24,12 +26,8 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
   private final BitVectorIntSet gen;
 
   public BitVectorKillGen(BitVector kill, BitVector gen) {
-    if (kill == null) {
-      throw new IllegalArgumentException("null kill");
-    }
-    if (gen == null) {
-      throw new IllegalArgumentException("null gen");
-    }
+    checkArgument(kill != null, "null kill");
+    checkArgument(gen != null, "null gen");
     this.kill = new BitVectorIntSet(kill);
     this.gen = new BitVectorIntSet(gen);
   }
@@ -37,12 +35,8 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
   @Override
   public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs == null");
-    }
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs == null");
-    }
+    checkArgument(rhs != null, "rhs == null");
+    checkArgument(lhs != null, "lhs == null");
     BitVectorVariable U = new BitVectorVariable();
     BitVectorIntSet bv = new BitVectorIntSet();
     if (rhs.getValue() != null) {

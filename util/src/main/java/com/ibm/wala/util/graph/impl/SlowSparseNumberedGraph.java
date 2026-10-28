@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.Graph;
@@ -64,9 +66,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> impleme
   }
 
   public static <T> void copyInto(Graph<T> g, Graph<T> into) {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     for (T name : g) {
       into.addNode(name);
     }

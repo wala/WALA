@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -97,9 +99,7 @@ public class AndroidManifestXMLReader {
   private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
 
   public AndroidManifestXMLReader(File xmlFile) {
-    if (xmlFile == null) {
-      throw new IllegalArgumentException("xmlFile may not be null");
-    }
+    checkArgument(xmlFile != null, "xmlFile may not be null");
     try (final FileInputStream in = new FileInputStream(xmlFile)) {
       readXML(in);
     } catch (Exception e) {
@@ -109,9 +109,7 @@ public class AndroidManifestXMLReader {
   }
 
   public AndroidManifestXMLReader(InputStream xmlFile) {
-    if (xmlFile == null) {
-      throw new IllegalArgumentException("xmlFile may not be null");
-    }
+    checkArgument(xmlFile != null, "xmlFile may not be null");
     try {
       readXML(xmlFile);
     } catch (Exception e) {

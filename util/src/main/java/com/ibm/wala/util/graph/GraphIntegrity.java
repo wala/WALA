@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.IteratorUtil;
@@ -35,9 +37,7 @@ public class GraphIntegrity {
   static final int DEBUG_LEVEL = 0;
 
   public static <T> void check(Graph<T> G) throws UnsoundGraphException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     checkNodeCount(G);
     checkEdges(G);
     checkEdgeCounts(G);
@@ -190,9 +190,7 @@ public class GraphIntegrity {
    * @throws IllegalArgumentException if c is null
    */
   public static void printCollection(String string, Collection<?> c) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
+    checkArgument(c != null, "c is null");
     System.err.println(string);
     if (c.isEmpty()) {
       System.err.println("none\n");

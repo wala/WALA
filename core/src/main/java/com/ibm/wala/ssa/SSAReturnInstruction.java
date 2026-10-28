@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** A return instruction. */
 public class SSAReturnInstruction extends SSAInstruction {
 
@@ -53,9 +55,7 @@ public class SSAReturnInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitReturn(this);
   }
 

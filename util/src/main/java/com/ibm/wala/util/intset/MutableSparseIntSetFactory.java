@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.TreeSet;
 
 /** An object that creates mutable sparse int sets. */
@@ -20,9 +22,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
    */
   @Override
   public MutableSparseIntSet make(int[] set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set is null");
-    }
+    checkArgument(set != null, "set is null");
     if (set.length == 0) {
       return MutableSparseIntSet.makeEmpty();
     } else {
@@ -48,9 +48,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
 
   @Override
   public MutableSparseIntSet makeCopy(IntSet x) throws IllegalArgumentException {
-    if (x == null) {
-      throw new IllegalArgumentException("x == null");
-    }
+    checkArgument(x != null, "x == null");
     return MutableSparseIntSet.make(x);
   }
 

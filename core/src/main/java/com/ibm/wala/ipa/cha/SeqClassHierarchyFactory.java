@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cha;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.Language;
@@ -24,9 +26,7 @@ public class SeqClassHierarchyFactory {
    * @return a ClassHierarchy object representing the analysis scope
    */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
-    if (scope == null) {
-      throw new IllegalArgumentException("null scope");
-    }
+    checkArgument(scope != null, "null scope");
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()));
   }
 
@@ -36,20 +36,14 @@ public class SeqClassHierarchyFactory {
    */
   public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor)
       throws ClassHierarchyException {
-    if (scope == null) {
-      throw new IllegalArgumentException("null scope");
-    }
+    checkArgument(scope != null, "null scope");
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()), monitor);
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory)
       throws ClassHierarchyException {
-    if (scope == null) {
-      throw new IllegalArgumentException("null scope");
-    }
-    if (factory == null) {
-      throw new IllegalArgumentException("null factory");
-    }
+    checkArgument(scope != null, "null scope");
+    checkArgument(factory != null, "null factory");
     return new ClassHierarchy(
         scope,
         factory,

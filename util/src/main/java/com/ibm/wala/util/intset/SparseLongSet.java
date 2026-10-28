@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import java.util.NoSuchElementException;
@@ -56,9 +58,7 @@ public class SparseLongSet implements LongSet {
    * elsewhere.
    */
   protected SparseLongSet(long[] backingArray) {
-    if (backingArray == null) {
-      throw new IllegalArgumentException("backingArray is null");
-    }
+    checkArgument(backingArray != null, "backingArray is null");
     elements = backingArray;
     this.size = backingArray.length;
   }
@@ -80,9 +80,7 @@ public class SparseLongSet implements LongSet {
   }
 
   public SparseLongSet(IntSet S) throws IllegalArgumentException {
-    if (S == null) {
-      throw new IllegalArgumentException("S == null");
-    }
+    checkArgument(S != null, "S == null");
     elements = new long[S.size()];
     size = S.size();
     S.foreach(
@@ -97,9 +95,7 @@ public class SparseLongSet implements LongSet {
   }
 
   public SparseLongSet(LongSet S) throws IllegalArgumentException {
-    if (S == null) {
-      throw new IllegalArgumentException("S == null");
-    }
+    checkArgument(S != null, "S == null");
     if (S instanceof SparseLongSet sparseLongSet) {
       cloneState(sparseLongSet);
     } else {
@@ -168,9 +164,7 @@ public class SparseLongSet implements LongSet {
 
   @Override
   public boolean sameValue(LongSet that) throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof SparseLongSet sparseLongSet) {
       return sameValueInternal(sparseLongSet);
     } else {
@@ -225,12 +219,8 @@ public class SparseLongSet implements LongSet {
    */
   public static SparseLongSet diff(SparseLongSet A, SparseLongSet B) {
 
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B is null");
-    }
+    checkArgument(A != null, "A is null");
+    checkArgument(B != null, "B is null");
 
     if (A.isEmpty()) {
       return new SparseLongSet(0);
@@ -300,9 +290,7 @@ public class SparseLongSet implements LongSet {
    * @throws IllegalArgumentException if str is null
    */
   public static long[] parseLongArray(String str) throws IllegalArgumentException {
-    if (str == null) {
-      throw new IllegalArgumentException("str is null");
-    }
+    checkArgument(str != null, "str is null");
     int len = str.length();
     if (len < 2) {
       throw new IllegalArgumentException("malformed input: " + str);
@@ -345,9 +333,7 @@ public class SparseLongSet implements LongSet {
   @Override
   public @Nullable LongSet intersection(LongSet that)
       throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof SparseLongSet sparseLongSet) {
       MutableSparseLongSet temp = MutableSparseLongSet.make(this);
       temp.intersectWith(sparseLongSet);
@@ -382,20 +368,14 @@ public class SparseLongSet implements LongSet {
 
   @Override
   public void foreach(LongSetAction action) {
-    if (action == null) {
-      throw new IllegalArgumentException("null action");
-    }
+    checkArgument(action != null, "null action");
     for (int i = 0; i < size; i++) action.act(elements[i]);
   }
 
   @Override
   public void foreachExcluding(LongSet X, LongSetAction action) {
-    if (X == null) {
-      throw new IllegalArgumentException("null X");
-    }
-    if (action == null) {
-      throw new IllegalArgumentException("null action");
-    }
+    checkArgument(X != null, "null X");
+    checkArgument(action != null, "null action");
     for (int i = 0; i < size; i++) {
       if (!X.contains(elements[i])) {
         action.act(elements[i]);
@@ -444,9 +424,7 @@ public class SparseLongSet implements LongSet {
 
   @Override
   public boolean isSubset(LongSet that) throws IllegalArgumentException, UnimplementedError {
-    if (that == null) {
-      throw new IllegalArgumentException("that == null");
-    }
+    checkArgument(that != null, "that == null");
     if (that instanceof SparseLongSet sparseLongSet) {
       return isSubsetInternal(sparseLongSet);
     } else {
@@ -456,9 +434,7 @@ public class SparseLongSet implements LongSet {
 
   @Override
   public boolean containsAny(LongSet set) {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof SparseLongSet sparseLongSet) {
       return containsAny(sparseLongSet);
     } else {
@@ -472,9 +448,7 @@ public class SparseLongSet implements LongSet {
   }
 
   public boolean containsAny(SparseLongSet set) throws IllegalArgumentException {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     int i = 0;
     for (int j = 0; j < set.size; j++) {
       long x = set.elements[j];

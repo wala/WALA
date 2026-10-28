@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Arrays;
@@ -348,9 +350,7 @@ public class SymbolTable implements Cloneable {
    * @throws IllegalArgumentException if rhs is null
    */
   public int newPhi(int[] rhs) throws IllegalArgumentException {
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs is null");
-    }
+    checkArgument(rhs != null, "rhs is null");
     int result = getNewValueNumber();
     SSAPhiInstruction phi = new SSAPhiInstruction(SSAInstruction.NO_INDEX, result, rhs.clone());
     assert result < nextFreeValueNumber;

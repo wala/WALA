@@ -10,6 +10,7 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
 
 import com.ibm.wala.util.debug.Assertions;
@@ -42,9 +43,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   @Override
   public int getNumber(@Nullable T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N is null");
-    }
+    checkArgument(N != null, "N is null");
     return N.getGraphNodeId();
   }
 
@@ -126,9 +125,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
    */
   @Override
   public void addNode(T n) {
-    if (n == null) {
-      throw new IllegalArgumentException("n is null");
-    }
+    checkArgument(n != null, "n is null");
     int number = n.getGraphNodeId();
     if (number == -1) {
       maxNumber++;
@@ -156,9 +153,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   @Override
   public void removeNode(T n) {
-    if (n == null) {
-      throw new IllegalArgumentException("n is null");
-    }
+    checkArgument(n != null, "n is null");
     int number = n.getGraphNodeId();
     if (number == -1) {
       throw new IllegalArgumentException("Cannot remove node, not in graph");
@@ -184,9 +179,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
   @Override
   public boolean containsNode(@Nullable T n) {
-    if (n == null) {
-      throw new IllegalArgumentException("n is null");
-    }
+    checkArgument(n != null, "n is null");
     int number = n.getGraphNodeId();
     if (number == -1) {
       return false;

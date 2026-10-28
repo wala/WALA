@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -27,9 +29,7 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
    * @throws IllegalArgumentException if T == null
    */
   private static IClass myElementType(ArrayClass T, int d) throws IllegalArgumentException {
-    if (T == null) {
-      throw new IllegalArgumentException("T == null");
-    }
+    checkArgument(T != null, "T == null");
     if (d == 0) {
       return T.getElementClass();
     } else {

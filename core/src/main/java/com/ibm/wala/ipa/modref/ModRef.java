@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.modref;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -55,9 +57,7 @@ public class ModRef<T extends InstanceKey> {
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeMod(
       CallGraph cg, PointerAnalysis<T> pa, HeapExclusions heapExclude) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     Map<CGNode, Collection<PointerKey>> scan = scanForMod(cg, pa, heapExclude);
     return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
@@ -70,9 +70,7 @@ public class ModRef<T extends InstanceKey> {
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeRef(
       CallGraph cg, PointerAnalysis<T> pa, HeapExclusions heapExclude) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
+    checkArgument(cg != null, "cg is null");
     Map<CGNode, Collection<PointerKey>> scan = scanForRef(cg, pa, heapExclude);
     return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
@@ -376,9 +374,7 @@ public class ModRef<T extends InstanceKey> {
       SSAInstruction s,
       HeapExclusions hexcl,
       boolean ignoreAllocHeapDefs) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     Set<PointerKey> result = HashSetFactory.make(2);
     ModVisitor<T, ?> v = makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
     s.visit(v);
@@ -401,9 +397,7 @@ public class ModRef<T extends InstanceKey> {
       PointerAnalysis<T> pa,
       SSAInstruction s,
       HeapExclusions hexcl) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     Set<PointerKey> result = HashSetFactory.make(2);
     RefVisitor<T, ?> v = makeRefVisitor(n, result, pa, h);
     s.visit(v);

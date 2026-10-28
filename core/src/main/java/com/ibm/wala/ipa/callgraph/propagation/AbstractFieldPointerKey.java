@@ -10,15 +10,15 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** Common implementation for {@link InstanceFieldPointerKey} implementations. */
 public abstract class AbstractFieldPointerKey extends AbstractPointerKey
     implements InstanceFieldPointerKey {
   protected final InstanceKey instance;
 
   protected AbstractFieldPointerKey(InstanceKey container) {
-    if (container == null) {
-      throw new IllegalArgumentException("container is null");
-    }
+    checkArgument(container != null, "container is null");
     this.instance = container;
   }
 

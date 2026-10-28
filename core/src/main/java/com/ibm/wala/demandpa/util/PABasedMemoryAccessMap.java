@@ -11,6 +11,8 @@
 
 package com.ibm.wala.demandpa.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -67,9 +69,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
       PointerAnalysis<InstanceKey> pa,
       Map<Statement, Set<PointerKey>> mod,
       Map<Statement, Set<PointerKey>> ref) {
-    if (pa == null) {
-      throw new IllegalArgumentException("null pa");
-    }
+    checkArgument(pa != null, "null pa");
     this.pa = pa;
     this.heapModel = pa.getHeapModel();
     invMod = MapUtil.inverseMap(mod);

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.TypeReference;
 
 /** Abstract base class for instructions that load or store from array contents. */
@@ -26,9 +28,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     this.arrayref = arrayref;
     this.index = index;
     this.elementType = elementType;
-    if (elementType == null) {
-      throw new IllegalArgumentException("null elementType");
-    }
+    checkArgument(elementType != null, "null elementType");
   }
 
   @Override

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -51,9 +53,7 @@ public class SSACache {
    */
   public synchronized IR findOrCreateIR(final IMethod m, Context c, final SSAOptions options) {
 
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isAbstract() || m.isNative()) {
       return null;
     }
@@ -81,9 +81,7 @@ public class SSACache {
    * @throws IllegalArgumentException if m is null
    */
   public synchronized DefUse findOrCreateDU(IMethod m, Context c, SSAOptions options) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     if (m.isAbstract() || m.isNative()) {
       return null;
     }
@@ -106,9 +104,7 @@ public class SSACache {
    * @throws IllegalArgumentException if ir is null
    */
   public synchronized DefUse findOrCreateDU(IR ir, Context C) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     DefUse du = (DefUse) duCache.find(ir.getMethod(), C, ir.getOptions());
     if (du == null) {
       du = new DefUse(ir);

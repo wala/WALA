@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import java.util.Iterator;
 
@@ -34,18 +36,14 @@ public final class BitSet<T> {
    * @throws IllegalArgumentException if map is null
    */
   public BitSet(OrdinalSetMapping<T> map) {
-    if (map == null) {
-      throw new IllegalArgumentException("map is null");
-    }
+    checkArgument(map != null, "map is null");
     int length = map.getMaximumIndex();
     vector = new BitVector(length);
     this.map = map;
   }
 
   public static <T> BitSet<T> createBitSet(BitSet<T> B) {
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(B != null, "null B");
     return new BitSet<>(B);
   }
 
@@ -60,9 +58,7 @@ public final class BitSet<T> {
    * @throws IllegalArgumentException if B is null
    */
   public void addAll(BitSet<?> B) {
-    if (B == null) {
-      throw new IllegalArgumentException("B is null");
-    }
+    checkArgument(B != null, "B is null");
     vector.or(B.vector);
   }
 
@@ -114,9 +110,7 @@ public final class BitSet<T> {
    * @throws IllegalArgumentException if other is null
    */
   public void copyBits(BitSet<T> other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     vector.copyBits(other.vector);
     map = other.map;
   }
@@ -127,9 +121,7 @@ public final class BitSet<T> {
    * @throws IllegalArgumentException if other is null
    */
   public boolean sameBits(BitSet<?> other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     return vector.equals(other.vector);
   }
 
@@ -198,9 +190,7 @@ public final class BitSet<T> {
    * @throws IllegalArgumentException if other is null
    */
   public void intersect(BitSet<?> other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     vector.and(other.vector);
   }
 
@@ -211,9 +201,7 @@ public final class BitSet<T> {
    * @throws IllegalArgumentException if other is null
    */
   public void difference(BitSet<T> other) {
-    if (other == null) {
-      throw new IllegalArgumentException("other is null");
-    }
+    checkArgument(other != null, "other is null");
     vector.and(BitVector.not(other.vector));
   }
 

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.ImmutableByteArray;
 import com.ibm.wala.core.util.strings.StringStuff;
@@ -67,9 +69,7 @@ public final class TypeName implements Serializable {
   }
 
   public static TypeName findOrCreate(ImmutableByteArray name) throws IllegalArgumentException {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     return findOrCreate(name, 0, name.length());
   }
 
@@ -79,12 +79,8 @@ public final class TypeName implements Serializable {
   }
 
   public static TypeName findOrCreateClass(Atom packageName, Atom className) {
-    if (packageName == null) {
-      throw new IllegalArgumentException("null packageName");
-    }
-    if (className == null) {
-      throw new IllegalArgumentException("null className");
-    }
+    checkArgument(packageName != null, "null packageName");
+    checkArgument(className != null, "null className");
     TypeNameKey T = new TypeNameKey(packageName, className, 0);
     return findOrCreate(T);
   }
@@ -119,9 +115,7 @@ public final class TypeName implements Serializable {
    * @throws IllegalArgumentException if s is null
    */
   public static TypeName string2TypeName(String s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     byte[] val = s.getBytes();
 
     return findOrCreate(new ImmutableByteArray(val));

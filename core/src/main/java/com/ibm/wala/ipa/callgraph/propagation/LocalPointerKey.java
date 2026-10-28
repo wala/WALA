@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /** A pointer key which provides a unique set for each local in each call graph node. */
@@ -24,9 +26,7 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
     if (valueNumber <= 0) {
       throw new IllegalArgumentException("illegal valueNumber: " + valueNumber);
     }
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
+    checkArgument(node != null, "null node");
   }
 
   @Override

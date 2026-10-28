@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -36,12 +38,8 @@ public class DelegatingContextSelector implements ContextSelector {
   public DelegatingContextSelector(ContextSelector A, ContextSelector B) {
     this.A = A;
     this.B = B;
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
   }
 
   @Override

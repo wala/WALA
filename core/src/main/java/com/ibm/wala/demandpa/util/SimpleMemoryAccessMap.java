@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.demandpa.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.util.shrike.ShrikeUtil;
@@ -78,9 +80,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private final HeapModel heapModel;
 
   public SimpleMemoryAccessMap(CallGraph cg, HeapModel heapModel, boolean includePrimOps) {
-    if (cg == null) {
-      throw new IllegalArgumentException("null cg");
-    }
+    checkArgument(cg != null, "null cg");
     this.cha = cg.getClassHierarchy();
     this.heapModel = heapModel;
     this.includePrimOps = includePrimOps;

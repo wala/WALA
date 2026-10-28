@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -97,9 +99,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass dispatchType) {
 
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
+    checkArgument(site != null, "site is null");
     // first, see if we'd like to bypass the CHA-based target for the site
     MethodReference ref = site.getDeclaredTarget();
     IMethod chaTarget = chaMethodTargetSelector.getCalleeTarget(caller, site, dispatchType);

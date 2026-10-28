@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cfg.exc.inter;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.cfg.exc.InterprocAnalysisResult;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -30,9 +32,7 @@ class InterprocAnalysisResultWrapper
   private final Map<CGNode, IntraprocAnalysisState> map;
 
   InterprocAnalysisResultWrapper(final Map<CGNode, IntraprocAnalysisState> map) {
-    if (map == null) {
-      throw new IllegalArgumentException();
-    }
+    checkArgument(map != null);
 
     this.map = map;
   }

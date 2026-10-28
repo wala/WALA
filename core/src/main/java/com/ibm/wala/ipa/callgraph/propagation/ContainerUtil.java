@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -45,9 +47,7 @@ public class ContainerUtil {
    * @throws IllegalArgumentException if C is null
    */
   public static boolean isContainer(IClass c) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
+    checkArgument(c != null, "c is null");
     if (ClassLoaderReference.Primordial.equals(c.getClassLoader().getReference())
         && TypeReference.JavaUtilCollection.getName()
             .getPackage()

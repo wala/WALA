@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.function.Predicate;
 
 /** intersection of two filters */
@@ -21,12 +23,8 @@ public class Filtersection<T> implements Predicate<T> {
   public Filtersection(Predicate<T> a, Predicate<T> b) {
     this.a = a;
     this.b = b;
-    if (a == null) {
-      throw new IllegalArgumentException("null a");
-    }
-    if (b == null) {
-      throw new IllegalArgumentException("null b");
-    }
+    checkArgument(a != null, "null a");
+    checkArgument(b != null, "null b");
   }
 
   @Override

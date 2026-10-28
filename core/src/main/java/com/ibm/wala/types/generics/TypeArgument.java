@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.generics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.TypeReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,15 +70,11 @@ public class TypeArgument extends Signature {
   }
 
   public static TypeArgument[] make(String s) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     if (s.isEmpty() || s.charAt(0) != '<') {
       throw new IllegalArgumentException(s);
     }
-    if (s.charAt(s.length() - 1) != '>') {
-      throw new IllegalArgumentException(s);
-    }
+    checkArgument(s.charAt(s.length() - 1) == '>', s);
     String[] args = parseForTypeArguments(s);
     TypeArgument[] result = new TypeArgument[args.length];
     Arrays.setAll(result, i -> makeTypeArgument(args[i]));

@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.types.MethodReference;
 
@@ -47,9 +49,7 @@ public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
 
   @Override
   public boolean shouldRefine(CallerSiteContext callSiteAndCGNode) throws IllegalArgumentException {
-    if (callSiteAndCGNode == null) {
-      throw new IllegalArgumentException("callSiteAndCGNode == null");
-    }
+    checkArgument(callSiteAndCGNode != null, "callSiteAndCGNode == null");
     MethodReference declaredTarget = callSiteAndCGNode.getCallSite().getDeclaredTarget();
     if (declaredTarget.toString().contains("toString()Ljava/lang/String")) {
       return false;

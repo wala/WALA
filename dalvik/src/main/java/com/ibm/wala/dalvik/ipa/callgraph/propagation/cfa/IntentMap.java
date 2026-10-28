@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.core.util.strings.StringStuff;
@@ -76,9 +78,7 @@ import org.jspecify.annotations.NonNull;
   }
 
   public Intent find(final InstanceKey key) throws IndexOutOfBoundsException {
-    if (key == null) {
-      throw new IllegalArgumentException("InstanceKey may not be null");
-    }
+    checkArgument(key != null, "InstanceKey may not be null");
     Intent intent = seen.get(key);
     if (intent == null) {
       throw new IndexOutOfBoundsException("No Intent was seen for key " + key);
@@ -87,9 +87,7 @@ import org.jspecify.annotations.NonNull;
   }
 
   private Intent create(final InstanceKey key, final Supplier<Intent> intentSupplier) {
-    if (key == null) {
-      throw new IllegalArgumentException("InstanceKey may not be null");
-    }
+    checkArgument(key != null, "InstanceKey may not be null");
     return seen.compute(
         key,
         (priorKey, priorIntent) -> {

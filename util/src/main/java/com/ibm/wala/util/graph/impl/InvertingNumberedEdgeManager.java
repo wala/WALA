@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntSet;
 import java.util.Iterator;
@@ -21,9 +23,7 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
   private final NumberedEdgeManager<T> original;
 
   public InvertingNumberedEdgeManager(NumberedEdgeManager<T> original) {
-    if (original == null) {
-      throw new IllegalArgumentException("null original");
-    }
+    checkArgument(original != null, "null original");
     this.original = original;
   }
 

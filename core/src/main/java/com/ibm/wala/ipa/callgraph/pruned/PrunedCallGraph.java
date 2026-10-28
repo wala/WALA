@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.pruned;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -52,8 +54,7 @@ public class PrunedCallGraph implements CallGraph {
     this.cg = cg;
     this.keep = keep;
     for (CGNode keptNode : keep)
-      if (!cg.containsNode(keptNode))
-        throw new IllegalArgumentException(String.format("%s does not contain %s", cg, keptNode));
+      checkArgument(cg.containsNode(keptNode), "%s does not contain %s", cg, keptNode);
   }
 
   public PrunedCallGraph(CallGraph cg, Set<CGNode> keep, Map<CGNode, @NonNull Set<CGNode>> remove) {

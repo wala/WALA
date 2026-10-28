@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -227,9 +229,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   @Override
   public Iterator<?> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
-    if (sfk == null) {
-      throw new IllegalArgumentException("sfk == null");
-    }
+    checkArgument(sfk != null, "sfk == null");
     Collection<MemoryAccess> fieldWrites = mam.getStaticFieldWrites(sfk.getField());
     for (MemoryAccess a : fieldWrites) {
       addSubgraphForNode(a.node());
@@ -239,9 +239,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   @Override
   public Iterator<?> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
-    if (sfk == null) {
-      throw new IllegalArgumentException("sfk == null");
-    }
+    checkArgument(sfk != null, "sfk == null");
     Collection<MemoryAccess> fieldReads = mam.getStaticFieldReads(sfk.getField());
     for (MemoryAccess a : fieldReads) {
       addSubgraphForNode(a.node());
@@ -287,9 +285,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * @throws UnsupportedOperationException if it doesn't know how to handle a {@link PointerKey}
    */
   public static PointerKey convertPointerKeyToHeapModel(PointerKey pk, HeapModel h) {
-    if (pk == null) {
-      throw new IllegalArgumentException("null pk");
-    }
+    checkArgument(pk != null, "null pk");
     if (pk instanceof LocalPointerKey lpk) {
       return h.getPointerKeyForLocal(lpk.getNode(), lpk.getValueNumber());
     } else if (pk instanceof ArrayContentsKey ack) {

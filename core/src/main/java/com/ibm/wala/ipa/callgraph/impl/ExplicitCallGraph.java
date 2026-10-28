@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -62,12 +64,8 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
   public ExplicitCallGraph(
       IMethod fakeRootMethod, AnalysisOptions options, IAnalysisCacheView cache) {
-    if (options == null) {
-      throw new IllegalArgumentException("null options");
-    }
-    if (cache == null) {
-      throw new IllegalArgumentException("null cache");
-    }
+    checkArgument(options != null, "null options");
+    checkArgument(cache != null, "null cache");
     this.cha = fakeRootMethod.getClassHierarchy();
     this.options = options;
     this.cache = cache;
@@ -96,12 +94,8 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter>
 
   @Override
   public CGNode findOrCreateNode(IMethod method, Context context) throws CancelException {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
-    if (context == null) {
-      throw new IllegalArgumentException("null context");
-    }
+    checkArgument(method != null, "null method");
+    checkArgument(context != null, "null context");
     Key k = new Key(method, context);
     CGNode result = getNode(k);
     if (result == null) {

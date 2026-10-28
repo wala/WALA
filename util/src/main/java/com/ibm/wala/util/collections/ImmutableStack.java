@@ -38,6 +38,8 @@
 
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Iterator;
@@ -107,9 +109,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("unused")
   public ImmutableStack<T> push(T entry) {
-    if (entry == null) {
-      throw new IllegalArgumentException("null entry");
-    }
+    checkArgument(entry != null, "null entry");
     if (MAX_SIZE == 0) {
       return emptyStack();
     }
@@ -199,9 +199,7 @@ public class ImmutableStack<T> implements Iterable<T> {
    * @throws IllegalArgumentException if other == null
    */
   public boolean topMatches(ImmutableStack<T> other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("other == null");
-    }
+    checkArgument(other != null, "other == null");
     if (other.size() > size()) {
       return false;
     }
@@ -222,9 +220,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("unchecked")
   public ImmutableStack<T> popAll(ImmutableStack<T> other) {
-    if (!topMatches(other)) {
-      throw new IllegalArgumentException("top does not match");
-    }
+    checkArgument(topMatches(other), "top does not match");
     int size = entries.length - other.entries.length;
     T[] tmpEntries = (T[]) new Object[size];
     System.arraycopy(entries, 0, tmpEntries, 0, size);
@@ -233,9 +229,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("unchecked")
   public ImmutableStack<T> pushAll(ImmutableStack<T> other) {
-    if (other == null) {
-      throw new IllegalArgumentException("null other");
-    }
+    checkArgument(other != null, "null other");
     int size = entries.length + other.entries.length;
     final T[] tmpEntries;
     if (isWithinSizeLimit(size)) {

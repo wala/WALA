@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.io.FileProvider;
 import com.ibm.wala.core.util.io.FileSuffixes;
 import com.ibm.wala.core.util.shrike.ShrikeClassReaderHandle;
@@ -86,9 +88,7 @@ public class ClassLoaderImpl implements IClassLoader {
       StringFilter exclusions,
       IClassHierarchy cha) {
 
-    if (loader == null) {
-      throw new IllegalArgumentException("null loader");
-    }
+    checkArgument(loader != null, "null loader");
 
     this.arrayClassLoader = arrayClassLoader;
     this.parent = parent;
@@ -449,9 +449,7 @@ public class ClassLoaderImpl implements IClassLoader {
   @Override
   public void init(List<Module> modules) throws IOException {
 
-    if (modules == null) {
-      throw new IllegalArgumentException("modules is null");
-    }
+    checkArgument(modules != null, "modules is null");
 
     // module are loaded according to the given order (same as in Java VM)
     Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
@@ -561,9 +559,7 @@ public class ClassLoaderImpl implements IClassLoader {
   @SuppressWarnings("unused")
   @Override
   public IClass lookupClass(TypeName className) {
-    if (className == null) {
-      throw new IllegalArgumentException("className is null");
-    }
+    checkArgument(className != null, "className is null");
     if (DEBUG_LEVEL > 1) {
       System.err.println(this + ": lookupClass " + className);
     }
@@ -622,9 +618,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
   @Override
   public String getSourceFileName(IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     ModuleEntry e = sourceMap.get(klass.getName());
     return e == null ? null : e.getName();
   }
@@ -641,18 +635,14 @@ public class ClassLoaderImpl implements IClassLoader {
 
   @Override
   public Reader getSource(IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     ModuleEntry e = sourceMap.get(klass.getName());
     return e == null ? null : new InputStreamReader(e.getInputStream());
   }
 
   @Override
   public void removeAll(Collection<IClass> toRemove) {
-    if (toRemove == null) {
-      throw new IllegalArgumentException("toRemove is null");
-    }
+    checkArgument(toRemove != null, "toRemove is null");
     toRemove.stream().map(IClass::getName).peek(loadedClasses::remove).forEach(sourceMap::remove);
   }
 

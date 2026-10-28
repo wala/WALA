@@ -9,6 +9,8 @@
  */
 package com.ibm.wala.dalvik.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.core.util.config.AnalysisScopeReader;
@@ -112,9 +114,7 @@ public class AndroidAnalysisScope {
   /** Handle .apk file. */
   public static void addClassPathToScope(
       String classPath, AnalysisScope scope, ClassLoaderReference loader) {
-    if (classPath == null) {
-      throw new IllegalArgumentException("null classPath");
-    }
+    checkArgument(classPath != null, "null classPath");
     try {
       String[] paths = classPath.split(File.pathSeparator);
 

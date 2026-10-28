@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** An instruction representing a monitorenter or monitorexit operation. */
 public abstract class SSAMonitorInstruction extends SSAInstruction {
   /** The value number of the object being locked or unlocked */
@@ -41,9 +43,7 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitMonitor(this);
   }
 

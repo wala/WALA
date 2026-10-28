@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -36,18 +38,14 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   private final IClassHierarchy cha;
 
   public ClassBasedInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("null cha");
-    }
+    checkArgument(cha != null, "null cha");
     this.cha = cha;
     this.options = options;
   }
 
   @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
-    if (allocation == null) {
-      throw new IllegalArgumentException("allocation is null");
-    }
+    checkArgument(allocation != null, "allocation is null");
 
     if (String.valueOf(allocation).contains("java/lang/invoke/DirectMethodHandle$StaticAccessor")) {
       System.err.println("got " + allocation + " in " + node);

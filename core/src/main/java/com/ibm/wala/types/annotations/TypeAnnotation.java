@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types.annotations;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
@@ -665,11 +667,10 @@ public class TypeAnnotation {
           return new LocalVarTarget(varIndex, null);
         }
         for (int i = 0; i < target.getNrOfRanges(); i++) {
-          if (target.getIndex(i) != varIndex) throw new IllegalArgumentException();
+          checkArgument(target.getIndex(i) == varIndex);
 
-          if (!method.getLocalVariableName(target.getStartPc(0), target.getIndex(0)).equals(name)) {
-            throw new IllegalArgumentException();
-          }
+          checkArgument(
+              method.getLocalVariableName(target.getStartPc(0), target.getIndex(0)).equals(name));
         }
         return new LocalVarTarget(varIndex, name);
       }

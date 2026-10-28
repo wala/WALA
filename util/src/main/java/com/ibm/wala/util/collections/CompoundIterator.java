@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -20,9 +22,7 @@ public class CompoundIterator<T> implements Iterator<T> {
   final Iterator<? extends T> B;
 
   public CompoundIterator(Iterator<? extends T> A, Iterator<? extends T> B) {
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
+    checkArgument(A != null, "null A");
     this.A = A;
     this.B = B;
   }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.cha;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -27,9 +29,7 @@ public class ContextInsensitiveCHAContextInterpreter implements CHAContextInterp
 
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     try {
       return CodeScanner.getCallSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
@@ -40,9 +40,7 @@ public class ContextInsensitiveCHAContextInterpreter implements CHAContextInterp
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     try {
       return CodeScanner.getNewSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {

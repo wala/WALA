@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.intset.IntIterator;
 import java.util.Iterator;
 import java.util.function.IntFunction;
@@ -21,12 +23,8 @@ public class IntMapIterator<T> implements Iterator<T> {
   final IntFunction<T> f;
 
   public IntMapIterator(IntIterator i, IntFunction<T> f) {
-    if (i == null) {
-      throw new IllegalArgumentException("null i");
-    }
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
+    checkArgument(i != null, "null i");
+    checkArgument(f != null, "null f");
     this.i = i;
     this.f = f;
   }

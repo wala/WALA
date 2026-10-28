@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrike.shrikeCT.ClassConstants;
@@ -61,9 +63,7 @@ public final class FieldImpl implements IField {
     this.annotations = annotations;
     this.typeAnnotations = typeAnnotations;
     this.genericSignature = sig;
-    if (declaringClass == null) {
-      throw new IllegalArgumentException("null declaringClass");
-    }
+    checkArgument(declaringClass != null, "null declaringClass");
     if (fieldRef == null) {
       throw new IllegalArgumentException("null canonicalRef");
     }

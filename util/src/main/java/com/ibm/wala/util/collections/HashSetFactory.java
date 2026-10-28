@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -54,9 +56,7 @@ public class HashSetFactory {
    * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
    */
   public static <T> HashSet<T> make(Collection<? extends T> s) {
-    if (s == null) {
-      throw new IllegalArgumentException("null s");
-    }
+    checkArgument(s != null, "null s");
     if (DEBUG) {
       return new ParanoidHashSet<>(s);
     } else {

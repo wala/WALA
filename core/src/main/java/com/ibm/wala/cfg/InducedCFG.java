@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -69,12 +71,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
    */
   public InducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
     super(method);
-    if (instructions == null) {
-      throw new IllegalArgumentException("instructions is null");
-    }
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
+    checkArgument(instructions != null, "instructions is null");
+    checkArgument(method != null, "method is null");
     this.context = context;
     this.instructions = instructions;
     if (DEBUG) {

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order to get a
  * new variable name to associate with some flow-insensitive dataflow fact. You can build an {@link
@@ -86,9 +88,7 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    if (v == null) {
-      throw new IllegalArgumentException("v is null");
-    }
+    checkArgument(v != null, "v is null");
     v.visitPi(this);
   }
 

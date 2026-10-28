@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -115,9 +117,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   /* END Custom change: caching */
   @Override
   public IR getIR(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node);
     if (DEBUG) {
       System.err.println("generating IR for " + node);
@@ -244,9 +244,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
    */
   @Override
   public boolean understands(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     if (!node.getContext().isA(JavaTypeContext.class)) {
       return false;
     }
@@ -263,9 +261,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node);
     Context context = node.getContext();
     TypeReference tr = ((TypeAbstraction) context.get(ContextKey.RECEIVER)).getTypeReference();

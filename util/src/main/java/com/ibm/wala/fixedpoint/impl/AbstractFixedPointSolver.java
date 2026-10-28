@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixedpoint.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -180,9 +182,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
   }
 
   public static String lineBreak(String string, int wrap) {
-    if (string == null) {
-      throw new IllegalArgumentException("string is null");
-    }
+    checkArgument(string != null, "string is null");
     if (string.length() > wrap) {
       StringBuilder result = new StringBuilder();
       int start = 0;
@@ -261,9 +261,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
       final NullaryOperator<T> operator,
       final boolean toWorkList,
       final boolean eager) {
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs is null");
-    }
+    checkArgument(lhs != null, "lhs is null");
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
     final NullaryStatement<T> s = new BasicNullaryStatement<>(lhs, operator);
@@ -312,9 +310,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
    */
   public boolean newStatement(
       T lhs, UnaryOperator<T> operator, T rhs, boolean toWorkList, boolean eager) {
-    if (operator == null) {
-      throw new IllegalArgumentException("operator is null");
-    }
+    checkArgument(operator != null, "operator is null");
     // add to the list of graph
     UnaryStatement<T> s = operator.makeEquation(lhs, rhs);
     if (getFixedPointSystem().containsStatement(s)) {
@@ -392,9 +388,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<T>>
    */
   public boolean newStatement(
       T lhs, AbstractOperator<T> operator, T op1, T op2, T op3, boolean toWorkList, boolean eager) {
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs is null");
-    }
+    checkArgument(lhs != null, "lhs is null");
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
     GeneralStatement<T> s = new Statement(lhs, operator, op1, op2, op3);

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.ArrayClass;
@@ -100,9 +102,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   @Override
   public IR getIR(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node);
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     IR result = IRCache.get(cls.getReference());
@@ -126,18 +126,14 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   @Override
   public boolean understands(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     return (node.getMethod().getReference().equals(CLONE)
         && ContextUtil.getConcreteClassFromContext(node.getContext()) != null);
   }
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node);
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     return new NonNullSingletonIterator<>(NewSiteReference.make(NEW_PC, cls.getReference()));

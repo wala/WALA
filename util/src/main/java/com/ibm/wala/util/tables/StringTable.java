@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.tables;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import java.io.File;
@@ -44,9 +46,7 @@ public class StringTable extends Table<String> implements Cloneable {
    */
   public static StringTable readFromDirectTextFile(String fileName, Character comment)
       throws IOException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("fileName is null");
-    }
+    checkArgument(fileName != null, "fileName is null");
     File f = new File(fileName);
     return readFromTextFile(f, comment);
   }
@@ -67,9 +67,7 @@ public class StringTable extends Table<String> implements Cloneable {
    * @param f a file containing a table in text format, whitespace delimited
    */
   public static StringTable readFromTextFile(File f, Character comment) throws IOException {
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
+    checkArgument(f != null, "null f");
     try (final FileInputStream in = new FileInputStream(f)) {
       return readFromStream(in, comment);
     }
@@ -90,9 +88,7 @@ public class StringTable extends Table<String> implements Cloneable {
    */
   public static StringTable readFromStream(
       InputStream s, Character commentToken, @Nullable Character delimiter) throws IOException {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
+    checkArgument(s != null, "s is null");
     StringTable result = new StringTable();
 
     LineNumberReader reader =
@@ -119,9 +115,7 @@ public class StringTable extends Table<String> implements Cloneable {
 
   public static String readNextNonCommentLine(LineNumberReader reader, Character commentToken)
       throws IOException {
-    if (reader == null) {
-      throw new IllegalArgumentException("reader is null");
-    }
+    checkArgument(reader != null, "reader is null");
     String line = reader.readLine();
     while (line != null && isCommented(line, commentToken)) {
       line = reader.readLine();

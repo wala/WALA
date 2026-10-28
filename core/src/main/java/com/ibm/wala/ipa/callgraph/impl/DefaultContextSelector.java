@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.ReflectionContextSelector;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -30,9 +32,7 @@ public class DefaultContextSelector implements ContextSelector {
   private final ContextSelector delegate;
 
   public DefaultContextSelector(AnalysisOptions options, IClassHierarchy cha) {
-    if (options == null) {
-      throw new IllegalArgumentException("null options");
-    }
+    checkArgument(options != null, "null options");
     ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
     ContextSelector r = ReflectionContextSelector.createReflectionContextSelector(options);
     ContextSelector s = new DelegatingContextSelector(r, ci);
@@ -42,9 +42,7 @@ public class DefaultContextSelector implements ContextSelector {
   @Override
   public Context getCalleeTarget(
       CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
-    if (caller == null) {
-      throw new IllegalArgumentException("null caller");
-    }
+    checkArgument(caller != null, "null caller");
     return delegate.getCalleeTarget(caller, site, callee, receiver);
   }
 

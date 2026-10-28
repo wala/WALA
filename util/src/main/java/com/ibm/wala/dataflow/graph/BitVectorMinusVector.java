@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
@@ -29,12 +31,8 @@ public class BitVectorMinusVector extends UnaryOperator<BitVectorVariable> {
   public byte evaluate(@Nullable BitVectorVariable lhs, BitVectorVariable rhs)
       throws IllegalArgumentException {
 
-    if (lhs == null) {
-      throw new IllegalArgumentException("lhs == null");
-    }
-    if (rhs == null) {
-      throw new IllegalArgumentException("rhs == null");
-    }
+    checkArgument(lhs != null, "lhs == null");
+    checkArgument(rhs != null, "rhs == null");
     BitVectorVariable U = new BitVectorVariable();
     BitVectorIntSet bv = new BitVectorIntSet();
     bv.addAll(rhs.getValue());

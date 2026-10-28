@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.core.util.CancelRuntimeException;
 import com.ibm.wala.core.util.ref.ReferenceCleanser;
@@ -156,9 +158,7 @@ public class TabulationSolver<T, P, F> {
    * @throws IllegalArgumentException if p is null
    */
   protected TabulationSolver(TabulationProblem<T, P, F> p, IProgressMonitor monitor) {
-    if (p == null) {
-      throw new IllegalArgumentException("p is null");
-    }
+    checkArgument(p != null, "p is null");
     this.supergraph = p.getSupergraph();
     this.flowFunctionMap = p.getFunctionMap();
     this.problem = p;

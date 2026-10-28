@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntIterator;
@@ -28,12 +30,8 @@ public final class CompoundIntIterator implements IntIterator {
   public CompoundIntIterator(IntIterator A, IntIterator B) {
     this.A = A;
     this.B = B;
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
   }
 
   @Override

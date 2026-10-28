@@ -40,6 +40,7 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNullElseGet;
 
 import com.ibm.wala.core.util.ssa.ParameterAccessor;
@@ -180,12 +181,8 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type is null or ssaValue is zero or negative
    */
   public void setAllocation(TypeReference type, int ssaValue, SSAInstruction setBy) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
-    if (ssaValue <= 0) {
-      throw new IllegalArgumentException("The SSA-Variable may not be zero or negative.");
-    }
+    checkArgument(type != null, "The argument type may not be null");
+    checkArgument(ssaValue > 0, "The SSA-Variable may not be zero or negative.");
 
     seenTypes.compute(
         type,
@@ -245,12 +242,8 @@ public class AndroidModelParameterManager {
    * @throws IllegalStateException if you forgot to close some Phis
    */
   public void setPhi(TypeReference type, int ssaValue, SSAInstruction setBy) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
-    if (ssaValue <= 0) {
-      throw new IllegalArgumentException("The SSA-Variable may not be zero or negative.");
-    }
+    checkArgument(type != null, "The argument type may not be null");
+    checkArgument(ssaValue > 0, "The SSA-Variable may not be zero or negative.");
 
     AtomicBoolean didPhi = new AtomicBoolean();
 
@@ -332,9 +325,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type is null
    */
   public int getFree(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     ManagedParameter param = new ManagedParameter();
     param.status = ValueStatus.FREE;
@@ -357,9 +348,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type is null
    */
   public int getUnallocated(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     for (ManagedParameter p :
         requireNonNullElseGet(seenTypes.get(type), List::<ManagedParameter>of)) {
@@ -401,9 +390,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public int getCurrent(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     int candidateSSA = -1;
     int candidateScope = -1;
@@ -451,9 +438,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public int getSuper(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     int ssa;
     currentScope--;
@@ -467,9 +452,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public List<Integer> getAllForPhi(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     List<Integer> ret = new ArrayList<>();
 
@@ -501,9 +484,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type is null
    */
   public boolean isSeen(TypeReference type, boolean withSuper) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     List<ManagedParameter> managedParameters = seenTypes.get(type);
     return managedParameters != null && (withSuper || managedParameters.get(0).type.equals(type));
@@ -521,9 +502,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type is null
    */
   public boolean needsAllocation(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     List<ManagedParameter> managedParameters = seenTypes.get(type);
     return managedParameters == null
@@ -540,9 +519,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type is null or has not been seen before
    */
   public boolean needsPhi(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     boolean seenLive = false;
 
@@ -573,9 +550,7 @@ public class AndroidModelParameterManager {
    * @throws IllegalArgumentException if type was not seen before or is null
    */
   public void invalidate(TypeReference type) {
-    if (type == null) {
-      throw new IllegalArgumentException("The argument type may not be null");
-    }
+    checkArgument(type != null, "The argument type may not be null");
 
     for (ManagedParameter param :
         requireNonNullElseGet(seenTypes.get(type), List::<ManagedParameter>of)) {

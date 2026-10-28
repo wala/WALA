@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -143,9 +145,7 @@ public class Overrides {
       /*if (caller == null) {
           throw new IllegalArgumentException("caller is null");
       }*/
-      if (site == null) {
-        throw new IllegalArgumentException("site is null");
-      }
+      checkArgument(site != null, "site is null");
 
       if (this.parent != null) {
         IMethod resolved = this.parent.getCalleeTarget(caller, site, receiver);

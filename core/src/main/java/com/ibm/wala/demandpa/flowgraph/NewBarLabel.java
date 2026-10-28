@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * @author Manu Sridharan
  */
@@ -57,9 +59,7 @@ public class NewBarLabel implements IFlowLabel {
 
   @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
-    if (v == null) {
-      throw new IllegalArgumentException("v == null");
-    }
+    checkArgument(v != null, "v == null");
     v.visitNewBar(this, dst);
   }
 

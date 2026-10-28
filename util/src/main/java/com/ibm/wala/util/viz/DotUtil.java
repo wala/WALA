@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.viz;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -82,9 +84,7 @@ public class DotUtil {
       String outputFile,
       String dotExe)
       throws WalaException {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     File f = DotUtil.writeDotFile(g, labels, title, dotFile);
     if (dotExe != null) {
       spawnDot(dotExe, outputFile, f);
@@ -92,9 +92,7 @@ public class DotUtil {
   }
 
   public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {
-    if (dotFile == null) {
-      throw new IllegalArgumentException("dotFile is null");
-    }
+    checkArgument(dotFile != null, "dotFile is null");
     String[] cmdarray = {
       dotExe, outputTypeCmdLineParam(), "-o", outputFile, "-v", dotFile.getAbsolutePath()
     };
@@ -158,9 +156,7 @@ public class DotUtil {
       Graph<T> g, NodeDecorator<T> labels, @Nullable String title, String dotfile)
       throws WalaException {
 
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     StringBuilder dotStringBuffer = dotOutput(g, labels, title);
 
     // retrieve the filename parameter to this component, a String

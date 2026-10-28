@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
@@ -35,9 +37,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @throws IllegalArgumentException if T is null
    */
   public static TypeName getName(TypeReference T) {
-    if (T == null) {
-      throw new IllegalArgumentException("T is null");
-    }
+    checkArgument(T != null, "T is null");
     String s = "L$" + T.getName().toString().substring(1);
     return TypeName.string2TypeName(s);
   }

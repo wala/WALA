@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.summaries;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.IMethod;
@@ -85,9 +87,7 @@ public class SyntheticIR extends IR {
       SSAInstruction[] instructions,
       Map<Integer, @NonNull ConstantValue> constants,
       AbstractCFG<?, ?> cfg) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
 
     // simulate allocation of value numbers

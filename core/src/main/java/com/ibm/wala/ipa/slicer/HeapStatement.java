@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.slicer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -22,9 +24,7 @@ public abstract class HeapStatement extends Statement {
 
     super(node);
 
-    if (loc == null) {
-      throw new IllegalArgumentException("loc is null");
-    }
+    checkArgument(loc != null, "loc is null");
     this.loc = loc;
   }
 

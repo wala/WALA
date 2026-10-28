@@ -11,6 +11,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.core.util.shrike.Exceptions.MethodResolutionFailure;
@@ -615,12 +617,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public Collection<TypeReference> inferInvokeExceptions(
       MethodReference target, IClassHierarchy cha) throws InvalidClassFileException {
 
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
-    if (target == null) {
-      throw new IllegalArgumentException("target is null");
-    }
+    checkArgument(cha != null, "cha is null");
+    checkArgument(target != null, "target is null");
     ArrayList<TypeReference> set = new ArrayList<>(cha.getJavaLangRuntimeExceptionTypes());
     set.addAll(cha.getJavaLangErrorTypes());
 
@@ -661,9 +659,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
    */
   @Override
   public Collection<TypeReference> getImplicitExceptionTypes(IInstruction pei) {
-    if (pei == null) {
-      throw new IllegalArgumentException("pei is null");
-    }
+    checkArgument(pei != null, "pei is null");
     return switch (((Instruction) pei).getOpcode()) {
       case OP_iaload,
           OP_laload,

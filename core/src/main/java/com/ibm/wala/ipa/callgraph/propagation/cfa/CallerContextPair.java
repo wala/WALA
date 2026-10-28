@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -38,9 +40,7 @@ public class CallerContextPair extends CallerContext {
 
   @Override
   public ContextItem get(ContextKey name) {
-    if (name == null) {
-      throw new IllegalArgumentException("name is null");
-    }
+    checkArgument(name != null, "name is null");
     if (name.equals(ContextKey.CALLER)) {
       return super.get(name);
     } else {

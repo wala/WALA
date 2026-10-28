@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
@@ -46,9 +48,7 @@ public class Acyclic {
    * <p>Not efficient. Recursive and uses hash sets.
    */
   public static <T> IBinaryNaturalRelation computeBackEdges(NumberedGraph<T> G, T root) {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
 
     final BasicNaturalRelation result = new BasicNaturalRelation();
 

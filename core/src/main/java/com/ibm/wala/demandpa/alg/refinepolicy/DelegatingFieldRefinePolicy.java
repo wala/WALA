@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
@@ -23,12 +25,8 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
   private final FieldRefinePolicy B;
 
   public DelegatingFieldRefinePolicy(FieldRefinePolicy a, FieldRefinePolicy b) {
-    if (a == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (b == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(a != null, "null A");
+    checkArgument(b != null, "null B");
     A = a;
     B = b;
   }

@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /** An instruction which unconditionally throws an exception */
 public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
   private final int exception;
@@ -33,9 +35,7 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
 
   @Override
   public int getUse(int j) {
-    if (j != 0) {
-      throw new IllegalArgumentException("j must be 0");
-    }
+    checkArgument(j == 0, "j must be 0");
     return exception;
   }
 

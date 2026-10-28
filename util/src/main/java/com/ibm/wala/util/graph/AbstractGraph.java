@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import java.util.Iterator;
 import java.util.stream.Stream;
@@ -45,17 +47,13 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   @Override
   public int getPredNodeCount(T n) throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("n cannot be null");
-    }
+    checkArgument(n != null, "n cannot be null");
     return getEdgeManager().getPredNodeCount(n);
   }
 
   @Override
   public Iterator<T> getPredNodes(@Nullable T n) throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("n cannot be null");
-    }
+    checkArgument(n != null, "n cannot be null");
     return getEdgeManager().getPredNodes(n);
   }
 
@@ -69,9 +67,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   @Override
   public Iterator<T> getSuccNodes(@Nullable T n) throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("n cannot be null");
-    }
+    checkArgument(n != null, "n cannot be null");
     return getEdgeManager().getSuccNodes(n);
   }
 
@@ -92,20 +88,14 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   @Override
   public boolean hasEdge(@Nullable T src, @Nullable T dst) {
-    if (src == null) {
-      throw new IllegalArgumentException("src is null");
-    }
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
-    }
+    checkArgument(src != null, "src is null");
+    checkArgument(dst != null, "dst is null");
     return getEdgeManager().hasEdge(src, dst);
   }
 
   @Override
   public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
-    if (node == null) {
-      throw new IllegalArgumentException("node cannot be null");
-    }
+    checkArgument(node != null, "node cannot be null");
     getEdgeManager().removeAllIncidentEdges(node);
   }
 
@@ -114,9 +104,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    */
   @Override
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
-    if (node == null) {
-      throw new IllegalArgumentException("node cannot be null");
-    }
+    checkArgument(node != null, "node cannot be null");
     getEdgeManager().removeIncomingEdges(node);
   }
 
@@ -125,9 +113,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    */
   @Override
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
-    if (node == null) {
-      throw new IllegalArgumentException("node cannot be null");
-    }
+    checkArgument(node != null, "node cannot be null");
     getEdgeManager().removeOutgoingEdges(node);
   }
 
@@ -136,18 +122,14 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    */
   @Override
   public void removeNodeAndEdges(T N) throws IllegalArgumentException {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(N != null, "N cannot be null");
     getEdgeManager().removeAllIncidentEdges(N);
     getNodeManager().removeNode(N);
   }
 
   @Override
   public void removeNode(T n) throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("N cannot be null");
-    }
+    checkArgument(n != null, "N cannot be null");
     getNodeManager().removeNode(n);
   }
 
@@ -177,9 +159,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
 
   @Override
   public boolean containsNode(@Nullable T n) {
-    if (n == null) {
-      throw new IllegalArgumentException("n cannot be null");
-    }
+    checkArgument(n != null, "n cannot be null");
     return getNodeManager().containsNode(n);
   }
 }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
@@ -147,9 +149,7 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   public ThisFilteringHeapModel(HeapModel delegate, IClassHierarchy cha) {
-    if (delegate == null) {
-      throw new IllegalArgumentException("delegate null");
-    }
+    checkArgument(delegate != null, "delegate null");
     this.delegate = delegate;
     this.cha = cha;
   }

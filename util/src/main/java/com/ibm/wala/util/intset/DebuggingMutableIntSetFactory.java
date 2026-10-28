@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import org.jspecify.annotations.NullUnmarked;
@@ -28,12 +30,8 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
   public DebuggingMutableIntSetFactory(MutableIntSetFactory<?> p, MutableIntSetFactory<?> s) {
     primary = p;
     secondary = s;
-    if (p == null) {
-      throw new IllegalArgumentException("null p");
-    }
-    if (s == null) {
-      throw new IllegalArgumentException("null s");
-    }
+    checkArgument(p != null, "null p");
+    checkArgument(s != null, "null s");
   }
 
   public DebuggingMutableIntSetFactory() {
@@ -42,9 +40,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
 
   @Override
   public DebuggingMutableIntSet make(int[] set) {
-    if (set == null) {
-      throw new IllegalArgumentException("null set");
-    }
+    checkArgument(set != null, "null set");
     return new DebuggingMutableIntSet(primary.make(set), secondary.make(set));
   }
 
@@ -57,9 +53,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
   @NullUnmarked
   @Override
   public @Nullable DebuggingMutableIntSet makeCopy(IntSet x) throws UnimplementedError {
-    if (x == null) {
-      throw new IllegalArgumentException("null x");
-    }
+    checkArgument(x != null, "null x");
     if (x instanceof DebuggingMutableIntSet db) {
       MutableIntSet pr = primary.makeCopy(db.primaryImpl());
       MutableIntSet sr = secondary.makeCopy(db.secondaryImpl());
@@ -80,22 +74,14 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
   }
 
   public void setPrimaryFactory(MutableIntSetFactory<?> x) {
-    if (x == null) {
-      throw new IllegalArgumentException("null x");
-    }
-    if (x == this) {
-      throw new IllegalArgumentException("bad recursion");
-    }
+    checkArgument(x != null, "null x");
+    checkArgument(x != this, "bad recursion");
     primary = x;
   }
 
   public void setSecondaryFactory(MutableIntSetFactory<?> x) {
-    if (x == null) {
-      throw new IllegalArgumentException("null x");
-    }
-    if (x == this) {
-      throw new IllegalArgumentException("bad recursion");
-    }
+    checkArgument(x != null, "null x");
+    checkArgument(x != this, "bad recursion");
     secondary = x;
   }
 }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -35,9 +37,7 @@ public class ArrayClassLoader {
       throws IllegalArgumentException {
     ArrayClass arrayClass;
     assert !DEBUG || className.toString().startsWith("[");
-    if (delegator == null) {
-      throw new IllegalArgumentException("delegator must not be null");
-    }
+    checkArgument(delegator != null, "delegator must not be null");
 
     TypeReference type = TypeReference.findOrCreate(delegator.getReference(), className);
     TypeReference elementType = type.getArrayElementType();

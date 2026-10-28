@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.ref.CacheReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -35,9 +37,7 @@ public class JarFileModule implements Module {
   private final HashMap<ZipEntry, Object> cache = HashMapFactory.make();
 
   public JarFileModule(JarFile f) {
-    if (f == null) {
-      throw new IllegalArgumentException("null f");
-    }
+    checkArgument(f != null, "null f");
     this.file = f;
   }
 

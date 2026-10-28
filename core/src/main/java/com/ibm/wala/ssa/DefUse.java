@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ssa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
@@ -44,9 +46,7 @@ public class DefUse {
    * @throws IllegalArgumentException if ir is null
    */
   public DefUse(final IR ir) {
-    if (ir == null) {
-      throw new IllegalArgumentException("ir is null");
-    }
+    checkArgument(ir != null, "ir is null");
     this.ir = ir;
 
     // set up mapping from integer -> instruction

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.reflection;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -26,9 +28,7 @@ public class ReflectionContextSelector {
 
   public static ContextSelector createReflectionContextSelector(AnalysisOptions options) {
 
-    if (options == null) {
-      throw new IllegalArgumentException("null options");
-    }
+    checkArgument(options != null, "null options");
 
     // start with a dummy
     ContextSelector result =

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -46,9 +48,7 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<IExpl
   @Override
   public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG(CGNode n)
       throws IllegalArgumentException {
-    if (n == null) {
-      throw new IllegalArgumentException("n == null");
-    }
+    checkArgument(n != null, "n == null");
     if (cfgMap == null) {
       // we have to initialize this lazily since this might be called from a super() constructor
       cfgMap = HashMapFactory.make();

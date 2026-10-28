@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.config;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassFileURLModule;
 import com.ibm.wala.classLoader.Module;
@@ -181,9 +183,7 @@ public class AnalysisScopeReader {
 
   public void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line)
       throws IOException {
-    if (line == null) {
-      throw new IllegalArgumentException("null line");
-    }
+    checkArgument(line != null, "null line");
     StringTokenizer tokens = new StringTokenizer(line, "\n,");
     if (!tokens.hasMoreTokens()) {
       return;
@@ -278,9 +278,7 @@ public class AnalysisScopeReader {
    */
   public AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile)
       throws IOException {
-    if (classPath == null) {
-      throw new IllegalArgumentException("classPath null");
-    }
+    checkArgument(classPath != null, "classPath null");
     AnalysisScope scope = makePrimordialScope(exclusionsFile);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 
@@ -291,9 +289,7 @@ public class AnalysisScopeReader {
 
   public void addClassPathToScope(
       String classPath, AnalysisScope scope, ClassLoaderReference loader) {
-    if (classPath == null) {
-      throw new IllegalArgumentException("null classPath");
-    }
+    checkArgument(classPath != null, "null classPath");
     try {
       StringTokenizer paths = new StringTokenizer(classPath, File.pathSeparator);
       while (paths.hasMoreTokens()) {

@@ -1,5 +1,7 @@
 package com.ibm.wala.cfg.exc.intra;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
@@ -24,13 +26,13 @@ public class OperatorUtil {
 
     @SuppressWarnings("unchecked")
     public UnaryOperatorSequence(Collection<UnaryOperator<T>> operators) {
-      if (operators.isEmpty()) throw new IllegalArgumentException("Empty Operator-Sequence");
+      checkArgument(!operators.isEmpty(), "Empty Operator-Sequence");
       this.operators = operators.toArray(new UnaryOperator[0]);
     }
 
     @SafeVarargs
     public UnaryOperatorSequence(UnaryOperator<T>... operators) {
-      if (operators.length == 0) throw new IllegalArgumentException("Empty Operator-Sequence");
+      checkArgument(operators.length != 0, "Empty Operator-Sequence");
       this.operators = Arrays.copyOf(operators, operators.length);
     }
 

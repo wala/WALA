@@ -12,6 +12,8 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ssa.DexSSABuilder;
@@ -30,9 +32,7 @@ public class DexIRFactory extends DefaultIRFactory {
 
   @Override
   public ControlFlowGraph<?, ?> makeCFG(IMethod method, Context C) throws IllegalArgumentException {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     if (method instanceof DexIMethod dexIMethod) return new DexCFG(dexIMethod, C);
     return super.makeCFG(method, C);
   }
@@ -40,9 +40,7 @@ public class DexIRFactory extends DefaultIRFactory {
   @Override
   public IR makeIR(IMethod _method, Context C, final SSAOptions options)
       throws IllegalArgumentException {
-    if (_method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(_method != null, "null method");
 
     if (!(_method instanceof DexIMethod method)) return super.makeIR(_method, C, options);
 
@@ -132,9 +130,7 @@ public class DexIRFactory extends DefaultIRFactory {
 
   @Override
   public boolean contextIsIrrelevant(IMethod method) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
+    checkArgument(method != null, "null method");
     if (method instanceof DexIMethod) return true;
     return super.contextIsIrrelevant(method);
   }

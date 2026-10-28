@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.AbstractFlowLabelVisitor;
@@ -86,9 +88,7 @@ public class IntraProcFilter implements StateMachine<IFlowLabel> {
 
   @Override
   public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
-    if (label == null) {
-      throw new IllegalArgumentException("label == null");
-    }
+    checkArgument(label != null, "label == null");
     // filter out all interprocedural edges
     InterprocFilterVisitor v = new InterprocFilterVisitor();
     label.visit(v, null);

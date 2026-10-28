@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.cast.js.callgraph.fieldbased;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CallVertex;
@@ -80,9 +82,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
   }
 
   private static MutableIntSet findOrCreateMutableIntSet(Map<Vertex, MutableIntSet> M, Vertex v) {
-    if (M == null) {
-      throw new IllegalArgumentException("M is null");
-    }
+    checkArgument(M != null, "M is null");
     return M.computeIfAbsent(v, k -> new MutableSharedBitVectorIntSet());
   }
 

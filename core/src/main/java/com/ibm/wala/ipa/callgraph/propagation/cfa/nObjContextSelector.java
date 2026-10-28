@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -52,9 +54,7 @@ public class nObjContextSelector implements ContextSelector {
   private final ContextSelector base;
 
   public nObjContextSelector(int n, ContextSelector base) {
-    if (n <= 0) {
-      throw new IllegalArgumentException("n must be a positive number");
-    }
+    checkArgument(n > 0, "n must be a positive number");
     this.n = n;
     this.base = base;
   }

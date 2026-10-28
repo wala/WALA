@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
@@ -151,9 +153,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
    */
   @Override
   public IR getIR(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node); // Should already have been checked before
     {
       // TODO: CACHE!
@@ -269,18 +269,14 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
    */
   @Override
   public boolean understands(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     final MethodReference target = node.getMethod().getReference();
     return intentStarters.isStarter(target);
   }
 
   @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node); // Should already have been checked before
     {
       final IR ir = getIR(node); // Speeeed
@@ -290,9 +286,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
 
   @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
+    checkArgument(node != null, "node is null");
     assert understands(node); // Should already have been checked before
     {
       final IR ir = getIR(node); // Speeeed

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.core.util.io; // 5724-D15
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Module;
@@ -50,26 +52,18 @@ public class FileProvider {
   }
 
   public URL getResource(String fileName) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
+    checkArgument(fileName != null, "null fileName");
     return getResource(fileName, FileProvider.class.getClassLoader());
   }
 
   public URL getResource(String fileName, ClassLoader loader) {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
-    if (loader == null) {
-      throw new IllegalArgumentException("null loader");
-    }
+    checkArgument(fileName != null, "null fileName");
+    checkArgument(loader != null, "null loader");
     return loader.getResource(fileName);
   }
 
   public File getFile(String fileName) throws IOException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
+    checkArgument(fileName != null, "null fileName");
     return getFile(fileName, FileProvider.class.getClassLoader());
   }
 
@@ -91,12 +85,8 @@ public class FileProvider {
    */
   public URL getURLFromClassLoader(String fileName, ClassLoader loader)
       throws FileNotFoundException, MalformedURLException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
-    if (loader == null) {
-      throw new IllegalArgumentException("null loader");
-    }
+    checkArgument(fileName != null, "null fileName");
+    checkArgument(loader != null, "null loader");
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       System.err.println("FileProvider got url: " + url + " for " + fileName);
@@ -113,12 +103,8 @@ public class FileProvider {
 
   public File getFileFromClassLoader(String fileName, ClassLoader loader)
       throws FileNotFoundException {
-    if (loader == null) {
-      throw new IllegalArgumentException("null loader");
-    }
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
+    checkArgument(loader != null, "null loader");
+    checkArgument(fileName != null, "null fileName");
     URL url = null;
     try {
       url = loader.getResource(fileName);
@@ -146,12 +132,8 @@ public class FileProvider {
    */
   public InputStream getInputStreamFromClassLoader(String fileName, ClassLoader loader)
       throws FileNotFoundException {
-    if (loader == null) {
-      throw new IllegalArgumentException("null loader");
-    }
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
+    checkArgument(loader != null, "null loader");
+    checkArgument(fileName != null, "null fileName");
     InputStream is = loader.getResourceAsStream(fileName);
     if (is == null) {
       // couldn't load it from the class loader. try again from the
@@ -170,12 +152,8 @@ public class FileProvider {
    *     wrapped as a JarFileModule or a NestedJarFileModule
    */
   public Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
-    if (loader == null) {
-      throw new IllegalArgumentException("null loader");
-    }
+    checkArgument(fileName != null, "null fileName");
+    checkArgument(loader != null, "null loader");
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       System.err.println("FileProvider got url: " + url + " for " + fileName);
@@ -223,9 +201,7 @@ public class FileProvider {
    * @throws IllegalArgumentException if url is null
    */
   public String filePathFromURL(URL url) {
-    if (url == null) {
-      throw new IllegalArgumentException("url is null");
-    }
+    checkArgument(url != null, "url is null");
     // Old solution does not deal well with "<" | ">" | "#" | "%" |
     // <">  "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`" since they may occur
     // inside an URL but are prohibited for an URI. See

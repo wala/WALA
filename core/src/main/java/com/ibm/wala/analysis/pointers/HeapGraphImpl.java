@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.pointers;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -38,9 +40,7 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
   private final PointerAnalysis<T> pa;
 
   protected HeapGraphImpl(PointerAnalysis<T> pa) {
-    if (pa == null) {
-      throw new IllegalArgumentException("null pa ");
-    }
+    checkArgument(pa != null, "null pa ");
     this.pa = pa;
   }
 

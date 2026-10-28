@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -25,9 +27,7 @@ public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
   private final CGNode node;
 
   public AbstractTypeInNode(CGNode node, IClass type) {
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
+    checkArgument(node != null, "null node");
     if (type != null && type.isInterface()) {
       Assertions.UNREACHABLE("unexpected type: " + type);
     }

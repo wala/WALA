@@ -11,6 +11,8 @@
 
 package com.ibm.wala.util.graph.traverse;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -55,9 +57,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
    * @throws IllegalArgumentException if G is null
    */
   public DFSPathFinder(Graph<T> G, T N, Predicate<T> f) throws IllegalArgumentException {
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (!G.containsNode(N)) {
       throw new IllegalArgumentException("source node not in graph: " + N);
     }
@@ -76,9 +76,7 @@ public class DFSPathFinder<T> extends ArrayList<T> {
     this.G = G;
     this.roots = nodes;
     this.filter = f;
-    if (G == null) {
-      throw new IllegalArgumentException("G is null");
-    }
+    checkArgument(G != null, "G is null");
     if (roots == null) {
       throw new IllegalArgumentException("roots is null");
     }

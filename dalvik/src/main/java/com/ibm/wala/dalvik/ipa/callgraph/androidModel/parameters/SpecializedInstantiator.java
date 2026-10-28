@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.core.util.ssa.IInstantiator;
 import com.ibm.wala.core.util.ssa.ParameterAccessor;
@@ -124,9 +126,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
     //        final IClass klass = this.cha.lookupClass(T);
     { // fetch new value
       if (asManaged) {
-        if (key == null) {
-          throw new IllegalArgumentException("A managed variable needs a key - null given.");
-        }
+        checkArgument(key != null, "A managed variable needs a key - null given.");
       } else {
         if (key == null) {
           key = new UniqueKey();
@@ -271,9 +271,8 @@ public class SpecializedInstantiator extends FlatInstantiator {
   public int createInstance(TypeReference type, Object... instantiatorArgs) {
     // public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey
     // key, Set<SSAValue> seen) {
-    if (!(instantiatorArgs[0] instanceof Boolean)) {
-      throw new IllegalArgumentException("Argument 0 to createInstance has to be boolean.");
-    }
+    checkArgument(
+        instantiatorArgs[0] instanceof Boolean, "Argument 0 to createInstance has to be boolean.");
     if (!((instantiatorArgs[1] == null) || (instantiatorArgs[1] instanceof VariableKey))) {
       throw new IllegalArgumentException(
           "Argument 1 to createInstance has to be null or an instance of VariableKey");

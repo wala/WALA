@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.analysis.typeInference;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.fixpoint.AbstractVariable;
 
 /**
@@ -22,17 +24,13 @@ public class TypeVariable extends AbstractVariable<TypeVariable> {
   TypeAbstraction type;
 
   public TypeVariable(TypeAbstraction type) {
-    if (type == null) {
-      throw new IllegalArgumentException("null type");
-    }
+    checkArgument(type != null, "null type");
     this.type = type;
   }
 
   @Override
   public void copyState(TypeVariable other) throws IllegalArgumentException {
-    if (other == null) {
-      throw new IllegalArgumentException("v == null");
-    }
+    checkArgument(other != null, "v == null");
     this.type = other.type;
   }
 

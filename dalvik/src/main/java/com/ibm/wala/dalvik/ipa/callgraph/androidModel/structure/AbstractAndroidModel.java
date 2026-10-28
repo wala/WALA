@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.ssa.SSAValueManager;
 import com.ibm.wala.core.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
@@ -135,15 +137,9 @@ public abstract class AbstractAndroidModel {
       SSAValueManager paramManager,
       Iterable<? extends Entrypoint> entryPoints) {
 
-    if (body == null) {
-      throw new IllegalArgumentException("The argument body may not be null.");
-    }
-    if (insts == null) {
-      throw new IllegalArgumentException("The argument insts may not be null.");
-    }
-    if (entryPoints == null) {
-      throw new IllegalArgumentException("The argument entryPoints may not be null.");
-    }
+    checkArgument(body != null, "The argument body may not be null.");
+    checkArgument(insts != null, "The argument insts may not be null.");
+    checkArgument(entryPoints != null, "The argument entryPoints may not be null.");
     // if (!(entryPoints.hasNext())) {
     //    throw new IllegalArgumentException("The iterable entryPoints may not be empty.");
     // }
@@ -171,9 +167,7 @@ public abstract class AbstractAndroidModel {
    * @throws IllegalStateException if you didn't call enter()
    */
   public final boolean hadSectionSwitch(IExecutionOrder order) {
-    if (order == null) {
-      throw new IllegalArgumentException("the argument order may not be null.");
-    }
+    checkArgument(order != null, "the argument order may not be null.");
     if (this.currentSection == null) {
       if (this.lastQueriedMethod != null) {
         throw new IllegalStateException(
@@ -184,10 +178,9 @@ public abstract class AbstractAndroidModel {
       this.lastQueriedMethod = order;
       return true;
     }
-    if (order.compareTo(lastQueriedMethod) < 0) {
-      throw new IllegalArgumentException(
-          "This method is meant to be called on AndroidEntrypoints in ascending order");
-    }
+    checkArgument(
+        order.compareTo(lastQueriedMethod) >= 0,
+        "This method is meant to be called on AndroidEntrypoints in ascending order");
     if ((currentSection.compareTo(lastQueriedMethod.getSection()) != 0)
         && (order.getSection().compareTo(lastQueriedMethod.getSection()) == 0)) {
       throw new IllegalStateException(
@@ -370,9 +363,7 @@ public abstract class AbstractAndroidModel {
       }
     }
 
-    if (PC < 0) {
-      throw new IllegalArgumentException("The PC can't be negative!");
-    }
+    checkArgument(PC >= 0, "The PC can't be negative!");
 
     if (section.compareTo(AndroidEntryPoint.ExecutionOrder.AT_FIRST) == 0) {
       if (this.currentSection != null) {

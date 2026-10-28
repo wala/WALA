@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
@@ -172,9 +174,7 @@ public class Intent implements Cloneable, ContextItem, Comparable<Intent> {
    * <p>If setAction is called multible times on an Intent it becomes UNBOUND.
    */
   public void setActionExplicit(Atom action) {
-    if (action == null) {
-      throw new IllegalArgumentException("Action may not be null!");
-    }
+    checkArgument(action != null, "Action may not be null!");
 
     if (this.action == null) {
       assert (this.explicit == Explicit.UNSET)

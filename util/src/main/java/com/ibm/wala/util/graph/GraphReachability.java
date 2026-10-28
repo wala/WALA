@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorIdentity;
@@ -55,9 +57,7 @@ public class GraphReachability<T, S> {
    * @throws IllegalArgumentException if g is null
    */
   public GraphReachability(Graph<T> g, Predicate<? super T> filter) {
-    if (g == null) {
-      throw new IllegalArgumentException("g is null");
-    }
+    checkArgument(g != null, "g is null");
     this.g = g;
     Iterator<T> i = new FilterIterator<>(g.iterator(), filter);
     domain = new MutableMapping<>(Iterator2Collection.toSet(i).toArray());

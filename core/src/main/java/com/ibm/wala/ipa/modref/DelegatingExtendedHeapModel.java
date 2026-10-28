@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.modref;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
@@ -28,9 +30,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
   private final HeapModel h;
 
   public DelegatingExtendedHeapModel(HeapModel h) {
-    if (h == null) {
-      throw new IllegalArgumentException("null h");
-    }
+    checkArgument(h != null, "null h");
     this.h = h;
   }
 
@@ -68,17 +68,13 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
 
   @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
-    if (node == null) {
-      throw new IllegalArgumentException("null node");
-    }
+    checkArgument(node != null, "null node");
     return h.getInstanceKeyForPEI(node, instr, type);
   }
 
   @Override
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
-    if (I == null) {
-      throw new IllegalArgumentException("I is null");
-    }
+    checkArgument(I != null, "I is null");
     return h.getPointerKeyForArrayContents(I);
   }
 
@@ -89,9 +85,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
 
   @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
-    if (field == null) {
-      throw new IllegalArgumentException("field is null");
-    }
+    checkArgument(field != null, "field is null");
     return h.getPointerKeyForInstanceField(I, field);
   }
 

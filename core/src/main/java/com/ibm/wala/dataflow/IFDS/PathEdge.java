@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.dataflow.IFDS;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Objects;
 
 /**
@@ -25,12 +27,8 @@ public final class PathEdge<T> {
   final int d2;
 
   public static <T> PathEdge<T> createPathEdge(T s_p, int d1, T n, int d2) {
-    if (s_p == null) {
-      throw new IllegalArgumentException("null s_p");
-    }
-    if (n == null) {
-      throw new IllegalArgumentException("null n");
-    }
+    checkArgument(s_p != null, "null s_p");
+    checkArgument(n != null, "null n");
     return new PathEdge<>(s_p, d1, n, d2);
   }
 

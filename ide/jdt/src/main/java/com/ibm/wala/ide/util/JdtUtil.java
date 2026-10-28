@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ide.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.ArrayList;
@@ -53,9 +55,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 public class JdtUtil {
 
   public static String getFilePath(IJavaElement javaElt) {
-    if (javaElt == null) {
-      throw new IllegalArgumentException("javaElt is null");
-    }
+    checkArgument(javaElt != null, "javaElt is null");
     try {
       IPath p = javaElt.getPath();
       if (p == null) {
@@ -68,9 +68,7 @@ public class JdtUtil {
   }
 
   public static String getPackageName(ICompilationUnit cu) {
-    if (cu == null) {
-      throw new IllegalArgumentException("cu is null");
-    }
+    checkArgument(cu != null, "cu is null");
     try {
       IPackageDeclaration[] pkgDecl = cu.getPackageDeclarations();
 
@@ -85,9 +83,7 @@ public class JdtUtil {
   }
 
   public static String getFullyQualifiedClassName(IType type) {
-    if (type == null) {
-      throw new IllegalArgumentException("type is null");
-    }
+    checkArgument(type != null, "type is null");
     ICompilationUnit cu = (ICompilationUnit) type.getParent();
     String packageName = getPackageName(cu);
     String className = type.getElementName();
@@ -95,9 +91,7 @@ public class JdtUtil {
   }
 
   public static String getClassName(IType type) {
-    if (type == null) {
-      throw new IllegalArgumentException("type is null");
-    }
+    checkArgument(type != null, "type is null");
     return type.getElementName();
   }
 
@@ -113,9 +107,7 @@ public class JdtUtil {
    * @throws IllegalArgumentException if javaElt is null
    */
   public static String getJdtHandleString(IJavaElement javaElt) {
-    if (javaElt == null) {
-      throw new IllegalArgumentException("javaElt is null");
-    }
+    checkArgument(javaElt != null, "javaElt is null");
     return javaElt.getHandleIdentifier();
   }
 
@@ -125,9 +117,7 @@ public class JdtUtil {
   }
 
   public static IType[] getClasses(ICompilationUnit cu) {
-    if (cu == null) {
-      throw new IllegalArgumentException("cu is null");
-    }
+    checkArgument(cu != null, "cu is null");
     try {
       return cu.getAllTypes();
     } catch (JavaModelException e) {
@@ -136,16 +126,12 @@ public class JdtUtil {
   }
 
   public static IJavaProject getProject(IJavaElement javaElt) {
-    if (javaElt == null) {
-      throw new IllegalArgumentException("javaElt is null");
-    }
+    checkArgument(javaElt != null, "javaElt is null");
     return javaElt.getJavaProject();
   }
 
   public static String getProjectName(IJavaProject javaProject) {
-    if (javaProject == null) {
-      throw new IllegalArgumentException("javaProject is null");
-    }
+    checkArgument(javaProject != null, "javaProject is null");
     return javaProject.getElementName();
   }
 
@@ -160,17 +146,13 @@ public class JdtUtil {
   }
 
   public static IJavaProject getJavaProject(IFile appJar) {
-    if (appJar == null) {
-      throw new IllegalArgumentException("appJar is null");
-    }
+    checkArgument(appJar != null, "appJar is null");
     String projectName = appJar.getProject().getName();
     return getJavaProject(projectName);
   }
 
   public static IJavaProject getJavaProject(String projectName) {
-    if (projectName == null) {
-      throw new IllegalArgumentException("null projectName");
-    }
+    checkArgument(projectName != null, "null projectName");
     return getNamedProject(projectName);
   }
 
@@ -203,9 +185,7 @@ public class JdtUtil {
   public static IType findJavaClassInProjects(
       String fullyQualifiedName, Collection<IJavaProject> projects)
       throws IllegalArgumentException {
-    if (projects == null) {
-      throw new IllegalArgumentException("projects == null");
-    }
+    checkArgument(projects != null, "projects == null");
     for (IJavaProject project : projects) {
       try {
         IType t = project.findType(fullyQualifiedName);
@@ -226,9 +206,7 @@ public class JdtUtil {
   }
 
   public static IType findJavaClassInResources(String className, Collection<IResource> resources) {
-    if (resources == null) {
-      throw new IllegalArgumentException("null resources");
-    }
+    checkArgument(resources != null, "null resources");
     Collection<IJavaProject> projects = HashSetFactory.make();
     for (IResource r : resources) {
       projects.add(JavaCore.create(r).getJavaProject());
@@ -275,12 +253,8 @@ public class JdtUtil {
   public static IMethod findJavaMethodInProjects(
       String klass, String selector, Collection<IJavaProject> projects) {
 
-    if (klass == null) {
-      throw new IllegalArgumentException("null klass");
-    }
-    if (projects == null) {
-      throw new IllegalArgumentException("null projects");
-    }
+    checkArgument(klass != null, "null klass");
+    checkArgument(projects != null, "null projects");
     final IType type;
     try {
       type = findJavaClassInProjects(klass, projects);
@@ -343,9 +317,7 @@ public class JdtUtil {
 
   public static Collection<String> getTypeParameterNames(IType type)
       throws IllegalArgumentException, JavaModelException {
-    if (type == null) {
-      throw new IllegalArgumentException("type == null");
-    }
+    checkArgument(type != null, "type == null");
     ITypeParameter[] tp = type.getTypeParameters();
     Collection<String> typeParameterNames = HashSetFactory.make(tp.length);
     for (ITypeParameter p : tp) {
@@ -355,9 +327,7 @@ public class JdtUtil {
   }
 
   public static String parseForName(String selector, IType type) {
-    if (selector == null) {
-      throw new IllegalArgumentException("selector is null");
-    }
+    checkArgument(selector != null, "selector is null");
     try {
       String result = selector.substring(0, selector.indexOf('('));
       if (result.equals("<init>")) {
@@ -373,9 +343,7 @@ public class JdtUtil {
   public static String[] parseForParameterTypes(String selector) throws IllegalArgumentException {
 
     try {
-      if (selector == null) {
-        throw new IllegalArgumentException("selector is null");
-      }
+      checkArgument(selector != null, "selector is null");
       String d = selector.substring(selector.indexOf('('));
       if (d.length() <= 2) {
         throw new IllegalArgumentException("invalid descriptor: " + d);
@@ -558,9 +526,7 @@ public class JdtUtil {
   /** get a {@link StructuredSelection} corresponding to the named projects */
   public static StructuredSelection getStructuredSelectionForProjectNames(
       Collection<String> projectNames) {
-    if (projectNames == null) {
-      throw new IllegalArgumentException("null projectNames");
-    }
+    checkArgument(projectNames != null, "null projectNames");
     Object[] projects = new Object[projectNames.size()];
     int i = 0;
     for (String projectName : projectNames) {

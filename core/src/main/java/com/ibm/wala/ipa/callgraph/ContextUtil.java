@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -25,9 +27,7 @@ public class ContextUtil {
    * @throws IllegalArgumentException if c is null
    */
   public static IClass getConcreteClassFromContext(Context c) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
+    checkArgument(c != null, "c is null");
     ContextItem item = c.get(ContextKey.RECEIVER);
     if (item == null) {
       return null;

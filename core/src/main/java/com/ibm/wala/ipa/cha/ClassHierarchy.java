@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cha;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -292,12 +294,9 @@ public class ClassHierarchy implements IClassHierarchy {
     this.map = map;
     this.superClassHandling = superClassHandling;
 
-    if (factory == null) {
-      throw new IllegalArgumentException();
-    }
-    if (scope.getLanguages().isEmpty()) {
-      throw new IllegalArgumentException("AnalysisScope must contain at least 1 language");
-    }
+    checkArgument(factory != null);
+    checkArgument(
+        !scope.getLanguages().isEmpty(), "AnalysisScope must contain at least 1 language");
     this.scope = scope;
     this.factory = factory;
     Set<Atom> langNames = HashSetFactory.make();
@@ -407,9 +406,7 @@ public class ClassHierarchy implements IClassHierarchy {
   @Override
   public boolean addClass(IClass klass) {
 
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
+    checkArgument(klass != null, "klass is null");
     if (klass.getReference().getName().equals(rootTypeRef.getName())) {
       if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
         throw new IllegalArgumentException(
@@ -540,9 +537,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public Set<IMethod> getPossibleTargets(MethodReference ref) {
-    if (ref == null) {
-      throw new IllegalArgumentException("ref is null");
-    }
+    checkArgument(ref != null, "ref is null");
     IClassLoader loader;
     try {
       loader = factory.getLoader(ref.getDeclaringClass().getClassLoader(), this, scope);
@@ -648,9 +643,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   @Override
   public IMethod resolveMethod(MethodReference m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
+    checkArgument(m != null, "m is null");
     IClass receiver = lookupClass(m.getDeclaringClass());
     if (receiver == null) {
       return null;
@@ -665,9 +658,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public IField resolveField(FieldReference f) {
-    if (f == null) {
-      throw new IllegalArgumentException("f is null");
-    }
+    checkArgument(f != null, "f is null");
     IClass klass = lookupClass(f.getDeclaringClass());
     if (klass == null) {
       return null;
@@ -682,20 +673,14 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public IField resolveField(IClass klass, FieldReference f) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
-    if (f == null) {
-      throw new IllegalArgumentException("f is null");
-    }
+    checkArgument(klass != null, "klass is null");
+    checkArgument(f != null, "f is null");
     return klass.getField(f.getName(), f.getFieldType().getName());
   }
 
   @Override
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
-    if (receiverClass == null) {
-      throw new IllegalArgumentException("receiverClass is null");
-    }
+    checkArgument(receiverClass != null, "receiverClass is null");
     IMethod result = findMethod(receiverClass, selector);
     if (result != null) {
       return result;
@@ -906,9 +891,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   @Override
   public TypeReference getLeastCommonSuperclass(TypeReference a, TypeReference b) {
-    if (a == null) {
-      throw new IllegalArgumentException("a is null");
-    }
+    checkArgument(a != null, "a is null");
     if (a.equals(b)) return a;
     IClass aClass = lookupClass(a);
     IClass bClass = lookupClass(b);
@@ -933,9 +916,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public IClass lookupClass(TypeReference a) {
-    if (a == null) {
-      throw new IllegalArgumentException("a is null");
-    }
+    checkArgument(a != null, "a is null");
     /* BEGIN Custom change: remember unresolved classes */
     final IClass cls = lookupClassRecursive(a);
 
@@ -1006,9 +987,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public boolean isSubclassOf(IClass c, IClass t) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
+    checkArgument(c != null, "c is null");
     assert t != null : "null T";
 
     if (c.isArrayClass()) {
@@ -1073,12 +1052,8 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public boolean implementsInterface(IClass c, IClass i) {
-    if (i == null) {
-      throw new IllegalArgumentException("Cannot ask implementsInterface with i == null");
-    }
-    if (c == null) {
-      throw new IllegalArgumentException("Cannot ask implementsInterface with c == null");
-    }
+    checkArgument(i != null, "Cannot ask implementsInterface with i == null");
+    checkArgument(c != null, "Cannot ask implementsInterface with c == null");
     if (!i.isInterface()) {
       return false;
     }
@@ -1300,9 +1275,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   @Override
   public boolean isRootClass(IClass c) throws IllegalArgumentException {
-    if (c == null) {
-      throw new IllegalArgumentException("c == null");
-    }
+    checkArgument(c != null, "c == null");
     return c.equals(root.getJavaClass());
   }
 
@@ -1344,12 +1317,8 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Override
   public boolean isAssignableFrom(IClass c1, IClass c2) {
-    if (c2 == null) {
-      throw new IllegalArgumentException("c2 is null");
-    }
-    if (c1 == null) {
-      throw new IllegalArgumentException("c1 is null");
-    }
+    checkArgument(c2 != null, "c2 is null");
+    checkArgument(c1 != null, "c1 is null");
     if (c1.isInterface()) {
       return implementsInterface(c2, c1);
     } else {

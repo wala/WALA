@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.intset;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import org.jspecify.annotations.NullUnmarked;
@@ -65,9 +67,7 @@ public class LongSetUtil {
    */
   public static @Nullable MutableLongSet makeMutableCopy(LongSet set)
       throws IllegalArgumentException, UnimplementedError {
-    if (set == null) {
-      throw new IllegalArgumentException("set == null");
-    }
+    checkArgument(set != null, "set == null");
     if (set instanceof SparseLongSet) {
       return MutableSparseLongSet.make(set);
     } else {
@@ -77,12 +77,8 @@ public class LongSetUtil {
 
   /** Compute the asymmetric difference of two sets, a \ b. */
   public static LongSet diff(LongSet A, LongSet B) {
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
     return diff(A, B, LongSetUtil.getDefaultLongSetFactory());
   }
 
@@ -109,12 +105,8 @@ public class LongSetUtil {
 
   /** Compute the asymmetric difference of two sets, a \ b. */
   public static LongSet diff(LongSet A, LongSet B, @Nullable MutableLongSetFactory factory) {
-    if (A == null) {
-      throw new IllegalArgumentException("null A");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("null B");
-    }
+    checkArgument(A != null, "null A");
+    checkArgument(B != null, "null B");
     if (A instanceof SparseLongSet longSet && B instanceof SparseLongSet sparseLongSet) {
       return SparseLongSet.diff(longSet, sparseLongSet);
     } else {
@@ -129,12 +121,8 @@ public class LongSetUtil {
    */
   public static MutableLongSet removeAll(MutableLongSet A, LongSet B)
       throws IllegalArgumentException {
-    if (A == null) {
-      throw new IllegalArgumentException("A == null");
-    }
-    if (B == null) {
-      throw new IllegalArgumentException("B == null");
-    }
+    checkArgument(A != null, "A == null");
+    checkArgument(B != null, "B == null");
     for (LongIterator it = B.longIterator(); it.hasNext(); ) {
       long I = it.next();
       A.remove(I);
@@ -153,9 +141,7 @@ public class LongSetUtil {
    */
   public static int binarySearch(long[] data, long key, int low, int high)
       throws IllegalArgumentException {
-    if (data == null) {
-      throw new IllegalArgumentException("null array");
-    }
+    checkArgument(data != null, "null array");
     if (data.length == 0) {
       return -1;
     }
@@ -185,9 +171,7 @@ public class LongSetUtil {
   }
 
   public static void setDefaultLongSetFactory(MutableLongSetFactory defaultLongSetFactory) {
-    if (defaultLongSetFactory == null) {
-      throw new IllegalArgumentException("null defaultLongSetFactory");
-    }
+    checkArgument(defaultLongSetFactory != null, "null defaultLongSetFactory");
     LongSetUtil.defaultLongSetFactory = defaultLongSetFactory;
   }
 
@@ -196,9 +180,7 @@ public class LongSetUtil {
    * @throws IllegalArgumentException if s == null
    */
   public static LongSet add(LongSet s, int j) throws IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("s == null");
-    }
+    checkArgument(s != null, "s == null");
     if (s instanceof SparseLongSet sis) {
       return SparseLongSet.add(sis, j);
     } else {

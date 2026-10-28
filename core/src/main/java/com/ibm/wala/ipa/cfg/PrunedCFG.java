@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.cfg;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
@@ -53,9 +55,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
    */
   public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(
       final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
-    if (cfg == null) {
-      throw new IllegalArgumentException("cfg is null");
-    }
+    checkArgument(cfg != null, "cfg is null");
     return new PrunedCFG<>(cfg, filter);
   }
 

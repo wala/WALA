@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -100,9 +102,7 @@ public class ContainerContextSelector implements ContextSelector {
   public ContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys delegate) {
     this.cha = cha;
     this.delegate = delegate;
-    if (delegate == null) {
-      throw new IllegalArgumentException("null delegate");
-    }
+    checkArgument(delegate != null, "null delegate");
   }
 
   @Override
@@ -154,9 +154,7 @@ public class ContainerContextSelector implements ContextSelector {
 
   /** Does m represent a library method that copies arrays? */
   public static boolean isArrayCopyingMethod(MethodReference m) {
-    if (m == null) {
-      throw new IllegalArgumentException("null m");
-    }
+    checkArgument(m != null, "null m");
     if (m.getDeclaringClass().equals(TypeReference.JavaLangSystem)) {
       if (m.getName().toString().equals("arraycopy")) {
         return true;
@@ -271,9 +269,7 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   public boolean mayUnderstand(CallSiteReference site, IMethod targetMethod, InstanceKey receiver) {
-    if (targetMethod == null) {
-      throw new IllegalArgumentException("targetMethod is null");
-    }
+    checkArgument(targetMethod != null, "targetMethod is null");
     if (isWellKnownStaticFactory(targetMethod.getReference())) {
       return true;
     } else {
