@@ -57,7 +57,6 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.jspecify.annotations.NonNull;
 
 public class JDT2CAstUtils {
   public static Collection<CAstQualifier> mapModifiersToQualifiers(
@@ -172,15 +171,22 @@ public class JDT2CAstUtils {
     return Assertions.UNREACHABLE("Couldn't find declaring class of node");
   }
 
-  private static final IdentityHashMap<ITypeBinding, @NonNull Integer> ids =
-      new IdentityHashMap<>();
+  private static final class TypeBindingId {
+    private final int value;
+
+    private TypeBindingId(int value) {
+      this.value = value;
+    }
+  }
+
+  private static final IdentityHashMap<ITypeBinding, TypeBindingId> ids = new IdentityHashMap<>();
 
   static String anonTypeName(ITypeBinding ct) {
     String binName = ct.getBinaryName();
     int n;
     // synchronize defensively just in case this code ever runs in multiple threads
     synchronized (ids) {
-      n = ids.computeIfAbsent(ct, absent -> ids.size());
+      n = ids.computeIfAbsent(ct, absent -> new TypeBindingId(ids.size())).value;
     }
 
     if (binName.contains("$")) {
