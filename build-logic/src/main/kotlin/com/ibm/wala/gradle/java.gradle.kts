@@ -291,6 +291,7 @@ tasks.withType<JavaCompile>().configureEach {
           "RefactorSwitch",
           "RefactorSwitch",
           "ReferenceEquality",
+          "RequireNonNullRefactoring",
           "RethrowReflectiveOperationExceptionAsLinkageError",
           "ReturnAtTheEndOfVoidFunction",
           "ReturnFromVoid",

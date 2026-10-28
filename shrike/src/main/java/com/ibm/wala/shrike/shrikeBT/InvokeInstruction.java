@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.shrike.shrikeBT;
 
+import static java.util.Objects.requireNonNull;
+
 /** This class represents method invocation instructions. */
 public class InvokeInstruction extends Instruction implements IInvokeInstruction {
   protected String type;
@@ -27,18 +29,10 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   public static InvokeInstruction make(
       String type, String className, String methodName, Dispatch mode) throws NullPointerException {
-    if (type == null) {
-      throw new NullPointerException("type must not be null");
-    }
-    if (className == null) {
-      throw new NullPointerException("className must not be null");
-    }
-    if (methodName == null) {
-      throw new NullPointerException("methodName must not be null");
-    }
-    if (mode == null) {
-      throw new NullPointerException("mode must not be null");
-    }
+    requireNonNull(type, "type must not be null");
+    requireNonNull(className, "className must not be null");
+    requireNonNull(methodName, "methodName must not be null");
+    requireNonNull(mode, "mode must not be null");
     short opcode =
         switch (mode) {
           case VIRTUAL -> OP_invokevirtual;
