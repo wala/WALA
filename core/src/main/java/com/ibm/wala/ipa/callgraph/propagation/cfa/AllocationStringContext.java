@@ -37,7 +37,7 @@ public class AllocationStringContext implements Context {
 
   @Override
   public int hashCode() {
-    return Objects.hash(allocationString);
+    return Objects.hashCode(allocationString);
   }
 
   @Override

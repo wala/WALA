@@ -24,7 +24,7 @@ public class ReverseOrder implements Comparator<Weight> {
     } else if (o2.type() == Weight.Type.UNLIMITED) {
       result = 1;
     } else {
-      result = -this.normalOrder.compare(o1, o2);
+      result = normalOrder.compare(o2, o1);
     }
 
     return result;
