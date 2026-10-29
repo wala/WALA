@@ -22,7 +22,7 @@ eclipse-osgi = "org.eclipse.platform:org.eclipse.osgi:3.24.300"
 eclipse-wst-jsdt-core = { module = "org.eclipse.wst.jsdt:core", version.ref = "eclipse-wst-jsdt" }
 eclipse-wst-jsdt-ui = { module = "org.eclipse.wst.jsdt:ui", version.ref = "eclipse-wst-jsdt" }
 #noinspection UnusedVersionCatalogEntry
-errorprone-core = "com.google.errorprone:error_prone_core:2.50.0"
+errorprone-core = "com.google.errorprone:error_prone_core:2.51.0"
 gson = "com.google.code.gson:gson:2.14.0"
 guava = "com.google.guava:guava:33.7.2-jre"
 htmlparser = "nu.validator.htmlparser:htmlparser:1.4"

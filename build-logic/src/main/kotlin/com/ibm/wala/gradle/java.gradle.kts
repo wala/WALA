@@ -152,6 +152,7 @@ tasks.withType<JavaCompile>().configureEach {
           "FutureTransformAsync",
           "GetClassOnEnum",
           "GuiceNestedCombine",
+          "HashCodeInObjectsHash",
           "ICCProfileGetInstance",
           "IdentityHashMapUsage",
           "IfChainToSwitch",
