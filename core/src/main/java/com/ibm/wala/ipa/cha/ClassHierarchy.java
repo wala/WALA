@@ -195,8 +195,7 @@ public class ClassHierarchy implements IClassHierarchy {
    *
    * @param scope the analysis scope whose classes populate the hierarchy
    * @param factory the factory that creates the class loaders for {@code scope}
-   * @param language the language whose classes, and those of its derived languages, the hierarchy
-   *     contains
+   * @param language the language whose classes the hierarchy contains
    * @param progressMonitor monitor for reporting progress, or {@code null} for none
    * @param superClassHandling how to handle classes whose superclass cannot be found
    * @throws ClassHierarchyException if the hierarchy cannot be built
@@ -240,8 +239,8 @@ public class ClassHierarchy implements IClassHierarchy {
    *
    * @param scope the analysis scope whose classes populate the hierarchy
    * @param factory the factory that creates the class loaders for {@code scope}
-   * @param languages the languages whose classes, and those of their derived languages, the
-   *     hierarchy contains
+   * @param languages the languages whose classes the hierarchy contains; to include a derived
+   *     language's classes, list that language here as well
    * @param progressMonitor monitor for reporting progress, or {@code null} for none
    * @param superClassHandling how to handle classes whose superclass cannot be found
    * @throws ClassHierarchyException if the hierarchy cannot be built
