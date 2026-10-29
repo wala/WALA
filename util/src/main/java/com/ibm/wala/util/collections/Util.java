@@ -38,6 +38,7 @@
 package com.ibm.wala.util.collections;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -215,7 +216,8 @@ public class Util {
 
     Class<?> c = obj.getClass();
     StringBuilder buf =
-        new StringBuilder(FULLY_QUALIFIED_NAMES ? c.getName() : removePackageName(c.getName()));
+        new StringBuilder(
+            FULLY_QUALIFIED_NAMES ? c.getName() : requireNonNull(removePackageName(c.getName())));
     while (c != Object.class) {
       Field[] fields = c.getDeclaredFields();
 
@@ -244,7 +246,7 @@ public class Util {
 
         buf = buf.append(i + 1 >= fields.length ? ")" : ",");
       }
-      c = c.getSuperclass();
+      c = requireNonNull(c.getSuperclass());
     }
     // Reinstate the security manager
     System.setSecurityManager(oldsecurity);

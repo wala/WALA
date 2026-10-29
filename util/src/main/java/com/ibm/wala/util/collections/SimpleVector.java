@@ -17,7 +17,7 @@ import org.jspecify.annotations.NullUnmarked;
 import org.jspecify.annotations.Nullable;
 
 /** simple implementation of IVector */
-public class SimpleVector<T> implements IVector<T> {
+public class SimpleVector<T> implements IVector<@Nullable T> {
 
   private static final int MAX_SIZE = Integer.MAX_VALUE / 4;
 
@@ -88,8 +88,8 @@ public class SimpleVector<T> implements IVector<T> {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Iterator<T> iterator() {
-    ArrayList<T> result = new ArrayList<>();
+  public Iterator<@Nullable T> iterator() {
+    ArrayList<@Nullable T> result = new ArrayList<>();
     for (int i = 0; i <= maxIndex; i++) {
       result.add((T) store[i]);
     }

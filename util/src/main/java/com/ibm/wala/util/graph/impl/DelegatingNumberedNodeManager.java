@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.INodeWithNumber;
@@ -89,13 +90,13 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber>
 
       @Override
       @SuppressWarnings("unchecked")
-      public @Nullable T next() {
+      public T next() {
         if (hasNext()) {
           int r = nextCounter;
           advance();
-          return (T) arr[r];
+          return (T) requireNonNull(arr[r]);
         } else {
-          return null;
+          throw new java.util.NoSuchElementException();
         }
       }
 

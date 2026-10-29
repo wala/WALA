@@ -93,7 +93,7 @@ public class GraphSlicer {
 
           @Override
           public boolean containsNode(@Nullable T n) {
-            return p.test(n) && g.containsNode(n);
+            return (n != null && p.test(n)) && g.containsNode(n);
           }
         };
     final EdgeManager<T> e =
@@ -146,7 +146,9 @@ public class GraphSlicer {
 
           @Override
           public boolean hasEdge(@Nullable T src, @Nullable T dst) {
-            return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
+            return g.hasEdge(src, dst)
+                && (src != null && p.test(src))
+                && (dst != null && p.test(dst));
           }
         };
 
@@ -186,7 +188,7 @@ public class GraphSlicer {
 
           @Override
           public boolean containsNode(@Nullable E N) {
-            return G.containsNode(N) && fmember.test(N);
+            return G.containsNode(N) && (N != null && fmember.test(N));
           }
 
           @Override

@@ -79,7 +79,7 @@ public abstract class DFSFinishTimeIterator<T> implements Iterator<T>, Serializa
   }
 
   private T peek() {
-    return stack.peek();
+    return requireNonNull(stack.peek());
   }
 
   private T pop() {

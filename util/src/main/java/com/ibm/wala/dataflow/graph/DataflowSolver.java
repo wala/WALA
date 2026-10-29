@@ -11,6 +11,7 @@
 package com.ibm.wala.dataflow.graph;
 
 import static com.ibm.wala.util.nullability.NullabilityUtil.castToNonNull;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.IVariable;
@@ -267,7 +268,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
             } else if (uf.isOut(rep)) {
               node2In.put(x, getOut(y));
             } else {
-              node2In.put(x, getEdge(y));
+              node2In.put(x, requireNonNull(getEdge(y)));
             }
           } else if (uf.isOut(i)) {
             if (uf.isIn(rep)) {
@@ -275,7 +276,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
             } else if (uf.isOut(rep)) {
               node2Out.put(x, getOut(y));
             } else {
-              node2Out.put(x, getEdge(y));
+              node2Out.put(x, requireNonNull(getEdge(y)));
             }
           } else {
             if (uf.isIn(rep)) {
@@ -283,7 +284,7 @@ public abstract class DataflowSolver<T, V extends IVariable<V>> extends DefaultF
             } else if (uf.isOut(rep)) {
               edge2Var.put(x, getOut(y));
             } else {
-              edge2Var.put(x, getEdge(y));
+              edge2Var.put(x, requireNonNull(getEdge(y)));
             }
           }
         }

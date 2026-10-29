@@ -29,12 +29,12 @@ public class IntSetUtil {
 
   static {
     MutableIntSetFactory<?> defaultFactory = new MutableSharedBitVectorIntSetFactory();
-    if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
+    String factoryClassName = System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME);
+    if (factoryClassName != null) {
       try {
         @SuppressWarnings("unchecked")
         Class<? extends MutableIntSetFactory<?>> intSetFactoryClass =
-            (Class<? extends MutableIntSetFactory<?>>)
-                Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+            (Class<? extends MutableIntSetFactory<?>>) Class.forName(factoryClassName);
         MutableIntSetFactory<?> intSetFactory = intSetFactoryClass.getConstructor().newInstance();
         setDefaultIntSetFactory(intSetFactory);
       } catch (Exception e) {

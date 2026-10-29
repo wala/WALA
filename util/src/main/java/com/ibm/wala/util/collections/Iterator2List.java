@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import org.jspecify.annotations.Nullable;
 
 @Deprecated(forRemoval = true, since = "1.8.0")
 public class Iterator2List<T> extends Iterator2Collection<T> implements Serializable, List<T> {
@@ -50,13 +51,13 @@ public class Iterator2List<T> extends Iterator2Collection<T> implements Serializ
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
-  public int indexOf(Object o) {
+  public int indexOf(@Nullable Object o) {
     return delegate.indexOf(o);
   }
 
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
-  public int lastIndexOf(Object o) {
+  public int lastIndexOf(@Nullable Object o) {
     return delegate.lastIndexOf(o);
   }
 

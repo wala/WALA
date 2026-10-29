@@ -1,6 +1,7 @@
 package com.ibm.wala.util.graph.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.util.graph.EdgeManager;
 import java.util.Iterator;
@@ -28,9 +29,9 @@ public class SelfLoopAddedEdgeManager<T> implements EdgeManager<T> {
     }
 
     @Override
-    public @Nullable T next() {
+    public T next() {
       if (!usedFirst) {
-        T tmp = first;
+        T tmp = requireNonNull(first);
         first = null;
         usedFirst = true;
         return tmp;

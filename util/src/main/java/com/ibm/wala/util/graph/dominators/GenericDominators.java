@@ -33,7 +33,7 @@ public class GenericDominators<T> extends Dominators<T> {
   /*
    * Look-aside table for DominatorInfo objects
    */
-  private final Map<Object, DominatorInfo> infoMap;
+  private final Map<@Nullable Object, DominatorInfo> infoMap;
 
   @Override
   protected DominatorInfo getInfo(@Nullable T node) {

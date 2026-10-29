@@ -97,7 +97,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  public boolean containsKey(Object key) {
+  public boolean containsKey(@Nullable Object key) {
     if (keysAndValues == null) {
       return false;
     }
@@ -110,7 +110,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  public boolean containsValue(Object value) {
+  public boolean containsValue(@Nullable Object value) {
     if (keysAndValues == null) {
       return false;
     }
@@ -132,7 +132,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
   @NullUnmarked
   @Override
   @SuppressWarnings("unchecked")
-  public V get(Object key) {
+  public V get(@Nullable Object key) {
 
     if (key != null)
       for (int i = 0; i < size(); i++) {
@@ -188,7 +188,7 @@ public class SmallMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  public V remove(Object key) throws UnsupportedOperationException {
+  public V remove(@Nullable Object key) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

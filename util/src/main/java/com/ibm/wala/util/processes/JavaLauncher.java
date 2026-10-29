@@ -11,6 +11,7 @@
 package com.ibm.wala.util.processes;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.Iterator2Iterable;
@@ -250,7 +251,7 @@ public class JavaLauncher extends Launcher {
   public String makeClasspath() {
     final StringBuilder cp =
         inheritClasspath
-            ? new StringBuilder(System.getProperty("java.class.path"))
+            ? new StringBuilder(requireNonNull(System.getProperty("java.class.path")))
             : new StringBuilder();
     if (getXtraClassPath() != null && !getXtraClassPath().isEmpty()) {
       for (String p : Iterator2Iterable.make(getXtraClassPath().iterator())) {

@@ -53,17 +53,17 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
   }
 
   @Override
-  public boolean containsKey(Object key) {
+  public boolean containsKey(@Nullable Object key) {
     return (backingStore == null) ? false : backingStore.containsKey(key);
   }
 
   @Override
-  public boolean containsValue(Object value) {
+  public boolean containsValue(@Nullable Object value) {
     return (backingStore == null) ? false : backingStore.containsValue(value);
   }
 
   @Override
-  public @Nullable V get(Object key) {
+  public @Nullable V get(@Nullable Object key) {
     return (backingStore == null) ? null : backingStore.get(key);
   }
 
@@ -99,7 +99,7 @@ public class BimodalMap<K, V extends @Nullable Object> implements Map<K, V> {
    * @throws UnsupportedOperationException if the backingStore doesn't support remove
    */
   @Override
-  public @Nullable V remove(Object key) {
+  public @Nullable V remove(@Nullable Object key) {
     return (backingStore == null) ? null : backingStore.remove(key);
   }
 

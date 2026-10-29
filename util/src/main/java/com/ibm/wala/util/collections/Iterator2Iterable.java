@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Iterator;
 import org.jspecify.annotations.Nullable;
 
@@ -27,7 +29,7 @@ public class Iterator2Iterable<T> implements Iterable<T> {
   }
 
   @Override
-  public @Nullable Iterator<T> iterator() {
-    return iter;
+  public Iterator<T> iterator() {
+    return requireNonNull(iter);
   }
 }

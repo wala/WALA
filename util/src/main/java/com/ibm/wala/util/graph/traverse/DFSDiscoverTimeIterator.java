@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.graph.traverse;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -152,7 +154,7 @@ public abstract class DFSDiscoverTimeIterator<T> implements Iterator<T>, Seriali
   }
 
   private T peek() {
-    return stack.peek();
+    return requireNonNull(stack.peek());
   }
 
   private T pop() {

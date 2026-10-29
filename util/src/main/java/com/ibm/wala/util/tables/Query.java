@@ -11,6 +11,7 @@
 package com.ibm.wala.util.tables;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class Query {
     Collection<Map<String, T>> rows = selectStarWhereEquals(t, column, value);
     Collection<T> result = HashSetFactory.make();
     for (Map<String, T> p : rows) {
-      result.add(p.get(attribute));
+      result.add(requireNonNull(p.get(attribute)));
     }
     return result;
   }
@@ -59,7 +60,7 @@ public class Query {
     Collection<Map<String, T>> c = new ArrayList<>();
     for (int i = 0; i < t.getNumberOfRows(); i++) {
       Map<String, T> p = t.row2Map(i);
-      T s = p.get(column);
+      T s = requireNonNull(p.get(column));
       if (P.test(s)) {
         c.add(p);
       }

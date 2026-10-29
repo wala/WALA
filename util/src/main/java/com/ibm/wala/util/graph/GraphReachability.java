@@ -60,7 +60,7 @@ public class GraphReachability<T, S> {
     checkArgument(g != null, "g is null");
     this.g = g;
     Iterator<T> i = new FilterIterator<>(g.iterator(), filter);
-    domain = new MutableMapping<>(Iterator2Collection.toSet(i).toArray());
+    domain = new MutableMapping<>(Iterator2Collection.toSet(i).toArray(new Object[0]));
   }
 
   /**

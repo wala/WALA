@@ -77,7 +77,8 @@ public class SparseNumberedLabeledEdgeManager<T, U>
   private final NumberedNodeManager<T> nodeManager;
 
   /** maps each edge label to its own {@link SparseNumberedEdgeManager} */
-  private final Map<U, SparseNumberedEdgeManager<T>> edgeLabelToManager = HashMapFactory.make();
+  private final Map<@Nullable U, SparseNumberedEdgeManager<T>> edgeLabelToManager =
+      HashMapFactory.make();
 
   private final ArraySetMultiMap<T, U> nodeToPredLabels = new ArraySetMultiMap<>();
 

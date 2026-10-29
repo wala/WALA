@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.heapTrace;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -113,7 +115,7 @@ public class HeapTracer {
    * @return the name of each class that's in the classpath
    */
   private static String[] generateRootClassesFromWorkspace() {
-    String classpath = System.getProperty("java.class.path");
+    String classpath = requireNonNull(System.getProperty("java.class.path"));
     String[] binDirectories = extractBinDirectories(classpath);
     HashSet<String> classFileNames = HashSetFactory.make();
     for (String dir : binDirectories) {
@@ -131,7 +133,7 @@ public class HeapTracer {
   private static Collection<String> findClassNames(String rootDir, File f) {
     HashSet<String> result = HashSetFactory.make();
     if (f.isDirectory()) {
-      File[] files = f.listFiles();
+      File[] files = requireNonNull(f.listFiles());
       for (File file : files) {
         result.addAll(findClassNames(rootDir, file));
       }
@@ -180,6 +182,9 @@ public class HeapTracer {
       }
     }
     for (Object instance : rootInstances) {
+      if (instance == null) {
+        continue;
+      }
       Class<?> c = instance.getClass();
       Set<Field> fields = getAllInstanceFields(c);
       for (Field f : fields) {
@@ -313,7 +318,7 @@ public class HeapTracer {
     if (DEBUG) {
       System.err.println(("traverse array " + array.getClass()));
     }
-    Class<?> elementKlass = array.getClass().getComponentType();
+    Class<?> elementKlass = requireNonNull(array.getClass().getComponentType());
     if (elementKlass.isPrimitive()) {
       return;
     }

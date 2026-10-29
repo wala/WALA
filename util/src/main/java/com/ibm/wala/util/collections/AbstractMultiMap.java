@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
@@ -69,7 +71,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
     if (ret == null) {
       if (create) {
         ret = createSet();
-        map.put(key, ret);
+        map.put(requireNonNull(key), ret);
       } else {
         ret = emptySet();
       }
@@ -84,7 +86,7 @@ abstract class AbstractMultiMap<K, V> implements Serializable, MultiMap<K, V> {
       vals = createSet();
       map.put(key, vals);
     }
-    return vals.add(val);
+    return vals.add(requireNonNull(val));
   }
 
   @Override

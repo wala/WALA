@@ -1,5 +1,7 @@
 package com.ibm.wala.util.io;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -27,7 +29,7 @@ public class RtJar {
   public static @Nullable JarFile getRtJar(Iterator<JarFile> x) {
     while (x.hasNext()) {
       JarFile JF = x.next();
-      switch (Paths.get(JF.getName()).getFileName().toString()) {
+      switch (requireNonNull(Paths.get(JF.getName()).getFileName()).toString()) {
         case "core.jar":
         case "java.base.jmod":
         case "rt.jar":
@@ -49,7 +51,8 @@ public class RtJar {
             new MapIterator<>(
                 new FilterIterator<>(
                     new ArrayIterator<>(
-                        System.getProperty("sun.boot.class.path").split(File.pathSeparator)),
+                        requireNonNull(System.getProperty("sun.boot.class.path"))
+                            .split(File.pathSeparator)),
                     t -> t.endsWith(".jar")),
                 object -> {
                   try {

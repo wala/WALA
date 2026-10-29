@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.collections;
 
+import static com.ibm.wala.util.nullability.NullabilityUtil.uncheckedNull;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -37,7 +39,7 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
   /** if indices[i] = x, then data[i] == get(x) */
   private MutableSparseIntSet indices;
 
-  private T[] data;
+  private @Nullable T[] data;
 
   @SuppressWarnings("unchecked")
   public SparseVector() {
@@ -105,7 +107,9 @@ public class SparseVector<T extends @Nullable Object> implements IVector<T>, Ser
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
-        return data[i++];
+        T result = data[i++];
+        // Stored nulls are valid only when T is nullable, as in MutableMapping.
+        return result == null ? uncheckedNull() : result;
       }
 
       @Override

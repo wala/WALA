@@ -27,10 +27,10 @@ public class LongSetUtil {
 
   static {
     MutableLongSetFactory defaultFactory = new MutableSparseLongSetFactory();
-    if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
+    String factoryClassName = System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME);
+    if (factoryClassName != null) {
       try {
-        Class<?> intSetFactoryClass =
-            Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        Class<?> intSetFactoryClass = Class.forName(factoryClassName);
         MutableLongSetFactory intSetFactory =
             (MutableLongSetFactory) intSetFactoryClass.getDeclaredConstructor().newInstance();
         setDefaultLongSetFactory(intSetFactory);

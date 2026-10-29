@@ -10,8 +10,11 @@
  */
 package com.ibm.wala.util.collections;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import org.jspecify.annotations.Nullable;
 
 /** Simple Heap data structure. */
 public abstract class Heap<T> {
@@ -23,7 +26,7 @@ public abstract class Heap<T> {
 
   private int numberOfElements;
 
-  private T[] backingStore;
+  private @Nullable T[] backingStore;
 
   /**
    * @return number of elements in this heap
@@ -58,7 +61,7 @@ public abstract class Heap<T> {
     if (numberOfElements == 0) {
       throw new NoSuchElementException();
     }
-    T result = backingStore[0];
+    T result = requireNonNull(backingStore[0]);
     removeElement(0);
     return result;
   }
@@ -87,14 +90,14 @@ public abstract class Heap<T> {
    */
   private void removeElement(int index) {
     int ne = numberOfElements;
-    T[] bs = backingStore;
+    @Nullable T[] bs = backingStore;
     while (true) {
       int leftIndex = heapLeftChild(index);
       if (leftIndex < ne) {
         int rightIndex = heapRightChild(index);
         if (rightIndex < ne) {
-          T leftObject = bs[leftIndex];
-          T rightObject = bs[rightIndex];
+          T leftObject = requireNonNull(bs[leftIndex]);
+          T rightObject = requireNonNull(bs[rightIndex]);
           if (compareElements(leftObject, rightObject)) {
             bs[index] = leftObject;
             index = leftIndex;
@@ -111,7 +114,7 @@ public abstract class Heap<T> {
         numberOfElements--;
         ne = numberOfElements;
         if (index != ne) {
-          bubbleUp(bs[ne], index);
+          bubbleUp(requireNonNull(bs[ne]), index);
         }
         return;
       }
@@ -123,14 +126,14 @@ public abstract class Heap<T> {
    * since this is performance critical.
    */
   private void bubbleUp(T elt, int index) {
-    T[] bs = backingStore;
+    @Nullable T[] bs = backingStore;
     while (true) {
       if (index == 0) {
         bs[index] = elt;
         return;
       }
       int hpIndex = heapParent(index);
-      T parent = bs[hpIndex];
+      T parent = requireNonNull(bs[hpIndex]);
       if (compareElements(parent, elt)) {
         bs[index] = elt;
         return;

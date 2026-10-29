@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
@@ -30,20 +32,20 @@ public class PlatformUtil {
 
   /** are we running on Mac OS X? */
   public static boolean onMacOSX() {
-    String osname = System.getProperty("os.name");
+    String osname = requireNonNull(System.getProperty("os.name"));
     return osname.toLowerCase().contains("mac");
     // return System.getProperty("mrj.version") != null;
   }
 
   /** are we running on Linux? */
   public static boolean onLinux() {
-    String osname = System.getProperty("os.name");
+    String osname = requireNonNull(System.getProperty("os.name"));
     return osname.equalsIgnoreCase("linux");
   }
 
   /** are we running on Windows? */
   public static boolean onWindows() {
-    String osname = System.getProperty("os.name");
+    String osname = requireNonNull(System.getProperty("os.name"));
     return osname.toLowerCase().contains("windows");
   }
 
@@ -66,7 +68,10 @@ public class PlatformUtil {
       } else {
         try (Stream<Path> modulePaths = Files.list(JRT_FILE_SYSTEM.getPath("modules"))) {
           modules =
-              modulePaths.map(Path::getFileName).map(Path::toString).collect(Collectors.toList());
+              modulePaths
+                  .map(path -> requireNonNull(path.getFileName()))
+                  .map(Path::toString)
+                  .collect(Collectors.toList());
         }
       }
     } catch (IOException e) {
@@ -79,7 +84,7 @@ public class PlatformUtil {
    * @return the major version of the Java runtime we are running on.
    */
   public static int getJavaRuntimeVersion() {
-    String version = System.getProperty("java.version");
+    String version = requireNonNull(System.getProperty("java.version"));
     if (version.startsWith("1.")) {
       version = version.substring(2, 3);
     } else {
