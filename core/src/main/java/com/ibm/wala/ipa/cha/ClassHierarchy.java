@@ -188,6 +188,74 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
+  /**
+   * Builds a class hierarchy for the given language. Intended for subclasses, such as language
+   * front ends that need to refine subtype queries; other clients should use {@link
+   * ClassHierarchyFactory}.
+   *
+   * @param scope the analysis scope whose classes populate the hierarchy
+   * @param factory the factory that creates the class loaders for {@code scope}
+   * @param language the language whose classes the hierarchy contains
+   * @param progressMonitor monitor for reporting progress, or {@code null} for none
+   * @param superClassHandling how to handle classes whose superclass cannot be found
+   * @throws ClassHierarchyException if the hierarchy cannot be built
+   * @throws IllegalArgumentException if {@code factory} is null or {@code scope} has no languages
+   */
+  protected ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      Language language,
+      IProgressMonitor progressMonitor,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, language, progressMonitor, new ConcurrentHashMap<>(), superClassHandling);
+  }
+
+  /**
+   * Builds a class hierarchy for all languages in the given scope. Intended for subclasses, such as
+   * language front ends that need to refine subtype queries; other clients should use {@link
+   * ClassHierarchyFactory}.
+   *
+   * @param scope the analysis scope whose classes, in all of its languages, populate the hierarchy
+   * @param factory the factory that creates the class loaders for {@code scope}
+   * @param progressMonitor monitor for reporting progress, or {@code null} for none
+   * @param superClassHandling how to handle classes whose superclass cannot be found
+   * @throws ClassHierarchyException if the hierarchy cannot be built
+   * @throws IllegalArgumentException if {@code factory} is null or {@code scope} has no languages
+   */
+  protected ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      IProgressMonitor progressMonitor,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, progressMonitor, new ConcurrentHashMap<>(), superClassHandling);
+  }
+
+  /**
+   * Builds a class hierarchy for the given languages. Intended for subclasses, such as language
+   * front ends that need to refine subtype queries; other clients should use {@link
+   * ClassHierarchyFactory}.
+   *
+   * @param scope the analysis scope whose classes populate the hierarchy
+   * @param factory the factory that creates the class loaders for {@code scope}
+   * @param languages the languages whose classes the hierarchy contains; to include a derived
+   *     language's classes, list that language here as well
+   * @param progressMonitor monitor for reporting progress, or {@code null} for none
+   * @param superClassHandling how to handle classes whose superclass cannot be found
+   * @throws ClassHierarchyException if the hierarchy cannot be built
+   * @throws IllegalArgumentException if {@code factory} is null or {@code scope} has no languages
+   */
+  protected ClassHierarchy(
+      AnalysisScope scope,
+      ClassLoaderFactory factory,
+      Collection<Language> languages,
+      IProgressMonitor progressMonitor,
+      MissingSuperClassHandling superClassHandling)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, languages, progressMonitor, new ConcurrentHashMap<>(), superClassHandling);
+  }
+
   ClassHierarchy(
       AnalysisScope scope,
       ClassLoaderFactory factory,
