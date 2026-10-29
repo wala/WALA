@@ -42,6 +42,8 @@
 */
 package com.ibm.wala.ipa.summaries;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAGotoInstruction;
@@ -262,9 +264,7 @@ public class VolatileMethodSummary {
     if (this.locked) {
       throw new IllegalStateException("Summary locked due to call to getMethodSummary().");
     }
-    if (statement == null) {
-      throw new NullPointerException("Statement is null!");
-    }
+    requireNonNull(statement, "Statement is null!");
     if (statement.iIndex() < 0) {
       throw new IllegalArgumentException("Statement has a negative iindex");
     }

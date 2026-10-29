@@ -40,6 +40,8 @@
 */
 package com.ibm.wala.dalvik.ipa.callgraph.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidComponent;
@@ -337,12 +339,8 @@ public class AndroidEntryPoint extends DexEntryPoint {
      * @throws NullPointerException if either parameter is null
      */
     public static ExecutionOrder between(IExecutionOrder after, IExecutionOrder before) {
-      if (after == null) {
-        throw new NullPointerException("after may not be null");
-      }
-      if (before == null) {
-        throw new NullPointerException("after may not be null");
-      }
+      requireNonNull(after, "after may not be null");
+      requireNonNull(before, "after may not be null");
       return between(after.getOrderValue(), before.getOrderValue());
     }
 
@@ -397,9 +395,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
       if ((after == null) || (after.length == 0)) {
         throw new NullPointerException("after may not be null or empty array");
       }
-      if (before == null) {
-        throw new NullPointerException("before may not be null");
-      }
+      requireNonNull(before, "before may not be null");
       int max = Integer.MIN_VALUE;
       for (IExecutionOrder i : after) if (max < i.getOrderValue()) max = i.getOrderValue();
       return between(max, before.getOrderValue());
@@ -414,9 +410,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
      * @throws NullPointerException if the parameter is null
      */
     public static ExecutionOrder after(IExecutionOrder after) {
-      if (after == null) {
-        throw new NullPointerException("after may not be null");
-      }
+      requireNonNull(after, "after may not be null");
       return after(after.getOrderValue());
     }
 
@@ -440,9 +434,7 @@ public class AndroidEntryPoint extends DexEntryPoint {
      * @throws NullPointerException if the parameter is null
      */
     public static ExecutionOrder after(IExecutionOrder[] after) {
-      if (after == null) {
-        throw new NullPointerException("after may not be null");
-      }
+      requireNonNull(after, "after may not be null");
 
       int max = Integer.MIN_VALUE;
       for (IExecutionOrder i : after) if (max < i.getOrderValue()) max = i.getOrderValue();

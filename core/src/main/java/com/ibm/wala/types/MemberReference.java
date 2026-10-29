@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.types;
 
+import static java.util.Objects.requireNonNull;
+
 import com.ibm.wala.core.util.strings.Atom;
 
 /** Abstract superclass of {@link MethodReference} and {@link FieldReference} */
@@ -54,10 +56,6 @@ public abstract class MemberReference {
    * @return the type that declared this member
    */
   public TypeReference getDeclaringClass() {
-    if (declaringClass == null) {
-      // fail eagerly
-      throw new NullPointerException();
-    }
-    return declaringClass;
+    return requireNonNull(declaringClass);
   }
 }

@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.util.io;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,9 +27,7 @@ public class TemporaryFile {
   private static @Nullable Path outputDir;
 
   public static File urlToFile(String fileName, URL input) throws IOException {
-    if (input == null) {
-      throw new NullPointerException("input == null");
-    }
+    requireNonNull(input, "input == null");
     if (outputDir == null) {
       outputDir = Files.createTempDirectory("wala");
     }
