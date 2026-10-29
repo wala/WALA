@@ -11,6 +11,7 @@
 package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
+import org.jspecify.annotations.Nullable;
 
 /** Represents a single variable in a fixed-point system. */
 public abstract class AbstractVariable<T extends AbstractVariable<T>> extends NodeWithNumber
@@ -27,7 +28,7 @@ public abstract class AbstractVariable<T extends AbstractVariable<T>> extends No
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     // we assume the solver manages these canonically
     return this == obj;
   }

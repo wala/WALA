@@ -13,6 +13,7 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
+import org.jspecify.annotations.Nullable;
 
 /** Represents a single step, restricted to a nullary operator. */
 public abstract class NullaryStatement<T extends IVariable<T>>
@@ -64,7 +65,7 @@ public abstract class NullaryStatement<T extends IVariable<T>>
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o instanceof NullaryStatement<?> other) {
 
       if (!getOperator().equals(other.getOperator())) {

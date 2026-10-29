@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph;
 
 import com.ibm.wala.util.intset.SimpleIntVector;
 import java.io.Serial;
+import org.jspecify.annotations.Nullable;
 
 /**
  * We represent a path in a numbered graph as a vector of integers &lt;i_1, ..., i_n&gt; where node
@@ -53,7 +54,7 @@ public class Path extends SimpleIntVector {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof Path other) {
       if (size == other.size) {
         for (int i = 0; i < size; i++) {

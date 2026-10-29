@@ -57,7 +57,7 @@ public class BitVectorUnionVector extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o instanceof BitVectorUnionVector other) {
       return v.sameBits(other.v);
     } else {

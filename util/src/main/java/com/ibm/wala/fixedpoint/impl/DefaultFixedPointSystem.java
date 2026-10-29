@@ -28,6 +28,7 @@ import com.ibm.wala.util.graph.traverse.Topological;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /** Default implementation of a dataflow graph */
 public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPointSystem<T> {
@@ -62,7 +63,7 @@ public class DefaultFixedPointSystem<T extends IVariable<T>> implements IFixedPo
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     return graph.equals(obj);
   }
 

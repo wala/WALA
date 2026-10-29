@@ -10,6 +10,8 @@
  */
 package com.ibm.wala.fixpoint;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * operator for a step in an iterative solver
  *
@@ -31,7 +33,7 @@ public abstract class AbstractOperator<T extends IVariable<T>> implements FixedP
   public abstract int hashCode();
 
   @Override
-  public abstract boolean equals(Object o);
+  public abstract boolean equals(@Nullable Object o);
 
   @Override
   public abstract String toString();

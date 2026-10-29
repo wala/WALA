@@ -48,7 +48,7 @@ public final class TrueOperator extends UnaryOperator<BooleanVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return (o instanceof TrueOperator);
   }
 }

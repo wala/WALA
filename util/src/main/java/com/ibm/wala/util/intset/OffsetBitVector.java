@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import java.io.Serial;
 import java.util.Arrays;
+import org.jspecify.annotations.Nullable;
 
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
@@ -215,7 +216,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @return true if the objects are the same; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof OffsetBitVector set) {
       if (this == obj) { // should help alias analysis
         return true;

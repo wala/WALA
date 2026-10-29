@@ -11,6 +11,7 @@
 package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
+import org.jspecify.annotations.Nullable;
 
 /** Represents a single step in an iterative solver */
 public abstract class AbstractStatement<T extends IVariable<T>, O extends AbstractOperator<T>>
@@ -23,7 +24,7 @@ public abstract class AbstractStatement<T extends IVariable<T>, O extends Abstra
   public abstract int hashCode();
 
   @Override
-  public abstract boolean equals(Object o);
+  public abstract boolean equals(@Nullable Object o);
 
   @Override
   public String toString() {

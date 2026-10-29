@@ -72,7 +72,7 @@ public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o instanceof BitVectorFilter other) {
       return mask.equals(other.mask);
     } else {

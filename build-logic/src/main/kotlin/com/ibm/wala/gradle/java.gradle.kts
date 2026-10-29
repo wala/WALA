@@ -124,6 +124,7 @@ tasks.withType<JavaCompile>().configureEach {
           "EmptySetMultibindingContributions",
           "EmptyTopLevelDeclaration",
           "EqualsIncompatibleType",
+          "EqualsMissingNullable",
           "EqualsUnsafeCast",
           "EqualsUsingHashCode",
           "ErroneousBitwiseExpression",
