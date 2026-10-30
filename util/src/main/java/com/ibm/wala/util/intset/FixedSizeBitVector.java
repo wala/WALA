@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import java.io.Serial;
 import java.util.Arrays;
+import org.jspecify.annotations.Nullable;
 
 public final class FixedSizeBitVector implements Cloneable, java.io.Serializable {
   @Serial private static final long serialVersionUID = 33181877746462822L;
@@ -272,7 +273,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @return true if the objects are the same; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof FixedSizeBitVector set) {
       if (this == obj) { // should help alias analysis
         return true;

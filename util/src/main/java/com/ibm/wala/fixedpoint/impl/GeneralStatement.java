@@ -15,6 +15,7 @@ import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 /** Represents a single step in an iterative solver */
 public abstract class GeneralStatement<T extends IVariable<T>>
@@ -171,7 +172,7 @@ public abstract class GeneralStatement<T extends IVariable<T>>
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o == null) {
       return false;
     }

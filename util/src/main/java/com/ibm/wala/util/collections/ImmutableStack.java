@@ -41,6 +41,7 @@ package com.ibm.wala.util.collections;
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Iterator;
+import org.jspecify.annotations.Nullable;
 
 /**
  * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()} operations create new
@@ -90,7 +91,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("rawtypes")
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o instanceof ImmutableStack other) {
       return Arrays.equals(entries, other.entries);

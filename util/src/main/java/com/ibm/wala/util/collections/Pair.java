@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 public class Pair<T, U> implements Serializable {
 
@@ -34,7 +35,7 @@ public class Pair<T, U> implements Serializable {
 
   @SuppressWarnings("rawtypes")
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return (o instanceof Pair pair) && check(fst, pair.fst) && check(snd, pair.snd);
   }
 

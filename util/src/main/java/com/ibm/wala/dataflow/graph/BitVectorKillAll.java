@@ -39,7 +39,7 @@ public class BitVectorKillAll extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return this == o;
   }
 

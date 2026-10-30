@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import java.io.Serial;
 import java.util.Arrays;
+import org.jspecify.annotations.Nullable;
 
 public class BitVector extends BitVectorBase<BitVector> {
 
@@ -361,7 +362,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @return true if the objects are the same; false otherwise.
    */
   @Override
-  public boolean equals(Object obj) {
+  public boolean equals(@Nullable Object obj) {
     if (obj instanceof BitVector set) {
       if (this == obj) { // should help alias analysis
         return true;

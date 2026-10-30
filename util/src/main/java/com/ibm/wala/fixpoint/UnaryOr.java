@@ -46,7 +46,7 @@ public final class UnaryOr extends UnaryOperator<BooleanVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return (o instanceof UnaryOr);
   }
 }

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Converts an {@link Iterator} to a {@link Collection}. Note that if you just want to use Java 5's
@@ -130,7 +131,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   @Deprecated(forRemoval = true, since = "1.8.0")
   @Override
   @SuppressWarnings("UndefinedEquals")
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return getDelegate().equals(o);
   }
 

@@ -56,7 +56,7 @@ public class BitVectorUnionConstant extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o instanceof BitVectorUnionConstant other) {
       return c == other.c;
     } else {

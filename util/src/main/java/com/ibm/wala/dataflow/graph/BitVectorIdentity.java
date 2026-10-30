@@ -51,7 +51,7 @@ public class BitVectorIdentity extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return (o instanceof BitVectorIdentity);
   }
 

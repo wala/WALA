@@ -11,6 +11,7 @@
 package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BooleanVariable;
+import org.jspecify.annotations.Nullable;
 
 /** Operator U(n) = U(n) U U(j) */
 public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> {
@@ -34,7 +35,7 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     return (o instanceof BooleanUnion);
   }
 

@@ -59,7 +59,7 @@ public class BitVectorMinusVector extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (o instanceof BitVectorMinusVector other) {
       return v.sameValue(other.v);
     } else {

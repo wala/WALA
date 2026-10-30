@@ -13,6 +13,7 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.util.intset.IntSet;
+import org.jspecify.annotations.Nullable;
 
 /** Operator U(n) = U(n) n U(j) */
 public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorVariable> {
@@ -70,7 +71,7 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
   }
 
   @Override
-  public boolean equals(final Object o) {
+  public boolean equals(final @Nullable Object o) {
     return o instanceof BitVectorIntersection;
   }
 
