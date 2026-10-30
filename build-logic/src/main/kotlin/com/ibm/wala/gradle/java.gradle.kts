@@ -369,6 +369,7 @@ tasks.withType<JavaCompile>().configureEach {
           "UnusedVariable",
           "UnusedVariable",
           "URLEqualsHashCode",
+          "ValueClassIdentity",
           "UseBinds",
           "UseEnumSwitch",
           "VariableNameSameAsType",
